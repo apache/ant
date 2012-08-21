@@ -120,7 +120,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (sysProperties != null) {
                 sysProperties.setSystem();
             }
-            Class target = null;
+            Class<?> target = null;
             try {
                 if (classpath == null) {
                     target = Class.forName(classname);

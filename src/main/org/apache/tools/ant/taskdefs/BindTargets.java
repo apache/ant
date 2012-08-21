@@ -33,7 +33,7 @@ public class BindTargets extends Task {
 
     private String extensionPoint;
 
-    private List/* <String> */targets = new ArrayList();
+    private List<String> targets = new ArrayList<String>();
 
     private OnMissingExtensionPoint onMissingExtensionPoint;
 
@@ -80,10 +80,9 @@ public class BindTargets extends Task {
         ProjectHelper helper = (ProjectHelper) getProject().getReference(
                 ProjectHelper.PROJECTHELPER_REFERENCE);
 
-        Iterator itTarget = targets.iterator();
-        while (itTarget.hasNext()) {
+        for (Iterator<String> itTarget = targets.iterator(); itTarget.hasNext();) {
             helper.getExtensionStack().add(
-                    new String[] { extensionPoint, (String) itTarget.next(),
+                    new String[] { extensionPoint, itTarget.next(),
                                             onMissingExtensionPoint.name() });
         }
 

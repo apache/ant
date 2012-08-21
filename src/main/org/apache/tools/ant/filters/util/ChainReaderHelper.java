@@ -60,7 +60,7 @@ public final class ChainReaderHelper {
     /**
      * Chain of filters
      */
-    public Vector filterChains = new Vector();
+    public Vector<FilterChain> filterChains = new Vector<FilterChain>();
 
     /** The Ant project */
     private Project project = null;
@@ -106,7 +106,7 @@ public final class ChainReaderHelper {
      *
      * @param fchain the filter chains collection
      */
-    public void setFilterChains(Vector fchain) {
+    public void setFilterChains(Vector<FilterChain> fchain) {
         filterChains = fchain;
     }
 
@@ -122,14 +122,14 @@ public final class ChainReaderHelper {
 
         Reader instream = primaryReader;
         final int filterReadersCount = filterChains.size();
-        final Vector finalFilters = new Vector();
-        final ArrayList/*<AntClassLoader>*/ classLoadersToCleanUp =
-            new ArrayList/*<AntClassLoader>*/();
+        final Vector<Object> finalFilters = new Vector<Object>();
+        final ArrayList<AntClassLoader> classLoadersToCleanUp =
+            new ArrayList<AntClassLoader>();
 
         for (int i = 0; i < filterReadersCount; i++) {
             final FilterChain filterchain =
-                (FilterChain) filterChains.elementAt(i);
-            final Vector filterReaders = filterchain.getFilterReaders();
+                filterChains.elementAt(i);
+            final Vector<Object> filterReaders = filterchain.getFilterReaders();
             final int readerCount = filterReaders.size();
             for (int j = 0; j < readerCount; j++) {
                 finalFilters.addElement(filterReaders.elementAt(j));
@@ -197,9 +197,9 @@ public final class ChainReaderHelper {
     /**
      * Deregisters Classloaders from the project so GC can remove them later.
      */
-    private static void cleanUpClassLoaders(List/*<AntClassLoader>*/ loaders) {
-        for (Iterator it = loaders.iterator(); it.hasNext(); ) {
-            ((AntClassLoader) it.next()).cleanup();
+    private static void cleanUpClassLoaders(List<AntClassLoader> loaders) {
+        for (Iterator<AntClassLoader> it = loaders.iterator(); it.hasNext(); ) {
+            it.next().cleanup();
         }
     }
 
@@ -223,13 +223,13 @@ public final class ChainReaderHelper {
      */
     private Reader expandReader(final AntFilterReader filter,
                                 final Reader ancestor,
-                                final List/*<AntClassLoader>*/ classLoadersToCleanUp) {
+                                final List<AntClassLoader> classLoadersToCleanUp) {
         final String className = filter.getClassName();
         final Path classpath = filter.getClasspath();
         final Project pro = filter.getProject();
         if (className != null) {
             try {
-                Class clazz = null;
+                Class<?> clazz = null;
                 if (classpath == null) {
                     clazz = Class.forName(className);
                 } else {
@@ -242,11 +242,11 @@ public final class ChainReaderHelper {
                         throw new BuildException(className + " does not extend"
                                                  + " java.io.FilterReader");
                     }
-                    final Constructor[] constructors = clazz.getConstructors();
+                    final Constructor<?>[] constructors = clazz.getConstructors();
                     int j = 0;
                     boolean consPresent = false;
                     for (; j < constructors.length; j++) {
-                        Class[] types = constructors[j].getParameterTypes();
+                        Class<?>[] types = constructors[j].getParameterTypes();
                         if (types.length == 1
                             && types[0].isAssignableFrom(Reader.class)) {
                             consPresent = true;

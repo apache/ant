@@ -27,26 +27,26 @@ import java.util.Vector;
  * @since Ant 1.5
  */
 public class MultipleChoiceInputRequest extends InputRequest {
-    private final LinkedHashSet choices;
+    private final LinkedHashSet<String> choices;
 
     /**
      * @param prompt The prompt to show to the user.  Must not be null.
      * @param choices holds all input values that are allowed.
      *                Must not be null.
      */
-    public MultipleChoiceInputRequest(String prompt, Vector choices) {
+    public MultipleChoiceInputRequest(String prompt, Vector<String> choices) {
         super(prompt);
         if (choices == null) {
             throw new IllegalArgumentException("choices must not be null");
         }
-        this.choices = new LinkedHashSet(choices);
+        this.choices = new LinkedHashSet<String>(choices);
     }
 
     /**
      * @return The possible values.
      */
-    public Vector getChoices() {
-        return new Vector(choices);
+    public Vector<String> getChoices() {
+        return new Vector<String>(choices);
     }
 
     /**

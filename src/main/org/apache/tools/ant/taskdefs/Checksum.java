@@ -31,8 +31,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Set;
 import java.util.Arrays;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -60,7 +58,6 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Checksum extends MatchingTask implements Condition {
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int NIBBLE = 4;
     private static final int WORD = 16;
     private static final int BUFFER_SIZE = 8 * 1024;
@@ -112,14 +109,14 @@ public class Checksum extends MatchingTask implements Condition {
      * Key:   java.util.File (source file)
      * Value: java.lang.String (digest)
      */
-    private Map allDigests = new HashMap();
+    private Map<File, byte[]> allDigests = new HashMap<File, byte[]>();
     /**
      * Holds relative file names for all files (always with a forward slash).
      * This is used to calculate the total hash.
      * Key:   java.util.File (source file)
      * Value: java.lang.String (relative file name)
      */
-    private Map relativeFilePaths = new HashMap();
+    private Map<File, String> relativeFilePaths = new HashMap<File, String>();
     /**
      * Property where totalChecksum gets set.
      */
@@ -140,7 +137,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Stores SourceFile, DestFile pairs and SourceFile, Property String pairs.
      */
-    private Hashtable includeFileMap = new Hashtable();
+    private Hashtable<File, Object> includeFileMap = new Hashtable<File, Object>();
     /**
      * Message Digest instance
      */
@@ -478,9 +475,9 @@ public class Checksum extends MatchingTask implements Condition {
         FileOutputStream fos = null;
         byte[] buf = new byte[readBufferSize];
         try {
-            for (Enumeration e = includeFileMap.keys(); e.hasMoreElements();) {
+            for (Map.Entry<File, Object> e : includeFileMap.entrySet()) {
                 messageDigest.reset();
-                File src = (File) e.nextElement();
+                File src = e.getKey();
                 if (!isCondition) {
                     log("Calculating " + algorithm + " checksum for " + src, Project.MSG_VERBOSE);
                 }
@@ -499,7 +496,7 @@ public class Checksum extends MatchingTask implements Condition {
                 }
                 String checksum = createDigestString(fileDigest);
                 //can either be a property name string or a file
-                Object destination = includeFileMap.get(src);
+                Object destination = e.getValue();
                 if (destination instanceof java.lang.String) {
                     String prop = (String) destination;
                     if (isCondition) {
@@ -549,14 +546,11 @@ public class Checksum extends MatchingTask implements Condition {
             if (totalproperty != null) {
                 // Calculate the total checksum
                 // Convert the keys (source files) into a sorted array.
-                Set keys = allDigests.keySet();
-                Object[] keyArray = keys.toArray();
+                File[] keyArray = allDigests.keySet().toArray(new File[allDigests.size()]);
                 // File is Comparable, but sort-order is platform
                 // dependent (case-insensitive on Windows)
-                Arrays.sort(keyArray, new Comparator() {
-                        public int compare(Object o1, Object o2) {
-                            File f1 = (File) o1;
-                            File f2 = (File) o2;
+                Arrays.sort(keyArray, new Comparator<File>() {
+                        public int compare(File f1, File f2) {
                             return f1 == null ? (f2 == null ? 0 : -1)
                                 : (f2 == null ? 1
                                    : getRelativeFilePath(f1)
@@ -565,11 +559,9 @@ public class Checksum extends MatchingTask implements Condition {
                     });
                 // Loop over the checksums and generate a total hash.
                 messageDigest.reset();
-                for (int i = 0; i < keyArray.length; i++) {
-                    File src = (File) keyArray[i];
-
+                for (File src : keyArray) {
                     // Add the digest for the file content
-                    byte[] digest = (byte[]) allDigests.get(src);
+                    byte[] digest = allDigests.get(src);
                     messageDigest.update(digest);
 
                     // Add the file path
@@ -675,7 +667,7 @@ public class Checksum extends MatchingTask implements Condition {
      * @since 1.7
      */
     public static class FormatElement extends EnumeratedAttribute {
-        private static HashMap formatMap = new HashMap();
+        private static HashMap<String, MessageFormat> formatMap = new HashMap<String, MessageFormat>();
         private static final String CHECKSUM = "CHECKSUM";
         private static final String MD5SUM = "MD5SUM";
         private static final String SVF = "SVF";

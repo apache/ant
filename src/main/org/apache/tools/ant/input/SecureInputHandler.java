@@ -42,8 +42,7 @@ public class SecureInputHandler extends DefaultInputHandler {
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         try {
-            Class system = Class.forName("java.lang.System");
-            Object console = ReflectUtil.invokeStatic(system, "console");
+            Object console = ReflectUtil.invokeStatic(System.class, "console");
             do {
                 char[] input = (char[]) ReflectUtil.invoke(
                     console, "readPassword", String.class, prompt,

@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.ProjectComponent;
@@ -37,7 +36,7 @@ import org.apache.tools.ant.BuildException;
  * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
 public class Service extends ProjectComponent {
-    private List providerList = new ArrayList();
+    private List<Provider> providerList = new ArrayList<Provider>();
     private String type;
 
     /**
@@ -84,16 +83,9 @@ public class Service extends ProjectComponent {
      * @throws IOException if there is an error.
      */
     public InputStream getAsStream() throws IOException {
-        ByteArrayOutputStream arrayOut;
-        Writer writer;
-        Iterator providerIterator;
-        Provider provider;
-
-        arrayOut = new ByteArrayOutputStream();
-        writer = new OutputStreamWriter(arrayOut, "UTF-8");
-        providerIterator = providerList.iterator();
-        while (providerIterator.hasNext()) {
-            provider = (Provider) providerIterator.next();
+        ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
+        Writer writer = new OutputStreamWriter(arrayOut, "UTF-8");
+        for (Provider provider : providerList) {
             writer.write(provider.getClassName());
             writer.write("\n");
         }

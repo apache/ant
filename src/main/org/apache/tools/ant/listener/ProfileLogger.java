@@ -32,7 +32,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class ProfileLogger extends DefaultLogger {
 
-    private Map profileData = new HashMap(); // <Object, Date>
+    private Map<Object, Date> profileData = new HashMap<Object, Date>();
 
     /**
      * Logs a message to say that the target has started.

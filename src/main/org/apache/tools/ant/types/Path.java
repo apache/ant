@@ -79,9 +79,6 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     public static final Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
-    private static final Iterator EMPTY_ITERATOR
-        = Collections.EMPTY_SET.iterator();
-
     // CheckStyle:VisibilityModifier OFF - bc
 
     /**
@@ -397,7 +394,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @return an array of strings, one for each path element
      */
     public static String[] translatePath(Project project, String source) {
-        final Vector result = new Vector();
+        final Vector<String> result = new Vector<String>();
         if (source == null) {
             return new String[0];
         }
@@ -418,9 +415,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             result.addElement(element.toString());
             element = new StringBuffer();
         }
-        String[] res = new String[result.size()];
-        result.copyInto(res);
-        return res;
+        return result.toArray(new String[result.size()]);
     }
 
     /**
@@ -489,7 +484,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -553,7 +548,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         Path result = new Path(getProject());
 
         String order = defValue;
-        String o = getProject() != null 
+        String o = getProject() != null
             ? getProject().getProperty(MagicNames.BUILD_SYSCLASSPATH)
             : System.getProperty(MagicNames.BUILD_SYSCLASSPATH);
         if (o != null) {
@@ -709,7 +704,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (getPreserveBC()) {
             return new FileResourceIterator(getProject(), null, list());
         }
-        return union == null ? EMPTY_ITERATOR
+        return union == null ? Collections.<Resource> emptySet().iterator()
             : assertFilesystemOnly(union).iterator();
     }
 

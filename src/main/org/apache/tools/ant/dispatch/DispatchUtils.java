@@ -58,7 +58,7 @@ public class DispatchUtils {
                         if (name.length() > 1) {
                             mName += name.substring(1);
                         }
-                        final Class c = dispatchable.getClass();
+                        final Class<? extends Dispatchable> c = dispatchable.getClass();
                         final Method actionM = c.getMethod(mName, new Class[0]);
                         if (actionM != null) {
                             final Object o = actionM.invoke(dispatchable, (Object[]) null);

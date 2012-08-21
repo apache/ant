@@ -50,7 +50,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
@@ -157,13 +156,13 @@ public class ProjectHelper2 extends ProjectHelper {
             context.setIgnoreProjectTag(true);
             Target currentTarget = context.getCurrentTarget();
             Target currentImplicit = context.getImplicitTarget();
-            Map    currentTargets = context.getCurrentTargets();
+            Map<String, Target>    currentTargets = context.getCurrentTargets();
             try {
                 Target newCurrent = new Target();
                 newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
-                context.setCurrentTargets(new HashMap());
+                context.setCurrentTargets(new HashMap<String, Target>());
                 context.setImplicitTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
                 newCurrent.execute();
@@ -174,7 +173,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
         } else {
             // top level file
-            context.setCurrentTargets(new HashMap());
+            context.setCurrentTargets(new HashMap<String, Target>());
             parse(project, source, new RootHandler(context, mainHandler));
             // Execute the top-level target
             context.getImplicitTarget().execute();
@@ -485,7 +484,7 @@ public class ProjectHelper2 extends ProjectHelper {
      * with the implicit execution stack )
      */
     public static class RootHandler extends DefaultHandler {
-        private Stack antHandlers = new Stack();
+        private Stack<AntHandler> antHandlers = new Stack<AntHandler>();
         private AntHandler currentHandler = null;
         private AntXMLContext context;
 
@@ -962,7 +961,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 throw new BuildException("Duplicate target '" + name + "'",
                                          target.getLocation());
             }
-            Hashtable projectTargets = project.getTargets();
+            Hashtable<String, Target> projectTargets = project.getTargets();
             boolean   usedTarget = false;
             // If the name has not already been defined define it
             if (projectTargets.containsKey(name)) {
@@ -979,12 +978,9 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (!isInIncludeMode) {
                     target.setDepends(depends);
                 } else {
-                    for (Iterator iter =
-                             Target.parseDepends(depends, name, "depends")
-                             .iterator();
-                         iter.hasNext(); ) {
-                        target.addDependency(prefix + sep + iter.next());
-                    }
+                    for (String string : Target.parseDepends(depends, name, "depends")) {
+                        target.addDependency(prefix + sep + string);
+                   }
                 }
             }
             if (!isInIncludeMode && context.isIgnoringProjectTag()
@@ -1003,7 +999,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
             if (extensionPointMissing != null && extensionPoint == null) {
                 throw new BuildException("onMissingExtensionPoint attribute cannot " +
-                                         "be specified unless extensionOf is specified", 
+                                         "be specified unless extensionOf is specified",
                                          target.getLocation());
 
             }

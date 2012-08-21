@@ -106,10 +106,10 @@ public final class ClassConstants
             } else {
                 final byte[] bytes = clazz.getBytes(ResourceUtils.ISO_8859_1);
                 try {
-                    final Class javaClassHelper =
+                    final Class<?> javaClassHelper =
                         Class.forName(JAVA_CLASS_HELPER);
                     if (javaClassHelper != null) {
-                        final Class[] params = {
+                        final Class<?>[] params = {
                             byte[].class
                         };
                         final Method getConstants =

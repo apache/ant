@@ -89,7 +89,7 @@ public class Resources extends DataType implements ResourceCollection {
             return coll;
         }
         private class MyIterator implements Iterator<Resource> {
-            private Iterator rci = getNested().iterator();
+            private Iterator<ResourceCollection> rci = getNested().iterator();
             private Iterator<Resource> ri = null;
 
             public boolean hasNext() {
@@ -112,7 +112,7 @@ public class Resources extends DataType implements ResourceCollection {
         }
     }
 
-    private Vector rc;
+    private Vector<ResourceCollection> rc;
     private Collection<Resource> coll;
     private boolean cache = false;
 
@@ -151,7 +151,7 @@ public class Resources extends DataType implements ResourceCollection {
             return;
         }
         if (rc == null) {
-            rc = new Vector();
+            rc = new Vector<ResourceCollection>();
         }
         rc.add(c);
         invalidateExistingIterators();
@@ -193,8 +193,8 @@ public class Resources extends DataType implements ResourceCollection {
         }
         validate();
 
-        for (Iterator i = getNested().iterator(); i.hasNext();) {
-            if ((!((ResourceCollection) i.next()).isFilesystemOnly())) {
+        for (Iterator<ResourceCollection> i = getNested().iterator(); i.hasNext();) {
+            if (!i.next().isFilesystemOnly()) {
                 return false;
             }
         }
@@ -230,7 +230,7 @@ public class Resources extends DataType implements ResourceCollection {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -238,10 +238,9 @@ public class Resources extends DataType implements ResourceCollection {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = getNested().iterator(); i.hasNext();) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (ResourceCollection resourceCollection : getNested()) {
+                if (resourceCollection instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) resourceCollection, stk, p);
                 }
             }
             setChecked(true);
@@ -269,7 +268,7 @@ public class Resources extends DataType implements ResourceCollection {
         coll = (coll == null) ? new MyCollection() : coll;
     }
 
-    private synchronized List getNested() {
-        return rc == null ? Collections.EMPTY_LIST : rc;
+    private synchronized List<ResourceCollection> getNested() {
+        return rc == null ? Collections.<ResourceCollection> emptyList() : rc;
     }
 }

@@ -32,11 +32,11 @@ import org.apache.tools.ant.types.Parameter;
  * <p>
  * Sort a file before and/or after the file.
  * </p>
- * 
+ *
  * <p>
  * Examples:
  * </p>
- * 
+ *
  * <pre>
  *   &lt;copy todir=&quot;build&quot;&gt;
  *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
@@ -45,14 +45,14 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
- * 
+ *
  * <p>
  * Sort all files <code>*.txt</code> from <i>src</i> location and copy
  * them into <i>build</i> location. The lines of each file are sorted
  * in ascendant order comparing the lines via the
  * <code>String.compareTo(Object o)</code> method.
  * </p>
- * 
+ *
  * <pre>
  *   &lt;copy todir=&quot;build&quot;&gt;
  *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
@@ -61,14 +61,14 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
- * 
+ *
  * <p>
  * Sort all files <code>*.txt</code> from <i>src</i> location into reverse
  * order and copy them into <i>build</i> location. If reverse parameter has
  * value <code>true</code> (default value), then the output line of the files
  * will be in ascendant order.
  * </p>
- * 
+ *
  * <pre>
  *   &lt;copy todir=&quot;build&quot;&gt;
  *       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre>
- * 
+ *
  * <p>
  * Sort all files <code>*.txt</code> from <i>src</i> location using as
  * sorting criterium <code>EvenFirstCmp</code> class, that sorts the file
@@ -89,7 +89,7 @@ import org.apache.tools.ant.types.Parameter;
  * therefore in case of inner class has to be <em>static</em>. It also has to
  * implement <code>java.util.Comparator</code> interface, for example:
  * </p>
- * 
+ *
  * <pre>
  *         package org.apache.tools.ant.filters;
  *         ...(omitted)
@@ -99,9 +99,9 @@ import org.apache.tools.ant.types.Parameter;
  *             }
  *           }
  * </pre>
- * 
+ *
  * <p>The example above is equivalent to:</p>
- * 
+ *
  * <blockquote><pre>
  *   &lt;componentdef name="evenfirst"
  *                 classname="org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
@@ -114,10 +114,10 @@ import org.apache.tools.ant.types.Parameter;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
  * </pre></blockquote>
- * 
+ *
  * <p> If parameter <code>comparator</code> is present, then
  * <code>reverse</code> parameter will not be taken into account.  </p>
- * 
+ *
  * @since Ant 1.8.0
  */
 public final class SortFilter extends BaseParamFilterReader
@@ -135,7 +135,7 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Instance of comparator class to be used for sorting.
      */
-    private Comparator comparator = null;
+    private Comparator<? super String> comparator = null;
 
     /**
      * Controls if the sorting process will be in ascendant/descendant order. If
@@ -148,7 +148,7 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Stores the lines to be sorted.
      */
-    private List lines;
+    private List<String> lines;
 
     /**
      * Remaining line to be read from this filter, or <code>null</code> if the
@@ -157,11 +157,11 @@ public final class SortFilter extends BaseParamFilterReader
      */
     private String line = null;
 
-    private Iterator iterator = null;
+    private Iterator<String> iterator = null;
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public SortFilter() {
@@ -170,7 +170,7 @@ public final class SortFilter extends BaseParamFilterReader
 
     /**
      * Creates a new filtered reader.
-     * 
+     *
      * @param in
      *            A Reader object providing the underlying stream. Must not be
      *            <code>null</code>.
@@ -184,10 +184,10 @@ public final class SortFilter extends BaseParamFilterReader
      * of lines have already been read, the resulting stream is effectively at
      * an end. Otherwise, the next character from the underlying stream is read
      * and returned.
-     * 
+     *
      * @return the next character in the resulting stream, or -1 if the end of
      *         the resulting stream has been reached
-     * 
+     *
      * @exception IOException
      *                if the underlying stream throws an IOException during
      *                reading
@@ -213,7 +213,7 @@ public final class SortFilter extends BaseParamFilterReader
         } else {
             if (lines == null) {
                 // We read all lines and sort them
-                lines = new ArrayList();
+                lines = new ArrayList<String>();
                 for (line = readLine(); line != null; line = readLine()) {
                     lines.add(line);
                 }
@@ -237,11 +237,11 @@ public final class SortFilter extends BaseParamFilterReader
 
     /**
      * Creates a new SortReader using the passed in Reader for instantiation.
-     * 
+     *
      * @param rdr
      *            A Reader object providing the underlying stream. Must not be
      *            <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering the
      *         specified reader
      */
@@ -256,7 +256,7 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Returns <code>true</code> if the sorting process will be in reverse
      * order, otherwise the sorting process will be in ascendant order.
-     * 
+     *
      * @return <code>true</code> if the sorting process will be in reverse
      *         order, otherwise the sorting process will be in ascendant order.
      */
@@ -267,7 +267,7 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Sets the sorting process will be in ascendant (<code>reverse=false</code>)
      * or to descendant (<code>reverse=true</code>).
-     * 
+     *
      * @param reverse
      *            Boolean representing reverse ordering process.
      */
@@ -277,30 +277,30 @@ public final class SortFilter extends BaseParamFilterReader
 
     /**
      * Returns the comparator to be used for sorting.
-     * 
+     *
      * @return the comparator
      */
-    public Comparator getComparator() {
+    public Comparator<? super String> getComparator() {
         return comparator;
     }
 
     /**
      * Set the comparator to be used as sorting criterium.
-     * 
+     *
      * @param comparator
      *            the comparator to set
      */
-    public void setComparator(Comparator comparator) {
+    public void setComparator(Comparator<? super String> comparator) {
         this.comparator = comparator;
     }
 
     /**
-     * Set the comparator to be used as sorting criterium as nested element.
-     * 
+     * Set the comparator to be used as sorting criterion as nested element.
+     *
      * @param comparator
      *            the comparator to set
      */
-    public void add(Comparator comparator) {
+    public void add(Comparator<? super String> comparator) {
         if (this.comparator != null && comparator != null) {
             throw new BuildException("can't have more than one comparator");
         }
@@ -324,8 +324,10 @@ public final class SortFilter extends BaseParamFilterReader
                 if (COMPARATOR_KEY.equals(paramName)) {
                     try {
                         String className = (String) params[i].getValue();
-                        setComparator((Comparator) (Class.forName(className)
-                                                    .newInstance()));
+                        @SuppressWarnings("unchecked")
+                        final Comparator<? super String> comparatorInstance = (Comparator<? super String>) (Class
+                                .forName(className).newInstance());
+                        setComparator(comparatorInstance);
                         continue;
                     } catch (InstantiationException e) {
                         throw new BuildException(e);
@@ -353,15 +355,13 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Sorts the read lines (<code>lines</code>)acording to the sorting
      * criteria defined by the user.
-     * 
+     *
      */
     private void sort() {
         if (comparator == null) {
             if (reverse) {
-                Collections.sort(lines, new Comparator() {
-                        public int compare(Object o1, Object o2) {
-                            String s1 = (String) o1;
-                            String s2 = (String) o2;
+                Collections.sort(lines, new Comparator<String>() {
+                        public int compare(String s1, String s2) {
                             return (-s1.compareTo(s2));
                         }
                     });

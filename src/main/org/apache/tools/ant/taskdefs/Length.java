@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;

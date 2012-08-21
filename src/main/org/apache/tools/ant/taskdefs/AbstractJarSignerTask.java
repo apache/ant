@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -74,7 +73,7 @@ public abstract class AbstractJarSignerTask extends Task {
     /**
      * the filesets of the jars to sign
      */
-    protected Vector filesets = new Vector();
+    protected Vector<FileSet> filesets = new Vector<FileSet>();
     /**
      * name of JDK program we are looking for
      */
@@ -291,10 +290,7 @@ public abstract class AbstractJarSignerTask extends Task {
         }
 
         //now patch in all system properties
-        Vector props = sysProperties.getVariablesVector();
-        Enumeration e = props.elements();
-        while (e.hasMoreElements()) {
-            Environment.Variable variable = (Environment.Variable) e.nextElement();
+        for (Environment.Variable variable : sysProperties.getVariablesVector()) {
             declareSysProperty(cmd, variable);
         }
     }
@@ -358,8 +354,9 @@ public abstract class AbstractJarSignerTask extends Task {
      * fileset, if is defined
      * @return a vector of FileSet instances
      */
-    protected Vector createUnifiedSources() {
-        Vector sources = (Vector) filesets.clone();
+    protected Vector<FileSet> createUnifiedSources() {
+        @SuppressWarnings("unchecked")
+        Vector<FileSet> sources = (Vector<FileSet>) filesets.clone();
         if (jar != null) {
             //we create a fileset with the source file.
             //this lets us combine our logic for handling output directories,
@@ -382,10 +379,8 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected Path createUnifiedSourcePath() {
         Path p = path == null ? new Path(getProject()) : (Path) path.clone();
-        Vector s = createUnifiedSources();
-        Enumeration e = s.elements();
-        while (e.hasMoreElements()) {
-            p.add((FileSet) e.nextElement());
+        for (FileSet fileSet : createUnifiedSources()) {
+            p.add(fileSet);
         }
         return p;
     }

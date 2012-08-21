@@ -54,7 +54,7 @@ public final class StripLineComments
     private static final String COMMENTS_KEY = "comment";
 
     /** Vector that holds the comment prefixes. */
-    private Vector comments = new Vector();
+    private Vector<String> comments = new Vector<String>();
 
     /** The line that has been read ahead. */
     private String line = null;
@@ -110,7 +110,7 @@ public final class StripLineComments
 
             while (line != null) {
                 for (int i = 0; i < commentsSize; i++) {
-                    String comment = (String) comments.elementAt(i);
+                    String comment = comments.elementAt(i);
                     if (line.startsWith(comment)) {
                         line = null;
                         break;
@@ -149,7 +149,7 @@ public final class StripLineComments
      * @param comments A list of strings, each of which is a prefix
      * for a comment line. Must not be <code>null</code>.
      */
-    private void setComments(final Vector comments) {
+    private void setComments(final Vector<String> comments) {
         this.comments = comments;
     }
 
@@ -158,7 +158,7 @@ public final class StripLineComments
      *
      * @return the list of comment prefixes to strip.
      */
-    private Vector getComments() {
+    private Vector<String> getComments() {
         return comments;
     }
 

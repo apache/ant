@@ -24,7 +24,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ import org.apache.tools.ant.Task;
 /**
  * Sets properties to the host provided, or localhost if no information is
  * provided. The default properties are NAME, FQDN, ADDR4, ADDR6;
- * 
+ *
  * @since Ant 1.8
  * @ant.task category="utility"
  */
@@ -71,12 +70,12 @@ public class HostInfo extends Task {
 
     private InetAddress best4;
 
-    private List inetAddrs;
+    private List<InetAddress> inetAddrs;
 
     /**
      * Set a prefix for the properties. If the prefix does not end with a "."
      * one is automatically added.
-     * 
+     *
      * @param aPrefix
      *            the prefix to use.
      * @since Ant 1.8
@@ -90,7 +89,7 @@ public class HostInfo extends Task {
 
     /**
      * Set the host to be retrieved.
-     * 
+     *
      * @param aHost
      *            the name or the address of the host, data for the local host
      *            will be retrieved if omitted.
@@ -102,7 +101,7 @@ public class HostInfo extends Task {
 
     /**
      * set the properties.
-     * 
+     *
      * @throws BuildException
      *             on error.
      */
@@ -116,12 +115,11 @@ public class HostInfo extends Task {
 
     private void executeLocal() {
         try {
-            Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
-            inetAddrs = new LinkedList();
+            inetAddrs = new LinkedList<InetAddress>();
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
-                NetworkInterface currentif = (NetworkInterface) interfaces
-                        .nextElement();
-                Enumeration addrs = currentif.getInetAddresses();
+                NetworkInterface currentif = interfaces.nextElement();
+                Enumeration<InetAddress> addrs = currentif.getInetAddresses();
                 while (addrs.hasMoreElements())
                 {
                     inetAddrs.add(addrs.nextElement());
@@ -153,16 +151,14 @@ public class HostInfo extends Task {
             setProperty(ADDR6, DEF_LOCAL_ADDR6);
         }
     }
-    
+
     private boolean hasHostName(InetAddress addr)
-    {   
+    {
         return !addr.getHostAddress().equals(addr.getCanonicalHostName());
     }
 
     private void selectAddresses() {
-        Iterator i = inetAddrs.iterator();
-        while (i.hasNext()) {
-            InetAddress current = (InetAddress) i.next();
+        for (InetAddress current : inetAddrs) {
             if (!current.isMulticastAddress()) {
                 if (current instanceof Inet4Address) {
                     best4 = selectBestAddress(best4, current);
@@ -171,7 +167,7 @@ public class HostInfo extends Task {
                 }
             }
         }
-        
+
         nameAddr = selectBestAddress(best4, best6);
     }
 
@@ -199,7 +195,7 @@ public class HostInfo extends Task {
                     best = current;
                 }
             } else {
-                // current is a "Global address", considered better than 
+                // current is a "Global address", considered better than
                 // site local (and better than link local, loopback)
                 // address with hostname resolved considered better than
                 // address without hostname

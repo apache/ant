@@ -63,7 +63,7 @@ public class Expand extends Task {
     private File source; // req
     private boolean overwrite = true;
     private Mapper mapperElement = null;
-    private Vector patternsets = new Vector();
+    private Vector<PatternSet> patternsets = new Vector<PatternSet>();
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
     private boolean failOnEmptyArchive = false;
@@ -167,10 +167,10 @@ public class Expand extends Task {
         try {
             zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields);
             boolean empty = true;
-            Enumeration e = zf.getEntries();
+            Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {
                 empty = false;
-                ZipEntry ze = (ZipEntry) e.nextElement();
+                ZipEntry ze = e.nextElement();
                 InputStream is = null;
                 log("extracting " + ze.getName(), Project.MSG_DEBUG);
                 try {
@@ -254,11 +254,11 @@ public class Expand extends Task {
                 .replace('\\', File.separatorChar);
 
             boolean included = false;
-            Set includePatterns = new HashSet();
-            Set excludePatterns = new HashSet();
+            Set<String> includePatterns = new HashSet<String>();
+            Set<String> excludePatterns = new HashSet<String>();
             final int size = patternsets.size();
             for (int v = 0; v < size; v++) {
-                PatternSet p = (PatternSet) patternsets.elementAt(v);
+                PatternSet p = patternsets.elementAt(v);
                 String[] incls = p.getIncludePatterns(getProject());
                 if (incls == null || incls.length == 0) {
                     // no include pattern implicitly means includes="**"
@@ -288,15 +288,15 @@ public class Expand extends Task {
                 }
             }
 
-            for (Iterator iter = includePatterns.iterator();
+            for (Iterator<String> iter = includePatterns.iterator();
                  !included && iter.hasNext();) {
-                String pattern = (String) iter.next();
+                String pattern = iter.next();
                 included = SelectorUtils.matchPath(pattern, name);
             }
 
-            for (Iterator iter = excludePatterns.iterator();
+            for (Iterator<String> iter = excludePatterns.iterator();
                  included && iter.hasNext();) {
-                String pattern = (String) iter.next();
+                String pattern = iter.next();
                 included = !SelectorUtils.matchPath(pattern, name);
             }
 

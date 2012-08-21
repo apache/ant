@@ -446,7 +446,7 @@ public class EmailTask extends Task {
             if (encoding.equals(MIME)
                  || (encoding.equals(AUTO) && !autoFound)) {
                 try {
-                    //check to make sure that activation.jar 
+                    //check to make sure that activation.jar
                     //and mail.jar are available - see bug 31969
                     Class.forName("javax.activation.DataHandler");
                     Class.forName("javax.mail.internet.MimeMessage");
@@ -529,7 +529,7 @@ public class EmailTask extends Task {
             }
 
             // identify which files should be attached
-            Vector files = new Vector();
+            Vector<File> files = new Vector<File>();
             if (attachments != null) {
                 for (Resource r : attachments) {
                     files.addElement(r.as(FileProvider.class)

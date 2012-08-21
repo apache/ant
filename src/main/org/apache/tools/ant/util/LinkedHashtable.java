@@ -37,23 +37,25 @@ import java.util.Set;
  *
  * @since Ant 1.8.2
  */
-public class LinkedHashtable extends Hashtable {
-    private final LinkedHashMap map;
+public class LinkedHashtable<K, V> extends Hashtable<K, V> {
+    private static final long serialVersionUID = 1L;
+
+    private final LinkedHashMap<K, V> map;
 
     public LinkedHashtable() {
-        map = new LinkedHashMap();
+        map = new LinkedHashMap<K, V>();
     }
 
     public LinkedHashtable(int initialCapacity) {
-        map = new LinkedHashMap(initialCapacity);
+        map = new LinkedHashMap<K, V>(initialCapacity);
     }
 
     public LinkedHashtable(int initialCapacity, float loadFactor) {
-        map = new LinkedHashMap(initialCapacity, loadFactor);
+        map = new LinkedHashMap<K, V>(initialCapacity, loadFactor);
     }
 
-    public LinkedHashtable(Map m) {
-        map = new LinkedHashMap(m);
+    public LinkedHashtable(Map<K, V> m) {
+        map = new LinkedHashMap<K, V>(m);
     }
 
     public synchronized void clear() {
@@ -72,11 +74,11 @@ public class LinkedHashtable extends Hashtable {
         return map.containsValue(value);
     }
 
-    public Enumeration elements() {
+    public Enumeration<V> elements() {
         return CollectionUtils.asEnumeration(values().iterator());
     }
 
-    public synchronized Set entrySet() {
+    public synchronized Set<Map.Entry<K, V>> entrySet() {
         return map.entrySet();
     }
 
@@ -84,7 +86,7 @@ public class LinkedHashtable extends Hashtable {
         return map.equals(o);
     }
 
-    public synchronized Object get(Object k) {
+    public synchronized V get(Object k) {
         return map.get(k);
     }
 
@@ -96,23 +98,23 @@ public class LinkedHashtable extends Hashtable {
         return map.isEmpty();
     }
 
-    public Enumeration keys() {
+    public Enumeration<K> keys() {
         return CollectionUtils.asEnumeration(keySet().iterator());
     }
 
-    public synchronized Set keySet() {
+    public synchronized Set<K> keySet() {
         return map.keySet();
     }
 
-    public synchronized Object put(Object k, Object v) {
+    public synchronized V put(K k, V v) {
         return map.put(k, v);
     }
 
-    public synchronized void putAll(Map m) {
+    public synchronized void putAll(Map<? extends K, ? extends V> m) {
         map.putAll(m);
     }
 
-    public synchronized Object remove(Object k) {
+    public synchronized V remove(Object k) {
         return map.remove(k);
     }
 
@@ -124,7 +126,7 @@ public class LinkedHashtable extends Hashtable {
         return map.toString();
     }
 
-    public synchronized Collection values() {
+    public synchronized Collection<V> values() {
         return map.values();
     }
 }

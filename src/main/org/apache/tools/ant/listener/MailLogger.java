@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.listener;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.email.EmailAddress;
+import org.apache.tools.ant.taskdefs.email.Header;
 import org.apache.tools.ant.taskdefs.email.Message;
 import org.apache.tools.ant.taskdefs.email.Mailer;
 import org.apache.tools.ant.util.ClasspathUtils;
@@ -100,7 +102,7 @@ public class MailLogger extends DefaultLogger {
         super.buildFinished(event);
 
         Project project = event.getProject();
-        Hashtable properties = project.getProperties();
+        Hashtable<String, Object> properties = project.getProperties();
 
         // overlay specified properties file (if any), which overrides project
         // settings
@@ -118,7 +120,7 @@ public class MailLogger extends DefaultLogger {
             }
         }
 
-        for (Enumeration e = fileProperties.keys(); e.hasMoreElements();) {
+        for (Enumeration<?> e = fileProperties.keys(); e.hasMoreElements();) {
             String key = (String) e.nextElement();
             String value = fileProperties.getProperty(key);
             properties.put(key, project.replaceProperties(value));
@@ -298,7 +300,7 @@ public class MailLogger extends DefaultLogger {
      * @exception  Exception  thrown if no default value is specified and the
      *      property is not present in properties.
      */
-    private String getValue(Hashtable properties, String name,
+    private String getValue(Hashtable<String, Object> properties, String name,
                             String defaultValue) throws Exception {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
@@ -371,7 +373,7 @@ public class MailLogger extends DefaultLogger {
             return;
         }
         // convert the replyTo string into a vector of emailaddresses
-        Vector replyToList = vectorizeEmailAddresses(values.replytoList());
+        Vector<EmailAddress> replyToList = vectorizeEmailAddresses(values.replytoList());
         mailer.setHost(values.mailhost());
         mailer.setPort(values.port());
         mailer.setUser(values.user());
@@ -388,17 +390,17 @@ public class MailLogger extends DefaultLogger {
         mailer.setMessage(mymessage);
         mailer.setFrom(new EmailAddress(values.from()));
         mailer.setReplyToList(replyToList);
-        Vector toList = vectorizeEmailAddresses(values.toList());
+        Vector<EmailAddress> toList = vectorizeEmailAddresses(values.toList());
         mailer.setToList(toList);
-        mailer.setCcList(new Vector());
-        mailer.setBccList(new Vector());
-        mailer.setFiles(new Vector());
+        mailer.setCcList(new Vector<EmailAddress>());
+        mailer.setBccList(new Vector<EmailAddress>());
+        mailer.setFiles(new Vector<File>());
         mailer.setSubject(values.subject());
-        mailer.setHeaders(new Vector());
+        mailer.setHeaders(new Vector<Header>());
         mailer.send();
     }
-    private Vector vectorizeEmailAddresses(String listString) {
-        Vector emailList = new Vector();
+    private Vector<EmailAddress> vectorizeEmailAddresses(String listString) {
+        Vector<EmailAddress> emailList = new Vector<EmailAddress>();
         StringTokenizer tokens = new StringTokenizer(listString, ",");
         while (tokens.hasMoreTokens()) {
             emailList.addElement(new EmailAddress(tokens.nextToken()));

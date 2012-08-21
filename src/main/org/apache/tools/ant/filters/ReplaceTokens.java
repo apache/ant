@@ -70,7 +70,7 @@ public final class ReplaceTokens
     private int queueIndex = -1;
 
     /** Hashtable to hold the replacee-replacer pairs (String to String). */
-    private Hashtable hash = new Hashtable();
+    private Hashtable<String, String> hash = new Hashtable<String, String>();
 
     /** Character marking the beginning of a token. */
     private char beginToken = DEFAULT_BEGIN_TOKEN;
@@ -266,7 +266,7 @@ public final class ReplaceTokens
      * @param hash A map (String->String) of token keys to replacement
      * values. Must not be <code>null</code>.
      */
-    private void setTokens(final Hashtable hash) {
+    private void setTokens(final Hashtable<String, String> hash) {
         this.hash = hash;
     }
 
@@ -276,7 +276,7 @@ public final class ReplaceTokens
      * @return a map (String->String) of token keys to replacement
      * values
      */
-    private Hashtable getTokens() {
+    private Hashtable<String, String> getTokens() {
         return hash;
     }
 
@@ -339,7 +339,7 @@ public final class ReplaceTokens
 
     private void makeTokensFromProperties(Resource r) {
         Properties props = getProperties(r);
-        for (Enumeration e = props.keys(); e.hasMoreElements();) {
+        for (Enumeration<?> e = props.keys(); e.hasMoreElements();) {
             String key = (String) e.nextElement();
             String value = props.getProperty(key);
             hash.put(key, value);

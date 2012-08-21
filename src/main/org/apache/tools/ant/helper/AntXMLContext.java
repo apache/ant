@@ -54,7 +54,7 @@ public class AntXMLContext {
      * defined. Project maintains a Hashtable, which is not ordered.
      * This will allow description to know the original order.
      */
-    private Vector targetVector = new Vector();
+    private Vector<Target> targetVector = new Vector<Target>();
 
     /**
      * Parent directory of the build file. Used for resolving entities
@@ -92,7 +92,7 @@ public class AntXMLContext {
     /** The stack of RuntimeConfigurable2 wrapping the
         objects.
     */
-    private Vector wStack = new Vector();
+    private Vector<RuntimeConfigurable> wStack = new Vector<RuntimeConfigurable>();
 
     /**
      * Indicates whether the project tag attributes are to be ignored
@@ -101,11 +101,11 @@ public class AntXMLContext {
     private boolean ignoreProjectTag = false;
 
     /** Keeps track of prefix -> uri mapping during parsing */
-    private Map prefixMapping = new HashMap();
+    private Map<String, List<String>> prefixMapping = new HashMap<String, List<String>>();
 
 
     /** Keeps track of targets in files */
-    private Map currentTargets = null;
+    private Map<String, Target> currentTargets = null;
 
     /**
      * constructor
@@ -253,7 +253,7 @@ public class AntXMLContext {
      * access the stack of wrappers
      * @return the stack of wrappers
      */
-    public Vector getWrapperStack() {
+    public Vector<RuntimeConfigurable> getWrapperStack() {
         return wStack;
     }
 
@@ -302,7 +302,7 @@ public class AntXMLContext {
      * access the vector of targets
      * @return vector of targets
      */
-    public Vector getTargets() {
+    public Vector<Target> getTargets() {
         return targetVector;
     }
 
@@ -362,9 +362,9 @@ public class AntXMLContext {
      * @param uri    a namespace uri
      */
     public void startPrefixMapping(String prefix, String uri) {
-        List list = (List) prefixMapping.get(prefix);
+        List<String> list = prefixMapping.get(prefix);
         if (list == null) {
-            list = new ArrayList();
+            list = new ArrayList<String>();
             prefixMapping.put(prefix, list);
         }
         list.add(uri);
@@ -376,7 +376,7 @@ public class AntXMLContext {
      * @param prefix the namespace prefix
      */
     public void endPrefixMapping(String prefix) {
-        List list = (List) prefixMapping.get(prefix);
+        List<String> list = prefixMapping.get(prefix);
         if (list == null || list.size() == 0) {
             return; // Should not happen
         }
@@ -390,7 +390,7 @@ public class AntXMLContext {
      * @return the uri for this prefix, null if not present
      */
     public String getPrefixMapping(String prefix) {
-        List list = (List) prefixMapping.get(prefix);
+        List<String> list = prefixMapping.get(prefix);
         if (list == null || list.size() == 0) {
             return null;
         }
@@ -401,7 +401,7 @@ public class AntXMLContext {
      * Get the targets in the current source file.
      * @return the current targets.
      */
-    public Map getCurrentTargets() {
+    public Map<String, Target> getCurrentTargets() {
         return currentTargets;
     }
 
@@ -409,7 +409,7 @@ public class AntXMLContext {
      * Set the map of the targets in the current source file.
      * @param currentTargets a map of targets.
      */
-    public void setCurrentTargets(Map currentTargets) {
+    public void setCurrentTargets(Map<String, Target> currentTargets) {
         this.currentTargets = currentTargets;
     }
 

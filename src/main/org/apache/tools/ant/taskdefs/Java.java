@@ -76,7 +76,7 @@ public class Java extends Task {
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
-    private static final String TIMEOUT_MESSAGE = 
+    private static final String TIMEOUT_MESSAGE =
         "Timeout: killed the sub-process";
 
     /**
@@ -896,12 +896,12 @@ public class Java extends Task {
      * @param args  arguments for the class.
      * @throws BuildException in case of IOException in the execution.
      */
-    protected void run(String classname, Vector args) throws BuildException {
+    protected void run(String classname, Vector<String> args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname(classname);
         final int size = args.size();
         for (int i = 0; i < size; i++) {
-            cmdj.createArgument().setValue((String) args.elementAt(i));
+            cmdj.createArgument().setValue(args.elementAt(i));
         }
         run(cmdj);
     }

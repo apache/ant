@@ -34,7 +34,6 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -142,7 +141,7 @@ public class ImportTask extends Task {
             throw new BuildException("import requires support in ProjectHelper");
         }
 
-        Vector importStack = helper.getImportStack();
+        Vector<Object> importStack = helper.getImportStack();
 
         if (importStack.size() == 0) {
             // this happens if ant is used with a project
@@ -166,7 +165,7 @@ public class ImportTask extends Task {
 
     private void importResource(ProjectHelper helper,
                                 Resource importedResource) {
-        Vector importStack = helper.getImportStack();
+        Vector<Object> importStack = helper.getImportStack();
 
         getProject().log("Importing file " + importedResource + " from "
                          + getLocation().getFileName(), Project.MSG_VERBOSE);
@@ -290,7 +289,7 @@ public class ImportTask extends Task {
 
     /**
      * Sets a bunch of Thread-local ProjectHelper properties.
-     * 
+     *
      * @since Ant 1.8.0
      */
     private static void setProjectHelperProps(String prefix,

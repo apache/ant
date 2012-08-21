@@ -41,7 +41,7 @@ public class Apt
     private boolean compile = true;
     private String factory;
     private Path factoryPath;
-    private Vector options = new Vector();
+    private Vector<Option> options = new Vector<Option>();
     private File preprocessDir;
     /** The name of the apt tool. */
     public static final String EXECUTABLE_NAME = "apt";
@@ -234,7 +234,7 @@ public class Apt
      * Each option will use '"-E" name ["=" value]' argument.
      * @return the options.
      */
-    public Vector getOptions() {
+    public Vector<Option> getOptions() {
         return options;
     }
 

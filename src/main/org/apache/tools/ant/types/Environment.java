@@ -32,7 +32,7 @@ public class Environment {
      * a vector of type Environment.Variable
      * @see Variable
      */
-    protected Vector variables;
+    protected Vector<Variable> variables;
 
     // CheckStyle:VisibilityModifier ON
 
@@ -135,7 +135,7 @@ public class Environment {
      * constructor
      */
     public Environment() {
-        variables = new Vector();
+        variables = new Vector<Variable>();
     }
 
     /**
@@ -170,7 +170,7 @@ public class Environment {
      * Variable
      * @since Ant 1.7
      */
-    public Vector getVariablesVector() {
+    public Vector<Variable> getVariablesVector() {
         return variables;
     }
 }

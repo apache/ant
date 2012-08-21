@@ -435,10 +435,6 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             push(cs, 0, cs.length);
         }
 
-        public void push(String s) {
-            push(s.toCharArray());
-        }
-
         /**
          * Does this filter want to block edits on the last character returned
          * by read()?

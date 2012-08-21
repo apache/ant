@@ -855,7 +855,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            BuildException being thrown during configuration.
          */
         public void init(String propType, AttributeList attrs) throws SAXParseException {
-            Class parentClass = parent.getClass();
+            Class<?> parentClass = parent.getClass();
             IntrospectionHelper ih = IntrospectionHelper.getHelper(helperImpl.project, parentClass);
 
             try {

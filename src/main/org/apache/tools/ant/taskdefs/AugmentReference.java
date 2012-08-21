@@ -32,7 +32,7 @@ public class AugmentReference extends Task implements TypeAdapter {
     /**
      * {@inheritDoc}
      */
-    public void checkProxyClass(Class proxyClass) {
+    public void checkProxyClass(Class<?> proxyClass) {
     }
 
     /**

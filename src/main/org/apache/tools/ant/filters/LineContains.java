@@ -55,7 +55,7 @@ public final class LineContains
     private static final String NEGATE_KEY = "negate";
 
     /** Vector that holds the strings that input lines must contain. */
-    private Vector contains = new Vector();
+    private Vector<String> contains = new Vector<String>();
 
     /**
      * Remaining line to be read from this filter, or <code>null</code> if
@@ -163,7 +163,7 @@ public final class LineContains
      * @param contains A vector of words which must be contained within a line
      * in order for it to match in this filter. Must not be <code>null</code>.
      */
-    private void setContains(final Vector contains) {
+    private void setContains(final Vector<String> contains) {
         this.contains = contains;
     }
 
@@ -176,7 +176,7 @@ public final class LineContains
      * returned object is "live" - in other words, changes made to the
      * returned object are mirrored in the filter.
      */
-    private Vector getContains() {
+    private Vector<String> getContains() {
         return contains;
     }
 

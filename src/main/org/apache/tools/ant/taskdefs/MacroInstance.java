@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.property.LocalProperties;
+import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
 
 /**
  * The class to be placed in the ant type definition.
@@ -48,13 +50,13 @@ import org.apache.tools.ant.property.LocalProperties;
  */
 public class MacroInstance extends Task implements DynamicAttribute, TaskContainer {
     private MacroDef macroDef;
-    private Map      map = new HashMap();
-    private Map      nsElements = null;
-    private Map      presentElements;
-    private Hashtable localAttributes;
+    private Map<String, String>      map = new HashMap<String, String>();
+    private Map<String, MacroDef.TemplateElement>      nsElements = null;
+    private Map<String, UnknownElement>      presentElements;
+    private Hashtable<String, String> localAttributes;
     private String    text = null;
     private String    implicitTag =     null;
-    private List      unknownElements = new ArrayList();
+    private List<Task>      unknownElements = new ArrayList<Task>();
 
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
@@ -93,20 +95,18 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         throw new BuildException("Not implemented any more");
     }
 
-    private Map getNsElements() {
+    private Map<String, MacroDef.TemplateElement> getNsElements() {
         if (nsElements == null) {
-            nsElements = new HashMap();
-            for (Iterator i = macroDef.getElements().entrySet().iterator();
-                 i.hasNext();) {
-                Map.Entry entry = (Map.Entry) i.next();
-                nsElements.put((String) entry.getKey(),
-                               entry.getValue());
-                MacroDef.TemplateElement te = (MacroDef.TemplateElement)
-                    entry.getValue();
-                if (te.isImplicit()) {
-                    implicitTag = te.getName();
-                }
+            nsElements = new HashMap<String, MacroDef.TemplateElement>();
+            for (Entry<String, MacroDef.TemplateElement> entry : macroDef.getElements().entrySet()) {
+            nsElements.put((String) entry.getKey(),
+                           entry.getValue());
+            MacroDef.TemplateElement te = (MacroDef.TemplateElement)
+                entry.getValue();
+            if (te.isImplicit()) {
+                implicitTag = te.getName();
             }
+         }
         }
         return nsElements;
     }
@@ -124,7 +124,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         if (implicitTag != null) {
             return;
         }
-        for (Iterator i = unknownElements.iterator(); i.hasNext();) {
+        for (Iterator<Task> i = unknownElements.iterator(); i.hasNext();) {
             UnknownElement ue = (UnknownElement) i.next();
             String name = ProjectHelper.extractNameFromComponentName(
                 ue.getTag()).toLowerCase(Locale.ENGLISH);
@@ -142,7 +142,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * Embedded element in macro instance
      */
     public static class Element implements TaskContainer {
-        private List unknownElements = new ArrayList();
+        private List<Task> unknownElements = new ArrayList<Task>();
 
         /**
          * Add an unknown element (to be snipped into the macroDef instance)
@@ -156,7 +156,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         /**
          * @return the list of unknown elements
          */
-        public List getUnknownElements() {
+        public List<Task> getUnknownElements() {
             return unknownElements;
         }
     }
@@ -165,7 +165,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
     private static final int STATE_EXPECT_BRACKET = 1;
     private static final int STATE_EXPECT_NAME    = 2;
 
-    private String macroSubs(String s, Map macroMapping) {
+    private String macroSubs(String s, Map<String, String> macroMapping) {
         if (s == null) {
             return null;
         }
@@ -262,26 +262,25 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         RuntimeConfigurable rc = new RuntimeConfigurable(
             ret, ue.getTaskName());
         rc.setPolyType(ue.getWrapper().getPolyType());
-        Map m = ue.getWrapper().getAttributeMap();
-        for (Iterator i = m.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
+        Map<String, Object> m = ue.getWrapper().getAttributeMap();
+        for (Map.Entry<String, Object> entry : m.entrySet()) {
             rc.setAttribute(
-                (String) entry.getKey(),
+                entry.getKey(),
                 macroSubs((String) entry.getValue(), localAttributes));
         }
         rc.addText(macroSubs(ue.getWrapper().getText().toString(),
                              localAttributes));
 
-        Enumeration e = ue.getWrapper().getChildren();
+        Enumeration<RuntimeConfigurable> e = ue.getWrapper().getChildren();
         while (e.hasMoreElements()) {
-            RuntimeConfigurable r = (RuntimeConfigurable) e.nextElement();
+            RuntimeConfigurable r = e.nextElement();
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
             String tag = unknownElement.getTaskType();
             if (tag != null) {
                 tag = tag.toLowerCase(Locale.ENGLISH);
             }
             MacroDef.TemplateElement templateElement =
-                (MacroDef.TemplateElement) getNsElements().get(tag);
+                getNsElements().get(tag);
             if (templateElement == null || nested) {
                 UnknownElement child = copy(unknownElement, nested);
                 rc.addChild(child.getWrapper());
@@ -292,7 +291,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                         "Missing nested elements for implicit element "
                         + templateElement.getName());
                 }
-                for (Iterator i = unknownElements.iterator();
+                for (Iterator<Task> i = unknownElements.iterator();
                      i.hasNext();) {
                     UnknownElement child
                         = copy((UnknownElement) i.next(), true);
@@ -315,12 +314,12 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 if (!"".equals(presentText)) {
                     rc.addText(macroSubs(presentText, localAttributes));
                 }
-                List list = presentElement.getChildren();
+                List<UnknownElement> list = presentElement.getChildren();
                 if (list != null) {
-                    for (Iterator i = list.iterator();
+                    for (Iterator<UnknownElement> i = list.iterator();
                          i.hasNext();) {
                         UnknownElement child
-                            = copy((UnknownElement) i.next(), true);
+                            = copy(i.next(), true);
                         rc.addChild(child.getWrapper());
                         ret.addChild(child);
                     }
@@ -337,13 +336,12 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      *
      */
     public void execute() {
-        presentElements = new HashMap();
+        presentElements = new HashMap<String, UnknownElement>();
         getNsElements();
         processTasks();
-        localAttributes = new Hashtable();
-        Set copyKeys = new HashSet(map.keySet());
-        for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
-            MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
+        localAttributes = new Hashtable<String, String>();
+        Set<String> copyKeys = new HashSet<String>(map.keySet());
+        for (Attribute attribute : macroDef.getAttributes()) {
             String value = (String) map.get(attribute.getName());
             if (value == null && "description".equals(attribute.getName())) {
                 value = getDescription();

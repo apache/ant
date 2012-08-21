@@ -57,7 +57,7 @@ public final class LineContainsRegExp
     private static final String CS_KEY = "casesensitive";
 
     /** Vector that holds the expressions that input lines must contain. */
-    private Vector regexps = new Vector();
+    private Vector<RegularExpression> regexps = new Vector<RegularExpression>();
 
     /**
      * Remaining line to be read from this filter, or <code>null</code> if
@@ -155,7 +155,7 @@ public final class LineContainsRegExp
      * within a line in order for it to match in this filter. Must not be
      * <code>null</code>.
      */
-    private void setRegexps(final Vector regexps) {
+    private void setRegexps(final Vector<RegularExpression> regexps) {
         this.regexps = regexps;
     }
 
@@ -169,7 +169,7 @@ public final class LineContainsRegExp
      * filter. The returned object is "live" - in other words, changes made to
      * the returned object are mirrored in the filter.
      */
-    private Vector getRegexps() {
+    private Vector<RegularExpression> getRegexps() {
         return regexps;
     }
 

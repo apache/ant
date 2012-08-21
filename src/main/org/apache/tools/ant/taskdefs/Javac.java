@@ -23,8 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -120,7 +120,7 @@ public class Javac extends MatchingTask {
     protected boolean failOnError = true;
     protected boolean listFiles = false;
     protected File[] compileList = new File[0];
-    private Map/*<String,Long>*/ packageInfos = new HashMap();
+    private Map<String, Long> packageInfos = new HashMap<String, Long>();
     // CheckStyle:VisibilityModifier ON
 
     private String source;
@@ -940,7 +940,7 @@ public class Javac extends MatchingTask {
      */
     protected void resetFileLists() {
         compileList = new File[0];
-        packageInfos = new HashMap();
+        packageInfos = new HashMap<String, Long>();
     }
 
     /**
@@ -984,7 +984,7 @@ public class Javac extends MatchingTask {
         if (adapter instanceof CompilerAdapterExtension) {
             extensions =
                 ((CompilerAdapterExtension) adapter).getSupportedFileExtensions();
-        } 
+        }
 
         if (extensions == null) {
             extensions = new String[] { "java" };
@@ -997,7 +997,7 @@ public class Javac extends MatchingTask {
                 extensions[i] = "*." + extensions[i];
             }
         }
-        return extensions; 
+        return extensions;
     }
 
     /**
@@ -1219,10 +1219,9 @@ public class Javac extends MatchingTask {
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
      */
     private void generateMissingPackageInfoClasses(File dest) throws IOException {
-        for (Iterator i = packageInfos.entrySet().iterator(); i.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String pkg = (String) entry.getKey();
-            Long sourceLastMod = (Long) entry.getValue();
+        for (Entry<String, Long> entry : packageInfos.entrySet()) {
+            String pkg = entry.getKey();
+            Long sourceLastMod = entry.getValue();
             File pkgBinDir = new File(dest, pkg.replace('/', File.separatorChar));
             pkgBinDir.mkdirs();
             File pkgInfoClass = new File(pkgBinDir, "package-info.class");

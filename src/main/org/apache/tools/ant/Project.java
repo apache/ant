@@ -2022,7 +2022,7 @@ public class Project implements ResourceFactory {
      *            Must not be <code>null</code>.
      *
      * @return the reference with the specified ID, or <code>null</code> if
-     *         there is no such reference in the project.
+     *         there is no such reference in the project, with type inference.
      */
     public <T> T getReference(String key) {
         @SuppressWarnings("unchecked")

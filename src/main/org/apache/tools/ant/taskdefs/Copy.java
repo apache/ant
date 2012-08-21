@@ -21,11 +21,9 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -76,9 +74,9 @@ public class Copy extends Task {
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
-    protected Vector rcs = new Vector();
+    protected Vector<ResourceCollection> rcs = new Vector<ResourceCollection>();
     // here to provide API backwards compatibility
-    protected Vector filesets = rcs;
+    protected Vector<ResourceCollection> filesets = rcs;
 
     private boolean enableMultipleMappings = false;
     protected boolean filtering = false;
@@ -89,15 +87,15 @@ public class Copy extends Task {
     protected boolean includeEmpty = true;
     protected boolean failonerror = true;
 
-    protected Hashtable fileCopyMap = new LinkedHashtable();
-    protected Hashtable dirCopyMap = new LinkedHashtable();
-    protected Hashtable completeDirMap = new LinkedHashtable();
+    protected Hashtable<String, String[]> fileCopyMap = new LinkedHashtable<String, String[]>();
+    protected Hashtable<String, String[]> dirCopyMap = new LinkedHashtable<String, String[]>();
+    protected Hashtable<File, File> completeDirMap = new LinkedHashtable<File, File>();
 
     protected Mapper mapperElement = null;
     protected FileUtils fileUtils;
     //CheckStyle:VisibilityModifier ON
-    private Vector filterChains = new Vector();
-    private Vector filterSets = new Vector();
+    private Vector<FilterChain> filterChains = new Vector<FilterChain>();
+    private Vector<FilterSet> filterSets = new Vector<FilterSet>();
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;
@@ -204,7 +202,7 @@ public class Copy extends Task {
      *
      * @return a vector of FilterSet objects.
      */
-    protected Vector getFilterSets() {
+    protected Vector<FilterSet> getFilterSets() {
         return filterSets;
     }
 
@@ -213,7 +211,7 @@ public class Copy extends Task {
      *
      * @return a vector of FilterChain objects.
      */
-    protected Vector getFilterChains() {
+    protected Vector<FilterChain> getFilterChains() {
         return filterChains;
     }
 
@@ -288,7 +286,7 @@ public class Copy extends Task {
 	/**
 	 * Set quiet mode. Used to hide messages when a file or directory to be
 	 * copied does not exist.
-	 * 
+	 *
 	 * @param quiet
 	 *            whether or not to display error messages when a file or
 	 *            directory does not exist. Default is false.
@@ -473,13 +471,13 @@ public class Copy extends Task {
                separate lists and then each list is handled in one go.
             */
 
-            HashMap filesByBasedir = new HashMap();
-            HashMap dirsByBasedir = new HashMap();
-            HashSet baseDirs = new HashSet();
-            ArrayList nonFileResources = new ArrayList();
+            HashMap<File, List<String>> filesByBasedir = new HashMap<File, List<String>>();
+            HashMap<File, List<String>> dirsByBasedir = new HashMap<File, List<String>>();
+            HashSet<File> baseDirs = new HashSet<File>();
+            ArrayList<Resource> nonFileResources = new ArrayList<Resource>();
             final int size = rcs.size();
             for (int i = 0; i < size; i++) {
-                ResourceCollection rc = (ResourceCollection) rcs.elementAt(i);
+                ResourceCollection rc = rcs.elementAt(i);
 
                 // Step (1) - beware of the ZipFileSet
                 if (rc instanceof FileSet && rc.isFilesystemOnly()) {
@@ -577,7 +575,7 @@ public class Copy extends Task {
                 Resource[] nonFiles =
                     (Resource[]) nonFileResources.toArray(new Resource[nonFileResources.size()]);
                 // restrict to out-of-date resources
-                Map map = scan(nonFiles, destDir);
+                Map<Resource, String[]> map = scan(nonFiles, destDir);
                 if (singleResource != null) {
                     map.put(singleResource,
                             new String[] { destFile.getAbsolutePath() });
@@ -645,21 +643,19 @@ public class Copy extends Task {
     }
 
     private void iterateOverBaseDirs(
-        HashSet baseDirs, HashMap dirsByBasedir, HashMap filesByBasedir) {
+        HashSet<File> baseDirs, HashMap<File, List<String>> dirsByBasedir, HashMap<File, List<String>> filesByBasedir) {
 
-        Iterator iter = baseDirs.iterator();
-        while (iter.hasNext()) {
-            File f = (File) iter.next();
-            List files = (List) filesByBasedir.get(f);
-            List dirs = (List) dirsByBasedir.get(f);
+        for (File f : baseDirs) {
+            List<String> files = filesByBasedir.get(f);
+            List<String> dirs = dirsByBasedir.get(f);
 
             String[] srcFiles = new String[0];
             if (files != null) {
-                srcFiles = (String[]) files.toArray(srcFiles);
+                srcFiles = files.toArray(srcFiles);
             }
             String[] srcDirs = new String[0];
             if (dirs != null) {
-                srcDirs = (String[]) dirs.toArray(srcDirs);
+                srcDirs = dirs.toArray(srcDirs);
             }
             scan(f == NULL_FILE_PLACEHOLDER ? null : f, destDir, srcFiles,
                  srcDirs);
@@ -755,7 +751,7 @@ public class Copy extends Task {
      *
      * @since Ant 1.7
      */
-    protected Map scan(Resource[] fromResources, File toDir) {
+    protected Map<Resource, String[]> scan(Resource[] fromResources, File toDir) {
         return buildMap(fromResources, toDir, getMapper());
     }
 
@@ -769,10 +765,10 @@ public class Copy extends Task {
      * @param map     a map of source file to array of destination files.
      */
     protected void buildMap(File fromDir, File toDir, String[] names,
-                            FileNameMapper mapper, Hashtable map) {
+                            FileNameMapper mapper, Hashtable<String, String[]> map) {
         String[] toCopy = null;
         if (forceOverwrite) {
-            Vector v = new Vector();
+            Vector<String> v = new Vector<String>();
             for (int i = 0; i < names.length; i++) {
                 if (mapper.mapFileName(names[i]) != null) {
                     v.addElement(names[i]);
@@ -810,12 +806,12 @@ public class Copy extends Task {
      * @return a map of source resource to array of destination files.
      * @since Ant 1.7
      */
-    protected Map buildMap(Resource[] fromResources, final File toDir,
+    protected Map<Resource, String[]> buildMap(Resource[] fromResources, final File toDir,
                            FileNameMapper mapper) {
-        HashMap map = new HashMap();
+        HashMap<Resource, String[]> map = new HashMap<Resource, String[]>();
         Resource[] toCopy = null;
         if (forceOverwrite) {
-            Vector v = new Vector();
+            Vector<Resource> v = new Vector<Resource>();
             for (int i = 0; i < fromResources.length; i++) {
                 if (mapper.mapFileName(fromResources[i].getName()) != null) {
                     v.addElement(fromResources[i]);
@@ -868,10 +864,9 @@ public class Copy extends Task {
                 + " file" + (fileCopyMap.size() == 1 ? "" : "s")
                 + " to " + destDir.getAbsolutePath());
 
-            Enumeration e = fileCopyMap.keys();
-            while (e.hasMoreElements()) {
-                String fromFile = (String) e.nextElement();
-                String[] toFiles = (String[]) fileCopyMap.get(fromFile);
+            for (Map.Entry<String, String[]> e : fileCopyMap.entrySet()) {
+                String fromFile = e.getKey();
+                String[] toFiles = e.getValue();
 
                 for (int i = 0; i < toFiles.length; i++) {
                     String toFile = toFiles[i];
@@ -889,10 +884,8 @@ public class Copy extends Task {
                             executionFilters
                                 .addFilterSet(getProject().getGlobalFilterSet());
                         }
-                        for (Enumeration filterEnum = filterSets.elements();
-                            filterEnum.hasMoreElements();) {
-                            executionFilters
-                                .addFilterSet((FilterSet) filterEnum.nextElement());
+                        for (FilterSet filterSet : filterSets) {
+                            executionFilters.addFilterSet(filterSet);
                         }
                         fileUtils.copyFile(new File(fromFile), new File(toFile),
                                            executionFilters,
@@ -917,10 +910,8 @@ public class Copy extends Task {
             }
         }
         if (includeEmpty) {
-            Enumeration e = dirCopyMap.elements();
             int createCount = 0;
-            while (e.hasMoreElements()) {
-                String[] dirs = (String[]) e.nextElement();
+            for (String[] dirs : dirCopyMap.values()) {
                 for (int i = 0; i < dirs.length; i++) {
                     File d = new File(dirs[i]);
                     if (!d.exists()) {
@@ -951,34 +942,26 @@ public class Copy extends Task {
      * @param map a map of source resource to array of destination files.
      * @since Ant 1.7
      */
-    protected void doResourceOperations(Map map) {
+    protected void doResourceOperations(Map<Resource, String[]> map) {
         if (map.size() > 0) {
             log("Copying " + map.size()
                 + " resource" + (map.size() == 1 ? "" : "s")
                 + " to " + destDir.getAbsolutePath());
 
-            Iterator iter = map.keySet().iterator();
-            while (iter.hasNext()) {
-                Resource fromResource = (Resource) iter.next();
-                String[] toFiles = (String[]) map.get(fromResource);
-
-                for (int i = 0; i < toFiles.length; i++) {
-                    String toFile = toFiles[i];
-
+            for (Map.Entry<Resource, String[]> e : map.entrySet()) {
+                Resource fromResource = e.getKey();
+                for (String toFile : e.getValue()) {
                     try {
                         log("Copying " + fromResource + " to " + toFile,
                             verbosity);
 
-                        FilterSetCollection executionFilters =
-                            new FilterSetCollection();
+                        FilterSetCollection executionFilters = new FilterSetCollection();
                         if (filtering) {
                             executionFilters
                                 .addFilterSet(getProject().getGlobalFilterSet());
                         }
-                        for (Enumeration filterEnum = filterSets.elements();
-                            filterEnum.hasMoreElements();) {
-                            executionFilters
-                                .addFilterSet((FilterSet) filterEnum.nextElement());
+                        for (FilterSet filterSet : filterSets) {
+                            executionFilters.addFilterSet(filterSet);
                         }
                         ResourceUtils.copyResource(fromResource,
                                                    new FileResource(destDir,
@@ -1032,12 +1015,12 @@ public class Copy extends Task {
      * Adds the given strings to a list contained in the given map.
      * The file is the key into the map.
      */
-    private static void add(File baseDir, String[] names, Map m) {
+    private static void add(File baseDir, String[] names, Map<File, List<String>> m) {
         if (names != null) {
             baseDir = getKeyFile(baseDir);
-            List l = (List) m.get(baseDir);
+            List<String> l = m.get(baseDir);
             if (l == null) {
-                l = new ArrayList(names.length);
+                l = new ArrayList<String>(names.length);
                 m.put(baseDir, l);
             }
             l.addAll(java.util.Arrays.asList(names));
@@ -1048,7 +1031,7 @@ public class Copy extends Task {
      * Adds the given string to a list contained in the given map.
      * The file is the key into the map.
      */
-    private static void add(File baseDir, String name, Map m) {
+    private static void add(File baseDir, String name, Map<File, List<String>> m) {
         if (name != null) {
             add(baseDir, new String[] {name}, m);
         }

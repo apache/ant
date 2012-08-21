@@ -59,7 +59,7 @@ public class ExecuteOn extends ExecTask {
     // switching type to "dir" when we encounter a DirSet that would
     // be more difficult to achieve otherwise.
 
-    protected Vector filesets = new Vector(); // contains AbstractFileSet
+    protected Vector<AbstractFileSet> filesets = new Vector<AbstractFileSet>(); // contains AbstractFileSet
                                               // (both DirSet and FileSet)
     private Union resources = null;
     private boolean relative = false;
@@ -349,12 +349,12 @@ public class ExecuteOn extends ExecTask {
         int totalDirs = 0;
         boolean haveExecuted = false;
         try {
-            Vector fileNames = new Vector();
-            Vector baseDirs = new Vector();
+            Vector<String> fileNames = new Vector<String>();
+            Vector<File> baseDirs = new Vector<File>();
             final int size = filesets.size();
             for (int i = 0; i < size; i++) {
                 String currentType = type;
-                AbstractFileSet fs = (AbstractFileSet) filesets.elementAt(i);
+                AbstractFileSet fs = filesets.elementAt(i);
                 if (fs instanceof DirSet) {
                     if (!FileDirBoth.DIR.equals(type)) {
                         log("Found a nested dirset but type is " + type + ". "
@@ -523,16 +523,16 @@ public class ExecuteOn extends ExecTask {
      */
     protected String[] getCommandline(String[] srcFiles, File[] baseDirs) {
         final char fileSeparator = File.separatorChar;
-        Vector targets = new Vector();
+        Vector<String> targets = new Vector<String>();
         if (targetFilePos != null) {
-            HashSet addedFiles = new HashSet();
+            HashSet<String> addedFiles = new HashSet<String>();
             for (int i = 0; i < srcFiles.length; i++) {
                 String[] subTargets = mapper.mapFileName(srcFiles[i]);
                 if (subTargets != null) {
                     for (int j = 0; j < subTargets.length; j++) {
                         String name = null;
                         if (!relative) {
-                            name = (new File(destDir, subTargets[j])).getAbsolutePath();
+                            name = new File(destDir, subTargets[j]).getAbsolutePath();
                         } else {
                             name = subTargets[j];
                         }
@@ -693,8 +693,8 @@ public class ExecuteOn extends ExecTask {
      * @throws BuildException on other errors.
      * @since Ant 1.6
      */
-    protected void runParallel(Execute exe, Vector fileNames,
-                               Vector baseDirs)
+    protected void runParallel(Execute exe, Vector<String> fileNames,
+                               Vector<File> baseDirs)
         throws IOException, BuildException {
         String[] s = new String[fileNames.size()];
         fileNames.copyInto(s);

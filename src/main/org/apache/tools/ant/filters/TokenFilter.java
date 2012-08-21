@@ -58,7 +58,7 @@ public class TokenFilter extends BaseFilterReader
 
 
     /** string filters */
-    private Vector    filters   = new Vector();
+    private Vector<Filter>    filters   = new Vector<Filter>();
     /** the tokenizer to use on the input stream */
     private Tokenizer tokenizer = null;
     /** the output token termination */
@@ -109,8 +109,8 @@ public class TokenFilter extends BaseFilterReader
             if (line == null) {
                 return -1;
             }
-            for (Enumeration e = filters.elements(); e.hasMoreElements();) {
-                Filter filter = (Filter) e.nextElement();
+            for (Enumeration<Filter> e = filters.elements(); e.hasMoreElements();) {
+                Filter filter = e.nextElement();
                 line = filter.filter(line);
                 if (line == null) {
                     break;

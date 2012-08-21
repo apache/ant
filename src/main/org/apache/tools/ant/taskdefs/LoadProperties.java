@@ -55,13 +55,13 @@ public class LoadProperties extends Task {
     /**
      * Holds filterchains
      */
-    private final Vector filterChains = new Vector();
+    private final Vector<FilterChain> filterChains = new Vector<FilterChain>();
 
     /**
      * Encoding to use for input; defaults to the platform's default encoding.
      */
     private String encoding = null;
-    
+
     /**
      * Prefix for loaded properties.
      */

@@ -22,16 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.MagicNames;
@@ -53,15 +54,12 @@ public abstract class Definer extends DefBase {
      */
     private static final String ANTLIB_XML = "/antlib.xml";
 
-    private static class ResourceStack extends ThreadLocal {
-        public Object initialValue() {
-            return new HashMap();
+    private static final ThreadLocal<Map<URL, Location>> RESOURCE_STACK = new ThreadLocal<Map<URL, Location>>() {
+        protected Map<URL, Location> initialValue() {
+            return new HashMap<URL, Location>();
         }
-        Map getStack() {
-            return (Map) get();
-        }
-    }
-    private static ResourceStack resourceStack = new ResourceStack();
+    };
+
     private String name;
     private String classname;
     private File file;
@@ -74,8 +72,8 @@ public abstract class Definer extends DefBase {
     private   String      adapter;
     private   String      adaptTo;
 
-    private   Class       adapterClass;
-    private   Class       adaptToClass;
+    private   Class<?>       adapterClass;
+    private   Class<?>       adaptToClass;
 
     /**
      * Enumerated type for onError attribute
@@ -243,32 +241,19 @@ public abstract class Definer extends DefBase {
                     + "together with file or resource.";
                 throw new BuildException(msg, getLocation());
             }
-            Enumeration/*<URL>*/ urls = null;
-            if (file != null) {
+            final Enumeration<URL> urls;
+            if (file == null) {
+                urls = resourceToURLs(al);
+            } else {
                 final URL url = fileToURL();
                 if (url == null) {
                     return;
                 }
-                urls = new Enumeration() {
-                    private boolean more = true;
-                    public boolean hasMoreElements() {
-                        return more;
-                    }
-                    public Object nextElement() throws NoSuchElementException {
-                        if (more) {
-                            more = false;
-                            return url;
-                        } else {
-                            throw new NoSuchElementException();
-                        }
-                    }
-                };
-            } else {
-                urls = resourceToURLs(al);
+                urls = Collections.enumeration(Collections.singleton(url));
             }
 
             while (urls.hasMoreElements()) {
-                URL url = (URL) urls.nextElement();
+                URL url = urls.nextElement();
 
                 int fmt = this.format;
                 if (url.toString().toLowerCase(Locale.ENGLISH).endsWith(".xml")) {
@@ -279,19 +264,19 @@ public abstract class Definer extends DefBase {
                     loadProperties(al, url);
                     break;
                 } else {
-                    if (resourceStack.getStack().get(url) != null) {
+                    if (RESOURCE_STACK.get().get(url) != null) {
                         log("Warning: Recursive loading of " + url
                             + " ignored"
                             + " at " + getLocation()
                             + " originally loaded at "
-                            + resourceStack.getStack().get(url),
+                            + RESOURCE_STACK.get().get(url),
                             Project.MSG_WARN);
                     } else {
                         try {
-                            resourceStack.getStack().put(url, getLocation());
+                            RESOURCE_STACK.get().put(url, getLocation());
                             loadAntlib(al, url);
                         } finally {
-                            resourceStack.getStack().remove(url);
+                            RESOURCE_STACK.get().remove(url);
                         }
                     }
                 }
@@ -369,8 +354,8 @@ public abstract class Definer extends DefBase {
         return null;
     }
 
-    private Enumeration/*<URL>*/ resourceToURLs(ClassLoader classLoader) {
-        Enumeration ret;
+    private Enumeration<URL> resourceToURLs(ClassLoader classLoader) {
+        Enumeration<URL> ret;
         try {
             ret = classLoader.getResources(resource);
         } catch (IOException e) {
@@ -416,7 +401,7 @@ public abstract class Definer extends DefBase {
             }
             Properties props = new Properties();
             props.load(is);
-            Enumeration keys = props.keys();
+            Enumeration<?> keys = props.keys();
             while (keys.hasMoreElements()) {
                 name = ((String) keys.nextElement());
                 classname = props.getProperty(name);
@@ -548,7 +533,7 @@ public abstract class Definer extends DefBase {
      *
      * @param adapterClass the class to use to adapt the definition class
      */
-    protected void setAdapterClass(Class adapterClass) {
+    protected void setAdapterClass(Class<?> adapterClass) {
         this.adapterClass = adapterClass;
     }
 
@@ -570,7 +555,7 @@ public abstract class Definer extends DefBase {
      *
      * @param adaptToClass the class for adaptor.
      */
-    protected void setAdaptToClass(Class adaptToClass) {
+    protected void setAdaptToClass(Class<?> adaptToClass) {
         this.adaptToClass = adaptToClass;
     }
 
@@ -585,7 +570,7 @@ public abstract class Definer extends DefBase {
      */
     protected void addDefinition(ClassLoader al, String name, String classname)
         throws BuildException {
-        Class cl = null;
+        Class<?> cl = null;
         try {
             try {
                 name = ProjectHelper.genComponentName(getURI(), name);

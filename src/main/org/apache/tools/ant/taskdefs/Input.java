@@ -218,7 +218,7 @@ public class Input extends Task {
 
         InputRequest request = null;
         if (validargs != null) {
-            Vector accept = StringUtils.split(validargs, ',');
+            Vector<String> accept = StringUtils.split(validargs, ',');
             request = new MultipleChoiceInputRequest(message, accept);
         } else {
             request = new InputRequest(message);

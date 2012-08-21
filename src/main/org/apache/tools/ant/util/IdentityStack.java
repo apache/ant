@@ -23,7 +23,7 @@ import java.util.Stack;
  * Identity Stack.
  * @since Ant 1.7
  */
-public class IdentityStack extends Stack {
+public class IdentityStack<E> extends Stack<E> {
 
     private static final long serialVersionUID = -5555522620060077046L;
 
@@ -32,11 +32,11 @@ public class IdentityStack extends Stack {
      * @param s the Stack to copy; ignored if null.
      * @return an IdentityStack instance.
      */
-    public static IdentityStack getInstance(Stack s) {
+    public static <E> IdentityStack<E> getInstance(Stack<E> s) {
         if (s instanceof IdentityStack) {
-            return (IdentityStack) s;
+            return (IdentityStack<E>) s;
         }
-        IdentityStack result = new IdentityStack();
+        IdentityStack<E> result = new IdentityStack<E>();
         if (s != null) {
             result.addAll(s);
         }
@@ -54,7 +54,7 @@ public class IdentityStack extends Stack {
      * as the bottom element.
      * @param o the bottom element.
      */
-    public IdentityStack(Object o) {
+    public IdentityStack(E o) {
         super();
         push(o);
     }

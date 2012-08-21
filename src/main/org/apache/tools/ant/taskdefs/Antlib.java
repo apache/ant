@@ -113,7 +113,7 @@ public class Antlib extends Task implements TaskContainer {
     //
     private ClassLoader classLoader;
     private String uri = "";
-    private List tasks = new ArrayList();
+    private List<Object> tasks = new ArrayList<Object>();
 
     /**
      * Set the class loader for this antlib.
@@ -155,7 +155,8 @@ public class Antlib extends Task implements TaskContainer {
      * any tasks that derive from Definer.
      */
     public void execute() {
-        for (Iterator i = tasks.iterator(); i.hasNext();) {
+        //TODO handle tasks added via #addTask()
+        for (Iterator<Object> i = tasks.iterator(); i.hasNext();) {
             UnknownElement ue = (UnknownElement) i.next();
             setLocation(ue.getLocation());
             ue.maybeConfigure();

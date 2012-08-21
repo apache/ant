@@ -26,9 +26,9 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -43,7 +43,7 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Runs an external program.
- * 
+ *
  * @since Ant 1.2
  */
 public class Execute {
@@ -68,7 +68,7 @@ public class Execute {
     private boolean useVMLauncher = true;
 
     private static String antWorkingDirectory = System.getProperty("user.dir");
-    private static Map/*<String, String>*/ procEnvironment = null;
+    private static Map<String, String> procEnvironment = null;
 
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
@@ -85,7 +85,7 @@ public class Execute {
     /**
      * Set whether or not you want the process to be spawned.
      * Default is not spawned.
-     * 
+     *
      * @param spawn if true you do not want Ant
      *              to wait for the end of the process.
      *              Has no influence in here, the calling task contains
@@ -101,27 +101,29 @@ public class Execute {
 
     /**
      * Find the list of environment variables for this process.
-     * 
+     *
      * @return a map containing the environment variables.
      * @since Ant 1.8.2
      */
-    public static synchronized Map/*<String,String>*/ getEnvironmentVariables() {
+    public static synchronized Map<String,String> getEnvironmentVariables() {
         if (procEnvironment != null) {
             return procEnvironment;
         }
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)
             && !Os.isFamily("openvms")) {
             try {
-                procEnvironment = (Map) System.class
+                @SuppressWarnings("unchecked")
+                final Map<String, String> cast = (Map<String, String>) System.class
                     .getMethod("getenv", new Class[0])
                     .invoke(null, new Object[0]);
+                procEnvironment = cast;
                 return procEnvironment;
             } catch (Exception x) {
                 x.printStackTrace();
             }
         }
 
-        procEnvironment = new LinkedHashMap();
+        procEnvironment = new LinkedHashMap<String, String>();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Execute exe = new Execute(new PumpStreamHandler(out));
@@ -174,17 +176,15 @@ public class Execute {
 
     /**
      * Find the list of environment variables for this process.
-     * 
+     *
      * @return a vector containing the environment variables.
      * The vector elements are strings formatted like variable = value.
      * @deprecated use #getEnvironmentVariables instead
      */
     @Deprecated
-    public static synchronized Vector getProcEnvironment() {
-        Vector v = new Vector();
-        Iterator it = getEnvironmentVariables().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+    public static synchronized Vector<String> getProcEnvironment() {
+        Vector<String> v = new Vector<String>();
+        for (Entry<String, String> entry : getEnvironmentVariables().entrySet()) {
             v.add(entry.getKey() + "=" + entry.getValue());
         }
         return v;
@@ -194,7 +194,7 @@ public class Execute {
      * This is the operation to get our environment.
      * It is a notorious troublespot pre-Java1.5, and should be approached
      * with extreme caution.
-     * 
+     *
      * @return
      */
     private static String[] getProcEnvCommand() {
@@ -240,7 +240,7 @@ public class Execute {
      * ByteArrayOutputStream#toString doesn't seem to work reliably on
      * OS/390, at least not the way we use it in the execution
      * context.
-     * 
+     *
      * @param bos the output stream that one wants to read.
      * @return the output stream as a string, read with
      * special encodings in the case of z/os and os/400.
@@ -273,7 +273,7 @@ public class Execute {
 
     /**
      * Creates a new execute object.
-     * 
+     *
      * @param streamHandler the stream handler used to handle the input and
      *        output streams of the subprocess.
      */
@@ -283,7 +283,7 @@ public class Execute {
 
     /**
      * Creates a new execute object.
-     * 
+     *
      * @param streamHandler the stream handler used to handle the input and
      *        output streams of the subprocess.
      * @param watchdog a watchdog for the subprocess or <code>null</code>
@@ -302,7 +302,7 @@ public class Execute {
 
     /**
      * Set the stream handler to use.
-     * 
+     *
      * @param streamHandler ExecuteStreamHandler.
      * @since Ant 1.6
      */
@@ -312,7 +312,7 @@ public class Execute {
 
     /**
      * Returns the commandline used to create a subprocess.
-     * 
+     *
      * @return the commandline used to create a subprocess.
      */
     public String[] getCommandline() {
@@ -321,7 +321,7 @@ public class Execute {
 
     /**
      * Sets the commandline of the subprocess to launch.
-     * 
+     *
      * @param commandline the commandline of the subprocess to launch.
      */
     public void setCommandline(String[] commandline) {
@@ -330,7 +330,7 @@ public class Execute {
 
     /**
      * Set whether to propagate the default environment or not.
-     * 
+     *
      * @param newenv whether to propagate the process environment.
      */
     public void setNewenvironment(boolean newenv) {
@@ -339,7 +339,7 @@ public class Execute {
 
     /**
      * Returns the environment used to create a subprocess.
-     * 
+     *
      * @return the environment used to create a subprocess.
      */
     public String[] getEnvironment() {
@@ -349,7 +349,7 @@ public class Execute {
 
     /**
      * Sets the environment variables for the subprocess to launch.
-     * 
+     *
      * @param env array of Strings, each element of which has
      * an environment variable settings in format <em>key=value</em>.
      */
@@ -364,7 +364,7 @@ public class Execute {
      * Windows NT in which case a cmd.exe is spawned,
      * or MRJ and setting user.dir works, or JDK 1.3 and there is
      * official support in java.lang.Runtime.
-     * 
+     *
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
@@ -375,7 +375,7 @@ public class Execute {
 
     /**
      * Return the working directory.
-     * 
+     *
      * @return the directory as a File.
      * @since Ant 1.7
      */
@@ -386,7 +386,7 @@ public class Execute {
 
     /**
      * Set the name of the antRun script using the project's value.
-     * 
+     *
      * @param project the current project.
      * @throws BuildException not clear when it is going to throw an exception, but
      * it is the method's signature.
@@ -400,7 +400,7 @@ public class Execute {
      * the OS's shell. In some cases and operating systems using the shell will
      * allow the shell to perform additional processing such as associating an
      * executable with a script, etc.
-     * 
+     *
      * @param useVMLauncher true if exec should launch through the VM,
      *                   false if the shell should be used to launch the
      *                   command.
@@ -411,7 +411,7 @@ public class Execute {
 
     /**
      * Creates a process that runs a command.
-     * 
+     *
      * @param project the Project, only used for logging purposes, may be null.
      * @param command the command to run.
      * @param env the environment for the command.
@@ -436,7 +436,7 @@ public class Execute {
 
     /**
      * Runs a process defined by the command line and returns its exit status.
-     * 
+     *
      * @return the exit status of the subprocess or <code>INVALID</code>.
      * @exception java.io.IOException The exception is thrown, if launching
      *            of the subprocess failed.
@@ -493,7 +493,7 @@ public class Execute {
     /**
      * Starts a process defined by the command line.
      * Ant will not wait for this process, nor log its output.
-     * 
+     *
      * @throws java.io.IOException The exception is thrown, if launching
      *            of the subprocess failed.
      * @since Ant 1.6
@@ -532,7 +532,7 @@ public class Execute {
 
     /**
      * Wait for a given process.
-     * 
+     *
      * @param process the process one wants to wait for.
      */
     protected void waitFor(Process process) {
@@ -546,7 +546,7 @@ public class Execute {
 
     /**
      * Set the exit value.
-     * 
+     *
      * @param value exit value of the process.
      */
     protected void setExitValue(int value) {
@@ -555,7 +555,7 @@ public class Execute {
 
     /**
      * Query the exit value of the process.
-     * 
+     *
      * @return the exit value or Execute.INVALID if no exit value has
      * been received.
      */
@@ -574,7 +574,7 @@ public class Execute {
      * return 0 if successful (like on any other platform), but this
      * signals a failure on OpenVMS. So if you execute a new Java VM
      * on OpenVMS, you cannot trust this method.</p>
-     * 
+     *
      * @param exitValue the exit value (return code) to be checked.
      * @return <code>true</code> if <code>exitValue</code> signals a failure.
      */
@@ -587,7 +587,7 @@ public class Execute {
 
     /**
      * Did this execute return in a failure.
-     * 
+     *
      * @see #isFailure(int)
      * @return true if and only if the exit code is interpreted as a failure
      * @since Ant1.7
@@ -598,7 +598,7 @@ public class Execute {
 
     /**
      * Test for an untimely death of the process.
-     * 
+     *
      * @return true if a watchdog had to kill the process.
      * @since Ant 1.5
      */
@@ -608,7 +608,7 @@ public class Execute {
 
     /**
      * Patch the current environment with the new values from the user.
-     * 
+     *
      * @return the patched environment.
      */
     private String[] patchEnvironment() {
@@ -618,8 +618,8 @@ public class Execute {
         if (Os.isFamily("openvms")) {
             return env;
         }
-        Map/*<String, String>*/ osEnv =
-            new LinkedHashMap(getEnvironmentVariables());
+        Map<String, String> osEnv =
+            new LinkedHashMap<String, String>(getEnvironmentVariables());
         for (int i = 0; i < env.length; i++) {
             String keyValue = env[i];
             String key = keyValue.substring(0, keyValue.indexOf('='));
@@ -630,8 +630,7 @@ public class Execute {
             if (osEnv.remove(key) == null && environmentCaseInSensitive) {
                 // not found, maybe perform a case insensitive search
 
-                for (Iterator it = osEnv.keySet().iterator(); it.hasNext();) {
-                    String osEnvItem = (String) it.next();
+                for (String osEnvItem : osEnv.keySet()) {
                     // Nb: using default locale as key is a env name
                     if (osEnvItem.toLowerCase().equals(key.toLowerCase())) {
                         // Use the original casiness of the key
@@ -645,18 +644,17 @@ public class Execute {
             osEnv.put(key, keyValue.substring(key.length() + 1));
         }
 
-        ArrayList l = new ArrayList();
-        for (Iterator it = osEnv.entrySet().iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
+        ArrayList<String> l = new ArrayList<String>();
+        for (Entry<String, String> entry : osEnv.entrySet()) {
             l.add(entry.getKey() + "=" + entry.getValue());
         }
-        return (String[]) (l.toArray(new String[osEnv.size()]));
+        return l.toArray(new String[osEnv.size()]);
     }
 
     /**
      * A utility method that runs an external command. Writes the output and
      * error streams of the command to the project log.
-     * 
+     *
      * @param task The task that the command is part of. Used for logging
      * @param cmdline The command to execute.
      * @throws BuildException if the command does not exit successfully.
@@ -683,7 +681,7 @@ public class Execute {
 
     /**
      * Close the streams belonging to the given Process.
-     * 
+     *
      * @param process the <code>Process</code>.
      */
     public static void closeStreams(Process process) {
@@ -703,9 +701,9 @@ public class Execute {
      * multiple equivalence names are mapped to a variable with multiple
      * values separated by a comma (,).
      */
-    private static Map getVMSLogicals(BufferedReader in)
+    private static Map<String, String> getVMSLogicals(BufferedReader in)
         throws IOException {
-        HashMap logicals = new HashMap();
+        HashMap<String, String> logicals = new HashMap<String, String>();
         String logName = null, logValue = null, newLogName;
         String line = null;
         // CheckStyle:MagicNumber OFF

@@ -78,7 +78,7 @@ public class GenerateKey extends Task {
      * A class corresponding to the dname nested element.
      */
     public static class DistinguishedName {
-        private Vector params = new Vector();
+        private Vector<DnameParam> params = new Vector<DnameParam>();
 
         /**
          * Create a param nested element.
@@ -95,7 +95,7 @@ public class GenerateKey extends Task {
          * Get the nested parameters.
          * @return an enumeration of the nested parameters.
          */
-        public Enumeration getParams() {
+        public Enumeration<DnameParam> getParams() {
             return params.elements();
         }
 

@@ -95,7 +95,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     private File destDir = null;
     private File file;
     private FixCrLfFilter filter = new FixCrLfFilter();
-    private Vector fcv = null;
+    private Vector<FilterChain> fcv = null;
 
     /**
      * Encoding to assume for the files
@@ -349,7 +349,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         if (fcv == null) {
             FilterChain fc = new FilterChain();
             fc.add(filter);
-            fcv = new Vector(1);
+            fcv = new Vector<FilterChain>(1);
             fcv.add(fc);
         }
         File tmpFile = FILE_UTILS.createTempFile("fixcrlf", "", null, true, false);
@@ -390,7 +390,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * Deprecated, the functionality has been moved to filters.FixCrLfFilter.
      * @deprecated since 1.7.0.
      */
-    protected class OneLiner implements Enumeration {
+    protected class OneLiner implements Enumeration<Object> {
         private static final int UNDEF = -1;
         private static final int NOTJAVA = 0;
         private static final int LOOKING = 1;

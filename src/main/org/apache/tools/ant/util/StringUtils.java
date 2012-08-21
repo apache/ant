@@ -49,7 +49,7 @@ public final class StringUtils {
      * @param data the string to split up into lines.
      * @return the list of lines available in the string.
      */
-    public static Vector lineSplit(String data) {
+    public static Vector<String> lineSplit(String data) {
         return split(data, '\n');
     }
 
@@ -60,8 +60,8 @@ public final class StringUtils {
      * @param ch the separator character.
      * @return the list of elements.
      */
-    public static Vector split(String data, int ch) {
-        Vector elems = new Vector();
+    public static Vector<String> split(String data, int ch) {
+        Vector<String> elems = new Vector<String>();
         int pos = -1;
         int i = 0;
         while ((pos = data.indexOf(ch, i)) != -1) {

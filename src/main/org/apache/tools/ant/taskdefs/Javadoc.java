@@ -78,7 +78,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 public class Javadoc extends Task {
     // Whether *this VM* is 1.4+ (but also check executable != null).
 
-    private static final boolean JAVADOC_5 = 
+    private static final boolean JAVADOC_5 =
         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
 
     /**
@@ -214,7 +214,7 @@ public class Javadoc extends Task {
     public class DocletInfo extends ExtensionInfo {
 
         /** Collection of doclet parameters. */
-        private Vector params = new Vector();
+        private Vector<DocletParam> params = new Vector<DocletParam>();
 
         /**
          * Create a doclet parameter to be configured by Ant.
@@ -233,7 +233,7 @@ public class Javadoc extends Task {
          *
          * @return an Enumeration of DocletParam instances.
          */
-        public Enumeration getParams() {
+        public Enumeration<DocletParam> getParams() {
             return params.elements();
         }
     }
@@ -366,7 +366,7 @@ public class Javadoc extends Task {
      * task runtime.</p>
      */
     public class ResourceCollectionContainer {
-        private ArrayList rcs = new ArrayList();
+        private ArrayList<ResourceCollection> rcs = new ArrayList<ResourceCollection>();
         /**
          * Add a resource collection to the container.
          * @param rc the collection to add.
@@ -379,7 +379,7 @@ public class Javadoc extends Task {
          * Get an iterator on the collection.
          * @return an iterator.
          */
-        private Iterator iterator() {
+        private Iterator<ResourceCollection> iterator() {
             return rcs.iterator();
         }
     }
@@ -425,9 +425,9 @@ public class Javadoc extends Task {
     private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
-    private Vector sourceFiles = new Vector();
-    private Vector packageNames = new Vector();
-    private Vector excludePackageNames = new Vector(1);
+    private Vector<SourceFile> sourceFiles = new Vector<SourceFile>();
+    private Vector<PackageName> packageNames = new Vector<PackageName>();
+    private Vector<PackageName> excludePackageNames = new Vector<PackageName>(1);
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
@@ -435,9 +435,9 @@ public class Javadoc extends Task {
     private Path bootclasspath = null;
     private String group = null;
     private String packageList = null;
-    private Vector links = new Vector();
-    private Vector groups = new Vector();
-    private Vector tags = new Vector();
+    private Vector<LinkArgument> links = new Vector<LinkArgument>();
+    private Vector<GroupArgument> groups = new Vector<GroupArgument>();
+    private Vector<Object> tags = new Vector<Object>();
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -455,7 +455,7 @@ public class Javadoc extends Task {
 
     private ResourceCollectionContainer nestedSourceFiles
         = new ResourceCollectionContainer();
-    private Vector packageSets = new Vector();
+    private Vector<DirSet> packageSets = new Vector<DirSet>();
 
     /**
      * Work around command line length limit by using an external file
@@ -1450,7 +1450,7 @@ public class Javadoc extends Task {
      */
     public class GroupArgument {
         private Html title;
-        private Vector packages = new Vector();
+        private Vector<PackageName> packages = new Vector<PackageName>();
 
         /** Constructor for GroupArgument */
         public GroupArgument() {
@@ -1662,7 +1662,7 @@ public class Javadoc extends Task {
     public void execute() throws BuildException {
         checkTaskName();
 
-        Vector packagesToDoc = new Vector();
+        Vector<String> packagesToDoc = new Vector<String>();
         Path sourceDirs = new Path(getProject());
 
         checkPackageAndSourcePath();
@@ -1674,7 +1674,8 @@ public class Javadoc extends Task {
         parsePackages(packagesToDoc, sourceDirs);
         checkPackages(packagesToDoc, sourceDirs);
 
-        Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
+        @SuppressWarnings("unchecked")
+        Vector<SourceFile> sourceFilesToDoc = (Vector<SourceFile>) sourceFiles.clone();
         addSourceFiles(sourceFilesToDoc);
 
         checkPackagesToDoc(packagesToDoc, sourceFilesToDoc);
@@ -1799,7 +1800,7 @@ public class Javadoc extends Task {
         }
     }
 
-    private void checkPackages(Vector packagesToDoc, Path sourceDirs) {
+    private void checkPackages(Vector<String> packagesToDoc, Path sourceDirs) {
         if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
             String msg = "sourcePath attribute must be set when "
                 + "specifying package names.";
@@ -1808,7 +1809,7 @@ public class Javadoc extends Task {
     }
 
     private void checkPackagesToDoc(
-        Vector packagesToDoc, Vector sourceFilesToDoc) {
+        Vector<String> packagesToDoc, Vector<SourceFile> sourceFilesToDoc) {
         if (packageList == null && packagesToDoc.size() == 0
             && sourceFilesToDoc.size() == 0) {
             throw new BuildException("No source files and no packages have "
@@ -1880,9 +1881,9 @@ public class Javadoc extends Task {
                         toExecute.createArgument().setPath(docletPath);
                     }
                 }
-                for (Enumeration e = doclet.getParams();
+                for (Enumeration<DocletParam> e = doclet.getParams();
                      e.hasMoreElements();) {
-                    DocletParam param = (DocletParam) e.nextElement();
+                    DocletParam param = e.nextElement();
                     if (param.getName() == null) {
                         throw new BuildException("Doclet parameters must "
                                                  + "have a name");
@@ -1952,8 +1953,8 @@ public class Javadoc extends Task {
 
     private void doLinks(Commandline toExecute) {
         if (links.size() != 0) {
-            for (Enumeration e = links.elements(); e.hasMoreElements();) {
-                LinkArgument la = (LinkArgument) e.nextElement();
+            for (Enumeration<LinkArgument> e = links.elements(); e.hasMoreElements();) {
+                LinkArgument la = e.nextElement();
 
                 if (la.getHref() == null || la.getHref().length() == 0) {
                     log("No href was given for the link - skipping",
@@ -2065,8 +2066,8 @@ public class Javadoc extends Task {
     // add the group arguments
     private void doGroups(Commandline toExecute) {
         if (groups.size() != 0) {
-            for (Enumeration e = groups.elements(); e.hasMoreElements();) {
-                GroupArgument ga = (GroupArgument) e.nextElement();
+            for (Enumeration<GroupArgument> e = groups.elements(); e.hasMoreElements();) {
+                GroupArgument ga = e.nextElement();
                 String title = ga.getTitle();
                 String packages = ga.getPackages();
                 if (title == null || packages == null) {
@@ -2083,7 +2084,7 @@ public class Javadoc extends Task {
 
     // Do java1.4 arguments
     private void doJava14(Commandline toExecute) {
-        for (Enumeration e = tags.elements(); e.hasMoreElements();) {
+        for (Enumeration<Object> e = tags.elements(); e.hasMoreElements();) {
             Object element = e.nextElement();
             if (element instanceof TagArgument) {
                 TagArgument ta = (TagArgument) element;
@@ -2170,15 +2171,13 @@ public class Javadoc extends Task {
 
     private void doSourceAndPackageNames(
         Commandline toExecute,
-        Vector packagesToDoc,
-        Vector sourceFilesToDoc,
+        Vector<String> packagesToDoc,
+        Vector<SourceFile> sourceFilesToDoc,
         boolean useExternalFile,
         File    tmpList,
         BufferedWriter srcListWriter)
         throws IOException {
-        Enumeration e = packagesToDoc.elements();
-        while (e.hasMoreElements()) {
-            String packageName = (String) e.nextElement();
+        for (String packageName : packagesToDoc) {
             if (useExternalFile) {
                 srcListWriter.write(packageName);
                 srcListWriter.newLine();
@@ -2187,9 +2186,7 @@ public class Javadoc extends Task {
             }
         }
 
-        e = sourceFilesToDoc.elements();
-        while (e.hasMoreElements()) {
-            SourceFile sf = (SourceFile) e.nextElement();
+        for (SourceFile sf : sourceFilesToDoc) {
             String sourceFileName = sf.getFile().getAbsolutePath();
             if (useExternalFile) {
                 // XXX what is the following doing?
@@ -2288,10 +2285,10 @@ public class Javadoc extends Task {
      *
      * @since 1.7
      */
-    private void addSourceFiles(Vector sf) {
-        Iterator e = nestedSourceFiles.iterator();
+    private void addSourceFiles(Vector<SourceFile> sf) {
+        Iterator<ResourceCollection> e = nestedSourceFiles.iterator();
         while (e.hasNext()) {
-            ResourceCollection rc = (ResourceCollection) e.next();
+            ResourceCollection rc = e.next();
             if (!rc.isFilesystemOnly()) {
                 throw new BuildException("only file system based resources are"
                                          + " supported by javadoc");
@@ -2321,9 +2318,10 @@ public class Javadoc extends Task {
      *
      * @since 1.5
      */
-    private void parsePackages(Vector pn, Path sp) {
-        HashSet addedPackages = new HashSet();
-        Vector dirSets = (Vector) packageSets.clone();
+    private void parsePackages(Vector<String> pn, Path sp) {
+        HashSet<String> addedPackages = new HashSet<String>();
+        @SuppressWarnings("unchecked")
+        Vector<DirSet> dirSets = (Vector<DirSet>) packageSets.clone();
 
         // for each sourcePath entry, add a directoryset with includes
         // taken from packagenames attribute and nested package
@@ -2333,9 +2331,9 @@ public class Javadoc extends Task {
             PatternSet ps = new PatternSet();
             ps.setProject(getProject());
             if (packageNames.size() > 0) {
-                Enumeration e = packageNames.elements();
+                Enumeration<PackageName> e = packageNames.elements();
                 while (e.hasMoreElements()) {
-                    PackageName p = (PackageName) e.nextElement();
+                    PackageName p = e.nextElement();
                     String pkg = p.getName().replace('.', '/');
                     if (pkg.endsWith("*")) {
                         pkg += "*";
@@ -2346,9 +2344,9 @@ public class Javadoc extends Task {
                 ps.createInclude().setName("**");
             }
 
-            Enumeration e = excludePackageNames.elements();
+            Enumeration<PackageName> e = excludePackageNames.elements();
             while (e.hasMoreElements()) {
-                PackageName p = (PackageName) e.nextElement();
+                PackageName p = e.nextElement();
                 String pkg = p.getName().replace('.', '/');
                 if (pkg.endsWith("*")) {
                     pkg += "*";
@@ -2374,9 +2372,9 @@ public class Javadoc extends Task {
             }
         }
 
-        Enumeration e = dirSets.elements();
+        Enumeration<DirSet> e = dirSets.elements();
         while (e.hasMoreElements()) {
-            DirSet ds = (DirSet) e.nextElement();
+            DirSet ds = e.nextElement();
             File baseDir = ds.getDir(getProject());
             log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG);
             DirectoryScanner dsc = ds.getDirectoryScanner(getProject());

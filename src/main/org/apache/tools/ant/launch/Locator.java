@@ -113,7 +113,7 @@ public final class Locator {
      *
      * @since Ant 1.6
      */
-    public static File getClassSource(Class c) {
+    public static File getClassSource(Class<?> c) {
         String classResource = c.getName().replace('.', '/') + ".class";
         return getResourceSource(c.getClassLoader(), classResource);
     }

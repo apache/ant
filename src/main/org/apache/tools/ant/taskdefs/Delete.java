@@ -81,8 +81,8 @@ public class Delete extends MatchingTask {
     private static final ResourceSelector EXISTS = new Exists();
 
     private static class ReverseDirs implements ResourceCollection {
-        static final Comparator REVERSE = new Comparator() {
-            public int compare(Object foo, Object bar) {
+        static final Comparator<Comparable<?>> REVERSE = new Comparator<Comparable<?>>() {
+            public int compare(Comparable<?> foo, Comparable<?> bar) {
                 return ((Comparable) foo).compareTo(bar) * -1;
             }
         };
@@ -105,7 +105,7 @@ public class Delete extends MatchingTask {
     // CheckStyle:VisibilityModifier OFF - bc
     protected File file = null;
     protected File dir = null;
-    protected Vector filesets = new Vector();
+    protected Vector<FileSet> filesets = new Vector<FileSet>();
     protected boolean usedMatchingTask = false;
     // by default, remove matching empty dirs
     protected boolean includeEmpty = false;

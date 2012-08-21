@@ -23,6 +23,7 @@ package org.apache.tools.ant.launch;
  * @since Ant 1.6
  */
 public class LaunchException extends Exception {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructs an exception with the given descriptive message.

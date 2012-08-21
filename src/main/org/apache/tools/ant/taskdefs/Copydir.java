@@ -20,8 +20,9 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -41,7 +42,7 @@ public class Copydir extends MatchingTask {
     private boolean filtering = false;
     private boolean flatten = false;
     private boolean forceOverwrite = false;
-    private Hashtable filecopyList = new Hashtable();
+    private Hashtable<String, String> filecopyList = new Hashtable<String, String>();
 
     /**
      * The src attribute
@@ -124,10 +125,9 @@ public class Copydir extends MatchingTask {
                 log("Copying " + filecopyList.size() + " file"
                     + (filecopyList.size() == 1 ? "" : "s")
                     + " to " + destDir.getAbsolutePath());
-                Enumeration e = filecopyList.keys();
-                while (e.hasMoreElements()) {
-                    String fromFile = (String) e.nextElement();
-                    String toFile = (String) filecopyList.get(fromFile);
+                for (Map.Entry<String, String> e : filecopyList.entrySet()) {
+                    String fromFile = e.getKey();
+                    String toFile = e.getValue();
                     try {
                         getProject().copyFile(fromFile, toFile, filtering,
                                          forceOverwrite);

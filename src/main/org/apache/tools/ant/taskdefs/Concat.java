@@ -211,8 +211,8 @@ public class Concat extends Task implements ResourceCollection {
         }
     }
 
-    private interface ReaderFactory {
-        Reader getReader(Object o) throws IOException;
+    private interface ReaderFactory<S> {
+        Reader getReader(S s) throws IOException;
     }
 
     /**
@@ -220,15 +220,15 @@ public class Concat extends Task implements ResourceCollection {
      * The concatentated result can then be filtered as
      * a single stream.
      */
-    private final class MultiReader extends Reader {
+    private final class MultiReader<S> extends Reader {
         private Reader reader = null;
         private int    lastPos = 0;
         private char[] lastChars = new char[eolString.length()];
         private boolean needAddSeparator = false;
-        private Iterator readerSources;
-        private ReaderFactory factory;
+        private Iterator<S> readerSources;
+        private ReaderFactory<S> factory;
 
-        private MultiReader(Iterator readerSources, ReaderFactory factory) {
+        private MultiReader(Iterator<S> readerSources, ReaderFactory<S> factory) {
             this.readerSources = readerSources;
             this.factory = factory;
         }
@@ -389,7 +389,7 @@ public class Concat extends Task implements ResourceCollection {
                 return result;
             }
             Reader resourceReader = getFilteredReader(
-                    new MultiReader(c.iterator(), resourceReaderFactory));
+                    new MultiReader<Resource>(c.iterator(), resourceReaderFactory));
             Reader rdr;
             if (header == null && footer == null) {
                 rdr = resourceReader;
@@ -417,7 +417,7 @@ public class Concat extends Task implements ResourceCollection {
                         readers[pos] = getFilteredReader(readers[pos]);
                     }
                 }
-                rdr = new MultiReader(Arrays.asList(readers).iterator(),
+                rdr = new MultiReader<Reader>(Arrays.asList(readers).iterator(),
                         identityReaderFactory);
             }
             return outputEncoding == null ? new ReaderInputStream(rdr)
@@ -469,7 +469,7 @@ public class Concat extends Task implements ResourceCollection {
     private Resources rc;
 
     /** for filtering the concatenated */
-    private Vector filterChains;
+    private Vector<FilterChain> filterChains;
     /** ignore dates on input files */
     private boolean forceOverwrite = true;
     /** overwrite read-only files */
@@ -490,18 +490,18 @@ public class Concat extends Task implements ResourceCollection {
     /** exposed resource name */
     private String resourceName;
 
-    private ReaderFactory resourceReaderFactory  = new ReaderFactory() {
-        public Reader getReader(Object o) throws IOException {
-            InputStream is = ((Resource) o).getInputStream();
+    private ReaderFactory<Resource> resourceReaderFactory = new ReaderFactory<Resource>() {
+        public Reader getReader(Resource o) throws IOException {
+            InputStream is = o.getInputStream();
             return new BufferedReader(encoding == null
                 ? new InputStreamReader(is)
                 : new InputStreamReader(is, encoding));
         }
     };
 
-    private ReaderFactory identityReaderFactory = new ReaderFactory() {
-        public Reader getReader(Object o) {
-            return (Reader) o;
+    private ReaderFactory<Reader> identityReaderFactory = new ReaderFactory<Reader>() {
+        public Reader getReader(Reader o) {
+            return o;
         }
     };
 
@@ -691,7 +691,7 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void addFilterChain(FilterChain filterChain) {
         if (filterChains == null) {
-            filterChains = new Vector();
+            filterChains = new Vector<FilterChain>();
         }
         filterChains.addElement(filterChain);
     }

@@ -843,17 +843,19 @@ public class Main implements AntMain {
         project.init();
 
         // resolve properties
-        PropertyHelper propertyHelper = (PropertyHelper) PropertyHelper
-                .getPropertyHelper(project);
-        HashMap<Object, Object> props = new HashMap<Object, Object>(definedProps);
+        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        Map raw = new HashMap(definedProps);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> props = raw;
 
         ResolvePropertyMap resolver = new ResolvePropertyMap(project,
                 NOPROPERTIES, propertyHelper.getExpanders());
         resolver.resolveAllProperties(props, null, false);
 
         // set user-define properties
-        for (Entry<Object, Object> ent : props.entrySet()) {
-            String arg = (String) ent.getKey();
+        for (Entry<String, Object> ent : props.entrySet()) {
+            String arg = ent.getKey();
             Object value = ent.getValue();
             project.setUserProperty(arg, String.valueOf(value));
         }

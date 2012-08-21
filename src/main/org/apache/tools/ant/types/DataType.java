@@ -112,7 +112,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
         if (checked || !isReference()) {
             return;
         }
-        dieOnCircularReference(new IdentityStack(this), p);
+        dieOnCircularReference(new IdentityStack<Object>(this), p);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @param project the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(final Stack stack,
+    protected void dieOnCircularReference(final Stack<Object> stack,
                                           final Project project)
         throws BuildException {
 
@@ -144,7 +144,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
         Object o = ref.getReferencedObject(project);
 
         if (o instanceof DataType) {
-            IdentityStack id = IdentityStack.getInstance(stack);
+            IdentityStack<Object> id = IdentityStack.getInstance(stack);
 
             if (id.contains(o)) {
                 throw circularReference();
@@ -166,7 +166,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @throws BuildException on error.
      * @since Ant 1.7
      */
-    public static void invokeCircularReferenceCheck(DataType dt, Stack stk,
+    public static void invokeCircularReferenceCheck(DataType dt, Stack<Object> stk,
                                                     Project p) {
         dt.dieOnCircularReference(stk, p);
     }
@@ -184,7 +184,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @since Ant 1.8.0
      */
     public static void pushAndInvokeCircularReferenceCheck(DataType dt,
-                                                           Stack stk,
+                                                           Stack<Object> stk,
                                                            Project p) {
         stk.push(dt);
         dt.dieOnCircularReference(stk, p);
@@ -223,7 +223,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      */
-    protected Object getCheckedRef(final Class requiredClass,
+    protected <T> T getCheckedRef(final Class<T> requiredClass,
                                    final String dataTypeName) {
         return getCheckedRef(requiredClass, dataTypeName, getProject());
     }
@@ -240,7 +240,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *                        or if <code>project</code> is <code>null</code>.
      * @since Ant 1.7
      */
-    protected Object getCheckedRef(final Class requiredClass,
+    protected <T> T getCheckedRef(final Class<T> requiredClass,
                                    final String dataTypeName, final Project project) {
         if (project == null) {
             throw new BuildException("No Project specified");
@@ -253,7 +253,9 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
         }
-        return o;
+        @SuppressWarnings("unchecked")
+        final T result = (T) o;
+        return result;
     }
 
     /**

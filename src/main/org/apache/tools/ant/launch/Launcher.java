@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.StringTokenizer;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 
@@ -133,7 +132,7 @@ public class Launcher {
      * @param libPathURLs the list of paths to add to
      * @throws MalformedURLException if we can't create a URL
      */
-    private void addPath(String path, boolean getJars, List libPathURLs)
+    private void addPath(String path, boolean getJars, List<URL> libPathURLs)
             throws MalformedURLException {
         StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
         while (tokenizer.hasMoreElements()) {
@@ -190,9 +189,9 @@ public class Launcher {
                 + "ant could not be located (estimated value="+antHome.getAbsolutePath()+")");
         }
 
-        List libPaths = new ArrayList();
+        List<String> libPaths = new ArrayList<String>();
         String cpString = null;
-        List argList = new ArrayList();
+        List<String> argList = new ArrayList<String>();
         String[] newArgs;
         boolean  noUserLib = false;
         boolean  noClassPath = false;
@@ -271,7 +270,7 @@ public class Launcher {
 
         URLClassLoader loader = new URLClassLoader(jars, Launcher.class.getClassLoader());
         Thread.currentThread().setContextClassLoader(loader);
-        Class mainClass = null;
+        Class<?> mainClass = null;
         int exitCode = 0;
         Throwable thrown=null;
         try {
@@ -311,20 +310,19 @@ public class Launcher {
      * @return an array of URLs.
      * @throws MalformedURLException if the URLs  cannot be created.
      */
-    private URL[] getLibPathURLs(String cpString, List libPaths)
+    private URL[] getLibPathURLs(String cpString, List<String> libPaths)
         throws MalformedURLException {
-        List libPathURLs = new ArrayList();
+        List<URL> libPathURLs = new ArrayList<URL>();
 
         if (cpString != null) {
             addPath(cpString, false, libPathURLs);
         }
 
-        for (Iterator i = libPaths.iterator(); i.hasNext();) {
-            String libPath = (String) i.next();
+        for (String libPath : libPaths) {
             addPath(libPath, true, libPathURLs);
         }
 
-        return  (URL[]) libPathURLs.toArray(new URL[libPathURLs.size()]);
+        return libPathURLs.toArray(new URL[libPathURLs.size()]);
     }
 
     /**
