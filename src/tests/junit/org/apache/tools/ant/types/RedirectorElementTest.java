@@ -32,7 +32,7 @@ public class RedirectorElementTest extends BuildFileTest {
 
     public void test1() {
         executeTarget("test1");
-        assertTrue((getProject().getReference("test1")
+        assertTrue((getProject().<Object> getReference("test1")
             instanceof RedirectorElement));
     }
 
