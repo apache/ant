@@ -279,8 +279,8 @@ a=b=
     <delete dir="copytest1dir"/>
     <delete quiet="yes" file="copy.filter.out"/>
     <delete quiet="yes" file="copy.filter.inp"/>
-    <delete dir="${from.dir}"/>
-    <delete dir="${to.dir}"/>
+    <delete dir="${from.dir}" quiet="true" />
+    <delete dir="${to.dir}" quiet="true" />
   </target>
 
 </project>
