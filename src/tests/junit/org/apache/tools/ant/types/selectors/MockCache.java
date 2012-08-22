@@ -54,7 +54,7 @@ public class MockCache implements Cache {
         log(".put("+key+", "+value+")");
         saved = false;
     }
-    public Iterator iterator() {
+    public Iterator<String> iterator() {
         log("iterator()");
         return null;
     }
