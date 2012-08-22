@@ -172,11 +172,11 @@ public final class SelectorUtils {
     /**
      * Tests whether or not a given path matches a given pattern.
      *
-     * If you need to call this method multiple times with the same 
+     * If you need to call this method multiple times with the same
      * pattern you should rather use TokenizedPath
      *
      * @see TokenizedPath
-     * 
+     *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
@@ -192,12 +192,12 @@ public final class SelectorUtils {
 
     /**
      * Tests whether or not a given path matches a given pattern.
-     * 
-     * If you need to call this method multiple times with the same 
+     *
+     * If you need to call this method multiple times with the same
      * pattern you should rather use TokenizedPattern
      *
      * @see TokenizedPattern
-     * 
+     *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
@@ -509,7 +509,7 @@ public final class SelectorUtils {
      *
      * @return a Vector of path elements from the tokenized path
      */
-    public static Vector tokenizePath (String path) {
+    public static Vector<String> tokenizePath(String path) {
         return tokenizePath(path, File.separator);
     }
 
@@ -522,8 +522,8 @@ public final class SelectorUtils {
      * @return a Vector of path elements from the tokenized path
      * @since Ant 1.6
      */
-    public static Vector tokenizePath (String path, String separator) {
-        Vector ret = new Vector();
+    public static Vector<String> tokenizePath(String path, String separator) {
+        Vector<String> ret = new Vector<String>();
         if (FileUtils.isAbsolutePath(path)) {
             String[] s = FILE_UTILS.dissect(path);
             ret.add(s[0]);

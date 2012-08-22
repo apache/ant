@@ -263,7 +263,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *
      * @return an enumerator that goes through each of the selectors
      */
-    public Enumeration selectorElements() {
+    public Enumeration<FileSelector> selectorElements() {
         return fileset.selectorElements();
     }
 

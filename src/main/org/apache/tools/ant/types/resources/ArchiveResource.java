@@ -244,7 +244,7 @@ public abstract class ArchiveResource extends Resource {
 
     /**
      * Validate settings and ensure that the represented "archive entry"
-     * has been established.  
+     * has been established.
      */
     protected final synchronized void checkEntry() throws BuildException {
         dieOnCircularReference();
@@ -277,7 +277,7 @@ public abstract class ArchiveResource extends Resource {
     /**
      * {@inheritDoc}
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
         }

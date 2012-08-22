@@ -203,7 +203,7 @@ public abstract class ResourceDecorator extends Resource {
     /**
      * {@inheritDoc}
      */
-    protected void dieOnCircularReference(final Stack stack,
+    protected void dieOnCircularReference(final Stack<Object> stack,
                                           final Project project)
         throws BuildException {
         if (isChecked()) {

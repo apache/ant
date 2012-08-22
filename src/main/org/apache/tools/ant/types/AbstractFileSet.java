@@ -18,10 +18,11 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.FileScanner;
@@ -62,8 +63,8 @@ public abstract class AbstractFileSet extends DataType
     implements Cloneable, SelectorContainer {
 
     private PatternSet defaultPatterns = new PatternSet();
-    private Vector additionalPatterns = new Vector();
-    private Vector selectors = new Vector();
+    private List<PatternSet> additionalPatterns = new ArrayList<PatternSet>();
+    private List<FileSelector> selectors = new ArrayList<FileSelector>();
 
     private File dir;
     private boolean useDefaultExcludes = true;
@@ -165,7 +166,7 @@ public abstract class AbstractFileSet extends DataType
             throw noChildrenAllowed();
         }
         PatternSet patterns = new PatternSet();
-        additionalPatterns.addElement(patterns);
+        additionalPatterns.add(patterns);
         directoryScanner = null;
         return patterns;
     }
@@ -579,9 +580,7 @@ public abstract class AbstractFileSet extends DataType
         if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
-        Enumeration e = additionalPatterns.elements();
-        while (e.hasMoreElements()) {
-            PatternSet ps = (PatternSet) e.nextElement();
+        for (PatternSet ps : additionalPatterns) {
             if (ps.hasPatterns(getProject())) {
                 return true;
             }
@@ -621,12 +620,12 @@ public abstract class AbstractFileSet extends DataType
      *
      * @return an <code>Enumeration</code> of selectors.
      */
-    public synchronized Enumeration selectorElements() {
+    public synchronized Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
             return getRef(getProject()).selectorElements();
         }
         dieOnCircularReference();
-        return selectors.elements();
+        return Collections.enumeration(selectors);
     }
 
     /**
@@ -638,7 +637,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        selectors.addElement(selector);
+        selectors.add(selector);
         directoryScanner = null;
         setChecked(false);
     }
@@ -844,13 +843,11 @@ public abstract class AbstractFileSet extends DataType
             try {
                 AbstractFileSet fs = (AbstractFileSet) super.clone();
                 fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
-                fs.additionalPatterns = new Vector(additionalPatterns.size());
-                Enumeration e = additionalPatterns.elements();
-                while (e.hasMoreElements()) {
-                    fs.additionalPatterns
-                        .addElement(((PatternSet) e.nextElement()).clone());
+                fs.additionalPatterns = new ArrayList<PatternSet>(additionalPatterns.size());
+                for (PatternSet ps : additionalPatterns) {
+                    fs.additionalPatterns.add((PatternSet) ps.clone());
                 }
-                fs.selectors = new Vector(selectors);
+                fs.selectors = new ArrayList<FileSelector>(selectors);
                 return fs;
             } catch (CloneNotSupportedException e) {
                 throw new BuildException(e);
@@ -898,13 +895,12 @@ public abstract class AbstractFileSet extends DataType
         PatternSet ps = (PatternSet) defaultPatterns.clone();
         final int count = additionalPatterns.size();
         for (int i = 0; i < count; i++) {
-            Object o = additionalPatterns.elementAt(i);
-            ps.append((PatternSet) o, p);
+            ps.append(additionalPatterns.get(i), p);
         }
         return ps;
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -912,14 +908,12 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = selectors.iterator(); i.hasNext(); ) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (FileSelector fileSelector : selectors) {
+                if (fileSelector instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p);
                 }
             }
-            for (Iterator i = additionalPatterns.iterator(); i.hasNext(); ) {
-                PatternSet ps = (PatternSet) i.next();
+            for (PatternSet ps : additionalPatterns) {
                 pushAndInvokeCircularReferenceCheck(ps, stk, p);
             }
             setChecked(true);

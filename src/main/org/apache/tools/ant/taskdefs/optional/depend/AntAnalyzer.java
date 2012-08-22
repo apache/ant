@@ -49,24 +49,24 @@ public class AntAnalyzer extends AbstractAnalyzer {
      * @param classes a vector to be populated with the names of the
      *      dependency classes.
      */
-    protected void determineDependencies(Vector files, Vector classes) {
+    protected void determineDependencies(Vector<File> files, Vector<String> classes) {
         // we get the root classes and build up a set of
         // classes upon which they depend
-        Hashtable dependencies = new Hashtable();
-        Hashtable containers = new Hashtable();
-        Hashtable toAnalyze = new Hashtable();
-        for (Enumeration e = getRootClasses(); e.hasMoreElements();) {
-            String classname = (String) e.nextElement();
+        Hashtable<String, String> dependencies = new Hashtable<String, String>();
+        Hashtable<File, File> containers = new Hashtable<File, File>();
+        Hashtable<String, String> toAnalyze = new Hashtable<String, String>();
+        for (Enumeration<String> e = getRootClasses(); e.hasMoreElements();) {
+            String classname = e.nextElement();
             toAnalyze.put(classname, classname);
         }
 
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 1;
-        Hashtable analyzedDeps = null;
+        Hashtable<String, String> analyzedDeps = null;
         while (toAnalyze.size() != 0 && count++ < maxCount) {
-            analyzedDeps = new Hashtable();
-            for (Enumeration e = toAnalyze.keys(); e.hasMoreElements();) {
-                String classname = (String) e.nextElement();
+            analyzedDeps = new Hashtable<String, String>();
+            for (Enumeration<String> e = toAnalyze.keys(); e.hasMoreElements();) {
+                String classname = e.nextElement();
                 dependencies.put(classname, classname);
                 try {
                     File container = getClassContainer(classname);
@@ -90,10 +90,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                         }
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
-                        Vector dependencyList = classFile.getClassRefs();
-                        Enumeration depEnum = dependencyList.elements();
-                        while (depEnum.hasMoreElements()) {
-                            String dependency = (String) depEnum.nextElement();
+                        for (String dependency : classFile.getClassRefs()) {
                             analyzedDeps.put(dependency, dependency);
                         }
                     } finally {
@@ -110,9 +107,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
             toAnalyze.clear();
 
             // now recover all the dependencies collected and add to the list.
-            Enumeration depsEnum = analyzedDeps.elements();
-            while (depsEnum.hasMoreElements()) {
-                String className = (String) depsEnum.nextElement();
+            for (String className : analyzedDeps.values()) {
                 if (!dependencies.containsKey(className)) {
                     toAnalyze.put(className, className);
                 }
@@ -120,20 +115,18 @@ public class AntAnalyzer extends AbstractAnalyzer {
         }
 
         // pick up the last round of dependencies that were determined
-        Enumeration depsEnum = analyzedDeps.elements();
-        while (depsEnum.hasMoreElements()) {
-            String className = (String) depsEnum.nextElement();
+        for (String className : analyzedDeps.values()) {
             dependencies.put(className, className);
         }
 
         files.removeAllElements();
-        for (Enumeration e = containers.keys(); e.hasMoreElements();) {
-            files.addElement((File) e.nextElement());
+        for (File f : containers.keySet()) {
+            files.add(f);
         }
 
         classes.removeAllElements();
-        for (Enumeration e = dependencies.keys(); e.hasMoreElements();) {
-            classes.addElement((String) e.nextElement());
+        for (String dependency :dependencies.keySet()) {
+            classes.add(dependency);
         }
     }
 

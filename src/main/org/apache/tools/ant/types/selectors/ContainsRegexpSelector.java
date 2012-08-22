@@ -66,7 +66,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer(
+        StringBuilder buf = new StringBuilder(
                 "{containsregexpselector expression: ");
         buf.append(userProvidedExpression);
         buf.append("}");

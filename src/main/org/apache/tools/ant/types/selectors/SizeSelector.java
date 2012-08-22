@@ -75,7 +75,7 @@ public class SizeSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{sizeselector value: ");
+        StringBuilder buf = new StringBuilder("{sizeselector value: ");
         buf.append(sizelimit);
         buf.append("compare: ").append(when.getValue());
         buf.append("}");

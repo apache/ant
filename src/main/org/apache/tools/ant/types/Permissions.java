@@ -21,7 +21,6 @@ package org.apache.tools.ant.types;
 import java.lang.reflect.Constructor;
 import java.security.UnresolvedPermission;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -45,15 +44,15 @@ import org.apache.tools.ant.ExitException;
  */
 public class Permissions {
 
-    private List grantedPermissions = new LinkedList();
-    private List revokedPermissions = new LinkedList();
+    private List<Permission> grantedPermissions = new LinkedList<Permission>();
+    private List<Permission> revokedPermissions = new LinkedList<Permission>();
     private java.security.Permissions granted = null;
     private SecurityManager origSm = null;
     private boolean active = false;
     private boolean delegateToOldSM;
 
     // Mandatory constructor for permission object.
-    private static final Class[] PARAMS = {String.class, String.class};
+    private static final Class<?>[] PARAMS = {String.class, String.class};
 
     /**
      * Create a set of Permissions.  Equivalent to calling
@@ -108,14 +107,12 @@ public class Permissions {
      */
     private void init() throws BuildException {
         granted = new java.security.Permissions();
-        for (Iterator i = revokedPermissions.listIterator(); i.hasNext();) {
-            Permissions.Permission p = (Permissions.Permission) i.next();
+        for (Permissions.Permission p : revokedPermissions) {
             if (p.getClassName() == null) {
                 throw new BuildException("Revoked permission " + p + " does not contain a class.");
             }
         }
-        for (Iterator i = grantedPermissions.listIterator(); i.hasNext();) {
-            Permissions.Permission p = (Permissions.Permission) i.next();
+        for (Permissions.Permission p : grantedPermissions) {
             if (p.getClassName() == null) {
                 throw new BuildException("Granted permission " + p
                         + " does not contain a class.");
@@ -153,12 +150,12 @@ public class Permissions {
         try {
             // First add explicitly already resolved permissions will not be
             // resolved when added as unresolved permission.
-            Class clazz = Class.forName(permission.getClassName());
+            Class<? extends java.security.Permission> clazz = Class.forName(
+                    permission.getClassName()).asSubclass(java.security.Permission.class);
             String name = permission.getName();
             String actions = permission.getActions();
-            Constructor ctr = clazz.getConstructor(PARAMS);
-            return (java.security.Permission) ctr.newInstance(new Object[] {
-                    name, actions });
+            Constructor<? extends java.security.Permission> ctr = clazz.getConstructor(PARAMS);
+            return ctr.newInstance(new Object[] { name, actions });
         } catch (Exception e) {
             // Let the UnresolvedPermission handle it.
             return new UnresolvedPermission(permission.getClassName(),
@@ -232,12 +229,11 @@ public class Permissions {
          * @param perm the permission being checked
          */
         private void checkRevoked(java.security.Permission perm) {
-            for (Iterator i = revokedPermissions.listIterator(); i.hasNext();) {
-                if (((Permissions.Permission) i.next()).matches(perm)) {
+            for (Permissions.Permission revoked : revokedPermissions) {
+                if (revoked.matches(perm)) {
                     throw new SecurityException("Permission " + perm + " was revoked.");
                 }
             }
-
         }
     }
 
@@ -246,14 +242,14 @@ public class Permissions {
         private String className;
         private String name;
         private String actionString;
-        private Set actions;
+        private Set<String> actions;
 
         /**
          * Set the class, mandatory.
          * @param aClass The class name of the permission.
          */
         public void setClass(String aClass) {
-                className = aClass.trim();
+            className = aClass.trim();
         }
 
         /**
@@ -319,7 +315,7 @@ public class Permissions {
                 }
             }
             if (actions != null) {
-                Set as = parseActions(perm.getActions());
+                Set<String> as = parseActions(perm.getActions());
                 int size = as.size();
                 as.removeAll(actions);
                 if (as.size() == size) {
@@ -334,8 +330,8 @@ public class Permissions {
          * Parses the actions into a set of separate strings.
          * @param actions The actions to be parsed.
          */
-        private Set parseActions(String actions) {
-            Set result = new HashSet();
+        private Set<String> parseActions(String actions) {
+            Set<String> result = new HashSet<String>();
             StringTokenizer tk = new StringTokenizer(actions, ",");
             while (tk.hasMoreTokens()) {
                 String item = tk.nextToken().trim();

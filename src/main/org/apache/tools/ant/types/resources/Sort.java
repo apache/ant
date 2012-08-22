@@ -80,12 +80,12 @@ public class Sort extends BaseResourceCollectionWrapper {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
         }
-        
+
         // check nested collection
         super.dieOnCircularReference(stk, p);
 

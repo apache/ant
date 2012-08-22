@@ -53,8 +53,8 @@ public class ZipScanner extends ArchiveScanner {
      * patterns and didn't match any exclude patterns.
      */
     protected void fillMapsFromArchive(Resource src, String encoding,
-                                       Map fileEntries, Map matchFileEntries,
-                                       Map dirEntries, Map matchDirEntries) {
+            Map<String, Resource> fileEntries, Map<String, Resource> matchFileEntries,
+            Map<String, Resource> dirEntries, Map<String, Resource> matchDirEntries) {
         ZipEntry entry = null;
         ZipFile zf = null;
 
@@ -74,9 +74,9 @@ public class ZipScanner extends ArchiveScanner {
             } catch (IOException ex) {
                 throw new BuildException("Problem opening " + srcFile, ex);
             }
-            Enumeration e = zf.getEntries();
+            Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {
-                entry = (ZipEntry) e.nextElement();
+                entry = e.nextElement();
                 Resource r = new ZipResource(srcFile, encoding, entry);
                 String name = entry.getName();
                 if (entry.isDirectory()) {

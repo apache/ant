@@ -40,14 +40,14 @@ public class DependScanner extends DirectoryScanner {
     /**
      * The root classes to drive the search for dependent classes.
      */
-    private Vector rootClasses;
+    private Vector<String> rootClasses;
 
     /**
      * The names of the classes to include in the fileset.
      */
-    private Vector included;
+    private Vector<String> included;
 
-    private Vector additionalBaseDirs = new Vector();
+    private Vector<File> additionalBaseDirs = new Vector<File>();
 
     /**
      * The parent scanner which gives the basic set of files. Only files which
@@ -72,7 +72,7 @@ public class DependScanner extends DirectoryScanner {
      *
      * @param rootClasses the rootClasses to be used for this scan.
      */
-    public synchronized void setRootClasses(Vector rootClasses) {
+    public synchronized void setRootClasses(Vector<String> rootClasses) {
         this.rootClasses = rootClasses;
     }
 
@@ -103,30 +103,31 @@ public class DependScanner extends DirectoryScanner {
      * @exception IllegalStateException when basedir was set incorrectly.
      */
     public synchronized void scan() throws IllegalStateException {
-        included = new Vector();
+        included = new Vector<String>();
         String analyzerClassName = DEFAULT_ANALYZER_CLASS;
         DependencyAnalyzer analyzer = null;
         try {
-            Class analyzerClass = Class.forName(analyzerClassName);
-            analyzer = (DependencyAnalyzer) analyzerClass.newInstance();
+            Class<? extends DependencyAnalyzer> analyzerClass = Class.forName(analyzerClassName)
+                    .asSubclass(DependencyAnalyzer.class);
+            analyzer = analyzerClass.newInstance();
         } catch (Exception e) {
             throw new BuildException("Unable to load dependency analyzer: "
                                      + analyzerClassName, e);
         }
         analyzer.addClassPath(new Path(null, basedir.getPath()));
-        for (Enumeration e = additionalBaseDirs.elements(); e.hasMoreElements();) {
-            File additionalBaseDir = (File) e.nextElement();
+        for (Enumeration<File> e = additionalBaseDirs.elements(); e.hasMoreElements();) {
+            File additionalBaseDir = e.nextElement();
             analyzer.addClassPath(new Path(null, additionalBaseDir.getPath()));
         }
 
-        for (Enumeration e = rootClasses.elements(); e.hasMoreElements();) {
-            String rootClass = (String) e.nextElement();
+        for (Enumeration<String> e = rootClasses.elements(); e.hasMoreElements();) {
+            String rootClass = e.nextElement();
             analyzer.addRootClass(rootClass);
         }
-        Enumeration e = analyzer.getClassDependencies();
+        Enumeration<String> e = analyzer.getClassDependencies();
 
         String[] parentFiles = parentScanner.getIncludedFiles();
-        Hashtable parentSet = new Hashtable();
+        Hashtable<String, String> parentSet = new Hashtable<String, String>();
         for (int i = 0; i < parentFiles.length; ++i) {
             parentSet.put(parentFiles[i], parentFiles[i]);
         }

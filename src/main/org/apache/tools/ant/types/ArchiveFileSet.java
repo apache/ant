@@ -207,6 +207,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      * @since Ant 1.8
      */
+    // TODO is the above true? AFAICT the calls look circular :/
     protected Object getCheckedRef(Project p) {
         return getRef(p);
     }
@@ -475,7 +476,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public Object clone() {
         if (isReference()) {
-            return ((ArchiveFileSet) getRef(getProject())).clone();
+            return getCheckedRef(ArchiveFileSet.class, getDataTypeName(), getProject()).clone();
         }
         return super.clone();
     }
@@ -545,7 +546,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

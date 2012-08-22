@@ -52,7 +52,7 @@ public class PresentSelector extends BaseSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{presentselector targetdir: ");
+        StringBuilder buf = new StringBuilder("{presentselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
         } else {
@@ -108,7 +108,7 @@ public class PresentSelector extends BaseSelector {
         }
         this.map = fileNameMapper;
     }
- 
+
     /**
      * This sets whether to select a file if its dest file is present.
      * It could be a <code>negate</code> boolean, but by doing things

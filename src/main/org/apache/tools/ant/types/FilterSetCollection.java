@@ -17,18 +17,8 @@
  */
 package org.apache.tools.ant.types;
 
-// java io classes
-
-
-
-
-// java util classes
-import java.util.Enumeration;
-import java.util.Vector;
-
-// ant classes
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -38,7 +28,7 @@ import java.util.Vector;
  */
 public class FilterSetCollection {
 
-    private Vector filterSets = new Vector();
+    private List<FilterSet> filterSets = new ArrayList<FilterSet>();
 
     /**
      * Constructor for a FilterSetCollection.
@@ -61,7 +51,7 @@ public class FilterSetCollection {
      * @param filterSet a <code>FilterSet</code> value
      */
     public void addFilterSet(FilterSet filterSet) {
-        filterSets.addElement(filterSet);
+        filterSets.add(filterSet);
     }
 
     /**
@@ -73,8 +63,7 @@ public class FilterSetCollection {
      */
     public String replaceTokens(String line) {
         String replacedLine = line;
-        for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
-            FilterSet filterSet = (FilterSet) e.nextElement();
+        for (FilterSet filterSet : filterSets) {
             replacedLine = filterSet.replaceTokens(replacedLine);
         }
         return replacedLine;
@@ -86,8 +75,7 @@ public class FilterSetCollection {
     * @return   Return true if there are filter in this set otherwise false.
     */
     public boolean hasFilters() {
-        for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
-            FilterSet filterSet = (FilterSet) e.nextElement();
+        for (FilterSet filterSet : filterSets) {
             if (filterSet.hasFilters()) {
                 return true;
             }

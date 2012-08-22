@@ -26,7 +26,7 @@ import java.util.Vector;
  */
 public abstract class ImageOperation extends DataType {
      // CheckStyle:VisibilityModifier OFF - bc
-    protected Vector instructions = new Vector();
+    protected Vector<ImageOperation> instructions = new Vector<ImageOperation>();
      // CheckStyle:VisibilityModifier ON
 
     /**

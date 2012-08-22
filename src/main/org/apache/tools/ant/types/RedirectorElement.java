@@ -18,9 +18,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 import org.apache.tools.ant.Project;
@@ -83,13 +84,13 @@ public class RedirectorElement extends DataType {
     private Mapper errorMapper;
 
     /** input filter chains. */
-    private Vector inputFilterChains = new Vector();
+    private Vector<FilterChain> inputFilterChains = new Vector<FilterChain>();
 
     /** output filter chains. */
-    private Vector outputFilterChains = new Vector();
+    private Vector<FilterChain> outputFilterChains = new Vector<FilterChain>();
 
     /** error filter chains. */
-    private Vector errorFilterChains = new Vector();
+    private Vector<FilterChain> errorFilterChains = new Vector<FilterChain>();
 
     /** The output encoding */
     private String outputEncoding;
@@ -554,7 +555,7 @@ public class RedirectorElement extends DataType {
             return null;
         }
         //remove any null elements
-        ArrayList list = new ArrayList(name.length);
+        ArrayList<File> list = new ArrayList<File>(name.length);
         for (int i = 0; i < name.length; i++) {
             if (name[i] != null) {
                 list.add(getProject().resolveFile(name[i]));
@@ -570,7 +571,7 @@ public class RedirectorElement extends DataType {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -586,12 +587,13 @@ public class RedirectorElement extends DataType {
                     stk.pop();
                 }
             }
-            Vector[] v = new Vector[]
-                {inputFilterChains, outputFilterChains, errorFilterChains};
-            for (int i = 0; i < v.length; i++) {
-                if (v[i] != null) {
-                    for (Iterator fci = v[i].iterator(); fci.hasNext();) {
-                        FilterChain fc = (FilterChain) fci.next();
+            @SuppressWarnings("unchecked")
+            final List<? extends List<FilterChain>> filterChainLists = Arrays
+                    .<List<FilterChain>> asList(inputFilterChains, outputFilterChains,
+                            errorFilterChains);
+            for (List<FilterChain> filterChains : filterChainLists) {
+                if (filterChains != null) {
+                    for (FilterChain fc : filterChains) {
                         pushAndInvokeCircularReferenceCheck(fc, stk, p);
                     }
                 }

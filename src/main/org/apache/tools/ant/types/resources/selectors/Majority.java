@@ -64,8 +64,8 @@ public class Majority
         boolean even = count % 2 == 0;
         int threshold = count / 2;
 
-        for (Iterator i = getSelectors(); i.hasNext();) {
-            if (((ResourceSelector) i.next()).isSelected(r)) {
+        for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
+            if (i.next().isSelected(r)) {
                 ++passed;
                 if (passed > threshold || (even && tie && passed == threshold)) {
                     return true;

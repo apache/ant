@@ -230,8 +230,7 @@ public class Mapper extends DataType implements Cloneable {
         }
 
         try {
-            FileNameMapper m
-                = (FileNameMapper) (getImplementationClass().newInstance());
+            FileNameMapper m = getImplementationClass().newInstance();
             final Project p = getProject();
             if (p != null) {
                 p.setProjectReference(m);
@@ -252,7 +251,7 @@ public class Mapper extends DataType implements Cloneable {
      * @return <code>Class</code>.
      * @throws ClassNotFoundException if the class cannot be found
      */
-    protected Class getImplementationClass() throws ClassNotFoundException {
+    protected Class<? extends FileNameMapper> getImplementationClass() throws ClassNotFoundException {
 
         String cName = this.classname;
         if (type != null) {
@@ -264,7 +263,7 @@ public class Mapper extends DataType implements Cloneable {
             // Memory leak in line below
             : getProject().createClassLoader(classpath);
 
-        return Class.forName(cName, true, loader);
+        return Class.forName(cName, true, loader).asSubclass(FileNameMapper.class);
     }
 
     /**
@@ -275,7 +274,7 @@ public class Mapper extends DataType implements Cloneable {
      * @return the referenced Mapper
      */
     protected Mapper getRef() {
-        return (Mapper) getCheckedRef();
+        return getCheckedRef(Mapper.class, getDataTypeName());
     }
 
     /**

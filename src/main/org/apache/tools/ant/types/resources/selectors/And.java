@@ -47,8 +47,8 @@ public class And extends ResourceSelectorContainer implements ResourceSelector {
      * @return whether the Resource was selected.
      */
     public boolean isSelected(Resource r) {
-        for (Iterator i = getSelectors(); i.hasNext();) {
-            if (!((ResourceSelector) i.next()).isSelected(r)) {
+        for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
+            if (!i.next().isSelected(r)) {
                 return false;
             }
         }

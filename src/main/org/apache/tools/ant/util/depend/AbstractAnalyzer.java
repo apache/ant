@@ -40,15 +40,15 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     private Path classPath = new Path(null);
 
     /** The list of root classes */
-    private final Vector rootClasses = new VectorSet();
+    private final Vector<String> rootClasses = new VectorSet<String>();
 
     /** true if dependencies have been determined */
     private boolean determined = false;
 
     /** the list of File objects that the root classes depend upon */
-    private Vector fileDependencies;
+    private Vector<File> fileDependencies;
     /** the list of java classes the root classes depend upon */
-    private Vector classDependencies;
+    private Vector<String> classDependencies;
 
     /** true if indirect dependencies should be gathered */
     private boolean closure = true;
@@ -77,7 +77,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *
      * @return an enumeration of File instances.
      */
-    public Enumeration getFileDependencies() {
+    public Enumeration<File> getFileDependencies() {
         if (!supportsFileDependencies()) {
             throw new RuntimeException("File dependencies are not supported "
                 + "by this analyzer");
@@ -95,7 +95,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @return an enumeration of Strings, each being the name of a Java
      *      class in dot notation.
      */
-    public Enumeration getClassDependencies() {
+    public Enumeration<String> getClassDependencies() {
         if (!determined) {
             determineDependencies(fileDependencies, classDependencies);
         }
@@ -201,8 +201,8 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     public void reset() {
         rootClasses.removeAllElements();
         determined = false;
-        fileDependencies = new Vector();
-        classDependencies = new Vector();
+        fileDependencies = new Vector<File>();
+        classDependencies = new Vector<String>();
     }
 
     /**
@@ -211,7 +211,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @return an enumeration of Strings, each of which is a class name
      *         for a root class.
      */
-    protected Enumeration getRootClasses() {
+    protected Enumeration<String> getRootClasses() {
         return rootClasses.elements();
     }
 
@@ -233,7 +233,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @param classes a vector of Strings into which the names of classes
      *      upon which the root classes depend should be placed.
      */
-    protected abstract void determineDependencies(Vector files, Vector classes);
+    protected abstract void determineDependencies(Vector<File> files, Vector<String> classes);
 
     /**
      * Indicate if the particular subclass supports file dependency

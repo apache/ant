@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -76,7 +75,7 @@ public class Assertions extends DataType implements Cloneable {
     /**
      * list of type BaseAssertion
      */
-    private ArrayList assertionList = new ArrayList();
+    private ArrayList<BaseAssertion> assertionList = new ArrayList<BaseAssertion>();
 
 
     /**
@@ -163,7 +162,7 @@ public class Assertions extends DataType implements Cloneable {
      * for adding to a command line
      * @param commandList the command line to format
      */
-    public void applyAssertions(List commandList) {
+    public void applyAssertions(List<String> commandList) {
         getProject().log("Applying assertions", Project.MSG_DEBUG);
         Assertions clause = getFinalReference();
         //do the system assertions
@@ -176,9 +175,7 @@ public class Assertions extends DataType implements Cloneable {
         }
 
         //now any inner assertions
-        Iterator it = clause.assertionList.iterator();
-        while (it.hasNext()) {
-            BaseAssertion assertion = (BaseAssertion) it.next();
+        for (BaseAssertion assertion : clause.assertionList) {
             String arg = assertion.toCommand();
             getProject().log("adding assertion " + arg, Project.MSG_DEBUG);
             commandList.add(arg);
@@ -199,9 +196,7 @@ public class Assertions extends DataType implements Cloneable {
         }
 
         //now any inner assertions
-        Iterator it = clause.assertionList.iterator();
-        while (it.hasNext()) {
-            BaseAssertion assertion = (BaseAssertion) it.next();
+        for (BaseAssertion assertion : clause.assertionList) {
             String arg = assertion.toCommand();
             addVmArgument(command, arg);
         }
@@ -212,7 +207,7 @@ public class Assertions extends DataType implements Cloneable {
      * for adding to a command line
      * @param commandIterator list of commands
      */
-    public void applyAssertions(final ListIterator commandIterator) {
+    public void applyAssertions(final ListIterator<String> commandIterator) {
         getProject().log("Applying assertions", Project.MSG_DEBUG);
         Assertions clause = getFinalReference();
         //do the system assertions
@@ -225,9 +220,7 @@ public class Assertions extends DataType implements Cloneable {
         }
 
         //now any inner assertions
-        Iterator it = clause.assertionList.iterator();
-        while (it.hasNext()) {
-            BaseAssertion assertion = (BaseAssertion) it.next();
+        for (BaseAssertion assertion : clause.assertionList) {
             String arg = assertion.toCommand();
             getProject().log("adding assertion " + arg, Project.MSG_DEBUG);
             commandIterator.add(arg);
@@ -254,7 +247,7 @@ public class Assertions extends DataType implements Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
         Assertions that = (Assertions) super.clone();
-        that.assertionList = (ArrayList) assertionList.clone();
+        that.assertionList = new ArrayList<BaseAssertion>(assertionList);
         return that;
     }
 

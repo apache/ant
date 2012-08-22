@@ -71,7 +71,7 @@ public class DateSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{dateselector date: ");
+        StringBuilder buf = new StringBuilder("{dateselector date: ");
         buf.append(dateTime);
         buf.append(" compare: ").append(when.getValue());
         buf.append(" granularity: ");

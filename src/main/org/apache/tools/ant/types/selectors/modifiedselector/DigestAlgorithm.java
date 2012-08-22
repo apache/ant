@@ -197,7 +197,7 @@ public class DigestAlgorithm implements Algorithm {
      * @return some information about this algorithm.
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("<DigestAlgorithm:");
         buf.append("algorithm=").append(algorithm);
         buf.append(";provider=").append(provider);

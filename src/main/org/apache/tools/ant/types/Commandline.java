@@ -20,7 +20,6 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -59,7 +58,7 @@ public class Commandline implements Cloneable {
     /**
      * The arguments of the command
      */
-    private Vector arguments = new Vector();
+    private List<Argument> arguments = new ArrayList<Argument>();
 
     /**
      * the program to execute
@@ -232,7 +231,7 @@ public class Commandline implements Cloneable {
             if (realPos == -1) {
                 realPos = (executable == null ? 0 : 1);
                 for (int i = 0; i < position; i++) {
-                    Argument arg = (Argument) arguments.elementAt(i);
+                    Argument arg = (Argument) arguments.get(i);
                     realPos += arg.getParts().length;
                 }
             }
@@ -306,9 +305,9 @@ public class Commandline implements Cloneable {
     public Argument createArgument(boolean insertAtStart) {
         Argument argument = new Argument();
         if (insertAtStart) {
-            arguments.insertElementAt(argument, 0);
+            arguments.add(0, argument);
         } else {
-            arguments.addElement(argument);
+            arguments.add(argument);
         }
         return argument;
     }
@@ -349,11 +348,9 @@ public class Commandline implements Cloneable {
      * @return the commandline as an array of strings.
      */
     public String[] getCommandline() {
-        List commands = new LinkedList();
-        ListIterator list = commands.listIterator();
-        addCommandToList(list);
-        final String[] result = new String[commands.size()];
-        return (String[]) commands.toArray(result);
+        final List<String> commands = new LinkedList<String>();
+        addCommandToList(commands.listIterator());
+        return commands.toArray(new String[commands.size()]);
     }
 
     /**
@@ -361,7 +358,7 @@ public class Commandline implements Cloneable {
      * @param list the list to add to.
      * @since Ant 1.6
      */
-    public void addCommandToList(ListIterator list) {
+    public void addCommandToList(ListIterator<String> list) {
         if (executable != null) {
             list.add(executable);
         }
@@ -374,10 +371,9 @@ public class Commandline implements Cloneable {
      * @return the arguments as an array of strings.
      */
     public String[] getArguments() {
-        List result = new ArrayList(arguments.size() * 2);
+        List<String> result = new ArrayList<String>(arguments.size() * 2);
         addArgumentsToList(result.listIterator());
-        String [] res = new String[result.size()];
-        return (String[]) result.toArray(res);
+        return result.toArray(new String[result.size()]);
     }
 
     /**
@@ -385,10 +381,10 @@ public class Commandline implements Cloneable {
      * @param list the list of arguments.
      * @since Ant 1.6
      */
-    public void addArgumentsToList(ListIterator list) {
+    public void addArgumentsToList(ListIterator<String> list) {
         final int size = arguments.size();
         for (int i = 0; i < size; i++) {
-            Argument arg = (Argument) arguments.elementAt(i);
+            Argument arg = arguments.get(i);
             String[] s = arg.getParts();
             if (s != null) {
                 for (int j = 0; j < s.length; j++) {
@@ -448,7 +444,7 @@ public class Commandline implements Cloneable {
             return "";
         }
         // path containing one or more elements
-        final StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
         for (int i = 0; i < line.length; i++) {
             if (i > 0) {
                 result.append(' ');
@@ -475,9 +471,9 @@ public class Commandline implements Cloneable {
         final int inQuote = 1;
         final int inDoubleQuote = 2;
         int state = normal;
-        StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
-        Vector v = new Vector();
-        StringBuffer current = new StringBuffer();
+        final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+        final ArrayList<String> result = new ArrayList<String>();
+        final StringBuilder current = new StringBuilder();
         boolean lastTokenHasBeenQuoted = false;
 
         while (tok.hasMoreTokens()) {
@@ -506,8 +502,8 @@ public class Commandline implements Cloneable {
                     state = inDoubleQuote;
                 } else if (" ".equals(nextTok)) {
                     if (lastTokenHasBeenQuoted || current.length() != 0) {
-                        v.addElement(current.toString());
-                        current = new StringBuffer();
+                        result.add(current.toString());
+                        current.setLength(0);
                     }
                 } else {
                     current.append(nextTok);
@@ -517,14 +513,12 @@ public class Commandline implements Cloneable {
             }
         }
         if (lastTokenHasBeenQuoted || current.length() != 0) {
-            v.addElement(current.toString());
+            result.add(current.toString());
         }
         if (state == inQuote || state == inDoubleQuote) {
             throw new BuildException("unbalanced quotes in " + toProcess);
         }
-        String[] args = new String[v.size()];
-        v.copyInto(args);
-        return args;
+        return result.toArray(new String[result.size()]);
     }
 
     /**
@@ -543,7 +537,7 @@ public class Commandline implements Cloneable {
     public Object clone() {
         try {
             Commandline c = (Commandline) super.clone();
-            c.arguments = (Vector) arguments.clone();
+            c.arguments = new ArrayList<Argument>(arguments);
             return c;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
@@ -555,7 +549,7 @@ public class Commandline implements Cloneable {
      */
     public void clear() {
         executable = null;
-        arguments.removeAllElements();
+        arguments.clear();
     }
 
     /**
@@ -563,7 +557,7 @@ public class Commandline implements Cloneable {
      * another operation.
      */
     public void clearArgs() {
-        arguments.removeAllElements();
+        arguments.clear();
     }
 
     /**
@@ -689,7 +683,7 @@ public class Commandline implements Cloneable {
      * @since Ant 1.7
      * @return an Iterator.
      */
-    public Iterator iterator() {
+    public Iterator<Argument> iterator() {
         return arguments.iterator();
     }
 }

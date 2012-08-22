@@ -113,10 +113,10 @@ public class ManifestTask extends Task {
      */
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
-        Enumeration attributeKeys = section.getAttributeKeys();
+        Enumeration<String> attributeKeys = section.getAttributeKeys();
         while (attributeKeys.hasMoreElements()) {
             Attribute attribute = section.getAttribute(
-                (String) attributeKeys.nextElement());
+                attributeKeys.nextElement());
             checkAttribute(attribute);
         }
         nestedManifest.addConfiguredSection(section);
@@ -249,9 +249,9 @@ public class ManifestTask extends Task {
         }
 
         //look for and print warnings
-        for (Enumeration e = nestedManifest.getWarnings();
+        for (Enumeration<String> e = nestedManifest.getWarnings();
                 e.hasMoreElements();) {
-            log("Manifest warning: " + (String) e.nextElement(),
+            log("Manifest warning: " + e.nextElement(),
                     Project.MSG_WARN);
         }
         try {

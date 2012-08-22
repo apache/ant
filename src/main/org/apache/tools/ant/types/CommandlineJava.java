@@ -79,7 +79,7 @@ public class CommandlineJava implements Cloneable {
         /** the system properties. */
         Properties sys = null;
         // CheckStyle:VisibilityModifier ON
-        private Vector propertySets = new Vector();
+        private Vector<PropertySet> propertySets = new Vector<PropertySet>();
 
         /**
          * Get the properties as an array; this is an override of the
@@ -89,13 +89,12 @@ public class CommandlineJava implements Cloneable {
          */
         public String[] getVariables() throws BuildException {
 
-            List definitions = new LinkedList();
-            ListIterator list = definitions.listIterator();
-            addDefinitionsToList(list);
+            List<String> definitions = new LinkedList<String>();
+            addDefinitionsToList(definitions.listIterator());
             if (definitions.size() == 0) {
                 return null;
             } else {
-                return (String[]) definitions.toArray(new String[definitions.size()]);
+                return definitions.toArray(new String[definitions.size()]);
             }
         }
 
@@ -103,7 +102,7 @@ public class CommandlineJava implements Cloneable {
          * Add all definitions (including property sets) to a list.
          * @param listIt list iterator supporting add method.
          */
-        public void addDefinitionsToList(ListIterator listIt) {
+        public void addDefinitionsToList(ListIterator<String> listIt) {
             String[] props = super.getVariables();
             if (props != null) {
                 for (int i = 0; i < props.length; i++) {
@@ -111,7 +110,7 @@ public class CommandlineJava implements Cloneable {
                 }
             }
             Properties propertySetProperties = mergePropertySets();
-            for (Enumeration e = propertySetProperties.keys();
+            for (Enumeration<?> e = propertySetProperties.keys();
                  e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String value = propertySetProperties.getProperty(key);
@@ -138,7 +137,7 @@ public class CommandlineJava implements Cloneable {
             try {
                 sys = System.getProperties();
                 Properties p = new Properties();
-                for (Enumeration e = sys.propertyNames(); e.hasMoreElements();) {
+                for (Enumeration<?> e = sys.propertyNames(); e.hasMoreElements();) {
                     String name = (String) e.nextElement();
                     String value = sys.getProperty(name);
                     if (name != null && value != null) {
@@ -146,8 +145,7 @@ public class CommandlineJava implements Cloneable {
                     }
                 }
                 p.putAll(mergePropertySets());
-                for (Enumeration e = variables.elements(); e.hasMoreElements();) {
-                    Environment.Variable v = (Environment.Variable) e.nextElement();
+                for (Environment.Variable v : variables) {
                     v.validate();
                     p.put(v.getKey(), v.getValue());
                 }
@@ -180,11 +178,12 @@ public class CommandlineJava implements Cloneable {
          * @return a cloned instance of SysProperties.
          * @exception CloneNotSupportedException for signature.
          */
+        @SuppressWarnings("unchecked")
         public Object clone() throws CloneNotSupportedException {
             try {
                 SysProperties c = (SysProperties) super.clone();
-                c.variables = (Vector) variables.clone();
-                c.propertySets = (Vector) propertySets.clone();
+                c.variables = (Vector<Environment.Variable>) variables.clone();
+                c.propertySets = (Vector<PropertySet>) propertySets.clone();
                 return c;
             } catch (CloneNotSupportedException e) {
                 return null;
@@ -215,9 +214,7 @@ public class CommandlineJava implements Cloneable {
          */
         private Properties mergePropertySets() {
             Properties p = new Properties();
-            for (Enumeration e = propertySets.elements();
-                 e.hasMoreElements();) {
-                PropertySet ps = (PropertySet) e.nextElement();
+            for (PropertySet ps : propertySets) {
                 p.putAll(ps.getProperties());
             }
             return p;
@@ -399,12 +396,11 @@ public class CommandlineJava implements Cloneable {
      */
     public String[] getCommandline() {
         //create the list
-        List commands = new LinkedList();
-        final ListIterator listIterator = commands.listIterator();
+        List<String> commands = new LinkedList<String>();
         //fill it
-        addCommandsToList(listIterator);
+        addCommandsToList(commands.listIterator());
         //convert to an array
-        return (String[]) commands.toArray(new String[commands.size()]);
+        return commands.toArray(new String[commands.size()]);
     }
 
     /**
@@ -412,7 +408,7 @@ public class CommandlineJava implements Cloneable {
      * @param listIterator an iterator that supports the add method.
      * @since Ant 1.6
      */
-    private void addCommandsToList(final ListIterator listIterator) {
+    private void addCommandsToList(final ListIterator<String> listIterator) {
         //create the command to run Java, including user specified options
         getActualVMCommand().addCommandToList(listIterator);
         // properties are part of the vm options...

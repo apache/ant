@@ -26,6 +26,7 @@ import java.io.IOException;
  * @since Ant 1.7
  */
 public class ImmutableResourceException extends IOException {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor.

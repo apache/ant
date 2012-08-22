@@ -86,9 +86,9 @@ public class ClassFile {
      *
      * @return a vector of class names which this class references
      */
-    public Vector getClassRefs() {
+    public Vector<String> getClassRefs() {
 
-        Vector classRefs = new Vector();
+        Vector<String> classRefs = new Vector<String>();
 
         final int size = constantPool.size();
         for (int i = 0; i < size; ++i) {
@@ -99,7 +99,7 @@ public class ClassFile {
                 ClassCPInfo classEntry = (ClassCPInfo) entry;
 
                 if (!classEntry.getClassName().equals(className)) {
-                    classRefs.addElement(
+                    classRefs.add(
                         ClassFileUtils.convertSlashName(classEntry.getClassName()));
                 }
             }

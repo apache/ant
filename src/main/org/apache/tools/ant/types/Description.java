@@ -25,7 +25,8 @@ import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.helper.ProjectHelperImpl;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -50,7 +51,7 @@ public class Description extends DataType {
      */
     public void addText(String text) {
 
-        ProjectHelper ph = (ProjectHelper) getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+        ProjectHelper ph = getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
         if (!(ph instanceof ProjectHelperImpl)) {
             // New behavior for delayed task creation. Description
             // will be evaluated in Project.getDescription()
@@ -73,31 +74,23 @@ public class Description extends DataType {
      *         the targets.
      */
     public static String getDescription(Project project) {
-        Vector targets = (Vector) project.getReference(ProjectHelper2.REFID_TARGETS);
+        List<Target> targets = project.getReference(ProjectHelper2.REFID_TARGETS);
         if (targets == null) {
             return null;
         }
-        StringBuffer description = new StringBuffer();
-        final int size = targets.size();
-        for (int i = 0; i < size; i++) {
-            Target t = (Target) targets.elementAt(i);
+        StringBuilder description = new StringBuilder();
+        for (Target t : targets) {
             concatDescriptions(project, t, description);
         }
         return description.toString();
     }
 
     private static void concatDescriptions(Project project, Target t,
-                                           StringBuffer description) {
+                                           StringBuilder description) {
         if (t == null) {
             return;
         }
-        Vector tasks = findElementInTarget(project, t, "description");
-        if (tasks == null) {
-            return;
-        }
-        final int size = tasks.size();
-        for (int i = 0; i < size; i++) {
-            Task task = (Task) tasks.elementAt(i);
+        for (Task task : findElementInTarget(project, t, "description")) {
             if (!(task instanceof UnknownElement)) {
                 continue;
             }
@@ -109,13 +102,12 @@ public class Description extends DataType {
         }
     }
 
-    private static Vector findElementInTarget(Project project,
+    private static List<Task> findElementInTarget(Project project,
                                               Target t, String name) {
-        Task[] tasks = t.getTasks();
-        Vector elems = new Vector();
-        for (int i = 0; i < tasks.length; i++) {
-            if (name.equals(tasks[i].getTaskName())) {
-                elems.addElement(tasks[i]);
+        final List<Task> elems = new ArrayList<Task>();
+        for (Task task : t.getTasks()) {
+            if (name.equals(task.getTaskName())) {
+                elems.add(task);
             }
         }
         return elems;

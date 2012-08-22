@@ -44,8 +44,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @since Ant 1.8.0
  */
 public class ResourceList extends DataType implements ResourceCollection {
-    private final Vector filterChains = new Vector();
-    private final ArrayList textDocuments = new ArrayList();
+    private final Vector<FilterChain> filterChains = new Vector<FilterChain>();
+    private final ArrayList<ResourceCollection> textDocuments = new ArrayList<ResourceCollection>();
     private final Union cachedResources = new Union();
     private volatile boolean cached = false;
     private String encoding = null;
@@ -148,7 +148,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -156,25 +156,22 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator iter = textDocuments.iterator(); iter.hasNext(); ) {
-                Object o = (Object) iter.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (ResourceCollection resourceCollection : textDocuments) {
+                if (resourceCollection instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) resourceCollection, stk, p);
                 }
             }
-            for (Iterator iter = filterChains.iterator(); iter.hasNext(); ) {
-                FilterChain fc = (FilterChain) iter.next();
-                pushAndInvokeCircularReferenceCheck(fc, stk, p);
+            for (FilterChain filterChain : filterChains) {
+                pushAndInvokeCircularReferenceCheck(filterChain, stk, p);
             }
             setChecked(true);
         }
     }
-    
+
     private synchronized ResourceCollection cache() {
         if (!cached) {
             dieOnCircularReference();
-            for (Iterator iter = textDocuments.iterator(); iter.hasNext(); ) {
-                ResourceCollection rc = (ResourceCollection) iter.next();
+            for (ResourceCollection rc : textDocuments) {
                 for (Resource r : rc) {
                     cachedResources.add(read(r));
                 }

@@ -141,7 +141,7 @@ public class ChecksumAlgorithm implements Algorithm {
      * @return some information about this algorithm.
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("<ChecksumAlgorithm:");
         buf.append("algorithm=").append(algorithm);
         buf.append(">");

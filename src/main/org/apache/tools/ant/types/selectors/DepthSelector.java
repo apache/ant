@@ -57,7 +57,7 @@ public class DepthSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{depthselector min: ");
+        StringBuilder buf = new StringBuilder("{depthselector min: ");
         buf.append(min);
         buf.append(" max: ");
         buf.append(max);

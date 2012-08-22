@@ -72,7 +72,7 @@ public class Reverse extends ResourceComparator {
             ? foo.compareTo(bar) : nested.compare(foo, bar));
     }
 
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

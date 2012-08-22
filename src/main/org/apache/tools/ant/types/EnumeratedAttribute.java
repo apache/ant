@@ -67,7 +67,7 @@ public abstract class EnumeratedAttribute {
      * http://issues.apache.org/bugzilla/show_bug.cgi?id=14831</a>
      */
     public static EnumeratedAttribute getInstance(
-        Class/*<? extends EnumeratedAttribute>*/ clazz,
+        Class<? extends EnumeratedAttribute> clazz,
         String value) throws BuildException {
         if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
             throw new BuildException(
@@ -75,7 +75,7 @@ public abstract class EnumeratedAttribute {
         }
         EnumeratedAttribute ea = null;
         try {
-            ea = (EnumeratedAttribute) clazz.newInstance();
+            ea = clazz.newInstance();
         } catch (Exception e) {
             throw new BuildException(e);
         }

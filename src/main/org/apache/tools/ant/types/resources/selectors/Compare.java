@@ -18,7 +18,6 @@
 package org.apache.tools.ant.types.resources.selectors;
 
 import java.util.Stack;
-import java.util.Iterator;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -128,7 +127,7 @@ public class Compare extends DataType implements ResourceSelector {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

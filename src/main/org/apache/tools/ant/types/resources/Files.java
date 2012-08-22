@@ -43,7 +43,7 @@ public class Files extends AbstractSelectorContainer
         = Collections.<Resource>emptySet().iterator();
 
     private PatternSet defaultPatterns = new PatternSet();
-    private Vector additionalPatterns = new Vector();
+    private Vector<PatternSet> additionalPatterns = new Vector<PatternSet>();
 
     private boolean useDefaultExcludes = true;
     private boolean caseSensitive = true;
@@ -357,8 +357,8 @@ public class Files extends AbstractSelectorContainer
         if (hasPatterns(defaultPatterns)) {
             return true;
         }
-        for (Iterator i = additionalPatterns.iterator(); i.hasNext();) {
-            if (hasPatterns((PatternSet) i.next())) {
+        for (PatternSet patternSet : additionalPatterns) {
+            if (hasPatterns(patternSet)) {
                 return true;
             }
         }
@@ -411,10 +411,9 @@ public class Files extends AbstractSelectorContainer
         }
         Files f = (Files) super.clone();
         f.defaultPatterns = (PatternSet) defaultPatterns.clone();
-        f.additionalPatterns = new Vector(additionalPatterns.size());
-        for (Iterator iter = additionalPatterns.iterator(); iter.hasNext();) {
-            PatternSet ps = (PatternSet) iter.next();
-            f.additionalPatterns.add(ps.clone());
+        f.additionalPatterns = new Vector<PatternSet>(additionalPatterns.size());
+        for (PatternSet ps : additionalPatterns) {
+            f.additionalPatterns.add((PatternSet) ps.clone());
         }
         return f;
     }

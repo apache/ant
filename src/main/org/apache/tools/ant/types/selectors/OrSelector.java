@@ -39,7 +39,7 @@ public class OrSelector extends BaseSelectorContainer {
      * @return a string representation of the selector
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (hasSelectors()) {
             buf.append("{orselect: ");
             buf.append(super.toString());
@@ -60,14 +60,11 @@ public class OrSelector extends BaseSelectorContainer {
      */
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
-        Enumeration e = selectorElements();
-        boolean result;
+        Enumeration<FileSelector> e = selectorElements();
 
         // First, check that all elements are correctly configured
         while (e.hasMoreElements()) {
-            result = ((FileSelector) e.nextElement()).isSelected(basedir,
-                    filename, file);
-            if (result) {
+            if (e.nextElement().isSelected(basedir, filename, file)) {
                 return true;
             }
         }

@@ -77,8 +77,8 @@ public class Archives extends DataType
         }
         dieOnCircularReference();
         int total = 0;
-        for (Iterator i = grabArchives(); i.hasNext(); ) {
-            total += ((ResourceCollection) i.next()).size();
+        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext(); ) {
+            total += i.next().size();
         }
         return total;
     }
@@ -173,7 +173,7 @@ public class Archives extends DataType
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

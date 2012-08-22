@@ -46,7 +46,7 @@ public class MajoritySelector extends BaseSelectorContainer {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (hasSelectors()) {
             buf.append("{majorityselect: ");
             buf.append(super.toString());
@@ -81,16 +81,14 @@ public class MajoritySelector extends BaseSelectorContainer {
         validate();
         int yesvotes = 0;
         int novotes = 0;
-        Enumeration e = selectorElements();
-        boolean result;
+        Enumeration<FileSelector> e = selectorElements();
 
         while (e.hasMoreElements()) {
-            result = ((FileSelector) e.nextElement()).isSelected(basedir,
-                    filename, file);
-            if (result) {
-                yesvotes = yesvotes + 1;
+            if (e.nextElement().isSelected(basedir,
+                    filename, file)) {
+                yesvotes++;
             } else {
-                novotes = novotes + 1;
+                novotes++;
             }
         }
         if (yesvotes > novotes) {

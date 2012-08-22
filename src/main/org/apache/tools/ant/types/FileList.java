@@ -19,8 +19,9 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.Iterator;
 
 import org.apache.tools.ant.Project;
@@ -36,7 +37,7 @@ import org.apache.tools.ant.types.resources.FileResourceIterator;
  */
 public class FileList extends DataType implements ResourceCollection {
 
-    private Vector filenames = new Vector();
+    private List<String> filenames = new ArrayList<String>();
     private File dir;
 
     /**
@@ -108,7 +109,7 @@ public class FileList extends DataType implements ResourceCollection {
             StringTokenizer tok = new StringTokenizer(
                 filenames, ", \t\n\r\f", false);
             while (tok.hasMoreTokens()) {
-               this.filenames.addElement(tok.nextToken());
+               this.filenames.add(tok.nextToken());
             }
         }
     }
@@ -131,9 +132,7 @@ public class FileList extends DataType implements ResourceCollection {
             throw new BuildException("No files specified for filelist.");
         }
 
-        String[] result = new String[filenames.size()];
-        filenames.copyInto(result);
-        return result;
+        return filenames.toArray(new String[filenames.size()]);
     }
 
     /**
@@ -180,7 +179,7 @@ public class FileList extends DataType implements ResourceCollection {
             throw new BuildException(
                 "No name specified in nested file element");
         }
-        filenames.addElement(name.getName());
+        filenames.add(name.getName());
     }
 
     /**
@@ -190,10 +189,10 @@ public class FileList extends DataType implements ResourceCollection {
      */
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((FileList) getRef(getProject())).iterator();
+            return getRef(getProject()).iterator();
         }
         return new FileResourceIterator(getProject(), dir,
-            (String[]) (filenames.toArray(new String[filenames.size()])));
+            filenames.toArray(new String[filenames.size()]));
     }
 
     /**

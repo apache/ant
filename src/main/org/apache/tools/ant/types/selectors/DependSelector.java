@@ -42,7 +42,7 @@ public class DependSelector extends MappingSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{dependselector targetdir: ");
+        StringBuilder buf = new StringBuilder("{dependselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
         } else {

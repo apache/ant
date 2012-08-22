@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -37,7 +36,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 public abstract class AbstractSelectorContainer extends DataType
     implements Cloneable, SelectorContainer {
 
-    private Vector selectorsList = new Vector();
+    private Vector<FileSelector> selectorsList = new Vector<FileSelector>();
 
     /**
      * Indicates whether there are any selectors here.
@@ -83,7 +82,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * Returns an enumerator for accessing the set of selectors.
      * @return an enumerator for the selectors
      */
-    public Enumeration selectorElements() {
+    public Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
             return ((AbstractSelectorContainer) getCheckedRef())
                 .selectorElements();
@@ -100,8 +99,8 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return comma separated list of Selectors contained in this one
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
-        Enumeration e = selectorElements();
+        StringBuilder buf = new StringBuilder();
+        Enumeration<FileSelector> e = selectorElements();
         if (e.hasMoreElements()) {
             while (e.hasMoreElements()) {
                 buf.append(e.nextElement().toString());
@@ -148,7 +147,7 @@ public abstract class AbstractSelectorContainer extends DataType
             ((AbstractSelectorContainer) getCheckedRef()).validate();
         }
         dieOnCircularReference();
-        Enumeration e = selectorElements();
+        Enumeration<FileSelector> e = selectorElements();
         while (e.hasMoreElements()) {
             Object o = e.nextElement();
             if (o instanceof BaseSelector) {
@@ -322,17 +321,16 @@ public abstract class AbstractSelectorContainer extends DataType
         appendSelector(selector);
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
         }
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = selectorsList.iterator(); i.hasNext(); ) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (FileSelector fileSelector : selectorsList) {
+                if (fileSelector instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p);
                 }
             }
             setChecked(true);
@@ -346,7 +344,7 @@ public abstract class AbstractSelectorContainer extends DataType
         try {
             AbstractSelectorContainer sc =
                 (AbstractSelectorContainer) super.clone();
-            sc.selectorsList = new Vector(selectorsList);
+            sc.selectorsList = new Vector<FileSelector>(selectorsList);
             return sc;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);

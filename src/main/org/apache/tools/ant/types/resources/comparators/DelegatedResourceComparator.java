@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ import org.apache.tools.ant.types.Resource;
  */
 public class DelegatedResourceComparator extends ResourceComparator {
 
-    private Vector v = null;
+    private List<ResourceComparator> resourceComparators = null;
 
     /**
      * Add a delegate ResourceComparator.
@@ -46,8 +47,8 @@ public class DelegatedResourceComparator extends ResourceComparator {
         if (c == null) {
             return;
         }
-        v = (v == null) ? new Vector() : v;
-        v.add(c);
+        resourceComparators = (resourceComparators == null) ? new Vector<ResourceComparator>() : resourceComparators;
+        resourceComparators.add(c);
         setChecked(false);
     }
 
@@ -67,8 +68,8 @@ public class DelegatedResourceComparator extends ResourceComparator {
         if (!(o instanceof DelegatedResourceComparator)) {
             return false;
         }
-        Vector ov = ((DelegatedResourceComparator) o).v;
-        return v == null ? ov == null : v.equals(ov);
+        List<ResourceComparator> ov = ((DelegatedResourceComparator) o).resourceComparators;
+        return resourceComparators == null ? ov == null : resourceComparators.equals(ov);
     }
 
     /**
@@ -79,18 +80,18 @@ public class DelegatedResourceComparator extends ResourceComparator {
         if (isReference()) {
             return getCheckedRef().hashCode();
         }
-        return v == null ? 0 : v.hashCode();
+        return resourceComparators == null ? 0 : resourceComparators.hashCode();
     }
 
     /** {@inheritDoc} */
     protected synchronized int resourceCompare(Resource foo, Resource bar) {
         //if no nested, natural order:
-        if (v == null || v.isEmpty()) {
+        if (resourceComparators == null || resourceComparators.isEmpty()) {
             return foo.compareTo(bar);
         }
         int result = 0;
-        for (Iterator i = v.iterator(); result == 0 && i.hasNext();) {
-            result = ((ResourceComparator) i.next()).resourceCompare(foo, bar);
+        for (Iterator<ResourceComparator> i = resourceComparators.iterator(); result == 0 && i.hasNext();) {
+            result = i.next().resourceCompare(foo, bar);
         }
         return result;
     }
@@ -102,7 +103,7 @@ s.
      * @param p   the Project to resolve against.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -110,11 +111,10 @@ s.
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            if (!(v == null || v.isEmpty())) {
-                for (Iterator i = v.iterator(); i.hasNext();) {
-                    Object o = i.next();
-                    if (o instanceof DataType) {
-                        pushAndInvokeCircularReferenceCheck((DataType) o, stk,
+            if (!(resourceComparators == null || resourceComparators.isEmpty())) {
+                for (ResourceComparator resourceComparator : resourceComparators) {
+                    if (resourceComparator instanceof DataType) {
+                        pushAndInvokeCircularReferenceCheck((DataType) resourceComparator, stk,
                                                             p);
                     }
                 }

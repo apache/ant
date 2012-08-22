@@ -30,7 +30,7 @@ import java.util.Comparator;
  * @version 2003-09-13
  * @since  Ant 1.6
  */
-public class EqualComparator implements Comparator {
+public class EqualComparator implements Comparator<Object> {
 
     /**
      * Implements Comparator.compare().

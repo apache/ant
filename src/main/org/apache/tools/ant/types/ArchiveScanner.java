@@ -20,7 +20,6 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Iterator;
 
@@ -62,22 +61,22 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     /**
      * record list of all file zip entries
      */
-    private TreeMap fileEntries = new TreeMap();
+    private Map<String, Resource> fileEntries = new TreeMap<String, Resource>();
 
     /**
      * record list of all directory zip entries
      */
-    private TreeMap dirEntries = new TreeMap();
+    private Map<String, Resource> dirEntries = new TreeMap<String, Resource>();
 
     /**
      * record list of matching file zip entries
      */
-    private TreeMap matchFileEntries = new TreeMap();
+    private Map<String, Resource> matchFileEntries = new TreeMap<String, Resource>();
 
     /**
      * record list of matching directory zip entries
      */
-    private TreeMap matchDirEntries = new TreeMap();
+    private Map<String, Resource> matchDirEntries = new TreeMap<String, Resource>();
 
     /**
      * encoding of file names.
@@ -159,8 +158,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
             return super.getIncludedFiles();
         }
         scanme();
-        Set s = matchFileEntries.keySet();
-        return (String[]) (s.toArray(new String[s.size()]));
+        return matchFileEntries.keySet().toArray(new String[matchFileEntries.size()]);
     }
 
     /**
@@ -189,8 +187,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
             return super.getIncludedDirectories();
         }
         scanme();
-        Set s = matchDirEntries.keySet();
-        return (String[]) (s.toArray(new String[s.size()]));
+        return matchDirEntries.keySet().toArray(new String[matchDirEntries.size()]);
     }
 
     /**
@@ -212,7 +209,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    /* package-private for now */ Iterator getResourceFiles(Project project) {
+    /* package-private for now */ Iterator<Resource> getResourceFiles(Project project) {
         if (src == null) {
             return new FileResourceIterator(project, getBasedir(), getIncludedFiles());
         }
@@ -226,7 +223,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
-    /* package-private for now */  Iterator getResourceDirectories(Project project) {
+    /* package-private for now */  Iterator<Resource> getResourceDirectories(Project project) {
         if (src == null) {
             return new FileResourceIterator(project, getBasedir(), getIncludedDirectories());
         }
@@ -280,12 +277,12 @@ public abstract class ArchiveScanner extends DirectoryScanner {
         // first check if the archive needs to be scanned again
         scanme();
         if (fileEntries.containsKey(name)) {
-            return (Resource) fileEntries.get(name);
+            return fileEntries.get(name);
         }
         name = trimSeparator(name);
 
         if (dirEntries.containsKey(name)) {
-            return (Resource) dirEntries.get(name);
+            return dirEntries.get(name);
         }
         return new Resource(name);
     }
@@ -308,10 +305,10 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      */
     protected abstract void fillMapsFromArchive(Resource archive,
                                                 String encoding,
-                                                Map fileEntries,
-                                                Map matchFileEntries,
-                                                Map dirEntries,
-                                                Map matchDirEntries);
+                                                Map<String, Resource> fileEntries,
+                                                Map<String, Resource> matchFileEntries,
+                                                Map<String, Resource> dirEntries,
+                                                Map<String, Resource> matchDirEntries);
 
     /**
      * if the datetime of the archive did not change since

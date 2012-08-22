@@ -232,7 +232,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     protected abstract InputStream openInputStream(ClassLoader cl) throws IOException;
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
         }

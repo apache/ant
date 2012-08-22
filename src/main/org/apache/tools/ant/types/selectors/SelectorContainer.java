@@ -55,7 +55,7 @@ public interface SelectorContainer {
      *
      * @return an enumerator that goes through each of the selectors
      */
-    Enumeration selectorElements();
+    Enumeration<FileSelector> selectorElements();
 
     /**
      * Add a new selector into this container.

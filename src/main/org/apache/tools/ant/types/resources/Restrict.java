@@ -40,8 +40,8 @@ public class Restrict
          * Restrict the nested ResourceCollection based on the nested selectors.
          */
         protected boolean filterResource(Resource r) {
-            for (Iterator i = getSelectors(); i.hasNext();) {
-                if (!((ResourceSelector) (i.next())).isSelected(r)) {
+            for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
+                if (!i.next().isSelected(r)) {
                     return true;
                 }
             }
@@ -140,7 +140,7 @@ public class Restrict
         return w.toString();
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p) {
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
         }

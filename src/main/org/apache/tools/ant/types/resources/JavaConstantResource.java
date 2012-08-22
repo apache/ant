@@ -37,7 +37,7 @@ public class JavaConstantResource extends AbstractClasspathResource {
      * @throws IOException if an error occurs.
      */
     protected InputStream openInputStream(ClassLoader cl) throws IOException {
-        Class clazz;
+        Class<?> clazz;
         String constant = getName();
         int index1 = constant.lastIndexOf('.');
         if (index1 < 0) {

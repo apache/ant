@@ -163,6 +163,7 @@ public class PropertyHelper implements GetProperty {
             String property, Object value, PropertyHelper propertyHelper);
     }
 
+    //TODO PropertyEnumerator Delegate type, would improve PropertySet
 
     //  --------------------------------------------------------
     //

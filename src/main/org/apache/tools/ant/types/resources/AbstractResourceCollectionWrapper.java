@@ -98,7 +98,7 @@ public abstract class AbstractResourceCollectionWrapper
      * of the iterator is allowed to not be thread safe whereas the iterator
      * itself should. The returned iterator will be wrapped into the FailFast
      * one.
-     * 
+     *
      * @return the iterator on the resource collection
      */
     protected abstract Iterator<Resource> createIterator();
@@ -118,7 +118,7 @@ public abstract class AbstractResourceCollectionWrapper
     /**
      * Do compute the size of the resource collection. The implementation of
      * this function is allowed to be not thread safe.
-     * 
+     *
      * @return size of resource collection.
      */
     protected abstract int getSize();
@@ -138,8 +138,7 @@ public abstract class AbstractResourceCollectionWrapper
         }
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
-        for (Iterator i = createIterator(); i.hasNext();) {
-            Resource r = (Resource) i.next();
+        for (Resource r : this) {
             if (r.as(FileProvider.class) == null) {
                 return false;
             }
@@ -154,7 +153,7 @@ public abstract class AbstractResourceCollectionWrapper
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -193,12 +192,12 @@ public abstract class AbstractResourceCollectionWrapper
         if (getSize() == 0) {
             return "";
         }
-        StringBuffer sb = new StringBuffer();
-        for (Iterator i = createIterator(); i.hasNext();) {
+        StringBuilder sb = new StringBuilder();
+        for (Resource resource : this) {
             if (sb.length() > 0) {
                 sb.append(File.pathSeparatorChar);
             }
-            sb.append(i.next());
+            sb.append(resource);
         }
         return sb.toString();
     }

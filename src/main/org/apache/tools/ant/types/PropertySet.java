@@ -18,16 +18,19 @@
 
 package org.apache.tools.ant.types;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -46,9 +49,9 @@ public class PropertySet extends DataType implements ResourceCollection {
 
     private boolean dynamic = true;
     private boolean negate = false;
-    private Set cachedNames;
-    private Vector ptyRefs = new Vector();
-    private Vector setRefs = new Vector();
+    private Set<String> cachedNames;
+    private List<PropertyRef> ptyRefs = new ArrayList<PropertyRef>();
+    private List<PropertySet> setRefs = new ArrayList<PropertySet>();
     private Mapper mapper;
 
     /**
@@ -184,7 +187,7 @@ public class PropertySet extends DataType implements ResourceCollection {
     public void addPropertyref(PropertyRef ref) {
         assertNotReference();
         setChecked(false);
-        ptyRefs.addElement(ref);
+        ptyRefs.add(ref);
     }
 
     /**
@@ -194,7 +197,7 @@ public class PropertySet extends DataType implements ResourceCollection {
     public void addPropertyset(PropertySet ref) {
         assertNotReference();
         setChecked(false);
-        setRefs.addElement(ref);
+        setRefs.add(ref);
     }
 
     /**
@@ -274,9 +277,9 @@ public class PropertySet extends DataType implements ResourceCollection {
      * Use propertynames to get the list of properties (including
      * default ones).
      */
-    private Hashtable getAllSystemProperties() {
-        Hashtable ret = new Hashtable();
-        for (Enumeration e = System.getProperties().propertyNames();
+    private Hashtable<String, Object> getAllSystemProperties() {
+        Hashtable<String, Object>  ret = new Hashtable<String, Object>();
+        for (Enumeration<?> e = System.getProperties().propertyNames();
              e.hasMoreElements();) {
             String name = (String) e.nextElement();
             ret.put(name, System.getProperties().getProperty(name));
@@ -289,23 +292,33 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return the properties for this propertyset.
      */
     public Properties getProperties() {
+        final Properties result = new Properties();
+        result.putAll(getPropertyMap());
+        return result;
+    }
+
+    /**
+     *
+     * @return Map
+     * @since 1.9.0
+     */
+    private Map<String, Object> getPropertyMap() {
         if (isReference()) {
-            return getRef().getProperties();
+            return getRef().getPropertyMap();
         }
         dieOnCircularReference();
-        Hashtable props = getEffectiveProperties();
-        Set names = getPropertyNames(props);
+        final Mapper myMapper = getMapper();
+        final FileNameMapper m = myMapper == null ? null : myMapper.getImplementation();
 
-        FileNameMapper m = null;
-        Mapper myMapper = getMapper();
-        if (myMapper != null) {
-            m = myMapper.getImplementation();
-        }
-        Properties properties = new Properties();
+        final Map<String, Object> effectiveProperties = getEffectiveProperties();
+        final Set<String> propertyNames = getPropertyNames(effectiveProperties);
+        final Map<String, Object> result = new HashMap<String, Object>();
+
         //iterate through the names, get the matching values
-        for (Iterator iter = names.iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
-            String value = (String) props.get(name);
+        for (String name : propertyNames) {
+            Object value = effectiveProperties.get(name);
+            // TODO should we include null properties?
+            // TODO should we query the PropertyHelper for property value to grab potentially shadowed values?
             if (value != null) {
                 // may be null if a system property has been added
                 // after the project instance has been initialized
@@ -316,36 +329,35 @@ public class PropertySet extends DataType implements ResourceCollection {
                         name = newname[0];
                     }
                 }
-                properties.setProperty(name, value);
+                result.put(name, value);
             }
         }
-        return properties;
+        return result;
+
     }
 
-    private Hashtable getEffectiveProperties() {
-        Project prj = getProject();
-        Hashtable result = prj == null ? getAllSystemProperties() : prj.getProperties();
+    private Map<String, Object> getEffectiveProperties() {
+        final Project prj = getProject();
+        final Map<String, Object> result = prj == null ? getAllSystemProperties() : prj.getProperties();
         //quick & dirty, to make nested mapped p-sets work:
-        for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
-            PropertySet set = (PropertySet) e.nextElement();
-            result.putAll(set.getProperties());
+        for (PropertySet set : setRefs) {
+            result.putAll(set.getPropertyMap());
         }
         return result;
     }
 
-    private Set getPropertyNames(Hashtable props) {
-        Set names;
+    private Set<String> getPropertyNames(Map<String, Object> props) {
+        Set<String> names;
         if (getDynamic() || cachedNames == null) {
-            names = new HashSet();
+            names = new HashSet<String>();
             addPropertyNames(names, props);
             // Add this PropertySet's nested PropertySets' property names.
-            for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
-                PropertySet set = (PropertySet) e.nextElement();
-                names.addAll(set.getProperties().keySet());
+            for (PropertySet set : setRefs) {
+                names.addAll(set.getPropertyMap().keySet());
             }
             if (negate) {
                 //make a copy...
-                HashSet complement = new HashSet(props.keySet());
+                HashSet<String> complement = new HashSet<String>(props.keySet());
                 complement.removeAll(names);
                 names = complement;
             }
@@ -361,24 +373,22 @@ public class PropertySet extends DataType implements ResourceCollection {
     /**
      * @param  names the output Set to fill with the property names
      *         matching this PropertySet selection criteria.
-     * @param  properties the current Project properties, passed in to
+     * @param  props the current Project properties, passed in to
      *         avoid needless duplication of the Hashtable during recursion.
      */
-    private void addPropertyNames(Set names, Hashtable properties) {
+    private void addPropertyNames(Set<String> names, Map<String, Object> props) {
         if (isReference()) {
-            getRef().addPropertyNames(names, properties);
+            getRef().addPropertyNames(names, props);
         }
         dieOnCircularReference();
         // Add this PropertySet's property names.
-        for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
-            PropertyRef r = (PropertyRef) e.nextElement();
+        for (PropertyRef r : ptyRefs) {
             if (r.name != null) {
-                if (properties.get(r.name) != null) {
+                if (props.get(r.name) != null) {
                     names.add(r.name);
                 }
             } else if (r.prefix != null) {
-                for (Enumeration p = properties.keys(); p.hasMoreElements();) {
-                    String name = (String) p.nextElement();
+                for (String name : props.keySet()) {
                     if (name.startsWith(r.prefix)) {
                         names.add(name);
                     }
@@ -387,8 +397,7 @@ public class PropertySet extends DataType implements ResourceCollection {
                 RegexpMatcherFactory matchMaker = new RegexpMatcherFactory();
                 RegexpMatcher matcher = matchMaker.newRegexpMatcher();
                 matcher.setPattern(r.regex);
-                for (Enumeration p = properties.keys(); p.hasMoreElements();) {
-                    String name = (String) p.nextElement();
+                for (String name : props.keySet()) {
                     if (matcher.matches(name)) {
                         names.add(name);
                     }
@@ -396,9 +405,9 @@ public class PropertySet extends DataType implements ResourceCollection {
             } else if (r.builtin != null) {
 
                 if (r.builtin.equals(BuiltinPropertySetName.ALL)) {
-                    names.addAll(properties.keySet());
+                    names.addAll(props.keySet());
                 } else if (r.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
-                    names.addAll(System.getProperties().keySet());
+                    names.addAll(getAllSystemProperties().keySet());
                 } else if (r.builtin.equals(BuiltinPropertySetName
                                               .COMMANDLINE)) {
                     names.addAll(getProject().getUserProperties().keySet());
@@ -483,16 +492,15 @@ public class PropertySet extends DataType implements ResourceCollection {
             return getRef().toString();
         }
         dieOnCircularReference();
-        StringBuffer b = new StringBuffer();
-        TreeMap sorted = new TreeMap(getProperties());
-        for (Iterator i = sorted.entrySet().iterator(); i.hasNext();) {
-            Map.Entry e = (Map.Entry) i.next();
+        StringBuilder b = new StringBuilder();
+        TreeMap<String, Object> sorted = new TreeMap<String, Object>(getPropertyMap());
+        for (Entry<String, Object> e : sorted.entrySet()) {
             if (b.length() != 0) {
                 b.append(", ");
             }
-            b.append(e.getKey().toString());
+            b.append(e.getKey());
             b.append("=");
-            b.append(e.getValue().toString());
+            b.append(e.getValue());
         }
         return b.toString();
     }
@@ -507,19 +515,18 @@ public class PropertySet extends DataType implements ResourceCollection {
             return getRef().iterator();
         }
         dieOnCircularReference();
-        Hashtable props = getEffectiveProperties();
-        Set names = getPropertyNames(props);
+        final Set<String> names = getPropertyNames(getEffectiveProperties());
 
         Mapper myMapper = getMapper();
         final FileNameMapper m = myMapper == null ? null : myMapper.getImplementation();
-        final Iterator iter = names.iterator();
+        final Iterator<String> iter = names.iterator();
 
         return new Iterator<Resource>() {
             public boolean hasNext() {
                 return iter.hasNext();
             }
             public Resource next() {
-                PropertyResource p = new PropertyResource(getProject(), (String) iter.next());
+                PropertyResource p = new PropertyResource(getProject(), iter.next());
                 return m == null ? (Resource) p : new MappedResource(p, m);
             }
             public void remove() {
@@ -548,7 +555,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         return false;
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -559,8 +566,8 @@ public class PropertySet extends DataType implements ResourceCollection {
             if (mapper != null) {
                 pushAndInvokeCircularReferenceCheck(mapper, stk, p);
             }
-            for (Iterator i = setRefs.iterator(); i.hasNext(); ) {
-                pushAndInvokeCircularReferenceCheck((PropertySet) i.next(), stk,
+            for (PropertySet propertySet : setRefs) {
+                pushAndInvokeCircularReferenceCheck(propertySet, stk,
                                                     p);
             }
             setChecked(true);

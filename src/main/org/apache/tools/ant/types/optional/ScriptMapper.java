@@ -27,9 +27,7 @@ import java.util.ArrayList;
  */
 public class ScriptMapper extends AbstractScriptComponent implements FileNameMapper {
 
-
-    private ArrayList files;
-    static final String[] EMPTY_STRING_ARRAY = new String[0];
+    private ArrayList<String> files;
 
 
     /**
@@ -54,7 +52,7 @@ public class ScriptMapper extends AbstractScriptComponent implements FileNameMap
      * Reset the list of files
      */
     public void clear() {
-        files = new ArrayList(1);
+        files = new ArrayList<String>(1);
     }
 
     /**
@@ -87,7 +85,7 @@ public class ScriptMapper extends AbstractScriptComponent implements FileNameMap
         if (files.size() == 0) {
             return null;
         } else {
-            return (String[]) files.toArray(EMPTY_STRING_ARRAY);
+            return files.toArray(new String[files.size()]);
         }
     }
 }

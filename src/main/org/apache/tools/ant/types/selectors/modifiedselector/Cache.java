@@ -68,5 +68,5 @@ public interface Cache {
      * Returns an iterator over the keys in the cache.
      * @return An iterator over the keys.
      */
-    Iterator iterator();
+    Iterator<String> iterator();
 }

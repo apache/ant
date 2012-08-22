@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -37,7 +36,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 public abstract class BaseSelectorContainer extends BaseSelector
         implements SelectorContainer {
 
-    private Vector selectorsList = new Vector();
+    private Vector<FileSelector> selectorsList = new Vector<FileSelector>();
 
     /**
      * Default constructor.
@@ -79,7 +78,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * Returns an enumerator for accessing the set of selectors.
      * @return an enumerator for the selectors
      */
-    public Enumeration selectorElements() {
+    public Enumeration<FileSelector> selectorElements() {
         dieOnCircularReference();
         return selectorsList.elements();
     }
@@ -93,17 +92,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public String toString() {
         dieOnCircularReference();
-        StringBuffer buf = new StringBuffer();
-        Enumeration e = selectorElements();
-        if (e.hasMoreElements()) {
-            while (e.hasMoreElements()) {
-                buf.append(e.nextElement().toString());
-                if (e.hasMoreElements()) {
-                    buf.append(", ");
-                }
+        StringBuilder buf = new StringBuilder();
+        Enumeration<FileSelector> e = selectorElements();
+        while (e.hasMoreElements()) {
+            buf.append(e.nextElement().toString());
+            if (e.hasMoreElements()) {
+                buf.append(", ");
             }
         }
-
         return buf.toString();
     }
 
@@ -140,7 +136,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
         if (errmsg != null) {
             throw new BuildException(errmsg);
         }
-        Enumeration e = selectorElements();
+        Enumeration<FileSelector> e = selectorElements();
         while (e.hasMoreElements()) {
             Object o = e.nextElement();
             if (o instanceof BaseSelector) {
@@ -328,7 +324,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -336,10 +332,9 @@ public abstract class BaseSelectorContainer extends BaseSelector
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = selectorsList.iterator(); i.hasNext();) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (FileSelector fileSelector : selectorsList) {
+                if (fileSelector instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p);
                 }
             }
             setChecked(true);

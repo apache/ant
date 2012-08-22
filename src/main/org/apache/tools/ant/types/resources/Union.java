@@ -17,11 +17,12 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
@@ -63,7 +64,7 @@ public class Union extends BaseResourceCollectionContainer {
     public Union(ResourceCollection rc) {
         this(Project.getProject(rc), rc);
     }
-    
+
     /**
      * Convenience constructor.
      * @param project owning Project
@@ -81,10 +82,10 @@ public class Union extends BaseResourceCollectionContainer {
      */
     public String[] list() {
         if (isReference()) {
-            return ((Union) getCheckedRef()).list();
+            return getCheckedRef(Union.class, getDataTypeName()).list();
         }
-        Collection result = getCollection(true);
-        return (String[]) (result.toArray(new String[result.size()]));
+        final Collection<String> result = getAllToStrings();
+        return result.toArray(new String[result.size()]);
     }
 
     /**
@@ -93,18 +94,18 @@ public class Union extends BaseResourceCollectionContainer {
      */
     public Resource[] listResources() {
         if (isReference()) {
-            return ((Union) getCheckedRef()).listResources();
+            return getCheckedRef(Union.class, getDataTypeName()).listResources();
         }
-        Collection result = getCollection();
-        return (Resource[]) (result.toArray(new Resource[result.size()]));
+        final Collection<Resource> result = getAllResources();
+        return result.toArray(new Resource[result.size()]);
     }
 
     /**
      * Unify the contained Resources.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection() {
-        return getCollection(false);
+    protected Collection<Resource> getCollection() {
+        return getAllResources();
     }
 
     /**
@@ -113,26 +114,43 @@ public class Union extends BaseResourceCollectionContainer {
      *        should contain Strings instead of Resources.
      * @return a Collection of Resources.
      */
-    protected Collection getCollection(boolean asString) { // XXX untypable
-        List rc = getResourceCollections();
-        if (rc.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        }
-        LinkedHashSet set = new LinkedHashSet(rc.size() * 2);
-        for (Iterator rcIter = rc.iterator(); rcIter.hasNext();) {
-            for (Iterator r = nextRC(rcIter).iterator(); r.hasNext();) {
-                Object o = r.next();
-                if (asString) {
-                    o = o.toString();
-                }
-                set.add(o);
-            }
-        }
-        return set;
+    @Deprecated
+    @SuppressWarnings("unchecked")
+    protected <T> Collection<T> getCollection(boolean asString) { // XXX untypable
+        return asString ? (Collection<T>) getAllToStrings() : (Collection<T>) getAllResources();
     }
 
-    private static ResourceCollection nextRC(Iterator i) {
-        return (ResourceCollection) i.next();
+    /**
+     * Get a collection of strings representing the unified resource set (strings may duplicate).
+     * @return Collection<String>
+     */
+    protected Collection<String> getAllToStrings() {
+        final Set<Resource> allResources = getAllResources();
+        final ArrayList<String> result = new ArrayList<String>(allResources.size());
+        for (Resource r : allResources) {
+            result.add(r.toString());
+        }
+        return result;
     }
+
+    /**
+     * Get the unified set of contained Resources.
+     * @return Set<Resource>
+     */
+    protected Set<Resource> getAllResources() {
+        final List<ResourceCollection> resourceCollections = getResourceCollections();
+        if (resourceCollections.isEmpty()) {
+            return Collections.emptySet();
+        }
+        final LinkedHashSet<Resource> result = new LinkedHashSet<Resource>(
+                resourceCollections.size() * 2);
+        for (ResourceCollection resourceCollection : resourceCollections) {
+            for (Resource r : resourceCollection) {
+                result.add(r);
+            }
+        }
+        return result;
+    }
+
 }
 

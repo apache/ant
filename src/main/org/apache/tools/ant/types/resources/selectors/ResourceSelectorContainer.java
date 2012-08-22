@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.types.resources.selectors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.Collections;
 
@@ -32,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
  */
 public class ResourceSelectorContainer extends DataType {
 
-    private Vector v = new Vector();
+    private final List<ResourceSelector> resourceSelectors = new ArrayList<ResourceSelector>();
 
     /**
      * Default constructor.
@@ -61,7 +62,7 @@ public class ResourceSelectorContainer extends DataType {
         if (s == null) {
             return;
         }
-        v.add(s);
+        resourceSelectors.add(s);
         setChecked(false);
     }
 
@@ -74,7 +75,7 @@ public class ResourceSelectorContainer extends DataType {
             return ((ResourceSelectorContainer) getCheckedRef()).hasSelectors();
         }
         dieOnCircularReference();
-        return !v.isEmpty();
+        return !resourceSelectors.isEmpty();
     }
 
     /**
@@ -86,19 +87,19 @@ public class ResourceSelectorContainer extends DataType {
             return ((ResourceSelectorContainer) getCheckedRef()).selectorCount();
         }
         dieOnCircularReference();
-        return v.size();
+        return resourceSelectors.size();
     }
 
     /**
      * Return an Iterator over the nested selectors.
      * @return Iterator of ResourceSelectors.
      */
-    public Iterator getSelectors() {
+    public Iterator<ResourceSelector> getSelectors() {
         if (isReference()) {
             return ((ResourceSelectorContainer) getCheckedRef()).getSelectors();
         }
         dieOnCircularReference();
-        return Collections.unmodifiableList(v).iterator();
+        return Collections.unmodifiableList(resourceSelectors).iterator();
     }
 
     /**
@@ -107,7 +108,7 @@ public class ResourceSelectorContainer extends DataType {
      * @param p   the Project to resolve against.
      * @throws BuildException on error.
      */
-    protected void dieOnCircularReference(Stack stk, Project p)
+    protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -115,10 +116,9 @@ public class ResourceSelectorContainer extends DataType {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = v.iterator(); i.hasNext();) {
-                Object o = i.next();
-                if (o instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
+            for (ResourceSelector resourceSelector : resourceSelectors) {
+                if (resourceSelector instanceof DataType) {
+                    pushAndInvokeCircularReferenceCheck((DataType) resourceSelector, stk, p);
                 }
             }
             setChecked(true);

@@ -28,8 +28,10 @@ import java.util.Collections;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.ConcatResourceInputStream;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.util.Tokenizer;
 
@@ -47,10 +49,10 @@ public class Tokens extends BaseResourceCollectionWrapper {
      * Sort the contained elements.
      * @return a Collection of Resources.
      */
-    protected synchronized Collection getCollection() {
+    protected synchronized Collection<Resource> getCollection() {
         ResourceCollection rc = getResourceCollection();
         if (rc.size() == 0) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         if (tokenizer == null) {
             tokenizer = new LineTokenizer();
@@ -58,27 +60,29 @@ public class Tokens extends BaseResourceCollectionWrapper {
         ConcatResourceInputStream cat = new ConcatResourceInputStream(rc);
         cat.setManagingComponent(this);
 
-        InputStreamReader rdr = null;
-        if (encoding == null) {
-            rdr = new InputStreamReader(cat);
-        } else {
-            try {
-                rdr = new InputStreamReader(cat, encoding);
-            } catch (UnsupportedEncodingException e) {
-                throw new BuildException(e);
-            }
-        }
-        ArrayList result = new ArrayList();
         try {
+            InputStreamReader rdr = null;
+            if (encoding == null) {
+                rdr = new InputStreamReader(cat);
+            } else {
+                try {
+                    rdr = new InputStreamReader(cat, encoding);
+                } catch (UnsupportedEncodingException e) {
+                    throw new BuildException(e);
+                }
+            }
+            ArrayList<Resource> result = new ArrayList<Resource>();
             for (String s = tokenizer.getToken(rdr); s != null; s = tokenizer.getToken(rdr)) {
                 StringResource resource = new StringResource(s);
                 resource.setProject(getProject());
                 result.add(resource);
             }
+            return result;
         } catch (IOException e) {
             throw new BuildException("Error reading tokens", e);
+        } finally {
+            FileUtils.close(cat);
         }
-        return result;
     }
 
     /**
@@ -112,7 +116,7 @@ public class Tokens extends BaseResourceCollectionWrapper {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

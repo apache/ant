@@ -62,7 +62,7 @@ public class FilenameSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer("{filenameselector name: ");
+        StringBuilder buf = new StringBuilder("{filenameselector name: ");
         if (pattern != null) {
             buf.append(pattern);
         }
