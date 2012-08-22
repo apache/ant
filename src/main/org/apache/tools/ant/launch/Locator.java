@@ -405,7 +405,7 @@ public final class Locator {
     @Deprecated
     public static URL fileToURL(File file)
         throws MalformedURLException {
-        return FileUtils.getFileUtils().getFileURL(file);
+        return new URL(file.getAbsoluteFile().toURI().toASCIIString());
     }
 
     /**
@@ -503,7 +503,7 @@ public final class Locator {
             String littlePath = path.toLowerCase(Locale.ENGLISH);
             for (int i = 0; i < extensions.length; ++i) {
                 if (littlePath.endsWith(extensions[i])) {
-                    urls[0] = FileUtils.getFileUtils().getFileURL(location);
+                    urls[0] = fileToURL(location);
                     break;
                 }
             }
@@ -523,7 +523,7 @@ public final class Locator {
             });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            urls[i] = FileUtils.getFileUtils().getFileURL(matches[i]);
+            urls[i] = fileToURL(matches[i]);
         }
         return urls;
     }
