@@ -405,7 +405,7 @@ public final class Locator {
     @Deprecated
     public static URL fileToURL(File file)
         throws MalformedURLException {
-        return new URL(file.getAbsoluteFile().toURI().toASCIIString());
+        return new URL(file.toURI().toASCIIString());
     }
 
     /**

@@ -138,7 +138,7 @@ public class FileUtils {
      *      formed.
      */
     public URL getFileURL(File file) throws MalformedURLException {
-        return new URL(toURI(file.getAbsolutePath()));
+        return new URL(file.toURI().toASCIIString());
     }
 
     /**
@@ -1209,7 +1209,7 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String toURI(String path) {
-        return new File(path).getAbsoluteFile().toURI().toASCIIString();
+        return new File(path).toURI().toASCIIString();
     }
 
     /**
