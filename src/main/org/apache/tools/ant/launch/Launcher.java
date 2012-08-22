@@ -25,6 +25,8 @@ import java.util.StringTokenizer;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.tools.ant.util.FileUtils;
+
 
 
 /**
@@ -150,7 +152,7 @@ public class Launcher {
                 }
             }
 
-            URL url = Locator.fileToURL(element);
+            URL url = FileUtils.getFileUtils().getFileURL(element);
             if (launchDiag) { System.out.println("adding library URL: " + url) ;}
             libPathURLs.add(url);
         }
@@ -381,7 +383,7 @@ public class Launcher {
             systemJars.length);
 
         if (toolsJar != null) {
-            jars[jars.length - 1] = Locator.fileToURL(toolsJar);
+            jars[jars.length - 1] = FileUtils.getFileUtils().getFileURL(toolsJar);
         }
         return jars;
     }

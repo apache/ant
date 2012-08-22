@@ -400,7 +400,9 @@ public final class Locator {
      * @param file the file to convert
      * @return URL the converted File
      * @throws MalformedURLException on error
+     * @deprecated since 1.9, use {@link FileUtils#getFileURL(File)}
      */
+    @Deprecated
     public static URL fileToURL(File file)
         throws MalformedURLException {
         return FileUtils.getFileUtils().getFileURL(file);
@@ -501,7 +503,7 @@ public final class Locator {
             String littlePath = path.toLowerCase(Locale.ENGLISH);
             for (int i = 0; i < extensions.length; ++i) {
                 if (littlePath.endsWith(extensions[i])) {
-                    urls[0] = fileToURL(location);
+                    urls[0] = FileUtils.getFileUtils().getFileURL(location);
                     break;
                 }
             }
@@ -521,7 +523,7 @@ public final class Locator {
             });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            urls[i] = fileToURL(matches[i]);
+            urls[i] = FileUtils.getFileUtils().getFileURL(matches[i]);
         }
         return urls;
     }
