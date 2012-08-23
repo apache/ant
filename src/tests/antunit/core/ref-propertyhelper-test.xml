@@ -49,7 +49,7 @@ public class Task {
     }
     private boolean set = false;
     public void setPath(Path p) {
-        if (p != project.getReference("foo")) {
+        if (p != (Path) project.getReference("foo")) {
             throw new BuildException("this is not my path");
         }
         set = true;
