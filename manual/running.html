@@ -445,9 +445,16 @@ org.apache.tools.ant.Executor implementation specified here.
 <tr>
   <td><code>org.apache.tools.ant.ProjectHelper</code></td>
   <!-- add the blank after the slash, so the browser can do a line break -->
-  <td>classname (optional, default 'org.apache.tools.ant.ProjectHelper')</td>
+  <td>classname (optional, default 'org.apache.tools.ant.ProjectHelper2')</td>
   <td>specifies the classname to use as ProjectHelper. The class must extend
       org.apache.tools.ant.ProjectHelper.
+  </td>
+</tr>
+<tr>
+  <td><code>org.apache.tools.ant.ArgumentProcessor</code></td>
+  <td>classname (optional)</td>
+  <td>specifies the classname to use as ArgumentProcessor. The class must extend
+      org.apache.tools.ant.ArgumentProcessor.
   </td>
 </tr>
 <tr>
@@ -475,6 +482,13 @@ org.apache.tools.ant.Executor implementation specified here.
   <td>boolean (default 'false')</td>
   <td>Set it to true to enable debugging with Ant's
   <a href="projecthelper.html#repository">ProjectHelper internal repository</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.argument-processor-repo.debug</code></td>
+  <td>boolean (default 'false')</td>
+  <td>Set it to true to enable debugging with Ant's
+  <a href="argumentprocessor.html#repository">ArgumentProcessor internal repository</a>.
   </td>
 </tr>
 </table>

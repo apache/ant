@@ -24,12 +24,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -152,6 +155,7 @@ public class Main implements AntMain {
      */
     private boolean proxy = false;
 
+    private Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
 
     private static final GetProperty NOPROPERTIES = new GetProperty(){
         public Object getProperty(String aName) {
@@ -324,6 +328,8 @@ public class Main implements AntMain {
         boolean justPrintVersion = false;
         boolean justPrintDiagnostics = false;
 
+        ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
+        
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
 
@@ -399,11 +405,29 @@ public class Main implements AntMain {
             } else if (arg.equals("-autoproxy")) {
                 proxy = true;
             } else if (arg.startsWith("-")) {
-                // we don't have any more args to recognize!
-                String msg = "Unknown argument: " + arg;
-                System.err.println(msg);
-                printUsage();
-                throw new BuildException("");
+                boolean processed = false;
+                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    int newI = processor.readArguments(args, i);
+                    if (newI != -1) {
+                        List<String> extraArgs = extraArguments.get(processor.getClass());
+                        if (extraArgs == null) {
+                            extraArgs = new ArrayList<String>();
+                            extraArguments.put(processor.getClass(), extraArgs);
+                        }
+                        for (; i < newI && i < args.length; i++) {
+                            extraArgs.add(args[i]);
+                        }
+                        processed = true;
+                        break;
+                    }
+                }
+                if (!processed) {
+                    // we don't have any more args to recognize!
+                    String msg = "Unknown argument: " + arg;
+                    System.err.println(msg);
+                    printUsage();
+                    throw new BuildException("");
+                }
             } else {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
@@ -726,6 +750,17 @@ public class Main implements AntMain {
             return;
         }
 
+        ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
+
+        for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
+            List<String> extraArgs = extraArguments.get(processor.getClass());
+            if (extraArgs != null) {
+                if (processor.handleArg(extraArgs)) {
+                    return;
+                }
+            }
+        }
+
         final Project project = new Project();
         project.setCoreLoader(coreLoader);
 
@@ -781,7 +816,23 @@ public class Main implements AntMain {
                     proxySetup.enableProxies();
                 }
 
+                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    List<String> extraArgs = extraArguments.get(processor.getClass());
+                    if (extraArgs != null) {
+                        processor.prepareConfigure(project, extraArgs);
+                    }
+                }
+
                 ProjectHelper.configureProject(project, buildFile);
+
+                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    List<String> extraArgs = extraArguments.get(processor.getClass());
+                    if (extraArgs != null) {
+                        if (processor.handleArg(project, extraArgs)) {
+                            return;
+                        }
+                    }
+                }
 
                 if (projectHelp) {
                     printDescription(project);
@@ -954,50 +1005,45 @@ public class Main implements AntMain {
      * Prints the usage information for this class to <code>System.out</code>.
      */
     private static void printUsage() {
-        String lSep = System.getProperty("line.separator");
-        StringBuffer msg = new StringBuffer();
-        msg.append("ant [options] [target [target2 [target3] ...]]" + lSep);
-        msg.append("Options: " + lSep);
-        msg.append("  -help, -h              print this message" + lSep);
-        msg.append("  -projecthelp, -p       print project help information" + lSep);
-        msg.append("  -version               print the version information and exit" + lSep);
-        msg.append("  -diagnostics           print information that might be helpful to" + lSep);
-        msg.append("                         diagnose or report problems." + lSep);
-        msg.append("  -quiet, -q             be extra quiet" + lSep);
-        msg.append("  -silent, -S            print nothing but task outputs and build failures" + lSep);
-        msg.append("  -verbose, -v           be extra verbose" + lSep);
-        msg.append("  -debug, -d             print debugging information" + lSep);
-        msg.append("  -emacs, -e             produce logging information without adornments"
-                   + lSep);
-        msg.append("  -lib <path>            specifies a path to search for jars and classes"
-                   + lSep);
-        msg.append("  -logfile <file>        use given file for log" + lSep);
-        msg.append("    -l     <file>                ''" + lSep);
-        msg.append("  -logger <classname>    the class which is to perform logging" + lSep);
-        msg.append("  -listener <classname>  add an instance of class as a project listener"
-                   + lSep);
-        msg.append("  -noinput               do not allow interactive input" + lSep);
-        msg.append("  -buildfile <file>      use given buildfile" + lSep);
-        msg.append("    -file    <file>              ''" + lSep);
-        msg.append("    -f       <file>              ''" + lSep);
-        msg.append("  -D<property>=<value>   use value for given property" + lSep);
-        msg.append("  -keep-going, -k        execute all targets that do not depend" + lSep);
-        msg.append("                         on failed target(s)" + lSep);
-        msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
-        msg.append("                         properties taking precedence" + lSep);
-        msg.append("  -inputhandler <class>  the class which will handle input requests" + lSep);
-        msg.append("  -find <file>           (s)earch for buildfile towards the root of" + lSep);
-        msg.append("    -s  <file>           the filesystem and use it" + lSep);
-        msg.append("  -nice  number          A niceness value for the main thread:" + lSep
-                   + "                         1 (lowest) to 10 (highest); 5 is the default"
-                   + lSep);
-        msg.append("  -nouserlib             Run ant without using the jar files from" + lSep
-                   + "                         ${user.home}/.ant/lib" + lSep);
-        msg.append("  -noclasspath           Run ant without using CLASSPATH" + lSep);
-        msg.append("  -autoproxy             Java1.5+: use the OS proxy settings"
-                + lSep);
-        msg.append("  -main <class>          override Ant's normal entry point");
-        System.out.println(msg.toString());
+        System.out.println("ant [options] [target [target2 [target3] ...]]");
+        System.out.println("Options: ");
+        System.out.println("  -help, -h              print this message");
+        System.out.println("  -projecthelp, -p       print project help information");
+        System.out.println("  -version               print the version information and exit");
+        System.out.println("  -diagnostics           print information that might be helpful to");
+        System.out.println("                         diagnose or report problems.");
+        System.out.println("  -quiet, -q             be extra quiet");
+        System.out.println("  -silent, -S            print nothing but task outputs and build failures");
+        System.out.println("  -verbose, -v           be extra verbose");
+        System.out.println("  -debug, -d             print debugging information");
+        System.out.println("  -emacs, -e             produce logging information without adornments");
+        System.out.println("  -lib <path>            specifies a path to search for jars and classes");
+        System.out.println("  -logfile <file>        use given file for log");
+        System.out.println("    -l     <file>                ''");
+        System.out.println("  -logger <classname>    the class which is to perform logging");
+        System.out.println("  -listener <classname>  add an instance of class as a project listener");
+        System.out.println("  -noinput               do not allow interactive input");
+        System.out.println("  -buildfile <file>      use given buildfile");
+        System.out.println("    -file    <file>              ''");
+        System.out.println("    -f       <file>              ''");
+        System.out.println("  -D<property>=<value>   use value for given property");
+        System.out.println("  -keep-going, -k        execute all targets that do not depend");
+        System.out.println("                         on failed target(s)");
+        System.out.println("  -propertyfile <name>   load all properties from file with -D");
+        System.out.println("                         properties taking precedence");
+        System.out.println("  -inputhandler <class>  the class which will handle input requests");
+        System.out.println("  -find <file>           (s)earch for buildfile towards the root of");
+        System.out.println("    -s  <file>           the filesystem and use it");
+        System.out.println("  -nice  number          A niceness value for the main thread:"
+                + "                         1 (lowest) to 10 (highest); 5 is the default");
+        System.out.println("  -nouserlib             Run ant without using the jar files from"
+                + "                         ${user.home}/.ant/lib");
+        System.out.println("  -noclasspath           Run ant without using CLASSPATH");
+        System.out.println("  -autoproxy             Java1.5+: use the OS proxy settings");
+        System.out.println("  -main <class>          override Ant's normal entry point");
+        for (ArgumentProcessor processor : ArgumentProcessorRegistry.getInstance().getProcessors()) {
+            processor.printUsage(System.out);
+        }
     }
 
     /**

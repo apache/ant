@@ -93,6 +93,9 @@ Other changes:
  * Make extension point bindable to imported prefixed targets
    Bugzilla Report 53550.
 
+ * Add the possibility to register a custom command line argument processor.
+   See org.apache.tools.ant.ArgumentProcessor and manual/argumentprocessor.html
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 
