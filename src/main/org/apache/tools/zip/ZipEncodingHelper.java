@@ -21,6 +21,7 @@ package org.apache.tools.zip;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +66,8 @@ public abstract class ZipEncodingHelper {
     private static final Map<String, SimpleEncodingHolder> simpleEncodings;
 
     static {
-        simpleEncodings = new HashMap<String, SimpleEncodingHolder>();
+        Map<String, SimpleEncodingHolder> se =
+            new HashMap<String, SimpleEncodingHolder>();
 
         char[] cp437_high_chars =
             new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
@@ -93,11 +95,11 @@ public abstract class ZipEncodingHelper {
 
         SimpleEncodingHolder cp437 = new SimpleEncodingHolder(cp437_high_chars);
 
-        simpleEncodings.put("CP437",cp437);
-        simpleEncodings.put("Cp437",cp437);
-        simpleEncodings.put("cp437",cp437);
-        simpleEncodings.put("IBM437",cp437);
-        simpleEncodings.put("ibm437",cp437);
+        se.put("CP437", cp437);
+        se.put("Cp437", cp437);
+        se.put("cp437", cp437);
+        se.put("IBM437", cp437);
+        se.put("ibm437", cp437);
 
         char[] cp850_high_chars =
             new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
@@ -125,11 +127,12 @@ public abstract class ZipEncodingHelper {
 
         SimpleEncodingHolder cp850 = new SimpleEncodingHolder(cp850_high_chars);
 
-        simpleEncodings.put("CP850",cp850);
-        simpleEncodings.put("Cp850",cp850);
-        simpleEncodings.put("cp850",cp850);
-        simpleEncodings.put("IBM850",cp850);
-        simpleEncodings.put("ibm850",cp850);
+        se.put("CP850", cp850);
+        se.put("Cp850", cp850);
+        se.put("cp850", cp850);
+        se.put("IBM850", cp850);
+        se.put("ibm850", cp850);
+        simpleEncodings = Collections.unmodifiableMap(se);
     }
 
     /**

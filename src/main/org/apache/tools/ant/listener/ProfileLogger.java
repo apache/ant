@@ -18,8 +18,8 @@
 package org.apache.tools.ant.listener;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
@@ -32,7 +32,7 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class ProfileLogger extends DefaultLogger {
 
-    private Map<Object, Date> profileData = new HashMap<Object, Date>();
+    private Map<Object, Date> profileData = new ConcurrentHashMap<Object, Date>();
 
     /**
      * Logs a message to say that the target has started.
