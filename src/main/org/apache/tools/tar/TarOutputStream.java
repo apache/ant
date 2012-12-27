@@ -28,6 +28,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.tools.zip.ZipEncoding;
@@ -272,9 +273,10 @@ public class TarOutputStream extends FilterOutputStream {
         }
         Map<String, String> paxHeaders = new HashMap<String, String>();
         final String entryName = entry.getName();
-        final byte[] nameBytes = encoding.encode(entryName).array();
+        final ByteBuffer encodedName = encoding.encode(entryName);
+        final int nameLen = encodedName.limit() - encodedName.position();
         boolean paxHeaderContainsPath = false;
-        if (nameBytes.length >= TarConstants.NAMELEN) {
+        if (nameLen >= TarConstants.NAMELEN) {
 
             if (longFileMode == LONGFILE_POSIX) {
                 paxHeaders.put("path", entryName);
@@ -285,9 +287,9 @@ public class TarOutputStream extends FilterOutputStream {
                 TarEntry longLinkEntry = new TarEntry(TarConstants.GNU_LONGLINK,
                                                       TarConstants.LF_GNUTYPE_LONGNAME);
 
-                longLinkEntry.setSize(nameBytes.length + 1); // +1 for NUL
+                longLinkEntry.setSize(nameLen + 1); // +1 for NUL
                 putNextEntry(longLinkEntry);
-                write(nameBytes);
+                write(encodedName.array(), encodedName.arrayOffset(), nameLen);
                 write(0); // NUL terminator
                 closeEntry();
             } else if (longFileMode != LONGFILE_TRUNCATE) {
@@ -483,6 +485,11 @@ public class TarOutputStream extends FilterOutputStream {
     void writePaxHeaders(String entryName,
                          Map<String, String> headers) throws IOException {
         String name = "./PaxHeaders.X/" + stripTo7Bits(entryName);
+        while (name.endsWith("/")) {
+            // TarEntry's constructor would think this is a directory
+            // and not allow any data to be written
+            name = name.substring(0, name.length() - 1);
+        }
         if (name.length() >= TarConstants.NAMELEN) {
             name = name.substring(0, TarConstants.NAMELEN - 1);
         }

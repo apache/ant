@@ -350,7 +350,7 @@ public class TarUtils {
         while (b.limit() > length && len > 0) {
             b = encoding.encode(name.substring(0, --len));
         }
-        final int limit = b.limit();
+        final int limit = b.limit() - b.position();
         System.arraycopy(b.array(), b.arrayOffset(), buf, offset, limit);
 
         // Pad any remaining output bytes with NUL
