@@ -48,6 +48,9 @@ public class TarInputStream extends FilterInputStream {
     private static final int LARGE_BUFFER_SIZE = 32 * 1024;
     private static final int BYTE_MASK = 0xFF;
 
+    private final byte[] SKIP_BUF = new byte[BUFFER_SIZE];
+    private final byte[] SMALL_BUF = new byte[SMALL_BUFFER_SIZE];
+
     // CheckStyle:VisibilityModifier OFF - bc
     protected boolean debug;
     protected boolean hasHitEOF;
@@ -196,11 +199,11 @@ public class TarInputStream extends FilterInputStream {
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
         //
-        byte[] skipBuf = new byte[BUFFER_SIZE];
         long skip = numToSkip;
         while (skip > 0) {
-            int realSkip = (int) (skip > skipBuf.length ? skipBuf.length : skip);
-            int numRead = read(skipBuf, 0, realSkip);
+            int realSkip = (int) (skip > SKIP_BUF.length
+                                  ? SKIP_BUF.length : skip);
+            int numRead = read(SKIP_BUF, 0, realSkip);
             if (numRead == -1) {
                 break;
             }
@@ -303,10 +306,9 @@ public class TarInputStream extends FilterInputStream {
         if (currEntry.isGNULongNameEntry()) {
             // read in the name
             ByteArrayOutputStream longName = new ByteArrayOutputStream();
-            byte[] buf = new byte[SMALL_BUFFER_SIZE];
             int length = 0;
-            while ((length = read(buf)) >= 0) {
-                longName.write(buf, 0, length);
+            while ((length = read(SMALL_BUF)) >= 0) {
+                longName.write(SMALL_BUF, 0, length);
             }
             getNextEntry();
             if (currEntry == null) {

@@ -80,6 +80,7 @@ public class Zip64ExtendedInformationExtraField
     private static final String LFH_MUST_HAVE_BOTH_SIZES_MSG =
         "Zip64 extended information must contain"
         + " both size values in the local file header.";
+    private static final byte[] EMPTY = new byte[0];
 
     private ZipEightByteInteger size, compressedSize, relativeHeaderOffset;
     private ZipLong diskStart;
@@ -159,7 +160,7 @@ public class Zip64ExtendedInformationExtraField
             addSizes(data);
             return data;
         }
-        return new byte[0];
+        return EMPTY;
     }
 
     /** {@inheritDoc} */
