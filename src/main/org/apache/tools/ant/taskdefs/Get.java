@@ -58,6 +58,9 @@ public class Get extends Task {
     private static final int BIG_BUFFER_SIZE = 100 * 1024;
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final int REDIRECT_LIMIT = 25;
+    // HttpURLConnection doesn't have a constant for this in Java5 and
+    // what it calls HTTP_MOVED_TEMP would better be FOUND
+    private static final int HTTP_MOVED_TEMP = 307;
 
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
@@ -666,7 +669,8 @@ public class Get extends Task {
                 int responseCode = httpConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
                         responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                        responseCode == HttpURLConnection.HTTP_SEE_OTHER)
+                        responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
+                        responseCode == HTTP_MOVED_TEMP)
                 {
                     String newLocation = httpConnection.getHeaderField("Location");
                     String message = aSource

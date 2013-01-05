@@ -56,6 +56,9 @@ Fixed bugs:
    was empty.
    Bugzilla Report 53626.
 
+ * <get> now supports HTTP redirects using status code 307.
+   Bugzilla Report 54374.
+
 Other changes:
 --------------
 

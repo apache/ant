@@ -64,6 +64,19 @@
         <au:assertLogContains text="temp.txt moved to http" />
     </target>
     
+    <target name="testStatusCode307Redirect">
+      <get  src="${location}/307.txt" dest="${output}/307.txt"/>
+        <au:assertTrue>
+          <resourcecount count="1">
+            <restrict>
+              <file file="${output}/307.txt" />
+              <contains text="307 status code redirect succeeded" />
+            </restrict>
+          </resourcecount>
+        </au:assertTrue>
+        <au:assertLogContains text="307.txt moved to http" />
+    </target>
+    
     <target name="test5LevelsOfRedirect">
       <get  src="${location}/redir5.txt" dest="${output}/redir5.tmp"/>
         <au:assertTrue>
