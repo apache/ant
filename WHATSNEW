@@ -62,6 +62,10 @@ Fixed bugs:
  * ssh tasks prompt for kerberos username/password under Java 7
    Bugzilla Report 53437.
 
+ * Zip task on <mappedresources> that excludes certain files by way of the mapper resulted in a NullPointerException
+   Bugzilla Report 54026
+
+
 Other changes:
 --------------
 

@@ -1068,22 +1068,27 @@ public class Zip extends MatchingTask {
             return;
         }
         for (int i = 0; i < resources.length; i++) {
-            String name = resources[i].getName().replace(File.separatorChar,
-                                                         '/');
+            final Resource resource = resources[i];
+            String name = resource.getName();
+            if (name == null) {
+                continue;
+            }
+            name = name.replace(File.separatorChar, '/');
+
             if ("".equals(name)) {
                 continue;
             }
-            if (resources[i].isDirectory() && doFilesonly) {
+            if (resource.isDirectory() && doFilesonly) {
                 continue;
             }
             File base = null;
-            FileProvider fp = resources[i].as(FileProvider.class);
+            FileProvider fp = resource.as(FileProvider.class);
             if (fp != null) {
                 base = ResourceUtils.asFileResource(fp).getBaseDir();
             }
 
-            if (resources[i].isDirectory()) {
-                addDirectoryResource(resources[i], name, "", base, zOut,
+            if (resource.isDirectory()) {
+                addDirectoryResource(resource, name, "", base, zOut,
                                      ArchiveFileSet.DEFAULT_DIR_MODE,
                                      ArchiveFileSet.DEFAULT_DIR_MODE);
 
@@ -1095,7 +1100,7 @@ public class Zip extends MatchingTask {
                     File f = (fp).getFile();
                     zipFile(f, zOut, name, ArchiveFileSet.DEFAULT_FILE_MODE);
                 } else {
-                    addResource(resources[i], name, "", zOut,
+                    addResource(resource, name, "", zOut,
                                 ArchiveFileSet.DEFAULT_FILE_MODE,
                                 null, null);
                 }

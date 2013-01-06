@@ -45,6 +45,21 @@
                          actual="${output}/out/bar.txt"/>
   </target>
 
+  <target name="test-54026">
+    <mkdir dir="${input}"/>
+    <touch file="${input}/test1"/>
+    <mkdir dir="${input}/subdir"/>
+    <touch file="${input}/subdir/test2"/>
+    <zip destfile="${output}/br54026-destzip.zip">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="subdir/*" to="subdir.orig/*"/>
+      </mappedresources>
+    </zip>
+
+    <au:assertFileExists file="${output}/br54026-destzip.zip"/>
+  </target>
+
   <target name="testMappedClasspath">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}/out"/>
