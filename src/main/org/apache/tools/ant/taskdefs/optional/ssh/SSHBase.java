@@ -218,6 +218,8 @@ public abstract class SSHBase extends Task implements LogListener {
         }
 
         Session session = jsch.getSession(userInfo.getName(), host, port);
+        session.setConfig("PreferredAuthentications",
+                "publickey,keyboard-interactive,password");
         session.setUserInfo(userInfo);
         log("Connecting to " + host + ":" + port);
         session.connect();
