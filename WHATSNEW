@@ -65,6 +65,9 @@ Fixed bugs:
  * Zip task on <mappedresources> that excludes certain files by way of the mapper resulted in a NullPointerException
    Bugzilla Report 54026
 
+ * The ant launcher script should properly detect JAVA_HOME on
+   MacOS X 10.7
+   Bugzilla Report 52632
 
 Other changes:
 --------------
