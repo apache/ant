@@ -69,6 +69,9 @@ Fixed bugs:
    MacOS X 10.7
    Bugzilla Report 52632
 
+ * Depend task does not handle invokeDynamic constant pool entries - java.lang.ClassFormatError: Invalid Constant Pool entry Type 18
+   Bugzilla Report 54090
+
 Other changes:
 --------------
 

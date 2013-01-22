@@ -62,6 +62,15 @@ public abstract class ConstantPoolEntry {
     /** Tag value for Name and Type entries. */
     public static final int CONSTANT_NAMEANDTYPE = 12;
 
+    /** Tag value for Method Handle entries */
+    public static final int CONSTANT_METHODHANDLE  = 15;
+
+    /** Tag value for Method Type entries */
+    public static final int CONSTANT_METHODTYPE = 16;
+
+    /** Tag value for InvokeDynamic entries*/
+    public static final int CONSTANT_INVOKEDYNAMIC = 18;
+
     /**
      * This entry's tag which identifies the type of this constant pool
      * entry.
@@ -153,6 +162,18 @@ public abstract class ConstantPoolEntry {
                 break;
             case CONSTANT_NAMEANDTYPE:
                 cpInfo = new NameAndTypeCPInfo();
+
+                break;
+            case CONSTANT_METHODHANDLE:
+                cpInfo = new MethodHandleCPInfo();
+
+                break;
+            case CONSTANT_METHODTYPE:
+                cpInfo = new MethodTypeCPInfo();
+
+                break;
+            case CONSTANT_INVOKEDYNAMIC:
+                cpInfo = new InvokeDynamicCPInfo();
 
                 break;
             default:
