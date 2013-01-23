@@ -83,7 +83,7 @@ public class Base64Converter {
             // store the octets
             bits24 = (octetString[i++] & BYTE_MASK) << WORD;
             bits24 |= (octetString[i++] & BYTE_MASK) << BYTE;
-            bits24 |= octetString[i++];
+            bits24 |= octetString[i++] & BYTE_MASK;
 
             bits6 = (bits24 & POS_3_MASK) >> POS_3_SHIFT;
             out[outIndex++] = ALPHABET[bits6];

@@ -72,6 +72,9 @@ Fixed bugs:
  * Depend task does not handle invokeDynamic constant pool entries - java.lang.ClassFormatError: Invalid Constant Pool entry Type 18
    Bugzilla Report 54090
 
+ * Base64Converter not properly handling bytes with MSB set (not masking byte to int conversion)
+   Bugzilla Report 54460
+
 Other changes:
 --------------
 
