@@ -666,12 +666,14 @@ public class ZipFile {
      */
     private void positionAtCentralDirectory()
         throws IOException {
-        boolean found = tryToLocateSignature(MIN_EOCD_SIZE + ZIP64_EOCDL_LENGTH,
-                                             MAX_EOCD_SIZE + ZIP64_EOCDL_LENGTH,
-                                             ZipOutputStream
-                                             .ZIP64_EOCD_LOC_SIG);
+        positionAtEndOfCentralDirectoryRecord();
+        archive.seek(archive.getFilePointer() - ZIP64_EOCDL_LENGTH);
+        archive.readFully(WORD_BUF);
+        boolean found = Arrays.equals(ZipOutputStream.ZIP64_EOCD_LOC_SIG,
+                                      WORD_BUF);
         if (!found) {
             // not a ZIP64 archive
+            skipBytes(ZIP64_EOCDL_LENGTH - WORD);
             positionAtCentralDirectory32();
         } else {
             positionAtCentralDirectory64();
@@ -686,7 +688,8 @@ public class ZipFile {
      */
     private void positionAtCentralDirectory64()
         throws IOException {
-        skipBytes(ZIP64_EOCDL_LOCATOR_OFFSET);
+        skipBytes(ZIP64_EOCDL_LOCATOR_OFFSET
+                  - WORD /* signature has already been read */);
         archive.readFully(DWORD_BUF);
         archive.seek(ZipEightByteInteger.getLongValue(DWORD_BUF));
         archive.readFully(WORD_BUF);
@@ -707,14 +710,22 @@ public class ZipFile {
      */
     private void positionAtCentralDirectory32()
         throws IOException {
+        skipBytes(CFD_LOCATOR_OFFSET);
+        archive.readFully(WORD_BUF);
+        archive.seek(ZipLong.getValue(WORD_BUF));
+    }
+
+    /**
+     * Searches for the and positions the stream at the start of the
+     * &quot;End of central dir record&quot;.
+     */
+    private void positionAtEndOfCentralDirectoryRecord()
+        throws IOException {
         boolean found = tryToLocateSignature(MIN_EOCD_SIZE, MAX_EOCD_SIZE,
                                              ZipOutputStream.EOCD_SIG);
         if (!found) {
             throw new ZipException("archive is not a ZIP archive");
         }
-        skipBytes(CFD_LOCATOR_OFFSET);
-        archive.readFully(WORD_BUF);
-        archive.seek(ZipLong.getValue(WORD_BUF));
     }
 
     /**
