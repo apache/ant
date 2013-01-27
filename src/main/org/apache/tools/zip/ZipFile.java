@@ -667,13 +667,19 @@ public class ZipFile {
     private void positionAtCentralDirectory()
         throws IOException {
         positionAtEndOfCentralDirectoryRecord();
-        archive.seek(archive.getFilePointer() - ZIP64_EOCDL_LENGTH);
-        archive.readFully(WORD_BUF);
-        boolean found = Arrays.equals(ZipOutputStream.ZIP64_EOCD_LOC_SIG,
-                                      WORD_BUF);
+        boolean found = false;
+        boolean searchedForZip64EOCD =
+            archive.getFilePointer() > ZIP64_EOCDL_LENGTH;
+        if (searchedForZip64EOCD) {
+            archive.seek(archive.getFilePointer() - ZIP64_EOCDL_LENGTH);
+            archive.readFully(WORD_BUF);
+            found = Arrays.equals(ZipOutputStream.ZIP64_EOCD_LOC_SIG, WORD_BUF);
+        }
         if (!found) {
             // not a ZIP64 archive
-            skipBytes(ZIP64_EOCDL_LENGTH - WORD);
+            if (searchedForZip64EOCD) {
+                skipBytes(ZIP64_EOCDL_LENGTH - WORD);
+            }
             positionAtCentralDirectory32();
         } else {
             positionAtCentralDirectory64();
