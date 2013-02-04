@@ -16,6 +16,8 @@ Changes that could break older environments:
 
  * Any FileResource whose represented File has a parent also has a basedir.
 
+ * Removing the Perforce Ant tasks replaced by tasks supplied by Perforce Inc.
+
 Fixed bugs:
 -----------
 

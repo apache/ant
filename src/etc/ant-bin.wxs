@@ -374,79 +374,78 @@
               <File DiskId="1" Id="file554" Name="MPARSE_1.HTM" LongName="mparse.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\mparse.html" />
               <File DiskId="1" Id="file555" Name="NATIVE_1.HTM" LongName="native2ascii.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\native2ascii.html" />
               <File DiskId="1" Id="file556" Name="NETREX_1.HTM" LongName="netrexxc.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\netrexxc.html" />
-              <File DiskId="1" Id="file557" Name="PERFOR_1.HTM" LongName="perforce.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\perforce.html" />
-              <File DiskId="1" Id="file558" Name="PROPER_1.HTM" LongName="propertyfile.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\propertyfile.html" />
-              <File DiskId="1" Id="file559" Name="PVCSTA_1.HTM" LongName="pvcstask.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\pvcstask.html" />
-              <File DiskId="1" Id="file560" Name="RENAME_1.HTM" LongName="renameextensions.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\renameextensions.html" />
-              <File DiskId="1" Id="file561" Name="REPLAC_1.HTM" LongName="replaceregexp.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\replaceregexp.html" />
-              <File DiskId="1" Id="file562" Name="REXEC_1.HTM" LongName="rexec.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\rexec.html" />
-              <File DiskId="1" Id="file563" Name="RPM_1.HTM" LongName="rpm.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\rpm.html" />
-              <File DiskId="1" Id="file564" Name="SCHEMA_1.HTM" LongName="schemavalidate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\schemavalidate.html" />
-              <File DiskId="1" Id="file565" Name="SCP_1.HTM" LongName="scp.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\scp.html" />
-              <File DiskId="1" Id="file566" Name="SCRIPT_2.HTM" LongName="script.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\script.html" />
-              <File DiskId="1" Id="file567" Name="SCRIPT_1.HTM" LongName="scriptdef.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\scriptdef.html" />
-              <File DiskId="1" Id="file568" Name="SERVER_1.HTM" LongName="serverdeploy.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\serverdeploy.html" />
-              <File DiskId="1" Id="file569" Name="SETPRO_1.HTM" LongName="setproxy.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\setproxy.html" />
-              <File DiskId="1" Id="file570" Name="SOS_1.HTM" LongName="sos.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sos.html" />
-              <File DiskId="1" Id="file571" Name="SOUND_1.HTM" LongName="sound.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sound.html" />
-              <File DiskId="1" Id="file572" Name="SPLASH_1.HTM" LongName="splash.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\splash.html" />
-              <File DiskId="1" Id="file573" Name="SSHEXE_1.HTM" LongName="sshexec.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sshexec.html" />
-              <File DiskId="1" Id="file574" Name="STARTE_1.HTM" LongName="starteam.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\starteam.html" />
-              <File DiskId="1" Id="file576" Name="SYMLIN_1.HTM" LongName="symlink.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\symlink.html" />
-              <File DiskId="1" Id="file577" Name="TELNET_1.HTM" LongName="telnet.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\telnet.html" />
-              <File DiskId="1" Id="file578" Name="TRANSL_1.HTM" LongName="translate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\translate.html" />
-              <File DiskId="1" Id="file579" Name="VBC_1.HTM" LongName="vbc.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\vbc.html" />
-              <File DiskId="1" Id="file580" Name="VSS_1.HTM" LongName="vss.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\vss.html" />
-              <File DiskId="1" Id="file581" Name="WLJSPC_1.HTM" LongName="wljspc.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\wljspc.html" />
-              <File DiskId="1" Id="file582" Name="WSDLTO_1.HTM" LongName="wsdltodotnet.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\wsdltodotnet.html" />
-              <File DiskId="1" Id="file583" Name="XMLVAL_1.HTM" LongName="xmlvalidate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\xmlvalidate.html" />
+              <File DiskId="1" Id="file557" Name="PROPER_1.HTM" LongName="propertyfile.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\propertyfile.html" />
+              <File DiskId="1" Id="file558" Name="PVCSTA_1.HTM" LongName="pvcstask.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\pvcstask.html" />
+              <File DiskId="1" Id="file559" Name="RENAME_1.HTM" LongName="renameextensions.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\renameextensions.html" />
+              <File DiskId="1" Id="file560" Name="REPLAC_1.HTM" LongName="replaceregexp.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\replaceregexp.html" />
+              <File DiskId="1" Id="file561" Name="REXEC_1.HTM" LongName="rexec.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\rexec.html" />
+              <File DiskId="1" Id="file562" Name="RPM_1.HTM" LongName="rpm.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\rpm.html" />
+              <File DiskId="1" Id="file563" Name="SCHEMA_1.HTM" LongName="schemavalidate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\schemavalidate.html" />
+              <File DiskId="1" Id="file564" Name="SCP_1.HTM" LongName="scp.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\scp.html" />
+              <File DiskId="1" Id="file565" Name="SCRIPT_2.HTM" LongName="script.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\script.html" />
+              <File DiskId="1" Id="file566" Name="SCRIPT_1.HTM" LongName="scriptdef.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\scriptdef.html" />
+              <File DiskId="1" Id="file567" Name="SERVER_1.HTM" LongName="serverdeploy.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\serverdeploy.html" />
+              <File DiskId="1" Id="file568" Name="SETPRO_1.HTM" LongName="setproxy.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\setproxy.html" />
+              <File DiskId="1" Id="file569" Name="SOS_1.HTM" LongName="sos.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sos.html" />
+              <File DiskId="1" Id="file570" Name="SOUND_1.HTM" LongName="sound.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sound.html" />
+              <File DiskId="1" Id="file571" Name="SPLASH_1.HTM" LongName="splash.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\splash.html" />
+              <File DiskId="1" Id="file572" Name="SSHEXE_1.HTM" LongName="sshexec.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\sshexec.html" />
+              <File DiskId="1" Id="file573" Name="STARTE_1.HTM" LongName="starteam.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\starteam.html" />
+              <File DiskId="1" Id="file574" Name="SYMLIN_1.HTM" LongName="symlink.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\symlink.html" />
+              <File DiskId="1" Id="file575" Name="TELNET_1.HTM" LongName="telnet.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\telnet.html" />
+              <File DiskId="1" Id="file576" Name="TRANSL_1.HTM" LongName="translate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\translate.html" />
+              <File DiskId="1" Id="file577" Name="VBC_1.HTM" LongName="vbc.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\vbc.html" />
+              <File DiskId="1" Id="file578" Name="VSS_1.HTM" LongName="vss.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\vss.html" />
+              <File DiskId="1" Id="file579" Name="WLJSPC_1.HTM" LongName="wljspc.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\wljspc.html" />
+              <File DiskId="1" Id="file580" Name="WSDLTO_1.HTM" LongName="wsdltodotnet.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\wsdltodotnet.html" />
+              <File DiskId="1" Id="file581" Name="XMLVAL_1.HTM" LongName="xmlvalidate.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTasks\xmlvalidate.html" />
             </Component>
           </Directory>
           <Directory Id="directory93" Name="OPTION_2" LongName="OptionalTypes">
             <Component Id="component90" DiskId="1" Guid="0507ED6A-50CE-4c58-A046-B74E7CFCB3CA">
-              <File DiskId="1" Id="file584" Name="CLASSF_1.HTM" LongName="classfileset.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\classfileset.html" />
-              <File DiskId="1" Id="file585" Name="EXTENS_2.HTM" LongName="extension.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\extension.html" />
-              <File DiskId="1" Id="file586" Name="EXTENS_1.HTM" LongName="extensionset.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\extensionset.html" />
+              <File DiskId="1" Id="file582" Name="CLASSF_1.HTM" LongName="classfileset.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\classfileset.html" />
+              <File DiskId="1" Id="file583" Name="EXTENS_2.HTM" LongName="extension.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\extension.html" />
+              <File DiskId="1" Id="file584" Name="EXTENS_1.HTM" LongName="extensionset.html" Vital="yes" src="$(var.dist.dir)/docs\manual\OptionalTypes\extensionset.html" />
             </Component>
           </Directory>
           <Directory Id="directory94" Name="STYLES_1" LongName="stylesheets">
             <Component Id="component91" DiskId="1" Guid="4B25D154-CC25-4f93-8D36-BF23E4C29F06">
-              <File DiskId="1" Id="file587" Name="ANTMAN_1.CSS" LongName="antmanual.css" Vital="yes" src="$(var.dist.dir)/docs\manual\stylesheets\antmanual.css" />
-              <File DiskId="1" Id="file588" Name="style.css" Vital="yes" src="$(var.dist.dir)/docs\manual\stylesheets\style.css" />
+              <File DiskId="1" Id="file585" Name="ANTMAN_1.CSS" LongName="antmanual.css" Vital="yes" src="$(var.dist.dir)/docs\manual\stylesheets\antmanual.css" />
+              <File DiskId="1" Id="file586" Name="style.css" Vital="yes" src="$(var.dist.dir)/docs\manual\stylesheets\style.css" />
             </Component>
           </Directory>
         </Directory>
         <Directory Id="directory95" Name="projects">
           <Component Id="component92" DiskId="1" Guid="FB149E10-8B7F-4206-AA50-8698C06BEC6E">
-            <File DiskId="1" Id="file589" Name="INDEX_1.HTM" LongName="index.html" Vital="yes" src="$(var.dist.dir)/docs\projects\index.html" />
+            <File DiskId="1" Id="file587" Name="INDEX_1.HTM" LongName="index.html" Vital="yes" src="$(var.dist.dir)/docs\projects\index.html" />
           </Component>
         </Directory>
         <Directory Id="directory96" Name="webtest">
           <Component Id="component93" DiskId="1" Guid="A26B499E-E57F-47e3-88B2-66C1293383BE">
-            <File DiskId="1" Id="file590" Name="TESTKE_1" LongName="testkeystore" Vital="yes" src="$(var.dist.dir)/docs\webtest\testkeystore" />
+            <File DiskId="1" Id="file588" Name="TESTKE_1" LongName="testkeystore" Vital="yes" src="$(var.dist.dir)/docs\webtest\testkeystore" />
           </Component>
         </Directory>
       </Directory>
       <Directory Id="directory97" Name="etc">
         <Component Id="component94" DiskId="1" Guid="90BD5A92-DA62-48ce-8799-868E387EC7C8">
-          <File DiskId="1" Id="file591" Name="ANT-BO_1.JAR" LongName="ant-bootstrap.jar" Vital="yes" src="$(var.dist.dir)/etc\ant-bootstrap.jar" />
-          <File DiskId="1" Id="file592" Name="CHANGE_1.XSL" LongName="changelog.xsl" Vital="yes" src="$(var.dist.dir)/etc\changelog.xsl" />
-          <File DiskId="1" Id="file593" Name="COVERA_1.XSL" LongName="coverage-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\coverage-frames.xsl" />
-          <File DiskId="1" Id="file594" Name="JDEPEN_1.XSL" LongName="jdepend-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\jdepend-frames.xsl" />
-          <File DiskId="1" Id="file595" Name="jdepend.xsl" Vital="yes" src="$(var.dist.dir)/etc\jdepend.xsl" />
-          <File DiskId="1" Id="file596" Name="JUNIT-_3.XSL" LongName="junit-frames-xalan1.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames-xalan1.xsl" />
-          <File DiskId="1" Id="file597" Name="JUNIT-_1.XSL" LongName="junit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames.xsl" />
-          <File DiskId="1" Id="file598" Name="JUNIT-_2.XSL" LongName="junit-noframes.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-noframes.xsl" />
-          <File DiskId="1" Id="file599" Name="log.xsl" Vital="yes" src="$(var.dist.dir)/etc\log.xsl" />
-          <File DiskId="1" Id="file600" Name="MAUDIT_1.XSL" LongName="maudit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\maudit-frames.xsl" />
-          <File DiskId="1" Id="file601" Name="MMETRI_1.XSL" LongName="mmetrics-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\mmetrics-frames.xsl" />
-          <File DiskId="1" Id="file602" Name="tagdiff.xsl" Vital="yes" src="$(var.dist.dir)/etc\tagdiff.xsl" />
+          <File DiskId="1" Id="file589" Name="ANT-BO_1.JAR" LongName="ant-bootstrap.jar" Vital="yes" src="$(var.dist.dir)/etc\ant-bootstrap.jar" />
+          <File DiskId="1" Id="file590" Name="CHANGE_1.XSL" LongName="changelog.xsl" Vital="yes" src="$(var.dist.dir)/etc\changelog.xsl" />
+          <File DiskId="1" Id="file591" Name="COVERA_1.XSL" LongName="coverage-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\coverage-frames.xsl" />
+          <File DiskId="1" Id="file592" Name="JDEPEN_1.XSL" LongName="jdepend-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\jdepend-frames.xsl" />
+          <File DiskId="1" Id="file593" Name="jdepend.xsl" Vital="yes" src="$(var.dist.dir)/etc\jdepend.xsl" />
+          <File DiskId="1" Id="file594" Name="JUNIT-_3.XSL" LongName="junit-frames-xalan1.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames-xalan1.xsl" />
+          <File DiskId="1" Id="file595" Name="JUNIT-_1.XSL" LongName="junit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames.xsl" />
+          <File DiskId="1" Id="file596" Name="JUNIT-_2.XSL" LongName="junit-noframes.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-noframes.xsl" />
+          <File DiskId="1" Id="file597" Name="log.xsl" Vital="yes" src="$(var.dist.dir)/etc\log.xsl" />
+          <File DiskId="1" Id="file598" Name="MAUDIT_1.XSL" LongName="maudit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\maudit-frames.xsl" />
+          <File DiskId="1" Id="file599" Name="MMETRI_1.XSL" LongName="mmetrics-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\mmetrics-frames.xsl" />
+          <File DiskId="1" Id="file600" Name="tagdiff.xsl" Vital="yes" src="$(var.dist.dir)/etc\tagdiff.xsl" />
         </Component>
         <Directory Id="directory98" Name="CHECKS_1" LongName="checkstyle">
           <Component Id="component95" DiskId="1" Guid="2AEB59C7-5CEF-401c-9AB9-911B995F00FC">
-            <File DiskId="1" Id="file603" Name="CHECKS_1.XSL" LongName="checkstyle-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-frames.xsl" />
-            <File DiskId="1" Id="file604" Name="CHECKS_3.XSL" LongName="checkstyle-text.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-text.xsl" />
-            <File DiskId="1" Id="file605" Name="CHECKS_2.XSL" LongName="checkstyle-xdoc.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-xdoc.xsl" />
+            <File DiskId="1" Id="file601" Name="CHECKS_1.XSL" LongName="checkstyle-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-frames.xsl" />
+            <File DiskId="1" Id="file602" Name="CHECKS_3.XSL" LongName="checkstyle-text.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-text.xsl" />
+            <File DiskId="1" Id="file603" Name="CHECKS_2.XSL" LongName="checkstyle-xdoc.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-xdoc.xsl" />
           </Component>
         </Directory>
       </Directory>

@@ -205,7 +205,6 @@
   <selector id="needs.apache-oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
-      <filename name="${optional.package}/perforce/"/>
     </or>
   </selector>
 
