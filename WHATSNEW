@@ -117,6 +117,9 @@ Other changes:
  * Add the possibility to register a custom command line argument processor.
    See org.apache.tools.ant.ArgumentProcessor and manual/argumentprocessor.html
 
+ * add the possibility to suppress stdout in the sshexec task.
+   Bugzilla Report 50270.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

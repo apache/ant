@@ -27,6 +27,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
 
 import org.apache.tools.ant.BuildException;
@@ -72,6 +73,11 @@ public class SSHExec extends SSHBase {
     private static final String TIMEOUT_MESSAGE =
         "Timeout period exceeded, connection dropped.";
 
+    /**
+     * To supress writing logs to System.out
+     */
+    private boolean suppressSystemOut = false;
+    
     /**
      * Constructor for SSHExecTask.
      */
@@ -181,11 +187,21 @@ public class SSHExec extends SSHBase {
     }
 
     /**
+     * If suppressSystemOut is <code>true</code>, output will not be sent to System.out<br/>
+     * If suppressSystemOut is <code>false</code>, normal behavior
+     * @since Ant 1.9.0
+     */
+    public void setSuppressSystemOut(boolean suppressSystemOut)
+    {
+        this.suppressSystemOut = suppressSystemOut;
+    }
+    /**
      * Execute the command on the remote host.
      *
      * @exception BuildException  Most likely a network error or bad parameter.
      */
     public void execute() throws BuildException {
+        
         if (getHost() == null) {
             throw new BuildException("Host is required.");
         }
@@ -262,9 +278,7 @@ public class SSHExec extends SSHBase {
     private void executeCommand(Session session, String cmd, StringBuffer sb)
         throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        TeeOutputStream tee =
-            new TeeOutputStream(out,
-                                KeepAliveOutputStream.wrapSystemOut());
+        OutputStream tee = suppressSystemOut ? out : new TeeOutputStream(out, KeepAliveOutputStream.wrapSystemOut());
 
         InputStream istream = null ;
         if (inputFile != null) {
@@ -407,4 +421,5 @@ public class SSHExec extends SSHBase {
             }
         }
     }
+
 }
