@@ -194,7 +194,7 @@ public class ManifestClassPathTest
                                    + " skipping test");
                 return;
             }
-
+            project.setProperty("altDriveLetter", altDriveLetter);
             expectBuildExceptionContaining("testDifferentDrive",
                                            "different drive",
                                            "No suitable relative path from ");

@@ -229,10 +229,11 @@
 
   <target name="testDifferentDrive">
     <property name="temp" location="${java.io.tmpdir}"/>
+    <!-- the property altDriveLetter gets defined in Java -->
     <manifestclasspath jarfile="${temp}\e.jar"
                        maxParentLevels="99" property="cp">
       <classpath>
-        <pathelement location="D:\a\b\x.jar"/>
+        <pathelement location="${altDriveLetter}:\a\b\x.jar"/>
       </classpath>
     </manifestclasspath>
   </target>
