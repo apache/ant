@@ -22,6 +22,9 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Tests &lt;bm:manifestclasspath&gt;.
  */
@@ -167,10 +170,27 @@ public class ManifestClassPathTest
         if (!Os.isFamily("windows")) {
             System.out.println("Test with drive letters only run on windows");
         } else {
+            // the lines below try to find a drive name different than the one containing the temp dir
+            // if the temp dir is C will try to use D
+            // if the temp dir is on D or other will try to use C
+            File tmpdir = new File(System.getProperty("java.io.tmpdir"));
+            String driveLetter = "C";
             try {
-                new java.io.File("D:/foo.txt").getCanonicalPath();
+                String tmpCanonicalPath = tmpdir.getCanonicalPath();
+                driveLetter = tmpCanonicalPath.substring(1).toUpperCase();
+            } catch (IOException ioe) {
+                System.out.println("exception happened getting canonical path of java.io.tmpdir : " + ioe.getMessage());
+            }
+            String altDriveLetter = null;
+            try {
+                if ("C".equals(driveLetter)) {
+                    altDriveLetter = "D";
+                } else {
+                    altDriveLetter = "C";
+                }
+                new java.io.File(altDriveLetter + ":/foo.txt").getCanonicalPath();
             } catch (java.io.IOException e) {
-                System.out.println("drive d: doesn't exist or is not ready,"
+                System.out.println("drive " + altDriveLetter + ": doesn't exist or is not ready,"
                                    + " skipping test");
                 return;
             }
