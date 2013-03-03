@@ -39,7 +39,8 @@ public class StringResource extends Resource {
     private static final int STRING_MAGIC
         = Resource.getMagicNumber("StringResource".getBytes());
 
-    private String encoding = null;
+    private static final String DEFAULT_ENCODING = "UTF-8";
+    private String encoding = DEFAULT_ENCODING;
 
     /**
      * Default constructor.
@@ -212,7 +213,7 @@ public class StringResource extends Resource {
      * @param r the Reference to set.
      */
     public void setRefid(Reference r) {
-        if (encoding != null) {
+        if (encoding != DEFAULT_ENCODING) {
             throw tooManyAttributes();
         }
         super.setRefid(r);

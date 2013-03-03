@@ -127,9 +127,9 @@
       <resourcecount count="1">
         <restrict>
           <concat encoding="UTF-8">
-            <file file="${output}/echo8.txt" />
+            <file file="${output}/echo8.txt"/>
           </concat>
-          <contains text="${char}" />
+          <contains text="${char}" encoding="UTF-8"/>
         </restrict>
       </resourcecount>
     </au:assertTrue>

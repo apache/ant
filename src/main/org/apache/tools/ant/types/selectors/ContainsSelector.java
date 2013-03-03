@@ -42,6 +42,7 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
     private String contains = null;
     private boolean casesensitive = true;
     private boolean ignorewhitespace = false;
+    private String encoding = null;
     /** Key to used for parameterized custom selector */
     public static final String EXPRESSION_KEY = "expression";
     /** Used for parameterized custom selector */
@@ -80,6 +81,15 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
      */
     public void setText(String contains) {
         this.contains = contains;
+    }
+
+    /**
+     * The encoding of the resources processed
+     * @since Ant 1.9.0
+     * @param encoding encoding of the resources processed
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     /**
@@ -176,7 +186,11 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         }
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new InputStreamReader(r.getInputStream()));
+            if (encoding != null) {
+                in = new BufferedReader(new InputStreamReader(r.getInputStream(), encoding));
+            }   else {
+                in = new BufferedReader(new InputStreamReader(r.getInputStream()));
+            }
         } catch (Exception e) {
             throw new BuildException("Could not get InputStream from "
                     + r.toLongString(), e);

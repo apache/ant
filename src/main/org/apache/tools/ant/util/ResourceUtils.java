@@ -48,6 +48,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Resources;
+import org.apache.tools.ant.types.resources.StringResource;
 import org.apache.tools.ant.types.resources.Touchable;
 import org.apache.tools.ant.types.resources.selectors.Date;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
@@ -393,7 +394,12 @@ public class ResourceUtils {
                                              && filters.hasFilters());
         final boolean filterChainsAvailable = (filterChains != null
                                                && filterChains.size() > 0);
-
+        String effectiveInputEncoding = null;
+        if (source instanceof StringResource) {
+             effectiveInputEncoding = ((StringResource) source).getEncoding();
+        } else {
+            effectiveInputEncoding = inputEncoding;
+        }
         File destFile = null;
         if (dest.as(FileProvider.class) != null) {
             destFile = dest.as(FileProvider.class).getFile();
@@ -413,11 +419,11 @@ public class ResourceUtils {
             BufferedWriter out = null;
             try {
                 InputStreamReader isr = null;
-                if (inputEncoding == null) {
+                if (effectiveInputEncoding == null) {
                     isr = new InputStreamReader(source.getInputStream());
                 } else {
                     isr = new InputStreamReader(source.getInputStream(),
-                                                inputEncoding);
+                                                effectiveInputEncoding);
                 }
                 in = new BufferedReader(isr);
                 OutputStream os = getOutputStream(dest, append, project);
@@ -457,18 +463,18 @@ public class ResourceUtils {
                 FileUtils.close(in);
             }
         } else if (filterChainsAvailable
-                   || (inputEncoding != null
-                       && !inputEncoding.equals(outputEncoding))
-                   || (inputEncoding == null && outputEncoding != null)) {
+                   || (effectiveInputEncoding != null
+                       && !effectiveInputEncoding.equals(outputEncoding))
+                   || (effectiveInputEncoding == null && outputEncoding != null)) {
             BufferedReader in = null;
             BufferedWriter out = null;
             try {
                 InputStreamReader isr = null;
-                if (inputEncoding == null) {
+                if (effectiveInputEncoding == null) {
                     isr = new InputStreamReader(source.getInputStream());
                 } else {
                     isr = new InputStreamReader(source.getInputStream(),
-                                                inputEncoding);
+                                                effectiveInputEncoding);
                 }
                 in = new BufferedReader(isr);
                 OutputStream os = getOutputStream(dest, append, project);
