@@ -77,6 +77,10 @@ Fixed bugs:
  * Base64Converter not properly handling bytes with MSB set (not masking byte to int conversion)
    Bugzilla Report 54460
 
+ * The size resource comparator would return wrong results if file
+   sizes differed by more than 2 GB.
+   Bugzilla Report 54623
+
 Other changes:
 --------------
 
