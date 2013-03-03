@@ -198,7 +198,7 @@ public final class ChainReaderHelper {
      * Deregisters Classloaders from the project so GC can remove them later.
      */
     private static void cleanUpClassLoaders(List<AntClassLoader> loaders) {
-        for (Iterator<AntClassLoader> it = loaders.iterator(); it.hasNext(); ) {
+        for (Iterator<AntClassLoader> it = loaders.iterator(); it.hasNext();) {
             it.next().cleanup();
         }
     }

@@ -38,7 +38,7 @@ public class TokenizedPattern {
         new TokenizedPattern("", new String[0]);
 
     private final String pattern;
-    private final String tokenizedPattern[];
+    private final String[] tokenizedPattern;
 
     /**
     * Initialize the PathPattern by parsing it.

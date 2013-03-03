@@ -262,8 +262,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
         // Change all EOL characters to match the calculated EOL string. If
         // configured to do so, append a trailing EOL so that the file ends on
         // a EOL.
-        if (eol != CrLf.ASIS)
-        {
+        if (eol != CrLf.ASIS) {
             in = new NormalizeEolFilter(in, calculateEolString(eol), getFixlast());
         }
 

@@ -47,7 +47,7 @@ public class TokenizedPath {
     private static final boolean[] CS_THEN_NON_CS = new boolean[] {true, false};
 
     private final String path;
-    private final String tokenizedPath[];
+    private final String[] tokenizedPath;
 
     /**
     * Initialize the TokenizedPath by parsing it. 

@@ -213,7 +213,7 @@ public class Image extends MatchingTask {
      * the directory.
      * @since Ant 1.8.0
      */
-    public int processDir(final File srcDir, final String srcNames[],
+    public int processDir(final File srcDir, final String[] srcNames,
                           final File dstDir, final FileNameMapper mapper) {
         int writeCount = 0;
 

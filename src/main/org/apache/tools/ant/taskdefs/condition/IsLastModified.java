@@ -80,6 +80,7 @@ public class IsLastModified extends ProjectComponent implements Condition {
 
     /**
      * The resource to test.
+     * @param r the resource to test
      */
     public void add(Resource r) {
         if (resource != null) {
@@ -90,6 +91,7 @@ public class IsLastModified extends ProjectComponent implements Condition {
 
     /**
      * The type of comparison to test.
+     * @param mode the mode of comparison.
      */
     public void setMode(CompareMode mode) {
         this.mode = mode;
@@ -97,6 +99,8 @@ public class IsLastModified extends ProjectComponent implements Condition {
 
     /**
      * Argument validation.
+     * @throws BuildException if the required attributes are not supplied or
+     * if there is an inconsistency in the attributes.
      */
     protected void validate() throws BuildException {
         if (millis >= 0 && dateTime != null) {
@@ -114,6 +118,8 @@ public class IsLastModified extends ProjectComponent implements Condition {
     /**
      * Calculate timestamp as millis either based on millis or
      * dateTime (and pattern) attribute.
+     * @return time in milliseconds
+     * @throws BuildException if the date cannot be parsed.
      */
     protected long getMillis() throws BuildException {
         if (millis >= 0) {
@@ -145,6 +151,11 @@ public class IsLastModified extends ProjectComponent implements Condition {
         return 0;
     }
 
+    /**
+     * evaluate the condition
+     * @return true or false depending on the compoarison mode and the time of the resource
+     * @throws BuildException
+     */
     public boolean eval() throws BuildException {
         validate();
         long expected = getMillis();
@@ -170,6 +181,9 @@ public class IsLastModified extends ProjectComponent implements Condition {
         throw new BuildException("Unknown mode " + mode.getValue());
     }
 
+    /**
+     * describes comparison modes.
+     */
     public static class CompareMode extends EnumeratedAttribute {
         private static final String EQUALS_TEXT = "equals";
         private static final String BEFORE_TEXT = "before";
@@ -179,10 +193,17 @@ public class IsLastModified extends ProjectComponent implements Condition {
 
         private static final CompareMode EQUALS = new CompareMode(EQUALS_TEXT);
 
+        /**
+         * creates a CompareMode instance of type equals
+         */
         public CompareMode() {
             this(EQUALS_TEXT);
         }
 
+        /**
+         * creates a comparemode instance
+         * @param s one of the authorized values for comparemode
+         */
         public CompareMode(String s) {
             super();
             setValue(s);
