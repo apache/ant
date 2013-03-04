@@ -88,8 +88,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
     on the branch. It is important that this be a clean build. Label this with
     a tag ANT_170_B1.
 
-    The file release.sh gives an idea of how to do this build process,
-    currently in two steps, one with JDK 1.4 and one with JDK 1.5
+    The file release.sh gives an idea of how to do this build process.
+    buid.xml specifies that the code should be compiled with source=1.5 and target=1.5.
 
     C:\dev\asf\ant-core>
     svn copy https://svn.apache.org/repos/asf/ant/core/trunk \

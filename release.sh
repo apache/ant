@@ -30,16 +30,6 @@ case "`uname`" in
   MINGW*) mingw=true ;;
   Linux) linux=true ;;
 esac
-# running first build under JDK 1.4 under cygwin
-if $cygwin ; then
-  export JAVA_HOME=/cygdrive/c/j2sdk1.4.2_19
-  export PATH=$JAVA_HOME/bin:$PATH
-  echo ANT_HOME=$ANT_HOME
-  echo JAVA_HOME=$JAVA_HOME
-  which java
-  echo running first build under JDK 1.4
-  ./build.sh
-fi
 if $cygwin ; then
   export JAVA_HOME="/cygdrive/c/Program Files/Java/jdk1.5.0_22"
   JDK_VERSION=1.5
