@@ -294,6 +294,7 @@
   </target>
 
   <target name="testTestMethods" >
+    <property name="tmp.dir" value="out"/>
     <echo file="${tmp.dir}/T1.java">public class T1 extends
       junit.framework.TestCase {
       public void testOK() {}
