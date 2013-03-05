@@ -285,8 +285,7 @@
             <classpath refid="test"/>
             <batchtest todir="out">
                 <fileset dir="../../../../tests/junit">
-                    <include
-                            name="org/example/junit/Junit4Skippable.java"/>
+                    <include name="org/example/junit/Junit4Skippable.java"/>
                     <!-- tests remove out-dir on tearDown -->
                 </fileset>
             </batchtest>
