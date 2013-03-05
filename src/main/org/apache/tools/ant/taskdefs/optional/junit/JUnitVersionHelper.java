@@ -112,7 +112,7 @@ public class JUnitVersionHelper {
 
     /**
      * Tries to find the name of the class which a test represents
-     * across JUnit 3 and 4. For Junit4 it parses the toString() value of the
+     * across JUnit 3 and 4. For JUnit4 it parses the toString() value of the
      * test, and extracts it from there.
      * @since Ant 1.7.1 (it was private until then)
      * @param test test case to look at

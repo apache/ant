@@ -276,7 +276,7 @@
     </junit>
   </target>
 
-  <!-- Junit4 Ignore and Assume for skipping tests -->
+  <!-- JUnit4 Ignore and Assume for skipping tests -->
   <target name="testSkippableTests">
     <mkdir dir="out"/>
     <junit fork="true">
@@ -285,7 +285,7 @@
             <classpath refid="test"/>
             <batchtest todir="out">
                 <fileset dir="../../../../tests/junit">
-                    <include name="org/example/junit/Junit4Skippable.java"/>
+                    <include name="org/example/junit/JUnit4Skippable.java"/>
                     <!-- tests remove out-dir on tearDown -->
                 </fileset>
             </batchtest>

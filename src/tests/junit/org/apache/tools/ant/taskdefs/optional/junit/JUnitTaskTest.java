@@ -304,12 +304,12 @@ public class JUnitTaskTest extends BuildFileTest {
         assertEquals(search, line);
     }
 
-    public void testJunit4Skip() throws Exception {
+    public void testJUnit4Skip() throws Exception {
         executeTarget("testSkippableTests");
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(getProject().getResource("out/TEST-org.example.junit.Junit4Skippable.xml").getInputStream());
+        Document doc = dBuilder.parse(getProject().getResource("out/TEST-org.example.junit.JUnit4Skippable.xml").getInputStream());
 
         assertEquals("Incorrect number of nodes created", 8, doc.getElementsByTagName("testcase").getLength());
 

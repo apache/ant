@@ -164,7 +164,7 @@ public class JUnitTask extends Task {
     private Permissions perm = null;
     private ForkMode forkMode = new ForkMode("perTest");
 
-    private boolean splitJunit = false;
+    private boolean splitJUnit = false;
     private boolean enableTestListenerEvents = false;
     private JUnitTaskMirror delegate;
     private ClassLoader mirrorLoader;
@@ -714,7 +714,7 @@ public class JUnitTask extends Task {
      */
     public void init() {
         antRuntimeClasses = new Path(getProject());
-        splitJunit = !addClasspathResource("/junit/framework/TestCase.class");
+        splitJUnit = !addClasspathResource("/junit/framework/TestCase.class");
         addClasspathEntry("/org/apache/tools/ant/launch/AntMain.class");
         addClasspathEntry("/org/apache/tools/ant/Task.class");
         addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
@@ -751,7 +751,7 @@ public class JUnitTask extends Task {
      */
     protected void setupJUnitDelegate() {
         final ClassLoader myLoader = JUnitTask.class.getClassLoader();
-        if (splitJunit) {
+        if (splitJUnit) {
             final Path path = new Path(getProject());
             path.add(antRuntimeClasses);
             Path extra = getCommandline().getClasspath();
@@ -825,7 +825,7 @@ public class JUnitTask extends Task {
 
     /**
      * Run the tests.
-     * @param arg one JunitTest
+     * @param arg one JUnitTest
      * @throws BuildException in case of test failures or errors
      */
     protected void execute(JUnitTest arg) throws BuildException {
@@ -1379,7 +1379,7 @@ public class JUnitTask extends Task {
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
-            if (splitJunit) {
+            if (splitJUnit) {
                 classLoader = (AntClassLoader) delegate.getClass().getClassLoader();
             } else {
                 createClassLoader();
@@ -1636,7 +1636,7 @@ public class JUnitTask extends Task {
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
-            if (splitJunit) {
+            if (splitJUnit) {
                 classLoader = (AntClassLoader) delegate.getClass().getClassLoader();
             } else {
                 createClassLoader();

@@ -23,7 +23,7 @@
 
     <!-- reports1 take care of transformation of 2 test result files and
          produce reports according to the default format (frames)
-         needed for testNoFileJunitNoFrames -->
+         needed for testNoFileJUnitNoFrames -->
     <target name="reports1">
         <mkdir dir="${outputdir}"/>
         <mkdir dir="${outputdir}/html"/>

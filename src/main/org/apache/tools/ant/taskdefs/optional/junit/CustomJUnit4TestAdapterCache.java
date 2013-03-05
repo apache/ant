@@ -27,7 +27,7 @@ import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * Provides a custom implementation of the notifier for a Junit4TestAdapter
+ * Provides a custom implementation of the notifier for a JUnit4TestAdapter
  * so that skipped and ignored tests can be reported to the existing
  * <tt>TestListener</tt>s.
  *

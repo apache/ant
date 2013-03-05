@@ -25,7 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class Junit4Skippable {
+public class JUnit4Skippable {
 
     @Test
     public void passingTest() {

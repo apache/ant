@@ -24,15 +24,15 @@ import org.junit.runner.notification.Failure;
 
 /**
  * Provides the functionality for TestListeners to be able to be notified of
- * the necessary Junit4 events for test being ignored (@Ignore annotation)
- * or skipped (Assume failures). Tests written in Junit4 will report against
+ * the necessary JUnit4 events for test being ignored (@Ignore annotation)
+ * or skipped (Assume failures). Tests written in JUnit4 will report against
  * the methods in this interface alongside the methods in the existing TestListener
  */
 public interface IgnoredTestListener extends TestListener {
 
     /**
      * Reports when a test has been marked with the @Ignore annotation. The parameter
-     * should normally be typed to Junit's {@link junit.framework.JUnit4TestCaseFacade}
+     * should normally be typed to JUnit's {@link junit.framework.JUnit4TestCaseFacade}
      * so implementing classes should be able to get the details of the ignore by casting
      * the argument and retrieving the descriptor from the test.
      * @param test
