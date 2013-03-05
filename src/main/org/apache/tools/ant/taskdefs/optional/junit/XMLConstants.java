@@ -106,6 +106,8 @@ public interface XMLConstants {
     /** tests attribute for testsuite elements */
     String ATTR_TESTS = "tests";
 
+    String ATTR_SKIPPED = "skipped";
+
     /** type attribute for failure and error elements */
     String ATTR_TYPE = "type";
 

@@ -144,6 +144,8 @@ public class SummaryJUnitResultFormatter
         sb.append(suite.failureCount());
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
+        sb.append(", Skipped: ");
+        sb.append(suite.skipCount());
         sb.append(", Time elapsed: ");
         sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");

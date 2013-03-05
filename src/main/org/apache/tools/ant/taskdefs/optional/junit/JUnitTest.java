@@ -62,6 +62,11 @@ public class JUnitTest extends BaseTest implements Cloneable {
     // part of the result. So we'd better derive a new class from TestResult
     // and deal with it. (SB)
     private long runs, failures, errors;
+    /**
+    @since Ant 1.9.0
+    */
+    private long skips;
+
     private long runTime;
 
     // Snapshot of the system properties
@@ -352,15 +357,30 @@ public class JUnitTest extends BaseTest implements Cloneable {
     }
 
     /**
-     * Set the number of runs, failures and errors.
+     * Set the number of runs, failures, errors, and skipped tests.
      * @param runs     the number of runs.
      * @param failures the number of failures.
      * @param errors   the number of errors.
+     * Kept for backward compatibility with Ant 1.8.4
      */
     public void setCounts(long runs, long failures, long errors) {
         this.runs = runs;
         this.failures = failures;
         this.errors = errors;
+    }
+    /**
+     * Set the number of runs, failures, errors, and skipped tests.
+     * @param runs     the number of runs.
+     * @param failures the number of failures.
+     * @param errors   the number of errors.
+     * @param skips   the number of skipped tests.
+     * @since Ant 1.9.0
+     */
+    public void setCounts(long runs, long failures, long errors, long skips) {
+        this.runs = runs;
+        this.failures = failures;
+        this.errors = errors;
+        this.skips = skips;
     }
 
     /**
@@ -393,6 +413,14 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     public long errorCount() {
         return errors;
+    }
+
+    /**
+     * Get the number of skipped tests.
+     * @return the number of skipped tests.
+     */
+    public long skipCount() {
+        return skips;
     }
 
     /**

@@ -87,6 +87,9 @@ Fixed bugs:
    set to ANSI_X3.4-1968.
    Bugzilla Report 54606
 
+ * JUnit4 tests marked @Ignore do not appear in XML output
+   Bugzilla Report 43969
+
 Other changes:
 --------------
 

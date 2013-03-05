@@ -26,11 +26,14 @@ import java.text.NumberFormat;
 import java.util.Hashtable;
 
 import junit.framework.AssertionFailedError;
+import junit.framework.JUnit4TestCaseFacade;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
+import org.junit.Ignore;
+import org.junit.runner.notification.Failure;
 
 
 /**
@@ -38,7 +41,7 @@ import org.apache.tools.ant.util.StringUtils;
  *
  */
 
-public class PlainJUnitResultFormatter implements JUnitResultFormatter {
+public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredTestListener {
 
     private static final double ONE_SECOND = 1000.0;
 
@@ -123,6 +126,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(suite.failureCount());
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
+        sb.append(", Skipped: ");
+        sb.append(suite.skipCount());
         sb.append(", Time elapsed: ");
         sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
@@ -258,4 +263,40 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         }
     }
 
+    @Override
+    public void testIgnored(Test test) {
+        String message = null;
+        if (test instanceof JUnit4TestCaseFacade) {
+            JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
+            Ignore annotation = facade.getDescription().getAnnotation(Ignore.class);
+            if (annotation != null && annotation.value() != null && !annotation.value().isEmpty()) {
+                message = annotation.value();
+            }
+        }
+        formatSkip(test, message);
+    }
+
+
+    public void formatSkip(Test test, String message) {
+        if (test != null) {
+            endTest(test);
+        }
+
+        try {
+            wri.write("\tSKIPPED");
+            if (message != null) {
+                wri.write(": ");
+                wri.write(message);
+            }
+            wri.newLine();
+        } catch (IOException ex) {
+            throw new BuildException(ex);
+        }
+
+    }
+
+    @Override
+    public void testAssumptionFailure(Test test, Throwable throwable) {
+        formatSkip(test, throwable.getMessage());
+    }
 } // PlainJUnitResultFormatter

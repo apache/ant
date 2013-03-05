@@ -1645,7 +1645,7 @@ public class JUnitTask extends Task {
                 classLoader.setThreadContextLoader();
             }
 
-            test.setCounts(1, 0, 1);
+            test.setCounts(1, 0, 1, 0);
             test.setProperties(getProject().getProperties());
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];

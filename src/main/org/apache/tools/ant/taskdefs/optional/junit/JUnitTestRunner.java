@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import junit.framework.AssertionFailedError;
+import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.Test;
 import junit.framework.TestFailure;
 import junit.framework.TestListener;
@@ -76,7 +77,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Collects TestResults.
      */
-    private TestResult res;
+    private IgnoredTestResult res;
 
     /**
      * Do we filter junit.*.* stack frames out of failure and error exceptions.
@@ -289,6 +290,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents,
                            ClassLoader loader) {
+        super();
         JUnitTestRunner.filtertrace = filtertrace; // XXX clumsy, should use instance field somehow
         this.junitTest = test;
         this.haltOnError = haltOnError;
@@ -350,7 +352,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Run the test.
      */
     public void run() {
-        res = new TestResult();
+        res = new IgnoredTestResult();
         res.addListener(wrapListener(this));
         final int size = formatters.size();
         for (int i = 0; i < size; i++) {
@@ -468,8 +470,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             formalParams = new Class[] {Class.class, String[].class};
                             actualParams = new Object[] {testClass, methods};
                         } else {
-                            formalParams = new Class[] {Class.class};
-                            actualParams = new Object[] {testClass};
+                            formalParams = new Class[] {Class.class, JUnit4TestAdapterCache.class};
+                            actualParams = new Object[] {testClass, CustomJUnit4TestAdapterCache.getInstance()};
                         }
                         suite =
                             (Test) junit4TestAdapterClass
@@ -512,7 +514,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     ((TestListener) formatters.elementAt(i))
                         .addError(null, exception);
                 }
-                junitTest.setCounts(1, 0, 1);
+                junitTest.setCounts(1, 0, 1, 0);
                 junitTest.setRunTime(0);
             } else {
                 try {
@@ -522,10 +524,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     if (junit4 ||
                         suite.getClass().getName().equals(JUNIT_4_TEST_ADAPTER)) {
                         int[] cnts = findJUnit4FailureErrorCount(res);
-                        junitTest.setCounts(res.runCount(), cnts[0], cnts[1]);
+                        junitTest.setCounts(res.runCount() + res.ignoredCount(), cnts[0], cnts[1], res.ignoredCount() + res.skippedCount());
                     } else {
-                        junitTest.setCounts(res.runCount(), res.failureCount(),
-                                res.errorCount());
+                        junitTest.setCounts(res.runCount() + res.ignoredCount(), res.failureCount(),
+                                res.errorCount(), res.ignoredCount() + res.skippedCount());
                     }
                     junitTest.setRunTime(System.currentTimeMillis() - start);
                 }
@@ -1101,8 +1103,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      *
      * @since Ant 1.7
      */
-    private TestListener wrapListener(final TestListener testListener) {
-        return new TestListener() {
+    private TestListenerWrapper wrapListener(final TestListener testListener) {
+        return new TestListenerWrapper(testListener) {
             public void addError(Test test, Throwable t) {
                 if (junit4 && t instanceof AssertionFailedError) {
                     // JUnit 4 does not distinguish between errors and failures
