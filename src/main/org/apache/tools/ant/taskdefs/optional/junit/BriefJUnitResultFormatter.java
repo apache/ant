@@ -273,13 +273,12 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     }
 
 
-    @Override
     public void testIgnored(Test test) {
         String message = null;
         if (test instanceof JUnit4TestCaseFacade) {
             JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
             Ignore annotation = facade.getDescription().getAnnotation(Ignore.class);
-            if (annotation != null && annotation.value() != null && !annotation.value().isEmpty()) {
+            if (annotation != null && annotation.value().length() > 0) {
                 message = annotation.value();
             }
         }
@@ -305,7 +304,6 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     }
 
-    @Override
     public void testAssumptionFailure(Test test, Throwable cause) {
         formatSkip(test, cause.getMessage());
     }

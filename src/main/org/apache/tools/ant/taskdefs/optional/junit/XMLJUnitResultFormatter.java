@@ -322,7 +322,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         nested.appendChild(doc.createCDATASection(output));
     }
 
-    @Override
     public void testIgnored(Test test) {
         String message = null;
         if (test != null && test instanceof JUnit4TestCaseFacade) {
@@ -336,7 +335,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         	
                 Method testMethod = testClass.getMethod(JUnitVersionHelper.getTestCaseName(test));
                 Ignore annotation = testMethod.getAnnotation(Ignore.class);
-                if (annotation != null && annotation.value() != null && !annotation.value().isEmpty()) {
+                if (annotation != null && annotation.value().length() > 0) {
                     message = annotation.value();
                 }
         	} catch (NoSuchMethodException e) {
@@ -374,7 +373,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     }
 
-    @Override
     public void testAssumptionFailure(Test test, Throwable failure) {
         String message = failure.getMessage();
         formatSkip(test, message);
