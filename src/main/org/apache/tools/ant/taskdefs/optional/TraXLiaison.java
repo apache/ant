@@ -528,7 +528,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
      */
     public void fatalError(TransformerException e) {
         logError(e, "Fatal Error");
-        throw new BuildException("Fatal error during transformation", e);
+        throw new BuildException("Fatal error during transformation using " + stylesheet, e);
     }
 
     /**
