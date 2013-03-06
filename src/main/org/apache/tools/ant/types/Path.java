@@ -67,7 +67,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     // CheckStyle:VisibilityModifier OFF - bc
 
     /** The system classpath as a Path object */
-    public static final Path systemClasspath =
+    public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
 
 
@@ -76,7 +76,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      *
      * @since Ant 1.6.2
      */
-    public static final Path systemBootClasspath =
+    public static Path systemBootClasspath =
         new Path(null, System.getProperty("sun.boot.class.path"));
 
     // CheckStyle:VisibilityModifier OFF - bc
