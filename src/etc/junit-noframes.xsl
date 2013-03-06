@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
         xmlns:lxslt="http://xml.apache.org/xslt"
-        xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
+        xmlns:string="xalan://java.lang.String">
 <xsl:output method="html" indent="yes" encoding="UTF-8"
   doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
@@ -439,10 +439,10 @@
 
 <xsl:template name="JS-escape">
     <xsl:param name="string"/>
-    <xsl:param name="tmp1" select="stringutils:replace(string($string),'\','\\')"/>
-    <xsl:param name="tmp2" select="stringutils:replace(string($tmp1),&quot;'&quot;,&quot;\&apos;&quot;)"/>
-    <xsl:param name="tmp3" select="stringutils:replace(string($tmp2),&quot;&#10;&quot;,'\n')"/>
-    <xsl:param name="tmp4" select="stringutils:replace(string($tmp3),&quot;&#13;&quot;,'\r')"/>
+    <xsl:param name="tmp1" select="string:replaceAll(string:new(string($string)),'\\','\\\\')"/>
+    <xsl:param name="tmp2" select="string:replaceAll(string:new(string($tmp1)),&quot;'&quot;,&quot;\\&apos;&quot;)"/>
+    <xsl:param name="tmp3" select="string:replaceAll(string:new(string($tmp2)),&quot;&#10;&quot;,'\\n')"/>
+    <xsl:param name="tmp4" select="string:replaceAll(string:new(string($tmp3)),&quot;&#13;&quot;,'\\r')"/>
     <xsl:value-of select="$tmp4"/>
 </xsl:template>
 
