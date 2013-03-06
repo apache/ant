@@ -20,20 +20,16 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.util.Iterator;
 import java.util.List;
-import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunListener;
-import org.junit.runner.notification.RunNotifier;
 
 /**
  * Adapter between JUnit 3.8.x API and JUnit 4.x API for execution of tests
- * and listening of events (test start, test finish, test failure).
+ * and listening of events (test start, test finish, test failure, test skipped).
  * The constructor is passed a JUnit 4 test class and a list of name of methods
  * in it that should be executed. Method {@link #run run(TestResult)} executes
  * the given JUnit-4-style test methods and notifies the given {@code TestResult}
@@ -46,7 +42,7 @@ public class JUnit4TestMethodAdapter implements Test {
     private final Class testClass;
     private final String[] methodNames;
     private final Runner runner;
-    private final Cache cache;
+    private final CustomJUnit4TestAdapterCache cache;
 
     /**
      * Creates a new adapter for the given class and a method within the class.
@@ -75,7 +71,7 @@ public class JUnit4TestMethodAdapter implements Test {
         }
         this.testClass = testClass;
         this.methodNames = (String[]) methodNames.clone();
-        this.cache = Cache.instance;
+        this.cache = CustomJUnit4TestAdapterCache.getInstance();
 
         // Warning: If 'testClass' is an old-style (pre-JUnit-4) class,
         // then all its test methods will be executed by the returned runner!
@@ -104,7 +100,7 @@ public class JUnit4TestMethodAdapter implements Test {
     public Class getTestClass() {
         return testClass;
     }
-    
+
     public void run(final TestResult result) {
         runner.run(cache.getNotifier(result));
     }
@@ -188,42 +184,5 @@ public class JUnit4TestMethodAdapter implements Test {
 
     }
 
-    /**
-     * Effectively a copy of {@code JUnit4TestAdapterCache}, except that its
-     * method {@code getNotifier()} does not require an argument
-     * of type {@code JUnit4TestAdapter}.
-     */
-    private static final class Cache extends JUnit4TestAdapterCache {
-        
-        private static final long serialVersionUID = 8454901854293461610L;
-
-	private static final Cache instance = new Cache();
-
-	public static JUnit4TestAdapterCache getDefault() {
-            return instance;
-	}
-	
-	public RunNotifier getNotifier(final TestResult result) {
-            RunNotifier notifier = new RunNotifier();
-            notifier.addListener(new RunListener() {
-                    public void testFailure(Failure failure) throws Exception {
-                        result.addError(asTest(failure.getDescription()),
-                                        failure.getException());
-                    }
-
-                    public void testFinished(Description description)
-                                    throws Exception {
-                        result.endTest(asTest(description));
-                    }
-
-                    public void testStarted(Description description)
-                                    throws Exception {
-                        result.startTest(asTest(description));
-                    }
-            });
-            return notifier;
-	}
-
-    }
 
 }

@@ -25,6 +25,14 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 public class JUnitTaskTest extends BuildFileTest {
 
@@ -262,7 +270,7 @@ public class JUnitTaskTest extends BuildFileTest {
                          line);
             line = reader.readLine();
             assertNotNull(line);
-            assertTrue(line.startsWith("Tests run: 1, Failures: 0, Errors: 0, Time elapsed:"));
+            assertTrue(line.startsWith("Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed:"));
             line = reader.readLine();
             assertEquals("------------- Standard Output ---------------",
                          line);
@@ -294,6 +302,35 @@ public class JUnitTaskTest extends BuildFileTest {
     private void assertPrint(String line, String from, String to) {
         String search = from + " print to System." + to;
         assertEquals(search, line);
+    }
+
+    public void testJUnit4Skip() throws Exception {
+        executeTarget("testSkippableTests");
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(getProject().getResource("out/TEST-org.example.junit.JUnit4Skippable.xml").getInputStream());
+
+        assertEquals("Incorrect number of nodes created", 8, doc.getElementsByTagName("testcase").getLength());
+
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xpath = factory.newXPath();
+
+        assertEquals("Incorrect number of skipped tests in header", 4, Integer.parseInt(xpath.compile("//testsuite/@skipped").evaluate(doc)));
+        assertEquals("Incorrect number of error tests in header", 1, Integer.parseInt(xpath.compile("//testsuite/@errors").evaluate(doc)));
+        assertEquals("Incorrect number of failure tests in header", 2, Integer.parseInt(xpath.compile("//testsuite/@failures").evaluate(doc)));
+        assertEquals("Incorrect number of tests in header", 8, Integer.parseInt(xpath.compile("//testsuite/@tests").evaluate(doc)));
+
+
+        assertEquals("Incorrect ignore message on explicit ignored test", "Please don't ignore me!", xpath.compile("//testsuite/testcase[@name='explicitIgnoreTest']/skipped/@message").evaluate(doc));
+        assertEquals("No message should be set on Ignored tests with no Ignore annotation text", 0, ((Node)xpath.compile("//testsuite/testcase[@name='explicitlyIgnoreTestNoMessage']/skipped").evaluate(doc, XPathConstants.NODE)).getAttributes().getLength());
+        assertEquals("Incorrect ignore message on implicit ignored test", "This test will be ignored", xpath.compile("//testsuite/testcase[@name='implicitlyIgnoreTest']/skipped/@message").evaluate(doc));
+        assertNotNull("Implicit ignore test should have an ignore element", xpath.compile("//testsuite/testcase[@name='implicitlyIgnoreTestNoMessage']/skipped").evaluate(doc, XPathConstants.NODE));
+
+    }
+
+    public void testTestMethods() throws Exception {
+        executeTarget("testTestMethods");
     }
 
 }

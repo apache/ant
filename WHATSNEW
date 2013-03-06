@@ -20,6 +20,8 @@ Changes that could break older environments:
 
  * Setting the default encoding of StringResource to UTF-8 instead of null
 
+ * Upgrade JUnit 4 to JUnit 4.11
+
 Fixed bugs:
 -----------
 
@@ -86,6 +88,9 @@ Fixed bugs:
  * Unable to encode properly into UTF-8 when the system property file.encoding is
    set to ANSI_X3.4-1968.
    Bugzilla Report 54606
+
+ * JUnit4 tests marked @Ignore do not appear in XML output
+   Bugzilla Report 43969
 
 Other changes:
 --------------

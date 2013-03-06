@@ -94,7 +94,7 @@ public class AssertionsTest extends BuildFileTest {
     }
 
 
-    public void testJunit() {
+    public void testJUnit() {
         executeTarget("test-junit");
     }
 }

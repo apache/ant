@@ -25,11 +25,13 @@ import java.io.StringWriter;
 import java.text.NumberFormat;
 
 import junit.framework.AssertionFailedError;
+import junit.framework.JUnit4TestCaseFacade;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
+import org.junit.Ignore;
 
 /**
  * Prints plain text output of the test to a specified Writer.
@@ -38,7 +40,7 @@ import org.apache.tools.ant.util.StringUtils;
  * @see FormatterElement
  * @see PlainJUnitResultFormatter
  */
-public class BriefJUnitResultFormatter implements JUnitResultFormatter {
+public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredTestListener {
 
     private static final double ONE_SECOND = 1000.0;
 
@@ -141,6 +143,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(suite.failureCount());
         sb.append(", Errors: ");
         sb.append(suite.errorCount());
+        sb.append(", Skipped: ");
+        sb.append(suite.skipCount());
         sb.append(", Time elapsed: ");
         sb.append(numberFormat.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
@@ -266,5 +270,41 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
         } catch (IOException ex) {
             throw new BuildException(ex);
         }
+    }
+
+
+    public void testIgnored(Test test) {
+        String message = null;
+        if (test instanceof JUnit4TestCaseFacade) {
+            JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
+            Ignore annotation = facade.getDescription().getAnnotation(Ignore.class);
+            if (annotation != null && annotation.value().length() > 0) {
+                message = annotation.value();
+            }
+        }
+        formatSkip(test, message);
+    }
+
+
+    public void formatSkip(Test test, String message) {
+        if (test != null) {
+            endTest(test);
+        }
+
+        try {
+            resultWriter.write(formatTest(test) + "SKIPPED");
+            if (message != null) {
+                resultWriter.write(": ");
+                resultWriter.write(message);
+            }
+            resultWriter.newLine();
+        } catch (IOException ex) {
+            throw new BuildException(ex);
+        }
+
+    }
+
+    public void testAssumptionFailure(Test test, Throwable cause) {
+        formatSkip(test, cause.getMessage());
     }
 }

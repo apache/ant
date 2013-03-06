@@ -17,7 +17,7 @@
 # this is a first attempt to document the build of the distribution
 # paths are hard-coded and obviously this is for a Cygwin/Windows combo
 #######################################################################
-rm -rf bootstrap build dist distribution
+rm -rf bootstrap build dist distribution java-repository
 unset ANT_HOME
 # OS specific support.  $var _must_ be set to either true or false.
 cygwin=false;
