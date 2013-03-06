@@ -79,17 +79,10 @@ public final class StringUtils {
      * @param from the occurrence to replace.
      * @param to the occurrence to be used as a replacement.
      * @return the new string with replaced occurrences.
+     * @deprecated Use {@link String#replace(CharSequence, CharSequence)} now.
      */
     public static String replace(String data, String from, String to) {
-        StringBuffer buf = new StringBuffer(data.length());
-        int pos = -1;
-        int i = 0;
-        while ((pos = data.indexOf(from, i)) != -1) {
-            buf.append(data.substring(i, pos)).append(to);
-            i = pos + from.length();
-        }
-        buf.append(data.substring(i));
-        return buf.toString();
+        return data.replace(from, to);
     }
 
     /**

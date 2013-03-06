@@ -498,7 +498,7 @@ public class DOMElementWriter {
             }
         }
 
-        return StringUtils.replace(sb.substring(0), "]]>", "]]]]><![CDATA[>");
+        return sb.substring(0).replace("]]>", "]]]]><![CDATA[>");
     }
 
     /**
