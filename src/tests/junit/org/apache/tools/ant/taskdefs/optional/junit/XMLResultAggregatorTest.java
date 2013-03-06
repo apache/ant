@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.security.Permission;
 import junit.framework.TestCase;
+import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.types.FileSet;
@@ -63,6 +64,11 @@ public class XMLResultAggregatorTest extends TestCase {
         fs.setFile(xml);
         task.addFileSet(fs);
         Project project = new Project();
+        DefaultLogger logger = new DefaultLogger();
+        logger.setOutputPrintStream(System.out);
+        logger.setErrorPrintStream(System.err);
+        logger.setMessageOutputLevel(Project.MSG_INFO);
+        project.addBuildListener(logger);
         project.init();
         task.setProject(project);
         /* getResourceAsStream override unnecessary on JDK 7. Ought to work around JAXP #6723276 in JDK 6, but causes a TypeCheckError in FunctionCall for reasons TBD:
