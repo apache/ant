@@ -56,21 +56,8 @@ Note: This document was updated in the context of releasing Ant 1.7.
     ant -version and the naming of the distribution files.
 
     Update the following files for version number:
-
-        On the branch only :
-
-            * manual/cover.html
-            * manual/credits.html
-            * build.xml properties : project-version & manifest-version 
-            * POM files under src/etc/poms and subdirectories
-            * ivy.xml in release subdirectory
-
-        Commit your changes.
-
-        On the branch and on the main trunk:
-
-            * WHATSNEW
-
+    
+    see at the end of this document the list of files containing version information
 
 6.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  All dependencies are either provided by
@@ -139,7 +126,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
     and more +1s than -1s have been cast.  The vote will run for a
     week.
 
-13. Once the vote has passed, the distrib artifacts should be published the
+13. Update the files listed at the end of the document (files containing 
+    version information) to prepare the development of the next version of Ant
+
+14. Once the vote has passed, the distrib artifacts should be published the
     apache dist. It is managed via svnpubsub so the release should be
     committed to the subversion repository
     https://dist.apache.org/repos/dist/release/ant/.
@@ -149,14 +139,14 @@ Note: This document was updated in the context of releasing Ant 1.7.
     available via the archive. To do so, just use the "svn rm" command against
     the artifacts or folders to remove.
 
-14. Address the available release tags in BugZilla. Create a new tag 1.7.0Beta1.
+15. Address the available release tags in BugZilla. Create a new tag 1.7.0Beta1.
     If there is a separate main branch, create a 1.8alpha tag.
     Assign all existing 1.7 alpha bugs to 1.7.0Beta1.
     Note that such massive changes can be done at once by choosing the
     link "Change several bugs at once" at the bottom of the bug list
     displaying the 1.7alpha bugs.
 
-15. Once that is done, do a test download to make sure everything is OK. A
+16. Once that is done, do a test download to make sure everything is OK. A
     common problem may be:
     * the file's mime type is not recognized and is interpreted as
       text/plain.  Fix it by using some .htaccess magic (AddEncoding stuff)
@@ -169,16 +159,16 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Announce beta releases at freecode.com (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
 
-16. As problems in the beta are discovered, there may be a need for
+17. As problems in the beta are discovered, there may be a need for
     one or more subsequent betas. The release manager makes this
     call. Each time, the versions are updated and the above process is
     repeated. Try not to have too many betas.
 
-17. Try to advertise the need for testing of the betas as much as possible.
+18. Try to advertise the need for testing of the betas as much as possible.
     This would eliminate the need to release minor patch versions like
     we had to do when releasing Ant 1.4.
 
-18. When the final beta is considered OK, propose a vote on dev@ant to
+19. When the final beta is considered OK, propose a vote on dev@ant to
     officially adopt the latest beta as the Ant 1.6 release. If it is passed,
     (it usually does,) this would be labelled ANT_16 and built in a similar
     fashion to the above process.
@@ -187,7 +177,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     files ready in time for the vote so that no additional vote on the
     actual package is required later.
 
-19. This time you'll have to do some house-keeping for the old
+20. This time you'll have to do some house-keeping for the old
     release:
 
     * commit the new release files to
@@ -225,7 +215,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     (*)
 
-20. Update the ant.apache.org site :
+21. Update the ant.apache.org site :
 
     The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
 
@@ -246,7 +236,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Change the version of the manual published on the site: change the URL in the
     svn:externals of the 'production' folder.
 
-21. Clean up.
+22. Clean up.
 
     * remove the remaining files of the previous release and betas from
       https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
@@ -254,10 +244,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
     (+)
 
-22. Now and perhaps during previous betas any changes on the branch must
+23. Now and perhaps during previous betas any changes on the branch must
     be merged back into the tree.
 
-23. At this point in time, the release is done and announcements are made.
+24. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     [[TODO: Identify the mailing lists where announcements are to be made.
@@ -269,9 +259,9 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Announce release at freecode.com
     (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
-24. Add a new release tag to doap_Ant.rdf in Ant's site.
+25. Add a new release tag to doap_Ant.rdf in Ant's site.
 
-25. You can now reacquaint yourself with your family and friends.
+26. You can now reacquaint yourself with your family and friends.
 
 (*)  Mirrors : the srcdownload.html, bindownload.html and
      manualdownload.html each list a number of mirrors. For ant 1.6.0
@@ -292,4 +282,39 @@ Related Information
 http://www.apache.org/dev/#releases
 http://commons.apache.org/releases/index.html
 http://wiki.apache.org/commons/SigningReleases
+
+Files containing version information
+------------------------------------
+
+   * manual/cover.html
+   * manual/credits.html
+   * build.xml properties : project.version,manifest-version,pom.version
+   * POM files under src/etc/poms and subdirectories
+   * ivy.xml in release subdirectory
+   * WHATSNEW
+   * src/etc/testcases/taskdefs/conditions/antversion.xml
+
+cover.html, credits.html, POM files, antversion.xml should be 
+adjusted for the [newversion] right after the build and tagging 
+of the release
+
+build.xml
+---------
+
+  right before a release :
+
+    the project.version gets bumped to the exact release
+    number, for instance 1.9.2
+
+  right after a release :
+ 
+    project.version property in build.xml gets bumped to
+    [newversion]alpha, for example 1.9.2alpha
+
+    manifest-version gets bumped to the exact next release number
+    for example 1.9.2
+
+    pom.version gets bumped to [newversion]-SNAPSHOT
+
+
 
