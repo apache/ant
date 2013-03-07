@@ -1,11 +1,17 @@
 Changes from Ant 1.9.0 TO current
 ===================================
 
+Changes that could break older environments:
+-------------------------------------------
+
 Fixed bugs:
 -----------
 
  * Corrected XSLTC error in <junitreport>.
    Bugzilla Report 54641.
+
+Other changes:
+--------------
 
 Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
