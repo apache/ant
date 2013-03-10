@@ -19,7 +19,9 @@ Changes from Ant 1.8.4 TO Ant 1.9.0
 Changes that could break older environments:
 -------------------------------------------
 
- * FixCRLF used to treat the EOL value ASIS to convert to the system property 
+ * Ant now requires at least Java 1.5 to compile and to run
+
+ * FixCRLF used to treat the EOL value ASIS to convert to the system property
    line.separator. Specified was that ASIS would leave the EOL characters alone,
    the task now really leaves the EOL characters alone. This also implies that
    EOL ASIS will not insert a newline even if fixlast is set to true.
@@ -73,7 +75,7 @@ Fixed bugs:
    handledirsep="true".
    Bugzilla Report 53399.
 
- * <expandproperties> filter caused a NullPointerExcpetion when input
+ * <expandproperties> filter caused a NullPointerException when input
    was empty.
    Bugzilla Report 53626.
 
