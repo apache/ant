@@ -186,16 +186,7 @@
   </selector>
 
   <selector id="needs.junit">
-    <and>
-      <filename name="${optional.package}/junit/"/>
-      <not>
-        <filename name="${optional.package}/junit/JUnit4TestMethodAdapter*"/>
-      </not>
-    </and>
-  </selector>
-
-  <selector id="needs.junit4">
-    <filename name="${optional.package}/junit/JUnit4TestMethodAdapter*"/>
+    <filename name="${optional.package}/junit/"/>
   </selector>
 
   <selector id="needs.apache-regexp">
@@ -304,7 +295,6 @@
         <selector refid="needs.jmf"/>
         <selector refid="needs.jsch"/>
         <selector refid="needs.junit"/>
-        <selector refid="needs.junit4"/>
         <selector refid="needs.netrexx"/>
         <selector refid="needs.swing"/>
         <selector refid="ant.launcher"/>
@@ -378,9 +368,6 @@
       classname="org.apache.xalan.trace.TraceListenerEx3"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="junit.present"
-      classname="junit.framework.TestCase"
-      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="junit4.present"
       classname="org.junit.Test"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="antunit.present"
@@ -561,8 +548,7 @@
             <selector refid="not.in.kaffe" if="kaffe"/>
 
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
-            <selector refid="needs.junit" unless="junit.present"/> <!-- XXX should perhaps use -source 1.4? -->
-            <selector refid="needs.junit4" unless="junit4.present"/>
+            <selector refid="needs.junit" unless="junit.present"/>
             <selector refid="needs.apache-regexp"
               unless="apache.regexp.present"/>
             <selector refid="needs.apache-oro" unless="apache.oro.present"/>
@@ -735,7 +721,6 @@
 
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
-    <optional-jar dep="junit4"/>
     <optional-jar dep="apache-regexp"/>
     <optional-jar dep="apache-oro"/>
     <optional-jar dep="apache-bcel"/>
@@ -828,7 +813,6 @@
 
     <optional-src-jar dep="apache-resolver"/>
     <optional-src-jar dep="junit"/>
-    <optional-src-jar dep="junit4"/>
     <optional-src-jar dep="apache-regexp"/>
     <optional-src-jar dep="apache-oro"/>
     <optional-src-jar dep="apache-bcel"/>

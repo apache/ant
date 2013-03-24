@@ -45,7 +45,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.2</version>
+      <version>4.11</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
@@ -82,9 +82,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/*</include>
           </includes>
-          <excludes>
-            <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter*</exclude>
-          </excludes>
           <testIncludes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/</include>
           </testIncludes>
