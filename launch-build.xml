@@ -23,12 +23,16 @@
     
     <property name="args" value="allclean test -Dignore.tests.failed=true -Doptional.jars.whenmanifestonly=skip" />
 
-    <condition property="launch.cmd" value="./build.sh">
+    <condition property="launch.cmd" value="${basedir}/build.sh">
         <os family="unix" />
     </condition>
-    <condition property="launch.cmd" value="build.bat">
+    <condition property="launch.cmd" value="cmd.exe">
         <os family="windows" />
     </condition>
+    <condition property="launch.args" value="/C &quot;${basedir}/build.bat ${args}&quot;">
+        <os family="windows" />
+    </condition>
+    <property name="launch.args" value="${args}" />
 
     <target name="launch">
         <fail unless="launch.cmd" message="Unsupported build platform" />
@@ -36,7 +40,7 @@
         <property name="args" value="" />
         <echo message="Launching ${launch.cmd} ${args}" />
         <exec executable="${launch.cmd}" failonerror="true">
-            <arg line="${args}" />
+            <arg line="${launch.args}" />
         </exec>
     </target>
 </project>
