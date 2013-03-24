@@ -33,7 +33,7 @@
         <!-- by default no args, overridable on the Ant command line with -Dargs="" -->
         <property name="args" value="" />
         <echo message="Launching ${launch.cmd} ${args}" />
-        <exec command="${launch.cmd}" failonerror="true">
+        <exec executable="${launch.cmd}" failonerror="true">
             <arg line="${args}" />
         </exec>
     </target>
