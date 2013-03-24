@@ -29,7 +29,7 @@
     <condition property="launch.cmd" value="cmd.exe">
         <os family="windows" />
     </condition>
-    <condition property="launch.args" value="/C &quot;${basedir}/build.bat ${args}&quot;">
+    <condition property="launch.args" value="/C &apos;&quot;${basedir}/build.bat&quot; ${args}&apos;">
         <os family="windows" />
     </condition>
     <property name="launch.args" value="${args}" />
@@ -37,8 +37,8 @@
     <target name="launch">
         <fail unless="launch.cmd" message="Unsupported build platform" />
         <!-- by default no args, overridable on the Ant command line with -Dargs="" -->
-        <property name="args" value="" />
-        <echo message="Launching ${launch.cmd} ${args}" />
+        <property name="launch.args" value="" />
+        <echo message="Launching ${launch.cmd} ${launch.args}" />
         <exec executable="${launch.cmd}" failonerror="true">
             <arg line="${launch.args}" />
         </exec>
