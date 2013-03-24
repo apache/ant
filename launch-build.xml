@@ -20,6 +20,8 @@
     <description>
         Build file be able to launch the boostrap build of Ant on every supported platform
     </description>
+    
+    <property name="args" value="allclean test -Dignore.tests.failed=true -Doptional.jars.whenmanifestonly=skip" />
 
     <condition property="launch.cmd" value="./build.sh">
         <os family="unix" />
