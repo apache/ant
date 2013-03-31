@@ -1584,6 +1584,7 @@ ${antunit.reports}
   </target>
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
+    <mkdir dir="${build.junit.tmpdir}"/>
     <macrodef name="test-junit">
       <element name="junit-nested" implicit="true" />
       <sequential>
