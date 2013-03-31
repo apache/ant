@@ -136,4 +136,45 @@
        resource="${file}"
        value="Class-Path: baz foo bar&#13;&#10;"/>
   </target>
+
+  <target name="-prepareJava5JarTest" depends="setUp">
+    <mkdir dir="${output}/bin"/>
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/AntFail.java"><![CDATA[
+package com.antfail;
+
+public class AntFail {
+    public static
+        void main(String[] args) {
+            System.out.println(System.getProperty("java.version"));
+        }
+    }
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}" includeantruntime="no" />
+  </target>
+
+  <target name="testJava5JarProblemManifestInSeparateTask"
+          depends="-prepareJava5JarTest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54762">
+    <manifest file="${output}/MANIFEST.MF">
+      <attribute name="Main-Class" value="org.example.AntFail" />
+    </manifest>
+    
+    <jar manifest="${output}/MANIFEST.MF" destfile="${output}/antfail.jar"
+         basedir="${output}/bin" />
+    <java jar="${output}/antfail.jar" fork="true"/>
+  </target>
+
+  <target name="testJava5JarProblemManifestAsNestedElement"
+          depends="-prepareJava5JarTest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54762">
+
+    <jar destfile="${output}/antfail.jar"
+         basedir="${output}/bin">
+      <manifest>
+        <attribute name="Main-Class" value="org.example.AntFail" />
+      </manifest>
+    </jar>
+    <java jar="${output}/antfail.jar" fork="true"/>
+  </target>
 </project>
