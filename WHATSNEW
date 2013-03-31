@@ -4,8 +4,8 @@ Changes from Ant 1.9.0 TO current
 Changes that could break older environments:
 -------------------------------------------
 
-* the optional ant-junit4.jar has been merged into ant-junit.jar
-  as Ant now requires JUnit4.
+ * the optional ant-junit4.jar has been merged into ant-junit.jar
+   as Ant now requires JUnit4.
 
 Fixed bugs:
 -----------
