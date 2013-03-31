@@ -141,7 +141,7 @@
     <mkdir dir="${output}/bin"/>
     <mkdir dir="${input}/org/example"/>
     <echo file="${input}/org/example/AntFail.java"><![CDATA[
-package com.antfail;
+package org.example;
 
 public class AntFail {
     public static
@@ -150,7 +150,7 @@ public class AntFail {
         }
     }
 ]]></echo>
-    <javac srcdir="${input}" destdir="${output}" includeantruntime="no" />
+    <javac srcdir="${input}" destdir="${output}/bin" includeantruntime="no" />
   </target>
 
   <target name="testJava5JarProblemManifestInSeparateTask"
@@ -162,7 +162,7 @@ public class AntFail {
     
     <jar manifest="${output}/MANIFEST.MF" destfile="${output}/antfail.jar"
          basedir="${output}/bin" />
-    <java jar="${output}/antfail.jar" fork="true"/>
+    <java jar="${output}/antfail.jar" fork="true" failonerror="true"/>
   </target>
 
   <target name="testJava5JarProblemManifestAsNestedElement"
@@ -175,6 +175,6 @@ public class AntFail {
         <attribute name="Main-Class" value="org.example.AntFail" />
       </manifest>
     </jar>
-    <java jar="${output}/antfail.jar" fork="true"/>
+    <java jar="${output}/antfail.jar" fork="true" failonerror="true"/>
   </target>
 </project>
