@@ -62,6 +62,7 @@ import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.zip.UnixStat;
+import org.apache.tools.zip.Zip64Mode;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
@@ -220,6 +221,13 @@ public class Zip extends MatchingTask {
      * @since Ant 1.8.0
      */
     private boolean fallBackToUTF8 = false;
+
+    /**
+     * Whether to enable Zip64 extensions.
+     *
+     * @since Ant 1.9.1
+     */
+    private Zip64ModeAttribute zip64Mode = Zip64ModeAttribute.AS_NEEDED;
 
     /**
      * This is the name/location of where to
@@ -554,6 +562,22 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Whether Zip64 extensions should be used.
+     * @since Ant 1.9.1
+     */
+    public void setZip64Mode(Zip64ModeAttribute b) {
+        zip64Mode = b;
+    }
+
+    /**
+     * Whether Zip64 extensions will be used.
+     * @since Ant 1.9.1
+     */
+    public Zip64ModeAttribute getZip64Mode() {
+        return zip64Mode;
+    }
+
+    /**
      * validate and build
      * @throws BuildException on error
      */
@@ -656,6 +680,7 @@ public class Zip extends MatchingTask {
                     zOut.setMethod(doCompress
                         ? ZipOutputStream.DEFLATED : ZipOutputStream.STORED);
                     zOut.setLevel(level);
+                    zOut.setUseZip64(zip64Mode.getMode());
                 }
                 initZipOutputStream(zOut);
 
@@ -2173,8 +2198,68 @@ public class Zip extends MatchingTask {
         }
 
         public ZipOutputStream.UnicodeExtraFieldPolicy getPolicy() {
-            return (ZipOutputStream.UnicodeExtraFieldPolicy)
-                POLICIES.get(getValue());
+            return POLICIES.get(getValue());
         }
     }
-}
+
+
+    /**
+     * The choices for Zip64 extensions.
+     *
+     * <p><b>never</b>: never add any Zip64 extensions.  This will
+     * cause the task to fail if you try to add entries bigger than
+     * 4GB or create an archive bigger than 4GB or holding more that
+     * 65535 entries.</p>
+     *
+     * <p><b>as-needed</b>: create Zip64 extensions only when the
+     * entry's size is bigger than 4GB or one of the archive limits is
+     * hit.  This mode also adds partial Zip64 extensions for all
+     * deflated entries written by Ant.</p>
+     *
+     * <p><b>always</b>: create Zip64 extensions for all entries.</p>
+     *
+     * <p><b>Note</b> some ZIP implementations don't handle Zip64
+     * extensions well and others may fail if the Zip64 extra field
+     * data is only present inside the local file header but not the
+     * central directory - which is what <em>as-needed</em> may result
+     * in.  Java5 and Microsoft Visual Studio's Extension loader are
+     * known to fconsider the archive broken in such cases.  If you
+     * are targeting such an archiver uset the value <em>never</em>
+     * unless you know you need Zip64 extensions.</p>
+     *
+     * @since Ant 1.9.1
+     */
+    public static final class Zip64ModeAttribute extends EnumeratedAttribute {
+        private static final Map<String, Zip64Mode> MODES = new HashMap<String, Zip64Mode>();
+
+        private static final String NEVER_KEY = "never";
+        private static final String ALWAYS_KEY = "always";
+        private static final String A_N_KEY = "as-needed";
+        static {
+            MODES.put(NEVER_KEY, Zip64Mode.Never);
+            MODES.put(ALWAYS_KEY, Zip64Mode.Always);
+            MODES.put(A_N_KEY, Zip64Mode.AsNeeded);
+        }
+
+        public String[] getValues() {
+            return new String[] {NEVER_KEY, ALWAYS_KEY, A_N_KEY};
+        }
+
+        public static final Zip64ModeAttribute NEVER =
+            new Zip64ModeAttribute(NEVER_KEY);
+        public static final Zip64ModeAttribute AS_NEEDED =
+            new Zip64ModeAttribute(A_N_KEY);
+
+        private Zip64ModeAttribute(String name) {
+            setValue(name);
+        }
+
+        public Zip64ModeAttribute() {
+        }
+
+        public Zip64Mode getMode() {
+            return MODES.get(getValue());
+        }
+
+    }
+ }

@@ -181,6 +181,7 @@ public class Jar extends Zip {
         archiveType = "jar";
         emptyBehavior = "create";
         setEncoding("UTF8");
+        setZip64Mode(Zip64ModeAttribute.NEVER);
         rootEntries = new Vector<String>();
     }
 

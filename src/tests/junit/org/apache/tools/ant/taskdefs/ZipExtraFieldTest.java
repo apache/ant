@@ -40,11 +40,20 @@ import org.apache.tools.zip.ZipFile;
 public class ZipExtraFieldTest extends TestCase {
 
     public void testPreservesExtraFields() throws IOException {
+        testExtraField(new Zip(), true);
+    }
+
+    public void testDoesntCreateZip64ExtraFieldForJar() throws IOException {
+        testExtraField(new Jar(), false);
+    }
+
+    private void testExtraField(Zip testInstance, boolean expectZip64)
+        throws IOException {
+
         File f = File.createTempFile("ziptest", ".zip");
         f.delete();
         ZipFile zf = null;
         try {
-            Zip testInstance = new Zip();
             testInstance.setDestFile(f);
             final ZipResource r = new ZipResource() {
                     public String getName() {
@@ -80,10 +89,12 @@ public class ZipExtraFieldTest extends TestCase {
             zf = new ZipFile(f);
             ZipEntry ze = zf.getEntry("x");
             assertNotNull(ze);
-            assertEquals(2, ze.getExtraFields().length);
+            assertEquals(expectZip64 ? 2 : 1, ze.getExtraFields().length);
             assertTrue(ze.getExtraFields()[0] instanceof JarMarker);
-            assertTrue(ze.getExtraFields()[1]
-                       instanceof Zip64ExtendedInformationExtraField);
+            if (expectZip64) {
+                assertTrue(ze.getExtraFields()[1]
+                           instanceof Zip64ExtendedInformationExtraField);
+            }
         } finally {
             ZipFile.closeQuietly(zf);
             if (f.exists()) {
@@ -91,5 +102,4 @@ public class ZipExtraFieldTest extends TestCase {
             }
         }
     }
-
 }
