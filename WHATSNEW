@@ -13,6 +13,12 @@ Fixed bugs:
  * Corrected XSLTC error in <junitreport>.
    Bugzilla Report 54641.
 
+ * Provide more control over Zip64 extensions created by <zip> and
+   related tasks.  In particular no Zip64 extensions will be used at
+   all by the <jar> task family by default - this is required for jars
+   to be readably by Java5.
+   Bugzilla Report 54762.
+
 Other changes:
 --------------
 

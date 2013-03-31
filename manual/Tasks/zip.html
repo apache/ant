@@ -272,6 +272,14 @@ archive.</p>
       <br/>See also the <a href="#encoding">discussion below</a></td>
     <td align="center" valign="top">No, default is false</td>
   </tr>
+  <tr>
+    <td valign="top">zip64Mode</td>
+    <td valign="top">When to use Zip64 extensions for entries.  The
+      possible values are "never", "always" and "as-needed".
+      <em>Since Ant 1.9.1</em>.
+      <br/>See also the <a href="#zip64">discussion below</a></td>
+    <td align="center" valign="top">No, default is "as-needed"</td>
+  </tr>
 </table>
 
 <h3><a name="encoding">Encoding of File Names</a></h3>
@@ -389,6 +397,50 @@ archive.</p>
   platform.  You may want to enable creation of unicode extra fields
   so the tools that support them will extract the file names
   correctly.</p>
+
+<h3><a name="zip64">Zip64 extensions</a></h3>
+
+<p>Zip64 extensions provide a way to create archives bigger than 4GB
+  or holding more than 65535 entries - or add individual entries
+  bigger than 4GB using the ZIP extension field mechanism.  These
+  extensions are supported by most modern ZIP implementations.</p>
+
+<p>When Ant writes compressed entries into the archive it creates it
+  doesn't know the compressed size of an entry before it has been
+  written.  Unfortunately the decision whether a Zip64 extra field
+  will be written has to be made before writing the entry's
+  content.</p>
+
+<p>Starting with Ant 1.9.0 Ant supports Zip64 extensions but didn't
+  provide any control over their usage, starting with Ant 1.9.1 a
+  new <em>zip64mode</em> attribute was added to the <code>zip</code>
+  family of tasks.  It supports three values:
+
+<ul>
+  <li><em>never</em> means no Zip64 extra fields will ever be
+    written, this is the behavior of Ant 1.8.x and earlier and the
+    default behavior of <code>jar</code>, <code>ear</code>
+    and <code>war</code> starting with Ant 1.9.1.</li>
+  <li><em>always</em> means Zip64 extra fields are written for all
+    entries.</li>
+  <li><em>as-needed</em> means Zip64 extra fields are written for all
+    compressed entries to the "local file header" (by default these
+    are all files but not the directories) but only written to the
+    central directory if the entry really required Zip64 features.
+    This is the default behavior of Ant 1.9.0 and remains the default
+    behavior of the <code>zip</code> task.</li>
+</ul>
+
+<p><em>as-needed</em> provides a good compromise if you don't know
+  whether you archive will exceed the limits of traditional zip files
+  but don't want to waste too much space (the Zip64 extensions take up
+  extra space).  Unfortunately some ZIP implementations don't
+  understand Zip64 extra fields or fail to parse archives with extra
+  fields in local file headers that are not present in the central
+  directory, one such implementation is the java.util.zip package of
+  Java5, that's why the <code>jar</code> tasks default
+  to <em>never</em>.  Archives created with <em>as-needed</em> can be
+  read without problems with Java6 and later.</p>
 
 <h3>Parameters specified as nested elements</h3>
 
