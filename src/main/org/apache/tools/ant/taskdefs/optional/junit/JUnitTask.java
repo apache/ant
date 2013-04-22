@@ -773,6 +773,10 @@ public class JUnitTask extends Task {
                                          "SummaryJUnitResultFormatter",
                                          "TearDownOnVmCrash",
                                          "XMLJUnitResultFormatter",
+                                         "IgnoredTestListener",
+                                         "IgnoredTestResult",
+                                         "CustomJUnit4TestAdapterCache",
+                                         "TestListenerWrapper"
                                      });
                 }
             });

@@ -19,6 +19,9 @@ Fixed bugs:
    to be readably by Java5.
    Bugzilla Report 54762.
 
+ * Fixed loading of external dependencies in JUnit task.
+   Bugzilla Report 54835.
+
 Other changes:
 --------------
 
