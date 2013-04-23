@@ -82,6 +82,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/*</include>
           </includes>
+          <excludes>
+              <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter*</exclude>
+              <exclude>org/apache/tools/ant/taskdefs/optional/junit/CustomJUnit4TestAdapterCache*</exclude>
+          </excludes>
           <testIncludes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/</include>
           </testIncludes>
