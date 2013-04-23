@@ -19,13 +19,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.Test;
 import junit.framework.TestListener;
 
-import org.junit.internal.AssumptionViolatedException;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 
 public class TestListenerWrapper implements TestListener, IgnoredTestListener {
 

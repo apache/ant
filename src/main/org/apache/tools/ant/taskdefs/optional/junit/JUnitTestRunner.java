@@ -36,7 +36,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import junit.framework.AssertionFailedError;
-import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.Test;
 import junit.framework.TestFailure;
 import junit.framework.TestListener;
@@ -402,6 +401,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
                 } else {
                     Class junit4TestAdapterClass = null;
+                    Class junit4TestAdapterCacheClass = null;
                     boolean useSingleMethodAdapter = false;
 
                     if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
@@ -429,6 +429,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
                     try {
                         Class.forName("java.lang.annotation.Annotation");
+                        junit4TestAdapterCacheClass = Class.forName("org.apache.tools.ant.taskdefs.optional.junit.CustomJUnit4TestAdapterCache");
                         if (loader == null) {
                             junit4TestAdapterClass =
                                 Class.forName(JUNIT_4_TEST_ADAPTER);
@@ -470,8 +471,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             formalParams = new Class[] {Class.class, String[].class};
                             actualParams = new Object[] {testClass, methods};
                         } else {
-                            formalParams = new Class[] {Class.class, JUnit4TestAdapterCache.class};
-                            actualParams = new Object[] {testClass, CustomJUnit4TestAdapterCache.getInstance()};
+                            formalParams = new Class[] {Class.class, Class.forName("junit.framework.JUnit4TestAdapterCache")};
+                            actualParams = new Object[] {testClass, junit4TestAdapterCacheClass.getMethod("getInstance").invoke(null)};
                         }
                         suite =
                             (Test) junit4TestAdapterClass

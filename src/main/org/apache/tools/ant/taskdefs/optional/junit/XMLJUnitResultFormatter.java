@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -35,14 +34,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.JUnit4TestCaseFacade;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Ignore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -323,28 +320,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     }
 
     public void testIgnored(Test test) {
-        String message = null;
-        if (test != null && test instanceof JUnit4TestCaseFacade) {
-        	//try and get the message coded as part of the ignore
-        	/*
-        	 * org.junit.runner.Description contains a getAnnotation(Class) method... but this
-        	 * wasn't in older versions of JUnit4 so we have to try and do this by reflection
-        	 */
-        	try {
-        		Class<?> testClass = Class.forName(JUnitVersionHelper.getTestCaseClassName(test));
-        	
-                Method testMethod = testClass.getMethod(JUnitVersionHelper.getTestCaseName(test));
-                Ignore annotation = testMethod.getAnnotation(Ignore.class);
-                if (annotation != null && annotation.value().length() > 0) {
-                    message = annotation.value();
-                }
-        	} catch (NoSuchMethodException e) {
-				// silently ignore - we'll report a skip with no message
-			} catch (ClassNotFoundException e) {
-				// silently ignore - we'll report a skip with no message
-			}
-        }
-        formatSkip(test, message);
+        formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
         if (test != null) {
             ignoredTests.put(createDescription(test), test);
         }
@@ -374,8 +350,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     }
 
     public void testAssumptionFailure(Test test, Throwable failure) {
-        String message = failure.getMessage();
-        formatSkip(test, message);
+        formatSkip(test, failure.getMessage());
         skippedTests.put(createDescription(test), test);
 
     }

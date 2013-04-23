@@ -18,7 +18,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -133,6 +136,44 @@ public class JUnitVersionHelper {
             }
         }
         return className;
+    }
+
+    public static String getIgnoreMessage(Test test) {
+        String message = null;
+
+        try {
+            Class<?> junit4FacadeClass = Class.forName("junit.framework.JUnit4TestCaseFacade");
+            if (test != null && test.getClass().isAssignableFrom(junit4FacadeClass)) {
+            //try and get the message coded as part of the ignore
+        	/*
+        	 * org.junit.runner.Description contains a getAnnotation(Class) method... but this
+        	 * wasn't in older versions of JUnit4 so we have to try and do this by reflection
+        	 */
+                Class<?> testClass = Class.forName(JUnitVersionHelper.getTestCaseClassName(test));
+
+                Method testMethod = testClass.getMethod(JUnitVersionHelper.getTestCaseName(test));
+                Class ignoreAnnotation = Class.forName("org.junit.Ignore");
+                Annotation annotation = testMethod.getAnnotation(ignoreAnnotation);
+                if (annotation != null) {
+                    Method valueMethod = annotation.getClass().getMethod("value");
+                    String value = (String) valueMethod.invoke(annotation);
+                    if (value != null && value.length() > 0) {
+                        message = value;
+                    }
+                }
+
+            }
+        } catch (NoSuchMethodException e) {
+            // silently ignore - we'll report a skip with no message
+        } catch (ClassNotFoundException e) {
+            // silently ignore - we'll report a skip with no message
+        } catch (InvocationTargetException e) {
+            // silently ignore - we'll report a skip with no message
+        } catch (IllegalAccessException e) {
+            // silently ignore - we'll report a skip with no message
+        }
+        return message;
+
     }
 
 }

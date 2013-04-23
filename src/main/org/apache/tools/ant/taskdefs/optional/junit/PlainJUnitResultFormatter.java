@@ -26,14 +26,11 @@ import java.text.NumberFormat;
 import java.util.Hashtable;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.JUnit4TestCaseFacade;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
-import org.junit.Ignore;
-import org.junit.runner.notification.Failure;
 
 
 /**
@@ -264,15 +261,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     }
 
     public void testIgnored(Test test) {
-        String message = null;
-        if (test instanceof JUnit4TestCaseFacade) {
-            JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
-            Ignore annotation = facade.getDescription().getAnnotation(Ignore.class);
-            if (annotation != null && annotation.value().length() > 0) {
-                message = annotation.value();
-            }
-        }
-        formatSkip(test, message);
+        formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
     }
 
 

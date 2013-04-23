@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import junit.framework.Test;
 import junit.framework.TestListener;
-import org.junit.runner.notification.Failure;
 
 /**
  * Provides the functionality for TestListeners to be able to be notified of
@@ -35,7 +34,7 @@ public interface IgnoredTestListener extends TestListener {
      * should normally be typed to JUnit's {@link junit.framework.JUnit4TestCaseFacade}
      * so implementing classes should be able to get the details of the ignore by casting
      * the argument and retrieving the descriptor from the test.
-     * @param test
+     * @param test the details of the test and failure that have triggered this report.
      */
     void testIgnored(Test test);
 
