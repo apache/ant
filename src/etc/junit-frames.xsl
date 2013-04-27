@@ -79,6 +79,13 @@
         <xsl:with-param name="type" select="'errors'"/>
       </xsl:apply-templates>
     </redirect:write>
+    
+    <!-- create the alltests-skipped.html at the root -->
+    <redirect:write file="{$output.dir}/alltests-skipped.html">
+      <xsl:apply-templates select="." mode="all.tests">
+        <xsl:with-param name="type" select="'skipped'"/>
+      </xsl:apply-templates>
+    </redirect:write>
 
   <!-- process all packages -->
     <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
@@ -151,6 +158,13 @@
       <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
         <xsl:apply-templates select="." mode="class.details">
           <xsl:with-param name="type" select="'errors'"/>
+        </xsl:apply-templates>
+      </redirect:write>
+    </xsl:if>
+    <xsl:if test="@skipped != 0">
+      <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}-skipped.html">
+        <xsl:apply-templates select="." mode="class.details">
+          <xsl:with-param name="type" select="'skipped'"/>
         </xsl:apply-templates>
       </redirect:write>
     </xsl:if>
@@ -229,7 +243,7 @@ h6 {
 }
 </xsl:template>
 
-<!-- Create list of all/failed/errored tests -->
+<!-- Create list of all/failed/errored/skipped tests -->
 <xsl:template match="testsuites" mode="all.tests">
     <xsl:param name="type" select="'all'"/>
     <html>
@@ -240,6 +254,9 @@ h6 {
 		</xsl:when>
 		<xsl:when test="$type = 'errors'">
 		    <xsl:text>All Errors</xsl:text>
+		</xsl:when>
+		<xsl:when test="$type = 'skipped'">
+		    <xsl:text>All Skipped</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
 		    <xsl:text>All Tests</xsl:text>
@@ -280,6 +297,11 @@ h6 {
                 </xsl:when>
                 <xsl:when test="$type = 'errors'">
                   <xsl:apply-templates select=".//testcase[error]" mode="print.test">
+                    <xsl:with-param name="show.class" select="'yes'"/>
+                  </xsl:apply-templates>
+                </xsl:when>
+                <xsl:when test="$type = 'skipped'">
+                  <xsl:apply-templates select=".//testcase[skipped]" mode="print.test">
                     <xsl:with-param name="show.class" select="'yes'"/>
                   </xsl:apply-templates>
                 </xsl:when>
@@ -362,6 +384,9 @@ h6 {
 		<xsl:when test="$type = 'errors'">
 		    <h2>Errors</h2>
 		</xsl:when>
+		<xsl:when test="$type = 'skipped'">
+		    <h2>Skipped</h2>
+		</xsl:when>
 		<xsl:otherwise>
 		    <h2>Tests</h2>
 		</xsl:otherwise>
@@ -383,6 +408,9 @@ h6 {
 		    </xsl:when>
 		    <xsl:when test="$type = 'errors'">
 			<xsl:apply-templates select="./testcase[error]" mode="print.test"/>
+		    </xsl:when>
+		    <xsl:when test="$type = 'skipped'">
+			<xsl:apply-templates select="./testcase[skipped]" mode="print.test"/>
 		    </xsl:when>
 		    <xsl:otherwise>
 			<xsl:apply-templates select="./testcase" mode="print.test"/>
@@ -563,6 +591,7 @@ h6 {
         <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
         <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
         <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
+        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)" />
         <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
         <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
@@ -570,6 +599,7 @@ h6 {
             <th>Tests</th>
             <th>Failures</th>
             <th>Errors</th>
+            <th>Skipped</th>
             <th>Success rate</th>
             <th>Time</th>
         </tr>
@@ -584,6 +614,7 @@ h6 {
             <td><a title="Display all tests" href="all-tests.html"><xsl:value-of select="$testCount"/></a></td>
             <td><a title="Display all failures" href="alltests-fails.html"><xsl:value-of select="$failureCount"/></a></td>
             <td><a title="Display all errors" href="alltests-errors.html"><xsl:value-of select="$errorCount"/></a></td>
+            <td><a title="Display all skipped test" href="alltests-skipped.html"><xsl:value-of select="$skippedCount" /></a></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -627,6 +658,7 @@ h6 {
                     <td><xsl:value-of select="sum($insamepackage/@tests)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@errors)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@failures)"/></td>
+                    <td><xsl:value-of select="sum($insamepackage/@skipped)" /></td>
                     <td>
                     <xsl:call-template name="display-time">
                         <xsl:with-param name="value" select="sum($insamepackage/@time)"/>
@@ -721,6 +753,7 @@ h6 {
         <th>Tests</th>
         <th>Errors</th>
         <th>Failures</th>
+        <th>Skipped</th>
         <th nowrap="nowrap">Time(s)</th>
         <th nowrap="nowrap">Time Stamp</th>
         <th>Host</th>
@@ -763,8 +796,8 @@ h6 {
 		    <xsl:apply-templates select="@errors"/>
 		</xsl:otherwise>
 	    </xsl:choose>
-	</td>
-        <td>
+		</td>
+	    <td>
 	    <xsl:choose>
 		<xsl:when test="@failures != 0">
 		    <a title="Display only failures" href="{@id}_{@name}-fails.html"><xsl:apply-templates select="@failures"/></a>
@@ -773,7 +806,17 @@ h6 {
 		    <xsl:apply-templates select="@failures"/>
 		</xsl:otherwise>
 	    </xsl:choose>
-	</td>
+		</td>
+	    <td>
+	    <xsl:choose>
+		<xsl:when test="@skipped != 0">
+		    <a title="Display only skipped tests" href="{@id}_{@name}-skipped.html"><xsl:apply-templates select="@skipped"/></a>
+		</xsl:when>
+		<xsl:otherwise>
+		    <xsl:apply-templates select="@skipped"/>
+		</xsl:otherwise>
+	    </xsl:choose>
+		</td>
         <td><xsl:call-template name="display-time">
                 <xsl:with-param name="value" select="@time"/>
             </xsl:call-template>
@@ -819,6 +862,10 @@ h6 {
                 <td>Error</td>
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
+            <xsl:when test="skipped">
+                <td>Skipped</td>
+                <td><xsl:apply-templates select="skipped"/></td>
+            </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>
                 <td></td>
@@ -833,13 +880,17 @@ h6 {
 </xsl:template>
 
 
-<!-- Note : the below template error and failure are the same style
+<!-- Note : the below template skipped, error and failure are the same style
             so just call the same style store in the toolkit template -->
 <xsl:template match="failure">
     <xsl:call-template name="display-failures"/>
 </xsl:template>
 
 <xsl:template match="error">
+    <xsl:call-template name="display-failures"/>
+</xsl:template>
+
+<xsl:template match="skipped">
     <xsl:call-template name="display-failures"/>
 </xsl:template>
 

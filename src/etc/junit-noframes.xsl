@@ -164,6 +164,7 @@
                 <xsl:variable name="testCount" select="sum($testsuites-in-package/@tests)"/>
                 <xsl:variable name="errorCount" select="sum($testsuites-in-package/@errors)"/>
                 <xsl:variable name="failureCount" select="sum($testsuites-in-package/@failures)"/>
+                <xsl:variable name="skippedCount" select="sum($testsuites-in-package/@skipped)" />
                 <xsl:variable name="timeCount" select="sum($testsuites-in-package/@time)"/>
 
                 <!-- write a summary for the package -->
@@ -179,6 +180,7 @@
                     <td><xsl:value-of select="$testCount"/></td>
                     <td><xsl:value-of select="$errorCount"/></td>
                     <td><xsl:value-of select="$failureCount"/></td>
+                    <td><xsl:value-of select="$skippedCount" /></td>
                     <td>
                     <xsl:call-template name="display-time">
                         <xsl:with-param name="value" select="$timeCount"/>
@@ -253,6 +255,7 @@
         <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
         <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
         <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
+        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)" />
         <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
         <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
@@ -260,6 +263,7 @@
             <th>Tests</th>
             <th>Failures</th>
             <th>Errors</th>
+            <th>Skipped</th>
             <th>Success rate</th>
             <th>Time</th>
         </tr>
@@ -273,6 +277,7 @@
             <td><xsl:value-of select="$testCount"/></td>
             <td><xsl:value-of select="$failureCount"/></td>
             <td><xsl:value-of select="$errorCount"/></td>
+            <td><xsl:value-of select="$skippedCount" /></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -325,6 +330,7 @@
         <th>Tests</th>
         <th>Errors</th>
         <th>Failures</th>
+        <th>Skipped</th>
         <th nowrap="nowrap">Time(s)</th>
     </tr>
 </xsl:template>
@@ -336,6 +342,7 @@
         <th>Tests</th>
         <th>Errors</th>
         <th>Failures</th>
+        <th>Skipped</th>
         <th nowrap="nowrap">Time(s)</th>
         <th nowrap="nowrap">Time Stamp</th>
         <th>Host</th>
@@ -369,6 +376,7 @@
         <td><xsl:value-of select="@tests"/></td>
         <td><xsl:value-of select="@errors"/></td>
         <td><xsl:value-of select="@failures"/></td>
+        <td><xsl:value-of select="@skipped" /></td>
         <td>
             <xsl:call-template name="display-time">
                 <xsl:with-param name="value" select="@time"/>
@@ -396,6 +404,10 @@
                 <td>Error</td>
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
+            <xsl:when test="skipped">
+            	<td>Skipped</td>
+            	<td><xsl:apply-templates select="skipped"/></td>
+            </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>
                 <td></td>
@@ -418,7 +430,11 @@
     <xsl:call-template name="display-failures"/>
 </xsl:template>
 
-<!-- Style for the error and failure in the tescase template -->
+<xsl:template match="skipped">
+    <xsl:call-template name="display-failures"/>
+</xsl:template>
+
+<!-- Style for the error, failure and skipped in the testcase template -->
 <xsl:template name="display-failures">
     <xsl:choose>
         <xsl:when test="not(@message)">N/A</xsl:when>
