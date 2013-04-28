@@ -27,6 +27,8 @@ Other changes:
  * strict attribute added to <signjar>.
    Bugzilla Report 54889.
 
+ * simplifying Execute.getEnvironmentVariables since we are only running on Java 1.5 or higher now
+
 Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
 

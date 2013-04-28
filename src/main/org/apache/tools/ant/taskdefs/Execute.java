@@ -38,7 +38,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.taskdefs.launcher.CommandLauncher;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -109,14 +108,9 @@ public class Execute {
         if (procEnvironment != null) {
             return procEnvironment;
         }
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)
-            && !Os.isFamily("openvms")) {
+        if (!Os.isFamily("openvms")) {
             try {
-                @SuppressWarnings("unchecked")
-                final Map<String, String> cast = (Map<String, String>) System.class
-                    .getMethod("getenv", new Class[0])
-                    .invoke(null, new Object[0]);
-                procEnvironment = cast;
+                procEnvironment = System.getenv();
                 return procEnvironment;
             } catch (Exception x) {
                 x.printStackTrace();
