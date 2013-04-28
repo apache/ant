@@ -1,0 +1,145 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>VerifyJar Task</title>
+</head>
+
+<body>
+
+<h2><a name="verifyjar">VerifyJar</a></h2>
+<h3>Description</h3>
+<p>Verifies JAR files with the <tt>jarsigner</tt> command line tool.
+It will take a named file in the <tt>jar</tt> attribute. Nested paths are also
+supported
+</p>
+
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">jar</td>
+    <td valign="top">the jar file to verify</td>
+    <td valign="top" align="center">Yes, unless nested paths have
+      been used.</td>
+  </tr>
+  <tr>
+    <td valign="top">alias</td>
+    <td valign="top">the alias to verify under</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">storepass</td>
+    <td valign="top">password for keystore integrity.</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">keystore</td>
+    <td valign="top">keystore location</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">storetype</td>
+    <td valign="top">keystore type</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keypass</td>
+    <td valign="top">password for private key (if different)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">certificates</td>
+    <td valign="top">(true | false) display information about certificates</td>
+    <td valign="top" align="center">No; default false</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">(true | false) verbose output when verifying</td>
+    <td valign="top" align="center">No; default false</td>
+  </tr>
+  <tr>
+    <td valign="top">strict</td>
+    <td valign="top">(true | false) strict checking when verifying.<br/><em>since Ant 1.9.1</em>.</td>
+    <td valign="top" align="center">No; default false</td>
+  </tr>
+  <tr>
+    <td valign="top">maxmemory</td>
+    <td valign="top">Specifies the maximum memory the jarsigner VM will use. Specified in the
+                     style of standard java memory specs (e.g. 128m = 128 MBytes)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">executable</td>
+    <td valign="top">Specify a particular <code>jarsigner</code> executable
+      to use in place of the default binary (found in the same JDK as
+      Apache Ant is running in).<br/>
+      Must support the same command line options as the Sun JDK
+      jarsigner command.
+      <em>since Ant 1.8.0</em>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>  
+</table>
+<h3>Parameters as nested elements</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">path</td>
+    <td valign="top">path of JAR files to verify. <em>since Ant 1.7</em></td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">fileset</td>
+    <td valign="top">fileset of JAR files to verify. </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sysproperty</td>
+    <td valign="top">JVM system properties, with the syntax of Ant
+    <a href="exec.html#env">environment variables</a> </td>
+    <td valign="top" align="center">No, and only one can be supplied</td>
+  </tr>
+ </table>
+
+
+<h3>Examples</h3>
+  <blockquote><pre>
+&lt;verifyjar jar=&quot;${dist}/lib/ant.jar&quot;
+alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
+</pre></blockquote>
+<p>
+  verifies the ant.jar with alias &quot;apache-group&quot; accessing the
+  keystore and private key via &quot;secret&quot; password.
+</p>
+
+
+
+</body>
+</html>
+

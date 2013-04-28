@@ -67,6 +67,11 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected boolean verbose;
     /**
+     * strict checking
+     * @since Ant 1.9.1
+     */
+    protected boolean strict = false;
+    /**
      * The maximum amount of memory to use for Jar signer
      */
     protected String maxMemory;
@@ -185,6 +190,15 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
+     * do strict checking
+     * @since Ant 1.9.1
+     * @param strict
+     */
+    public void setStrict(boolean strict) {
+        this.strict = strict;
+    }
+
+    /**
      * Adds a set of files to sign
      *
      * @param set a set of files to sign
@@ -287,6 +301,10 @@ public abstract class AbstractJarSignerTask extends Task {
 
         if (verbose) {
             addValue(cmd, "-verbose");
+        }
+
+        if (strict) {
+            addValue(cmd, "-strict");
         }
 
         //now patch in all system properties

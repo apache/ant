@@ -24,6 +24,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * strict attribute added to <signjar>.
+   Bugzilla Report 54889.
+
 Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
 
@@ -127,7 +130,8 @@ Other changes:
    archives using Zip64 extensions (files and archives bigger that 4GB
    and with more that 64k entries).
 
- * a new task <commandlaucher> can be used to configure the
+ * a new task <commandlaun
+ cher> can be used to configure the
    CommandLauncher used by Ant when forking external programs or new
    Java VMs.
    Bugzilla Report 52706.
