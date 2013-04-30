@@ -132,8 +132,7 @@ Other changes:
    archives using Zip64 extensions (files and archives bigger that 4GB
    and with more that 64k entries).
 
- * a new task <commandlaun
- cher> can be used to configure the
+ * a new task <commandlauncher> can be used to configure the
    CommandLauncher used by Ant when forking external programs or new
    Java VMs.
    Bugzilla Report 52706.
