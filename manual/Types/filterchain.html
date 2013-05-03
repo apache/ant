@@ -585,9 +585,14 @@ user defined values.
 <h4>Example:</h4>
 
 This replaces occurrences of the string &#64;DATE&#64; in the data
-with today's date and stores it in the property ${src.file.replaced}
+with today's date and stores it in the property ${src.file.replaced}.
 <blockquote><pre>
 &lt;tstamp/&gt;
+&lt;!-- just for explaining the use of the properties --&gt;
+&lt;property name=&quot;src.file&quot; value=&quot;orders.csv&quot;/&gt;
+&lt;property name=&quot;src.file.replaced&quot; value=&quot;orders.replaced&quot;/&gt;
+
+&lt;!-- do the loading and filtering --&gt;
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ReplaceTokens&quot;&gt;
@@ -595,6 +600,9 @@ with today's date and stores it in the property ${src.file.replaced}
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
+
+&lt;!-- just for explaining the use of the properties --&gt;
+&lt;echo message=&quot;${orders.replaced}&quot;/>
 </pre></blockquote>
 
 Convenience method:
