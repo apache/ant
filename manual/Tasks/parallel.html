@@ -197,7 +197,6 @@ if the <code>&lt;wljspc&gt;</code> task used the javac compiler in-VM
 (it may), concurrency problems may arise.
 </p>
 
-<taskdef name=""
 <pre>
  &lt;macrodef name="dbpurge"&gt;
     &lt;attribute file="file"/&gt;
@@ -208,7 +207,7 @@ if the <code>&lt;wljspc&gt;</code> task used the javac compiler in-VM
    &lt;/sequential&gt;
 &lt;/macrodef&gt;
     
-&lt;parallel threadCount='4'&gt;
+&lt;parallel threadCount="4"&gt;
   &lt;dbpurge file="db/one" /&gt;
   &lt;dbpurge file="db/two" /&gt;
   &lt;dbpurge file="db/three" /&gt;
