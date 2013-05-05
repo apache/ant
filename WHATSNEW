@@ -29,6 +29,9 @@ Other changes:
 
  * simplifying Execute.getEnvironmentVariables since we are only running on Java 1.5 or higher now
 
+ * Add conditional attributes
+   Bugzilla report 43362
+
 Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
 

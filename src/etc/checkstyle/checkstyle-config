@@ -96,8 +96,8 @@
     <module name="IllegalInstantiation">
       <property name="classes" value="java.lang.Boolean"/>
     </module>
-    <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <!-- <module name="InnerAssignment"/> -->
+    <!-- <module name="MagicNumber"/> -->
     <module name="MissingSwitchDefault"/>
     <!-- Allow redundant throw declarations for doc purposes 
     <module name="RedundantThrows">
@@ -120,7 +120,7 @@
       <property name="format" value="\s+$"/>
       <property name="message" value="Line has trailing spaces."/>
     </module>
-    <module name="TodoComment"/>
+    <!-- <module name="TodoComment"/> -->
     <module name="UpperEll"/>
     <!-- allow comment suppression of checks -->
     <module name="FileContentsHolder"/>

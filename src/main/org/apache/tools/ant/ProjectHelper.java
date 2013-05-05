@@ -43,6 +43,11 @@ public class ProjectHelper {
     /** The URI for antlib current definitions */
     public static final String ANT_CURRENT_URI      = "ant:current";
 
+    /** The URI for ant specific attributes
+     * @since Ant 1.9.1
+     * */
+    public static final String ANT_ATTRIBUTE_URI      = "ant:attribute";
+
     /** The URI for defined types/tasks - the format is antlib:<package> */
     public static final String ANTLIB_URI     = "antlib:";
 
@@ -520,6 +525,16 @@ public class ProjectHelper {
             return componentName;
         }
         return componentName.substring(index + 1);
+    }
+
+    /**
+     * Convert an attribute namespace to a "component name".
+     * @param ns the xml namespace uri.
+     * @return the converted value.
+     * @since Ant 1.9.1
+     */
+    public static String nsToComponentName(String ns) {
+        return "attribute namespace:" + ns;
     }
 
     /**

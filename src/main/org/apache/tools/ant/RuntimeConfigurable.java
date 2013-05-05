@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.tools.ant.attribute.EnableAttribute;
+
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
 import org.apache.tools.ant.taskdefs.MacroInstance;
@@ -63,6 +65,9 @@ public class RuntimeConfigurable implements Serializable {
      * @deprecated since 1.6.x
      */
     private transient AttributeList attributes;
+
+    // The following is set to true if any of the attributes are namespaced
+    private transient boolean namespacedAttribute = false;
 
     /** Attribute names and values. While the XML spec doesn't require
      *  preserving the order ( AFAIK ), some ant tests do rely on the
@@ -111,6 +116,73 @@ public class RuntimeConfigurable implements Serializable {
     public synchronized void setProxy(Object proxy) {
         wrappedObject = proxy;
         proxyConfigured = false;
+    }
+
+    private static class EnableAttributeConsumer {
+        public void add(EnableAttribute b) {
+            // Ignore
+        }
+    }
+
+    /**
+     * Check if an UE is enabled.
+     * This looks tru the attributes and checks if there
+     * are any Ant attributes, and if so, the method calls the
+     * isEnabled() method on them.
+     * @param owner the UE that owns this RC.
+     * @return true if enabled, false if any of the ant attribures return
+     *              false.
+     */
+    public boolean isEnabled(UnknownElement owner) {
+        if (!namespacedAttribute) {
+            return true;
+        }
+        ComponentHelper componentHelper = ComponentHelper
+            .getComponentHelper(owner.getProject());
+
+        IntrospectionHelper ih
+            = IntrospectionHelper.getHelper(
+                owner.getProject(), EnableAttributeConsumer.class);
+        for (int i = 0; i < attributeMap.keySet().size(); ++i) {
+            String name = (String) attributeMap.keySet().toArray()[i];
+            if (name.indexOf(':') == -1) {
+                continue;
+            }
+            String componentName = attrToComponent(name);
+            String ns = ProjectHelper.extractUriFromComponentName(componentName);
+            if (componentHelper.getRestrictedDefinitions(
+                    ProjectHelper.nsToComponentName(ns)) == null) {
+                continue;
+            }
+
+            String value = (String) attributeMap.get(name);
+
+            EnableAttribute enable = null;
+            try {
+                enable = (EnableAttribute)
+                    ih.createElement(
+                        owner.getProject(), new EnableAttributeConsumer(),
+                        componentName);
+            } catch (BuildException ex) {
+                throw new BuildException(
+                    "Unsupported attribute " + componentName);
+            }
+            if (enable == null) {
+                continue;
+            }
+            value = owner.getProject().replaceProperties(value); // FixMe: need to make config
+            if (!enable.isEnabled(owner, value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String attrToComponent(String a) {
+        // need to remove the prefix
+        int p1 = a.lastIndexOf(':');
+        int p2 = a.lastIndexOf(':', p1 - 1);
+        return a.substring(0, p2) + a.substring(p1);
     }
 
     /**
@@ -177,6 +249,9 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public synchronized void setAttribute(String name, String value) {
+        if (name.indexOf(':') != -1) {
+            namespacedAttribute = true;
+        }
         setAttribute(name, (Object) value);
     }
 

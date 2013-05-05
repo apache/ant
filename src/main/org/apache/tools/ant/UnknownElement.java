@@ -170,6 +170,9 @@ public class UnknownElement extends Task {
      *
      */
     public void configure(Object realObject) {
+        if (realObject == null) {
+            return;
+        }
         realThing = realObject;
 
         getWrapper().setProxy(realThing);
@@ -281,10 +284,8 @@ public class UnknownElement extends Task {
      */
     public void execute() {
         if (realThing == null) {
-            // plain impossible to get here, maybeConfigure should
-            // have thrown an exception.
-            throw new BuildException("Could not create task of type: "
-                                     + elementName, getLocation());
+            // Got here if the runtimeconfigurable is not enabled.
+            return;
         }
         try {
             if (realThing instanceof Task) {
@@ -346,6 +347,14 @@ public class UnknownElement extends Task {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = it.next();
                 try {
+                    if (!childWrapper.isEnabled(child)) {
+                        if (ih.supportsNestedElement(
+                                parentUri, ProjectHelper.genComponentName(
+                                    child.getNamespace(), child.getTag()))) {
+                            continue;
+                        }
+                        // fall tru and fail in handlechild (unsupported element)
+                    }
                     if (!handleChild(
                             parentUri, ih, parent, child, childWrapper)) {
                         if (!(parent instanceof TaskContainer)) {
@@ -411,6 +420,9 @@ public class UnknownElement extends Task {
      * @return the task or data type represented by the given unknown element.
      */
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
+        if (!w.isEnabled(ue)) {
+            return null;
+        }
         ComponentHelper helper = ComponentHelper.getComponentHelper(
             getProject());
         String name = ue.getComponentName();

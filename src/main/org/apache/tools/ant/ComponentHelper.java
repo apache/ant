@@ -316,6 +316,7 @@ public class ComponentHelper  {
     public void initDefaultDefinitions() {
         initTasks();
         initTypes();
+        new DefaultDefinitions(this).execute();
     }
 
     /**
