@@ -175,6 +175,9 @@ Other changes:
    This will be useful to use the contains selector if the encoding of the VM is different from the encoding
    of the files being selected.
 
+ * support for GNU Classpath.
+   Bugzilla report 54760.
+
 Changes from Ant 1.8.3 TO Ant 1.8.4
 ===================================
 

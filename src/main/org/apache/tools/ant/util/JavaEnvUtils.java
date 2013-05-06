@@ -101,6 +101,10 @@ public final class JavaEnvUtils {
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
+
+    /** Wheter this is a GNU Classpath based VM */
+    private static boolean classpathDetected;
+
     /** Whether this is the GNU VM (gcj/gij) */
     private static boolean gijDetected;
 
@@ -158,6 +162,13 @@ public final class JavaEnvUtils {
             kaffeDetected = true;
         } catch (Throwable t) {
             // swallow as this simply doesn't seem to be Kaffe
+        }
+        classpathDetected = false;
+        try {
+            Class.forName("gnu.classpath.Configuration");
+            classpathDetected = true;
+        } catch (Throwable t) {
+            // swallow as this simply doesn't seem to be GNU classpath based.
         }
         gijDetected = false;
         try {
@@ -231,6 +242,15 @@ public final class JavaEnvUtils {
      */
     public static boolean isKaffe() {
         return kaffeDetected;
+    }
+
+    /**
+     * Checks whether the current Java VM is GNU Classpath
+     * @since Ant 1.9.1
+     * @return true if the version of Java is GNU Classpath
+     */
+    public static boolean isClasspathBased() {
+        return classpathDetected;
     }
 
     /**
