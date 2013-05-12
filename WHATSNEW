@@ -40,6 +40,10 @@ Other changes:
  * Add conditional attributes
    Bugzilla report 43362
 
+ * Recommending to upgrade jsch to 0.1.50, particularly if you are using Java 1.7.
+   jsch is the library behind the sshexec and scp Ant tasks.
+   Versions of jsch older than 0.1.50 fail randomly under Java 1.7 with an error message "verify: false"
+
 Changes from Ant 1.8.4 TO Ant 1.9.0
 ===================================
 
