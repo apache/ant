@@ -64,7 +64,7 @@ import java.util.Vector;
 public class ImportTask extends Task {
     private String file;
     private boolean optional;
-    private String targetPrefix;
+    private String targetPrefix = ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX;
     private String prefixSeparator = ".";
     private final Union resources = new Union();
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -199,7 +199,7 @@ public class ImportTask extends Task {
             return;
         }
 
-        // nested invokations are possible like an imported file
+        // nested invocations are possible like an imported file
         // importing another one
         String oldPrefix = ProjectHelper.getCurrentTargetPrefix();
         boolean oldIncludeMode = ProjectHelper.isInIncludeMode();
@@ -209,7 +209,9 @@ public class ImportTask extends Task {
             if (isInIncludeMode() && oldPrefix != null
                 && targetPrefix != null) {
                 prefix = oldPrefix + oldSep + targetPrefix;
-            } else if (targetPrefix != null) {
+            } else if (isInIncludeMode()) {
+                prefix = targetPrefix;
+            } else if (!ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX.equals(targetPrefix)) {
                 prefix = targetPrefix;
             } else {
                 prefix = oldPrefix;

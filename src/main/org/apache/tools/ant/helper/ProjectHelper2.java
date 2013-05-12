@@ -732,12 +732,10 @@ public class ProjectHelper2 extends ProjectHelper {
                             project.setName(value);
                             project.addReference(value, project);
                         } else if (isInIncludeMode()) {
-                            if (!"".equals(value)
-                                && (getCurrentTargetPrefix() == null
-                                    || getCurrentTargetPrefix().length() == 0)
-                                ) {
+                            if (!"".equals(value) && getCurrentTargetPrefix()!= null && getCurrentTargetPrefix().endsWith(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX))  {
+                                String newTargetPrefix = getCurrentTargetPrefix().replace(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX, value);
                                 // help nested include tasks
-                                setCurrentTargetPrefix(value);
+                                setCurrentTargetPrefix(newTargetPrefix);
                             }
                         }
                     }

@@ -72,6 +72,12 @@ public class ProjectHelper {
     public static final String PROJECTHELPER_REFERENCE = MagicNames.REFID_PROJECT_HELPER;
 
     /**
+     * constant to denote use project name as target prefix
+     * @since Ant 1.9.1
+     */
+    public static final String USE_PROJECT_NAME_AS_TARGET_PREFIX = "USE_PROJECT_NAME_AS_TARGET_PREFIX";
+
+    /**
      * Configures the project with the contents of the specified build file.
      *
      * @param project The project to configure. Must not be <code>null</code>.

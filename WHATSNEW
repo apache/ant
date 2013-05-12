@@ -4,6 +4,9 @@ Changes from Ant 1.9.0 TO current
 Changes that could break older environments:
 -------------------------------------------
 
+ * Users who have their own ProjectHelper implementation will need to change it because the import and include tasks
+   will now default the targetPrefix to ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX.
+   Users using the default ProjectHelper2 with ant need not worry about this change done to fix Bugzilla Report 54940.
 
 
 Fixed bugs:
@@ -20,6 +23,11 @@ Fixed bugs:
 
  * Fixed loading of external dependencies in JUnit task.
    Bugzilla Report 54835.
+
+ * Target rewriting for nested "include" only works when "as" is specified.
+   See also "Changes that could break older environments"
+   Bugzilla Report 54940.
+
 
 Other changes:
 --------------

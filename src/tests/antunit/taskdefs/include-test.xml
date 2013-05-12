@@ -18,9 +18,9 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <include>
-    <file file="importtests/a.xml"/>
-  </include>
+ <include>
+  <file file="importtests/a.xml"/>
+</include>
   <include file="importtests/b.xml" as="c"/>
 
   <target name="testNoExplicitPrefix" depends="a.a">
@@ -50,4 +50,9 @@
   <!-- really only tests that the targets have the expected names by
        forcing an exception if the dependencies don't exist -->
   <target name="testNesting" depends="nested.b::b, nested.aa"/>
+  <target name="testNoExplicitPrefixNested">
+    <ant target="x.y.z.zz" antfile="importtests/w.xml"/>
+  </target>
+
+
 </project>
