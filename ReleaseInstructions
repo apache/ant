@@ -233,8 +233,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
      
-    Change the version of the manual published on the site: change the URL in the
-    svn:externals of the 'production' folder.
+    Change the version of the manual published on the site: svn copy the manual into
+    the production folder, using a command similar to :
+    svn copy https://svn.apache.org/repos/asf/ant/core/tags/ANT_190/manual/ .
+    followed by a commit.
 
 22. Clean up.
 
