@@ -123,8 +123,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 12. Once this is committed call for a release vote on dev@ant.  The
     vote will only pass if at least three PMC members have voted +1
-    and more +1s than -1s have been cast.  The vote will run for a
-    week.
+    and more +1s than -1s have been cast.  The vote will run for 3 days.
 
 13. Update the files listed at the end of the document (files containing 
     version information) to prepare the development of the next version of Ant
