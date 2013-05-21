@@ -22,6 +22,7 @@ import org.apache.tools.ant.UnknownElement;
 
 /**
  * Check if an attribute is blank or not.
+ * @since Ant 1.9.1
  */
 public class IfBlankAttribute extends BaseIfAttribute {
     /** The unless version */

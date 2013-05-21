@@ -21,7 +21,8 @@ package org.apache.tools.ant.attribute;
 import org.apache.tools.ant.UnknownElement;
 
 /**
- * This interface is used by ant attributes.
+ * This interface is used by Ant attributes.
+ * @since Ant 1.9.1
  */
 public interface EnableAttribute {
     /**

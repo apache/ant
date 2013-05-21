@@ -23,6 +23,7 @@ import org.apache.tools.ant.UnknownElement;
 
 /**
  * Check if an attribute value is true or not.
+ * @since Ant 1.9.1
  */
 public class IfTrueAttribute extends BaseIfAttribute {
     /** The unless version */

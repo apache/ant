@@ -22,6 +22,7 @@ import org.apache.tools.ant.UnknownElement;
 
 /**
  * Check if an attribute value as a property is set or not
+ * @since Ant 1.9.1
  */
 public class IfSetAttribute extends BaseIfAttribute {
     /** The unless version */

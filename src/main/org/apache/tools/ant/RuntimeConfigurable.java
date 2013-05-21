@@ -132,6 +132,7 @@ public class RuntimeConfigurable implements Serializable {
      * @param owner the UE that owns this RC.
      * @return true if enabled, false if any of the ant attribures return
      *              false.
+     * @since 1.9.1
      */
     public boolean isEnabled(UnknownElement owner) {
         if (!namespacedAttribute) {

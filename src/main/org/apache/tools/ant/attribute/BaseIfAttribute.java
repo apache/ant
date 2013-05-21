@@ -31,6 +31,7 @@ import org.apache.tools.ant.UnknownElement;
  * An abstract class for if/unless attributes.
  * This contains a boolean flag to specify whether this is an
  * if or unless attribute.
+ * @since Ant 1.9.1
  */
 public abstract class BaseIfAttribute
     extends ProjectComponent implements EnableAttribute {

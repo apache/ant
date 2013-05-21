@@ -276,9 +276,11 @@ public final class MagicNames {
      * @since Ant 1.9.0
      */
     public static final String ANT_VM_LAUNCHER_REF_ID = "ant.vmLauncher";
-    /** Name of the namespace "type" (note: cannot be used as an element)
-     *  @since  Ant 1.9.1
-     * */
+    /**
+     * Name of the namespace "type".
+     * (Note: cannot be used as an element.)
+     * @since Ant 1.9.1
+     */
     public static final String ATTRIBUTE_NAMESPACE = "attribute namespace";
 }
 

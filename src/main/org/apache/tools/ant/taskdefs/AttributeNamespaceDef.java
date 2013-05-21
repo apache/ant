@@ -24,16 +24,16 @@ import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.attribute.AttributeNamespace;
 
 /**
- * Defintion to allow the uri to be considered for
- * ant attributes.
+ * Definition to allow the URI to be considered for
+ * Ant attributes.
  *
- * @since Ant 1.8.0
+ * @since Ant 1.9.1
  */
 public final class AttributeNamespaceDef  extends AntlibDefinition {
 
     /**
      * Run the definition.
-     * This registers the xml namespace (uri) as a namepace for
+     * This registers the XML namespace (URI) as a namepace for
      * attributes.
      */
     public void execute() {

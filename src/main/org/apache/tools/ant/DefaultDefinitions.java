@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 
 /**
  * Default definitions.
+ * @since Ant 1.9.1
  */
 public final class DefaultDefinitions {
     private static final String IF_NAMESPACE = "ant:if";
@@ -37,7 +38,7 @@ public final class DefaultDefinitions {
     }
 
     /**
-     * Register the defintions.
+     * Register the definitions.
      */
     public void execute() {
         attributeNamespaceDef(IF_NAMESPACE);

@@ -19,8 +19,10 @@
 package org.apache.tools.ant.attribute;
 
 /**
- * This class is used to indicate that the xml namespace (uri)
+ * This class is used to indicate that the XML namespace (URI)
  * can be used to look for namespace attributes.
+ * @see org.apache.tools.ant.taskdefs.AttributeNamespaceDef
+ * @since Ant 1.9.1
  */
 public final class AttributeNamespace {
 }
