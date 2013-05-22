@@ -202,10 +202,10 @@ Note: This document was updated in the context of releasing Ant 1.7.
        login using your Apache credentials
        select the Staging enterprise repository
        expand org.apache.ant 
-       right click the upload that you just did
-       select the context menu entry "Close"
+       select the checkbox next to the upload that you just did
+       click the button "Close" on the top of the table listing the uploads
        once this is done, you have to again select your upload in the web interface,
-       right click, and select the menu entry promote.
+       and click the button "Release".
        4 hours later, the artefacts will be in the maven central repository.
       
 
