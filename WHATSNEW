@@ -8,6 +8,9 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * Parsing of zip64 extra fields has become more lenient in order to
+   be able to read archives created by DotNetZip and maybe other
+   archivers as well.
 
 Other changes:
 --------------

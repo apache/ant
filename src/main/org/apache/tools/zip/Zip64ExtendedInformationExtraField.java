@@ -240,7 +240,7 @@ public class Zip64ExtendedInformationExtraField
      * field with knowledge which fields are expected to be there.
      *
      * <p>All four fields inside the zip64 extended information extra
-     * field are optional and only present if their corresponding
+     * field are optional and must only be present if their corresponding
      * entry inside the central directory contains the correct magic
      * value.</p>
      */
@@ -254,7 +254,7 @@ public class Zip64ExtendedInformationExtraField
                 + (hasCompressedSize ? DWORD : 0)
                 + (hasRelativeHeaderOffset ? DWORD : 0)
                 + (hasDiskStart ? WORD : 0);
-            if (rawCentralDirectoryData.length != expectedLength) {
+            if (rawCentralDirectoryData.length < expectedLength) {
                 throw new ZipException("central directory zip64 extended"
                                        + " information extra field's length"
                                        + " doesn't match central directory"
