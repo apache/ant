@@ -12,6 +12,9 @@ Fixed bugs:
    be able to read archives created by DotNetZip and maybe other
    archivers as well.
 
+ * TarInputStream should now properly read GNU longlink entries' names.
+   Bugzilla Report 55040.
+
 Other changes:
 --------------
 

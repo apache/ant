@@ -238,6 +238,11 @@ public interface TarConstants {
     byte   LF_CONTIG = (byte) '7';
 
     /**
+     * Identifies the *next* file on the tape as having a long linkname.
+     */
+    byte LF_GNUTYPE_LONGLINK = (byte) 'K';
+
+    /**
      * Identifies the *next* file on the tape as having a long name.
      */
     byte LF_GNUTYPE_LONGNAME = (byte) 'L';
