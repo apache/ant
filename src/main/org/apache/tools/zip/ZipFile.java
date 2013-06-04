@@ -28,7 +28,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -80,17 +82,16 @@ public class ZipFile {
     private static final int POS_3 = 3;
 
     /**
-     * Maps ZipEntrys to two longs, recording the offsets of
-     * the local file headers and the start of entry data.
+     * List of entries in the order they appear inside the central
+     * directory.
      */
-    private final Map<ZipEntry, OffsetEntry> entries =
-        new LinkedHashMap<ZipEntry, OffsetEntry>(HASH_SIZE);
+    private final List<ZipEntry> entries = new LinkedList<ZipEntry>();
 
     /**
-     * Maps String to ZipEntrys, name -> actual entry.
+     * Maps String to list of ZipEntrys, name -> actual entries.
      */
-    private final Map<String, ZipEntry> nameMap =
-        new HashMap<String, ZipEntry>(HASH_SIZE);
+    private final Map<String, LinkedList<ZipEntry>> nameMap =
+        new HashMap<String, LinkedList<ZipEntry>>(HASH_SIZE);
 
     private static final class OffsetEntry {
         private long headerOffset = -1;
@@ -272,7 +273,7 @@ public class ZipFile {
      * @return all entries as {@link ZipEntry} instances
      */
     public Enumeration<ZipEntry> getEntries() {
-        return Collections.enumeration(entries.keySet());
+        return Collections.enumeration(entries);
     }
 
     /**
@@ -286,8 +287,7 @@ public class ZipFile {
      * @since Ant 1.9.0
      */
     public Enumeration<ZipEntry> getEntriesInPhysicalOrder() {
-        ZipEntry[] allEntries =
-            entries.keySet().toArray(new ZipEntry[0]);
+        ZipEntry[] allEntries = entries.toArray(new ZipEntry[0]);
         Arrays.sort(allEntries, OFFSET_COMPARATOR);
         return Collections.enumeration(Arrays.asList(allEntries));
     }
@@ -295,12 +295,51 @@ public class ZipFile {
     /**
      * Returns a named entry - or {@code null} if no entry by
      * that name exists.
+     *
+     * <p>If multiple entries with the same name exist the first entry
+     * in the archive's central directory by that name is
+     * returned.</p>
+     *
      * @param name name of the entry.
      * @return the ZipEntry corresponding to the given name - or
      * {@code null} if not present.
      */
     public ZipEntry getEntry(String name) {
-        return nameMap.get(name);
+        LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
+        return entriesOfThatName != null ? entriesOfThatName.getFirst() : null;
+    }
+
+    /**
+     * Returns all named entries in the same order they appear within
+     * the archive's central directory.
+     *
+     * @param name name of the entry.
+     * @return the Iterable<ZipEntry> corresponding to the
+     * given name
+     * @since 1.9.2
+     */
+    public Iterable<ZipEntry> getEntries(String name) {
+        List<ZipEntry> entriesOfThatName = nameMap.get(name);
+        return entriesOfThatName != null ? entriesOfThatName
+            : Collections.<ZipEntry>emptyList();
+    }
+
+    /**
+     * Returns all named entries in the same order their contents
+     * appear within the archive.
+     *
+     * @param name name of the entry.
+     * @return the Iterable<ZipEntry> corresponding to the
+     * given name
+     * @since 1.9.2
+     */
+    public Iterable<ZipEntry> getEntriesInPhysicalOrder(String name) {
+        ZipEntry[] entriesOfThatName = new ZipEntry[0];
+        if (nameMap.containsKey(name)) {
+            entriesOfThatName = nameMap.get(name).toArray(entriesOfThatName);
+            Arrays.sort(entriesOfThatName, OFFSET_COMPARATOR);
+        }
+        return Arrays.asList(entriesOfThatName);
     }
 
     /**
@@ -323,10 +362,11 @@ public class ZipFile {
      */
     public InputStream getInputStream(ZipEntry ze)
         throws IOException, ZipException {
-        OffsetEntry offsetEntry = entries.get(ze);
-        if (offsetEntry == null) {
+        if (!(ze instanceof Entry)) {
             return null;
         }
+        // cast valididty is checked just above
+        OffsetEntry offsetEntry = ((Entry) ze).getOffsetEntry();
         ZipUtil.checkRequestedFeatures(ze);
         long start = offsetEntry.dataOffset;
         BoundedInputStream bis =
@@ -441,7 +481,8 @@ public class ZipFile {
         throws IOException {
         archive.readFully(CFH_BUF);
         int off = 0;
-        ZipEntry ze = new ZipEntry();
+        OffsetEntry offset = new OffsetEntry();
+        Entry ze = new Entry(offset);
 
         int versionMadeBy = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
@@ -496,12 +537,9 @@ public class ZipFile {
         ze.setName(entryEncoding.decode(fileName), fileName);
 
         // LFH offset,
-        OffsetEntry offset = new OffsetEntry();
         offset.headerOffset = ZipLong.getValue(CFH_BUF, off);
         // data offset will be filled later
-        entries.put(ze, offset);
-
-        nameMap.put(ze.getName(), ze);
+        entries.add(ze);
 
         byte[] cdExtraData = new byte[extraLen];
         archive.readFully(cdExtraData);
@@ -814,16 +852,11 @@ public class ZipFile {
     private void resolveLocalFileHeaderData(Map<ZipEntry, NameAndComment>
                                             entriesWithoutUTF8Flag)
         throws IOException {
-        // changing the name of a ZipEntry is going to change
-        // the hashcode - see COMPRESS-164
-        // Map needs to be reconstructed in order to keep central
-        // directory order
-        Map<ZipEntry, OffsetEntry> origMap =
-            new LinkedHashMap<ZipEntry, OffsetEntry>(entries);
-        entries.clear();
-        for (Map.Entry<ZipEntry, OffsetEntry> ent : origMap.entrySet()) {
-            ZipEntry ze = ent.getKey();
-            OffsetEntry offsetEntry = ent.getValue();
+        for (Iterator<ZipEntry> it = entries.iterator(); it.hasNext(); ) {
+            // entries is filled in populateFromCentralDirectory and
+            // never modified
+            Entry ze = (Entry) it.next();
+            OffsetEntry offsetEntry = ze.getOffsetEntry();
             long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
             archive.readFully(SHORT_BUF);
@@ -846,16 +879,18 @@ public class ZipFile {
                 + SHORT + SHORT + fileNameLen + extraFieldLen;
 
             if (entriesWithoutUTF8Flag.containsKey(ze)) {
-                String orig = ze.getName();
                 NameAndComment nc = entriesWithoutUTF8Flag.get(ze);
                 ZipUtil.setNameAndCommentFromExtraFields(ze, nc.name,
                                                          nc.comment);
-                if (!orig.equals(ze.getName())) {
-                    nameMap.remove(orig);
-                    nameMap.put(ze.getName(), ze);
-                }
             }
-            entries.put(ze, offsetEntry);
+
+            String name = ze.getName();
+            LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
+            if (entriesOfThatName == null) {
+                entriesOfThatName = new LinkedList<ZipEntry>();
+                nameMap.put(name, entriesOfThatName);
+            }
+            entriesOfThatName.addLast(ze);
         }
     }
 
@@ -962,16 +997,52 @@ public class ZipFile {
                 return 0;
             }
 
-            OffsetEntry off1 = entries.get(e1);
-            OffsetEntry off2 = entries.get(e2);
-            if (off1 == null) {
+            Entry ent1 = e1 instanceof Entry ? (Entry) e1 : null;
+            Entry ent2 = e2 instanceof Entry ? (Entry) e2 : null;
+            if (ent1 == null) {
                 return 1;
             }
-            if (off2 == null) {
+            if (ent2 == null) {
                 return -1;
             }
-            long val = (off1.headerOffset - off2.headerOffset);
+            long val = (ent1.getOffsetEntry().headerOffset
+                        - ent2.getOffsetEntry().headerOffset);
             return val == 0 ? 0 : val < 0 ? -1 : +1;
         }
     };
+
+    /**
+     * Extends ZipEntry to store the offset within the archive.
+     */
+    private static class Entry extends ZipEntry {
+
+        private final OffsetEntry offsetEntry;
+
+        Entry(OffsetEntry offset) {
+            this.offsetEntry = offset;
+        }
+
+        OffsetEntry getOffsetEntry() {
+            return offsetEntry;
+        }
+
+        @Override
+        public int hashCode() {
+            return 3 * super.hashCode()
+                + (int) (offsetEntry.headerOffset % Integer.MAX_VALUE);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (super.equals(other)) {
+                // super.equals would return false if other were not an Entry
+                Entry otherEntry = (Entry) other;
+                return offsetEntry.headerOffset
+                        == otherEntry.offsetEntry.headerOffset
+                    && offsetEntry.dataOffset
+                        == otherEntry.offsetEntry.dataOffset;
+            }
+            return false;
+        }
+    }
 }
