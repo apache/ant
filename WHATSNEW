@@ -15,6 +15,11 @@ Fixed bugs:
  * TarInputStream should now properly read GNU longlink entries' names.
    Bugzilla Report 55040.
 
+ * <java> and <exec> used to be too restrictive when evaluating
+   whether a given set of options is compatible with spawning the new
+   process.
+   Bugzilla Report 55112.
+
 Other changes:
 --------------
 

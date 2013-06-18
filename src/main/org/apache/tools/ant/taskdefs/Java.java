@@ -619,7 +619,7 @@ public class Java extends Task {
      */
     public void setAppend(boolean append) {
         redirector.setAppend(append);
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= append;
     }
 
     /**
