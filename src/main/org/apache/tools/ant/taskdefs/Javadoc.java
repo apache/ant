@@ -2456,9 +2456,10 @@ public class Javadoc extends Task {
                                             + "classpath.");
         }
         try {
-            fixData = FileUtils.readFully(new InputStreamReader(in, "US-ASCII")).trim()
-                .replace("\r\n", StringUtils.LINE_SEP)
-                .replace("\n", StringUtils.LINE_SEP);
+            fixData =
+                fixLineFeeds(FileUtils
+                             .readFully(new InputStreamReader(in, "US-ASCII")))
+                .trim();
         } finally {
             FileUtils.close(in);
         }
@@ -2490,7 +2491,8 @@ public class Javadoc extends Task {
         String fileContents;
         try {
             fileContents =
-                FileUtils.safeReadFully(new InputStreamReader(fin, enc));
+                fixLineFeeds(FileUtils
+                             .safeReadFully(new InputStreamReader(fin, enc)));
         } finally {
             FileUtils.close(fin);
         }
@@ -2513,6 +2515,11 @@ public class Javadoc extends Task {
             }
         }
         return 0;
+    }
+
+    private String fixLineFeeds(String orig) {
+        return orig.replace("\r\n", "\n")
+            .replace("\n", StringUtils.LINE_SEP);
     }
 
     private String patchContent(String fileContents, String fixData) {
