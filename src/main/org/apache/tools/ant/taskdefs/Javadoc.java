@@ -17,13 +17,20 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,6 +57,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -80,6 +88,9 @@ public class Javadoc extends Task {
 
     private static final boolean JAVADOC_5 =
         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
+
+    private static final String LOAD_FRAME = "function loadFrames() {";
+    private static final int LOAD_FRAME_LEN = LOAD_FRAME.length();
 
     /**
      * Inner class used to manage doclet parameters.
@@ -452,6 +463,8 @@ public class Javadoc extends Task {
     private String executable = null;
     private boolean docFilesSubDirs = false;
     private String excludeDocFilesSubDir = null;
+    private String docEncoding = null;
+    private boolean postProcessGeneratedJavadocs = true;
 
     private ResourceCollectionContainer nestedSourceFiles
         = new ResourceCollectionContainer();
@@ -1151,6 +1164,7 @@ public class Javadoc extends Task {
     public void setDocencoding(String enc) {
         cmd.createArgument().setValue("-docencoding");
         cmd.createArgument().setValue(enc);
+        docEncoding = enc;
     }
 
     /**
@@ -1656,6 +1670,14 @@ public class Javadoc extends Task {
     }
 
     /**
+     * Whether to post-process the generated javadocs in order to mitigate CVE-2013-1571.
+     * @since Ant 1.9.2
+     */
+    public void setPostProcessGeneratedJavadocs(boolean b) {
+        postProcessGeneratedJavadocs = b;
+    }
+
+    /**
      * Execute the task.
      * @throws BuildException on error
      */
@@ -1765,6 +1787,7 @@ public class Javadoc extends Task {
                 throw new BuildException("Javadoc returned " + ret,
                                          getLocation());
             }
+            postProcessGeneratedJavadocs();
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, getLocation());
         } finally {
@@ -2418,6 +2441,88 @@ public class Javadoc extends Task {
                     Project.MSG_VERBOSE);
             }
         }
+    }
+
+    private void postProcessGeneratedJavadocs() throws IOException {
+        if (!postProcessGeneratedJavadocs) {
+            return;
+        }
+        final String fixData;
+        final InputStream in = getClass()
+            .getResourceAsStream("javadoc-frame-injections-fix.txt");
+        if (in == null) {
+            throw new FileNotFoundException("Missing resource "
+                                            + "'javadoc-frame-injections-fix.txt' in "
+                                            + "classpath.");
+        }
+        try {
+            fixData = FileUtils.readFully(new InputStreamReader(in, "US-ASCII")).trim()
+                .replace("\r\n", StringUtils.LINE_SEP)
+                .replace("\n", StringUtils.LINE_SEP);
+        } finally {
+            FileUtils.close(in);
+        }
+
+        final DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(destDir);
+        ds.setCaseSensitive(false);
+        ds.setIncludes(new String[] {
+                "**/index.html", "**/index.htm", "**/toc.html", "**/toc.htm"
+            });
+        ds.addDefaultExcludes();
+        ds.scan();
+        int patched = 0;
+        for (String f : ds.getIncludedFiles()) {
+            patched += postProcess(new File(destDir, f), fixData);
+        }
+        if (patched > 0) {
+            log("Patched " + patched + " link injection vulnerable javadocs",
+                Project.MSG_INFO);
+        }
+    }
+
+    private int postProcess(File file, String fixData) throws IOException {
+        String enc = docEncoding != null ? docEncoding
+            : FILE_UTILS.getDefaultEncoding();
+        // we load the whole file as one String (toc/index files are
+        // generally small, because they only contain frameset declaration):
+        InputStream fin = new FileInputStream(file);
+        String fileContents;
+        try {
+            fileContents =
+                FileUtils.safeReadFully(new InputStreamReader(fin, enc));
+        } finally {
+            FileUtils.close(fin);
+        }
+
+        // check if file may be vulnerable because it was not
+        // patched with "validURL(url)":
+        if (fileContents.indexOf("function validURL(url) {") < 0) {
+            // we need to patch the file!
+            String patchedFileContents = patchContent(fileContents, fixData);
+            if (!patchedFileContents.equals(fileContents)) {
+                FileOutputStream fos = new FileOutputStream(file);
+                try {
+                    OutputStreamWriter w = new OutputStreamWriter(fos, enc);
+                    w.write(patchedFileContents);
+                    w.close();
+                    return 1;
+                } finally {
+                    FileUtils.close(fos);
+                }
+            }
+        }
+        return 0;
+    }
+
+    private String patchContent(String fileContents, String fixData) {
+        // using regexes here looks like overkill
+        int start = fileContents.indexOf(LOAD_FRAME);
+        if (start >= 0) {
+            return fileContents.substring(0, start) + fixData
+                + fileContents.substring(start + LOAD_FRAME_LEN);
+        }
+        return fileContents;
     }
 
     private class JavadocOutputStream extends LogOutputStream {
