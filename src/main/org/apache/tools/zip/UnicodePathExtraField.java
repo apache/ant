@@ -24,15 +24,9 @@ package org.apache.tools.zip;
  * <p>Stores the UTF-8 version of the file name field as stored in the 
  * local header and central directory header.</p>
  *
- * <pre>
- *         Value         Size        Description
- *         -----         ----        -----------
- * (UPath) 0x7075        Short       tag for this extra block type ("up")
- *         TSize         Short       total data size for this block
- *         Version       1 byte      version of this extra field, currently 1
- *         NameCRC32     4 bytes     File Name Field CRC32 Checksum
- *         UnicodeName   Variable    UTF-8 version of the entry File Name
- * </pre>
+ * <p>See {@link
+ * "http://www.pkware.com/documents/casestudies/APPNOTE.TXT PKWARE's
+ * APPNOTE.TXT, section 4.6.9"}.</p>
  */
 public class UnicodePathExtraField extends AbstractUnicodeExtraField {
 
