@@ -274,7 +274,7 @@ public class Native2Ascii extends MatchingTask {
         }
 
         // Make intermediate directories if needed
-        // XXX JDK 1.1 doesn't have File.getParentFile,
+        // TODO JDK 1.1 doesn't have File.getParentFile,
         String parentName = destFile.getParent();
         if (parentName != null) {
             File parentFile = new File(parentName);

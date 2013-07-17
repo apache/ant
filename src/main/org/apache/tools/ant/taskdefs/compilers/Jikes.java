@@ -162,7 +162,7 @@ public class Jikes extends DefaultCompilerAdapter {
 
     private void addPropertyParams(Commandline cmd) {
         /**
-         * XXX
+         * TODO
          * Perhaps we shouldn't use properties for these
          * three options (emacs mode, warnings and pedantic),
          * but include it in the javac directive?

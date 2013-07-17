@@ -60,7 +60,7 @@ public class RegexpFactory extends RegexpMatcherFactory {
 
         if (systemDefault != null) {
             return createRegexpInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to
+            // TODO     should we silently catch possible exceptions and try to
             //         load a different implementation?
         }
 

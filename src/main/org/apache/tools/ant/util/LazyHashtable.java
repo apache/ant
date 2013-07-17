@@ -115,6 +115,6 @@ public class LazyHashtable extends Hashtable {
         return super.keys();
     }
 
-    // XXX Unfortunately JDK1.2 adds entrySet(), keySet(), values() -
+    // TODO Unfortunately JDK1.2 adds entrySet(), keySet(), values() -
     // implementing this requires a small hack, we can add it later.
 }

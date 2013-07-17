@@ -288,7 +288,7 @@ public class AntStructure extends Task {
                 ih = IntrospectionHelper.getHelper(p, element);
             } catch (Throwable t) {
                 /*
-                 * XXX - failed to load the class properly.
+                 * TODO - failed to load the class properly.
                  *
                  * should we print a warning here?
                  */
@@ -433,7 +433,7 @@ public class AntStructure extends Task {
             final int length = s.length();
             for (int i = 0; i < length; i++) {
                 char c = s.charAt(i);
-                // XXX - we are committing CombiningChar and Extender here
+                // TODO - we are committing CombiningChar and Extender here
                 if (!Character.isLetterOrDigit(c)
                     && c != '.' && c != '-' && c != '_' && c != ':') {
                     return false;

@@ -166,7 +166,7 @@ public final class Locator {
      *
      * <p>Will be an absolute path if the given URI is absolute.</p>
      *
-     * <p>Prior to Java 1.4,<!-- XXX is JDK version actually relevant? -->
+     * <p>Prior to Java 1.4,<!-- TODO is JDK version actually relevant? -->
      * swallows '%' that are not followed by two characters.</p>
      *
      * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
@@ -181,7 +181,7 @@ public final class Locator {
     public static String fromURI(String uri) {
         return fromURIJava13(uri);
         // #buzilla8031: first try Java 1.4.
-        // XXX should use java.net.URI now that we can rely on 1.4...
+        // TODO should use java.net.URI now that we can rely on 1.4...
         // but check for UNC-related regressions, e.g. #42275
         // (and remember that \\server\share\file -> file:////server/share/file
         // rather than -> file://server/share/file as it should;
@@ -392,7 +392,7 @@ public final class Locator {
      * Convert a File to a URL.
      * File.toURL() does not encode characters like #.
      * File.toURI() has been introduced in java 1.4, so
-     * Ant cannot use it (except by reflection) <!-- XXX no longer true -->
+     * Ant cannot use it (except by reflection) <!-- TODO no longer true -->
      * FileUtils.toURI() cannot be used by Locator.java
      * Implemented this way.
      * File.toURL() adds file: and changes '\' to '/' for dos OSes

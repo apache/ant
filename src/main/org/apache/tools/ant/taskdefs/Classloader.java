@@ -178,7 +178,7 @@ public class Classloader extends Task {
                 obj = null; // a new one will be created.
             }
 
-            // XXX maybe use reflection to addPathElement (other patterns ?)
+            // TODO maybe use reflection to addPathElement (other patterns ?)
             if (obj != null && !(obj instanceof AntClassLoader)) {
                 log("Referenced object is not an AntClassLoader",
                         Project.MSG_ERR);
@@ -235,7 +235,7 @@ public class Classloader extends Task {
                 }
             }
 
-            // XXX add exceptions
+            // TODO add exceptions
 
         } catch (Exception ex) {
             ex.printStackTrace();

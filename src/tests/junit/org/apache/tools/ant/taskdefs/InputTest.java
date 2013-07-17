@@ -100,7 +100,7 @@ public class InputTest extends BuildFileTest {
     }
 
     private String getKey(String key) {
-        return key; // XXX what is this for?
+        return key; // TODO what is this for?
     }
 
 }

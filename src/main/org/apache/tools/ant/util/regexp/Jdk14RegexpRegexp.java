@@ -74,7 +74,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
                         subst.append(c);
                     }
                 } else {
-                    // XXX - should throw an exception instead?
+                    // TODO - should throw an exception instead?
                     subst.append('\\');
                 }
             } else {

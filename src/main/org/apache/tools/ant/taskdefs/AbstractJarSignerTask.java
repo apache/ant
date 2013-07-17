@@ -262,7 +262,7 @@ public abstract class AbstractJarSignerTask extends Task {
             // Try to avoid showing password prompts on log output, as they would be confusing.
             LineContainsRegExp filter = new LineContainsRegExp();
             RegularExpression rx = new RegularExpression();
-            // XXX only handles English locale, not ja or zh_CN
+            // TODO only handles English locale, not ja or zh_CN
             rx.setPattern("^(Enter Passphrase for keystore: |Enter key password for .+: )$");
             filter.addConfiguredRegexp(rx);
             filter.setNegate(true);

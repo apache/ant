@@ -2136,7 +2136,7 @@ public class FTP extends Task implements FTPTaskConfig {
         InputStream instream = null;
 
         try {
-            // XXX - why not simply new File(dir, filename)?
+            // TODO - why not simply new File(dir, filename)?
             File file = getProject().resolveFile(new File(dir, filename).getPath());
 
             if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {

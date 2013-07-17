@@ -185,7 +185,7 @@ public abstract class Task extends ProjectComponent {
         this.wrapper = wrapper;
     }
 
-    // XXX: (Jon Skeet) The comment "if it hasn't been done already" may
+    // TODO: (Jon Skeet) The comment "if it hasn't been done already" may
     // not be strictly true. wrapper.maybeConfigure() won't configure the same
     // attributes/text more than once, but it may well add the children again,
     // unless I've missed something.

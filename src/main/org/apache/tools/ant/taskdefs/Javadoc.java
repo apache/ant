@@ -2212,7 +2212,7 @@ public class Javadoc extends Task {
         for (SourceFile sf : sourceFilesToDoc) {
             String sourceFileName = sf.getFile().getAbsolutePath();
             if (useExternalFile) {
-                // XXX what is the following doing?
+                // TODO what is the following doing?
                 //     should it run if !javadoc4 && executable != null?
                 if (sourceFileName.indexOf(" ") > -1) {
                     String name = sourceFileName;

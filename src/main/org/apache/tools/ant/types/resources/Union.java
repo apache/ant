@@ -116,7 +116,7 @@ public class Union extends BaseResourceCollectionContainer {
      */
     @Deprecated
     @SuppressWarnings("unchecked")
-    protected <T> Collection<T> getCollection(boolean asString) { // XXX untypable
+    protected <T> Collection<T> getCollection(boolean asString) { // TODO untypable
         return asString ? (Collection<T>) getAllToStrings() : (Collection<T>) getAllResources();
     }
 

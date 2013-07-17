@@ -61,7 +61,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
                         subst.append(c);
                     }
                 } else {
-                    // XXX - should throw an exception instead?
+                    // TODO - should throw an exception instead?
                     subst.append('\\');
                 }
             } else {

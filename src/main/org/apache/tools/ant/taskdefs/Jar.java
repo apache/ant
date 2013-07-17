@@ -353,7 +353,7 @@ public class Jar extends Zip {
                 try {
                     zf.close();
                 } catch (IOException e) {
-                    // XXX - log an error?  throw an exception?
+                    // TODO - log an error?  throw an exception?
                 }
             }
         }
@@ -392,7 +392,7 @@ public class Jar extends Zip {
                 try {
                     zf.close();
                 } catch (IOException e) {
-                    // XXX - log an error?  throw an exception?
+                    // TODO - log an error?  throw an exception?
                 }
             }
         }

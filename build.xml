@@ -567,7 +567,7 @@
             <selector refid="not.in.kaffe" if="kaffe"/>
 
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
-            <selector refid="needs.junit" unless="junit.present"/> <!-- XXX should perhaps use -source 1.4? -->
+            <selector refid="needs.junit" unless="junit.present"/> <!-- TODO should perhaps use -source 1.4? -->
             <selector refid="needs.junit4" unless="junit4.present"/>
             <selector refid="needs.apache-regexp"
               unless="apache.regexp.present"/>
@@ -1631,7 +1631,7 @@ ${antunit.reports}
         <property name="test.junit.vmargs" value=""/>
         <property name="ant.junit.failureCollector"
                   value="${junit.collector.dir}/${junit.collector.class}"/>
-        <!-- XXX includeantruntime="false" does not solve "multiple versions of ant detected in path for junit" warning -->
+        <!-- TODO includeantruntime="false" does not solve "multiple versions of ant detected in path for junit" warning -->
         <junit printsummary="${junit.summary}"
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"

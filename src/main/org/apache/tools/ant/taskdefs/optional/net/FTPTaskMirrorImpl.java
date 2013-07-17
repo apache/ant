@@ -1523,7 +1523,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         InputStream instream = null;
 
         try {
-            // XXX - why not simply new File(dir, filename)?
+            // TODO - why not simply new File(dir, filename)?
             File file = task.getProject().resolveFile(new File(dir, filename).getPath());
 
             if (task.isNewer() && isUpToDate(ftp, file, resolveFile(filename))) {

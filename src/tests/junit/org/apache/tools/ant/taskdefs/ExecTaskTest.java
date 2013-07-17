@@ -104,7 +104,7 @@ public class ExecTaskTest extends BuildFileTest {
         assertTrue("log file found after spawn", logFile.exists());
     }
 
-    /* XXX #50507 - fails at least on Linux
+    /* TODO #50507 - fails at least on Linux
     public void testOutAndErr() {
         project.executeTarget("test-out-and-err");
     }

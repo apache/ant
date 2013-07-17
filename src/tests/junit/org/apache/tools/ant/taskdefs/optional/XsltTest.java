@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildFileTest;
 
 /**
  * Tests the {@link XSLTProcess} task.
- * XXX merge with {@link StyleTest}?
+ * TODO merge with {@link StyleTest}?
  * @since Ant 1.5
  */
 public class XsltTest extends BuildFileTest {

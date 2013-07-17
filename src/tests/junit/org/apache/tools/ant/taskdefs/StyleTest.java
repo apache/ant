@@ -28,7 +28,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * TestCases for {@link XSLTProcess} task.
- * XXX merge with {@link XsltTest}?
+ * TODO merge with {@link XsltTest}?
  * @version 2003-08-05
  */
 public class StyleTest extends BuildFileTest {

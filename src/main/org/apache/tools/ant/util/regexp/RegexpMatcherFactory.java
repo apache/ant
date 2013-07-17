@@ -63,7 +63,7 @@ public class RegexpMatcherFactory {
 
         if (systemDefault != null) {
             return createInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to
+            // TODO     should we silently catch possible exceptions and try to
             //         load a different implementation?
         }
 

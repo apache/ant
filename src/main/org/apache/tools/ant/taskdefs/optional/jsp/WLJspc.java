@@ -148,7 +148,7 @@ public class WLJspc extends MatchingTask {
         File jspFile = null;
         String parents = "";
         int j = 0;
-        //XXX  this array stuff is a remnant of prev trials.. gotta remove.
+        //TODO  this array stuff is a remnant of prev trials.. gotta remove.
         args[j++] = "-d";
         args[j++] = destinationDirectory.getAbsolutePath().trim();
         args[j++] = "-docroot";
@@ -169,7 +169,7 @@ public class WLJspc extends MatchingTask {
 
         final int size = filesToDo.size();
         for (int i = 0; i < size; i++) {
-            //XXX
+            //TODO
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky!
             // Careful.. similar code in scanDir , but slightly different!!
@@ -271,7 +271,7 @@ public class WLJspc extends MatchingTask {
         String pack = "";
         for (int i = 0; i < files.length; i++) {
             File srcFile = new File(this.sourceDirectory, files[i]);
-            //XXX
+            //TODO
             // All this to convert source to destination directory according
             // to weblogic standards Can be written better... this is too hacky!
             jspFile = new File(files[i]);

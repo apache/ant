@@ -145,7 +145,7 @@ public class RegexpPatternMapper implements FileNameMapper {
                         result.append(to[i]);
                     }
                 } else {
-                    // XXX - should throw an exception instead?
+                    // TODO - should throw an exception instead?
                     result.append('\\');
                 }
             } else {

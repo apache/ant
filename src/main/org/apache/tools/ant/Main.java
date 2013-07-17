@@ -962,7 +962,7 @@ public class Main implements AntMain {
         project.setInputHandler(handler);
     }
 
-    // XXX: (Jon Skeet) Any reason for writing a message and then using a bare
+    // TODO: (Jon Skeet) Any reason for writing a message and then using a bare
     // RuntimeException rather than just using a BuildException here? Is it
     // in case the message could end up being written to no loggers (as the
     // loggers could have failed to be created due to this failure)?

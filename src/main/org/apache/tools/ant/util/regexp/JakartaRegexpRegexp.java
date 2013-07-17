@@ -74,7 +74,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher
                         result.append(c);
                     }
                 } else {
-                    // XXX - should throw an exception instead?
+                    // TODO - should throw an exception instead?
                     result.append('\\');
                 }
             } else {
