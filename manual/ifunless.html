@@ -36,9 +36,9 @@
 
   <p>The if and unless namespaces support the following 3 conditions :
   <ul>
-    <li>true</li>true if the value of the property evaluates to true
-    <li>blank</li>true if the value of the property is null or empty
-    <li>set</li>true if the property is set
+    <li>true</li>true if the value of the attribute evaluates to true
+    <li>blank</li>true if the value of the attribute is null or empty
+    <li>set</li>true if the specified property is set
   </ul></p>
 
 <blockquote>
@@ -48,8 +48,8 @@
  xmlns:unless=&quot;ant:unless&quot;
 &gt;
  &lt;exec executable=&quot;java&quot;&gt;
-   &lt;arg line=&quot;-X&quot; if:true=&quot;showextendedparams&quot;/&gt;
-   &lt;arg line=&quot;-version&quot; unless:true=&quot;showextendedparams&quot;/&gt;
+   &lt;arg line=&quot;-X&quot; if:true=&quot;${showextendedparams}&quot;/&gt;
+   &lt;arg line=&quot;-version&quot; unless:true=&quot;${showextendedparams}&quot;/&gt;
  &lt;/exec&gt;
  &lt;condition property=&quot;onmac&quot;&gt;
    &lt;os family=&quot;mac&quot;/&gt;

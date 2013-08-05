@@ -12,6 +12,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * Documentation fix for if/unless attributes.  PR 55359.
+
 
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
