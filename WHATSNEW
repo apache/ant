@@ -14,6 +14,8 @@ Other changes:
 
  * Documentation fix for if/unless attributes.  PR 55359.
 
+ * tar entries with long link names are now handled the same way as
+   entries with long names.
 
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================

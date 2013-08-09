@@ -273,31 +273,13 @@ public class TarOutputStream extends FilterOutputStream {
         }
         Map<String, String> paxHeaders = new HashMap<String, String>();
         final String entryName = entry.getName();
-        final ByteBuffer encodedName = encoding.encode(entryName);
-        final int nameLen = encodedName.limit() - encodedName.position();
-        boolean paxHeaderContainsPath = false;
-        if (nameLen >= TarConstants.NAMELEN) {
+        boolean paxHeaderContainsPath = handleLongName(entryName, paxHeaders, "path",
+                                                       TarConstants.LF_GNUTYPE_LONGNAME);
 
-            if (longFileMode == LONGFILE_POSIX) {
-                paxHeaders.put("path", entryName);
-                paxHeaderContainsPath = true;
-            } else if (longFileMode == LONGFILE_GNU) {
-                // create a TarEntry for the LongLink, the contents
-                // of which are the entry's name
-                TarEntry longLinkEntry = new TarEntry(TarConstants.GNU_LONGLINK,
-                                                      TarConstants.LF_GNUTYPE_LONGNAME);
-
-                longLinkEntry.setSize(nameLen + 1); // +1 for NUL
-                putNextEntry(longLinkEntry);
-                write(encodedName.array(), encodedName.arrayOffset(), nameLen);
-                write(0); // NUL terminator
-                closeEntry();
-            } else if (longFileMode != LONGFILE_TRUNCATE) {
-                throw new RuntimeException("file name '" + entryName
-                                           + "' is too long ( > "
-                                           + TarConstants.NAMELEN + " bytes)");
-            }
-        }
+        final String linkName = entry.getLinkName();
+        boolean paxHeaderContainsLinkPath = linkName != null
+            && handleLongName(linkName, paxHeaders, "linkpath",
+                              TarConstants.LF_GNUTYPE_LONGLINK);
 
         if (bigNumberMode == BIGNUMBER_POSIX) {
             addPaxHeadersForBigNumbers(paxHeaders, entry);
@@ -310,10 +292,10 @@ public class TarOutputStream extends FilterOutputStream {
             paxHeaders.put("path", entryName);
         }
 
-        if (addPaxHeadersForNonAsciiNames
+        if (addPaxHeadersForNonAsciiNames && !paxHeaderContainsLinkPath
             && (entry.isLink() || entry.isSymbolicLink())
-            && !ASCII.canEncode(entry.getLinkName())) {
-            paxHeaders.put("linkpath", entry.getLinkName());
+            && !ASCII.canEncode(linkName)) {
+            paxHeaders.put("linkpath", linkName);
         }
 
         if (paxHeaders.size() > 0) {
@@ -595,5 +577,55 @@ public class TarOutputStream extends FilterOutputStream {
                                        + "' is too big ( > "
                                        + maxValue + " )");
         }
+    }
+
+    /**
+     * Handles long file or link names according to the longFileMode setting.
+     *
+     * <p>I.e. if the given name is too long to be written to a plain
+     * tar header then
+     * <ul>
+     *   <li>it creates a pax header who's name is given by the
+     *   paxHeaderName parameter if longFileMode is POSIX</li>
+     *   <li>it creates a GNU longlink entry who's type is given by
+     *   the linkType parameter if longFileMode is GNU</li>
+     *   <li>throws an exception othewise.</li>
+     * </ul></p>
+     *
+     * @param name the name to write
+     * @param paxHeaders current map of pax headers
+     * @param paxHeaderName name of the pax header to write
+     * @param linkType type of the GNU entry to write
+     * @return whether a pax header has been written.
+     */
+    private boolean handleLongName(String name,
+                                   Map<String, String> paxHeaders,
+                                   String paxHeaderName, byte linkType)
+        throws IOException {
+        final ByteBuffer encodedName = encoding.encode(name);
+        final int len = encodedName.limit() - encodedName.position();
+        if (len >= TarConstants.NAMELEN) {
+
+            if (longFileMode == LONGFILE_POSIX) {
+                paxHeaders.put(paxHeaderName, name);
+                return true;
+            } else if (longFileMode == LONGFILE_GNU) {
+                // create a TarEntry for the LongLink, the contents
+                // of which are the link's name
+                TarEntry longLinkEntry =
+                    new TarEntry(TarConstants.GNU_LONGLINK, linkType);
+
+                longLinkEntry.setSize(len + 1); // +1 for NUL
+                putNextEntry(longLinkEntry);
+                write(encodedName.array(), encodedName.arrayOffset(), len);
+                write(0); // NUL terminator
+                closeEntry();
+            } else if (longFileMode != LONGFILE_TRUNCATE) {
+                throw new RuntimeException(paxHeaderName + " '" + name
+                                           + "' is too long ( > "
+                                           + TarConstants.NAMELEN + " bytes)");
+            }
+        }
+        return false;
     }
 }
