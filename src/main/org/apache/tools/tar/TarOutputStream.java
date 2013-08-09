@@ -274,12 +274,12 @@ public class TarOutputStream extends FilterOutputStream {
         Map<String, String> paxHeaders = new HashMap<String, String>();
         final String entryName = entry.getName();
         boolean paxHeaderContainsPath = handleLongName(entryName, paxHeaders, "path",
-                                                       TarConstants.LF_GNUTYPE_LONGNAME);
+                                                       TarConstants.LF_GNUTYPE_LONGNAME, "file name");
 
         final String linkName = entry.getLinkName();
         boolean paxHeaderContainsLinkPath = linkName != null
             && handleLongName(linkName, paxHeaders, "linkpath",
-                              TarConstants.LF_GNUTYPE_LONGLINK);
+                              TarConstants.LF_GNUTYPE_LONGLINK, "link name");
 
         if (bigNumberMode == BIGNUMBER_POSIX) {
             addPaxHeadersForBigNumbers(paxHeaders, entry);
@@ -589,18 +589,20 @@ public class TarOutputStream extends FilterOutputStream {
      *   paxHeaderName parameter if longFileMode is POSIX</li>
      *   <li>it creates a GNU longlink entry who's type is given by
      *   the linkType parameter if longFileMode is GNU</li>
-     *   <li>throws an exception othewise.</li>
+     *   <li>it throws an exception if longFileMode is ERROR</li>
+     *   <li>it truncates the name if longFileMode is TRUNCATE</li>
      * </ul></p>
      *
      * @param name the name to write
      * @param paxHeaders current map of pax headers
      * @param paxHeaderName name of the pax header to write
      * @param linkType type of the GNU entry to write
+     * @param fieldName the name of the field
      * @return whether a pax header has been written.
      */
     private boolean handleLongName(String name,
                                    Map<String, String> paxHeaders,
-                                   String paxHeaderName, byte linkType)
+                                   String paxHeaderName, byte linkType, String fieldName)
         throws IOException {
         final ByteBuffer encodedName = encoding.encode(name);
         final int len = encodedName.limit() - encodedName.position();
@@ -621,7 +623,7 @@ public class TarOutputStream extends FilterOutputStream {
                 write(0); // NUL terminator
                 closeEntry();
             } else if (longFileMode != LONGFILE_TRUNCATE) {
-                throw new RuntimeException(paxHeaderName + " '" + name
+                throw new RuntimeException(fieldName + " '" + name
                                            + "' is too long ( > "
                                            + TarConstants.NAMELEN + " bytes)");
             }
