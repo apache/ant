@@ -367,6 +367,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         Throwable exception = null;
         boolean startTestSuiteSuccess = false;
 
+        savedErr.println("Running test " + junitTest.getName() + " with {loader: " + loader + ", methods: " + methods + "}");
+
         try {
 
             try {
@@ -387,9 +389,11 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 try {
                     // check if there is a suite method
                     suiteMethod = testClass.getMethod("suite", new Class[0]);
+                    savedErr.println("found suite method");
                 } catch (NoSuchMethodException e) {
                     // no appropriate suite method found. We don't report any
                     // error here since it might be perfectly normal.
+                    savedErr.println("didn't find suite method");
                 }
                 }
 
@@ -405,6 +409,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     boolean useSingleMethodAdapter = false;
 
                     if (junit.framework.TestCase.class.isAssignableFrom(testClass)) {
+                        savedErr.println("this is a JUnit3 test");
                         // Do not use JUnit 4 API for running JUnit 3.x
                         // tests - it is not able to run individual test
                         // methods.
@@ -428,12 +433,19 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // will avoid UnsupportedClassVersionError.
 
                     try {
+                        savedErr.println("trying to load java.lang.annotation.Annotation");
                         Class.forName("java.lang.annotation.Annotation");
+                        savedErr.println("found");
+                        savedErr.println("trying to load org.apache.tools.ant.taskdefs.optional.junit.CustomJUnit4TestAdapterCache");
                         junit4TestAdapterCacheClass = Class.forName("org.apache.tools.ant.taskdefs.optional.junit.CustomJUnit4TestAdapterCache");
+                        savedErr.println("found");
                         if (loader == null) {
+                            savedErr.println("trying to load " + JUNIT_4_TEST_ADAPTER);
                             junit4TestAdapterClass =
                                 Class.forName(JUNIT_4_TEST_ADAPTER);
+                            savedErr.println("found");
                             if (testMethodsSpecified) {
+                                savedErr.println("trying to load org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter");
                                 /*
                                  * We cannot try to load the JUnit4TestAdapter
                                  * before trying to load JUnit4TestMethodAdapter
@@ -443,17 +455,22 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                  */
                                 junit4TestAdapterClass = Class.forName(
                                     "org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter");
+                                savedErr.println("found");
                                 useSingleMethodAdapter = true;
                             }
                         } else {
+                            savedErr.println("trying to load " + JUNIT_4_TEST_ADAPTER);
                             junit4TestAdapterClass =
                                 Class.forName(JUNIT_4_TEST_ADAPTER,
                                               true, loader);
+                            savedErr.println("found");
                             if (testMethodsSpecified) {
+                                savedErr.println("trying to load org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter");
                                 junit4TestAdapterClass =
                                     Class.forName(
                                         "org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter",
                                         true, loader);
+                                savedErr.println("found");
                                 useSingleMethodAdapter = true;
                             }
                         }
@@ -464,6 +481,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     junit4 = junit4TestAdapterClass != null;
 
                     if (junit4) {
+                        savedErr.println("using JUnit4");
                         // Let's use it!
                         Class[] formalParams;
                         Object[] actualParams;
@@ -479,6 +497,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             .getConstructor(formalParams).
                             newInstance(actualParams);
                     } else {
+                        savedErr.println("using JUnit3");
                         // Use JUnit 3.
 
                         // try to extract a test suite automatically this
