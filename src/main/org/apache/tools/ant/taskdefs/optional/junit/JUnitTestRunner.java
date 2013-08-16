@@ -476,6 +476,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                         }
                     } catch (ClassNotFoundException e) {
                         // OK, fall back to JUnit 3.
+                        savedErr.println("NOT found");
                     }
                     }
                     junit4 = junit4TestAdapterClass != null;
