@@ -1937,6 +1937,7 @@ ${antunit.reports}
       <au:xmllistener todir="${antunit.xml}" />
       <propertyset>
         <propertyref name="antunit.tmpdir"/>
+        <propertyref name="ant.home"/>
       </propertyset>
     </au:antunit>
   </target>
