@@ -19,7 +19,12 @@
   <!-- each test verifies that the PropertyEvaluator delegate works -->
   <import file="../antunit-base.xml" />
 
-  <available property="prereqs-ok" classname="org.apache.bsf.BSFManager"/>
+  <condition property="prereqs-ok">
+    <and>
+      <available classname="org.apache.bsf.BSFManager"/>
+      <available classname="bsh.util.BeanShellBSFEngine"/>
+    </and>
+  </condition>
 
   <target name="setUp" unless="setup.complete" if="prereqs-ok">
     <script language="beanshell" manager="bsf">
