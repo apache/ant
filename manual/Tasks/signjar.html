@@ -26,7 +26,8 @@
 
 <h2><a name="signjar">SignJar</a></h2>
 <h3>Description</h3>
-<p>Signs JAR files with the <tt>jarsigner</tt> command line tool. 
+<p>Signing a jar allows users to authenticate the publisher.</p>
+<p>Signs JAR files with the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html"><tt>jarsigner</tt> command line tool</a>. 
 It will take a named file in the <tt>jar</tt> attribute, and an optional
 <tt>destDir</tt> or <tt>signedJar</tt> attribute. Nested paths are also
 supported; here only an (optional) <tt>destDir</tt> is allowed. If a destination
@@ -206,6 +207,7 @@ block</td>
 
 
 <h3>Examples</h3>
+<p>For instructions on generating a code signing certificate, see the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html">keytool documentation</a> and/or instructions from your certificate authority.</p>
   <blockquote><pre>
 &lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
 alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
@@ -266,12 +268,21 @@ SHA256withRSA.
 </p>
 <h3>About timestamp signing</h3>
 
+<p>Timestamps record the date and time that a signature took place, allowing the signature to be verified as of that point in time.
+With trusted timestamping, users can verify that signing occurred before a certificate's expiration or revocation. Without this timestamp, users can only verify the signature as of their current date.</p>
+
 <p>
-Timestamped JAR files are a new feature in Java1.5; a feature supported in Ant since
+Timestamped JAR files were introduced in Java1.5 and supported in Ant since
 Ant 1.7. Ant does not yet support proxy setup for this signing process. 
 </p>
 
-
+<p>Common public timestamp authorities include
+  <ul>
+    <li>http://timestamp.verisign.com</li>
+	<li>http://tsa.starfieldtech.com</li>
+	<li>https://timestamp.geotrust.com/tsa</li>
+	<li>Others (see your certificate authority)</li>
+  </ul></p>
 
 </body>
 </html>

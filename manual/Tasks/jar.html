@@ -48,7 +48,6 @@ multiple ones to merge together different trees of files into one JAR.
 The extended fileset and groupfileset child elements from the zip task are
 also available in the jar task.
 See the <a href="zip.html">Zip</a> task for more details and examples.</p>
-<p>If the manifest is omitted, a simple one will be supplied by Apache Ant.</p>
 
 <p>The <code>update</code> parameter controls what happens if the JAR
 file already exists. When set to <code>yes</code>, the JAR file is
@@ -58,6 +57,8 @@ provided in the <a href="zip.html">Zip task documentation</a>.  Please
 note that ZIP files store file modification times with a granularity
 of two seconds.  If a file is less than two seconds newer than the
 entry in the archive, Ant will not consider it newer.</p>
+
+<p>If the manifest is omitted, a simple one will be supplied by Apache Ant.</p>
 
 <p>The <code>whenmanifestonly</code> parameter controls what happens when no
 files, apart from the manifest file, or nested services, match.
@@ -73,12 +74,12 @@ attribute of a zipfileset in a Zip task. The one difference is that if the
 include an empty one for you.)</p>
 
 <p>Manifests are processed by the Jar task according to the
-<a target="_blank" href="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html">Jar file specification.</a>
+<a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html">Jar file specification.</a>
 Note in particular that this may result in manifest lines greater than 72 bytes
 being wrapped and continued on the next line.</p>
 
 <p>The Jar task checks whether you specified package information according to the
-<a target="_blank" href="http://download.oracle.com/javase/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning">
+<a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/versioning/spec/versioning2.html#wp90779">
 versioning specification</a>.</p>
 
 <p><b>Please note that the zip format allows multiple files of the same
@@ -86,6 +87,8 @@ fully-qualified name to exist within a single archive. This has been
 documented as causing various problems for unsuspecting users. If you wish
 to avoid this behavior you must set the <code>duplicate</code> attribute
 to a value other than its default, <code>"add"</code>.</b></p>
+
+<p>To cryptographically sign your JAR file, use the <a href="signjar.html">SignJar task</a> on the JAR that you create from this task.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -196,7 +199,7 @@ to a value other than its default, <code>"add"</code>.</b></p>
   <tr>
     <td valign="top">index</td>
     <td valign="top">whether to create an <A
-    HREF="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Index">index
+    HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#JAR_Index">index
     list</A> to speed up classloading.  This is a JDK 1.3+ specific
     feature.  Unless you specify additional jars with nested <a
     href="#indexjars"><code>indexjars</code></a> elements, only the
@@ -211,7 +214,7 @@ to a value other than its default, <code>"add"</code>.</b></p>
       false.<br/>
       Sun's jar implementation used to skip the META-INF directory and
       Ant followed that example.  The behavior has been changed with
-      <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">Java
+      <a href="https://bugs.openjdk.java.net/browse/JDK-4408526">Java
       5</a>.  In order to avoid problems with Ant generated jars on
       Java 1.4 or earlier Ant will not include META-INF unless
       explicitly asked to.<br/>
@@ -391,8 +394,8 @@ depend on your manifest:</p>
 
 <p>
   The nested <code>service</code> element specifies a service.
-  Services are described by
-  <a href="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider</a>.
+  Services are described in the
+  <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#Service_Provider">service provider overview</a>.
   The approach is to have providers JARs include files named by the service
   provided, for example,
   META-INF/services/javax.script.ScriptEngineFactory
@@ -516,6 +519,10 @@ by Java).</p>
 <blockquote><pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
+      &lt;!-- If this is an Applet or Web Start application, include
+           the proper attributes from <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/index.html">http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/index.html</a> --&gt;
+      &lt;attribute name=&quot;Permissions&quot; value=&quot;sandbox&quot;/&gt;
+      &lt;attribute name=&quot;Codebase&quot; value=&quot;example.com&quot;/&gt;
       &lt;!-- Who is building this jar? --&gt;
       &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
       &lt;!-- Information about the program itself --&gt;
@@ -535,11 +542,13 @@ property ${user.name}. The manifest produced by the above would look like this:
 </p>
 
 <blockquote><pre><code>Manifest-Version: 1.0
+Permissions: sandbox
+Codebase: example.com
 Built-By: conor
 Implementation-Vendor: ACME inc.
 Implementation-Title: GreatProduct
 Implementation-Version: 1.0.0beta2
-Created-By: Apache Ant 1.7.0
+Created-By: Apache Ant 1.9.2
 
 Name: common/MyClass.class
 Sealed: false</code></pre></blockquote>
