@@ -60,6 +60,10 @@ public class GetTest extends BuildFileTest {
         executeTarget("test6");
     }
 
+    public void test7() {
+        expectBuildException("test7", "userAgent may not be null or empty");
+    }
+
     public void testUseTimestamp() {
         executeTarget("testUseTimestamp");
     }

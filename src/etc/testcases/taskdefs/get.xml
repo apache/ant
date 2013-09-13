@@ -39,7 +39,7 @@
   </target>
 
   <target name="test6">
-    <get src="http://www.apache.org/" dest="get.tmp"/>
+    <get src="http://www.apache.org/" dest="get.tmp" userAgent="Apache Ant/test"/>
 
     <fileset id="t6" file="get.tmp" />
     <pathconvert property="t6" refid="t6" setonempty="false" />
@@ -51,6 +51,10 @@
         </not>
       </condition>
     </fail>
+  </target>
+
+  <target name="test7">
+     <get src="" dest="" userAgent=""/>
   </target>
 
   <target name="testUseTimestamp" depends="-90s,-timestamp" />

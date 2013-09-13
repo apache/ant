@@ -425,7 +425,7 @@ org.apache.tools.ant.Executor implementation specified here.
   <td>name of a supported character set (e.g. UTF-8, ISO-8859-1, US-ASCII)</td>
   <td>use as default character set of email messages; use as default for source-, dest- and bundleencoding
       in <a href="Tasks/translate.html">translate</a> <br>
-      see JavaDoc of <a target="_blank" href="http://download.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
+      see JavaDoc of <a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
       for more information about character sets (not used in Ant, but has nice docs).
   </td>
 </tr>
@@ -602,8 +602,7 @@ Here is an example:
         failonerror="true"
         dir="${sub.builddir}"
         timeout="4000000"
-        taskname="startAnt"
-&gt;
+        taskname="startAnt"&gt;
     &lt;classpath&gt;
         &lt;pathelement location="${ant.home}/lib/ant-launcher.jar"/&gt;
     &lt;/classpath&gt;

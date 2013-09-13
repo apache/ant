@@ -34,7 +34,7 @@ replacing or updating an existing file.</p>
 
 
 <p>Manifests are processed according to the 
-<a href="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html">Jar
+<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html">Jar
 file specification.</a>. Specifically, a manifest element consists of
 a set of attributes and sections. These sections in turn may contain
 attributes. Note in particular that this may result in manifest lines
@@ -169,21 +169,21 @@ href="#attribute">attribute</a> elements into sections.</p>
 attribute will take the value of the Ant property ${user.name}.  The
 same is true for the ${version} and ${TODAY} properties.  This example
 produces a MANIFEST.MF that contains 
-<a href="http://docs.oracle.com/javase/1.5.0/docs/guide/versioning/">package
+<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/versioning/spec/versioning2.html#wp90779">package
 version identification</a> for the package <code>common</code>.</p>
 
 <p>The manifest produced by the above would look like this:</p>
 
 <pre><code>Manifest-Version: 1.0
 Built-By: bodewig
-Created-By: Apache Ant 1.7
+Created-By: Apache Ant 1.9
 
 Name: common
 Specification-Title: Example
 Specification-Vendor: Example Organization
 Implementation-Vendor: Example Corp.
 Specification-Version: 1.2
-Implementation-Version: 1.2 February 19 2006
+Implementation-Version: 1.2 September 10, 2013
 Implementation-Title: common
 
 Name: common/class1.class

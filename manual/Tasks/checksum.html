@@ -48,7 +48,8 @@ Warning: the case of the extension is that of the algorithm used.
 If you ask for "SHA1", you get a .SHA1 extension; if you ask for "sha1", you
 get a file ending in .sha1. The Java Crypto Engines are case-insensitive
 in matching algorithms, so choose a name to match your desired output extension,
-or set the <tt>fileext</tt> attribute.
+or set the <tt>fileext</tt> attribute. The names of common hashing algorithms can be located on the
+<a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#MessageDigest">Cryptography Architecture Standard Algorithm Name Documentation</a>
 </p>
 
 <h3>Parameters</h3>
@@ -76,7 +77,7 @@ or set the <tt>fileext</tt> attribute.
     <td valign="top">algorithm</td>
     <td valign="top">Specifies the algorithm to be used to
       compute the checksum. Defaults to &quot;MD5&quot;.
-      Other popular algorithms like &quot;SHA&quot; or &quot;SHA-512&quot; may be used
+      Other <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#MessageDigest">popular algorithms</a> like &quot;SHA&quot; or &quot;SHA-512&quot; may be used
       as well.
     </td>
     <td valign="top" align="center">No</td>

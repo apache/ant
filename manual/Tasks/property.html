@@ -269,12 +269,10 @@ about this feature
 <li>If the file is not there, nothing is printed except at -verbose log
 level. This lets you have optional configuration files for every
 project, that team members can customize.
-<li>The rules for this format are laid down
-<a href="http://download.oracle.com/javase/6/docs/api/java/util/Properties.html#load%28java.io.InputStream%29">by Sun</a>.
-This makes it hard for Team Ant to field bug reports about it.
-<li>Trailing spaces are not stripped. It may have been what you wanted.
-<li>Want unusual characters? Escape them \u0456 or \&quot; style.
-<li>Ant Properties are expanded in the file
+<li>The rules for this format match <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Properties.html#load%28java.io.InputStream%29">java.util.Properties</a>.</li>
+<li>Trailing spaces are not stripped. It may have been what you wanted.</li>
+<li>Want unusual characters? Escape them \u0456 or \&quot; style.</li>
+<li>Ant Properties are expanded in the file</li>
 <li>If you want to expand properties defined inside the same file and
   you use the prefix attribute of the task, you must use the same
   prefix when expanding the properties or
@@ -294,7 +292,7 @@ deploy.url=http://${deploy.server}:${deploy.port}/
 <a name="notes-env"></a>
 <h3>Notes about environment variables</h3>
 <p>
-  Ant runs on Java 1.2 therefore it cant use Java5 features for accessing environment
+  Ant runs on Java 1.2 therefore it cannot use Java5 features for accessing environment
   variables. So it starts a command in a new process which prints the environment variables,
   analyzes the output and creates the properties. <br>
   There are commands for the following operating systems implemented in

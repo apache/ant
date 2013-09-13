@@ -87,8 +87,7 @@ proxy configuration.
 
 <h4>How Autoproxy works</h4>
 <p>
-We are grateful for some input from Sun as to how the proxy code works under
-Java 1.5 and up. The <code>java.net.useSystemProxies</code> is checked only
+The <code>java.net.useSystemProxies</code> is checked only
 once, at startup time, the other checks (registry, gconf, system properties) are done
 dynamically whenever needed (socket connection, URL connection etc..).
 </p>
@@ -284,10 +283,8 @@ use one of the alternate mechanisms to configure the JVM.
 <h4>Further reading</h4>
 
 <ul>
-<li><a href="http://download.oracle.com/javase/1.5.0/docs/guide/net/properties.html">
-Java Networking Properties</a>. Notice how not all proxy settings are documented
-there.
-<li><a href="http://blogs.sun.com/roller/resources/jcc/Proxies.pdf">Proxies</a>
+<li><a href="http://docs.oracle.com/javase/7/docs/technotes/guides/net/properties.html">
+Java Networking Properties</a>.
 </li>
 </ul>
 

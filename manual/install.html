@@ -238,8 +238,8 @@ that tend to work best. As of Ant1.7, Windows 9x is no longer supported.
 
 <p>
 For the current version of Ant, you will also need a JDK installed on
-your system, version 1.4 or later required, 1.5 or later strongly recommended.
-The later the version of Java , the more Ant tasks you get.
+your system, version 1.4 or later required, 1.7 or later strongly recommended.
+The more up-to-date the version of Java , the more Ant tasks you get.
 </p>
 <p>
   <strong>Note: </strong>If a JDK is not present, only the JRE runtime, then many tasks will not work.
@@ -252,10 +252,9 @@ The later the version of Java , the more Ant tasks you get.
 
 <h3>Open Source Java Runtimes</h3>
 <p>
-    The Ant team strongly supports users running Ant on Kaffe and other
+    The Ant team strongly supports users running Ant on <a target="_blank" href="http://openjdk.java.net/">OpenJDK</a> and other
     open source Java runtimes, and so strives to have a product that works
-    well on those platforms. What appears to work well is Kaffe with
-    Gnu Classpath and the Xerces and Xalan libraries.
+    well on those platforms.
 </p>
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
@@ -369,7 +368,7 @@ Build failed
 So Ant works. This message is there because you need to write an individual buildfile for your
 project. With a <tt>ant -version</tt> you should get an output like
 <pre>
-Apache Ant version 1.7.1 compiled on June 27 2008
+Apache Ant(TM) version 1.9.2 compiled on July 8 2013
 </pre>
 </p>
 <p>If this does not work ensure your environment variables are set right. They must resolve to:
@@ -448,7 +447,7 @@ libraries must be added to Ant's classpath, in any of the following ways:
 
 <blockquote>
   <pre>ant -f fetch.xml -Ddest=<i>[option]</i></pre>
-</blockquote
+</blockquote>
 
 <p>
     where option is one of the following, as described above:
@@ -552,10 +551,10 @@ this. </p>
 
 <ul>
 
-<li><b>With Java1.5</b><br>
+<li><b>With Java1.5 or above</b><br>
 
 <p>
-When you run Ant on Java1.5, you could try to use the automatic proxy setup
+When you run Ant on Java1.5 or above, you could try to use the automatic proxy setup
 mechanism with <code>-autoproxy</code>.
 </p>
 
@@ -563,8 +562,8 @@ mechanism with <code>-autoproxy</code>.
 
 <li><b>With explicit JVM properties.</b><br>
 <p>
-These are documented <a
-href="http://download.oracle.com/javase/1.5.0/docs/guide/net/properties.html" target="_top">by Oracle</a>,
+These are documented in <a
+href="http://docs.oracle.com/javase/7/docs/technotes/guides/net/properties.html" target="_top">Java's Networking Properties</a>,
 and control the proxy behaviour of the entire JVM. To set them in Ant, declare
 them in the <code>ANT_OPTS</code> environment variable. This is the best option
 for a non-mobile system. For a laptop, you have to change these settings as you
@@ -629,19 +628,19 @@ configuring the JVM properties until they are happy. </p>
 <p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
 environment:</p>
 <pre>set ANT_HOME=c:\ant
-set JAVA_HOME=c:\jdk-1.5.0.05
+set JAVA_HOME=c:\jdk1.7.0_51
 set PATH=%PATH%;%ANT_HOME%\bin</pre>
 
 <h3><a name="bash">Linux/Unix (bash)</a></h3>
 <p>Assume Ant is installed in <code>/usr/local/ant</code>. The following sets up
 the environment:</p>
 <pre>export ANT_HOME=/usr/local/ant
-export JAVA_HOME=/usr/local/jdk-1.5.0.05
+export JAVA_HOME=/usr/local/jdk1.7.0_51
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
 
 <h3><a name="tcshcsh">Linux/Unix (csh)</a></h3>
 <pre>setenv ANT_HOME /usr/local/ant
-setenv JAVA_HOME /usr/local/jdk/jdk-1.5.0.05
+setenv JAVA_HOME /usr/local/jdk/jdk1.7.0_51
 set path=( $path $ANT_HOME/bin )</pre>
 
 <p>
@@ -732,7 +731,7 @@ See <a href="#installing">Installing Ant</a>
 for examples on how to do this for your operating system. </p>
 
 <p><b>Note</b>: The bootstrap process of Ant requires a greedy
-compiler like Sun's javac or jikes.  It does not work with gcj or
+compiler like OpenJDK or Oracle's javac.  It does not work with gcj or
 kjc.</p>
 
 <p>Make sure you have downloaded any auxiliary jars required to
@@ -986,8 +985,8 @@ you need jakarta-oro 2.0.8 or later, and <a href="#commons-net">commons-net</a><
   <tr>
     <td>mail.jar</td>
     <td>Mail task with Mime encoding, and the MimeMail task</td>
-    <td><a href="http://www.oracle.com/technetwork/java/index-jsp-139225.html"
-        target="_top">http://www.oracle.com/technetwork/java/index-jsp-139225.html</a></td>
+    <td><a href="http://www.oracle.com/technetwork/java/index-138643.html"
+        target="_top">http://www.oracle.com/technetwork/java/index-138643.html</a></td>
   </tr>
   <tr>
     <td>activation.jar</td>

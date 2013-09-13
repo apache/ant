@@ -31,6 +31,7 @@ import java.net.URLConnection;
 import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Main;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Mapper;
@@ -65,6 +66,8 @@ public class Get extends Task {
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
 
+    private static final String DEFAULT_AGENT_PREFIX = "Apache Ant";
+
     private Resources sources = new Resources();
     private File destination; // required
     private boolean verbose = false;
@@ -77,6 +80,7 @@ public class Get extends Task {
     private boolean skipExisting = false;
     private boolean httpUseCaches = true; // on by default
     private Mapper mapperElement = null;
+    private String userAgent = System.getProperty("http.agent", DEFAULT_AGENT_PREFIX + "/" + Main.getAntVersion()); 
 
     /**
      * Does the work.
@@ -216,7 +220,7 @@ public class Get extends Task {
 
         GetThread getThread = new GetThread(source, dest,
                                             hasTimestamp, timestamp, progress,
-                                            logLevel);
+                                            logLevel, userAgent);
         getThread.setDaemon(true);
         getProject().registerThreadTask(getThread, this);
         getThread.start();
@@ -247,6 +251,11 @@ public class Get extends Task {
      * Check the attributes.
      */
     private void checkAttributes() {
+
+        if (userAgent == null || userAgent.trim().length() == 0) {
+            throw new BuildException("userAgent may not be null or empty");
+        }
+
         if (sources.size() == 0) {
             throw new BuildException("at least one source is required",
                                      getLocation());
@@ -411,6 +420,16 @@ public class Get extends Task {
     public void setHttpUseCaches(boolean httpUseCache) {
         this.httpUseCaches = httpUseCache;
     }
+    
+    /**
+     * HTTP connections only - set the user-agent to be used
+     * when communicating with remote server. if null, then
+     * the value is considered unset and the behaviour falls
+     * back to the default of the http API.
+     */
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 
     /**
      * Define the mapper to map source to destination files.
@@ -553,15 +572,17 @@ public class Get extends Task {
         private OutputStream os = null;
         private URLConnection connection;
         private int redirections = 0;
-
+        private String userAgent = null;
+        
         GetThread(URL source, File dest,
-                  boolean h, long t, DownloadProgress p, int l) {
+                  boolean h, long t, DownloadProgress p, int l, String userAgent) {
             this.source = source;
             this.dest = dest;
             hasTimestamp = h;
             timestamp = t;
             progress = p;
             logLevel = l;
+            this.userAgent = userAgent;
         }
 
         public void run() {

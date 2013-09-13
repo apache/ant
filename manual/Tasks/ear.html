@@ -147,7 +147,7 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   <tr>
     <td valign="top">index</td>
     <td valign="top">whether to create an <A
-    HREF="http://download.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Index">index
+    HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#JAR_Index">index
     list</A> to speed up classloading.  This is a JDK 1.3+ specific
     feature.  Unless you specify additional jars with nested <a
     href="jar.html#indexjars"><code>indexjars</code></a> elements, only the
@@ -160,9 +160,9 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
     <td valign="top">whether to include META-INF and its children in
       the index.  Doesn't have any effect if <em>index</em> is
       false.<br/>
-      Sun's jar implementation used to skip the META-INF directory and
+      Oracle's jar implementation used to skip the META-INF directory and
       Ant followed that example.  The behavior has been changed with
-      <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">Java
+      <a href="https://bugs.openjdk.java.net/browse/JDK-4408526">Java
       5</a>.  In order to avoid problems with Ant generated jars on
       Java 1.4 or earlier Ant will not include META-INF unless
       explicitly asked to.<br/>

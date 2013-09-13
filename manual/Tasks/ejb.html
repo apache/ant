@@ -1294,7 +1294,7 @@ This step can be performed by the websphere element as part of the jar generatio
 switch <code>ejbdeploy</code> is on, the ejbdeploy tool from the websphere toolset is called for
 every ejb-jar. Unfortunately, this step only works, if you use the ibm jdk. Otherwise, the rmic
 (called by ejbdeploy) throws a ClassFormatError. Be sure to switch ejbdeploy off, if run ant with
-sun jdk.
+Oracle JDK or OpenJDK.
 </p>
 
 <p>
