@@ -200,8 +200,14 @@ public class BTest extends TestCase {
     </junit>
     <au:assertFileExists file="${output}/TEST-test.ATest.txt" />
     <au:assertFileExists file="${output}/TEST-test.ATest.xml" />
+   <!--
     <au:assertFileExists file="${output}/TEST-test.BTest.txt" />
     <au:assertFileExists file="${output}/TEST-test.BTest.xml" />
+
+    These files should only exist if something was written to the log by te runner.
+    The test previously passed even though the files were empty, which isn't a meaningful result.
+    TODO we should probably improve the testing around reporting of tests that have timed-out
+    -->
   </target>
 
   <target name="-ifUnlessSetup" depends="setUp">
