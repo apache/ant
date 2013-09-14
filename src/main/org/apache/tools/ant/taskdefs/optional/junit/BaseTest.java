@@ -42,6 +42,7 @@ public abstract class BaseTest {
     // CheckStyle:VisibilityModifier ON
 
     private Object ifCond, unlessCond;
+    private boolean skipNonTests;
 
     /**
      * Set the filtertrace attribute.
@@ -228,5 +229,13 @@ public abstract class BaseTest {
      */
     public void setErrorProperty(String errorProperty) {
         this.errorProperty = errorProperty;
+    }
+
+    public void setSkipNonTests(boolean skipNonTests) {
+        this.skipNonTests = skipNonTests;
+    }
+
+    public boolean isSkipNonTests() {
+        return skipNonTests;
     }
 }

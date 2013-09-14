@@ -526,6 +526,18 @@ the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir
     <td valign="top">Only run test <a href="../properties.html#if+unless">if the named property is <b>not</b> set</a>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">skipNonTests</td>
+    <td valign="top">Do not pass any classes that do not contain JUnit tests to the test runner.
+          This prevents non tests from appearing as test errors in test results.<br />
+          Tests are identified by looking for the <code>@Test</code> annotation on any methods in concrete classes
+          that don't extend <code>junit.framework.TestCase</code>, or for public/protected methods with
+          names starting with 'test' in concrete classes that extend <code>junit.framework.TestCase</code>.
+          Classes marked with the JUnit4 <code>org.junit.runner.RunWith</code> or
+          <code>org.junit.runner.Suite.SuiteClasses</code> annotations are also passed to JUnit for execution,
+          as is any class with a public/protected no-argument <code>suite</code> method.</td>
+    <td align="center" valign="top">No. Default is false.</td>
+  </tr>
 </table>
 
 <p>Tests can define their own formatters via nested
@@ -604,6 +616,18 @@ supported.</p>
     <td valign="top">Only run tests <a href="../properties.html#if+unless">if the named property is <strong>not</strong> set</a>.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+      <td valign="top">skipNonTests</td>
+      <td valign="top">Do not pass any classes that do not contain JUnit tests to the test runner.
+                          This prevents non tests from appearing as test errors in test results.<br />
+                          Tests are identified by looking for the <code>@Test</code> annotation on any methods in concrete classes
+                          that don't extend <code>junit.framework.TestCase</code>, or for public/protected methods with
+                          names starting with 'test' in concrete classes that extend <code>junit.framework.TestCase</code>.
+                          Classes marked with the JUnit4 <code>org.junit.runner.RunWith</code> or
+                          <code>org.junit.runner.Suite.SuiteClasses</code> annotations are also passed to JUnit for execution,
+                          as is any class with a public/protected no-argument <code>suite</code> method.</td>
+      <td align="center" valign="top">No. Default is false.</td>
+  </tr>
 </table>
 
 <p>Batchtests can define their own formatters via nested
@@ -649,7 +673,7 @@ supported.</p>
 
 <p>to your <code>junit</code> task.</p>
 
-<h3><a name="enabletestlistenerevents"><code>ant.junit.enabletestlistenerevents</a>
+<h3><a name="enabletestlistenerevents"><code>ant.junit.enabletestlistenerevents</code></a>
   magic property</h3>
 
 <p><em>Since Ant 1.8.2</em> the <code>enableTestListenerEvents</code>

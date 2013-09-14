@@ -30,6 +30,7 @@ import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -37,6 +38,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
@@ -71,7 +73,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Holds the registered formatters.
      */
-    private Vector formatters = new Vector();
+    private Vector<JUnitTaskMirror.JUnitResultFormatterMirror> formatters = new Vector();
 
     /**
      * Collects TestResults.
@@ -463,6 +465,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     }
                     junit4 = junit4TestAdapterClass != null;
 
+                    if (junitTest.isSkipNonTests()) {
+                       if (!containsTests( testClass, junit4)) {
+                           return;
+                       }
+                    }
+
+
                     if (junit4) {
                         // Let's use it!
                         Class[] formalParams;
@@ -561,6 +570,93 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         } else if (junitTest.failureCount() != 0) {
             retCode = FAILURES;
         }
+    }
+
+    private static boolean containsTests(Class<?> testClass, boolean isJUnit4) {
+        Class testAnnotation = null;
+        Class suiteAnnotation = null;
+        Class runWithAnnotation = null;
+
+        try {
+            testAnnotation = Class.forName("org.junit.Test");
+        } catch (ClassNotFoundException e) {
+            if (isJUnit4) {
+                // odd - we think we're JUnit4 but don't support the test annotation. We therefore can't have any tests!
+                return false;
+            }
+            // else... we're a JUnit3 test and don't need the annotation
+        }
+
+        try {
+            suiteAnnotation = Class.forName("org.junit.Suite.SuiteClasses");
+        } catch(ClassNotFoundException ex) {
+            // ignore - we don't have this annotation so make sure we don't check for it
+        }
+        try {
+            runWithAnnotation = Class.forName("org.junit.runner.RunWith");
+        } catch(ClassNotFoundException ex) {
+            // also ignore as this annotation doesn't exist so tests can't use it
+        }
+
+
+        if (!isJUnit4 && !TestCase.class.isAssignableFrom(testClass)) {
+            //a test we think is JUnit3 but does not extend TestCase. Can't really be a test.
+            return false;
+        }
+
+        // check if we have any inner classes that contain suitable test methods
+        for (Class<?> innerClass : testClass.getDeclaredClasses()) {
+            if (containsTests(innerClass, isJUnit4) || containsTests(innerClass, !isJUnit4)) {
+                return true;
+            }
+        }
+
+        if (Modifier.isAbstract(testClass.getModifiers()) || Modifier.isInterface(testClass.getModifiers())) {
+            // can't instantiate class and no inner classes are tests either
+            return false;
+        }
+
+        if (isJUnit4) {
+             if (suiteAnnotation != null && testClass.getAnnotation(suiteAnnotation) != null) {
+                // class is marked as a suite. Let JUnit try and work its magic on it.
+                return true;
+             }
+            if (runWithAnnotation != null && testClass.getAnnotation(runWithAnnotation) != null) {
+                /* Class is marked with @RunWith. If this class is badly written (no test methods, multiple
+                 * constructors, private constructor etc) then the class is automatically run and fails in the
+                 * IDEs I've tried... so I'm happy handing the class to JUnit to try and run, and let JUnit
+                 * report a failure if a bad test case is provided. Trying to do anything else is likely to
+                 * result in us filtering out cases that could be valid for future versions of JUnit so would
+                 * just increase future maintenance work.
+                 */
+                return true;
+            }
+        }
+
+        for (Method m : testClass.getMethods()) {
+            if (isJUnit4) {
+                // check if suspected JUnit4 classes have methods with @Test annotation
+                if (m.getAnnotation(testAnnotation) != null) {
+                    return true;
+                }
+            } else {
+                // check if JUnit3 class have public or protected no-args methods starting with names starting with test
+                if (m.getName().startsWith("test") && m.getParameterTypes().length == 0
+                        && (Modifier.isProtected(m.getModifiers()) || Modifier.isPublic(m.getModifiers()))) {
+                    return true;
+                }
+            }
+            // check if JUnit3 or JUnit4 test have a public or protected, static,
+            // no-args 'suite' method
+            if (m.getName().equals("suite") && m.getParameterTypes().length == 0
+                    && (Modifier.isProtected(m.getModifiers()) || Modifier.isPublic(m.getModifiers()))
+                    && Modifier.isStatic(m.getModifiers())) {
+                return true;
+            }
+        }
+
+        // no test methods found
+        return false;
     }
 
     /**
@@ -792,6 +888,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         boolean outputToFormat = true;
         boolean logFailedTests = true;
         boolean logTestListenerEvents = false;
+        boolean skipNonTests = false;
 
 
         if (args.length == 0) {
@@ -845,6 +942,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             } else if (args[i].startsWith(Constants.LOG_FAILED_TESTS)) {
                 logFailedTests = Project.toBoolean(
                     args[i].substring(Constants.LOG_FAILED_TESTS.length()));
+            } else if (args[i].startsWith(Constants.SKIP_NON_TESTS)) {
+                skipNonTests = Project.toBoolean(
+                    args[i].substring(Constants.SKIP_NON_TESTS.length()));
             }
         }
 
@@ -884,6 +984,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
                     t.setProperties(props);
+                    t.setSkipNonTests(skipNonTests);
                     code = launch(t, testMethodNames, haltError, stackfilter, haltFail,
                                   showOut, outputToFormat,
                                   logTestListenerEvents);
@@ -911,6 +1012,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         } else {
             JUnitTest t = new JUnitTest(args[0]);
             t.setProperties(props);
+            t.setSkipNonTests(skipNonTests);
             returnCode = launch(
                 t, methods, haltError, stackfilter, haltFail,
                 showOut, outputToFormat, logTestListenerEvents);

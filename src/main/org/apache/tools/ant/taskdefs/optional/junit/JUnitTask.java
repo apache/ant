@@ -976,6 +976,7 @@ public class JUnitTask extends Task {
             cmd.createArgument().setValue(Constants.TESTSFILE + casesFile);
         }
 
+        cmd.createArgument().setValue(Constants.SKIP_NON_TESTS + String.valueOf(test.isSkipNonTests()));
         cmd.createArgument().setValue(Constants.FILTERTRACE + test.getFiltertrace());
         cmd.createArgument().setValue(Constants.HALT_ON_ERROR + test.getHaltonerror());
         cmd.createArgument().setValue(Constants.HALT_ON_FAILURE

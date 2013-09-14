@@ -191,6 +191,7 @@ public final class BatchTest extends BaseTest {
         test.setTodir(this.destDir);
         test.setFailureProperty(failureProperty);
         test.setErrorProperty(errorProperty);
+        test.setSkipNonTests(isSkipNonTests());
         Enumeration list = this.formatters.elements();
         while (list.hasMoreElements()) {
             test.addFormatter((FormatterElement) list.nextElement());
