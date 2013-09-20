@@ -18,7 +18,11 @@ Other changes:
    entries with long names.
 
  * <parallel> swallowed the status code of nested <fail> tasks.
-   Bugzilla Report 55539
+   Bugzilla Report 55539.
+
+ * a race condition could make <fixcrlf> tasks of parallel builds to
+   interfere with each other.
+   Bugzilla Report 54393.
 
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
