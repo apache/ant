@@ -16,12 +16,14 @@
  *
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.PrintStream;
 
 import junit.framework.AssertionFailedError;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DemuxOutputStream;
+import org.apache.tools.ant.ExitStatusException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -147,6 +149,28 @@ public class ParallelTest extends BuildFileTest {
         } finally {
             System.setOut(out);
             System.setErr(err);
+        }
+    }
+
+    /**
+     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=55539"
+     */
+    public void testSingleExit() {
+        try {
+            executeTarget("testSingleExit");
+        } catch (ExitStatusException ex) {
+            assertEquals(42, ex.getStatus());
+        }
+    }
+
+    /**
+     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=55539"
+     */
+    public void testExitAndOtherException() {
+        try {
+            executeTarget("testExitAndOtherException");
+        } catch (ExitStatusException ex) {
+            assertEquals(42, ex.getStatus());
         }
     }
 

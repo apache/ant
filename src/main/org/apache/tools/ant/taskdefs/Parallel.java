@@ -22,6 +22,7 @@ import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ExitStatusException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
@@ -108,6 +109,9 @@ public class Parallel extends Task
 
     /** The location of the first exception */
     private Location firstLocation;
+
+    /** The status of the first ExitStatusException. */
+    private Integer firstExitStatus;
 
     /**
      * Add a group of daemon threads
@@ -229,6 +233,14 @@ public class Parallel extends Task
                 if (t instanceof BuildException
                     && firstLocation == Location.UNKNOWN_LOCATION) {
                     firstLocation = ((BuildException) t).getLocation();
+                }
+                if (t instanceof ExitStatusException
+                    && firstExitStatus == null) {
+                    ExitStatusException ex = (ExitStatusException) t;
+                    firstExitStatus = ex.getStatus();
+                    // potentially overwriting existing value but the
+                    // location should match the exit status
+                    firstLocation = ex.getLocation();
                 }
                 exceptionMessage.append(StringUtils.LINE_SEP);
                 exceptionMessage.append(t.getMessage());
@@ -366,6 +378,7 @@ public class Parallel extends Task
         exceptionMessage = new StringBuffer();
         numExceptions = 0;
         firstException = null;
+        firstExitStatus = null;
         firstLocation = Location.UNKNOWN_LOCATION;
         processExceptions(daemons);
         processExceptions(runnables);
@@ -377,8 +390,13 @@ public class Parallel extends Task
                 throw new BuildException(firstException);
             }
         } else if (numExceptions > 1) {
-            throw new BuildException(exceptionMessage.toString(),
-                                     firstLocation);
+            if (firstExitStatus == null) {
+                throw new BuildException(exceptionMessage.toString(),
+                                         firstLocation);
+            } else {
+                throw new ExitStatusException(exceptionMessage.toString(),
+                                              firstExitStatus, firstLocation);
+            }
         }
     }
 

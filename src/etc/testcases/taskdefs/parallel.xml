@@ -142,6 +142,20 @@
     </parallel>
   </target>
   
+  <target name="testSingleExit">
+    <parallel>
+      <echo message="all is well"/>
+      <fail message="no it isn't" status="42"/>
+    </parallel>
+  </target>
+
+  <target name="testExitAndOtherException">
+    <parallel>
+      <fail message="no it isn't"/>
+      <fail message="no it isn't" status="42"/>
+    </parallel>
+  </target>
+
   <target name="help">
     <echo>Test build file for the &lt;parallel&gt; task.</echo> 
     <echo>Use the various targets to run the tests.</echo>

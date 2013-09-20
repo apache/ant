@@ -17,6 +17,9 @@ Other changes:
  * tar entries with long link names are now handled the same way as
    entries with long names.
 
+ * <parallel> swallowed the status code of nested <fail> tasks.
+   Bugzilla Report 55539
+
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
 
