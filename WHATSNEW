@@ -15,6 +15,9 @@ Fixed bugs:
    interfere with each other.
    Bugzilla Report 54393.
 
+ * <mail>'s mailport still didn't work proprly when using smtps.
+   Bugzilla Report 49267.
+
 Other changes:
 --------------
 
