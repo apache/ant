@@ -26,6 +26,9 @@ Other changes:
  * tar entries with long link names are now handled the same way as
    entries with long names.
 
+ * Addition of 'skipNonTests' attribute to <junit> and <batchtest>
+   tasks to allow the tasks to skip classes that don't contain tests.
+
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
 
