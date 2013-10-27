@@ -2447,6 +2447,11 @@ public class Javadoc extends Task {
         if (!postProcessGeneratedJavadocs) {
             return;
         }
+        if (!destDir.isDirectory()) {
+            log("No javadoc created, no need to post-process anything",
+                Project.MSG_VERBOSE);
+            return;
+        }
         final String fixData;
         final InputStream in = getClass()
             .getResourceAsStream("javadoc-frame-injections-fix.txt");
