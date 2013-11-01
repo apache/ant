@@ -575,6 +575,15 @@ user defined values.
     <td vAlign=top align="center">No</td>
   </tr>
   <tr>
+    <td vAlign=top>Not applicable.</td>
+    <td vAlign=top>propertiesResource</td>
+    <td vAlign=top>Properties resource to take tokens from.
+      Note this only works is you use the
+      "convenience" <code>&lt;replacetokens&gt;</code> syntax.
+      <em>since Ant 1.8.0</em></td>
+    <td vAlign=top align="center">No</td>
+  </tr>
+  <tr>
     <td vAlign=top>User defined String.</td>
     <td vAlign=top>value</td>
     <td vAlign=top>Replace-value for the token</td>
@@ -626,7 +635,19 @@ This will treat each properties file entry in sample.properties as a token/key p
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-&lt;/filterchain&gt;
+</pre></blockquote>
+
+This reads the properties from an Ant resource referenced by its id:
+<blockquote><pre>
+&lt;string id=&quot;embedded-properties&quot;&gt;
+foo=bar
+baz=xyzzy
+&lt;/string&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;replacetokens propertiesResource=&quot;${ant.refid:embedded-properties}&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
 </pre></blockquote>
 
 <h3><a name="stripjavacomments">StripJavaComments</a></h3>
