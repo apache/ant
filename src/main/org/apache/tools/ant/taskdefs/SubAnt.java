@@ -300,6 +300,9 @@ public class SubAnt extends Task {
         }
 
         try {
+            if (verbose) {
+                log("Executing: " + antfilename, Project.MSG_INFO);
+            }
             ant.execute();
         } catch (BuildException e) {
             if (failOnError || isHardError(e)) {
