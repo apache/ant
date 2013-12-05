@@ -47,7 +47,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.TransformerConfigurationException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.XSLTLiaison3;
+import org.apache.tools.ant.taskdefs.XSLTLiaison4;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.taskdefs.XSLTProcess;
@@ -68,7 +68,7 @@ import org.xml.sax.XMLReader;
  *
  * @since Ant 1.3
  */
-public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware {
+public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware {
 
     /**
      * Helper for transforming filenames to URIs.
@@ -118,7 +118,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
     private Vector outputProperties = new Vector();
 
     /** stylesheet parameters */
-    private Hashtable params = new Hashtable();
+    private Hashtable<String, Object> params = new Hashtable<String, Object>();
 
     /** factory attributes */
     private Vector attributes = new Vector();
@@ -369,7 +369,7 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
         for (final Enumeration enumeration = params.keys();
              enumeration.hasMoreElements();) {
             final String name = (String) enumeration.nextElement();
-            final String value = (String) params.get(name);
+            final Object value = params.get(name);
             transformer.setParameter(name, value);
         }
     }
@@ -503,6 +503,16 @@ public class TraXLiaison implements XSLTLiaison3, ErrorListener, XSLTLoggerAware
      * @param value the value of the parameter
      */
     public void addParam(String name, String value) {
+        params.put(name, value);
+    }
+    
+    /**
+     * Add a parameter.
+     * @param name the name of the parameter
+     * @param value the value of the parameter
+     * @since Ant 1.9.3
+     */
+    public void addParam(String name, Object value) {
         params.put(name, value);
     }
 

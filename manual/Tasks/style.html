@@ -295,9 +295,31 @@ element is used to perform Entity and URI resolution.</p>
   </tr>
   <tr>
     <td valign="top">expression</td>
-    <td valign="top">Text value to be placed into the param.<br>
-    Was originally intended to be an XSL expression.</td>
+    <td valign="top">
+        The value to be placed into the param or an XPath expression
+        (depending on <code>type</code>).
+    </td>
     <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">
+        Data type of the parameter. Possible values are:
+        <ul>
+            <li><code>STRING</code></li>
+            <li><code>BOOLEAN</code></li>
+            <li><code>INT</code></li>
+            <li><code>LONG</code></li>
+            <li><code>DOUBLE</code></li>
+            <li><code>XPATH_STRING</code></li>
+            <li><code>XPATH_BOOLEAN</code></li>
+            <li><code>XPATH_NUMBER</code></li>
+            <li><code>XPATH_NODE</code></li>
+            <li><code>XPATH_NODESET</code></li>
+        </ul>
+        <em>since Ant 1.9.3</em>
+    </td>
+    <td align="center" valign="top">No; default is <code>STRING</code></td>
   </tr>
   <tr>
     <td valign="top">if</td>
@@ -312,6 +334,18 @@ element is used to perform Entity and URI resolution.</p>
 
 </table>
 </blockquote>
+
+  <p>      
+      The <code>XPATH_*</code> types says that the <code>expression</code> is not just a primitive-type value but an XPath expression.
+      This expression will be evaluated on an empty XML document and the result will be passed to the XSLT transformer as a parameter of given type.
+      In these expressions the declared Ant properties can be used as XPath variables e.g. <code>$someProperty</code>.
+      So you can compute something using standard XPath functions and operators.
+  </p>
+  <p>
+      If you write <code>${someProperty}</code> instead of <code>$someProperty</code>,
+      the value will be simply substituted by Ant before evaluating the XPath expression
+      (this substitution works also for primitive types).
+  </p>
 
 <h4>outputproperty ('trax' processors only)</h4>
 <p>Used to specify how you wish the result tree to be output
@@ -459,6 +493,7 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 &lt;/xslt&gt;
 </pre>
   <h4>Using XSL parameters</h4>
+  <p>Simple String parameter:</p>
 <pre>
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
@@ -469,6 +504,55 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
   element &lt;xsl:param name=&quot;date&quot;/&gt;, the variable
   <code>$date</code> will subsequently have the value 07-01-2000.
   </p>
+  
+  <p>Various data types and XPath expressions:</p>
+  
+  <pre>&lt;property name="antProperty1" value="ANT_PROPERTY_1"/&gt;
+&lt;property name="antProperty2" value="ANT_PROPERTY_2"/&gt;
+&lt;property name="antProperty3" value="3"/&gt;
+&lt;property name="antProperty4" value="substring-before"/&gt;
+
+&lt;!--
+  ${this} is substituted by Ant itself
+  and $this is evaluated by XPath as a variable
+--&gt;
+
+&lt;xslt in="in.xml" out="out.xml" style="template.xsl"&gt;
+  
+  &lt;!-- Simple String parameter: --&gt;
+  &lt;param name="p0" expression="some nice string" type="STRING"/&gt;
+  
+  &lt;!-- A value substituted by Ant --&gt;
+  &lt;param name="p1" expression="some string with ${antProperty1} constructed by Ant" type="STRING"/&gt;
+  
+  &lt;!-- XPath resulting in: and this is done in XPath: ANT_PROPERTY_2 --&gt;
+  &lt;param name="p2" expression="concat('and this is done in XPath: ', $antProperty2)" type="XPATH_STRING"/&gt;
+  
+  &lt;!-- Some XPath math, result: 42 --&gt;
+  &lt;param name="p3" expression="64 * 64 div 128 + 10" type="XPATH_NUMBER"/&gt;
+  
+  &lt;!-- Some numeric parameter: --&gt;
+  &lt;param name="p4" expression="123.45" type="DOUBLE"/&gt;
+  
+  &lt;!-- XPath expression, result: true boolean --&gt;
+  &lt;param name="p5" expression="$antProperty1 = 'ANT_PROPERTY_1'" type="XPATH_BOOLEAN"/&gt;
+  
+  &lt;!-- First one is an XPath variable, second one is a text substituted by Ant, result: true boolean --&gt;
+  &lt;param name="p6" expression="$antProperty2 = '${antProperty2}'" type="XPATH_BOOLEAN"/&gt;
+  
+  &lt;!-- Some XPath math with a variable, result: 64 --&gt;
+  &lt;param name="p7" expression="$antProperty3 * 4 * 5 + 4" type="XPATH_NUMBER"/&gt;
+  
+  &lt;!-- 
+    XPath expression with substituted function name and a variable:
+    substring-before($antProperty2, '_')
+    result: ANT
+  --&gt;
+  &lt;param name="p8" expression="${antProperty4}($antProperty2, '_')" type="XPATH_STRING"/&gt;
+  
+  &lt;!-- Without type attribute: --&gt;
+  &lt;param name="p9" expression="default type is String"/&gt;
+&lt;/xslt&gt;</pre>
 
   <h4>Using output properties</h4>
 <pre>

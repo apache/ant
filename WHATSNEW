@@ -32,6 +32,9 @@ Other changes:
  * <filterset> now supports a nested <propertyset> to specify filters.
    Bugzilla Report 55794.
 
+ * <xslt>'s params can now be typed.
+   Bugzilla Report 21525.
+
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
 

@@ -34,6 +34,46 @@
        resource="${output}/out.xml"
        value="set='myvalue'"/>
   </target>
+  
+  <target name="testParameterTypes" depends="setUp" description="parameters of various data types and XPath expressions">
+
+    <property name="antProperty1" value="ANT_PROPERTY_1"/>
+    <property name="antProperty2" value="ANT_PROPERTY_2"/>
+    <property name="antProperty3" value="3"/>
+    <property name="antProperty4" value="substring-before"/>
+    
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml">
+      <param name="p1" expression="123" type="INT"/>
+      <param name="p2" expression="64 * 64 div 128 + 10" type="XPATH_NUMBER"/>
+      <param name="p3" expression="${antProperty4}($antProperty2, '_')" type="XPATH_STRING"/>
+      
+      <style>
+        <string><![CDATA[<xsl:stylesheet
+  version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<!-- get the xsl-parameter -->
+<xsl:param name="p1"/>
+<xsl:param name="p2"/>
+<xsl:param name="p3"/>
+
+<!-- use the xsl-parameter -->
+<xsl:template match="/">
+p1_result='<xsl:value-of select="$p1 + 321"/>'
+p2_result='<xsl:value-of select="$p2"/>'
+p3_result='<xsl:value-of select="$p3"/>'
+</xsl:template>
+
+</xsl:stylesheet>
+]]></string>
+      </style>
+    </xslt>
+    <au:assertResourceContains resource="${output}/out.xml" value="p1_result='444'"/>
+    <au:assertResourceContains resource="${output}/out.xml" value="p2_result='42'"/>
+    <au:assertResourceContains resource="${output}/out.xml" value="p3_result='ANT'"/>
+  </target>
 
   <target name="testInlineStyleSheet" depends="setUp">
     <xslt in="${legacy.dir}/data.xml"
