@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.Project;
@@ -458,10 +460,27 @@ public class FilterSet extends DataType implements Cloneable {
     }
 
     /**
-    * Test to see if this filter set has filters.
-    *
-    * @return Return true if there are filters in this set.
-    */
+     * Adds the properties provided by the specified PropertySet to this filterset.
+     * 
+     * @param propertySet the propertyset to be added to this propertyset
+     */
+    public synchronized void addConfiguredPropertySet(PropertySet propertySet) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        Properties p = propertySet.getProperties();
+        Set<Map.Entry<Object,Object>> entries = p.entrySet();
+        for (Map.Entry<Object, Object> entry : entries) {
+            addFilter(new Filter(String.valueOf(entry.getKey()),
+                                 String.valueOf(entry.getValue())));
+        }
+    }
+
+    /**
+     * Test to see if this filter set has filters.
+     *
+     * @return Return true if there are filters in this set.
+     */
     public synchronized boolean hasFilters() {
         return getFilters().size() > 0;
     }

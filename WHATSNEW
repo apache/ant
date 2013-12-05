@@ -29,6 +29,9 @@ Other changes:
  * Addition of 'skipNonTests' attribute to <junit> and <batchtest>
    tasks to allow the tasks to skip classes that don't contain tests.
 
+ * <filterset> now supports a nested <propertyset> to specify filters.
+   Bugzilla Report 55794.
+
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
 

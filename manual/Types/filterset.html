@@ -45,6 +45,9 @@ filters.</p>
 <p>Filtersets are used for doing 
 replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
 
+<p>Filters can also by specified by one or more nested propertysets, the
+  contents of which are applied when the filterset is created.</p>
+
 <p>If you specify multiple values for the same token, the last one
   defined within a filterset will be used.</p>
 
@@ -179,6 +182,19 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset refid=&quot;myFilterSet&quot;/&gt;
+&lt;/copy&gt;
+</pre></blockquote>
+
+<p>You are copying the <code>version.txt</code> file to the <code>dist</code>
+directory from the <code>build</code> directory 
+but wish to replace the token <code>&#64;project.date&#64;</code> with the property of the same name.</p>
+<blockquote><pre>
+&lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
+  &lt;filterset&gt;
+    &lt;propertyset&gt;
+      &lt;propertyref name=&quot;project.date&quot;/&gt;
+    &lt;/propertyset&gt;
+  &lt;/filterset&gt;
 &lt;/copy&gt;
 </pre></blockquote>
 </body></html>

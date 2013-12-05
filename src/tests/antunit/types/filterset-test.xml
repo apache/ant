@@ -60,4 +60,37 @@
        actual="${afterfiltering}"/>
   </target>
 
+  <target name="testNestedPropertySet">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <echo file="${input}/src.txt">
+Filter with property set test
+@foo.x@ - should change
+@foo.y@ - should change
+@bar.x@ - should not change
+@cccc@ - should not change
+    </echo>
+    <echo file="${output}/expected.txt">
+Filter with property set test
+1111 - should change
+2222 - should change
+@bar.x@ - should not change
+@cccc@ - should not change
+    </echo>
+    <property name="foo.x" value="1111" />
+    <property name="foo.y" value="2222" />
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <filterset>
+        <propertyset>
+          <propertyref prefix="foo." />
+        </propertyset>
+      </filterset>
+    </copy>
+    <au:assertFilesMatch
+        actual="${output}/src.txt"
+        expected="${output}/expected.txt"
+        />
+  </target>
+
 </project>
