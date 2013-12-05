@@ -31,6 +31,7 @@ import java.net.URLConnection;
 import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Main;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -80,7 +81,10 @@ public class Get extends Task {
     private boolean skipExisting = false;
     private boolean httpUseCaches = true; // on by default
     private Mapper mapperElement = null;
-    private String userAgent = System.getProperty("http.agent", DEFAULT_AGENT_PREFIX + "/" + Main.getAntVersion()); 
+    private String userAgent = 
+        System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
+                           DEFAULT_AGENT_PREFIX + "/"
+                           + Main.getShortAntVersion());
 
     /**
      * Does the work.
@@ -406,6 +410,18 @@ public class Get extends Task {
     public void setSkipExisting(boolean s) {
         this.skipExisting = s;
     }
+    
+    /**
+     * HTTP connections only - set the user-agent to be used
+     * when communicating with remote server. if null, then
+     * the value is considered unset and the behaviour falls
+     * back to the default of the http API.
+     *
+     * @since Ant 1.9.3
+     */
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 
     /**
      * HTTP connections only - control caching on the
@@ -421,16 +437,6 @@ public class Get extends Task {
         this.httpUseCaches = httpUseCache;
     }
     
-    /**
-     * HTTP connections only - set the user-agent to be used
-     * when communicating with remote server. if null, then
-     * the value is considered unset and the behaviour falls
-     * back to the default of the http API.
-     */
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
     /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.
@@ -657,6 +663,9 @@ public class Get extends Task {
             if (hasTimestamp) {
                 connection.setIfModifiedSince(timestamp);
             }
+            // Set the user agent
+            connection.addRequestProperty("User-Agent", this.userAgent);
+            
             // prepare Java 1.1 style credentials
             if (uname != null || pword != null) {
                 String up = uname + ":" + pword;

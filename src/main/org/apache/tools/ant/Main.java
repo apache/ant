@@ -1061,6 +1061,11 @@ public class Main implements AntMain {
     private static String antVersion = null;
 
     /**
+     * Cache of the short Ant version information when it has been loaded.
+     */
+    private static String shortAntVersion = null;
+    
+    /**
      * Returns the Ant version information, if available. Once the information
      * has been loaded once, it's cached and returned from the cache on future
      * calls.
@@ -1078,10 +1083,11 @@ public class Main implements AntMain {
                     Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
                 props.load(in);
                 in.close();
+                shortAntVersion = props.getProperty("VERSION");
 
                 StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant(TM) version ");
-                msg.append(props.getProperty("VERSION"));
+                msg.append(shortAntVersion);
                 msg.append(" compiled on ");
                 msg.append(props.getProperty("DATE"));
                 antVersion = msg.toString();
@@ -1093,6 +1099,24 @@ public class Main implements AntMain {
             }
         }
         return antVersion;
+    }
+    
+    /**
+     * Returns the short Ant version information, if available. Once the information
+     * has been loaded once, it's cached and returned from the cache on future
+     * calls.
+     * 
+     * @return the short Ant version information as a String
+     *         (always non-<code>null</code>)
+     *         
+     * @throws BuildException BuildException if the version information is unavailable
+     * @since Ant 1.9.3
+     */
+    public static String getShortAntVersion() throws BuildException {
+        if (shortAntVersion == null) {
+            getAntVersion();
+        }
+        return shortAntVersion;
     }
 
      /**

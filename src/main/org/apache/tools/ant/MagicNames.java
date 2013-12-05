@@ -282,5 +282,12 @@ public final class MagicNames {
      * @since Ant 1.9.1
      */
     public static final String ATTRIBUTE_NAMESPACE = "attribute namespace";
+
+    /**
+     * Name of the property which can provide an override of the
+     * User-Agent used in &lt;get&gt; tasks.
+     * Value {@value}
+     */
+    public static final String HTTP_AGENT_PROPERTY = "ant.http.agent";
 }
 
