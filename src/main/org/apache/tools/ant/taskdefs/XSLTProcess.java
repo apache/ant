@@ -1330,7 +1330,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         ParamType type;
 
-        if (typeName == null || typeName.isEmpty()) {
+        if (typeName == null || "".equals(typeName)) {
             type = ParamType.STRING; // String is default
         } else {
             try {
