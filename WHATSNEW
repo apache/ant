@@ -18,6 +18,10 @@ Fixed bugs:
  * <mail>'s mailport still didn't work proprly when using smtps.
    Bugzilla Report 49267.
 
+ * using attributes belonging to the if and unless namespaces
+   made macrodef fail.
+   Bugzilla Report 55885.
+
 Other changes:
 --------------
 

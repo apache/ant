@@ -57,4 +57,18 @@
     <au:assertLogContains text="message6"/>
   </target>
 
+
+
+
+  <target name="test-macrodef">
+    <property name="verbose" value="true"/>
+    <macrodef name="sayhi">
+      <sequential>
+        <echo>hi</echo>
+      </sequential>
+    </macrodef>
+    <sayhi if:set="verbose" />
+    <au:assertLogContains text="hi"/>
+  </target>
+
 </project>
