@@ -185,10 +185,10 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
                 return;
             }
 
-            t.join(JOIN_TIMEOUT);
             if (s != null && !s.isFinished()) {
                 s.stop();
             }
+            t.join(JOIN_TIMEOUT);
             while ((s == null || !s.isFinished()) && t.isAlive()) {
                 t.interrupt();
                 t.join(JOIN_TIMEOUT);

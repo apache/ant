@@ -116,7 +116,6 @@ public class StreamPumper implements Runnable {
             started = true;
         }
         finished = false;
-        finish = false;
 
         final byte[] buf = new byte[bufferSize];
 
@@ -130,12 +129,28 @@ public class StreamPumper implements Runnable {
                 }
 
                 length = is.read(buf);
-                if (length <= 0 || finish || Thread.interrupted()) {
+                if (length <= 0 || Thread.interrupted()) {
                     break;
                 }
                 os.write(buf, 0, length);
                 if (autoflush) {
                     os.flush();
+                }
+                if (finish) {
+                	break;
+                }
+            }
+            // On completion, drain any available data (which might be the first data available for quick executions)
+            if (finish) {
+                while((length = is.available()) > 0) {
+                	if (Thread.interrupted()) {
+                		break;
+                	}
+                    length = is.read(buf, 0, Math.min(length, buf.length));
+                    if (length <= 0) {
+                        break;
+                    }
+                    os.write(buf, 0, length);
                 }
             }
             os.flush();
@@ -150,6 +165,7 @@ public class StreamPumper implements Runnable {
                 FileUtils.close(os);
             }
             finished = true;
+            finish = false;
             synchronized (this) {
                 notifyAll();
             }

@@ -22,6 +22,9 @@ Fixed bugs:
    made macrodef fail.
    Bugzilla Report 55885.
 
+ * Ant 1.8 exec task changes have slowed exec to a crawl
+   Bugzilla Report 54128.
+
 Other changes:
 --------------
 
