@@ -23,15 +23,11 @@
 <h2><a name="Apt">Apt</a></h2>
 <h3>Description</h3>
 <p>Runs the annotation processor tool (apt), and then optionally compiles
-   the original code, and any generated source code. This task requires Java 1.5.
-   It may work on later versions, but this cannot be confirmed until those
-   versions ship. Be advised that the Apt tool does appear to be an unstable
-   part of the JDK framework, so may change radically in future versions. 
-   In particular it is likely to be obsolete in JDK 6, which can run annotation
-   processors as part of javac.
-   If the &lt;apt&gt; task does break when upgrading JVM, please
-   check to see if there is a more recent version of Apache Ant that tracks
-   any changes.</p>
+   the original code, and any generated source code.
+   <p>This task runs on Java 1.5 to Java 1.7.</p>
+   <p>Apt is deprecated in Java 1.6, which can run annotation
+   processors as part of javac, and removed from the distribution in Java 1.8.
+   The task will fire an exception when attempting to run under Java 1.8.</p>
 
 
 <p>This task inherits from the <a href="javac.html">Javac Task</a>, and thus
