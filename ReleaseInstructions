@@ -5,7 +5,7 @@ Authors: Conor MacNeill
          Magesh Umasankar
          Antoine Levy-Lambert
 
-Note: This document was updated in the context of releasing Ant 1.7.
+Note: This document was updated in the context of releasing Ant 1.9.3.
       Please interpret the branch names, tags, etc. according to
       your context.
 
@@ -27,30 +27,18 @@ Note: This document was updated in the context of releasing Ant 1.7.
     particularly the release manager will need to make judgement calls here.
     Anything too "big" is likely to be held over.
 
-3.  Once the freeze date arrives, create a branch for the release builds,
-    if this was decided in the release vote. This was done for Ant 1.6, 
-    but not for Ant 1.7, nor for Ant 1.8.
+3.  We used until Ant 1.6 to create branches, for instance ANT_16_BRANCH
+    to allow parallel development on trunk and on the current branch.
 
-    You will need to be comfortable in handling SVN branches with multiple
-    merge-backs to the main branch and even selected merges from the the main
-    branch to the release branch.
+    In the case of parallel development on a branch and on trunk, the project
+    version would be x.y+1 on trunk and x.y on the branch, for instance 2.0.alpha on trunk
+    and 1.9.xbeta on the branch.
 
     For more information on performing branching and merging, please visit
     http://svnbook.red-bean.com/nightly/en/svn-book.html
 
-    Label such branches ANT_16_BRANCH.
 
-4.  Once the branch is setup, the version numbers in SVN are changed. On the
-    branch, the project.version property in build.xml becomes 1.7Beta.
-
-    If there were a main branch, its build.xml would have 1.8alpha.
-
-    [[ TODO: Check if the documentation files also need to be updated to point
-    to the right areas of Ant's website. ]]
-
-5.  Before a build :
-
-    the first beta on the 1.7 branch has been called 1.7.0Beta1, ...
+4.  Before a build :
 
     the project.version property in build.xml governs the output of
     ant -version and the naming of the distribution files.
@@ -59,7 +47,7 @@ Note: This document was updated in the context of releasing Ant 1.7.
     
     see at the end of this document the list of files containing version information
 
-6.  Ensure you have all the external libraries that Ant uses in your
+5.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  All dependencies are either provided by
     JDK 1.5.0 or downloadable using
     ant -f fetch.xml -Ddest=optional.
@@ -67,25 +55,22 @@ Note: This document was updated in the context of releasing Ant 1.7.
     the build with -verbose option and scan for lines beginning with
     "Unable to load...". 
 
-7.  Make sure that your directory tree is clean by running svn status.
+6.  Make sure that your directory tree is clean by running svn status.
     Some tests leave behind leftovers which end up in the source
     distribution otherwise.
 
-8.  Next bootstrap, build and run the tests.  Then build the distribution
+7.  Next bootstrap, build and run the tests.  Then build the distribution
     on the branch. It is important that this be a clean build. Label this with
-    a tag ANT_170_B1.
+    a tag ANT_193.
 
     The file release.sh gives an idea of how to do this build process.
     buid.xml specifies that the code should be compiled with source=1.5 and target=1.5.
 
-    C:\dev\asf\ant-core>
     svn copy https://svn.apache.org/repos/asf/ant/core/trunk \
-    https://svn.apache.org/repos/asf/ant/core/tags/ANT_170_B1 \
-    -m "Tagging version 1.7.0Beta1 of Ant"
+     https://svn.apache.org/repos/asf/ant/core/tags/ANT_193 \
+     -m "Tagging version 1.9.3 of Ant"
 
-    Revision 437509 Uebertragen.
-
-9.  Sign the distribution files using the script release/signit.xml 
+8.  Sign the distribution files using the script release/signit.xml
 
     This script requires using commons-openpgp to sign the artefacts,
 
@@ -106,23 +91,57 @@ Note: This document was updated in the context of releasing Ant 1.7.
     Also make sure you have sent the key that you use to a public
     keyserver.
 
-10. The beta distribution is now ready to go. Commit it to
-    https://dist.apache.org/repos/dist/dev/ant
-
-11. Meanwhile, convert the part of the WHATSNEW file covering the changes
+9.  Convert the part of the WHATSNEW file covering the changes
     since the last release into HTML for the README file on the
     website. See the previous release directories for examples of these files.
     Add instructions and warnings (GNU tar format issues, etc).
 
     Use the target txt2html of docs.xml
 
-    Name the generated file RELEASE-NOTES-x.y.z.html.
+    This target generates a file build/html/WHATSNEW.html
 
-    Change the title to something like "Release Notes of Apache Ant
-    1.7.0Beta2" (from the default txt2html)
+    Add an html head element with a title like "Release Notes of Apache Ant
+    1.9.3" (from the default txt2html)
 
-12. Once this is committed call for a release vote on dev@ant.  The
-    vote will only pass if at least three PMC members have voted +1
+    Cut all sections about previous releases to keep only the current release,
+    and save as  RELEASE-NOTES-1.9.3.html inside the distribution folder.
+
+    Copy the file RELEASE-NOTES-1.9.3.html also as README.html
+
+10. The distribution is now ready to go.
+    Create a SVN sandbox on your computer with https://dist.apache.org/repos/dist/dev/ant in it
+    Copy the distribution folder to the location of the sandbox.
+    svn add the files and commit into https://dist.apache.org/repos/dist/dev/ant
+
+11.     * upload the maven artifacts located under java-repository/org/apache/ant
+          these artifacts comprise currently for each ant jar of one POM file, the corresponding jar file
+          and the corresponding GPG signatures (x.pom, x.jar, x.pom.asc, x.jar.asc)
+          MD5 and SHA1 are generated by ivy during the upload
+
+          to
+
+          https://repository.apache.org (nexus repository)
+
+          using the build file release/upload.xml
+
+          ant -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f upload.xml
+
+        *  after the upload, you need to access the web interface of nexus under https://repository.apache.org
+           login using your Apache credentials
+           in the left pane, below "build promotion", click on the "Stagings Repositories" links
+           expand org.apache.ant
+           select the checkbox next to the upload that you just did
+           click the button "Close" on the top of the table listing the uploads
+           make a note of the location of the staging repository for the vote email
+
+
+12. Once this is committed send a release vote email on dev@ant.
+    The email will typically mention :
+       - the SVN tag for the release including revision number,
+       - the location of the tarballs, including revision number in dist.apache.org repository
+       - the URL for the maven artifacts
+
+    The vote will only pass if at least three PMC members have voted +1
     and more +1s than -1s have been cast.  The vote will run for 3 days.
 
 13. Update the files listed at the end of the document (files containing 
@@ -138,12 +157,11 @@ Note: This document was updated in the context of releasing Ant 1.7.
     available via the archive. To do so, just use the "svn rm" command against
     the artifacts or folders to remove.
 
-15. Address the available release tags in BugZilla. Create a new tag 1.7.0Beta1.
-    If there is a separate main branch, create a 1.8alpha tag.
-    Assign all existing 1.7 alpha bugs to 1.7.0Beta1.
+15. Address the available version tags in BugZilla. Create a new version 1.9.4.
+    Assign all existing 1.9.3 bugs to 1.9.4.
     Note that such massive changes can be done at once by choosing the
     link "Change several bugs at once" at the bottom of the bug list
-    displaying the 1.7alpha bugs.
+    displaying the 1.9.3 bugs.
 
 16. Once that is done, do a test download to make sure everything is OK. A
     common problem may be:
@@ -184,27 +202,11 @@ Note: This document was updated in the context of releasing Ant 1.7.
       from distribution
       to   https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
 
-      
-    * upload the maven artifacts located under java-repository/org/apache/ant
-      these artifacts comprise currently for each ant jar of one POM file, the corresponding jar file
-      and the corresponding GPG signatures (x.pom, x.jar, x.pom.asc, x.jar.asc)
-      MD5 and SHA1 are generated by ivy during the upload
-
-      to  
-
-      https://repository.apache.org (nexus repository)
-
-      using the build file release/upload.xml
-      
-      ant -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f upload.xml      
-
-    *  after the upload, you need to access the web interface of nexus under https://repository.apache.org
+    *  release the maven artifacts using the web interface of nexus under https://repository.apache.org
        login using your Apache credentials
-       select the Staging enterprise repository
+       in the left pane, below "build promotion", click on the "Stagings Repositories" links
        expand org.apache.ant 
        select the checkbox next to the upload that you just did
-       click the button "Close" on the top of the table listing the uploads
-       once this is done, you have to again select your upload in the web interface,
        and click the button "Release".
        4 hours later, the artefacts will be in the maven central repository.
       
@@ -250,9 +252,6 @@ Note: This document was updated in the context of releasing Ant 1.7.
 
 24. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
-
-    [[TODO: Identify the mailing lists where announcements are to be made.
-      Also identify the webpages to which the announcements must go. ]]
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
