@@ -46,6 +46,9 @@ Other changes:
  * <xslt>'s params can now be typed.
    Bugzilla Report 21525.
 
+ * build of Mac OS X pkg installer
+   Bugzilla Report 55899.
+
 Changes from Ant 1.9.1 TO Ant 1.9.2
 ===================================
 

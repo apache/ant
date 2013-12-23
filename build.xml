@@ -1148,8 +1148,7 @@
          Create the binary distribution
        ===================================================================
   -->
-  <target name="main_distribution" depends="jars-sources,test-jar-source"
-    description="--> creates the zip and tar distributions">
+  <target name="-distribution_prep">
     <delete dir="${dist.base}"/>
     <delete dir="${dist.name}"/>
     <delete dir="${java-repository.dir}"/>
@@ -1161,6 +1160,10 @@
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
+  </target>
+
+  <target name="zip_distribution" depends="jars,-distribution_prep"
+    description="--> creates the zip distribution">
     <zip destfile="${dist.base.binaries}/${dist.name}-bin.zip">
       <zipfileset dir="${dist.name}/.." filemode="755">
         <include name="${dist.name}/bin/ant"/>
@@ -1176,6 +1179,22 @@
         <exclude name="${dist.name}/bin/*.py"/>
       </fileset>
     </zip>
+  </target>
+
+  <condition property="buildosxpackage">
+    <os family="mac"/>
+  </condition>
+
+  <target name="pkg_distribution" depends="zip_distribution" if="buildosxpackage">
+    <exec executable="release/build-osx-pkg.py">
+      <arg value="--output-dir"/>
+      <arg value="${dist.base.binaries}"/>
+      <arg value="${dist.base.binaries}/${dist.name}-bin.zip"/>
+    </exec>
+  </target>
+
+  <target name="tar_distribution" depends="jars,-distribution_prep"
+    description="--> creates the tar distribution">
     <tar longfile="gnu"
       destfile="${dist.base.binaries}/${dist.name}-bin.tar">
       <!-- removes redundant definition of permissions, but seems to
@@ -1201,6 +1220,10 @@
     <bzip2 destfile="${dist.base.binaries}/${dist.name}-bin.tar.bz2"
       src="${dist.base.binaries}/${dist.name}-bin.tar"/>
     <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
+  </target>
+
+  <target name="main_distribution" depends="zip_distribution,pkg_distribution,tar_distribution,jars-sources,test-jar-source"
+    description="--> creates the zip, pkg, and tar distributions">
 
     <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
