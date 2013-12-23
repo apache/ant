@@ -1,4 +1,4 @@
-Changes from Ant 1.9.2 TO current
+Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
 Changes that could break older environments:
@@ -15,7 +15,7 @@ Fixed bugs:
    interfere with each other.
    Bugzilla Report 54393.
 
- * <mail>'s mailport still didn't work proprly when using smtps.
+ * <mail>'s mailport still didn't work properly when using smtps.
    Bugzilla Report 49267.
 
  * using attributes belonging to the if and unless namespaces
