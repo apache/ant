@@ -25,6 +25,10 @@ Fixed bugs:
  * Ant 1.8 exec task changes have slowed exec to a crawl
    Bugzilla Report 54128.
 
+ * Apt is not available under JDK 1.8
+   Bugzilla Report 55922.
+
+
 Other changes:
 --------------
 
