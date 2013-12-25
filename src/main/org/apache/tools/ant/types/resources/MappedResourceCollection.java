@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -239,4 +240,27 @@ public class MappedResourceCollection
         }
         return collected;
     }
+
+    /**
+     * Format this resource collection as a String.
+     * @return a descriptive <code>String</code>.
+     */
+    public String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        Iterator<Resource> i = iterator();
+        if (!i.hasNext()) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer();
+        while (i.hasNext()) {
+            if (sb.length() > 0) {
+                sb.append(File.pathSeparatorChar);
+            }
+            sb.append(i.next());
+        }
+        return sb.toString();
+    }
+
 }

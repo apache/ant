@@ -17,6 +17,9 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.io.File;
+import java.util.Iterator;
+
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -99,4 +102,12 @@ public class MappedResource extends ResourceDecorator {
         return (myName == null ? otherName == null : myName.equals(otherName))
             && getResource().equals(m.getResource());
     }
+
+    public String toString() {
+        if (isReference()) {
+            return getCheckedRef().toString();
+        }
+        return getName();
+    }
+
 }
