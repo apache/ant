@@ -236,7 +236,7 @@ Note: This document was updated in the context of releasing Ant 1.9.3.
      
     Change the version of the manual published on the site: svn copy the manual into
     the production folder, using a command similar to :
-    svn copy https://svn.apache.org/repos/asf/ant/core/tags/ANT_190/manual/ .
+    svn merge https://svn.apache.org/repos/asf/ant/core/tags/ANT_193/manual/ ./manual/
     followed by a commit.
 
 22. Clean up.
