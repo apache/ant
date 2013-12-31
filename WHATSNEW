@@ -21,6 +21,10 @@ Fixed bugs:
    where another thread already created the same directory.
    Bugzilla Report 55290
 
+ * <manifestclasspath> created '/' rather than './' for the parent
+   directory of the given jarfile.
+   Bugzilla Report 55049
+
 Other changes:
 --------------
 

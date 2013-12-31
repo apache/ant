@@ -87,7 +87,11 @@ public class ManifestClassPath extends Task {
             String relPath = null;
             String canonicalPath = null;
             try {
-                relPath = FileUtils.getRelativePath(dir, pathEntry);
+                if (dir.equals(pathEntry)) {
+                    relPath = ".";
+                } else {
+                    relPath = FileUtils.getRelativePath(dir, pathEntry);
+                }
 
                 canonicalPath = pathEntry.getCanonicalPath();
                 // getRelativePath always uses '/' as separator, adapt
