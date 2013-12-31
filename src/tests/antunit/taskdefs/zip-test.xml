@@ -170,7 +170,7 @@
       <au:assertFileExists file="${output}/expand/test1.txt"/>
     </target>
 
-    <!--target name="testUpdateZipWithDuplicateEntries"
+    <target name="testUpdateZipWithDuplicateEntries"
             description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54967">
       <mkdir dir="${input}/"/>
       <touch file="${input}/test1.txt"/>
@@ -181,5 +181,5 @@
       <zip destfile="${output}/test.zip" update="true">
         <fileset dir="${basedir}" includes="zip-test.xml"/>
       </zip>
-    </target-->
+    </target>
 </project>
