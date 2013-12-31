@@ -17,6 +17,10 @@ Fixed bugs:
    different resource types.
    Bugzilla Report 55097
 
+ * several calls to File#mkdirs could fall victim to a race condition
+   where another thread already created the same directory.
+   Bugzilla Report 55290
+
 Other changes:
 --------------
 

@@ -178,7 +178,7 @@ public class Move extends Copy {
                     }
                     File d = new File(toDirNames[i]);
                     if (!d.exists()) {
-                        if (!d.mkdirs()) {
+                        if (!(d.mkdirs() || d.exists())) {
                             log("Unable to create directory "
                                     + d.getAbsolutePath(), Project.MSG_ERR);
                         } else {

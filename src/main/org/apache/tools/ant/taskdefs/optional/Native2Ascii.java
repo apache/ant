@@ -279,7 +279,8 @@ public class Native2Ascii extends MatchingTask {
         if (parentName != null) {
             File parentFile = new File(parentName);
 
-            if ((!parentFile.exists()) && (!parentFile.mkdirs())) {
+            if (!parentFile.exists()
+                && !(parentFile.mkdirs() || parentFile.isDirectory())) {
                 throw new BuildException("cannot create parent directory "
                                          + parentName);
             }

@@ -915,7 +915,7 @@ public class Copy extends Task {
                 for (int i = 0; i < dirs.length; i++) {
                     File d = new File(dirs[i]);
                     if (!d.exists()) {
-                        if (!d.mkdirs()) {
+                        if (!(d.mkdirs() || d.isDirectory())) {
                             log("Unable to create directory "
                                 + d.getAbsolutePath(), Project.MSG_ERR);
                         } else {

@@ -305,7 +305,8 @@ public class Image extends MatchingTask {
             }
 
             File dstParent = newFile.getParentFile();
-            if (!dstParent.isDirectory() && !dstParent.mkdirs()){
+            if (!dstParent.isDirectory()
+                && !(dstParent.mkdirs() || dstParent.isDirectory())) {
                 throw new BuildException("Failed to create parent directory "
                                          + dstParent);
             }

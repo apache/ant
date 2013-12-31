@@ -513,7 +513,7 @@ public class ResourceUtils {
 
             File parent = destFile.getParentFile();
             if (parent != null && !parent.isDirectory()
-                && !destFile.getParentFile().mkdirs()) {
+                && !(parent.mkdirs() || parent.isDirectory())) {
                 throw new IOException("failed to create the parent directory"
                                       + " for " + destFile);
             }

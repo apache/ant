@@ -319,7 +319,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                         if (!dir.exists()) {
                             log("Creating " + dir.getAbsolutePath(),
                                 Project.MSG_VERBOSE);
-                            if (dir.mkdirs()) {
+                            if (dir.mkdirs() || dir.isDirectory()) {
                                 log("Created " + dir.getAbsolutePath(),
                                     Project.MSG_INFO);
                             } else {

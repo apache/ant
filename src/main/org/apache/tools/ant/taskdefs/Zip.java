@@ -645,7 +645,8 @@ public class Zip extends MatchingTask {
             }
 
             File parent = zipFile.getParentFile();
-            if (parent != null && !parent.isDirectory() && !parent.mkdirs()) {
+            if (parent != null && !parent.isDirectory()
+                && !(parent.mkdirs() || parent.isDirectory())) {
                 throw new BuildException("Failed to create missing parent"
                                          + " directory for " + zipFile);
             }

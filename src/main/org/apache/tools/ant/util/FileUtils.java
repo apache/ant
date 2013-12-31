@@ -1308,7 +1308,8 @@ public class FileUtils {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
         }
         File parent = to.getParentFile();
-        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+        if (parent != null && !parent.isDirectory()
+            && !(parent.mkdirs() || parent.isDirectory())) {
             throw new IOException("Failed to create directory " + parent
                                   + " while trying to rename " + from);
         }

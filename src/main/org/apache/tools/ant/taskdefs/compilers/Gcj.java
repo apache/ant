@@ -87,7 +87,8 @@ public class Gcj extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
 
-            if (!destDir.exists() && !destDir.mkdirs()) {
+            if (!destDir.exists()
+                && !(destDir.mkdirs() || destDir.isDirectory())) {
                 throw new BuildException("Can't make output directories. "
                                          + "Maybe permission is wrong. ");
             }
