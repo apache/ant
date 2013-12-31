@@ -18,6 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
+  <mkdir dir="${output}"/>
   <mkdir dir="${input}/a/b"/>
   <mkdir dir="${input}/a/c"/>
   <echo file="${input}/a/b/outer.xml"><![CDATA[
@@ -40,6 +41,18 @@
   <echo file="${input}/a/c/test.properties"><![CDATA[
 foo=bar
 ]]></echo>
+  <echo file="${input}/a/b/external-import.xml"><![CDATA[
+<project name="external-import">
+  <import file="${output}/imported.xml"/>
+</project>
+]]></echo>
+  <echo file="${output}/imported.xml"><![CDATA[
+<project name="imported">
+  <target name="bar">
+    <echo>In imported</echo>
+  </target>
+</project>
+]]></echo>
   <jar destfile="${test.jar}">
     <fileset dir="${input}"/>
   </jar>
@@ -55,11 +68,21 @@ foo=bar
       <classpath location="${test.jar}"/>
     </javaresource>
   </import>
+  <import>
+    <javaresource name="a/b/external-import.xml">
+      <classpath location="${test.jar}"/>
+    </javaresource>
+  </import>
 
   <target name="testImportOfNestedFile" depends="foo">
     <au:assertLogContains text="In inner"/>
     <au:assertLogContains text="type is url"/>
     <au:assertLogContains text="foo is bar"/>
+  </target>
+
+  <target name="testImportOfNestedFileWithAbsolutePath" depends="bar"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50953">
+    <au:assertLogContains text="In imported"/>
   </target>
 
   <target name="tearDown">
@@ -73,5 +96,6 @@ foo=bar
     <delete file="${test.jar}" quiet="true" deleteonexit="true"/>
     <!-- Calling antunit-base.tearDown sometimes causes ISEs in <import> in Ant-Build-Matrix: -->
     <delete dir="${input}"/>
+    <delete dir="${output}"/>
   </target>
 </project>

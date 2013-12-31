@@ -8,6 +8,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* <import>/<include> failed when the importing file was loaded from an
+  URI or a jar and it imported a file from the local file system via
+  an absolute path.
+  Bugzilla Report 50953
 
 Other changes:
 --------------

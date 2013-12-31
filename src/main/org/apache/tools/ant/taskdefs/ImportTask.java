@@ -248,6 +248,10 @@ public class ImportTask extends Task {
         // *not* the current directory (same as entity includes).
 
         if (file != null) {
+            if (isExistingAbsoluteFile(file)) {
+                return new FileResource(new File(file));
+            }
+
             File buildFile =
                 new File(getLocation().getFileName()).getAbsoluteFile();
             if (buildFile.exists()) {
@@ -269,6 +273,11 @@ public class ImportTask extends Task {
                                      + getLocation().getFileName());
         }
         return null;
+    }
+
+    private boolean isExistingAbsoluteFile(String name) {
+        File f = new File(name);
+        return f.isAbsolute() && f.exists();
     }
 
     /**
