@@ -343,7 +343,7 @@ public final class IntrospectionHelper {
      *
      * @return a helper for the specified class
      */
-    public static IntrospectionHelper getHelper(Project p, Class<?> c) {
+    public synchronized static IntrospectionHelper getHelper(Project p, Class<?> c) {
         IntrospectionHelper ih = HELPERS.get(c.getName());
         // If a helper cannot be found, or if the helper is for another
         // classloader, create a new IH
@@ -1499,7 +1499,7 @@ public final class IntrospectionHelper {
     /**
      * Clears the static cache of on build finished.
      */
-    public static void clearCache() {
+    public synchronized static void clearCache() {
         HELPERS.clear();
     }
 
