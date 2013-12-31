@@ -298,7 +298,7 @@ public class URLResource extends Resource implements URLProvider {
         if (isReference()) {
             return getCheckedRef().equals(another);
         }
-        if (!(another.getClass().equals(getClass()))) {
+        if (another == null || !(another.getClass().equals(getClass()))) {
             return false;
         }
         URLResource otheru = (URLResource) another;

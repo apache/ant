@@ -299,7 +299,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
         if (isReference()) {
             return getCheckedRef().equals(another);
         }
-        if (!(another.getClass().equals(getClass()))) {
+        if (another == null || !(another.getClass().equals(getClass()))) {
             return false;
         }
         FileResource otherfr = (FileResource) another;
