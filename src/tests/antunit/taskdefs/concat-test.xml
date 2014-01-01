@@ -76,6 +76,48 @@
     </au:assertTrue>
   </target>
 
+  <target name="-fixlastline-setup">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/1">1</echo>
+    <echo file="${input}/2">2</echo>
+  </target>
+
+  <target name="testFixLastLineActuallyFixes" depends="-fixlastline-setup">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}2${line.separator}</string>
+        <concat fixlastline="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFixLastLineActuallyFixesWithFilterChain"
+          depends="-fixlastline-setup"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54672">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}2${line.separator}</string>
+        <concat fixlastline="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+          <filterchain>
+	    <tokenfilter>
+	      <ignoreblank/>
+	    </tokenfilter>
+	  </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
   <target name="testIgnoreEmptyFalseFileIsCreated">
     <mkdir dir="${input}" />
     <mkdir dir="${output}" />

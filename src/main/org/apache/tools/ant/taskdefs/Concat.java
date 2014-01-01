@@ -255,12 +255,12 @@ public class Concat extends Task implements ResourceCollection {
          */
         public int read() throws IOException {
             if (needAddSeparator) {
-                int ret = eolString.charAt(lastPos++);
                 if (lastPos >= eolString.length()) {
                     lastPos = 0;
                     needAddSeparator = false;
+                } else {
+                    return eolString.charAt(lastPos++);
                 }
-                return ret;
             }
             while (getReader() != null) {
                 int ch = getReader().read();
@@ -268,7 +268,8 @@ public class Concat extends Task implements ResourceCollection {
                     nextReader();
                     if (isFixLastLine() && isMissingEndOfLine()) {
                         needAddSeparator = true;
-                        lastPos = 0;
+                        lastPos = 1;
+                        return eolString.charAt(0);
                     }
                 } else {
                     addLastChar((char) ch);

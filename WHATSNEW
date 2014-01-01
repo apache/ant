@@ -32,6 +32,10 @@ Fixed bugs:
    directory of the given jarfile.
    Bugzilla Report 55049
 
+ * <concat>'s fixlastline="true" didn't work when using certain filter
+   readers.
+   Bugzilla Report 54672
+
 Other changes:
 --------------
 
