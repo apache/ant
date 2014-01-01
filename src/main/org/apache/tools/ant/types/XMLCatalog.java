@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Stack;
 import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
@@ -763,7 +764,12 @@ public class XMLCatalog extends DataType
 
         if (url != null) {
             try {
-                InputStream is = url.openStream();
+                InputStream is = null;
+                URLConnection conn = url.openConnection();
+                if (conn != null) {
+                    conn.setDefaultUseCaches(false);
+                    is = conn.getInputStream();
+                }
                 if (is != null) {
                     source = new InputSource(is);
                     String sysid = url.toExternalForm();

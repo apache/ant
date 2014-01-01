@@ -36,6 +36,10 @@ Fixed bugs:
    readers.
    Bugzilla Report 54672
 
+ * several places where resources are read from jars will now
+   explicitly disable caching to avoid problems with reloading jars.
+   Bugzilla Report 54473
+
 Other changes:
 --------------
 

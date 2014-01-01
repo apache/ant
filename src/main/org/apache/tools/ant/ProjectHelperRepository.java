@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -87,8 +88,10 @@ public class ProjectHelperRepository {
                     classLoader.getResources(ProjectHelper.SERVICE_ID);
                 while (resources.hasMoreElements()) {
                     URL resource = resources.nextElement();
+                    URLConnection conn = resource.openConnection();
+                    conn.setDefaultUseCaches(false);
                     projectHelper =
-                        getProjectHelperByService(resource.openStream());
+                        getProjectHelperByService(conn.getInputStream());
                     registerProjectHelper(projectHelper);
                 }
             }

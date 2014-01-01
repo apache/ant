@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -257,7 +258,9 @@ public class ProjectHelper2 extends ProjectHelper {
                     inputStream =
                         zf.getInputStream(zf.getEntry(uri.substring(pling + 1)));
                 } else {
-                    inputStream = url.openStream();
+                    URLConnection conn = url.openConnection();
+                    conn.setDefaultUseCaches(false);
+                    inputStream = conn.getInputStream();
                 }
             }
 

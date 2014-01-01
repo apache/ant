@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +64,9 @@ public class Antlib extends Task implements TaskContainer {
                                       String uri) {
         // Check if we can contact the URL
         try {
-            antlibUrl.openConnection().connect();
+            URLConnection conn = antlibUrl.openConnection();
+            conn.setDefaultUseCaches(false);
+            conn.connect();
         } catch (IOException ex) {
             throw new BuildException(
                 "Unable to find " + antlibUrl, ex);
