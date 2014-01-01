@@ -87,10 +87,19 @@ public class ResolvePropertyMap implements GetProperty {
             }
 
             seen.add(name);
+
+            String recursiveCallKey = name;
+            if (prefix != null && !expandingLHS && !prefixValues) {
+                // only look up unprefixed properties inside the map
+                // if prefixValues is true or we are expanding the key
+                // itself
+                recursiveCallKey = prefix + name;
+            }
+
             expandingLHS = false;
             // will recurse into this method for each property
             // reference found in the map's value
-            return parseProperties.parseProperties((String) map.get(name));
+            return parseProperties.parseProperties((String) map.get(recursiveCallKey));
         } finally {
             seen.remove(name);
         }

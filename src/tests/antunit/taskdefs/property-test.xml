@@ -135,4 +135,19 @@ y=$${x}
     <property file="${input}/x.properties" prefix="foo"/>
     <au:assertPropertyEquals name="foo.y" value="x"/>
   </target>
+
+  <target name="testInternalExpansionWithPrefixOnlyExpandsWhenPrefixValuesIsTrue"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54769">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/x.properties"><![CDATA[
+a=A
+b=$${a}
+]]></echo>
+    <property file="${input}/x.properties" prefix="foo" prefixValues="true"/>
+    <au:assertPropertyEquals name="foo.b" value="A"/>
+    <property file="${input}/x.properties" prefix="bar" prefixValues="false"/>
+    <au:assertPropertyEquals name="bar.b" value="$${a}"/>
+    <property file="${input}/x.properties" prefix="baz"/>
+    <au:assertPropertyEquals name="baz.b" value="$${a}"/>
+  </target>
 </project>

@@ -4,6 +4,13 @@ Changes from Ant 1.9.3 TO current
 Changes that could break older environments:
 -------------------------------------------
 
+ * the prefixValues attribute of <property> didn't work as expected
+   when set to false (the default).
+   It is quite likely existing build files relied on the wrong
+   behavior and expect Ant to resolve the value side against the
+   properties defined in the property file itself - these build files
+   must now explicitly set the prefixValues attribute to true.
+   Bugzilla Report 54769
 
 Fixed bugs:
 -----------
