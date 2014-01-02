@@ -168,13 +168,13 @@ public class AntClassLoaderTest extends BuildFileTest {
             System.setErr(err);
             loader.getResource("foo.txt");
             String log = getLog();
-            int startMessage = log.indexOf("Unable to obtain resource from ");
+            int startMessage = log.indexOf("CLASSPATH element ");
             assertTrue(startMessage >= 0);
-            assertTrue(log.indexOf("foo.jar", startMessage) > 0);
+            assertTrue(log.indexOf("foo.jar is not a JAR", startMessage) > 0);
             log = errBuffer.toString();
-            startMessage = log.indexOf("Unable to obtain resource from ");
+            startMessage = log.indexOf("CLASSPATH element ");
             assertTrue(startMessage >= 0);
-            assertTrue(log.indexOf("foo.jar", startMessage) > 0);
+            assertTrue(log.indexOf("foo.jar is not a JAR", startMessage) > 0);
         } finally {
             System.setErr(sysErr);
         }

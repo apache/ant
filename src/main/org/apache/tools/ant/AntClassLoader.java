@@ -41,6 +41,7 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.zip.ZipException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -1003,7 +1004,19 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
             } else {
                 if (jarFile == null) {
                     if (file.exists()) {
-                        jarFile = new JarFile(file);
+                        try {
+                            jarFile = new JarFile(file);
+                        } catch (ZipException notAJar) {
+                            // raised if a file that is not a ZIP
+                            // happens to be part of the classpath -
+                            // this obviously cannot contain the
+                            // resource
+                            String msg = "CLASSPATH element " + file
+                                + " is not a JAR.";
+                            log(msg, Project.MSG_WARN);
+                            System.err.println(msg);
+                            return null;
+                        }
                         jarFiles.put(file, jarFile);
                     } else {
                         return null;

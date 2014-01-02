@@ -345,4 +345,24 @@ public class BTest extends TestCase {
       <test name="T2" methods="ok" />
     </junit>
   </target>
+
+  <target name="testClasspathBuildingSurvivesNonZips" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53964">
+    <empty-test classname="ATest" package="org.apache.ant.test" />
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit" />
+    </javac>
+    <junit fork="true" printsummary="true" haltonerror="true">
+      <classpath>
+        <pathelement location="${output}" />
+        <pathelement location="${ant.file}" />
+        <path refid="junit" />
+      </classpath>
+      <batchtest>
+        <fileset dir="${output}">
+          <include name="**/*Test.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
 </project>
