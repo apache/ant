@@ -637,7 +637,7 @@ public class FileUtils {
         int len = filename.length();
         return (c == sep && (len == 1 || filename.charAt(1) != sep))
                 || (Character.isLetter(c) && len > 1
-                && filename.indexOf(':') == 1
+                && filename.charAt(1) == ':'
                 && (len == 2 || filename.charAt(2) != sep));
     }
 

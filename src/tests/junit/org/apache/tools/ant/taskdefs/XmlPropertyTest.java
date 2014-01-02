@@ -204,7 +204,7 @@ public class XmlPropertyTest extends BuildFileTest {
 
             String xmlValue = (String)xmlproperties.get(currentKey);
 
-            if ( propertyValue.indexOf("ID.") == 0 ) {
+            if (propertyValue.startsWith("ID.")) {
                 // The property is an id's thing -- either a property
                 // or a path.  We need to make sure
                 // that the object was created with the given id.
@@ -231,7 +231,7 @@ public class XmlPropertyTest extends BuildFileTest {
 
             } else {
 
-                if (propertyValue.indexOf("FILE.") == 0) {
+                if (propertyValue.startsWith("FILE.")) {
                     // The property is the name of a file.  We are testing
                     // a location attribute, so we need to resolve the given
                     // file name in the provided folder.

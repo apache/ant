@@ -17,6 +17,10 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -102,4 +106,18 @@ public class IdentityStack<E> extends Stack<E> {
         return -1;
     }
 
+    public synchronized boolean removeAll(Collection<?> c) {
+        if (!(c instanceof Set)) {
+            c = new HashSet(c);
+        }
+        return super.removeAll(c);
+    }
+
+    public synchronized boolean containsAll(Collection<?> c) {
+        IdentityHashMap map = new IdentityHashMap();
+        for (Object e : this) {
+            map.put(e, Boolean.TRUE);
+        }
+        return map.keySet().containsAll(c);
+    }
 }

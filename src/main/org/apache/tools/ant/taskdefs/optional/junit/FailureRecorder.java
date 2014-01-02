@@ -156,7 +156,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             Object listener = allListeners.get(i);
             if (listener instanceof FailureRecorder) {
                 alreadyRegistered = true;
-                continue;
+                break;
             }
         }
         // register if needed

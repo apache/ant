@@ -410,7 +410,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         // ${tests.and.ant.share.classloader} will be set
         // we are trying to catch this here.
         if (shareclassloader == null
-                || (shareclassloader != null && shareclassloader.indexOf("${") == 0)) {
+                || (shareclassloader != null && shareclassloader.startsWith("${"))) {
             System.out.println("cannot execute testIsExcludedDirectoryScanned when tests are forked, " +
                     "package private method called");
             return;

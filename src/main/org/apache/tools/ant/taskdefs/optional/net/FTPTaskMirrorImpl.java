@@ -628,6 +628,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                                 && pcounter != icounter
                                 && target.equals(array[pcounter].getName())) {
                                 candidateFound = false;
+                                break;
                             }
                         }
                         if (candidateFound) {
@@ -810,7 +811,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
              */
             public String getFastRelativePath() {
                 String absPath = getAbsolutePath();
-                if (absPath.indexOf(rootPath + task.getSeparator()) == 0) {
+                if (absPath.startsWith(rootPath + task.getSeparator())) {
                     return absPath.substring(rootPath.length()
                                              + task.getSeparator().length());
                 }
@@ -1757,13 +1758,13 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         throws IOException, BuildException {
         String workingDirectory = ftp.printWorkingDirectory();
         if (task.isVerbose()) {
-            if (dir.indexOf("/") == 0 || workingDirectory == null) {
+            if (dir.startsWith("/") || workingDirectory == null) {
                 task.log("Creating directory: " + dir + " in /");
             } else {
                 task.log("Creating directory: " + dir + " in " + workingDirectory);
             }
         }
-        if (dir.indexOf("/") == 0) {
+        if (dir.startsWith("/")) {
             ftp.changeWorkingDirectory("/");
         }
         String subdir = "";
