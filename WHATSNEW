@@ -48,9 +48,9 @@ Fixed bugs:
    explicitly disable caching to avoid problems with reloading jars.
    Bugzilla Report 54473
 
- * AntClassloader will now ignore files that are part of the classpath but
-   not valid zip files when scanning for resources.  It used to throw
-   an exception.
+ * AntClassloader will now ignore files that are part of the classpath
+   but not zip files when scanning for resources.  It used to throw an
+   exception.
    Bugzilla Report 53964
 
 Other changes:
