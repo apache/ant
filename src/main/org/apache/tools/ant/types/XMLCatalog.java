@@ -767,7 +767,7 @@ public class XMLCatalog extends DataType
                 InputStream is = null;
                 URLConnection conn = url.openConnection();
                 if (conn != null) {
-                    conn.setDefaultUseCaches(false);
+                    conn.setUseCaches(false);
                     is = conn.getInputStream();
                 }
                 if (is != null) {

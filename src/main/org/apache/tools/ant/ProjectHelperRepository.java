@@ -89,7 +89,7 @@ public class ProjectHelperRepository {
                 while (resources.hasMoreElements()) {
                     URL resource = resources.nextElement();
                     URLConnection conn = resource.openConnection();
-                    conn.setDefaultUseCaches(false);
+                    conn.setUseCaches(false);
                     projectHelper =
                         getProjectHelperByService(conn.getInputStream());
                     registerProjectHelper(projectHelper);

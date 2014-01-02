@@ -76,7 +76,7 @@ public class ArgumentProcessorRegistry {
                 while (resources.hasMoreElements()) {
                     URL resource = resources.nextElement();
                     URLConnection conn = resource.openConnection();
-                    conn.setDefaultUseCaches(false);
+                    conn.setUseCaches(false);
                     ArgumentProcessor processor = getProcessorByService(conn.getInputStream());
                     registerArgumentProcessor(processor);
                 }

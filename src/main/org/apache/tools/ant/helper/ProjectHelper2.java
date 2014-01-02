@@ -259,7 +259,7 @@ public class ProjectHelper2 extends ProjectHelper {
                         zf.getInputStream(zf.getEntry(uri.substring(pling + 1)));
                 } else {
                     URLConnection conn = url.openConnection();
-                    conn.setDefaultUseCaches(false);
+                    conn.setUseCaches(false);
                     inputStream = conn.getInputStream();
                 }
             }

@@ -65,7 +65,7 @@ public class Antlib extends Task implements TaskContainer {
         // Check if we can contact the URL
         try {
             URLConnection conn = antlibUrl.openConnection();
-            conn.setDefaultUseCaches(false);
+            conn.setUseCaches(false);
             conn.connect();
         } catch (IOException ex) {
             throw new BuildException(
