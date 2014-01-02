@@ -42,8 +42,10 @@ is used, the zipfileset is populated with filesystem files found under <span
 </ul>
 <p><code>&lt;zipfileset&gt;</code> supports all attributes of <code>&lt;<a
  href="fileset.html">fileset</a>&gt;</code>
-in addition to those listed below.<br>
-</p>
+ in addition to those listed below.  Note that zip archives in general
+ don't contain entries with leading slashes so you shouldn't use
+ include/exclude patterns that start with slashes either.</p>
+
 <p>Since Ant 1.6, a zipfileset can be defined with the <span
  style="font-style: italic;">id </span>attribute and referred to with
 the <span style="font-style: italic;">refid</span> attribute.<br>

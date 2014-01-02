@@ -12,6 +12,14 @@ Changes that could break older environments:
    must now explicitly set the prefixValues attribute to true.
    Bugzilla Report 54769
 
+ * when matching an entry of a zip/tarfileset against a pattern a
+   leading slash will be stripped from the entry name.  Most archive
+   don't contain paths with leading slashes anyway.
+   This may cause include/exclude patterns that start with a / to stop
+   matching anything.  Such patterns only used to work by accident and
+   only on platforms with multiple file syste roots.
+   Bugzilla Report 53949
+
 Fixed bugs:
 -----------
 

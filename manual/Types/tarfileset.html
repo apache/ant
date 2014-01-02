@@ -44,7 +44,9 @@ is used, the tarfileset is populated with filesystem files found under <span
 </ul>
 <p><code>&lt;tarfileset&gt;</code> supports all attributes of <code>&lt;<a
  href="fileset.html">fileset</a>&gt;</code>
-in addition to those listed below.<br>
+ in addition to those listed below.  Note that tar archives in general
+ don't contain entries with leading slashes so you shouldn't use
+ include/exclude patterns that start with slashes either.
 </p>
 <p>A tarfileset can be defined with the <span style="font-style:
 italic;">id </span>attribute and referred to with the <span
