@@ -106,14 +106,26 @@ public final class VectorSet<E> extends Vector<E> {
      * if any of them are already contained in the collection.
      */
     public synchronized boolean addAll(int index, Collection<? extends E> c) {
-        boolean changed = false;
+        LinkedList toAdd = new LinkedList();
         for (E e : c) {
-            if (!set.contains(e)) {
-                doAdd(index++, e);
-                changed = true;
+            if (set.add(e)) {
+                toAdd.add(e);
             }
         }
-        return changed;
+        if (toAdd.isEmpty()) {
+            return false;
+        }
+        int count = size();
+        ensureCapacity(count + toAdd.size());
+        if (index != count) {
+            System.arraycopy(elementData, index, elementData, index + toAdd.size(),
+                             count - index);
+        }
+        for (Object o : toAdd) {
+            elementData[index++] = o;
+        }
+        elementCount += toAdd.size();
+        return true;
     }
 
     public synchronized void clear() {

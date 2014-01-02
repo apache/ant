@@ -113,6 +113,13 @@ public class IdentityStack<E> extends Stack<E> {
         return super.removeAll(c);
     }
 
+    public synchronized boolean retainAll(Collection c) {
+        if (!(c instanceof Set)) {
+            c = new HashSet(c);
+        }
+        return super.retainAll(c);
+    }
+
     public synchronized boolean containsAll(Collection<?> c) {
         IdentityHashMap map = new IdentityHashMap();
         for (Object e : this) {
