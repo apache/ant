@@ -2447,7 +2447,7 @@ public class Javadoc extends Task {
         if (!postProcessGeneratedJavadocs) {
             return;
         }
-        if (!destDir.isDirectory()) {
+        if (destDir != null && !destDir.isDirectory()) {
             log("No javadoc created, no need to post-process anything",
                 Project.MSG_VERBOSE);
             return;

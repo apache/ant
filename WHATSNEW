@@ -53,6 +53,9 @@ Fixed bugs:
    exception.
    Bugzilla Report 53964
 
+ * <javadoc> caused a NullPointerException when no destdir was set.
+   Bugzilla Report 55949
+
 Other changes:
 --------------
 
