@@ -226,4 +226,27 @@ Main-Class: MyClass
                                resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
 
+  <target name="testMergeWithoutMainWithoutExplicitManifest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54171">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/input.jar">
+      <manifest>
+        <attribute name="Foo" value="Main Section"/>
+      </manifest>
+      <fileset dir="."/>
+    </jar>
+    <jar destfile="${input}/test.jar"
+         filesetmanifest="mergewithoutmain">
+      <zipgroupfileset dir="${input}">
+        <include name="input.jar"/>
+      </zipgroupfileset>
+    </jar>
+    <unjar src="${input}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceDoesntContain
+        value="Foo: Main Section"
+        resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
 </project>

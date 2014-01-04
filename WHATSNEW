@@ -56,6 +56,11 @@ Fixed bugs:
  * <javadoc> caused a NullPointerException when no destdir was set.
    Bugzilla Report 55949
 
+ * <jar filesetmanifest="mergewithoutmain"> would still include the
+   Main section of the fileset manifests if there was no nested
+   manifest or manifest attribute.
+   Bugzilla Report 54171
+
 Other changes:
 --------------
 
