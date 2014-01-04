@@ -446,4 +446,26 @@ public class NullByteStreamResource extends Resource {
     <au:assertResourceDoesntContain resource="${input}/somefile"
                                     value="default contents"/>
   </target>
+
+  <target name="testCopyDoesntDeleteReadonlyTargetWhenCopyFails"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53095">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/somefile"/>
+    <touch file="${output}/somefile"/>
+    <exec executable="chmod" osfamily="unix">
+      <arg value="-w"/>
+      <arg file="${output}/somefile"/>
+    </exec>
+    <exec executable="attrib" osfamily="dos">
+      <arg value="+r"/>
+      <arg file="${output}/somefile"/>
+    </exec>
+    <au:expectfailure>
+      <copy todir="${output}" file="${input}/somefile"
+            overwrite="true"/>
+    </au:expectfailure>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertFileExists file="${output}/somefile"/>
+  </target>
 </project>

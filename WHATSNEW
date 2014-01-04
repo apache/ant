@@ -64,6 +64,10 @@ Fixed bugs:
  * reading of compiler args has become more defensive
    Bugzilla Report 53754
 
+ * <copy> without force="true" would not only fail to overwrite a
+   read-only file as expected but also remove the existing file.
+   Bugzilla Report 53095
+
 Other changes:
 --------------
 

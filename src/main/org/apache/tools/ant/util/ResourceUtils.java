@@ -406,8 +406,7 @@ public class ResourceUtils {
         }
         if (destFile != null && destFile.isFile() && !destFile.canWrite()) {
             if (!force) {
-                throw new IOException("can't write to read-only destination "
-                                      + "file " + destFile);
+                throw new ReadOnlyTargetFileException(destFile);
             } else if (!FILE_UTILS.tryHardToDelete(destFile)) {
                 throw new IOException("failed to delete read-only "
                                       + "destination file " + destFile);
@@ -784,5 +783,14 @@ public class ResourceUtils {
 
     public static interface ResourceSelectorProvider {
         ResourceSelector getTargetSelectorForSource(Resource source);
+    }
+
+    /**
+     * @since Ant 1.9.4
+     */
+    public static class ReadOnlyTargetFileException extends IOException {
+        public ReadOnlyTargetFileException(File destFile) {
+            super("can't write to read-only destination file " + destFile);
+        }
     }
 }

@@ -898,7 +898,9 @@ public class Copy extends Task {
                         String msg = "Failed to copy " + fromFile + " to " + toFile
                             + " due to " + getDueTo(ioe);
                         File targetFile = new File(toFile);
-                        if (targetFile.exists() && !targetFile.delete()) {
+                        if (!(ioe instanceof
+                              ResourceUtils.ReadOnlyTargetFileException)
+                            && targetFile.exists() && !targetFile.delete()) {
                             msg += " and I couldn't delete the corrupt " + toFile;
                         }
                         if (failonerror) {
@@ -980,7 +982,9 @@ public class Copy extends Task {
                             + " to " + toFile
                             + " due to " + getDueTo(ioe);
                         File targetFile = new File(toFile);
-                        if (targetFile.exists() && !targetFile.delete()) {
+                        if (!(ioe instanceof
+                              ResourceUtils.ReadOnlyTargetFileException)
+                            && targetFile.exists() && !targetFile.delete()) {
                             msg += " and I couldn't delete the corrupt " + toFile;
                         }
                         if (failonerror) {
