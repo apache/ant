@@ -61,6 +61,9 @@ Fixed bugs:
    manifest or manifest attribute.
    Bugzilla Report 54171
 
+ * reading of compiler args has become more defensive
+   Bugzilla Report 53754
+
 Other changes:
 --------------
 

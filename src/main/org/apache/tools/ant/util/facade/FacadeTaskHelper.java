@@ -131,8 +131,10 @@ public class FacadeTaskHelper {
             ImplementationSpecificArgument arg =
                 ((ImplementationSpecificArgument) e.next());
             String[] curr = arg.getParts(getImplementation());
-            for (int i = 0; i < curr.length; i++) {
-                tmp.add(curr[i]);
+            if (curr != null) {
+                for (int i = 0; i < curr.length; i++) {
+                    tmp.add(curr[i]);
+                }
             }
         }
         String[] res = new String[tmp.size()];
