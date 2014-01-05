@@ -31,26 +31,54 @@
     <symlink action="delete" link="${link}"/>
   </target>
 
-  <target name="testNotFollowedLink" if="unix">
+  <target name="setUp" if="unix">
     <mkdir dir="${input}/A/B"/>
     <mkdir dir="${input}/C"/>
     <property name="link" location="${input}/A/B/C"/>
     <symlink link="${link}" resource="${input}/C"/>
+  </target>
+
+  <target name="testNotFollowedLink" if="unix" depends="setUp">
     <delete>
       <fileset dir="${input}" followSymlinks="false"/>
     </delete>
     <au:assertFileExists file="${input}/A/B/C"/>
   </target>
 
-  <target name="testRemoveNotFollowedLink" if="unix">
-    <mkdir dir="${input}/A/B"/>
-    <mkdir dir="${input}/C"/>
-    <property name="link" location="${input}/A/B/C"/>
-    <symlink link="${link}" resource="${input}/C"/>
+  <target name="testRemoveNotFollowedLink" if="unix" depends="setUp">
     <delete removeNotFollowedSymlinks="true">
       <fileset dir="${input}/A" followSymlinks="false"/>
     </delete>
     <au:assertFileDoesntExist file="${input}/A/B/C"/>
     <au:assertFileExists file="${input}/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkHonorsIncludesOnFiles"
+          depends="setUp" if="unix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53959">
+    <delete dir="${input}/C"/>
+    <touch file="${input}/C"/>
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" includes="**/D"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkDeletesNotIncludedDirs"
+          depends="setUp" if="unix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53959">
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" includes="**/D"/>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/A/B/C"/>
+    <au:assertFileExists file="${input}/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkHonorsExcludes" if="unix"
+          depends="setUp">
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" excludes="**/C/**"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
   </target>
 </project>

@@ -68,6 +68,13 @@ Fixed bugs:
    read-only file as expected but also remove the existing file.
    Bugzilla Report 53095
 
+ * <delete removeNotFollowedSymlinks="true"> would remove symbolic
+   links to not-included files.  It will still delete symlinks to
+   directories that would have been followed even if they are not
+   explicitly included.  exclude-Patterns can still be used to
+   preserve symbolic links.
+   Bugzilla Report 53959
+
 Other changes:
 --------------
 

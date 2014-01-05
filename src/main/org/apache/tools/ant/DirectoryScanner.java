@@ -1012,9 +1012,7 @@ public class DirectoryScanner
 
                 if (myfile != null && myfile.exists()) {
                     if (!followSymlinks && currentPath.isSymlink(basedir)) {
-                        if (!isExcluded(currentPath)) {
-                            notFollowedSymlinks.add(myfile.getAbsolutePath());
-                        }
+                        accountForNotFollowedSymlink(currentPath, myfile);
                         continue;
                     }
                     if (myfile.isDirectory()) {
@@ -1226,9 +1224,7 @@ public class DirectoryScanner
                         File file = new File(dir, newfiles[i]);
                         (file.isDirectory()
                             ? dirsExcluded : filesExcluded).addElement(name);
-                        if (!isExcluded(name)) {
-                            notFollowedSymlinks.add(file.getAbsolutePath());
-                        }
+                        accountForNotFollowedSymlink(name, file);
                     } else {
                         noLinks.add(newfiles[i]);
                     }
@@ -1326,6 +1322,19 @@ public class DirectoryScanner
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
             scandir(file, name, fast, children, directoryNamesFollowed);
+        }
+    }
+
+    private void accountForNotFollowedSymlink(String name, File file) {
+        accountForNotFollowedSymlink(new TokenizedPath(name), file);
+    }
+
+    private void accountForNotFollowedSymlink(TokenizedPath name, File file) {
+        if (!isExcluded(name) &&
+            (isIncluded(name)
+             || (file.isDirectory() && couldHoldIncluded(name)
+                 && !contentsExcluded(name)))) {
+            notFollowedSymlinks.add(file.getAbsolutePath());
         }
     }
 
