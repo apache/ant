@@ -81,6 +81,10 @@ Other changes:
  * <sshexec> can optionally pass System.in to the remote process
    Bugzilla Report 55393
 
+ * <sshexec> now supports capturing error output of the executed
+   process and setting a property from the return code.
+   Bugzilla Report 48478
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

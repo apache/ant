@@ -122,8 +122,20 @@ and won't work with versions of jsch earlier than
     <td align="center" valign="top">No, defaults to false</td>
   </tr>
   <tr>
+    <td valign="top">suppresssystemerr</td>
+    <td valign="top">Whether to suppress system err.
+      <em>since Ant 1.9.4</em></td>
+    <td align="center" valign="top">No, defaults to false</td>
+  </tr>
+  <tr>
     <td valign="top">output</td>
     <td valign="top">Name of a file to which to write the output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">errorOutput</td>
+    <td valign="top">The file to which the standard error of the
+    command should be redirected.  <em>since Ant 1.9.4</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -132,11 +144,31 @@ and won't work with versions of jsch earlier than
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">errAppend</td>
+    <td valign="top">Whether errorOutput file should be appended to or
+    overwritten. Defaults to false, meaning overwrite any existing
+    file.  <em>since Ant 1.9.4</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">outputproperty</td>
     <td valign="top">The name of a property in which the output of the 
       command should be stored.  If you use the commandResource
       attribute, each command's output will be prefixed by the
       command itself.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">errorproperty</td>
+    <td valign="top">The name of a property in which the standard error of the
+      command should be stored.  <em>since Ant 1.9.4</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resultproperty</td>
+    <td valign="top">the name of a property in which the return code
+      of the command should be stored. Only of interest if
+      failonerror=false.  <em>since Ant 1.9.4</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
