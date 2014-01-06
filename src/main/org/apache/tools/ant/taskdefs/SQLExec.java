@@ -163,6 +163,11 @@ public class SQLExec extends JDBCTask {
     private Resource output = null;
 
     /**
+     * Output encoding.
+     */
+    private String outputEncoding = null;
+
+    /**
      * Action to perform if an error is found
      */
     private String onError = "abort";
@@ -429,6 +434,17 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * The encoding to use when writing the result to a resource.
+     * <p>Default's to the platform's default encoding</p>
+     * @param outputEncoding the name of the encoding or null for the
+     * platform's default encoding
+     * @since Ant 1.9.4
+     */
+    public void setOutputEncoding(String outputEncoding) {
+        this.outputEncoding = outputEncoding;
+    }
+
+    /**
      * whether output should be appended to or overwrite
      * an existing file.  Defaults to false.
      *
@@ -641,7 +657,12 @@ public class SQLExec extends JDBCTask {
                                 }
                             }
                         }
+                        if (outputEncoding != null) {
+                            out = new PrintStream(new BufferedOutputStream(os),
+                                                  false, outputEncoding);
+                        } else {
                         out = new PrintStream(new BufferedOutputStream(os));
+                        }
                     }
 
                     // Process all transactions

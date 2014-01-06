@@ -88,6 +88,9 @@ Other changes:
  * <javadoc> now has an option to fail if javadoc issues warnings.
    Bugzilla Report 55015
 
+ * <sql> has a new outputencoding attribute.
+   Bugzilla Report 39541
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
