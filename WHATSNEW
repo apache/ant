@@ -95,6 +95,9 @@ Other changes:
    OutOfMemoryErrors less likely.
    Bugzilla Report 45536
 
+ * changes to DOMElementWriter to make OutOfMemoryErrors less likely.
+   Bugzilla Report 54147
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
