@@ -36,6 +36,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.apache.tools.ant.util.KeepAliveInputStream;
 import org.apache.tools.ant.util.TeeOutputStream;
 
 import com.jcraft.jsch.ChannelExec;
@@ -67,6 +68,7 @@ public class SSHExec extends SSHBase {
     private File inputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
     private boolean usePty = false;
+    private boolean useSystemIn = false;
 
     private Resource commandResource = null;
 
@@ -187,6 +189,16 @@ public class SSHExec extends SSHBase {
     }
 
     /**
+     * If set, input will be taken from System.in
+     * 
+     * @param useSystemIn True to use System.in as InputStream, false otherwise
+     * @since Apache Ant 1.9.4
+     */
+    public void setUseSystemIn(boolean useSystemIn) {
+        this.useSystemIn = useSystemIn;
+    }        
+
+    /**
      * If suppressSystemOut is <code>true</code>, output will not be sent to System.out<br/>
      * If suppressSystemOut is <code>false</code>, normal behavior
      * @since Ant 1.9.0
@@ -300,6 +312,10 @@ public class SSHExec extends SSHBase {
         }
         if (inputString != null) {
             istream = new ByteArrayInputStream(inputString.getBytes());
+        }
+
+        if (useSystemIn) {
+            istream = KeepAliveInputStream.wrapSystemIn();
         }
 
         try {

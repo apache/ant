@@ -78,6 +78,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * <sshexec> can optionally pass System.in to the remote process
+   Bugzilla Report 55393
 
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
