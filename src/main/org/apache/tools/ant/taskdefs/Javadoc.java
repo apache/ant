@@ -434,6 +434,11 @@ public class Javadoc extends Task {
      * Javadoc error.
      */
     private boolean failOnError = false;
+    /**
+     * Flag which indicates if the task should fail if there is a
+     * Javadoc warning.
+     */
+    private boolean failOnWarning = false;
     private Path sourcePath = null;
     private File destDir = null;
     private Vector<SourceFile> sourceFiles = new Vector<SourceFile>();
@@ -1554,6 +1559,18 @@ public class Javadoc extends Task {
     }
 
     /**
+     * Should the build process fail if Javadoc warns (as indicated by
+     * the word "warning" on stdout)?
+     *
+     * <p>Default is false.</p>
+     * @param b a <code>boolean</code> value
+     * @since Ant 1.9.4
+     */
+    public void setFailonwarning(boolean b) {
+        failOnWarning = b;
+    }
+
+    /**
      * Enables the -source switch, will be ignored if Javadoc is not
      * the 1.4 version.
      * @param source a <code>String</code> value
@@ -1785,6 +1802,10 @@ public class Javadoc extends Task {
             int ret = exe.execute();
             if (ret != 0 && failOnError) {
                 throw new BuildException("Javadoc returned " + ret,
+                                         getLocation());
+            }
+            if (out.sawWarnings() && failOnWarning) {
+                throw new BuildException("Javadoc issued warnings.",
                                          getLocation());
             }
             postProcessGeneratedJavadocs();
@@ -2548,7 +2569,11 @@ public class Javadoc extends Task {
         // unless they appear after what could be an informational message.
         //
         private String queuedLine = null;
+        private boolean sawWarnings = false;
         protected void processLine(String line, int messageLevel) {
+            if (line.contains("warning")) {
+                sawWarnings = true;
+            }
             if (messageLevel == Project.MSG_INFO
                 && line.startsWith("Generating ")) {
                 if (queuedLine != null) {
@@ -2574,6 +2599,10 @@ public class Javadoc extends Task {
                 super.processLine(queuedLine, Project.MSG_VERBOSE);
                 queuedLine = null;
             }
+        }
+        
+        public boolean sawWarnings() {
+            return sawWarnings;
         }
     }
 

@@ -85,6 +85,9 @@ Other changes:
    process and setting a property from the return code.
    Bugzilla Report 48478
 
+ * <javadoc> now has an option to fail if javadoc issues warnings.
+   Bugzilla Report 55015
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
