@@ -355,7 +355,7 @@ public class SSHExec extends SSHBase {
         throws BuildException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ByteArrayOutputStream errout = new ByteArrayOutputStream();
-        OutputStream teeErr = suppressSystemErr ? errout : new TeeOutputStream(out, KeepAliveOutputStream.wrapSystemErr());
+        OutputStream teeErr = suppressSystemErr ? errout : new TeeOutputStream(errout, KeepAliveOutputStream.wrapSystemErr());
         OutputStream tee = suppressSystemOut ? out : new TeeOutputStream(out, KeepAliveOutputStream.wrapSystemOut());
 
         InputStream istream = null ;
