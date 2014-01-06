@@ -118,36 +118,36 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
         try {
-        StringBuffer sb = new StringBuffer("Tests run: ");
-        sb.append(suite.runCount());
-        sb.append(", Failures: ");
-        sb.append(suite.failureCount());
-        sb.append(", Errors: ");
-        sb.append(suite.errorCount());
-        sb.append(", Skipped: ");
-        sb.append(suite.skipCount());
-        sb.append(", Time elapsed: ");
-        sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
-        sb.append(" sec");
-        sb.append(StringUtils.LINE_SEP);
+            StringBuffer sb = new StringBuffer("Tests run: ");
+            sb.append(suite.runCount());
+            sb.append(", Failures: ");
+            sb.append(suite.failureCount());
+            sb.append(", Errors: ");
+            sb.append(suite.errorCount());
+            sb.append(", Skipped: ");
+            sb.append(suite.skipCount());
+            sb.append(", Time elapsed: ");
+            sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
+            sb.append(" sec");
+            sb.append(StringUtils.LINE_SEP);
             write(sb.toString());
 
-        // write the err and output streams to the log
-        if (systemOutput != null && systemOutput.length() > 0) {
+            // write the err and output streams to the log
+            if (systemOutput != null && systemOutput.length() > 0) {
                 write("------------- Standard Output ---------------");
                 write(StringUtils.LINE_SEP);
                 write(systemOutput);
                 write("------------- ---------------- ---------------");
                 write(StringUtils.LINE_SEP);
-        }
+            }
 
-        if (systemError != null && systemError.length() > 0) {
+            if (systemError != null && systemError.length() > 0) {
                 write("------------- Standard Error -----------------");
                 write(StringUtils.LINE_SEP);
                 write(systemError);
                 write("------------- ---------------- ---------------");
                 write(StringUtils.LINE_SEP);
-        }
+            }
 
             write(StringUtils.LINE_SEP);
             if (out != null) {
@@ -159,19 +159,19 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                 }
             }
         } finally {
-        if (out != null) {
-            try {
-                wri.close();
-            } catch (IOException ioex) {
+            if (out != null) {
+                try {
+                    wri.close();
+                } catch (IOException ioex) {
                     throw new BuildException("Unable to flush output", ioex);
-            } finally {
-                if (out != System.out && out != System.err) {
-                    FileUtils.close(out);
-                }
+                } finally {
+                    if (out != System.out && out != System.err) {
+                        FileUtils.close(out);
+                    }
                     wri = null;
                     out = null;
+                }
             }
-        }
         }
     }
 
