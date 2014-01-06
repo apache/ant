@@ -88,7 +88,7 @@ public class SSHExec extends SSHBase {
      * To suppress writing logs to System.err
      */
     private boolean suppressSystemErr = false;
-    
+
     /**
      * Constructor for SSHExecTask.
      */
@@ -141,7 +141,7 @@ public class SSHExec extends SSHBase {
      * @since Apache Ant 1.9.4
      */
     public void setErrorOutput(File output) {
-      errorFile = output;
+        errorFile = output;
     }
 
     /**
@@ -164,7 +164,7 @@ public class SSHExec extends SSHBase {
      * @since Ant 1.8.0
      */
     public void setInputProperty(String inputProperty) {
-    	this.inputProperty = inputProperty;
+        this.inputProperty = inputProperty;
     }
 
     /**
@@ -175,7 +175,7 @@ public class SSHExec extends SSHBase {
      * @since Ant 1.8.3
      */
     public void setInputString(String inputString) {
-    	this.inputString = inputString;
+        this.inputString = inputString;
     }
 
     /**
@@ -188,7 +188,7 @@ public class SSHExec extends SSHBase {
     public void setAppend(boolean append) {
         this.append = append;
     }
-    
+
     /**
      * Determines if the output is appended to the file given in
      * <code>setErrorOutput</code>. Default is false, that is, overwrite
@@ -196,9 +196,9 @@ public class SSHExec extends SSHBase {
      *
      * @param append  True to append to an existing file, false to overwrite.
      * @since Apache Ant 1.9.4
-     */    
+     */
     public void setErrAppend(boolean appenderr) {
-      this.appenderr = appenderr;
+        this.appenderr = appenderr;
     }
 
     /**
@@ -210,27 +210,27 @@ public class SSHExec extends SSHBase {
     public void setOutputproperty(String property) {
         outputProperty = property;
     }
-    
+
     /**
      * If set, the erroroutput of the command will be stored in the given property.
      *
      * @param property  The name of the property in which the command erroroutput
      *      will be stored.
      * @since Apache Ant 1.9.4
-     */    
+     */
     public void setErrorproperty (String property) {
-      errorProperty = property;
+        errorProperty = property;
     }
-    
+
     /**
      * If set, the exitcode of the command will be stored in the given property.
      *
      * @param property  The name of the property in which the exitcode
      *      will be stored.
      * @since Apache Ant 1.9.4
-     */    
+     */
     public void setResultproperty(String property) {
-      resultProperty = property;
+        resultProperty = property;
     }
 
     /**
@@ -249,7 +249,7 @@ public class SSHExec extends SSHBase {
      */
     public void setUseSystemIn(boolean useSystemIn) {
         this.useSystemIn = useSystemIn;
-    }        
+    }
 
     /**
      * If suppressSystemOut is <code>true</code>, output will not be sent to System.out<br/>
@@ -260,7 +260,7 @@ public class SSHExec extends SSHBase {
     {
         this.suppressSystemOut = suppressSystemOut;
     }
-    
+
     /**
      * If suppressSystemErr is <code>true</code>, output will not be sent to System.err<br/>
      * If suppressSystemErr is <code>false</code>, normal behavior
@@ -270,14 +270,14 @@ public class SSHExec extends SSHBase {
     {
         this.suppressSystemErr = suppressSystemErr;
     }
-    
+
     /**
      * Execute the command on the remote host.
      *
      * @exception BuildException  Most likely a network error or bad parameter.
      */
     public void execute() throws BuildException {
-        
+
         if (getHost() == null) {
             throw new BuildException("Host is required.");
         }
@@ -374,7 +374,7 @@ public class SSHExec extends SSHBase {
             String inputData = getProject().getProperty(inputProperty) ;
             if (inputData != null) {
                 istream = new ByteArrayInputStream(inputData.getBytes()) ;
-            }        	
+            }
         }
         if (inputString != null) {
             istream = new ByteArrayInputStream(inputString.getBytes());
@@ -433,7 +433,7 @@ public class SSHExec extends SSHBase {
                 }
                 // set errorProperty
                 if (errorProperty != null) {
-                    getProject().setNewProperty(errorProperty, errout.toString());    
+                    getProject().setNewProperty(errorProperty, errout.toString());
                 }
                 // stderr to errorFile
                 if (errorFile != null) {
