@@ -661,7 +661,7 @@ public class SQLExec extends JDBCTask {
                             out = new PrintStream(new BufferedOutputStream(os),
                                                   false, outputEncoding);
                         } else {
-                        out = new PrintStream(new BufferedOutputStream(os));
+                            out = new PrintStream(new BufferedOutputStream(os));
                         }
                     }
 
