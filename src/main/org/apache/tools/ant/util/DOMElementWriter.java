@@ -21,6 +21,7 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -233,7 +234,7 @@ public class DOMElementWriter {
 
                 case Node.CDATA_SECTION_NODE:
                     out.write("<![CDATA[");
-                    out.write(encodedata(((Text) child).getData()));
+                    encodedata(out, ((Text) child).getData());
                     out.write("]]>");
                     break;
 
@@ -486,19 +487,59 @@ public class DOMElementWriter {
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
      * @param value the value to be encoded.
      * @return the encoded value.
-
      */
     public String encodedata(final String value) {
+        final StringWriter out = new StringWriter();
+        try {
+            encodedata(out, value);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        return out.toString();
+    }
+
+    /**
+     * Drop characters that are illegal in XML documents and write the
+     * rest to the given writer.
+     *
+     * <p>Also ensure that we are not including an <code>]]&gt;</code>
+     * marker by replacing that sequence with
+     * <code>&amp;#x5d;&amp;#x5d;&amp;gt;</code>.</p>
+     *
+     * <p>See XML 1.0 2.2 <a
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
+     * 2.7 <a
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
+     * @param value the value to be encoded.
+     * @param out where to write the encoded data to.
+     */
+    public void encodedata(final Writer out, final String value) throws IOException {
         final int len = value.length();
-        StringBuffer sb = new StringBuffer(len);
-        for (int i = 0; i < len; ++i) {
-            final char c = value.charAt(i);
-            if (isLegalCharacter(c)) {
-                sb.append(c);
+        int prevEnd = 0, cdataEndPos = value.indexOf("]]>");
+        while (prevEnd < len) {
+            final int end = (cdataEndPos < 0 ? len : cdataEndPos);
+            // Write out stretches of legal characters in the range [prevEnd, end).
+            for (int prevLegalCharPos = prevEnd; prevLegalCharPos < end; /*empty*/) {
+                int illegalCharPos;
+                for (illegalCharPos = prevLegalCharPos; true; ++illegalCharPos) {
+                    if (illegalCharPos >= end
+                        || !isLegalCharacter(value.charAt(illegalCharPos))) {
+                        break;
+                    }
+                }
+                out.write(value, prevLegalCharPos, illegalCharPos - prevLegalCharPos);
+                prevLegalCharPos = illegalCharPos + 1;
+            }
+
+            if (cdataEndPos >= 0) {
+                out.write("]]]]><![CDATA[>");
+                prevEnd = cdataEndPos + 3;
+                cdataEndPos = value.indexOf("]]>", prevEnd);
+            } else {
+                prevEnd = end;
             }
         }
-
-        return sb.substring(0).replace("]]>", "]]]]><![CDATA[>");
     }
 
     /**

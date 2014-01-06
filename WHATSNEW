@@ -91,6 +91,10 @@ Other changes:
  * <sql> has a new outputencoding attribute.
    Bugzilla Report 39541
 
+ * changes to JUnitTestRunner and PlainJUnitResultFormatter to make
+   OutOfMemoryErrors less likely.
+   Bugzilla Report 45536
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

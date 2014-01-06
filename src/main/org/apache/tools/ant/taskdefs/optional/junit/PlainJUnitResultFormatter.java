@@ -117,6 +117,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @throws BuildException if unable to write the output
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
+        try {
         StringBuffer sb = new StringBuffer("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
@@ -129,39 +130,48 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
         sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
         sb.append(StringUtils.LINE_SEP);
+            write(sb.toString());
 
-        // append the err and output streams to the log
+        // write the err and output streams to the log
         if (systemOutput != null && systemOutput.length() > 0) {
-            sb.append("------------- Standard Output ---------------")
-                .append(StringUtils.LINE_SEP)
-                .append(systemOutput)
-                .append("------------- ---------------- ---------------")
-                .append(StringUtils.LINE_SEP);
+                write("------------- Standard Output ---------------");
+                write(StringUtils.LINE_SEP);
+                write(systemOutput);
+                write("------------- ---------------- ---------------");
+                write(StringUtils.LINE_SEP);
         }
 
         if (systemError != null && systemError.length() > 0) {
-            sb.append("------------- Standard Error -----------------")
-                .append(StringUtils.LINE_SEP)
-                .append(systemError)
-                .append("------------- ---------------- ---------------")
-                .append(StringUtils.LINE_SEP);
+                write("------------- Standard Error -----------------");
+                write(StringUtils.LINE_SEP);
+                write(systemError);
+                write("------------- ---------------- ---------------");
+                write(StringUtils.LINE_SEP);
         }
 
-        sb.append(StringUtils.LINE_SEP);
-
+            write(StringUtils.LINE_SEP);
+            if (out != null) {
+                try {
+                    wri.flush();
+                    write(inner.toString());
+                } catch (IOException ioex) {
+                    throw new BuildException("Unable to write output", ioex);
+                }
+            }
+        } finally {
         if (out != null) {
             try {
-                out.write(sb.toString().getBytes());
                 wri.close();
-                out.write(inner.toString().getBytes());
-                out.flush();
             } catch (IOException ioex) {
-                throw new BuildException("Unable to write output", ioex);
+                    throw new BuildException("Unable to flush output", ioex);
             } finally {
                 if (out != System.out && out != System.err) {
                     FileUtils.close(out);
                 }
+                    wri = null;
+                    out = null;
             }
+        }
         }
     }
 
@@ -285,5 +295,23 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     public void testAssumptionFailure(Test test, Throwable throwable) {
         formatSkip(test, throwable.getMessage());
+    }
+
+    /**
+     * Print out some text, and flush the output stream; encoding in the platform
+     * local default encoding.
+     * @param text text to write.
+     * @throws BuildException on IO Problems.
+     */
+    private void write(String text) {
+        if (out == null) {
+            return;
+        }
+        try {
+            out.write(text.getBytes());
+            out.flush();
+        } catch (IOException ex) {
+            throw new BuildException("Unable to write output " + ex, ex);
+        }
     }
 } // PlainJUnitResultFormatter

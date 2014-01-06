@@ -558,8 +558,18 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             systemOut.close();
             systemOut = null;
             if (startTestSuiteSuccess) {
-                sendOutAndErr(new String(outStrm.toByteArray()),
-                              new String(errStrm.toByteArray()));
+                String out, err;
+                try {
+                    out = new String(outStrm.toByteArray());
+                } catch (OutOfMemoryError ex) {
+                    out = "out of memory on output stream";
+                }
+                try {
+                    err = new String(errStrm.toByteArray());
+                } catch (OutOfMemoryError ex) {
+                    err = "out of memory on error stream";
+                }
+                sendOutAndErr(out, err);
             }
         }
         fireEndTestSuite();
