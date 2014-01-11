@@ -396,7 +396,7 @@ public class ResourceUtils {
                                                && filterChains.size() > 0);
         String effectiveInputEncoding = null;
         if (source instanceof StringResource) {
-             effectiveInputEncoding = ((StringResource) source).getEncoding();
+            effectiveInputEncoding = ((StringResource) source).getEncoding();
         } else {
             effectiveInputEncoding = inputEncoding;
         }
@@ -414,151 +414,25 @@ public class ResourceUtils {
         }
 
         if (filterSetsAvailable) {
-            BufferedReader in = null;
-            BufferedWriter out = null;
-            try {
-                InputStreamReader isr = null;
-                if (effectiveInputEncoding == null) {
-                    isr = new InputStreamReader(source.getInputStream());
-                } else {
-                    isr = new InputStreamReader(source.getInputStream(),
-                                                effectiveInputEncoding);
-                }
-                in = new BufferedReader(isr);
-                OutputStream os = getOutputStream(dest, append, project);
-                OutputStreamWriter osw;
-                if (outputEncoding == null) {
-                    osw = new OutputStreamWriter(os);
-                } else {
-                    osw = new OutputStreamWriter(os, outputEncoding);
-                }
-                out = new BufferedWriter(osw);
-                if (filterChainsAvailable) {
-                    ChainReaderHelper crh = new ChainReaderHelper();
-                    crh.setBufferSize(FileUtils.BUF_SIZE);
-                    crh.setPrimaryReader(in);
-                    crh.setFilterChains(filterChains);
-                    crh.setProject(project);
-                    Reader rdr = crh.getAssembledReader();
-                    in = new BufferedReader(rdr);
-                }
-                LineTokenizer lineTokenizer = new LineTokenizer();
-                lineTokenizer.setIncludeDelims(true);
-                String newline = null;
-                String line = lineTokenizer.getToken(in);
-                while (line != null) {
-                    if (line.length() == 0) {
-                        // this should not happen, because the lines are
-                        // returned with the end of line delimiter
-                        out.newLine();
-                    } else {
-                        newline = filters.replaceTokens(line);
-                        out.write(newline);
-                    }
-                    line = lineTokenizer.getToken(in);
-                }
-            } finally {
-                FileUtils.close(out);
-                FileUtils.close(in);
-            }
+            copyWithFilterSets(source, dest, filters, filterChains,
+                               filterChainsAvailable, append,
+                               effectiveInputEncoding, outputEncoding,
+                               project);
         } else if (filterChainsAvailable
                    || (effectiveInputEncoding != null
                        && !effectiveInputEncoding.equals(outputEncoding))
                    || (effectiveInputEncoding == null && outputEncoding != null)) {
-            BufferedReader in = null;
-            BufferedWriter out = null;
-            try {
-                InputStreamReader isr = null;
-                if (effectiveInputEncoding == null) {
-                    isr = new InputStreamReader(source.getInputStream());
-                } else {
-                    isr = new InputStreamReader(source.getInputStream(),
-                                                effectiveInputEncoding);
-                }
-                in = new BufferedReader(isr);
-                OutputStream os = getOutputStream(dest, append, project);
-                OutputStreamWriter osw;
-                if (outputEncoding == null) {
-                    osw = new OutputStreamWriter(os);
-                } else {
-                    osw = new OutputStreamWriter(os, outputEncoding);
-                }
-                out = new BufferedWriter(osw);
-                if (filterChainsAvailable) {
-                    ChainReaderHelper crh = new ChainReaderHelper();
-                    crh.setBufferSize(FileUtils.BUF_SIZE);
-                    crh.setPrimaryReader(in);
-                    crh.setFilterChains(filterChains);
-                    crh.setProject(project);
-                    Reader rdr = crh.getAssembledReader();
-                    in = new BufferedReader(rdr);
-                }
-                char[] buffer = new char[FileUtils.BUF_SIZE];
-                while (true) {
-                    int nRead = in.read(buffer, 0, buffer.length);
-                    if (nRead == -1) {
-                        break;
-                    }
-                    out.write(buffer, 0, nRead);
-                }
-            } finally {
-                FileUtils.close(out);
-                FileUtils.close(in);
-            }
+            copyWithFilterChainsOrTranscoding(source, dest, filterChains,
+                                              filterChainsAvailable, append,
+                                              effectiveInputEncoding,
+                                              outputEncoding, project);
         } else if (source.as(FileProvider.class) != null
                    && destFile != null) {
             File sourceFile =
                 source.as(FileProvider.class).getFile();
-
-            File parent = destFile.getParentFile();
-            if (parent != null && !parent.isDirectory()
-                && !(parent.mkdirs() || parent.isDirectory())) {
-                throw new IOException("failed to create the parent directory"
-                                      + " for " + destFile);
-            }
-
-            FileInputStream in = null;
-            FileOutputStream out = null;
-            FileChannel srcChannel = null;
-            FileChannel destChannel = null;
-
-            try {
-                in = new FileInputStream(sourceFile);
-                out = new FileOutputStream(destFile);
-                    
-                srcChannel = in.getChannel();
-                destChannel = out.getChannel();
-                
-                long position = 0;
-                long count = srcChannel.size();
-                while (position < count) {
-                    long chunk = Math.min(MAX_IO_CHUNK_SIZE, count - position);
-                    position +=
-                        destChannel.transferFrom(srcChannel, position, chunk);
-                }
-            } finally {
-                FileUtils.close(srcChannel);
-                FileUtils.close(destChannel);
-                FileUtils.close(out);
-                FileUtils.close(in);
-            }
+            copyUsingFileChannels(sourceFile, destFile);
         } else {
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                in = source.getInputStream();
-                out = getOutputStream(dest, append, project);
-
-                byte[] buffer = new byte[FileUtils.BUF_SIZE];
-                int count = 0;
-                do {
-                    out.write(buffer, 0, count);
-                    count = in.read(buffer, 0, buffer.length);
-                } while (count != -1);
-            } finally {
-                FileUtils.close(out);
-                FileUtils.close(in);
-            }
+            copyUsingStreams(source, dest, append, project);
         }
         if (preserveLastModified) {
             Touchable t = dest.as(Touchable.class);
@@ -765,6 +639,173 @@ public class ResourceUtils {
         future.add(rc);
         for (Resource r : future) {
             logTo.log("Warning: " + r.getName() + " modified in the future.", Project.MSG_WARN);
+        }
+    }
+
+    private static void copyWithFilterSets(Resource source, Resource dest,
+                                           FilterSetCollection filters,
+                                           Vector filterChains,
+                                           boolean filterChainsAvailable,
+                                           boolean append, String inputEncoding,
+                                           String outputEncoding,
+                                           Project project)
+        throws IOException {
+        BufferedReader in = null;
+        BufferedWriter out = null;
+        try {
+            InputStreamReader isr = null;
+            if (inputEncoding == null) {
+                isr = new InputStreamReader(source.getInputStream());
+            } else {
+                isr = new InputStreamReader(source.getInputStream(),
+                                            inputEncoding);
+            }
+            in = new BufferedReader(isr);
+            OutputStream os = getOutputStream(dest, append, project);
+            OutputStreamWriter osw;
+            if (outputEncoding == null) {
+                osw = new OutputStreamWriter(os);
+            } else {
+                osw = new OutputStreamWriter(os, outputEncoding);
+            }
+            out = new BufferedWriter(osw);
+            if (filterChainsAvailable) {
+                ChainReaderHelper crh = new ChainReaderHelper();
+                crh.setBufferSize(FileUtils.BUF_SIZE);
+                crh.setPrimaryReader(in);
+                crh.setFilterChains(filterChains);
+                crh.setProject(project);
+                Reader rdr = crh.getAssembledReader();
+                in = new BufferedReader(rdr);
+            }
+            LineTokenizer lineTokenizer = new LineTokenizer();
+            lineTokenizer.setIncludeDelims(true);
+            String newline = null;
+            String line = lineTokenizer.getToken(in);
+            while (line != null) {
+                if (line.length() == 0) {
+                    // this should not happen, because the lines are
+                    // returned with the end of line delimiter
+                    out.newLine();
+                } else {
+                    newline = filters.replaceTokens(line);
+                    out.write(newline);
+                }
+                line = lineTokenizer.getToken(in);
+            }
+        } finally {
+            FileUtils.close(out);
+            FileUtils.close(in);
+        }
+    }
+
+    private static void copyWithFilterChainsOrTranscoding(Resource source,
+                                                          Resource dest,
+                                                          Vector filterChains,
+                                                          boolean filterChainsAvailable,
+                                                          boolean append,
+                                                          String inputEncoding,
+                                                          String outputEncoding,
+                                                          Project project)
+        throws IOException {
+        BufferedReader in = null;
+        BufferedWriter out = null;
+        try {
+            InputStreamReader isr = null;
+            if (inputEncoding == null) {
+                isr = new InputStreamReader(source.getInputStream());
+            } else {
+                isr = new InputStreamReader(source.getInputStream(),
+                                            inputEncoding);
+            }
+            in = new BufferedReader(isr);
+            OutputStream os = getOutputStream(dest, append, project);
+            OutputStreamWriter osw;
+            if (outputEncoding == null) {
+                osw = new OutputStreamWriter(os);
+            } else {
+                osw = new OutputStreamWriter(os, outputEncoding);
+            }
+            out = new BufferedWriter(osw);
+            if (filterChainsAvailable) {
+                ChainReaderHelper crh = new ChainReaderHelper();
+                crh.setBufferSize(FileUtils.BUF_SIZE);
+                crh.setPrimaryReader(in);
+                crh.setFilterChains(filterChains);
+                crh.setProject(project);
+                Reader rdr = crh.getAssembledReader();
+                in = new BufferedReader(rdr);
+            }
+            char[] buffer = new char[FileUtils.BUF_SIZE];
+            while (true) {
+                int nRead = in.read(buffer, 0, buffer.length);
+                if (nRead == -1) {
+                    break;
+                }
+                out.write(buffer, 0, nRead);
+            }
+        } finally {
+            FileUtils.close(out);
+            FileUtils.close(in);
+        }
+    }
+
+    private static void copyUsingFileChannels(File sourceFile,
+                                              File destFile)
+        throws IOException {
+
+        File parent = destFile.getParentFile();
+        if (parent != null && !parent.isDirectory()
+            && !(parent.mkdirs() || parent.isDirectory())) {
+            throw new IOException("failed to create the parent directory"
+                                  + " for " + destFile);
+        }
+
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        FileChannel srcChannel = null;
+        FileChannel destChannel = null;
+
+        try {
+            in = new FileInputStream(sourceFile);
+            out = new FileOutputStream(destFile);
+                    
+            srcChannel = in.getChannel();
+            destChannel = out.getChannel();
+                
+            long position = 0;
+            long count = srcChannel.size();
+            while (position < count) {
+                long chunk = Math.min(MAX_IO_CHUNK_SIZE, count - position);
+                position +=
+                    destChannel.transferFrom(srcChannel, position, chunk);
+            }
+        } finally {
+            FileUtils.close(srcChannel);
+            FileUtils.close(destChannel);
+            FileUtils.close(out);
+            FileUtils.close(in);
+        }
+    }
+
+    private static void copyUsingStreams(Resource source, Resource dest,
+                                         boolean append, Project project)
+        throws IOException {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = source.getInputStream();
+            out = getOutputStream(dest, append, project);
+
+            byte[] buffer = new byte[FileUtils.BUF_SIZE];
+            int count = 0;
+            do {
+                out.write(buffer, 0, count);
+                count = in.read(buffer, 0, buffer.length);
+            } while (count != -1);
+        } finally {
+            FileUtils.close(out);
+            FileUtils.close(in);
         }
     }
 
