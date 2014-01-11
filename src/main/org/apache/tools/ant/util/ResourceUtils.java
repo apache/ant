@@ -426,13 +426,26 @@ public class ResourceUtils {
                                               filterChainsAvailable, append,
                                               effectiveInputEncoding,
                                               outputEncoding, project);
-        } else if (source.as(FileProvider.class) != null
-                   && destFile != null && !append) {
-            File sourceFile =
-                source.as(FileProvider.class).getFile();
-            copyUsingFileChannels(sourceFile, destFile);
         } else {
-            copyUsingStreams(source, dest, append, project);
+            boolean copied = false;
+            if (source.as(FileProvider.class) != null
+                && destFile != null && !append) {
+                File sourceFile =
+                    source.as(FileProvider.class).getFile();
+                try {
+                    copyUsingFileChannels(sourceFile, destFile);
+                    copied = true;
+                } catch (IOException ex) {
+                    project.log("Attempt to copy " + sourceFile
+                                + " to " + destFile + " using NIO Channels"
+                                + " failed due to '" + ex.getMessage()
+                                + "'.  Falling back to streams.",
+                                Project.MSG_WARN);
+                }
+            }
+            if (!copied) {
+                copyUsingStreams(source, dest, append, project);
+            }
         }
         if (preserveLastModified) {
             Touchable t = dest.as(Touchable.class);
