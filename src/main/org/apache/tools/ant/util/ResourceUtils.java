@@ -427,7 +427,7 @@ public class ResourceUtils {
                                               effectiveInputEncoding,
                                               outputEncoding, project);
         } else if (source.as(FileProvider.class) != null
-                   && destFile != null) {
+                   && destFile != null && !append) {
             File sourceFile =
                 source.as(FileProvider.class).getFile();
             copyUsingFileChannels(sourceFile, destFile);
