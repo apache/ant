@@ -75,6 +75,11 @@ Fixed bugs:
    preserve symbolic links.
    Bugzilla Report 53959
 
+ * Sometimes copy-operations using NIO FileChannels fail.  Ant will
+   now try to use a Stream based copy operation as fallback when the
+   Channel based copy fails.
+   Bugzilla Reports 53102 and 54397
+
 Other changes:
 --------------
 
