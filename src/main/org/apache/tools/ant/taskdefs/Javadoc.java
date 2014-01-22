@@ -2474,7 +2474,7 @@ public class Javadoc extends Task {
             return;
         }
         final String fixData;
-        final InputStream in = getClass()
+        final InputStream in = Javadoc.class
             .getResourceAsStream("javadoc-frame-injections-fix.txt");
         if (in == null) {
             throw new FileNotFoundException("Missing resource "

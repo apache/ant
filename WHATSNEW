@@ -80,6 +80,10 @@ Fixed bugs:
    Channel based copy fails.
    Bugzilla Reports 53102 and 54397
 
+ * Javadoc.postProcessGeneratedJavadocs() fails for Classes that
+   extend Javadoc
+   Bugzilla Report 56047
+
 Other changes:
 --------------
 
