@@ -121,19 +121,18 @@ public class TarUtils {
             }
         }
 
-        // Must have trailing NUL or space
-        byte trailer;
-        trailer = buffer[end-1];
-        if (trailer == 0 || trailer == ' '){
+        // Trim all trailing NULs and spaces.
+        // The ustar and POSIX tar specs require a trailing NUL or
+        // space but some implementations use the extra digit for big
+        // sizes/uids/gids ...
+        byte trailer = buffer[end - 1];
+        while (start < end && (trailer == 0 || trailer == ' ')) {
             end--;
-        } else {
-            throw new IllegalArgumentException(
-                    exceptionMessage(buffer, offset, length, end-1, trailer));
+            trailer = buffer[end - 1];
         }
-        // May have additional NUL or space
-        trailer = buffer[end-1];
-        if (trailer == 0 || trailer == ' '){
-            end--;
+        if (start == end) {
+            throw new IllegalArgumentException(
+                    exceptionMessage(buffer, offset, length, start, trailer));
         }
 
         for ( ;start < end; start++) {
