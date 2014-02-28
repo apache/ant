@@ -363,7 +363,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     }
 
     /**
-     * Sets the paramters for the transformer.
+     * Sets the parameters for the transformer.
      */
     private void setTransformationParameters() {
         for (final Enumeration enumeration = params.keys();

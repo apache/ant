@@ -387,7 +387,7 @@ public class RExecTask extends Task {
     }
     /**
      *  Process a 'typical' login.  If it differs, use the read
-     *  and write tasks explicitely
+     *  and write tasks explicitly
      */
     private void login(AntRExecClient rexec) {
         if (addCarriageReturn) {

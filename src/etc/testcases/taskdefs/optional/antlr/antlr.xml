@@ -74,7 +74,7 @@
   </target>
 
   <target name="test8" depends="setup">
-    <antlr target="extended.calc.g" outputdirectory="${tmp.dir}" glib="non-existant-file.g"/>
+    <antlr target="extended.calc.g" outputdirectory="${tmp.dir}" glib="non-existent-file.g"/>
   </target>
 
   <target name="test9" depends="setup">

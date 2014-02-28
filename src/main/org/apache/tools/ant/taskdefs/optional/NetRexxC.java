@@ -991,7 +991,7 @@ public class NetRexxC extends MatchingTask {
      * Takes a classpath-like string, and adds each element of this string to
      * a new classpath, if the components exist. Components that don't exist,
      * aren't added. We do this, because jikes issues warnings for
-     * non-existant files/dirs in his classpath, and these warnings are pretty
+     * non-existent files/dirs in his classpath, and these warnings are pretty
      * annoying.
      *
      * @param target - target classpath

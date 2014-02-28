@@ -602,9 +602,9 @@ public final class Extension {
             return;
         }
 
-        final String[] extentions = split(names, " ");
-        for (int i = 0; i < extentions.length; i++) {
-            final String prefix = extentions[ i ] + "-";
+        final String[] extensions = split(names, " ");
+        for (int i = 0; i < extensions.length; i++) {
+            final String prefix = extensions[ i ] + "-";
             final Extension extension = getExtension(prefix, attributes);
 
             if (null != extension) {

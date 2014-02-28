@@ -63,7 +63,7 @@
       <filelist dir="${basedir}" files="thisfiledoesnotexist"/>
     </concat>
     <available file="TESTDEST" property="TESTDEST.was.created"/>
-    <fail message="TESTDEST created for nonexistant files"
+    <fail message="TESTDEST created for nonexistent files"
           if="TESTDEST.was.created"/>
   </target>
 

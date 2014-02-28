@@ -817,7 +817,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals that a target has finished.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void targetFinished(BuildEvent event) {
         if (getDelayUpdate()) {
@@ -828,7 +828,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals that a task has finished.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void taskFinished(BuildEvent event) {
         if (getDelayUpdate()) {
@@ -839,7 +839,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals that a build has started.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void buildStarted(BuildEvent event) {
         // no-op
@@ -858,7 +858,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals that a task is starting.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void taskStarted(BuildEvent event) {
         // no-op
@@ -867,7 +867,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * Signals a message logging event.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void messageLogged(BuildEvent event) {
         // no-op

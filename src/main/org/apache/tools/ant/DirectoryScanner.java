@@ -1851,7 +1851,7 @@ public class DirectoryScanner
      *
      * <p>Can only happen if the given directory has been seen at
      * least more often than allowed during the current scan and it is
-     * a symbolic link and enough other occurences of the same name
+     * a symbolic link and enough other occurrences of the same name
      * higher up are symbolic links that point to the same place.</p>
      *
      * @since Ant 1.8.0

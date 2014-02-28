@@ -567,9 +567,9 @@ public class ResourceUtils {
     /**
      * Binary compares the contents of two Resources.
      * <p>
-     * simple but sub-optimal comparision algorithm. written for working
+     * simple but sub-optimal comparison algorithm. written for working
      * rather than fast. Better would be a block read into buffers followed
-     * by long comparisions apart from the final 1-7 bytes.
+     * by long comparisons apart from the final 1-7 bytes.
      * </p>
      *
      * @param r1 the Resource whose content is to be compared.

@@ -245,7 +245,7 @@ public class Available extends Task implements Condition {
                         Project.MSG_WARN);
                 }
                 // NB: this makes use of Project#setProperty rather than Project#setNewProperty
-                //     due to backwards compatiblity reasons
+                //     due to backwards compatibility reasons
                 ph.setProperty(property, value, true);
             }
         } finally {

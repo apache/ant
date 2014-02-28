@@ -37,7 +37,7 @@
 | <xsl:value-of select="$testsuite"/>.<xsl:value-of select="@name"/>() : <xsl:value-of select="failure/@message"/><xsl:value-of select="error/@message"/>
 </xsl:template>
 
-<!-- Supress log output from the tests like stacktraces -->
+<!-- Suppress log output from the tests like stacktraces -->
 <xsl:template match="text()"/>
 
 

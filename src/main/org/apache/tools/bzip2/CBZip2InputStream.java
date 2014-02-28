@@ -1031,7 +1031,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
          *
          * This method is called when the required length of the array
          * is known.  I don't initialize it at construction time to
-         * avoid unneccessary memory allocation when compressing small
+         * avoid unnecessary memory allocation when compressing small
          * files.
          */
         final int[] initTT(int length) {

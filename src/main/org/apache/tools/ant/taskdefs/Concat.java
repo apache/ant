@@ -475,9 +475,9 @@ public class Concat extends Task implements ResourceCollection {
     private boolean forceOverwrite = true;
     /** overwrite read-only files */
     private boolean force = false;
-    /** String to place at the start of the concatented stream */
+    /** String to place at the start of the concatenated stream */
     private TextElement footer;
-    /** String to place at the end of the concatented stream */
+    /** String to place at the end of the concatenated stream */
     private TextElement header;
     /** add missing line.separator to files **/
     private boolean fixLastLine = false;

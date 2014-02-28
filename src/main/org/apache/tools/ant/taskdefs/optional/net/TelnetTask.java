@@ -131,7 +131,7 @@ public class TelnetTask extends Task {
 
     /**
      *  Process a 'typical' login.  If it differs, use the read
-     *  and write tasks explicitely
+     *  and write tasks explicitly
      */
     private void login(AntTelnetClient telnet) {
        if (addCarriageReturn) {

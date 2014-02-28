@@ -1224,7 +1224,7 @@ Changes that could break older environments:
    Bugzilla Report 46506.
 
  * <copy> silently ignored missing resources even with
-   failOnError="true".  If your build tries to copy non-existant
+   failOnError="true".  If your build tries to copy non-existent
    resources and you relied on this behavior you must now explicitly
    set failOnError to false.
    Bugzilla Report 47362.
@@ -1377,7 +1377,7 @@ Fixed bugs:
    Bugzilla Report 45607.
 
  * only <formatter>s that logged to a file were notified if forked VM
-   crashed or a timeout occured in <junit>.
+   crashed or a timeout occurred in <junit>.
    Bugzilla Report 37312.
 
  * ant -v -version would print the version information twice.
@@ -1475,7 +1475,7 @@ Fixed bugs:
    of the file system).
    Bugzilla Report 43665.
 
- * <sshexec> didn't store the ouput in outputproperty if the remote
+ * <sshexec> didn't store the output in outputproperty if the remote
    command failed.
    Bugzilla Report 46340.
 
@@ -1748,7 +1748,7 @@ Other changes:
 
  * A new listener for <junit> has been added that tries to invoke the
    tearDown method of a TestCase if that TestCase was run in a forked
-   VM and the VM crashed or a timeout occured.  See the <junit> task's
+   VM and the VM crashed or a timeout occurred.  See the <junit> task's
    manual page for details.
    Bugzilla Report 37241.
 
@@ -1879,7 +1879,7 @@ Other changes:
  * <xslt> now fails early if a specified stylesheet doesn't exist.
    Bugzilla Report 34525.
 
- * <xslt> now has an option to supress transformer warnings.  This
+ * <xslt> now has an option to suppress transformer warnings.  This
    option only has an effect for processors that support this feature;
    the "trax" processor included with Ant does support it.
    Bugzilla Report 18897.
@@ -2790,7 +2790,7 @@ Other changes:
 * Upgraded XML API and parser to Xerces 2.8.1
 
 * A code review of some threaded logic has tightened up the synchronization
-  of Watchdog, ExecuteWatchdog and ExecuteJava, which could reduce the occurence
+  of Watchdog, ExecuteWatchdog and ExecuteJava, which could reduce the occurrence
   of race conditions here, especially on Java1.5+.
 
 * Allow broken reference build files. The defer reference processing would
@@ -3368,7 +3368,7 @@ Fixed bugs:
 
 * FTP task, getTimeDiff method was returning wrong value. Bugzilla 30595.
 
-* make sure that Zip and its derivates call the createEmptyZip method when
+* make sure that Zip and its derivatives call the createEmptyZip method when
  there are no resources to zip/jar/...
 
 * Zip task was not zipping when only empty directories were found.
@@ -3946,7 +3946,7 @@ Fixed bugs:
   than seven characters.  Bugzilla Report 18105.
 
 * <copy> and <move>'s failonerror didn't apply to filesets pointing to
-  non-existant directories.  Bugzilla Report 18414.
+  non-existent directories.  Bugzilla Report 18414.
 
 * The <stripjavacomments> filter sometimes removed parts of string
   constants.  Bugzilla Report 17441.
@@ -4061,7 +4061,7 @@ Fixed bugs:
 * ftp put with chmod failed when the remote system was UNIX and local system
   Windows. Bugzilla Report 23143.
 
-* ftp did not set the ascii mode explicity, causing problems with ftp servers
+* ftp did not set the ascii mode explicitly, causing problems with ftp servers
   having binary as default
 
 * ftp was not able to download files when they were pointed to by symbolic
@@ -5204,7 +5204,7 @@ Other changes:
   or a file.
 
 * New tasks <bzip2> and <bunzip2> to pack and unpack files using the
-  BZip2 alogrithm.
+  BZip2 algorithm.
 
 * New tasks <replaceregexp>, <checksum>, <translate>, <waitfor>,
   <manifest>, <vsscp>, <vssadd>, <vsscreate>, <splash>, <basename>, <dirname>,
@@ -5504,7 +5504,7 @@ Changes that could break older environments:
   other tasks. This can break customer listeners which do not expect messages
   from a task before the previous task has finished.
 
-* Ant now installs its own ouput stream into System.out to route output to the
+* Ant now installs its own output stream into System.out to route output to the
   task currently executing on the current thread. This also means that all
   output is now routed as Ant message events. Customer listeners and loggers
   should not call System.out at any time. This has always been true but such
@@ -5622,7 +5622,7 @@ Other changes:
 
 * added vmlauncher attribute to exec tasks. This defaults to true. If
   it is set to false, the VM's ability to launch commands in bypassed
-  and the OS shell, either directly or through the auxillary antRun
+  and the OS shell, either directly or through the auxiliary antRun
   scripts is used.
 
 * regexp mapper now supports the java.util.regex package of JDK 1.4.

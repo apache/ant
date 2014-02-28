@@ -71,7 +71,7 @@ public class ProjectHelperRepositoryTest extends TestCase {
         assertTrue(helper instanceof ProjectHelper2);
     }
 
-    public void testNoDefaultContructor() throws Exception {
+    public void testNoDefaultConstructor() throws Exception {
         class IncrrectHelper extends ProjectHelper {
             // the default constructor is not visible to ant here 
         }

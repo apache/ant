@@ -185,7 +185,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Extention of EnumeratedAttribute to hold the values for style.
+     * Extension of EnumeratedAttribute to hold the values for style.
      */
     public static class BriefCodediffNofile extends EnumeratedAttribute {
         /**

@@ -33,7 +33,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  */
 public final class Compatibility {
     /**
-     * A string representaiton of compatibility level.
+     * A string representation of compatibility level.
      */
     private final String name;
 

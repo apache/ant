@@ -184,7 +184,7 @@
     </copy>
   </target>
 
-  <!-- need to check for existance of regex -->
+  <!-- need to check for existence of regex -->
   <target name="replaceregex">
     <concat destfile="result/input">
       hello Hello HELLO hello
@@ -226,7 +226,7 @@
     </concat>
   </target>
 
-  <!-- need to check for existance of regex -->
+  <!-- need to check for existence of regex -->
   <target name="containsregex">
     <concat destfile="result/input">
       hello world
@@ -256,7 +256,7 @@
   </target>
 
 
-  <!-- need to check for existance of regex -->
+  <!-- need to check for existence of regex -->
   <target name="containsregex2">
     <concat destfile="result/input">
       SUITE(TestSuite, bits);

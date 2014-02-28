@@ -25,7 +25,7 @@ import java.util.Properties;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- *  JUnit testcase that excercises the optional PropertyFile task in ant.
+ *  JUnit testcase that exercises the optional PropertyFile task in ant.
  *  (this is really more of a functional test so far.., but it's enough to let
  *   me start refactoring...)
  *
@@ -70,7 +70,7 @@ public class PropertyFileTest extends BuildFileTest {
     }
 
     /**
-     *  A unit test for JUnit- Excercises the propertyfile tasks ability to
+     *  A unit test for JUnit- Exercises the propertyfile tasks ability to
      *  update properties that are already defined-
      */
     public void testUpdatesExistingProperties() throws Exception {

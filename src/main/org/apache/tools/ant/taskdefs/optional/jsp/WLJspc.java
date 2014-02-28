@@ -311,7 +311,7 @@ public class WLJspc extends MatchingTask {
 
 
     /**
-     * Replace occurances of a string with a replacement string.
+     * Replace occurrences of a string with a replacement string.
      * @param inpString the string to convert.
      * @param escapeChars the string to replace.
      * @param replaceChars the string to place.

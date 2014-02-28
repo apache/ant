@@ -301,9 +301,9 @@ can implement our task, so that these test cases will pass.</p>
 is a common way, because we separate the prerequisites from the real work. On <b>//2</b> we iterate
 over all nested filesets. If we don't want to handle multiple filesets, the <tt>addFileset()</tt>
 method has to reject the further calls. We can get the result of a fileset via its DirectoryScanner
-like done in <b>//3</b>. After that we create a platform independend String representation of
+like done in <b>//3</b>. After that we create a platform independent String representation of
 the file path (<b>//4</b>, can be done in other ways of course). We have to do the <tt>replace()</tt>,
-because we work with a simple string comparison. Ant itself is platform independant and can
+because we work with a simple string comparison. Ant itself is platform independent and can
 therefore run on filesystems with slash (/, e.g. Linux) or backslash (\, e.g. Windows) as
 path separator. Therefore we have to unify that. If we found our file we create an absolute
 path representation on <b>//5</b>, so that we can use that information without knowing the basedir.

@@ -194,7 +194,7 @@ public abstract class ZipEncodingHelper {
     static final String UTF8 = "UTF8";
 
     /**
-     * variant name of the encoding UTF-8 used for comparisions.
+     * variant name of the encoding UTF-8 used for comparisons.
      */
     private static final String UTF_DASH_8 = "utf-8";
 

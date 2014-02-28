@@ -40,7 +40,7 @@ public final class ColorMapper {
     public static final String COLOR_GRAY = "gray";
     /** lightgray string */
     public static final String COLOR_LIGHTGRAY = "lightgray";
-    // Gotta atleast put in the proper spelling :-P
+    // Gotta at least put in the proper spelling :-P
     /** darkgrey string */
     public static final String COLOR_DARKGREY = "darkgrey";
     /** grey string */

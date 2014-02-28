@@ -757,7 +757,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Extention of EnumeratedAttribute to hold the values for file time stamp.
+     * Extension of EnumeratedAttribute to hold the values for file time stamp.
      */
     public static class CurrentModUpdated extends EnumeratedAttribute {
         /**
@@ -770,7 +770,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Extention of EnumeratedAttribute to hold the values for writable filess.
+     * Extension of EnumeratedAttribute to hold the values for writable filess.
      */
     public static class WritableFiles extends EnumeratedAttribute {
         /**

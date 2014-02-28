@@ -54,7 +54,7 @@ import org.apache.tools.ant.util.FileUtils;
 
  *
  * <b>19-04-2001</b> <p>The task now has a more robust
- * parser. It allows for platform independant file paths
+ * parser. It allows for platform independent file paths
  * and supports file names with <i>()</i>. Thanks to Erik Husby for
  * bringing the bug to my attention.
  *

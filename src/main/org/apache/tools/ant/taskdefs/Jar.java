@@ -825,7 +825,7 @@ public class Jar extends Zip {
             // this pass is only there to construct the merged
             // manifest this means we claim an update was needed and
             // only include the manifests, skipping any uptodate
-            // checks here defering them for the second run
+            // checks here deferring them for the second run
             Resource[][] manifests = grabManifests(rcs);
             int count = 0;
             for (int i = 0; i < manifests.length; i++) {
