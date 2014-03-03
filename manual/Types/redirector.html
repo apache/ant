@@ -136,6 +136,16 @@ source (input) and destination (output/error) files.  <em>Since Apache Ant 1.6.2
     </td>
     <td align="center" valign="top">No, default is <code>true</code></td>
   </tr>
+  <tr>
+    <td valign="top">binaryOutput</td>
+    <td valign="top">When set to true Ant will not try to split the
+      output into lines - which it will usually do in order to separate
+      error from normal output.  This setting will not prevent binary
+      output from getting corrupted if you also specify filter chains.
+      <i>Since Ant 1.9.4</i>.
+    </td>
+    <td align="center" valign="top">No, default is <code>false</code></td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>inputmapper</h4>

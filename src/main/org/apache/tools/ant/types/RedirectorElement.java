@@ -104,6 +104,9 @@ public class RedirectorElement extends DataType {
     /** whether to log the inputstring */
     private Boolean logInputString;
 
+    /** Is the output binary or can we safely split it into lines? */
+    private boolean outputIsBinary = false;
+
     /**
      * Add the input file mapper.
      * @param inputMapper   <code>Mapper</code>.
@@ -427,6 +430,18 @@ public class RedirectorElement extends DataType {
     }
 
     /**
+     * Whether to consider the output created by the process binary.
+     *
+     * <p>Binary output will not be split into lines which may make
+     * error and normal output look mixed up when they get written to
+     * the same stream.</p>
+     * @since 1.9.4
+     */
+    public void setBinaryOutput(boolean b) {
+        outputIsBinary = b;
+    }
+
+    /**
      * Configure the specified <code>Redirector</code>.
      * @param redirector   <code>Redirector</code>.
      */
@@ -530,6 +545,7 @@ public class RedirectorElement extends DataType {
         if (errorEncoding != null) {
             redirector.setErrorEncoding(errorEncoding);
         }
+        redirector.setBinaryOutput(outputIsBinary);
     }
 
     /**

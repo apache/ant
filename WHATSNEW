@@ -111,6 +111,13 @@ Other changes:
  * changes to DOMElementWriter to make OutOfMemoryErrors less likely.
    Bugzilla Report 54147
 
+ * <redirector> has a new attribute binaryOutput that prevents Ant
+   from splitting the output into lines.  This prevents binary output
+   from being corrupted but may lead to error and normal output being
+   mixed up.
+   Bugzilla Report 55667
+   Bugzilla Report 56156
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

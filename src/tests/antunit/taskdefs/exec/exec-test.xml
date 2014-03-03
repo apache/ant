@@ -678,4 +678,33 @@ public class Hello {
       <au:assertLogDoesntContain text="Hello 20"/>
     </target>
 
+    <target name="test-output-is-split-into-lines" if="cat.can.run" depends="setUp">
+        <echo file="${input}/redirector.in">1&#xa;2&#xd;&#xa;3</echo>
+        <echo file="${output}/expected">1${line.separator}2${line.separator}3</echo>
+        <exec executable="cat">
+            <redirector output="${output}/redirector.out"
+                        input="${input}/redirector.in"/>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <file file="${output}/redirector.out" />
+                <file file="${output}/expected" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-binary-output-is-not-split-into-lines" if="cat.can.run" depends="setUp">
+        <echo file="${input}/redirector.in">1&#xa;2&#xd;&#xa;3</echo>
+        <exec executable="cat">
+            <redirector output="${output}/redirector.out" binaryOutput="true"
+                        input="${input}/redirector.in"/>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <file file="${output}/redirector.out" />
+                <file file="${input}/redirector.in" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
 </project>

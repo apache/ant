@@ -192,6 +192,9 @@ public class Redirector {
     /** Mutex for err */
     private Object errMutex = new Object();
 
+    /** Is the output binary or can we safely split it into lines? */
+    private boolean outputIsBinary = false;
+
     /**
      * Create a redirector instance for the given task
      *
@@ -524,6 +527,18 @@ public class Redirector {
     }
 
     /**
+     * Whether to consider the output created by the process binary.
+     *
+     * <p>Binary output will not be split into lines which may make
+     * error and normal output look mixed up when they get written to
+     * the same stream.</p>
+     * @since 1.9.4
+     */
+    public void setBinaryOutput(boolean b) {
+        outputIsBinary = b;
+    }
+
+    /**
      * Set a property from a ByteArrayOutputStream
      *
      * @param baos
@@ -722,8 +737,12 @@ public class Redirector {
             OutputStreamFunneler funneler = new OutputStreamFunneler(
                     outputStream, funnelTimeout);
             try {
-                outputStream = new LineOrientedOutputStreamRedirector(funneler.getFunnelInstance());
-                errorStream = new LineOrientedOutputStreamRedirector(funneler.getFunnelInstance());
+                outputStream = funneler.getFunnelInstance();
+                errorStream = funneler.getFunnelInstance();
+                if (!outputIsBinary) {
+                    outputStream = new LineOrientedOutputStreamRedirector(outputStream);
+                    errorStream = new LineOrientedOutputStreamRedirector(errorStream);
+                }
             } catch (IOException eyeOhEx) {
                 throw new BuildException(
                         "error splitting output/error streams", eyeOhEx);
