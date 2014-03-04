@@ -20,6 +20,12 @@ Changes that could break older environments:
    only on platforms with multiple file syste roots.
    Bugzilla Report 53949
 
+ * DirectoryScanner and thus fileset/dirset will now silently drop all
+   filesystem objects that are neither files nor directories according
+   to java.io.File.  This prevents Ant from reading named pipes which
+   might lead to blocking or other undefined behavior.
+   Bugzilla Report 56149
+
 Fixed bugs:
 -----------
 

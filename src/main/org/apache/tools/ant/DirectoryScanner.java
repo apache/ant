@@ -1022,7 +1022,7 @@ public class DirectoryScanner
                         }  else {
                             scandir(myfile, currentPath, true);
                         }
-                    } else {
+                    } else if (myfile.isFile()) {
                         String originalpattern = (String) entry.getValue();
                         boolean included = isCaseSensitive()
                             ? originalpattern.equals(currentelement)
@@ -1222,8 +1222,11 @@ public class DirectoryScanner
                     if (SYMLINK_UTILS.isSymbolicLink(dir, newfiles[i])) {
                         String name = vpath + newfiles[i];
                         File file = new File(dir, newfiles[i]);
-                        (file.isDirectory()
-                            ? dirsExcluded : filesExcluded).addElement(name);
+                        if (file.isDirectory()) {
+                            dirsExcluded.addElement(name);
+                        } else if (file.isFile()) {
+                            filesExcluded.addElement(name);
+                        }
                         accountForNotFollowedSymlink(name, file);
                     } else {
                         noLinks.add(newfiles[i]);
@@ -1253,7 +1256,7 @@ public class DirectoryScanner
                     everythingIncluded = false;
                     filesNotIncluded.addElement(name);
                 }
-            } else { // dir
+            } else if (file.isDirectory()) { // dir
 
                 if (followSymlinks
                     && causesIllegalSymlinkLoop(newfiles[i], dir,
