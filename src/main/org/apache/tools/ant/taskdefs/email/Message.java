@@ -20,10 +20,13 @@ package org.apache.tools.ant.taskdefs.email;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.Reader;
 
 import org.apache.tools.ant.ProjectComponent;
 
@@ -38,6 +41,7 @@ public class Message extends ProjectComponent {
     private String mimeType = "text/plain";
     private boolean specified = false;
     private String charset = null;
+    private String inputEncoding;
 
     /** Creates a new empty message  */
     public Message() {
@@ -122,7 +126,7 @@ public class Message extends ProjectComponent {
                 : new BufferedWriter(new OutputStreamWriter(ps));
             if (messageSource != null) {
                 // Read message from a file
-                FileReader freader = new FileReader(messageSource);
+                Reader freader = getReader(messageSource);
 
                 try {
                     BufferedReader in = new BufferedReader(freader);
@@ -171,6 +175,29 @@ public class Message extends ProjectComponent {
      */
     public String getCharset() {
       return charset;
+    }
+
+    /**
+     * Sets the encoding to expect when reading the message from a file.
+     * <p>Will be ignored if the message has been specified inline.</p>
+     * @param encoding the name of the charset used
+     * @since Ant 1.9.4
+     */
+    public void setInputEncoding(String encoding) {
+        this.inputEncoding = encoding;
+    }
+
+    private Reader getReader(File f) throws IOException {
+        if (inputEncoding != null) {
+            FileInputStream fis = new FileInputStream(f);
+            try {
+                return new InputStreamReader(fis, inputEncoding);
+            } catch (IOException ex) {
+                fis.close();
+                throw ex;
+            }
+        }
+        return new FileReader(f);
     }
 }
 

@@ -98,7 +98,19 @@
     <td valign="top">File to send as the body of the email. Property
     values in the file will be expanded.</td>
   </tr>
-      <td valign="top">messagemimetype</td>
+  <tr>
+    <td valign="top">messagefileinputencoding</td>
+    <td valign="top">
+      Specifies the encoding of the input file. Please see
+      <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html">
+        Supported Encodings</a> for a list of possible
+      values. Defaults to the platform's default character
+      encoding. <em>Since Ant 1.9.4</em>
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">messagemimetype</td>
     <td valign="top">The content type of the message.  The default is
     <code>text/plain</code>.</td>
     <td align="center" valign="top">No</td>
@@ -252,6 +264,17 @@ attributes:</p>
     You can also set the charset as attribute of the enclosing mail task.<br>
     These options are mutually exclusive.</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">inputencoding</td>
+    <td valign="top">
+      Specifies the encoding of the input file. Please see
+      <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html">
+        Supported Encodings</a> for a list of possible
+      values. Defaults to the platform's default character
+      encoding. <em>Since Ant 1.9.4</em>
+    </td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 

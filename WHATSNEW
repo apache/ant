@@ -124,6 +124,11 @@ Other changes:
    Bugzilla Report 55667
    Bugzilla Report 56156
 
+ * the nested <message> elements of <mail> now have an optional
+   inputEncoding attribute that can be used to specify the encoding of
+   files read that don't use the platform's default encoding.
+   Bugzilla Report 56258
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
