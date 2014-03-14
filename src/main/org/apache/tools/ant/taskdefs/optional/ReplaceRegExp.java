@@ -372,8 +372,6 @@ public class ReplaceRegExp extends Task {
                         w = new BufferedWriter(w);
 
                         StringBuffer linebuf = new StringBuffer();
-                        String line = null;
-                        String res = null;
                         int c;
                         boolean hasCR = false;
 
@@ -383,14 +381,8 @@ public class ReplaceRegExp extends Task {
                             if (c == '\r') {
                                 if (hasCR) {
                                     // second CR -> EOL + possibly empty line
-                                    line = linebuf.toString();
-                                    res  = doReplace(regex, subs, line, options);
-
-                                    if (!res.equals(line)) {
-                                        changes = true;
-                                    }
-
-                                    w.write(res);
+                                    changes |= replaceAndWrite(linebuf.toString(),
+                                                               w, options);
                                     w.write('\r');
 
                                     linebuf = new StringBuffer();
@@ -401,14 +393,8 @@ public class ReplaceRegExp extends Task {
                                 }
                             } else if (c == '\n') {
                                 // LF -> EOL
-                                line = linebuf.toString();
-                                res  = doReplace(regex, subs, line, options);
-
-                                if (!res.equals(line)) {
-                                    changes = true;
-                                }
-
-                                w.write(res);
+                                changes |= replaceAndWrite(linebuf.toString(),
+                                                           w, options);
                                 if (hasCR) {
                                     w.write('\r');
                                     hasCR = false;
@@ -419,14 +405,8 @@ public class ReplaceRegExp extends Task {
                             } else { // any other char
                                 if ((hasCR) || (c < 0)) {
                                     // Mac-style linebreak or EOF (or both)
-                                    line = linebuf.toString();
-                                    res  = doReplace(regex, subs, line, options);
-
-                                    if (!res.equals(line)) {
-                                        changes = true;
-                                    }
-
-                                    w.write(res);
+                                    changes |= replaceAndWrite(linebuf.toString(),
+                                                               w, options);
                                     if (hasCR) {
                                         w.write('\r');
                                         hasCR = false;
@@ -536,12 +516,15 @@ public class ReplaceRegExp extends Task {
 
     private boolean multilineReplace(Reader r, Writer w, int options)
         throws IOException {
-        String buf = FileUtils.safeReadFully(r);
-        String res = doReplace(regex, subs, buf, options);
-        w.write(res);
-        return !res.equals(buf);
+        return replaceAndWrite(FileUtils.safeReadFully(r), w, options);
     }
 
+    private boolean replaceAndWrite(String s, Writer w, int options)
+        throws IOException {
+        String res = doReplace(regex, subs, s, options);
+        w.write(res);
+        return !res.equals(s);
+    }
 }
 
 
