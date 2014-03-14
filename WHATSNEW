@@ -129,6 +129,9 @@ Other changes:
    files read that don't use the platform's default encoding.
    Bugzilla Report 56258
 
+ * The <get> task now explicitly accepts and supports the gzip content encoding.
+   Bugzilla Report 49453
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
