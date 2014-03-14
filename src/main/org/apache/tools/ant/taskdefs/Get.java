@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
@@ -68,6 +69,7 @@ public class Get extends Task {
     private static final String HTTPS = "https";
 
     private static final String DEFAULT_AGENT_PREFIX = "Apache Ant";
+    private static final String GZIP_CONTENT_ENCODING = "gzip";
 
     private Resources sources = new Resources();
     private File destination; // required
@@ -679,6 +681,8 @@ public class Get extends Task {
                         + encoding);
             }
 
+            connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
+
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)
                         .setInstanceFollowRedirects(false);
@@ -765,6 +769,10 @@ public class Get extends Task {
                 }
                 throw new BuildException("Can't get " + source + " to " + dest,
                         getLocation());
+            }
+
+            if (GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
+            	is = new GZIPInputStream(is);
             }
 
             os = new FileOutputStream(dest);
