@@ -23,7 +23,7 @@
         <property name="tmpdir" location="../../../../build/ant-unit/taskdef" />
         <mkdir dir="${tmpdir}" />
         <echo file="${input}/org/example/antlib.xml">
-            <![CDATA[<antlib xmlns:e="antlib:org.example">
+            <![CDATA[<antlib xmlns:e="ant:current">
                 <macrodef name="echoo" backtrace="false">
                     <attribute name="message" />
                     <sequential>
@@ -41,16 +41,20 @@
         <jar destfile="${test.jar}">
             <fileset dir="${input}" />
         </jar>
+        <sleep seconds="1"/>
     </target>
 
     <target name="testAntlib" depends="setUp">
-        <taskdef classpath="${test.jar}" uri="antlib:org.example" />
+        <taskdef classpath="${test.jar}" uri="antlib:org.example"
+                 loaderref="loader1"/>
         <echoooo xmlns="antlib:org.example" message="exemple" />
         <au:assertLogContains text="exempleexempleexempleexemple" />
     </target>
 
-    <target name="broken_testURI" depends="setUp">
-        <taskdef classpath="${test.jar}" uri="urn:my:exemple" resource="org/example/antlib.xml" />
+    <target name="testURI" depends="setUp">
+        <taskdef classpath="${test.jar}" uri="urn:my:exemple"
+                 loaderref="loader2"
+                 resource="org/example/antlib.xml" />
         <echoooo xmlns="urn:my:exemple" message="exemple" />
         <au:assertLogContains text="exempleexempleexempleexemple" />
     </target>
