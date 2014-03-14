@@ -364,96 +364,96 @@ public class ReplaceRegExp extends Task {
                     BufferedReader br = new BufferedReader(r);
                     BufferedWriter bw = new BufferedWriter(w);
 
-            log("Replacing pattern '" + regex.getPattern(getProject())
-                + "' with '" + subs.getExpression(getProject())
-                + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
-                + (flags.length() > 0 ? " with flags: '" + flags + "'" : "")
-                + ".", Project.MSG_VERBOSE);
+                    log("Replacing pattern '" + regex.getPattern(getProject())
+                        + "' with '" + subs.getExpression(getProject())
+                        + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
+                        + (flags.length() > 0 ? " with flags: '" + flags + "'" : "")
+                        + ".", Project.MSG_VERBOSE);
 
-            if (byline) {
-                StringBuffer linebuf = new StringBuffer();
-                String line = null;
-                String res = null;
-                int c;
-                boolean hasCR = false;
+                    if (byline) {
+                        StringBuffer linebuf = new StringBuffer();
+                        String line = null;
+                        String res = null;
+                        int c;
+                        boolean hasCR = false;
 
-                do {
-                    c = br.read();
+                        do {
+                            c = br.read();
 
-                    if (c == '\r') {
-                        if (hasCR) {
-                            // second CR -> EOL + possibly empty line
-                            line = linebuf.toString();
-                            res  = doReplace(regex, subs, line, options);
+                            if (c == '\r') {
+                                if (hasCR) {
+                                    // second CR -> EOL + possibly empty line
+                                    line = linebuf.toString();
+                                    res  = doReplace(regex, subs, line, options);
 
-                            if (!res.equals(line)) {
-                                changes = true;
+                                    if (!res.equals(line)) {
+                                        changes = true;
+                                    }
+
+                                    bw.write(res);
+                                    bw.write('\r');
+
+                                    linebuf = new StringBuffer();
+                                    // hasCR is still true (for the second one)
+                                } else {
+                                    // first CR in this line
+                                    hasCR = true;
+                                }
+                            } else if (c == '\n') {
+                                // LF -> EOL
+                                line = linebuf.toString();
+                                res  = doReplace(regex, subs, line, options);
+
+                                if (!res.equals(line)) {
+                                    changes = true;
+                                }
+
+                                bw.write(res);
+                                if (hasCR) {
+                                    bw.write('\r');
+                                    hasCR = false;
+                                }
+                                bw.write('\n');
+
+                                linebuf = new StringBuffer();
+                            } else { // any other char
+                                if ((hasCR) || (c < 0)) {
+                                    // Mac-style linebreak or EOF (or both)
+                                    line = linebuf.toString();
+                                    res  = doReplace(regex, subs, line, options);
+
+                                    if (!res.equals(line)) {
+                                        changes = true;
+                                    }
+
+                                    bw.write(res);
+                                    if (hasCR) {
+                                        bw.write('\r');
+                                        hasCR = false;
+                                    }
+
+                                    linebuf = new StringBuffer();
+                                }
+
+                                if (c >= 0) {
+                                    linebuf.append((char) c);
+                                }
                             }
+                        } while (c >= 0);
 
-                            bw.write(res);
-                            bw.write('\r');
+                    } else {
+                        String buf = FileUtils.safeReadFully(br);
 
-                            linebuf = new StringBuffer();
-                            // hasCR is still true (for the second one)
-                        } else {
-                            // first CR in this line
-                            hasCR = true;
-                        }
-                    } else if (c == '\n') {
-                        // LF -> EOL
-                        line = linebuf.toString();
-                        res  = doReplace(regex, subs, line, options);
+                        String res = doReplace(regex, subs, buf, options);
 
-                        if (!res.equals(line)) {
+                        if (!res.equals(buf)) {
                             changes = true;
                         }
 
                         bw.write(res);
-                        if (hasCR) {
-                            bw.write('\r');
-                            hasCR = false;
-                        }
-                        bw.write('\n');
-
-                        linebuf = new StringBuffer();
-                    } else { // any other char
-                        if ((hasCR) || (c < 0)) {
-                            // Mac-style linebreak or EOF (or both)
-                            line = linebuf.toString();
-                            res  = doReplace(regex, subs, line, options);
-
-                            if (!res.equals(line)) {
-                                changes = true;
-                            }
-
-                            bw.write(res);
-                            if (hasCR) {
-                                bw.write('\r');
-                                hasCR = false;
-                            }
-
-                            linebuf = new StringBuffer();
-                        }
-
-                        if (c >= 0) {
-                            linebuf.append((char) c);
-                        }
                     }
-                } while (c >= 0);
 
-            } else {
-                String buf = FileUtils.safeReadFully(br);
-
-                String res = doReplace(regex, subs, buf, options);
-
-                if (!res.equals(buf)) {
-                    changes = true;
-                }
-
-                bw.write(res);
-            }
-
-            bw.flush();
+                    bw.flush();
 
                 } finally {
                     os.close();
