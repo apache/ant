@@ -18,7 +18,9 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
     <import file="../antunit-base.xml" />
 
-    <target name="setUp">
+    <!-- Java5 has some trouble with the recursive Antlib lookup -->
+
+    <target name="setUp" if="jdk1.6+">
         <mkdir dir="${input}/org/example" />
         <property name="tmpdir" location="../../../../build/ant-unit/taskdef" />
         <mkdir dir="${tmpdir}" />
@@ -44,14 +46,14 @@
         <sleep seconds="1"/>
     </target>
 
-    <target name="testAntlib" depends="setUp">
+    <target name="testAntlib" depends="setUp" if="jdk1.6+">
         <taskdef classpath="${test.jar}" uri="antlib:org.example"
                  loaderref="loader1"/>
         <echoooo xmlns="antlib:org.example" message="exemple" />
         <au:assertLogContains text="exempleexempleexempleexemple" />
     </target>
 
-    <target name="testURI" depends="setUp">
+    <target name="testURI" depends="setUp" if="jdk1.6+">
         <taskdef classpath="${test.jar}" uri="urn:my:exemple"
                  loaderref="loader2"
                  resource="org/example/antlib.xml" />
