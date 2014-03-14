@@ -361,9 +361,6 @@ public class ReplaceRegExp extends Task {
                 try {
                     Writer w = encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os);
 
-                    BufferedReader br = new BufferedReader(r);
-                    BufferedWriter bw = new BufferedWriter(w);
-
                     log("Replacing pattern '" + regex.getPattern(getProject())
                         + "' with '" + subs.getExpression(getProject())
                         + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
@@ -371,6 +368,9 @@ public class ReplaceRegExp extends Task {
                         + ".", Project.MSG_VERBOSE);
 
                     if (byline) {
+                        r = new BufferedReader(r);
+                        w = new BufferedWriter(w);
+
                         StringBuffer linebuf = new StringBuffer();
                         String line = null;
                         String res = null;
@@ -378,7 +378,7 @@ public class ReplaceRegExp extends Task {
                         boolean hasCR = false;
 
                         do {
-                            c = br.read();
+                            c = r.read();
 
                             if (c == '\r') {
                                 if (hasCR) {
@@ -390,8 +390,8 @@ public class ReplaceRegExp extends Task {
                                         changes = true;
                                     }
 
-                                    bw.write(res);
-                                    bw.write('\r');
+                                    w.write(res);
+                                    w.write('\r');
 
                                     linebuf = new StringBuffer();
                                     // hasCR is still true (for the second one)
@@ -408,12 +408,12 @@ public class ReplaceRegExp extends Task {
                                     changes = true;
                                 }
 
-                                bw.write(res);
+                                w.write(res);
                                 if (hasCR) {
-                                    bw.write('\r');
+                                    w.write('\r');
                                     hasCR = false;
                                 }
-                                bw.write('\n');
+                                w.write('\n');
 
                                 linebuf = new StringBuffer();
                             } else { // any other char
@@ -426,9 +426,9 @@ public class ReplaceRegExp extends Task {
                                         changes = true;
                                     }
 
-                                    bw.write(res);
+                                    w.write(res);
                                     if (hasCR) {
-                                        bw.write('\r');
+                                        w.write('\r');
                                         hasCR = false;
                                     }
 
@@ -442,18 +442,11 @@ public class ReplaceRegExp extends Task {
                         } while (c >= 0);
 
                     } else {
-                        String buf = FileUtils.safeReadFully(br);
-
-                        String res = doReplace(regex, subs, buf, options);
-
-                        if (!res.equals(buf)) {
-                            changes = true;
-                        }
-
-                        bw.write(res);
+                        changes = multilineReplace(r, w, options);
                     }
 
-                    bw.flush();
+                    r.close();
+                    w.close();
 
                 } finally {
                     os.close();
@@ -539,6 +532,14 @@ public class ReplaceRegExp extends Task {
                 }
             }
         }
+    }
+
+    private boolean multilineReplace(Reader r, Writer w, int options)
+        throws IOException {
+        String buf = FileUtils.safeReadFully(r);
+        String res = doReplace(regex, subs, buf, options);
+        w.write(res);
+        return !res.equals(buf);
     }
 
 }
