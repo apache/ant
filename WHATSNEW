@@ -94,6 +94,9 @@ Fixed bugs:
    implementations that encode big numbers by not adding a trailing
    NUL.
 
+ * the isExists() method of URLResource returned false positives for
+   HTTP and FTP URLs.
+
 Other changes:
 --------------
 

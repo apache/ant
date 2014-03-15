@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.MalformedURLException;
@@ -227,6 +228,19 @@ public class URLResource extends Resource implements URLProvider {
         }
         try {
             connect(Project.MSG_VERBOSE);
+            if (conn instanceof HttpURLConnection) {
+                int sc = ((HttpURLConnection) conn).getResponseCode();
+                // treating inaccessible resources as non-existent
+                return sc < 400;
+            } else if (url.getProtocol().startsWith("ftp")) {
+                closeConnection = true;
+                InputStream in = null;
+                try {
+                    in = conn.getInputStream();
+                } finally {
+                    FileUtils.close(in);
+                }
+            }
             return true;
         } catch (IOException e) {
             return false;
