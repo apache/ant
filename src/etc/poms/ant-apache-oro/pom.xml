@@ -58,6 +58,10 @@
           <includes>
             <include>org/apache/tools/ant/util/regexp/JakartaOro*</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/util/regexp/JakartaOro*</include>
+            <include>org/apache/tools/ant/util/regexp/Regexp*</include>
+          </testIncludes>
         </configuration>
       </plugin>
     </plugins>
