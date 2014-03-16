@@ -1,0 +1,173 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>MultiRooFileSet Type</title>
+</head>
+
+<body>
+
+<h2><a name="multirootfileset">MultiRootFileSet</a></h2>
+
+<p><em>Since Ant 1.9.4</em></p>
+
+<p>A MultiRootFileSet is a group of files or directories. These files
+or drectories can be found in a directory forrest starting with a set
+of base directories and are matched by patterns taken from a number of
+<a href="patternset.html">PatternSets</a> and <a
+href="selectors.html">Selectors</a>.</p>
+
+<p>MultiRootFileSet acts as a union of <a
+href="fileset.html">FileSets</a> and <a href="dirset.html">DirSets</a>
+that share the same patterns and selectors.</p>
+
+<p>MultiRootFileSet supports all attributes and nested elements of
+FileSet and DirSet except for the "dir" attribute.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">basedirs</td>
+    <td valign="top">Comma separated list of directories that build
+    the roots of the MultiRootFileSet.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">cache</td>
+    <td valign="top">Whether to cache results; disabling
+    may seriously impact performance</td>
+    <td valign="top" align="center">No, default <i>true</i></td>
+  </tr>
+  <tr>
+    <td valign="top">type</td>
+    <td valign="top">The type of file system entities which will be
+    included in this set.
+    Acceptable values are:
+    <ul>
+      <li>file - regular files</li>
+      <li>dir - directories</li>
+      <li>both - regular files and directories</li>
+    </ul>
+    </td>
+    <td valign="top" align="center">No, defaults to <i>file</i></td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">A comma- or space-separated list of patterns of directories that
+     must be included; all directories are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">The name of a file; each line of this file is
+      taken to be an include pattern.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">A comma- or space-separated list of patterns of directories that
+     must be excluded; no directories are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">The name of a file; each line of this file is
+      taken to be an exclude pattern.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">casesensitive</td>
+    <td valign="top">Specifies whether case-sensitivity should be applied
+     (<code>true</code>|<code>yes</code>|<code>on</code> or
+     <code>false</code>|<code>no</code>|<code>off</code>).</td>
+    <td valign="top" align="center">No; defaults to true.</td>
+  </tr>
+  <tr>
+    <td valign="top">followsymlinks</td>
+    <td valign="top">Shall symbolic links be followed? Defaults to
+      true. See <a href="fileset.html#symlink">fileset's documentation</a>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">erroronmissingdir</td>
+    <td valign="top">
+      Specify what happens if one of the base directories does not exist.
+      If true a build error will happen, if false, the subtree
+      will be ignored/empty.
+      Defaults to true.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<p>PatternSets can be specified as nested
+<code>&lt;patternset&gt;</code> elements. In addition, MultiRootFileSet holds
+an implicit PatternSet and supports the nested
+<code>&lt;include&gt;</code>, <code>&lt;includesfile&gt;</code>,
+<code>&lt;exclude&gt;</code> and <code>&lt;excludesfile&gt;</code>
+elements of <code>&lt;patternset&gt;</code> directly, as well as
+<code>&lt;patternset&gt;</code>'s attributes.</p>
+
+<p>Selectors are available as nested elements within the
+MultiRootFileSet.  If any of the selectors within the MultiRootFileSet
+do not select the file or directory, it is not considered part of the
+MultiRootFileSet. This makes a MultiRootFileSet equivalent to
+an <code>&lt;and&gt;</code> selector container.</p>
+
+<p>In addition basedirs for the MultiRootFileSet can be specified as
+  nested <code>basedir</code> elements that have a
+  single <code>file</code> attribute.</p>
+
+
+<h4>Examples</h4>
+
+<blockquote><pre>
+&lt;multirootfileset basedirs=&quot;${build.dir},${other.project.dir}&quot;&gt;
+  &lt;include name=&quot;apps/**/classes&quot;/&gt;
+  &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
+&lt;/multirootfileset&gt;
+</pre></blockquote>
+<p>Groups all files inside <code>classes</code> found under the
+<code>apps</code> subdirectory of <code>${build.dir}</code> or
+<code>${other.project.dir}</code>, except those that have the text
+<code>Test</code> in their name.</p>
+
+<blockquote><pre>
+&lt;multirootfileset&gt;
+  &lt;basedir file=&quot;${build.dir}&quot;/&gt;
+  &lt;basedir file=&quot;${other.project.dir}&quot;
+  &lt;include name=&quot;apps/**/classes&quot;/&gt;
+  &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
+&lt;/multirootfileset&gt;
+</pre></blockquote>
+<p>Is equivalent to the first example but used
+  nested <code>basedir</code> elements.  The nested elements and
+  the <code>basedirs</code> attribute can be used at the same time and
+  the will be merged.</p>
+
+</body>
+</html>
+

@@ -135,6 +135,11 @@ Other changes:
  * The <get> task now explicitly accepts and supports the gzip content encoding.
    Bugzilla Report 49453
 
+ * A new resourcecollection type <multirootfileset> acts like a union
+   of <fileset>s and <dirset>s that share the same configuration but
+   have different base directories.
+   Bugzilla Report 48621
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 
