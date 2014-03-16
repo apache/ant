@@ -221,7 +221,7 @@ public class MultiRootFileSet extends AbstractFileSet
             DirectoryScanner ds = getDirectoryScanner(getProject());
             int count = type == SetType.file
                 ? ds.getIncludedFilesCount()
-                : ds.getIncludedDirs Count();
+                : ds.getIncludedDirsCount();
             if (type == SetType.both) {
                 count += ds.getIncludedFilesCount();
             }
