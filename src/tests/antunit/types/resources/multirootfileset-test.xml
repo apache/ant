@@ -20,23 +20,25 @@
   <import file="../../antunit-base.xml"/>
 
   <target name="setUp">
-    <touch mkdirs="true" file="${input}/a/1/1.txt"/>
-    <touch mkdirs="true" file="${input}/a/1/2.txt"/>
-    <touch mkdirs="true" file="${input}/a/1/3.txt"/>
-    <touch mkdirs="true" file="${input}/b/2/3.txt"/>
-    <touch mkdirs="true" file="${input}/b/2/4.txt"/>
+    <property name="a" location="${input}/a"/>
+    <property name="b" location="${input}/b"/>
+    <touch mkdirs="true" file="${a}/1/1.txt"/>
+    <touch mkdirs="true" file="${a}/1/2.txt"/>
+    <touch mkdirs="true" file="${a}/1/3.txt"/>
+    <touch mkdirs="true" file="${b}/2/3.txt"/>
+    <touch mkdirs="true" file="${b}/2/4.txt"/>
     <mkdir dir="${output}"/>
   </target>
 
   <target name="test-count-in-simple-configuration" depends="setUp">
     <resourcecount property="files">
-      <multirootfileset basedirs="${input}/a,${input}/b"/>
+      <multirootfileset basedirs="${a},${b}"/>
     </resourcecount>
     <resourcecount property="dirs">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="dir"/>
+      <multirootfileset basedirs="${a},${b}" type="dir"/>
     </resourcecount>
     <resourcecount property="files-and-dirs">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="both"/>
+      <multirootfileset basedirs="${a},${b}" type="both"/>
     </resourcecount>
     <au:assertPropertyEquals value="5" name="files"/>
     <au:assertPropertyEquals value="4" name="dirs"/>
@@ -46,20 +48,20 @@
   <target name="test-count-nested-basedir-elements" depends="setUp">
     <resourcecount property="files">
       <multirootfileset>
-        <basedir file="${input}/a"/>
-        <basedir file="${input}/b"/>
+        <basedir file="${a}"/>
+        <basedir file="${b}"/>
       </multirootfileset>
     </resourcecount>
     <resourcecount property="dirs">
       <multirootfileset type="dir">
-        <basedir file="${input}/a"/>
-        <basedir file="${input}/b"/>
+        <basedir file="${a}"/>
+        <basedir file="${b}"/>
       </multirootfileset>
     </resourcecount>
     <resourcecount property="files-and-dirs">
       <multirootfileset type="both">
-        <basedir file="${input}/a"/>
-        <basedir file="${input}/b"/>
+        <basedir file="${a}"/>
+        <basedir file="${b}"/>
       </multirootfileset>
     </resourcecount>
     <au:assertPropertyEquals value="5" name="files"/>
@@ -69,7 +71,7 @@
 
   <target name="test-copying" depends="setUp">
     <copy todir="${output}">
-      <multirootfileset basedirs="${input}/a,${input}/b"/>
+      <multirootfileset basedirs="${a},${b}"/>
     </copy>
     <au:assertFileExists file="${output}/1/1.txt"/>
     <au:assertFileExists file="${output}/1/2.txt"/>
@@ -80,15 +82,15 @@
 
   <target name="test-dirs" depends="setUp">
     <pathconvert property="dirs" pathsep=":">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="dir"/>
+      <multirootfileset basedirs="${a},${b}" type="dir"/>
     </pathconvert>
-    <au:assertPropertyEquals value="${input}${file.separator}a:${input}${file.separator}a${file.separator}1:${input}${file.separator}b:${input}${file.separator}b${file.separator}2"
+    <au:assertPropertyEquals value="${a}:${a}${file.separator}1:${b}:${b}${file.separator}2"
                              name="dirs"/>
   </target>
 
   <target name="test-include-pattern" depends="setUp">
     <copy todir="${output}">
-      <multirootfileset basedirs="${input}/a,${input}/b">
+      <multirootfileset basedirs="${a},${b}">
         <include name="**/3.txt"/>
       </multirootfileset>
     </copy>
@@ -97,16 +99,16 @@
     <au:assertFileExists file="${output}/2/3.txt"/>
     <au:assertFileDoesntExist file="${output}/2/4.txt"/>
     <pathconvert property="dirs" pathsep=":">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
+      <multirootfileset basedirs="${a},${b}" type="dir">
         <include name="1/"/>
       </multirootfileset>
     </pathconvert>
-    <au:assertPropertyEquals value="${input}${file.separator}a${file.separator}1" name="dirs"/>
+    <au:assertPropertyEquals value="${a}${file.separator}1" name="dirs"/>
   </target>
 
   <target name="test-exclude-pattern" depends="setUp">
     <copy todir="${output}">
-      <multirootfileset basedirs="${input}/a,${input}/b">
+      <multirootfileset basedirs="${a},${b}">
         <exclude name="**/3.txt"/>
       </multirootfileset>
     </copy>
@@ -115,17 +117,17 @@
     <au:assertFileDoesntExist file="${output}/2/3.txt"/>
     <au:assertFileExists file="${output}/2/4.txt"/>
     <pathconvert property="dirs" pathsep=":">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
+      <multirootfileset basedirs="${a},${b}" type="dir">
         <exclude name="1/"/>
       </multirootfileset>
     </pathconvert>
-    <au:assertPropertyEquals value="${input}${file.separator}a:${input}${file.separator}b:${input}${file.separator}b${file.separator}2"
+    <au:assertPropertyEquals value="${a}:${b}:${b}${file.separator}2"
                              name="dirs"/>
   </target>
 
   <target name="test-selectors" depends="setUp">
     <copy todir="${output}">
-      <multirootfileset basedirs="${input}/a,${input}/b">
+      <multirootfileset basedirs="${a},${b}">
         <filename regex=".*3\.txt"/>
       </multirootfileset>
     </copy>
@@ -134,11 +136,31 @@
     <au:assertFileExists file="${output}/2/3.txt"/>
     <au:assertFileDoesntExist file="${output}/2/4.txt"/>
     <pathconvert property="dirs" pathsep=":">
-      <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
+      <multirootfileset basedirs="${a},${b}" type="dir">
         <filename regex="1"/>
       </multirootfileset>
     </pathconvert>
-    <au:assertPropertyEquals value="${input}${file.separator}a${file.separator}1" name="dirs"/>
+    <au:assertPropertyEquals value="${a}${file.separator}1" name="dirs"/>
+  </target>
+
+  <target name="test-cache-false" depends="setUp">
+    <copy todir="${output}">
+      <multirootfileset basedirs="${a},${b}" cache="false">
+        <filename regex=".*3\.txt"/>
+      </multirootfileset>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/1/1.txt"/>
+    <au:assertFileExists file="${output}/1/3.txt"/>
+    <au:assertFileExists file="${output}/2/3.txt"/>
+    <au:assertFileDoesntExist file="${output}/2/4.txt"/>
+    <multirootfileset basedirs="${a},${b}" type="dir" cache="false"
+                      id="the-one-dirs">
+      <filename regex="1"/>
+    </multirootfileset>
+    <pathconvert property="dirs" pathsep=":" refid="the-one-dirs"/>
+    <au:assertPropertyEquals value="${a}${file.separator}1" name="dirs"/>
+    <resourcecount property="dir-count" refid="the-one-dirs" />
+    <au:assertPropertyEquals value="1" name="dir-count"/>
   </target>
 
 </project>
