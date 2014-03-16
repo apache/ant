@@ -79,7 +79,7 @@
   </target>
 
   <target name="test-dirs" depends="setUp">
-    <pathconvert property="dirs" pathsep=":">
+    <pathconvert property="dirs" pathsep=":" dirsep="/">
       <multirootfileset basedirs="${input}/a,${input}/b" type="dir"/>
     </pathconvert>
     <au:assertPropertyEquals value="${input}/a:${input}/a/1:${input}/b:${input}/b/2"
@@ -96,7 +96,7 @@
     <au:assertFileExists file="${output}/1/3.txt"/>
     <au:assertFileExists file="${output}/2/3.txt"/>
     <au:assertFileDoesntExist file="${output}/2/4.txt"/>
-    <pathconvert property="dirs" pathsep=":">
+    <pathconvert property="dirs" pathsep=":" dirsep="/">
       <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
         <include name="1/"/>
       </multirootfileset>
@@ -114,7 +114,7 @@
     <au:assertFileDoesntExist file="${output}/1/3.txt"/>
     <au:assertFileDoesntExist file="${output}/2/3.txt"/>
     <au:assertFileExists file="${output}/2/4.txt"/>
-    <pathconvert property="dirs" pathsep=":">
+    <pathconvert property="dirs" pathsep=":" dirsep="/">
       <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
         <exclude name="1/"/>
       </multirootfileset>
@@ -133,7 +133,7 @@
     <au:assertFileExists file="${output}/1/3.txt"/>
     <au:assertFileExists file="${output}/2/3.txt"/>
     <au:assertFileDoesntExist file="${output}/2/4.txt"/>
-    <pathconvert property="dirs" pathsep=":">
+    <pathconvert property="dirs" pathsep=":" dirsep="/">
       <multirootfileset basedirs="${input}/a,${input}/b" type="dir">
         <filename regex="1"/>
       </multirootfileset>
