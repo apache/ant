@@ -247,7 +247,16 @@ elements</a>).</p>
       <em>since Ant 1.8.2</em> - <strong>Ant 1.7.0 to 1.8.1 behave as
         if this attribute was true by default.</strong></td>
     <td align="center" valign="top">No</td>
-  </tr>    
+  </tr>
+  <tr>
+    <td valign="top">threads</td>
+    <td valign="top">a number of threads to run the tests in.<br/>
+      When this attribute is specified the tests will be split arbitrarily among the threads.<br/>
+      requires that the tests be forked with the <code>perTest</code>
+      option to be operative.<br/>
+      <em>since Ant 1.9.4</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <p>By using the <code>errorproperty</code> and <code>failureproperty</code>

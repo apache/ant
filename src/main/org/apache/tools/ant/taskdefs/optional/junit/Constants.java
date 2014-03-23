@@ -38,4 +38,6 @@ public class Constants {
     static final String TERMINATED_SUCCESSFULLY = "terminated successfully";
     static final String LOG_FAILED_TESTS="logfailedtests=";
     static final String SKIP_NON_TESTS = "skipNonTests=";
+    /** @since Ant 1.9.4 */
+    static final String THREADID="threadid=";
 }

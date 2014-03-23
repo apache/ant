@@ -899,7 +899,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         boolean logFailedTests = true;
         boolean logTestListenerEvents = false;
         boolean skipNonTests = false;
-
+        int antThreadID = 0; /* Ant id of thread running this unit test, 0 in single-threaded mode */
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -955,6 +955,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             } else if (args[i].startsWith(Constants.SKIP_NON_TESTS)) {
                 skipNonTests = Project.toBoolean(
                     args[i].substring(Constants.SKIP_NON_TESTS.length()));
+            } else if (args[i].startsWith(Constants.THREADID)) {
+                antThreadID = Integer.parseInt( args[i].substring(Constants.THREADID.length()) );
             }
         }
 
@@ -995,6 +997,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     t.setOutfile(st.nextToken());
                     t.setProperties(props);
                     t.setSkipNonTests(skipNonTests);
+                    t.setThread(antThreadID);
                     code = launch(t, testMethodNames, haltError, stackfilter, haltFail,
                                   showOut, outputToFormat,
                                   logTestListenerEvents);
@@ -1021,6 +1024,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
         } else {
             JUnitTest t = new JUnitTest(args[0]);
+            t.setThread(antThreadID);
             t.setProperties(props);
             t.setSkipNonTests(skipNonTests);
             returnCode = launch(

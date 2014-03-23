@@ -111,6 +111,12 @@
   <property name="test.haltonfailure" value="false"/>
   <property name="junit.fork" value="true"/>
   <property name="junit.forkmode" value="once"/>
+  <condition property="junit.threads" value="2" else="0">
+    <and>
+      <equals arg1="${junit.fork}" arg2="true"/>
+      <equals arg1="${junit.forkmode}" arg2="perTest"/>
+    </and>
+</condition>
   <property name="expandproperty.files"
             value="**/version.txt,**/defaultManifest.mf"/>
   <property name="junit.collector.dir" value="${build.dir}/failingTests"/>
@@ -1659,6 +1665,7 @@ ${antunit.reports}
                haltonfailure="${test.haltonfailure}"
                fork="${junit.fork}"
                forkmode="${junit.forkmode}"
+               threads="${junit.threads}"
                failureproperty="junit.failed"
                errorproperty="junit.failed"
                filtertrace="${junit.filtertrace}">

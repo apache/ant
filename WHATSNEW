@@ -144,6 +144,9 @@ Other changes:
    when enabled.
    GitHub Pull Request #1
 
+* <junit> has now a threads attribute allowing to run the tests in several threads.
+  Bugzilla Report 55925
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

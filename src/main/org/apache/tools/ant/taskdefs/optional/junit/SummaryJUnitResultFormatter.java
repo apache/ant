@@ -53,6 +53,27 @@ public class SummaryJUnitResultFormatter
      */
     public SummaryJUnitResultFormatter() {
     }
+
+    /**
+     *  Insures that a line of log output is written and flushed as a single
+     *  operation, to prevent lines from being spliced into other lines.
+     *  (Hopefully this solves the issue of run on lines -
+     *  [junit] Tests Run: 2 Failures: 2 [junit] Tests run: 5...
+     *  synchronized doesn't seem to be to harsh a penalty since it only
+     *  occurs twice per test - at the beginning and end.  Note that message
+     *  construction occurs outside the locked block.
+     *
+     *  @param b data to be written as an unbroken block
+     */
+    private synchronized void writeOutputLine(byte[] b) {
+        try {
+            out.write(b);
+            out.flush();
+        } catch (IOException ioex) {
+            throw new BuildException("Unable to write summary output", ioex);
+        }
+    }
+
     /**
      * The testsuite started.
      * @param suite the testsuite.
@@ -60,15 +81,16 @@ public class SummaryJUnitResultFormatter
     public void startTestSuite(JUnitTest suite) {
         String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Running ");
-        sb.append(suite.getName());
-        sb.append(newLine);
+        int antThreadID = suite.getThread();
 
-        try {
-            out.write(sb.toString().getBytes());
-            out.flush();
-        } catch (IOException ioex) {
-            throw new BuildException("Unable to write summary output", ioex);
+        sb.append(suite.getName());
+        /* only write thread id in multi-thread mode so default old way doesn't change output */
+        if (antThreadID > 0) {
+            sb.append(" in thread ");
+            sb.append(antThreadID);
         }
+        sb.append(newLine);
+        writeOutputLine(sb.toString().getBytes());
     }
     /**
      * Empty
@@ -149,6 +171,17 @@ public class SummaryJUnitResultFormatter
         sb.append(", Time elapsed: ");
         sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
+
+        /* class name needed with multi-threaded execution because
+           results line may not appear immediately below start line.
+           only write thread id, class name in multi-thread mode so
+           the line still looks as much like the old line as possible. */
+        if (suite.getThread() > 0) {
+            sb.append(", Thread: ");
+            sb.append(suite.getThread());
+            sb.append(", Class: ");
+            sb.append(suite.getName());
+        }
         sb.append(newLine);
 
         if (withOutAndErr) {
@@ -164,10 +197,7 @@ public class SummaryJUnitResultFormatter
         }
 
         try {
-            out.write(sb.toString().getBytes());
-            out.flush();
-        } catch (IOException ioex) {
-            throw new BuildException("Unable to write summary output", ioex);
+            writeOutputLine(sb.toString().getBytes());
         } finally {
             if (out != System.out && out != System.err) {
                 try {
