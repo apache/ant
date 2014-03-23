@@ -140,6 +140,10 @@ Other changes:
    have different base directories.
    Bugzilla Report 48621
 
+ * <get> has a quiet attribute that makes the task log errors only
+   when enabled.
+   GitHub Pull Request #1
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

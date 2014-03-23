@@ -74,6 +74,7 @@ public class Get extends Task {
     private Resources sources = new Resources();
     private File destination; // required
     private boolean verbose = false;
+    private boolean quiet = false;
     private boolean useTimestamp = false; //off by default
     private boolean ignoreErrors = false;
     private String uname = null;
@@ -253,6 +254,13 @@ public class Get extends Task {
         return getThread.wasSuccessful();
     }
 
+    @Override
+    public void log(String msg, int msgLevel) {
+        if (!quiet || msgLevel >= Project.MSG_ERR) {
+            super.log(msg, msgLevel);
+        }
+    }
+
     /**
      * Check the attributes.
      */
@@ -329,6 +337,16 @@ public class Get extends Task {
      */
     public void setVerbose(boolean v) {
         verbose = v;
+    }
+
+    /**
+     * If true, set default log level to Project.MSG_ERR.
+     *
+     * @param v if "true" then be quiet
+     * @since Ant 1.9.4
+     */
+    public void setQuiet(boolean v){
+        this.quiet = v;
     }
 
     /**
