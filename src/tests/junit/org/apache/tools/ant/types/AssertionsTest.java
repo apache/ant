@@ -32,10 +32,6 @@ public class AssertionsTest extends BuildFileTest {
         configureProject("src/etc/testcases/types/assertions.xml");
     }
 
-    protected void tearDown() throws Exception {
-        executeTarget("teardown");
-    }
-
     /**
      * runs a test and expects an assertion thrown in forked code
      * @param target

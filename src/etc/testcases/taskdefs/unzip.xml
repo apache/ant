@@ -18,12 +18,12 @@
 
 <project name="xxx-test" basedir="." default="test1">
 
-  <target name="cleanup">
-    <delete file="asf-logo.gif" />
-    <delete file="unziptest.zip"/>
-    <delete dir="unziptestin"/>
-    <delete dir="unziptestout"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
   </target>
+
 
   <target name="test1">
     <unzip/>
@@ -39,30 +39,28 @@
 
   <target name="testZipTask">
     <ant antfile="zip.xml" target="feather" />
-    <unzip src="asf-logo.gif.zip" dest="." />
-    <ant antfile="zip.xml" target="cleanup" />
+    <unzip src="${output}/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="testUncompressedZipTask">
     <ant antfile="zip.xml" target="uncompressed-feather" />
-    <unzip src="asf-logo.gif.zip" dest="." />
-    <ant antfile="zip.xml" target="cleanup" />
+    <unzip src="${output}/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="realTest">
-    <unzip src="expected/asf-logo.gif.zip" dest="." />
+    <unzip src="expected/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="prepareTestZip">
-    <mkdir dir="unziptestin/1"/>
-    <mkdir dir="unziptestin/2"/>
-    <touch file="unziptestin/1/foo"/>
-    <touch file="unziptestin/2/bar"/>
-    <zip destfile="unziptest.zip" basedir="unziptestin"/>
+    <mkdir dir="${output}/unziptestin/1"/>
+    <mkdir dir="${output}/unziptestin/2"/>
+    <touch file="${output}/unziptestin/1/foo"/>
+    <touch file="${output}/unziptestin/2/bar"/>
+    <zip destfile="${output}/unziptest.zip" basedir="${output}/unziptestin"/>
   </target>
 
   <target name="testPatternSetExcludeOnly" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <exclude name="1/**"/>
       </patternset>
@@ -70,7 +68,7 @@
   </target>
 
   <target name="testPatternSetIncludeOnly" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="2/**"/>
       </patternset>
@@ -78,7 +76,7 @@
   </target>
 
   <target name="testPatternSetIncludeAndExclude" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="2/**"/>
         <exclude name="2/**"/>
@@ -87,7 +85,7 @@
   </target>
 
   <target name="testTwoPatternSets" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="2/**"/>
       </patternset>
@@ -98,7 +96,7 @@
   </target>
 
   <target name="testTwoPatternSetsWithExcludes" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="2/**"/>
       </patternset>
@@ -110,13 +108,13 @@
   </target>
 
   <target name="selfExtractingArchive">
-    <mkdir dir="unziptestout"/>
-    <unzip dest="unziptestout" src="zip/test.exe"/>
+    <mkdir dir="${output}/unziptestout"/>
+    <unzip dest="${output}/unziptestout" src="zip/test.exe"/>
   </target>
 
   <!-- Bugzilla Report 20969 -->
   <target name="testPatternSetSlashOnly" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="2/"/>
       </patternset>
@@ -125,16 +123,16 @@
 
   <!-- Bugzilla Report 10504 -->
   <target name="encodingTest">
-    <mkdir dir="unziptestin"/>
-    <touch file="unziptestin/foo"/>
-    <zip zipfile="unziptest.zip" basedir="unziptestin" encoding="UnicodeBig"/>
-    <mkdir dir="unziptestout"/>
-    <unzip src="unziptest.zip" dest="unziptestout" encoding="UnicodeBig"/>
+    <mkdir dir="${output}/unziptestin"/>
+    <touch file="${output}/unziptestin/foo"/>
+    <zip zipfile="${output}/unziptest.zip" basedir="${output}/unziptestin" encoding="UnicodeBig"/>
+    <mkdir dir="${output}/unziptestout"/>
+    <unzip src="${output}/unziptest.zip" dest="${output}/unziptestout" encoding="UnicodeBig"/>
   </target>
 
   <!-- Bugzilla Report 21996 -->
   <target name="testFlattenMapper" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="1/**"/>
       </patternset>
@@ -144,7 +142,7 @@
 
   <!-- Bugzilla Report 21996 -->
   <target name="testGlobMapper" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="1/**"/>
       </patternset>
@@ -153,7 +151,7 @@
   </target>
 
   <target name="testTwoMappers" depends="prepareTestZip">
-    <unzip dest="unziptestout" src="unziptest.zip">
+    <unzip dest="${output}/unziptestout" src="${output}/unziptest.zip">
       <patternset>
         <include name="1/**"/>
       </patternset>
@@ -163,7 +161,7 @@
   </target>
 
   <target name="testResourceCollection">
-    <unzip dest="unziptestout">
+    <unzip dest="${output}/unziptestout">
       <patternset>
         <include name="junit/**"/>
       </patternset>
@@ -175,8 +173,8 @@
   </target>
 
   <target name="testDocumentationClaimsOnCopy" depends="prepareTestZip">
-    <copy todir="unziptestout" preservelastmodified="true"> 
-      <zipfileset src="unziptest.zip">
+    <copy todir="${output}/unziptestout" preservelastmodified="true">
+      <zipfileset src="${output}/unziptest.zip">
         <patternset>
           <include name="2/"/>
         </patternset>

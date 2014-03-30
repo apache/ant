@@ -18,41 +18,38 @@
 -->
 <project default="no">
 
-  <property name="out" location="output"/>
+  <import file="../../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
   <property name="in" location="input"/>
 
   <target name="no">
     <fail>For tests only</fail>
   </target>
 
-  <target name="setUp">
-    <mkdir dir="${out}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${out}"/>
-  </target>
-
   <target name="compile" depends="setUp">
-    <javac srcdir="${in}" destdir="${out}"/>
+    <javac srcdir="${in}" destdir="${output}"/>
   </target>
 
   <target name="simple-compile" depends="compile">
-    <javah destdir="${out}">
+    <javah destdir="${output}">
       <class name="org.example.Foo"/>
       <classpath>
-        <pathelement location="${out}"/>
+        <pathelement location="${output}"/>
       </classpath>
     </javah>
   </target>
 	
   <target name="test-fileset" depends="compile">
-  	<javah destdir="${out}">
-  	  <fileset dir="${out}">
+  	<javah destdir="${output}">
+  	  <fileset dir="${output}">
   		<include name="**/*.class"/>
   	  </fileset>
   	  <classpath>
-  		<pathelement location="${out}"/>
+  		<pathelement location="${output}"/>
   	  </classpath>
   	</javah>
   </target>

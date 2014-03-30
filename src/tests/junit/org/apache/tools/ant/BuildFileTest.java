@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
+import org.apache.tools.ant.util.ProcessUtil;
 
 /**
  * A BuildFileTest is a TestCase which executes targets from an Ant buildfile
@@ -296,6 +297,9 @@ public abstract class BuildFileTest extends TestCase {
         project.init();
         File antFile = new File(System.getProperty("root"), filename);
         project.setUserProperty("ant.file" , antFile.getAbsolutePath());
+        // set two new properties to allow to build unique names when running multithreaded tests
+        project.setProperty("ant.processid", ProcessUtil.getProcessId("<Process>"));
+        project.setProperty("ant.threadname", Thread.currentThread().getName());
         project.addBuildListener(new AntTestListener(logLevel));
         ProjectHelper.configureProject(project, antFile);
     }

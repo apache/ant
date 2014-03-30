@@ -15,18 +15,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project default="cleanup" basedir=".">
+<project default="tearDown" basedir=".">
 
-  <target name="init">
-    <mkdir dir="result" />
-  </target>
+  <import file="../buildfiletest-base.xml"/>
 
-  <target name="cleanup">
-    <delete dir="result"/>
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
   <target name="tokenfilter">
-    <copy file="input/linecontains.test" tofile="result/file1">
+    <copy file="input/linecontains.test" tofile="${output}/file1">
       <filterchain>
         <tokenfilter/>
       </filterchain>
@@ -34,12 +32,12 @@
   </target>
 
   <target name="trimignore">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       Hello
       
       World
     </concat>
-    <copy file="result/input" tofile="result/output" overwrite="yes">
+    <copy file="${output}/input" tofile="${output}/output" overwrite="yes">
       <filterchain>
         <tokenfilter delimoutput="-">
           <trim/>
@@ -48,12 +46,12 @@
       </filterchain>
     </copy>
     <concat>
-      <filelist dir="." files="result/output"/>
+      <filelist dir="." files="${output}/output"/>
     </concat>
   </target>
 
   <target name="trimfile">
-    <concat destfile="result/trimfile">
+    <concat destfile="${output}/trimfile">
       This is the contents of the trimmed file.
       This is the second line.
       <filterchain>
@@ -63,7 +61,7 @@
   </target>
 
   <target name="trimfilebyline">
-    <concat destfile="result/trimfilebyline">
+    <concat destfile="${output}/trimfilebyline">
       This is the contents of the trimmed file.
       This is the second line.
       <filterchain>
@@ -74,7 +72,7 @@
   </target>
 
   <target name="filterreplacestring">
-    <concat destfile="result/filterreplacestring">
+    <concat destfile="${output}/filterreplacestring">
       This is foo bar
       <filterchain>
         <replacestring from="foo" to="the"/>
@@ -93,11 +91,11 @@
   </target>
 
   <target name="stringtokenizer">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       This is a number
       of words
     </concat>
-    <copy file="result/input" tofile="result/output" overwrite="yes">
+    <copy file="${output}/input" tofile="${output}/output" overwrite="yes">
       <filterchain>
         <tokenfilter delimoutput="#">
           <stringtokenizer/>
@@ -105,12 +103,12 @@
       </filterchain>
     </copy>
     <concat>
-      <filelist dir="." files="result/output"/>
+      <filelist dir="." files="${output}/output"/>
     </concat>
   </target>
 
   <target name="unixlineoutput">
-    <concat destfile="result/unixlineoutput">
+    <concat destfile="${output}/unixlineoutput">
       This is a number
       of words
       <filterchain>
@@ -122,7 +120,7 @@
   </target>
 
   <target name="doslineoutput">
-    <concat destfile="result/doslineoutput">
+    <concat destfile="${output}/doslineoutput">
       This is a number
       of words
       <filterchain>
@@ -134,11 +132,11 @@
   </target>
 
   <target name="filetokenizer">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       This is a number
       of words
     </concat>
-    <copy file="result/input" tofile="result/filetokenizer">
+    <copy file="${output}/input" tofile="${output}/filetokenizer">
       <filterchain>
         <tokenfilter>
           <filetokenizer/>
@@ -149,7 +147,7 @@
   </target>
 
   <target name="replacestring">
-    <concat destfile="result/replacestring">
+    <concat destfile="${output}/replacestring">
       this is the sun
       <filterchain>
         <tokenfilter>
@@ -171,11 +169,11 @@
   </target>
 
   <target name="containsstring">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       this is a line contains foo
       this line does not
     </concat>
-    <copy file="result/input" tofile="result/containsstring">
+    <copy file="${output}/input" tofile="${output}/containsstring">
       <filterchain>
         <tokenfilter>
           <containsstring contains="foo"/>
@@ -186,14 +184,14 @@
 
   <!-- need to check for existence of regex -->
   <target name="replaceregex">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello Hello HELLO hello
       cat Cat cat
       Sun Sun Sun
       WhiteSpace 	tab
       This is a line with digits - 1234 -- there
     </concat>
-    <copy file="result/input" tofile="result/replaceregex">
+    <copy file="${output}/input" tofile="${output}/replaceregex">
       <filterchain>
         <tokenfilter>
           <replaceregex pattern="hello" replace="world" flags="gi"/>
@@ -209,7 +207,7 @@
   </target>
 
   <target name="filterreplaceregex">
-    <concat destfile="result/filterreplaceregex">
+    <concat destfile="${output}/filterreplaceregex">
       hello Hello HELLO hello
       <filterchain>
         <replaceregex pattern="hello" replace="world" flags="gi"/>
@@ -228,12 +226,12 @@
 
   <!-- need to check for existence of regex -->
   <target name="containsregex">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello world
       this is the moon
       World here
     </concat>
-    <copy file="result/input" tofile="result/containsregex">
+    <copy file="${output}/input" tofile="${output}/containsregex">
       <filterchain>
         <tokenfilter>
           <containsregex pattern="(hello|world)" flags="i"/>
@@ -243,7 +241,7 @@
   </target>
 
   <target name="filtercontainsregex">
-    <concat destfile="result/filtercontainsregex">
+    <concat destfile="${output}/filtercontainsregex">
       hello world
       this is the moon
       World here
@@ -258,11 +256,11 @@
 
   <!-- need to check for existence of regex -->
   <target name="containsregex2">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       SUITE(TestSuite, bits);
       here
     </concat>
-    <copy file="result/input" tofile="result/containsregex2">
+    <copy file="${output}/input" tofile="${output}/containsregex2">
       <filterchain>
         <tokenfilter>
           <containsregex
@@ -274,7 +272,7 @@
   </target>
 
   <target name="deletecharacters">
-    <concat destfile="result/deletechars">
+    <concat destfile="${output}/deletechars">
       This is some ### s
       some ****
       <filterchain>
@@ -287,10 +285,10 @@
   </target>
 
   <target name="scriptfilter">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello world
     </concat>
-    <copy file="result/input" tofile="result/scriptfilter">
+    <copy file="${output}/input" tofile="${output}/scriptfilter">
       <filterchain>
         <tokenfilter>
           <scriptfilter language="javascript">
@@ -302,10 +300,10 @@
   </target>
 
   <target name="scriptfilter2">
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello moon
     </concat>
-    <copy file="result/input" tofile="result/scriptfilter2">
+    <copy file="${output}/input" tofile="${output}/scriptfilter2">
       <filterchain>
         <scriptfilter language="javascript">
           self.setToken(self.getToken().toUpperCase());
@@ -327,11 +325,11 @@
       <classpath refid="test-classes"/>
     </typedef>
     
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello world
     </concat>
 
-    <copy file="result/input" tofile="result/custom">
+    <copy file="${output}/input" tofile="${output}/custom">
       <filterchain>
         <tokenfilter>
           <stringtokenizer/>
@@ -348,10 +346,10 @@
   </target>
   
   <target name="hasregex">
-    <concat destfile="result/replaceregexp">
+    <concat destfile="${output}/replaceregexp">
       hello world
     </concat>
-    <replaceregexp file="result/replaceregexp"
+    <replaceregexp file="${output}/replaceregexp"
                   match="hello( )world"
                   replace="bye\1world"/>
   </target>

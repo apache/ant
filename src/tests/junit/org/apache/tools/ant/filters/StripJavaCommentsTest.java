@@ -38,14 +38,10 @@ public class StripJavaCommentsTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testStripJavaComments() throws IOException {
         executeTarget("testStripJavaComments");
         File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/stripjavacomments.test");
-        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(),"result/stripjavacomments.test");
+        File result = new File(getProject().getProperty("output"), "stripjavacomments.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

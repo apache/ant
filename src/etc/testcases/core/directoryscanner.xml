@@ -16,31 +16,26 @@
    limitations under the License.
 -->
 <project name="directoryscanner-test" basedir=".">
+  <import file="../buildfiletest-base.xml"/>
 
-    <property name="tmp.dir" location="tmp"/>
-
-    <target name="setup">
-        <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
-        <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
-        <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
+    <target name="setUp">
+        <mkdir dir="${output}/alpha/beta/gamma"/>
+        <touch file="${output}/alpha/beta/gamma/gamma.xml"/>
+        <touch file="${output}/alpha/beta/beta.xml"/>
     </target>
 
-    <target name="extended-setup" depends="setup">
-        <mkdir dir="${tmp.dir}/delta"/>
-        <touch file="${tmp.dir}/delta/delta.xml"/>
+    <target name="extended-setup" depends="setUp">
+        <mkdir dir="${output}/delta"/>
+        <touch file="${output}/delta/delta.xml"/>
     </target>
 
     <target name="children-of-excluded-dir-setup" depends="extended-setup" />
 
-    <target name="cleanup">
-        <delete dir="${tmp.dir}" quiet="true"/>
-    </target>
-
-    <target name="symlink-setup" depends="setup">
-        <mkdir dir="${tmp.dir}/epsilon/gamma"/>
-        <delete dir="${tmp.dir}/alpha/beta"/>
-        <symlink link="${tmp.dir}/alpha/beta" resource="${tmp.dir}/epsilon"/>
-        <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
+    <target name="symlink-setup" depends="setUp">
+        <mkdir dir="${output}/epsilon/gamma"/>
+        <delete dir="${output}/alpha/beta"/>
+        <symlink link="${output}/alpha/beta" resource="${output}/epsilon"/>
+        <touch file="${output}/alpha/beta/gamma/gamma.xml"/>
     </target>
 
 </project>

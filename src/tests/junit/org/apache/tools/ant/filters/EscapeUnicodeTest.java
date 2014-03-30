@@ -38,14 +38,10 @@ public class EscapeUnicodeTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testEscapeUnicode() throws IOException {
         executeTarget("testEscapeUnicode");
         File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(), "expected/escapeunicode.test");
-        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(), "result/escapeunicode.test");
+        File result = new File(getProject().getProperty("output"), "escapeunicode.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

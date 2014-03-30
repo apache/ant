@@ -17,25 +17,27 @@
  *
 -->
 <project name="javadoc" basedir=".">
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
   <path id="path.dirset">
     <dirset dir="." />
   </path>
-  <property name="javadoc" location="javadoc"/>
 
-  <target name="tearDown">
-    <delete dir="${javadoc}" quiet="true"/>
-  </target>
 
   <target name="dirsetPath">
-    <javadoc sourcepathref="path.dirset" packagenames="*" destdir="${javadoc}" />
+    <javadoc sourcepathref="path.dirset" packagenames="*" destdir="${output}" />
   </target>
 
   <target name="dirsetPathWithoutPackagenames">
-    <javadoc sourcepathref="path.dirset" destdir="${javadoc}" />
+    <javadoc sourcepathref="path.dirset" destdir="${output}" />
   </target>
 
   <target name="nestedDirsetPath">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <sourcepath refid="path.dirset" />
     </javadoc>
   </target>
@@ -48,29 +50,29 @@
   </path>
 
   <target name="filesetPath">
-    <javadoc sourcepathref="path.fileset" packagenames="*" destdir="${javadoc}" />
+    <javadoc sourcepathref="path.fileset" packagenames="*" destdir="${output}" />
   </target>
 
   <target name="nestedFilesetPath">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <sourcepath refid="path.fileset" />
     </javadoc>
   </target>
 
   <target name="nestedFilesetRefInPath">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <fileset refid="fileset.inpath" />
     </javadoc>
   </target>
 
   <target name="nestedFilesetNoPatterns">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <fileset dir="java/"/>
     </javadoc>
   </target>
 
   <target name="doublyNestedFileset">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <sourcefiles>
         <fileset dir="java/" includes="**/*.java"/>
       </sourcefiles>
@@ -78,7 +80,7 @@
   </target>
 
   <target name="doublyNestedFilesetNoPatterns">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <sourcefiles>
         <fileset dir="java/"/>
       </sourcefiles>
@@ -94,11 +96,11 @@
 
   <target name="filelistPath">
     <javadoc sourcepathref="path.filelist" packagenames="*"
-      destdir="${javadoc}" />
+      destdir="${output}" />
   </target>
 
   <target name="nestedFilelistPath">
-    <javadoc packagenames="*" destdir="${javadoc}">
+    <javadoc packagenames="*" destdir="${output}">
       <sourcepath refid="path.filelist" />
     </javadoc>
   </target>
@@ -112,7 +114,7 @@
 
   <target name="pathelementPath">
     <javadoc sourcepathref="path.pathelement.path"
-      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="${javadoc}" />
+      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="${output}" />
   </target>
 
   <path id="path.pathelement.location">
@@ -122,11 +124,11 @@
 
   <target name="pathelementLocationPath">
     <javadoc sourcepathref="path.pathelement.location"
-      packagenames="*" destdir="${javadoc}" />
+      packagenames="*" destdir="${output}" />
   </target>
 
   <target name="nestedSource">
-    <javadoc destdir="${javadoc}">
+    <javadoc destdir="${output}">
       <source file="java/ClassToJavadoc.java" />
     </javadoc>
   </target>
@@ -136,19 +138,17 @@
   </fileset>
 
   <target name="nestedFilesetRef">
-    <javadoc destdir="${javadoc}">
+    <javadoc destdir="${output}">
       <fileset refid="fileset.simple" />
     </javadoc>
   </target>
 
   <target name="nonJavaIncludes">
-    <delete dir="${javadoc}"/>
-    <mkdir dir="${javadoc}"/>
-    <echo file="${javadoc}/stuff1.java">public class stuff1 {}</echo>
-    <echo file="${javadoc}/stuff2.java">public class stuff2 {}</echo>
-    <echo file="${javadoc}/stuff.properties">x=4</echo>
-    <javadoc destdir="${javadoc}" failonerror="true">
-      <fileset dir="${javadoc}"/>
+    <echo file="${output}/stuff1.java">public class stuff1 {}</echo>
+    <echo file="${output}/stuff2.java">public class stuff2 {}</echo>
+    <echo file="${output}/stuff.properties">x=4</echo>
+    <javadoc destdir="${output}" failonerror="true">
+      <fileset dir="${output}"/>
     </javadoc>
   </target>
 

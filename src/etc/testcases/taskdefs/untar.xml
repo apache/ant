@@ -16,82 +16,79 @@
   limitations under the License.
 -->
 
-<project basedir="." default="cleanup">
+<project basedir="." default="tearDown">
 
-  <target name="cleanup">
-    <delete file="asf-logo.gif" />
-    <delete file="untartest.tar" />
-    <delete dir="untartestin"/>
-    <delete dir="untartestout"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${output}/untar"/>
   </target>
 
   <target name="testTarTask">
     <ant antfile="tar.xml" target="feather" />
-    <untar src="asf-logo.gif.tar" dest="." />
-    <ant antfile="tar.xml" target="cleanup" />
+    <untar src="${output}/asf-logo.gif.tar" dest="${output}/untar" />
   </target>
 
   <target name="testGzipTarTask">
     <ant antfile="tar.xml" target="feather" />
-    <untar src="asf-logo.gif.tar.gz" dest="." compression="gzip" />
-    <ant antfile="tar.xml" target="cleanup" />
+    <untar src="${output}/asf-logo.gif.tar.gz" dest="${output}/untar" compression="gzip" />
   </target>
 
   <target name="testBzip2TarTask">
     <ant antfile="tar.xml" target="feather" />
-    <untar src="asf-logo.gif.tar.bz2" dest="." compression="bzip2"/>
-    <ant antfile="tar.xml" target="cleanup" />
+    <untar src="${output}/asf-logo.gif.tar.bz2" dest="${output}/untar" compression="bzip2"/>
   </target>
 
   <target name="realTest">
-    <untar src="expected/asf-logo.gif.tar" dest="." />
+    <untar src="expected/asf-logo.gif.tar" dest="${output}/untar" />
   </target>
 
   <target name="realGzipTest">
-    <untar src="expected/asf-logo.gif.tar.gz" dest="." compression="gzip" />
+    <untar src="expected/asf-logo.gif.tar.gz" dest="${output}/untar" compression="gzip" />
   </target>
 
   <target name="realBzip2Test">
-    <untar src="expected/asf-logo.gif.tar.bz2" dest="." compression="bzip2"/>
+    <untar src="expected/asf-logo.gif.tar.bz2" dest="${output}/untar" compression="bzip2"/>
   </target>
 
 
   <target name="srcDirTest">
-    <untar src="." dest="." />
+    <untar src="." dest="${output}/untar" />
   </target>
 
   <target name="encoding">
-    <untar src="expected/asf-logo.gif.tar" dest="." encoding="foo"/>
+    <untar src="expected/asf-logo.gif.tar" dest="${output}/untar" encoding="foo"/>
   </target>
 
   <target name="resourceCollection">
-    <mkdir dir="untartestout"/>
-    <zip destfile="untartestout/test.zip">
+    <mkdir dir="${output}/untartestout"/>
+    <zip destfile="${output}/untartestout/test.zip">
       <fileset dir="expected">
         <include name="asf-logo.gif.tar"/>
       </fileset>
     </zip>
-    <untar dest=".">
-      <zipfileset src="untartestout/test.zip">
+    <untar dest="${output}/untar">
+      <zipfileset src="${output}/untartestout/test.zip">
         <include name="*.tar"/>
       </zipfileset>
     </untar>
   </target>
 
   <target name="prepareTestTar">
-    <mkdir dir="untartestin/1"/>
-    <mkdir dir="untartestin/2"/>
-    <touch file="untartestin/1/foo"/>
-    <touch file="untartestin/2/bar"/>
-    <copy todir="untartestin/2">
+    <mkdir dir="${output}/untartestin/1"/>
+    <mkdir dir="${output}/untartestin/2"/>
+    <touch file="${output}/untartestin/1/foo"/>
+    <touch file="${output}/untartestin/2/bar"/>
+    <copy todir="${output}/untartestin/2">
       <fileset dir="expected" includes="*md5*"/>
     </copy>
-    <tar destfile="untartest.tar" basedir="untartestin"/>
+    <tar destfile="${output}/untartest.tar" basedir="${output}/untartestin"/>
   </target>
 
   <target name="testDocumentationClaimsOnCopy" depends="prepareTestTar">
-    <copy todir="untartestout" preservelastmodified="true"> 
-      <tarfileset src="untartest.tar">
+    <copy todir="${output}/untar" preservelastmodified="true">
+      <tarfileset src="${output}/untartest.tar">
         <patternset>
           <include name="2/"/>
         </patternset>

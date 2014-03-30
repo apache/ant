@@ -38,14 +38,10 @@ public class LineContainsTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testLineContains() throws IOException {
         executeTarget("testLineContains");
         File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/linecontains.test");
-        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(),"result/linecontains.test");
+        File result = new File(getProject().getProperty("output"),"linecontains.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

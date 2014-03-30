@@ -147,6 +147,11 @@ Other changes:
 * <junit> has now a threads attribute allowing to run the tests in several threads.
   Bugzilla Report 55925
 
+* addition of a new ProcessUtil class providing the process id of the current process
+
+* changes to allow to run the JUnit testcases of Ant in parallel,
+  by making them use unique temporary directories
+
 Changes from Ant 1.9.2 TO Ant 1.9.3
 ===================================
 

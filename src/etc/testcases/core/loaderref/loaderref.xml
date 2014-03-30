@@ -19,7 +19,13 @@
 <project name="loaderref-test" default="help">
 
   <property name="src.dir" value="src"/>
-  <property name="classes.dir" value="classes"/>
+
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <echo message="output=${output}" file="/Users/antoine/debug.txt"/>
+    <mkdir dir="${output}"/>
+  </target>
 
   <target name="help">
     <echo>
@@ -27,20 +33,15 @@ This build file is intended to be used for testing Ant
     </echo>
   </target>
 
-  <target name="clean">
-    <delete dir="${classes.dir}"/>
-  </target>
-
   <target name="compile">
-    <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+    <javac srcdir="${src.dir}" destdir="${output}"/>
   </target>
 
   <target name="testbadref" depends="compile" >
     <taskdef loaderref="loaderref-test"
              name="test1"
              classname="Test1"
-             classpath="${classes.dir}"/>
+             classpath="${output}"/>
   </target>
 
 </project>

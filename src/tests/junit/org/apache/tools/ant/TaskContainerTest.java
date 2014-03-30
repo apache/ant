@@ -28,10 +28,6 @@ public class TaskContainerTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/taskcontainer.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testPropertyExpansion() {
         executeTarget("testPropertyExpansion");
         assertTrue("attribute worked",

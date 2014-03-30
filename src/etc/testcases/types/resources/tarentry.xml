@@ -16,18 +16,19 @@
   limitations under the License.
 -->
 <project default="not me">
+  <import file="../../buildfiletest-base.xml" optional="false"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
   <target name="not me">
     <fail>only use from within unit tests</fail>
   </target>
 
-  <property name="testout" location="testout"/>
-  <target name="setUp">
-    <mkdir dir="${testout}"/>
-  </target>
-
   <target name="uncompressSource" depends="setUp">
     <ant antfile="../../taskdefs/tar.xml" target="feather" />
-    <copy todir="${testout}">
+    <copy todir="${output}">
       <tarentry name="asf-logo.gif">
         <gzipresource>
           <file file="../../taskdefs/expected/asf-logo.gif.tar.gz"/>
@@ -36,8 +37,4 @@
     </copy>
   </target>
 
-  <target name="tearDown">
-    <delete dir="${testout}"/>
-    <ant antfile="../../taskdefs/tar.xml" target="cleanup" />
-  </target>
 </project>

@@ -16,10 +16,10 @@
    limitations under the License.
 -->
 <project name="antclassloader-test" basedir=".">
-
-    <property name="tmp.dir" location="${java.io.tmpdir}/tmp space"/>
+    <import file="../buildfiletest-base.xml"/>
+    <property name="tmp.dir" location="${output}/tmp space"/>
     <!-- ant for germans -->
-    <property name="tmp.dir.nonascii" value="${java.io.tmpdir}/&#0227;nt"/>
+    <property name="tmp.dir.nonascii" value="${output}/&#0227;nt"/>
     <property name="ext.dir.relative" value="ext"/>
     <property name="main.jar" location="${tmp.dir}/main.jar"/>
     <property name="ext.jar.relative" value="${ext.dir.relative}/ext.jar"/>
@@ -27,7 +27,7 @@
     <property name="build.sysclasspath" value="first"/>
     <property name="main.jar.nonascii" location="${tmp.dir.nonascii}/main.jar"/>
     <property name="ext.jar.nonascii" location="${tmp.dir.nonascii}/${ext.jar.relative}"/>
-    <target name="setup" depends="setup.withspace,setup.nonascii"/>
+    <target name="setUp" depends="setup.withspace,setup.nonascii"/>
 
     <target name="setup.withspace">
         <mkdir dir="${tmp.dir}/${ext.dir.relative}"/>
@@ -49,12 +49,8 @@
 
     </target>
 
-    <target name="cleanup">
-        <delete dir="${tmp.dir}" quiet="true"/>
-        <delete dir="${tmp.dir.nonascii}" quiet="true"/>
-    </target>
 
-    <target name="prepareGetPackageTest" depends="setup">
+    <target name="prepareGetPackageTest" depends="setUp">
       <mkdir dir="${tmp.dir.nonascii}/org/example"/>
       <echo file="${tmp.dir.nonascii}/org/example/Foo.java"><![CDATA[
 package org.example;

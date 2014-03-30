@@ -38,6 +38,7 @@ public class ZipTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/zip.xml");
+        executeTarget("setUp");
     }
 
     public void test1() {
@@ -65,7 +66,11 @@ public class ZipTest extends BuildFileTest {
         } catch (IOException e) {
             //ignored
         }
-        executeTarget("cleanup");
+        try {
+            super.tearDown();
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+        }
     }
 
     public void test5() {
@@ -89,7 +94,7 @@ public class ZipTest extends BuildFileTest {
     public void testZipgroupfileset() throws IOException {
         executeTarget("testZipgroupfileset");
 
-        ZipFile zipFile = new ZipFile(new File(getProjectDir(), "zipgroupfileset.zip"));
+        ZipFile zipFile = new ZipFile(new File(getProject().getProperty("output"), "zipgroupfileset.zip"));
 
         assertTrue(zipFile.getEntry("ant.xml") != null);
         assertTrue(zipFile.getEntry("optional/jspc.xml") != null);
@@ -113,7 +118,7 @@ public class ZipTest extends BuildFileTest {
     // Bugzilla Report 18403
     public void testPrefixAddsDir() throws IOException {
         executeTarget("testPrefixAddsDir");
-        File archive = getProject().resolveFile("test3.zip");
+        File archive = new File(getProject().getProperty("output"), "test3.zip");
         zfPrefixAddsDir = new ZipFile(archive);
         ZipEntry ze = zfPrefixAddsDir.getEntry("test/");
         assertNotNull("test/ has been added", ze);
@@ -124,10 +129,10 @@ public class ZipTest extends BuildFileTest {
     public void testFilesOnlyDoesntCauseRecreate()
         throws InterruptedException {
         executeTarget("testFilesOnlyDoesntCauseRecreateSetup");
-        long l = getProject().resolveFile("test3.zip").lastModified();
+        long l = new File(getProject().getProperty("output"), "test3.zip").lastModified();
         Thread.sleep(3000);
         executeTarget("testFilesOnlyDoesntCauseRecreate");
-        assertEquals(l, getProject().resolveFile("test3.zip").lastModified());
+        assertEquals(l, new File(getProject().getProperty("output"), "test3.zip").lastModified());
     }
 
     // Bugzilla Report 22865
@@ -156,7 +161,7 @@ public class ZipTest extends BuildFileTest {
         executeTarget("testDefaultExcludesAndUpdate");
         ZipFile f = null;
         try {
-            f = new ZipFile(getProject().resolveFile("test3.zip"));
+            f = new ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
             assertNotNull("ziptest~ should be included",
                           f.getEntry("ziptest~"));
         } finally {
@@ -178,8 +183,7 @@ public class ZipTest extends BuildFileTest {
         executeTarget("testTarFileSet");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(getProject()
-                                                  .resolveFile("test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("asf-logo.gif");
             assertEquals(UnixStat.FILE_FLAG | 0446, ze.getUnixMode());
         } finally {
@@ -193,8 +197,7 @@ public class ZipTest extends BuildFileTest {
         executeTarget("rewriteZeroPermissions");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(getProject()
-                                                  .resolveFile("test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
         } finally {
@@ -208,8 +211,7 @@ public class ZipTest extends BuildFileTest {
         executeTarget("acceptZeroPermissions");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(getProject()
-                                                  .resolveFile("test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(0000, ze.getUnixMode());
         } finally {
@@ -223,8 +225,7 @@ public class ZipTest extends BuildFileTest {
         executeTarget("testForBugzilla34764");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(getProject()
-                                                  .resolveFile("test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("file1");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
         } finally {

@@ -16,6 +16,9 @@
   limitations under the License.
 -->
 <project name="test" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
   <path id="testclasses">
     <pathelement location="../../../../build/testcases" />
     <pathelement path="${java.class.path}" />
@@ -26,11 +29,11 @@
           classpathref="testclasses"/>
 
   <property name="map.ext" value=".copy2"/>
-  <property name="rootScratchDir" value="test_multi_mapper_scratch_area"/>
+  <property name="rootScratchDir" value="${output}/test_multi_mapper_scratch_area"/>
   <property name="baseScratchSrc" value="${rootScratchDir}/src"/>
   <property name="baseScratchDest" value="${rootScratchDir}/dest"/>
 
-  <target name="setup">
+  <target name="setUp">
     <delete dir="${baseScratchSrc}"/>
     <mkdir dir="${baseScratchSrc}"/>
     <delete dir="${baseScratchDest}"/>
@@ -39,7 +42,7 @@
   </target>
 
   <!-- test simple single file to multiple file move -->
-  <target name="multicopy" depends="setup">
+  <target name="multicopy" depends="setUp">
     <copy todir="${baseScratchDest}" enablemultiplemappings="true">
       <fileset dir="${baseScratchSrc}" includes="somefile.txt"/>
       <mapper refid="testmapper"/>
@@ -53,7 +56,7 @@
     <fail unless="multicopy.outcome">multicopy failed</fail>
   </target>
 
-  <target name="multimove" depends="setup">
+  <target name="multimove" depends="setUp">
     <move todir="${baseScratchDest}" enablemultiplemappings="true">
       <fileset dir="${baseScratchSrc}" includes="somefile.txt"/>
       <mapper refid="testmapper"/>
@@ -78,7 +81,7 @@
        task to ignore multiple mappings
        -->
 
-  <target name="singlecopy" depends="setup">
+  <target name="singlecopy" depends="setUp">
     <copy todir="${baseScratchDest}" enablemultiplemappings="false">
       <fileset dir="${baseScratchSrc}" includes="somefile.txt"/>
       <mapper refid="testmapper"/>
@@ -95,7 +98,7 @@
     <fail unless="singlecopy.outcome">singlecopy failed</fail>
   </target>
 
-  <target name="singlemove" depends="setup">
+  <target name="singlemove" depends="setUp">
     <move todir="${baseScratchDest}" enablemultiplemappings="false">
       <fileset dir="${baseScratchSrc}" includes="somefile.txt"/>
       <mapper refid="testmapper"/>
@@ -185,8 +188,5 @@
     <fail unless="movewithempty.outcome">movewithempty failed</fail>
   </target>
 
-  <target name="cleanup">
-    <delete dir="${rootScratchDir}"/>
-  </target>
 
 </project>

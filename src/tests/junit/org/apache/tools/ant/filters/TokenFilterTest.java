@@ -37,11 +37,7 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/filters/tokenfilter.xml");
-        executeTarget("init");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        executeTarget("setUp");
     }
 
     /** make sure tokenfilter exists */
@@ -60,26 +56,26 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void testUnixLineOutput() throws IOException {
         expectFileContains(
-            "unixlineoutput", "result/unixlineoutput",
+            "unixlineoutput", getProject().getProperty("output") + "/unixlineoutput",
             "\nThis\nis\na\nnumber\nof\nwords\n");
     }
 
     public void testDosLineOutput() throws IOException {
         expectFileContains(
-            "doslineoutput", "result/doslineoutput",
+            "doslineoutput", getProject().getProperty("output") + "/doslineoutput",
             "\r\nThis\r\nis\r\na\r\nnumber\r\nof\r\nwords\r\n");
     }
 
     public void testFileTokenizer() throws IOException {
         String contents = getFileString(
-            "filetokenizer", "result/filetokenizer");
+            "filetokenizer", getProject().getProperty("output") + "/filetokenizer");
         assertStringContains(contents, "   of words");
         assertStringNotContains(contents, " This is");
     }
 
     public void testReplaceString() throws IOException {
         expectFileContains(
-            "replacestring", "result/replacestring",
+            "replacestring", getProject().getProperty("output") + "/replacestring",
             "this is the moon");
     }
 
@@ -89,7 +85,7 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void testContainsString() throws IOException {
         String contents = getFileString(
-            "containsstring", "result/containsstring");
+            "containsstring", getProject().getProperty("output") + "/containsstring");
         assertStringContains(contents, "this is a line contains foo");
         assertStringNotContains(contents, "this line does not");
     }
@@ -98,7 +94,7 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasRegex("testReplaceRegex"))
             return;
         String contents = getFileString(
-            "replaceregex", "result/replaceregex");
+            "replaceregex", getProject().getProperty("output") + "/replaceregex");
         assertStringContains(contents, "world world world world");
         assertStringContains(contents, "dog Cat dog");
         assertStringContains(contents, "moon Sun Sun");
@@ -111,7 +107,7 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasRegex("testFilterReplaceRegex"))
             return;
         String contents = getFileString(
-            "filterreplaceregex", "result/filterreplaceregex");
+            "filterreplaceregex", getProject().getProperty("output") + "/filterreplaceregex");
         assertStringContains(contents, "world world world world");
     }
 
@@ -123,7 +119,7 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void testTrimFile() throws IOException {
         String contents = getFileString(
-            "trimfile", "result/trimfile");
+            "trimfile", getProject().getProperty("output") + "/trimfile");
         assertTrue("no ws at start", contents.startsWith("This is th"));
         assertTrue("no ws at end", contents.endsWith("second line."));
         assertStringContains(contents, "  This is the second");
@@ -131,7 +127,7 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void testTrimFileByLine() throws IOException {
         String contents = getFileString(
-            "trimfilebyline", "result/trimfilebyline");
+            "trimfilebyline", getProject().getProperty("output") + "/trimfilebyline");
         assertFalse("no ws at start", contents.startsWith("This is th"));
         assertFalse("no ws at end", contents.endsWith("second line."));
         assertStringNotContains(contents, "  This is the second");
@@ -140,7 +136,7 @@ public class TokenFilterTest extends BuildFileTest {
 
     public void testFilterReplaceString() throws IOException {
         String contents = getFileString(
-            "filterreplacestring", "result/filterreplacestring");
+            "filterreplacestring", getProject().getProperty("output") + "/filterreplacestring");
         assertStringContains(contents, "This is the moon");
     }
 
@@ -152,7 +148,7 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasRegex("testContainsRegex"))
             return;
         String contents = getFileString(
-            "containsregex", "result/containsregex");
+            "containsregex", getProject().getProperty("output") + "/containsregex");
         assertStringContains(contents, "hello world");
         assertStringNotContains(contents, "this is the moon");
         assertStringContains(contents, "World here");
@@ -162,7 +158,7 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasRegex("testFilterContainsRegex"))
             return;
         String contents = getFileString(
-            "filtercontainsregex", "result/filtercontainsregex");
+            "filtercontainsregex", getProject().getProperty("output") + "/filtercontainsregex");
         assertStringContains(contents, "hello world");
         assertStringNotContains(contents, "this is the moon");
         assertStringContains(contents, "World here");
@@ -172,13 +168,13 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasRegex("testContainsRegex2"))
             return;
         String contents = getFileString(
-            "containsregex2", "result/containsregex2");
+            "containsregex2", getProject().getProperty("output") + "/containsregex2");
         assertStringContains(contents, "void register_bits();");
     }
 
     public void testDeleteCharacters() throws IOException {
         String contents = getFileString(
-            "deletecharacters", "result/deletechars");
+            "deletecharacters", getProject().getProperty("output") + "/deletechars");
         assertStringNotContains(contents, "#");
         assertStringNotContains(contents, "*");
         assertStringContains(contents, "This is some ");
@@ -188,7 +184,7 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasScript("testScriptFilter"))
             return;
 
-        expectFileContains("scriptfilter", "result/scriptfilter",
+        expectFileContains("scriptfilter", getProject().getProperty("output") + "/scriptfilter",
                            "HELLO WORLD");
     }
 
@@ -197,12 +193,12 @@ public class TokenFilterTest extends BuildFileTest {
         if (! hasScript("testScriptFilter"))
             return;
 
-        expectFileContains("scriptfilter2", "result/scriptfilter2",
+        expectFileContains("scriptfilter2", getProject().getProperty("output") + "/scriptfilter2",
                            "HELLO MOON");
     }
 
     public void testCustomTokenFilter() throws IOException {
-        expectFileContains("customtokenfilter", "result/custom",
+        expectFileContains("customtokenfilter", getProject().getProperty("output") + "/custom",
                            "Hello World");
     }
 
@@ -224,7 +220,7 @@ public class TokenFilterTest extends BuildFileTest {
     private boolean hasRegex(String test) {
         try {
             executeTarget("hasregex");
-            expectFileContains("result/replaceregexp", "bye world");
+            expectFileContains(getProject().getProperty("output") + "/replaceregexp", "bye world");
         }
         catch (Throwable ex) {
             System.out.println(test + ": skipped - regex not present "

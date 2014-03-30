@@ -30,10 +30,7 @@ public class LoaderRefTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/core/loaderref/loaderref.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("clean");
+        executeTarget("setUp");
     }
 
     // override allowed on <available>

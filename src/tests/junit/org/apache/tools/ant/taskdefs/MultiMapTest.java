@@ -34,10 +34,6 @@ public class MultiMapTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/multimap.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testMultiCopy() {
         executeTarget("multicopy");
     }

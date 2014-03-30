@@ -16,33 +16,31 @@
   limitations under the License.
 -->
 
-<project name="assertions" basedir="." default="init">
+<project name="assertions" basedir="." default="tearDown">
 
-  <property name="build.dir" location="assertions/build"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <javac srcdir="${src.dir}"
+           includes="*.java"
+           source="1.4"
+           debug="true"
+           destdir="${output}"
+        />
+  </target>
+
   <property name="src.dir" location="assertions"/>
   <property name="classname" value="AssertionMain"/>
   <property name="test.classname" value="AssertionTest"/>
   
   <path id="assert.classpath">
-    <pathelement location="${build.dir}"/>
-  </path>
+    <pathelement location="${output}"/>
+  </path>                                   
   
-  <target name="setup" >
-    <mkdir dir="${build.dir}"/>
-    <javac srcdir="${src.dir}"
-      includes="*.java"
-      source="1.4"
-      debug="true"
-      destdir="${build.dir}"
-      />
-  </target>
   
-  <target name="teardown" >
-    <delete dir="${build.dir}"/>
-  </target>
-
   <!-- if per-class assertions work, this run asserts -->
-  <target name="test-classname" depends="setup">
+  <target name="test-classname" depends="setUp">
     <java fork="true" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -53,7 +51,7 @@
   </target>
   
   <!-- if package works, this run asserts -->
-  <target name="test-package" depends="setup">
+  <target name="test-package" depends="setUp">
     <java fork="true"  failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -64,7 +62,7 @@
   </target>
 
   <!-- this test should run the app successfully -->
-  <target name="test-empty-assertions" depends="setup">
+  <target name="test-empty-assertions" depends="setUp">
     <java fork="true"  failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -73,7 +71,7 @@
   </target>  
 
   <!-- this test should run the app successfully -->
-  <target name="test-disable" depends="setup">
+  <target name="test-disable" depends="setUp">
     <java fork="true" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -87,7 +85,7 @@
   <!-- repeated settigns result in the last declaration winning
     except that the rule 'classes win over packages takes priority
     this run will assert -->
-  <target name="test-override" depends="setup">
+  <target name="test-override" depends="setUp">
     <java fork="true" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -102,7 +100,7 @@
 
   <!-- repeated settigns result in the last declaration winning;
     this run will not assert -->
-  <target name="test-override2" depends="setup">
+  <target name="test-override2" depends="setUp">
     <java fork="true" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -129,7 +127,7 @@
   </target>
   
   <!-- when fork=false; we need to reject the construct -->
-  <target name="test-nofork" depends="setup">
+  <target name="test-nofork" depends="setUp">
     <java fork="false" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -140,7 +138,7 @@
   </target>  
 
   <!-- this throws a build error -->
-  <target name="test-multiple-assertions" depends="setup">
+  <target name="test-multiple-assertions" depends="setUp">
     <java fork="true" failonerror="true"
       classname="${classname}"
       classpathref="assert.classpath">
@@ -152,7 +150,7 @@
   </target>  
   
   <!-- should throw a build exception -->
-  <target name="test-reference-abuse" depends="setup">
+  <target name="test-reference-abuse" depends="setUp">
   <assertions id="project.assertions2" >
     <enable package="org.apache.test" />
     <disable package="org.apache.log4j"/>
@@ -168,7 +166,7 @@
   </target>    
   
     
-  <target name="test-junit" depends="setup">
+  <target name="test-junit" depends="setUp">
     <junit fork="true" 
       haltonerror="true" haltonfailure="true"
       >
@@ -186,7 +184,7 @@
   <!-- This is here to show that setting it as a property works
   so there is some defect in pass-on of assertions that
   is causing the problem -->
-  <target name="test-junit-manual-setup" depends="setup">
+  <target name="test-junit-manual-setup" depends="setUp">
     <junit fork="true" 
       haltonerror="true" haltonfailure="true"
       >

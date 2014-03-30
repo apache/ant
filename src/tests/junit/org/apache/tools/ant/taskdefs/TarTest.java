@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -33,6 +34,7 @@ public class TarTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/tar.xml");
+        executeTarget("setUp");
     }
 
     public void test1() {
@@ -54,7 +56,7 @@ public class TarTest extends BuildFileTest {
     public void test5() {
         executeTarget("test5");
         File f
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test5.tar");
+            = new File(getProject().getProperty("output"), "test5.tar");
 
         if (!f.exists()) {
             fail("Tarring a directory failed");
@@ -80,14 +82,14 @@ public class TarTest extends BuildFileTest {
     private void test7(String target) {
         executeTarget(target);
         File f1
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test7-prefix");
+            = new File(getProject().getProperty("output"), "untar/test7-prefix");
 
         if (!(f1.exists() && f1.isDirectory())) {
             fail("The prefix attribute is not working properly.");
         }
 
         File f2
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test7dir");
+            = new File(getProject().getProperty("output"), "untar/test7dir");
 
         if (!(f2.exists() && f2.isDirectory())) {
             fail("The prefix attribute is not working properly.");
@@ -117,7 +119,7 @@ public class TarTest extends BuildFileTest {
     private void test8(String target) {
         executeTarget(target);
         File f1
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test8.xml");
+            = new File(getProject().getProperty("output"), "untar/test8.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
@@ -130,7 +132,7 @@ public class TarTest extends BuildFileTest {
     public void test10() {
         executeTarget("test10");
         File f1
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test10.xml");
+            = new File(getProject().getProperty("output"), "untar/test10.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
@@ -139,7 +141,7 @@ public class TarTest extends BuildFileTest {
     public void test11() {
         executeTarget("test11");
         File f1
-            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test11.xml");
+            = new File(getProject().getProperty("output"), "untar/test11.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
@@ -149,10 +151,8 @@ public class TarTest extends BuildFileTest {
         executeTarget("testGZipResource");
         assertTrue(FileUtils.getFileUtils()
                    .contentEquals(getProject().resolveFile("../asf-logo.gif"),
-                                  getProject().resolveFile("testout/asf-logo.gif.gz")));
+                           new File(getProject().getProperty("output"), "untar/asf-logo.gif.gz")));
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
+
 }

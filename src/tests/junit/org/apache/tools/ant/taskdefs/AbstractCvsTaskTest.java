@@ -35,27 +35,20 @@ public class AbstractCvsTaskTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/abstractcvstask.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
-    public void testAbstractCvsTask() {
-        executeTarget( "all" );
+        executeTarget("setUp");
     }
 
     public void testPackageAttribute() {
-        File f = getProject().resolveFile("tmpdir/ant/build.xml");
+        File f = new File(getProject().getProperty("output") + "/src/Makefile");
         assertTrue("starting empty", !f.exists());
-        expectLogContaining("package-attribute", "U ant/build.xml");
+        expectLogContaining("package-attribute", "U src/Makefile");
         assertTrue("now it is there", f.exists());
     }
 
     public void testTagAttribute() {
-        File f = getProject().resolveFile("tmpdir/ant/build.xml");
+        File f = new File(getProject().getProperty("output") + "/src/Makefile");
         assertTrue("starting empty", !f.exists());
-        expectLogContaining("tag-attribute", "ANT_141 (revision: 1.175.2.13)");
+        expectLogContaining("tag-attribute", "OPENBSD_5_3");
         assertTrue("now it is there", f.exists());
     }
 }

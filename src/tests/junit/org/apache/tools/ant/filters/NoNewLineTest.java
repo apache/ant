@@ -36,10 +36,6 @@ public class NoNewLineTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testNoAddNewLine() throws IOException {
         executeTarget("testNoAddNewLine");
     }

@@ -37,14 +37,11 @@ public class DynamicFilterTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/filters/dynamicfilter.xml");
-        executeTarget("init");
+        executeTarget("setUp");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
     public void testCustomFilter() throws IOException {
-        expectFileContains("dynamicfilter", "result/dynamicfilter",
+        expectFileContains("dynamicfilter", getProject().getProperty("output") + "/dynamicfilter",
                            "hellO wOrld");
     }
 

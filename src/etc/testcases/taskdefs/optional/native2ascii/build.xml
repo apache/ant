@@ -18,23 +18,20 @@
 -->
 <project default="no">
 
-  <property name="out" location="output"/>
+  <import file="../../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
   <property name="in" location="input"/>
 
   <target name="no">
     <fail>For tests only</fail>
   </target>
 
-  <target name="setUp">
-    <mkdir dir="${out}"/>
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${out}"/>
-  </target>
-
   <target name="testIso8859-1" depends="setUp">
-    <native2ascii encoding="ISO8859-1" dest="${out}"
+    <native2ascii encoding="ISO8859-1" dest="${output}"
                   src="${in}" includes="iso8859-1.*"/>
   </target>
 </project>

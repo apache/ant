@@ -74,14 +74,11 @@ public class ConcatFilterTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/concat.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
 
     public void testFilterReaderNoArgs() throws IOException {
         executeTarget("testFilterReaderNoArgs");
-        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"input/concatfilter.test");
-        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(), "result/concat.FilterReaderNoArgs.test");
+        File expected = new File(getProject().getProperty("output"), "concatfilter.test");
+        File result = new File(getProject().getProperty("output"),  "concat.FilterReaderNoArgs.test");
         assertTrue("testFilterReaderNoArgs: Result not like expected", FILE_UTILS.contentEquals(expected, result));
     }
 
@@ -124,7 +121,7 @@ public class ConcatFilterTest extends BuildFileTest {
      */
     protected void doTest(String target, String expectedStart, String expectedEnd) {
         executeTarget(target);
-        String resultContent = read("result/concat." + target.substring(4) + ".test");
+        String resultContent = read(getProject().getProperty("output") + "/concat." + target.substring(4) + ".test");
         assertTrue("First 5 lines differs.", resultContent.startsWith(expectedStart));
         assertTrue("Last 5 lines differs.", resultContent.endsWith(expectedEnd));
     }

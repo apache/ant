@@ -35,14 +35,10 @@ public class Native2AsciiTest extends BuildFileTest {
         configureProject(BUILD_XML);
     }
 
-    public void tearDown() {
-        executeTarget("tearDown");
-    }
-
     public void testIso8859_1() throws java.io.IOException {
         executeTarget("testIso8859-1");
         File in = getProject().resolveFile("expected/iso8859-1.test");
-        File out = getProject().resolveFile("output/iso8859-1.test");
+        File out = new File(getProject().getProperty("output"), "iso8859-1.test");
         assertTrue(FileUtils.getFileUtils().contentEquals(in, out, true));
     }
 }

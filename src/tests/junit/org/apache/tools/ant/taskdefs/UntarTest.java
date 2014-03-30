@@ -20,6 +20,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
+import java.io.File;
+
 /**
  */
 public class UntarTest extends BuildFileTest {
@@ -33,10 +35,6 @@ public class UntarTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/untar.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
     }
 
     public void testRealTest() throws java.io.IOException {
@@ -81,12 +79,13 @@ public class UntarTest extends BuildFileTest {
     private void testLogoExtraction(String target) throws java.io.IOException {
         executeTarget(target);
         assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+                                           new File(getProject().getProperty("output"), "untar/" +
+                                                   "asf-logo.gif")));
     }
 
     public void testDocumentationClaimsOnCopy() {
         executeTarget("testDocumentationClaimsOnCopy");
-        assertFalse(getProject().resolveFile("untartestout/1/foo").exists());
-        assertTrue(getProject().resolveFile("untartestout/2/bar").exists());
+        assertFalse(new File(getProject().getProperty("output"), "untar/1/foo").exists());
+        assertTrue(new File(getProject().getProperty("output"), "untar/2/bar").exists());
     }
 }

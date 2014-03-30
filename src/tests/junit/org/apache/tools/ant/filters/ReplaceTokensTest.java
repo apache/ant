@@ -38,21 +38,17 @@ public class ReplaceTokensTest extends BuildFileTest {
         configureProject("src/etc/testcases/filters/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testReplaceTokens() throws IOException {
         executeTarget("testReplaceTokens");
         File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/replacetokens.test");
-        File result = FILE_UTILS.resolveFile(getProject().getBaseDir(),"result/replacetokens.test");
+        File result = new File(getProject().getProperty("output"), "replacetokens.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 
     public void testReplaceTokensPropertyFile() throws IOException {
         executeTarget("testReplaceTokensPropertyFile");
         File expected = FILE_UTILS.resolveFile(getProjectDir(), "expected/replacetokens.test");
-        File result = FILE_UTILS.resolveFile(getProjectDir(), "result/replacetokensPropertyFile.test");
+        File result = new File(getProject().getProperty("output"), "replacetokensPropertyFile.test");
         assertTrue(FILE_UTILS.contentEquals(expected, result));
     }
 

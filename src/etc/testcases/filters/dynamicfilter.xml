@@ -15,14 +15,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project default="cleanup" basedir=".">
+<project default="tearDown" basedir=".">
 
-  <target name="init">
-    <mkdir dir="result" />
-  </target>
+  <import file="../buildfiletest-base.xml"/>
 
-  <target name="cleanup">
-    <delete dir="result"/>
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
   <target name="dynamicfilter">
@@ -36,11 +34,11 @@
       <classpath refid="test-classes"/>
     </typedef>
     
-    <concat destfile="result/input">
+    <concat destfile="${output}/input">
       hello world
     </concat>
 
-    <copy file="result/input" tofile="result/dynamicfilter">
+    <copy file="${output}/input" tofile="${output}/dynamicfilter">
       <filterchain>
         <customfilter replace="o" with="O"/>
       </filterchain>

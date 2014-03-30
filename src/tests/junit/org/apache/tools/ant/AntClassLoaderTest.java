@@ -30,7 +30,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class AntClassLoaderTest extends BuildFileTest {
 
-    private Project p;
     private AntClassLoader loader;
 
     public AntClassLoaderTest(String name) {
@@ -38,17 +37,19 @@ public class AntClassLoaderTest extends BuildFileTest {
     }
 
     public void setUp() {
-        p = new Project();
-        p.init();
-        configureProject("src/etc/testcases/core/antclassloader.xml");
-        getProject().executeTarget("setup");
+        super.configureProject("src/etc/testcases/core/antclassloader.xml");
+        getProject().executeTarget("setUp");
     }
 
     public void tearDown() {
         if (loader != null) {
             loader.cleanup();
         }
-        getProject().executeTarget("cleanup");
+        try {
+            super.tearDown();
+        } catch ( Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
     //test inspired by bug report 37085
     public void testJarWithManifestInDirWithSpace() {
@@ -72,8 +73,8 @@ public class AntClassLoaderTest extends BuildFileTest {
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
     public void testCleanup() throws BuildException {
-        Path path = new Path(p, ".");
-        loader = p.createClassLoader(path);
+        Path path = new Path(project, ".");
+        loader = project.createClassLoader(path);
         try {
             // we don't expect to find this
             loader.findClass("fubar");
@@ -94,7 +95,7 @@ public class AntClassLoaderTest extends BuildFileTest {
         }
 
         // tell the build it is finished
-        p.fireBuildFinished(null);
+        project.fireBuildFinished(null);
         try {
             // we don't expect to find this
             loader.findClass("fubar");
@@ -149,7 +150,9 @@ public class AntClassLoaderTest extends BuildFileTest {
     }
 
     /**
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=47593
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47593">
+     *     bug 47593, request to log the name of corrupt zip files from which
+     *     classes cannot be loaded</a>
      */
     public void testInvalidZipException() throws Exception {
         executeTarget("createNonJar");
