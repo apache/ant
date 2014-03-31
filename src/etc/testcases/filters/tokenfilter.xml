@@ -46,7 +46,7 @@
       </filterchain>
     </copy>
     <concat>
-      <filelist dir="." files="${output}/output"/>
+      <filelist dir="${output}" files="output"/>
     </concat>
   </target>
 
@@ -103,7 +103,7 @@
       </filterchain>
     </copy>
     <concat>
-      <filelist dir="." files="${output}/output"/>
+      <filelist dir="${output}" files="output"/>
     </concat>
   </target>
 
