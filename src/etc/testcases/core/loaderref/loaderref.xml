@@ -23,7 +23,6 @@
   <import file="../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <echo message="output=${output}" file="/Users/antoine/debug.txt"/>
     <mkdir dir="${output}"/>
   </target>
 
