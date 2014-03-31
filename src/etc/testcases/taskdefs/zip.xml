@@ -49,7 +49,7 @@
   -->
 
   <target name="test5">
-    <zip zipfile="test5.zip" basedir="." >
+    <zip zipfile="${output}/test5.zip" basedir="." >
       <exclude name="test5.zip" />
     </zip>
   </target>
@@ -136,9 +136,9 @@
 
   <!-- Bugzilla Report 19449 -->
   <target name="testFilesOnlyDoesntCauseRecreateSetup">
-    <mkdir dir="ziptest"/>
-    <touch file="ziptest/ziptest"/>
-    <zip destFile="${output}/test3.zip" basedir="."
+    <mkdir dir="${output}/ziptest"/>
+    <touch file="${output}/ziptest/ziptest"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}"
          includes="ziptest/**" filesonly="true"/>
   </target>
 
@@ -161,8 +161,8 @@
 
   <!-- Bugzilla Report 30365 -->
   <target name="zipEmptyDir">
-    <mkdir dir="empty/empty2"/>
-    <zip destFile="${output}/test3.zip" basedir="empty" update="true"/>
+    <mkdir dir="${output}/empty/empty2"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true"/>
     <fail message="single-directory archive should be created">
       <condition>
         <or>
@@ -185,8 +185,8 @@
 
   <!-- Bugzilla Report 40258 -->
   <target name="zipEmptyDirFilesOnly">
-    <mkdir dir="empty/empty2" />
-    <zip destFile="${output}/test3.zip" basedir="empty" update="true" filesonly="true" />
+    <mkdir dir="${output}/empty/empty2" />
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true" filesonly="true" />
     <fail message="archive should get skipped">
       <condition>
         <available file="${output}/test3.zip" />
@@ -195,8 +195,8 @@
   </target>
 
   <target name="zipEmptyCreate">
-    <mkdir dir="empty"/>
-    <zip destFile="${output}/test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>
+    <mkdir dir="${output}/empty"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" whenempty="create" includes="*.xyz"/>
     <fail message="empty archive should be created">
       <condition>
         <or>
@@ -237,7 +237,8 @@
   <target name="testDefaultExcludesAndUpdate">
     <mkdir dir="${output}/ziptest"/>
     <touch file="${output}/ziptest/ziptest~"/>
-    <zip destFile="${output}/test3.zip" basedir="ziptest" defaultexcludes="false"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest"
+         defaultexcludes="false"/>
     <touch file="${output}/ziptest/ziptest2"/>
     <zip destFile="${output}/test3.zip" basedir="${output}/ziptest"
       defaultexcludes="false"
