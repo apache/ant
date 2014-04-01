@@ -1080,8 +1080,7 @@
 
     <copy todir="${src.dist.lib}">
       <fileset dir="${lib.dir}">
-        <include name="*.jar"/>
-        <include name="*.zip"/>
+        <include name="optional/junit*.jar"/>
         <include name="README"/>
         <include name="libraries.properties"/>
       </fileset>
