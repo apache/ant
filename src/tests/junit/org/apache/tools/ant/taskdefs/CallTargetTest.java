@@ -32,6 +32,7 @@ public class CallTargetTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/calltarget.xml");
+        executeTarget("setUp");
     }
 
     // see bugrep 21724 (references not passing through with antcall)
@@ -66,7 +67,4 @@ public class CallTargetTest extends BuildFileTest {
         expectLog("multiple-targets-2", "dadctb");
     }
 
-    public void tearDown() {
-        project.executeTarget("cleanup");
-    }
 }

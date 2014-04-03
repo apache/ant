@@ -18,8 +18,10 @@
 
 <project name="available-test" basedir="." default="test1">
 
-  <target name="tearDown">
-    <delete dir="greatgrandparent"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
   <target name="test1">
@@ -153,14 +155,12 @@
 
   <target name="test24">
     <!-- create a dummy file and look for it -->
-    <mkdir dir="${user.dir}/test"/>
-    <echo message="package test;public class test {}" file="${user.dir}/test/test.java"/>
-    <javac srcdir="${user.dir}" includes="test/test.java"/>
-    <jar destfile="${user.dir}/test.jar" basedir="${user.dir}" includes="test/test.class"/>
+    <mkdir dir="${output}/test"/>
+    <echo message="package test;public class test {}" file="${output}/test/test.java"/>
+    <javac srcdir="${output}" includes="test/test.java"/>
+    <jar destfile="${output}/test.jar" basedir="${output}" includes="test/test.class"/>
     <available property="test"
-               classname="test.test" classpath="${user.dir}/test.jar"/>
-    <delete dir="${user.dir}/test"/>
-    <delete file="${user.dir}/test.jar"/>
+               classname="test.test" classpath="${output}/test.jar"/>
   </target>
 
   <target name="searchInPathNotThere">
@@ -183,14 +183,13 @@
   </target>
 
   <target name="prep.parents">
-    <delete quiet="yes" dir="greatgrandparent"/>
-    <mkdir  dir="greatgrandparent/grandparent/parent/dir"/>
-    <touch  file="greatgrandparent/a.txt"/>
-    <touch  file="greatgrandparent/grandparent/b.txt"/>
-    <touch  file="greatgrandparent/grandparent/parent/c.txt"/>
-    <touch  file="greatgrandparent/grandparent/parent/dir/d.txt"/>
+    <mkdir  dir="${output}/greatgrandparent/grandparent/parent/dir"/>
+    <touch  file="${output}/greatgrandparent/a.txt"/>
+    <touch  file="${output}/greatgrandparent/grandparent/b.txt"/>
+    <touch  file="${output}/greatgrandparent/grandparent/parent/c.txt"/>
+    <touch  file="${output}/greatgrandparent/grandparent/parent/dir/d.txt"/>
     <property name="available.test.dir"
-              value="greatgrandparent/grandparent/parent/dir"/>
+              value="${output}/greatgrandparent/grandparent/parent/dir"/>
   </target>
   <target name="search-parents" depends="prep.parents">
     <echo>testing greatgrandparent - should see</echo>

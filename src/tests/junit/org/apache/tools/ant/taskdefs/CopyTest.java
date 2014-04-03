@@ -39,23 +39,20 @@ public class CopyTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/copy.xml");
+        executeTarget("setUp");
     }
 
     public void test1() {
         executeTarget("test1");
-        File f = new File(getProjectDir(), "copytest1.tmp");
+        File f = new File(getOutputDir(), "copytest1.tmp");
         if ( !f.exists()) {
             fail("Copy failed");
         }
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void test2() {
         executeTarget("test2");
-        File f = new File(getProjectDir(), "copytest1dir/copy.xml");
+        File f = new File(getOutputDir(), "copytest1dir/copy.xml");
         if ( !f.exists()) {
             fail("Copy failed");
         }
@@ -63,13 +60,13 @@ public class CopyTest extends BuildFileTest {
 
     public void test3() {
         executeTarget("test3");
-        File file3  = new File(getProjectDir(), "copytest3.tmp");
+        File file3  = new File(getOutputDir(), "copytest3.tmp");
         assertTrue(file3.exists());
-        File file3a = new File(getProjectDir(), "copytest3a.tmp");
+        File file3a = new File(getOutputDir(), "copytest3a.tmp");
         assertTrue(file3a.exists());
-        File file3b = new File(getProjectDir(), "copytest3b.tmp");
+        File file3b = new File(getOutputDir(), "copytest3b.tmp");
         assertTrue(file3b.exists());
-        File file3c = new File(getProjectDir(), "copytest3c.tmp");
+        File file3c = new File(getOutputDir(), "copytest3c.tmp");
         assertTrue(file3c.exists());
 
         //file length checks rely on touch generating a zero byte file
@@ -101,7 +98,7 @@ public class CopyTest extends BuildFileTest {
 
     public void testFilterSet() throws IOException {
         executeTarget("testFilterSet");
-        File tmp  = new File(getProjectDir(), "copy.filterset.tmp");
+        File tmp  = new File(getOutputDir(), "copy.filterset.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(FILE_UTILS.contentEquals(tmp, check));
@@ -109,7 +106,7 @@ public class CopyTest extends BuildFileTest {
 
     public void testFilterChain() throws IOException {
         executeTarget("testFilterChain");
-        File tmp  = new File(getProjectDir(), "copy.filterchain.tmp");
+        File tmp  = new File(getOutputDir(), "copy.filterchain.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(FILE_UTILS.contentEquals(tmp, check));
@@ -117,14 +114,14 @@ public class CopyTest extends BuildFileTest {
 
     public void testSingleFileFileset() {
         executeTarget("test_single_file_fileset");
-        File file  = new File(getProjectDir(),
+        File file  = new File(getOutputDir(),
                                         "copytest_single_file_fileset.tmp");
         assertTrue(file.exists());
     }
 
     public void testSingleFilePath() {
         executeTarget("test_single_file_path");
-        File file  = new File(getProjectDir(),
+        File file  = new File(getOutputDir(),
                                         "copytest_single_file_path.tmp");
         assertTrue(file.exists());
     }
@@ -132,7 +129,7 @@ public class CopyTest extends BuildFileTest {
     public void testTranscoding() throws IOException {
         executeTarget("testTranscoding");
         File f1 = getProject().resolveFile("copy/expected/utf-8");
-        File f2 = getProject().resolveFile("copytest1.tmp");
+        File f2 = new File(getOutputDir(), "copytest1.tmp");
         assertTrue(FILE_UTILS.contentEquals(f1, f2));
     }
 
@@ -158,9 +155,9 @@ public class CopyTest extends BuildFileTest {
     
     public void testFileResourcePlain() {
         executeTarget("testFileResourcePlain");
-        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProject().getProperty("to.dir")+"/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -168,9 +165,9 @@ public class CopyTest extends BuildFileTest {
     
     public void _testFileResourceWithMapper() {
         executeTarget("testFileResourceWithMapper");
-        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt.bak");
-        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt.bak");
-        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt.bak");
+        File file1 = new File(getProject().getProperty("to.dir")+"/file1.txt.bak");
+        File file2 = new File(getProject().getProperty("to.dir")+"/file2.txt.bak");
+        File file3 = new File(getProject().getProperty("to.dir")+"/file3.txt.bak");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -178,7 +175,7 @@ public class CopyTest extends BuildFileTest {
     
     public void testFileResourceWithFilter() {
         executeTarget("testFileResourceWithFilter");
-        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/fileNR.txt");
+        File file1 = new File(getProject().getProperty("to.dir")+"/fileNR.txt");
         assertTrue(file1.exists());
         try {
             String file1Content = FileUtils.readFully(new FileReader(file1));
@@ -190,9 +187,9 @@ public class CopyTest extends BuildFileTest {
     
     public void testPathAsResource() {
         executeTarget("testPathAsResource");
-        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProject().getProperty("to.dir")+"/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -200,9 +197,9 @@ public class CopyTest extends BuildFileTest {
     
     public void testZipfileset() {
         executeTarget("testZipfileset");
-        File file1 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(getProjectDir(), getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(getProject().getProperty("to.dir")+"/file1.txt");
+        File file2 = new File(getProject().getProperty("to.dir")+"/file2.txt");
+        File file3 = new File(getProject().getProperty("to.dir")+"/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());

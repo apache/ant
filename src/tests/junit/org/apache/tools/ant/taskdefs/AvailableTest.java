@@ -31,6 +31,7 @@ public class AvailableTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/available.xml");
+        executeTarget("setUp");
     }
 
     // Nothing specified -> Fail

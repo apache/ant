@@ -352,6 +352,15 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
+     * get location of temporary directory pointed to by property "output"
+     * @return location of temporary directory pointed to by property "output"
+     * @since Ant 1.9.4
+     */
+    public File getOutputDir() {
+        return new File(project.getProperty("output"));
+    }
+
+    /**
      * Runs a target, wait for a build exception.
      *
      * @param  target target to run
