@@ -18,6 +18,12 @@
 
 <project name="copydir-test" basedir="." default="test1">
 
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <target name="test1">
     <copydir/>
   </target>
@@ -36,9 +42,9 @@
   </target>
 
   <target name="test5">
-    <mkdir dir="../taskdefs.tmp" />
+    <mkdir dir="${output}/taskdefs.tmp" />
     <copydir src="." 
-             dest="../taskdefs.tmp"/>
+             dest="${output}/taskdefs.tmp"/>
   </target>
 
   <target name="test6">
@@ -46,8 +52,5 @@
              dest="template.xml"/>
   </target>
 
-  <target name="cleanup">
-    <delete dir="../taskdefs.tmp" />
-  </target>
 
 </project>

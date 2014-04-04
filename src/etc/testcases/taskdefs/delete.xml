@@ -18,8 +18,11 @@
 
 <project name="delete-test" basedir="." default="test1">
 
-  <property name="dirname" value="taskdefs.tmp" />
-  <property name="dir" location="${dirname}" />
+  <import file="../buildfiletest-base.xml"/>
+
+
+  <property name="dir" location="${output}" />
+  <basename property="dirname" file="${output}"/>
 
   <macrodef name="expectabsent">
     <attribute name="target" default="${dir}"/>
@@ -187,6 +190,5 @@
   </target>
 
 
-  <target name="cleanup" depends="test4" />
 
 </project>

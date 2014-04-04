@@ -32,10 +32,6 @@ public class DeleteTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/delete.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void test1() {
         expectBuildException("test1", "required argument not specified");
     }

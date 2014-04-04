@@ -48,6 +48,7 @@ public class JarTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/jar.xml");
+        executeTarget("setUp");
     }
 
     public void tearDown() {
@@ -63,8 +64,11 @@ public class JarTest extends BuildFileTest {
             } catch (IOException e) {
             }
         }
+        try {
+            super.tearDown();
+        } catch (Exception exc) {
 
-        executeTarget("cleanup");
+        }
     }
 
     public void test1() {
@@ -81,7 +85,7 @@ public class JarTest extends BuildFileTest {
 
     public void test4() {
         executeTarget("test4");
-        File jarFile = new File(getProjectDir(), tempJar);
+        File jarFile = new File(getOutputDir(), tempJar);
         assertTrue(jarFile.exists());
     }
 
@@ -95,7 +99,7 @@ public class JarTest extends BuildFileTest {
 
     private void testNoRecreate(String secondTarget) {
         executeTarget("test4");
-        File jarFile = new File(getProjectDir(), tempJar);
+        File jarFile = new File(getOutputDir(), tempJar);
         long jarModifiedDate = jarFile.lastModified();
         try {
             Thread.sleep(2500);
@@ -132,10 +136,10 @@ public class JarTest extends BuildFileTest {
             Thread.sleep(sleeptime);
         } catch (InterruptedException e) {
         } // end of try-catch
-        File jarFile = new File(getProjectDir(), tempJar);
+        File jarFile = new File(getOutputDir(), tempJar);
         long jarModifiedDate = jarFile.lastModified();
         executeTarget(secondTarget);
-        jarFile = new File(getProjectDir(), tempJar);
+        jarFile = new File(getOutputDir(), tempJar);
         assertTrue("jar has been recreated in " + secondTarget,
                    jarModifiedDate < jarFile.lastModified());
     }
@@ -144,10 +148,10 @@ public class JarTest extends BuildFileTest {
         throws IOException, ManifestException {
         executeTarget("testManifestStaysIntact");
 
-        r1 = new FileReader(getProject()
-                            .resolveFile(tempDir + "manifest"));
-        r2 = new FileReader(getProject()
-                            .resolveFile(tempDir + "META-INF/MANIFEST.MF"));
+        r1 = new FileReader(new File(getOutputDir(),
+                            tempDir + "manifest"));
+        r2 = new FileReader(new File(getOutputDir(),
+                tempDir + "META-INF/MANIFEST.MF"));
         Manifest mf1 = new Manifest(r1);
         Manifest mf2 = new Manifest(r2);
         assertEquals(mf1, mf2);
@@ -197,7 +201,7 @@ public class JarTest extends BuildFileTest {
 
     public void testUpdateIfOnlyManifestHasChanged() {
         executeTarget("testUpdateIfOnlyManifestHasChanged");
-        File jarXml = getProject().resolveFile(tempDir + "jar.xml");
+        File jarXml = new File(getOutputDir(), tempDir + "jar.xml");
         assertTrue(jarXml.exists());
     }
 
@@ -206,7 +210,7 @@ public class JarTest extends BuildFileTest {
         ZipFile archive = null;
         try {
             executeTarget("testIndexTests");
-            archive = new ZipFile(getProject().resolveFile(tempJar));
+            archive = new ZipFile(new File(getOutputDir(), tempJar));
             Enumeration e = archive.entries();
             int numberOfIndexLists = 0;
             while (e.hasMoreElements()) {
@@ -228,7 +232,7 @@ public class JarTest extends BuildFileTest {
         ZipFile archive = null;
         try {
             executeTarget("testIndexTests");
-            archive = new ZipFile(getProject().resolveFile(tempJar));
+            archive = new ZipFile(new File(getOutputDir(), tempJar));
             ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
             InputStream is = archive.getInputStream(ze);
             BufferedReader r = new BufferedReader(new InputStreamReader(is,
@@ -260,7 +264,7 @@ public class JarTest extends BuildFileTest {
     }
     public void testManifestOnlyJar() {
         expectLogContaining("testManifestOnlyJar", "Building MANIFEST-only jar: ");
-        File manifestFile = getProject().resolveFile(tempDir + "META-INF" + File.separator + "MANIFEST.MF");
+        File manifestFile = new File(getOutputDir(), tempDir + "META-INF" + File.separator + "MANIFEST.MF");
         assertTrue(manifestFile.exists());
     }
 

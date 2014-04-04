@@ -35,15 +35,12 @@ public class ProtectedJarMethodsTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/jar.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        executeTarget("setUp");
     }
 
     public void testGrabFilesAndDirs() throws IOException {
         executeTarget("testIndexTests");
-        String archive = getProject().resolveFile(tempJar).getAbsolutePath();
+        String archive = getProject().getProperty(tempJar);
         ArrayList dirs = new ArrayList();
         ArrayList files = new ArrayList();
         String[] expectedDirs = new String[] {

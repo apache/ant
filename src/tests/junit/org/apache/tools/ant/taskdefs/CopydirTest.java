@@ -30,10 +30,7 @@ public class CopydirTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/copydir.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        executeTarget("setUp");
     }
 
     public void test1() {
@@ -54,7 +51,7 @@ public class CopydirTest extends BuildFileTest {
 
     public void test5() {
         executeTarget("test5");
-        java.io.File f = new java.io.File(getProjectDir(), "../taskdefs.tmp");
+        java.io.File f = new java.io.File(getOutputDir(), "taskdefs.tmp");
         if (!f.exists() || !f.isDirectory()) {
             fail("Copy failed");
         }

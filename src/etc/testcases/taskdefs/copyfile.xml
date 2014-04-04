@@ -18,6 +18,12 @@
 
 <project name="copyfile-test" basedir="." default="test1">
 
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <target name="test1">
     <copyfile/>
   </target>
@@ -37,18 +43,14 @@
 
   <target name="test5">
     <copyfile src="copyfile.xml" 
-             dest="copyfile.tmp"/>
+             dest="${output}/copyfile.tmp"/>
   </target>
 
   <target name="test6">
-    <delete file="testdir"/>
-    <mkdir dir="testdir" />
-    <copyfile src="copyfile.xml" 
-              dest="testdir"
+    <mkdir dir="${output}/testdir"/>
+    <copyfile src="copyfile.xml"
+              dest="${output}/testdir"
               forceoverwrite="true" />
   </target>
 
-  <target name="cleanup">
-    <delete dir="testdir" />
-  </target>
 </project>

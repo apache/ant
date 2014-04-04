@@ -34,10 +34,7 @@ public class CopyfileTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/copyfile.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        executeTarget("setUp");
     }
 
     public void test1() {
@@ -58,10 +55,8 @@ public class CopyfileTest extends BuildFileTest {
 
     public void test5() {
         executeTarget("test5");
-        java.io.File f = new java.io.File(getProjectDir(), "copyfile.tmp");
-        if (f.exists()) {
-            f.delete();
-        } else {
+        java.io.File f = new java.io.File(getOutputDir(), "copyfile.tmp");
+        if (!f.exists()) {
             fail("Copy failed");
         }
     }
