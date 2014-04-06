@@ -38,15 +38,12 @@ public class MoveTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/move.xml");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        project.executeTarget("setUp");
     }
 
     public void testFilterSet() throws IOException {
         executeTarget("testFilterSet");
-        File tmp  = new File(getProjectDir(), "move.filterset.tmp");
+        File tmp  = new File(getOutputDir(), "move.filterset.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(FILE_UTILS.contentEquals(tmp, check));
@@ -54,7 +51,7 @@ public class MoveTest extends BuildFileTest {
 
     public void testFilterChain() throws IOException {
         executeTarget("testFilterChain");
-        File tmp  = new File(getProjectDir(), "move.filterchain.tmp");
+        File tmp  = new File(getOutputDir(), "move.filterchain.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(FILE_UTILS.contentEquals(tmp, check));
@@ -63,23 +60,23 @@ public class MoveTest extends BuildFileTest {
     /** Bugzilla Report 11732 */
     public void testDirectoryRemoval() throws IOException {
         executeTarget("testDirectoryRemoval");
-        assertTrue(!getProject().resolveFile("E/B/1").exists());
-        assertTrue(getProject().resolveFile("E/C/2").exists());
-        assertTrue(getProject().resolveFile("E/D/3").exists());
-        assertTrue(getProject().resolveFile("A/B/1").exists());
-        assertTrue(!getProject().resolveFile("A/C/2").exists());
-        assertTrue(!getProject().resolveFile("A/D/3").exists());
-        assertTrue(!getProject().resolveFile("A/C").exists());
-        assertTrue(!getProject().resolveFile("A/D").exists());
+        assertTrue(!new File(getOutputDir(),"E/B/1").exists());
+        assertTrue(new File(getOutputDir(),"E/C/2").exists());
+        assertTrue(new File(getOutputDir(),"E/D/3").exists());
+        assertTrue(new File(getOutputDir(),"A/B/1").exists());
+        assertTrue(!new File(getOutputDir(),"A/C/2").exists());
+        assertTrue(!new File(getOutputDir(),"A/D/3").exists());
+        assertTrue(!new File(getOutputDir(),"A/C").exists());
+        assertTrue(!new File(getOutputDir(),"A/D").exists());
     }
 
     /** Bugzilla Report 18886 */
     public void testDirectoryRetaining() throws IOException {
         executeTarget("testDirectoryRetaining");
-        assertTrue(getProject().resolveFile("E").exists());
-        assertTrue(getProject().resolveFile("E/1").exists());
-        assertTrue(!getProject().resolveFile("A/1").exists());
-        assertTrue(getProject().resolveFile("A").exists());
+        assertTrue(new File(getOutputDir(),"E").exists());
+        assertTrue(new File(getOutputDir(),"E/1").exists());
+        assertTrue(!new File(getOutputDir(),"A/1").exists());
+        assertTrue(new File(getOutputDir(),"A").exists());
     }
 
     public void testCompleteDirectoryMove() throws IOException {
@@ -92,19 +89,19 @@ public class MoveTest extends BuildFileTest {
 
     private void testCompleteDirectoryMove(String target) throws IOException {
         executeTarget(target);
-        assertTrue(getProject().resolveFile("E").exists());
-        assertTrue(getProject().resolveFile("E/1").exists());
-        assertTrue(!getProject().resolveFile("A/1").exists());
+        assertTrue(new File(getOutputDir(),"E").exists());
+        assertTrue(new File(getOutputDir(),"E/1").exists());
+        assertTrue(!new File(getOutputDir(),"A/1").exists());
         // <path> swallows the basedir, it seems
-        //assertTrue(!getProject().resolveFile("A").exists());
+        //assertTrue(!new File(getOutputDir(),"A").exists());
     }
 
     public void testPathElementMove() throws IOException {
         executeTarget("testPathElementMove");
-        assertTrue(getProject().resolveFile("E").exists());
-        assertTrue(getProject().resolveFile("E/1").exists());
-        assertTrue(!getProject().resolveFile("A/1").exists());
-        assertTrue(getProject().resolveFile("A").exists());
+        assertTrue(new File(getOutputDir(),"E").exists());
+        assertTrue(new File(getOutputDir(),"E/1").exists());
+        assertTrue(!new File(getOutputDir(),"A/1").exists());
+        assertTrue(new File(getOutputDir(),"A").exists());
     }
 
     public void testMoveFileAndFileset() {

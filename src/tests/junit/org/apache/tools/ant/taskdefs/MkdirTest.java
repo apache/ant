@@ -41,7 +41,7 @@ public class MkdirTest extends BuildFileTest {
 
     public void test3() {
         executeTarget("test3");
-        java.io.File f = new java.io.File(getProjectDir(), "testdir.tmp");
+        java.io.File f = new java.io.File(getOutputDir(), "testdir.tmp");
         if (!f.exists() || !f.isDirectory()) {
             fail("mkdir failed");
         } else {

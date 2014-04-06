@@ -17,44 +17,42 @@
 -->
 
 <project name="manifestclasspath" default="tearDown">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <!-- hebrew -->
   <property name="jom" value="&#1501;&#1493;&#1497;"/>
   <!-- german -->
-  <property name="aent" value="&#227;nt"/> 
-  <target name="setUp">
-    <property name="tmp" location="${basedir}/${ant.project.name}.tmp" />
-    <mkdir dir="${tmp}" />
-  </target>
-
+  <property name="aent" value="&#227;nt"/>
   <target name="fullSetUp" depends="setUp">
-    <mkdir dir="${tmp}/lib" />
-    <touch file="${tmp}/lib/acme-core.jar" />
-    <touch file="${tmp}/lib/acme-pres.jar" />
+    <mkdir dir="${output}/lib" />
+    <touch file="${output}/lib/acme-core.jar" />
+    <touch file="${output}/lib/acme-pres.jar" />
 
-    <mkdir dir="${tmp}/classes/dsp-core/com/lgc/infra/core" />
-    <mkdir dir="${tmp}/classes/dsp-pres/com/lgc/infra/pres" />
-    <mkdir dir="${tmp}/classes/dsp-void" />
-    <mkdir dir="${tmp}/generated/dsp-core/com/lgc/infra/core/generated" />
-    <mkdir dir="${tmp}/generated/dsp-pres" />
-    <mkdir dir="${tmp}/generated/dsp-void" />
-    <mkdir dir="${tmp}/resources/dsp-core/com/lgc/infra/core" />
-    <mkdir dir="${tmp}/resources/dsp-pres/com/lgc/infra/pres" />
-    <mkdir dir="${tmp}/resources/dsp-void" />
-  </target>
-
-  <target name="tearDown">
-    <delete dir="${tmp}" />
+    <mkdir dir="${output}/classes/dsp-core/com/lgc/infra/core" />
+    <mkdir dir="${output}/classes/dsp-pres/com/lgc/infra/pres" />
+    <mkdir dir="${output}/classes/dsp-void" />
+    <mkdir dir="${output}/generated/dsp-core/com/lgc/infra/core/generated" />
+    <mkdir dir="${output}/generated/dsp-pres" />
+    <mkdir dir="${output}/generated/dsp-void" />
+    <mkdir dir="${output}/resources/dsp-core/com/lgc/infra/core" />
+    <mkdir dir="${output}/resources/dsp-pres/com/lgc/infra/pres" />
+    <mkdir dir="${output}/resources/dsp-void" />
   </target>
 
   <target name="test-bad-directory">
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classpath.jar">
+                       jarfile="${output}/classpath.jar">
       <classpath />
     </manifestclasspath>
   </target>
 
   <target name="test-bad-no-property" depends="setUp">
-    <manifestclasspath jarfile="${tmp}/classpath.jar">
+    <manifestclasspath jarfile="${output}/classpath.jar">
       <classpath />
     </manifestclasspath>
   </target>
@@ -62,7 +60,7 @@
   <target name="test-bad-property-exists" depends="setUp">
     <property name="jar.classpath" value="exists" />
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classpath.jar">
+                       jarfile="${output}/classpath.jar">
       <classpath />
     </manifestclasspath>
   </target>
@@ -75,56 +73,56 @@
 
   <target name="test-bad-no-classpath" depends="setUp">
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classpath.jar" />
+                       jarfile="${output}/classpath.jar" />
   </target>
 
   <target name="test-pseudo-tahoe-refid" depends="fullSetUp">
     <path id="classpath">
       <!-- All the classes/ directories -->
-      <dirset dir="${tmp}/classes"   includes="dsp-*" />
+      <dirset dir="${output}/classes"   includes="dsp-*" />
 
       <!-- All the JAXB generated/ directories -->
-      <dirset dir="${tmp}/generated" includes="dsp-*">
+      <dirset dir="${output}/generated" includes="dsp-*">
         <!-- Add only non-empty directories to the classpath -->
-        <present targetdir="${tmp}/generated" present="both">
+        <present targetdir="${output}/generated" present="both">
           <mapper type="regexp" from="(.*)" to="\1/com" />
         </present>
       </dirset>
 
       <!-- All the resources/ directories -->
-      <dirset dir="${tmp}/resources" includes="dsp-*">
+      <dirset dir="${output}/resources" includes="dsp-*">
         <!-- Add only non-empty directories to the classpath -->
-        <present targetdir="${tmp}/resources" present="both">
+        <present targetdir="${output}/resources" present="both">
           <mapper type="regexp" from="(.*)" to="\1/com" />
         </present>
       </dirset>
     </path>
 
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classpath.jar">
+                       jarfile="${output}/classpath.jar">
       <classpath refid="classpath" />
     </manifestclasspath>
   </target>
 
   <target name="test-pseudo-tahoe-nested" depends="fullSetUp">
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classpath.jar">
+                       jarfile="${output}/classpath.jar">
       <classpath>
         <!-- All the classes/ directories -->
-        <dirset dir="${tmp}/classes"   includes="dsp-*" />
+        <dirset dir="${output}/classes"   includes="dsp-*" />
 
         <!-- All the JAXB generated/ directories -->
-        <dirset dir="${tmp}/generated" includes="dsp-*">
+        <dirset dir="${output}/generated" includes="dsp-*">
           <!-- Add only non-empty directories to the classpath -->
-          <present targetdir="${tmp}/generated" present="both">
+          <present targetdir="${output}/generated" present="both">
             <mapper type="regexp" from="(.*)" to="\1/com" />
           </present>
         </dirset>
 
         <!-- All the resources/ directories -->
-        <dirset dir="${tmp}/resources" includes="dsp-*">
+        <dirset dir="${output}/resources" includes="dsp-*">
           <!-- Add only non-empty directories to the classpath -->
-          <present targetdir="${tmp}/resources" present="both">
+          <present targetdir="${output}/resources" present="both">
             <mapper type="regexp" from="(.*)" to="\1/com" />
           </present>
         </dirset>
@@ -134,48 +132,48 @@
 
   <target name="test-parent-level1" depends="fullSetUp">
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classes/classpath.jar">
+                       jarfile="${output}/classes/classpath.jar">
       <classpath>
-        <dirset dir="${tmp}/classes"   includes="dsp-*" />
-        <dirset dir="${tmp}/generated" includes="dsp-*" />
-        <dirset dir="${tmp}/resources" includes="dsp-*" />
+        <dirset dir="${output}/classes"   includes="dsp-*" />
+        <dirset dir="${output}/generated" includes="dsp-*" />
+        <dirset dir="${output}/resources" includes="dsp-*" />
       </classpath>
     </manifestclasspath>
   </target>
 
   <target name="test-parent-level2" depends="fullSetUp">
-    <mkdir dir="${tmp}/classes/level2" />
+    <mkdir dir="${output}/classes/level2" />
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classes/level2/classpath.jar">
+                       jarfile="${output}/classes/level2/classpath.jar">
       <classpath>
-        <dirset dir="${tmp}/classes"   includes="dsp-*" />
-        <dirset dir="${tmp}/generated" includes="dsp-*" />
-        <dirset dir="${tmp}/resources" includes="dsp-*" />
+        <dirset dir="${output}/classes"   includes="dsp-*" />
+        <dirset dir="${output}/generated" includes="dsp-*" />
+        <dirset dir="${output}/resources" includes="dsp-*" />
       </classpath>
     </manifestclasspath>
   </target>
 
   <target name="test-parent-level2-too-deep" depends="fullSetUp">
-    <mkdir dir="${tmp}/classes/level2" />
+    <mkdir dir="${output}/classes/level2" />
     <manifestclasspath property="jar.classpath" maxParentLevels="1"
-                       jarfile="${tmp}/classes/level2/classpath.jar">
+                       jarfile="${output}/classes/level2/classpath.jar">
       <classpath>
-        <dirset dir="${tmp}/classes"   includes="dsp-*" />
-        <dirset dir="${tmp}/generated" includes="dsp-*" />
-        <dirset dir="${tmp}/resources" includes="dsp-*" />
+        <dirset dir="${output}/classes"   includes="dsp-*" />
+        <dirset dir="${output}/generated" includes="dsp-*" />
+        <dirset dir="${output}/resources" includes="dsp-*" />
       </classpath>
     </manifestclasspath>
   </target>
 
   <target name="test-parent-level2-with-jars" depends="fullSetUp">
-    <mkdir dir="${tmp}/classes/level2" />
+    <mkdir dir="${output}/classes/level2" />
     <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/classes/level2/classpath.jar">
+                       jarfile="${output}/classes/level2/classpath.jar">
       <classpath>
-        <fileset dir="${tmp}/lib" includes="*.jar" />
-        <dirset dir="${tmp}/classes"   includes="dsp-*" />
-        <dirset dir="${tmp}/generated" includes="dsp-*" />
-        <dirset dir="${tmp}/resources" includes="dsp-*" />
+        <fileset dir="${output}/lib" includes="*.jar" />
+        <dirset dir="${output}/classes"   includes="dsp-*" />
+        <dirset dir="${output}/generated" includes="dsp-*" />
+        <dirset dir="${output}/resources" includes="dsp-*" />
       </classpath>
     </manifestclasspath>
   </target>
@@ -191,22 +189,22 @@
       </antcall>
   </target>
   <target name="run-two-jars">
-     <mkdir dir="${tmp}/${ext.dir}"/>
-      <javac srcdir="manifestclasspath" destdir="${tmp}" />
-       <jar destfile="${tmp}/${ext.dir}/alpha.jar">
-          <fileset dir="${tmp}">
+     <mkdir dir="${output}/${ext.dir}"/>
+      <javac srcdir="manifestclasspath" destdir="${output}" />
+       <jar destfile="${output}/${ext.dir}/alpha.jar">
+          <fileset dir="${output}">
               <include name="Alpha.class"/>
           </fileset>
        </jar>
         <manifestclasspath property="jar.classpath"
-                       jarfile="${tmp}/beta.jar">
+                       jarfile="${output}/beta.jar">
         <classpath>
-           <pathelement location="${tmp}/beta.jar"/>
-           <pathelement location="${tmp}/${ext.dir}/alpha.jar"/>
+           <pathelement location="${output}/beta.jar"/>
+           <pathelement location="${output}/${ext.dir}/alpha.jar"/>
         </classpath>
        </manifestclasspath>
-      <jar destfile="${tmp}/beta.jar" >
-          <fileset dir="${tmp}">
+      <jar destfile="${output}/beta.jar" >
+          <fileset dir="${output}">
               <include name="Beta.class"/>
           </fileset>
           <manifest>
@@ -214,7 +212,7 @@
              <attribute name="Class-Path" value="${jar.classpath}"/>
           </manifest>
       </jar>
-      <java fork="true" jar="${tmp}/beta.jar"/>
+      <java fork="true" jar="${output}/beta.jar"/>
     </target>
 
   <target name="testSameDrive">

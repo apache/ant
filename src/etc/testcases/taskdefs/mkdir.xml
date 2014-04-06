@@ -18,6 +18,12 @@
 
 <project name="xxx-test" basedir="." default="test1">
 
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <target name="test1">
     <mkdir/>
   </target>
@@ -27,7 +33,7 @@
   </target>
 
   <target name="test3">
-    <mkdir dir="testdir.tmp"/>
+    <mkdir dir="${output}/testdir.tmp"/>
   </target>
 
 </project>

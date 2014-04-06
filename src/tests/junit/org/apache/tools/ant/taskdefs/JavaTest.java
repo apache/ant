@@ -60,6 +60,7 @@ public class JavaTest extends BuildFileTest {
      */
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/java.xml");
+        project.executeTarget("setUp");
 
         //final String propname="tests-classpath.value";
         //String testClasspath=System.getProperty(propname);
@@ -67,11 +68,6 @@ public class JavaTest extends BuildFileTest {
         String runFatal=System.getProperty("junit.run.fatal.tests");
         if(runFatal!=null)
             runFatalTests=true;
-    }
-
-    public void tearDown() {
-        // remove log file from testSpawn
-        project.executeTarget("cleanup");
     }
 
     public void testNoJarNoClassname(){
@@ -180,7 +176,7 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void testSpawn() {
-        File logFile = FILE_UTILS.createTempFile("spawn","log", project.getBaseDir(), false, false);
+        File logFile = FILE_UTILS.createTempFile("spawn","log", getOutputDir(), false, false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         project.setProperty("logFile", logFile.getAbsolutePath());

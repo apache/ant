@@ -17,13 +17,20 @@
 -->
 
 <project name="java-test" basedir="." default="foo">
+  <property name="tests-classpath.value" value="${java.class.path}"/>
   <fail unless="tests-classpath.value"
       message="the property tests-classpath.value is required by this test" />
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <!-- this property gets overridden programmatically-->
   <property name="timeToWait" value="4"/>
   <!-- this property gets overridden programmatically-->
-  <property name="logFile" value="spawn.log"/>
-  <property name="tmp" location="${java.io.tmpdir}/ant.tmp.java-test"/>
+  <property name="logFile" value="${output}/spawn.log"/>
+  <property name="tmp" location="${output}/ant.tmp.java-test"/>
   <mkdir dir="${tmp}" description="The directory must exist"/>
   <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
@@ -390,12 +397,6 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     <target name="flushedInput">
         <java classname="org.apache.tools.ant.taskdefs.JavaTest$$ReadPoint" fork="true"
             classpath="${tests-classpath.value}" failonerror="true" timeout="2000" />
-    </target>
-
-    <target name="cleanup">
-        <delete failonerror="false">
-            <fileset file="${logFile}" />
-        </delete>
     </target>
 
     <target name="foo" />
