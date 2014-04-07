@@ -50,14 +50,6 @@ public class XsltTest extends BuildFileTest {
     }
 
 
-    /**
-     * The teardown method for JUnit
-     */
-    public void tearDown() {
-        executeTarget("teardown");
-    }
-
-
 
     /**
      * A unit test for JUnit
@@ -78,16 +70,6 @@ public class XsltTest extends BuildFileTest {
     public void testOutputProperty() throws Exception {
       executeTarget("testOutputProperty");
     }
-
-    /* Only runs if xalan.jar is in CP (not incl. Sun's JRE repackaging):
-    public void testFactory() throws Exception {
-        executeTarget("testFactory");
-    }
-
-    public void testAttribute() throws Exception {
-        executeTarget("testAttribute");
-    }
-    */
 
     public void testXMLWithEntitiesInNonAsciiPath() throws Exception {
         executeTarget("testXMLWithEntitiesInNonAsciiPath");

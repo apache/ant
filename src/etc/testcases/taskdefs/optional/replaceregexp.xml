@@ -16,67 +16,67 @@
   limitations under the License.
 -->
 <project name="test" default="def" basedir=".">
-  <property name="tmpregexp" location="tmpregexp"/>
+  <import file="../../buildfiletest-base.xml"/>
+
+  <property name="root" location="../../../../.."/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
+  </target>
+
   <target name="def">
     <fail>This build file should only be run from within the testcase</fail>
   </target>
 
-  <target name="setup">
-    <copy file="replaceregexp.properties" tofile="test.properties" />
+  <target name="setUp-nl">
+    <mkdir dir="${output}" />
+    <copy file="replaceregexp2.properties" tofile="${output}/test.properties" />
   </target>
 
-  <target name="setup-nl">
-    <copy file="replaceregexp2.properties" tofile="test.properties" />
-  </target>
-
-  <target name="testReplace" depends="setup">
-    <replaceregexp file="test.properties" byline="true">
+  <target name="testReplace" depends="setUp">
+    <replaceregexp file="${output}/test.properties" byline="true">
       <regexp pattern="Old(.*)=(.*)" />
       <substitution expression="NewProp=\1\2" />
     </replaceregexp>
   </target>
   <!-- use in conjunction with testDirectoryDateDoesNotChange to make sure something will happen -->
   <target name="touchDirectory">
-    <mkdir dir="${tmpregexp}"/>
-    <copy file="replaceregexp.properties" tofile="${tmpregexp}/test.properties" />
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
     <sleep seconds="2"/>
   </target>
   <target name="testDirectoryDateDoesNotChange">
-    <replaceregexp file="${tmpregexp}/test.properties" byline="true">
+    <replaceregexp file="${output}/test.properties" byline="true">
       <regexp pattern="foo" />
         <substitution expression="bar"/>
       </replaceregexp>
   </target>
 
-  <target name="testDontAddNewline1" depends="setup-nl">
-    <replaceregexp file="test.properties" byline="false">
+  <target name="testDontAddNewline1" depends="setUp-nl">
+    <replaceregexp file="${output}/test.properties" byline="false">
       <regexp pattern="Old(.*)=(.*)" />
       <substitution expression="NewProp=\1\2" />
     </replaceregexp>
   </target>
 
-  <target name="testDontAddNewline2" depends="setup-nl">
-    <replaceregexp file="test.properties" byline="true">
+  <target name="testDontAddNewline2" depends="setUp-nl">
+    <replaceregexp file="${output}/test.properties" byline="true">
       <regexp pattern="Old(.*)=(.*)" />
       <substitution expression="NewProp=\1\2" />
     </replaceregexp>
   </target>
 
   <target name="lastModifiedSetup">
-    <mkdir dir="${tmpregexp}"/>
-    <echo file="${tmpregexp}/test.txt">Hello, world!</echo>
-  </target>
-  <target name="testNoPreserve">
-    <replaceregexp match="world" replace="Ant" file="${tmpregexp}/test.txt"/>
-  </target>
-  <target name="testPreserve">
-    <replaceregexp match="world" replace="Ant" file="${tmpregexp}/test.txt"
-                   preserveLastModified="true"/>
+    <echo file="${output}/test.txt">Hello, world!</echo>
   </target>
 
-  <target name="cleanup">
-    <delete file="test.properties" />
-    <delete dir="${tmpregexp}" quiet="true"/>
+  <target name="testNoPreserve">
+    <replaceregexp match="world" replace="Ant" file="${output}/test.txt"/>
+  </target>
+
+  <target name="testPreserve">
+    <replaceregexp match="world" replace="Ant" file="${output}/test.txt"
+                   preserveLastModified="true"/>
   </target>
 
 </project>

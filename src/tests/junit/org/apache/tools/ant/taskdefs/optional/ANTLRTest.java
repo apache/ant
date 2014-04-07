@@ -44,10 +44,6 @@ public class ANTLRTest extends BuildFileTest {
         configureProject(TASKDEFS_DIR + "antlr.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void test1() {
         expectBuildException("test1", "required argument, target, missing");
     }
@@ -99,8 +95,7 @@ public class ANTLRTest extends BuildFileTest {
      */
     public void test10() {
         executeTarget("test10");
-        File outputDirectory = new File(System.getProperty("root"), TASKDEFS_DIR + "antlr.tmp");
-        String[] calcFiles = outputDirectory.list(new HTMLFilter());
+         String[] calcFiles = getOutputDir().list(new HTMLFilter());
         assertTrue(calcFiles.length > 0);
     }
 

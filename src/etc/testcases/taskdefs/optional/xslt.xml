@@ -16,14 +16,17 @@
   limitations under the License.
 -->
 
-<project name="xslt" default="xslt" basedir=".">
-  <property name="nonasciidir" value="xml/&#0227;nt"/>
-  <target name="init">
-      <mkdir dir="xml/out"/>
+<project name="xslt" default="tearDown" basedir=".">
+
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
-  <target name="initNonAscii">
-      <mkdir dir="${nonasciidir}"/>
+  <target name="initNonAscii" depends="setUp">
+    <property name="nonasciidir" value="${output}/&#0227;nt"/>
+    <mkdir dir="${nonasciidir}"/>
       <copy todir="${nonasciidir}">
         <fileset dir="xml">
           <include name="docwithentity.xml"/>
@@ -32,13 +35,8 @@
       </copy>
   </target>
 
-  <target name="teardown">
-      <delete dir="xml/out"/>
-      <delete dir="${nonasciidir}" quiet="true"/>
-  </target>
-  
-  <target name="testCatchNoDtd" depends="init">
-    <xslt basedir="xml" destdir="xml/out"
+  <target name="testCatchNoDtd" depends="setUp">
+    <xslt basedir="xml" destdir="${output}"
            includes="about.xml"
            extension=".txt"
            style="xml/doc.xsl">
@@ -50,8 +48,8 @@
      location="xml/doc.dtd"/>
   </xmlcatalog>  
   
-  <target name="testCatalog" depends="init">
-    <xslt destdir="xml/out"
+  <target name="testCatalog" depends="setUp">
+    <xslt destdir="${output}"
            includes="about.xml"
            extension=".txt"
            style="xml/doc.xsl">
@@ -59,9 +57,9 @@
      </xslt>
   </target>
 
-  <target name="testOutputProperty" depends="init">
+  <target name="testOutputProperty" depends="setUp">
     <xslt in="xml/test.xml"
-           out="xml/out/test-out.xml"
+           out="${output}/test-out.xml"
            style="xml/test.xsl">
       <outputproperty name="method" value="xml"/>
       <outputproperty name="standalone" value="yes"/>
@@ -71,17 +69,17 @@
   </target>
   
   
-  <target name="testFactory" depends="init">
+  <target name="testFactory" depends="setUp">
     <xslt in="xml/test.xml"
-           out="xml/out/test-out.xml"
+           out="${output}/test-out.xml"
            style="xml/test.xsl">
            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
     </xslt>
   </target>
 
-  <target name="testAttribute" depends="init">
+  <target name="testAttribute" depends="setUp">
     <xslt in="xml/test.xml"
-           out="xml/out/test-out.xml"
+           out="${output}/test-out.xml"
            style="xml/test.xsl">
            <factory name="org.apache.xalan.processor.TransformerFactoryImpl">
             <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
@@ -91,13 +89,13 @@
   <!-- inspired by bug report 37348 -->
   <target name="testXMLWithEntitiesInNonAsciiPath" depends="initNonAscii">
     <xslt in="${nonasciidir}/docwithentity.xml"
-           out="xml/out/test-out.xml"
+           out="${output}/test-out.xml"
            style="xml/apache.xsl">
     </xslt>
   </target>
-  <target name="testStyleSheetWithInclude" depends="init">
+  <target name="testStyleSheetWithInclude" depends="setUp">
     <xslt in="xml/books.xml"
-           out="xml/out/test-out.xml"
+           out="${output}/test-out.xml"
            style="xml/stylesheet_with_include.xsl">
     </xslt>
   </target>
