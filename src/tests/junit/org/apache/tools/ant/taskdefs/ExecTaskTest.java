@@ -52,20 +52,13 @@ public class ExecTaskTest extends BuildFileTest {
         configureProject(BUILD_FILE);
     }
 
-    public void tearDown() {
-        if (logFile != null && logFile.exists()) {
-            getProject().setProperty("logFile", logFile.getAbsolutePath());
-        }
-        executeTarget("cleanup");
-    }
-
     public void testspawn() {
-        project.executeTarget("init");
+        project.executeTarget("setUp");
         if (project.getProperty("test.can.run") == null) {
             return;
         }
         myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
-        logFile = FILE_UTILS.createTempFile("spawn", "log", project.getBaseDir(), false, false);
+        logFile = FILE_UTILS.createTempFile("spawn", "log", getOutputDir(), false, false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         // make the spawned process run 4 seconds

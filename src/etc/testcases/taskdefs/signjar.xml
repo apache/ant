@@ -17,11 +17,16 @@
 -->
 <project name="signjartest" default="help" basedir="..">
 
-  <property name="classes.dir" value="../../../build/classes"/>
-  <property name="sign.dir" location="signedjars" />
-  <property name="subdir" location="${sign.dir}/subdir" />
-  <property name="test.jar" location="${sign.dir}/signtest.jar" />
-  <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <property name="subdir" location="${output}/subdir" />
+    <property name="classes.dir" value="../../../build/classes"/>
+    <property name="test.jar" location="${output}/signtest.jar" />
+    <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+
+  </target>
 
 
   <macrodef name="assertSigned">
@@ -45,25 +50,12 @@
            storepass="apacheant"/>
   </presetdef>
 
-
-
   <presetdef name="sign">
     <sign-base jar="${test.jar}" />
   </presetdef>
 
-  <target name="init">
-    <mkdir dir="${sign.dir}" />
-    <mkdir dir="${subdir}" />
-  </target>
-
-  <target name="jar" depends="init">
+  <target name="jar" depends="setUp">
     <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
-  </target>
-
-
-
-  <target name="clean">
-    <delete dir="${sign.dir}"/>
   </target>
 
   <target name="help">

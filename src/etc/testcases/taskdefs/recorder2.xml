@@ -17,16 +17,13 @@
 -->
 <project name="recorder-test" default="test6" basedir=".">
 
-    <property name="recin" location="recorder"/>
-    <property name="recdir" location="recorder-out"/>
-
     <target name="test6">
-        <record name="${recdir}/rectest6.log" action="start" />
+        <record name="${output}/rectest6.log" action="start" />
         <echo message="some message6"/>
-        <record name="${recdir}/rectest5.log" action="stop" />
+        <record name="${output}/rectest5.log" action="stop" />
         <echo message="some message7"/>
-        <record name="${recdir}/rectest5.log" action="start" />
+        <record name="${output}/rectest5.log" action="start" />
         <echo message="some message8"/>
-        <record name="${recdir}/rectest6.log" action="stop" />
+        <record name="${output}/rectest6.log" action="stop" />
     </target>
 </project>

@@ -16,18 +16,17 @@
   limitations under the License.
 -->
 <project name="fixcrlf" default="cleanup" basedir=".">
-  <target name="init">
-    <mkdir dir="result" />
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
-  <target name="cleanup">
-    <delete dir="result" />
-  </target>
 
   <macrodef name="assertequal">
     <attribute name="junk" default="" />
     <attribute name="name" default="Junk@{junk}.java" />
-    <attribute name="file1" default="result/@{name}" />
+    <attribute name="file1" default="${output}/@{name}" />
     <attribute name="file2" default="expected/@{name}" />
     <sequential>
       <fail message="@{file1} and @{file2} are different">
@@ -40,84 +39,84 @@
     </sequential>
   </macrodef>
 
-  <target name="test1" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test1" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk1.java"
              javafiles="true" tab="add" eol="crlf" eof="asis" />
     <assertequal junk="1" />
   </target>
 
-  <target name="test2" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test2" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk2.java"
              javafiles="true" tab="add" cr="add" eol="crlf" eof="asis" />
     <assertequal junk="2" />
   </target>
 
-  <target name="test3" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test3" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk3.java"
              javafiles="true" tab="remove" eol="lf" eof="asis" />
     <assertequal junk="3" />
   </target>
 
-  <target name="test4" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test4" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk4.java"
              javafiles="true" tab="remove" eol="lf" eof="asis" />
     <assertequal junk="4" />
   </target>
 
-  <target name="test5" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test5" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk5.java"
              tab="remove" eol="lf" eof="asis" />
     <assertequal junk="5" />
   </target>
 
-  <target name="test6" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test6" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk6.java"
              tab="add" cr="remove" eol="crlf" eof="asis" />
     <assertequal junk="6" />
   </target>
 
-  <target name="test7" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test7" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk7.java"
              tab="add" cr="add" eof="asis" />
     <assertequal junk="7" />
   </target>
 
-  <target name="test8" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test8" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk8.java"
              javafiles="true" tab="add" cr="add" eof="add" />
     <assertequal junk="8" />
   </target>
 
-  <target name="test9" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="test9" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk9.java"
              javafiles="true" tab="remove" cr="remove" eof="remove" />
     <assertequal junk="9" />
   </target>
 
-  <target name="testMacLines" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testMacLines" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Mac2Unix" eol="lf" />
     <assertequal name="Mac2Unix" />
   </target>
 
   <target name="testNoOverwrite" depends="test1">
-    <touch file="result/Junk1.java" millis="0" />
-    <fixcrlf srcdir="input" destdir="result"
+    <touch file="${output}/Junk1.java" millis="0" />
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="Junk1.java" preservelastmodified="false"
              javafiles="true" tab="add" eol="crlf" eof="asis" />
     <fail message="overwrote unchanged output file">Q
       <condition>
         <not>
-          <isfileselected file="result/Junk1.java">
+          <isfileselected file="${output}/Junk1.java">
             <date when="equal" millis="0" />
           </isfileselected>
         </not>
@@ -125,112 +124,112 @@
     </fail>
   </target>
 
-  <target name="testEncoding" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testEncoding" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="input.crlf.utf16"
              javafiles="false" cr="remove" encoding="UnicodeBig" />
-    <assertequal file1="result/input.crlf.utf16"
+    <assertequal file1="${output}/input.crlf.utf16"
                  file2="expected/input.lf.utf16" />
   </target>
 
-  <target name="testOutputEncoding" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testOutputEncoding" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="input.crlf.utf16"
              javafiles="false" eol="lf" encoding="UnicodeBig"
              outputencoding="ascii" />
-    <assertequal file1="result/input.crlf.utf16"
+    <assertequal file1="${output}/input.crlf.utf16"
                  file2="expected/input.lf.ascii" />
   </target>
 
-  <target name="testLongLines" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testLongLines" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="longlines.crlf"
              javafiles="false" cr="remove" />
-    <assertequal file1="result/longlines.crlf"
+    <assertequal file1="${output}/longlines.crlf"
                  file2="expected/longlines.lf" />
   </target>
 
-  <target name="testCrCrLfSequence-unix" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testCrCrLfSequence-unix" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="crcrlf" eol="lf" />
-    <assertequal file1="result/crcrlf"
+    <assertequal file1="${output}/crcrlf"
                  file2="expected/crcrlf.unix" />
   </target>
 
-  <target name="testCrCrLfSequence-dos" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testCrCrLfSequence-dos" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="crcrlf" eol="crlf" />
-    <assertequal file1="result/crcrlf"
+    <assertequal file1="${output}/crcrlf"
                  file2="expected/crcrlf.dos" />
   </target>
 
-  <target name="testCrCrLfSequence-mac" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testCrCrLfSequence-mac" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="crcrlf" eol="cr" />
-    <assertequal file1="result/crcrlf"
+    <assertequal file1="${output}/crcrlf"
                  file2="expected/crcrlf.mac" />
   </target>
 
-  <target name="testFixlastDos" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testFixlastDos" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="fixlastfalse.lf" eol="crlf" />
-    <assertequal file1="result/fixlastfalse.lf"
+    <assertequal file1="${output}/fixlastfalse.lf"
                  file2="expected/fixlast.dos" />
   </target>
 
-  <target name="testFixlastFalseMac" depends="init">
-    <fixcrlf srcdir="input" destdir="result"
+  <target name="testFixlastFalseMac" depends="setUp">
+    <fixcrlf srcdir="input" destdir="${output}"
              includes="fixlastfalse.lf" eol="cr" fixlast="false" />
-    <assertequal file1="result/fixlastfalse.lf"
+    <assertequal file1="${output}/fixlastfalse.lf"
                  file2="expected/fixlastfalse.mac" />
   </target>
 
   <!-- Bugzilla Report 20840 -->
-  <target name="createParentDirs" depends="init">
-    <fixcrlf srcdir="." destdir="result" includes="input/Junk1.java" />
+  <target name="createParentDirs" depends="setUp">
+    <fixcrlf srcdir="." destdir="${output}" includes="input/Junk1.java" />
   </target>
 
-  <target name="testFixFile" depends="init">
-    <fixcrlf file="input/longlines.crlf" destdir="result" />
+  <target name="testFixFile" depends="setUp">
+    <fixcrlf file="input/longlines.crlf" destdir="${output}" />
     <fail message="didn't create output file">
       <condition>
         <not>
-          <available file="result/longlines.crlf" />
+          <available file="${output}/longlines.crlf" />
         </not>
       </condition>
     </fail>
   </target>
 
-  <target name="testFixFileExclusive" depends="init">
-    <fixcrlf file="input/longlines.crlf" srcdir="input" destdir="result"/>
+  <target name="testFixFileExclusive" depends="setUp">
+    <fixcrlf file="input/longlines.crlf" srcdir="input" destdir="${output}"/>
   </target>
 
-  <target name="testPreserveLastModified" depends="init">
-    <fixcrlf file="input/longlines.crlf" destdir="result"
+  <target name="testPreserveLastModified" depends="setUp">
+    <fixcrlf file="input/longlines.crlf" destdir="${output}"
              preservelastmodified="true" />
     <fail>
       <condition>
         <not>
-          <uptodate srcfile="result/longlines.crlf"
+          <uptodate srcfile="${output}/longlines.crlf"
                     targetfile="input/longlines.crlf" />
         </not>
       </condition>
     </fail>
 
-    <touch file="result/longlines.crlf" millis="0" />
+    <touch file="${output}/longlines.crlf" millis="0" />
 
-    <fixcrlf file="result/longlines.crlf" destdir="result" eol="lf"
+    <fixcrlf file="${output}/longlines.crlf" destdir="${output}" eol="lf"
              preservelastmodified="true" />
 
-    <fileset id="fs" file="result/longlines.crlf">
+    <fileset id="fs" file="${output}/longlines.crlf">
       <date when="equal" millis="0" />
     </fileset>
     <property name="fs" refid="fs" />
     <fail unless="fs" />
   </target>
 
-  <target name="testFilter1" depends="init">
-    <copy file="input/Junk1.java" todir="result" overwrite="true">
+  <target name="testFilter1" depends="setUp">
+    <copy file="input/Junk1.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="add"
                  eol="crlf" eof="asis" />
@@ -239,8 +238,8 @@
     <assertequal junk="1" />
   </target>
 
-  <target name="testFilter2" depends="init">
-    <copy file="input/Junk2.java" todir="result" overwrite="true">
+  <target name="testFilter2" depends="setUp">
+    <copy file="input/Junk2.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="add" cr="add" eol="crlf" eof="asis" />
       </filterchain>
@@ -248,8 +247,8 @@
     <assertequal junk="2" />
   </target>
 
-  <target name="testFilter3" depends="init">
-    <copy file="input/Junk3.java" todir="result" overwrite="true">
+  <target name="testFilter3" depends="setUp">
+    <copy file="input/Junk3.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="remove" eol="lf" eof="asis" />
       </filterchain>
@@ -257,8 +256,8 @@
     <assertequal junk="3" />
   </target>
 
-  <target name="testFilter4" depends="init">
-    <copy file="input/Junk4.java" todir="result" overwrite="true">
+  <target name="testFilter4" depends="setUp">
+    <copy file="input/Junk4.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="remove" eol="lf" eof="asis" />
       </filterchain>
@@ -266,8 +265,8 @@
     <assertequal junk="4" />
   </target>
 
-  <target name="testFilter5" depends="init">
-    <copy file="input/Junk5.java" todir="result" overwrite="true">
+  <target name="testFilter5" depends="setUp">
+    <copy file="input/Junk5.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf tab="remove" eol="lf" eof="asis" />
       </filterchain>
@@ -275,8 +274,8 @@
     <assertequal junk="5" />
   </target>
 
-  <target name="testFilter6" depends="init">
-    <copy file="input/Junk6.java" todir="result" overwrite="true">
+  <target name="testFilter6" depends="setUp">
+    <copy file="input/Junk6.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf tab="add" cr="remove" eol="crlf" eof="asis" />
       </filterchain>
@@ -284,8 +283,8 @@
     <assertequal junk="6" />
   </target>
 
-  <target name="testFilter7" depends="init">
-    <copy file="input/Junk7.java" todir="result" overwrite="true">
+  <target name="testFilter7" depends="setUp">
+    <copy file="input/Junk7.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf tab="add" cr="add" eof="asis" />
       </filterchain>
@@ -293,8 +292,8 @@
     <assertequal junk="7" />
   </target>
 
-  <target name="testFilter8" depends="init">
-    <copy file="input/Junk8.java" todir="result" overwrite="true">
+  <target name="testFilter8" depends="setUp">
+    <copy file="input/Junk8.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="add" cr="add" eof="add" />
       </filterchain>
@@ -302,8 +301,8 @@
     <assertequal junk="8" />
   </target>
 
-  <target name="testFilter9" depends="init">
-    <copy file="input/Junk9.java" todir="result" overwrite="true">
+  <target name="testFilter9" depends="setUp">
+    <copy file="input/Junk9.java" todir="${output}" overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="remove" cr="remove" eof="remove" />
       </filterchain>
@@ -312,13 +311,13 @@
   </target>
 
   <target name="testCannotDoubleEof" depends="test8">
-    <fixcrlf file="result/Junk8.java"
+    <fixcrlf file="${output}/Junk8.java"
              javafiles="true" tab="add" cr="add" eof="add" />
     <assertequal junk="8" />
   </target>
 
   <target name="testTabInLiteralInComment">
-    <copy file="input/tab_in_literal_in_comment" todir="result"
+    <copy file="input/tab_in_literal_in_comment" todir="${output}"
           overwrite="true">
       <filterchain>
         <fixcrlf javafiles="true" tab="remove" eol="lf" fixlast="false" />

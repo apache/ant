@@ -50,13 +50,6 @@ public class JUnitTaskTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
     }
 
-    /**
-     * The teardown method for JUnit.
-     */
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testCrash() {
        expectPropertySet("crash", "crashed");
     }
@@ -121,8 +114,8 @@ public class JUnitTaskTest extends BuildFileTest {
         }
 
         try {
-            File testDir = new File(getProjectDir(), "out");
-            File collectorFile = new File(getProjectDir(),
+            File testDir = new File(getOutputDir(), "out");
+            File collectorFile = new File(getOutputDir(),
                                           "out/FailedTests.java");
         
             // ensure that there is a clean test environment
@@ -249,7 +242,7 @@ public class JUnitTaskTest extends BuildFileTest {
 
     private void assertResultFileExists(String classNameFragment, String ext) {
         assertTrue("result for " + classNameFragment + "Test" + ext + " exists",
-                   getProject().resolveFile("out/TEST-org.apache.tools.ant."
+                   new File(getOutputDir(), "TEST-org.apache.tools.ant."
                                             + "taskdefs.optional.junit."
                                             + classNameFragment + "Test" + ext)
                    .exists());
@@ -261,8 +254,8 @@ public class JUnitTaskTest extends BuildFileTest {
     }
 
     private void assertOutput() throws IOException {
-        FileReader inner = new FileReader(getProject()
-                                          .resolveFile("testlog.txt"));
+        FileReader inner = new FileReader(new File(getOutputDir(),
+                                          "testlog.txt"));
         BufferedReader reader = new BufferedReader(inner);
         try {
             String line = reader.readLine();
@@ -309,7 +302,7 @@ public class JUnitTaskTest extends BuildFileTest {
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(getProject().getResource("out/TEST-org.example.junit.JUnit4Skippable.xml").getInputStream());
+        Document doc = dBuilder.parse(new File(getOutputDir(), "TEST-org.example.junit.JUnit4Skippable.xml"));
 
         assertEquals("Incorrect number of nodes created", 8, doc.getElementsByTagName("testcase").getLength());
 
@@ -335,26 +328,26 @@ public class JUnitTaskTest extends BuildFileTest {
 
     public void testNonTestsSkipped() throws Exception {
         executeTarget("testNonTests");
-        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.NonTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.NonTestMissed.xml").isExists());
-        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.JUnit3TestMissed.xml").isExists());
-        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.AbstractTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractTestMissed.xml").isExists());
-        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.AbstractJUnit3TestMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractJUnit3TestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractTestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractJUnit3TestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractJUnit3TestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.TestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3TestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.JUnit3TestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestWithSuiteNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.TestWithSuiteNotMissed.xml").isExists());
+        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.NonTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.NonTestMissed.xml").exists());
+        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.JUnit3TestMissed.xml").exists());
+        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.AbstractTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractTestMissed.xml").exists());
+        assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.AbstractJUnit3TestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractJUnit3TestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractTestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractJUnit3TestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractJUnit3TestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.TestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3TestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.JUnit3TestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestWithSuiteNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.TestWithSuiteNotMissed.xml").exists());
 
         executeTarget("testNonTestsRun");
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.NonTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.NonTestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.JUnit3NonTestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.TestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3TestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.JUnit3TestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractTestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractTestNotMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractJUnit3TestMissed.xml", getProject().getResource("out/TEST-org.example.junit.AbstractJUnit3TestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", getProject().getResource("out/TEST-org.example.junit.JUnit3NonTestMissed.xml").isExists());
-        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestWithSuiteNotMissed.xml", getProject().getResource("out/TEST-org.example.junit.TestWithSuiteNotMissed.xml").isExists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.NonTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.NonTestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.JUnit3NonTestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.TestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3TestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.JUnit3TestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractTestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractTestNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractTestNotMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.AbstractJUnit3TestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.AbstractJUnit3TestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.JUnit3NonTestMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.JUnit3NonTestMissed.xml").exists());
+        assertTrue("Test result should exist as test was not skipped - TEST-org.example.junit.TestWithSuiteNotMissed.xml", new File(getOutputDir(), "TEST-org.example.junit.TestWithSuiteNotMissed.xml").exists());
 
     }
 

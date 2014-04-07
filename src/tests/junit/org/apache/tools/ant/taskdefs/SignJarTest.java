@@ -40,10 +40,6 @@ public class SignJarTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/signjar.xml");
     }
 
-    public void tearDown() {
-        executeTarget("clean");
-    }
-
     /**
      * check for being offline
      * @return true if the system property "offline" is "true"
@@ -108,7 +104,7 @@ public class SignJarTest extends BuildFileTest {
     }
 
     /**
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=50081
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=50081">bug 50081</a>
      */
     public void testSignUnnormalizedJar() throws Exception {
         executeTarget("jar");

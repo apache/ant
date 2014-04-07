@@ -18,7 +18,13 @@
 
 <project name="propertyfile-test" default="main" basedir=".">
 
-   <property file="propertyfile.build.properties"/>
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <property file="${output}/propertyfile.build.properties"/>
 
    <target name="main">
       <fail>
@@ -29,7 +35,7 @@
 
    <target name="update-existing-properties">
       <propertyfile
-          file="${test.propertyfile}"
+          file="${output}/${test.propertyfile}"
           comment="unit test for the property file task..." >
         <entry  key="firstname" value="${firstname}" />
         <entry  key="lastname"  value="${lastname}" />
@@ -43,14 +49,14 @@
    <target name="delete-properties">
     <echoproperties/>
       <propertyfile
-          file="${test.propertyfile}"
+          file="${output}/${test.propertyfile}"
           comment="unit test for the property file task..." >
         <entry  key="firstname" operation="del" />
       </propertyfile>
    </target>
 
    <target name="exercise">
-     <propertyfile file="${test.propertyfile}">
+     <propertyfile file="${output}/${test.propertyfile}">
         <entry key="existing.prop"
                type="int"
                default="23"/>
@@ -91,11 +97,11 @@
                value="8"
                pattern="MMdd"/>
      </propertyfile>
-     <property file="${test.propertyfile}"/>
+     <property file="${output}/${test.propertyfile}"/>
    </target>
    
     <target name="createfile">
-       <echo file="${overwrite.test.propertyfile}">
+       <echo file="${output}/${overwrite.test.propertyfile}">
  foo=3
        </echo>
     </target>
@@ -103,11 +109,11 @@
     <target name="bugDemo1" depends="createfile,bugDemoInit"/>
     
     <target name="bugDemo2" depends="bugDemoInit">
-        <property file="${overwrite.test.propertyfile}"/>
+        <property file="${output}/${overwrite.test.propertyfile}"/>
     </target>
 
     <target name="bugDemoInit">
-       <propertyfile file="${overwrite.test.propertyfile}">
+       <propertyfile file="${output}/${overwrite.test.propertyfile}">
           <entry key="foo" default="0" value="1" operation="+" type="int"/>
        </propertyfile>
     </target>

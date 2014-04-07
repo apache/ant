@@ -17,25 +17,23 @@
 -->
 
 <project name="war-test" basedir="." default="help">
-  <property name="working.dir" value="working"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
 
   <target name="help">
     <echo message="Test file for the war task"/>
   </target>
 
-  <target name="setup">
-    <mkdir dir="${working.dir}"/>
-  </target>
-  
-  <target name="testlibrefs" depends="setup">
+  <target name="testlibrefs" depends="setUp">
     <fileset id="test" dir="." includes="war.xml"/>
-    <war webxml="war.xml" destfile="${working.dir}/test.war">
+    <war webxml="war.xml" destfile="${output}/test.war">
       <lib refid="test"/>
     </war>
-    <unzip src="${working.dir}/test.war" dest="${working.dir}"/>
+    <unzip src="${output}/test.war" dest="${output}"/>
   </target>
   
-  <target name="clean">
-    <delete dir="${working.dir}"/>
-  </target>
 </project>

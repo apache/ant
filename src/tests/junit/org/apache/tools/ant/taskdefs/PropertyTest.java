@@ -35,6 +35,7 @@ public class PropertyTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/property.xml");
+        project.executeTarget("setUp");
     }
 
     public void test1() {

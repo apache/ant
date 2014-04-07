@@ -30,10 +30,6 @@ public class SyncTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/sync.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testSimpleCopy() {
         executeTarget("simplecopy");
         String d = getProject().getProperty("dest") + "/a/b/c/d";

@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -39,11 +40,7 @@ public class RecorderTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/recorder.xml");
-        executeTarget("prepare");
-    }
-
-    public void tearDown() {
-        executeTarget("cleanup");
+        executeTarget("setUp");
     }
 
     public void testNoAppend() throws IOException {
@@ -51,8 +48,8 @@ public class RecorderTest extends BuildFileTest {
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest1.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest1.log"), true));
+                                  new File(getOutputDir(),
+                                                      "rectest1.log"), true));
     }
 
     public void testAppend() throws IOException {
@@ -60,8 +57,8 @@ public class RecorderTest extends BuildFileTest {
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest2.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest2.log"), true));
+                           new File(getOutputDir(),
+                                                      "rectest2.log"), true));
     }
 
     public void testRestart() throws IOException {
@@ -69,8 +66,7 @@ public class RecorderTest extends BuildFileTest {
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest3.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest3.log"), true));
+                           new File(getOutputDir(), "rectest3.log"), true));
     }
 
     public void testDeleteRestart() throws IOException {
@@ -78,8 +74,8 @@ public class RecorderTest extends BuildFileTest {
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest4.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest4.log"), true));
+                           new File(getOutputDir(),
+                                                      "rectest4.log"), true));
     }
 
     public void testSubBuild() throws IOException {
@@ -87,13 +83,11 @@ public class RecorderTest extends BuildFileTest {
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest5.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest5.log"), true));
+                           new File(getOutputDir(), "rectest5.log"), true));
         assertTrue(FILE_UTILS
                    .contentEquals(project.resolveFile(REC_IN
                                                       + "rectest6.result"),
-                                  project.resolveFile(REC_DIR
-                                                      + "rectest6.log"), true));
+                           new File(getOutputDir(), "rectest6.log"), true));
                                                       
     }
 

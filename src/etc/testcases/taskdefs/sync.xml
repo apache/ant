@@ -16,24 +16,21 @@
   limitations under the License.
 -->
 <project name="sync-test" default="not-me">
-  <property name="scratch" location="synctest"/>
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <property name="src" location="${output}/source"/>
+    <property name="dest" location="${output}/target"/>
+    <mkdir dir="${src}"/>
+    <mkdir dir="${dest}"/>
+  </target>
 
   <target name="not-me">
     <fail>This file must be used from a test case</fail>
   </target>
 
-  <target name="cleanup">
-    <delete dir="${scratch}"/>
-  </target>
-
-  <target name="setup">
-    <property name="src" location="${scratch}/source"/>
-    <property name="dest" location="${scratch}/target"/>
-    <mkdir dir="${src}"/>
-    <mkdir dir="${dest}"/>
-  </target>
-
-  <target name="simplecopy" depends="setup">
+  <target name="simplecopy" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <sync todir="${dest}">
@@ -41,7 +38,7 @@
     </sync>
   </target>
 
-  <target name="copyandremove" depends="setup">
+  <target name="copyandremove" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>
@@ -51,7 +48,7 @@
     </sync>
   </target>
 
-  <target name="copyandremove-with-filelist" depends="setup">
+  <target name="copyandremove-with-filelist" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>
@@ -64,7 +61,7 @@
     </sync>
   </target>
 
-  <target name="copyandremove-with-zipfileset" depends="setup">
+  <target name="copyandremove-with-zipfileset" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>
@@ -77,7 +74,7 @@
     </sync>
   </target>
 
-  <target name="copyandremove-emptypreserve" depends="setup">
+  <target name="copyandremove-emptypreserve" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>
@@ -88,7 +85,7 @@
     </sync>
   </target>
 
-  <target name="emptycopy" depends="setup">
+  <target name="emptycopy" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <sync todir="${dest}">
@@ -96,7 +93,7 @@
     </sync>
   </target>
 
-  <target name="emptydircopy" depends="setup">
+  <target name="emptydircopy" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <sync todir="${dest}"
@@ -105,7 +102,7 @@
     </sync>
   </target>
 
-  <target name="emptydircopyandremove" depends="setup">
+  <target name="emptydircopyandremove" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e/f"/>
@@ -115,7 +112,7 @@
     </sync>
   </target>
 
-  <target name="copynoremove" depends="setup">
+  <target name="copynoremove" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>
@@ -128,7 +125,7 @@
     </sync>
   </target>
 
-  <target name="copynoremove-selectors" depends="setup">
+  <target name="copynoremove-selectors" depends="setUp">
     <mkdir dir="${src}/a/b/c"/>
     <touch file="${src}/a/b/c/d"/>
     <mkdir dir="${dest}/e"/>

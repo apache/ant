@@ -38,16 +38,12 @@ public class WarTest extends BuildFileTest {
         configureProject(TEST_BUILD_FILE);
     }
 
-    public void tearDown() {
-        executeTarget("clean");
-    }
-
     /**
      * Test direct dependency removal
      */
     public void testLibRefs() {
         executeTarget("testlibrefs");
-        File f = getProject().resolveFile("working/WEB-INF/lib/war.xml");
+        File f = new File(getOutputDir(), "WEB-INF/lib/war.xml");
         assertTrue("File has been put into lib", f.exists());
     }
 }

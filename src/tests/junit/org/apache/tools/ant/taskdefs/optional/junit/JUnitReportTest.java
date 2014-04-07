@@ -40,10 +40,6 @@ public class JUnitReportTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/optional/junitreport.xml");
     }
 
-    protected void tearDown() {
-        executeTarget("clean");
-    }
-
     /**
      * Verifies that no empty junit-noframes.html is generated when frames
      * output is selected via the default.
@@ -51,15 +47,14 @@ public class JUnitReportTest extends BuildFileTest {
      */
     public void testNoFileJUnitNoFrames() {
         executeTarget("reports1");
-        if (new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists())
+        if (new File(getOutputDir(), "html/junit-noframes.html").exists())
         {
             fail("No file junit-noframes.html expected");
         }
     }
 
     public void assertIndexCreated() {
-        if (!new File(System.getProperty("root"),
-                "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html").exists()) {
+        if (!new File(getOutputDir(), "html/index.html").exists()) {
             fail("No file index file found");
         }
 
@@ -98,8 +93,7 @@ public class JUnitReportTest extends BuildFileTest {
         expectReportWithText("testStackTraceLineBreaks", null);
         FileReader r = null;
         try {
-            r = new FileReader(new File(System.getProperty("root"),
-                                        "src/etc/testcases/taskdefs/optional/junitreport/test/html/sampleproject/coins/0_CoinTest.html"));
+            r = new FileReader(new File(getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
             String report = FileUtils.readFully(r);
             assertTrue("output must contain <br>:\n" + report,
                        report.indexOf("junit.framework.AssertionFailedError: DOEG<br>")
@@ -116,7 +110,7 @@ public class JUnitReportTest extends BuildFileTest {
     // Bugzilla Report 38477
     public void testSpecialSignsInSrcPath() throws Exception {
         executeTarget("testSpecialSignsInSrcPath");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        File reportFile = new File(getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -129,7 +123,7 @@ public class JUnitReportTest extends BuildFileTest {
 
     public void testSpecialSignsInHtmlPath() throws Exception {
         executeTarget("testSpecialSignsInHtmlPath");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html# $%\u00A7&-!report/index.html");
+        File reportFile = new File(getOutputDir(), "html# $%\u00A7&-!report/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -143,7 +137,7 @@ public class JUnitReportTest extends BuildFileTest {
     //Bugzilla Report 39708
     public void testWithStyleFromDir() throws Exception {
         executeTarget("testWithStyleFromDir");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        File reportFile = new File(getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -157,7 +151,7 @@ public class JUnitReportTest extends BuildFileTest {
     //Bugzilla Report 40021
     public void testNoFrames() throws Exception {
         executeTarget("testNoFrames");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html");
+        File reportFile = new File(getOutputDir(), "html/junit-noframes.html");
         // tests one the file object
         assertTrue("No junit-noframes.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -170,7 +164,7 @@ public class JUnitReportTest extends BuildFileTest {
     //Bugzilla Report 39708
     public void testWithStyleFromDirAndXslImport() throws Exception {
         executeTarget("testWithStyleFromDirAndXslImport");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        File reportFile = new File(getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -183,7 +177,7 @@ public class JUnitReportTest extends BuildFileTest {
 
     public void testWithStyleFromClasspath() throws Exception {
         executeTarget("testWithStyleFromClasspath");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        File reportFile = new File(getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
@@ -196,7 +190,7 @@ public class JUnitReportTest extends BuildFileTest {
 
     public void testWithParams() throws Exception {
         expectLogContaining("testWithParams", "key1=value1,key2=value2");
-        File reportFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/index.html");
+        File reportFile = new File(getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );

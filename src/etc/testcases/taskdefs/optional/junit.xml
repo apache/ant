@@ -17,16 +17,17 @@
 -->
 
 <project name="junit-test" basedir="." default="outputTests">
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
   <property name="showoutput" value="false" />
   <path id="test">
     <pathelement path="${java.class.path}" />
     <pathelement location="../../../../../build/testcases" />
   </path>
-
-  <target name="cleanup">
-    <delete file="testlog.txt"/>
-    <delete dir="out"/>
-  </target>
 
   <target name="testForkedOutput">
     <junit fork="yes" haltonerror="true" haltonfailure="true" 
@@ -91,11 +92,12 @@
     </junit>
   </target>
 
-  <target name="capture">
+  <target name="capture" depends="setUp">
     <property name="fork" value="false"/>
     <junit fork="${fork}">
       <test
         name="org.apache.tools.ant.taskdefs.optional.junit.Printer"
+        todir="${output}"
         outfile="testlog"/>
       <formatter type="plain"/>
       <classpath refid="test"/>
@@ -112,12 +114,11 @@
     </junit>
   </target>
 
-  <target name="testBatchTestForkOnceToDir">
-    <mkdir dir="out"/>
+  <target name="testBatchTestForkOnceToDir" depends="setUp">
     <junit fork="true" forkmode="once">
       <formatter type="xml"/>
       <classpath refid="test"/>
-      <batchtest todir="out">
+      <batchtest todir="${output}">
         <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
@@ -132,11 +133,11 @@
 
   <!-- Bugzilla Report 32973 -->
   <target name="testBatchTestForkOnceExtension">
-    <mkdir dir="out"/>
+    <mkdir dir="${output}"/>
     <junit fork="true" forkmode="once">
       <formatter type="xml" extension=".foo"/>
       <classpath refid="test"/>
-      <batchtest todir="out">
+      <batchtest todir="${output}">
         <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
@@ -150,12 +151,12 @@
   </target>
 
   <target name="testBatchTestForkOnceCustomFormatter">
-    <mkdir dir="out"/>
+    <mkdir dir="${output}"/>
     <junit fork="true" forkmode="once">
       <formatter extension="foo"
         classname="org.apache.tools.ant.taskdefs.optional.junit.TestFormatter"/>
       <classpath refid="test"/>
-      <batchtest todir="out">
+      <batchtest todir="${output}">
         <fileset dir="../../../../tests/junit">
           <include
             name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
@@ -169,7 +170,7 @@
   </target>
 
   <target name="failureRecorder.prepare">
-    <property name="tmp.dir" value="out"/>
+    <property name="tmp.dir" value="${output}"/>
     <mkdir dir="${tmp.dir}/org"/>
     <echo file="${tmp.dir}/A.java">
         import junit.framework.*;
@@ -210,7 +211,7 @@
   </target>
 
   <target name="failureRecorder.internal">  
-    <property name="tmp.dir" value="out"/>
+    <property name="tmp.dir" value="${output}"/>
     <delete>
       <fileset dir="${tmp.dir}" includes="FailedTests*.class"/>
     </delete>
@@ -248,7 +249,7 @@
   </target>
   
   <target name="failureRecorder.fixing">
-    <property name="tmp.dir" value="out"/>
+    <property name="tmp.dir" value="${output}"/>
     <echo file="${tmp.dir}/A.java">
         import junit.framework.*;
         public class A extends TestCase {
@@ -278,12 +279,12 @@
 
   <!-- JUnit4 Ignore and Assume for skipping tests -->
   <target name="testSkippableTests">
-    <mkdir dir="out"/>
+    <mkdir dir="${output}"/>
     <junit fork="true">
             <classpath refid="test"/>
             <formatter type="xml"/>
             <classpath refid="test"/>
-            <batchtest todir="out">
+            <batchtest todir="${output}">
                 <fileset dir="../../../../tests/junit">
                     <include name="org/example/junit/JUnit4Skippable.java"/>
                     <!-- tests remove out-dir on tearDown -->
@@ -295,12 +296,12 @@
 
   <!-- Skipping classes that are not tests -->
   <target name="testNonTests">
-    <mkdir dir="out"/>
+    <mkdir dir="${output}"/>
         <junit fork="true">
             <classpath refid="test"/>
             <formatter type="xml"/>
             <classpath refid="test"/>
-            <batchtest todir="out" skipNonTests="true">
+            <batchtest todir="${output}" skipNonTests="true">
                 <fileset dir="../../../../tests/junit">
                     <include name="org/example/junit/*Missed.java"/>
                     <!-- tests remove out-dir on tearDown -->
@@ -311,12 +312,12 @@
 
     <!-- Not skipping classes that are not tests -->
     <target name="testNonTestsRun">
-        <mkdir dir="out"/>
+        <mkdir dir="${output}"/>
         <junit fork="true">
             <classpath refid="test"/>
             <formatter type="xml"/>
             <classpath refid="test"/>
-            <batchtest todir="out" skipNonTests="false">
+            <batchtest todir="${output}" skipNonTests="false">
                 <fileset dir="../../../../tests/junit">
                     <include name="org/example/junit/*Missed.java"/>
                     <!-- tests remove out-dir on tearDown -->
@@ -326,7 +327,7 @@
     </target>
 
   <target name="testTestMethods" >
-    <property name="tmp.dir" value="out"/>
+    <property name="tmp.dir" value="${output}"/>
     <echo file="${tmp.dir}/T1.java">public class T1 extends
       junit.framework.TestCase {
       public void testOK() {}

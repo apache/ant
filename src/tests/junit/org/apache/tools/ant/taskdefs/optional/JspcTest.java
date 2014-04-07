@@ -33,14 +33,6 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFa
  * @since Ant 1.5
  */
 public class JspcTest extends BuildFileTest {
-    /**
-     * Description of the Field
-     */
-    private File baseDir;
-    /**
-     * Description of the Field
-     */
-    private File outDir;
 
     /**
      * Description of the Field
@@ -63,16 +55,6 @@ public class JspcTest extends BuildFileTest {
      */
     public void setUp() {
         configureProject(TASKDEFS_DIR + "jspc.xml");
-        baseDir = new File(System.getProperty("root"), TASKDEFS_DIR);
-        outDir = new File(baseDir, "jsp/java");
-    }
-
-
-    /**
-     * The teardown method for JUnit
-     */
-    public void tearDown() {
-        executeTarget("cleanup");
     }
 
 
@@ -180,7 +162,7 @@ public class JspcTest extends BuildFileTest {
      * @return The OutputFile value
      */
     protected File getOutputFile(String subpath) {
-        return new File(outDir, subpath);
+        return new File(getOutputDir(), subpath);
     }
 
     /**

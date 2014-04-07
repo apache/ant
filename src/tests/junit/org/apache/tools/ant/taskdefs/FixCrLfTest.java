@@ -40,10 +40,6 @@ public class FixCrLfTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/fixcrlf/build.xml");
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void test1() throws IOException {
         executeTarget("test1");
     }

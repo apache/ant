@@ -43,20 +43,14 @@ public class PropertyFileTest extends BuildFileTest {
      *  The JUnit setup method
      */
     public void setUp() throws Exception {
-        destroyTempFiles();
+        configureProject(projectFilePath);
+        executeTarget("setUp");
         initTestPropFile();
         initBuildPropFile();
         configureProject(projectFilePath);
         project.setProperty(valueDoesNotGetOverwrittenPropertyFileKey,valueDoesNotGetOverwrittenPropertyFile);
     }
 
-
-    /**
-     *  The JUnit tearDown method
-     */
-    public void tearDown() {
-        destroyTempFiles();
-    }
 
     public void testNonExistingFile() {
         PropertyFile props = new PropertyFile();
@@ -129,33 +123,10 @@ public class PropertyFileTest extends BuildFileTest {
         executeTarget("bugDemo2");
         assertEquals("5", project.getProperty("foo"));
     }
-/*
-    public void testDirect() throws Exception {
-        PropertyFile pf = new PropertyFile();
-        pf.setProject(project);
-        pf.setFile(new File(System.getProperty("root"), testPropsFilePath));
-        PropertyFile.Entry entry = pf.createEntry();
-
-        entry.setKey("date");
-        entry.setValue("123");
-        PropertyFile.Entry.Type type = new PropertyFile.Entry.Type();
-        type.setValue("date");
-        entry.setType(type);
-
-        entry.setPattern("yyyy/MM/dd");
-
-        PropertyFile.Entry.Operation operation = new PropertyFile.Entry.Operation();
-        operation.setValue("+");
-        pf.execute();
-
-        Properties props = getTestProperties();
-        assertEquals("yeehaw", props.getProperty("date"));
-    }
-*/
 
     private Properties getTestProperties() throws Exception {
         Properties testProps = new Properties();
-        FileInputStream propsFile = new FileInputStream(new File(System.getProperty("root"), testPropsFilePath));
+        FileInputStream propsFile = new FileInputStream(new File(getOutputDir(), testPropsFilePath));
         testProps.load(propsFile);
         propsFile.close();
         return testProps;
@@ -169,7 +140,7 @@ public class PropertyFileTest extends BuildFileTest {
         testProps.put(EMAIL_KEY, EMAIL);
         testProps.put("existing.prop", "37");
 
-        FileOutputStream fos = new FileOutputStream(new File(System.getProperty("root"), testPropsFilePath));
+        FileOutputStream fos = new FileOutputStream(new File(getOutputDir(), testPropsFilePath));
         testProps.store(fos, "defaults");
         fos.close();
     }
@@ -185,25 +156,11 @@ public class PropertyFileTest extends BuildFileTest {
         buildProps.put(AGE_KEY, NEW_AGE);
         buildProps.put(DATE_KEY, NEW_DATE);
 
-        FileOutputStream fos = new FileOutputStream(new File(System.getProperty("root"), buildPropsFilePath));
+        FileOutputStream fos = new FileOutputStream(new File(getOutputDir(), buildPropsFilePath));
         buildProps.store(fos, null);
         fos.close();
     }
 
-
-    private void destroyTempFiles() {
-        File tempFile = new File(System.getProperty("root"), testPropsFilePath);
-        tempFile.delete();
-        tempFile = null;
-
-        tempFile = new File(System.getProperty("root"), buildPropsFilePath);
-        tempFile.delete();
-        tempFile = null;
-
-        tempFile = new File(System.getProperty("root"), valueDoesNotGetOverwrittenPropsFilePath);
-        tempFile.delete();
-        tempFile = null;
-    }
 
 
 
@@ -212,13 +169,13 @@ public class PropertyFileTest extends BuildFileTest {
 
         testPropertyFile    = "propertyfile.test.properties",
         testPropertyFileKey = "test.propertyfile",
-        testPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + testPropertyFile,
+        testPropsFilePath   = testPropertyFile,
 
         valueDoesNotGetOverwrittenPropertyFile    = "overwrite.test.properties",
         valueDoesNotGetOverwrittenPropertyFileKey = "overwrite.test.propertyfile",
-        valueDoesNotGetOverwrittenPropsFilePath   = "src/etc/testcases/taskdefs/optional/" + valueDoesNotGetOverwrittenPropertyFile,
+        valueDoesNotGetOverwrittenPropsFilePath   = valueDoesNotGetOverwrittenPropertyFile,
 
-        buildPropsFilePath  = "src/etc/testcases/taskdefs/optional/propertyfile.build.properties",
+        buildPropsFilePath  = "propertyfile.build.properties",
 
         FNAME     = "Bruce",
         NEW_FNAME = "Clark",

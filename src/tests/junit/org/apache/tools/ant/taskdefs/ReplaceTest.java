@@ -34,6 +34,7 @@ public class ReplaceTest extends BuildFileTest {
 
     public void setUp() {
         configureProject("src/etc/testcases/taskdefs/replace.xml");
+        project.executeTarget("setUp");
     }
 
     public void test1() {
@@ -70,32 +71,26 @@ public class ReplaceTest extends BuildFileTest {
 
     public void test9() throws IOException {
         executeTarget("test9");
-        String tmpdir = project.getProperty("tmp.dir");
-        assertEqualContent(new File(tmpdir, "result.txt"),
-                    new File(tmpdir, "output.txt"));
+        assertEqualContent(new File(getOutputDir(), "result.txt"),
+                    new File(getOutputDir(), "output.txt"));
     }
 
     public void testNoPreserveLastModified() throws Exception {
         executeTarget("lastModifiedSetup");
-        String tmpdir = project.getProperty("tmp.dir");
-        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
         Thread.sleep(3000);
         executeTarget("testNoPreserve");
-        assertTrue(ts1 < new File(tmpdir, "test.txt").lastModified());
+        assertTrue(ts1 < new File(getOutputDir(), "test.txt").lastModified());
     }
 
     public void testPreserveLastModified() throws Exception {
         executeTarget("lastModifiedSetup");
-        String tmpdir = project.getProperty("tmp.dir");
-        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
         Thread.sleep(3000);
         executeTarget("testPreserve");
-        assertTrue(ts1 == new File(tmpdir, "test.txt").lastModified());
+        assertTrue(ts1 == new File(getOutputDir(), "test.txt").lastModified());
     }
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

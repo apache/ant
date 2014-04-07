@@ -17,60 +17,57 @@
 -->
 <project name="recorder-test" default="all" basedir=".">
 
-    <property name="recin" location="recorder"/>
-    <property name="recdir" location="recorder-out"/>
+  <import file="../buildfiletest-base.xml"/>
 
-    <target name="all" depends="noappend,append,restart,deleterestart"/>
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
 
-    <target name="prepare">
-      <mkdir dir="${recdir}"/>
-    </target>
+  <property name="recin" location="recorder"/>
 
-    <target name="noappend">
-        <copy file="${recin}/rectest2.result" tofile="${recdir}/rectest1.log"/>
-        <record name="${recdir}/rectest1.log" action="start" />
-        <echo message="some message1"/>
-        <record name="${recdir}/rectest1.log" action="stop" />
-    </target>
+  <target name="all" depends="noappend,append,restart,deleterestart"/>
 
-    <target name="append">
-        <copy file="${recin}/rectest1.result" tofile="${recdir}/rectest2.log"/>
-        <record name="${recdir}/rectest2.log" append="true" action="start"/>
-        <echo message="some message2"/>
-        <record name="${recdir}/rectest2.log" action="stop"/>
-    </target>
+  <target name="noappend">
+    <copy file="${recin}/rectest2.result" tofile="${output}/rectest1.log"/>
+    <record name="${output}/rectest1.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest1.log" action="stop"/>
+  </target>
 
-    <target name="restart">
-        <record name="${recdir}/rectest3.log" action="start"/>
-        <echo message="some message1"/>
-        <record name="${recdir}/rectest3.log" action="stop"/>
-        <echo message="some message2"/>
-        <record name="${recdir}/rectest3.log" action="start"/>
-        <echo message="some message3"/>
-        <record name="${recdir}/rectest3.log" action="stop"/>
-    </target>
+  <target name="append">
+    <copy file="${recin}/rectest1.result" tofile="${output}/rectest2.log"/>
+    <record name="${output}/rectest2.log" append="true" action="start"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest2.log" action="stop"/>
+  </target>
 
-    <target name="deleterestart">
-        <record name="${recdir}/rectest4.log" action="start"/>
-        <echo message="some message1"/>
-        <record name="${recdir}/rectest4.log" action="stop"/>
-        <delete file="${recdir}/rectest4.log"/>
-        <echo message="some message2"/>
-        <record name="${recdir}/rectest4.log" action="start"/>
-        <echo message="some message3"/>
-        <record name="${recdir}/rectest4.log" action="stop"/>
-    </target>
+  <target name="restart">
+    <record name="${output}/rectest3.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest3.log" action="stop"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest3.log" action="start"/>
+    <echo message="some message3"/>
+    <record name="${output}/rectest3.log" action="stop"/>
+  </target>
 
-    <target name="subbuild">
-        <record name="${recdir}/rectest5.log" action="start"/>
-        <echo message="some message5"/>
-        <ant antfile="recorder2.xml"/>
-        <record name="${recdir}/rectest5.log" action="stop"/>
-    </target>
+  <target name="deleterestart">
+    <record name="${output}/rectest4.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest4.log" action="stop"/>
+    <delete file="${output}/rectest4.log"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest4.log" action="start"/>
+    <echo message="some message3"/>
+    <record name="${output}/rectest4.log" action="stop"/>
+  </target>
 
+  <target name="subbuild">
+    <record name="${output}/rectest5.log" action="start"/>
+    <echo message="some message5"/>
+    <ant antfile="recorder2.xml"/>
+    <record name="${output}/rectest5.log" action="stop"/>
+  </target>
 
-    <target name="cleanup">
-       <delete dir="${recdir}"/>
-    </target>
 
 </project>
