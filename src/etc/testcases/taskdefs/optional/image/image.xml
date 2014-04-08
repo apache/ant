@@ -18,59 +18,56 @@
 
 <project name="image-test" default="main" basedir=".">
 
-   <target name="main" depends="testSimpleScale">
-   </target>
+  <import file="../../../buildfiletest-base.xml"/>
 
-    <target name="init">
-        <property name="src.dir" location="${basedir}/src"/>
-        <property name="dest.dir" location="${basedir}/dest"/>
-        <mkdir dir="${dest.dir}"/>
-    </target>
-    
-    <target name="cleanup">
-        <delete dir="${dest.dir}"/>   
-    </target>
-   
-   	<!-- this should produce a single file in the dest dir -->
-	 	<target name="testSimpleScale" depends="init">
-			<image includes="*.jpg" srcdir="${src.dir}" destdir="${dest.dir}" overwrite="no" failonerror="no">
-				<scale width="300" proportions="width"/>
-			</image>   
-		</target>   
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="src.dir" location="${basedir}/src"/>
+  </target>
 
-   	<!-- this should put some text in the log -->
-	 	<target name="testEchoToLog" depends="init">
-			<image includes="*.jpg" srcdir="${src.dir}" destdir="${dest.dir}" overwrite="no" failonerror="no">
-				<scale width="300" proportions="width"/>
-			</image>   
-		</target>   
-		
-   	<!-- this should produce a single file in the dest dir -->
-	 	<target name="testFailOnError" depends="init">
-			<image includes="*.jpg" srcdir="${src.dir}" destdir="${dest.dir}" overwrite="no" failonerror="yes">
-				<scale width="300" proportions="width"/>
-			</image>   
-		</target>   		
-		
-		<!-- this should produce a single file in the dest dir, overwriting any existing file -->
-		<target name="testOverwriteTrue" depends="init">
-			<image includes="*.jpg" srcdir="${src.dir}" destdir="${dest.dir}" overwrite="true" failonerror="no">
-				<scale width="300" proportions="width"/>
-			</image>   
-		</target>   
+  <target name="main" depends="testSimpleScale">
+  </target>
 
-		<!-- this should not overwrite the existing file -->
-		<target name="testOverwriteFalse" depends="init">
-			<image includes="*.jpg" srcdir="${src.dir}" destdir="${dest.dir}" overwrite="false" failonerror="no">
-				<scale width="300" proportions="width"/>
-			</image>   
-		</target>   
-   
-  <target name="testSimpleScaleWithMapper" depends="init">
+  <!-- this should produce a single file in the dest dir -->
+  <target name="testSimpleScale" depends="setUp">
+    <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </image>
+  </target>
+
+  <!-- this should put some text in the log -->
+  <target name="testEchoToLog" depends="setUp">
+    <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </image>
+  </target>
+
+  <!-- this should produce a single file in the dest dir -->
+  <target name="testFailOnError" depends="setUp">
+    <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="yes">
+      <scale width="300" proportions="width"/>
+    </image>
+  </target>
+
+  <!-- this should produce a single file in the dest dir, overwriting any existing file -->
+  <target name="testOverwriteTrue" depends="setUp">
+    <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="true" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </image>
+  </target>
+
+  <!-- this should not overwrite the existing file -->
+  <target name="testOverwriteFalse" depends="setUp">
+    <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="false" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </image>
+  </target>
+
+  <target name="testSimpleScaleWithMapper" depends="setUp">
     <image includes="*.jpg" srcdir="${src.dir}"
-           destdir="${dest.dir}" overwrite="no" failonerror="no">
+           destdir="${output}" overwrite="no" failonerror="no">
       <scale width="300" proportions="width"/>
       <globmapper from="*" to="scaled-*"/>
-    </image>   
-  </target>   
+    </image>
+  </target>
 </project>

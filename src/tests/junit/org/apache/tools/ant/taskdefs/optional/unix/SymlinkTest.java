@@ -35,6 +35,8 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
 
+import java.io.File;
+
 /**
  * Test cases for the Symlink task. Link creation, link deletion, recording
  * of links in multiple directories, and restoration of links recorded are
@@ -56,7 +58,7 @@ public class SymlinkTest extends BuildFileTest {
     public void setUp() {
         if (supportsSymlinks) {
             configureProject("src/etc/testcases/taskdefs/optional/unix/symlink.xml");
-            executeTarget("setup");
+            executeTarget("setUp");
         }
     }
 
@@ -187,7 +189,7 @@ public class SymlinkTest extends BuildFileTest {
             executeTarget("test-fileutils");
             SymbolicLinkUtils su = SymbolicLinkUtils.getSymbolicLinkUtils();
 
-            java.io.File f = getProject().resolveFile("test-working/file1");
+            java.io.File f = new File(getOutputDir(), "file1");
             assertTrue(f.exists());
             assertFalse(f.isDirectory());
             assertTrue(f.isFile());
@@ -198,7 +200,7 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
-            f = getProject().resolveFile("test-working/dir1");
+            f = new File(getOutputDir(), "dir1");
             assertTrue(f.exists());
             assertTrue(f.isDirectory());
             assertFalse(f.isFile());
@@ -209,7 +211,7 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
-            f = getProject().resolveFile("test-working/file2");
+            f = new File(getOutputDir(), "file2");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
@@ -220,7 +222,7 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
-            f = getProject().resolveFile("test-working/dir2");
+            f = new File(getOutputDir(), "dir2");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
@@ -232,7 +234,7 @@ public class SymlinkTest extends BuildFileTest {
                                                   f.getName()));
 
 
-            f = getProject().resolveFile("test-working/file.there");
+            f = new File(getOutputDir(), "file.there");
             assertTrue(f.exists());
             assertFalse(f.isDirectory());
             assertTrue(f.isFile());
@@ -243,7 +245,7 @@ public class SymlinkTest extends BuildFileTest {
             assertFalse(su.isDanglingSymbolicLink(f.getParentFile(),
                                                   f.getName()));
 
-            f = getProject().resolveFile("test-working/dir.there");
+            f = new File(getOutputDir(), "dir.there");
             assertTrue(f.exists());
             assertTrue(f.isDirectory());
             assertFalse(f.isFile());
@@ -260,7 +262,7 @@ public class SymlinkTest extends BuildFileTest {
             // this is not true under Snow Leopard and JDK 1.5
             // Removing special handling of MacOS until someone shouts
             // Antoine
-            f = getProject().resolveFile("test-working/file.notthere");
+            f = new File(getOutputDir(), "file.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
@@ -270,7 +272,7 @@ public class SymlinkTest extends BuildFileTest {
             assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                                  f.getName()));
 
-            f = getProject().resolveFile("test-working/dir.notthere");
+            f = new File(getOutputDir(), "dir.notthere");
             assertFalse(f.exists());
             assertFalse(f.isDirectory());
             assertFalse(f.isFile());
@@ -285,7 +287,7 @@ public class SymlinkTest extends BuildFileTest {
 
     public void tearDown() {
         if (supportsSymlinks) {
-            executeTarget("teardown");
+            executeTarget("tearDown");
         }
     }
 

@@ -15,20 +15,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="rmic" default="teardown" basedir=".">
+<project name="rmic" default="tearDown" basedir=".">
 
   <property name="rmic.dir" location="." />
   <property name="src.dir" location="${rmic.dir}/src"/>
-  <property name="build.dir" location="${java.io.tmpdir}/build"/>
-  <property name="dest.dir" location="${java.io.tmpdir}/dest"/>
 
-  <target name="teardown">
-    <delete dir="${build.dir}"/>
-    <delete dir="${dest.dir}"/>
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <property name="build.dir" location="${output}/build"/>
+    <property name="dest.dir" location="${output}/dest"/>
   </target>
 
+
+
   <!-- init builds the java source -->
-  <target name="init" depends="probe-rmic">
+  <target name="init" depends="probe-rmic,setUp">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dest.dir}"/>
 

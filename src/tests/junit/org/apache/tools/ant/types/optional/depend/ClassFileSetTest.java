@@ -42,10 +42,6 @@ public class ClassFileSetTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/optional/depend/depend.xml");
     }
 
-    public void tearDown() {
-        executeTarget("clean");
-    }
-
     /**
      * Test basic classfileset
      */

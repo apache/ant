@@ -42,10 +42,6 @@ public class DependTest extends BuildFileTest {
         configureProject(TEST_BUILD_FILE);
     }
 
-    public void tearDown() {
-        executeTarget("clean");
-    }
-
     /**
      * Test direct dependency removal
      */

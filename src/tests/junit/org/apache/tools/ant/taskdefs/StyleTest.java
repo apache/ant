@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs;
 
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -45,10 +46,6 @@ public class StyleTest extends BuildFileTest {
         //commented out for performance while target is empty
     }
 
-    protected void tearDown() throws Exception {
-        executeTarget("teardown");
-    }
-
     public void testStyleIsSet() throws Exception {
         expectSpecificBuildException("testStyleIsSet",
                 "no stylesheet specified", "specify the " +
@@ -58,31 +55,31 @@ public class StyleTest extends BuildFileTest {
 
     public void testTransferParameterSet() throws Exception {
         expectFileContains("testTransferParameterSet",  // target
-                           "out/out.xml",               // file
+                           getOutputDir().getAbsoluteFile() + "/out.xml",               // file
                            "set='myvalue'");            // exptected string
     }
 
     public void testTransferParameterEmpty() throws Exception {
         expectFileContains("testTransferParameterEmpty",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "empty=''");
     }
 
     public void testTransferParameterUnset() throws Exception {
         expectFileContains("testTransferParameterUnset",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "undefined='${value}'");
     }
 
     public void testTransferParameterUnsetWithIf() throws Exception {
         expectFileContains("testTransferParameterUnsetWithIf",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "undefined='undefined default value'");
     }
 
     public void testNewerStylesheet() throws Exception {
         expectFileContains("testNewerStylesheet",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "new-value");
     }
 
@@ -95,40 +92,36 @@ public class StyleTest extends BuildFileTest {
     }
 
     public void testDefaultMapper(String target) throws Exception {
-        assertTrue(!(FileUtils.getFileUtils().resolveFile(
-                getProject().getBaseDir(),"out/data.html")).exists());
+        assertTrue(!(
+                new File(getOutputDir().getAbsoluteFile(), "data.html").exists()));
         expectFileContains(target,
-                           "out/data.html",
+                           getOutputDir().getAbsoluteFile() + "/data.html",
                            "set='myvalue'");
     }
 
     public void testCustomMapper() throws Exception {
-        assertTrue(!FILE_UTILS.resolveFile(
-                getProject().getBaseDir(), "out/out.xml").exists());
+        assertTrue(!new File(getOutputDir().getAbsoluteFile(),  "out.xml").exists());
         expectFileContains("testCustomMapper",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "set='myvalue'");
     }
 
     public void testTypedMapper() throws Exception {
-        assertTrue(!FILE_UTILS.resolveFile(
-                getProject().getBaseDir(), "out/out.xml").exists());
+        assertTrue(!new File(getOutputDir().getAbsoluteFile(),  "out.xml").exists());
         expectFileContains("testTypedMapper",
-                           "out/out.xml",
+                           getOutputDir().getAbsoluteFile() + "/out.xml",
                            "set='myvalue'");
     }
 
     public void testDirectoryHierarchyWithDirMatching() throws Exception {
         executeTarget("testDirectoryHierarchyWithDirMatching");
-        assertTrue(FILE_UTILS.resolveFile(
-                getProject().getBaseDir(), "out/dest/level1/data.html")
+        assertTrue(new File(getOutputDir().getAbsoluteFile(),  "dest/level1/data.html")
                    .exists());
     }
 
     public void testDirsWithSpaces() throws Exception {
         executeTarget("testDirsWithSpaces");
-        assertTrue(FILE_UTILS.resolveFile(
-                getProject().getBaseDir(), "out/d est/data.html")
+        assertTrue(new File(getOutputDir().getAbsoluteFile(),  "d est/data.html")
                    .exists());
     }
 
@@ -141,36 +134,36 @@ public class StyleTest extends BuildFileTest {
     }
 
     public void testWithFileResource() throws Exception {
-        expectFileContains("testWithFileResource", "out/out.xml", "set='value'");
+        expectFileContains("testWithFileResource", getOutputDir().getAbsoluteFile() + "/out.xml", "set='value'");
     }
 
     public void testWithUrlResource() throws Exception {
-        expectFileContains("testWithUrlResource", "out/out.xml", "set='value'");
+        expectFileContains("testWithUrlResource", getOutputDir().getAbsoluteFile() + "/out.xml", "set='value'");
     }
 
     public void testFilenameAsParam() throws Exception {
         executeTarget("testFilenameAsParam");
-        assertFileContains("out/out/one.txt",      "filename='one.xml'");
-        assertFileContains("out/out/two.txt",      "filename='two.xml'");
-        assertFileContains("out/out/three.txt",    "filename='three.xml'");
-        assertFileContains("out/out/dir/four.txt", "filename='four.xml'");
-        assertFileContains("out/out/dir/four.txt", "filedir ='-not-set-'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='one.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/two.txt",      "filename='two.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/three.txt",    "filename='three.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='four.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filedir ='-not-set-'");
     }
 
     public void testFilenameAsParamNoSetting() throws Exception {
         executeTarget("testFilenameAsParamNoSetting");
-        assertFileContains("out/out/one.txt",      "filename='-not-set-'");
-        assertFileContains("out/out/two.txt",      "filename='-not-set-'");
-        assertFileContains("out/out/three.txt",    "filename='-not-set-'");
-        assertFileContains("out/out/dir/four.txt", "filename='-not-set-'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='-not-set-'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/two.txt",      "filename='-not-set-'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/three.txt",    "filename='-not-set-'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='-not-set-'");
     }
 
     public void testFilenameAndFiledirAsParam() throws Exception {
         executeTarget("testFilenameAndFiledirAsParam");
-        assertFileContains("out/out/one.txt",      "filename='one.xml'");
-        assertFileContains("out/out/one.txt",      "filedir ='.'");
-        assertFileContains("out/out/dir/four.txt", "filename='four.xml'");
-        assertFileContains("out/out/dir/four.txt", "filedir ='dir'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='one.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/one.txt",      "filedir ='.'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='four.xml'");
+        assertFileContains(getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filedir ='dir'");
     }
 
 

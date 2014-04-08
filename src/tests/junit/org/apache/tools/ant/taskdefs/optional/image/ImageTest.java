@@ -47,17 +47,13 @@ public class ImageTest extends BuildFileTest {
     }
 
 
-    public void tearDown() {
-        executeTarget("cleanup");
-    }
-
     public void testEchoToLog() {
         expectLogContaining("testEchoToLog", "Processing File");
     }
 
     public void testSimpleScale(){
         expectLogContaining("testSimpleScale", "Processing File");
-        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        File f = new File(getOutputDir(), LARGEIMAGE);
         assertTrue(
                    "Did not create "+f.getAbsolutePath(),
                    f.exists());
@@ -66,7 +62,7 @@ public class ImageTest extends BuildFileTest {
 
     public void testOverwriteTrue() {
         expectLogContaining("testSimpleScale", "Processing File");
-        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        File f = new File(getOutputDir(), LARGEIMAGE);
         long lastModified = f.lastModified();
         try {
             Thread.sleep(FILE_UTILS
@@ -74,7 +70,7 @@ public class ImageTest extends BuildFileTest {
         }
         catch (InterruptedException e) {}
         expectLogContaining("testOverwriteTrue", "Processing File");
-        f = createRelativeFile("/dest/" + LARGEIMAGE);
+        f = new File(getOutputDir(), LARGEIMAGE);
         long overwrittenLastModified = f.lastModified();
         assertTrue("File was not overwritten.",
                    lastModified < overwrittenLastModified);
@@ -82,10 +78,10 @@ public class ImageTest extends BuildFileTest {
 
     public void testOverwriteFalse() {
         expectLogContaining("testSimpleScale", "Processing File");
-        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        File f = new File(getOutputDir(), LARGEIMAGE);
         long lastModified = f.lastModified();
         expectLogContaining("testOverwriteFalse", "Processing File");
-        f = createRelativeFile("/dest/" + LARGEIMAGE);
+        f = new File(getOutputDir(), LARGEIMAGE);
         long overwrittenLastModified = f.lastModified();
         assertTrue("File was overwritten.",
                    lastModified == overwrittenLastModified);
@@ -93,7 +89,7 @@ public class ImageTest extends BuildFileTest {
 
     public void testSimpleScaleWithMapper() {
         expectLogContaining("testSimpleScaleWithMapper", "Processing File");
-        File f = createRelativeFile("/dest/scaled-" + LARGEIMAGE);
+        File f = new File(getOutputDir(), "scaled-" + LARGEIMAGE);
         assertTrue(
                    "Did not create "+f.getAbsolutePath(),
                    f.exists());
@@ -112,16 +108,6 @@ public class ImageTest extends BuildFileTest {
                        re.toString()
                        .indexOf("Unable to process image stream") > -1);
         }
-    }
-
-
-
-    protected File createRelativeFile(String filename) {
-        if (filename.equals(".")) {
-            return getProjectDir();
-        }
-        // else
-        return new File(getProjectDir(), filename);
     }
 }
 

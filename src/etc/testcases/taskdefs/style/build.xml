@@ -16,59 +16,55 @@
   limitations under the License.
 -->
 
-<project name="xslt-test" basedir="." default="nothing">
+<project name="xslt-test" basedir="." default="tearDown">
 
-  <property name="out.dir" value="out"/>
+  <import file="../../buildfiletest-base.xml"/>
 
-
-  <target name="setup">
+  <target name="setUp">
+    <mkdir dir="${output}" />
   </target>
 
-  <target name="teardown">
-      <delete dir="${out.dir}" failonerror="false" />
-  </target>
-  
 
   <target name="testStyleIsSet">
-      <xslt in="data.xml" out="${out.dir}/out.xml"/>
+      <xslt in="data.xml" out="${output}/out.xml"/>
   </target>
 
   <target name="testTransferParameterSet">
       <property name="value" value="myvalue"/>
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
           <param name="set" expression="${value}"/>
       </xslt>
   </target>
 
   <target name="testTransferParameterEmpty">
       <property name="value" value=""/>
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
           <param name="empty" expression="${value}"/>
       </xslt>
   </target>
 
   <target name="testTransferParameterUnset">
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
           <param name="undefined" expression="${value}"/>
       </xslt>
   </target>
 
   <target name="testTransferParameterUnsetWithIf">
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
           <param name="undefined" expression="${value}" if="value" />
       </xslt>
   </target>
 
   <target name="testDefaultMapper">
     <property name="value" value="myvalue"/>
-    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
+    <xslt style="printParams.xsl" destDir="${output}" basedir=".">
       <param name="set" expression="${value}"/>
     </xslt>
   </target>
 
   <target name="testCustomMapper">
     <property name="value" value="myvalue"/>
-    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
+    <xslt style="printParams.xsl" destDir="${output}" basedir=".">
       <param name="set" expression="${value}"/>
       <mapper type="glob" from="data.*" to="out.*"/>
     </xslt>
@@ -76,7 +72,7 @@
 
   <target name="testTypedMapper">
     <property name="value" value="myvalue"/>
-    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
+    <xslt style="printParams.xsl" destDir="${output}" basedir=".">
       <param name="set" expression="${value}"/>
       <globmapper from="data.*" to="out.*"/>
     </xslt>
@@ -84,7 +80,7 @@
 
   <target name="testExplicitFileset">
     <property name="value" value="myvalue"/>
-    <xslt style="printParams.xsl" destDir="${out.dir}"
+    <xslt style="printParams.xsl" destDir="${output}"
           useImplicitFileset="false" basedir="..">
       <param name="set" expression="${value}"/>
       <fileset dir="."/>
@@ -95,26 +91,26 @@
       <antcall target="copyXsl">
         <param name="xsl.value" value="old-value"/>
       </antcall>
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <xslt in="data.xml" out="${output}/out.xml" style="tmp.xsl"/>
 
       <antcall target="copyXsl">
         <param name="xsl.value" value="new-value"/>
       </antcall>
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <xslt in="data.xml" out="${output}/out.xml" style="tmp.xsl"/>
       <delete file="tmp.xsl"/>
   </target>
 
   <target name="testDirectoryHierarchyWithDirMatching">
-    <mkdir dir="${out.dir}/src/level1/"/>
-    <copy file="data.xml" todir="${out.dir}/src/level1/"/>
-    <xslt basedir="${out.dir}/src" destdir="${out.dir}/dest"
+    <mkdir dir="${output}/src/level1/"/>
+    <copy file="data.xml" todir="${output}/src/level1/"/>
+    <xslt basedir="${output}/src" destdir="${output}/dest"
            style="printParams.xsl"/>
   </target>
 
   <target name="testDirsWithSpaces">
-    <mkdir dir="${out.dir}/s rc/"/>
-    <copy file="data.xml" todir="${out.dir}/s rc/"/>
-    <xslt basedir="${out.dir}/s rc" destdir="${out.dir}/d est"
+    <mkdir dir="${output}/s rc/"/>
+    <copy file="data.xml" todir="${output}/s rc/"/>
+    <xslt basedir="${output}/s rc" destdir="${output}/d est"
            style="printParams.xsl"/>
   </target>
 
@@ -127,13 +123,13 @@
   <target name="testWithStyleAttrAndResource">
       <!-- also testing style as resources, with refid -->
       <file id="xslFile" file="printParams.xsl"/>
-      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
         <style refid="xslFile" />
       </xslt>
   </target>
 
   <target name="testWithFileResource">
-      <xslt in="data.xml" out="${out.dir}/out.xml">
+      <xslt in="data.xml" out="${output}/out.xml">
           <style>
               <file file="printParams.xsl"/>
           </style>
@@ -143,7 +139,7 @@
 
   <target name="testWithUrlResource">
       <makeurl file="printParams.xsl" property="printParams.xsl.url"/>
-      <xslt in="data.xml" out="${out.dir}/out.xml">
+      <xslt in="data.xml" out="${output}/out.xml">
           <style>
               <url url="${printParams.xsl.url}"/>
           </style>
@@ -152,15 +148,14 @@
   </target>
 
   <target name="testFilenameAndFiledirAsParam">
-      <mkdir dir="${out.dir}/xml/dir"/>
-      <mkdir dir="${out.dir}/out"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <mkdir dir="${output}/xml/dir"/>
+      <copy file="data.xml" tofile="${output}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/dir/four.xml"/>
       <xslt style="printFilename.xsl"
-            destdir="${out.dir}/out"
-            basedir="${out.dir}/xml"
+            destdir="${output}"
+            basedir="${output}/xml"
             includes="**/*.xml"
             extension=".txt"
 
@@ -170,15 +165,14 @@
   </target>
 
   <target name="testFilenameAsParam">
-      <mkdir dir="${out.dir}/xml/dir"/>
-      <mkdir dir="${out.dir}/out"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <mkdir dir="${output}/xml/dir"/>
+      <copy file="data.xml" tofile="${output}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/dir/four.xml"/>
       <xslt style="printFilename.xsl"
-            destdir="${out.dir}/out"
-            basedir="${out.dir}/xml"
+            destdir="${output}"
+            basedir="${output}/xml"
             includes="**/*.xml"
             extension=".txt"
 
@@ -187,15 +181,14 @@
   </target>
 
   <target name="testFilenameAsParamNoSetting">
-      <mkdir dir="${out.dir}/xml/dir"/>
-      <mkdir dir="${out.dir}/out"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/one.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/two.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/three.xml"/>
-      <copy file="data.xml" tofile="${out.dir}/xml/dir/four.xml"/>
+      <mkdir dir="${output}/xml/dir"/>
+      <copy file="data.xml" tofile="${output}/xml/one.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/two.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/three.xml"/>
+      <copy file="data.xml" tofile="${output}/xml/dir/four.xml"/>
       <xslt style="printFilename.xsl"
-            destdir="${out.dir}/out"
-            basedir="${out.dir}/xml"
+            destdir="${output}"
+            basedir="${output}/xml"
             includes="**/*.xml"
             extension=".txt"
       /> <!-- without 'filenameparameter' to check, that the xsl:param is NOT set -->

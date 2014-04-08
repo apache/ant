@@ -45,13 +45,6 @@ public class RmicAdvancedTest extends BuildFileTest {
     }
 
     /**
-     * The teardown method for JUnit
-     */
-    public void tearDown() {
-        executeTarget("teardown");
-    }
-
-    /**
      * verify that "default" binds us to the default compiler
      */
     public void testDefault() throws Exception {
