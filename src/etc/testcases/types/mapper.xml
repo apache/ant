@@ -18,21 +18,50 @@
 
 <project name="copy-test" basedir="." default="test1">
 
-  <target name="test1">
-    <mkdir dir="copytest" />
-    <copy todir="copytest">
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <target name="test1" depends="setUp">
+    <union id="source.resourcecollection">
       <fileset dir="../../../main">
         <include name="**/taskdefs/*.java" />
       </fileset>
       <fileset dir="../../../tests/junit">
         <include name="**/taskdefs/*.java" />
       </fileset>
+    </union>
+    <copy todir="${output}">
+      <union refid="source.resourcecollection"/>
       <mapper type="flatten" />
     </copy>
-  </target>
-
-  <target name="cleanup">
-    <delete dir="copytest" />
+    <resourcecount property="sourcefiles.count">
+      <union refid="source.resourcecollection"/>
+    </resourcecount>
+    <resourcecount property="destfiles.count">
+       <fileset dir="${output}"/>
+    </resourcecount>
+    <resourcecount property="destdirs.count">
+      <dirset dir="${output}"/>
+    </resourcecount>
+    <fail message="different number of files in source and destination ${sourcefiles.count} ${destfiles.count}">
+      <condition>
+        <not>
+          <equals arg1="${sourcefiles.count}" arg2="${destfiles.count}"/>
+        </not>
+      </condition>
+    </fail>
+    <!-- one expects the output of resourcecount on a dirset which does not contain subdirectories to be 1 -->
+    <!-- it looks like the folder of the dirset itself is counted -->
+    <fail message="flatten mapper should not copy folders">
+      <condition>
+        <not>
+          <equals arg1="${destdirs.count}" arg2="1"/>
+        </not>
+      </condition>
+    </fail>
   </target>
 
 </project>

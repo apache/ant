@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.types;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +36,6 @@ import org.apache.tools.ant.util.MergingMapper;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Mapper.
- *
  */
 
 public class MapperTest extends TestCase {
@@ -58,7 +59,7 @@ public class MapperTest extends TestCase {
             fail("Can add reference to Mapper with from attribute set");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
+                    be.getMessage());
         }
 
         m = new Mapper(project);
@@ -68,7 +69,7 @@ public class MapperTest extends TestCase {
             fail("Can set from in Mapper that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
+                    be.getMessage());
         }
 
         m = new Mapper(project);
@@ -78,7 +79,7 @@ public class MapperTest extends TestCase {
             fail("Can set to in Mapper that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
+                    be.getMessage());
         }
         try {
             Mapper.MapperType mt = new Mapper.MapperType();
@@ -87,7 +88,7 @@ public class MapperTest extends TestCase {
             fail("Can set type in Mapper that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
+                    be.getMessage());
         }
     }
 
@@ -100,7 +101,7 @@ public class MapperTest extends TestCase {
             fail("Can make Mapper a Reference to itself.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
+                    be.getMessage());
         }
 
         // dummy1 --> dummy2 --> dummy3 --> dummy1
@@ -118,7 +119,7 @@ public class MapperTest extends TestCase {
             fail("Can make circular reference.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
+                    be.getMessage());
         }
 
         // dummy1 --> dummy2 --> dummy3
@@ -167,11 +168,11 @@ public class MapperTest extends TestCase {
         assertEquals("wrong number of filenames mapped", 3, targets.length);
         List list = Arrays.asList(targets);
         assertTrue("cannot find expected target \"tofilename\"",
-            list.contains("tofilename"));
+                list.contains("tofilename"));
         assertTrue("cannot find expected target \"fromfilename\"",
-            list.contains("fromfilename"));
+                list.contains("fromfilename"));
         assertTrue("cannot find expected target \"mergefile\"",
-            list.contains("mergefile"));
+                list.contains("mergefile"));
     }
 
     public void testChained() {
@@ -236,7 +237,11 @@ public class MapperTest extends TestCase {
         }
 
         public void tearDown() {
-            executeTarget("cleanup");
+            try {
+                super.tearDown();
+            } catch (Exception exc) {
+                // ignore
+            }
         }
 
         public void test1() {
