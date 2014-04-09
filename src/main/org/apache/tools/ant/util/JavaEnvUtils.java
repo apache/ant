@@ -17,11 +17,12 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
+
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
@@ -99,6 +100,11 @@ public final class JavaEnvUtils {
     /** Number Version constant for Java 1.8 */
     public static final int VERSION_1_8 = 18;
 
+    /** Version constant for Java 1.9 */
+    public static final String JAVA_1_9 = "1.9";
+    /** Number Version constant for Java 1.9 */
+    public static final int VERSION_1_9 = 19;
+
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
 
@@ -152,6 +158,9 @@ public final class JavaEnvUtils {
             Class.forName("java.lang.reflect.Executable");
             javaVersion = JAVA_1_8;
             javaVersionNumber++;
+            checkForJava9();
+            javaVersion = JAVA_1_9;
+            javaVersionNumber++;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
             // we have
@@ -196,6 +205,24 @@ public final class JavaEnvUtils {
 
 
     /**
+     * Checks for a give Java 9 runtime.
+     * At the time of writing the actual version of the JDK was 1.9.0_b06.
+     * Searching for new classes gave no hits, so we need another aproach.
+     * Searching for changes (grep -r -i -n "@since 1.9" .) in the sources gave
+     * only one hit: a new constant in the class SourceVersion.
+     * So we have to check that ...
+     * 
+     * @throws An exception if we can't load the class or don't find the new constant.
+     *    This is the behavior when searching for new features on older versions.
+     * @since Ant 1.9.4
+     */
+    private static void checkForJava9() throws Exception {
+    	Class<?> clazz = Class.forName("javax.lang.model.SourceVersion");
+    	clazz.getDeclaredField("RELEASE_9");
+	}
+
+
+	/**
      * Returns the version of Java this class is running under.
      * This number can be used for comparisons; it will always be
      * @return the version of Java as a number 10x the major/minor,
@@ -398,6 +425,7 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector<String>();
         switch(javaVersionNumber) {
+        	case VERSION_1_9:
             case VERSION_1_8:
             case VERSION_1_7:
             case VERSION_1_6:
@@ -446,20 +474,22 @@ public final class JavaEnvUtils {
      * Testing helper method; kept here for unification of changes.
      * @return a list of test classes depending on the java version.
      */
-    public static Vector getJrePackageTestCases() {
-        Vector tests = new Vector();
+    public static Vector<String> getJrePackageTestCases() {
+        Vector<String> tests = new Vector<String>();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
+            case VERSION_1_9:
             case VERSION_1_8:
             case VERSION_1_7:
             case VERSION_1_6:
             case VERSION_1_5:
                 tests.addElement(
                     "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
-                // Fall tru
+                // Fall through
             case VERSION_1_4:
                 tests.addElement("sun.audio.AudioPlayer");
                 if (javaVersionNumber == VERSION_1_4) {
+                	// only for 1.4, not for higher versions which fall through
                     tests.addElement("org.apache.crimson.parser.ContentModel");
                     tests.addElement("org.apache.xalan.processor.ProcessorImport");
                     tests.addElement("org.apache.xml.utils.URI");

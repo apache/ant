@@ -80,6 +80,7 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC19 = "javac1.9";
     private static final String JAVAC18 = "javac1.8";
     private static final String JAVAC17 = "javac1.7";
     private static final String JAVAC16 = "javac1.6";
@@ -152,6 +153,8 @@ public class Javac extends MatchingTask {
             return JAVAC17;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
             return JAVAC18;
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_9)) {
+            return JAVAC19;
         } else {
             return CLASSIC;
         }
@@ -767,8 +770,9 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(String anImplementation) {
-        if (JAVAC17.equalsIgnoreCase(anImplementation)
+        if (JAVAC19.equalsIgnoreCase(anImplementation)
                 || JAVAC18.equalsIgnoreCase(anImplementation)
+                || JAVAC17.equalsIgnoreCase(anImplementation)
                 || JAVAC16.equalsIgnoreCase(anImplementation)
                 || JAVAC15.equalsIgnoreCase(anImplementation)
                 || JAVAC14.equalsIgnoreCase(anImplementation)
@@ -781,8 +785,9 @@ public class Javac extends MatchingTask {
         }
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             String nextSelected = assumedJavaVersion();
-            if (JAVAC17.equalsIgnoreCase(nextSelected)
+            if (JAVAC19.equalsIgnoreCase(nextSelected)
                     || JAVAC18.equalsIgnoreCase(nextSelected)
+                    || JAVAC17.equalsIgnoreCase(nextSelected)
                     || JAVAC16.equalsIgnoreCase(nextSelected)
                     || JAVAC15.equalsIgnoreCase(nextSelected)
                     || JAVAC14.equalsIgnoreCase(nextSelected)
@@ -1013,12 +1018,13 @@ public class Javac extends MatchingTask {
      *
      * @param compilerImpl the name of the compiler implementation
      * @return true if compilerImpl is "modern", "classic",
-     * "javac1.1", "javac1.2", "javac1.3", "javac1.4", "javac1.5" or
-     * "javac1.6".
+     * "javac1.1", "javac1.2", "javac1.3", "javac1.4", "javac1.5",
+     * "javac1.6", "javac1.7", "javac1.8" or "javac1.9".
      */
     protected boolean isJdkCompiler(String compilerImpl) {
         return MODERN.equals(compilerImpl)
             || CLASSIC.equals(compilerImpl)
+            || JAVAC19.equals(compilerImpl)
             || JAVAC18.equals(compilerImpl)
             || JAVAC17.equals(compilerImpl)
             || JAVAC16.equals(compilerImpl)
@@ -1243,6 +1249,7 @@ public class Javac extends MatchingTask {
             }
         }
     }
+
     private static final byte[] PACKAGE_INFO_CLASS_HEADER = {
         (byte) 0xca, (byte) 0xfe, (byte) 0xba, (byte) 0xbe, 0x00, 0x00, 0x00,
         0x31, 0x00, 0x07, 0x07, 0x00, 0x05, 0x07, 0x00, 0x06, 0x01, 0x00, 0x0a,
@@ -1250,6 +1257,7 @@ public class Javac extends MatchingTask {
         0x11, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x2d, 0x69, 0x6e, 0x66,
         0x6f, 0x2e, 0x6a, 0x61, 0x76, 0x61, 0x01
     };
+
     private static final byte[] PACKAGE_INFO_CLASS_FOOTER = {
         0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x2d, 0x69, 0x6e, 0x66,
         0x6f, 0x01, 0x00, 0x10, 0x6a, 0x61, 0x76, 0x61, 0x2f, 0x6c, 0x61, 0x6e,

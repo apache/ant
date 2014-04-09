@@ -19,8 +19,8 @@
 package org.apache.tools.ant.util.facade;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 
@@ -37,7 +37,7 @@ public class FacadeTaskHelper {
     /**
      * Command line arguments.
      */
-    private List args = new ArrayList();
+    private List<ImplementationSpecificArgument> args = new ArrayList<ImplementationSpecificArgument>();
 
     /**
      * The explicitly chosen implementation.
@@ -126,10 +126,8 @@ public class FacadeTaskHelper {
      * @return an array of command line arguments.
      */
     public String[] getArgs() {
-        List tmp = new ArrayList(args.size());
-        for (Iterator e = args.iterator(); e.hasNext();) {
-            ImplementationSpecificArgument arg =
-                ((ImplementationSpecificArgument) e.next());
+        List<String> tmp = new ArrayList<String>(args.size());
+        for (ImplementationSpecificArgument arg : args) {
             String[] curr = arg.getParts(getImplementation());
             if (curr != null) {
                 for (int i = 0; i < curr.length; i++) {

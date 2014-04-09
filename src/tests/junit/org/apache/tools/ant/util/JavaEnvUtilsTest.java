@@ -136,5 +136,5 @@ public class JavaEnvUtilsTest extends TestCase {
                 "In case the current java version is higher than 9.0 definitely a new algorithem will be needed",
                 JavaEnvUtils.isAtLeastJavaVersion("9.0"));
     }
-
+  
 }
