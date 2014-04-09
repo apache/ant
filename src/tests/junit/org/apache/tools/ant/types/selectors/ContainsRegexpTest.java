@@ -60,7 +60,11 @@ public class ContainsRegexpTest extends TestCase {
         }
 
         public void tearDown() {
-            executeTarget("cleanupregexp");
+            try {
+                super.tearDown();
+            } catch (Exception exc) {
+                // ignore
+            }
         }
 
         public void test() {
@@ -70,7 +74,7 @@ public class ContainsRegexpTest extends TestCase {
 
             executeTarget("containsregexp");
 	
-            dir = new File(getProjectDir() + "/regexpseltestdest/");
+            dir = new File(getOutputDir(), "regexpseltestdest");
             files = dir.listFiles();
             filecount = files.length;
 	

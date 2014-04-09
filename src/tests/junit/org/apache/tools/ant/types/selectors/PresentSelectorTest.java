@@ -128,7 +128,7 @@ public class PresentSelectorTest extends BaseSelectorTest {
                 makeMirror();
 
                 s = (PresentSelector)getInstance();
-                subdir = getProject().resolveFile("selectortest2");
+                subdir = new File(getOutputDir(), "selectortest2");
                 s.setTargetdir(subdir);
                 results = mirrorSelectionString(s);
                 assertEquals("TTTFFTTTTTTT", results);

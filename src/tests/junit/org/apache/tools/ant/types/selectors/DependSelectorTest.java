@@ -138,13 +138,13 @@ public class DependSelectorTest extends BaseSelectorTest {
                 makeMirror();
 
                 s = (DependSelector)getInstance();
-                File testdir = getProject().resolveFile("selectortest2");
+                File testdir = new File(getOutputDir(), "selectortest2");
                 s.setTargetdir(testdir);
                 results = selectionString(s);
                 assertEquals("FFFTTFFFFFFF", results);
 
                 s = (DependSelector)getInstance();
-                testdir = getProject().resolveFile("selectortest2/tar/bz2");
+                testdir = new File(getOutputDir(), "selectortest2/tar/bz2");
                 s.setTargetdir(testdir);
                 m = s.createMapper();
                 m.setType(glob);

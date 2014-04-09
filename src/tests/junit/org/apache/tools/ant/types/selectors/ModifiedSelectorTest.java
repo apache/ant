@@ -192,6 +192,9 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
 
     public void testCustomClasses() {
+        if (getProject().getProperty("ant.home") == null) {
+            return;
+        }
         BFT bft = new BFT();
         bft.setUp();
         try {
@@ -287,6 +290,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      */
     private String getAlgoName(String classname) {
         ModifiedSelector sel = new ModifiedSelector();
+        sel.setProject(getProject());
         // add the test classes to its classpath
         sel.addClasspath(testclasses);
         sel.setAlgorithmClass(classname);
@@ -422,7 +426,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      * A cache must return a stored value and a valid iterator.
      * After calling the delete() the cache must be empty.
      *
-     * @param algo   configured test object
+     * @param cache   configured test object
      */
     protected void doTest(Cache cache) {
         assertTrue("Cache not proper configured.", cache.isValid());
@@ -609,6 +613,9 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
         bft.deleteCachefile();
     }
     public void testResourceSelectorScenarioSimple() {
+        if (getProject().getProperty("ant.home") == null) {
+            return;
+        }
         BFT bft = new BFT("modifiedselector");
         bft.doTarget("modifiedselectortest-scenario-resourceSimple");
         bft.doTarget("modifiedselectortest-scenario-clean");
@@ -618,7 +625,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
      * Test the interface semantic of Comparators.
      * This method does some common test for comparator implementations.
      *
-     * @param algo   configured test object
+     * @param comp   configured test object
      */
     protected void doTest(Comparator comp) {
         Object o1 = new String("string1");
@@ -827,16 +834,25 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
 
     public void testScenarioCoreSelectorDefaults() {
+        if (getProject().getProperty("ant.home") == null) {
+            return;
+        }
         doScenarioTest("modifiedselectortest-scenario-coreselector-defaults", "cache.properties");
     }
 
 
     public void testScenarioCoreSelectorSettings() {
+        if (getProject().getProperty("ant.home") == null) {
+            return;
+        }
         doScenarioTest("modifiedselectortest-scenario-coreselector-settings", "core.cache.properties");
     }
 
 
     public void testScenarioCustomSelectorSettings() {
+        if (getProject().getProperty("ant.home") == null) {
+            return;
+        }
         doScenarioTest("modifiedselectortest-scenario-customselector-settings", "core.cache.properties");
     }
 
@@ -851,9 +867,9 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             bft.doTarget(target);
 
             // the directories to check
-            File to1 = new File(basedir, "selectortest/to-1");
-            File to2 = new File(basedir, "selectortest/to-2");
-            File to3 = new File(basedir, "selectortest/to-3");
+            File to1 = new File(getOutputDir(), "selectortest/to-1");
+            File to2 = new File(getOutputDir(), "selectortest/to-2");
+            File to3 = new File(getOutputDir(), "selectortest/to-3");
 
             // do the checks
             assertTrue("Cache file not created.", cachefile.exists());

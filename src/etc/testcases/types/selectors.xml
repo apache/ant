@@ -18,15 +18,20 @@
 
 <project name="selectors-test" basedir="." default="setupfiles">
 
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
   <property name="etc.dir" value=".."/>
   <property name="test.dir"
-          value="selectortest"/>
+          value="${output}/selectortest"/>
   <property name="testregexpsrc.dir"
-          value="regexpseltestsrc"/>
+          value="${output}/regexpseltestsrc"/>
   <property name="testregexpdest.dir"
-          value="regexpseltestdest"/>
+          value="${output}/regexpseltestdest"/>
   <property name="mirror.dir"
-          value="selectortest2"/>
+          value="${output}/selectortest2"/>
 
   <target name="setupfiles">
     <mkdir dir="${test.dir}" />
@@ -75,10 +80,6 @@
             datetime="05/10/2002 2:29 AM"/>
   </target>
 
-  <target name="cleanup">
-    <delete dir="${test.dir}" />
-  </target>
-
   <target name="mirrorfiles">
     <mkdir dir="${mirror.dir}" />
     <mkdir dir="${mirror.dir}/zip" />
@@ -96,15 +97,6 @@
     <touch file="${mirror.dir}/tar/gz/asf-logo.gif.tar.gz"/>
     <touch file="${mirror.dir}/tar/bz2/asf-logo.gif.tar.bz2"/>
     <touch file="${mirror.dir}/tar/bz2/asf-logo-huge.tar.bz2"/>
-  </target>
-
-  <target name="cleanup.mirrorfiles">
-    <delete dir="${mirror.dir}" />
-  </target>
-
-  <target name="cleanupregexp">
-    <delete dir="${testregexpsrc.dir}" />
-    <delete dir="${testregexpdest.dir}" />
   </target>
 
   <target name="containsregexp">

@@ -32,16 +32,13 @@ import org.apache.tools.ant.Project;
  * whether selections are correct.
  *
  */
-public abstract class BaseSelectorTest extends TestCase {
+public abstract class BaseSelectorTest extends BuildFileTest {
 
     private Project project;
     private TaskdefForMakingBed tbed = null;
-    protected String basedirname = "src/etc/testcases/types";
-    protected String beddirname = basedirname + "/selectortest";
-    protected String mirrordirname = basedirname + "/selectortest2";
-    protected File basedir = new File(System.getProperty("root"), basedirname);
-    protected File beddir = new File(System.getProperty("root"), beddirname);
-    protected File mirrordir = new File(System.getProperty("root"), mirrordirname);
+    protected File basedir;
+    protected File beddir;
+    protected File mirrordir;
     protected String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
             "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
             "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",
@@ -55,6 +52,11 @@ public abstract class BaseSelectorTest extends TestCase {
     }
 
     public void setUp() {
+        configureProject("src/etc/testcases/types/selectors.xml");
+        executeTarget("setUp");
+        beddir = new File(super.getProject().getProperty("test.dir"));
+        mirrordir = new File(super.getProject().getProperty("mirror.dir"));
+        basedir = getProjectDir();
         project = new Project();
         project.init();
         project.setBaseDir(basedir);
@@ -227,7 +229,7 @@ public abstract class BaseSelectorTest extends TestCase {
      */
     protected void cleanupBed() {
         if (tbed != null) {
-            tbed.tearDown();
+           tbed.tearDown();
             tbed = null;
         }
     }
@@ -268,7 +270,11 @@ public abstract class BaseSelectorTest extends TestCase {
         }
 
         public void tearDown() {
-            executeTarget("cleanup");
+            try {
+                super.tearDown();
+            } catch (Exception exc) {
+                // ignore
+            }
         }
 
         public void makeTestbed() {
@@ -280,7 +286,7 @@ public abstract class BaseSelectorTest extends TestCase {
         }
 
         public void deleteMirror() {
-            executeTarget("cleanup.mirrorfiles");
+            executeTarget("tearDown");
         }
     }
 

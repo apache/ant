@@ -407,12 +407,12 @@ public class ModifiedSelector extends BaseExtendSelector
                 clazz = Class.forName(classname);
             }
 
-            T rv = clazz.asSubclass(type).newInstance();
+            Object rv = clazz.newInstance();
 
             if (!type.isInstance(rv)) {
                 throw new BuildException("Specified class (" + classname + ") " + msg);
             }
-            return rv;
+            return (T) rv;
         } catch (ClassNotFoundException e) {
             throw new BuildException("Specified class (" + classname + ") not found.");
         } catch (Exception e) {
