@@ -936,7 +936,7 @@
     </antcall>
   </target>
 
-  <target name="dist_javadocs" depends="javadocs">
+  <target name="dist_javadocs" depends="javadocs" unless="javadoc.notrequired">
     <mkdir dir="${dist.javadocs}"/>
     <copy todir="${dist.javadocs}" overwrite="true">
       <fileset dir="${build.javadocs}"/>
