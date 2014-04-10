@@ -31,25 +31,25 @@ import java.util.Vector;
 
 
 /**
- * The implementation of the apt compiler for JDK 1.5
- * <p/>
- * As usual, the low level entry points for Java tools are neither documented or
+ * <p>The implementation of the apt compiler for JDK 1.5.</p>
+ * 
+ * <p>As usual, the low level entry points for Java tools are neither documented or
  * stable; this entry point may change from that of 1.5.0_01-b08 without any
- * warning at all. The IDE decompile of the tool entry points is as follows:
+ * warning at all. The IDE decompile of the tool entry points is as follows:</p>
  * <pre>
  * public class Main {
  * public Main() ;
- * <p/>
- * public static transient void main(String... strings) ;
- * <p/>
+ * 
+ * public static transient void main(String... strings);
+ * 
  * public static transient int process(String... strings);
- * <p/>
+ * 
  * public static transient int process(PrintWriter printWriter,
- *      String... strings) ;
+ *      String... strings);
  * public static transient int process(
  *      AnnotationProcessorFactory annotationProcessorFactory,
- *      String... strings) ;
- * <p/>
+ *      String... strings);
+ *      
  * public static transient int process(
  *      AnnotationProcessorFactory annotationProcessorFactory,
  *      PrintWriter printWriter,
@@ -64,8 +64,6 @@ import java.util.Vector;
  * This Adapter is designed to run Apt in-JVM, an option that is not actually
  * exposed to end-users, because it was too brittle during beta testing; classpath
  * problems being the core issue.
- *
- *
  *
  * @since Ant 1.7
  */

@@ -43,15 +43,15 @@ public class AntTypeDefinition {
     /**
      * Set the restrict attribute.
      * @param restrict the value to set.
-      */
-     public void setRestrict(boolean restrict) {
+     */
+    public void setRestrict(boolean restrict) {
          this.restrict = restrict;
-     }
+    }
 
     /**
      * Get the restrict attribute.
-      * @return the restrict attribute.
-      */
+     * @return the restrict attribute.
+     */
     public boolean isRestrict() {
         return restrict;
     }
@@ -236,12 +236,12 @@ public class AntTypeDefinition {
 
     /**
      * Checks if the attributes are correct.
-     * <dl>
+     * <ul>
      *   <li>if the class can be created.</li>
      *   <li>if an adapter class can be created</li>
      *   <li>if the type is assignable from adapter</li>
      *   <li>if the type can be used with the adapter class</li>
-     * </dl>
+     * </ul>
      * @param project the current project.
      */
     public void checkClass(Project project) {
@@ -298,7 +298,8 @@ public class AntTypeDefinition {
 
     /**
      * Inner implementation of the {@link #createAndSet(Project, Class)} logic, with no
-     * exception catching
+     * exception catching.
+     * @param <T> return type of the method
      * @param newclass class to create
      * @param project the project to use
      * @return a newly constructed and bound instance.

@@ -50,7 +50,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.FlatFileNameMapper;
 
 /**
- * Copies a file or directory to a new file
+ * <p>Copies a file or directory to a new file
  * or directory.  Files are only copied if the source file is newer
  * than the destination file, or when the destination file does not
  * exist.  It is possible to explicitly overwrite existing files.</p>

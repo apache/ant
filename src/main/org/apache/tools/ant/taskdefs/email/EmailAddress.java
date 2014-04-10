@@ -35,12 +35,12 @@ public class EmailAddress {
     /**
      * Creates a new email address based on the given string
      *
-     * @param email the email address (with or without <>)
+     * @param email the email address (with or without &lt;&gt;)
      * Acceptable forms include:
      *    address
-     *    <address>
-     *    name <address>
-     *    <address> name
+     *    &lt;address&gt;
+     *    name &lt;address&gt;
+     *    &lt;address&gt; name
      *    (name) address
      *    address (name)
      */
@@ -142,7 +142,7 @@ public class EmailAddress {
 
 
     /**
-     * Sets the personal / display name of the address
+     * Sets the personal / display name of the address.
      *
      * @param name the display name
      */
@@ -152,9 +152,9 @@ public class EmailAddress {
 
 
     /**
-     * Sets the email address
+     * Sets the email address.
      *
-     * @param address the actual email address (without <>)
+     * @param address the actual email address (without &lt;&gt;)
      */
     public void setAddress(String address) {
         this.address = address;

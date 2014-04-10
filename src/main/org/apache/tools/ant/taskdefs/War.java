@@ -28,13 +28,15 @@ import org.apache.tools.zip.ZipOutputStream;
 
 
 /**
- * An extension of &lt;jar&gt; to create a WAR archive.
+ * <p>An extension of &lt;jar&gt; to create a WAR archive.
  * Contains special treatment for files that should end up in the
  * <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
  * <code>WEB-INF</code> directories of the Web Application Archive.</p>
+ * 
  * <p>(The War task is a shortcut for specifying the particular layout of a WAR file.
  * The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
  * attributes of zipfilesets in a Zip or Jar task.)</p>
+ * 
  * <p>The extended zipfileset element from the zip task
  * (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>)
  * is available in the War task.</p>
@@ -69,13 +71,14 @@ public class War extends Jar {
     }
 
     /**
-     * <i>Deprecated<i> name of the file to create
+     * <i>Deprecated</i> name of the file to create
      * -use <tt>destfile</tt> instead.
      * @param warFile the destination file
      * @deprecated since 1.5.x.
      *             Use setDestFile(File) instead
      * @ant.attribute ignore="true"
      */
+    @Deprecated
     public void setWarfile(File warFile) {
         setDestFile(warFile);
     }

@@ -214,7 +214,7 @@ public class Replace extends MatchingTask {
         }
 
         /**
-         * The replacement string; required if <code>property<code>
+         * The replacement string; required if <code>property</code>
          * is not set.
          * @param value <code>String</code> value to replace.
          */

@@ -38,42 +38,42 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>viewpath</td>
  *      <td>Path to the ClearCase view file or directory that the command will operate on</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>comment</td>
  *      <td>Specify a comment. Only one of comment or cfile may be used.</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>commentfile</td>
  *      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>nowarn</td>
  *      <td>Suppress warning messages</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>preservetime</td>
  *      <td>Preserve the modification time</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>keepcopy</td>
  *      <td>Keeps a copy of the file with a .keep extension</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>identical</td>
  *      <td>Allows the file to be checked in even if it is identical to the original</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  *   <tr>
  *      <td>failonerr</td>
  *      <td>Throw an exception if the command fails. Default is true</td>
  *      <td>No</td>
- *   <tr>
+ *   </tr>
  * </table>
  *
  */

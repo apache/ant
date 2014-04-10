@@ -133,7 +133,7 @@ public class ChangeLogTask extends AbstractCvsTask {
 
 
     /**
-     * Set a lookup list of user names & addresses
+     * Set a lookup list of user names &amp; addresses
      *
      * @param usersFile The file containing the users info.
      */

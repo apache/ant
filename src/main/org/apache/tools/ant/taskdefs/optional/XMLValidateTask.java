@@ -120,7 +120,7 @@ public class XMLValidateTask extends Task {
     /**
      * Specify how parser error are to be handled.
      * <p>
-     * If set to <code>true</true> (default), log a warn message for each SAX warn event.
+     * If set to <code>true</code> (default), log a warn message for each SAX warn event.
      * @param bool if set to <code>false</code> do not send warnings
      */
     public void setWarn(boolean bool) {

@@ -22,27 +22,25 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.property.ResolvePropertyMap;
 
 /**
- * Sets a property by name, or set of properties (from file or
+ * <p>Sets a property by name, or set of properties (from file or
  * resource) in the project.  </p>
- * Properties are immutable: whoever sets a property first freezes it for the
+ * <p>Properties are immutable: whoever sets a property first freezes it for the
  * rest of the build; they are most definitely not variable.
  * <p>There are seven ways to set properties:</p>
  * <ul>

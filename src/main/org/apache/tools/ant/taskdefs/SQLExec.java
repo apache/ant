@@ -542,7 +542,7 @@ public class SQLExec extends JDBCTask {
      * will be quoted, not even if they contain the column
      * separator.</p>
      *
-     * <p><b>Note:<b> BLOB values will never be quoted.</p>
+     * <p><b>Note:</b> BLOB values will never be quoted.</p>
      *
      * <p>Defaults to "not set"</p>
      *

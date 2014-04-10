@@ -37,7 +37,7 @@ public interface Executor {
      * Get the appropriate subproject Executor instance.
      *
      * This allows the top executor to control what type of executor is used to execute
-     * subprojects via <ant>/<antcall>/<subant> and task that extend these.
+     * subprojects via &lt;ant&gt;/&lt;antcall&gt;/&lt;subant&gt; and task that extend these.
      * All bundled Executors return a SingleCheckExecutor (running a merged set of
      * depended targets for all targets called) to run sub-builds.
      *

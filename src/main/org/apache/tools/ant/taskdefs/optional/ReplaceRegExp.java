@@ -212,11 +212,13 @@ public class ReplaceRegExp extends Task {
      * on one line at a time.  This is useful if you
      * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
-     * Defaults to <i>false</i>.</td>
+     * Defaults to <i>false</i>.
+     * 
      * @param byline the byline attribute as a string
      * @deprecated since 1.6.x.
      *             Use setByLine(boolean).
      */
+    @Deprecated
     public void setByLine(String byline) {
         Boolean res = Boolean.valueOf(byline);
 
@@ -231,13 +233,13 @@ public class ReplaceRegExp extends Task {
      * on one line at a time.  This is useful if you
      * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
-     * Defaults to <i>false</i>.</td>
+     * Defaults to <i>false</i>.
+     * 
      * @param byline the byline attribute
      */
     public void setByLine(boolean byline) {
         this.byline = byline;
     }
-
 
     /**
      * Specifies the encoding Ant expects the files to be in -

@@ -48,7 +48,7 @@ public class ProjectHelper {
      * */
     public static final String ANT_ATTRIBUTE_URI      = "ant:attribute";
 
-    /** The URI for defined types/tasks - the format is antlib:<package> */
+    /** The URI for defined types/tasks - the format is antlib:&lt;package&gt; */
     public static final String ANTLIB_URI     = "antlib:";
 
     /** Polymorphic attribute  */
@@ -296,7 +296,7 @@ public class ProjectHelper {
     }
 
     /**
-     * JDK1.1 compatible access to the context class loader. Cut & paste from JAXP.
+     * JDK1.1 compatible access to the context class loader. Cut &amp; paste from JAXP.
      *
      * @deprecated since 1.6.x.
      *             Use LoaderUtils.getContextClassLoader()

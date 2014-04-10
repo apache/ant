@@ -107,7 +107,7 @@ public class Patch extends Task {
      *
      * <p>patch's <i>-p</i> option.
      * @param num number of lines to strip
-     * @exception BuildException if num is < 0, or other errors
+     * @exception BuildException if num is &lt; 0, or other errors
      */
     public void setStrip(int num) throws BuildException {
         if (num < 0) {

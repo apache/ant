@@ -23,8 +23,8 @@ import org.apache.tools.ant.Task;
  * Tasks extending this class may contain multiple actions.
  * The method that is invoked for execution depends upon the
  * value of the action attribute of the task.
- * <br/>
- * Example:<br/>
+ * <br>
+ * Example:<br>
  * &lt;mytask action=&quot;list&quot;/&gt; will invoke the method
  * with the signature public void list() in mytask's class.
  * If the action attribute is not defined in the task or is empty,

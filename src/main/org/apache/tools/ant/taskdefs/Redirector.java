@@ -370,7 +370,7 @@ public class Redirector {
     /**
      * This <code>Redirector</code>'s subordinate
      * <code>PropertyOutputStream</code>s will not set their respective
-     * properties <code>while (appendProperties && append)</code>.
+     * properties <code>while (appendProperties &amp;&amp; append)</code>.
      *
      * @param appendProperties
      *            whether to append properties.

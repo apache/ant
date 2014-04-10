@@ -29,7 +29,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -40,6 +39,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.MagicNames;
@@ -57,8 +57,8 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Generates Javadoc documentation for a collection
@@ -918,7 +918,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Generate the &quot;use&quot page for each package.
+     * Generate the &quot;use&quot; page for each package.
      *
      * @param b true if the use page should be generated.
      */

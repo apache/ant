@@ -24,13 +24,14 @@ import org.apache.tools.ant.Task;
 /**
  * Sleep, or pause, for a period of time.
  *
- * A task for sleeping a short period of time, useful when a
- * build or deployment process requires an interval between tasks.
- *<p>
- * A negative value can be supplied to any of attributes provided the total sleep time
+ * <p>A task for sleeping a short period of time, useful when a
+ * build or deployment process requires an interval between tasks.</p>
+ * 
+ * <p>A negative value can be supplied to any of attributes provided the total sleep time
  * is positive, pending fundamental changes in physics and JVM
  * execution times</p>
- * Note that sleep times are always hints to be interpreted by the OS how it feels
+ * 
+ * <p>Note that sleep times are always hints to be interpreted by the OS how it feels
  * small times may either be ignored or rounded up to a minimum timeslice. Note
  * also that the system clocks often have a fairly low granularity too, which complicates
  * measuring how long a sleep actually took.</p>
@@ -38,7 +39,6 @@ import org.apache.tools.ant.Task;
  * @since Ant 1.4
  * @ant.task category="utility"
  */
-
 public class Sleep extends Task {
     /**
      * failure flag

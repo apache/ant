@@ -32,11 +32,11 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
- * This task takes file and turns them into a URL, which it then assigns
- * to a property. Use when for setting up RMI codebases.
- * <p/>
- * nested filesets are supported; if present, these are turned into the
- * url with the given separator between them (default = " ").
+ * <p>This task takes file and turns them into a URL, which it then assigns
+ * to a property. Use when for setting up RMI codebases.</p>
+ * 
+ * <p>nested filesets are supported; if present, these are turned into the
+ * url with the given separator between them (default = " ").</p>
  *
  * @ant.task category="core" name="makeurl"
  */

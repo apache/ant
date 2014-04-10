@@ -41,8 +41,9 @@ import org.apache.tools.ant.types.Reference;
  * <p>
  * The following example class prints the contents of the first column of each row in TableName.
  *</p>
- *<code><pre>
+ *<pre>
 package examples;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,16 +85,11 @@ public class SQLExampleTask extends JDBCTask {
     }
 
 }
-
-
-</pre></code>
-
-
-
+</pre>
+ *
  * @since Ant 1.5
  *
  */
-
 public abstract class JDBCTask extends Task {
     private static final int HASH_TABLE_SIZE = 3;
 

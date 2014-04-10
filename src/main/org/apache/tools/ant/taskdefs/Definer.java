@@ -155,11 +155,11 @@ public abstract class Definer extends DefBase {
 
     /**
      * What to do if there is an error in loading the class.
-     * <dl>
+     * <ul>
      *   <li>error - throw build exception</li>
      *   <li>report - output at warning level</li>
      *   <li>ignore - output at debug level</li>
-     * </dl>
+     * </ul>
      *
      * @param onError an <code>OnError</code> value
      */

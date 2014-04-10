@@ -48,7 +48,7 @@ public class Apt
     /** An warning message when ignoring compiler attribute. */
     public static final String ERROR_IGNORING_COMPILER_OPTION
         = "Ignoring compiler attribute for the APT task, as it is fixed";
-    /** A warning message if used with java < 1.5. */
+    /** A warning message if used with java &lt; 1.5. */
     public static final String ERROR_WRONG_JAVA_VERSION
         = "Apt task requires Java 1.5+";
 

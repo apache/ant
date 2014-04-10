@@ -119,12 +119,12 @@ import org.apache.tools.ant.util.VectorSet;
  *
  *   System.out.println("FILES:");
  *   String[] files = ds.getIncludedFiles();
- *   for (int i = 0; i < files.length; i++) {
+ *   for (int i = 0; i &lt; files.length; i++) {
  *     System.out.println(files[i]);
  *   }
  * </pre>
  * This will scan a directory called test for .class files, but excludes all
- * files in all proper subdirectories of a directory called "modules"
+ * files in all proper subdirectories of a directory called "modules".
  *
  */
 public class DirectoryScanner
@@ -1736,7 +1736,9 @@ public class DirectoryScanner
      * but would have been followed had followsymlinks been true or
      * maxLevelsOfSymlinks been bigger.
      *
+     * @return sorted array of not followed symlinks
      * @since Ant 1.8.0
+     * @see #notFollowedSymlinks
      */
     public synchronized String[] getNotFollowedSymlinks() {
         String[] links;

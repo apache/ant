@@ -611,7 +611,7 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Checks whether the archive is out-of-date with respect to the
+     * <p>Checks whether the archive is out-of-date with respect to the
      * given files, ensures that the archive won't contain itself.</p>
      *
      * @param basedir base directory for file names

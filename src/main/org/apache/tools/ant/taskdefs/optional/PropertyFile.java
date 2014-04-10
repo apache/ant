@@ -43,69 +43,85 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- *Modifies settings in a property file.
+ * Modifies settings in a property file.
  *
- * <p>
- *The following is an example of its usage:
- *    <ul>&lt;target name="setState"&gt;<br>
- *    <ul>&lt;property<br>
- *        <ul>name="header"<br>
- *        value="##Generated file - do not modify!"/&gt;<br>
- *      &lt;propertyfile file="apropfile.properties" comment="${header}"&gt;<br>
- *        &lt;entry key="product.version.major" type="int"  value="5"/&gt;<br>
- *        &lt;entry key="product.version.minor" type="int"  value="0"/&gt;<br>
- *        &lt;entry key="product.build.major"   type="int"  value="0" /&gt;<br>
- *        &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;<br>
- *        &lt;entry key="product.build.date"    type="date" value="now" /&gt;<br>
- *        &lt;entry key="intSet" type="int" operation="=" value="681"/&gt;<br>
- *        &lt;entry key="intDec" type="int" operation="-"/&gt;<br>
- *        &lt;entry key="StringEquals" type="string" value="testValue"/&gt;<br>
- *     &lt;/propertyfile&gt;<br></ul>
- *   &lt;/target&gt;</ul><p>
+ * <p>The following is an example of its usage:</p>
+ * <pre>
+ *    &lt;target name="setState"&gt;
+ *      &lt;property
+ *        name="header"
+ *        value="##Generated file - do not modify!"/&gt;
+ *      &lt;propertyfile file="apropfile.properties" comment="${header}"&gt;
+ *        &lt;entry key="product.version.major" type="int"  value="5"/&gt;
+ *        &lt;entry key="product.version.minor" type="int"  value="0"/&gt;
+ *        &lt;entry key="product.build.major"   type="int"  value="0" /&gt;
+ *        &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;
+ *        &lt;entry key="product.build.date"    type="date" value="now" /&gt;
+ *        &lt;entry key="intSet" type="int" operation="=" value="681"/&gt;
+ *        &lt;entry key="intDec" type="int" operation="-"/&gt;
+ *        &lt;entry key="StringEquals" type="string" value="testValue"/&gt;
+ *     &lt;/propertyfile&gt;
+ *   &lt;/target&gt;
+ * </pre>
  *
- *The &lt;propertyfile&gt; task must have:<br>
- *    <ul><li>file</li></ul>
- *Other parameters are:<br>
- *    <ul><li>comment, key, operation, type and value (the final four being
- *            eliminated shortly)</li></ul>
+ * The &lt;propertyfile&gt; task must have:
+ * <ul>
+ *   <li>file</li>
+ * </ul>
+ * Other parameters are:
+ * <ul>
+ *   <li>comment</li> 
+ *   <li>key</li> 
+ *   <li>operation</li> 
+ *   <li>type</li>
+ *   <li>value (the final four being eliminated shortly)</li>
+ * </ul>
  *
- *The &lt;entry&gt; task must have:<br>
- *    <ul><li>key</li></ul>
- *Other parameters are:<br>
- *    <ul><li>operation</li>
- *        <li>type</li>
- *        <li>value</li>
- *        <li>default</li>
- *        <li>unit</li>
- *    </ul>
+ * The &lt;entry&gt; task must have:
+ * <ul>
+ *   <li>key</li>
+ * </ul>
+ * Other parameters are:
+ * <ul>
+ *   <li>operation</li>
+ *   <li>type</li>
+ *   <li>value</li>
+ *   <li>default</li>
+ *   <li>unit</li>
+ * </ul>
  *
- *If type is unspecified, it defaults to string
+ * If type is unspecified, it defaults to string.
  *
- *Parameter values:<br>
- *    <ul><li>operation:</li>
- *        <ul><li>"=" (set -- default)</li>
- *        <li>"-" (dec)</li>
- *        <li>"+" (inc)</li>
- *
- *    <li>type:</li>
- *        <ul><li>"int"</li>
- *        <li>"date"</li>
- *        <li>"string"</li></ul></ul>
- *
- *    <li>value:</li>
- *      <ul><li>holds the default value, if the property
+ * Parameter values:
+ * <ul>
+ *   <li>operation:</li>
+ *   <ul>
+ *     <li>"=" (set -- default)</li>
+ *     <li>"-" (dec)</li>
+ *     <li>"+" (inc)</li>
+ *   </ul>
+ *   <li>type:</li>
+ *   <ul>
+ *     <li>"int"</li>
+ *     <li>"date"</li>
+ *     <li>"string"</li>
+ *   </ul>
+ *   <li>value:</li>
+ *   <ul>
+ *     <li>holds the default value, if the property
  *              was not found in property file</li>
- *          <li>"now" In case of type "date", the
+ *     <li>"now" In case of type "date", the
  *              value "now" will be replaced by the current
  *              date/time and used even if a valid date was
- *              found in the property file.</li></ul>
+ *              found in the property file.</li>
+ *   </ul>
+ * </ul>
  *
+ * <p>String property types can only use the "=" operation.
+ * Int property types can only use the "=", "-" or "+" operations.<p>
  *
- *String property types can only use the "=" operation.
- *Int property types can only use the "=", "-" or "+" operations.<p>
- *
- *The message property is used for the property file header, with "\\" being
- *a newline delimiter character.
+ * The message property is used for the property file header, with "\\" being
+ * a newline delimiter character.
  *
  */
 public class PropertyFile extends Task {

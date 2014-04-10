@@ -29,72 +29,76 @@ import org.apache.tools.ant.Project;
  * Uses ANSI Color Code Sequences to colorize messages
  * sent to the console.
  *
- * If used with the -logfile option, the output file
+ * <p>If used with the -logfile option, the output file
  * will contain all the necessary escape codes to
  * display the text in colorized mode when displayed
  * in the console using applications like cat, more,
- * etc.
+ * etc.</p>
  *
- * This is designed to work on terminals that support ANSI
+ * <p>This is designed to work on terminals that support ANSI
  * color codes.  It works on XTerm, ETerm, Mindterm, etc.
- * It also works on Win9x (with ANSI.SYS loaded.)
+ * It also works on Win9x (with ANSI.SYS loaded.)</p>
  *
- * NOTE:
+ * <p>NOTE:
  * It doesn't work on WinNT's COMMAND.COM even with
- * ANSI.SYS loaded.
+ * ANSI.SYS loaded.</p>
  *
- * The default colors used for differentiating
+ * <p>The default colors used for differentiating
  * the message levels can be changed by editing the
  * /org/apache/tools/ant/listener/defaults.properties
  * file.
- * This file contains 5 key/value pairs:
+ * This file contains 5 key/value pairs:</p>
+ * <pre>
  * AnsiColorLogger.ERROR_COLOR=2;31
  * AnsiColorLogger.WARNING_COLOR=2;35
  * AnsiColorLogger.INFO_COLOR=2;36
  * AnsiColorLogger.VERBOSE_COLOR=2;32
  * AnsiColorLogger.DEBUG_COLOR=2;34
+ * </pre>
  *
- * Another option is to pass a system variable named
+ * <p>Another option is to pass a system variable named
  * ant.logger.defaults, with value set to the path of
  * the file that contains user defined Ansi Color
- * Codes, to the <B>java</B> command using -D option.
+ * Codes, to the <B>java</B> command using -D option.</p>
  *
  * To change these colors use the following chart:
  *
- *      <B>ANSI COLOR LOGGER CONFIGURATION</B>
+ *      <h2>ANSI COLOR LOGGER CONFIGURATION</h2>
  *
  * Format for AnsiColorLogger.*=
  *  Attribute;Foreground;Background
  *
- *  Attribute is one of the following:
- *  0 -> Reset All Attributes (return to normal mode)
- *  1 -> Bright (Usually turns on BOLD)
- *  2 -> Dim
- *  3 -> Underline
- *  5 -> link
- *  7 -> Reverse
- *  8 -> Hidden
+ *  Attribute is one of the following: <pre>
+ *  0 -&gt; Reset All Attributes (return to normal mode)
+ *  1 -&gt; Bright (Usually turns on BOLD)
+ *  2 -&gt; Dim
+ *  3 -&gt; Underline
+ *  5 -&gt; link
+ *  7 -&gt; Reverse
+ *  8 -&gt; Hidden
+ *  </pre>
+ *  
+ *  Foreground is one of the following:<pre>
+ *  30 -&gt; Black
+ *  31 -&gt; Red
+ *  32 -&gt; Green
+ *  33 -&gt; Yellow
+ *  34 -&gt; Blue
+ *  35 -&gt; Magenta
+ *  36 -&gt; Cyan
+ *  37 -&gt; White
+ *  </pre>
  *
- *  Foreground is one of the following:
- *  30 -> Black
- *  31 -> Red
- *  32 -> Green
- *  33 -> Yellow
- *  34 -> Blue
- *  35 -> Magenta
- *  36 -> Cyan
- *  37 -> White
- *
- *  Background is one of the following:
- *  40 -> Black
- *  41 -> Red
- *  42 -> Green
- *  43 -> Yellow
- *  44 -> Blue
- *  45 -> Magenta
- *  46 -> Cyan
- *  47 -> White
- *
+ *  Background is one of the following:<pre>
+ *  40 -&gt; Black
+ *  41 -&gt; Red
+ *  42 -&gt; Green
+ *  43 -&gt; Yellow
+ *  44 -&gt; Blue
+ *  45 -&gt; Magenta
+ *  46 -&gt; Cyan
+ *  47 -&gt; White
+ *  </pre>
  */
 public class AnsiColorLogger extends DefaultLogger {
     // private static final int ATTR_NORMAL = 0;

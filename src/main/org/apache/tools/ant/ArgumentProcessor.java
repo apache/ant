@@ -65,7 +65,7 @@ public interface ArgumentProcessor {
     /**
      * Print the usage of the supported arguments
      * 
-     * @see org.apache.tools.ant.Main.printUsage()
+     * @see org.apache.tools.ant.Main#printUsage()
      */
     void printUsage(PrintStream writer);
 

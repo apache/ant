@@ -813,7 +813,7 @@ public class Concat extends Task implements ResourceCollection {
 
     /**
      * Implement ResourceCollection.
-     * @return Iterator<Resource>.
+     * @return Iterator&lt;Resource&gt;.
      */
     public Iterator<Resource> iterator() {
         validate();

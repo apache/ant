@@ -67,12 +67,12 @@ public class Retry extends Task implements TaskContainer {
 
     /**
      * set the delay between retries (in milliseconds)
-     * @param n the time between retries.
+     * @param retryDelay the time between retries.
      * @since Ant 1.8.3
      */
     public void setRetryDelay(int retryDelay) {
         if (retryDelay < 0) {
-            throw new BuildException("delay must be a non-negative number");
+            throw new BuildException("retryDelay must be a non-negative number");
         }
         this.retryDelay = retryDelay;
     }

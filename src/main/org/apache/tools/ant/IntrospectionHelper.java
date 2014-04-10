@@ -648,8 +648,8 @@ public final class IntrospectionHelper {
      * Indicates whether the introspected class is a dynamic one,
      * supporting arbitrary nested elements and/or attributes.
      *
-     * @return <code>true<code> if the introspected class is dynamic;
-     *         <code>false<code> otherwise.
+     * @return <div><code>true</code> if the introspected class is dynamic;
+     *         <code>false</code> otherwise.</div>
      * @since Ant 1.6.3
      *
      * @see DynamicElement
@@ -664,8 +664,8 @@ public final class IntrospectionHelper {
      * Indicates whether the introspected class is a task container,
      * supporting arbitrary nested tasks/types.
      *
-     * @return <code>true<code> if the introspected class is a container;
-     *         <code>false<code> otherwise.
+     * @return <code>true</code> if the introspected class is a container;
+     *         <code>false</code> otherwise.
      * @since Ant 1.6.3
      *
      * @see TaskContainer
@@ -984,13 +984,13 @@ public final class IntrospectionHelper {
      * Returns a read-only list of extension points supported
      * by the introspected class.
      * <p>
-     * A task/type or nested element with void methods named <code>add()<code>
+     * A task/type or nested element with void methods named <code>add()</code>
      * or <code>addConfigured()</code>, taking a single class or interface
      * argument, supports extensions point. This method returns the list of
      * all these <em>void add[Configured](type)</em> methods.
      *
      * @return a list of void, single argument add() or addConfigured()
-     *         <code>Method<code>s of all supported extension points.
+     *         <code>Method</code>s of all supported extension points.
      *         These methods are sorted such that if the argument type of a
      *         method derives from another type also an argument of a method
      *         of this list, the method with the most derived argument will
