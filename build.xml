@@ -116,11 +116,12 @@
       <equals arg1="${junit.fork}" arg2="true"/>
       <equals arg1="${junit.forkmode}" arg2="perTest"/>
     </and>
-</condition>
+  </condition>
   <property name="expandproperty.files"
             value="**/version.txt,**/defaultManifest.mf"/>
   <property name="junit.collector.dir" value="${build.dir}/failingTests"/>
   <property name="junit.collector.class" value="FailedTests"/>
+
 
   <!--
        ===================================================================
@@ -374,6 +375,9 @@
     <available property="jdk1.6+" classname="java.net.CookieStore"/>
     <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
     <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
+    <condition property="jdk1.9+">
+      <contains string="${java.version}" substring="1.9."/>
+    </condition>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="harmony"
                classname="org.apache.harmony.luni.util.Base64"/>
@@ -528,6 +532,19 @@
       </or>
     </condition>
 
+    <!-- 
+    Java8 introduced a HTML checker 'doclint' which is very strict and breaks 
+    the build if there is a HTML error in the JavaDoc.
+    -->
+    <condition 
+      property="javadoc.doclint.none" 
+      value="-Xdoclint:none" 
+      else="">
+      <and>
+        <isset property="jdk1.8+"/>
+        <not><isset property="withDoclint"/></not>
+      </and>
+    </condition>
   </target>
 
 
@@ -1422,7 +1439,8 @@
       windowtitle="${Name} API"
       doctitle="${Name}"
       failonerror="true"
-      verbose="${javadoc.verbose}">
+      verbose="${javadoc.verbose}"
+      additionalparam="${javadoc.doclint.none}">
 
       <packageset dir="${java.dir}"/>
 
@@ -1454,7 +1472,8 @@
       version="true"
       locale="en"
       windowtitle="${Name} Test Utilities"
-      doctitle="${Name}">
+      doctitle="${Name}"
+      additionalparam="${javadoc.doclint.none}">
 
       <!-- hide some meta information for javadoc -->
       <tag name="pre" description="Precondition:" scope="all"/>
