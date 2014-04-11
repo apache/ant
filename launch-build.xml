@@ -32,8 +32,6 @@
 
     <target name="launch">
         <fail unless="launch.cmd" message="Unsupported build platform" />
-        <!-- by default no args, overridable on the Ant command line with -Dargs="" -->
-        <property name="args" value="" />
         <echo message="Launching ${launch.cmd} ${args}" />
         <exec executable="${launch.cmd}" failonerror="true">
             <arg line="${args}" />
