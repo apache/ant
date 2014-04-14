@@ -197,4 +197,116 @@ public class Adapter implements CompilerAdapter {
     </javac>
     <au:assertLogContains text="adapter called" />
   </target>
+
+  <target name="testSourceAttributes" xmlns:if="ant:if">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/classes" />
+    <echo file="${javac-dir}/src/A.java">
+      public class A { }
+    </echo>
+  	<presetdef name="testJavac">
+      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" includeantruntime="false"/>  	    
+  	</presetdef>
+
+    <au:expectfailure>
+      <testJavac source="notValid"/>
+    </au:expectfailure>
+  	
+  	<echo>JDK 1.4+</echo>
+    <testJavac source="1.4"/>
+    <delete dir="${javac-dir}/classes"/>
+    <mkdir dir="${javac-dir}/classes"/>
+  	
+  	<sequential if:set="jdk1.5+">
+      <echo>JDK 1.5+</echo>
+      <testJavac source="1.5"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+  	</sequential>
+    
+  	<sequential if:set="jdk1.6+">
+      <echo>JDK 1.6+</echo>
+      <testJavac source="1.6"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+  	</sequential>
+  		
+  	<sequential if:set="jdk1.7+">
+      <echo>JDK 1.7+</echo>
+      <testJavac source="1.7"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+  	</sequential>
+    
+    <sequential if:set="jdk1.8+">
+      <echo>JDK 1.8+</echo>
+      <testJavac source="1.8"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+            
+    <sequential if:set="jdk1.9+">
+      <echo>JDK 1.9+</echo>
+      <testJavac source="1.9"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+  </target>	
+	
+  <target name="testTargetAttributes" xmlns:if="ant:if">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/classes" />
+    <echo file="${javac-dir}/src/A.java">
+      public class A { }
+    </echo>
+    <presetdef name="testJavac">
+      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" includeantruntime="false"/>       
+    </presetdef>
+
+    <au:expectfailure>
+      <testJavac target="notValid"/>
+    </au:expectfailure>
+
+    <echo>JDK 1.4+</echo>
+    <testJavac source="1.4" target="1.4"/>
+    <delete dir="${javac-dir}/classes"/>
+    <mkdir dir="${javac-dir}/classes"/>
+  	
+    <sequential if:set="jdk1.5+">
+      <echo>JDK 1.5+</echo>
+      <testJavac source="1.5" target="1.5"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+    
+    <sequential if:set="jdk1.6+">
+      <echo>JDK 1.6+</echo>
+      <testJavac source="1.6" target="1.6"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+        
+    <sequential if:set="jdk1.7+">
+      <echo>JDK 1.7+</echo>
+      <testJavac source="1.7" target="1.7"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+    
+    <sequential if:set="jdk1.8+">
+      <echo>JDK 1.8+</echo>
+      <testJavac source="1.8" target="1.8"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+            
+    <sequential if:set="jdk1.9+">
+      <echo>JDK 1.9+</echo>
+      <testJavac source="1.9" target="1.9"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+  </target> 
 </project>

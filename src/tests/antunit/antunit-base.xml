@@ -27,6 +27,9 @@
   <property name="test3.jar" location="${antunit.tmpdir}/test3.jar"/>
   <property name="test4.jar" location="${antunit.tmpdir}/test4.jar"/>
   <property name="test5.jar" location="${antunit.tmpdir}/test5.jar"/>
+  <condition property="jdk1.9+">
+    <contains string="${java.version}" substring="1.9."/>
+  </condition>
   <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
   <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
   <available property="jdk1.6+" classname="java.net.CookieStore"/>

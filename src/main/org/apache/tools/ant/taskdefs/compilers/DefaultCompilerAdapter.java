@@ -606,6 +606,15 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
+     * Shall we assume JDK 1.9 command line switches?
+     * @return true if JDK 1.9
+     * @since Ant 1.9.4
+     */
+    protected boolean assumeJava19() {
+        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_1_8);
+    }
+
+    /**
      * Shall we assume command line switches for the given version of Java?
      * @since Ant 1.8.3
      */
