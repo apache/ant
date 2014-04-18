@@ -18,9 +18,18 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.apache.tools.ant.AntAssert.assertNotContains;
 
-public class JUnitTestListenerTest extends BuildFileTest {
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+public class JUnitTestListenerTest{
+	
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
 
     // The captureToSummary test writes to stdout and stderr, good for
     // verifying that the TestListener support doesn't break anything.
@@ -29,78 +38,74 @@ public class JUnitTestListenerTest extends BuildFileTest {
     // testNoCrash is the test invoked by the captureToSummary's junit task
     private static final String PASS_TEST = "testNoCrash";
 
-    public JUnitTestListenerTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
     }
 
+
+    @Test
     public void testFullLogOutput() {
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-        assertTrue("expecting full log to have BuildListener events", 
-                   hasBuildListenerEvents(getFullLog()));
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertContains("expecting full log to have BuildListener events", 
+        		JUnitTask.TESTLISTENER_PREFIX, buildRule.getFullLog());
     }
     
+    @Test
     public void testNoLogOutput() {
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-        assertFalse("expecting log to not have BuildListener events", 
-                    hasBuildListenerEvents(getLog()));
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertNotContains("expecting log to not have BuildListener events", 
+        		JUnitTask.TESTLISTENER_PREFIX, buildRule.getLog());
     }
 
+    @Test
     public void testTestCountFired() {
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-	assertTrue("expecting test count message",
-		   hasEventMessage(JUnitTask.TESTLISTENER_PREFIX + 
-				   "tests to run: "));
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+	    assertContains("expecting test count message", JUnitTask.TESTLISTENER_PREFIX + 
+				   "tests to run: ", buildRule.getFullLog());
     }
     
+    @Test
     public void testStartTestFired() {
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-	assertTrue("expecting test started message",
-		   hasEventMessage(JUnitTask.TESTLISTENER_PREFIX + 
-				   "startTest(" + PASS_TEST + ")"));
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertContains("expecting test started message", JUnitTask.TESTLISTENER_PREFIX + 
+				   "startTest(" + PASS_TEST + ")", buildRule.getFullLog());
     }
     
+    @Test
     public void testEndTestFired() {
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-	assertTrue("expecting test ended message",
-		   hasEventMessage(JUnitTask.TESTLISTENER_PREFIX + 
-				   "endTest(" + PASS_TEST + ")"));
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertContains("expecting test ended message", JUnitTask.TESTLISTENER_PREFIX + 
+				   "endTest(" + PASS_TEST + ")", buildRule.getFullLog());
     }
     
+    @Test
     public void testNoFullLogOutputByDefault() {
-        executeTarget(PASS_TEST_TARGET);
-        assertFalse("expecting full log to not have BuildListener events", 
-                    hasBuildListenerEvents(getFullLog()));
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertNotContains("expecting full log to not have BuildListener events", 
+        		JUnitTask.TESTLISTENER_PREFIX, buildRule.getFullLog());
     }
     
+    @Test
     public void testFullLogOutputMagicProperty() {
-        getProject().setProperty(JUnitTask.ENABLE_TESTLISTENER_EVENTS, "true");
-        executeTarget(PASS_TEST_TARGET);
-        assertTrue("expecting full log to have BuildListener events", 
-                   hasBuildListenerEvents(getFullLog()));
+        buildRule.getProject().setProperty(JUnitTask.ENABLE_TESTLISTENER_EVENTS, "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertContains("expecting full log to have BuildListener events", 
+        		JUnitTask.TESTLISTENER_PREFIX, buildRule.getFullLog());
     }
     
+    @Test
     public void testNoFullLogOutputMagicPropertyWins() {
-        getProject().setProperty(JUnitTask.ENABLE_TESTLISTENER_EVENTS, "false");
-        getProject().setProperty("enableEvents", "true");
-        executeTarget(PASS_TEST_TARGET);
-        assertFalse("expecting full log to not have BuildListener events", 
-                    hasBuildListenerEvents(getFullLog()));
+        buildRule.getProject().setProperty(JUnitTask.ENABLE_TESTLISTENER_EVENTS, "false");
+        buildRule.getProject().setProperty("enableEvents", "true");
+        buildRule.executeTarget(PASS_TEST_TARGET);
+        assertNotContains("expecting full log to not have BuildListener events", 
+        		JUnitTask.TESTLISTENER_PREFIX, buildRule.getFullLog());
     }
     
-    private boolean hasBuildListenerEvents(String log) {
-        return log.indexOf(JUnitTask.TESTLISTENER_PREFIX) >= 0;
-    }
-
-    private boolean hasEventMessage(String eventPrefix) {
-	return getFullLog().indexOf(eventPrefix) >= 0;
-    }
 }

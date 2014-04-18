@@ -18,20 +18,23 @@
 
 package org.apache.tools.zip;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.zip.AsiExtraField.
+ * JUnit testcases for org.apache.tools.zip.AsiExtraField.
  *
  */
-public class AsiExtraFieldTest extends TestCase implements UnixStat {
-    public AsiExtraFieldTest(String name) {
-        super(name);
-    }
+public class AsiExtraFieldTest implements UnixStat {
 
     /**
      * Test file mode magic.
      */
+    @Test
     public void testModes() {
         AsiExtraField a = new AsiExtraField();
         a.setMode(0123);
@@ -45,6 +48,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
     /**
      * Test content.
      */
+    @Test
     public void testContent() {
         AsiExtraField a = new AsiExtraField();
         a.setMode(0123);
@@ -79,6 +83,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
     /**
      * Test reparse
      */
+    @Test
     public void testReparse() throws Exception {
         // CRC manually calculated, sorry
         byte[] data = {(byte)0xC6, 0x02, 0x78, (byte)0xB6, // CRC
@@ -139,6 +144,7 @@ public class AsiExtraFieldTest extends TestCase implements UnixStat {
         }
     }
 
+    @Test
     public void testClone() {
         AsiExtraField s1 = new AsiExtraField();
         s1.setUserId(42);

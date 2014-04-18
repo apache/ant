@@ -280,8 +280,7 @@
   <!-- JUnit4 Ignore and Assume for skipping tests -->
   <target name="testSkippableTests">
     <mkdir dir="${output}"/>
-    <junit fork="true">
-            <classpath refid="test"/>
+    <junit>
             <formatter type="xml"/>
             <classpath refid="test"/>
             <batchtest todir="${output}">
@@ -297,8 +296,7 @@
   <!-- Skipping classes that are not tests -->
   <target name="testNonTests">
     <mkdir dir="${output}"/>
-        <junit fork="true">
-            <classpath refid="test"/>
+        <junit>
             <formatter type="xml"/>
             <classpath refid="test"/>
             <batchtest todir="${output}" skipNonTests="true">
@@ -313,8 +311,7 @@
     <!-- Not skipping classes that are not tests -->
     <target name="testNonTestsRun">
         <mkdir dir="${output}"/>
-        <junit fork="true">
-            <classpath refid="test"/>
+        <junit>
             <formatter type="xml"/>
             <classpath refid="test"/>
             <batchtest todir="${output}" skipNonTests="false">

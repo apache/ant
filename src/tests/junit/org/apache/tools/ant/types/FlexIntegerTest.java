@@ -18,24 +18,30 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class FlexIntegerTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
 
-    public FlexIntegerTest(String name) {
-        super(name);
-    }
+public class FlexIntegerTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/flexinteger.xml");
+        buildRule.configureProject("src/etc/testcases/types/flexinteger.xml");
     }
 
+    @Test
     public void testFlexInteger() {
-        executeTarget("test");
-        assertEquals(project.getProperty("flexint.value1"), "10");
-        assertEquals(project.getProperty("flexint.value2"), "8");
+        buildRule.executeTarget("test");
+        assertEquals(buildRule.getProject().getProperty("flexint.value1"), "10");
+        assertEquals(buildRule.getProject().getProperty("flexint.value2"), "8");
     }
 
     // This class acts as a custom Ant task also
@@ -44,12 +50,7 @@ public class FlexIntegerTest extends BuildFileTest {
     String propName;
     private FlexInteger value;
 
-    /**
-     * To make taskdef happy
-     */
-    public FlexIntegerTest() {
-        super("FlexIntegerTest");
-    }
+
 
     public void setPropName(String propName) {
         this.propName = propName;

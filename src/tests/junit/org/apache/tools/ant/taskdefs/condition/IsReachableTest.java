@@ -17,66 +17,100 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * test for reachable things
  */
-public class IsReachableTest extends BuildFileTest {
+public class IsReachableTest {
 
-    public IsReachableTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject(
+        buildRule.configureProject(
                 "src/etc/testcases/taskdefs/conditions/isreachable.xml");
     }
 
 
+    @Test
     public void testLocalhost() throws Exception {
-        executeTarget("testLocalhost");
+        buildRule.executeTarget("testLocalhost");
     }
 
+    @Test
     public void testLocalhostURL() throws Exception {
-        executeTarget("testLocalhostURL");
+        buildRule.executeTarget("testLocalhostURL");
     }
 
+    @Test
     public void testIpv4localhost() throws Exception {
-        executeTarget("testIpv4localhost");
+        buildRule.executeTarget("testIpv4localhost");
     }
 
+    @Test
     public void testFTPURL() throws Exception {
-        executeTarget("testFTPURL");
+        buildRule.executeTarget("testFTPURL");
     }
 
+    @Test
     public void testBoth() throws Exception {
-        expectBuildExceptionContaining("testBoth",
-                "error on two targets",
-                IsReachable.ERROR_BOTH_TARGETS);
+        try {
+           buildRule.executeTarget("testBoth");
+            fail("Build exception expected: error on two targets");
+        } catch(BuildException ex) {
+            assertEquals(IsReachable.ERROR_BOTH_TARGETS, ex.getMessage());
+        }
     }
 
+    @Test
     public void testNoTargets() throws Exception {
-        expectBuildExceptionContaining("testNoTargets",
-                "no params",
-                IsReachable.ERROR_NO_HOSTNAME);
+        try {
+            buildRule.executeTarget("testNoTargets");
+            fail("Build exception expected: no params");
+        } catch(BuildException ex) {
+            assertEquals(IsReachable.ERROR_NO_HOSTNAME, ex.getMessage());
+        }
     }
 
+    @Test
     public void testBadTimeout() throws Exception {
-        expectBuildExceptionContaining("testBadTimeout",
-                "error on -ve timeout",
-                IsReachable.ERROR_BAD_TIMEOUT);
+        try {
+            buildRule.executeTarget("testBadTimeout");
+            fail("Build exception expected: error on -ve timeout");
+        } catch(BuildException ex) {
+            assertEquals(IsReachable.ERROR_BAD_TIMEOUT, ex.getMessage());
+        }
     }
 
+    @Test
+    @Ignore("Previously named in a way to prevent execution")
     public void NotestFile() throws Exception {
-        expectBuildExceptionContaining("testFile",
-                "error on file URL",
-                IsReachable.ERROR_NO_HOST_IN_URL);
+        try {
+            buildRule.executeTarget("testFile");
+            fail("Build exception expected: error on file URL");
+        } catch(BuildException ex) {
+            assertEquals(IsReachable.ERROR_NO_HOST_IN_URL, ex.getMessage());
+        }
     }
 
+    @Test
     public void testBadURL() throws Exception {
-        expectBuildExceptionContaining("testBadURL",
-                "error in URL",
-                IsReachable.ERROR_BAD_URL);
+        try {
+            buildRule.executeTarget("testBadURL");
+            fail("Build exception expected: error in URL");
+        } catch(BuildException ex) {
+            AntAssert.assertContains(IsReachable.ERROR_BAD_URL, ex.getMessage());
+        }
     }
 }

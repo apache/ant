@@ -21,6 +21,11 @@ package org.apache.tools.ant.types;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.TarFileSet.
@@ -31,13 +36,12 @@ import org.apache.tools.ant.BuildException;
 
 public class TarFileSetTest extends AbstractFileSetTest {
 
-    public TarFileSetTest(String name) {
-        super(name);
-    }
 
     protected AbstractFileSet getInstance() {
         return new TarFileSet();
     }
+
+    @Test
     public final void testAttributes() {
         TarFileSet f = (TarFileSet)getInstance();
         //check that dir and src are incompatible

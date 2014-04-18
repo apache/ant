@@ -19,15 +19,16 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import junit.framework.TestCase;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Test;
 
 /**
  * Used to verify the performance effect of classloader changes.
  */
-public class AntClassLoaderPerformance extends TestCase {
+public class AntClassLoaderPerformance  {
 
+    @Test
     public void testFindClass() throws Exception {
         String testCaseURL = getClass()
             .getClassLoader().getResource("junit/framework/TestCase.class")

@@ -18,23 +18,31 @@
 
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XMLFragmentTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-    public XMLFragmentTest(String name) {
-        super(name);
-    }
+public class XMLFragmentTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/xmlfragment.xml");
+        buildRule.configureProject("src/etc/testcases/types/xmlfragment.xml");
     }
 
+    @Test
     public void testNestedText() {
-        XMLFragment x = (XMLFragment) getProject().getReference("nested-text");
+        XMLFragment x = (XMLFragment) buildRule.getProject().getReference("nested-text");
         assertNotNull(x);
         Node n = x.getFragment();
         assertTrue("No attributes", !n.hasAttributes());
@@ -44,9 +52,10 @@ public class XMLFragmentTest extends BuildFileTest {
         assertEquals("foo", nl.item(0).getNodeValue());
     }
 
+    @Test
     public void testNestedChildren() {
         XMLFragment x =
-            (XMLFragment) getProject().getReference("with-children");
+            (XMLFragment) buildRule.getProject().getReference("with-children");
         assertNotNull(x);
         Node n = x.getFragment();
         assertTrue("No attributes", !n.hasAttributes());

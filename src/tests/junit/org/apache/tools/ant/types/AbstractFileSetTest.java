@@ -20,10 +20,13 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Base class for FileSetTest and DirSetTest.
@@ -32,14 +35,12 @@ import org.apache.tools.ant.Project;
  *
  */
 
-public abstract class AbstractFileSetTest extends TestCase {
+public abstract class AbstractFileSetTest {
 
     private Project project;
 
-    public AbstractFileSetTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
@@ -51,6 +52,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         return project;
     }
 
+    @Test
     public final void testEmptyElementIfIsReference() {
         AbstractFileSet f = getInstance();
         f.setIncludes("**/*.java");
@@ -182,6 +184,7 @@ public abstract class AbstractFileSetTest extends TestCase {
         }
     }
 
+    @Test
     public void testCircularReferenceCheck() {
         AbstractFileSet f = getInstance();
         project.addReference("dummy", f);

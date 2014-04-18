@@ -17,18 +17,18 @@
  */
 package org.apache.tools.ant.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * JAXPUtils test case
  */
-public class JAXPUtilsTest extends TestCase {
-    public JAXPUtilsTest(String name){
-        super(name);
-    }
+public class JAXPUtilsTest {
 
+    @Test
     public void testGetSystemId(){
         File file = null;
         if ( File.separatorChar == '\\' ){

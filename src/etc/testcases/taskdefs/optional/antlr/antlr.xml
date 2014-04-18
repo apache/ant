@@ -110,14 +110,12 @@
 
   <!-- test9 will have been run before that -->
   <target name="normalRecompile">
-    <sleep seconds="2"/>
     <touch file="${output}/extended.calc.g"/>
     <antlr target="${output}/extended.calc.g" glib="${output}/antlr.g"/>
   </target>
 
   <!-- test9 will have been run before that -->
   <target name="supergrammarChangeRecompile">
-    <sleep seconds="2"/>
     <touch file="${output}/antlr.g"/>
     <antlr target="${output}/extended.calc.g" glib="${output}/antlr.g"/>
   </target>

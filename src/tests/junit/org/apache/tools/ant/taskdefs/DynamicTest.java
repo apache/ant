@@ -18,23 +18,29 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class DynamicTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
 
-    public DynamicTest(String name) {
-        super(name);
-    }
+public class DynamicTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/dynamictask.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/dynamictask.xml");
     }
 
+    @Test
     public void testSimple() {
-        executeTarget("simple");
-        assertEquals("1", project.getProperty("prop1"));
-        assertEquals("2", project.getProperty("prop2"));
-        assertEquals("3", project.getProperty("prop3"));
-        assertEquals("4", project.getProperty("prop4"));
+        buildRule.executeTarget("simple");
+        assertEquals("1", buildRule.getProject().getProperty("prop1"));
+        assertEquals("2", buildRule.getProject().getProperty("prop2"));
+        assertEquals("3", buildRule.getProject().getProperty("prop3"));
+        assertEquals("4", buildRule.getProject().getProperty("prop4"));
     }
 }

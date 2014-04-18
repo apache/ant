@@ -18,84 +18,121 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class AddTypeTest extends BuildFileTest {
+import static org.junit.Assert.fail;
 
-    public AddTypeTest(String name) {
-        super(name);
-    }
+public class AddTypeTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/addtype.xml");
+        buildRule.configureProject("src/etc/testcases/types/addtype.xml");
     }
 
+    @Test
     public void testAddPath() {
-        executeTarget("addpath");
+        buildRule.executeTarget("addpath");
     }
 
+    @Test
     public void testAddCondition() {
-        executeTarget("addcondition");
+        buildRule.executeTarget("addcondition");
     }
 
+    @Test
     public void testAddFilter() {
-        executeTarget("addfilter");
+        buildRule.executeTarget("addfilter");
     }
 
+    @Test
     public void testAddSelector() {
-        executeTarget("addselector");
+        buildRule.executeTarget("addselector");
     }
 
+    @Test
     public void testNestedA() {
-        expectLogContaining("nested.a", "add A called");
+        buildRule.executeTarget("nested.a");
+        AntAssert.assertContains("add A called", buildRule.getLog());
     }
 
+    @Test
     public void testNestedB() {
-        expectLogContaining("nested.b", "add B called");
+        buildRule.executeTarget("nested.b");
+         AntAssert.assertContains( "add B called", buildRule.getLog());
     }
 
+    @Test
     public void testNestedC() {
-        expectLogContaining("nested.c", "add C called");
+        buildRule.executeTarget("nested.c");
+        AntAssert.assertContains( "add C called", buildRule.getLog());
     }
 
+    @Test
     public void testNestedAB() {
-        expectBuildExceptionContaining(
-            "nested.ab", "Should have got ambiguous", "ambiguous");
+        try {
+            buildRule.executeTarget("nested.ab");
+            fail("Build exception expected: Should have got ambiguous");
+        } catch (BuildException ex) {
+            AntAssert.assertContains("ambiguous", ex.getMessage());
+        }
     }
 
+    @Test
     public void testConditionType() {
-        expectLogContaining("condition.type", "beforeafter");
+        buildRule.executeTarget("condition.type");
+        AntAssert.assertContains( "beforeafter", buildRule.getLog());
     }
 
+    @Test
     public void testConditionTask() {
-        expectLogContaining("condition.task", "My Condition execution");
+        buildRule.executeTarget("condition.task");
+        AntAssert.assertContains( "My Condition execution", buildRule.getLog());
     }
+    
+    @Test
     public void testConditionConditionType() {
-        expectLogContaining("condition.condition.type", "My Condition eval");
+        buildRule.executeTarget("condition.condition.type");
+        AntAssert.assertContains( "My Condition eval", buildRule.getLog());
     }
+    
+    @Test
     public void testConditionConditionTask() {
-        expectBuildExceptionContaining(
-            "condition.condition.task", "task masking condition",
-            "doesn't support the nested");
+        try {
+            buildRule.executeTarget("condition.condition.task");
+            fail("Build exception expected: Task masking condition");
+        } catch (BuildException ex) {
+             AntAssert.assertContains("doesn't support the nested", ex.getMessage());
+        }
     }
 
+    @Test
     public void testAddConfigured() {
-        expectLogContaining(
-            "myaddconfigured", "value is Value Setexecute: value is Value Set");
+        buildRule.executeTarget("myaddconfigured");
+        AntAssert.assertContains("value is Value Setexecute: value is Value Set",
+                buildRule.getLog());
     }
 
+    @Test
     public void testAddConfiguredValue() {
-        expectLogContaining(
-            "myaddconfiguredvalue",
-            "value is Value Setexecute: value is Value Set");
+        buildRule.executeTarget("myaddconfiguredvalue");
+        AntAssert.assertContains("value is Value Setexecute: value is Value Set",
+                buildRule.getLog());
     }
 
+    @Test
     public void testNamespace() {
-        executeTarget("namespacetest");
+        buildRule.executeTarget("namespacetest");
     }
 
     // The following will be used as types and tasks

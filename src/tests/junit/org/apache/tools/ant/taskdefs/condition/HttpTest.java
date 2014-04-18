@@ -17,45 +17,60 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * Testcases for the &lt;http&gt; condition. All these tests require
  * us to be online as they attempt to get the status of various pages
  * on the Ant Apache web site.
  */
-public class HttpTest extends BuildFileTest {
+public class HttpTest {
 
-    public HttpTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/http.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/http.xml");
     }
 
+    @Test
     public void testNoMethod() {
-       expectPropertySet("basic-no-method", "basic-no-method");
-       assertPropertyUnset("basic-no-method-bad-url");
+        buildRule.executeTarget("basic-no-method");
+        assertEquals("true", buildRule.getProject().getProperty("basic-no-method"));
+        assertNull(buildRule.getProject().getProperty("basic-no-method-bad-url"));
     }
 
+    @Test
     public void testHeadRequest() {
-       expectPropertySet("test-head-request", "test-head-request");
-       assertPropertyUnset("test-head-request-bad-url");
+        buildRule.executeTarget("test-head-request");
+        assertEquals("true", buildRule.getProject().getProperty("test-head-request"));
+        assertNull(buildRule.getProject().getProperty("test-head-request-bad-url"));
     }
 
+    @Test
     public void testGetRequest() {
-       expectPropertySet("test-get-request", "test-get-request");
-       assertPropertyUnset("test-get-request-bad-url");
+        buildRule.executeTarget("test-get-request");
+        assertEquals("true", buildRule.getProject().getProperty("test-get-request"));
+        assertNull(buildRule.getProject().getProperty("test-get-request-bad-url"));
     }
 
+    @Test
     public void testBadRequestMethod() {
-        expectSpecificBuildException("bad-request-method",
-                                     "invalid HTTP request method specified",
-                                     null);
+        try {
+            buildRule.executeTarget("bad-request-method");
+            fail("Exception should have been thrown as invalid HTTP request method specified");
+        } catch (BuildException ex) {
+            //TODO we should assert the correct build exception was thrown
+        }
     }
 
 }

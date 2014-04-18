@@ -18,44 +18,53 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 
 /**
  */
-public class MultiMapTest extends BuildFileTest {
+public class MultiMapTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
-    public MultiMapTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/multimap.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/multimap.xml");
     }
 
+    @Test
     public void testMultiCopy() {
-        executeTarget("multicopy");
+        buildRule.executeTarget("multicopy");
     }
 
+    @Test
     public void testMultiMove() {
-        executeTarget("multimove");
+        buildRule.executeTarget("multimove");
     }
 
+    @Test
     public void testSingleCopy() {
-        executeTarget("singlecopy");
+        buildRule.executeTarget("singlecopy");
     }
 
+    @Test
     public void testSingleMove() {
-        executeTarget("singlemove");
+        buildRule.executeTarget("singlemove");
     }
 
+    @Test
     public void testCopyWithEmpty() {
-        executeTarget("copywithempty");
+        buildRule.executeTarget("copywithempty");
     }
 
+    @Test
     public void testMoveWithEmpty() {
-        executeTarget("movewithempty");
+        buildRule.executeTarget("movewithempty");
     }
 
     public static class TestMapper implements FileNameMapper {

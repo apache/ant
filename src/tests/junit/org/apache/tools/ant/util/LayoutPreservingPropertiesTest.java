@@ -24,18 +24,19 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class LayoutPreservingPropertiesTest extends TestCase {
-    public LayoutPreservingPropertiesTest(String s) {
-        super(s);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class LayoutPreservingPropertiesTest {
 
     /**
      * Tests that a properties file read by the
      * LayoutPreservingPropertiesFile and then saves the properties in
      * it.
      */
+    @Test
     public void testPreserve() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -66,6 +67,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
      * Tests that names and value are properly escaped when being
      * written out.
      */
+    @Test
     public void testEscaping() throws Exception {
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
 
@@ -104,6 +106,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
      * an existing property, it updates the logical line, and it doesn't
      * append a new one.
      */
+    @Test
     public void testOverwrite() throws Exception {
         File unusual = new File(System.getProperty("root"),
                                 "src/etc/testcases/util/unusual.properties");
@@ -131,6 +134,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
         assertTrue(s.indexOf("prop\\nthree=new three") > -1);
     }
 
+    @Test
     public void testStoreWithHeader() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -150,6 +154,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
         assertTrue("should have had header ", s.startsWith("#file-header"));
     }
 
+    @Test
     public void testClear() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -181,6 +186,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
                    s.indexOf("# now a line wrapping one") == -1);
     }
 
+    @Test
     public void testRemove() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -203,6 +209,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
                    s.indexOf("! more comment") > -1);
     }
 
+    @Test
     public void testRemoveWithComment() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -227,6 +234,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
                    s.indexOf("! more comment") == -1);
     }
 
+    @Test
     public void testClone() throws Exception {
         File simple = new File(System.getProperty("root"),
                                "src/etc/testcases/util/simple.properties");
@@ -263,6 +271,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
         assertTrue("should have had prop.new", s2.indexOf("prop.new") > -1);
     }
 
+    @Test
     public void testPreserveEscapeName() throws Exception {
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         File unusual = new File(System.getProperty("root"),
@@ -296,7 +305,7 @@ public class LayoutPreservingPropertiesTest extends TestCase {
         assertTrue(s.indexOf("beta set with a space") == -1);
     }
 
-    private String readFile(File f) throws IOException {
+    private static String readFile(File f) throws IOException {
         FileInputStream fis = new FileInputStream(f);
         InputStreamReader isr = new InputStreamReader(fis);
         String s = FileUtils.readFully(isr);

@@ -17,47 +17,82 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class MakeUrlTest extends BuildFileTest {
 
-    public MakeUrlTest(String s) {
-        super(s);
-    }
+public class MakeUrlTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/makeurl.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/makeurl.xml");
     }
 
+    @Test
     public void testEmpty() {
-        expectBuildExceptionContaining("testEmpty", "missing property", "property");
+        try {
+			buildRule.executeTarget("testEmpty");
+			fail("BuildException expected: missing property");
+		} catch (BuildException ex) {
+			assertContains("property", ex.getMessage());
+		}
     }
 
+    @Test
     public void testNoProperty() {
-        expectBuildExceptionContaining("testNoProperty", "missing property", "property");
+        try {
+			buildRule.executeTarget("testNoProperty");
+			fail("BuildException expected: missing property");
+		} catch (BuildException ex) {
+			assertContains("property", ex.getMessage());
+		}
     }
 
+    @Test
     public void testNoFile() {
-        expectBuildExceptionContaining("testNoFile", "missing file", "file");
+        try {
+			buildRule.executeTarget("testNoFile");
+			fail("BuildException expected: missing file");
+		} catch (BuildException ex) {
+			assertContains("file", ex.getMessage());
+		}
     }
 
+    @Test
     public void testValidation() {
-        expectBuildExceptionContaining("testValidation", MakeUrl.ERROR_MISSING_FILE, "file");
+        try {
+			buildRule.executeTarget("testValidation");
+			fail("BuildException expected: " + MakeUrl.ERROR_MISSING_FILE);
+		} catch (BuildException ex) {
+			assertContains("file", ex.getMessage());
+		}
     }
 
+    @Test
     public void testWorks() {
-        executeTarget("testWorks");
+        buildRule.executeTarget("testWorks");
         assertPropertyContains("testWorks", "file:");
         assertPropertyContains("testWorks", "/foo");
     }
 
+    @Test
     public void testIllegalChars() {
-        executeTarget("testIllegalChars");
+        buildRule.executeTarget("testIllegalChars");
         assertPropertyContains("testIllegalChars", "file:");
         assertPropertyContains("testIllegalChars", "fo%20o%25");
     }
@@ -67,8 +102,9 @@ public class MakeUrlTest extends BuildFileTest {
      *
      * @throws IOException
      */
+    @Test
     public void testRoundTrip() throws IOException {
-        executeTarget("testRoundTrip");
+        buildRule.executeTarget("testRoundTrip");
         assertPropertyContains("testRoundTrip", "file:");
         String property = getProperty("testRoundTrip");
         URL url = new URL(property);
@@ -76,26 +112,30 @@ public class MakeUrlTest extends BuildFileTest {
         instream.close();
     }
 
+    @Test
     public void testIllegalCombinations() {
-        executeTarget("testIllegalCombinations");
+        buildRule.executeTarget("testIllegalCombinations");
         assertPropertyContains("testIllegalCombinations", "/foo");
         assertPropertyContains("testIllegalCombinations", ".xml");
     }
 
+    @Test
     public void testFileset() {
-        executeTarget("testFileset");
+        buildRule.executeTarget("testFileset");
         assertPropertyContains("testFileset", ".xml ");
         assertPropertyEndsWith("testFileset", ".xml");
     }
 
+    @Test
     public void testFilesetSeparator() {
-        executeTarget("testFilesetSeparator");
+        buildRule.executeTarget("testFilesetSeparator");
         assertPropertyContains("testFilesetSeparator", ".xml\",\"");
         assertPropertyEndsWith("testFilesetSeparator", ".xml");
     }
 
+    @Test
     public void testPath() {
-        executeTarget("testPath");
+        buildRule.executeTarget("testPath");
         assertPropertyContains("testPath", "makeurl.xml");
     }
 
@@ -131,6 +171,6 @@ public class MakeUrlTest extends BuildFileTest {
      * @return
      */
     protected String getProperty(String property) {
-        return project.getProperty(property);
+        return buildRule.getProject().getProperty(property);
     }
 }

@@ -18,36 +18,57 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Testcase for the &lt;isfileselected&gt; condition.
  *
  */
-public class IsFileSelectedTest extends BuildFileTest {
+public class IsFileSelectedTest {
 
-    public IsFileSelectedTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/isfileselected.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/isfileselected.xml");
     }
 
+    @Test
     public void testSimple() {
-        executeTarget("simple");
+        buildRule.executeTarget("simple");
     }
+
+    @Test
     public void testName() {
-        executeTarget("name");
+        buildRule.executeTarget("name");
     }
+
+    @Test
     public void testBaseDir() {
-        executeTarget("basedir");
+        buildRule.executeTarget("basedir");
     }
+
+    @Test
     public void testType() {
-        executeTarget("type");
+        buildRule.executeTarget("type");
     }
+
+    @Test
     public void testNotSelector() {
-        expectBuildExceptionContaining(
-            "not.selector", "checking for use as a selector (not allowed)",
-            "fileset doesn't support the nested \"isfile");
+        try {
+            buildRule.executeTarget("not.selector");
+            fail("Exception should have been thrown: checking for use as a selector (not allowed)");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("fileset doesn't support the nested \"isfile",
+                    ex.getMessage());
+        }
     }
 }

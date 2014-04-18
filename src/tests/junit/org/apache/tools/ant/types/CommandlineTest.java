@@ -18,20 +18,20 @@
 
 package org.apache.tools.ant.types;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandLine
  *
  */
-public class CommandlineTest extends TestCase {
+public class CommandlineTest {
 
-    public CommandlineTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testTokenizer() {
         String[] s = Commandline.translateCommandline("1 2 3");
         assertEquals("Simple case", 3, s.length);
@@ -107,20 +107,21 @@ public class CommandlineTest extends TestCase {
         // now to the expected failures
 
         try {
-            s = Commandline.translateCommandline("a \'b c");
+            Commandline.translateCommandline("a \'b c");
             fail("unbalanced single quotes undetected");
         } catch (BuildException be) {
             assertEquals("unbalanced quotes in a \'b c", be.getMessage());
         }
 
         try {
-            s = Commandline.translateCommandline("a \"b c");
+            Commandline.translateCommandline("a \"b c");
             fail("unbalanced double quotes undetected");
         } catch (BuildException be) {
             assertEquals("unbalanced quotes in a \"b c", be.getMessage());
         }
     }
 
+    @Test
     public void testToString() {
         assertEquals("", Commandline.toString(new String[0]));
         assertEquals("", Commandline.toString(null));
@@ -130,6 +131,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("1 \'2\"3\'", Commandline.toString(new String[] {"1", "2\"3"}));
     }
 
+    @Test
     public void testAwkCommand() {
         Commandline c = new Commandline();
         c.setExecutable("awk");
@@ -141,6 +143,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("'NR == 2 { print $NF }'", s[1]);
     }
 
+    @Test
     public void testPrefix() {
         Commandline c = new Commandline();
         Commandline.Argument a = c.createArgument();
@@ -151,6 +154,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("-f=foo", s[0]);
     }
 
+    @Test
     public void testSuffix() {
         Commandline c = new Commandline();
         Commandline.Argument a = c.createArgument();
@@ -161,6 +165,7 @@ public class CommandlineTest extends TestCase {
         assertEquals("foo,1", s[0]);
     }
 
+    @Test
     public void testPrefixSuffixLine() {
         Commandline c = new Commandline();
         Commandline.Argument a = c.createArgument();

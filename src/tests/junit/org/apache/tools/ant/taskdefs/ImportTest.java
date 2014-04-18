@@ -18,141 +18,141 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
+import org.junit.Assume;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class ImportTest extends BuildFileTest {
+public class ImportTest {
 
-    public ImportTest(String name) {
-        super(name);
-    }
-
-    public void setUp() {
-    }
-
-    public void tearDown() {
-    }
-
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+	
+	@Test
     public void testSimpleImport() {
-        configureProject("src/etc/testcases/taskdefs/import/import.xml");
-        assertLogContaining("Before importIn imported topAfter import");
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/import.xml");
+        assertContains("Before importIn imported topAfter import", buildRule.getLog());
     }
 
+	@Test
     public void testUnnamedNesting() {
-        configureProject("src/etc/testcases/taskdefs/import/unnamedImport.xml",
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/unnamedImport.xml",
                          Project.MSG_WARN);
-        String log = getLog();
+        String log = buildRule.getLog();
         assertTrue("Warnings logged when not expected: " + log,
                     log.length() == 0);
     }
 
+	@Test
     public void testSerial() {
-        configureProject("src/etc/testcases/taskdefs/import/subdir/serial.xml");
-        assertLogContaining("Unnamed2.xmlUnnamed1.xml");
-        String fullLog = getFullLog();
-        String substring = "Skipped already imported file";
-        assertTrue("expecting full log to contain \"" + substring
-            + "\" full log was \"" + fullLog + "\"",
-            fullLog.indexOf(substring) >= 0);
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/subdir/serial.xml");
+        assertContains("Unnamed2.xmlUnnamed1.xml", buildRule.getLog());
+        assertContains("Expected string was not found in log",
+        		"Skipped already imported file", buildRule.getFullLog());
     }
 
     // allow this as imported in targets are only tested when a target is run
-    public void testImportInTargetNoEffect() {
-        configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
-        expectPropertyUnset("no-import", "foo");
-        assertTrue(null == getProject().getReference("baz"));
+    @Test
+	public void testImportInTargetNoEffect() {
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
+        buildRule.executeTarget("no-import");
+        assertNull(buildRule.getProject().getProperty("foo"));
+        assertNull(buildRule.getProject().getReference("baz"));
     }
 
-    // deactivate this test as imports within targets are not allowed
+    @Ignore("deactivate this test as imports within targets are not allowed")
+    @Test
     public void notTestImportInTargetWithEffect() {
-        configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
-        expectPropertySet("do-import", "foo", "bar");
-        assertNotNull(getProject().getReference("baz"));
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
+        buildRule.executeTarget("do-import");
+        assertEquals(buildRule.getProject().getProperty("foo"), "bar");
+        assertNotNull(buildRule.getProject().getReference("baz"));
     }
 
+    @Test
     public void testImportInTargetNotAllowed() {
-        configureProject(
+        buildRule.configureProject(
             "src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
-        expectBuildExceptionContaining(
-            "do-import", "not a top level task",
-            "import only allowed as a top-level task");
+        try {
+        	buildRule.executeTarget("do-import");
+        	fail("Build exception should have been thrown as import only allowed in top level task");
+        } catch(BuildException ex) {
+        	assertContains( "not a top level task", "import only allowed as a top-level task", ex.getMessage());
+        }
     }
 
+    @Test
     public void testImportInSequential() {
-        configureProject(
+        buildRule.configureProject(
             "src/etc/testcases/taskdefs/import/subdir/importinsequential.xml");
-        expectPropertySet("within-imported", "foo", "bar");
-        assertNotNull(getProject().getReference("baz"));
+        buildRule.executeTarget("within-imported");
+        assertEquals(buildRule.getProject().getProperty("foo"), "bar");
+        assertNotNull(buildRule.getProject().getReference("baz"));
     }
 
+    @Test
     public void testImportSameTargets() {
         try {
-            configureProject(
+            buildRule.configureProject(
                 "src/etc/testcases/taskdefs/import/same_target.xml");
+            fail("Expected build exception");
         } catch (BuildException ex) {
-            String message = ex.getMessage();
-            if (message.indexOf("Duplicate target") == -1) {
-                assertTrue("Did not see 'Duplicate target' in '" + message +"'", false);
-            }
-            return;
+        	assertContains("Message did not contain expected contents", "Duplicate target", ex.getMessage());
         }
-        assertTrue(
-            "Did not see build exception",
-            false);
     }
 
+    @Test
     public void testImportError() {
         try {
-            configureProject(
+            buildRule.configureProject(
                 "src/etc/testcases/taskdefs/import/import_bad_import.xml");
+            fail("Build exception should have been thrown");
         } catch (BuildException ex) {
             Location lo = ex.getLocation();
-            assertTrue(
-                "expected location of build exception to be set",
-                (lo != null));
-            assertTrue(
-                "expected location to contain calling file",
-                lo.getFileName().indexOf("import_bad_import.xml") != -1);
-            assertTrue(
-                "expected message of ex to contain called file",
-                ex.getMessage().indexOf("bad.xml") != -1);
-            return;
+            assertNotNull(
+                "expected location of build exception to be set", lo);
+            assertContains(
+                "expected location to contain calling file", "import_bad_import.xml", lo.getFileName());
+            assertContains(
+                "expected message of ex to contain called file", "bad.xml", ex.getMessage());
         }
-        assertTrue(
-            "Did not see build exception",
-            false);
     }
 
+    @Test
     public void testSymlinkedImports() throws Exception {
         String ln = "/usr/bin/ln";
         if (!new File(ln).exists()) {
             ln = "/bin/ln";
         }
-        if (!new File(ln).exists()) {
-            // Running on Windows or something, so skip it.
-            return;
-        }
+        Assume.assumeTrue("Current system does not support Symlinks", new File(ln).exists());
         String symlink = "src/etc/testcases/taskdefs/import/symlinks/d3b";
         File symlinkFile = new File(System.getProperty("root"), symlink);
         if (Runtime.getRuntime().exec(new String[] {ln, "-s", "d3a", symlinkFile.getAbsolutePath()}).waitFor() != 0) {
             throw new IOException("'" + ln + " -s d3a " + symlink + "' failed");
         }
         try {
-            configureProject(
+            buildRule.configureProject(
                 "src/etc/testcases/taskdefs/import/symlinks/d1/p1.xml");
-            assertPropertyEquals(
-                "ant.file.p2",
+            assertEquals(
+                buildRule.getProject().getProperty("ant.file.p2"),
                 new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d2/p2.xml")
                 .getAbsolutePath());
-            assertPropertyEquals(
-                "ant.file.p3",
+            assertEquals(
+                buildRule.getProject().getProperty("ant.file.p3"),
                 new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d3b/p3.xml")
                 .getAbsolutePath());
         } finally {
@@ -160,13 +160,15 @@ public class ImportTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testTargetFirst() {
-        configureProject("src/etc/testcases/taskdefs/import/importtargetfirst.xml");
-        assertLogContaining("Importing targetfirstAfter target firstAfter importing");
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/importtargetfirst.xml");
+        assertContains("Importing targetfirstAfter target firstAfter importing", buildRule.getLog());
     }
 
+    @Test
     public void testTargetName() {
-        configureProject("src/etc/testcases/taskdefs/import/c.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/c.xml");
     }
 
 }

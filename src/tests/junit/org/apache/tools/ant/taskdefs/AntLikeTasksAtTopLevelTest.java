@@ -19,19 +19,25 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @since Ant 1.6
  */
-public class AntLikeTasksAtTopLevelTest extends BuildFileTest {
-    public AntLikeTasksAtTopLevelTest(String name) {
-        super(name);
-    }
+public class AntLikeTasksAtTopLevelTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Test
     public void testAnt() {
         try {
-            configureProject("src/etc/testcases/taskdefs/toplevelant.xml");
+            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelant.xml");
             fail("no exception thrown");
         } catch (BuildException e) {
             assertEquals("ant task at the top level must not invoke its own"
@@ -39,9 +45,10 @@ public class AntLikeTasksAtTopLevelTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testSubant() {
         try {
-            configureProject("src/etc/testcases/taskdefs/toplevelsubant.xml");
+            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelsubant.xml");
             fail("no exception thrown");
         } catch (BuildException e) {
             assertEquals("subant task at the top level must not invoke its own"
@@ -49,9 +56,10 @@ public class AntLikeTasksAtTopLevelTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testAntcall() {
         try {
-            configureProject("src/etc/testcases/taskdefs/toplevelantcall.xml");
+            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelantcall.xml");
             fail("no exception thrown");
         } catch (BuildException e) {
             assertEquals("antcall must not be used at the top level.",

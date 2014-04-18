@@ -19,32 +19,30 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests Type Selectors.
  *
  */
-public class TypeSelectorTest extends BaseSelectorTest {
+public class TypeSelectorTest {
 
-    public TypeSelectorTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BaseSelectorRule selectorRule = new BaseSelectorRule();
 
-    /**
-     * Factory method from base class. This is overriden in child
-     * classes to return a specific Selector class.
-     */
-    public BaseSelector getInstance() {
-        return new TypeSelector();
-    }
 
     /**
      * Test the code that validates the selector.
      */
+    @Test
     public void testValidate() {
-        TypeSelector s = (TypeSelector)getInstance();
+        TypeSelector s = new TypeSelector();
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0] ,selectorRule.getFiles()[0]);
             fail("TypeSelector did not check for required fields");
         } catch (BuildException be1) {
             assertEquals("The type attribute is required"
@@ -55,35 +53,28 @@ public class TypeSelectorTest extends BaseSelectorTest {
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
+    @Test
     public void testSelectionBehaviour() {
         TypeSelector s;
         String results;
 
-        TypeSelector.FileType directory = new
-                TypeSelector.FileType();
+        TypeSelector.FileType directory = new TypeSelector.FileType();
         directory.setValue("dir");
-        TypeSelector.FileType file = new
-                TypeSelector.FileType();
+        TypeSelector.FileType file = new TypeSelector.FileType();
         file.setValue("file");
 
-        try {
-            makeBed();
+    
 
-            s = (TypeSelector)getInstance();
-            s.setType(directory);
-            results = selectionString(s);
-            assertEquals("TFFFFFFFFFFT", results);
+        s = new TypeSelector();
+        s.setType(directory);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFFFFFFFFFFT", results);
 
-            s = (TypeSelector)getInstance();
-            s.setType(file);
-            results = selectionString(s);
-            assertEquals("FTTTTTTTTTTF", results);
+        s = new TypeSelector();
+        s.setType(file);
+        results = selectorRule.selectionString(s);
+        assertEquals("FTTTTTTTTTTF", results);
 
-
-        }
-        finally {
-            cleanupBed();
-        }
 
     }
 

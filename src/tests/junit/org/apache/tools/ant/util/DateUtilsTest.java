@@ -20,17 +20,18 @@ package org.apache.tools.ant.util;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * TestCase for DateUtils.
  *
  */
-public class DateUtilsTest extends TestCase {
-    public DateUtilsTest(String s) {
-        super(s);
-    }
+public class DateUtilsTest {
 
+
+    @Test
     public void testElapsedTime(){
         String text = DateUtils.formatElapsedTime(50*1000);
         assertEquals("50 seconds", text);
@@ -43,6 +44,7 @@ public class DateUtilsTest extends TestCase {
     }
 
     // https://issues.apache.org/bugzilla/show_bug.cgi?id=44659
+    @Test
     public void testLongElapsedTime(){
         assertEquals("2926 minutes 13 seconds",
                      DateUtils.formatElapsedTime(1000 * 175573));
@@ -50,6 +52,7 @@ public class DateUtilsTest extends TestCase {
                      DateUtils.formatElapsedTime(Long.MAX_VALUE));
     }
 
+    @Test
     public void testDateTimeISO(){
         TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
         Calendar cal = Calendar.getInstance(timeZone);
@@ -59,6 +62,7 @@ public class DateUtilsTest extends TestCase {
         assertEquals("2002-02-23T09:11:12", text);
     }
 
+    @Test
     public void testDateISO(){
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(timeZone);
@@ -68,6 +72,7 @@ public class DateUtilsTest extends TestCase {
         assertEquals("2002-02-23", text);
     }
 
+    @Test
     public void testTimeISODate(){
         // make sure that elapsed time in set via date works
         TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
@@ -78,6 +83,7 @@ public class DateUtilsTest extends TestCase {
         assertEquals("20:11:12", text);
     }
 
+    @Test
     public void testTimeISO(){
         // make sure that elapsed time in ms works
         long ms = (20*3600 + 11*60 + 12)*1000;
@@ -86,6 +92,7 @@ public class DateUtilsTest extends TestCase {
         assertEquals("20:11:12", text);
     }
 
+    @Test
     public void testPhaseOfMoon() {
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(timeZone);

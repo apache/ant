@@ -18,14 +18,19 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import junit.framework.TestCase;
+
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
@@ -34,17 +39,14 @@ import org.w3c.dom.Document;
  *
  * <a href="sbailliez@apache.org">Stephane Bailliez</a>
  */
-public abstract class AbstractXSLTLiaisonTest extends TestCase {
+public abstract class AbstractXSLTLiaisonTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     
     protected XSLTLiaison liaison;
 
-    protected  AbstractXSLTLiaisonTest(String name){
-        super(name);
-    }
-
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         liaison = createLiaison();
     }
 
@@ -61,6 +63,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
     }
 
     /** keep it simple stupid */
+    @Test
     public void testTransform() throws Exception {
         File xsl = getFile("/taskdefs/optional/xsltliaison-in.xsl");
         liaison.setStylesheet(xsl);
@@ -75,6 +78,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
         }
     }
 
+    @Test
     public void testEncoding() throws Exception {
         File xsl = getFile("/taskdefs/optional/xsltliaison-encoding-in.xsl");
         liaison.setStylesheet(xsl);

@@ -19,54 +19,62 @@
 package org.apache.tools.ant.util;
 
 import java.io.IOException;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class LineOrientedOutputStreamTest extends TestCase {
+
+public class LineOrientedOutputStreamTest {
 
     private static String LINE = "This is a line";
     private DummyStream stream;
 
-    public LineOrientedOutputStreamTest(String name) {
-        super(name);
-    }
-    
+
+    @Before
     public void setUp() {
         stream = new DummyStream();
     }
 
+    @After
     public void tearDown() throws IOException {
         if (stream != null) {
             stream.close();
         }
     }
 
+    @Test
     public void testLineWithLinefeedArray() throws IOException {
         writeByteArray();
         writeAsArray('\n');
         stream.assertInvoked();
     }
 
+    @Test
     public void testLineWithLinefeedSingleBytes() throws IOException {
         writeSingleBytes();
         stream.write('\n');
         stream.assertInvoked();
     }
 
+    @Test
     public void testLineWithCariagereturnArray() throws IOException {
         writeByteArray();
         writeAsArray('\r');
         stream.assertInvoked();
     }
 
+    @Test
     public void testLineWithCariagereturnSingleBytes() throws IOException {
         writeSingleBytes();
         stream.write('\r');
         stream.assertInvoked();
     }
 
+    @Test
     public void testLineWithCariagereturnLinefeedArray() throws IOException {
         writeByteArray();
         writeAsArray('\r');
@@ -74,6 +82,7 @@ public class LineOrientedOutputStreamTest extends TestCase {
         stream.assertInvoked();
     }
 
+    @Test
     public void testLineWithCariagereturnLinefeedSingleBytes() throws IOException {
         writeSingleBytes();
         stream.write('\r');
@@ -81,18 +90,21 @@ public class LineOrientedOutputStreamTest extends TestCase {
         stream.assertInvoked();
     }
 
+    @Test
     public void testFlushArray() throws IOException {
         writeByteArray();
         stream.flush();
         stream.assertNotInvoked();
     }
 
+    @Test
     public void testFlushSingleBytes() throws IOException {
         writeSingleBytes();
         stream.flush();
         stream.assertNotInvoked();
     }
 
+    @Test
     public void testCloseArray() throws IOException {
         writeByteArray();
         stream.close();
@@ -100,6 +112,7 @@ public class LineOrientedOutputStreamTest extends TestCase {
         stream = null;
     }
 
+    @Test
     public void testCloseSingleBytes() throws IOException {
         writeSingleBytes();
         stream.close();
@@ -134,7 +147,7 @@ public class LineOrientedOutputStreamTest extends TestCase {
             assertTrue("At least one line", invoked);
         }
         private void assertNotInvoked() {
-            assertTrue("No output", invoked==false);
+            assertTrue("No output", !invoked);
         }
     }
 }// LineOrientedOutputStreamTest

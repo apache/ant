@@ -18,13 +18,14 @@
 
 package org.apache.tools.tar;
 
+import org.junit.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import junit.framework.TestCase;
+public class TarOutputStreamTest {
 
-public class TarOutputStreamTest extends TestCase {
-
+    @Test
     public void testClose() throws IOException {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         TarOutputStream stream = new TarOutputStream(byteStream);

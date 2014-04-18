@@ -17,36 +17,44 @@
  */
 package org.apache.tools.ant.taskdefs.optional.script;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the examples of the &lt;scriptdef&gt; task.
  *
  * @since Ant 1.6
  */
-public class ScriptDefTest extends BuildFileTest {
+public class ScriptDefTest {
 
-    public ScriptDefTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/script/scriptdef.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/script/scriptdef.xml");
     }
 
+    @Test
     public void testSimple() {
-        executeTarget("simple");
+        buildRule.executeTarget("simple");
         // get the fileset and its basedir
-        Project p = getProject();
+        Project p = buildRule.getProject();
         FileSet fileset = (FileSet) p.getReference("testfileset");
         File baseDir = fileset.getDir(p);
-        String log = getLog();
+        String log = buildRule.getLog();
         assertTrue("Expecting attribute value printed",
             log.indexOf("Attribute attr1 = test") != -1);
 
@@ -54,25 +62,34 @@ public class ScriptDefTest extends BuildFileTest {
             log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
     }
 
+    @Test
     public void testNoLang() {
-        expectBuildExceptionContaining("nolang",
-            "Absence of language attribute not detected",
-            "requires a language attribute");
+        try {
+            buildRule.executeTarget("nolang");
+            fail("Absence of language attribute not detected");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("requires a language attribute", ex.getMessage());
+        }
     }
 
+    @Test
     public void testNoName() {
-        expectBuildExceptionContaining("noname",
-            "Absence of name attribute not detected",
-            "scriptdef requires a name attribute");
+        try {
+            buildRule.executeTarget("noname");
+            fail("Absence of name attribute not detected");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("scriptdef requires a name attribute", ex.getMessage());
+        }
     }
 
+    @Test
     public void testNestedByClassName() {
-        executeTarget("nestedbyclassname");
+        buildRule.executeTarget("nestedbyclassname");
         // get the fileset and its basedir
-        Project p = getProject();
+        Project p = buildRule.getProject();
         FileSet fileset = (FileSet) p.getReference("testfileset");
         File baseDir = fileset.getDir(p);
-        String log = getLog();
+        String log = buildRule.getLog();
         assertTrue("Expecting attribute value to be printed",
             log.indexOf("Attribute attr1 = test") != -1);
 
@@ -80,35 +97,47 @@ public class ScriptDefTest extends BuildFileTest {
             log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
     }
 
+    @Test
     public void testNoElement() {
-        expectOutput("noelement", "Attribute attr1 = test");
+        buildRule.executeTarget("noelement");
+        assertEquals("Attribute attr1 = test", buildRule.getOutput().trim());
     }
 
+    @Test
     public void testException() {
-        expectBuildExceptionContaining("exception",
-            "Should have thrown an exception in the script",
-            "TypeError");
+        try {
+            buildRule.executeTarget("exception");
+            fail("Should have thrown an exception in the script");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("TypeError", ex.getMessage());
+        }
     }
 
+    @Test
     public void testDoubleDef() {
-        executeTarget("doubledef");
-        String log = getLog();
+        buildRule.executeTarget("doubledef");
+        String log = buildRule.getLog();
         assertTrue("Task1 did not execute",
             log.indexOf("Task1") != -1);
         assertTrue("Task2 did not execute",
             log.indexOf("Task2") != -1);
     }
 
+    @Test
     public void testDoubleAttribute() {
-        expectBuildExceptionContaining("doubleAttributeDef",
-            "Should have detected duplicate attribute definition",
-            "attr1 attribute more than once");
+        try {
+            buildRule.executeTarget("doubleAttributeDef");
+            fail("Should have detected duplicate attirbute definition");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("attr1 attribute more than once", ex.getMessage());
+        }
     }
 
+    @Test
     public void testProperty() {
-        executeTarget("property");
+        buildRule.executeTarget("property");
         // get the fileset and its basedir
-        String log = getLog();
+        String log = buildRule.getLog();
         assertTrue("Expecting property in attribute value replaced",
             log.indexOf("Attribute value = test") != -1);
     }

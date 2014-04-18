@@ -18,115 +18,131 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class SyncTest extends BuildFileTest {
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertTrue;
 
-    public SyncTest(String name) {
-        super(name);
-    }
+public class SyncTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/sync.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/sync.xml");
     }
 
+    @Test
     public void testSimpleCopy() {
-        executeTarget("simplecopy");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("simplecopy");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        assertTrue(getFullLog().indexOf("dangling") == -1);
+        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
     }
 
+    @Test
     public void testEmptyCopy() {
-        executeTarget("emptycopy");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("emptycopy");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsNotPresent(d);
-        String c = getProject().getProperty("dest") + "/a/b/c";
+        String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsNotPresent(c);
-        assertTrue(getFullLog().indexOf("dangling") == -1);
+        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
     }
 
+    @Test
     public void testEmptyDirCopy() {
-        executeTarget("emptydircopy");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("emptydircopy");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsNotPresent(d);
-        String c = getProject().getProperty("dest") + "/a/b/c";
+        String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsPresent(c);
-        assertTrue(getFullLog().indexOf("dangling") == -1);
+        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
     }
 
+    @Test
     public void testCopyAndRemove() {
         testCopyAndRemove("copyandremove");
     }
 
+    @Test
     public void testCopyAndRemoveWithFileList() {
         testCopyAndRemove("copyandremove-with-filelist");
     }
 
+    @Test
     public void testCopyAndRemoveWithZipfileset() {
         testCopyAndRemove("copyandremove-with-zipfileset");
     }
 
     private void testCopyAndRemove(String target) {
-        executeTarget(target);
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget(target);
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        String f = getProject().getProperty("dest") + "/e/f";
+        String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(getFullLog().indexOf("Removing orphan file:") > -1);
-        assertDebuglogContaining("Removed 1 dangling file from");
-        assertDebuglogContaining("Removed 1 dangling directory from");
+        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") > -1);
+        assertContains("Removed 1 dangling file from", buildRule.getFullLog());
+        assertContains("Removed 1 dangling directory from", buildRule.getFullLog());
     }
 
+    @Test
     public void testCopyAndRemoveEmptyPreserve() {
-        executeTarget("copyandremove-emptypreserve");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("copyandremove-emptypreserve");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        String f = getProject().getProperty("dest") + "/e/f";
+        String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(getFullLog().indexOf("Removing orphan file:") > -1);
-        assertDebuglogContaining("Removed 1 dangling file from");
-        assertDebuglogContaining("Removed 1 dangling directory from");
+        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") > -1);
+        assertContains("Removed 1 dangling file from", buildRule.getFullLog());
+        assertContains("Removed 1 dangling directory from", buildRule.getFullLog());
     }
 
+    @Test
     public void testEmptyDirCopyAndRemove() {
-        executeTarget("emptydircopyandremove");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("emptydircopyandremove");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsNotPresent(d);
-        String c = getProject().getProperty("dest") + "/a/b/c";
+        String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsPresent(c);
-        String f = getProject().getProperty("dest") + "/e/f";
+        String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(getFullLog().indexOf("Removing orphan directory:") > -1);
-        assertDebuglogContaining("NO dangling file to remove from");
-        assertDebuglogContaining("Removed 2 dangling directories from");
+        assertTrue(buildRule.getFullLog().indexOf("Removing orphan directory:") > -1);
+        assertContains("NO dangling file to remove from", buildRule.getFullLog());
+        assertContains("Removed 2 dangling directories from", buildRule.getFullLog());
     }
 
+    @Test
     public void testCopyNoRemove() {
-        executeTarget("copynoremove");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("copynoremove");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        String f = getProject().getProperty("dest") + "/e/f";
+        String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(getFullLog().indexOf("Removing orphan file:") == -1);
+        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") == -1);
     }
 
+    @Test
     public void testCopyNoRemoveSelectors() {
-        executeTarget("copynoremove-selectors");
-        String d = getProject().getProperty("dest") + "/a/b/c/d";
+        buildRule.executeTarget("copynoremove-selectors");
+        String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        String f = getProject().getProperty("dest") + "/e/f";
+        String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(getFullLog().indexOf("Removing orphan file:") == -1);
+        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") == -1);
     }
 
     public void assertFileIsPresent(String f) {
         assertTrue("Expected file " + f,
-                   getProject().resolveFile(f).exists());
+                buildRule.getProject().resolveFile(f).exists());
     }
 
     public void assertFileIsNotPresent(String f) {
         assertTrue("Didn't expect file " + f,
-                   !getProject().resolveFile(f).exists());
+                   !buildRule.getProject().resolveFile(f).exists());
     }
 }

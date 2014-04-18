@@ -21,11 +21,14 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import junit.framework.TestCase;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Test;
 
-public class PropertyFileCLITest extends TestCase {
+import static org.apache.tools.ant.AntAssert.assertContains;
 
+public class PropertyFileCLITest {
+
+    @Test
     public void testPropertyResolution() throws Exception {
         FileUtils fu = FileUtils.getFileUtils();
         File props = fu.createTempFile("propertyfilecli", ".properties",
@@ -51,8 +54,7 @@ public class PropertyFileCLITest extends TestCase {
                     "-l", log.getAbsolutePath()
                 }, null, null);
             String l = FileUtils.safeReadFully(fr = new FileReader(log));
-            assertTrue("expected log to contain 'Hello, world' but was " + l,
-                       l.indexOf("Hello, world") > -1);
+            assertContains("Hello, world", l);
         } finally {
             FileUtils.close(fw);
             FileUtils.close(fr);

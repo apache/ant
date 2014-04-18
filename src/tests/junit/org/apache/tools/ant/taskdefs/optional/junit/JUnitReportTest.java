@@ -18,26 +18,35 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.net.URL;
-import org.apache.tools.ant.BuildFileTest;
+
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Small testcase for the junitreporttask.
  * First test added to reproduce an fault, still a lot to improve
  *
  */
-public class JUnitReportTest extends BuildFileTest {
+public class JUnitReportTest {
+	
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
 
-    public JUnitReportTest(String name){
-        super(name);
-    }
-
-    protected void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/junitreport.xml");
+	@Before
+    public void setUp() {
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/junitreport.xml");
     }
 
     /**
@@ -45,62 +54,53 @@ public class JUnitReportTest extends BuildFileTest {
      * output is selected via the default.
      * Needs reports1 task from junitreport.xml.
      */
+	@Test
     public void testNoFileJUnitNoFrames() {
-        executeTarget("reports1");
-        if (new File(getOutputDir(), "html/junit-noframes.html").exists())
-        {
-            fail("No file junit-noframes.html expected");
-        }
+        buildRule.executeTarget("reports1");
+        assertFalse("No file junit-noframes.html expected", (new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists()));
+        
     }
 
     public void assertIndexCreated() {
-        if (!new File(getOutputDir(), "html/index.html").exists()) {
+        if (!new File(buildRule.getProject().getProperty("output"), "html/index.html").exists()) {
             fail("No file index file found");
         }
 
     }
 
-    /**
-     * run a target, assert the index file is there, look for text in the log
-     * @param targetName target
-     * @param text optional text to look for
-     */
-    private void expectReportWithText(String targetName, String text) {
-        executeTarget(targetName);
-        assertIndexCreated();
-        if(text!=null) {
-            assertLogContaining(text);
-        }
-    }
 
-
+    @Test
     public void testEmptyFile() throws Exception {
-        expectReportWithText("testEmptyFile",
-                XMLResultAggregator.WARNING_EMPTY_FILE);
+    	buildRule.executeTarget("testEmptyFile");
+        assertIndexCreated();
+    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_EMPTY_FILE, buildRule.getLog());
     }
 
+    @Test
     public void testIncompleteFile() throws Exception {
-        expectReportWithText("testIncompleteFile",
-                XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED);
+        buildRule.executeTarget("testIncompleteFile");
+        assertIndexCreated();
+    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED, buildRule.getLog());
     }
+    
+    @Test
     public void testWrongElement() throws Exception {
-        expectReportWithText("testWrongElement",
-                XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT);
+        buildRule.executeTarget("testWrongElement");
+        assertIndexCreated();
+    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT, buildRule.getLog());
     }
 
     // Bugzilla Report 34963
+    @Test
     public void testStackTraceLineBreaks() throws Exception {
-        expectReportWithText("testStackTraceLineBreaks", null);
+        buildRule.executeTarget("testStackTraceLineBreaks");
+        assertIndexCreated();
         FileReader r = null;
         try {
-            r = new FileReader(new File(getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
+            r = new FileReader(new File(buildRule.getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
             String report = FileUtils.readFully(r);
-            assertTrue("output must contain <br>:\n" + report,
-                       report.indexOf("junit.framework.AssertionFailedError: DOEG<br>")
-                   > -1);
-            assertTrue("#51049: output must translate line breaks:\n" + report,
-                       report.indexOf("cur['line.separator'] = '\\r\\n';")
-                   > -1);
+            assertContains("output must contain <br>:\n" + report, "junit.framework.AssertionFailedError: DOEG<br>", report);
+            assertContains("#51049: output must translate line breaks:\n" + report, "cur['line.separator'] = '\\r\\n';", report);
         } finally {
             FileUtils.close(r);
         }
@@ -108,96 +108,104 @@ public class JUnitReportTest extends BuildFileTest {
 
 
     // Bugzilla Report 38477
+    @Test
     public void testSpecialSignsInSrcPath() throws Exception {
-        executeTarget("testSpecialSignsInSrcPath");
-        File reportFile = new File(getOutputDir(), "html/index.html");
+        buildRule.executeTarget("testSpecialSignsInSrcPath");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 
+    @Test
     public void testSpecialSignsInHtmlPath() throws Exception {
-        executeTarget("testSpecialSignsInHtmlPath");
-        File reportFile = new File(getOutputDir(), "html# $%\u00A7&-!report/index.html");
+        buildRule.executeTarget("testSpecialSignsInHtmlPath");
+        File reportFile = new File(buildRule.getOutputDir(), "html# $%\u00A7&-!report/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 
     //Bugzilla Report 39708
+    @Test
     public void testWithStyleFromDir() throws Exception {
-        executeTarget("testWithStyleFromDir");
-        File reportFile = new File(getOutputDir(), "html/index.html");
+        buildRule.executeTarget("testWithStyleFromDir");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 
     //Bugzilla Report 40021
+    @Test
     public void testNoFrames() throws Exception {
-        executeTarget("testNoFrames");
-        File reportFile = new File(getOutputDir(), "html/junit-noframes.html");
+        buildRule.executeTarget("testNoFrames");
+        File reportFile = new File(buildRule.getOutputDir(), "html/junit-noframes.html");
         // tests one the file object
         assertTrue("No junit-noframes.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
     //Bugzilla Report 39708
+    @Test
     public void testWithStyleFromDirAndXslImport() throws Exception {
-        executeTarget("testWithStyleFromDirAndXslImport");
-        File reportFile = new File(getOutputDir(), "html/index.html");
+        buildRule.executeTarget("testWithStyleFromDirAndXslImport");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 
+    @Test
     public void testWithStyleFromClasspath() throws Exception {
-        executeTarget("testWithStyleFromClasspath");
-        File reportFile = new File(getOutputDir(), "html/index.html");
+        buildRule.executeTarget("testWithStyleFromClasspath");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 
+    @Test
     public void testWithParams() throws Exception {
-        expectLogContaining("testWithParams", "key1=value1,key2=value2");
-        File reportFile = new File(getOutputDir(), "html/index.html");
+    	buildRule.executeTarget("testWithParams");
+    	assertContains("key1=value1,key2=value2", buildRule.getLog());
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
         assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldnt be empty.", reportFile.length() > 0 );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
         URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
         InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldnt be an empty stream.", reportStream.available() > 0);
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 }

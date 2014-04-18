@@ -17,27 +17,28 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcases for the &lt;isfailure&gt; condition.
  *
  */
-public class IsFailureTest extends BuildFileTest {
+public class IsFailureTest {
 
-    public IsFailureTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/isfailure.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/isfailure.xml");
     }
 
+    @Test
     public void testIsFailure() {
-       executeTarget("testisfailure");
+       buildRule.executeTarget("testisfailure");
     }
 
 }

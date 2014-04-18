@@ -17,28 +17,29 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Tests using an undefined reference.
  *
  * @since Ant 1.6
  */
-public class RhinoReferenceTest extends BuildFileTest {
+public class RhinoReferenceTest {
 
-    public RhinoReferenceTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject(
-            "src/etc/testcases/taskdefs/optional/script_reference.xml");
+        buildRule.configureProject(
+                "src/etc/testcases/taskdefs/optional/script_reference.xml");
     }
 
+    @Test
     public void testScript() {
-        executeTarget("script");
+        buildRule.executeTarget("script");
     }
 }

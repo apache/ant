@@ -17,12 +17,15 @@
  */
 package org.example.junit;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
-public class Timeout extends TestCase {
+public class Timeout {
+    @Test
     public void testTimeout() throws InterruptedException {
         Thread.sleep(5000);
     }
+    @After
     public void tearDown() {
         System.out.println("tearDown called on Timeout");
     }

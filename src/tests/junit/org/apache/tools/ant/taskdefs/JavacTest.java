@@ -18,35 +18,31 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.taskdefs.compilers.Javac13;
 import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
-import org.apache.tools.ant.types.Path;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testcase for <javac>.
  *
  */
-public class JavacTest extends TestCase {
+public class JavacTest {
 
     private Project project;
     private Javac javac;
 
-    public JavacTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         project = new Project();
         project.init();
@@ -57,6 +53,7 @@ public class JavacTest extends TestCase {
     /**
      * Test setting the name of the javac executable.
      */
+    @Test
     public void testForkedExecutableName() {
         assertNull("no fork means no executable", javac.getJavacExecutable());
 
@@ -65,14 +62,13 @@ public class JavacTest extends TestCase {
 
         javac.setFork(true);
         assertNotNull("normal fork", javac.getJavacExecutable());
-        assertTrue("name should contain \"javac\"",
-                   javac.getJavacExecutable().indexOf("javac") > -1);
+        assertContains("name should contain \"javac\"", "javac",
+                   javac.getJavacExecutable());
 
         project.setProperty("build.compiler", "extJavac");
         javac.setFork(false);
         assertNotNull("fork via property", javac.getJavacExecutable());
-        assertTrue("name should contain \"javac\"",
-                   javac.getJavacExecutable().indexOf("javac") > -1);
+        assertContains("name should contain \"javac\"", "javac", javac.getJavacExecutable());
 
         project.setProperty("build.compiler", "whatever");
         assertNull("no fork and not extJavac means no executable",
@@ -87,6 +83,7 @@ public class JavacTest extends TestCase {
     /**
      * Test nested compiler args.
      */
+    @Test
     public void testCompilerArg() {
         String[] args = javac.getCurrentCompilerArgs();
         assertNotNull(args);
@@ -129,6 +126,7 @@ public class JavacTest extends TestCase {
      * Test nested compiler args in the fork="true" and
      * implementation="extJavac" case.
      */
+    @Test
     public void testCompilerArgForForkAndExtJavac() {
         Javac.ImplementationSpecificArgument arg = javac.createCompilerArg();
         String ford = "Ford";
@@ -145,6 +143,7 @@ public class JavacTest extends TestCase {
     /**
      * Test compiler attribute.
      */
+    @Test
     public void testCompilerAttribute() {
         // check defaults
         String compiler = javac.getCompiler();
@@ -194,6 +193,7 @@ public class JavacTest extends TestCase {
         assertEquals("jvc", compiler);
     }
 
+    @Test
     public void testCompilerAdapter() {
         javac.setCompiler("javac1.4");
 
@@ -209,30 +209,36 @@ public class JavacTest extends TestCase {
         assertTrue(adapter instanceof JavacExternal);
     }
 
+    @Test
     public void testSourceNoDefault() {
         assertNull(javac.getSource());
     }
 
+    @Test
     public void testSourceWithDefault() {
         project.setNewProperty("ant.build.javac.source", "1.4");
         assertEquals("1.4", javac.getSource());
     }
 
+    @Test
     public void testSourceOverridesDefault() {
         project.setNewProperty("ant.build.javac.source", "1.4");
         javac.setSource("1.5");
         assertEquals("1.5", javac.getSource());
     }
 
+    @Test
     public void testTargetNoDefault() {
         assertNull(javac.getTarget());
     }
 
+    @Test
     public void testTargetWithDefault() {
         project.setNewProperty("ant.build.javac.target", "1.4");
         assertEquals("1.4", javac.getTarget());
     }
 
+    @Test
     public void testTargetOverridesDefault() {
         project.setNewProperty("ant.build.javac.target", "1.4");
         javac.setTarget("1.5");

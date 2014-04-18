@@ -18,17 +18,17 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @since Ant 1.6
  */
-public class LoaderUtilsTest extends TestCase {
+public class LoaderUtilsTest {
 
-    public LoaderUtilsTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testGetXyzSource() {
         File f1 = LoaderUtils.getClassSource(LoaderUtils.class);
         assertNotNull(f1);

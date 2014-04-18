@@ -23,67 +23,100 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.tools.ant.BuildFileTest;
 
-/**
- */
-public class FilterTest extends BuildFileTest {
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-    public FilterTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+
+public class FilterTest {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/filter.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/filter.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument missing");
+        try {
+            buildRule.executeTarget("test1");
+            fail("required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument missing");
+        try {
+            buildRule.executeTarget("test2");
+            fail("required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument missing");
+        try {
+            buildRule.executeTarget("test3");
+            fail("required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test4() {
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
         assertEquals("2000",
                      getFilteredFile("5", "filtered.tmp"));
     }
 
 
+    @Test
     public void test6() {
-        executeTarget("test6");
+        buildRule.executeTarget("test6");
         assertEquals("2000",
                      getFilteredFile("6", "taskdefs.tmp/filter1.txt"));
     }
 
+    @Test
     public void test7() {
-        executeTarget("test7");
+        buildRule.executeTarget("test7");
         assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
                      getFilteredFile("7", "filtered.tmp"));
     }
 
+    @Test
     public void test8() {
-        executeTarget("test8");
+        buildRule.executeTarget("test8");
         assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
                      getFilteredFile("8", "taskdefs.tmp/filter2.txt"));
     }
 
+    @Test
     public void test9() {
-        executeTarget("test9");
+        buildRule.executeTarget("test9");
         assertEquals("included",
                     getFilteredFile("9", "taskdefs.tmp/filter3.txt"));
     }
@@ -91,7 +124,7 @@ public class FilterTest extends BuildFileTest {
     private String getFilteredFile(String testNumber, String filteredFile) {
 
         String line = null;
-        File f = new File(getProjectDir(), filteredFile);
+        File f = new File(buildRule.getProject().getBaseDir(), filteredFile);
         if (!f.exists()) {
             fail("filter test"+testNumber+" failed");
         } else {

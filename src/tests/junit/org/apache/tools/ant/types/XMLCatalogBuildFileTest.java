@@ -18,25 +18,24 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * BuildFileTest testcases for org.apache.tools.ant.types.XMLCatalog
+ * testcases for org.apache.tools.ant.types.XMLCatalog
  *
  * @see org.apache.tools.ant.types.XMLCatalogTest
  *
  */
-public class XMLCatalogBuildFileTest extends BuildFileTest {
+public class XMLCatalogBuildFileTest {
 
-    public XMLCatalogBuildFileTest(String name) {
-        super(name);
-    }
+     @Rule
+     public BuildFileRule buildRule = new BuildFileRule();
 
-    public void setUp() {
-    }
 
-    public void tearDown() {
-    }
 
     //
     // Ensure that an external entity resolves as expected with NO
@@ -45,10 +44,11 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // Transform an XML file that refers to the entity into a text
     // file, stuff result into property: val1
     //
+    @Test
     public void testEntityNoCatalog() {
-        configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testentitynocatalog", "val1",
-                          "A stitch in time saves nine");
+        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
+        buildRule.executeTarget("testentitynocatalog");
+        assertEquals("A stitch in time saves nine", buildRule.getProject().getProperty("val1"));
     }
 
     //
@@ -59,10 +59,11 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // file, entity is listed in the XMLCatalog pointing to a
     // different file.  Stuff result into property: val2
     //
+    @Test
     public void testEntityWithCatalog() {
-        configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testentitywithcatalog", "val2",
-                          "No news is good news");
+        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
+        buildRule.executeTarget("testentitywithcatalog");
+        assertEquals("No news is good news", buildRule.getProject().getProperty("val2"));
     }
 
     //
@@ -73,10 +74,11 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // via the document() function.  The _second_ XML file refers to an entity.
     // Stuff result into the property: val3
     //
+    @Test
     public void testDocumentNoCatalog() {
-        configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testdocumentnocatalog", "val3",
-                          "A stitch in time saves nine");
+        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
+        buildRule.executeTarget("testdocumentnocatalog");
+        assertEquals("A stitch in time saves nine", buildRule.getProject().getProperty("val3"));
     }
 
     //
@@ -87,10 +89,10 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // via the document() function.  The _second_ XML file refers to an entity.
     // The entity is listed in the XMLCatalog pointing to a different file.
     // Stuff result into the property: val4
-    //
+    @Test
     public void testDocumentWithCatalog() {
-        configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testdocumentwithcatalog", "val4",
-                          "No news is good news");
+        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
+        buildRule.executeTarget("testdocumentwithcatalog");
+        assertEquals("No news is good news", buildRule.getProject().getProperty("val4"));
     }
 }

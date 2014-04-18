@@ -18,25 +18,35 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  */
-public class LoaderRefTest extends BuildFileTest {
+public class LoaderRefTest {
 
-    public LoaderRefTest(String name) {
-        super(name);
-    }
-
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+	
+	@Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/loaderref/loaderref.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/core/loaderref/loaderref.xml");
+        buildRule.executeTarget("setUp");
     }
 
     // override allowed on <available>
-    public void testBadRef() {
-        expectBuildExceptionContaining("testbadref", "Should fail due to ref "
-            + "not being a class loader", "does not reference a class loader");
+    @Test
+	public void testBadRef() {
+    	try {
+    		buildRule.executeTarget("testbadref");
+    		fail("BuildRule should have thrown an exception due to a bad classloader being specified");
+    	} catch (BuildException ex) {
+    		assertContains("Should fail due to ref not being a class loader", "does not reference a class loader", ex.getMessage());
+    	}
     }
 }
 

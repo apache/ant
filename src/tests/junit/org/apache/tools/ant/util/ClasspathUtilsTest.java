@@ -21,31 +21,31 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 
 /**
  * Test case for ClasspathUtils
  *
  */
-public class ClasspathUtilsTest extends TestCase {
+public class ClasspathUtilsTest {
 
     private Project p;
 
-    public ClasspathUtilsTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         p = new Project();
         p.init();
     }
 
 
+    @Test
     public void testOnlyOneInstance() {
         Enumeration enumeration;
         String list = "";
@@ -55,7 +55,7 @@ public class ClasspathUtilsTest extends TestCase {
                 "org/apache/tools/ant/taskdefs/defaults.properties");
         } catch (IOException e) {
             throw new BuildException(
-                "Could not get the defaults.properties resource");
+                "Could not get the defaults.properties resource", e);
         }
         int count = 0;
         while (enumeration.hasMoreElements()) {

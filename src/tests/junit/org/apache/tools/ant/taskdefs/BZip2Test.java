@@ -18,34 +18,44 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.bzip2.CBZip2InputStream;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class BZip2Test extends BuildFileTest {
+public class BZip2Test {
 
-    public BZip2Test(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/bzip2.xml");
-        executeTarget("prepare");
+        buildRule.configureProject("src/etc/testcases/taskdefs/bzip2.xml");
+        buildRule.executeTarget("prepare");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void testRealTest() throws IOException {
-        executeTarget("realTest");
+        buildRule.executeTarget("realTest");
 
         // doesn't work: Depending on the compression engine used,
         // compressed bytes may differ. False errors would be
@@ -57,8 +67,8 @@ public class BZip2Test extends BuildFileTest {
         // We have to compare the decompressed content instead:
 
         File originalFile =
-            project.resolveFile("expected/asf-logo-huge.tar.bz2");
-        File actualFile   = project.resolveFile("asf-logo-huge.tar.bz2");
+            buildRule.getProject().resolveFile("expected/asf-logo-huge.tar.bz2");
+        File actualFile   = buildRule.getProject().resolveFile("asf-logo-huge.tar.bz2");
 
         InputStream originalIn =
             new BufferedInputStream(new FileInputStream(originalFile));
@@ -92,13 +102,15 @@ public class BZip2Test extends BuildFileTest {
         actualIn.close();
     }
 
+    @Test
     public void testResource(){
-        executeTarget("realTestWithResource");
+        buildRule.executeTarget("realTestWithResource");
     }
 
+    @Test
     public void testDateCheck(){
-        executeTarget("testDateCheck");
-        String log = getLog();
+        buildRule.executeTarget("testDateCheck");
+        String log = buildRule.getLog();
         assertTrue(
             "Expecting message ending with 'asf-logo.gif.bz2 is up to date.' but got '" + log + "'",
             log.endsWith("asf-logo.gif.bz2 is up to date."));

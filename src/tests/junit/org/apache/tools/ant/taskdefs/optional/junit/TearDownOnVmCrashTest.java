@@ -18,21 +18,36 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.apache.tools.ant.AntAssert.assertNotContains;
+import static org.junit.Assert.assertEquals;
 
-public class TearDownOnVmCrashTest extends BuildFileTest {
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+public class TearDownOnVmCrashTest {
+	
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+
+	@Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/junit/teardownlistener.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/junit/teardownlistener.xml");
     }
 
+	@Test
     public void testNoTeardown() {
-        expectPropertySet("testNoTeardown", "error");
-        assertOutputNotContaining(null, "tearDown called on Timeout");
+        buildRule.executeTarget("testNoTeardown");
+        assertEquals("true", buildRule.getProject().getProperty("error"));
+        assertNotContains("tearDown called on Timeout", buildRule.getOutput());
     }
 
+	@Test
     public void testTeardown() {
-        expectPropertySet("testTeardown", "error");
-        assertOutputContaining("tearDown called on Timeout");
+		buildRule.executeTarget("testTeardown");
+		assertEquals("true", buildRule.getProject().getProperty("error"));
+		assertContains("tearDown called on Timeout", buildRule.getOutput());
     }
 }

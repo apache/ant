@@ -20,34 +20,28 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Mapper;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /**
  * Tests Depend Selectors
  *
  */
-public class DependSelectorTest extends BaseSelectorTest {
+public class DependSelectorTest {
 
-    public DependSelectorTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
-    /**
-     * Factory method from base class. This is overriden in child
-     * classes to return a specific Selector class.
-     */
-    public BaseSelector getInstance() {
-        return new DependSelector();
-    }
-
-    /**
-     * Test the code that validates the selector.
-     */
-    public void testValidate() {
-        DependSelector s = (DependSelector)getInstance();
+    @Test
+    public void testValidateSingleMapper() {
         try {
+            DependSelector s = new DependSelector();
             s.createMapper();
             s.createMapper();
             fail("DependSelector allowed more than one nested mapper.");
@@ -55,10 +49,14 @@ public class DependSelectorTest extends BaseSelectorTest {
             assertEquals("Cannot define more than one mapper",
                     be1.getMessage());
         }
+    }
 
-        s = (DependSelector)getInstance();
+
+    @Test
+     public void testValidateRequiredFields() {
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            DependSelector s = new DependSelector();
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DependSelector did not check for required fields");
         } catch (BuildException be2) {
             assertEquals("The targetdir attribute is required.",
@@ -67,103 +65,121 @@ public class DependSelectorTest extends BaseSelectorTest {
 
     }
 
-    /**
-     * Tests to make sure that the selector is selecting files correctly.
-     */
-    public void testSelectionBehaviour() {
-        DependSelector s;
-        String results;
-        File subdir;
-        Mapper m;
+    @Test
+    public void testNoMapper() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(selectorRule.getBeddir());
+
+        String results = selectorRule.selectionString(s);
+        assertEquals("FFFFFFFFFFFF", results);
+    }
+
+    @Test
+    public void testIdentityMapper() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(selectorRule.getBeddir());
+
         Mapper.MapperType identity = new Mapper.MapperType();
         identity.setValue("identity");
-        Mapper.MapperType glob = new Mapper.MapperType();
-        glob.setValue("glob");
+
+        Mapper m = s.createMapper();
+        m.setType(identity);
+
+        String results = selectorRule.selectionString(s);
+        assertEquals("FFFFFFFFFFFF", results);
+    }
+
+    @Test
+    public void testMergeMapper() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(selectorRule.getBeddir());
+
         Mapper.MapperType merge = new Mapper.MapperType();
         merge.setValue("merge");
 
-        try {
-            makeBed();
+        Mapper m = s.createMapper();
+        m.setType(merge);
+        m.setTo("asf-logo.gif.gz");
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(beddir);
-            results = selectionString(s);
-            assertEquals("FFFFFFFFFFFF", results);
+        String results = selectorRule.selectionString(s);
+        assertEquals("TFFFFTTTFFF", results.substring(0,11));
+    }
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(beddir);
-            m = s.createMapper();
-            m.setType(identity);
-            results = selectionString(s);
-            assertEquals("FFFFFFFFFFFF", results);
+    @Test
+    public void testMergeMapper2() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(selectorRule.getBeddir());
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(beddir);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.gz");
-            results = selectionString(s);
-            assertEquals("TFFFFTTTFFF", results.substring(0,11));
+        Mapper.MapperType merge = new Mapper.MapperType();
+        merge.setValue("merge");
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(beddir);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.bz2");
-            results = selectionString(s);
-            assertEquals("TTFTTTTTTTTT", results);
+        Mapper m = s.createMapper();
+        m.setType(merge);
+        m.setTo("asf-logo.gif.bz2");
+        String results = selectorRule.selectionString(s);
+        assertEquals("TTFTTTTTTTTT", results);
+    }
 
-            // Test for path relative to project base directory
-            s = (DependSelector)getInstance();
-            subdir = new File("selectortest/tar/bz2");
-            s.setTargetdir(subdir);
-            m = s.createMapper();
-            m.setType(glob);
-            m.setFrom("*.bz2");
-            m.setTo("*.tar.bz2");
-            results = selectionString(s);
-            assertEquals("FFTFFFFFFTTF", results);
+    @Test
+    public void testGlobMapperRelativePath() {
+        DependSelector s = new DependSelector();
+        File subdir = new File("selectortest/tar/bz2");
+        s.setTargetdir(subdir);
 
-            s = (DependSelector)getInstance();
-            subdir = new File(beddir,"tar/bz2");
-            s.setTargetdir(subdir);
-            m = s.createMapper();
-            m.setType(glob);
-            m.setFrom("*.bz2");
-            m.setTo("*.tar.bz2");
-            results = selectionString(s);
-            assertEquals("FFFFFFFFFTTF", results);
+        Mapper.MapperType glob = new Mapper.MapperType();
+        glob.setValue("glob");
 
-            try {
-                makeMirror();
+        Mapper m = s.createMapper();
+        m.setType(glob);
+        m.setFrom("*.bz2");
+        m.setTo("*.tar.bz2");
 
-                s = (DependSelector)getInstance();
-                File testdir = new File(getOutputDir(), "selectortest2");
-                s.setTargetdir(testdir);
-                results = selectionString(s);
-                assertEquals("FFFTTFFFFFFF", results);
+        String results = selectorRule.selectionString(s);
+        assertEquals("FFTFFFFFFTTF", results);
+    }
 
-                s = (DependSelector)getInstance();
-                testdir = new File(getOutputDir(), "selectortest2/tar/bz2");
-                s.setTargetdir(testdir);
-                m = s.createMapper();
-                m.setType(glob);
-                m.setFrom("*.bz2");
-                m.setTo("*.tar.bz2");
-                results = mirrorSelectionString(s);
-                assertEquals("FFFFFFFFFTTF", results);
-                results = selectionString(s);
-                assertEquals("FFFFFFFFFTTF", results);
-            }
-            finally {
-                cleanupMirror();
-            }
+    @Test
+    public void testRestrictedGlobMapper() {
+        DependSelector s = new DependSelector();
+        File subdir = new File(selectorRule.getBeddir(), "tar/bz2");
+        s.setTargetdir(subdir);
 
-        }
-        finally {
-            cleanupBed();
-        }
+        Mapper.MapperType glob = new Mapper.MapperType();
+        glob.setValue("glob");
 
+        Mapper m = s.createMapper();
+        m.setType(glob);
+        m.setFrom("*.bz2");
+        m.setTo("*.tar.bz2");
+        String results = selectorRule.selectionString(s);
+        assertEquals("FFFFFFFFFTTF", results);
+    }
+
+    @Test
+    public void testSelectionNoMapper() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(new File(selectorRule.getOutputDir(), "selectortest2"));
+        String results = selectorRule.selectionString(s);
+        assertEquals("FFFTTFFFFFFF", results);
+    }
+
+
+    @Test
+    public void testMirroredSelection() {
+        DependSelector s = new DependSelector();
+        s.setTargetdir(new File(selectorRule.getOutputDir(), "selectortest2/tar/bz2"));
+
+        Mapper.MapperType glob = new Mapper.MapperType();
+        glob.setValue("glob");
+
+        Mapper m = s.createMapper();
+        m.setType(glob);
+        m.setFrom("*.bz2");
+        m.setTo("*.tar.bz2");
+        String results = selectorRule.mirrorSelectionString(s);
+        assertEquals("FFFFFFFFFTTF", results);
+        results = selectorRule.selectionString(s);
+        assertEquals("FFFFFFFFFTTF", results);
     }
 
 }

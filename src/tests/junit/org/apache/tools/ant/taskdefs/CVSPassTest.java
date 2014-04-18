@@ -19,14 +19,24 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.BuildFileTest;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests CVSLogin task.
  *
  */
-public class CVSPassTest extends BuildFileTest {
+public class CVSPassTest {
     private final String EOL = System.getProperty("line.separator");
     private static final String JAKARTA_URL =
         ":pserver:anoncvs@jakarta.apache.org:/home/cvspublic Ay=0=h<Z";
@@ -34,63 +44,69 @@ public class CVSPassTest extends BuildFileTest {
         ":pserver:anoncvs@xml.apache.org:/home/cvspublic Ay=0=h<Z";
     private static final String TIGRIS_URL =
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
 
-    public CVSPassTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/cvspass.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/cvspass.xml");
     }
 
+    @Test
     public void testNoCVSRoot() {
         try{
-            executeTarget("test1");
+            buildRule.executeTarget("test1");
             fail("BuildException not thrown");
         }catch(BuildException e){
             assertEquals("cvsroot is required", e.getMessage());
         }
     }
 
+    @Test
     public void testNoPassword() {
         try{
-            executeTarget("test2");
+            buildRule.executeTarget("test2");
             fail("BuildException not thrown");
         }catch(BuildException e){
             assertEquals("password is required", e.getMessage());
         }
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void testPassFile() throws Exception {
-        executeTarget("test3");
-        File f = new File(getProjectDir(), "testpassfile.tmp");
+        buildRule.executeTarget("test3");
+        File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
         assertTrue( "Passfile "+f+" not created", f.exists());
 
-        assertEquals(JAKARTA_URL+EOL, readFile(f));
+        assertEquals(JAKARTA_URL+EOL, FileUtilities.getFileContents(f));
 
     }
 
+    @Test
     public void testPassFileDuplicateEntry() throws Exception {
-        executeTarget("test4");
-        File f = new File(getProjectDir(), "testpassfile.tmp");
+        buildRule.executeTarget("test4");
+        File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
         assertTrue( "Passfile "+f+" not created", f.exists());
 
         assertEquals(
             JAKARTA_URL+ EOL+
             TIGRIS_URL+ EOL,
-            readFile(f));
+            FileUtilities.getFileContents(f));
     }
 
+    @Test
     public void testPassFileMultipleEntry() throws Exception {
-        executeTarget("test5");
-        File f = new File(getProjectDir(), "testpassfile.tmp");
+        buildRule.executeTarget("test5");
+        File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
         assertTrue( "Passfile "+f+" not created", f.exists());
 
@@ -98,25 +114,6 @@ public class CVSPassTest extends BuildFileTest {
             JAKARTA_URL+ EOL+
             XML_URL+ EOL+
             TIGRIS_URL+ EOL,
-            readFile(f));
-    }
-
-    private String readFile(File f) throws Exception {
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader(f));
-
-            StringBuffer buf = new StringBuffer();
-            String line=null;
-            while((line=reader.readLine())!=null){
-                buf.append(line + EOL);
-            }
-            return buf.toString();
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
+            FileUtilities.getFileContents(f));
     }
 }

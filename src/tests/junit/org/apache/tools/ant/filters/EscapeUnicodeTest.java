@@ -21,28 +21,30 @@ package org.apache.tools.ant.filters;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class EscapeUnicodeTest extends BuildFileTest {
-    
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+import static org.junit.Assert.assertEquals;
 
-    public EscapeUnicodeTest(String name) {
-        super(name);
-    }
+public class EscapeUnicodeTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/build.xml");
+        buildRule.configureProject("src/etc/testcases/filters/build.xml");
     }
 
+    @Test
     public void testEscapeUnicode() throws IOException {
-        executeTarget("testEscapeUnicode");
-        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(), "expected/escapeunicode.test");
-        File result = new File(getProject().getProperty("output"), "escapeunicode.test");
-        assertTrue(FILE_UTILS.contentEquals(expected, result));
+        buildRule.executeTarget("testEscapeUnicode");
+        File expected = buildRule.getProject().resolveFile("expected/escapeunicode.test");
+        File result = new File(buildRule.getProject().getProperty("output"), "escapeunicode.test");
+        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
 }

@@ -18,14 +18,14 @@
 
 package org.apache.tools.ant;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ProjectComponentTest extends TestCase {
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
-    public ProjectComponentTest(String name) {
-        super(name);
-    }
+public class ProjectComponentTest {
 
+    @Test
     public void testClone() throws CloneNotSupportedException {
         Project expectedProject = new Project();
         Location expectedLocation = new Location("foo");

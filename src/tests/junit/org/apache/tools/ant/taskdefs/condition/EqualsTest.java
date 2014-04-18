@@ -18,18 +18,17 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testcase for the &lt;equals&gt; condition.
  *
  */
-public class EqualsTest extends TestCase {
+public class EqualsTest {
 
-    public EqualsTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testTrim() {
         Equals eq = new Equals();
         eq.setArg1("a");
@@ -43,6 +42,7 @@ public class EqualsTest extends TestCase {
         assertTrue(eq.eval());
     }
 
+    @Test
     public void testCaseSensitive() {
         Equals eq = new Equals();
         eq.setArg1("a");

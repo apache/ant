@@ -18,27 +18,38 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class DeltreeTest extends BuildFileTest {
+import static org.junit.Assert.fail;
 
-    public DeltreeTest(String name) {
-        super(name);
-    }
+public class DeltreeTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/deltree.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/deltree.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+            buildRule.executeTarget("test1");
+            fail("required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test2() {
         // We try to delete the directory created in CopydirTest
-        executeTarget("test2");
+        buildRule.executeTarget("test2");
     }
 
 }

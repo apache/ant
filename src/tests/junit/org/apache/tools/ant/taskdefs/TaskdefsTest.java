@@ -21,7 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @deprecated use BuildFileTest instead.
+ * @deprecated use {@link org.apache.tools.ant.BuildFileRule} instead.
  */
 public abstract class TaskdefsTest extends BuildFileTest {
 

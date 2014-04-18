@@ -18,76 +18,92 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 
-/**
- */
-public class ChecksumTest extends BuildFileTest {
+public class ChecksumTest {
 
-    public ChecksumTest(String name) {
-        super(name);
-    }
-
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/checksum.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/checksum.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void testCreateMd5() throws IOException {
-        executeTarget("createMd5");
+        buildRule.executeTarget("createMd5");
     }
 
+    @Test
     public void testCreateMD5SUMformat() throws IOException {
-        executeTarget("createMD5SUMformat");
+        buildRule.executeTarget("createMD5SUMformat");
     }
-    
+
+    @Test
     public void testCreateSVFformat() throws IOException {
-        executeTarget("createSVFformat");
+        buildRule.executeTarget("createSVFformat");
     }
-    
+
+    @Test
     public void testCreatePattern() throws IOException {
-        executeTarget("createPattern");
+        buildRule.executeTarget("createPattern");
     }
 
+    @Test
     public void testSetProperty() {
-        executeTarget("setProperty");
+        buildRule.executeTarget("setProperty");
     }
 
+    @Test
     public void testVerifyTotal() {
-        executeTarget("verifyTotal");
+        buildRule.executeTarget("verifyTotal");
     }
 
+    @Test
     public void testVerifyTotalRC() {
-        executeTarget("verifyTotalRC");
+        buildRule.executeTarget("verifyTotalRC");
     }
 
+    @Test
     public void testVerifyChecksumdir() {
-        executeTarget("verifyChecksumdir");
+        buildRule.executeTarget("verifyChecksumdir");
     }
 
+    @Test
     public void testVerifyAsTask() {
-        executeTarget("verifyAsTask");
+        buildRule.executeTarget("verifyAsTask");
     }
 
+    @Test
     public void testVerifyMD5SUMAsTask() {
-        executeTarget("verifyMD5SUMAsTask");
+        buildRule.executeTarget("verifyMD5SUMAsTask");
     }
 
+    @Test
     public void testVerifyAsCondition() {
-        executeTarget("verifyAsCondition");
+        buildRule.executeTarget("verifyAsCondition");
     }
 
+    @Test
     public void testVerifyFromProperty() {
-        executeTarget("verifyFromProperty");
+        buildRule.executeTarget("verifyFromProperty");
     }
 
+    @Test
     public void testVerifyChecksumdirNoTotal() {
-        executeTarget("verifyChecksumdirNoTotal");
+        buildRule.executeTarget("verifyChecksumdirNoTotal");
     }
 
 }

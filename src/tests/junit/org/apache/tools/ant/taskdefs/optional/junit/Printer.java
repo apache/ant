@@ -17,14 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  */
-public class Printer extends TestCase {
+public class Printer {
 
-    public Printer(String name) {
-        super(name);
+    public Printer() {
         System.err.println("constructor print to System.err");
         System.out.println("constructor print to System.out");
     }
@@ -34,6 +33,7 @@ public class Printer extends TestCase {
         System.out.println("static print to System.out");
     }
 
+    @Test
     public void testNoCrash() {
         System.err.println("method print to System.err");
         System.out.println("method print to System.out");

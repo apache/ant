@@ -17,35 +17,44 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
+
 /**
  * JUnit Testcase for the optional replaceregexp task.
  *
  */
-public class ReplaceRegExpTest extends BuildFileTest {
+public class ReplaceRegExpTest {
     private static final String PROJECT_PATH = "src/etc/testcases/taskdefs/optional";
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     
-    public ReplaceRegExpTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject(PROJECT_PATH + "/replaceregexp.xml");
+        buildRule.configureProject(PROJECT_PATH + "/replaceregexp.xml");
     }
 
+    @Test
     public void testReplace() throws IOException {
         Properties original = new Properties();
         FileInputStream propsFile = null;
         try {
-            propsFile = new FileInputStream(new File(project.getBaseDir() + "/replaceregexp.properties"));
+            propsFile = new FileInputStream(new File(buildRule.getProject().getBaseDir() + "/replaceregexp.properties"));
             original.load(propsFile);
         } finally {
             if (propsFile != null) {
@@ -56,62 +65,68 @@ public class ReplaceRegExpTest extends BuildFileTest {
 
         assertEquals("Def", original.get("OldAbc"));
 
-        executeTarget("testReplace");
+        buildRule.executeTarget("testReplace");
 
         Properties after = new Properties();
         try {
-            propsFile = new FileInputStream(new File(getOutputDir(), "test.properties"));
+            propsFile = new FileInputStream(new File(buildRule.getOutputDir(), "test.properties"));
             after.load(propsFile);
         } finally {
             if (propsFile != null) {
                 propsFile.close();
-                propsFile = null;
             }
         }
 
         assertNull(after.get("OldAbc"));
         assertEquals("AbcDef", after.get("NewProp"));
     }
+
     // inspired by bug 22541
+    @Test
     public void testDirectoryDateDoesNotChange() {
-        executeTarget("touchDirectory");
-        File myFile = getOutputDir();
+        buildRule.executeTarget("touchDirectory");
+        File myFile = buildRule.getOutputDir();
         long timeStampBefore = myFile.lastModified();
-        executeTarget("testDirectoryDateDoesNotChange");
+        buildRule.executeTarget("testDirectoryDateDoesNotChange");
         long timeStampAfter = myFile.lastModified();
         assertEquals("directory date should not change",
             timeStampBefore, timeStampAfter);
     }
+
+    @Test
     public void testDontAddNewline1() throws IOException {
-        executeTarget("testDontAddNewline1");
-        assertTrue("Files match",
-                   FILE_UTILS
-                   .contentEquals(new File(getOutputDir(), "test.properties"),
-                                  new File(getProjectDir(), "replaceregexp2.result.properties")));
+        buildRule.executeTarget("testDontAddNewline1");
+        assertEquals(FileUtilities.getFileContents(new File(buildRule.getOutputDir(), "test.properties")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getBaseDir(), "replaceregexp2.result.properties")));
     }
 
+    @Test
     public void testDontAddNewline2() throws IOException {
-        executeTarget("testDontAddNewline2");
-        assertTrue("Files match",
-                   FILE_UTILS
-                   .contentEquals(new File(getOutputDir(), "test.properties"),
-                                  new File(getProjectDir(), "replaceregexp2.result.properties")));
+        buildRule.executeTarget("testDontAddNewline2");
+        assertEquals(FileUtilities.getFileContents(new File(buildRule.getOutputDir(), "test.properties")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getBaseDir(), "replaceregexp2.result.properties")));
     }
 
+    @Test
     public void testNoPreserveLastModified() throws Exception {
-        executeTarget("lastModifiedSetup");
-        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
-        Thread.sleep(3000);
-        executeTarget("testNoPreserve");
-        assertTrue(ts1 < new File(getOutputDir(), "test.txt").lastModified());
+        buildRule.executeTarget("lastModifiedSetup");
+        File testFile = new File(buildRule.getOutputDir(), "test.txt");
+        assumeTrue(testFile.setLastModified(testFile.lastModified()
+                - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
+        long ts1 = testFile.lastModified();
+        buildRule.executeTarget("testNoPreserve");
+        assertTrue(ts1 < testFile.lastModified());
     }
 
+    @Test
     public void testPreserveLastModified() throws Exception {
-        executeTarget("lastModifiedSetup");
-        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
-        Thread.sleep(3000);
-        executeTarget("testPreserve");
-        assertTrue(ts1 == new File(getOutputDir(), "test.txt").lastModified());
+        buildRule.executeTarget("lastModifiedSetup");
+        File testFile = new File(buildRule.getOutputDir(), "test.txt");
+        assumeTrue(testFile.setLastModified(testFile.lastModified()
+                - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
+        long ts1 = testFile.lastModified();
+        buildRule.executeTarget("testPreserve");
+        assertEquals(ts1 , testFile.lastModified());
     }
 
 }// ReplaceRegExpTest

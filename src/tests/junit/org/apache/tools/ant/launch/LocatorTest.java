@@ -17,39 +17,27 @@
  */
 package org.apache.tools.ant.launch;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
 
 /** Test the locator in the ant-launch JAR */
-public class LocatorTest extends TestCase {
+public class LocatorTest {
     private boolean windows;
     private boolean unix;
     private static final String LAUNCHER_JAR = "//morzine/slo/Java/Apache/ant/lib/ant-launcher.jar";
     private static final String SHARED_JAR_URI = "jar:file:"+ LAUNCHER_JAR +"!/org/apache/tools/ant/launch/Launcher.class";
 
-    /**
-     * No-arg constructor to enable serialization. This method is not intended to be used by mere mortals without calling
-     * setName().
-     */
-    public LocatorTest() {
-    }
 
-    /** Constructs a test case with the given name.
-     * @param name
-     */
-    public LocatorTest(String name) {
-        super(name);
-    }
-
-    /**
-     * Sets up the fixture, for example, open a network connection.
-     * This method is called before a test is executed.
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         windows = Os.isFamily(Os.FAMILY_DOS);
         unix = Os.isFamily(Os.FAMILY_UNIX);
     }
@@ -105,26 +93,27 @@ public class LocatorTest extends TestCase {
                 "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
-    /**
-     * This is not being tested as we don't appear to generate paths like this in the launcher
-     * @throws Exception
-     */
-    public void NotestTripleForwardSlashNetworkURI() throws Exception {
+    @Ignore("We don't appear to generate paths like this in the launcher")
+    @Test
+    public void testTripleForwardSlashNetworkURI() throws Exception {
         resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar",
                 "///PC03/jclasses/lib/ant-1.7.0.jar",
                 "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
+    @Test
     public void testUnixNetworkPath() throws Exception {
         resolveTo("file://cluster/home/ant/lib",
                 "//cluster/home/ant/lib",
                 "\\\\cluster\\home\\ant\\lib");
     }
 
+    @Test
     public void testUnixPath() throws Exception {
         resolveTo("file:/home/ant/lib", "/home/ant/lib", null);
     }
 
+    @Test
     public void testSpacedURI() throws Exception {
         resolveTo("file:C:\\Program Files\\Ant\\lib",
                 "C:\\Program Files\\Ant\\lib",
@@ -135,6 +124,7 @@ public class LocatorTest extends TestCase {
      * Bug 42275; Ant failing to run off a remote share
      * @throws Throwable if desired
      */
+    @Test
     public void testAntOnRemoteShare() throws Throwable {
         String resolved=Locator.fromJarURI(SHARED_JAR_URI);
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, unix);
@@ -147,6 +137,7 @@ public class LocatorTest extends TestCase {
      *
      * @throws Throwable if desired
      */
+    @Test
     public void testFileFromRemoteShare() throws Throwable {
         String resolved = Locator.fromJarURI(SHARED_JAR_URI);
         File f = new File(resolved);
@@ -156,17 +147,20 @@ public class LocatorTest extends TestCase {
         }
     }
 
+    @Test
     public void testHttpURI() throws Exception {
         String url = "http://ant.apache.org";
         try {
             Locator.fromURI(url);
+            fail("Exception should have been thrown");
         } catch (IllegalArgumentException e) {
             String message = e.getMessage();
-            assertTrue(message, message.indexOf(Locator.ERROR_NOT_FILE_URI) >= 0);
-            assertTrue(message, message.indexOf(url) >= 0);
+            assertContains(Locator.ERROR_NOT_FILE_URI, message);
+            assertContains(url, message);
         }
     }
 
+    @Test
     public void testInternationalURI() throws Exception {
         String result = assertResolves("L\u00f6wenbrau.aus.M\u00fcnchen");
         char umlauted = result.charAt(1);
@@ -178,6 +172,7 @@ public class LocatorTest extends TestCase {
         assertEquals("file:/tmp/hezky \u010Desky", Locator.decodeUri("file:/tmp/hezky%20\u010Desky")); // non-ISO-8859-1 variant
     }
 
+    @Test
     public void testOddLowAsciiURI() throws Exception {
         assertResolves("hash# and percent%");
     }

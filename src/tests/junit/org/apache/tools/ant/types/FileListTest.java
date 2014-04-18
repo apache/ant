@@ -18,30 +18,37 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Some tests for filelist.
  */
 
-public class FileListTest extends BuildFileTest {
+public class FileListTest {
 
-    public FileListTest(String name) {
-        super(name);
-    }
-
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/filelist.xml");
+        buildRule.configureProject("src/etc/testcases/types/filelist.xml");
     }
     
+    @Test
     public void testEmptyElementIfIsReference() {
         FileList f = new FileList();
-        f.setDir(project.resolveFile("."));
+        f.setDir(buildRule.getProject().resolveFile("."));
         try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
+            f.setRefid(new Reference(buildRule.getProject(), "dummyref"));
             fail("Can add reference to FileList with directory attribute set.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -51,7 +58,7 @@ public class FileListTest extends BuildFileTest {
         f = new FileList();
         f.setFiles("foo.xml,c/d/bar.xml");
         try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
+            f.setRefid(new Reference(buildRule.getProject(), "dummyref"));
             fail("Can add reference to FileList with file attribute set.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -59,7 +66,7 @@ public class FileListTest extends BuildFileTest {
         }
 
         f = new FileList();
-        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setRefid(new Reference(buildRule.getProject(), "dummyref"));
         try {
             f.setFiles("a/b/foo.java");
             fail("Can set files in FileList that is a reference.");
@@ -68,7 +75,7 @@ public class FileListTest extends BuildFileTest {
                          be.getMessage());
         }
         try {
-            f.setDir(project.resolveFile("."));
+            f.setDir(buildRule.getProject().resolveFile("."));
             fail("Can set dir in FileList that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -76,19 +83,20 @@ public class FileListTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testCircularReferenceCheck() {
         FileList f = new FileList();
-        project.addReference("dummy", f);
-        f.setRefid(new Reference(getProject(), "dummy"));
+        buildRule.getProject().addReference("dummy", f);
+        f.setRefid(new Reference(buildRule.getProject(), "dummy"));
         try {
-            f.getDir(project);
+            f.getDir(buildRule.getProject());
             fail("Can make FileList a Reference to itself.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
         try {
-            f.getFiles(project);
+            f.getFiles(buildRule.getProject());
             fail("Can make FileList a Reference to itself.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
@@ -97,23 +105,23 @@ public class FileListTest extends BuildFileTest {
 
         // dummy1 --> dummy2 --> dummy3 --> dummy1
         FileList f1 = new FileList();
-        project.addReference("dummy1", f1);
-        f1.setRefid(new Reference(getProject(), "dummy2"));
+        buildRule.getProject().addReference("dummy1", f1);
+        f1.setRefid(new Reference(buildRule.getProject(), "dummy2"));
         FileList f2 = new FileList();
-        project.addReference("dummy2", f2);
-        f2.setRefid(new Reference(getProject(), "dummy3"));
+        buildRule.getProject().addReference("dummy2", f2);
+        f2.setRefid(new Reference(buildRule.getProject(), "dummy3"));
         FileList f3 = new FileList();
-        project.addReference("dummy3", f3);
-        f3.setRefid(new Reference(getProject(), "dummy1"));
+        buildRule.getProject().addReference("dummy3", f3);
+        f3.setRefid(new Reference(buildRule.getProject(), "dummy1"));
         try {
-            f1.getDir(project);
+            f1.getDir(buildRule.getProject());
             fail("Can make circular reference.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
         try {
-            f1.getFiles(project);
+            f1.getFiles(buildRule.getProject());
             fail("Can make circular reference.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
@@ -123,27 +131,33 @@ public class FileListTest extends BuildFileTest {
         // dummy1 --> dummy2 --> dummy3
         // (which has the Project's basedir as root).
         f1 = new FileList();
-        project.addReference("dummy1", f1);
-        f1.setRefid(new Reference(getProject(), "dummy2"));
+        buildRule.getProject().addReference("dummy1", f1);
+        f1.setRefid(new Reference(buildRule.getProject(), "dummy2"));
         f2 = new FileList();
-        project.addReference("dummy2", f2);
-        f2.setRefid(new Reference(getProject(), "dummy3"));
+        buildRule.getProject().addReference("dummy2", f2);
+        f2.setRefid(new Reference(buildRule.getProject(), "dummy3"));
         f3 = new FileList();
-        project.addReference("dummy3", f3);
-        f3.setDir(project.resolveFile("."));
-        File dir = f1.getDir(project);
-        assertEquals("Dir is basedir", dir, project.getBaseDir());
+        buildRule.getProject().addReference("dummy3", f3);
+        f3.setDir(buildRule.getProject().resolveFile("."));
+        File dir = f1.getDir(buildRule.getProject());
+        assertEquals("Dir is basedir", dir, buildRule.getProject().getBaseDir());
     }
-    
+
+    @Test
     public void testSimple() {
-        expectLog("simple", "/abc/a");
+        buildRule.executeTarget("simple");
+        assertEquals("/abc/a", buildRule.getLog());
     }
 
+    @Test
     public void testDouble() {
-        expectLog("double", "/abc/a:/abc/b");
+        buildRule.executeTarget("double");
+        assertEquals("/abc/a:/abc/b", buildRule.getLog());
     }
 
+    @Test
     public void testNested() {
-        expectLog("nested", "/abc/a:/abc/b");
+        buildRule.executeTarget("nested");
+        assertEquals("/abc/a:/abc/b", buildRule.getLog());
     }
 }

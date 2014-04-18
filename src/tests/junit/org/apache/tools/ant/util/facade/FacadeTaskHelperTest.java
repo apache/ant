@@ -18,17 +18,17 @@
 
 package org.apache.tools.ant.util.facade;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @since Ant 1.5
  */
-public class FacadeTaskHelperTest extends TestCase {
+public class FacadeTaskHelperTest {
 
-    public FacadeTaskHelperTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testPrecedenceRules() {
         FacadeTaskHelper fth = new FacadeTaskHelper("foo");
         assertEquals("foo", fth.getImplementation());
@@ -48,6 +48,7 @@ public class FacadeTaskHelperTest extends TestCase {
         assertEquals("baz", fth.getImplementation());
     }
 
+    @Test
     public void testHasBeenSet() {
         FacadeTaskHelper fth = new FacadeTaskHelper("foo");
         assertTrue("nothing set", !fth.hasBeenSet());

@@ -24,39 +24,81 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.UnixStat;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class ZipTest extends BuildFileTest {
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
+
+
+public class ZipTest {
+    
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+            
     //instance variable to allow cleanup
     ZipFile zfPrefixAddsDir = null;
-    public ZipTest(String name) {
-        super(name);
-    }
 
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/zip.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/zip.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "zip cannot include itself");
+        try {
+			buildRule.executeTarget("test3");
+			fail("BuildException expected: zip cannot include itself");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
-    //    public void test4() {
-    //        expectBuildException("test4", "zip cannot include itself");
-    //    }
+    @Test
+    @Ignore("Previously commented out")
+    public void test4() {
+        try {
+			buildRule.executeTarget("test4");
+			fail("BuildException expected: zip cannot include itself");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
+    }
 
+    @After
     public void tearDown() {
         try {
             if ( zfPrefixAddsDir != null) {
@@ -66,35 +108,35 @@ public class ZipTest extends BuildFileTest {
         } catch (IOException e) {
             //ignored
         }
-        try {
-            super.tearDown();
-        } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-        }
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+       buildRule.executeTarget("test5");
     }
 
 
+    @Test
     public void test6() {
-        executeTarget("test6");
+       buildRule.executeTarget("test6");
     }
 
 
+    @Test
     public void test7() {
-        executeTarget("test7");
+       buildRule.executeTarget("test7");
     }
 
+    @Test
     public void test8() {
-        executeTarget("test8");
+       buildRule.executeTarget("test8");
     }
 
+    @Test
     public void testZipgroupfileset() throws IOException {
-        executeTarget("testZipgroupfileset");
+       buildRule.executeTarget("testZipgroupfileset");
 
-        ZipFile zipFile = new ZipFile(new File(getProject().getProperty("output"), "zipgroupfileset.zip"));
+        ZipFile zipFile = new ZipFile(new File(buildRule.getProject().getProperty("output"), "zipgroupfileset.zip"));
 
         assertTrue(zipFile.getEntry("ant.xml") != null);
         assertTrue(zipFile.getEntry("optional/jspc.xml") != null);
@@ -106,19 +148,23 @@ public class ZipTest extends BuildFileTest {
         zipFile.close();
     }
 
+    @Test
     public void testUpdateNotNecessary() {
-        executeTarget("testUpdateNotNecessary");
-        assertEquals(-1, getLog().indexOf("Updating"));
+       buildRule.executeTarget("testUpdateNotNecessary");
+        assertEquals(-1, buildRule.getLog().indexOf("Updating"));
     }
 
+    @Test
     public void testUpdateIsNecessary() {
-        expectLogContaining("testUpdateIsNecessary", "Updating");
+        buildRule.executeTarget("testUpdateIsNecessary");
+		assertContains("Updating", buildRule.getLog());
     }
 
     // Bugzilla Report 18403
+    @Test
     public void testPrefixAddsDir() throws IOException {
-        executeTarget("testPrefixAddsDir");
-        File archive = new File(getProject().getProperty("output"), "test3.zip");
+       buildRule.executeTarget("testPrefixAddsDir");
+        File archive = new File(buildRule.getProject().getProperty("output"), "test3.zip");
         zfPrefixAddsDir = new ZipFile(archive);
         ZipEntry ze = zfPrefixAddsDir.getEntry("test/");
         assertNotNull("test/ has been added", ze);
@@ -126,42 +172,52 @@ public class ZipTest extends BuildFileTest {
     }
 
     // Bugzilla Report 19449
-    public void testFilesOnlyDoesntCauseRecreate()
-        throws InterruptedException {
-        executeTarget("testFilesOnlyDoesntCauseRecreateSetup");
-        long l = new File(getProject().getProperty("output"), "test3.zip").lastModified();
-        Thread.sleep(3000);
-        executeTarget("testFilesOnlyDoesntCauseRecreate");
-        assertEquals(l, new File(getProject().getProperty("output"), "test3.zip").lastModified());
+    @Test
+    public void testFilesOnlyDoesntCauseRecreate() {
+        buildRule.executeTarget("testFilesOnlyDoesntCauseRecreateSetup");
+        File testFile = new File(buildRule.getOutputDir(), "test3.zip");
+        assumeTrue("Could not change file modification time",
+                testFile.setLastModified(testFile.lastModified() - (FileUtils.getFileUtils().getFileTimestampGranularity() * 5)));
+        long l = testFile.lastModified();
+
+        buildRule.executeTarget("testFilesOnlyDoesntCauseRecreate");
+        assertEquals(l, testFile.lastModified());
     }
 
     // Bugzilla Report 22865
+    @Test
     public void testEmptySkip() {
-        executeTarget("testEmptySkip");
+       buildRule.executeTarget("testEmptySkip");
     }
     // Bugzilla Report 30365
+    @Test
     public void testZipEmptyDir() {
-        executeTarget("zipEmptyDir");
+       buildRule.executeTarget("zipEmptyDir");
     }
     // Bugzilla Report 40258
+    @Test
     public void testZipEmptyDirFilesOnly() {
-        executeTarget("zipEmptyDirFilesOnly");
+       buildRule.executeTarget("zipEmptyDirFilesOnly");
     }
+    @Test
     public void testZipEmptyCreate() {
-        expectLogContaining("zipEmptyCreate", "Note: creating empty");
+        buildRule.executeTarget("zipEmptyCreate");
+		assertContains("Note: creating empty", buildRule.getLog());
     }
     // Bugzilla Report 25513
+    @Test
     public void testCompressionLevel() {
-        executeTarget("testCompressionLevel");
+       buildRule.executeTarget("testCompressionLevel");
     }
 
     // Bugzilla Report 33412
-    public void testDefaultExcludesAndUpdate() 
+    @Test
+    public void testDefaultExcludesAndUpdate()
         throws ZipException, IOException {
-        executeTarget("testDefaultExcludesAndUpdate");
+       buildRule.executeTarget("testDefaultExcludesAndUpdate");
         ZipFile f = null;
         try {
-            f = new ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
+            f = new ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
             assertNotNull("ziptest~ should be included",
                           f.getEntry("ziptest~"));
         } finally {
@@ -171,19 +227,22 @@ public class ZipTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testFileResource() {
-        executeTarget("testFileResource");
+       buildRule.executeTarget("testFileResource");
     }
 
+    @Test
     public void testNonFileResource() {
-        executeTarget("testNonFileResource");
+       buildRule.executeTarget("testNonFileResource");
     }
 
+    @Test
     public void testTarFileSet() throws IOException {
-        executeTarget("testTarFileSet");
+       buildRule.executeTarget("testTarFileSet");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("asf-logo.gif");
             assertEquals(UnixStat.FILE_FLAG | 0446, ze.getUnixMode());
         } finally {
@@ -193,11 +252,12 @@ public class ZipTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testRewriteZeroPermissions() throws IOException {
-        executeTarget("rewriteZeroPermissions");
+       buildRule.executeTarget("rewriteZeroPermissions");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
         } finally {
@@ -207,11 +267,12 @@ public class ZipTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testAcceptZeroPermissions() throws IOException {
-        executeTarget("acceptZeroPermissions");
+       buildRule.executeTarget("acceptZeroPermissions");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(0000, ze.getUnixMode());
         } finally {
@@ -221,11 +282,12 @@ public class ZipTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testForBugzilla34764() throws IOException {
-        executeTarget("testForBugzilla34764");
+       buildRule.executeTarget("testForBugzilla34764");
         org.apache.tools.zip.ZipFile zf = null;
         try {
-            zf = new org.apache.tools.zip.ZipFile(new File(getProject().getProperty("output"), "test3.zip"));
+            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("file1");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
         } finally {

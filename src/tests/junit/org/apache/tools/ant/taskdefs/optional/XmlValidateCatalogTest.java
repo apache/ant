@@ -17,7 +17,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Tests the XMLValidate optional task with nested external catalogs.
@@ -25,38 +28,21 @@ import org.apache.tools.ant.BuildFileTest;
  * @see XmlValidateTest
  * @since Ant 1.6
  */
-public class XmlValidateCatalogTest extends BuildFileTest {
+public class XmlValidateCatalogTest {
 
     /**
      * where tasks run
      */
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * Constructor
-     *
-     * @param name testname
-     */
-    public XmlValidateCatalogTest(String name) {
-        super(name);
-    }
-
-
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject(TASKDEFS_DIR + "xmlvalidate.xml");
+        buildRule.configureProject(TASKDEFS_DIR + "xmlvalidate.xml");
     }
 
-
-    /**
-     * The teardown method for JUnit
-     */
-    public void tearDown() {
-
-    }
 
     /**
      * catalogfiles fileset should be ignored
@@ -65,8 +51,9 @@ public class XmlValidateCatalogTest extends BuildFileTest {
      * work b/c we have a nested dtd with the same
      * entity
      */
+    @Test
     public void testXmlCatalogFiles() {
-        executeTarget("xmlcatalogfiles");
+        buildRule.executeTarget("xmlcatalogfiles");
     }
 
     /**
@@ -76,8 +63,9 @@ public class XmlValidateCatalogTest extends BuildFileTest {
      * way, test should work b/c we have a nested
      * dtd with the same entity
      */
+    @Test
     public void testXmlCatalogPath() {
-        executeTarget("xmlcatalogpath");
+        buildRule.executeTarget("xmlcatalogpath");
     }
 
 }

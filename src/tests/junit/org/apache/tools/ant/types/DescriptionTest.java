@@ -18,41 +18,42 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * FilterSet testing
  *
  */
-public class DescriptionTest extends BuildFileTest {
+public class DescriptionTest {
 
-    public DescriptionTest(String name) {
-        super(name);
-    }
-
-    public void setUp() {
-    }
-
-    public void tearDown() {
-    }
-
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Test
     public void test1() {
-        configureProject("src/etc/testcases/types/description1.xml");
-        assertEquals("Single description failed", "Test Project Description", project.getDescription());
+        buildRule.configureProject("src/etc/testcases/types/description1.xml");
+        assertEquals("Single description failed", "Test Project Description", buildRule.getProject().getDescription());
     }
 
+    @Test
     public void test2() {
-        configureProject("src/etc/testcases/types/description2.xml");
-        assertEquals("Multi line description failed", "Multi Line\nProject Description", project.getDescription());
+        buildRule.configureProject("src/etc/testcases/types/description2.xml");
+        assertEquals("Multi line description failed", "Multi Line\nProject Description", buildRule.getProject().getDescription());
     }
 
+    @Test
     public void test3() {
-        configureProject("src/etc/testcases/types/description3.xml");
-        assertEquals("Multi instance description failed", "Multi Instance Project Description", project.getDescription());
+        buildRule.configureProject("src/etc/testcases/types/description3.xml");
+        assertEquals("Multi instance description failed", "Multi Instance Project Description", buildRule.getProject().getDescription());
     }
 
+    @Test
     public void test4() {
-        configureProject("src/etc/testcases/types/description4.xml");
-        assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description", project.getDescription());
+        buildRule.configureProject("src/etc/testcases/types/description4.xml");
+        assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description", buildRule.getProject().getDescription());
     }
 }

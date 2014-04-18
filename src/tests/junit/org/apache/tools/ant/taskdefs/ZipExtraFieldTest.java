@@ -22,11 +22,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
 import org.apache.tools.ant.types.Resource;
 
 import org.apache.tools.ant.types.ResourceCollection;
@@ -36,9 +34,15 @@ import org.apache.tools.zip.Zip64ExtendedInformationExtraField;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
+import org.junit.Test;
 
-public class ZipExtraFieldTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+public class ZipExtraFieldTest {
+
+    @Test
     public void testPreservesExtraFields() throws IOException {
         testExtraField(new Zip(), true);
     }

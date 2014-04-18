@@ -19,222 +19,272 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Date: 04-Aug-2004
  * Time: 22:15:46
  */
-public class RmicAdvancedTest extends BuildFileTest {
-
-    public RmicAdvancedTest(String name) {
-        super(name);
-    }
+public class RmicAdvancedTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/rmic/";
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     /**
      * The JUnit setup method
      */
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
-        configureProject(TASKDEFS_DIR + "rmic.xml");
+        buildRule.configureProject(TASKDEFS_DIR + "rmic.xml");
     }
 
     /**
      * verify that "default" binds us to the default compiler
      */
+    @Test
     public void testDefault() throws Exception {
-        executeTarget("testDefault");
+        buildRule.executeTarget("testDefault");
     }
 
     /**
      * verify that "default" binds us to the default compiler
      */
+    @Test
     public void testDefaultDest() throws Exception {
-        executeTarget("testDefaultDest");
+        buildRule.executeTarget("testDefaultDest");
     }
 
     /**
      * verify that "" binds us to the default compiler
      */
+    @Test
     public void testEmpty() throws Exception {
-        executeTarget("testEmpty");
+        buildRule.executeTarget("testEmpty");
     }
 
     /**
      * verify that "" binds us to the default compiler
      */
+    @Test
     public void testEmptyDest() throws Exception {
-        executeTarget("testEmptyDest");
+        buildRule.executeTarget("testEmptyDest");
     }
 
     /**
      * test sun's rmic compiler
      */
+    @Test
     public void testRmic() throws Exception {
-        executeTarget("testRmic");
+        buildRule.executeTarget("testRmic");
     }
 
     /**
      * test sun's rmic compiler
      */
+    @Test
     public void testRmicDest() throws Exception {
-        executeTarget("testRmicDest");
+        buildRule.executeTarget("testRmicDest");
     }
 
     /**
      * test sun's rmic compiler strips
      * out -J arguments when not forking
      */
+    @Test
     public void testRmicJArg() throws Exception {
-        executeTarget("testRmicJArg");
+        buildRule.executeTarget("testRmicJArg");
     }
 
     /**
      * test sun's rmic compiler strips
      * out -J arguments when not forking
      */
+    @Test
     public void testRmicJArgDest() throws Exception {
-        executeTarget("testRmicJArgDest");
+        buildRule.executeTarget("testRmicJArgDest");
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testKaffe() throws Exception {
-        executeTarget("testKaffe");
+        buildRule.executeTarget("testKaffe");
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testKaffeDest() throws Exception {
-        executeTarget("testKaffeDest");
+        buildRule.executeTarget("testKaffeDest");
     }
 
     // WLrmic tests don't work
     /**
      * test weblogic
      */
+    @Test
+    @Ignore("WLRmin tests don't work")
     public void XtestWlrmic() throws Exception {
-        executeTarget("testWlrmic");
+        buildRule.executeTarget("testWlrmic");
     }
 
     /**
      *  test weblogic's stripping of -J args
      */
+    @Test
+    @Ignore("WLRmin tests don't work")
     public void XtestWlrmicJArg() throws Exception {
-        executeTarget("testWlrmicJArg");
+        buildRule.executeTarget("testWlrmicJArg");
     }
 
     /**
      * test the forking compiler
      */
+    @Test
+    @Ignore("WLRmin tests don't work")
     public void NotestForking() throws Exception {
-        executeTarget("testForking");
+        buildRule.executeTarget("testForking");
     }
 
     /**
      * test the forking compiler
      */
+    @Test
     public void testForkingAntClasspath() throws Exception {
-        executeTarget("testForkingAntClasspath");
+        buildRule.executeTarget("testForkingAntClasspath");
     }
 
     /**
      * test the forking compiler
      */
+    @Test
     public void testForkingAntClasspathDest() throws Exception {
-        executeTarget("testForkingAntClasspathDest");
+        buildRule.executeTarget("testForkingAntClasspathDest");
     }
 
     /**
      * test the forking compiler
      */
+    @Test
     public void testAntClasspath() throws Exception {
-        executeTarget("testAntClasspath");
+        buildRule.executeTarget("testAntClasspath");
     }
 
     /**
      * test the forking compiler
      */
+    @Test
     public void testAntClasspathDest() throws Exception {
-        executeTarget("testAntClasspathDest");
+        buildRule.executeTarget("testAntClasspathDest");
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testBadName() throws Exception {
-        expectBuildExceptionContaining("testBadName",
-                "compiler not known",
-                RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        try {
+            buildRule.executeTarget("testBadName");
+            fail("Compile not known");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
+        }
     }
 
     /**
      * load an adapter by name
      */
+    @Test
     public void testExplicitClass() throws Exception {
-        executeTarget("testExplicitClass");
+        buildRule.executeTarget("testExplicitClass");
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testWrongClass() throws Exception {
-        expectBuildExceptionContaining("testWrongClass",
-                "class not an RMIC adapter",
-                RmicAdapterFactory.ERROR_NOT_RMIC_ADAPTER);
+        try {
+            buildRule.executeTarget("testWrongClass");
+            fail("Class not an RMIC adapter");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(RmicAdapterFactory.ERROR_NOT_RMIC_ADAPTER, ex.getMessage());
+        }
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testDefaultBadClass() throws Exception {
-        expectBuildExceptionContaining("testDefaultBadClass",
-                "expected the class to fail",
-                Rmic.ERROR_RMIC_FAILED);
+        try {
+            buildRule.executeTarget("testDefaultBadClass");
+            fail("expected the class to fail");
+        } catch(BuildException ex) {
+            AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
+        }
         //dont look for much text here as it is vendor and version dependent
-        assertLogContaining("unimplemented.class");
+        AntAssert.assertContains("unimplemented.class", buildRule.getLog());
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testMagicProperty() throws Exception {
-        expectBuildExceptionContaining("testMagicProperty",
-                "magic property not working",
-                RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        try {
+            buildRule.executeTarget("testMagicProperty");
+            fail("Magic property not working");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
+        }
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testMagicPropertyOverridesEmptyString() throws Exception {
-        expectBuildExceptionContaining("testMagicPropertyOverridesEmptyString",
-                "magic property not working",
-                RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        try {
+            buildRule.executeTarget("testMagicPropertyOverridesEmptyString");
+            fail("Magic property not working");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
+        }
     }
 
 
-    /**
-     *
-     */
+    @Test
     public void testMagicPropertyIsEmptyString() throws Exception {
-        executeTarget("testMagicPropertyIsEmptyString");
+        buildRule.executeTarget("testMagicPropertyIsEmptyString");
     }
 
 
+    @Test
+    @Ignore("Previously named to prevent execution")
     public void NotestFailingAdapter() throws Exception {
-        expectBuildExceptionContaining("testFailingAdapter",
-                "expected failures to propagate",
-                Rmic.ERROR_RMIC_FAILED);
+        try {
+            buildRule.executeTarget("testFailingAdapter");
+            fail("Expected failures to propogate");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
+        }
     }
 
 
@@ -242,16 +292,18 @@ public class RmicAdvancedTest extends BuildFileTest {
      * test that version 1.1 stubs are good
      * @throws Exception
      */
+    @Test
     public void testVersion11() throws Exception {
-        executeTarget("testVersion11");
+        buildRule.executeTarget("testVersion11");
     }
 
     /**
      * test that version 1.1 stubs are good
      * @throws Exception
      */
+    @Test
     public void testVersion11Dest() throws Exception {
-        executeTarget("testVersion11Dest");
+        buildRule.executeTarget("testVersion11Dest");
     }
 
     /**
@@ -259,8 +311,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testVersion12() throws Exception {
-        executeTarget("testVersion12");
+        buildRule.executeTarget("testVersion12");
     }
 
     /**
@@ -268,8 +321,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testVersion12Dest() throws Exception {
-        executeTarget("testVersion12Dest");
+        buildRule.executeTarget("testVersion12Dest");
     }
 
     /**
@@ -277,8 +331,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testVersionCompat() throws Exception {
-        executeTarget("testVersionCompat");
+        buildRule.executeTarget("testVersionCompat");
     }
 
     /**
@@ -286,8 +341,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testVersionCompatDest() throws Exception {
-        executeTarget("testVersionCompatDest");
+        buildRule.executeTarget("testVersionCompatDest");
     }
 
     /**
@@ -295,8 +351,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnew() throws Exception {
-        executeTarget("testXnew");
+        buildRule.executeTarget("testXnew");
     }
 
     /**
@@ -304,8 +361,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnewDest() throws Exception {
-        executeTarget("testXnewDest");
+        buildRule.executeTarget("testXnewDest");
     }
 
     /**
@@ -313,8 +371,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnewForked() throws Exception {
-        executeTarget("testXnewForked");
+        buildRule.executeTarget("testXnewForked");
     }
 
     /**
@@ -322,8 +381,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnewForkedDest() throws Exception {
-        executeTarget("testXnewForkedDest");
+        buildRule.executeTarget("testXnewForkedDest");
     }
 
     /**
@@ -331,8 +391,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnewCompiler() throws Exception {
-        executeTarget("testXnewCompiler");
+        buildRule.executeTarget("testXnewCompiler");
     }
 
     /**
@@ -340,8 +401,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testXnewCompilerDest() throws Exception {
-        executeTarget("testXnewCompilerDest");
+        buildRule.executeTarget("testXnewCompilerDest");
     }
 
     /**
@@ -349,8 +411,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testIDL() throws Exception {
-        executeTarget("testIDL");
+        buildRule.executeTarget("testIDL");
     }
 
     /**
@@ -358,8 +421,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testIDLDest() throws Exception {
-        executeTarget("testIDLDest");
+        buildRule.executeTarget("testIDLDest");
     }
 
     /**
@@ -367,8 +431,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testIIOP() throws Exception {
-        executeTarget("testIIOP");
+        buildRule.executeTarget("testIIOP");
     }
 
     /**
@@ -376,8 +441,9 @@ public class RmicAdvancedTest extends BuildFileTest {
      *
      * @throws Exception
      */
+    @Test
     public void testIIOPDest() throws Exception {
-        executeTarget("testIIOPDest");
+        buildRule.executeTarget("testIIOPDest");
     }
 
     /**

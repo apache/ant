@@ -20,41 +20,49 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *  JUnit testcase that exercises the optional PropertyFile task in ant.
  *  (this is really more of a functional test so far.., but it's enough to let
  *   me start refactoring...)
  *
- *@created    October 2, 2001
+ *created    October 2, 2001
  */
 
-public class PropertyFileTest extends BuildFileTest {
+public class PropertyFileTest {
 
-    public PropertyFileTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-
-    /**
-     *  The JUnit setup method
-     */
+    @Before
     public void setUp() throws Exception {
-        configureProject(projectFilePath);
-        executeTarget("setUp");
+        buildRule.configureProject(projectFilePath);
+        buildRule.executeTarget("setUp");
         initTestPropFile();
         initBuildPropFile();
-        configureProject(projectFilePath);
-        project.setProperty(valueDoesNotGetOverwrittenPropertyFileKey,valueDoesNotGetOverwrittenPropertyFile);
+        buildRule.configureProject(projectFilePath);
+        buildRule.getProject().setProperty(valueDoesNotGetOverwrittenPropertyFileKey,
+                valueDoesNotGetOverwrittenPropertyFile);
     }
 
 
+    @Test
     public void testNonExistingFile() {
         PropertyFile props = new PropertyFile();
-        props.setProject( getProject() );
+        props.setProject( buildRule.getProject() );
         File file = new File("this-file-does-not-exist.properties");
         props.setFile(file);
         assertFalse("Properties file exists before test.", file.exists());
@@ -67,6 +75,7 @@ public class PropertyFileTest extends BuildFileTest {
      *  A unit test for JUnit- Exercises the propertyfile tasks ability to
      *  update properties that are already defined-
      */
+    @Test
     public void testUpdatesExistingProperties() throws Exception {
         Properties beforeUpdate = getTestProperties();
         assertEquals(FNAME, beforeUpdate.getProperty(FNAME_KEY));
@@ -77,7 +86,7 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals(null, beforeUpdate.getProperty(DATE_KEY));
 
         // ask ant to update the properties...
-        executeTarget("update-existing-properties");
+        buildRule.executeTarget("update-existing-properties");
 
         Properties afterUpdate = getTestProperties();
         assertEquals(NEW_FNAME, afterUpdate.getProperty(FNAME_KEY));
@@ -87,7 +96,8 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals(NEW_AGE, afterUpdate.getProperty(AGE_KEY));
         assertEquals(NEW_DATE, afterUpdate.getProperty(DATE_KEY));
     }
-    
+
+    @Test
     public void testDeleteProperties() throws Exception {
         Properties beforeUpdate = getTestProperties();
         assertEquals("Property '" + FNAME_KEY + "' should exist before deleting",
@@ -95,7 +105,7 @@ public class PropertyFileTest extends BuildFileTest {
         assertEquals("Property '" + LNAME_KEY + "' should exist before deleting",
             LNAME, beforeUpdate.getProperty(LNAME_KEY));
         
-        executeTarget("delete-properties");
+        buildRule.executeTarget("delete-properties");
         Properties afterUpdate = getTestProperties();
 
         assertEquals("Property '" + LNAME_KEY + "' should exist after deleting",
@@ -104,49 +114,77 @@ public class PropertyFileTest extends BuildFileTest {
             afterUpdate.getProperty(FNAME_KEY));
     }
 
+    @Test
     public void testExerciseDefaultAndIncrement() throws Exception {
-        executeTarget("exercise");
-        assertEquals("3",project.getProperty("int.with.default"));
-        assertEquals("1",project.getProperty("int.without.default"));
-        assertEquals("-->",project.getProperty("string.with.default"));
-        assertEquals(".",project.getProperty("string.without.default"));
-        assertEquals("2002/01/21 12:18", project.getProperty("ethans.birth"));
-        assertEquals("2003/01/21", project.getProperty("first.birthday"));
-        assertEquals("0124", project.getProperty("olderThanAWeek"));
-        assertEquals("37", project.getProperty("existing.prop"));
-        assertEquals("6",project.getProperty("int.without.value"));
+        buildRule.executeTarget("exercise");
+        assertEquals("3",buildRule.getProject().getProperty("int.with.default"));
+        assertEquals("1",buildRule.getProject().getProperty("int.without.default"));
+        assertEquals("-->",buildRule.getProject().getProperty("string.with.default"));
+        assertEquals(".",buildRule.getProject().getProperty("string.without.default"));
+        assertEquals("2002/01/21 12:18", buildRule.getProject().getProperty("ethans.birth"));
+        assertEquals("2003/01/21", buildRule.getProject().getProperty("first.birthday"));
+        assertEquals("0124", buildRule.getProject().getProperty("olderThanAWeek"));
+        assertEquals("37", buildRule.getProject().getProperty("existing.prop"));
+        assertEquals("6",buildRule.getProject().getProperty("int.without.value"));
     }
 
+    @Test
     public void testValueDoesNotGetOverwritten() {
         // this test shows that the bug report 21505 is fixed
-        executeTarget("bugDemo1");
-        executeTarget("bugDemo2");
-        assertEquals("5", project.getProperty("foo"));
+        buildRule.executeTarget("bugDemo1");
+        buildRule.executeTarget("bugDemo2");
+        assertEquals("5", buildRule.getProject().getProperty("foo"));
     }
+
+
+    @Test
+    @Ignore("Previously commented out")
+    public void testDirect() throws Exception {
+        PropertyFile pf = new PropertyFile();
+        pf.setProject(buildRule.getProject());
+        pf.setFile(new File(System.getProperty("root"), testPropsFilePath));
+        PropertyFile.Entry entry = pf.createEntry();
+
+        entry.setKey("date");
+        entry.setValue("123");
+        PropertyFile.Entry.Type type = new PropertyFile.Entry.Type();
+        type.setValue("date");
+        entry.setType(type);
+
+        entry.setPattern("yyyy/MM/dd");
+
+        PropertyFile.Entry.Operation operation = new PropertyFile.Entry.Operation();
+        operation.setValue("+");
+        pf.execute();
+
+        Properties props = getTestProperties();
+        assertEquals("yeehaw", props.getProperty("date"));
+    }
+
 
     private Properties getTestProperties() throws Exception {
         Properties testProps = new Properties();
-        FileInputStream propsFile = new FileInputStream(new File(getOutputDir(), testPropsFilePath));
+        FileInputStream propsFile = new FileInputStream(new File(buildRule.getOutputDir(), testPropsFilePath));
         testProps.load(propsFile);
         propsFile.close();
         return testProps;
     }
 
 
-    private void initTestPropFile() throws Exception {
+    private void initTestPropFile() throws IOException {
         Properties testProps = new Properties();
         testProps.put(FNAME_KEY, FNAME);
         testProps.put(LNAME_KEY, LNAME);
         testProps.put(EMAIL_KEY, EMAIL);
         testProps.put("existing.prop", "37");
 
-        FileOutputStream fos = new FileOutputStream(new File(getOutputDir(), testPropsFilePath));
+        FileOutputStream fos = new FileOutputStream(new File(buildRule.getOutputDir(), testPropsFilePath));
         testProps.store(fos, "defaults");
         fos.close();
     }
 
 
-    private void initBuildPropFile() throws Exception {
+    private void initBuildPropFile() throws IOException {
         Properties buildProps = new Properties();
         buildProps.put(testPropertyFileKey, testPropertyFile);
         buildProps.put(FNAME_KEY, NEW_FNAME);
@@ -156,13 +194,10 @@ public class PropertyFileTest extends BuildFileTest {
         buildProps.put(AGE_KEY, NEW_AGE);
         buildProps.put(DATE_KEY, NEW_DATE);
 
-        FileOutputStream fos = new FileOutputStream(new File(getOutputDir(), buildPropsFilePath));
+        FileOutputStream fos = new FileOutputStream(new File(buildRule.getOutputDir(), buildPropsFilePath));
         buildProps.store(fos, null);
         fos.close();
     }
-
-
-
 
     private static final String
         projectFilePath     = "src/etc/testcases/taskdefs/optional/propertyfile.xml",

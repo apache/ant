@@ -19,23 +19,25 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @since Ant 1.6
  */
-public class LazyFileOutputStreamTest extends TestCase {
+public class LazyFileOutputStreamTest {
     private LazyFileOutputStream los;
     private final static File f = new File("test.txt");
 
-    public LazyFileOutputStreamTest(String s) {
-        super(s);
-    }
-
+    @Before
     public void setUp() {
         los = new LazyFileOutputStream(f);
     }
 
+    @After
     public void tearDown() throws IOException {
         try {
             los.close();
@@ -44,23 +46,27 @@ public class LazyFileOutputStreamTest extends TestCase {
         }
     }
 
+    @Test
     public void testNoFileWithoutWrite() throws IOException {
         los.close();
         assertTrue(f + " has not been written.", !f.exists());
     }
 
+    @Test
     public void testOpen() throws IOException {
         los.open();
         los.close();
         assertTrue(f + " has been written.", f.exists());
     }
 
+    @Test
     public void testSingleByte() throws IOException {
         los.write(0);
         los.close();
         assertTrue(f + " has been written.", f.exists());
     }
 
+    @Test
     public void testByteArray() throws IOException {
         los.write(new byte[] {0});
         los.close();

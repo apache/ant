@@ -18,60 +18,106 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildFileTest;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class TaskdefTest extends BuildFileTest {
+public class TaskdefTest {
 
-    public TaskdefTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/taskdef.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/taskdef.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument not specified");
+        try {
+			buildRule.executeTarget("test3");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test4() {
-        expectBuildException("test4", "classname specified doesn't exist");
+        try {
+			buildRule.executeTarget("test4");
+			fail("BuildException expected: classname specified doesn't exist");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test5() {
-        expectBuildException("test5", "No public execute() in " + Project.class);
+        try {
+            buildRule.executeTarget("test5");
+            fail("BuildException expected: No public execute() in " + Project.class);
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test5a() {
-        executeTarget("test5a");
+        buildRule.executeTarget("test5a");
     }
 
+    @Test
     public void test6() {
-        expectLog("test6", "simpletask: worked");
+        buildRule.executeTarget("test6");
+		assertEquals("simpletask: worked", buildRule.getLog());
     }
 
+    @Test
     public void test7() {
-        expectLog("test7", "worked");
+        buildRule.executeTarget("test7");
+		assertEquals("worked", buildRule.getLog());
     }
 
+    @Test
     public void testGlobal() {
-        expectLog("testGlobal", "worked");
+        buildRule.executeTarget("testGlobal");
+		assertEquals("worked", buildRule.getLog());
     }
 
+    @Test
     public void testOverride() {
-        executeTarget("testOverride");
-        String log = getLog();
+        buildRule.executeTarget("testOverride");
+        String log = buildRule.getLog();
         assertTrue("override warning sent",
                    log.indexOf("Trying to override old definition of task copy") > -1);
         assertTrue("task inside target worked",

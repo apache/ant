@@ -18,25 +18,38 @@
 package org.apache.tools.ant.types.resources;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Reference;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class ResourceListTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-    protected void setUp() throws Exception {
-        configureProject("src/etc/testcases/types/resources/resourcelist.xml");
+public class ResourceListTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
+    public void setUp() throws Exception {
+        buildRule.configureProject("src/etc/testcases/types/resources/resourcelist.xml");
     }
 
-    protected void tearDown() throws Exception {
-        executeTarget("tearDown");
+    @After
+    public void tearDown() throws Exception {
+        buildRule.executeTarget("tearDown");
     }
 
+    @Test
     public void testEmptyElementWithReference() {
         ResourceList rl = new ResourceList();
         rl.setEncoding("foo");
         try {
-            rl.setRefid(new Reference(getProject(), "dummyref"));
+            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
             fail("Can add reference to ResourceList with encoding attribute set.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
@@ -44,7 +57,7 @@ public class ResourceListTest extends BuildFileTest {
         }
 
         rl = new ResourceList();
-        rl.setRefid(new Reference(getProject(), "dummyref"));
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
         try {
             rl.setEncoding("foo");
             fail("Can set encoding in ResourceList that is a reference");
@@ -54,9 +67,9 @@ public class ResourceListTest extends BuildFileTest {
         }
 
         rl = new ResourceList();
-        rl.add(new FileResource(getProject(), "."));
+        rl.add(new FileResource(buildRule.getProject(), "."));
         try {
-            rl.setRefid(new Reference(getProject(), "dummyref"));
+            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
             fail("Can add reference to ResourceList with nested resource collection.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
@@ -64,9 +77,9 @@ public class ResourceListTest extends BuildFileTest {
         }
 
         rl = new ResourceList();
-        rl.setRefid(new Reference(getProject(), "dummyref"));
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
         try {
-            rl.add(new FileResource(getProject(), "."));
+            rl.add(new FileResource(buildRule.getProject(), "."));
             fail("Can add reference to ResourceList with nested resource collection.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
@@ -76,7 +89,7 @@ public class ResourceListTest extends BuildFileTest {
         rl = new ResourceList();
         rl.addFilterChain(new FilterChain());
         try {
-            rl.setRefid(new Reference(getProject(), "dummyref"));
+            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
             fail("Can add reference to ResourceList with nested filter chain.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
@@ -84,7 +97,7 @@ public class ResourceListTest extends BuildFileTest {
         }
 
         rl = new ResourceList();
-        rl.setRefid(new Reference(getProject(), "dummyref"));
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
         try {
             rl.addFilterChain(new FilterChain());
             fail("Can add reference to ResourceList with nested filter chain.");
@@ -94,18 +107,19 @@ public class ResourceListTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testCircularReference() throws Exception {
         ResourceList rl1 = new ResourceList();
-        rl1.setProject(getProject());
-        rl1.setRefid(new Reference(getProject(), "foo"));
+        rl1.setProject(buildRule.getProject());
+        rl1.setRefid(new Reference(buildRule.getProject(), "foo"));
 
         ResourceList rl2 = new ResourceList();
-        rl2.setProject(getProject());
-        getProject().addReference("foo", rl2);
+        rl2.setProject(buildRule.getProject());
+        buildRule.getProject().addReference("foo", rl2);
 
         Union u = new Union();
         u.add(rl1);
-        u.setProject(getProject());
+        u.setProject(buildRule.getProject());
 
         rl2.add(u);
 

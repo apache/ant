@@ -20,45 +20,42 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests Filename Selectors
  *
  */
-public class FilenameSelectorTest extends BaseSelectorTest {
+public class FilenameSelectorTest {
 
-    public FilenameSelectorTest(String name) {
-        super(name);
-    }
-
-    /**
-     * Factory method from base class. This is overriden in child
-     * classes to return a specific Selector class.
-     */
-    public BaseSelector getInstance() {
-        return new FilenameSelector();
-    }
+    @Rule
+    public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
     /**
      * Test the code that validates the selector.
      */
+    @Test
     public void testValidate() {
-        FilenameSelector s = (FilenameSelector)getInstance();
+        FilenameSelector s = new FilenameSelector();
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("FilenameSelector did not check for required fields");
         } catch (BuildException be1) {
             assertEquals("The name or regex attribute is required", be1.getMessage());
         }
 
-        s = (FilenameSelector)getInstance();
+        s = new FilenameSelector();
         Parameter param = new Parameter();
         param.setName("garbage in");
         param.setValue("garbage out");
         Parameter[] params = {param};
         s.setParameters(params);
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("FilenameSelector did not check for valid parameter element");
         } catch (BuildException be2) {
             assertEquals("Invalid parameter garbage in", be2.getMessage());
@@ -69,21 +66,20 @@ public class FilenameSelectorTest extends BaseSelectorTest {
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
+    @Test
     public void testSelectionBehaviour() {
         FilenameSelector s;
         String results;
 
-        try {
-            makeBed();
 
-            s = (FilenameSelector)getInstance();
+            s = new FilenameSelector();
             s.setName("no match possible");
-            results = selectionString(s);
+            results = selectorRule.selectionString(s);
             assertEquals("FFFFFFFFFFFF", results);
 
-            s = (FilenameSelector)getInstance();
+            s = new FilenameSelector();
             s.setName("*.gz");
-            results = selectionString(s);
+            results = selectorRule.selectionString(s);
             // This is turned off temporarily. There appears to be a bug
             // in SelectorUtils.matchPattern() where it is recursive on
             // Windows even if no ** is in pattern.
@@ -91,31 +87,28 @@ public class FilenameSelectorTest extends BaseSelectorTest {
             // vs
             //assertEquals("FFFTFFFFTFFF", results); // Windows
 
-            s = (FilenameSelector)getInstance();
+            s = new FilenameSelector();
             s.setName("**/*.gz");
             s.setNegate(true);
-            results = selectionString(s);
+            results = selectorRule.selectionString(s);
             assertEquals("TTTFTTTFFTTT", results);
 
-            s = (FilenameSelector)getInstance();
+            s = new FilenameSelector();
             s.setName("**/*.GZ");
             s.setCasesensitive(false);
-            results = selectionString(s);
+            results = selectorRule.selectionString(s);
             assertEquals("FFFTFFFTTFFF", results);
 
-            s = (FilenameSelector)getInstance();
+            s = new FilenameSelector();
             Parameter param1 = new Parameter();
             param1.setName("name");
             param1.setValue("**/*.bz2");
             Parameter[] params = {param1};
             s.setParameters(params);
-            results = selectionString(s);
+            results = selectorRule.selectionString(s);
             assertEquals("FFTFFFFFFTTF", results);
 
-        }
-        finally {
-            cleanupBed();
-        }
+        
 
     }
 

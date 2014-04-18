@@ -20,69 +20,37 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
+import static org.junit.Assert.assertEquals;
 
 
-public class ContainsRegexpTest extends TestCase {
+public class ContainsRegexpTest {
 
-    private Project project;
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    public ContainsRegexpTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        project = new Project();
-        project.setBasedir(".");
+        buildRule.configureProject("src/etc/testcases/types/selectors.xml");
     }
 
+    @Test
     public void testContainsRegexp() {
-        TaskdefForRegexpTest MyTask =
-            new TaskdefForRegexpTest("containsregexp");
-        try {
-            MyTask.setUp();
-            MyTask.test();
-        } finally {
-            MyTask.tearDown();
+        buildRule.executeTarget("containsregexp");
+        File dir = new File(buildRule.getOutputDir(), "regexpseltestdest");
+        File[] files = dir.listFiles();
+        int filecount = files.length;
+
+        if (filecount != 1)  {
+            assertEquals("ContainsRegexp test should have copied 1 file",
+                         1, files.length);
+
         }
     }
 
-    private class TaskdefForRegexpTest extends BuildFileTest {
-        TaskdefForRegexpTest(String name) {
-            super(name);
-        }
-
-        public void setUp() {
-            configureProject("src/etc/testcases/types/selectors.xml");
-        }
-
-        public void tearDown() {
-            try {
-                super.tearDown();
-            } catch (Exception exc) {
-                // ignore
-            }
-        }
-
-        public void test() {
-            File dir = null;
-            File[] files = null;
-            int filecount;
-
-            executeTarget("containsregexp");
-	
-            dir = new File(getOutputDir(), "regexpseltestdest");
-            files = dir.listFiles();
-            filecount = files.length;
-	
-            if (filecount != 1)
-                assertEquals("ContainsRegexp test should have copied 1 file",
-                             1, files.length);
-	
-        }
-    }
 }
 

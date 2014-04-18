@@ -18,65 +18,96 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class BasenameTest extends BuildFileTest {
+public class BasenameTest {
 
-    public BasenameTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/basename.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/basename.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required attribute missing");
+        try {
+            buildRule.executeTarget("test1");
+            fail("Required attribute missing");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required attribute missing");
+        try {
+            buildRule.executeTarget("test2");
+            fail("Required attribute missing");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required attribute missing");
+        try {
+            buildRule.executeTarget("test3");
+            fail("Required attribute missing");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test4() {
-        executeTarget("test4");
-        String checkprop = project.getProperty("file.w.suf");
+        buildRule.executeTarget("test4");
+        String checkprop = buildRule.getProject().getProperty("file.w.suf");
         assertEquals("foo.txt", checkprop);
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
-        String checkprop = project.getProperty("file.wo.suf");
+        buildRule.executeTarget("test5");
+        String checkprop = buildRule.getProject().getProperty("file.wo.suf");
         assertEquals("foo", checkprop);
     }
 
+    @Test
     public void testMultipleDots() {
-        executeTarget("testMultipleDots");
-        String checkprop = project.getProperty("file.wo.suf");
+        buildRule.executeTarget("testMultipleDots");
+        String checkprop = buildRule.getProject().getProperty("file.wo.suf");
         assertEquals("foo.bar", checkprop);
     }
 
+    @Test
     public void testNoDots() {
-        executeTarget("testNoDots");
-        String checkprop = project.getProperty("file.wo.suf");
+        buildRule.executeTarget("testNoDots");
+        String checkprop = buildRule.getProject().getProperty("file.wo.suf");
         assertEquals("foo.bar", checkprop);
     }
 
+    @Test
     public void testValueEqualsSuffixWithDot() {
-        executeTarget("testValueEqualsSuffixWithDot");
-        String checkprop = project.getProperty("file.wo.suf");
+        buildRule.executeTarget("testValueEqualsSuffixWithDot");
+        String checkprop = buildRule.getProject().getProperty("file.wo.suf");
         assertEquals("", checkprop);
     }
 
+    @Test
     public void testValueEqualsSuffixWithoutDot() {
-        executeTarget("testValueEqualsSuffixWithoutDot");
-        String checkprop = project.getProperty("file.wo.suf");
+        buildRule.executeTarget("testValueEqualsSuffixWithoutDot");
+        String checkprop = buildRule.getProject().getProperty("file.wo.suf");
         assertEquals("", checkprop);
     }
 

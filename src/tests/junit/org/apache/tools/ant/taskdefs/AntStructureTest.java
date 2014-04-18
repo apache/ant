@@ -18,40 +18,57 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.Project;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.PrintWriter;
 import java.util.Hashtable;
-import junit.framework.Assert;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
+
+import static org.junit.Assert.fail;
 
 /**
  */
-public class AntStructureTest extends BuildFileTest {
+public class AntStructureTest {
 
-    public AntStructureTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/antstructure.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/antstructure.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("tearDown");
+        buildRule.executeTarget("tearDown");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+            buildRule.executeTarget("test1");
+            fail("required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void testCustomPrinter() {
-        executeTarget("testCustomPrinter");
+        buildRule.executeTarget("testCustomPrinter");
         // can't access the booleans in MyPrinter here (even if they
         // were static) since the MyPrinter instance that was used in
         // the test has likely been loaded via a different classloader
         // than this class.  Therefore we make the printer assert its
         // state and only check for the tail invocation.
-        assertLogContaining(MyPrinter.TAIL_CALLED);
+        AntAssert.assertContains(MyPrinter.TAIL_CALLED, buildRule.getLog());
     }
 
     public static class MyPrinter implements AntStructure.StructurePrinter {

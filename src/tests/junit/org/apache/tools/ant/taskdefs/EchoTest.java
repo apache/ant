@@ -18,28 +18,29 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
-
-import junit.framework.TestCase;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test Java-dependent parts of the Echo task.
  */
-public class EchoTest extends TestCase {
+public class EchoTest {
 
     private File removeThis;
-    /**
-     * Create a new EchoTest.
-     * @param name
-     */
-    public EchoTest(String name) {
-        super(name);
-    }
 
+    @Test
     public void testLogBlankEcho() {
         Project p = new Project();
         p.init();
@@ -52,7 +53,8 @@ public class EchoTest extends TestCase {
         assertEquals("[testLogBlankEcho] ", logger.lastLoggedMessage );
     }
 
-    public void testLogUTF8Echo() {
+    @Test
+    public void testLogUTF8Echo() throws IOException {
         Project p = new Project();
         p.init();
         EchoTestLogger logger = new EchoTestLogger();
@@ -65,15 +67,11 @@ public class EchoTest extends TestCase {
         echo.setFile(removeThis);
         echo.setEncoding("UTF-8");
         echo.execute();
-        FileUtils fu = FileUtils.getFileUtils();
-        try {
         String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8" ));
-            assertEquals(x,"\u00e4\u00a9");
-        } catch (Exception exc) {
-
-        }
+        assertEquals(x,"\u00e4\u00a9");
     }
 
+    @After
     public void tearDown() {
         if (removeThis != null && removeThis.exists()) {
             if (!removeThis.delete())

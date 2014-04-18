@@ -17,52 +17,59 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Test that Xor follows the conventional boolean logic semantics
  * (a ^ b) === (a||b)&!(a&&b)
  */
-public class XorTest extends BuildFileTest {
+public class XorTest {
 
-    public XorTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/xor.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/xor.xml");
     }
 
+    @Test
     public void testEmpty() {
-        executeTarget("testEmpty");
+        buildRule.executeTarget("testEmpty");
     }
 
+    @Test
     public void test0() {
-        executeTarget("test0");
+        buildRule.executeTarget("test0");
     }
 
+    @Test
     public void test1() {
-        executeTarget("test1");
+        buildRule.executeTarget("test1");
     }
 
+    @Test
     public void test00() {
-        executeTarget("test00");
+        buildRule.executeTarget("test00");
     }
 
+    @Test
     public void test10() {
-        executeTarget("test10");
+        buildRule.executeTarget("test10");
     }
 
+    @Test
     public void test01() {
-        executeTarget("test01");
+        buildRule.executeTarget("test01");
     }
 
+    @Test
     public void test11() {
-        executeTarget("test11");
+        buildRule.executeTarget("test11");
     }
 
 }

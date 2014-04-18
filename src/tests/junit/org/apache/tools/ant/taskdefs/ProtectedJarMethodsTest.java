@@ -21,26 +21,35 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import org.apache.tools.ant.BuildFileTest;
+
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class ProtectedJarMethodsTest extends BuildFileTest {
+public class ProtectedJarMethodsTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
     private static String tempJar = "tmp.jar";
 
-    public ProtectedJarMethodsTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/jar.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/jar.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void testGrabFilesAndDirs() throws IOException {
-        executeTarget("testIndexTests");
-        String archive = getProject().getProperty(tempJar);
+        buildRule.executeTarget("testIndexTests");
+        String archive = buildRule.getProject().getProperty(tempJar);
         ArrayList dirs = new ArrayList();
         ArrayList files = new ArrayList();
         String[] expectedDirs = new String[] {
@@ -63,16 +72,19 @@ public class ProtectedJarMethodsTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testFindJarNameNoClasspath() {
         assertEquals("foo", Jar.findJarName("foo", null));
         assertEquals("foo", Jar.findJarName("lib" + File.separatorChar + "foo",
                                             null));
     }
 
+    @Test
     public void testFindJarNameNoMatch() {
         assertNull(Jar.findJarName("foo", new String[] {"bar"}));
     }
 
+    @Test
     public void testFindJarNameSimpleMatches() {
         assertEquals("foo", Jar.findJarName("foo", new String[] {"foo"}));
         assertEquals("lib/foo", Jar.findJarName("foo",
@@ -84,6 +96,7 @@ public class ProtectedJarMethodsTest extends BuildFileTest {
                                      new String[] {"lib/foo"}));
     }
 
+    @Test
     public void testFindJarNameLongestMatchWins() {
         assertEquals("lib/foo",
                      Jar.findJarName("lib/foo", 

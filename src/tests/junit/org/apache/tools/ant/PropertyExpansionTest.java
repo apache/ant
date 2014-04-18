@@ -19,33 +19,39 @@
 
 package org.apache.tools.ant;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * class to look at how we expand properties
  */
-public class PropertyExpansionTest extends BuildFileTest {
+public class PropertyExpansionTest {
 
-
-    public PropertyExpansionTest(String name) {
-        super(name);
-    }
-
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
     /**
      * we bind to an existing test file because we are too lazy to write our
      * own, and we don't really care what it is
      */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/immutable.xml");
+        buildRule.configureProject("src/etc/testcases/core/immutable.xml");
     }
 
     /**
      * run through the test cases of expansion
      */
+    @Test
     public void testPropertyExpansion() {
         assertExpandsTo("","");
         assertExpandsTo("$","$");
         assertExpandsTo("$$-","$-");
         assertExpandsTo("$$","$");
-        project.setProperty("expanded","EXPANDED");
+        buildRule.getProject().setProperty("expanded","EXPANDED");
         assertExpandsTo("a${expanded}b","aEXPANDEDb");
         assertExpandsTo("${expanded}${expanded}","EXPANDEDEXPANDED");
         assertExpandsTo("$$$","$$");
@@ -57,6 +63,7 @@ public class PropertyExpansionTest extends BuildFileTest {
     /**
      * new things we want
      */
+    @Test
     public void testDollarPassthru() {
         assertExpandsTo("$-","$-");
         assertExpandsTo("Class$subclass","Class$subclass");
@@ -71,6 +78,8 @@ public class PropertyExpansionTest extends BuildFileTest {
     /**
      * old things we dont want; not a test no more
      */
+    @Test
+    @Ignore("Previously disabled through naming convention")
     public void oldtestQuirkyLegacyBehavior() {
         assertExpandsTo("Class$subclass","Classsubclass");
         assertExpandsTo("$$$-","$-");
@@ -82,7 +91,7 @@ public class PropertyExpansionTest extends BuildFileTest {
      * little helper method to validate stuff
      */
     private void assertExpandsTo(String source,String expected) {
-        String actual=project.replaceProperties(source);
+        String actual = buildRule.getProject().replaceProperties(source);
         assertEquals(source,expected,actual);
     }
 

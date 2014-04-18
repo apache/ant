@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.junit.internal.AssumptionViolatedException;
+
 /**
  * Interactive Testcase for Processdestroyer.
  *
@@ -39,7 +41,11 @@ public class TestProcess
             {
                 while (!done)
                 {
-                    try { wait(); } catch (InterruptedException ie) {}
+                    try {
+                        wait();
+                    } catch (InterruptedException ie) {
+                        throw new AssumptionViolatedException("Thread interrupted", ie);
+                    }
                 }
             }
 
@@ -53,7 +59,11 @@ public class TestProcess
         {
             System.out.println(Thread.currentThread().getName());
 
-            try { Thread.sleep(2000); } catch (InterruptedException ie) {}
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ie) {
+                throw new AssumptionViolatedException("Thread interrupted", ie);
+            }
         }
 
         synchronized(this)

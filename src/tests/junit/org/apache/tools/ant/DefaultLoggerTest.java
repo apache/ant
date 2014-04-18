@@ -18,15 +18,15 @@
 
 package org.apache.tools.ant;
 
-import java.io.PrintWriter;
-import junit.framework.TestCase;
 import org.apache.tools.ant.util.StringUtils;
+import org.junit.Test;
 
-public class DefaultLoggerTest extends TestCase {
+import java.io.PrintWriter;
 
-    public DefaultLoggerTest(String n) {
-        super(n);
-    }
+import static org.junit.Assert.assertEquals;
+
+public class DefaultLoggerTest {
+
 
     private static String msg(Throwable error, boolean verbose) {
         StringBuffer m = new StringBuffer();
@@ -34,6 +34,7 @@ public class DefaultLoggerTest extends TestCase {
         return m.toString();
     }
 
+    @Test
     public void testThrowableMessage() throws Exception { // #43398
         BuildException be = new BuildException("oops", new Location("build.xml", 1, 0));
         assertEquals(

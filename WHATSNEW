@@ -26,6 +26,16 @@ Changes that could break older environments:
    might lead to blocking or other undefined behavior.
    Bugzilla Report 56149
 
+ * BuildFileTest and BaseSelectorTest have both been deprecated in
+   favour of BuildFileRule and BaseSelectorRule respectively, and the
+   tests that previously extended these base tests have been converted to
+   JUnit 4 tests using the new "rule"s. Any external test that sub-classed
+   a test in the Ant workspace, rather than BuildFileTest, will need
+   changed to either use JUnit4's annotations, or be modified to
+   extend BuildFileTest directly. This will not affect any tests that are
+   being executed by Ant's junit or batchtest tasks that are not specifically
+   testing Ant's code.
+
 Fixed bugs:
 -----------
 

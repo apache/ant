@@ -22,94 +22,145 @@ import java.io.File;
 
 import junit.framework.AssertionFailedError;
 
+import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.Path;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class AntTest extends BuildFileTest {
+public class AntTest {
+    
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    public AntTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/ant.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/ant.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "recursive call");
+        try {
+            buildRule.executeTarget("test1");
+            fail("recursive call");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
     // target must be specified
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+            buildRule.executeTarget("test2");
+            fail("required argument not specified");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
     // Should fail since a recursion will occur...
+    @Test
     public void test3() {
-        expectBuildException("test1", "recursive call");
+        try {
+            buildRule.executeTarget("test1");
+            fail("recursive call");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test4() {
-        expectBuildException("test4", "target attribute must not be empty");
+        try {
+            buildRule.executeTarget("test4");
+            fail("target attribute must not be empty");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test4b() {
-        expectBuildException("test4b", "target doesn't exist");
+        try {
+            buildRule.executeTarget("test4b");
+            fail("target doesn't exist");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
     }
 
+    @Test
     public void test6() {
-        executeTarget("test6");
+        buildRule.executeTarget("test6");
     }
 
+    @Test
     public void testExplicitBasedir1() {
-        File dir1 = getProjectDir();
-        File dir2 = project.resolveFile("..");
+        File dir1 = buildRule.getProject().getBaseDir();
+        File dir2 = buildRule.getProject().resolveFile("..");
         testBaseDirs("explicitBasedir1",
                      new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
 
+    @Test
     public void testExplicitBasedir2() {
-        File dir1 = getProjectDir();
-        File dir2 = project.resolveFile("..");
+        File dir1 = buildRule.getProject().getBaseDir();
+        File dir2 = buildRule.getProject().resolveFile("..");
         testBaseDirs("explicitBasedir2",
                      new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
 
+    @Test
     public void testInheritBasedir() {
-        String basedir = getProjectDir().getAbsolutePath();
+        String basedir = buildRule.getProject().getBaseDir().getAbsolutePath();
         testBaseDirs("inheritBasedir", new String[] {basedir, basedir});
     }
 
+    @Test
     public void testDoNotInheritBasedir() {
-        File dir1 = getProjectDir();
-        File dir2 = project.resolveFile("ant");
+        File dir1 = buildRule.getProject().getBaseDir();
+        File dir2 = buildRule.getProject().resolveFile("ant");
         testBaseDirs("doNotInheritBasedir",
                      new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath()
                      });
     }
 
+    @Test
     public void testBasedirTripleCall() {
-        File dir1 = getProjectDir();
-        File dir2 = project.resolveFile("ant");
+        File dir1 = buildRule.getProject().getBaseDir();
+        File dir2 = buildRule.getProject().resolveFile("ant");
         testBaseDirs("tripleCall",
                      new String[] {dir1.getAbsolutePath(),
                                    dir2.getAbsolutePath(),
@@ -119,20 +170,21 @@ public class AntTest extends BuildFileTest {
 
     protected void testBaseDirs(String target, String[] dirs) {
         BasedirChecker bc = new BasedirChecker(dirs);
-        project.addBuildListener(bc);
-        executeTarget(target);
+        buildRule.getProject().addBuildListener(bc);
+        buildRule.executeTarget(target);
         AssertionFailedError ae = bc.getError();
         if (ae != null) {
             throw ae;
         }
-        project.removeBuildListener(bc);
+        buildRule.getProject().removeBuildListener(bc);
     }
 
+    @Test
     public void testReferenceInheritance() {
         Path p = Path.systemClasspath;
-        p.setProject(project);
-        project.addReference("path", p);
-        project.addReference("no-override", p);
+        p.setProject(buildRule.getProject());
+        buildRule.getProject().addReference("path", p);
+        buildRule.getProject().addReference("no-override", p);
         testReference("testInherit", new String[] {"path", "path"},
                       new boolean[] {true, true}, p);
         testReference("testInherit",
@@ -143,11 +195,12 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {false, false}, null);
     }
 
+    @Test
     public void testReferenceNoInheritance() {
         Path p = Path.systemClasspath;
-        p.setProject(project);
-        project.addReference("path", p);
-        project.addReference("no-override", p);
+        p.setProject(buildRule.getProject());
+        buildRule.getProject().addReference("path", p);
+        buildRule.getProject().addReference("no-override", p);
         testReference("testNoInherit", new String[] {"path", "path"},
                       new boolean[] {true, false}, p);
         testReference("testNoInherit", new String[] {"path", "path"},
@@ -160,10 +213,11 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {false, false}, null);
     }
 
+    @Test
     public void testReferenceRename() {
         Path p = Path.systemClasspath;
-        p.setProject(project);
-        project.addReference("path", p);
+        p.setProject(buildRule.getProject());
+        buildRule.getProject().addReference("path", p);
         testReference("testRename", new String[] {"path", "path"},
                       new boolean[] {true, false}, p);
         testReference("testRename", new String[] {"path", "path"},
@@ -172,35 +226,37 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {false, true}, p);
     }
 
+    @Test
     public void testInheritPath() {
-        executeTarget("testInheritPath");
+        buildRule.executeTarget("testInheritPath");
     }
 
     protected void testReference(String target, String[] keys,
                                  boolean[] expect, Object value) {
         ReferenceChecker rc = new ReferenceChecker(keys, expect, value);
-        project.addBuildListener(rc);
-        executeTarget(target);
+        buildRule.getProject().addBuildListener(rc);
+        buildRule.executeTarget(target);
         AssertionFailedError ae = rc.getError();
         if (ae != null) {
             throw ae;
         }
-        project.removeBuildListener(rc);
+        buildRule.getProject().removeBuildListener(rc);
     }
 
+    @Test
     public void testLogfilePlacement() {
         File[] logFiles = new File[] {
-            getProject().resolveFile("test1.log"),
-            getProject().resolveFile("test2.log"),
-            getProject().resolveFile("ant/test3.log"),
-            getProject().resolveFile("ant/test4.log")
+            buildRule.getProject().resolveFile("test1.log"),
+            buildRule.getProject().resolveFile("test2.log"),
+            buildRule.getProject().resolveFile("ant/test3.log"),
+            buildRule.getProject().resolveFile("ant/test4.log")
         };
         for (int i=0; i<logFiles.length; i++) {
             assertTrue(logFiles[i].getName()+" doesn\'t exist",
                        !logFiles[i].exists());
         }
 
-        executeTarget("testLogfilePlacement");
+        buildRule.executeTarget("testLogfilePlacement");
 
         for (int i=0; i<logFiles.length; i++) {
             assertTrue(logFiles[i].getName()+" exists",
@@ -208,84 +264,106 @@ public class AntTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testInputHandlerInheritance() {
         InputHandler ih = new PropertyFileInputHandler();
-        getProject().setInputHandler(ih);
+        buildRule.getProject().setInputHandler(ih);
         InputHandlerChecker ic = new InputHandlerChecker(ih);
-        getProject().addBuildListener(ic);
-        executeTarget("tripleCall");
+        buildRule.getProject().addBuildListener(ic);
+        buildRule.executeTarget("tripleCall");
         AssertionFailedError ae = ic.getError();
         if (ae != null) {
             throw ae;
         }
-        getProject().removeBuildListener(ic);
+        buildRule.getProject().removeBuildListener(ic);
     }
 
+    @Test
     public void testRefId() {
-        Path testPath = new Path(project);
+        Path testPath = new Path(buildRule.getProject());
         testPath.createPath().setPath(System.getProperty("java.class.path"));
         PropertyChecker pc =
             new PropertyChecker("testprop",
                                 new String[] {null,
                                               testPath.toString()});
-        project.addBuildListener(pc);
-        executeTarget("testRefid");
+        buildRule.getProject().addBuildListener(pc);
+        buildRule.executeTarget("testRefid");
         AssertionFailedError ae = pc.getError();
         if (ae != null) {
             throw ae;
         }
-        project.removeBuildListener(pc);
+        buildRule.getProject().removeBuildListener(pc);
     }
 
+    @Test
     public void testUserPropertyWinsInheritAll() {
-        getProject().setUserProperty("test", "7");
-        expectLogContaining("test-property-override-inheritall-start",
-                            "The value of test is 7");
+        buildRule.getProject().setUserProperty("test", "7");
+        buildRule.executeTarget("test-property-override-inheritall-start");
+
+        AntAssert.assertContains("The value of test is 7", buildRule.getLog());
     }
 
+    @Test
     public void testUserPropertyWinsNoInheritAll() {
-        getProject().setUserProperty("test", "7");
-        expectLogContaining("test-property-override-no-inheritall-start",
-                            "The value of test is 7");
+        buildRule.getProject().setUserProperty("test", "7");
+        buildRule.executeTarget("test-property-override-no-inheritall-start");
+
+        AntAssert.assertContains("The value of test is 7", buildRule.getLog());
     }
 
+    @Test
     public void testOverrideWinsInheritAll() {
-        expectLogContaining("test-property-override-inheritall-start",
-                            "The value of test is 4");
+        buildRule.executeTarget("test-property-override-inheritall-start");
+
+        AntAssert.assertContains("The value of test is 4", buildRule.getLog());
     }
 
+    @Test
     public void testOverrideWinsNoInheritAll() {
-        expectLogContaining("test-property-override-no-inheritall-start",
-                            "The value of test is 4");
+        buildRule.executeTarget("test-property-override-no-inheritall-start");
+        AntAssert.assertContains("The value of test is 4", buildRule.getLog());
     }
 
+    @Test
     public void testPropertySet() {
-        executeTarget("test-propertyset");
-        assertTrue(getLog().indexOf("test1 is ${test1}") > -1);
-        assertTrue(getLog().indexOf("test2 is ${test2}") > -1);
-        assertTrue(getLog().indexOf("test1.x is 1") > -1);
+        buildRule.executeTarget("test-propertyset");
+        assertTrue(buildRule.getLog().indexOf("test1 is ${test1}") > -1);
+        assertTrue(buildRule.getLog().indexOf("test2 is ${test2}") > -1);
+        assertTrue(buildRule.getLog().indexOf("test1.x is 1") > -1);
     }
 
+    @Test
     public void testInfiniteLoopViaDepends() {
-        expectBuildException("infinite-loop-via-depends", "recursive call");
+        try {
+            buildRule.executeTarget("infinite-loop-via-depends");
+            fail("recursive call");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void testMultiSameProperty() {
-        expectLog("multi-same-property", "prop is two");
+        buildRule.executeTarget("multi-same-property");
+        assertEquals("prop is two", buildRule.getLog());
     }
 
+    @Test
     public void testTopLevelTarget() {
-        expectLog("topleveltarget", "Hello world");
+        buildRule.executeTarget("topleveltarget");
+
+        assertEquals("Hello world", buildRule.getLog());
     }
 
+    @Test
     public void testMultiplePropertyFileChildren() {
         PropertyChecker pcBar = new PropertyChecker("bar",
                                                     new String[] {null, "Bar"});
         PropertyChecker pcFoo = new PropertyChecker("foo",
                                                     new String[] {null, "Foo"});
-        project.addBuildListener(pcBar);
-        project.addBuildListener(pcFoo);
-        executeTarget("multiple-property-file-children");
+        buildRule.getProject().addBuildListener(pcBar);
+        buildRule.getProject().addBuildListener(pcFoo);
+        buildRule.executeTarget("multiple-property-file-children");
         AssertionFailedError aeBar = pcBar.getError();
         if (aeBar != null) {
             throw aeBar;
@@ -294,26 +372,37 @@ public class AntTest extends BuildFileTest {
         if (aeFoo != null) {
             throw aeFoo;
         }
-        project.removeBuildListener(pcBar);
-        project.removeBuildListener(pcFoo);
+        buildRule.getProject().removeBuildListener(pcBar);
+        buildRule.getProject().removeBuildListener(pcFoo);
     }
 
+    @Test
     public void testBlankTarget() {
-        expectBuildException("blank-target", "target name must not be empty");
+        try {
+            buildRule.executeTarget("blank-target");
+            fail("target name must not be empty");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void testMultipleTargets() {
-        expectLog("multiple-targets", "tadadctbdbtc");
+        buildRule.executeTarget("multiple-targets");
+        assertEquals("tadadctbdbtc", buildRule.getLog());
     }
 
+    @Test
     public void testMultipleTargets2() {
-        expectLog("multiple-targets-2", "dadctb");
+        buildRule.executeTarget("multiple-targets-2");
+        assertEquals("dadctb", buildRule.getLog());
     }
 
+    @Test
     public void testAntCoreLib() {
         // Cf. #42263
-        executeTarget("sub-show-ant.core.lib");
-        String realLog = getLog();
+        buildRule.executeTarget("sub-show-ant.core.lib");
+        String realLog = buildRule.getLog();
         assertTrue("found ant.core.lib in: " + realLog, realLog.matches(".*(ant[.]jar|build.classes).*"));
     }
 

@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import junit.framework.TestCase;
-
 import java.util.Date;
 import java.io.PrintWriter;
 import java.io.OutputStreamWriter;
@@ -27,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.apache.tools.ant.util.JAXPUtils;
+import org.junit.Test;
 import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.ContentHandler;
@@ -37,10 +36,11 @@ import org.xml.sax.Attributes;
 /**
  *  Test for the cvslib ChangeLogWriter
  */
-public class ChangeLogWriterTest extends TestCase {
+public class ChangeLogWriterTest {
 
     private ChangeLogWriter writer = new ChangeLogWriter();
 
+    @Test
     public void testNonUTF8Characters() throws Exception {
         CVSEntry entry = new CVSEntry(new Date(), "Se\u00f1orita", "2003 < 2004 && 3 > 5");
         entry.addFile("Medicare & review.doc", "1.1");

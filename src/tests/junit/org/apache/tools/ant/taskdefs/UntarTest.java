@@ -17,75 +17,97 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
 
-/**
- */
-public class UntarTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    public UntarTest(String name) {
-        super(name);
-    }
+public class UntarTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/untar.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/untar.xml");
     }
 
+    @Test
     public void testRealTest() throws java.io.IOException {
         testLogoExtraction("realTest");
     }
 
+    @Test
     public void testRealGzipTest() throws java.io.IOException {
         testLogoExtraction("realGzipTest");
     }
 
+    @Test
     public void testRealBzip2Test() throws java.io.IOException {
         testLogoExtraction("realBzip2Test");
     }
 
+    @Test
     public void testTestTarTask() throws java.io.IOException {
         testLogoExtraction("testTarTask");
     }
 
+    @Test
     public void testTestGzipTarTask() throws java.io.IOException {
         testLogoExtraction("testGzipTarTask");
     }
 
+    @Test
     public void testTestBzip2TarTask() throws java.io.IOException {
         testLogoExtraction("testBzip2TarTask");
     }
 
+    @Test
     public void testSrcDirTest() {
-        expectBuildException("srcDirTest", "Src cannot be a directory.");
+        try {
+            buildRule.executeTarget("srcDirTest");
+            fail("Src cannot be a directory.");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void testEncoding() {
-        expectSpecificBuildException("encoding",
-                                     "<untar> overrides setEncoding.",
-                                     "The untar task doesn't support the "
-                                     + "encoding attribute");
+        try {
+            buildRule.executeTarget("encoding");
+            fail("<untar> overrides setEncoding.");
+        } catch (BuildException ex) {
+            assertEquals("The untar task doesn't support the encoding attribute", ex.getMessage());
+        }
     }
 
+    @Test
     public void testResourceCollection() throws java.io.IOException {
         testLogoExtraction("resourceCollection");
     }
 
     private void testLogoExtraction(String target) throws java.io.IOException {
-        executeTarget(target);
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           new File(getProject().getProperty("output"), "untar/" +
-                                                   "asf-logo.gif")));
+        buildRule.executeTarget(target);
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif")));
+
     }
 
+    @Test
     public void testDocumentationClaimsOnCopy() {
-        executeTarget("testDocumentationClaimsOnCopy");
-        assertFalse(new File(getProject().getProperty("output"), "untar/1/foo").exists());
-        assertTrue(new File(getProject().getProperty("output"), "untar/2/bar").exists());
+        buildRule.executeTarget("testDocumentationClaimsOnCopy");
+        assertFalse(new File(buildRule.getProject().getProperty("output"), "untar/1/foo").exists());
+        assertTrue(new File(buildRule.getProject().getProperty("output"), "untar/2/bar").exists());
     }
 }

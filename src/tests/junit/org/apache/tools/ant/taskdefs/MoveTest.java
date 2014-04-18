@@ -18,126 +18,151 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the Move task.
  *
  */
-public class MoveTest extends BuildFileTest {
+public class MoveTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    public MoveTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/move.xml");
-        project.executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/move.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void testFilterSet() throws IOException {
-        executeTarget("testFilterSet");
-        File tmp  = new File(getOutputDir(), "move.filterset.tmp");
-        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
+        buildRule.executeTarget("testFilterSet");
+        File tmp  = new File(buildRule.getProject().getProperty("output"), "move.filterset.tmp");
+        File check  = new File(buildRule.getProject().getBaseDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
-        assertTrue(FILE_UTILS.contentEquals(tmp, check));
+        assertEquals(FileUtilities.getFileContents(check), FileUtilities.getFileContents(tmp));
     }
 
+    @Test
     public void testFilterChain() throws IOException {
-        executeTarget("testFilterChain");
-        File tmp  = new File(getOutputDir(), "move.filterchain.tmp");
-        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
+        buildRule.executeTarget("testFilterChain");
+        File tmp  = new File(buildRule.getProject().getProperty("output"), "move.filterchain.tmp");
+        File check  = new File(buildRule.getProject().getBaseDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
-        assertTrue(FILE_UTILS.contentEquals(tmp, check));
+        assertEquals(FileUtilities.getFileContents(check), FileUtilities.getFileContents(tmp));
     }
 
     /** Bugzilla Report 11732 */
+    @Test
     public void testDirectoryRemoval() throws IOException {
-        executeTarget("testDirectoryRemoval");
-        assertTrue(!new File(getOutputDir(),"E/B/1").exists());
-        assertTrue(new File(getOutputDir(),"E/C/2").exists());
-        assertTrue(new File(getOutputDir(),"E/D/3").exists());
-        assertTrue(new File(getOutputDir(),"A/B/1").exists());
-        assertTrue(!new File(getOutputDir(),"A/C/2").exists());
-        assertTrue(!new File(getOutputDir(),"A/D/3").exists());
-        assertTrue(!new File(getOutputDir(),"A/C").exists());
-        assertTrue(!new File(getOutputDir(),"A/D").exists());
+
+        buildRule.executeTarget("testDirectoryRemoval");
+        String output = buildRule.getProject().getProperty("output");
+        assertTrue(!new File(output,"E/B/1").exists());
+        assertTrue(new File(output, "E/C/2").exists());
+        assertTrue(new File(output,"E/D/3").exists());
+        assertTrue(new File(output,"A/B/1").exists());
+        assertTrue(!new File(output,"A/C/2").exists());
+        assertTrue(!new File(output,"A/D/3").exists());
+        assertTrue(!new File(output,"A/C").exists());
+        assertTrue(!new File(output,"A/D").exists());
     }
 
     /** Bugzilla Report 18886 */
+    @Test
     public void testDirectoryRetaining() throws IOException {
-        executeTarget("testDirectoryRetaining");
-        assertTrue(new File(getOutputDir(),"E").exists());
-        assertTrue(new File(getOutputDir(),"E/1").exists());
-        assertTrue(!new File(getOutputDir(),"A/1").exists());
-        assertTrue(new File(getOutputDir(),"A").exists());
+        buildRule.executeTarget("testDirectoryRetaining");
+        String output = buildRule.getProject().getProperty("output");
+        assertTrue(new File(output,"E").exists());
+        assertTrue(new File(output,"E/1").exists());
+        assertTrue(!new File(output,"A/1").exists());
+        assertTrue(new File(output,"A").exists());
     }
 
+    @Test
     public void testCompleteDirectoryMove() throws IOException {
         testCompleteDirectoryMove("testCompleteDirectoryMove");
     }
 
+    @Test
     public void testCompleteDirectoryMove2() throws IOException {
         testCompleteDirectoryMove("testCompleteDirectoryMove2");
     }
 
     private void testCompleteDirectoryMove(String target) throws IOException {
-        executeTarget(target);
-        assertTrue(new File(getOutputDir(),"E").exists());
-        assertTrue(new File(getOutputDir(),"E/1").exists());
-        assertTrue(!new File(getOutputDir(),"A/1").exists());
+        buildRule.executeTarget(target);
+        String output = buildRule.getProject().getProperty("output");
+        assertTrue(new File(output,"E").exists());
+        assertTrue(new File(output,"E/1").exists());
+        assertTrue(!new File(output,"A/1").exists());
         // <path> swallows the basedir, it seems
         //assertTrue(!new File(getOutputDir(),"A").exists());
     }
 
+    @Test
     public void testPathElementMove() throws IOException {
-        executeTarget("testPathElementMove");
-        assertTrue(new File(getOutputDir(),"E").exists());
-        assertTrue(new File(getOutputDir(),"E/1").exists());
-        assertTrue(!new File(getOutputDir(),"A/1").exists());
-        assertTrue(new File(getOutputDir(),"A").exists());
+        buildRule.executeTarget("testPathElementMove");
+        String output = buildRule.getProject().getProperty("output");
+        assertTrue(new File(output,"E").exists());
+        assertTrue(new File(output,"E/1").exists());
+        assertTrue(!new File(output,"A/1").exists());
+        assertTrue(new File(output,"A").exists());
     }
 
+    @Test
     public void testMoveFileAndFileset() {
-        executeTarget("testMoveFileAndFileset");
+        buildRule.executeTarget("testMoveFileAndFileset");
     }
 
+    @Test
     public void testCompleteDirectoryMoveToExistingDir() {
-        executeTarget("testCompleteDirectoryMoveToExistingDir");
+        buildRule.executeTarget("testCompleteDirectoryMoveToExistingDir");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToFile() {
-        executeTarget("testCompleteDirectoryMoveFileToFile");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToFile");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToDir() {
-        executeTarget("testCompleteDirectoryMoveFileToDir");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToDir");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileAndFileset() {
-        executeTarget("testCompleteDirectoryMoveFileAndFileset");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileAndFileset");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToExistingFile() {
-        executeTarget("testCompleteDirectoryMoveFileToExistingFile");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToExistingFile");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToExistingDir() {
-        executeTarget("testCompleteDirectoryMoveFileToExistingDir");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToExistingDir");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToDirWithExistingFile() {
-        executeTarget("testCompleteDirectoryMoveFileToDirWithExistingFile");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToDirWithExistingFile");
     }
 
+    @Test
     public void testCompleteDirectoryMoveFileToDirWithExistingDir() {
-        executeTarget("testCompleteDirectoryMoveFileToDirWithExistingDir");
+        buildRule.executeTarget("testCompleteDirectoryMoveFileToDirWithExistingDir");
     }
 
 }

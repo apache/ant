@@ -22,26 +22,39 @@ import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.*;
 
 import java.io.File;
-import junit.framework.TestCase;
+
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PatternSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 /**
  * Very limited test class for Project. Waiting to be extended.
  *
  */
-public class ProjectTest extends TestCase {
+public class ProjectTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     private Project p;
     private String root;
     private MockBuildListener mbl;
 
-    public ProjectTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         p = new Project();
         p.init();
@@ -49,6 +62,7 @@ public class ProjectTest extends TestCase {
         mbl = new MockBuildListener(p);
     }
 
+    @Test
     public void testDataTypes() throws BuildException {
         assertNull("dummy is not a known data type",
                    p.createDataType("dummy"));
@@ -63,6 +77,7 @@ public class ProjectTest extends TestCase {
     /**
      * This test has been a starting point for moving the code to FileUtils.
      */
+    @Test
     public void testResolveFile() {
         if (Os.isFamily("netware") || Os.isFamily("dos")) {
             assertEqualsIgnoreDriveCase(localize(File.separator),
@@ -178,6 +193,7 @@ public class ProjectTest extends TestCase {
         }
     }
 
+    @Test
     public void testAddTaskDefinition() {
         p.addBuildListener(mbl);
 
@@ -209,6 +225,7 @@ public class ProjectTest extends TestCase {
         assertEquals(DummyTaskWithNonVoidExecute.class, p.getTaskDefinitions().get("NonVoidExecute"));
     }
 
+    @Test
     public void testInputHandler() {
         InputHandler ih = p.getInputHandler();
         assertNotNull(ih);
@@ -218,33 +235,38 @@ public class ProjectTest extends TestCase {
         assertSame(pfih, p.getInputHandler());
     }
 
+    @Test
     public void testTaskDefinitionContainsKey() {
         assertTrue(p.getTaskDefinitions().containsKey("echo"));
     }
 
+    @Test
     public void testTaskDefinitionContains() {
         assertTrue(p.getTaskDefinitions().contains(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
+    @Test
     public void testDuplicateTargets() {
         // fail, because buildfile contains two targets with the same name
         try {
-            BFT bft = new BFT("", "core/duplicate-target.xml");
+            buildRule.configureProject("src/etc/testcases/core/duplicate-target.xml");
+            fail("Should throw BuildException about duplicate target");
         } catch (BuildException ex) {
             assertEquals("specific message",
                          "Duplicate target 'twice'",
                          ex.getMessage());
-            return;
         }
-        fail("Should throw BuildException about duplicate target");
     }
 
+    @Test
     public void testDuplicateTargetsImport() {
         // overriding target from imported buildfile is allowed
-        BFT bft = new BFT("", "core/duplicate-target2.xml");
-        bft.expectLog("once", "once from buildfile");
+        buildRule.configureProject("src/etc/testcases/core/duplicate-target2.xml");
+        buildRule.executeTarget("once");
+        assertContains("once from buildfile", buildRule.getLog());
     }
 
+    @Test
     public void testOutputDuringMessageLoggedIsSwallowed()
         throws InterruptedException {
         final String FOO = "foo", BAR = "bar";
@@ -277,8 +299,10 @@ public class ProjectTest extends TestCase {
     }
 
     /**
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=47623
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47623">
+     *     https://issues.apache.org/bugzilla/show_bug.cgi?id=47623</a>
      */
+    @Test
     public void testNullThrowableMessageLog() {
         p.log(new Task() {}, null, new Throwable(), Project.MSG_ERR);
         // be content if no exception has been thrown
@@ -294,42 +318,10 @@ public class ProjectTest extends TestCase {
         public void execute() {}
     }
 
-    private class BFT extends org.apache.tools.ant.BuildFileTest {
-        BFT(String name, String buildfile) {
-            super(name);
-            this.buildfile = buildfile;
-            setUp();
-        }
 
-        // avoid multiple configurations
-        boolean isConfigured = false;
+    class DummyTaskPackage extends Task {
+        public DummyTaskPackage() {}
+        public void execute() {}
+    }
 
-        // the buildfile to use
-        String buildfile = "";
-
-        public void setUp() {
-            if (!isConfigured) {
-                configureProject("src/etc/testcases/"+buildfile);
-                isConfigured = true;
-            }
-        }
-
-        public void tearDown() { }
-
-        // call a target
-        public void doTarget(String target) {
-            if (!isConfigured) setUp();
-            executeTarget(target);
-        }
-
-        public org.apache.tools.ant.Project getProject() {
-            return super.getProject();
-        }
-    }//class-BFT
-
-}
-
-class DummyTaskPackage extends Task {
-    public DummyTaskPackage() {}
-    public void execute() {}
 }

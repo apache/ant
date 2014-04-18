@@ -18,31 +18,42 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcase for the &lt;issigned&gt; condition.
  *
  */
-public class IsSignedTest extends BuildFileTest {
+public class IsSignedTest {
 
-    public IsSignedTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/issigned.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/issigned.xml");
     }
 
+    @Test
     public void testPass() {
-        executeTarget("pass");
+        buildRule.executeTarget("pass");
     }
+
+    @Test
     public void testPassword() {
-        executeTarget("password");
+        buildRule.executeTarget("password");
     }
+
+    @Test
     public void testAPassword() {
-        executeTarget("apassword");
+        buildRule.executeTarget("apassword");
     }
+
+    @Test
     public void testAllSigned() {
-        executeTarget("allsigned");
+        buildRule.executeTarget("allsigned");
     }
 }

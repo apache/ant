@@ -18,53 +18,78 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  
  */
-public class ParserSupportsTest extends BuildFileTest {
+public class ParserSupportsTest {
 
-    public ParserSupportsTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/parsersupports.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/parsersupports.xml");
     }
 
-    public void testEmpty() throws Exception {
-        expectBuildExceptionContaining("testEmpty",
-                ParserSupports.ERROR_NO_ATTRIBUTES,
-                ParserSupports.ERROR_NO_ATTRIBUTES);
+    @Test
+    public void testEmpty() {
+        try {
+            buildRule.executeTarget("testEmpty");
+            fail("Build exception expected: " + ParserSupports.ERROR_NO_ATTRIBUTES);
+        } catch(BuildException ex) {
+            assertEquals(ParserSupports.ERROR_NO_ATTRIBUTES, ex.getMessage());
+        }
     }
 
-    public void testBoth() throws Exception {
-        expectBuildExceptionContaining("testBoth",
-                ParserSupports.ERROR_BOTH_ATTRIBUTES,
-                ParserSupports.ERROR_BOTH_ATTRIBUTES);
+    @Test
+    public void testBoth() {
+        try {
+            buildRule.executeTarget("testBoth");
+            fail("Build exception expected: " + ParserSupports.ERROR_BOTH_ATTRIBUTES);
+        } catch(BuildException ex) {
+            assertEquals(ParserSupports.ERROR_BOTH_ATTRIBUTES, ex.getMessage());
+        }
     }
 
-    public void testNamespaces() throws Exception {
-        executeTarget("testNamespaces");
+    @Test
+    public void testNamespaces() {
+        buildRule.executeTarget("testNamespaces");
     }
 
-    public void testPropertyNoValue() throws Exception {
-        expectBuildExceptionContaining("testPropertyNoValue",
-                ParserSupports.ERROR_NO_VALUE,
-                ParserSupports.ERROR_NO_VALUE);
+    @Test
+    public void testPropertyNoValue() {
+        try {
+            buildRule.executeTarget("testPropertyNoValue");
+            fail("Build exception expected: " + ParserSupports.ERROR_NO_VALUE);
+        } catch(BuildException ex) {
+            assertEquals(ParserSupports.ERROR_NO_VALUE, ex.getMessage());
+        }
     }
 
-    public void testUnknownProperty() throws Exception {
-        executeTarget("testUnknownProperty");
+    @Test
+    public void testUnknownProperty() {
+        buildRule.executeTarget("testUnknownProperty");
     }
-    public void NotestPropertyInvalid() throws Exception {
-        executeTarget("testPropertyInvalid");
+
+    @Test
+    @Ignore("Previously named in a manner to prevent execution")
+    public void NotestPropertyInvalid() {
+        buildRule.executeTarget("testPropertyInvalid");
     }
-    public void NotestXercesProperty() throws Exception {
-        executeTarget("testXercesProperty");
+
+    @Test
+    @Ignore("Previously named in a manner to prevent execution")
+    public void NotestXercesProperty() {
+        buildRule.executeTarget("testXercesProperty");
     }
 }

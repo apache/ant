@@ -17,23 +17,31 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.io.*;
-import junit.framework.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
 
 /**
  * Small testcase for the runner, tests are very very very basics.
  * They must be enhanced with time.
  *
  */
-public class JUnitTestRunnerTest extends TestCase {
+public class JUnitTestRunnerTest{
 
-    // mandatory constructor
-    public JUnitTestRunnerTest(String name){
-        super(name);
-    }
+  
 
     // check that a valid method name generates no errors
+    @Test
     public void testValidMethod(){
         TestRunner runner = createRunnerForTestMethod(ValidMethodTestCase.class,"testA");
         runner.run();
@@ -41,6 +49,7 @@ public class JUnitTestRunnerTest extends TestCase {
     }
 
     // check that having an invalid method name generates an error
+    @Test
     public void testInvalidMethod(){
         TestRunner runner = createRunnerForTestMethod(InvalidMethodTestCase.class,"testInvalid");
         runner.run();
@@ -50,6 +59,7 @@ public class JUnitTestRunnerTest extends TestCase {
     }    
     
     // check that having no suite generates no errors
+    @Test
     public void testNoSuite(){
         TestRunner runner = createRunner(NoSuiteTestCase.class);
         runner.run();
@@ -57,6 +67,7 @@ public class JUnitTestRunnerTest extends TestCase {
     }
 
     // check that a suite generates no errors
+    @Test
     public void testSuite(){
         TestRunner runner = createRunner(SuiteTestCase.class);
         runner.run();
@@ -64,6 +75,7 @@ public class JUnitTestRunnerTest extends TestCase {
     }
 
     // check that an invalid suite generates an error.
+    @Test
     public void testInvalidSuite(){
         TestRunner runner = createRunner(InvalidSuiteTestCase.class);
         runner.run();
@@ -74,6 +86,7 @@ public class JUnitTestRunnerTest extends TestCase {
 
     // check that something which is not a testcase generates no errors
     // at first even though this is incorrect.
+    @Test
     public void testNoTestCase(){
         TestRunner runner = createRunner(NoTestCase.class);
         runner.run();
@@ -88,6 +101,7 @@ public class JUnitTestRunnerTest extends TestCase {
     }
 
     // check that an exception in the constructor is noticed
+    @Test
     public void testInvalidTestCase(){
         TestRunner runner = createRunner(InvalidTestCase.class);
         runner.run();
@@ -102,12 +116,12 @@ public class JUnitTestRunnerTest extends TestCase {
         //assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
 
-    protected TestRunner createRunner(Class clazz){
+    protected TestRunner createRunner(Class<?> clazz){
         return new TestRunner(new JUnitTest(clazz.getName()), null, 
                                             true, true, true);
     }
 
-    protected TestRunner createRunnerForTestMethod(Class clazz, String method){
+    protected TestRunner createRunnerForTestMethod(Class<?> clazz, String method){
         return new TestRunner(new JUnitTest(clazz.getName()), new String[] {method},
                                             true, true, true);
     }    
@@ -137,11 +151,10 @@ public class JUnitTestRunnerTest extends TestCase {
         public void startTestSuite(JUnitTest suite) throws BuildException{}
         public void endTestSuite(JUnitTest suite) throws BuildException{}
         public void setOutput(java.io.OutputStream out){}
-        public void startTest(Test t) {}
-        public void endTest(Test test) {}
-        public void addFailure(Test test, Throwable t) { }
-        public void addFailure(Test test, AssertionFailedError t) { }
-        public void addError(Test test, Throwable t) {
+        public void startTest(junit.framework.Test t) {}
+        public void endTest(junit.framework.Test test) {}
+        public void addFailure(junit.framework.Test test, AssertionFailedError t) { }
+        public void addError(junit.framework.Test test, Throwable t) {
             error = t;
         }
         String getError(){
@@ -189,19 +202,16 @@ public class JUnitTestRunnerTest extends TestCase {
 
     public static class SuiteTestCase extends NoSuiteTestCase {
         public SuiteTestCase(String name){ super(name); }
-        public static Test suite(){
+        public static junit.framework.Test suite(){
             return new TestSuite(SuiteTestCase.class);
         }
     }
 
     public static class InvalidSuiteTestCase extends NoSuiteTestCase {
         public InvalidSuiteTestCase(String name){ super(name); }
-        public static Test suite(){
+        public static junit.framework.Test suite(){
             throw new NullPointerException("thrown on purpose");
         }
-    }
-    public static void main(String[] args){
-        junit.textui.TestRunner.run(JUnitTestRunnerTest.class);
     }
 }
 

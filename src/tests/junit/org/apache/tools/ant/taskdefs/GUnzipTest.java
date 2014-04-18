@@ -17,54 +17,74 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class GUnzipTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+public class GUnzipTest {
 
-    public GUnzipTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/gunzip.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/gunzip.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument missing");
+        try {
+            buildRule.executeTarget("test1");
+            fail("required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "attribute src invalid");
+        try {
+            buildRule.executeTarget("test2");
+            fail("attribute src invalid");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void testRealTest() throws java.io.IOException {
         testRealTest("realTest");
     }
 
+    @Test
     public void testRealTestWithResource() throws java.io.IOException {
         testRealTest("realTestWithResource");
     }
 
     private void testRealTest(String target) throws java.io.IOException {
-        executeTarget(target);
-        assertTrue(FILE_UTILS.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        buildRule.executeTarget(target);
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(buildRule.getProject().resolveFile("asf-logo.gif")));
     }
 
+    @Test
     public void testTestGzipTask() throws java.io.IOException {
         testRealTest("testGzipTask");
     }
 
+    @Test
     public void testDocumentationClaimsOnCopy() throws java.io.IOException {
         testRealTest("testDocumentationClaimsOnCopy");
     }

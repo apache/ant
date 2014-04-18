@@ -18,21 +18,28 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * A test class for the 'concat' task, used to concatenate a series of
  * files into a single stream.
  *
  */
-public class ConcatTest
-    extends BuildFileTest {
+public class ConcatTest {
 
     /**
      * The name of the temporary file.
@@ -44,57 +51,68 @@ public class ConcatTest
      */
     private static final String tempFile2 = "concat.tmp.2";
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    /**
-     * Required constructor.
-     */
-    public ConcatTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
 
     /**
      * Test set up, called by the unit test framework prior to each
      * test.
      */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/concat.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/concat.xml");
     }
 
     /**
      * Test tear down, called by the unit test framework prior to each
      * test.
      */
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
     /**
      * Expect an exception when insufficient information is provided.
      */
+    @Test
     public void test1() {
-        expectBuildException("test1", "Insufficient information.");
+        try {
+            buildRule.executeTarget("test1");
+            fail("BuildException should have been thrown - Insufficient information");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
+
     }
 
     /**
      * Expect an exception when the destination file is invalid.
      */
+    @Test
     public void test2() {
-        expectBuildException("test2", "Invalid destination file.");
+        try {
+            buildRule.executeTarget("test2");
+            fail("BuildException should have been thrown - Invalid destination file");
+        } catch(BuildException ex) {
+            //TODO assert value
+        }
     }
 
     /**
      * Cats the string 'Hello, World!' to a temporary file.
      */
+    @Test
     public void test3() {
 
-        File file = new File(getProjectDir(), tempFile);
+        File file = new File(buildRule.getProject().getBaseDir(), tempFile);
         if (file.exists()) {
             file.delete();
         }
 
-        executeTarget("test3");
+        buildRule.executeTarget("test3");
 
         assertTrue(file.exists());
     }
@@ -102,15 +120,16 @@ public class ConcatTest
     /**
      * Cats the file created in test3 three times.
      */
+    @Test
     public void test4() {
         test3();
 
-        File file = new File(getProjectDir(), tempFile);
+        File file = new File(buildRule.getProject().getBaseDir(), tempFile);
         final long origSize = file.length();
 
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
 
-        File file2 = new File(getProjectDir(), tempFile2);
+        File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         final long newSize = file2.length();
 
         assertEquals(origSize * 3, newSize);
@@ -119,170 +138,178 @@ public class ConcatTest
     /**
      * Cats the string 'Hello, World!' to the console.
      */
+    @Test
     public void test5() {
-        expectLog("test5", "Hello, World!");
+        buildRule.executeTarget("test5");
+        assertEquals("Hello, World!", buildRule.getLog());
     }
 
+    @Test
     public void test6() {
         String filename = "src/etc/testcases/taskdefs/thisfiledoesnotexist"
             .replace('/', File.separatorChar);
-        expectLogContaining("test6", filename +" does not exist.");
+        buildRule.executeTarget("test6");
+        assertContains(filename + " does not exist", buildRule.getLog());
     }
 
+    @Test
     public void testConcatNoNewline() {
-        expectLog("testConcatNoNewline", "ab");
+        buildRule.executeTarget("testConcatNoNewline");
+        assertEquals("ab", buildRule.getLog());
     }
 
+    @Test
     public void testConcatNoNewlineEncoding() {
-        expectLog("testConcatNoNewlineEncoding", "ab");
+        buildRule.executeTarget("testConcatNoNewlineEncoding");
+        assertEquals("ab", buildRule.getLog());
     }
 
+    @Test
     public void testPath() {
         test3();
 
-        File file = new File(getProjectDir(), tempFile);
+        File file = new File(buildRule.getProject().getBaseDir(), tempFile);
         final long origSize = file.length();
 
-        executeTarget("testPath");
+        buildRule.executeTarget("testPath");
 
-        File file2 = new File(getProjectDir(), tempFile2);
+        File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         final long newSize = file2.length();
 
         assertEquals(origSize, newSize);
 
     }
+
+    @Test
     public void testAppend() {
         test3();
 
-        File file = new File(getProjectDir(), tempFile);
+        File file = new File(buildRule.getProject().getBaseDir(), tempFile);
         final long origSize = file.length();
 
-        executeTarget("testAppend");
+        buildRule.executeTarget("testAppend");
 
-        File file2 = new File(getProjectDir(), tempFile2);
+        File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         final long newSize = file2.length();
 
         assertEquals(origSize*2, newSize);
 
     }
 
+    @Test
     public void testFilter() {
-        executeTarget("testfilter");
-        assertTrue(getLog().indexOf("REPLACED") > -1);
+        buildRule.executeTarget("testfilter");
+        assertTrue(buildRule.getLog().indexOf("REPLACED") > -1);
     }
 
+    @Test
     public void testNoOverwrite() {
-        executeTarget("testnooverwrite");
-        File file2 = new File(getProjectDir(), tempFile2);
+        buildRule.executeTarget("testnooverwrite");
+        File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         long size = file2.length();
         assertEquals(size, 0);
     }
 
+    @Test
     public void testOverwrite() {
-        executeTarget("testoverwrite");
-        File file2 = new File(getProjectDir(), tempFile2);
+        buildRule.executeTarget("testoverwrite");
+        File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         long size = file2.length();
         assertTrue(size > 0);
     }
 
+    @Test
     public void testheaderfooter() {
         test3();
-        expectLog("testheaderfooter", "headerHello, World!footer");
+        buildRule.executeTarget("testheaderfooter");
+        assertEquals("headerHello, World!footer", buildRule.getLog());
     }
 
+    @Test
     public void testfileheader() {
         test3();
-        expectLog("testfileheader", "Hello, World!Hello, World!");
+        buildRule.executeTarget("testfileheader");
+        assertEquals("Hello, World!Hello, World!", buildRule.getLog());
     }
 
     /**
      * Expect an exception when attempting to cat an file to itself
      */
+    @Test
     public void testsame() {
-        expectBuildException("samefile", "output file same as input");
+        try {
+            buildRule.executeTarget("samefile");
+            fail("Build exception should have been thrown - output file same as input");
+        } catch(BuildException ex) {
+            //TODO assert value
+        }
     }
 
     /**
      * Check if filter inline works
      */
+    @Test
     public void testfilterinline() {
-        executeTarget("testfilterinline");
-        assertTrue(getLog().indexOf("REPLACED") > -1);
+        buildRule.executeTarget("testfilterinline");
+        assertTrue(buildRule.getLog().indexOf("REPLACED") > -1);
     }
 
     /**
      * Check if multireader works
      */
+    @Test
     public void testmultireader() {
-        executeTarget("testmultireader");
-        assertTrue(getLog().indexOf("Bye") > -1);
-        assertTrue(getLog().indexOf("Hello") == -1);
+        buildRule.executeTarget("testmultireader");
+        assertTrue(buildRule.getLog().indexOf("Bye") > -1);
+        assertTrue(buildRule.getLog().indexOf("Hello") == -1);
     }
     /**
      * Check if fixlastline works
      */
+    @Test
     public void testfixlastline()
         throws IOException
     {
-        expectFileContains(
-            "testfixlastline", "concat.line4",
-            "end of line" + System.getProperty("line.separator")
-            + "This has");
+        buildRule.executeTarget("testfixlastline");
+        assertContains("end of line" + System.getProperty("line.separator") + "This has",
+                FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"));
     }
 
     /**
      * Check if fixlastline works with eol
      */
+    @Test
     public void testfixlastlineeol()
         throws IOException
     {
-        expectFileContains(
-            "testfixlastlineeol", "concat.linecr",
-            "end of line\rThis has");
+        buildRule.executeTarget("testfixlastlineeol");
+        assertContains("end of line\rThis has", FileUtilities.getFileContents(buildRule.getProject(), "concat.linecr"));
+    }
+
+
+    @Test
+    public void testTranscoding() throws IOException {
+        buildRule.executeTarget("testTranscoding");
+        File f1 = buildRule.getProject().resolveFile("copy/expected/utf-8");
+        File f2 = buildRule.getProject().resolveFile("concat.utf8");
+        assertEquals(f1.toString() + " differs from " + f2.toString(),
+                FileUtilities.getFileContents(f1), FileUtilities.getFileContents(f2));
     }
 
     // ------------------------------------------------------
-    //   Helper methods - should be in BuildFileTest
+    //   Helper methods - should be in a utility class
     // -----------------------------------------------------
-
-    private String getFileString(String filename)
-        throws IOException
-    {
-        Reader r = null;
-        try {
-            r = new FileReader(getProject().resolveFile(filename));
-            return  FileUtils.readFully(r);
-        }
-        finally {
-            FileUtils.close(r);
-        }
-
-    }
-
-    private String getFileString(String target, String filename)
-        throws IOException
-    {
-        executeTarget(target);
-        return getFileString(filename);
-    }
-
-    private void expectFileContains(
+    private void expectFileContainsx(
         String target, String filename, String contains)
         throws IOException
     {
-        String content = getFileString(target, filename);
+        buildRule.executeTarget(target);
+        String content = FileUtilities.getFileContents(buildRule.getProject(), filename);
         assertTrue(
             "expecting file " + filename + " to contain " +
             contains +
             " but got " + content, content.indexOf(contains) > -1);
     }
 
-    public void testTranscoding() throws IOException {
-        executeTarget("testTranscoding");
-        File f1 = getProject().resolveFile("copy/expected/utf-8");
-        File f2 = getProject().resolveFile("concat.utf8");
-        assertTrue(f1.toString() + " differs from " + f2.toString(),
-                FILE_UTILS.contentEquals(f1, f2));
-    }
 
 }

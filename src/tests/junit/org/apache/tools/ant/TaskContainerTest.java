@@ -18,40 +18,49 @@
 
 package org.apache.tools.ant;
 
-public class TaskContainerTest extends BuildFileTest {
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-    public TaskContainerTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertTrue;
 
+public class TaskContainerTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/taskcontainer.xml");
+        buildRule.configureProject("src/etc/testcases/core/taskcontainer.xml");
     }
 
+    @Test
     public void testPropertyExpansion() {
-        executeTarget("testPropertyExpansion");
+        buildRule.executeTarget("testPropertyExpansion");
         assertTrue("attribute worked",
-                   getLog().indexOf("As attribute: it worked") > -1);
+                   buildRule.getLog().indexOf("As attribute: it worked") > -1);
         assertTrue("nested text worked",
-                   getLog().indexOf("As nested text: it worked") > -1);
+                   buildRule.getLog().indexOf("As nested text: it worked") > -1);
     }
 
+    @Test
     public void testTaskdef() {
-        executeTarget("testTaskdef");
+        buildRule.executeTarget("testTaskdef");
         assertTrue("attribute worked",
-                   getLog().indexOf("As attribute: it worked") > -1);
+                   buildRule.getLog().indexOf("As attribute: it worked") > -1);
         assertTrue("nested text worked",
-                   getLog().indexOf("As nested text: it worked") > -1);
+                   buildRule.getLog().indexOf("As nested text: it worked") > -1);
         assertTrue("nested text worked",
-                   getLog().indexOf("As nested task: it worked") > -1);
+                   buildRule.getLog().indexOf("As nested task: it worked") > -1);
     }
 
+    @Test
     public void testCaseInsensitive() {
-        executeTarget("testCaseInsensitive");
+        buildRule.executeTarget("testCaseInsensitive");
         assertTrue("works outside of container",
-                   getLog().indexOf("hello ") > -1);
+                   buildRule.getLog().indexOf("hello ") > -1);
         assertTrue("works inside of container",
-                   getLog().indexOf("world") > -1);
+                   buildRule.getLog().indexOf("world") > -1);
     }
 
 }

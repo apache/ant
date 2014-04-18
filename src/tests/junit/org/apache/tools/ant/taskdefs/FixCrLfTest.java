@@ -26,103 +26,136 @@ import java.io.InputStream;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class FixCrLfTest extends BuildFileTest {
+public class FixCrLfTest {
 
-    public FixCrLfTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/fixcrlf/build.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/fixcrlf/build.xml");
     }
 
+    @Test
     public void test1() throws IOException {
-        executeTarget("test1");
+        buildRule.executeTarget("test1");
     }
 
+    @Test
     public void test2() throws IOException {
-        executeTarget("test2");
+        buildRule.executeTarget("test2");
     }
 
+    @Test
     public void test3() throws IOException {
-        executeTarget("test3");
+        buildRule.executeTarget("test3");
     }
 
+    @Test
     public void test4() throws IOException {
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
     }
 
+    @Test
     public void test5() throws IOException {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
     }
 
+    @Test
     public void test6() throws IOException {
-        executeTarget("test6");
+        buildRule.executeTarget("test6");
     }
 
+    @Test
     public void test7() throws IOException {
-        executeTarget("test7");
+        buildRule.executeTarget("test7");
     }
 
+    @Test
     public void test8() throws IOException {
-        executeTarget("test8");
+        buildRule.executeTarget("test8");
     }
 
+    @Test
     public void test9() throws IOException {
-        executeTarget("test9");
+        buildRule.executeTarget("test9");
     }
 
+    @Test
     public void testMacLines() throws IOException {
-        executeTarget("testMacLines");
+        buildRule.executeTarget("testMacLines");
     }
 
+    @Test
     public void testNoOverwrite() throws IOException {
-        executeTarget("testNoOverwrite");
+        buildRule.executeTarget("testNoOverwrite");
     }
 
+    @Test
     public void testEncoding() throws IOException {
-        executeTarget("testEncoding");
+        buildRule.executeTarget("testEncoding");
     }
 
+    @Test
     public void testOutputEncoding() throws IOException {
-        executeTarget("testOutputEncoding");
+        buildRule.executeTarget("testOutputEncoding");
     }
 
+    @Test
     public void testLongLines() throws IOException {
-        executeTarget("testLongLines");
+        buildRule.executeTarget("testLongLines");
     }
 
+    @Test
     public void testCrCrLfSequenceUnix() throws IOException {
-        executeTarget("testCrCrLfSequence-unix");
+        buildRule.executeTarget("testCrCrLfSequence-unix");
     }
 
+    @Test
     public void testCrCrLfSequenceDos() throws IOException {
-        executeTarget("testCrCrLfSequence-dos");
+        buildRule.executeTarget("testCrCrLfSequence-dos");
     }
 
+    @Test
     public void testCrCrLfSequenceMac() throws IOException {
-        executeTarget("testCrCrLfSequence-mac");
+        buildRule.executeTarget("testCrCrLfSequence-mac");
     }
 
+    @Test
     public void testFixlastDos() throws IOException {
-        executeTarget("testFixlastDos");
+        buildRule.executeTarget("testFixlastDos");
     }
 
+    @Test
     public void testFixlastFalseMac() throws IOException {
-        executeTarget("testFixlastFalseMac");
+        buildRule.executeTarget("testFixlastFalseMac");
     }
 
+    @Test
     public void testFixFile() throws Exception {
-        executeTarget("testFixFile");
+        buildRule.executeTarget("testFixFile");
     }
 
+    @Test
     public void testFixFileExclusive() throws Exception {
-        expectBuildExceptionContaining("testFixFileExclusive",
-                FixCRLF.ERROR_FILE_AND_SRCDIR, FixCRLF.ERROR_FILE_AND_SRCDIR);
+        try {
+            buildRule.executeTarget("testFixFileExclusive");
+            fail(FixCRLF.ERROR_FILE_AND_SRCDIR);
+        } catch (BuildException ex) {
+            AntAssert.assertContains(FixCRLF.ERROR_FILE_AND_SRCDIR, ex.getMessage());
+        }
     }
 
     /**
@@ -131,59 +164,73 @@ public class FixCrLfTest extends BuildFileTest {
      * Will fail with an exception if the parent directories do not
      * get created.
      */
+    @Test
     public void testCreateParentDirs() {
-        executeTarget("createParentDirs");
+        buildRule.executeTarget("createParentDirs");
     }
 
+    @Test
     public void testPreserveLastModified() {
-        executeTarget("testPreserveLastModified");
+        buildRule.executeTarget("testPreserveLastModified");
     }
 
+    @Test
     public void testFilter1() {
-        executeTarget("testFilter1");
+        buildRule.executeTarget("testFilter1");
     }
 
+    @Test
     public void testFilter2() {
-        executeTarget("testFilter2");
+        buildRule.executeTarget("testFilter2");
     }
 
+    @Test
     public void testFilter3() {
-        executeTarget("testFilter3");
+        buildRule.executeTarget("testFilter3");
     }
 
+    @Test
     public void testFilter4() {
-        executeTarget("testFilter4");
+        buildRule.executeTarget("testFilter4");
     }
 
+    @Test
     public void testFilter5() {
-        executeTarget("testFilter5");
+        buildRule.executeTarget("testFilter5");
     }
 
+    @Test
     public void testFilter6() {
-        executeTarget("testFilter6");
+        buildRule.executeTarget("testFilter6");
     }
 
+    @Test
     public void testFilter7() {
-        executeTarget("testFilter7");
+        buildRule.executeTarget("testFilter7");
     }
 
+    @Test
     public void testFilter8() {
-        executeTarget("testFilter8");
+        buildRule.executeTarget("testFilter8");
     }
 
+    @Test
     public void testFilter9() {
-        executeTarget("testFilter9");
+        buildRule.executeTarget("testFilter9");
     }
 
+    @Test
     public void testCannotDoubleEof() {
-        executeTarget("testCannotDoubleEof");
+        buildRule.executeTarget("testCannotDoubleEof");
     }
 
+    @Test
     public void testTabInLiteralInComment() {
-        executeTarget("testTabInLiteralInComment");
+        buildRule.executeTarget("testTabInLiteralInComment");
     }
 
     // not used, but public so theoretically must remain for BC?
+    @Deprecated
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

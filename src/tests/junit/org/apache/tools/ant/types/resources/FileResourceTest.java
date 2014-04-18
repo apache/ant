@@ -21,19 +21,24 @@ import java.io.File;
 
 import org.apache.tools.ant.Project;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test Java API of {@link FileResource}.
  */
-public class FileResourceTest extends TestCase {
+public class FileResourceTest {
 
     private File root;
 
+    @Before
     public void setUp() {
         root = new File(System.getProperty("root"));
     }
 
+    @Test
     public void testAttributes() {
         FileResource f = new FileResource();
         f.setBaseDir(root);
@@ -43,6 +48,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo", f.getName());
     }
 
+    @Test
     public void testNonImmediateBasedir() {
         FileResource f = new FileResource();
         f.setBaseDir(root);
@@ -52,6 +58,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo/bar", f.getName().replace(File.separatorChar, '/'));
     }
 
+    @Test
     public void testFile() {
         FileResource f = new FileResource(new File(root, "foo"));
         assertEquals(new File(root, "foo"), f.getFile());
@@ -59,6 +66,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo", f.getName());
     }
 
+    @Test
     public void testBasedirAndName() {
         FileResource f = new FileResource(root, "foo");
         assertEquals(new File(root, "foo"), f.getFile());
@@ -66,6 +74,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo", f.getName());
     }
 
+    @Test
     public void testNonImmediateBasedirAndName() {
         FileResource f = new FileResource(root, "foo/bar");
         assertEquals(new File(root, "foo/bar"), f.getFile());
@@ -73,6 +82,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo/bar", f.getName().replace(File.separatorChar, '/'));
     }
 
+    @Test
     public void testProjectAndFilename() {
         Project p = new Project();
         p.setBaseDir(root);
@@ -82,6 +92,7 @@ public class FileResourceTest extends TestCase {
         assertEquals("foo", f.getName());
     }
 
+    @Test
     public void testRelativeFactoryResource() {
         FileResource f = new FileResource(root, "foo");
         FileResource relative = f.getResource("bar").as(FileResource.class);
@@ -90,6 +101,7 @@ public class FileResourceTest extends TestCase {
         assertEquals(root, relative.getBaseDir());
     }
 
+    @Test
     public void testAbsoluteFactoryResource() {
         FileResource f = new FileResource(new File(root, "foo/a"));
         assertEquals(new File(root, "foo"), f.getBaseDir());
@@ -99,6 +111,7 @@ public class FileResourceTest extends TestCase {
         assertEquals(root, fromFactory.getBaseDir());
     }
 
+    @Test
     public void testParentSiblingFactoryResource() {
         FileResource f = new FileResource(new File(root, "foo/a"));
         assertEquals(new File(root, "foo"), f.getBaseDir());

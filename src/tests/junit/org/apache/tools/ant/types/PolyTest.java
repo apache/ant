@@ -18,34 +18,46 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class PolyTest extends BuildFileTest {
+public class PolyTest {
 
-    public PolyTest(String name) {
-        super(name);
-    }
-
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/poly.xml");
+        buildRule.configureProject("src/etc/testcases/types/poly.xml");
     }
 
+    @Test
     public void testFileSet() {
-        expectLogContaining("fileset", "types.FileSet");
+        buildRule.executeTarget("fileset");
+        AntAssert.assertContains( "types.FileSet", buildRule.getLog());
     }
 
+    @Test
     public void testFileSetAntType() {
-        expectLogContaining("fileset-ant-type", "types.PolyTest$MyFileSet");
+        buildRule.executeTarget("fileset-ant-type");
+        AntAssert.assertContains("types.PolyTest$MyFileSet", buildRule.getLog());
     }
 
+    @Test
     public void testPath() {
-        expectLogContaining("path", "types.Path");
+        buildRule.executeTarget("path");
+        AntAssert.assertContains( "types.Path", buildRule.getLog());
     }
 
+    @Test
     public void testPathAntType() {
-        expectLogContaining("path-ant-type", "types.PolyTest$MyPath");
+        buildRule.executeTarget("path-ant-type");
+        AntAssert.assertContains( "types.PolyTest$MyPath", buildRule.getLog());
     }
 
     public static class MyFileSet extends FileSet {}

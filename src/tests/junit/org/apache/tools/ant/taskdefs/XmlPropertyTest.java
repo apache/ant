@@ -27,95 +27,116 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class XmlPropertyTest extends BuildFileTest {
+public class XmlPropertyTest {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    public XmlPropertyTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/xmlproperty.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/xmlproperty.xml");
     }
 
+    @Test
     public void testFile() {
         testProperties("test");
     }
 
+    @Test
     public void testResource() {
         testProperties("testResource");
     }
 
     private void testProperties(String target) {
-        executeTarget(target);
-        assertEquals("true", getProject().getProperty("root-tag(myattr)"));
-        assertEquals("Text", getProject().getProperty("root-tag.inner-tag"));
+        buildRule.executeTarget(target);
+        assertEquals("true", buildRule.getProject().getProperty("root-tag(myattr)"));
+        assertEquals("Text", buildRule.getProject().getProperty("root-tag.inner-tag"));
         assertEquals("val",
-                     getProject().getProperty("root-tag.inner-tag(someattr)"));
-        assertEquals("false", getProject().getProperty("root-tag.a2.a3.a4"));
+                buildRule.getProject().getProperty("root-tag.inner-tag(someattr)"));
+        assertEquals("false", buildRule.getProject().getProperty("root-tag.a2.a3.a4"));
         assertEquals("CDATA failed",
-            "<test>", getProject().getProperty("root-tag.cdatatag"));
+            "<test>", buildRule.getProject().getProperty("root-tag.cdatatag"));
     }
 
+    @Test
     public void testDTD() {
-        executeTarget("testdtd");
-        assertEquals("Text", getProject().getProperty("root-tag.inner-tag"));
+        buildRule.executeTarget("testdtd");
+        assertEquals("Text", buildRule.getProject().getProperty("root-tag.inner-tag"));
     }
 
-    public void testNone () {
+    @Test
+    public void testNone () throws IOException {
         doTest("testNone", false, false, false, false, false);
     }
 
-    public void testKeeproot() {
+    @Test
+    public void testKeeproot() throws IOException {
         doTest("testKeeproot", true, false, false, false, false);
     }
 
-    public void testCollapse () {
+    @Test
+    public void testCollapse () throws IOException {
         doTest("testCollapse", false, true, false, false, false);
     }
 
-    public void testSemantic () {
+    @Test
+    public void testSemantic () throws IOException {
         doTest("testSemantic", false, false, true, false, false);
     }
 
-    public void testKeeprootCollapse () {
+    @Test
+    public void testKeeprootCollapse () throws IOException {
         doTest("testKeeprootCollapse", true, true, false, false, false);
     }
 
-    public void testKeeprootSemantic () {
+    @Test
+    public void testKeeprootSemantic () throws IOException {
         doTest("testKeeprootSemantic", true, false, true, false, false);
     }
 
-    public void testCollapseSemantic () {
+    @Test
+    public void testCollapseSemantic () throws IOException {
         doTest("testCollapseSemantic", false, true, true, false, false);
     }
 
-    public void testKeeprootCollapseSemantic () {
+    @Test
+    public void testKeeprootCollapseSemantic () throws IOException {
         doTest("testKeeprootCollapseSemantic", true, true, true, false, false);
     }
 
-    public void testInclude () {
+    @Test
+    public void testInclude () throws IOException {
         doTest("testInclude", false, false, false, true, false);
     }
 
-    public void testSemanticInclude () {
+    @Test
+    public void testSemanticInclude () throws IOException {
         doTest("testSemanticInclude", false, false, true, true, false);
     }
 
-    public void testSemanticLocal () {
+    @Test
+    public void testSemanticLocal () throws IOException {
         doTest("testSemanticInclude", false, false, true, false, true);
     }
 
+    @Test
     public void testNeedsCatalog() {
-        executeTarget("testneedscat");
-        assertEquals("true", getProject().getProperty("skinconfig.foo"));
+        buildRule.executeTarget("testneedscat");
+        assertEquals("true", buildRule.getProject().getProperty("skinconfig.foo"));
     }
 
     /**
@@ -123,7 +144,7 @@ public class XmlPropertyTest extends BuildFileTest {
      * goldfile)
      */
     private void doTest(String msg, boolean keepRoot, boolean collapse,
-                        boolean semantic, boolean include, boolean localRoot) {
+                        boolean semantic, boolean include, boolean localRoot) throws IOException {
         Enumeration iter =
             getFiles(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
@@ -137,49 +158,45 @@ public class XmlPropertyTest extends BuildFileTest {
                 workingDir = FILE_UTILS.resolveFile(new File("."), ".");
             }
 
-            try {
 
-                File propertyFile = getGoldfile(inputFile, keepRoot, collapse,
-                                                semantic, include, localRoot);
-                if (!propertyFile.exists()) {
+            File propertyFile = getGoldfile(inputFile, keepRoot, collapse,
+                                            semantic, include, localRoot);
+            if (!propertyFile.exists()) {
 //                    System.out.println("Skipping as "
 //                                       + propertyFile.getAbsolutePath()
 //                                       + ") doesn't exist.");
-                    continue;
-                }
-
-                //                System.out.println(msg + " (" + propertyFile.getName() + ") in (" + workingDir + ")");
-
-                Project p = new Project();
-
-                XmlProperty xmlproperty = new XmlProperty();
-                xmlproperty.setProject(p);
-                xmlproperty.setFile(inputFile);
-
-                xmlproperty.setKeeproot(keepRoot);
-                xmlproperty.setCollapseAttributes(collapse);
-                xmlproperty.setSemanticAttributes(semantic);
-                xmlproperty.setIncludeSemanticAttribute(include);
-                xmlproperty.setRootDirectory(workingDir);
-
-                // Set a property on the project to make sure that loading
-                // a property with the same name from an xml file will
-                // *not* change it.
-                p.setNewProperty("override.property.test", "foo");
-
-                xmlproperty.execute();
-
-                Properties props = new Properties();
-                props.load(new FileInputStream(propertyFile));
-
-                //printProperties(p.getProperties());
-
-                ensureProperties(msg, inputFile, workingDir, p, props);
-                ensureReferences(msg, inputFile, p.getReferences());
-
-            } catch (IOException ex) {
-                fail(ex.toString());
+                continue;
             }
+
+            //                System.out.println(msg + " (" + propertyFile.getName() + ") in (" + workingDir + ")");
+
+            Project p = new Project();
+
+            XmlProperty xmlproperty = new XmlProperty();
+            xmlproperty.setProject(p);
+            xmlproperty.setFile(inputFile);
+
+            xmlproperty.setKeeproot(keepRoot);
+            xmlproperty.setCollapseAttributes(collapse);
+            xmlproperty.setSemanticAttributes(semantic);
+            xmlproperty.setIncludeSemanticAttribute(include);
+            xmlproperty.setRootDirectory(workingDir);
+
+            // Set a property on the project to make sure that loading
+            // a property with the same name from an xml file will
+            // *not* change it.
+            p.setNewProperty("override.property.test", "foo");
+
+            xmlproperty.execute();
+
+            Properties props = new Properties();
+            props.load(new FileInputStream(propertyFile));
+
+            //printProperties(p.getProperties());
+
+            ensureProperties(msg, inputFile, workingDir, p, props);
+            ensureReferences(msg, inputFile, p.getReferences());
+
         }
     }
 

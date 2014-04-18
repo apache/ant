@@ -18,41 +18,62 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class PvcsTest extends BuildFileTest {
+import static org.junit.Assert.fail;
 
-    public PvcsTest(String name) {
-        super(name);
-    }
+public class PvcsTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/pvcs.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/pvcs.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "Required argument repository not specified");
+        try {
+            buildRule.executeTarget("test1");
+            fail("Required argument repository not specified");
+        }  catch (BuildException ex) {
+            //TODO check exception message
+        }
     }
 
+    @Test
     public void test2() {
-        executeTarget("test2");
+        buildRule.executeTarget("test2");
     }
 
+    @Test
     public void test3() {
-        executeTarget("test3");
+        buildRule.executeTarget("test3");
     }
 
+    @Test
     public void test4() {
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
     }
 
+    @Test
     public void test6() {
-        expectBuildException("test6", "Failed executing: /never/heard/of/a/directory/structure/like/this/pcli lvf -z -aw -pr//ct4serv2/pvcs/monitor /. Exception: /never/heard/of/a/directory/structure/like/this/pcli: not found");
+        try {
+            buildRule.executeTarget("test6");
+            fail("Failed executing: /never/heard/of/a/directory/structure/like/this/pcli lvf -z " +
+                    "-aw -pr//ct4serv2/pvcs/monitor /. Exception: /never/heard/of/a/directory/structure/like/this/pcli: not found");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 }

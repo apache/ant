@@ -21,49 +21,65 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.taskdefs.ConditionTask;
 import org.apache.tools.ant.taskdefs.Echo;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class LocationTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+public class LocationTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/location.xml");
+        buildRule.configureProject("src/etc/testcases/core/location.xml");
     }
 
+    @Test
     public void testPlainTask() {
-        executeTarget("testPlainTask");
-        Echo e = (Echo) getProject().getReference("echo");
+        buildRule.executeTarget("testPlainTask");
+        Echo e = (Echo) buildRule.getProject().getReference("echo");
         assertFalse(e.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(e.getLocation().getLineNumber() == 0);
     }
 
+    @Test
     public void testStandaloneType() {
-        executeTarget("testStandaloneType");
-        Echo e = (Echo) getProject().getReference("echo2");
-        FileSet f = (FileSet) getProject().getReference("fs");
+        buildRule.executeTarget("testStandaloneType");
+        Echo e = (Echo) buildRule.getProject().getReference("echo2");
+        FileSet f = (FileSet) buildRule.getProject().getReference("fs");
         assertFalse(f.getLocation() == Location.UNKNOWN_LOCATION);
         assertEquals(e.getLocation().getLineNumber() + 1,
                      f.getLocation().getLineNumber());
     }
 
+    @Test
     public void testConditionTask() {
-        executeTarget("testConditionTask");
-        TaskAdapter ta = (TaskAdapter) getProject().getReference("cond");
+        buildRule.executeTarget("testConditionTask");
+        TaskAdapter ta = (TaskAdapter) buildRule.getProject().getReference("cond");
         ConditionTask c = (ConditionTask) ta.getProxy();
         assertFalse(c.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(c.getLocation().getLineNumber() == 0);
     }
 
+    @Test
     public void testMacrodefWrappedTask() {
-        executeTarget("testMacrodefWrappedTask");
-        Echo e = (Echo) getProject().getReference("echo3");
-        assertTrue(getLog().indexOf("Line: " 
+        buildRule.executeTarget("testMacrodefWrappedTask");
+        Echo e = (Echo) buildRule.getProject().getReference("echo3");
+        assertTrue(buildRule.getLog().indexOf("Line: "
                                     + (e.getLocation().getLineNumber() + 1))
                    > -1);
     }
 
+    @Test
     public void testPresetdefWrappedTask() {
-        executeTarget("testPresetdefWrappedTask");
-        Echo e = (Echo) getProject().getReference("echo4");
-        assertTrue(getLog().indexOf("Line: " 
+        buildRule.executeTarget("testPresetdefWrappedTask");
+        Echo e = (Echo) buildRule.getProject().getReference("echo4");
+        assertTrue(buildRule.getLog().indexOf("Line: "
                                     + (e.getLocation().getLineNumber() + 1))
                    > -1);
     }

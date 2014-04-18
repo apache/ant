@@ -20,138 +20,190 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
 import java.io.File;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 
-/**
- */
-public class TarTest extends BuildFileTest {
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-    public TarTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+public class TarTest {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/tar.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/tar.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument not specified");
+        try {
+			buildRule.executeTarget("test3");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test4() {
-        expectBuildException("test4", "tar cannot include itself");
+        try {
+			buildRule.executeTarget("test4");
+			fail("BuildException expected: tar cannot include itself");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
         File f
-            = new File(getProject().getProperty("output"), "test5.tar");
+            = new File(buildRule.getProject().getProperty("output"), "test5.tar");
 
         if (!f.exists()) {
             fail("Tarring a directory failed");
         }
     }
 
+    @Test
     public void test6() {
-        expectBuildException("test6", "Invalid value specified for longfile attribute.");
+        try {
+			buildRule.executeTarget("test6");
+			fail("BuildException expected: Invalid value specified for longfile attribute.");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test7() {
         test7("test7");
     }
 
+    @Test
     public void test7UsingPlainFileSet() {
         test7("test7UsingPlainFileSet");
     }
 
+    @Test
     public void test7UsingFileList() {
         test7("test7UsingFileList");
     }
 
     private void test7(String target) {
-        executeTarget(target);
+        buildRule.executeTarget(target);
         File f1
-            = new File(getProject().getProperty("output"), "untar/test7-prefix");
+            = new File(buildRule.getProject().getProperty("output"), "untar/test7-prefix");
 
         if (!(f1.exists() && f1.isDirectory())) {
             fail("The prefix attribute is not working properly.");
         }
 
         File f2
-            = new File(getProject().getProperty("output"), "untar/test7dir");
+            = new File(buildRule.getProject().getProperty("output"), "untar/test7dir");
 
         if (!(f2.exists() && f2.isDirectory())) {
             fail("The prefix attribute is not working properly.");
         }
     }
 
+    @Test
     public void test8() {
         test8("test8");
     }
 
+    @Test
     public void test8UsingZipFileset() {
         test8("test8UsingZipFileset");
     }
 
+    @Test
     public void test8UsingZipFilesetSrc() {
         test8("test8UsingZipFilesetSrc");
     }
 
+    @Test
     public void test8UsingTarFilesetSrc() {
         test8("test8UsingTarFilesetSrc");
     }
 
+    @Test
     public void test8UsingZipEntry() {
         test8("test8UsingZipEntry");
     }
 
     private void test8(String target) {
-        executeTarget(target);
+        buildRule.executeTarget(target);
         File f1
-            = new File(getProject().getProperty("output"), "untar/test8.xml");
+            = new File(buildRule.getProject().getProperty("output"), "untar/test8.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
     }
 
+    @Test
     public void test9() {
-        expectBuildException("test9", "Invalid value specified for compression attribute.");
+        try {
+			buildRule.executeTarget("test9");
+			fail("BuildException expected: Invalid value specified for compression attribute.");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test10() {
-        executeTarget("test10");
+        buildRule.executeTarget("test10");
         File f1
-            = new File(getProject().getProperty("output"), "untar/test10.xml");
+            = new File(buildRule.getProject().getProperty("output"), "untar/test10.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
     }
 
+    @Test
     public void test11() {
-        executeTarget("test11");
+        buildRule.executeTarget("test11");
         File f1
-            = new File(getProject().getProperty("output"), "untar/test11.xml");
+            = new File(buildRule.getProject().getProperty("output"), "untar/test11.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
     }
 
+    @Test
     public void testGZipResource() throws IOException {
-        executeTarget("testGZipResource");
-        assertTrue(FileUtils.getFileUtils()
-                   .contentEquals(getProject().resolveFile("../asf-logo.gif"),
-                           new File(getProject().getProperty("output"), "untar/asf-logo.gif.gz")));
+        buildRule.executeTarget("testGZipResource");
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif.gz")));
     }
 
 

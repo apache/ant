@@ -22,30 +22,36 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Tests for org.apache.tools.ant.util.FileUtils.
  *
  */
-public class FileUtilsTest extends TestCase {
+public class FileUtilsTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private File removeThis;
     private String root;
 
-    public FileUtilsTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
         // Windows adds the drive letter in uppercase, unless you run Cygwin
         root = new File(File.separator).getAbsolutePath().toUpperCase();
     }
 
+    @After
     public void tearDown() {
         if (removeThis != null && removeThis.exists()) {
             if (!removeThis.delete())
@@ -65,24 +71,16 @@ public class FileUtilsTest extends TestCase {
      * @see FileUtils#setFileLastModified(java.io.File, long)
      * @throws IOException
      */
+    @Test
     public void testSetLastModified() throws IOException {
         removeThis = new File("dummy");
         FileOutputStream fos = new FileOutputStream(removeThis);
         fos.write(new byte[0]);
         fos.close();
+        assumeTrue("Could not change file modified time", removeThis.setLastModified(removeThis.lastModified() - 2000));
         long modTime = removeThis.lastModified();
         assertTrue(modTime != 0);
 
-        /*
-         * Sleep for some time to make sure a touched file would get a
-         * more recent timestamp according to the file system's
-         * granularity (should be > 2s to account for Windows FAT).
-         */
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ie) {
-            fail(ie.getMessage());
-        }
 
         FILE_UTILS.setFileLastModified(removeThis, -1);
         long secondModTime = removeThis.lastModified();
@@ -104,6 +102,7 @@ public class FileUtilsTest extends TestCase {
         assertTrue(thirdModTime != secondModTime);
     }
 
+    @Test
     public void testResolveFile() {
         if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
             /*
@@ -203,6 +202,7 @@ public class FileUtilsTest extends TestCase {
 
     }
 
+    @Test
     public void testNormalize() {
         if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
             /*
@@ -324,6 +324,7 @@ public class FileUtilsTest extends TestCase {
     /**
      * Test handling of null arguments.
      */
+    @Test
     public void testNullArgs() {
         try {
             FILE_UTILS.normalize(null);
@@ -340,6 +341,7 @@ public class FileUtilsTest extends TestCase {
     /**
      * Test createTempFile
      */
+    @Test
     public void testCreateTempFile()
     {
         // null parent dir
@@ -391,6 +393,7 @@ public class FileUtilsTest extends TestCase {
     /**
      * Test contentEquals
      */
+    @Test
     public void testContentEquals() throws IOException {
         assertTrue("Non existing files", FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
                                                           new File(System.getProperty("root"), "bar")));
@@ -409,6 +412,7 @@ public class FileUtilsTest extends TestCase {
     /**
      * Test createNewFile
      */
+    @Test
     public void testCreateNewFile() throws IOException {
         removeThis = new File("dummy");
         assertTrue(!removeThis.exists());
@@ -419,6 +423,7 @@ public class FileUtilsTest extends TestCase {
     /**
      * Test removeLeadingPath.
      */
+    @Test
     public void testRemoveLeadingPath() {
         assertEquals("bar", FILE_UTILS.removeLeadingPath(new File("/foo"),
                                                  new File("/foo/bar")));
@@ -465,8 +470,9 @@ public class FileUtilsTest extends TestCase {
     /**
      * test toUri
      */
+    @Test
     public void testToURI() {
-        String dosRoot = null;
+        String dosRoot;
         if (Os.isFamily("dos") || Os.isFamily("netware")) {
             dosRoot = System.getProperty("user.dir")
                 .substring(0, 3).replace(File.separatorChar, '/');
@@ -513,17 +519,19 @@ public class FileUtilsTest extends TestCase {
         }
     }
 
+    @Test
     public void testIsContextRelativePath() {
-        if (Os.isFamily("dos")) {
-            assertTrue(FileUtils.isContextRelativePath("/\u00E4nt"));
-            assertTrue(FileUtils.isContextRelativePath("\\foo"));
-        }
+        assumeTrue("Test only runs on DOS", Os.isFamily("dos"));
+        assertTrue(FileUtils.isContextRelativePath("/\u00E4nt"));
+        assertTrue(FileUtils.isContextRelativePath("\\foo"));
     }
+
     /**
      * test fromUri
      */
+    @Test
     public void testFromURI() {
-        String dosRoot = null;
+        String dosRoot;
         if (Os.isFamily("dos") || Os.isFamily("netware")) {
             dosRoot = System.getProperty("user.dir").substring(0, 2);
         } else {
@@ -542,6 +550,7 @@ public class FileUtilsTest extends TestCase {
         assertEquals(dosRoot + File.separator + "foo#bar", FILE_UTILS.fromURI("file:///foo%23bar"));
     }
 
+    @Test
     public void testModificationTests() {
 
         //get a time
@@ -564,6 +573,7 @@ public class FileUtilsTest extends TestCase {
                 !FILE_UTILS.isUpToDate(firstTime,-1L));
     }
 
+    @Test
     public void testHasErrorInCase() {
         File tempFolder = new File(System.getProperty("java.io.tmpdir"));
         File wellcased = FILE_UTILS.createTempFile("alpha", "beta", tempFolder,
@@ -603,8 +613,8 @@ public class FileUtilsTest extends TestCase {
     private void assertEqualsIgnoreDriveCase(String s1, String s2) {
         if ((Os.isFamily("dos") || Os.isFamily("netware"))
             && s1.length() > 0 && s2.length() > 0) {
-            StringBuffer sb1 = new StringBuffer(s1);
-            StringBuffer sb2 = new StringBuffer(s2);
+            StringBuilder sb1 = new StringBuilder(s1);
+            StringBuilder sb2 = new StringBuilder(s2);
             sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));
             sb2.setCharAt(0, Character.toUpperCase(s2.charAt(0)));
             assertEquals(sb1.toString(), sb2.toString());

@@ -22,24 +22,25 @@ import java.util.TimeZone;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-import junit.framework.TestCase;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Location;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  */
-public class TStampTest extends TestCase {
+public class TStampTest {
 
     protected Tstamp tstamp;
     protected Project project;
     protected Location location;
 
-    public TStampTest(String s) {
-        super(s);
-    }
-
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         location = new Location("test.xml");
         project = new Project();
         tstamp = new Tstamp();
@@ -47,6 +48,7 @@ public class TStampTest extends TestCase {
         tstamp.setProject(project);
     }
 
+    @Test
     public void testTimeZone() throws Exception {
         Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("today");
@@ -68,6 +70,7 @@ public class TStampTest extends TestCase {
      * originals
      * @throws Exception
      */
+    @Test
     public void testWriteOrder() throws Exception {
         Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("TODAY");
@@ -90,6 +93,7 @@ public class TStampTest extends TestCase {
      * originals
      * @throws Exception
      */
+    @Test
     public void testPrefix() throws Exception {
         tstamp.setPrefix("prefix");
         tstamp.execute();
@@ -97,8 +101,9 @@ public class TStampTest extends TestCase {
         assertNotNull(prop);
     }
 
+    @Test
     public void testFormatPrefix() throws Exception {
-	Tstamp.CustomFormat format = tstamp.createFormat();
+	    Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("format");
         format.setPattern("HH:mm:ss z");
         format.setTimezone("GMT");

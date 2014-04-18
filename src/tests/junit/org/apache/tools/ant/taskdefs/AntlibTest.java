@@ -18,19 +18,26 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  */
-public class AntlibTest extends BuildFileTest {
-    public AntlibTest(String name) {
-        super(name);
-    }
+public class AntlibTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/antlib.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/antlib.xml");
     }
 
     /**
@@ -42,8 +49,10 @@ public class AntlibTest extends BuildFileTest {
         return property!=null && Project.toBoolean(property);
     }
 
+    @Test
     public void testAntlibFile() {
-        expectLog("antlib.file", "MyTask called");
+        buildRule.executeTarget("antlib.file");
+        assertEquals("MyTask called", buildRule.getLog());
     }
 
     /**
@@ -51,31 +60,34 @@ public class AntlibTest extends BuildFileTest {
      * can collect several antlibs in one Definer call.
      * @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=24024"
      */
+    @Test
     public void testAntlibResource() {
-        expectLog("antlib.resource", "MyTask called-and-then-MyTask2 called");
+        buildRule.executeTarget("antlib.resource");
+        assertEquals("MyTask called-and-then-MyTask2 called", buildRule.getLog());
     }
 
+    @Test
     public void testNsCurrent() {
-        expectLog("ns.current", "Echo2 inside a macroHello from x:p");
+        buildRule.executeTarget("ns.current");
+        assertEquals("Echo2 inside a macroHello from x:p", buildRule.getLog());
     }
 
-
+    @Test
     public void testAntlib_uri() {
-        if (isSharedJVM()) {
-            executeTarget("antlib_uri");
-        }
+        Assume.assumeTrue("Test requires shared JVM", isSharedJVM());
+        buildRule.executeTarget("antlib_uri");
     }
 
+    @Test
     public void testAntlib_uri_auto() {
-        if (isSharedJVM()) {
-            executeTarget("antlib_uri_auto");
-        }
+        Assume.assumeTrue("Test requires shared JVM", isSharedJVM());
+        buildRule.executeTarget("antlib_uri_auto");
     }
 
+    @Test
     public void testAntlib_uri_auto2() {
-        if (isSharedJVM()) {
-            executeTarget("antlib_uri_auto2");
-        }
+        Assume.assumeTrue("Test requires shared JVM", isSharedJVM());
+        buildRule.executeTarget("antlib_uri_auto2");
     }
     
     public static class MyTask extends Task {

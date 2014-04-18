@@ -22,41 +22,54 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test to see if static initializers are invoked the same way
  * when <java> is invoked in forked and unforked modes.
  *
  */
-public class InitializeClassTest extends BuildFileTest {
+public class InitializeClassTest {
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     private File f1 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/forkedout");
     private File f2 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/unforkedout");
 
-    public InitializeClassTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/initializeclass.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/initializeclass.xml");
     }
 
+    @Test
     public void testAll() throws IOException {
-        executeTarget("forked");
-        PrintStream ps = System.out;
-        PrintStream newps = new PrintStream(new FileOutputStream(f2));
-        System.setOut(newps);
-        project.executeTarget("unforked");
-        System.setOut(ps);
-        newps.close();
-        assertTrue("Forked - non-forked mismatch", FILE_UTILS.contentEquals(f1, f2));
+        buildRule.executeTarget("forked");
+        synchronized (System.out) {
+            PrintStream ps = System.out;
+            PrintStream newps = new PrintStream(new FileOutputStream(f2));
+             try {
+                 System.setOut(newps);
+                 buildRule.getProject().executeTarget("unforked");
+             } finally {
+                 System.setOut(ps);
+
+                 newps.close();
+             }
+        }
+        assertEquals(FileUtilities.getFileContents(f1), FileUtilities.getFileContents(f2));
     }
 
+    @After
     public void tearDown() {
         f1.delete();
         f2.delete();

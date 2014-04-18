@@ -17,31 +17,50 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  */
-public class MkdirTest extends BuildFileTest {
+public class MkdirTest {
 
-    public MkdirTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/mkdir.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/mkdir.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument missing");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument missing");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "directory already exists as a file");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: directory already exists as a file");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        executeTarget("test3");
-        java.io.File f = new java.io.File(getOutputDir(), "testdir.tmp");
+        buildRule.executeTarget("test3");
+        java.io.File f = new java.io.File(buildRule.getProject().getProperty("output"), "testdir.tmp");
         if (!f.exists() || !f.isDirectory()) {
             fail("mkdir failed");
         } else {

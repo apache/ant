@@ -30,25 +30,19 @@ import org.apache.tools.ant.Project;
  */
 public class SplashScreenTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Project p = new Project();
         SplashTask t = new SplashTask();
         t.setProject(p);
         t.execute();
 
         // give it some time to display
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-        } // end of try-catch
+        Thread.sleep(2000);
 
         p.fireBuildFinished(null);
         System.err.println("finished");
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-        } // end of try-catch
+        Thread.sleep(2000);
         System.err.println("exiting");
         System.exit(0);
     }

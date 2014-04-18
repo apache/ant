@@ -18,19 +18,29 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.junit.Assert.fail;
 
-public class DispatchTaskTest extends BuildFileTest {
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-    public DispatchTaskTest(String name) {
-        super(name);
-    }
+public class DispatchTaskTest {
 
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/dispatch/dispatch.xml");
+        buildRule.configureProject("src/etc/testcases/core/dispatch/dispatch.xml");
     }
 
+    @Test
     public void testDisp() {
-        expectBuildException("disp", "list");
+        try {
+        	buildRule.executeTarget("disp");
+        	fail("BuildException should have been thrown");
+        } catch(BuildException ex) {
+        	//FIXME the previous method used here ignored the build exception - what are we trying to test
+        }
     }
 }

@@ -23,30 +23,40 @@ import java.io.File;
 import junit.framework.AssertionFailedError;
 
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildListener;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
-public class SubAntTest extends BuildFileTest {
+public class SubAntTest {
 
-    public SubAntTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/subant.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/subant.xml");
     }
 
+    @Test
     public void testnodirs() {
-        project.executeTarget("testnodirs");
-        expectLog("testnodirs", "No sub-builds to iterate on");
+        buildRule.executeTarget("testnodirs");
+        assertEquals("No sub-builds to iterate on",buildRule.getLog());
     }
 
     // target must be specified
+    @Test
     public void testgenericantfile() {
-        File dir1 = project.resolveFile(".");
-        File dir2 = project.resolveFile("subant/subant-test1");
-        File dir3 = project.resolveFile("subant/subant-test2");
+        File dir1 = buildRule.getProject().resolveFile(".");
+        File dir2 = buildRule.getProject().resolveFile("subant/subant-test1");
+        File dir3 = buildRule.getProject().resolveFile("subant/subant-test2");
 
         testBaseDirs("testgenericantfile",
                      new String[] { dir1.getAbsolutePath(),
@@ -56,14 +66,15 @@ public class SubAntTest extends BuildFileTest {
                      });
     }
 
+    @Test
     public void testantfile() {
-        File dir1 = project.resolveFile(".");
+        File dir1 = buildRule.getProject().resolveFile(".");
         // basedir of subant/subant-test1/subant.xml is ..
         // therefore we expect here the subant/subant-test1 subdirectory
-        File dir2 = project.resolveFile("subant/subant-test1");
+        File dir2 = buildRule.getProject().resolveFile("subant/subant-test1");
         // basedir of subant/subant-test2/subant.xml is ..
         // therefore we expect here the subant subdirectory
-        File dir3 = project.resolveFile("subant");
+        File dir3 = buildRule.getProject().resolveFile("subant");
 
         testBaseDirs("testantfile",
                      new String[] { dir1.getAbsolutePath(),
@@ -74,34 +85,40 @@ public class SubAntTest extends BuildFileTest {
 
     }
     
+    @Test
     public void testMultipleTargets() {
-        executeTarget("multipleTargets");
-        assertLogContaining("test1-one");
-        assertLogContaining("test1-two");
-        assertLogContaining("test2-one");
-        assertLogContaining("test2-two");
+        buildRule.executeTarget("multipleTargets");
+        assertContains("test1-one", buildRule.getLog());
+        assertContains("test1-two", buildRule.getLog());
+        assertContains("test2-one", buildRule.getLog());
+        assertContains("test2-two", buildRule.getLog());
     }
     
+    @Test
     public void testMultipleTargetsOneDoesntExist_FOEfalse() {
-        executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
-        assertLogContaining("Target \"three\" does not exist in the project \"subant\"");
+        buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
+        assertContains("Target \"three\" does not exist in the project \"subant\"", buildRule.getLog());
     }
     
+    @Test
     public void testMultipleTargetsOneDoesntExist_FOEtrue() {
-        expectBuildExceptionContaining("multipleTargetsOneDoesntExist_FOEtrue", 
-                                       "Calling not existent target", 
-                                       "Target \"three\" does not exist in the project \"subant\"");
+        try {
+            buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEtrue");
+            fail("BuildException expected: Calling not existent target");
+        } catch (BuildException ex) {
+            assertContains("Target \"three\" does not exist in the project \"subant\"", ex.getMessage());
+        }
     }
 
     protected void testBaseDirs(String target, String[] dirs) {
         SubAntTest.BasedirChecker bc = new SubAntTest.BasedirChecker(dirs);
-        project.addBuildListener(bc);
-        executeTarget(target);
+        buildRule.getProject().addBuildListener(bc);
+        buildRule.executeTarget(target);
         AssertionFailedError ae = bc.getError();
         if (ae != null) {
             throw ae;
         }
-        project.removeBuildListener(bc);
+        buildRule.getProject().removeBuildListener(bc);
     }
 
     private class BasedirChecker implements BuildListener {

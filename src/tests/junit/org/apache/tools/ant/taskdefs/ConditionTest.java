@@ -17,259 +17,363 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- * @created 13 January 2002
- */
-public class ConditionTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
-    /**
-     * Constructor for the ConditionTest object
-     *
-     * @param name we dont know
-     */
-    public ConditionTest(String name) {
-        super(name);
-    }
+public class ConditionTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
 
     /**
      * The JUnit setup method
      */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/condition.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/condition.xml");
     }
 
 
     /**
      * The teardown method for JUnit
      */
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
+    @Test
     public void testBasic() {
-       expectPropertySet("basic","basic");
+       buildRule.executeTarget("basic");
+       assertEquals("true", buildRule.getProject().getProperty("basic"));
     }
 
+    @Test
     public void testConditionIncomplete() {
-        expectSpecificBuildException("condition-incomplete",
-                                     "property attribute has been omitted",
-                                     "The property attribute is required.");
+        try {
+            buildRule.executeTarget("condition-incomplete");
+            fail("BuildException should have been thrown - property attribute has been omitted");
+        } catch (BuildException ex) {
+            assertEquals("The property attribute is required.", ex.getMessage());
+        }
     }
 
+    @Test
     public void testConditionEmpty() {
-        expectSpecificBuildException("condition-empty",
-                                     "no conditions",
-                                     "You must nest a condition into <condition>");
+        try {
+            buildRule.executeTarget("condition-empty");
+            fail("BuildException should have been thrown - no conditions");
+        }  catch(BuildException ex) {
+            assertEquals("You must nest a condition into <condition>", ex.getMessage());
+        }
     }
 
+    @Test
     public void testShortcut() {
-        expectPropertySet("shortcut","shortcut","set");
+        buildRule.executeTarget("shortcut");
+        assertEquals("set", buildRule.getProject().getProperty("shortcut"));
     }
 
+    @Test
     public void testUnset() {
-        expectPropertyUnset("dontset","dontset");
+        buildRule.executeTarget("dontset");
+        assertNull(buildRule.getProject().getProperty("dontset"));
     }
 
+    @Test
     public void testSetValue() {
-        expectPropertySet("setvalue","setvalue","woowoo");
+        buildRule.executeTarget("setvalue");
+        assertEquals("woowoo", buildRule.getProject().getProperty("setvalue"));
     }
 
+    @Test
     public void testNegation() {
-        expectPropertySet("negation","negation");
+        buildRule.executeTarget("negation");
+        assertEquals("true", buildRule.getProject().getProperty("negation"));
     }
 
+    @Test
     public void testNegationFalse() {
-        expectPropertyUnset("negationfalse","negationfalse");
+        buildRule.executeTarget("negationfalse");
+        assertNull(buildRule.getProject().getProperty("negationfalse"));
     }
 
+    @Test
     public void testNegationIncomplete() {
-        expectSpecificBuildException("negationincomplete",
-                                     "no conditions in <not>",
-                                     "You must nest a condition into <not>");
+        try {
+            buildRule.executeTarget("negationincomplete");
+            fail("BuildException should have been thrown - no conditions in <not>");
+        } catch (BuildException ex) {
+            assertEquals("You must nest a condition into <not>", ex.getMessage());
+        }
     }
 
+    @Test
     public void testAnd() {
-        expectPropertySet("and","and");
+        buildRule.executeTarget("and");
+        assertEquals("true", buildRule.getProject().getProperty("and"));
     }
 
+    @Test
     public void testAndFails() {
-        expectPropertyUnset("andfails","andfails");
+        buildRule.executeTarget("andfails");
+        assertNull(buildRule.getProject().getProperty("andfails"));
     }
 
+    @Test
     public void testAndIncomplete() {
-        expectPropertyUnset("andincomplete","andincomplete");
+        buildRule.executeTarget("andincomplete");
+        assertNull(buildRule.getProject().getProperty("andincomplete"));
     }
 
+    @Test
     public void testAndempty() {
-        expectPropertySet("andempty","andempty");
+        buildRule.executeTarget("andempty");
+        assertEquals("true", buildRule.getProject().getProperty("andempty"));
     }
 
+    @Test
     public void testOr() {
-        expectPropertySet("or","or");
+        buildRule.executeTarget("or");
+        assertEquals("true", buildRule.getProject().getProperty("or"));
     }
 
+    @Test
     public void testOrincomplete() {
-        expectPropertySet("or","or");
+        buildRule.executeTarget("or");
+        assertEquals("true", buildRule.getProject().getProperty("or"));
     }
 
+    @Test
     public void testOrFails() {
-        expectPropertyUnset("orfails","orfails");
+        buildRule.executeTarget("orfails");
+        assertNull(buildRule.getProject().getProperty("orfails"));
     }
 
+    @Test
     public void testOrboth() {
-        expectPropertySet("orboth","orboth");
+        buildRule.executeTarget("orboth");
+        assertEquals("true", buildRule.getProject().getProperty("orboth"));
     }
 
+    @Test
     public void testFilesmatchIdentical() {
-        expectPropertySet("filesmatch-identical","filesmatch-identical");
+        buildRule.executeTarget("filesmatch-identical");
+        assertEquals("true", buildRule.getProject().getProperty("filesmatch-identical"));
     }
 
-
+    @Test
     public void testFilesmatchIncomplete() {
-        expectSpecificBuildException("filesmatch-incomplete",
-                                     "Missing file2 attribute",
-                                     "both file1 and file2 are required in filesmatch");
+        try {
+            buildRule.executeTarget("filesmatch-incomplete");
+            fail("Build exception should have been thrown - Missing file2 attirbute");
+        } catch (BuildException ex) {
+            assertEquals("both file1 and file2 are required in filesmatch", ex.getMessage());
+        }
     }
 
+    @Test
     public void testFilesmatchOddsizes() {
-        expectPropertyUnset("filesmatch-oddsizes","filesmatch-oddsizes");
+        buildRule.executeTarget("filesmatch-oddsizes");
+        assertNull(buildRule.getProject().getProperty("filesmatch-oddsizes"));
     }
 
+    @Test
     public void testFilesmatchExistence() {
-        expectPropertyUnset("filesmatch-existence", "filesmatch-existence");
+        buildRule.executeTarget("filesmatch-existence");
+        assertNull(buildRule.getProject().getProperty("filesmatch-existence"));
     }
 
+    @Test
     public void testFilesmatchDifferent() {
-        expectPropertyUnset("filesmatch-different","filesmatch-different");
+        buildRule.executeTarget("filesmatch-different");
+        assertNull(buildRule.getProject().getProperty("filesmatch-different"));
     }
 
+    @Test
     public void testFilesmatchMatch() {
-        expectPropertySet("filesmatch-match","filesmatch-match");
+        buildRule.executeTarget("filesmatch-match");
+        assertEquals("true", buildRule.getProject().getProperty("filesmatch-match"));
     }
 
+    @Test
     public void testFilesmatchDifferentSizes() {
-        expectPropertyUnset("filesmatch-different-sizes",
-            "filesmatch-different-sizes");
+        buildRule.executeTarget("filesmatch-different-sizes");
+        assertNull(buildRule.getProject().getProperty("filesmatch-different-sizes"));
     }
 
+    @Test
     public void testFilesmatchDifferentOnemissing() {
-        expectPropertyUnset("filesmatch-different-onemissing",
-            "filesmatch-different-onemissing");
+        buildRule.executeTarget("filesmatch-different-onemissing");
+        assertNull(buildRule.getProject().getProperty("filesmatch-different-onemissing"));
     }
 
+    @Test
     public void testFilesmatchDifferentEol() {
-        executeTarget("filesmatch-different-eol");
+        buildRule.executeTarget("filesmatch-different-eol");
     }
 
+    @Test
     public void testFilesmatchSameEol() {
-        executeTarget("filesmatch-same-eol");
+        buildRule.executeTarget("filesmatch-same-eol");
     }
 
+    @Test
     public void testFilesmatchNeitherExist() {
-        executeTarget("filesmatch-neitherexist");
+        buildRule.executeTarget("filesmatch-neitherexist");
     }
 
+    @Test
     public void testContains() {
-        expectPropertySet("contains","contains");
+        buildRule.executeTarget("contains");
+        assertEquals("true", buildRule.getProject().getProperty("contains"));
     }
 
-
+    @Test
     public void testContainsDoesnt() {
-        expectPropertyUnset("contains-doesnt","contains-doesnt");
+        buildRule.executeTarget("contains-doesnt");
+        assertNull(buildRule.getProject().getProperty("contains-doesnt"));
     }
 
+    @Test
     public void testContainsAnycase() {
-        expectPropertySet("contains-anycase","contains-anycase");
+        buildRule.executeTarget("contains-anycase");
+        assertEquals("true", buildRule.getProject().getProperty("contains-anycase"));
     }
 
-
+    @Test
     public void testContainsIncomplete1() {
-        expectSpecificBuildException("contains-incomplete1",
-                    "Missing contains attribute",
-                    "both string and substring are required in contains");
+        try {
+            buildRule.executeTarget("contains-incomplete1");
+            fail("BuildException should have been thrown - Missing contains attribute");
+        }  catch(BuildException ex) {
+            assertEquals("both string and substring are required in contains", ex.getMessage());
+        }
     }
 
+    @Test
     public void testContainsIncomplete2() {
-        expectSpecificBuildException("contains-incomplete2",
-                    "Missing contains attribute",
-                    "both string and substring are required in contains");
+        try {
+            buildRule.executeTarget("contains-incomplete2");
+            fail("BuildException should have been thrown - Missing contains attribute");
+        }  catch(BuildException ex) {
+            assertEquals("both string and substring are required in contains", ex.getMessage());
+        }
     }
 
+    @Test
     public void testIstrue() {
-        expectPropertySet("istrue","istrue");
+        buildRule.executeTarget("istrue");
+        assertEquals("true", buildRule.getProject().getProperty("istrue"));
     }
 
+    @Test
     public void testIstrueNot() {
-        expectPropertyUnset("istrue-not","istrue-not");
+        buildRule.executeTarget("istrue-not");
+        assertNull(buildRule.getProject().getProperty("istrue-not"));
     }
 
+    @Test
     public void testIstrueFalse() {
-        expectPropertyUnset("istrue-false","istrue-false");
+        buildRule.executeTarget("istrue-false");
+        assertNull(buildRule.getProject().getProperty("istrue-false"));
     }
 
-
+    @Test
     public void testIstrueIncomplete1() {
-        expectSpecificBuildException("istrue-incomplete",
-                    "Missing attribute",
-                    "Nothing to test for truth");
+        try {
+            buildRule.executeTarget("istrue-incomplete");
+            fail("BuildException should have been thrown - Missing attribute");
+        }  catch(BuildException ex) {
+            assertEquals("Nothing to test for truth", ex.getMessage());
+        }
     }
 
+    @Test
     public void testIsfalseTrue() {
-        expectPropertyUnset("isfalse-true","isfalse-true");
+        buildRule.executeTarget("isfalse-true");
+        assertNull(buildRule.getProject().getProperty("isfalse-true"));
     }
 
+    @Test
     public void testIsfalseNot() {
-        expectPropertySet("isfalse-not","isfalse-not");
+        buildRule.executeTarget("isfalse-not");
+        assertEquals("true", buildRule.getProject().getProperty("isfalse-not"));
     }
 
+    @Test
     public void testIsfalseFalse() {
-        expectPropertySet("isfalse-false","isfalse-false");
+
+        buildRule.executeTarget("isfalse-false");
+        assertEquals("true", buildRule.getProject().getProperty("isfalse-false"));
     }
 
-
+    @Test
     public void testIsfalseIncomplete1() {
-        expectSpecificBuildException("isfalse-incomplete",
-                    "Missing attribute",
-                    "Nothing to test for falsehood");
+        try {
+            buildRule.executeTarget("isfalse-incomplete");
+            fail("BuildException should have been thrown - Missing attribute");
+        }  catch(BuildException ex) {
+            assertEquals("Nothing to test for falsehood", ex.getMessage());
+        }
     }
 
+    @Test
     public void testElse() {
-        executeTarget("testElse");
+        buildRule.executeTarget("testElse");
     }
 
+    @Test
     public void testResourcesmatchError() {
-        expectBuildException("resourcesmatch-error",
-            "should fail because no resources specified");
+        try {
+            buildRule.executeTarget("resourcematch-error");
+            fail("BuildException should have been thrown - no resources specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void testResourcesmatchEmpty() {
-        executeTarget("resourcesmatch-match-empty");
+        buildRule.executeTarget("resourcesmatch-match-empty");
     }
 
+    @Test
     public void testResourcesmatchOne() {
-        executeTarget("resourcesmatch-match-one");
+        buildRule.executeTarget("resourcesmatch-match-one");
     }
 
+    @Test
     public void testResourcesmatchBinary() {
-        executeTarget("resourcesmatch-match-binary");
+        buildRule.executeTarget("resourcesmatch-match-binary");
     }
 
+    @Test
     public void testResourcesmatchMultipleBinary() {
-        executeTarget("resourcesmatch-match-multiple-binary");
+        buildRule.executeTarget("resourcesmatch-match-multiple-binary");
     }
 
+    @Test
     public void testResourcesmatchDiffer() {
-        executeTarget("resourcesmatch-differ");
+        buildRule.executeTarget("resourcesmatch-differ");
     }
 
+    @Test
     public void testResourcesmatchText() {
-        executeTarget("resourcesmatch-match-text");
+        buildRule.executeTarget("resourcesmatch-match-text");
     }
 
+    @Test
     public void testResourcesmatchNoneExist() {
-        executeTarget("resourcesmatch-noneexist");
+        buildRule.executeTarget("resourcesmatch-noneexist");
     }
 }

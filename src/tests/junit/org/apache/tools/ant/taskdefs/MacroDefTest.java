@@ -19,124 +19,167 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class MacroDefTest extends BuildFileTest {
-    public MacroDefTest(String name) {
-        super(name);
-    }
+public class MacroDefTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/macrodef.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/macrodef.xml");
     }
 
+    @Test
     public void testSimple() {
-        expectLog("simple", "Hello World");
+        buildRule.executeTarget("simple");
+		assertEquals("Hello World", buildRule.getLog());
     }
 
+    @Test
     public void testText() {
-        expectLog("text", "Inner Text");
+        buildRule.executeTarget("text");
+		assertEquals("Inner Text", buildRule.getLog());
     }
 
+    @Test
     public void testDuplicateAttribute() {
-        expectBuildException(
-            "duplicate.attribute",
-            "the attribute text has already been specified");
+        try {
+			buildRule.executeTarget("duplicate.attribute");
+			fail("BuildException expected: the attribute text has already been specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testDuplicateElement() {
-        expectBuildException(
-            "duplicate.element",
-            "the element text has already been specified");
+        try {
+			buildRule.executeTarget("duplicate.element");
+			fail("BuildException expected: the element text has already been specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testUri() {
-        expectLog("uri", "Hello World");
+        buildRule.executeTarget("uri");
+		assertEquals("Hello World", buildRule.getLog());
     }
 
+    @Test
     public void testNested() {
-        expectLog("nested", "A nested element");
+        buildRule.executeTarget("nested");
+		assertEquals("A nested element", buildRule.getLog());
     }
 
+    @Test
     public void testDouble() {
-        expectLog(
-            "double",
-            "@{prop} is 'property', value of ${property} is 'A property value'");
+        buildRule.executeTarget("double");
+		assertEquals("@{prop} is 'property', value of ${property} is 'A property value'", buildRule.getLog());
     }
 
+    @Test
     public void testIgnoreCase() {
-        expectLog(
-            "ignorecase",
-            "a is ab is b");
+        buildRule.executeTarget("ignorecase");
+		assertEquals("a is ab is b", buildRule.getLog());
     }
 
+    @Test
     public void testIgnoreElementCase() {
-        expectLog(
-            "ignore-element-case",
-            "nested elementnested element");
+        buildRule.executeTarget("ignore-element-case");
+		assertEquals("nested elementnested element", buildRule.getLog());
     }
 
+    @Test
     public void testTextElement() {
-        expectLogContaining(
-            "textelement", "Hello world");
+        buildRule.executeTarget("textelement");
+		assertContains("Hello world", buildRule.getLog());
     }
 
+    @Test
     public void testTextTrim() {
-        expectLogContaining(
-            "text.trim", "[Hello world]");
+        buildRule.executeTarget("text.trim");
+		assertContains("[Hello world]", buildRule.getLog());
     }
 
+    @Test
     public void testDuplicateTextName() {
-        expectBuildException(
-            "duplicatetextname",
-            "the name \"text\" is already used as an attribute");
+        try {
+			buildRule.executeTarget("duplicatetextname");
+			fail("BuildException expected: the name \"text\" is already used as an attribute");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
+    @Test
     public void testDuplicateTextName2() {
-        expectBuildException(
-            "duplicatetextname2",
-            "the attribute name \"text\" has already been used by the text element");
+        try {
+			buildRule.executeTarget("duplicatetextname2");
+			fail("BuildException expected: the attribute name \"text\" has already been used by the text element");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
+    @Test
     public void testEscape() {
-        expectLog(
-            "escape",
-            "a@b or a@b is avalue@bvalue");
+        buildRule.executeTarget("escape");
+		assertEquals("a@b or a@b is avalue@bvalue", buildRule.getLog());
     }
+    @Test
     public void testAttributeDescription() {
-        expectLog(
-            "attribute.description",
-            "description is hello world");
+        buildRule.executeTarget("attribute.description");
+		assertEquals("description is hello world", buildRule.getLog());
     }
+    @Test
     public void testOverrideDefault() {
-        expectLog(
-            "override.default",
-            "value is new");
+        buildRule.executeTarget("override.default");
+		assertEquals("value is new", buildRule.getLog());
     }
+    @Test
     public void testImplicit() {
-        expectLog(
-            "implicit", "Before implicitIn implicitAfter implicit");
+        buildRule.executeTarget("implicit");
+		assertEquals("Before implicitIn implicitAfter implicit", buildRule.getLog());
     }
+    @Test
     public void testImplicitNotOptional() {
-        expectSpecificBuildException(
-            "implicit.notoptional",
-            "Missing nested elements for implicit element implicit",
-            "Missing nested elements for implicit element implicit");
+        try {
+            buildRule.executeTarget("implicit.notoptional");
+            fail("BuildException expected: Missing nested elements for implicit element implicit");
+        } catch (BuildException ex) {
+            assertEquals("Missing nested elements for implicit element implicit", ex.getMessage());
+        }
     }
+    @Test
     public void testImplicitOptional() {
-        expectLog(
-            "implicit.optional", "Before implicitAfter implicit");
+        buildRule.executeTarget("implicit.optional");
+		assertEquals("Before implicitAfter implicit", buildRule.getLog());
     }
+    @Test
     public void testImplicitExplicit() {
-        expectSpecificBuildException(
-            "implicit.explicit",
-            "Only one element allowed when using implicit elements",
-            "Only one element allowed when using implicit elements");
+        try {
+            buildRule.executeTarget("implicit.explicit");
+            fail("BuildException expected: Only one element allowed when using implicit elements");
+        } catch (BuildException ex) {
+            assertEquals("Only one element allowed when using implicit elements", ex.getMessage());
+        }
     }
 
+    @Test
     public void testBackTraceOff() {
         try {
-            executeTarget("backtraceoff");
+            buildRule.executeTarget("backtraceoff");
         } catch (BuildException ex) {
             if (ex.getMessage().indexOf("following error occurred") != -1) {
                 fail("error message contained backtrace - " + ex.getMessage());
@@ -144,15 +187,20 @@ public class MacroDefTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testBackTrace() {
-        expectBuildExceptionContaining(
-            "backtraceon",
-            "Checking if a back trace is created",
-            "following error occurred");
+        try {
+            buildRule.executeTarget("backtraceon");
+            fail("BuildException expected: Checking if a back trace is created");
+        } catch (BuildException ex) {
+            assertContains("following error occurred", ex.getMessage());
+        }
     }
 
+    @Test
     public void testTopLevelText() {
-        expectLogContaining("top-level-text", "Hello World");
+        buildRule.executeTarget("top-level-text");
+		assertContains("Hello World", buildRule.getLog());
     }
 }
 

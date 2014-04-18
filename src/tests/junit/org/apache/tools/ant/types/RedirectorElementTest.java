@@ -17,48 +17,70 @@
  */
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildFileTest;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class RedirectorElementTest extends BuildFileTest {
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-    public RedirectorElementTest(String name) {
-        super(name);
-    }
+public class RedirectorElementTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/redirector.xml", Project.MSG_VERBOSE);
+        buildRule.configureProject("src/etc/testcases/types/redirector.xml", Project.MSG_VERBOSE);
     }
 
+    @Test
     public void test1() {
-        executeTarget("test1");
-        assertTrue((getProject().<Object> getReference("test1")
+        buildRule.executeTarget("test1");
+        assertTrue((buildRule.getProject().<Object> getReference("test1")
             instanceof RedirectorElement));
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "You must not specify more than one "
-            + "attribute when using refid");
-    }
-
-    public void test3() {
-        expectBuildException("test3", "You must not specify nested elements "
-            + "when using refid");
-    }
-
-    public void test4() {
-        executeTarget("test4");
-    }
-
-    public void testLogInputString() {
-        executeTarget("testLogInputString");
-        if (super.getLog().indexOf("testLogInputString can-cat") >=0 ) {
-            assertDebuglogContaining("Using input string");
+        try {
+            buildRule.executeTarget("test2");
+            fail("You must not specify more than one attribute when using refid");
+        } catch (BuildException ex) {
+            //TODO assert exception message
         }
     }
 
+    @Test
+    public void test3() {
+        try {
+            buildRule.executeTarget("test3");
+            fail("You must not specify nested elements when using refid");
+        } catch (BuildException ex) {
+            //TODO assert exception message
+        }
+    }
+
+    @Test
+    public void test4() {
+        buildRule.executeTarget("test4");
+    }
+
+    @Test
+    public void testLogInputString() {
+        buildRule.executeTarget("testLogInputString");
+        if (buildRule.getLog().indexOf("testLogInputString can-cat") >=0 ) {
+            AntAssert.assertContains("Using input string", buildRule.getFullLog());
+        }
+    }
+
+    @Test
     public void testRefid() {
-        executeTarget("testRefid");
+        buildRule.executeTarget("testRefid");
     }
 
 }

@@ -21,6 +21,10 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.io.FileOutputStream;
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.DirSet.
@@ -28,14 +32,11 @@ import org.apache.tools.ant.BuildException;
  */
 public class DirSetTest extends AbstractFileSetTest {
 
-    public DirSetTest(String name) {
-        super(name);
-    }
-
     protected AbstractFileSet getInstance() {
         return new DirSet();
     }
 
+    @Test
     public void testFileSetIsNoDirSet() {
         DirSet ds = (DirSet) getInstance();
         ds.setProject(getProject());

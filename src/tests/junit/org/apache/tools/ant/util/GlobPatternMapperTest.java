@@ -18,18 +18,19 @@
 
 package org.apache.tools.ant.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests for org.apache.tools.ant.util;GlobPatternMapper.
  *
  */
-public class GlobPatternMapperTest extends TestCase {
+public class GlobPatternMapperTest {
 
-    public GlobPatternMapperTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testNoPatternAtAll() {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foobar");
@@ -41,6 +42,7 @@ public class GlobPatternMapperTest extends TestCase {
         assertEquals("baz", result[0]);
     }
 
+    @Test
     public void testPostfixOnly() {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("*foo");
@@ -57,6 +59,7 @@ public class GlobPatternMapperTest extends TestCase {
         assertEquals("foobar.", result[0]);
     }
 
+    @Test
     public void testPrefixOnly() {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foo*");
@@ -73,6 +76,7 @@ public class GlobPatternMapperTest extends TestCase {
         assertEquals(".barfoo", result[0]);
     }
 
+    @Test
     public void testPreAndPostfix() {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foo*bar");

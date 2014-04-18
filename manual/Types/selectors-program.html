@@ -140,78 +140,58 @@
 
     <p>For a robust component (and selectors are (Project)Components) tests are
     necessary. For testing Tasks we use JUnit TestCases - more specific
-    <tt>org.apache.tools.ant.BuildFileTest extends junit.framework.TestCase</tt>.
+    <tt>org.apache.tools.ant.BuildFileRule extends org.junit.rules.ExternalResource</tt>.
     Some of its features like configure the (test) project by reading its buildfile and
-    execute targets we need for selector tests also. Therefore we use that BuildFileTest.
+    execute targets we need for selector tests also. Therefore we use that BuildFileRule.
     But testing selectors requires some more work: having a set of files, instantiate
     and configure the selector, check the selection work and more. Because we usually
     extend <tt>BaseExtendSelector</tt> its features have to be tested also (e.g. setError()).
     </p>
 
-    <p>That's why we have a base class for doing our selector tests:
-    <tt>org.apache.tools.ant.types.selectors.BaseSelectorTest</tt>.</p>
+    <p>That's why we have a test rule for doing our selector tests:
+    <tt>org.apache.tools.ant.types.selectors.BaseSelectorRule</tt>.</p>
 
-    <p>This class extends TestCase and therefore can included in the set of Ant's
-    unit tests. It holds an instance of preconfigured BuildFileTest. Configuration
-    is done by parsing the src/etc/testcases/types/selectors.xml. BaseSelectorTest
+    <p>This class extends ExternalResource and therefore can included in the set of Ant's
+    unit tests. It holds an instance of preconfigured BuildFileRule. Configuration
+    is done by parsing the src/etc/testcases/types/selectors.xml. BaseSelectorRule
     then gives us helper methods for handling multiple selections. </p>
 
     <p>Because the term "testcase" or "testenvironment" are so often used, this
-    special testenvironment got a new name: <i>bed</i>. Like you initialize the
-    test environment by calling setUp() and cleaning by calling tearDown() (<i>or like
-    to make your bed before go sleeping</i>) you have to do that work with your
-    <i>bed</i> by calling <tt>makeBed()</tt> respective <tt>cleanupBed()</tt>.</p>
+    special testenvironment got a new name: <i>bed</i>. The setup and cleanup of
+    the bed is all handled by the BaseSelectorRule so any test only has to handle
+    the actual test scenarios</p>
 
-    <p>A usual test scenario is<ol>
-       <li>make the bed</li>
+    <p>A usual test scenario is:</p>
+    <ol>
        <li>instantiate the selector</li>
        <li>configure the selector</li>
        <li>let the selector do some work</li>
        <li>verify the work</li>
-       <li>clean the bed</li>
-       </ol>
-    </p>
+    </ol>
 
-    <p>For common way of instantiation you have to override the <tt>getInstance()</tt>
-    simply by returning a new object of your selector. For easier "selection and verification work"
-    BaseSelectorTest provides the method <tt>performTests()</tt> which
-    iterates over all files (and directories) in the String array <tt>filenames</tt>
-    and checks whether the given selector returns the expected result. If an error
-    occurred (especially the selector does not return the expected result) the test
-    fails and the failing filenames are logged.</p>
+
 
     <p>An example test would be:<pre>
 package org.apache.tools.ant.types.selectors;
 
-public class MySelectorTest extends BaseSelectorTest {
+public class MySelectorTest {
 
-    public MySelectorTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
-    public BaseSelector getInstance() {
-        return new MySelector();
-    }
-
+    @Test
     public void testCase1() {
-        try {
-            // initialize test environment 'bed'
-            makeBed();
 
-            // Configure the selector
-            MySelector s = (MySelector)getSelector();
-            s.addParam("key1", "value1");
-            s.addParam("key2", "value2");
-            s.setXX(true);
-            s.setYY("a value");
 
-            // do the tests
-            performTests(s, "FTTTTTTTTTTT");  // First is not selected - rest is
+        // Configure the selector
+        MySelector s = new MySelector();
+        s.addParam("key1", "value1");
+        s.addParam("key2", "value2");
+        s.setXX(true);
+        s.setYY("a value");
 
-        } finally {
-            // cleanup the environment
-            cleanupBed();
-        }
+        // do the tests
+        assertEquals("FTTTTTTTT", selectorRule.selectionString(s));
     }
 }
     </pre>

@@ -17,81 +17,108 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
 
 /**
  * test assertion handling
  */
-public class AssertionsTest extends BuildFileTest {
+public class AssertionsTest {
 
-    public AssertionsTest(String name) {
-        super(name);
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
+    public void setUp() {
+        buildRule.configureProject("src/etc/testcases/types/assertions.xml");
     }
 
-    protected void setUp() throws Exception {
-        configureProject("src/etc/testcases/types/assertions.xml");
-    }
 
     /**
      * runs a test and expects an assertion thrown in forked code
      * @param target
      */
-    protected void expectAssertion(String target) {
-        expectBuildExceptionContaining(target,
-                "assertion not thrown in "+target,
-                "Java returned: 1");
+    private void expectAssertion(String target) {
+        try {
+            buildRule.executeTarget(target);
+            fail("BuildException should have been thrown by assertion fail in task");
+        } catch (BuildException ex) {
+            assertContains("assertion not thrown in "+target, "Java returned: 1", ex.getMessage());
+        }
     }
 
+    @Test
     public void testClassname() {
         expectAssertion("test-classname");
     }
 
+    @Test
     public void testPackage() {
         expectAssertion("test-package");
     }
 
+    @Test
     public void testEmptyAssertions() {
-        executeTarget("test-empty-assertions");
+        buildRule.executeTarget("test-empty-assertions");
     }
 
+    @Test
     public void testDisable() {
-        executeTarget("test-disable");
+        buildRule.executeTarget("test-disable");
     }
 
+    @Test
     public void testOverride() {
         expectAssertion("test-override");
     }
 
+    @Test
     public void testOverride2() {
-        executeTarget("test-override2");
+        buildRule.executeTarget("test-override2");
     }
+
+    @Test
     public void testReferences() {
         expectAssertion("test-references");
     }
 
+    @Test
     public void testMultipleAssertions() {
-        expectBuildExceptionContaining("test-multiple-assertions",
-                "multiple assertions rejected",
-                "Only one assertion declaration is allowed");
-    }
-
-    public void testReferenceAbuse() {
-        expectBuildExceptionContaining("test-reference-abuse",
-                "reference abuse rejected",
-                "You must not specify");
-    }
-
-    public void testNofork() {
-        if (AssertionsTest.class.desiredAssertionStatus()) {
-            return; // ran Ant tests with -ea and this would fail spuriously
+        try {
+            buildRule.executeTarget("test-multiple-assertions");
+            fail("BuildException should have been thrown by assertion fail in task");
+        } catch (BuildException ex) {
+            assertContains("multiple assertions rejected", "Only one assertion declaration is allowed", ex.getMessage());
         }
-        expectLogContaining("test-nofork",
-                "Assertion statements are currently ignored in non-forked mode");
     }
 
+    @Test
+    public void testReferenceAbuse() {
+        try {
+            buildRule.executeTarget("test-reference-abuse");
+            fail("BuildException should have been thrown by reference abuse");
+        } catch (BuildException ex) {
+            assertContains("reference abuse rejected", "You must not specify", ex.getMessage());
+        }
+    }
 
+    @Test
+    public void testNofork() {
+        Assume.assumeFalse("ran Ant tests with -ea and this would fail spuriously", AssertionsTest.class.desiredAssertionStatus());
+        buildRule.executeTarget("test-nofork");
+        assertContains("Assertion statements are currently ignored in non-forked mode", buildRule.getLog());
+    }
+
+    @Test
     public void testJUnit() {
-        executeTarget("test-junit");
+        buildRule.executeTarget("test-junit");
     }
 }
 

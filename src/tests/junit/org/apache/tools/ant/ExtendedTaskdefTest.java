@@ -17,49 +17,52 @@
  */
 package org.apache.tools.ant;
 
+import static org.junit.Assert.fail;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 /**
  * created 16-Mar-2006 12:25:12
  */
 
-public class ExtendedTaskdefTest extends BuildFileTest {
+public class ExtendedTaskdefTest {
 
-    /**
-     * Constructor for the BuildFileTest object.
-     *
-     * @param name string to pass up to TestCase constructor
-     */
-    public ExtendedTaskdefTest(String name) {
-        super(name);
-    }
-
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+	
+	@Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/extended-taskdef.xml");
+        buildRule.configureProject("src/etc/testcases/core/extended-taskdef.xml");
     }
 
-    /**
-     * Automatically calls the target called "tearDown"
-     * from the build file tested if it exits.
-     * <p/>
-     * This allows to use Ant tasks directly in the build file
-     * to clean up after each test. Note that no "setUp" target
-     * is automatically called, since it's trivial to have a
-     * test target depend on it.
-     */
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        executeTarget("teardown");
+    @After
+    public void tearDown() throws Exception {
+        buildRule.executeTarget("teardown");
     }
 
+    @Test
     public void testRun() throws Exception {
-        expectBuildExceptionContaining("testRun",
-                "exception thrown by the subclass",
-                "executing the Foo task");
+    	try {
+    		buildRule.executeTarget("testRun");
+    		fail("BuildException should have been thrown");
+    	} catch(BuildException ex) {
+    		assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
+    	}
     }
 
+    @Test
     public void testRun2() throws Exception {
-        expectBuildExceptionContaining("testRun2",
-                "exception thrown by the subclass",
-                "executing the Foo task");
+    	try {
+    		buildRule.executeTarget("testRun2");
+    		fail("BuildException should have been thrown");
+    	} catch(BuildException ex) {
+    		assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
+    	}
     }
 
 }

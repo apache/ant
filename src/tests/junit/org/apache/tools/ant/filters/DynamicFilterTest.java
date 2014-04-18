@@ -18,67 +18,38 @@
 
 package org.apache.tools.ant.filters;
 
+import java.io.File;
 import java.io.Reader;
-import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class DynamicFilterTest extends BuildFileTest {
+import static org.apache.tools.ant.AntAssert.assertContains;
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    
-    public DynamicFilterTest(String name) {
-        super(name);
-    }
+public class DynamicFilterTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/dynamicfilter.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/filters/dynamicfilter.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void testCustomFilter() throws IOException {
-        expectFileContains("dynamicfilter", getProject().getProperty("output") + "/dynamicfilter",
-                           "hellO wOrld");
+        buildRule.executeTarget("dynamicfilter");
+        String content = FileUtilities.getFileContents(
+                new File(buildRule.getProject().getProperty("output") + "/dynamicfilter"));
+        assertContains("hellO wOrld", content);
     }
 
-    // ------------------------------------------------------
-    //   Helper methods
-    // -----------------------------------------------------
 
-    private String getFileString(String filename)
-        throws IOException
-    {
-        Reader r = null;
-        try {
-            r = new FileReader(FILE_UTILS.resolveFile(getProject().getBaseDir(), filename));
-            return  FileUtils.readFully(r);
-        }
-        finally {
-            FileUtils.close(r);
-        }
-
-    }
-
-    private void expectFileContains(String name, String contains)
-        throws IOException
-    {
-        String content = getFileString(name);
-        assertTrue(
-            "expecting file " + name + " to contain " + contains +
-            " but got " + content, content.indexOf(contains) > -1);
-    }
-
-    private void expectFileContains(
-        String target, String name, String contains)
-        throws IOException
-    {
-        executeTarget(target);
-        expectFileContains(name, contains);
-    }
 
     public static class CustomFilter implements ChainableReader {
         char replace = 'x';

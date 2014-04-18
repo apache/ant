@@ -19,26 +19,39 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
 
-public class Native2AsciiTest extends BuildFileTest {
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+
+public class Native2AsciiTest {
 
     private final static String BUILD_XML = 
         "src/etc/testcases/taskdefs/optional/native2ascii/build.xml";
 
-    public Native2AsciiTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject(BUILD_XML);
+        buildRule.configureProject(BUILD_XML);
     }
 
+    @After
+    public void tearDown() {
+        buildRule.executeTarget("tearDown");
+    }
+
+    @Test
     public void testIso8859_1() throws java.io.IOException {
-        executeTarget("testIso8859-1");
-        File in = getProject().resolveFile("expected/iso8859-1.test");
-        File out = new File(getProject().getProperty("output"), "iso8859-1.test");
+        buildRule.executeTarget("testIso8859-1");
+        File in = buildRule.getProject().resolveFile("expected/iso8859-1.test");
+        File out = new File(buildRule.getProject().getProperty("output"), "iso8859-1.test");
         assertTrue(FileUtils.getFileUtils().contentEquals(in, out, true));
     }
 }

@@ -18,29 +18,39 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
 
-public class TouchTest extends BuildFileTest {
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class TouchTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    public TouchTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/touch.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/touch.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
     public long getTargetTime() {
@@ -56,22 +66,25 @@ public class TouchTest extends BuildFileTest {
      * No real test, simply checks whether the dateformat without
      * seconds is accepted - by erroring out otherwise.
      */
+    @Test
     public void testNoSeconds() {
-        executeTarget("noSeconds");
-        long time = getTargetTime();
+        buildRule.executeTarget("noSeconds");
+        getTargetTime();
     }
 
     /**
      * No real test, simply checks whether the dateformat with
      * seconds is accepted - by erroring out otherwise.
      */
+    @Test
     public void testSeconds() {
-        executeTarget("seconds");
-        long time=getTargetTime();
+        buildRule.executeTarget("seconds");
+        getTargetTime();
     }
     /**
      * verify that the millis test sets things up
      */
+    @Test
     public void testMillis() {
         touchFile("testMillis", 662256000000L);
     }
@@ -79,15 +92,17 @@ public class TouchTest extends BuildFileTest {
     /**
      * verify that the default value defaults to now
      */
+    @Test
     public void testNow() {
         long now=System.currentTimeMillis();
-        executeTarget("testNow");
+        buildRule.executeTarget("testNow");
         long time = getTargetTime();
         assertTimesNearlyMatch(time,now,5000);
     }
     /**
      * verify that the millis test sets things up
      */
+    @Test
     public void test2000() {
         touchFile("test2000", 946080000000L);
     }
@@ -95,6 +110,7 @@ public class TouchTest extends BuildFileTest {
     /**
      * test the file list
      */
+    @Test
     public void testFilelist() {
         touchFile("testFilelist", 662256000000L);
     }
@@ -102,6 +118,7 @@ public class TouchTest extends BuildFileTest {
     /**
      * test the file set
      */
+    @Test
     public void testFileset() {
         touchFile("testFileset", 946080000000L);
     }
@@ -109,6 +126,7 @@ public class TouchTest extends BuildFileTest {
     /**
      * test the resource collection
      */
+    @Test
     public void testResourceCollection() {
         touchFile("testResourceCollection", 1662256000000L);
     }
@@ -116,37 +134,47 @@ public class TouchTest extends BuildFileTest {
     /**
      * test the mapped file set
      */
+    @Test
     public void testMappedFileset() {
-        executeTarget("testMappedFileset");
+        buildRule.executeTarget("testMappedFileset");
     }
 
     /**
      * test the explicit mapped file set
      */
+    @Test
     public void testExplicitMappedFileset() {
-        executeTarget("testExplicitMappedFileset");
+        buildRule.executeTarget("testExplicitMappedFileset");
     }
 
     /**
      * test the mapped file list
      */
+    @Test
     public void testMappedFilelist() {
-        executeTarget("testMappedFilelist");
+        buildRule.executeTarget("testMappedFilelist");
     }
 
     /**
      * test the pattern attribute
      */
+    @Test
     public void testGoodPattern() {
-        executeTarget("testGoodPattern");
+        buildRule.executeTarget("testGoodPattern");
     }
 
     /**
      * test the pattern attribute again
      */
+    @Test
     public void testBadPattern() {
-        expectBuildExceptionContaining("testBadPattern",
-            "No parsing exception thrown", "Unparseable");
+        try {
+            buildRule.executeTarget("testBadPattern");
+            fail("No parsing exception thrown");
+        } catch (BuildException ex) {
+            assertContains("Unparseable", ex.getMessage());
+        }
+
     }
 
     /**
@@ -155,7 +183,7 @@ public class TouchTest extends BuildFileTest {
      * @param timestamp
      */
     private void touchFile(String targetName, long timestamp) {
-        executeTarget(targetName);
+        buildRule.executeTarget(targetName);
         long time = getTargetTime();
         assertTimesNearlyMatch(timestamp, time);
     }

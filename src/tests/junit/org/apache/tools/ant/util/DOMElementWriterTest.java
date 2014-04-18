@@ -18,26 +18,25 @@
 
 package org.apache.tools.ant.util;
 
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for org.apache.tools.ant.util.DOMElementWriter.
  *
  */
-public class DOMElementWriterTest extends TestCase {
+public class DOMElementWriterTest {
 
     private DOMElementWriter w = new DOMElementWriter();
 
-    public DOMElementWriterTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testIsReference() {
         assertTrue("&#20;", w.isReference("&#20;"));
         assertTrue("&#x20;", w.isReference("&#x20;"));
@@ -52,6 +51,7 @@ public class DOMElementWriterTest extends TestCase {
         assertTrue("&amp;", w.isReference("&amp;"));
     }
 
+    @Test
     public void testEncode() {
         assertEquals("&amp;#20;", w.encode("&#20;"));
         assertEquals("&amp;#x20;", w.encode("&#x20;"));
@@ -71,6 +71,7 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("\r\n\t", w.encode("\r\n\t"));
     }
 
+    @Test
     public void testEncodeAttributeValue() {
         assertEquals("&amp;#20;", w.encodeAttributeValue("&#20;"));
         assertEquals("&amp;#x20;", w.encodeAttributeValue("&#x20;"));
@@ -90,6 +91,7 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("&#xd;&#xa;&#x9;", w.encodeAttributeValue("\r\n\t"));
     }
 
+    @Test
     public void testAttributeWithWhitespace() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElement("root");
@@ -101,11 +103,13 @@ public class DOMElementWriterTest extends TestCase {
                      sw.toString());
     }
 
+    @Test
     public void testEncodeData() {
         assertEquals("&#20;\"20;&", w.encodedata("&#20;\"20;&"));
         assertEquals("", w.encodedata("\u0017"));
     }
 
+    @Test
     public void testIsLegalCharacter() {
         assertTrue("0x00", !w.isLegalCharacter('\u0000'));
         assertTrue("0x09", w.isLegalCharacter('\t'));
@@ -121,6 +125,7 @@ public class DOMElementWriterTest extends TestCase {
         assertTrue("0xFFFE", !w.isLegalCharacter('\uFFFE'));
     }
 
+    @Test
     public void testCDATAEndEncoding() {
         assertEquals("]>", w.encodedata("]>"));
         assertEquals("]]", w.encodedata("]]"));
@@ -132,6 +137,7 @@ public class DOMElementWriterTest extends TestCase {
                      w.encodedata("A]]>B]]>C"));
     }
 
+    @Test
     public void testNoAdditionalWhiteSpaceForText() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElement("root");
@@ -147,6 +153,7 @@ public class DOMElementWriterTest extends TestCase {
                      sw.toString());
     }
 
+    @Test
     public void testNoAdditionalWhiteSpaceForCDATA() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElement("root");
@@ -162,6 +169,7 @@ public class DOMElementWriterTest extends TestCase {
                      sw.toString());
     }
 
+    @Test
     public void testNoAdditionalWhiteSpaceForEmptyElement() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElement("root");
@@ -178,6 +186,7 @@ public class DOMElementWriterTest extends TestCase {
                      sw.toString());
     }
 
+    @Test
     public void testNoNSPrefixByDefault() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");
@@ -190,6 +199,7 @@ public class DOMElementWriterTest extends TestCase {
                      + StringUtils.LINE_SEP, sw.toString());
     }
 
+    @Test
     public void testNSOnElement() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");
@@ -205,6 +215,7 @@ public class DOMElementWriterTest extends TestCase {
                      + StringUtils.LINE_SEP, sw.toString());
     }
 
+    @Test
     public void testNSPrefixOnAttribute() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");
@@ -221,6 +232,7 @@ public class DOMElementWriterTest extends TestCase {
                      + StringUtils.LINE_SEP, sw.toString());
     }
 
+    @Test
     public void testNSPrefixOnAttributeEvenWithoutElement() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");
@@ -237,6 +249,7 @@ public class DOMElementWriterTest extends TestCase {
                      + StringUtils.LINE_SEP, sw.toString());
     }
 
+    @Test
     public void testNSGetsReused() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");
@@ -256,6 +269,7 @@ public class DOMElementWriterTest extends TestCase {
                      + StringUtils.LINE_SEP, sw.toString());
     }
 
+    @Test
     public void testNSGoesOutOfScope() throws IOException {
         Document d = DOMUtils.newDocument();
         Element root = d.createElementNS("urn:foo", "root");

@@ -18,48 +18,83 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- */
-public class CopydirTest extends BuildFileTest {
+import java.io.File;
 
-    public CopydirTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+
+public class CopydirTest {
+
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/copydir.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/copydir.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+            buildRule.executeTarget("test1");
+            fail("Required argument not specified");
+        } catch (BuildException ex) {
+            // TODO assert value
+        }
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+            buildRule.executeTarget("test2");
+            fail("Required argument not specified");
+        } catch (BuildException ex) {
+            // TODO assert value
+        }
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument not specified");
+        try {
+            buildRule.executeTarget("test3");
+            fail("Required argument not specified");
+        } catch (BuildException ex) {
+            // TODO assert value
+        }
     }
 
+    @Test
     public void test4() {
-        expectLog("test4", "DEPRECATED - The copydir task is deprecated.  Use copy instead.Warning: src == dest");
+        buildRule.executeTarget("test4");
+        assertEquals("DEPRECATED - The copydir task is deprecated.  Use copy instead.Warning: src == dest",
+                buildRule.getLog());
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
-        java.io.File f = new java.io.File(getOutputDir(), "taskdefs.tmp");
+        buildRule.executeTarget("test5");
+        java.io.File f = new java.io.File(new File(buildRule.getProject().getProperty("output")), "taskdefs.tmp");
+
         if (!f.exists() || !f.isDirectory()) {
             fail("Copy failed");
         }
         // We keep this, so we have something to delete in later tests :-)
     }
 
+    @Test
     public void test6() {
-        expectBuildException("test6", "target is file");
+        try {
+            buildRule.executeTarget("test6");
+            fail("target is file");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
 }

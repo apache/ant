@@ -23,18 +23,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Test;
 
-public class MessageTest extends TestCase {
-    private File f = new File(System.getProperty("java.io.tmpdir"),
+public class MessageTest {
+    private static final File f = new File(System.getProperty("java.io.tmpdir"),
                               "message.txt");
     /**
      * test for bugzilla 48932
      */
-    public void testPrintStreamDoesNotGetClosed() {
+    @Test
+    public void testPrintStreamDoesNotGetClosed() throws IOException {
         Message ms = new Message();
         Project p = new Project();
         ms.setProject(p);
@@ -44,14 +45,13 @@ public class MessageTest extends TestCase {
             fis = new FileOutputStream(f);
             ms.print(new PrintStream(fis));
             fis.write(120);
-        } catch (IOException ioe) {
-            fail("we should not have issues writing after having called Message.print");
         } finally {
             FileUtils.close(fis);
         }
 
     }
 
+    @After
     public void tearDown() {
         if (f.exists()) {
             FileUtils fu = FileUtils.getFileUtils();

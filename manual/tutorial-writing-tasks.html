@@ -17,8 +17,7 @@
 <html>
 <head>
   <title>Tutorial: Writing Tasks</title>
-  <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-  </link>
+  <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
 </head>
 <body>
 <h1>Tutorial: Writing Tasks</h1>
@@ -596,12 +595,9 @@ Next step: test ...
 <h2>Test the Task</h2>
 <p>We have written a test already: the use.* tasks in the buildfile. But its
 difficult to test that automatically. Common (and in Ant) used is JUnit for
-that. For testing tasks Ant provides a baseclass <tt>org.apache.tools.ant.BuildFileTest</tt>.
-This class extends <tt>junit.framework.TestCase</tt> and can therefore be integrated
-into the unit tests. But this class provides some for testing tasks useful methods:
-initialize Ant, load a buildfile, execute targets,
-expecting BuildExceptions with a specified text, expect a special text
-in the output log ... </p>
+that. For testing tasks Ant provides a JUnit Rule <tt>org.apache.tools.ant.BuildFileRule</tt>.
+This class provides some for testing tasks useful methods:
+initialize Ant, load a buildfile, execute targets, capturing debug and run logs ...</p>
 
 <p>In Ant it is usual that the testcase has the same name as the task with a prepending
 <i>Test</i>, therefore we will create a file <i>HelloWorldTest.java</i>. Because we
@@ -677,49 +673,68 @@ and <code>&lt;junitreport&gt;</code>. So we add to the buildfile:</p>
 ...
 </pre>
 
-<p>Back to the <i>src/HelloWorldTest.java</i>. We create a class extending
-<i>BuildFileTest</i> with String-constructor (JUnit-standard), a <i>setUp()</i>
-method initializing Ant and for each testcase (targets use.*) a <i>testXX()</i>
-method invoking that target.</p>
+<p>Back to the <i>src/HelloWorldTest.java</i>. We create a class with a public
+<i>BuildFileRule</i> field annotated with JUnit's <i>@Rule</i> annotation. As per
+conventional JUnit4 tests, this class should have no constructors, or a default no-args
+constructor, setup methods should be annotated with <i>@Before</i>, tear down methods
+annotated with <i>@After</i> and any test method annotated with <i>@Test</i>.
 <pre class="code">
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.Rule;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
 
-public class HelloWorldTest extends BuildFileTest {
+public class HelloWorldTest {
 
-    public HelloWorldTest(String s) {
-        super(s);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
         // initialize Ant
-        configureProject("build.xml");
+        buildRule.configureProject("build.xml");
     }
 
+    @Test
     public void testWithout() {
-        executeTarget("use.without");
-        assertEquals("Message was logged but should not.", getLog(), "");
+        buildRule.executeTarget("use.without");
+        assertEquals("Message was logged but should not.", buildRule.getLog(), "");
     }
 
     public void testMessage() {
         // execute target 'use.nestedText' and expect a message
         // 'attribute-text' in the log
-        expectLog("use.message", "attribute-text");
+        buildRule.executeTarget("use.message");
+        Assert.assertEquals("attribute-text", buildRule.getLog());
     }
 
+    @Test
     public void testFail() {
         // execute target 'use.fail' and expect a BuildException
         // with text 'Fail requested.'
-        expectBuildException("use.fail", "Fail requested.");
+        try {
+           buildRule.executeTarget("use.fail");
+           fail("BuildException should have been thrown as task was set to fail");
+        } catch (BuildException ex) {
+            Assert.assertEquals("fail requested", ex.getMessage());
+        }
+
     }
 
+    @Test
     public void testNestedText() {
-        expectLog("use.nestedText", "nested-text");
+        buildRule.executeTarget("use.nestedText");
+        Assert.assertEquals("nested-text", buildRule.getLog());
     }
 
+    @Test
     public void testNestedElement() {
-        executeTarget("use.nestedElement");
-        assertLogContaining("Nested Element 1");
-        assertLogContaining("Nested Element 2");
+        buildRule.executeTarget("use.nestedElement");
+        AntAssert.assertContains("Nested Element 1", buildRule.getLog());
+        AntAssert.assertContains("Nested Element 2", buildRule.getLog());
     }
 }
 </pre>
@@ -790,14 +805,14 @@ The ZIP provided there contains</p><ul>
 <a href="tutorial-writing-tasks-src.zip">here [7]</a> inside the manual.
 </p>
 
-<p>Used Links:<br></br>
-&nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/properties.html#built-in-props">http://ant.apache.org/manual/properties.html#built-in-props</a><br></br>
-&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/Tasks/taskdef.html">http://ant.apache.org/manual/Tasks/taskdef.html</a><br></br>
-&nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br></br>
-&nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br></br>
-&nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br></br>
-&nbsp;&nbsp;[6] <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22570">http://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a><br></br>
-&nbsp;&nbsp;[7] <a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a><br></br>
+<p>Used Links:<br />
+&nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/properties.html#built-in-props">http://ant.apache.org/manual/properties.html#built-in-props</a><br />
+&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/Tasks/taskdef.html">http://ant.apache.org/manual/Tasks/taskdef.html</a><br />
+&nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br />
+&nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br />
+&nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br />
+&nbsp;&nbsp;[6] <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22570">http://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a><br />
+&nbsp;&nbsp;[7] <a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a><br />
 </p>
 
 </body>

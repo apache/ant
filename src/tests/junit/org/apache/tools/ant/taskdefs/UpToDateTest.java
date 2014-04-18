@@ -18,35 +18,60 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class UpToDateTest extends BuildFileTest {
+import java.io.File;
 
-    public UpToDateTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
 
+public class UpToDateTest {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/uptodate.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/uptodate.xml");
+        buildRule.executeTarget("setUp");
+        File srcDir = buildRule.getProject().resolveFile("source");
+        assumeTrue("Could not change modification timestamp of source directory",
+                srcDir.setLastModified(srcDir.lastModified()
+                - (3 * FileUtils.getFileUtils().getFileTimestampGranularity())));
     }
 
+    @After
     public void tearDown() {
-        executeTarget("tearDown");
+        buildRule.executeTarget("tearDown");
     }
 
+    @Test
     public void testFilesetUpToDate() {
-        expectPropertySet("testFilesetUpToDate", "foo");
+        buildRule.executeTarget("testFilesetUpToDate");
+		assertEquals("true", buildRule.getProject().getProperty("foo"));
     }
 
+    @Test
     public void testFilesetOutOfDate() {
-        expectPropertyUnset("testFilesetOutOfDate", "foo");
+        buildRule.executeTarget("testFilesetOutOfDate");
+		assertNull(buildRule.getProject().getProperty("foo"));
     }
 
+    @Test
     public void testRCUpToDate() {
-        expectPropertySet("testRCUpToDate", "foo");
+        buildRule.executeTarget("testRCUpToDate");
+		assertEquals("true", buildRule.getProject().getProperty("foo"));
     }
 
+    @Test
     public void testRCOutOfDate() {
-        expectPropertyUnset("testRCOutOfDate", "foo");
+        buildRule.executeTarget("testRCOutOfDate");
+		assertNull(buildRule.getProject().getProperty("foo"));
     }
 }

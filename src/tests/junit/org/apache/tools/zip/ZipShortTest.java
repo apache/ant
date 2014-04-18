@@ -18,21 +18,22 @@
 
 package org.apache.tools.zip;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ZipShort.
  *
  */
-public class ZipShortTest extends TestCase {
-
-    public ZipShortTest(String name) {
-        super(name);
-    }
+public class ZipShortTest {
 
     /**
      * Test conversion to bytes.
      */
+    @Test
     public void testToBytes() {
         ZipShort zs = new ZipShort(0x1234);
         byte[] result = zs.getBytes();
@@ -44,6 +45,7 @@ public class ZipShortTest extends TestCase {
     /**
      * Test conversion from bytes.
      */
+    @Test
     public void testFromBytes() {
         byte[] val = new byte[] {0x34, 0x12};
         ZipShort zs = new ZipShort(val);
@@ -53,6 +55,7 @@ public class ZipShortTest extends TestCase {
     /**
      * Test the contract of the equals method.
      */
+    @Test
     public void testEquals() {
         ZipShort zs = new ZipShort(0x1234);
         ZipShort zs2 = new ZipShort(0x1234);
@@ -72,11 +75,13 @@ public class ZipShortTest extends TestCase {
     /**
      * Test sign handling.
      */
+    @Test
     public void testSign() {
         ZipShort zs = new ZipShort(new byte[] {(byte)0xFF, (byte)0xFF});
         assertEquals(0x0000FFFF, zs.getValue());
     }
 
+    @Test
     public void testClone() {
         ZipShort s1 = new ZipShort(42);
         ZipShort s2 = (ZipShort) s1.clone();

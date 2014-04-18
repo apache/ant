@@ -19,7 +19,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Project;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 /**
@@ -27,15 +31,12 @@ import junit.framework.TestCase;
  *
  * @since Ant 1.5
  */
-public class RmicTest extends TestCase {
+public class RmicTest {
 
     private Project project;
     private Rmic rmic;
 
-    public RmicTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         project = new Project();
         project.init();
@@ -46,6 +47,7 @@ public class RmicTest extends TestCase {
     /**
      * Test nested compiler args.
      */
+    @Test
     public void testCompilerArg() {
         String[] args = rmic.getCurrentCompilerArgs();
         assertNotNull(args);
@@ -81,6 +83,7 @@ public class RmicTest extends TestCase {
     /**
      * Test compiler attribute.
      */
+    @Test
     public void testCompilerAttribute() {
         // check defaults
         String compiler = rmic.getCompiler();

@@ -18,77 +18,136 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.AssertionFailedError;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
+
 /**
  */
-public class ReplaceTest extends BuildFileTest {
+public class ReplaceTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
-    public ReplaceTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/replace.xml");
-        project.executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/replace.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument not specified");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument not specified");
+        try {
+			buildRule.executeTarget("test3");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test4() {
-        expectBuildException("test4", "empty token not allowed");
+        try {
+			buildRule.executeTarget("test4");
+			fail("BuildException expected: empty token not allowed");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
     }
 
+    @Test
     public void test6() {
-        expectBuildException("test6", "required argument not specified");
+        try {
+			buildRule.executeTarget("test6");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test7() {
-        expectBuildException("test7", "empty token not allowed");
+        try {
+			buildRule.executeTarget("test7");
+			fail("BuildException expected: empty token not allowed");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test8() {
-        executeTarget("test8");
+        buildRule.executeTarget("test8");
     }
 
+    @Test
     public void test9() throws IOException {
-        executeTarget("test9");
-        assertEqualContent(new File(getOutputDir(), "result.txt"),
-                    new File(getOutputDir(), "output.txt"));
+
+        buildRule.executeTarget("test9");
+        assertEqualContent(new File(buildRule.getOutputDir(), "result.txt"),
+                    new File(buildRule.getOutputDir(), "output.txt"));
     }
 
+    @Test
     public void testNoPreserveLastModified() throws Exception {
-        executeTarget("lastModifiedSetup");
-        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
-        Thread.sleep(3000);
-        executeTarget("testNoPreserve");
-        assertTrue(ts1 < new File(getOutputDir(), "test.txt").lastModified());
+        buildRule.executeTarget("lastModifiedSetup");
+        File testFile = new File(buildRule.getOutputDir(), "test.txt");
+        assumeTrue("Could not change file modification time",
+                testFile.setLastModified(testFile.lastModified() - (FileUtils.getFileUtils().getFileTimestampGranularity() * 5)));
+        long ts1 = testFile.lastModified();
+        buildRule.executeTarget("testNoPreserve");
+        assertTrue(ts1 < new File(buildRule.getOutputDir(), "test.txt").lastModified());
     }
 
+    @Test
     public void testPreserveLastModified() throws Exception {
-        executeTarget("lastModifiedSetup");
-        long ts1 = new File(getOutputDir(), "test.txt").lastModified();
-        Thread.sleep(3000);
-        executeTarget("testPreserve");
-        assertTrue(ts1 == new File(getOutputDir(), "test.txt").lastModified());
+        buildRule.executeTarget("lastModifiedSetup");
+        File testFile = new File(buildRule.getOutputDir(), "test.txt");
+        assumeTrue("Could not change file modification time",
+                testFile.setLastModified(testFile.lastModified() - (FileUtils.getFileUtils().getFileTimestampGranularity() * 5)));
+        long ts1 = testFile.lastModified();buildRule.executeTarget("testPreserve");
+        assertTrue(ts1 == new File(buildRule.getOutputDir(), "test.txt").lastModified());
     }
 
     public void assertEqualContent(File expect, File result)

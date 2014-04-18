@@ -18,48 +18,85 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class TypedefTest extends BuildFileTest {
+public class TypedefTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
-    public TypedefTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/typedef.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/typedef.xml");
     }
 
+    @Test
     public void testEmpty() {
-        expectBuildException("empty", "required argument not specified");
+        try {
+			buildRule.executeTarget("empty");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testNoName() {
-        expectBuildException("noName", "required argument not specified");
+        try {
+			buildRule.executeTarget("noName");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testNoClassname() {
-        expectBuildException("noClassname", "required argument not specified");
+        try {
+			buildRule.executeTarget("noClassname");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testClassNotFound() {
-        expectBuildException("classNotFound",
-                             "classname specified doesn't exist");
+        try {
+			buildRule.executeTarget("classNotFound");
+			fail("BuildException expected: classname specified doesn't exist");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void testGlobal() {
-        expectLog("testGlobal", "");
-        Object ref = project.getReferences().get("global");
+        buildRule.executeTarget("testGlobal");
+        assertEquals("", buildRule.getLog());
+        Object ref = buildRule.getProject().getReferences().get("global");
         assertNotNull("ref is not null", ref);
         assertEquals("org.example.types.TypedefTestType",
                      ref.getClass().getName());
     }
 
+    @Test
     public void testLocal() {
-        expectLog("testLocal", "");
-        Object ref = project.getReferences().get("local");
+        buildRule.executeTarget("testLocal");
+        assertEquals("", buildRule.getLog());
+        Object ref = buildRule.getProject().getReferences().get("local");
         assertNotNull("ref is not null", ref);
         assertEquals("org.example.types.TypedefTestType",
                      ref.getClass().getName());
@@ -69,19 +106,31 @@ public class TypedefTest extends BuildFileTest {
      * test to make sure that one can define a not present
      * optional type twice and then have a valid definition.
      */
+    @Test
     public void testDoubleNotPresent() {
-        expectLogContaining("double-notpresent", "hi");
+        buildRule.executeTarget("double-notpresent");
+		assertContains("hi", buildRule.getLog());
     }
     
+    @Test
     public void testNoResourceOnErrorFailAll(){
-    		this.expectBuildExceptionContaining("noresourcefailall","the requested resource does not exist","Could not load definitions from resource ");
+    		try {
+			buildRule.executeTarget("noresourcefailall");
+			fail("BuildException expected: the requested resource does not exist");
+		} catch (BuildException ex) {
+			assertContains("Could not load definitions from resource ", ex.getMessage());
+		}
     }
     
+    @Test
     public void testNoResourceOnErrorFail(){
-		expectLogContaining("noresourcefail","Could not load definitions from resource ");
+		buildRule.executeTarget("noresourcefail");
+		assertContains("Could not load definitions from resource ", buildRule.getLog());
     }
     
+    @Test
     public void testNoResourceOnErrorNotFail(){
-    		expectLogContaining("noresourcenotfail","Could not load definitions from resource ");
+    		buildRule.executeTarget("noresourcenotfail");
+		assertContains("Could not load definitions from resource ", buildRule.getLog());
     }
 }

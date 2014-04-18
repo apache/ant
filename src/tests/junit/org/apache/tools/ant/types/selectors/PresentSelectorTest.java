@@ -20,33 +20,31 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Mapper;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /**
  * Tests Present Selectors
  *
  */
-public class PresentSelectorTest extends BaseSelectorTest {
+public class PresentSelectorTest {
 
-    public PresentSelectorTest(String name) {
-        super(name);
-    }
 
-    /**
-     * Factory method from base class. This is overriden in child
-     * classes to return a specific Selector class.
-     */
-    public BaseSelector getInstance() {
-        return new PresentSelector();
-    }
+    @Rule
+    public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
     /**
      * Test the code that validates the selector.
      */
+    @Test
     public void testValidate() {
-        PresentSelector s = (PresentSelector)getInstance();
+        PresentSelector s = new PresentSelector();
         try {
             s.createMapper();
             s.createMapper();
@@ -56,9 +54,9 @@ public class PresentSelectorTest extends BaseSelectorTest {
                     be1.getMessage());
         }
 
-        s = (PresentSelector)getInstance();
+        s = new PresentSelector();
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("PresentSelector did not check for required fields");
         } catch (BuildException be2) {
             assertEquals("The targetdir attribute is required.",
@@ -70,6 +68,7 @@ public class PresentSelectorTest extends BaseSelectorTest {
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
+    @Test
     public void testSelectionBehaviour() {
         PresentSelector s;
         String results;
@@ -83,68 +82,55 @@ public class PresentSelectorTest extends BaseSelectorTest {
         Mapper.MapperType flatten = new Mapper.MapperType();
         flatten.setValue("flatten");
 
-        try {
-            makeBed();
+        File beddir = selectorRule.getBeddir();
+        
+        s = new PresentSelector();
+        s.setTargetdir(beddir);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTTTTTTTTTT", results);
 
-            s = (PresentSelector)getInstance();
-            s.setTargetdir(beddir);
-            results = selectionString(s);
-            assertEquals("TTTTTTTTTTTT", results);
+        s = new PresentSelector();
+        s.setTargetdir(beddir);
+        m = s.createMapper();
+        m.setType(identity);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTTTTTTTTTT", results);
 
-            s = (PresentSelector)getInstance();
-            s.setTargetdir(beddir);
-            m = s.createMapper();
-            m.setType(identity);
-            results = selectionString(s);
-            assertEquals("TTTTTTTTTTTT", results);
+        s = new PresentSelector();
+        File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
+        s.setTargetdir(subdir);
+        m = s.createMapper();
+        m.setType(flatten);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTTTTTTTTTF", results);
 
-            s = (PresentSelector)getInstance();
-            File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
-            s.setTargetdir(subdir);
-            m = s.createMapper();
-            m.setType(flatten);
-            results = selectionString(s);
-            assertEquals("TTTTTTTTTTTF", results);
+        s = new PresentSelector();
+        s.setTargetdir(beddir);
+        m = s.createMapper();
+        m.setType(merge);
+        m.setTo("asf-logo.gif.gz");
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTTTTTTTTTT", results);
 
-            s = (PresentSelector)getInstance();
-            s.setTargetdir(beddir);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.gz");
-            results = selectionString(s);
-            assertEquals("TTTTTTTTTTTT", results);
+        s = new PresentSelector();
+        subdir = new File(beddir, "tar/bz2");
+        s.setTargetdir(subdir);
+        m = s.createMapper();
+        m.setType(glob);
+        m.setFrom("*.bz2");
+        m.setTo("*.tar.bz2");
+        results = selectorRule.selectionString(s);
+        assertEquals("FFTFFFFFFFFF", results);
 
-            s = (PresentSelector)getInstance();
-            subdir = new File(beddir, "tar/bz2");
-            s.setTargetdir(subdir);
-            m = s.createMapper();
-            m.setType(glob);
-            m.setFrom("*.bz2");
-            m.setTo("*.tar.bz2");
-            results = selectionString(s);
-            assertEquals("FFTFFFFFFFFF", results);
+            
+        s = new PresentSelector();
+        subdir = new File(selectorRule.getOutputDir(), "selectortest2");
+        s.setTargetdir(subdir);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTFFTTTTTTT", results);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTFFTTTTTTT", results);
 
-            try {
-                makeMirror();
-
-                s = (PresentSelector)getInstance();
-                subdir = new File(getOutputDir(), "selectortest2");
-                s.setTargetdir(subdir);
-                results = mirrorSelectionString(s);
-                assertEquals("TTTFFTTTTTTT", results);
-                results = selectionString(s);
-                assertEquals("TTTFFTTTTTTT", results);
-
-
-            }
-            finally {
-                cleanupMirror();
-            }
-
-        }
-        finally {
-            cleanupBed();
-        }
 
     }
 

@@ -18,22 +18,21 @@
 
 package org.apache.tools.ant.types;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.ExitException;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Permissions.
  *
  */
-public class PermissionsTest extends TestCase {
+public class PermissionsTest {
 
     Permissions perms;
 
-    public PermissionsTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         perms = new Permissions();
         Permissions.Permission perm = new Permissions.Permission();
@@ -72,16 +71,18 @@ public class PermissionsTest extends TestCase {
     }
 
     /** Tests a permission that is granted per default. */
+    @Test
     public void testDefaultGranted() {
         perms.setSecurityManager();
         try {
-            String s = System.getProperty("line.separator");
+            System.getProperty("line.separator");
         } finally {
             perms.restoreSecurityManager();
         }
     }
 
     /** Tests a permission that has been granted later via wildcard. */
+    @Test
     public void testGranted() {
         perms.setSecurityManager();
         try {
@@ -93,6 +94,7 @@ public class PermissionsTest extends TestCase {
     }
 
     /** Tests a permission that has been granted and revoked later. */
+    @Test
     public void testGrantedAndRevoked() {
         perms.setSecurityManager();
         try {
@@ -107,6 +109,7 @@ public class PermissionsTest extends TestCase {
     }
 
     /** Tests a permission that is granted as per default but revoked later via wildcard. */
+    @Test
     public void testDefaultRevoked() {
         perms.setSecurityManager();
         try {
@@ -119,13 +122,15 @@ public class PermissionsTest extends TestCase {
         }
     }
     /** Tests a permission that has not been granted or revoked. */
+    @Test
     public void testOther() {
         String ls = System.getProperty("line.separator");
         perms.setSecurityManager();
         try {
-            String s = System.setProperty("line.separator",ls);
+            System.setProperty("line.separator",ls);
             fail("Could perform an action that should have been forbidden.");
         } catch (SecurityException e){
+            //TODO assert exception message
             // Was expected, test passes
         } finally {
             perms.restoreSecurityManager();
@@ -133,6 +138,7 @@ public class PermissionsTest extends TestCase {
     }
 
     /** Tests an exit condition. */
+    @Test
     public void testExit() {
         perms.setSecurityManager();
         try {
@@ -147,10 +153,6 @@ public class PermissionsTest extends TestCase {
         } finally {
             perms.restoreSecurityManager();
         }
-    }
-
-
-    public void tearDown() {
     }
 
 }

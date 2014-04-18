@@ -18,12 +18,15 @@
 
 package org.apache.tools.ant.types;
 
-import java.io.File;
-
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.PatternSet.
@@ -32,19 +35,17 @@ import org.apache.tools.ant.Project;
  *
  */
 
-public class PatternSetTest extends TestCase {
+public class PatternSetTest {
 
     private Project project;
 
-    public PatternSetTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
     }
 
+    @Test
     public void testEmptyElementIfIsReference() {
         PatternSet p = new PatternSet();
         p.setIncludes("**/*.java");
@@ -119,6 +120,7 @@ public class PatternSetTest extends TestCase {
         }
     }
 
+    @Test
     public void testCircularReferenceCheck() {
         PatternSet p = new PatternSet();
         project.addReference("dummy", p);
@@ -185,6 +187,7 @@ public class PatternSetTest extends TestCase {
         assertEquals("exclude", i[0]);
     }
 
+    @Test
     public void testNestedPatternset() {
         PatternSet p = new PatternSet();
         p.setIncludes("**/*.java");

@@ -18,21 +18,22 @@
 
 package org.apache.tools.ant.types;
 
-import junit.framework.TestCase;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.EnumeratedAttribute.
+ * JUnit testcases for org.apache.tools.ant.EnumeratedAttribute.
  */
-public class EnumeratedAttributeTest extends TestCase {
+public class EnumeratedAttributeTest {
 
     private static String[] expected = {"a", "b", "c"};
 
-    public EnumeratedAttributeTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testContains() {
         EnumeratedAttribute t1 = new TestNormal();
         for (int i=0; i<expected.length; i++) {
@@ -47,6 +48,7 @@ public class EnumeratedAttributeTest extends TestCase {
                !(new TestNull()).containsValue("d"));
     }
 
+    @Test
     public void testFactory() {
 		Factory ea = (Factory)EnumeratedAttribute.getInstance(Factory.class, "one");
 		assertEquals("Factory did not set the right value.", ea.getValue(), "one");
@@ -55,9 +57,11 @@ public class EnumeratedAttributeTest extends TestCase {
 	    	fail("Factory should fail when trying to set an illegal value.");
 		} catch (BuildException be) {
 			// was expected
+            //TODO assert exception message
 		}
 	}
 
+    @Test
 	public void testExceptions() {
         EnumeratedAttribute t1 = new TestNormal();
         for (int i=0; i<expected.length; i++) {
@@ -71,13 +75,13 @@ public class EnumeratedAttributeTest extends TestCase {
             t1.setValue("d");
             fail("expected exception for value \"d\"");
         } catch (BuildException be) {
+         //TODO assert build exception
         }
         try {
             (new TestNull()).setValue("d");
             fail("expected exception for value \"d\" in TestNull");
         } catch (BuildException be) {
-        } catch (Throwable other) {
-            fail("unexpected death of TestNull: "+other.getMessage());
+            //TODO assert exception message
         }
     }
 

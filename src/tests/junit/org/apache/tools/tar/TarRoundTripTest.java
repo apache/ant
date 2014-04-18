@@ -17,24 +17,26 @@
  */
 package org.apache.tools.tar;
 
-import java.io.IOException;
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import junit.framework.TestCase;
+import java.io.IOException;
 
-public class TarRoundTripTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class TarRoundTripTest {
 
     private static final String LONG_NAME
         = "this/path/name/contains/more/than/one/hundred/characters/in/order/"
             + "to/test/the/GNU/long/file/name/capability/round/tripped";
 
-    public TarRoundTripTest(String name) {
-        super(name);
-    }
-
     /**
      * test round-tripping long (GNU) entries
      */
+    @Test
     public void testLongRoundTrippingGNU() throws IOException {
         testLongRoundTripping(TarOutputStream.LONGFILE_GNU);
     }
@@ -42,6 +44,7 @@ public class TarRoundTripTest extends TestCase {
     /**
      * test round-tripping long (POSIX) entries
      */
+    @Test
     public void testLongRoundTrippingPOSIX() throws IOException {
         testLongRoundTripping(TarOutputStream.LONGFILE_POSIX);
     }

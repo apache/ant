@@ -21,29 +21,39 @@ package org.apache.tools.ant;
 // This test will fail with embed, or if top-level is moved out of
 // dependency - as 'echo' happens as part of configureProject stage.
 
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * Tests for builds with tasks at the top level
  *
  * @since Ant 1.6
  */
-public class TopLevelTaskTest extends BuildFileTest {
+public class TopLevelTaskTest {
 
-    public TopLevelTaskTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Test
     public void testNoTarget() {
-        configureProject("src/etc/testcases/core/topleveltasks/notarget.xml");
-        expectLog("", "Called");
+        buildRule.configureProject("src/etc/testcases/core/topleveltasks/notarget.xml");
+        buildRule.executeTarget("");
+        assertEquals("Called", buildRule.getLog());
     }
 
+    @Test
     public void testCalledFromTopLevelAnt() {
-        configureProject("src/etc/testcases/core/topleveltasks/toplevelant.xml");
-        expectLog("", "Called");
+        buildRule.configureProject("src/etc/testcases/core/topleveltasks/toplevelant.xml");
+        buildRule.executeTarget("");
+        assertEquals("Called", buildRule.getLog());
     }
 
+    @Test
     public void testCalledFromTargetLevelAnt() {
-        configureProject("src/etc/testcases/core/topleveltasks/targetlevelant.xml");
-        expectLog("foo", "Called");
+        buildRule.configureProject("src/etc/testcases/core/topleveltasks/targetlevelant.xml");
+        buildRule.executeTarget("foo");
+        assertEquals("Called", buildRule.getLog());
     }
 }

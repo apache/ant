@@ -20,16 +20,21 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.tools.ant.BuildFileTest;
+
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class XMLFormatterWithCDATAOnSystemOut extends BuildFileTest {
+import static org.junit.Assert.assertTrue;
 
-    private static String DIR = "src/etc/testcases/taskdefs/optional/junit";
-    private static String REPORT =
+public class XMLFormatterWithCDATAOnSystemOut {
+
+    private static final String DIR = "src/etc/testcases/taskdefs/optional/junit";
+    private static final String REPORT =
         "TEST-" + XMLFormatterWithCDATAOnSystemOut.class.getName() + ".xml";
 
-    private static String TESTDATA =
+    private static final String TESTDATA =
         "<ERROR>" +
         "<![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
         "  <RESPONSE>" +
@@ -45,20 +50,21 @@ public class XMLFormatterWithCDATAOnSystemOut extends BuildFileTest {
         "]]>" +
         "</ERROR>";
 
-    public XMLFormatterWithCDATAOnSystemOut(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Test
     public void testOutput() {
         System.out.println(TESTDATA);
     }
 
+    @Test
     public void testBuildfile() throws IOException {
-        configureProject(DIR + "/cdataoutput.xml");
-        if (getProject().getProperty("cdata.inner") == null) {
+        buildRule.configureProject(DIR + "/cdataoutput.xml");
+        if (buildRule.getProject().getProperty("cdata.inner") == null) {
             // avoid endless loop
-            executeTarget("run-junit");
-            File f = getProject().resolveFile(REPORT);
+            buildRule.executeTarget("run-junit");
+            File f = buildRule.getProject().resolveFile(REPORT);
             FileReader reader = null;
             try {
                 reader = new FileReader(f);

@@ -18,61 +18,73 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 /**
  */
-public class ImmutableTest extends BuildFileTest {
+public class ImmutableTest {
 
-    public ImmutableTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/immutable.xml");
+        buildRule.configureProject("src/etc/testcases/core/immutable.xml");
     }
 
     // override allowed on <available>
+    @Test
     public void test1() {
-        executeTarget("test1");
-        assertEquals("override", project.getProperty("test"));
+        buildRule.executeTarget("test1");
+        assertEquals("override",buildRule.getProject().getProperty("test"));
     }
 
     // ensure <tstamp>'s new prefix attribute is working
+    @Test
     public void test2() {
-        executeTarget("test2");
-        assertNotNull(project.getProperty("DSTAMP"));
-        assertNotNull(project.getProperty("start.DSTAMP"));
+        buildRule.executeTarget("test2");
+        assertNotNull(buildRule.getProject().getProperty("DSTAMP"));
+        assertNotNull(buildRule.getProject().getProperty("start.DSTAMP"));
     }
 
     // ensure <tstamp> follows the immutability rule
+    @Test
     public void test3() {
-        executeTarget("test3");
-        assertEquals("original", project.getProperty("DSTAMP"));
+        buildRule.executeTarget("test3");
+        assertEquals("original", buildRule.getProject().getProperty("DSTAMP"));
     }
 
     // ensure <condition> follows the immutability rule
+    @Test
     public void test4() {
-        executeTarget("test4");
-        assertEquals("original", project.getProperty("test"));
+        buildRule.executeTarget("test4");
+        assertEquals("original", buildRule.getProject().getProperty("test"));
     }
     // ensure <checksum> follows the immutability rule
+    @Test
     public void test5() {
-        executeTarget("test5");
-        assertEquals("original", project.getProperty("test"));
+        buildRule.executeTarget("test5");
+        assertEquals("original", buildRule.getProject().getProperty("test"));
     }
 
     // ensure <exec> follows the immutability rule
+    @Test
     public void test6() {
-        executeTarget("test6");
-        assertEquals("original", project.getProperty("test1"));
-        assertEquals("original", project.getProperty("test2"));
+        buildRule.executeTarget("test6");
+        assertEquals("original", buildRule.getProject().getProperty("test1"));
+        assertEquals("original", buildRule.getProject().getProperty("test2"));
     }
 
     // ensure <pathconvert> follows the immutability rule
+    @Test
     public void test7() {
-        executeTarget("test7");
-        assertEquals("original", project.getProperty("test"));
+        buildRule.executeTarget("test7");
+        assertEquals("original", buildRule.getProject().getProperty("test"));
     }
 }
 

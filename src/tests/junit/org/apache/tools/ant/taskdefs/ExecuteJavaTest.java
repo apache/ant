@@ -23,14 +23,17 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Simple testcase for the ExecuteJava class - mostly stolen from
  * ExecuteWatchdogTest.
  *
  */
-public class ExecuteJavaTest extends TestCase {
+public class ExecuteJavaTest {
 
     private final static int TIME_OUT = 5000;
 
@@ -41,13 +44,10 @@ public class ExecuteJavaTest extends TestCase {
     private Project project;
     private Path cp;
 
-    public ExecuteJavaTest(String name) {
-        super(name);
-    }
-
-    protected void setUp(){
+    @Before
+    public void setUp(){
         ej = new ExecuteJava();
-        ej.setTimeout(new Long(TIME_OUT));
+        ej.setTimeout((long)TIME_OUT);
         project = new Project();
         project.setBasedir(".");
         project.setProperty(MagicNames.ANT_HOME, System.getProperty(MagicNames.ANT_HOME));
@@ -62,6 +62,7 @@ public class ExecuteJavaTest extends TestCase {
         return cmd;
     }
 
+    @Test
     public void testNoTimeOut() throws Exception {
         Commandline cmd = getCommandline(TIME_OUT/2);
         ej.setJavaCommand(cmd);
@@ -70,6 +71,7 @@ public class ExecuteJavaTest extends TestCase {
     }
 
     // test that the watchdog ends the process
+    @Test
     public void testTimeOut() throws Exception {
         Commandline cmd = getCommandline(TIME_OUT*2);
         ej.setJavaCommand(cmd);
@@ -86,7 +88,7 @@ public class ExecuteJavaTest extends TestCase {
                    elapsed < TIME_OUT*2);
     }
 
-
+    @Test
     public void testNoTimeOutForked() throws Exception {
         Commandline cmd = getCommandline(TIME_OUT/2);
         ej.setJavaCommand(cmd);
@@ -95,6 +97,7 @@ public class ExecuteJavaTest extends TestCase {
     }
 
     // test that the watchdog ends the process
+    @Test
     public void testTimeOutForked() throws Exception {
         Commandline cmd = getCommandline(TIME_OUT*2);
         ej.setJavaCommand(cmd);

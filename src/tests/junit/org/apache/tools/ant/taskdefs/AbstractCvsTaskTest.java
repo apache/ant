@@ -17,38 +17,55 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class AbstractCvsTaskTest extends BuildFileTest {
+public class AbstractCvsTaskTest {
 
-    public AbstractCvsTaskTest() {
-        this( "AbstractCvsTaskTest" );
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    public AbstractCvsTaskTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/abstractcvstask.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/abstractcvstask.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @After
+    public void tearDown() {
+        buildRule.executeTarget("cleanup");
+    }
+
+    @Test
+    public void testAbstractCvsTask() {
+        buildRule.executeTarget("all");
+    }
+
+    @Test
     public void testPackageAttribute() {
-        File f = new File(getProject().getProperty("output") + "/src/Makefile");
+        File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertTrue("starting empty", !f.exists());
-        expectLogContaining("package-attribute", "U src/Makefile");
+        buildRule.executeTarget("package-attribute");
+        AntAssert.assertContains("U src/Makefile", buildRule.getLog());
         assertTrue("now it is there", f.exists());
     }
 
+    @Test
     public void testTagAttribute() {
-        File f = new File(getProject().getProperty("output") + "/src/Makefile");
+        File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertTrue("starting empty", !f.exists());
-        expectLogContaining("tag-attribute", "OPENBSD_5_3");
+        buildRule.executeTarget("tag-attribute");
+        AntAssert.assertContains("OPENBSD_5_3", buildRule.getLog());
         assertTrue("now it is there", f.exists());
     }
 }

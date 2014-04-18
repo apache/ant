@@ -21,34 +21,36 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.Path
+ * JUnit testcases for org.apache.tools.ant.types.Path
  *
  */
 
-public class PathTest extends TestCase {
+public class PathTest {
 
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
     public static boolean isNetWare = Os.isFamily("netware");
 
     private Project project;
 
-    public PathTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(System.getProperty("root"));
     }
 
     // actually tests constructor as well as setPath
+    @Test
     public void testConstructorUnixStyle() {
         Path p = new Path(project, "/a:/b");
         String[] l = p.list();
@@ -66,6 +68,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testRelativePathUnixStyle() {
         project.setBasedir(new File(System.getProperty("root"), "src/etc").getAbsolutePath());
         Path p = new Path(project, "..:testcases");
@@ -89,6 +92,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testConstructorWindowsStyle() {
         Path p = new Path(project, "\\a;\\b");
         String[] l = p.list();
@@ -176,6 +180,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testConstructorNetWareStyle() {
         // try a netware-volume length path, see how it is handled
         Path p = new Path(project, "sys:\\test");
@@ -296,6 +301,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testConstructorMixedStyle() {
         Path p = new Path(project, "\\a;\\b:/c");
         String[] l = p.list();
@@ -316,6 +322,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testSetLocation() {
         Path p = new Path(project);
         p.setLocation(new File(File.separatorChar+"a"));
@@ -332,6 +339,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testAppending() {
         Path p = new Path(project, "/a:/b");
         String[] l = p.list();
@@ -350,6 +358,7 @@ public class PathTest extends TestCase {
         assertEquals("7 after append", 7, l.length);
     }
 
+    @Test
     public void testEmpyPath() {
         Path p = new Path(project, "");
         String[] l = p.list();
@@ -365,6 +374,7 @@ public class PathTest extends TestCase {
         assertEquals("0 after append", 0, l.length);
     }
 
+    @Test
     public void testUnique() {
         Path p = new Path(project, "/a:/a");
         String[] l = p.list();
@@ -384,6 +394,7 @@ public class PathTest extends TestCase {
         assertEquals("1 after append", 1, l.length);
     }
 
+    @Test
     public void testEmptyElementIfIsReference() {
         Path p = new Path(project, "/a:/a");
         try {
@@ -465,6 +476,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testCircularReferenceCheck() {
         Path p = new Path(project);
         project.addReference("dummy", p);
@@ -513,6 +525,7 @@ public class PathTest extends TestCase {
         }
     }
 
+    @Test
     public void testFileList() {
         Path p = new Path(project);
         FileList f = new FileList();
@@ -525,6 +538,7 @@ public class PathTest extends TestCase {
         assertEquals(project.resolveFile("build.xml").getAbsolutePath(), l[0]);
     }
 
+    @Test
     public void testFileSet() {
         Path p = new Path(project);
         FileSet f = new FileSet();
@@ -537,6 +551,7 @@ public class PathTest extends TestCase {
         assertEquals(project.resolveFile("build.xml").getAbsolutePath(), l[0]);
     }
 
+    @Test
     public void testDirSet() {
         Path p = new Path(project);
         DirSet d = new DirSet();
@@ -549,6 +564,7 @@ public class PathTest extends TestCase {
         assertEquals(project.resolveFile("build").getAbsolutePath(), l[0]);
     }
 
+    @Test
     public void testRecursion() {
         Path p = new Path(project);
         try {

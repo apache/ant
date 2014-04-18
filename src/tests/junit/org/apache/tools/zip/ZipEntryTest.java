@@ -18,21 +18,24 @@
 
 package org.apache.tools.zip;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ZipEntry.
  *
  */
-public class ZipEntryTest extends TestCase {
+public class ZipEntryTest {
 
-    public ZipEntryTest(String name) {
-        super(name);
-    }
 
     /**
      * test handling of extra fields
      */
+    @Test
     public void testExtraFields() {
         AsiExtraField a = new AsiExtraField();
         a.setDirectory(true);
@@ -80,12 +83,14 @@ public class ZipEntryTest extends TestCase {
             ze.removeExtraField(ExtraFieldUtilsTest.UNRECOGNIZED_HEADER);
             fail("should be no such element");
         } catch (java.util.NoSuchElementException nse) {
+            //TODO assert exception values
         }
     }
 
     /**
      * test handling of extra fields via central directory
      */
+    @Test
     public void testExtraFieldMerging() {
         AsiExtraField a = new AsiExtraField();
         a.setDirectory(true);
@@ -132,6 +137,7 @@ public class ZipEntryTest extends TestCase {
     /**
      * test handling of extra fields
      */
+    @Test
     public void testAddAsFirstExtraField() {
         AsiExtraField a = new AsiExtraField();
         a.setDirectory(true);
@@ -167,6 +173,7 @@ public class ZipEntryTest extends TestCase {
         assertSame(a, result[2]);
     }
 
+    @Test
     public void testUnixMode() {
         ZipEntry ze = new ZipEntry("foo");
         assertEquals(0, ze.getPlatform());
@@ -202,6 +209,7 @@ public class ZipEntryTest extends TestCase {
      * <a href="https://issues.apache.org/jira/browse/COMPRESS-94"
      * >COMPRESS-94</a>.
      */
+    @Test
     public void testNotEquals() {
         ZipEntry entry1 = new ZipEntry("foo");
         ZipEntry entry2 = new ZipEntry("bar");

@@ -18,60 +18,75 @@
 
 package org.apache.tools.ant;
 
-import junit.framework.AssertionFailedError;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Test the build file inclusion using XML entities.
  *
  */
-public class IncludeTest extends BuildFileTest {
+public class IncludeTest {
+	
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
 
-    public IncludeTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void test1() {
-        configureProject("src/etc/testcases/core/include/basic/include.xml");
-        expectLog("test1", "from included entity");
+        buildRule.configureProject("src/etc/testcases/core/include/basic/include.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity", buildRule.getLog());
     }
 
+    @Test
     public void test2() {
-        configureProject("src/etc/testcases/core/include/frag#ment/include.xml");
-        expectLog("test1", "from included entity");
+        buildRule.configureProject("src/etc/testcases/core/include/frag#ment/include.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity", buildRule.getLog());
     }
 
+    @Test
     public void test3() {
-        configureProject("src/etc/testcases/core/include/frag#ment/simple.xml");
-        expectLog("test1", "from simple buildfile");
+        buildRule.configureProject("src/etc/testcases/core/include/frag#ment/simple.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from simple buildfile", buildRule.getLog());
     }
 
+    @Test
     public void test4() {
-        configureProject("src/etc/testcases/core/include/basic/relative.xml");
-        expectLog("test1", "from included entity");
+        buildRule.configureProject("src/etc/testcases/core/include/basic/relative.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity", buildRule.getLog());
     }
 
+    @Test
     public void test5() {
-        configureProject("src/etc/testcases/core/include/frag#ment/relative.xml");
-        expectLog("test1", "from included entity");
+        buildRule.configureProject("src/etc/testcases/core/include/frag#ment/relative.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity", buildRule.getLog());
     }
 
+    @Test
     public void testParseErrorInIncluding() {
         try {
-            configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
+            buildRule.configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertTrue(e.getLocation().toString()
+            assertContains(e.getLocation().toString()
                        + " should refer to build.xml",
-                       e.getLocation().toString().indexOf("build.xml:") > -1);
+                       "build.xml:", e.getLocation().toString());
         }
     }
 
+    @Test
     public void testTaskErrorInIncluding() {
-        configureProject("src/etc/testcases/core/include/including_file_task_error/build.xml");
+        buildRule.configureProject("src/etc/testcases/core/include/including_file_task_error/build.xml");
         try {
-            executeTarget("test");
+            buildRule.executeTarget("test");
             fail("should have cause a build failure");
         } catch (BuildException e) {
             assertTrue(e.getMessage()
@@ -83,22 +98,24 @@ public class IncludeTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testParseErrorInIncluded() {
         try {
-            configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
+            buildRule.configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertTrue(e.getLocation().toString()
+            assertContains(e.getLocation().toString()
                        + " should refer to included_file.xml",
-                       e.getLocation().toString()
-                       .indexOf("included_file.xml:") > -1);
+                       "included_file.xml:",
+                       e.getLocation().toString());
         }
     }
 
+    @Test
     public void testTaskErrorInIncluded() {
-        configureProject("src/etc/testcases/core/include/included_file_task_error/build.xml");
+        buildRule.configureProject("src/etc/testcases/core/include/included_file_task_error/build.xml");
         try {
-            executeTarget("test");
+            buildRule.executeTarget("test");
             fail("should have cause a build failure");
         } catch (BuildException e) {
             assertTrue(e.getMessage()
@@ -110,24 +127,25 @@ public class IncludeTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testWithSpaceInclude() {
-        configureProject("src/etc/testcases/core/include/with space/include.xml");
-        try {
-            expectLog("test1", "from included entity in 'with space'");
-        } catch (Throwable t) {
-            throw new AssertionFailedError(
-                t.toString() + "; log=\n" + getFullLog());
-        }
+        buildRule.configureProject("src/etc/testcases/core/include/with space/include.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity in 'with space'", buildRule.getLog());
     }
 
+    @Test
     public void testWithSpaceSimple() {
-        configureProject("src/etc/testcases/core/include/with space/simple.xml");
-        expectLog("test1", "from simple buildfile in 'with space'");
+        buildRule.configureProject("src/etc/testcases/core/include/with space/simple.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from simple buildfile in 'with space'", buildRule.getLog());
     }
 
+    @Test
     public void testWithSpaceRelative() {
-        configureProject("src/etc/testcases/core/include/with space/relative.xml");
-        expectLog("test1", "from included entity in 'with space'");
+        buildRule.configureProject("src/etc/testcases/core/include/with space/relative.xml");
+        buildRule.executeTarget("test1");
+        assertEquals("from included entity in 'with space'", buildRule.getLog());
     }
 
 }

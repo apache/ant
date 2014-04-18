@@ -19,17 +19,25 @@ package org.apache.tools.ant.taskdefs.optional.sos;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are
  *  correct.
  *
  */
-public class SOSTest extends BuildFileTest {
+public class SOSTest {
 
     private Commandline commandline;
 
@@ -46,33 +54,19 @@ public class SOSTest extends BuildFileTest {
     private static final String SOS_HOME = "/home/user/.sos";
     private static final String VERSION = "007";
 
-    /**
-     *  Constructor for the SOSTest object
-     *
-     * @param  s  Test name
-     */
-    public SOSTest(String s) {
-        super(s);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    private Project project;
 
-    /**
-     *  The JUnit setup method
-     *
-     * @throws  Exception
-     */
-    protected void setUp()
-        throws Exception {
+    @Before
+    public void setUp() {
         project = new Project();
+        project.init();
         project.setBasedir(".");
     }
 
-    /**
-     *  The teardown method for JUnit
-     *
-     * @throws  Exception
-     */
-    protected void tearDown()
-        throws Exception {
+    @After
+    public void tearDown() {
         File file = new File(project.getBaseDir(), LOCAL_PATH);
         if (file.exists()) {
             file.delete();
@@ -80,6 +74,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test SOSGetFile flags & commandline generation  */
+    @Test
     public void testGetFileFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "GetFile", "-file",
                 SRC_FILE, "-revision", "007", "-server", SOS_SERVER_PATH, "-name",
@@ -110,6 +105,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test SOSGetProject flags & commandline generation  */
+    @Test
     public void testGetProjectFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "GetProject", "-recursive",
                 "-label", SRC_LABEL, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
@@ -137,8 +133,9 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Tests SOSGet required attributes.  */
+    @Test
     public void testGetExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
         expectSpecificBuildException("sosget.1", "some cause", "sosserverpath attribute must be set!");
         expectSpecificBuildException("sosget.2", "some cause", "username attribute must be set!");
         expectSpecificBuildException("sosget.3", "some cause", "vssserverpath attribute must be set!");
@@ -146,6 +143,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test CheckInFile option flags  */
+    @Test
     public void testCheckinFileFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "CheckInFile", "-file",
                 SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
@@ -176,6 +174,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test CheckInProject option flags  */
+    @Test
     public void testCheckinProjectFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "CheckInProject",
                 "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
@@ -203,8 +202,9 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test SOSCheckIn required attributes.  */
+    @Test
     public void testCheckinExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
         expectSpecificBuildException("soscheckin.1", "some cause", "sosserverpath attribute must be set!");
         expectSpecificBuildException("soscheckin.2", "some cause", "username attribute must be set!");
         expectSpecificBuildException("soscheckin.3", "some cause", "vssserverpath attribute must be set!");
@@ -212,6 +212,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test CheckOutFile option flags  */
+    @Test
     public void testCheckoutFileFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "CheckOutFile", "-file",
                 SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
@@ -241,6 +242,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test CheckOutProject option flags  */
+    @Test
     public void testCheckoutProjectFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "CheckOutProject",
                 "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
@@ -267,8 +269,9 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test SOSCheckout required attributes.  */
+    @Test
     public void testCheckoutExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
         expectSpecificBuildException("soscheckout.1", "some cause", "sosserverpath attribute must be set!");
         expectSpecificBuildException("soscheckout.2", "some cause", "username attribute must be set!");
         expectSpecificBuildException("soscheckout.3", "some cause", "vssserverpath attribute must be set!");
@@ -276,6 +279,7 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test Label option flags  */
+    @Test
     public void testLabelFlags() {
         String[] sTestCmdLine = {"soscmd", "-command", "AddLabel", "-server",
                 SOS_SERVER_PATH, "-name", SOS_USERNAME, "-password", "", "-database",
@@ -301,13 +305,24 @@ public class SOSTest extends BuildFileTest {
     }
 
     /**  Test SOSLabel required attributes.  */
+    @Test
     public void testLabelExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
         expectSpecificBuildException("soslabel.1", "some cause", "sosserverpath attribute must be set!");
         expectSpecificBuildException("soslabel.2", "some cause", "username attribute must be set!");
         expectSpecificBuildException("soslabel.3", "some cause", "vssserverpath attribute must be set!");
         expectSpecificBuildException("soslabel.4", "some cause", "projectpath attribute must be set!");
         expectSpecificBuildException("soslabel.5", "some cause", "label attribute must be set!");
+    }
+
+    private void expectSpecificBuildException(String target, String errorMessage,
+                                              String exceptionMessage) {
+        try {
+            buildRule.executeTarget(target);
+            fail(errorMessage);
+        } catch(BuildException ex) {
+            assertEquals(exceptionMessage, ex.getMessage());
+        }
     }
 
     /**

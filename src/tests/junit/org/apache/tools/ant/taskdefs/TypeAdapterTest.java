@@ -20,49 +20,71 @@ package org.apache.tools.ant.taskdefs;
 
 import java.lang.reflect.Method;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TypeAdapter;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 /**
  */
-public class TypeAdapterTest extends BuildFileTest {
+public class TypeAdapterTest {
 
-    public TypeAdapterTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/typeadapter.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/typeadapter.xml");
     }
 
+    @Test
     public void testTaskAdapter() {
-        expectLogContaining("taskadapter", "MyExec called");
+        buildRule.executeTarget("taskadapter");
+		assertContains("MyExec called", buildRule.getLog());
     }
 
+    @Test
     public void testRunAdapter() {
-        expectLogContaining("runadapter", "MyRunnable called");
+        buildRule.executeTarget("runadapter");
+		assertContains("MyRunnable called", buildRule.getLog());
     }
 
+    @Test
     public void testRunAdapterError() {
-        expectBuildExceptionContaining(
-            "runadaptererror", "xx", "No public run() method in");
+        try {
+            buildRule.executeTarget("runadaptererror");
+            fail("BuildException expected: no public run method");
+        } catch (BuildException ex) {
+            assertContains("No public run() method in", ex.getMessage());
+        }
     }
 
+    @Test
     public void testDelay() {
-        expectLogContaining("delay", "MyTask called");
+        buildRule.executeTarget("delay");
+		assertContains("MyTask called", buildRule.getLog());
     }
 
+    @Test
     public void testOnErrorReport() {
-        expectLogContaining("onerror.report",
-                            "MyTaskNotPresent cannot be found");
+        buildRule.executeTarget("onerror.report");
+		assertContains("MyTaskNotPresent cannot be found", buildRule.getLog());
     }
 
+    @Test
     public void testOnErrorIgnore() {
-        expectLog("onerror.ignore","");
+        buildRule.executeTarget("onerror.ignore");
+		assertEquals("", buildRule.getLog());
     }
 
     public static class MyTask extends Task {

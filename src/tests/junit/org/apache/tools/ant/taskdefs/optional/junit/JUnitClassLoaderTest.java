@@ -17,19 +17,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
 
 /**
  * Test to ensure that the classloader loading JUnit testcase
  * is also the context classloader.
  *
  */
-public class JUnitClassLoaderTest extends TestCase {
+public class JUnitClassLoaderTest {
 
-    public JUnitClassLoaderTest(String s) {
-        super(s);
-    }
-
+    @Test
     public void testContextClassLoader(){
         ClassLoader context = Thread.currentThread().getContextClassLoader();
         ClassLoader caller = getClass().getClassLoader();

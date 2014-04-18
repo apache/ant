@@ -17,16 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  */
-public class NoVmCrash extends TestCase {
+public class NoVmCrash {
 
-    public NoVmCrash(String name) {
-        super(name);
-    }
-
+    @Test
     public void testNoCrash() {
     }
 

@@ -18,24 +18,21 @@
 
 package org.apache.tools.zip;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class ZipOutputStreamTest extends TestCase {
+public class ZipOutputStreamTest {
     
     private Date time;
     private ZipLong zl;
-    
-    /**
-     * Constructor
-     */	
-    public ZipOutputStreamTest(String name) {
-        super(name);
-    }
-	
-    protected void setUp() throws Exception {
+
+	@Before
+    public void setUp() throws Exception {
         time = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
@@ -56,15 +53,14 @@ public class ZipOutputStreamTest extends TestCase {
         zl = new ZipLong(result);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-    
+
+    @Test
     public void testZipLong() throws Exception {
         ZipLong test = ZipOutputStream.toDosTime(time);
         assertEquals(test.getValue(), zl.getValue());
     }
 
+    @Test
     public void testAdjustToLong() {
         assertEquals((long) Integer.MAX_VALUE,
                      ZipOutputStream.adjustToLong(Integer.MAX_VALUE));

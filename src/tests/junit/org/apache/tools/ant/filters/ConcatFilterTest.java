@@ -21,16 +21,21 @@ package org.apache.tools.ant.filters;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.StringUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit Testcases for ConcatReader
  */
-public class ConcatFilterTest extends BuildFileTest {
+public class ConcatFilterTest {
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private static final String lSep = StringUtils.LINE_SEP;
 
     private static final String FILE_PREPEND_WITH =
@@ -65,48 +70,55 @@ public class ConcatFilterTest extends BuildFileTest {
         + "Line 60" + lSep
     ;
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    public ConcatFilterTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/concat.xml");
+        buildRule.configureProject("src/etc/testcases/filters/concat.xml");
     }
 
-
+    @Test
     public void testFilterReaderNoArgs() throws IOException {
-        executeTarget("testFilterReaderNoArgs");
-        File expected = new File(getProject().getProperty("output"), "concatfilter.test");
-        File result = new File(getProject().getProperty("output"),  "concat.FilterReaderNoArgs.test");
-        assertTrue("testFilterReaderNoArgs: Result not like expected", FILE_UTILS.contentEquals(expected, result));
+        buildRule.executeTarget("testFilterReaderNoArgs");
+        File expected = new File(buildRule.getProject().getProperty("output"), "concatfilter.test");
+        File result = new File(buildRule.getProject().getProperty("output"),  "concat.FilterReaderNoArgs.test");
+        assertEquals("testFilterReaderNoArgs: Result not like expected", FileUtilities.getFileContents(expected),
+                FileUtilities.getFileContents(result));
     }
 
-    public void testFilterReaderBefore() {
+    @Test
+    public void testFilterReaderBefore() throws IOException {
         doTest("testFilterReaderPrepend", FILE_PREPEND_WITH, FILE_APPEND);
     }
 
-    public void testFilterReaderAfter() {
+    @Test
+    public void testFilterReaderAfter() throws IOException {
         doTest("testFilterReaderAppend", FILE_PREPEND, FILE_APPEND_WITH);
     }
 
-    public void testFilterReaderBeforeAfter() {
+    @Test
+    public void testFilterReaderBeforeAfter() throws IOException {
         doTest("testFilterReaderPrependAppend", FILE_PREPEND_WITH, FILE_APPEND_WITH);
     }
 
-    public void testConcatFilter() {
+    @Test
+    public void testConcatFilter() throws IOException {
         doTest("testConcatFilter", FILE_PREPEND, FILE_APPEND);
     }
 
-    public void testConcatFilterBefore() {
+    @Test
+    public void testConcatFilterBefore() throws IOException {
         doTest("testConcatFilterPrepend", FILE_PREPEND_WITH, FILE_APPEND);
     }
 
-    public void testConcatFilterAfter() {
+    @Test
+    public void testConcatFilterAfter() throws IOException {
         doTest("testConcatFilterAppend", FILE_PREPEND, FILE_APPEND_WITH);
     }
 
-    public void testConcatFilterBeforeAfter() {
+    @Test
+    public void testConcatFilterBeforeAfter() throws IOException {
         doTest("testConcatFilterPrependAppend", FILE_PREPEND_WITH, FILE_APPEND_WITH);
     }
 
@@ -119,33 +131,13 @@ public class ConcatFilterTest extends BuildFileTest {
      * @param expectedStart The string which should be at the beginning of the file
      * @param expectedEnd The string which should be at the end of the file
      */
-    protected void doTest(String target, String expectedStart, String expectedEnd) {
-        executeTarget(target);
-        String resultContent = read(getProject().getProperty("output") + "/concat." + target.substring(4) + ".test");
+    protected void doTest(String target, String expectedStart, String expectedEnd) throws IOException {
+        buildRule.executeTarget(target);
+        String resultContent = FileUtilities.getFileContents(
+                new File(buildRule.getProject().getProperty("output") + "/concat." + target.substring(4) + ".test"));
         assertTrue("First 5 lines differs.", resultContent.startsWith(expectedStart));
         assertTrue("Last 5 lines differs.", resultContent.endsWith(expectedEnd));
     }
 
-
-    /**
-     * Wrapper for FileUtils.readFully().
-     * Additionally it resolves the filename according the the projects basedir
-     * and closes the used reader.
-     * @param filename The name of the file to read
-     * @return the content of the file or <i>null</i> if something goes wrong
-     */
-    protected String read(String filename) {
-        String content = null;
-        try {
-            File file = FILE_UTILS.resolveFile(getProject().getBaseDir(), filename);
-            java.io.FileReader rdr = new java.io.FileReader(file);
-            content = FileUtils.readFully(rdr);
-            rdr.close();
-            rdr = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
 
 }

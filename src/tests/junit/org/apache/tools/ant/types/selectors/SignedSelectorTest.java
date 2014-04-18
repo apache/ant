@@ -18,28 +18,37 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcase for the &lt;signedselector&gt; selector.
  *
  */
-public class SignedSelectorTest extends BuildFileTest {
+public class SignedSelectorTest {
 
-    public SignedSelectorTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/selectors/signedselector.xml");
+        buildRule.configureProject("src/etc/testcases/types/selectors/signedselector.xml");
     }
 
+    @Test
     public void testSelectSigned() {
-        executeTarget("selectsigned");
+        buildRule.executeTarget("selectsigned");
     }
+
+    @Test
     public void testNotSelected() {
-        executeTarget("notselected");
+        buildRule.executeTarget("notselected");
     }
+
+    @Test
     public void testName() {
-        executeTarget("name");
+        buildRule.executeTarget("name");
     }
 }

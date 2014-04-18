@@ -18,26 +18,45 @@
 
 package org.apache.tools.ant;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UnknownElementTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+
+public class UnknownElementTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/unknownelement.xml");
+        buildRule.configureProject("src/etc/testcases/core/unknownelement.xml");
     }
+
+    @Test
     public void testMaybeConfigure() {
         // make sure we do not get a NPE
-        executeTarget("testMaybeConfigure");
+        buildRule.executeTarget("testMaybeConfigure");
     }
 
     /**
      * Not really a UnknownElement test but rather one of "what
      * information is available in taskFinished".
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=26197
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26197">
+     *     https://issues.apache.org/bugzilla/show_bug.cgi?id=26197</a>
      */
+    @Test
+    @Ignore("Previously disabled through naming convention")
     public void XtestTaskFinishedEvent() {
-        getProject().addBuildListener(new BuildListener() {
+        buildRule.getProject().addBuildListener(new BuildListener() {
                 public void buildStarted(BuildEvent event) {}
                 public void buildFinished(BuildEvent event) {}
                 public void targetStarted(BuildEvent event) {}
@@ -58,7 +77,7 @@ public class UnknownElementTest extends BuildFileTest {
                                  t.getClass().getName());
                 }
             });
-        executeTarget("echo");
+        buildRule.executeTarget("echo");
     }
 
     public static class Child extends Task {

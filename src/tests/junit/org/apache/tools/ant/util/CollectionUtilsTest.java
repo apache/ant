@@ -23,18 +23,18 @@ import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for org.apache.tools.ant.util.CollectionUtils.
  *
  */
-public class CollectionUtilsTest extends TestCase {
+public class CollectionUtilsTest {
 
-    public CollectionUtilsTest(String name) {
-        super(name);
-    }
 
+    @Test
     public void testVectorEquals() {
         assertTrue(!CollectionUtils.equals(null, new Vector()));
         assertTrue(!CollectionUtils.equals(new Vector(), null));
@@ -63,6 +63,7 @@ public class CollectionUtilsTest extends TestCase {
         assertTrue(!CollectionUtils.equals(s2, v1));
     }
 
+    @Test
     public void testDictionaryEquals() {
         assertTrue(!CollectionUtils.equals(null, new Hashtable()));
         assertTrue(!CollectionUtils.equals(new Hashtable(), null));

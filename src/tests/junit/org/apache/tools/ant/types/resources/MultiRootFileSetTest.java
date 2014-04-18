@@ -25,15 +25,17 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.AbstractFileSetTest;
 import org.apache.tools.ant.types.Reference;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * This doesn't actually test much, mainly reference handling.
  */
 public class MultiRootFileSetTest extends AbstractFileSetTest {
 
-    public MultiRootFileSetTest(String name) {
-        super(name);
-    }
 
     protected AbstractFileSet getInstance() {
         return new MultiRootFileSet() {
@@ -56,6 +58,7 @@ public class MultiRootFileSetTest extends AbstractFileSetTest {
         };
     }
 
+    @Test
     public void testEmptyElementIfIsReferenceAdditionalAttributes() {
         MultiRootFileSet f = new MultiRootFileSet();
         f.setProject(getProject());
@@ -115,6 +118,7 @@ public class MultiRootFileSetTest extends AbstractFileSetTest {
         }
     }
 
+    @Test
     public void testDirCannotBeSet() {
         try {
             new MultiRootFileSet().setDir(new File("."));

@@ -43,7 +43,7 @@
   <!-- use in conjunction with testDirectoryDateDoesNotChange to make sure something will happen -->
   <target name="touchDirectory">
     <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
-    <sleep seconds="2"/>
+
   </target>
   <target name="testDirectoryDateDoesNotChange">
     <replaceregexp file="${output}/test.properties" byline="true">

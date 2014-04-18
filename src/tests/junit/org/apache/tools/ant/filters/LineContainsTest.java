@@ -21,32 +21,37 @@ package org.apache.tools.ant.filters;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class LineContainsTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+public class LineContainsTest {
+
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
     
-    public LineContainsTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/build.xml");
+        buildRule.configureProject("src/etc/testcases/filters/build.xml");
     }
 
+    @Test
     public void testLineContains() throws IOException {
-        executeTarget("testLineContains");
-        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/linecontains.test");
-        File result = new File(getProject().getProperty("output"),"linecontains.test");
-        assertTrue(FILE_UTILS.contentEquals(expected, result));
+        buildRule.executeTarget("testLineContains");
+        File expected = buildRule.getProject().resolveFile("expected/linecontains.test");
+        File result = new File(buildRule.getProject().getProperty("output"),"linecontains.test");
+        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
+    @Test
     public void testNegateLineContains() throws IOException {
-        executeTarget("testNegateLineContains");
+        buildRule.executeTarget("testNegateLineContains");
     }
 
 }

@@ -18,17 +18,17 @@
 
 package org.apache.tools.ant.util.facade;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @since Ant 1.5
  */
-public class ImplementationSpecificArgumentTest extends TestCase {
+public class ImplementationSpecificArgumentTest {
 
-    public ImplementationSpecificArgumentTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testDependsOnImplementation() {
         ImplementationSpecificArgument ia =
             new ImplementationSpecificArgument();

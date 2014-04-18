@@ -18,32 +18,41 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class WhichResourceTest extends BuildFileTest {
+import static org.junit.Assert.assertNotNull;
+
+public class WhichResourceTest {
     public static final String TEST_BUILD_FILE
         = "src/etc/testcases/taskdefs/whichresource.xml";
 
-    public WhichResourceTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+
+    @Before
     public void setUp() {
-        configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject(TEST_BUILD_FILE);
     }
 
+    @Test
     public void testClassname() {
-        executeTarget("testClassname");
-        assertNotNull(getProject().getProperty("antmain"));
+        buildRule.executeTarget("testClassname");
+        assertNotNull(buildRule.getProject().getProperty("antmain"));
     }
 
+    @Test
     public void testResourcename() {
-        executeTarget("testResourcename");
-        assertNotNull(getProject().getProperty("defaults"));
+        buildRule.executeTarget("testResourcename");
+        assertNotNull(buildRule.getProject().getProperty("defaults"));
     }
 
+    @Test
     public void testResourcenameWithLeadingSlash() {
-        executeTarget("testResourcenameWithLeadingSlash");
-        assertNotNull(getProject().getProperty("defaults"));
+        buildRule.executeTarget("testResourcenameWithLeadingSlash");
+        assertNotNull(buildRule.getProject().getProperty("defaults"));
     }
 }

@@ -21,33 +21,40 @@ package org.apache.tools.ant.types.optional.depend;
 import java.io.File;
 import java.util.Hashtable;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testcase for the Classfileset optional type.
  *
  */
-public class ClassFileSetTest extends BuildFileTest {
+public class ClassFileSetTest {
     public static final String RESULT_FILESET = "result";
 
-    public ClassFileSetTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
         // share the setup for testing the depend task
-        configureProject("src/etc/testcases/taskdefs/optional/depend/depend.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/depend/depend.xml");
     }
 
     /**
      * Test basic classfileset
      */
+    @Test
     public void testBasicSet() {
-        Project p = getProject();
-        executeTarget("testbasicset");
+        Project p = buildRule.getProject();
+        buildRule.executeTarget("testbasicset");
         FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -70,9 +77,10 @@ public class ClassFileSetTest extends BuildFileTest {
     /**
      * Test small classfileset
      */
+    @Test
     public void testSmallSet() {
-        Project p = getProject();
-        executeTarget("testsmallset");
+        Project p = buildRule.getProject();
+        buildRule.executeTarget("testsmallset");
         FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -91,9 +99,10 @@ public class ClassFileSetTest extends BuildFileTest {
     /**
      * Test combo classfileset
      */
+    @Test
     public void testComboSet() {
-        Project p = getProject();
-        executeTarget("testcomboset");
+        Project p = buildRule.getProject();
+        buildRule.executeTarget("testcomboset");
         FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -110,16 +119,18 @@ public class ClassFileSetTest extends BuildFileTest {
     /**
      * Test that you can pass a classfileset by reference to a fileset.
      */
+    @Test
     public void testByReference() {
-        executeTarget("testbyreference");
+        buildRule.executeTarget("testbyreference");
     }
 
     /**
      * Test that classes included in a method "System.out.println(MyClass.class)" are included.
      */
+    @Test
     public void testMethodParam() {
-        Project p = getProject();
-        executeTarget("testmethodparam");
+        Project p = buildRule.getProject();
+        buildRule.executeTarget("testmethodparam");
         FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -144,9 +155,10 @@ public class ClassFileSetTest extends BuildFileTest {
     /**
      * Test that classes included in a method "System.out.println(Outer.Inner.class)" are included.
      */
+    @Test
     public void testMethodParamInner() {
-        Project p = getProject();
-        executeTarget("testmethodparaminner");
+        Project p = buildRule.getProject();
+        buildRule.executeTarget("testmethodparaminner");
         FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
@@ -166,8 +178,9 @@ public class ClassFileSetTest extends BuildFileTest {
             files.containsKey("test" + File.separator + "MethodParam.class"));
     }
 
+    @Test
     public void testResourceCollection() {
-        executeTarget("testresourcecollection");
+        buildRule.executeTarget("testresourcecollection");
     }
 
 }

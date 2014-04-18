@@ -25,26 +25,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import junit.framework.TestCase;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test case for ant class loader
  *
  */
-public class AntClassLoaderDelegationTest extends TestCase {
+public class AntClassLoaderDelegationTest {
 
     /** Instance of a utility class to use for file operations. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private Project p;
 
-    public AntClassLoaderDelegationTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         p = new Project();
         p.init();
@@ -53,7 +54,8 @@ public class AntClassLoaderDelegationTest extends TestCase {
     /** Sample resource present in build/testcases/ */
     private static final String TEST_RESOURCE
         = "apache/tools/ant/IncludeTest.class";
-    
+
+    @Test
     public void testFindResources() throws Exception {
         // This path should contain the class files for these testcases:
         String buildTestcases = System.getProperty("build.tests");
@@ -79,6 +81,7 @@ public class AntClassLoaderDelegationTest extends TestCase {
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
 
+    @Test
     public void testFindIsolateResources() throws Exception {
         String buildTestcases = System.getProperty("build.tests");
         assertNotNull("defined ${build.tests}", buildTestcases);

@@ -18,45 +18,66 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
 
 /**
  * test nice
  */
-public class NiceTest extends BuildFileTest {
+public class NiceTest {
 
-    public NiceTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/nice.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/nice.xml");
     }
 
+    @Test
     public void testNoop() {
-        executeTarget("noop");
+        buildRule.executeTarget("noop");
     }
 
+    @Test
     public void testCurrent() {
-        executeTarget("current");
+        buildRule.executeTarget("current");
     }
 
+    @Test
     public void testFaster() {
-        executeTarget("faster");
+        buildRule.executeTarget("faster");
     }
 
+    @Test
     public void testSlower() {
-        executeTarget("slower");
+        buildRule.executeTarget("slower");
     }
 
+    @Test
     public void testTooSlow() {
-        expectBuildExceptionContaining(
-                "too_slow","out of range","out of the range 1-10");
+        try {
+			buildRule.executeTarget("too_slow");
+			fail("BuildException expected: out of range");
+		} catch (BuildException ex) {
+			assertContains("out of the range 1-10", ex.getMessage());
+		}
     }
 
+    @Test
     public void testTooFast() {
-        expectBuildExceptionContaining(
-                "too_fast", "out of range", "out of the range 1-10");
+        try {
+			buildRule.executeTarget("too_fast");
+			fail("BuildException expected: out of range");
+		} catch (BuildException ex) {
+			assertContains("out of the range 1-10", ex.getMessage());
+		}
     }
 
 }

@@ -18,9 +18,11 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.selectors.TokenizedPath;
-import org.apache.tools.ant.util.SymbolicLinkUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,34 +32,43 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.selectors.TokenizedPath;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 /**
- * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
+ * JUnit testcases for org.apache.tools.ant.DirectoryScanner
  *
  */
-public class DirectoryScannerTest extends BuildFileTest {
+public class DirectoryScannerTest {
 
-    public DirectoryScannerTest(String name) {super(name);}
-
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+	
     // keep track of what operating systems are supported here.
     private boolean supportsSymlinks = Os.isFamily("unix");
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/core/directoryscanner.xml");
-        getProject().executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/core/directoryscanner.xml");
+        buildRule.getProject().executeTarget("setUp");
     }
 
-
+    @Test
     public void test1() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha"});
         ds.scan();
         compareFiles(ds, new String[] {} ,new String[] {"alpha"});
     }
 
+    @Test
     public void test2() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/"});
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml",
@@ -65,9 +76,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    @Test
     public void test3() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
@@ -75,27 +87,30 @@ public class DirectoryScannerTest extends BuildFileTest {
                                    "alpha/beta/gamma"});
     }
 
+    @Test
     public void testFullPathMatchesCaseSensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
         ds.scan();
         compareFiles(ds, new String[] {}, new String[] {});
     }
 
+    @Test
     public void testFullPathMatchesCaseInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setCaseSensitive(false);
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/beta/gamma/GAMMA.XML"});
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
             new String[] {});
     }
 
+    @Test
     public void test2ButCaseInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"ALPHA/"});
         ds.setCaseSensitive(false);
         ds.scan();
@@ -104,28 +119,28 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    @Test
     public void testAllowSymlinks() {
-        if (!supportsSymlinks) {
-            return;
-        }
+        
+    	assumeTrue("Current system does not support Symlinks", supportsSymlinks);
 
-        getProject().executeTarget("symlink-setup");
+        buildRule.getProject().executeTarget("symlink-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/beta/gamma/"});
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha/beta/gamma"});
     }
 
+    @Test
     public void testProhibitSymlinks() {
-        if (!supportsSymlinks) {
-            return;
-        }
+    	assumeTrue("Current system does not support Symlinks", supportsSymlinks);
 
-        getProject().executeTarget("symlink-setup");
+
+        buildRule.getProject().executeTarget("symlink-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/beta/gamma/"});
         ds.setFollowSymlinks(false);
         ds.scan();
@@ -133,26 +148,28 @@ public class DirectoryScannerTest extends BuildFileTest {
     }
 
     // father and child pattern test
+    @Test
     public void testOrderOfIncludePatternsIrrelevant() {
         String [] expectedFiles = {"alpha/beta/beta.xml",
                                    "alpha/beta/gamma/gamma.xml"};
         String [] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/be?a/**", "alpha/beta/gamma/"});
         ds.scan();
         compareFiles(ds, expectedFiles, expectedDirectories);
         // redo the test, but the 2 include patterns are inverted
         ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/beta/gamma/", "alpha/be?a/**"});
         ds.scan();
         compareFiles(ds, expectedFiles, expectedDirectories);
     }
 
+    @Test
     public void testPatternsDifferInCaseScanningSensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml",
@@ -160,9 +177,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    @Test
     public void testPatternsDifferInCaseScanningInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
         ds.setCaseSensitive(false);
         ds.scan();
@@ -171,9 +189,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    @Test
     public void testFullpathDiffersInCaseScanningSensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {
             "alpha/beta/gamma/gamma.xml",
             "alpha/beta/gamma/GAMMA.XML"
@@ -183,9 +202,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
     }
 
+    @Test
     public void testFullpathDiffersInCaseScanningInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {
             "alpha/beta/gamma/gamma.xml",
             "alpha/beta/gamma/GAMMA.XML"
@@ -196,9 +216,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
     }
 
+    @Test
     public void testParentDiffersInCaseScanningSensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
         ds.scan();
         compareFiles(ds, new String[] {"alpha/beta/beta.xml",
@@ -206,9 +227,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
 
+    @Test
     public void testParentDiffersInCaseScanningInsensitive() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
         ds.setCaseSensitive(false);
         ds.scan();
@@ -222,8 +244,10 @@ public class DirectoryScannerTest extends BuildFileTest {
      * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
+     * @throws InterruptedException 
      */
-    public void testSetFollowLinks() throws IOException {
+    @Test
+    public void testSetFollowLinks() throws IOException, InterruptedException {
         if (supportsSymlinks) {
             File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
             System.err.println("link exists pre-test? " + linkFile.exists());
@@ -233,20 +257,11 @@ public class DirectoryScannerTest extends BuildFileTest {
                 String[] command = new String[] {
                     "ln", "-s", "ant", linkFile.getAbsolutePath()
                 };
-                try {
-                    Runtime.getRuntime().exec(command);
-                    // give ourselves some time for the system call
-                    // to execute... tweak if you have a really over
-                    // loaded system.
-                    Thread.sleep(1000);
-                } catch (IOException ioe) {
-                    fail("IOException making link "+ioe);
-                } catch (InterruptedException ie) {
-                }
+                Process process = Runtime.getRuntime().exec(command);
+                assertEquals("0 return code expected for external process", 0, process.waitFor());
+
 
                 File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
-                System.err.println("link exists after exec? " + linkFile.exists());
-                System.err.println("Ant knows it is a link? " + SymbolicLinkUtils.getSymbolicLinkUtils().isSymbolicLink(dir, "ThisIsALink"));
 
                 DirectoryScanner ds = new DirectoryScanner();
 
@@ -304,18 +319,19 @@ public class DirectoryScannerTest extends BuildFileTest {
                            !haveTaskdefsPackage);
 
             } finally {
-                System.err.println("link exists pre-delete? " + linkFile.exists());
                 if (!linkFile.delete()) {
-                    throw new RuntimeException("Failed to delete " + linkFile);
+                    //TODO log this?
+                    //throw new RuntimeException("Failed to delete " + linkFile);
                 }
-                System.err.println("link exists post-delete? " + linkFile.exists());
+
             }
         }
     }
 
+    @Test
     public void testExcludeOneFile() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {
             "**/*.xml"
         });
@@ -327,9 +343,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
     }
 
+    @Test
     public void testExcludeHasPrecedence() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {
             "alpha/**"
         });
@@ -342,9 +359,10 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     }
 
+    @Test
     public void testAlternateIncludeExclude() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {
             "alpha/**",
             "alpha/beta/gamma/**"
@@ -358,9 +376,10 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     }
 
+    @Test
     public void testAlternateExcludeInclude() {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setExcludes(new String[] {
             "alpha/**",
             "alpha/beta/gamma/**"
@@ -377,10 +396,11 @@ public class DirectoryScannerTest extends BuildFileTest {
     /**
      * Test inspired by Bug#1415.
      */
+    @Test
     public void testChildrenOfExcludedDirectory() {
-        getProject().executeTarget("children-of-excluded-dir-setup");
+        buildRule.getProject().executeTarget("children-of-excluded-dir-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setExcludes(new String[] {"alpha/**"});
         ds.setFollowSymlinks(false);
         ds.scan();
@@ -388,7 +408,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                     new String[] {"", "delta"});
 
         ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setExcludes(new String[] {"alpha"});
         ds.setFollowSymlinks(false);
         ds.scan();
@@ -399,35 +419,35 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     }
 
+    @Test
     public void testIsExcludedDirectoryScanned() {
-        String shareclassloader = getProject().getProperty("tests.and.ant.share.classloader");
+        String shareclassloader = buildRule.getProject().getProperty("tests.and.ant.share.classloader");
         // when the test is started by the build.xml of ant
         // if the property tests.and.ant.share.classloader is not set in the build.xml
         // a sysproperty with name tests.and.ant.share.classloader and value
         // ${tests.and.ant.share.classloader} will be set
         // we are trying to catch this here.
-        if (shareclassloader == null
-                || (shareclassloader != null && shareclassloader.startsWith("${"))) {
-            System.out.println("cannot execute testIsExcludedDirectoryScanned when tests are forked, " +
-                    "package private method called");
-            return;
-        }
-        getProject().executeTarget("children-of-excluded-dir-setup");
+        assumeFalse("cannot execute testIsExcludedDirectoryScanned when tests are forked, " +
+                "package private method called", shareclassloader == null
+                || (shareclassloader != null && shareclassloader.indexOf("${") == 0));
+        buildRule.getProject().executeTarget("children-of-excluded-dir-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
+
         ds.setExcludes(new String[] {"**/gamma/**"});
         ds.setFollowSymlinks(false);
         ds.scan();
-        Set set = ds.getScannedDirs();
+        Set<String> set = ds.getScannedDirs();
         assertFalse("empty set", set.isEmpty());
         String s = "alpha/beta/gamma/".replace('/', File.separatorChar);
         assertFalse("scanned " + s, set.contains(s));
     }
 
+    @Test
     public void testAbsolute1() {
-        getProject().executeTarget("extended-setup");
+        buildRule.getProject().executeTarget("extended-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        String tmpdir = getProject().getProperty("output").replace(
+        String tmpdir = buildRule.getProject().getProperty("output").replace(
                 File.separatorChar, '/');
         ds.setIncludes(new String[] {tmpdir + "/**/*"});
         ds.scan();
@@ -440,6 +460,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                                    tmpdir + "/delta"});
     }
 
+    @Test
     public void testAbsolute2() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setIncludes(new String[] {"alpha/**", "alpha/beta/gamma/**"});
@@ -448,10 +469,11 @@ public class DirectoryScannerTest extends BuildFileTest {
         compareFiles(ds, mt, mt);
     }
 
+    @Test
     public void testAbsolute3() {
-        getProject().executeTarget("extended-setup");
+        buildRule.getProject().executeTarget("extended-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        String tmpdir = getProject().getProperty("output").replace(
+        String tmpdir = buildRule.getProject().getProperty("output").replace(
                 File.separatorChar, '/');
         ds.setIncludes(new String[] {tmpdir + "/**/*"});
         ds.setExcludes(new String[] {"**/alpha",
@@ -464,11 +486,12 @@ public class DirectoryScannerTest extends BuildFileTest {
                                    tmpdir + "/delta"});
     }
 
+    @Test
     public void testAbsolute4() {
-        getProject().executeTarget("extended-setup");
+        buildRule.getProject().executeTarget("extended-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        String tmpdir = getProject().getProperty("output").replace(
-            File.separatorChar, '/') ;
+        String tmpdir = buildRule.getProject().getProperty("output").replace(
+                File.separatorChar, '/') ;
         ds.setIncludes(new String[] {tmpdir + "/alpha/beta/**/*",
                                      tmpdir + "/delta/*"});
         ds.setExcludes(new String[] {"**/beta.xml"});
@@ -478,11 +501,10 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {tmpdir + "/alpha/beta/gamma"});
     }
 
+    @Test
     public void testAbsolute5() {
         //testing drive letter search from root:
-        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
-            return;
-        }
+        assumeTrue("Can't use drive letters on non DOS or Netware systems", (Os.isFamily("dos") || Os.isFamily("netware")));
         DirectoryScanner ds = new DirectoryScanner();
         String pattern = new File(File.separator).getAbsolutePath().toUpperCase() + "*";
         ds.setIncludes(new String[] {pattern});
@@ -501,18 +523,18 @@ public class DirectoryScannerTest extends BuildFileTest {
         assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
-        TreeSet files = new TreeSet();
+        TreeSet<String> files = new TreeSet<String>();
         for (int counter = 0; counter < includedFiles.length; counter++) {
             files.add(includedFiles[counter].replace(File.separatorChar, '/'));
         }
-        TreeSet directories = new TreeSet();
+        TreeSet<String> directories = new TreeSet<String>();
         for (int counter = 0; counter < includedDirectories.length; counter++) {
             directories.add(includedDirectories[counter]
                             .replace(File.separatorChar, '/'));
         }
 
         String currentfile;
-        Iterator i = files.iterator();
+        Iterator<String> i = files.iterator();
         int counter = 0;
         while (i.hasNext()) {
             currentfile = (String) i.next();
@@ -520,7 +542,7 @@ public class DirectoryScannerTest extends BuildFileTest {
             counter++;
         }
         String currentdirectory;
-        Iterator dirit = directories.iterator();
+        Iterator<String> dirit = directories.iterator();
         counter = 0;
         while (dirit.hasNext()) {
             currentdirectory = (String) dirit.next();
@@ -529,19 +551,20 @@ public class DirectoryScannerTest extends BuildFileTest {
         }
     }
 
+    @Test
     public void testRecursiveExcludes() throws Exception {
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(new File(getProject().getProperty("output")));
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setExcludes(new String[] {"**/beta/**"});
         ds.scan();
-        List dirs = Arrays.asList(ds.getExcludedDirectories());
+        List<String> dirs = Arrays.asList(ds.getExcludedDirectories());
         assertEquals(2, dirs.size());
         assertTrue("beta is excluded",
                    dirs.contains("alpha/beta".replace('/', File.separatorChar)));
         assertTrue("gamma is excluded",
                    dirs.contains("alpha/beta/gamma".replace('/',
                                                             File.separatorChar)));
-        List files = Arrays.asList(ds.getExcludedFiles());
+        List<String> files = Arrays.asList(ds.getExcludedFiles());
         assertEquals(2, files.size());
         assertTrue("beta.xml is excluded",
                    files.contains("alpha/beta/beta.xml"
@@ -551,6 +574,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                                   .replace('/', File.separatorChar)));
     }
 
+    @Test
     public void testContentsExcluded() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File("."));

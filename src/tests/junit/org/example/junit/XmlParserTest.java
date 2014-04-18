@@ -17,21 +17,21 @@
  */
 package org.example.junit;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * created Aug 12, 2004 1:39:59 PM
  */
 
-public class XmlParserTest extends TestCase {
+public class XmlParserTest {
 
-    public XmlParserTest(String s) {
-        super(s);
-    }
 
+    @Test
     public void testXercesIsPresent() throws SAXException {
         XMLReader xerces;
         xerces = XMLReaderFactory.createXMLReader(
@@ -39,6 +39,7 @@ public class XmlParserTest extends TestCase {
         assertNotNull(xerces);
     }
 
+    @Test
     public void testXercesHandlesSchema() throws SAXException {
         XMLReader xerces;
         xerces = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
@@ -46,6 +47,7 @@ public class XmlParserTest extends TestCase {
                 true);
     }
 
+    @Test
     public void testParserHandlesSchema() throws SAXException {
         XMLReader xerces;
         xerces = XMLReaderFactory.createXMLReader();

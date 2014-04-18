@@ -18,20 +18,17 @@
 
 package org.apache.tools.tar;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @since Ant 1.6
  */
-public class TarEntryTest extends TestCase {
-
-    public TarEntryTest(String name) {
-        super(name);
-    }
+public class TarEntryTest {
 
     /**
      * demonstrates bug 18105 on OSes with os.name shorter than 7.
      */
+    @Test
     public void testFileConstructor() {
         new TarEntry(new java.io.File("/foo"));
     }

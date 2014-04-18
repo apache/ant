@@ -18,11 +18,13 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class UnPackageNameMapperTest extends TestCase {
-    public UnPackageNameMapperTest(String name) { super(name); }
+import static org.junit.Assert.assertEquals;
 
+public class UnPackageNameMapperTest {
+
+    @Test
     public void testMapping() {
         UnPackageNameMapper mapper = new UnPackageNameMapper();
         mapper.setFrom("TEST-*.xml");

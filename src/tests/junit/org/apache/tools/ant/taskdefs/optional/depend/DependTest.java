@@ -18,35 +18,53 @@
 
 package org.apache.tools.ant.taskdefs.optional.depend;
 
+import java.io.File;
 import java.util.Hashtable;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Testcase for the Depend optional task.
  *
  */
-public class DependTest extends BuildFileTest {
+public class DependTest {
     public static final String RESULT_FILESET = "result";
 
     public static final String TEST_BUILD_FILE
         = "src/etc/testcases/taskdefs/optional/depend/depend.xml";
 
-    public DependTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject(TEST_BUILD_FILE);
     }
 
     /**
      * Test direct dependency removal
      */
+    @Test
     public void testDirect() {
-        executeTarget("testdirect");
+        buildRule.executeTarget("src1setup");
+        buildRule.executeTarget("compile");
+
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+
+        buildRule.executeTarget("testdirect");
         Hashtable files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 3,
             files.size());
@@ -59,8 +77,15 @@ public class DependTest extends BuildFileTest {
     /**
      * Test dependency traversal (closure)
      */
+    @Test
     public void testClosure() {
-        executeTarget("testclosure");
+        buildRule.executeTarget("src1setup");
+        buildRule.executeTarget("compile");
+
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+
+        buildRule.executeTarget("testclosure");
         Hashtable files = getResultFiles();
         assertTrue("Depend did not leave correct number of files", 
             files.size() <= 2);
@@ -71,8 +96,16 @@ public class DependTest extends BuildFileTest {
     /**
      * Test that inner class dependencies trigger deletion of the outer class
      */
+    @Test
     public void testInner() {
-        executeTarget("testinner");
+        buildRule.executeTarget("src2setup");
+        buildRule.executeTarget("compile");
+
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+
+
+        buildRule.executeTarget("testinner");
         assertEquals("Depend did not leave correct number of files", 0,
             getResultFiles().size());
     }
@@ -81,8 +114,15 @@ public class DependTest extends BuildFileTest {
      * Test that multi-leve inner class dependencies trigger deletion of
      * the outer class
      */
+    @Test
     public void testInnerInner() {
-        executeTarget("testinnerinner");
+        buildRule.executeTarget("src3setup");
+        buildRule.executeTarget("compile");
+
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+
+        buildRule.executeTarget("testinnerinner");
         assertEquals("Depend did not leave correct number of files", 0,
             getResultFiles().size());
     }
@@ -90,17 +130,27 @@ public class DependTest extends BuildFileTest {
     /**
      * Test that an exception is thrown when there is no source
      */
+    @Test
     public void testNoSource() {
-        expectBuildExceptionContaining("testnosource",
-            "No source specified", "srcdir attribute must be set");
+        try {
+            buildRule.executeTarget("testnosource");
+            fail("Build exception expected: No source specified");
+        } catch(BuildException ex) {
+            assertContains("srcdir attribute must be set", ex.getMessage());
+        }
     }
 
     /**
      * Test that an exception is thrown when the source attribute is empty
      */
+    @Test
     public void testEmptySource() {
-        expectBuildExceptionContaining("testemptysource",
-            "No source specified", "srcdir attribute must be non-empty");
+        try {
+            buildRule.executeTarget("testemptysource");
+            fail("Build exception expected: No source specified");
+        } catch(BuildException ex) {
+            assertContains("srcdir attribute must be non-empty", ex.getMessage());
+        }
     }
 
     /**
@@ -110,8 +160,8 @@ public class DependTest extends BuildFileTest {
      * fileset
      */
     private Hashtable getResultFiles() {
-        FileSet resultFileSet = (FileSet) project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        FileSet resultFileSet = (FileSet) buildRule.getProject().getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(buildRule.getProject());
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
         for (int i = 0; i < scannedFiles.length; ++i) {
@@ -125,8 +175,9 @@ public class DependTest extends BuildFileTest {
      * Test mutual dependency between inner and outer do not cause both to be
      * deleted
      */
+    @Test
     public void testInnerClosure() {
-        executeTarget("testinnerclosure");
+        buildRule.executeTarget("testinnerclosure");
         assertEquals("Depend did not leave correct number of files", 4,
             getResultFiles().size());
     }
@@ -134,21 +185,29 @@ public class DependTest extends BuildFileTest {
     /**
      * Test the operation of the cache
      */
+    @Test
     public void testCache() {
-        executeTarget("testcache");
+        buildRule.executeTarget("testcache");
     }
 
     /**
      * Test the detection and warning of non public classes
      */
+    @Test
     public void testNonPublic() {
-        executeTarget("testnonpublic");
-        String log = getLog();
-        assertTrue("Expected warning about APrivate",
-            log.indexOf("The class APrivate in file") != -1);
-        assertTrue("but has not been deleted because its source file "
+        buildRule.executeTarget("src5setup");
+        buildRule.executeTarget("compile");
+
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+
+        buildRule.executeTarget("testnonpublic");
+        String log = buildRule.getLog();
+        assertContains("Expected warning about APrivate",
+            "The class APrivate in file", log);
+        assertContains("but has not been deleted because its source file "
             + "could not be determined",
-            log.indexOf("The class APrivate in file") != -1);
+            "The class APrivate in file", log);
     }
 
 }

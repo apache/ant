@@ -18,13 +18,14 @@
 
 package org.apache.tools.ant;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+
 import java.util.Vector;
 
-import junit.framework.Assert;
+public class MockBuildListener implements BuildListener {
 
-public class MockBuildListener extends Assert implements BuildListener {
-
-    private final Vector buffer = new Vector();
+    private final Vector<BuildEvent> buffer = new Vector<BuildEvent>();
     private final Project project;
 
     public MockBuildListener(final Project project) {

@@ -18,67 +18,76 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
-/**
- * @created 01 May 2001
- */
-public class SleepTest extends BuildFileTest {
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class SleepTest {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
-    private final static boolean TRACE=false;
 	private final static int ERROR_RANGE=1000;
 	
-    public SleepTest(String name) {
-        super(name);
-    }
-
+    
+    @Before
     public void setUp() {
-        configureProject(TASKDEFS_DIR + "sleep.xml");
+        buildRule.configureProject(TASKDEFS_DIR + "sleep.xml");
     }
 
+    @Test
     public void test1() {
        Timer timer=new Timer();
-        executeTarget("test1");
+        buildRule.executeTarget("test1");
         timer.stop();
-        if(TRACE) System.out.println(" test1 elapsed time="+timer.time());
         assertTrue(timer.time()>=0);
     }
 
+    @Test
     public void test2() {
         Timer timer=new Timer();
-        executeTarget("test2");
+        buildRule.executeTarget("test2");
         timer.stop();
-        if(TRACE) System.out.println(" test2 elapsed time="+timer.time());
         assertTrue(timer.time()>=0);
     }
 
+    @Test
     public void test3() {
         Timer timer=new Timer();
-        executeTarget("test3");
+        buildRule.executeTarget("test3");
         timer.stop();
-        if(TRACE) System.out.println(" test3 elapsed time="+timer.time());
         assertTrue(timer.time()>=(2000-ERROR_RANGE));
     }
 
+    @Test
     public void test4() {
         Timer timer=new Timer();
-        executeTarget("test3");
+        buildRule.executeTarget("test3");
         timer.stop();
-        if(TRACE) System.out.println(" test4 elapsed time="+timer.time());
         assertTrue(timer.time()>=(2000-ERROR_RANGE) && timer.time()<60000);
     }
 
+    @Test
     public void test5() {
-        expectBuildException("test5",
-            "Negative sleep periods are not supported");
+        try {
+            buildRule.executeTarget("test5");
+            fail("Negative sleep periods are not supported");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
+    @Test
     public void test6() {
         Timer timer=new Timer();
-        executeTarget("test6");
+        buildRule.executeTarget("test6");
         timer.stop();
-        if(TRACE) System.out.println(" test6 elapsed time="+timer.time());
         assertTrue(timer.time()<2000);
     }
 

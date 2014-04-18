@@ -17,50 +17,74 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 /**
  * test the typeexists condition
  */
-public class TypeFoundTest extends BuildFileTest {
+public class TypeFoundTest {
 
-    public TypeFoundTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/typefound.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/typefound.xml");
     }
 
+    @Test
     public void testTask() {
-        expectPropertySet("testTask", "testTask");
+        buildRule.executeTarget("testTask");
+        assertEquals("true", buildRule.getProject().getProperty("testTask"));
     }
 
+    @Test
     public void testUndefined() {
-        expectBuildExceptionContaining("testUndefined","left out the name attribute", "No type specified");
+        try {
+            buildRule.executeTarget("testUndefined");
+            fail("Build exception expected: left out the name attribute");
+        } catch(BuildException ex) {
+            AntAssert.assertContains("No type specified", ex.getMessage());
+        }
     }
 
+    @Test
     public void testTaskThatIsntDefined() {
-        expectPropertyUnset("testTaskThatIsntDefined", "testTaskThatIsntDefined");
+        buildRule.executeTarget("testTaskThatIsntDefined");
+        assertNull(buildRule.getProject().getProperty("testTaskThatIsntDefined"));
     }
 
+    @Test
     public void testTaskThatDoesntReallyExist() {
-        expectPropertyUnset("testTaskThatDoesntReallyExist", "testTaskThatDoesntReallyExist");
+        buildRule.executeTarget("testTaskThatDoesntReallyExist");
+        assertNull(buildRule.getProject().getProperty("testTaskThatDoesntReallyExist"));
     }
 
+    @Test
     public void testType() {
-        expectPropertySet("testType", "testType");
+        buildRule.executeTarget("testType");
+        assertEquals("true", buildRule.getProject().getProperty("testType"));
     }
 
+    @Test
     public void testPreset() {
-        expectPropertySet("testPreset", "testPreset");
+        buildRule.executeTarget("testPreset");
+        assertEquals("true", buildRule.getProject().getProperty("testPreset"));
     }
 
+    @Test
     public void testMacro() {
-        expectPropertySet("testMacro", "testMacro");
+        buildRule.executeTarget("testMacro");
+        assertEquals("true", buildRule.getProject().getProperty("testMacro"));
     }
 
 

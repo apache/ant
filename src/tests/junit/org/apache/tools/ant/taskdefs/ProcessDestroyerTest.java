@@ -23,57 +23,46 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
 
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class ProcessDestroyerTest extends TestCase {
+//TODO this test seems really unsafe due to the infinite loop
+public class ProcessDestroyerTest {
 
-    /**
-     * Constructor for ProcessDestroyerTest.
-     * @param arg0
-     */
-    public ProcessDestroyerTest(String arg0) {
-        super(arg0);
-    }
+    @Test
+    public void testProcessDestroyer() throws IOException {
+        ProcessDestroyer processDestroyer = new ProcessDestroyer();
+        Process process =
+            Runtime.getRuntime().exec(
+                "java -cp "
+                    + System.getProperty("java.class.path")
+                    + " "
+                    + getClass().getName());
 
-    public void testProcessDestroyer(){
+        assertFalse("Not registered as shutdown hook",
+                    processDestroyer.isAddedAsShutdownHook());
+
+        processDestroyer.add(process);
+
+        assertTrue("Registered as shutdown hook",
+                   processDestroyer.isAddedAsShutdownHook());
         try {
-            ProcessDestroyer processDestroyer = new ProcessDestroyer();
-            Process process =
-                Runtime.getRuntime().exec(
-                    "java -cp "
-                        + System.getProperty("java.class.path")
-                        + " "
-                        + getClass().getName());
-
-            assertFalse("Not registered as shutdown hook",
-                        processDestroyer.isAddedAsShutdownHook());
-
-            processDestroyer.add(process);
-
-            assertTrue("Registered as shutdown hook",
-                       processDestroyer.isAddedAsShutdownHook());
-            try {
-                process.destroy();
-            } finally {
-                processDestroyer.remove(process);
-            }
-
-            assertFalse("Not registered as shutdown hook",
-                        processDestroyer.isAddedAsShutdownHook());
-        } catch (IOException e) {
-            e.printStackTrace();
+            process.destroy();
+        } finally {
+            processDestroyer.remove(process);
         }
+
+        assertFalse("Not registered as shutdown hook",
+                    processDestroyer.isAddedAsShutdownHook());
+
     }
 
-    public static void main(String[] args){
-        new ProcessDestroyerTest("testProcessDestroyer").testProcessDestroyer();
-        try{
-            Thread.sleep(60000);
-        }catch(InterruptedException ie){
-            ie.printStackTrace();
-        }
+    public static void main(String[] args) throws IOException, InterruptedException {
+        new ProcessDestroyerTest().testProcessDestroyer();
+        Thread.sleep(60000);
     }
 }

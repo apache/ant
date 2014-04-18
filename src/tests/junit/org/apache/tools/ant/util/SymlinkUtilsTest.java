@@ -18,19 +18,22 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.IOException;
-import junit.framework.TestCase;
-import org.apache.tools.ant.taskdefs.condition.Os;
+import static org.junit.Assert.assertFalse;
 
-public class SymlinkUtilsTest extends TestCase {
+import java.io.IOException;
+
+import org.apache.tools.ant.taskdefs.condition.Os;
+import org.junit.Assume;
+import org.junit.Test;
+
+public class SymlinkUtilsTest {
 
     private static final SymbolicLinkUtils SYMLINK_UTILS =
         SymbolicLinkUtils.getSymbolicLinkUtils();
 
+    @Test
     public void testRootIsNoSymlink() throws IOException {
-        if (Os.isFamily("windows")) {
-            return; // test is meaningless on Windows
-        }
+        Assume.assumeFalse("Symlink doesn't work on Windows", Os.isFamily("windows"));
         assertFalse(SYMLINK_UTILS.isSymbolicLink("/"));
     }
 

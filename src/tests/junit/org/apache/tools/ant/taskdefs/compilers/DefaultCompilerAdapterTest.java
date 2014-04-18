@@ -21,9 +21,12 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.types.Commandline;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class DefaultCompilerAdapterTest extends TestCase {
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+
+public class DefaultCompilerAdapterTest {
 
     private static class LogCapturingJavac extends Javac {
         private StringBuffer sb = new StringBuffer();
@@ -54,6 +57,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         }
     }
 
+    @Test
     public void testSourceIsIgnoredForJavac13() {
         testSource(null, "javac1.3", "", null, "1.1");
         testSource(null, "javac1.3", "", null, "1.2");
@@ -61,6 +65,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource(null, "javac1.3", "", null, "1.4");
     }
 
+    @Test
     public void testSource11IsUpgradedTo13() {
         testSource("1.3", "javac1.4", "", null, "1.1");
         testSource("1.3", "javac1.5", "", null, "1.1");
@@ -69,6 +74,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource("1.3", "javac1.8", "", null, "1.1");
     }
 
+    @Test
     public void testSource12IsUpgradedTo13() {
         testSource("1.3", "javac1.4", "", null, "1.2");
         testSource("1.3", "javac1.5", "", null, "1.2");
@@ -77,12 +83,14 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource("1.3", "javac1.8", "", null, "1.2");
     }
 
+    @Test
     public void testImplicitSourceForJava15() {
         commonSourceDowngrades("javac1.5");
         testSource(null, "javac1.5", "", "1.5");
         testSource(null, "javac1.5", "", "5");
     }
 
+    @Test
     public void testImplicitSourceForJava16() {
         commonSourceDowngrades("javac1.6");
         testSource(null, "javac1.6", "", "1.5");
@@ -91,6 +99,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource(null, "javac1.6", "", "6");
     }
 
+    @Test
     public void testImplicitSourceForJava17() {
         commonSourceDowngrades("javac1.7");
         testSource("1.5", "javac1.7",
@@ -109,6 +118,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource(null, "javac1.7", "", "7");
     }
 
+    @Test
     public void testImplicitSourceForJava18() {
         commonSourceDowngrades("javac1.8");
         testSource("1.5", "javac1.8",
@@ -133,6 +143,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
         testSource(null, "javac1.8", "", "8");
     }
 
+    @Test
     public void testImplicitSourceForJava19() {
         commonSourceDowngrades("javac1.9");
         testSource("1.5", "javac1.9",
@@ -204,8 +215,7 @@ public class DefaultCompilerAdapterTest extends TestCase {
             assertEquals("", javac.getLog());
         } else {
             String l = javac.getLog();
-            assertTrue("expected to find '" + expectedLog + "' in '" + l + "'", 
-                       l.indexOf(expectedLog) > -1);
+            assertContains(expectedLog, l);
         }
         String[] args = cmd.getCommandline();
         assertEquals(expectedSource == null ? 0 : 2, args.length);

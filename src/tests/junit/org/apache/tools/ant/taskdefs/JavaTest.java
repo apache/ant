@@ -29,15 +29,29 @@ import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * stress out java task
  * */
-public class JavaTest extends BuildFileTest {
+public class JavaTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     private static final int TIME_TO_WAIT = 1;
     // wait 1 second extra to allow for java to start ...
@@ -49,18 +63,16 @@ public class JavaTest extends BuildFileTest {
 
     private boolean runFatalTests=false;
 
-    public JavaTest(String name) {
-        super(name);
-    }
 
     /**
      * configure the project.
      * if the property junit.run.fatal.tests is set we run
      * the fatal tests
      */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/java.xml");
-        project.executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/java.xml");
+        buildRule.executeTarget("setUp");
 
         //final String propname="tests-classpath.value";
         //String testClasspath=System.getProperty(propname);
@@ -70,32 +82,49 @@ public class JavaTest extends BuildFileTest {
             runFatalTests=true;
     }
 
+    @Test
     public void testNoJarNoClassname(){
-        expectBuildExceptionContaining("testNoJarNoClassname",
-            "parameter validation",
-            "Classname must not be null.");
+        try {
+            buildRule.executeTarget("testNoJarNoClassname");
+            fail("Build exception should have been thrown - parameter validation");
+        } catch (BuildException ex) {
+            assertContains("Classname must not be null.", ex.getMessage());
+        }
     }
 
+    @Test
     public void testJarNoFork() {
-        expectBuildExceptionContaining("testJarNoFork",
-            "parameter validation",
-            "Cannot execute a jar in non-forked mode. "
-                + "Please set fork='true'. ");
+        try {
+            buildRule.executeTarget("testJarNoFork");
+            fail("Build exception should have been thrown - parameter validation");
+        } catch (BuildException ex) {
+            assertContains("Cannot execute a jar in non-forked mode. Please set fork='true'. ", ex.getMessage());
+        }
     }
 
+    @Test
     public void testJarAndClassName() {
-        expectBuildException("testJarAndClassName",
-            "Should not be able to set both classname AND jar");
+        try {
+            buildRule.executeTarget("testJarAndClassName");
+            fail("Build exception should have been thrown - both classname and JAR are not allowed");
+        } catch (BuildException ex) {
+            assertEquals("Cannot use 'jar' and 'classname' attributes in same command", ex.getMessage());
+        }
     }
 
-
+    @Test
     public void testClassnameAndJar() {
-        expectBuildException("testClassnameAndJar",
-            "Should not be able to set both classname AND jar");
+        try {
+            buildRule.executeTarget("testClassnameAndJar");
+            fail("Build exception should have been thrown - both classname and JAR are not allowed");
+        } catch (BuildException ex) {
+            assertEquals("Cannot use 'jar' and 'classname' attributes in same command.", ex.getMessage());
+        }
     }
 
+    @Test
     public void testRun() {
-        executeTarget("testRun");
+        buildRule.executeTarget("testRun");
     }
 
 
@@ -103,90 +132,117 @@ public class JavaTest extends BuildFileTest {
     /** this test fails but we ignore the return value;
      *  we verify that failure only matters when failonerror is set
      */
+    @Test
     public void testRunFail() {
-        if(runFatalTests) {
-            executeTarget("testRunFail");
-        }
+        Assume.assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        buildRule.executeTarget("testRunFail");
     }
 
+    @Test
     public void testRunFailFoe() {
-        if(runFatalTests) {
-            expectBuildExceptionContaining("testRunFailFoe",
-                "java failures being propagated",
-                "Java returned:");
+        Assume.assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        try {
+            buildRule.executeTarget("testRunFailFoe");
+            fail("Build exception should have been thrown - " + "java failures being propagated");
+        } catch (BuildException ex) {
+            assertContains("Java returned:", ex.getMessage());
         }
-}
+    }
 
+    @Test
     public void testRunFailFoeFork() {
-        expectBuildExceptionContaining("testRunFailFoeFork",
-            "java failures being propagated",
-            "Java returned:");
+        try {
+            buildRule.executeTarget("testRunFailFoeFork");
+            fail("Build exception should have been thrown - " + "java failures being propagated");
+        } catch (BuildException ex) {
+            assertContains("Java returned:", ex.getMessage());
+        }
     }
 
+    @Test
     public void testExcepting() {
-        expectLogContaining("testExcepting",
-                            "Exception raised inside called program");
+        buildRule.executeTarget("testExcepting");
+        assertContains("Exception raised inside called program", buildRule.getLog());
     }
 
+    @Test
     public void testExceptingFork() {
-        expectLogContaining("testExceptingFork",
-                            "Java Result:");
+        buildRule.executeTarget("testExceptingFork");
+        assertContains("Java Result:", buildRule.getLog());
     }
 
+    @Test
     public void testExceptingFoe() {
-        expectBuildExceptionContaining("testExceptingFoe",
-            "passes exception through",
-            "Exception raised inside called program");
+        try {
+            buildRule.executeTarget("testExceptingFoe");
+            fail("Build exception should have been thrown - " + "passes exception through");
+        } catch (BuildException ex) {
+            assertContains("Exception raised inside called program", ex.getMessage());
+        }
     }
 
+    @Test
     public void testExceptingFoeFork() {
-        expectBuildExceptionContaining("testExceptingFoeFork",
-            "exceptions turned into error codes",
-            "Java returned:");
+        try {
+            buildRule.executeTarget("testExceptingFoeFork");
+            fail("Build exception should have been thrown - " + "exceptions turned into error codes");
+        } catch (BuildException ex) {
+            assertContains("Java returned:", ex.getMessage());
+        }
     }
 
+    @Test
     public void testResultPropertyZero() {
-        executeTarget("testResultPropertyZero");
-        assertEquals("0",project.getProperty("exitcode"));
+        buildRule.executeTarget("testResultPropertyZero");
+        assertEquals("0", buildRule.getProject().getProperty("exitcode"));
     }
 
+    @Test
     public void testResultPropertyNonZero() {
-        executeTarget("testResultPropertyNonZero");
-        assertEquals("2",project.getProperty("exitcode"));
+        buildRule.executeTarget("testResultPropertyNonZero");
+        assertEquals("2", buildRule.getProject().getProperty("exitcode"));
     }
 
+    @Test
     public void testResultPropertyZeroNoFork() {
-        executeTarget("testResultPropertyZeroNoFork");
-        assertEquals("0",project.getProperty("exitcode"));
+        buildRule.executeTarget("testResultPropertyZeroNoFork");
+        assertEquals("0", buildRule.getProject().getProperty("exitcode"));
     }
 
+    @Test
     public void testResultPropertyNonZeroNoFork() {
-        executeTarget("testResultPropertyNonZeroNoFork");
-         assertEquals("-1",project.getProperty("exitcode"));
+        buildRule.executeTarget("testResultPropertyNonZeroNoFork");
+         assertEquals("-1", buildRule.getProject().getProperty("exitcode"));
      }
 
+    @Test
     public void testRunFailWithFailOnError() {
-        expectBuildExceptionContaining("testRunFailWithFailOnError",
-            "non zero return code",
-            "Java returned:");
+        try {
+            buildRule.executeTarget("testRunFailWithFailOnError");
+            fail("Build exception should have been thrown - " + "non zero return code");
+        } catch (BuildException ex) {
+            assertContains("Java returned:", ex.getMessage());
+        }
     }
 
+    @Test
     public void testRunSuccessWithFailOnError() {
-        executeTarget("testRunSuccessWithFailOnError");
+        buildRule.executeTarget("testRunSuccessWithFailOnError");
     }
 
-    public void testSpawn() {
-        File logFile = FILE_UTILS.createTempFile("spawn","log", getOutputDir(), false, false);
+    @Test
+    public void testSpawn() throws InterruptedException {
+        File logFile = FILE_UTILS.createTempFile("spawn", "log",
+                new File(buildRule.getProject().getProperty("output")), false, false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
-        project.setProperty("logFile", logFile.getAbsolutePath());
-        project.setProperty("timeToWait", Long.toString(TIME_TO_WAIT));
-        project.executeTarget("testSpawn");
-        try {
-            Thread.sleep(TIME_TO_WAIT * 1000 + SECURITY_MARGIN);
-        } catch (Exception ex) {
-            System.out.println("my sleep was interrupted");
-        }
+        buildRule.getProject().setProperty("logFile", logFile.getAbsolutePath());
+        buildRule.getProject().setProperty("timeToWait", Long.toString(TIME_TO_WAIT));
+        buildRule.getProject().executeTarget("testSpawn");
+
+        Thread.sleep(TIME_TO_WAIT * 1000 + SECURITY_MARGIN);
+
+
         // let's be nice with the next generation of developers
         if (!logFile.exists()) {
             System.out.println("suggestion: increase the constant"
@@ -195,38 +251,44 @@ public class JavaTest extends BuildFileTest {
         assertTrue("log file exists", logFile.exists());
     }
 
+    @Test
     public void testRedirect1() {
-        executeTarget("redirect1");
+        buildRule.executeTarget("redirect1");
     }
 
+    @Test
     public void testRedirect2() {
-        executeTarget("redirect2");
+        buildRule.executeTarget("redirect2");
     }
 
+    @Test
     public void testRedirect3() {
-        executeTarget("redirect3");
+        buildRule.executeTarget("redirect3");
     }
 
+    @Test
     public void testRedirector1() {
-        executeTarget("redirector1");
+        buildRule.executeTarget("redirector1");
     }
 
+    @Test
     public void testRedirector2() {
-        executeTarget("redirector2");
+        buildRule.executeTarget("redirector2");
     }
 
+    @Test
     public void testReleasedInput() throws Exception {
         PipedOutputStream out = new PipedOutputStream();
         final PipedInputStream in = new PipedInputStream(out);
-        project.setInputHandler(new DefaultInputHandler() {
+        buildRule.getProject().setInputHandler(new DefaultInputHandler() {
             protected InputStream getInputStream() {
                 return in;
             }
         });
-        project.setDefaultInputStream(in);
+        buildRule.getProject().setDefaultInputStream(in);
 
         Java java = new Java();
-        java.setProject(project);
+        java.setProject(buildRule.getProject());
         java.setClassname("org.apache.tools.ant.Main");
         java.setArgs("-version");
         java.setFork(true);
@@ -237,7 +299,7 @@ public class JavaTest extends BuildFileTest {
         Thread inputThread = new Thread(new Runnable() {
             public void run() {
                 Input input = new Input();
-                input.setProject(project);
+                input.setProject(buildRule.getProject());
                 input.setAddproperty("input.value");
                 input.execute();
             }
@@ -259,18 +321,19 @@ public class JavaTest extends BuildFileTest {
 
         inputThread.join(2000);
 
-        assertEquals("foo", project.getProperty("input.value"));
+        assertEquals("foo", buildRule.getProject().getProperty("input.value"));
     }
 
+    @Test
     public void testFlushedInput() throws Exception {
         final PipedOutputStream out = new PipedOutputStream();
         final PipedInputStream in = new PipedInputStream(out);
-        project.setInputHandler(new DefaultInputHandler() {
+        buildRule.getProject().setInputHandler(new DefaultInputHandler() {
             protected InputStream getInputStream() {
                 return in;
             }
         });
-        project.setDefaultInputStream(in);
+        buildRule.getProject().setDefaultInputStream(in);
 
         final boolean[] timeout = new boolean[1];
         timeout[0] = false;
@@ -281,7 +344,7 @@ public class JavaTest extends BuildFileTest {
                     // wait a little bit to have the target executed
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    // don't care
+                    throw new AssumptionViolatedException("Thread interrupted", e);
                 }
                 try {
                     out.write("foo-FlushedInput\n".getBytes());
@@ -293,7 +356,7 @@ public class JavaTest extends BuildFileTest {
         writingThread.setDaemon(true);
 
         writingThread.start();
-        executeTarget("flushedInput");
+        buildRule.executeTarget("flushedInput");
     }
 
     /**
@@ -348,7 +411,7 @@ public class JavaTest extends BuildFileTest {
      * test class for spawn
      */
     public static class SpawnEntryPoint {
-        public static void main(String [] argv) {
+        public static void main(String [] argv) throws InterruptedException {
             int sleepTime = 10;
             String logFile = "spawn.log";
             if (argv.length >= 1) {
@@ -359,11 +422,7 @@ public class JavaTest extends BuildFileTest {
                 logFile = argv[1];
             }
             OutputStreamWriter out = null;
-            try {
-                Thread.sleep(sleepTime * 1000);
-            } catch (InterruptedException ex) {
-                System.out.println("my sleep was interrupted");
-            }
+            Thread.sleep(sleepTime * 1000);
 
             try {
                 File dest = new File(logFile);
@@ -386,7 +445,7 @@ public class JavaTest extends BuildFileTest {
         /**
          * pipe input to specified output
          */
-        public static void main(String[] args) {
+        public static void main(String[] args) throws InterruptedException {
             OutputStream os = null;
             if (args.length > 0) {
                 if ("out".equalsIgnoreCase(args[0])) {
@@ -401,10 +460,7 @@ public class JavaTest extends BuildFileTest {
                 Thread t = new Thread(new StreamPumper(System.in, os, true));
                 t.setName("PipeEntryPoint " + args[0]);
                 t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException eyeEx) {
-                }
+                t.join();
             }
         }
     }

@@ -18,25 +18,33 @@
 
 package org.apache.tools.ant.types.mappers;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcase for the &lt;regexpmapper&gt; mapper.
  *
  */
-public class RegexpPatternMapperTest extends BuildFileTest {
-    public RegexpPatternMapperTest(String name) {
-        super(name);
-    }
+public class RegexpPatternMapperTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/mappers/regexpmapper.xml");
+        buildRule.configureProject("src/etc/testcases/types/mappers/regexpmapper.xml");
     }
 
+    @Test
     public void testIgnoreCase() {
-        executeTarget("ignore.case");
+        buildRule.executeTarget("ignore.case");
     }
+
+    @Test
     public void testHandleDirSep() {
-        executeTarget("handle.dirsep");
+        buildRule.executeTarget("handle.dirsep");
     }
 }
 

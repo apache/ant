@@ -17,28 +17,32 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the examples of the &lt;script&gt; task docs.
  *
  * @since Ant 1.5.2
  */
-public class BeanShellScriptTest extends BuildFileTest {
+public class BeanShellScriptTest {
 
-    public BeanShellScriptTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/script.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/script.xml");
     }
 
+    @Test
     public void testCanLoad() {
-        expectLog("useBeanshell", "I'm here");
+        buildRule.executeTarget("useBeanshell");
+        assertEquals("I'm here", buildRule.getLog());
     }
 
 }

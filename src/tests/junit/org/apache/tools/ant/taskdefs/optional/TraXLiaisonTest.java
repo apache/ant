@@ -1,9 +1,6 @@
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.apache.tools.ant.taskdefs.XSLTLogger;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.JAXPUtils;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,6 +8,14 @@ import java.io.InputStream;
 import java.security.Permission;
 
 import junit.framework.AssertionFailedError;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.XSLTLogger;
+import org.apache.tools.ant.util.JAXPUtils;
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Test;
 
 /*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -36,10 +41,8 @@ import junit.framework.AssertionFailedError;
 public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     implements XSLTLogger {
 
-    public TraXLiaisonTest(String name){
-        super(name);
-    }
 
+	@After
     public void tearDown() {
         File f = new File("xalan2-redirect-out.tmp");
         if (f.exists()) {
@@ -53,16 +56,12 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         return l;
     }
 
+    @Test
     public void testXalan2Redirect() throws Exception {
-    	Class clazz = null;
     	try {
-    		clazz = getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
+    		getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
     	} catch (Exception exc) {
-    		// ignore
-    	}
-    	if (clazz == null) {
-    		System.out.println("xalan redirect is not on the classpath");
-    		return;
+    		Assume.assumeNoException("xalan redirect is not on the classpath", exc);
     	}
         File xsl = getFile("/taskdefs/optional/xalan-redirect-in.xsl");
         liaison.setStylesheet(xsl);
@@ -91,6 +90,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         }
     }
 
+    @Test
     public void testMultipleTransform() throws Exception {
         File xsl = getFile("/taskdefs/optional/xsltliaison-in.xsl");
         liaison.setStylesheet(xsl);
@@ -109,6 +109,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         }
     }
 
+    @Test
     public void testSystemId(){
         File file = null;
         if ( File.separatorChar == '\\' ){

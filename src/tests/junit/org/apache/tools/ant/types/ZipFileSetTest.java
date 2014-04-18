@@ -21,6 +21,11 @@ package org.apache.tools.ant.types;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.ZipFileSet.
@@ -31,13 +36,11 @@ import org.apache.tools.ant.BuildException;
 
 public class ZipFileSetTest extends AbstractFileSetTest {
 
-    public ZipFileSetTest(String name) {
-        super(name);
-    }
-
     protected AbstractFileSet getInstance() {
         return new ZipFileSet();
     }
+
+    @Test
     public final void testAttributes() {
         ZipFileSet f = (ZipFileSet)getInstance();
         //check that dir and src are incompatible

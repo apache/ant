@@ -19,17 +19,19 @@ package org.apache.tools.ant;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.StringResource;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Testing around the management of the project helpers
  */
-public class ProjectHelperRepositoryTest extends TestCase {
+public class ProjectHelperRepositoryTest {
 
     public static class SomeHelper extends ProjectHelper {
         public boolean canParseBuildFile(Resource buildFile) {
@@ -42,6 +44,7 @@ public class ProjectHelperRepositoryTest extends TestCase {
         }
     }
 
+    @Test
     public void testFind() throws Exception {
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
         repo.registerProjectHelper(SomeHelper.class);
@@ -71,7 +74,9 @@ public class ProjectHelperRepositoryTest extends TestCase {
         assertTrue(helper instanceof ProjectHelper2);
     }
 
-    public void testNoDefaultConstructor() throws Exception {
+    @Test
+    public void testNoDefaultContructor() throws Exception {
+
         class IncrrectHelper extends ProjectHelper {
             // the default constructor is not visible to ant here 
         }
@@ -82,9 +87,11 @@ public class ProjectHelperRepositoryTest extends TestCase {
             fail("Registring an helper with no default constructor should fail");
         } catch (BuildException e) {
             // ok
+            //TODO we should be asserting a value in here
         }
     }
 
+    @Test
     public void testUnkwnowHelper() throws Exception {
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
         try {
@@ -92,6 +99,7 @@ public class ProjectHelperRepositoryTest extends TestCase {
             fail("Registring an unknwon helper should fail");
         } catch (BuildException e) {
             // ok
+            //TODO we should be asserting a value in here
         }
     }
 }

@@ -18,44 +18,65 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Task;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class XmlnsTest extends BuildFileTest {
-    public XmlnsTest(String name) {
-        super(name);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+
+public class XmlnsTest {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/xmlns.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/xmlns.xml");
     }
 
+    @Test
     public void testXmlns() {
-        expectLog("xmlns", "MyTask called");
+        buildRule.executeTarget("xmlns");
+		assertEquals("MyTask called", buildRule.getLog());
     }
 
+    @Test
     public void testXmlnsFile() {
-        expectLog("xmlns.file", "MyTask called");
+        buildRule.executeTarget("xmlns.file");
+		assertEquals("MyTask called", buildRule.getLog());
     }
 
+    @Test
     public void testCore() {
-        expectLog("core", "MyTask called");
+        buildRule.executeTarget("core");
+		assertEquals("MyTask called", buildRule.getLog());
     }
 
+    @Test
     public void testExcluded() {
-        expectBuildExceptionContaining(
-            "excluded", "excluded uri",
-            "Attempt to use a reserved URI ant:notallowed");
+        try {
+            buildRule.executeTarget("excluded");
+            fail("BuildException expected: excluded uri");
+        } catch (BuildException ex) {
+            assertEquals("Attempt to use a reserved URI ant:notallowed", ex.getMessage());
+        }
     }
 
+    @Test
     public void testOther() {
-        expectLog("other", "a message");
+        buildRule.executeTarget("other");
+		assertEquals("a message", buildRule.getLog());
     }
 
+    @Test
     public void testNsAttributes() {
-        expectLog("ns.attributes", "hello world");
+        buildRule.executeTarget("ns.attributes");
+		assertEquals("hello world", buildRule.getLog());
     }
 
     public static class MyTask extends Task {

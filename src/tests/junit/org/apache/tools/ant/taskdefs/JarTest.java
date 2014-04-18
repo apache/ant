@@ -28,29 +28,42 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.apache.tools.ant.BuildFileTest;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class JarTest extends BuildFileTest {
-
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+public class JarTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     private static String tempJar = "tmp.jar";
     private static String tempDir = "jartmp/";
     private Reader r1, r2;
 
-    public JarTest(String name) {
-        super(name);
-    }
-
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/jar.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/jar.xml");
+        buildRule.executeTarget("setUp");
     }
 
+    @After
     public void tearDown() {
         if (r1 != null) {
             try {
@@ -64,152 +77,192 @@ public class JarTest extends BuildFileTest {
             } catch (IOException e) {
             }
         }
-        try {
-            super.tearDown();
-        } catch (Exception exc) {
-
-        }
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        try {
+			buildRule.executeTarget("test1");
+			fail("BuildException expected: required argument not specified");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "manifest file does not exist");
+        try {
+			buildRule.executeTarget("test2");
+			fail("BuildException expected: manifest file does not exist");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    @Test
     public void test3() {
-        expectBuildException("test3", "Unrecognized whenempty attribute: format C: /y");
+        try {
+			buildRule.executeTarget("test3");
+			fail("BuildException expected: Unrecognized whenempty attribute: format C: /y");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
+    private File getOutputDir() {
+        return new File(buildRule.getProject().getProperty("output"));
+    }
+
+    @Test
     public void test4() {
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
         File jarFile = new File(getOutputDir(), tempJar);
+
         assertTrue(jarFile.exists());
     }
 
+    @Test
     public void testNoRecreateWithoutUpdate() {
         testNoRecreate("test4");
     }
 
+    @Test
     public void testNoRecreateWithUpdate() {
         testNoRecreate("testNoRecreateWithUpdate");
     }
 
     private void testNoRecreate(String secondTarget) {
-        executeTarget("test4");
+        buildRule.executeTarget("test4");
         File jarFile = new File(getOutputDir(), tempJar);
+
+        // move the modified date back a couple of seconds rather than delay the test on each run
+        Assume.assumeTrue(jarFile.setLastModified(jarFile.lastModified()
+                - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
         long jarModifiedDate = jarFile.lastModified();
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {
-        } // end of try-catch
-        executeTarget(secondTarget);
+
+        buildRule.executeTarget(secondTarget);
         assertEquals("jar has not been recreated in " + secondTarget,
                      jarModifiedDate, jarFile.lastModified());
     }
 
+    @Test
     public void testRecreateWithoutUpdateAdditionalFiles() {
         testRecreate("test4", "testRecreateWithoutUpdateAdditionalFiles");
     }
 
+    @Test
     public void testRecreateWithUpdateAdditionalFiles() {
         testRecreate("test4", "testRecreateWithUpdateAdditionalFiles");
     }
 
+    @Test
     public void testRecreateWithoutUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateWithoutUpdateNewerFile");
     }
 
+    @Test
     public void testRecreateWithUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateWithUpdateNewerFile");
     }
 
     private void testRecreate(String firstTarget, String secondTarget) {
-        executeTarget(firstTarget);
-        long sleeptime = 3000
-            + FILE_UTILS.getFileTimestampGranularity();
-        try {
-            Thread.sleep(sleeptime);
-        } catch (InterruptedException e) {
-        } // end of try-catch
+        //Move the modified date on all input back a couple of seconds rather then delay the test to achieve a similar effect
+        FileUtilities.rollbackTimetamps(buildRule.getProject().getBaseDir(), 5);
+
+        buildRule.executeTarget(firstTarget);
         File jarFile = new File(getOutputDir(), tempJar);
+
+        //Move the modified date back a couple of seconds rather then delay the test to achieve a similar effect
+        FileUtilities.rollbackTimetamps(buildRule.getOutputDir(), 5);
+
         long jarModifiedDate = jarFile.lastModified();
-        executeTarget(secondTarget);
+        buildRule.executeTarget(secondTarget);
         jarFile = new File(getOutputDir(), tempJar);
         assertTrue("jar has been recreated in " + secondTarget,
                    jarModifiedDate < jarFile.lastModified());
     }
 
+    @Test
     public void testManifestStaysIntact()
         throws IOException, ManifestException {
-        executeTarget("testManifestStaysIntact");
+        buildRule.executeTarget("testManifestStaysIntact");
 
         r1 = new FileReader(new File(getOutputDir(),
                             tempDir + "manifest"));
         r2 = new FileReader(new File(getOutputDir(),
                 tempDir + "META-INF/MANIFEST.MF"));
+
         Manifest mf1 = new Manifest(r1);
         Manifest mf2 = new Manifest(r2);
         assertEquals(mf1, mf2);
     }
 
+    @Test
     public void testNoRecreateBasedirExcludesWithUpdate() {
         testNoRecreate("testNoRecreateBasedirExcludesWithUpdate");
     }
 
+    @Test
     public void testNoRecreateBasedirExcludesWithoutUpdate() {
         testNoRecreate("testNoRecreateBasedirExcludesWithoutUpdate");
     }
 
+    @Test
     public void testNoRecreateZipfilesetExcludesWithUpdate() {
         testNoRecreate("testNoRecreateZipfilesetExcludesWithUpdate");
     }
 
+    @Test
     public void testNoRecreateZipfilesetExcludesWithoutUpdate() {
         testNoRecreate("testNoRecreateZipfilesetExcludesWithoutUpdate");
     }
 
+    @Test
     public void testRecreateZipfilesetWithoutUpdateAdditionalFiles() {
         testRecreate("test4",
                      "testRecreateZipfilesetWithoutUpdateAdditionalFiles");
     }
 
+    @Test
     public void testRecreateZipfilesetWithUpdateAdditionalFiles() {
         testRecreate("test4",
                      "testRecreateZipfilesetWithUpdateAdditionalFiles");
     }
 
+    @Test
     public void testRecreateZipfilesetWithoutUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateZipfilesetWithoutUpdateNewerFile");
     }
 
+    @Test
     public void testRecreateZipfilesetWithUpdateNewerFile() {
         testRecreate("testRecreateNewerFileSetup",
                      "testRecreateZipfilesetWithUpdateNewerFile");
     }
 
+    @Test
     public void testCreateWithEmptyFileset() {
-        executeTarget("testCreateWithEmptyFilesetSetUp");
-        executeTarget("testCreateWithEmptyFileset");
-        executeTarget("testCreateWithEmptyFileset");
+        buildRule.executeTarget("testCreateWithEmptyFilesetSetUp");
+        buildRule.executeTarget("testCreateWithEmptyFileset");
+        buildRule.executeTarget("testCreateWithEmptyFileset");
     }
 
+    @Test
     public void testUpdateIfOnlyManifestHasChanged() {
-        executeTarget("testUpdateIfOnlyManifestHasChanged");
+        buildRule.executeTarget("testUpdateIfOnlyManifestHasChanged");
         File jarXml = new File(getOutputDir(), tempDir + "jar.xml");
         assertTrue(jarXml.exists());
     }
 
     // bugzilla report 10262
+    @Test
     public void testNoDuplicateIndex() throws IOException {
         ZipFile archive = null;
         try {
-            executeTarget("testIndexTests");
+            buildRule.executeTarget("testIndexTests");
             archive = new ZipFile(new File(getOutputDir(), tempJar));
             Enumeration e = archive.entries();
             int numberOfIndexLists = 0;
@@ -228,10 +281,11 @@ public class JarTest extends BuildFileTest {
     }
 
     // bugzilla report 16972
+    @Test
     public void testRootFilesInIndex() throws IOException {
         ZipFile archive = null;
         try {
-            executeTarget("testIndexTests");
+            buildRule.executeTarget("testIndexTests");
             archive = new ZipFile(new File(getOutputDir(), tempJar));
             ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
             InputStream is = archive.getInputStream(ze);
@@ -262,46 +316,60 @@ public class JarTest extends BuildFileTest {
             }
         }
     }
+    @Test
     public void testManifestOnlyJar() {
-        expectLogContaining("testManifestOnlyJar", "Building MANIFEST-only jar: ");
+
+        buildRule.executeTarget("testManifestOnlyJar");
+        assertContains("Building MANIFEST-only jar: ", buildRule.getLog());
         File manifestFile = new File(getOutputDir(), tempDir + "META-INF" + File.separator + "MANIFEST.MF");
         assertTrue(manifestFile.exists());
     }
 
+    @Test
     public void testIndexJarsPlusJarMarker() {
-        executeTarget("testIndexJarsPlusJarMarker");
+        buildRule.executeTarget("testIndexJarsPlusJarMarker");
     }
     
+    @Test
     public void testNoVersionInfoFail() {
-        expectBuildExceptionContaining("testNoVersionInfoFail", "Manifest Implemention information missing.", "No Implementation-Title set.");
+        try {
+			buildRule.executeTarget("testNoVersionInfoFail");
+			fail("BuildException expected: Manifest Implemention information missing.");
+		} catch (BuildException ex) {
+			assertContains("No Implementation-Title set.", ex.getMessage());
+		}
     }
     
+    @Test
     public void testNoVersionInfoIgnore() {
-        executeTarget("testNoVersionInfoIgnore");
-        assertTrue( getFullLog().indexOf("No Implementation-Title set.") > -1 );
-        assertTrue( getFullLog().indexOf("No Implementation-Version set.") > -1 );
-        assertTrue( getFullLog().indexOf("No Implementation-Vendor set.") > -1 );
+        buildRule.executeTarget("testNoVersionInfoIgnore");
+        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Title set.") > -1 );
+        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Version set.") > -1 );
+        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
 
+    @Test
     public void testNoVersionInfoWarn() {
-        executeTarget("testNoVersionInfoWarn");
-        assertTrue( getLog().indexOf("No Implementation-Title set.") > -1 );
-        assertTrue( getLog().indexOf("No Implementation-Version set.") > -1 );
-        assertTrue( getLog().indexOf("No Implementation-Vendor set.") > -1 );
+        buildRule.executeTarget("testNoVersionInfoWarn");
+        assertTrue(buildRule.getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertTrue(buildRule.getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertTrue(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
 
+    @Test
     public void testNoVersionInfoNoStrict() {
-        executeTarget("testNoVersionInfoNoStrict");
-        assertFalse( getLog().indexOf("No Implementation-Title set.") > -1 );
-        assertFalse( getLog().indexOf("No Implementation-Version set.") > -1 );
-        assertFalse( getLog().indexOf("No Implementation-Vendor set.") > -1 );
+        buildRule.executeTarget("testNoVersionInfoNoStrict");
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
     
+    @Test
     public void testHasVersionInfo() {
-        executeTarget("testHasVersionInfo");
-        assertFalse( getLog().indexOf("No Implementation-Title set.") > -1 );
-        assertFalse( getLog().indexOf("No Implementation-Version set.") > -1 );
-        assertFalse( getLog().indexOf("No Implementation-Vendor set.") > -1 );
+        buildRule.executeTarget("testHasVersionInfo");
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Title set.") > -1 );
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1 );
+        assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
     
 }

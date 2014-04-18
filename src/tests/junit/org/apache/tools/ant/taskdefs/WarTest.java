@@ -20,30 +20,36 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testcase for the war task
  *
  */
-public class WarTest extends BuildFileTest {
+public class WarTest {
     public static final String TEST_BUILD_FILE
         = "src/etc/testcases/taskdefs/war.xml";
 
-    public WarTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject(TEST_BUILD_FILE);
     }
 
     /**
      * Test direct dependency removal
      */
+    @Test
     public void testLibRefs() {
-        executeTarget("testlibrefs");
-        File f = new File(getOutputDir(), "WEB-INF/lib/war.xml");
+        buildRule.executeTarget("testlibrefs");
+        File f = new File(buildRule.getOutputDir(), "WEB-INF/lib/war.xml");
         assertTrue("File has been put into lib", f.exists());
     }
 }

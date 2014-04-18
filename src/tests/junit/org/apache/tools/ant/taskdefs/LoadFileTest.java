@@ -18,83 +18,99 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * Test the load file task
- *
- * @created 10 December 2001
  */
-public class LoadFileTest extends BuildFileTest {
+public class LoadFileTest {
 
-    /**
-     * Constructor for the LoadFileTest object
-     *
-     * @param name Description of Parameter
-     */
-    public LoadFileTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
 
-
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/loadfile.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/loadfile.xml");
     }
 
 
-    /**
-     * The teardown method for JUnit
-     */
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testNoSourcefileDefined() {
-        expectBuildException("testNoSourcefileDefined",
-                "source file not defined");
+        try {
+			buildRule.executeTarget("testNoSourcefileDefined");
+			fail("BuildException expected: source file not defined");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testNoPropertyDefined() {
-        expectBuildException("testNoPropertyDefined",
-                "output property not defined");
+        try {
+			buildRule.executeTarget("testNoPropertyDefined");
+			fail("BuildException expected: output property not defined");
+		} catch (BuildException ex) {
+			//TODO assert value
+		}
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testNoSourcefilefound() {
-        expectBuildExceptionContaining("testNoSourcefilefound",
-                "File not found", " doesn't exist");
+        try {
+			buildRule.executeTarget("testNoSourcefilefound");
+			fail("BuildException expected: File not found");
+		} catch (BuildException ex) {
+			assertContains(" doesn't exist", ex.getMessage());
+		}
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testFailOnError()
             throws BuildException {
-        expectPropertyUnset("testFailOnError","testFailOnError");
+        buildRule.executeTarget("testFailOnError");
+		assertNull(buildRule.getProject().getProperty("testFailOnError"));
     }
 
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testLoadAFile()
             throws BuildException {
-        executeTarget("testLoadAFile");
-        if(project.getProperty("testLoadAFile").indexOf("eh?")<0) {
+        buildRule.executeTarget("testLoadAFile");
+        if(buildRule.getProject().getProperty("testLoadAFile").indexOf("eh?")<0) {
             fail("property is not all in the file");
         }
     }
@@ -103,21 +119,21 @@ public class LoadFileTest extends BuildFileTest {
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testLoadAFileEnc()
             throws BuildException {
-        executeTarget("testLoadAFileEnc");
-        if(project.getProperty("testLoadAFileEnc")==null) {
-            fail("file load failed");
-        }
+        buildRule.executeTarget("testLoadAFileEnc");
+        assertNotNull("file load files", buildRule.getProject().getProperty("testLoadAFileEnc"));
     }
 
     /**
      * A unit test for JUnit
      */
+    @Test
     public void testEvalProps()
             throws BuildException {
-        executeTarget("testEvalProps");
-        if(project.getProperty("testEvalProps").indexOf("rain")<0) {
+        buildRule.executeTarget("testEvalProps");
+        if(buildRule.getProject().getProperty("testEvalProps").indexOf("rain")<0) {
             fail("property eval broken");
         }
     }
@@ -125,10 +141,11 @@ public class LoadFileTest extends BuildFileTest {
     /**
      * Test FilterChain and FilterReaders
      */
+    @Test
     public void testFilterChain()
             throws BuildException {
-        executeTarget("testFilterChain");
-        if(project.getProperty("testFilterChain").indexOf("World!")<0) {
+        buildRule.executeTarget("testFilterChain");
+        if(buildRule.getProject().getProperty("testFilterChain").indexOf("World!")<0) {
             fail("Filter Chain broken");
         }
     }
@@ -136,20 +153,18 @@ public class LoadFileTest extends BuildFileTest {
     /**
      * Test StripJavaComments filterreader functionality.
      */
+    @Test
     public final void testStripJavaComments()
             throws BuildException {
-        executeTarget("testStripJavaComments");
-        final String expected = project.getProperty("expected");
-        final String generated = project.getProperty("testStripJavaComments");
+        buildRule.executeTarget("testStripJavaComments");
+        final String expected = buildRule.getProject().getProperty("expected");
+        final String generated = buildRule.getProject().getProperty("testStripJavaComments");
         assertEquals(expected, generated);
     }
 
-    /**
-     * A unit test for JUnit
-     */
-    public void testOneLine()
-            throws BuildException {
-            expectPropertySet("testOneLine","testOneLine","1,2,3,4");
-
+    @Test
+    public void testOneLine() {
+        buildRule.executeTarget("testOneLine");
+        assertEquals("1,2,3,4", buildRule.getProject().getProperty("testOneLine"));
     }
 }

@@ -17,27 +17,32 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcases for the &lt;antversion&gt; condition.
  *
  */
-public class AntVersionTest extends BuildFileTest {
-    
-    public AntVersionTest(String name) {
-        super(name);
-    }
-    
+public class AntVersionTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() throws Exception {
-        configureProject("src/etc/testcases/taskdefs/conditions/antversion.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/antversion.xml");
     }
-    
+
+    @Test
     public void testAtLeast() {
-        executeTarget("testatleast");
+        buildRule.executeTarget("testatleast");
     }
-    
+
+    @Test
     public void testExactly() {
-        executeTarget("testexactly");
+        buildRule.executeTarget("testexactly");
     }
 }

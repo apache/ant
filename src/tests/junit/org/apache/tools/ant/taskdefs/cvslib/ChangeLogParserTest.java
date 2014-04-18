@@ -17,20 +17,23 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Minimal test of the parser implementation
  */
-public class ChangeLogParserTest extends TestCase {
+public class ChangeLogParserTest {
 
     protected ChangeLogParser parser = new ChangeLogParser();
 
+    @Test
     public void testOldCvsFormat() throws Exception {
         parser.stdout("Working file: build.xml");
         parser.stdout("revision 1.475");
@@ -46,6 +49,7 @@ public class ChangeLogParserTest extends TestCase {
         assertEquals(date, entries[0].getDate());
     }
 
+    @Test
     public void testCvs112Format() throws Exception {
         parser.stdout("Working file: build.xml");
         parser.stdout("revision 1.475");

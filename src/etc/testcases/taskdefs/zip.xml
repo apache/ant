@@ -118,7 +118,6 @@
   </target>
 
   <target name="testUpdateIsNecessary" depends="feather">
-    <sleep seconds="5" />
     <touch file="${output}/dummyfile" />
     <copy file="../asf-logo.gif" todir="${output}"/>
     <zip destFile="${output}/asf-logo.gif.zip"

@@ -17,10 +17,13 @@
  */
 package org.apache.tools.ant.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class UnicodeUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class UnicodeUtilTest {
+
+    @Test
     public void testChineseWord() {
         String word = "\u81ea\u7531";
         assertEquals("u81ea", UnicodeUtil.EscapeUnicode(word.charAt(0)).toString());

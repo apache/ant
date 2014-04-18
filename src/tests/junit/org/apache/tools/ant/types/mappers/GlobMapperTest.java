@@ -18,25 +18,31 @@
 
 package org.apache.tools.ant.types.mappers;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Testcase for the &lt;globmapper&gt; mapper.
  *
  */
-public class GlobMapperTest extends BuildFileTest {
-    public GlobMapperTest(String name) {
-        super(name);
-    }
+public class GlobMapperTest {
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/mappers/globmapper.xml");
+        buildRule.configureProject("src/etc/testcases/types/mappers/globmapper.xml");
     }
 
+    @Test
     public void testIgnoreCase() {
-        executeTarget("ignore.case");
+        buildRule.executeTarget("ignore.case");
     }
     public void testHandleDirSep() {
-        executeTarget("handle.dirsep");
+        buildRule.executeTarget("handle.dirsep");
     }
 }
 

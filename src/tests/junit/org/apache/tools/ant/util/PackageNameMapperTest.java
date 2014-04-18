@@ -17,12 +17,15 @@
  */
  package org.apache.tools.ant.util;
 
+import org.junit.Test;
+
 import java.io.File;
-import junit.framework.TestCase;
 
-public class PackageNameMapperTest extends TestCase {
-    public PackageNameMapperTest(String name) { super(name); }
+import static org.junit.Assert.assertEquals;
 
+public class PackageNameMapperTest {
+
+    @Test
     public void testMapping() {
         PackageNameMapper mapper = new PackageNameMapper();
         mapper.setFrom("*.java");

@@ -18,16 +18,31 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.util.FileUtils;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.GregorianCalendar;
 
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
 /**
  * Unit test for the &lt;exec&gt; task.
  */
-public class ExecTaskTest extends BuildFileTest {
+public class ExecTaskTest {
+	
+	@Rule
+	public BuildFileRule buildRule = new BuildFileRule();
+	
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
     private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
     private static final int TIME_TO_WAIT = 1;
@@ -44,21 +59,19 @@ public class ExecTaskTest extends BuildFileTest {
     private MonitoredBuild myBuild = null;
     volatile private boolean buildFinished = false;
 
-    public ExecTaskTest(String name) {
-        super(name);
-    }
 
+    @Before
     public void setUp() {
-        configureProject(BUILD_FILE);
+        buildRule.configureProject(BUILD_FILE);
     }
 
-    public void testspawn() {
-        project.executeTarget("setUp");
-        if (project.getProperty("test.can.run") == null) {
-            return;
-        }
+    @Test
+    public void testspawn() throws InterruptedException {
+        buildRule.getProject().executeTarget("setUp");
+        Assume.assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
         myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
-        logFile = FILE_UTILS.createTempFile("spawn", "log", getOutputDir(), false, false);
+        logFile = FILE_UTILS.createTempFile("spawn", "log", new File(buildRule.getProject().getProperty("output")),
+                false, false);
         // this is guaranteed by FileUtils#createTempFile
         assertTrue("log file not existing", !logFile.exists());
         // make the spawned process run 4 seconds
@@ -69,11 +82,7 @@ public class ExecTaskTest extends BuildFileTest {
         GregorianCalendar startwait = new GregorianCalendar();
         // this loop runs parallel to the build
         while (!buildFinished) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                System.out.println("my sleep was interrupted");
-            }
+            Thread.sleep(10);
             GregorianCalendar now = new GregorianCalendar();
             // security
             if (now.getTime().getTime() - startwait.getTime().getTime() > MAX_BUILD_TIME) {
@@ -84,11 +93,7 @@ public class ExecTaskTest extends BuildFileTest {
             }
         }
         // now wait until the spawned process is finished
-        try {
-            Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
-        } catch (InterruptedException e) {
-            System.out.println("my sleep was interrupted");
-        }
+        Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
         // time of the build in milli seconds
         long elapsed = myBuild.getTimeElapsed();
         assertTrue("we waited more than the process lasted",
@@ -97,29 +102,26 @@ public class ExecTaskTest extends BuildFileTest {
         assertTrue("log file found after spawn", logFile.exists());
     }
 
-    /* TODO #50507 - fails at least on Linux
+    @Test
+    @Ignore("#50507 - fails at least on Linux")
+    /* TODO #50507 - fails at least on Linux */
     public void testOutAndErr() {
-        project.executeTarget("test-out-and-err");
+        buildRule.getProject().executeTarget("test-out-and-err");
     }
-    */
 
     private static class MonitoredBuild implements Runnable {
         private Thread worker;
         private File myBuildFile = null;
         private String target = null;
         private Project project = null;
-        private int timeToWait = 0;
-        private String logFile = null;
         private GregorianCalendar timeStarted = null;
         private GregorianCalendar timeFinished = null;
 
         public void setLogFile(String logFile) {
-            this.logFile = logFile;
             project.setProperty("logFile", logFile);
         }
 
         public void setTimeToWait(int timeToWait) {
-            this.timeToWait = timeToWait;
             project.setProperty("timeToWait", Long.toString(timeToWait));
         }
 

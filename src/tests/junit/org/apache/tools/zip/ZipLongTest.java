@@ -18,21 +18,22 @@
 
 package org.apache.tools.zip;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 /**
- * JUnit 3 testcases for org.apache.tools.zip.ZipLong.
+ * JUnit testcases for org.apache.tools.zip.ZipLong.
  *
  */
-public class ZipLongTest extends TestCase {
-
-    public ZipLongTest(String name) {
-        super(name);
-    }
+public class ZipLongTest {
 
     /**
      * Test conversion to bytes.
      */
+    @Test
     public void testToBytes() {
         ZipLong zl = new ZipLong(0x12345678);
         byte[] result = zl.getBytes();
@@ -46,6 +47,7 @@ public class ZipLongTest extends TestCase {
     /**
      * Test conversion from bytes.
      */
+    @Test
     public void testFromBytes() {
         byte[] val = new byte[] {0x78, 0x56, 0x34, 0x12};
         ZipLong zl = new ZipLong(val);
@@ -55,6 +57,7 @@ public class ZipLongTest extends TestCase {
     /**
      * Test the contract of the equals method.
      */
+    @Test
     public void testEquals() {
         ZipLong zl = new ZipLong(0x12345678);
         ZipLong zl2 = new ZipLong(0x12345678);
@@ -74,11 +77,13 @@ public class ZipLongTest extends TestCase {
     /**
      * Test sign handling.
      */
+    @Test
     public void testSign() {
         ZipLong zl = new ZipLong(new byte[] {(byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF});
         assertEquals(0x00000000FFFFFFFFl, zl.getValue());
     }
 
+    @Test
     public void testClone() {
         ZipLong s1 = new ZipLong(42);
         ZipLong s2 = (ZipLong) s1.clone();

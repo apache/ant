@@ -21,10 +21,15 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-import junit.framework.TestCase;
 
-public class RpmTest extends TestCase {
+import org.junit.Test;
 
+import static org.junit.Assert.fail;
+import static org.apache.tools.ant.AntAssert.assertContains;
+
+public class RpmTest {
+
+    @Test
     public void testShouldThrowExceptionWhenRpmFails() throws Exception {
         Rpm rpm = new MyRpm();
         rpm.setProject(new org.apache.tools.ant.Project());
@@ -34,11 +39,11 @@ public class RpmTest extends TestCase {
             rpm.execute();
             fail("should have thrown a build exception");
         } catch (BuildException ex) {
-            assertTrue(ex.getMessage()
-                       .indexOf("' failed with exit code 2") != -1);
+            assertContains("' failed with exit code 2", ex.getMessage());
         }
     }
 
+    @Test
     public void testShouldNotThrowExceptionWhenRpmFails() throws Exception {
         Rpm rpm = new MyRpm();
         rpm.execute();

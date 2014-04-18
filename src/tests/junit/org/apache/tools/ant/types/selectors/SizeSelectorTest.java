@@ -21,42 +21,39 @@ package org.apache.tools.ant.types.selectors;
 import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests Size Selectors
  *
  */
-public class SizeSelectorTest extends BaseSelectorTest {
-
-    public SizeSelectorTest(String name) {
-        super(name);
-    }
-
-    /**
-     * Factory method from base class. This is overriden in child
-     * classes to return a specific Selector class.
-     */
-    public BaseSelector getInstance() {
-        return new SizeSelector();
-    }
+public class SizeSelectorTest {
+    
+    @Rule
+    public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
     /**
      * Test the code that validates the selector.
      */
+    @Test
     public void testValidate() {
-        SizeSelector s = (SizeSelector)getInstance();
+        SizeSelector s = new SizeSelector();
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("SizeSelector did not check for required fields");
         } catch (BuildException be1) {
             assertEquals("The value attribute is required, and must "
                     + "be positive", be1.getMessage());
         }
 
-        s = (SizeSelector)getInstance();
+        s = new SizeSelector();
         s.setValue(-10);
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("SizeSelector did not check for value being in the "
                     + "allowable range");
         } catch (BuildException be2) {
@@ -64,34 +61,34 @@ public class SizeSelectorTest extends BaseSelectorTest {
                     + "be positive", be2.getMessage());
         }
 
-        s = (SizeSelector)getInstance();
+        s = new SizeSelector();
         Parameter param = new Parameter();
         param.setName("garbage in");
         param.setValue("garbage out");
         Parameter[] params = {param};
         s.setParameters(params);
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("SizeSelector did not check for valid parameter element");
         } catch (BuildException be3) {
             assertEquals("Invalid parameter garbage in", be3.getMessage());
         }
 
-        s = (SizeSelector)getInstance();
+        s = new SizeSelector();
         param = new Parameter();
         param.setName("value");
         param.setValue("garbage out");
         params[0] = param;
         s.setParameters(params);
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("SizeSelector accepted bad value as parameter");
         } catch (BuildException be4) {
             assertEquals("Invalid size setting garbage out",
                     be4.getMessage());
         }
 
-        s = (SizeSelector)getInstance();
+        s = new SizeSelector();
         Parameter param1 = new Parameter();
         Parameter param2 = new Parameter();
         param1.setName("value");
@@ -103,7 +100,7 @@ public class SizeSelectorTest extends BaseSelectorTest {
         params[1] = param2;
         try {
             s.setParameters(params);
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("SizeSelector accepted bad units as parameter");
         } catch (BuildException be5) {
             assertEquals("garbage out is not a legal value for this attribute",
@@ -115,6 +112,7 @@ public class SizeSelectorTest extends BaseSelectorTest {
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
+    @Test
     public void testSelectionBehaviour() {
         SizeSelector s;
         String results;
@@ -133,77 +131,75 @@ public class SizeSelectorTest extends BaseSelectorTest {
         more.setValue("more");
 
 
-        try {
-            makeBed();
+    
+        s = new SizeSelector();
+        s.setValue(10);
+        s.setWhen(less);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFFFFFFFFFFT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(10);
-            s.setWhen(less);
-            results = selectionString(s);
-            assertEquals("TFFFFFFFFFFT", results);
+        s = new SizeSelector();
+        s.setValue(10);
+        s.setWhen(more);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTTTTTTTTTT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(10);
-            s.setWhen(more);
-            results = selectionString(s);
-            assertEquals("TTTTTTTTTTTT", results);
+        s = new SizeSelector();
+        s.setValue(32);
+        s.setWhen(equal);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFFFTFFFFFFT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(32);
-            s.setWhen(equal);
-            results = selectionString(s);
-            assertEquals("TFFFTFFFFFFT", results);
+        s = new SizeSelector();
+        s.setValue(7);
+        s.setWhen(more);
+        s.setUnits(kilo);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFTFFTTTTTTT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(7);
-            s.setWhen(more);
-            s.setUnits(kilo);
-            results = selectionString(s);
-            assertEquals("TFTFFTTTTTTT", results);
+        s = new SizeSelector();
+        s.setValue(7);
+        s.setWhen(more);
+        s.setUnits(kibi);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFTFFFTTFTTT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(7);
-            s.setWhen(more);
-            s.setUnits(kibi);
-            results = selectionString(s);
-            assertEquals("TFTFFFTTFTTT", results);
+        s = new SizeSelector();
+        s.setValue(99999);
+        s.setWhen(more);
+        s.setUnits(tibi);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFFFFFFFFFFT", results);
 
-            s = (SizeSelector)getInstance();
-            s.setValue(99999);
-            s.setWhen(more);
-            s.setUnits(tibi);
-            results = selectionString(s);
-            assertEquals("TFFFFFFFFFFT", results);
-
-            s = (SizeSelector)getInstance();
-            Parameter param1 = new Parameter();
-            Parameter param2 = new Parameter();
-            Parameter param3 = new Parameter();
-            param1.setName("value");
-            param1.setValue("20");
-            param2.setName("units");
-            param2.setValue("Ki");
-            param3.setName("when");
-            param3.setValue("more");
-            Parameter[] params = {param1,param2,param3};
-            s.setParameters(params);
-            results = selectionString(s);
-            assertEquals("TFFFFFFTFFTT", results);
-        }
-        finally {
-            cleanupBed();
-        }
+        s = new SizeSelector();
+        Parameter param1 = new Parameter();
+        Parameter param2 = new Parameter();
+        Parameter param3 = new Parameter();
+        param1.setName("value");
+        param1.setValue("20");
+        param2.setName("units");
+        param2.setValue("Ki");
+        param3.setName("when");
+        param3.setValue("more");
+        Parameter[] params = {param1,param2,param3};
+        s.setParameters(params);
+        results = selectorRule.selectionString(s);
+        assertEquals("TFFFFFFTFFTT", results);
+    
 
     }
 
+    @Test
     public void testParameterParsingLowerCase() {
         testCaseInsensitiveParameterParsing("units");
     }
 
+    @Test
     public void testParameterParsingUpperCase() {
         testCaseInsensitiveParameterParsing("UNITS");
     }
 
+    @Test
     public void testParameterParsingLowerCaseTurkish() {
         Locale l = Locale.getDefault();
         try {
@@ -214,6 +210,7 @@ public class SizeSelectorTest extends BaseSelectorTest {
         }
     }
 
+    @Test
     public void testParameterParsingUpperCaseTurkish() {
         Locale l = Locale.getDefault();
         try {

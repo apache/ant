@@ -18,53 +18,75 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.util.Vector;
 
-import org.apache.tools.ant.BuildFileTest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class CallTargetTest extends BuildFileTest {
+public class CallTargetTest {
 
-    public CallTargetTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/calltarget.xml");
-        executeTarget("setUp");
+        buildRule.configureProject("src/etc/testcases/taskdefs/calltarget.xml");
+        buildRule.executeTarget("setUp");
     }
 
     // see bugrep 21724 (references not passing through with antcall)
+    @Test
     public void testInheritRefFileSet() {
-        expectLogContaining("testinheritreffileset", "calltarget.xml");
+        buildRule.executeTarget("testinheritreffileset");
+        AntAssert.assertContains("calltarget.xml", buildRule.getLog());
     }
 
     // see bugrep 21724 (references not passing through with antcall)
+    @Test
     public void testInheritFilterset() {
-        project.executeTarget("testinheritreffilterset");
+        buildRule.getProject().executeTarget("testinheritreffilterset");
     }
 
     // see bugrep 11418 (In repeated calls to the same target,
     // params will not be passed in)
+    @Test
     public void testMultiCall() {
-        Vector v = new Vector();
+        Vector<String> v = new Vector<String>();
         v.add("call-multi");
         v.add("call-multi");
-        project.executeTargets(v);
-        assertLogContaining("multi is SETmulti is SET");
+        buildRule.getProject().executeTargets(v);
+        AntAssert.assertContains("multi is SETmulti is SET", buildRule.getLog());
     }
 
+    @Test
     public void testBlankTarget() {
-        expectBuildException("blank-target", "target name must not be empty");
+        try {
+            buildRule.executeTarget("blank-target");
+            fail("target name must not be empty");
+        } catch (BuildException ex) {
+            //TODO assert exception contents
+        }
     }
 
+    @Test
     public void testMultipleTargets() {
-        expectLog("multiple-targets", "tadadctbdbtc");
+        buildRule.executeTarget("multiple-targets");
+        assertEquals("tadadctbdbtc", buildRule.getLog());
     }
 
+    @Test
     public void testMultipleTargets2() {
-        expectLog("multiple-targets-2", "dadctb");
+        buildRule.executeTarget("multiple-targets-2");
+        assertEquals("dadctb", buildRule.getLog());
     }
 
 }

@@ -17,39 +17,72 @@
  */
 
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class RenameTest extends BuildFileTest {
+import static org.junit.Assert.fail;
 
-    public RenameTest(String name) {
-        super(name);
-    }
+public class RenameTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/rename.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/rename.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "required argument missing");
+        try {
+            buildRule.executeTarget("test1");
+            fail("BuildException should have been thrown:  required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
+    @Test
     public void test2() {
-        expectBuildException("test2", "required argument missing");
+        try {
+            buildRule.executeTarget("test2");
+            fail("BuildException should have been thrown: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
+    @Test
     public void test3() {
-        expectBuildException("test3", "required argument missing");
+        try {
+            buildRule.executeTarget("test3");
+            fail("BuildException should have been thrown: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
-/*
+
+    @Test
+    @Ignore("Previously commented out")
     public void test4() {
-        expectBuildException("test4", "source and destination the same");
+        try {
+            buildRule.executeTarget("test4");
+            fail("BuildException should have been thrown: source and destination the same");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
+
+    @Test
+    @Ignore("Previously commented out")
     public void test5() {
-        executeTarget("test5");
+        buildRule.executeTarget("test5");
     }
-    */
+    @Test
     public void test6() {
-        executeTarget("test6");
+        buildRule.executeTarget("test6");
     }
 
 }

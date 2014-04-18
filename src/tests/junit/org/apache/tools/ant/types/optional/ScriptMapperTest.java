@@ -18,27 +18,36 @@
 
 package org.apache.tools.ant.types.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Test our script mapping
  */
-public class ScriptMapperTest extends BuildFileTest {
-    public ScriptMapperTest(String name) {
-        super(name);
-    }
+public class ScriptMapperTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/mappers/scriptmapper.xml");
+        buildRule.configureProject("src/etc/testcases/types/mappers/scriptmapper.xml");
     }
 
+    @Test
     public void testClear() {
-        executeTarget("testClear");
+        buildRule.executeTarget("testClear");
     }
+
+    @Test
     public void testSetMultiple() {
-        executeTarget("testSetMultiple");
+        buildRule.executeTarget("testSetMultiple");
     }
+
+    @Test
     public void testPassthrough() {
-        executeTarget("testPassthrough");
+        buildRule.executeTarget("testPassthrough");
     }
 }

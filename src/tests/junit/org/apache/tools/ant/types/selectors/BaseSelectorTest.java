@@ -20,8 +20,6 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
@@ -31,7 +29,9 @@ import org.apache.tools.ant.Project;
  * a test bed for selecting on, and a helper method for determining
  * whether selections are correct.
  *
+ * @deprecated as of 1.9.4. Use {@link org.apache.tools.ant.types.selectors.BaseSelectorRule} instead.
  */
+@Deprecated
 public abstract class BaseSelectorTest extends BuildFileTest {
 
     private Project project;

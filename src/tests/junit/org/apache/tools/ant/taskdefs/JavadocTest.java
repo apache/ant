@@ -18,122 +18,115 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class JavadocTest extends BuildFileTest {
+public class JavadocTest {
 
-    public JavadocTest(String name) {
-        super(name);
-    }
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/javadoc/";
     private static final String BUILD_FILENAME = "javadoc.xml";
     private static final String BUILD_FILE = BUILD_PATH + BUILD_FILENAME;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        configureProject(BUILD_FILE);
+    @Before
+    public void setUp() {
+        buildRule.configureProject(BUILD_FILE);
     }
 
     // PR 38370
-    public void testDirsetPath() throws Exception {
-        executeTarget("dirsetPath");
+    @Test
+    public void testDirsetPath() {
+        buildRule.executeTarget("dirsetPath");
     }
 
     // PR 38370
-    public void testDirsetPathWithoutPackagenames() throws Exception {
-        try {
-            executeTarget("dirsetPathWithoutPackagenames");
-        } catch (BuildException e) {
-            fail("Contents of path should be picked up without specifying package names: " + e);
-        }
+    @Test
+    public void testDirsetPathWithoutPackagenames() {
+        buildRule.executeTarget("dirsetPathWithoutPackagenames");
     }
 
     // PR 38370
-    public void testNestedDirsetPath() throws Exception {
-        executeTarget("nestedDirsetPath");
+    @Test
+    public void testNestedDirsetPath() {
+        buildRule.executeTarget("nestedDirsetPath");
     }
 
     // PR 38370
-    public void testFilesetPath() throws Exception {
-        try {
-            executeTarget("filesetPath");
-        } catch (BuildException e) {
-            fail("A path can contain filesets: " + e);
-        }
+    @Test
+    public void testFilesetPath() {
+        buildRule.executeTarget("filesetPath");
     }
 
     // PR 38370
-    public void testNestedFilesetPath() throws Exception {
-        try {
-            executeTarget("nestedFilesetPath");
-        } catch (BuildException e) {
-            fail("A path can contain nested filesets: " + e);
-        }
+    @Test
+    public void testNestedFilesetPath() {
+        buildRule.executeTarget("nestedFilesetPath");
     }
 
     // PR 38370
-    public void testFilelistPath() throws Exception {
-        try {
-            executeTarget("filelistPath");
-        } catch (BuildException e) {
-            fail("A path can contain filelists: " + e);
-        }
+    @Test
+    public void testFilelistPath() {
+        buildRule.executeTarget("filelistPath");
     }
 
     // PR 38370
-    public void testNestedFilelistPath() throws Exception {
-        try {
-            executeTarget("nestedFilelistPath");
-        } catch (BuildException e) {
-            fail("A path can contain nested filelists: " + e);
-        }
+    @Test
+    public void testNestedFilelistPath() {
+        buildRule.executeTarget("nestedFilelistPath");
     }
 
     // PR 38370
-    public void testPathelementPath() throws Exception {
-        executeTarget("pathelementPath");
+    @Test
+    public void testPathelementPath() {
+        buildRule.executeTarget("pathelementPath");
     }
 
     // PR 38370
-    public void testPathelementLocationPath() throws Exception {
-        try {
-            executeTarget("pathelementLocationPath");
-        } catch (BuildException e) {
-            fail("A path can contain pathelements pointing to a file: " + e);
-        }
+    @Test
+    public void testPathelementLocationPath() {
+        buildRule.executeTarget("pathelementLocationPath");
     }
 
     // PR 38370
-    public void testNestedSource() throws Exception {
-        executeTarget("nestedSource");
+    @Test
+    public void testNestedSource() {
+        buildRule.executeTarget("nestedSource");
     }
 
     // PR 38370
-    public void testNestedFilesetRef() throws Exception {
-        executeTarget("nestedFilesetRef");
+    @Test
+    public void testNestedFilesetRef() {
+        buildRule.executeTarget("nestedFilesetRef");
     }
 
     // PR 38370
-    public void testNestedFilesetRefInPath() throws Exception {
-        executeTarget("nestedFilesetRefInPath");
+    @Test
+    public void testNestedFilesetRefInPath() {
+        buildRule.executeTarget("nestedFilesetRefInPath");
     }
 
-    public void testNestedFilesetNoPatterns() throws Exception {
-        executeTarget("nestedFilesetNoPatterns");
+    @Test
+    public void testNestedFilesetNoPatterns() {
+        buildRule.executeTarget("nestedFilesetNoPatterns");
     }
 
-    public void testDoublyNestedFileset() throws Exception {
-        executeTarget("doublyNestedFileset");
+    @Test
+    public void testDoublyNestedFileset() {
+        buildRule.executeTarget("doublyNestedFileset");
     }
 
-    public void testDoublyNestedFilesetNoPatterns() throws Exception {
-        executeTarget("doublyNestedFilesetNoPatterns");
+    @Test
+    public void testDoublyNestedFilesetNoPatterns() {
+        buildRule.executeTarget("doublyNestedFilesetNoPatterns");
     }
 
-    public void testNonJavaIncludes() throws Exception { // #41264
-        executeTarget("nonJavaIncludes");
+    @Test
+    public void testNonJavaIncludes() { // #41264
+        buildRule.executeTarget("nonJavaIncludes");
     }
 
 }

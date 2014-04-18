@@ -17,43 +17,55 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 /**
  * Testcases for the &lt;isreference&gt; condition.
  *
  */
-public class IsReferenceTest extends BuildFileTest {
+public class IsReferenceTest {
 
-    public IsReferenceTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/conditions/isreference.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/isreference.xml");
     }
 
+    @Test
     public void testBasic() {
-       expectPropertySet("basic", "global-path");
-       assertPropertySet("target-path");
-       assertPropertyUnset("undefined");
+        buildRule.executeTarget("basic");
+        assertEquals("true", buildRule.getProject().getProperty("global-path"));
+        assertEquals("true", buildRule.getProject().getProperty("target-path"));
+        assertNull(buildRule.getProject().getProperty("undefined"));
     }
 
+    @Test
     public void testNotEnoughArgs() {
-        expectSpecificBuildException("isreference-incomplete",
-                                     "refid attribute has been omitted",
-                                     "No reference specified for isreference "
-                                     + "condition");
+        try {
+            buildRule.executeTarget("isreference-incomplete");
+            fail("Build exception expected: refid attirbute has been omitted");
+        } catch(BuildException ex) {
+            assertEquals("No reference specified for isreference condition", ex.getMessage());
+        }
     }
 
+    @Test
     public void testType() {
-       expectPropertySet("type", "global-path");
-       assertPropertyUnset("global-path-as-fileset");
-       assertPropertyUnset("global-path-as-foo");
-       assertPropertySet("global-echo");
+        buildRule.executeTarget("type");
+        assertEquals("true", buildRule.getProject().getProperty("global-path"));
+        assertNull(buildRule.getProject().getProperty("global-path-as-fileset"));
+        assertNull(buildRule.getProject().getProperty("global-path-as-foo"));
+        assertEquals("true", buildRule.getProject().getProperty("global-echo"));
     }
 
 }

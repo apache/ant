@@ -32,7 +32,10 @@ import org.apache.tools.ant.util.ProcessUtil;
  * This class provides a number of utility methods for particular build file
  * tests which extend this class.
  *
+ * @deprecated as of 1.9.4. Use BuildFileRule, Assert, AntAssert and JUnit4 annotations to drive tests instead
+ * @see org.apache.tools.ant.BuildFileRule
  */
+@Deprecated
 public abstract class BuildFileTest extends TestCase {
 
     protected Project project;

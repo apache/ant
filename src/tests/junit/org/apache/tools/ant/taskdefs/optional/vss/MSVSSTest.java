@@ -23,18 +23,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Tstamp;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are correct.
  *
  */
-public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
+public class MSVSSTest implements MSVSSConstants {
 
     private Commandline commandline;
 
@@ -52,43 +60,30 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     private static final String OUTPUT = "output.log";
     private static final String SS_DIR = "c:/winnt".replace('/', File.separatorChar);
 
-    /**
-     *  Constructor for the MSVSSTest object
-     *
-     * @param  s  Test name
-     */
-    public MSVSSTest(String s) {
-        super(s);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+    private Project project;
 
-    /**
-     *  The JUnit setup method
-     *
-     * @throws  Exception
-     */
-    protected void setUp()
-        throws Exception {
+    @Before
+    public void setUp(){
         project = new Project();
         project.setBasedir(".");
+        project.init();
     }
 
-    /**
-     *  The teardown method for JUnit
-     *
-     * @throws  Exception
-     */
-    protected void tearDown()
-        throws Exception {
+    @After
+    public void tearDown() {
         File file = new File(project.getBaseDir(), LOCAL_PATH);
         if (file.exists()) {
             file.delete();
         }
     }
 
-    /**  Tests VSSGet commandline generation.  */
+    @Test
     public void testGetCommandLine() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_GET, DS_VSS_PROJECT_PATH,
-                MSVSS.FLAG_OVERRIDE_WORKING_DIR + project.getBaseDir().getAbsolutePath()
+                MSVSS.FLAG_OVERRIDE_WORKING_DIR + project.getBaseDir()
+                        .getAbsolutePath()
                  + File.separator + LOCAL_PATH, MSVSS.FLAG_AUTORESPONSE_DEF,
                 MSVSS.FLAG_RECURSION, MSVSS.FLAG_VERSION + VERSION, MSVSS.FLAG_LOGIN
                  + VSS_USERNAME + "," + VSS_PASSWORD, FLAG_FILETIME_UPDATED, FLAG_SKIP_WRITABLE};
@@ -117,12 +112,14 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     }
 
     /**  Tests VSSGet required attributes.  */
+    @Test
     public void testGetExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vssget.1", "some cause", "vsspath attribute must be set!");
     }
 
     /**  Tests Label commandline generation.  */
+    @Test
     public void testLabelCommandLine1() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_LABEL, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_YES,
@@ -145,6 +142,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     }
 
     /**  Tests Label commandline generation with a label of more than 31 chars.  */
+    @Test
     public void testLabelCommandLine2() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_LABEL, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_DEF,
@@ -167,18 +165,21 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSLabel required attributes.
      */
+    @Test
     public void testLabelExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsslabel.1", "some cause", "vsspath attribute must be set!");
         expectSpecificBuildException("vsslabel.2", "some cause", "label attribute must be set!");
     }
 
     /**  Tests VSSHistory commandline generation with from label.  */
+    @Test
     public void testHistoryCommandLine1() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_HISTORY, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_VERSION_LABEL + LONG_LABEL
                  + MSVSS.VALUE_FROMLABEL + SRC_LABEL, MSVSS.FLAG_LOGIN + VSS_USERNAME
-                 + "," + VSS_PASSWORD, MSVSS.FLAG_OUTPUT + project.getBaseDir().getAbsolutePath()
+                 + "," + VSS_PASSWORD, MSVSS.FLAG_OUTPUT + project.getBaseDir()
+                .getAbsolutePath()
                  + File.separator + OUTPUT};
 
         // Set up a VSSHistory task
@@ -199,6 +200,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     }
 
     /**  Tests VSSHistory commandline generation with from date.  */
+    @Test
     public void testHistoryCommandLine2() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_HISTORY, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_VERSION_DATE + DATE + MSVSS.VALUE_FROMDATE
@@ -219,6 +221,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     }
 
     /**  Tests VSSHistory commandline generation with date calculation.  */
+    @Test
     public void testHistoryCommandLine3() {
         // Set up a Timestamp
         Tstamp tstamp = new Tstamp();
@@ -256,12 +259,24 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Tests VSSHistory required attributes.
      */
+    @Test
     public void testHistoryExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsshistory.1", "some cause", "vsspath attribute must be set!");
     }
 
+    private void expectSpecificBuildException(String target, String failMessage,
+                                              String exceptionMessage) {
+        try {
+            buildRule.executeTarget(target);
+            fail(failMessage);
+        } catch(BuildException ex) {
+            assertEquals(exceptionMessage, ex.getMessage());
+        }
+    }
+
     /**  Tests CheckIn commandline generation.  */
+    @Test
     public void testCheckinCommandLine() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_CHECKIN, DS_VSS_PROJECT_PATH,
                 MSVSS.FLAG_AUTORESPONSE_NO, MSVSS.FLAG_WRITABLE, MSVSS.FLAG_LOGIN + VSS_USERNAME,
@@ -284,12 +299,14 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSCheckIn required attributes.
      */
+    @Test
     public void testCheckinExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsscheckin.1", "some cause", "vsspath attribute must be set!");
     }
 
     /**  Tests CheckOut commandline generation.  */
+    @Test
     public void testCheckoutCommandLine() {
         String[] sTestCmdLine = {SS_DIR + File.separator + MSVSS.SS_EXE, MSVSS.COMMAND_CHECKOUT,
                 DS_VSS_PROJECT_PATH, MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_RECURSION,
@@ -318,13 +335,15 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSCheckout required attributes.
      */
+    @Test
     public void testCheckoutExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsscheckout.1", "some cause", "vsspath attribute must be set!");
         expectSpecificBuildException("vsscheckout.2", "some cause", "blah is not a legal value for this attribute");
     }
 
     /**  Tests Add commandline generation.  */
+    @Test
     public void testAddCommandLine() {
         String[] sTestCmdLine = {SS_DIR + File.separator + MSVSS.SS_EXE, MSVSS.COMMAND_ADD,
                 project.getBaseDir().getAbsolutePath() + File.separator + LOCAL_PATH,
@@ -349,12 +368,14 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSAdd required attributes.
      */
+    @Test
     public void testAddExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vssadd.1", "some cause", "localPath attribute must be set!");
     }
 
     /**  Tests CP commandline generation.  */
+    @Test
     public void testCpCommandLine() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_CP,
                 DS_VSS_PROJECT_PATH, MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_LOGIN +
@@ -374,12 +395,14 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSCP required attributes.
      */
+    @Test
     public void testCpExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsscp.1", "some cause", "vsspath attribute must be set!");
     }
 
     /**  Tests Create commandline generation.  */
+    @Test
     public void testCreateCommandLine() {
         String[] sTestCmdLine = { MSVSS.SS_EXE, MSVSS.COMMAND_CREATE,
                 DS_VSS_PROJECT_PATH, MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_NO,
@@ -403,8 +426,9 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     /**
      * Test VSSCreate required attributes.
      */
+    @Test
     public void testCreateExceptions() {
-        configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
         expectSpecificBuildException("vsscreate.1", "some cause", "vsspath attribute must be set!");
     }
 
@@ -422,7 +446,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
 
         while (testIndex < testLength) {
             try {
-                if (sGeneratedCmdLine[genIndex] == "") {
+                if (sGeneratedCmdLine[genIndex].equals("")) {
                     genIndex++;
                     continue;
                 }
@@ -439,7 +463,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
         // Count the number of empty strings
         int cnt = 0;
         for (int i = 0; i < genLength; i++) {
-            if (sGeneratedCmdLine[i] == "") {
+            if (sGeneratedCmdLine[i].equals("")) {
                 cnt++;
             }
         }

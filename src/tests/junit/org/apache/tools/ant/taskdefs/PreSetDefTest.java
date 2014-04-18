@@ -19,70 +19,107 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  */
-public class PreSetDefTest extends BuildFileTest {
-    public PreSetDefTest(String name) {
-        super(name);
-    }
-
+public class PreSetDefTest {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/presetdef.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/presetdef.xml");
     }
 
+    @Test
     public void testSimple() {
-        expectLog("simple", "Hello world");
+        buildRule.executeTarget("simple");
+		assertEquals("Hello world", buildRule.getLog());
     }
 
+    @Test
     public void testText() {
-        expectLog("text", "Inner Text");
+        buildRule.executeTarget("text");
+		assertEquals("Inner Text", buildRule.getLog());
     }
 
+    @Test
     public void testUri() {
-        expectLog("uri", "Hello world");
+        buildRule.executeTarget("uri");
+		assertEquals("Hello world", buildRule.getLog());
     }
 
+    @Test
     public void testDefaultTest() {
-        expectLog("defaulttest", "attribute is false");
+        buildRule.executeTarget("defaulttest");
+		assertEquals("attribute is false", buildRule.getLog());
     }
 
+    @Test
     public void testDoubleDefault() {
-        expectLog("doubledefault", "attribute is falseattribute is true");
+        buildRule.executeTarget("doubledefault");
+		assertEquals("attribute is falseattribute is true", buildRule.getLog());
     }
 
+    @Test
     public void testTextOptional() {
-        expectLog("text.optional", "MyTextoverride text");
+        buildRule.executeTarget("text.optional");
+		assertEquals("MyTextoverride text", buildRule.getLog());
     }
 
+    @Test
     public void testElementOrder() {
-        expectLog("element.order", "Line 1Line 2");
+        buildRule.executeTarget("element.order");
+		assertEquals("Line 1Line 2", buildRule.getLog());
     }
 
+    @Test
     public void testElementOrder2() {
-        expectLog("element.order2", "Line 1Line 2Line 3");
+        buildRule.executeTarget("element.order2");
+		assertEquals("Line 1Line 2Line 3", buildRule.getLog());
     }
 
+    @Test
     public void testAntTypeTest() {
-        expectLog("antTypeTest", "");
+        buildRule.executeTarget("antTypeTest");
+		assertEquals("", buildRule.getLog());
     }
 
+    @Test
     public void testCorrectTaskNameBadAttr() {
-        expectBuildExceptionContaining(
-            "correct_taskname_badattr", "attribute message", "javac doesn't support the");
+        try {
+            buildRule.executeTarget("correct_taskname_badattr");
+            fail("BuildException expected: attribute message");
+        } catch (BuildException ex) {
+            assertContains("javac doesn't support the", ex.getMessage());
+        }
     }
 
+    @Test
     public void testCorrectTaskNameBadEl() {
-        expectBuildExceptionContaining(
-            "correct_taskname_badel", "element message", "javac doesn't support the");
+        try {
+            buildRule.executeTarget("correct_taskname_badel");
+            fail("BuildException expected: element message");
+        } catch (BuildException ex) {
+            assertContains("javac doesn't support the", ex.getMessage());
+        }
     }
     
+    @Test
     public void testPresetdefWithNestedElementTwice() { // #38056
-        executeTarget("presetdef-with-nested-element-twice");
-        executeTarget("presetdef-with-nested-element-twice");
+        buildRule.executeTarget("presetdef-with-nested-element-twice");
+        buildRule.executeTarget("presetdef-with-nested-element-twice");
     }
     
     /**

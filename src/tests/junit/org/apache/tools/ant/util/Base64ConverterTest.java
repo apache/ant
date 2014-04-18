@@ -17,25 +17,24 @@
  */
 package org.apache.tools.ant.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-import java.util.Calendar;
-import java.util.TimeZone;
+import static org.junit.Assert.assertEquals;
 
 /**
  * TestCase for Base64Converter.
  *
  */
-public class Base64ConverterTest extends TestCase {
-    public Base64ConverterTest(String s) {
-        super(s);
-    }
+public class Base64ConverterTest {
+
+    @Test
     public void testOneValue() {
         byte[] mybytes = {0, 0, (byte)0xFF};
         Base64Converter base64Converter = new Base64Converter();
         assertEquals("AAD/",base64Converter.encode(mybytes));
     }
 
+    @Test
     public void testHelloWorld() {
         byte[] mybytes = "Hello World".getBytes();
         Base64Converter base64Converter = new Base64Converter();

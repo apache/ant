@@ -17,13 +17,20 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.AntAssert;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Test schema validation
  */
 
-public class SchemaValidateTest extends BuildFileTest {
+public class SchemaValidateTest {
 
     /**
      * where tasks run
@@ -31,69 +38,91 @@ public class SchemaValidateTest extends BuildFileTest {
     private final static String TASKDEFS_DIR =
             "src/etc/testcases/taskdefs/optional/";
 
-    /**
-     * Constructor
-     *
-     * @param name testname
-     */
-    public SchemaValidateTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    /**
-     * The JUnit setup method
-     */
+    @Before
     public void setUp() {
-        configureProject(TASKDEFS_DIR + "schemavalidate.xml");
+        buildRule.configureProject(TASKDEFS_DIR + "schemavalidate.xml");
     }
 
     /**
      * test with no namespace
      */
+    @Test
     public void testNoNamespace() throws Exception {
-        executeTarget("testNoNamespace");
+        buildRule.executeTarget("testNoNamespace");
     }
 
     /**
      * add namespace awareness.
      */
+    @Test
     public void testNSMapping() throws Exception {
-        executeTarget("testNSMapping");
+        buildRule.executeTarget("testNSMapping");
     }
 
+    @Test
     public void testNoEmptySchemaNamespace() throws Exception {
-        expectBuildExceptionContaining("testNoEmptySchemaNamespace",
-                "empty namespace URI",SchemaValidate.SchemaLocation.ERROR_NO_URI);
+        try {
+            buildRule.executeTarget("testNoEmptySchemaNamespace");
+            fail("Empty namespace URI");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_URI, ex.getMessage());
+        }
     }
 
+    @Test
     public void testNoEmptySchemaLocation() throws Exception {
-        expectBuildExceptionContaining("testNoEmptySchemaLocation",
-                "empty schema location",
-                SchemaValidate.SchemaLocation.ERROR_NO_LOCATION);
+        try {
+            buildRule.executeTarget("testNoEmptySchemaLocation");
+            fail("Empty schema location");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_LOCATION,
+                    ex.getMessage());
+        }
     }
 
+    @Test
     public void testNoFile() throws Exception {
-        expectBuildExceptionContaining("testNoFile",
-                "no file at file attribute",
-                SchemaValidate.SchemaLocation.ERROR_NO_FILE);
+        try {
+            buildRule.executeTarget("testNoFile");
+            fail("No file at file attribute");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_FILE,
+                    ex.getMessage());
+        }
     }
 
+    @Test
     public void testNoDoubleSchemaLocation() throws Exception {
-        expectBuildExceptionContaining("testNoDoubleSchemaLocation",
-                "two locations for schemas",
-                SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS);
+        try {
+            buildRule.executeTarget("testNoDoubleSchemaLocation");
+            fail("Two locations for schemas");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS,
+                    ex.getMessage());
+        }
     }
+
+    @Test
     public void testNoDuplicateSchema() throws Exception {
-        expectBuildExceptionContaining("testNoDuplicateSchema",
-                "duplicate schemas with different values",
-                SchemaValidate.ERROR_DUPLICATE_SCHEMA);
+        try {
+            buildRule.executeTarget("testNoDuplicateSchema");
+            fail("duplicate schemas with different values");
+        } catch (BuildException ex) {
+            AntAssert.assertContains(SchemaValidate.ERROR_DUPLICATE_SCHEMA,
+                    ex.getMessage());
+        }
     }
 
+    @Test
     public void testEqualsSchemasOK() throws Exception {
-        executeTarget("testEqualsSchemasOK");
+        buildRule.executeTarget("testEqualsSchemasOK");
     }
 
+    @Test
     public void testFileset() throws Exception {
-        executeTarget("testFileset");
+        buildRule.executeTarget("testFileset");
     }
 }

@@ -22,12 +22,14 @@ package org.apache.tools.zip;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test zip encodings.
  */
-public class ZipEncodingTest extends TestCase {
+public class ZipEncodingTest {
     private static final String UNENC_STRING = "\u2016";
 
     // stress test for internal grow method.
@@ -37,16 +39,19 @@ public class ZipEncodingTest extends TestCase {
     private static final String BAD_STRING_ENC =
         "%U2016%U2015%U2016%U2015%U2016%U2015%U2016%U2015%U2016%U2015%U2016";
 
+    @Test
     public void testSimpleCp437Encoding() throws IOException {
 
         doSimpleEncodingTest("Cp437", null);
     }
 
+    @Test
     public void testSimpleCp850Encoding() throws IOException {
 
         doSimpleEncodingTest("Cp850", null);
     }
 
+    @Test
     public void testNioCp1252Encoding() throws IOException {
         // CP1252 has some undefined code points, these are
         // the defined ones
@@ -104,7 +109,7 @@ public class ZipEncodingTest extends TestCase {
         doSimpleEncodingTest("Cp1252",b);
     }
 
-    private static final void assertEquals(byte[] expected, ByteBuffer actual) {
+    private static void assertByteEquals(byte[] expected, ByteBuffer actual) {
 
         assertEquals(expected.length, actual.limit());
 
@@ -135,13 +140,13 @@ public class ZipEncodingTest extends TestCase {
 
         ByteBuffer encoded = enc.encode(decoded);
 
-        assertEquals(testBytes, encoded);
+        assertByteEquals(testBytes, encoded);
 
         assertEquals(false, enc.canEncode(UNENC_STRING));
-        assertEquals("%U2016".getBytes("US-ASCII"), enc.encode(UNENC_STRING));
+        assertByteEquals("%U2016".getBytes("US-ASCII"), enc.encode(UNENC_STRING));
         assertEquals(false, enc.canEncode(BAD_STRING));
-        assertEquals(BAD_STRING_ENC.getBytes("US-ASCII"),
-                     enc.encode(BAD_STRING));
+        assertByteEquals(BAD_STRING_ENC.getBytes("US-ASCII"),
+                enc.encode(BAD_STRING));
     }
 
 }

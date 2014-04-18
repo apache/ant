@@ -17,53 +17,65 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.Test;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
+import org.junit.Test;
+import org.junit.runner.Description;
+
 /**
  */
-public class JUnitVersionHelperTest extends TestCase {
+public class JUnitVersionHelperTest {
 
-    public JUnitVersionHelperTest(String name) {
-        super(name);
-    }
-
+	@Test
     public void testMyOwnName() {
         assertEquals("testMyOwnName",
-                     JUnitVersionHelper.getTestCaseName(this));
+        		JUnitVersionHelper.getTestCaseName(
+                    JUnit4TestAdapterCache.getDefault().asTest(
+                    		Description.createTestDescription(JUnitVersionHelperTest.class, "testMyOwnName")
+                    )
+                )
+        );
     }
 
+	@Test
     public void testNonTestCaseName() {
         assertEquals("I'm a foo",
                      JUnitVersionHelper.getTestCaseName(new Foo1()));
     }
 
+	@Test
     public void testNoStringReturn() {
         assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo2()));
     }
 
+	@Test
     public void testNoGetName() {
         assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo3()));
     }
 
+	@Test
     public void testNameNotGetName() {
         assertEquals("I'm a foo, too",
                      JUnitVersionHelper.getTestCaseName(new Foo4()));
     }
 
+	@Test
     public void testNull() {
         assertEquals("unknown", JUnitVersionHelper.getTestCaseName(null));
     }
 
+	@Test
     public void testTestCaseSubClass() {
         assertEquals("overridden getName",
                      JUnitVersionHelper.getTestCaseName(new Foo5()));
     }
 
-    public static class Foo implements Test {
+    public static class Foo implements junit.framework.Test {
         public int countTestCases() {return 0;}
         public void run(TestResult result) {}
     }

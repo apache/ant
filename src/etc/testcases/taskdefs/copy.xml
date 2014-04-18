@@ -63,13 +63,10 @@ a=b=
   <target name="test3">
     <!-- create an empty file -->
     <touch file="${output}/copytest3.tmp"/>
-    <!--wait -->
-    <sleep seconds="4"/>
     <!-- copy a different file to two places -->
     <copy file="copy.xml" tofile="${output}/copytest3a.tmp" overwrite="true"/>
     <copy file="copy.xml" tofile="${output}/copytest3b.tmp" overwrite="true"/>
-    <!--wait -->
-    <sleep seconds="4"/>
+      </target><target name="test3Part2">
     <!-- copy an old file onto a newer file (should not work) -->
     <copy file="${output}/copytest3.tmp" tofile="${output}/copytest3b.tmp" />
     <!-- copy an older file onto a new one, should succeed -->

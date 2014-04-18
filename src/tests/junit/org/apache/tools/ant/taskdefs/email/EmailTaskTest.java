@@ -18,28 +18,46 @@
 
 package org.apache.tools.ant.taskdefs.email;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * TODO : develop these testcases - the email task needs to have attributes allowing
  * to simulate sending mail and to catch the output in text files or streams
  */
-public class EmailTaskTest extends BuildFileTest {
+public class EmailTaskTest {
 
-    public EmailTaskTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/email/mail.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/email/mail.xml");
     }
 
+    @Test
     public void test1() {
-        expectBuildException("test1", "SMTP auth only possible with MIME mail");
+        try {
+            buildRule.executeTarget("test1");
+            fail("Build exception expected: SMTP auth only possibly with MIME mail");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
+    @Test
     public void test2() {
-        expectBuildException("test2", "SSL only possible with MIME mail");
+        try {
+            buildRule.executeTarget("test2");
+            fail("Build exception expected: SSL only possibly with MIME mail");
+        } catch(BuildException ex) {
+            //TODO assert exception message
+        }
     }
 
 }

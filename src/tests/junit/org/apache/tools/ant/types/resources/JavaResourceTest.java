@@ -17,33 +17,43 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class JavaResourceTest extends BuildFileTest {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-    public JavaResourceTest(String name) {
-        super(name);
-    }
+public class JavaResourceTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/resources/javaresource.xml");
+        buildRule.configureProject("src/etc/testcases/types/resources/javaresource.xml");
     }
 
+    @Test
     public void testLoadManifest() {
-        executeTarget("loadManifest");
-        assertNotNull(getProject().getProperty("manifest"));
+        buildRule.executeTarget("loadManifest");
+        assertNotNull(buildRule.getProject().getProperty("manifest"));
 
         // this actually relies on the first manifest being found on
         // the classpath (probably rt.jar's) being valid
-        assertTrue(getProject().getProperty("manifest")
+        assertTrue(buildRule.getProject().getProperty("manifest")
                    .startsWith("Manifest-Version:"));
     }
 
+    @Test
     public void testIsURLProvider() {
         JavaResource r = new JavaResource();
         assertSame(r, r.as(URLProvider.class));
     }
 
+    @Test
     public void testGetURLOfManifest() {
         JavaResource r = new JavaResource();
         r.setName("META-INF/MANIFEST.MF");

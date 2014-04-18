@@ -21,9 +21,16 @@ package org.apache.tools.ant.util;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import junit.framework.TestCase;
 
-public class LinkedHashtableTest extends TestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+
+public class LinkedHashtableTest {
 
     private static final Object K1 = new Object();
     private static final Object K2 = new Object();
@@ -44,6 +51,7 @@ public class LinkedHashtableTest extends TestCase {
         assertTrue(h2.containsKey(K1));
     }
 
+    @Test
     public void testContainsAndPut() {
         h.put(K1, V1);
         assertTrue(h.contains(K1));
@@ -52,23 +60,27 @@ public class LinkedHashtableTest extends TestCase {
         assertFalse(h.containsKey(K2));
     }
 
+    @Test
     public void testGet() {
         assertNull(h.get(K1));
         h.put(K1, V1);
         assertSame(V1, h.get(K1));
     }
 
+    @Test
     public void testIsEmpty() {
         assertTrue(h.isEmpty());
         h.put(K1, V1);
         assertFalse(h.isEmpty());
     }
 
+    @Test
     public void testPutReturnValue() {
         assertNull(h.put(K1, V1));
         assertSame(V1, h.put(K1, V2));
     }
 
+    @Test
     public void testPutAll() {
         LinkedHashtable h2 = new LinkedHashtable();
         h.put(K1, V1);
@@ -76,6 +88,7 @@ public class LinkedHashtableTest extends TestCase {
         assertTrue(h2.containsKey(K1));
     }
 
+    @Test
     public void testRemove() {
         h.put(K1, V1);
         assertSame(V1, h.remove(K1));
@@ -83,32 +96,38 @@ public class LinkedHashtableTest extends TestCase {
         assertNull(h.remove(K1));
     }
 
+    @Test
     public void testSize() {
         assertEquals(0, h.size());
         h.put(K1, V1);
         assertEquals(1, h.size());
     }
 
+    @Test
     public void testKeys() {
         multiSetup();
         assertKeys(CollectionUtils.asIterator(h.keys()));
     }
 
+    @Test
     public void testKeySet() {
         multiSetup();
         assertKeys(h.keySet().iterator());
     }
 
+    @Test
     public void testElements() {
         multiSetup();
         assertValues(CollectionUtils.asIterator(h.elements()));
     }
 
+    @Test
     public void testValues() {
         multiSetup();
         assertValues(h.values().iterator());
     }
 
+    @Test
     public void testEntrySet() {
         multiSetup();
         Iterator i = h.entrySet().iterator();

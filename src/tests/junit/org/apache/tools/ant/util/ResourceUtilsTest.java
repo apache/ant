@@ -18,26 +18,28 @@
 
 package org.apache.tools.ant.util;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Echo;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for org.apache.tools.ant.util.ResourceUtils.
  */
-public class ResourceUtilsTest extends TestCase
-    implements ResourceFactory, FileNameMapper {
+public class ResourceUtilsTest implements ResourceFactory, FileNameMapper {
 
     private Echo taskINeedForLogging = new Echo();
 
-    public ResourceUtilsTest(String name) {
-        super(name);
+    @Before
+    public void setUp() {
         taskINeedForLogging.setProject(new Project());
     }
 
+    @Test
     public void testNoDuplicates() {
         Resource r = new Resource("samual vimes", true, 1, false);
         Resource[] toNew =

@@ -19,16 +19,18 @@ package org.apache.tools.ant.util;
 
 import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for StringUtils
  */
-public class StringUtilsTest extends TestCase {
-    public StringUtilsTest(String s) {
-        super(s);
-    }
+public class StringUtilsTest {
 
+    @Test
     public void testSplit(){
         final String data = "a,b,,";
         Vector res = StringUtils.split(data, ',');
@@ -39,6 +41,7 @@ public class StringUtilsTest extends TestCase {
         assertEquals("", res.elementAt(3));
     }
 
+    @Test
     public void testSplitLines(){
         final String data = "a\r\nb\nc\nd\ne";
         Vector res = StringUtils.lineSplit(data);
@@ -50,40 +53,49 @@ public class StringUtilsTest extends TestCase {
         assertEquals("e", res.elementAt(4));
     }
 
+    @Test
     public void testReplace() {
         final String data = "abcabcabca";
         String res = StringUtils.replace(data, "a", "");
         assertEquals("bcbcbc", res);
     }
 
+    @Test
     public void testEndsWithBothEmpty() {
         assertTrue( StringUtils.endsWith( new StringBuffer(), "") );
     }
 
+    @Test
     public void testEndsWithEmptyString() {
         assertTrue( StringUtils.endsWith( new StringBuffer("12234545"), "") );
     }
 
+    @Test
     public void testEndsWithShorterString() {
         assertTrue( StringUtils.endsWith( new StringBuffer("12345678"), "78"));
     }
 
+    @Test
     public void testEndsWithSameString() {
         assertTrue( StringUtils.endsWith( new StringBuffer("123"), "123"));
     }
 
+    @Test
     public void testEndsWithLongerString() {
         assertFalse( StringUtils.endsWith( new StringBuffer("12"), "1245"));
     }
 
+    @Test
     public void testEndsWithNoMatch() {
         assertFalse( StringUtils.endsWith( new StringBuffer("12345678"), "789"));
     }
 
+    @Test
     public void testEndsWithEmptyBuffer() {
         assertFalse( StringUtils.endsWith( new StringBuffer(""), "12345667") );
     }
 
+    @Test
     public void testEndsWithJDKPerf() {
         StringBuffer buf = getFilledBuffer(1024*300, 'a');
         for (int i = 0; i < 1000; i++) {
@@ -91,6 +103,7 @@ public class StringUtilsTest extends TestCase {
         }
     }
 
+    @Test
     public void testEndsWithPerf() {
         StringBuffer buf = getFilledBuffer(1024*300, 'a');
         for (int i = 0; i < 1000; i++) {
@@ -103,7 +116,8 @@ public class StringUtilsTest extends TestCase {
         for (int i = 0; i < size; i++) { buf.append(ch); };
         return buf;
     }
-    
+
+    @Test
     public void testParseHumanSizes() throws Exception {
     	final long KILOBYTE = 1024;
     	final long MEGABYTE = KILOBYTE * 1024;
@@ -117,7 +131,8 @@ public class StringUtilsTest extends TestCase {
     	assertEquals(StringUtils.parseHumanSizes("1P"), PETABYTE);
     	assertEquals(StringUtils.parseHumanSizes("1"), 1L);
     }
-    
+
+    @Test
     public void testRemoveSuffix() {
         String prefix = "Prefix";
         String name = "Name";
@@ -134,7 +149,8 @@ public class StringUtilsTest extends TestCase {
             StringUtils.removeSuffix(input, "bla")
         );
     }
-    
+
+    @Test
     public void testRemovePrefix() {
         String prefix = "Prefix";
         String name = "Name";

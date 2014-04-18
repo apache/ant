@@ -26,10 +26,17 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Simple testcase to test for driver caching.
@@ -40,7 +47,7 @@ import org.apache.tools.ant.BuildException;
  * as the test db, so that a db is really used.
  *
  */
-public class SQLExecTest extends TestCase {
+public class SQLExecTest {
 
     // some database keys, see #getProperties(int)
     public final static int NULL = 0;
@@ -55,23 +62,22 @@ public class SQLExecTest extends TestCase {
     public final static String PATH = "path";
     public final static String SQL = "sql";
 
-    public SQLExecTest(String s) {
-        super(s);
-    }
-
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         // make sure the cache is cleared.
         JDBCTask.getLoaderMap().clear();
     }
 
    // simple test to ensure that the caching does work...
+    @Test
     public void testDriverCaching(){
         SQLExec sql = createTask(getProperties(NULL));
         assertTrue(!SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
+            fail("BuildException should have been thrown");
         } catch (BuildException e){
-            assertTrue(e.getCause().getMessage().indexOf("No suitable Driver") != -1);
+            assertContains("No suitable Driver", e.getMessage());
         }
         assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
@@ -91,19 +97,22 @@ public class SQLExecTest extends TestCase {
         assertSame(loader1, sql.getLoader());
     }
 
+    @Test
     public void testNull() throws Exception {
         doMultipleCalls(1000, NULL, true, true);
     }
 
-    /*
+    @Ignore
+    @Test
     public void testOracle(){
         doMultipleCalls(1000, ORACLE, true, false);
-    }*/
+    }
 
-    /*
+    @Ignore
+    @Test
     public void testMySQL(){
         doMultipleCalls(1000, MYSQL, true, false);
-    }*/
+    }
 
 
     /**
@@ -239,6 +248,7 @@ public class SQLExecTest extends TestCase {
         }
     }
 
+    @Test
     public void testLastDelimiterPositionNormalModeStrict() {
         SQLExec s = new SQLExec();
         assertEquals(-1,
@@ -258,6 +268,7 @@ public class SQLExecTest extends TestCase {
                      s.lastDelimiterPosition(new StringBuffer("GO"), null));
     }
 
+    @Test
     public void testLastDelimiterPositionNormalModeNonStrict() {
         SQLExec s = new SQLExec();
         s.setStrictDelimiterMatching(false);
@@ -278,6 +289,7 @@ public class SQLExecTest extends TestCase {
                      s.lastDelimiterPosition(new StringBuffer("GO"), null));
     }
 
+    @Test
     public void testLastDelimiterPositionRowModeStrict() {
         SQLExec s = new SQLExec();
         SQLExec.DelimiterType t = new SQLExec.DelimiterType();
@@ -293,6 +305,7 @@ public class SQLExecTest extends TestCase {
         assertEquals(0, s.lastDelimiterPosition(new StringBuffer("ab"), "GO"));
     }
 
+    @Test
     public void testLastDelimiterPositionRowModeNonStrict() {
         SQLExec s = new SQLExec();
         SQLExec.DelimiterType t = new SQLExec.DelimiterType();

@@ -21,35 +21,39 @@ package org.apache.tools.ant.filters;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.FileUtilities;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-/**
- */
-public class ReplaceTokensTest extends BuildFileTest {
+import static org.junit.Assert.assertEquals;
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+public class ReplaceTokensTest {
 
-    public ReplaceTokensTest(String name) {
-        super(name);
-    }
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/build.xml");
+        buildRule.configureProject("src/etc/testcases/filters/build.xml");
     }
 
+    @Test
     public void testReplaceTokens() throws IOException {
-        executeTarget("testReplaceTokens");
-        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),"expected/replacetokens.test");
-        File result = new File(getProject().getProperty("output"), "replacetokens.test");
-        assertTrue(FILE_UTILS.contentEquals(expected, result));
+        buildRule.executeTarget("testReplaceTokens");
+        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
+        File result = new File(buildRule.getProject().getProperty("output"), "replacetokens.test");
+       assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
+    @Test
     public void testReplaceTokensPropertyFile() throws IOException {
-        executeTarget("testReplaceTokensPropertyFile");
-        File expected = FILE_UTILS.resolveFile(getProjectDir(), "expected/replacetokens.test");
-        File result = new File(getProject().getProperty("output"), "replacetokensPropertyFile.test");
-        assertTrue(FILE_UTILS.contentEquals(expected, result));
+        buildRule.executeTarget("testReplaceTokensPropertyFile");
+        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
+        File result = new File(buildRule.getProject().getProperty("output"), "replacetokensPropertyFile.test");
+        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
 }

@@ -19,7 +19,6 @@
 
   <target name="setUp">
     <touch file="source"/>
-    <sleep seconds="3"/>
     <touch file="target"/>
   </target>
 
@@ -28,19 +27,19 @@
     <delete file="target"/>
   </target>
 
-  <target name="testFilesetUpToDate" depends="setUp">
+  <target name="testFilesetUpToDate">
     <uptodate property="foo" targetfile="target">
       <srcfiles dir="." includes="source"/>
     </uptodate>
   </target>
 
-  <target name="testFilesetOutOfDate" depends="setUp">
+  <target name="testFilesetOutOfDate">
     <uptodate property="foo" targetfile="source">
       <srcfiles dir="." includes="target"/>
     </uptodate>
   </target>
 
-  <target name="testRCUpToDate" depends="setUp">
+  <target name="testRCUpToDate">
     <uptodate property="foo" targetfile="target">
       <srcresources>
         <fileset dir="." includes="source"/>
@@ -48,7 +47,7 @@
     </uptodate>
   </target>
 
-  <target name="testRCOutOfDate" depends="setUp">
+  <target name="testRCOutOfDate">
     <uptodate property="foo" targetfile="source">
       <srcresources>
         <fileset dir="." includes="target"/>

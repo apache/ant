@@ -17,45 +17,67 @@
  */
 package org.apache.tools.ant.types.optional;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
 
 /**
  * Test that scripting selection works. Needs scripting support to work
  */
-public class ScriptSelectorTest extends BuildFileTest {
+public class ScriptSelectorTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
-    public ScriptSelectorTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/types/selectors/scriptselector.xml");
+        buildRule.configureProject("src/etc/testcases/types/selectors/scriptselector.xml");
     }
 
+    @Test
     public void testNolanguage() {
-        expectBuildExceptionContaining("testNolanguage",
-                "Absence of language attribute not detected",
-                "script language must be specified");
+        try {
+            buildRule.executeTarget("testNolanguage");
+            fail("Absence of language attribute not detected");
+        } catch(BuildException ex) {
+            assertContains("script language must be specified", ex.getMessage());
+
+        }
     }
 
+    @Test
     public void testSelectionSetByDefault() {
-        executeTarget("testSelectionSetByDefault");
+        buildRule.executeTarget("testSelectionSetByDefault");
     }
+
+    @Test
     public void testSelectionSetWorks() {
-        executeTarget("testSelectionSetWorks");
+        buildRule.executeTarget("testSelectionSetWorks");
     }
+
+    @Test
     public void testSelectionClearWorks() {
-        executeTarget("testSelectionClearWorks");
+        buildRule.executeTarget("testSelectionClearWorks");
     }
+
+    @Test
     public void testFilenameAttribute() {
-        executeTarget("testFilenameAttribute");
+        buildRule.executeTarget("testFilenameAttribute");
     }
+
+    @Test
     public void testFileAttribute() {
-        executeTarget("testFileAttribute");
+        buildRule.executeTarget("testFileAttribute");
     }
+
+    @Test
     public void testBasedirAttribute() {
-        executeTarget("testBasedirAttribute");
+        buildRule.executeTarget("testBasedirAttribute");
     }
 
 }

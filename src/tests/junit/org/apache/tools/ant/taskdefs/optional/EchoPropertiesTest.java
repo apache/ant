@@ -18,17 +18,29 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
  * Tests the EchoProperties task.
@@ -36,7 +48,7 @@ import java.util.Properties;
  * @created   17-Jan-2002
  * @since     Ant 1.5
  */
-public class EchoPropertiesTest extends BuildFileTest {
+public class EchoPropertiesTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
     private static final String GOOD_OUTFILE = "test.properties";
@@ -44,144 +56,166 @@ public class EchoPropertiesTest extends BuildFileTest {
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
     private static final String TEST_VALUE = "isSet";
 
-    public EchoPropertiesTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
 
+    @Before
     public void setUp() {
-        configureProject(TASKDEFS_DIR + "echoproperties.xml");
-        project.setProperty( "test.property", TEST_VALUE );
+        buildRule.configureProject(TASKDEFS_DIR + "echoproperties.xml");
+        buildRule.getProject().setProperty("test.property", TEST_VALUE);
     }
 
 
+    @After
     public void tearDown() {
-        executeTarget("cleanup");
+        buildRule.executeTarget("cleanup");
     }
 
 
+    @Test
     public void testEchoToLog() {
-        expectLogContaining("testEchoToLog", "test.property="+TEST_VALUE);
+    	buildRule.executeTarget("testEchoToLog");
+    	assertContains("test.property=" + TEST_VALUE, buildRule.getLog());
     }
 
+    @Test
     public void testEchoWithEmptyPrefixToLog() {
-        expectLogContaining("testEchoWithEmptyPrefixToLog", "test.property="+TEST_VALUE);
+    	buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
+    	assertContains("test.property="+TEST_VALUE, buildRule.getLog());
     }
 
 
+    @Test
     public void testReadBadFile() {
-        expectBuildExceptionContaining( "testReadBadFile",
-            "srcfile is a directory", "srcfile is a directory!" );
+    	try {
+    		buildRule.executeTarget("testReadBadFile");
+    		fail("BuildException should have been thrown on bad file");
+    	}
+    	catch(BuildException ex) {
+    		assertContains("srcfile is a directory","srcfile is a directory!", ex.getMessage());
+    	}
     }
 
-
-    public void testReadBadFileFail() {
-        expectBuildExceptionContaining( "testReadBadFile",
-            "srcfile is a directory", "srcfile is a directory!" );
-    }
-
-
+    @Test
     public void testReadBadFileNoFail() {
-        expectLog( "testReadBadFileNoFail", "srcfile is a directory!" );
+        buildRule.executeTarget("testReadBadFileNoFail");
+        assertContains("srcfile is a directory!", buildRule.getLog());
     }
 
 
+    @Test
     public void testEchoToBadFile() {
-        expectBuildExceptionContaining( "testEchoToBadFile",
-            "destfile is a directory", "destfile is a directory!" );
+    	try {
+    		buildRule.executeTarget("testEchoToBadFile");
+            fail("BuildException should have been thrown on destination file being a directory");
+    	} catch(BuildException ex) {
+    		assertContains("destfile is a directory", "destfile is a directory!", ex.getMessage());
+    	}
     }
 
 
-    public void testEchoToBadFileFail() {
-        expectBuildExceptionContaining( "testEchoToBadFileFail",
-            "destfile is a directory", "destfile is a directory!" );
-    }
-
-
+    @Test
     public void testEchoToBadFileNoFail() {
-        expectLog( "testEchoToBadFileNoFail", "destfile is a directory!");
+    	buildRule.executeTarget("testEchoToBadFileNoFail");
+    	assertContains("destfile is a directory!", buildRule.getLog());
     }
 
 
+    @Test
     public void testEchoToGoodFile() throws Exception {
-        executeTarget( "testEchoToGoodFile" );
+        buildRule.executeTarget("testEchoToGoodFile");
         assertGoodFile();
     }
 
 
+    @Test
     public void testEchoToGoodFileXml() throws Exception {
-        executeTarget( "testEchoToGoodFileXml" );
+        buildRule.executeTarget("testEchoToGoodFileXml");
 
         // read in the file
-        File f = createRelativeFile( GOOD_OUTFILE_XML );
-        FileReader fr = new FileReader( f );
+        File f = createRelativeFile(GOOD_OUTFILE_XML);
+        FileReader fr = new FileReader(f);
+        BufferedReader br = new BufferedReader(fr);
         try {
-            BufferedReader br = new BufferedReader( fr );
             String read = null;
-            while ( (read = br.readLine()) != null) {
+            while ((read = br.readLine()) != null) {
                 if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\" />") >= 0) {
                     // found the property we set - it's good.
                     return;
                 }
             }
-            fail( "did not encounter set property in generated file." );
+            fail("did not encounter set property in generated file.");
         } finally {
             try {
                 fr.close();
+            } catch(IOException e) {}
+            try {
+                br.close();
             } catch(IOException e) {}
         }
     }
 
 
+    @Test
     public void testEchoToGoodFileFail() throws Exception {
-        executeTarget( "testEchoToGoodFileFail" );
+        buildRule.executeTarget("testEchoToGoodFileFail");
         assertGoodFile();
     }
 
 
+    @Test
     public void testEchoToGoodFileNoFail() throws Exception {
-        executeTarget( "testEchoToGoodFileNoFail" );
+        buildRule.executeTarget("testEchoToGoodFileNoFail");
         assertGoodFile();
     }
 
-
+    @Test
     public void testEchoPrefix() throws Exception {
         testEchoPrefixVarious("testEchoPrefix");
     }
 
+    @Test
     public void testEchoPrefixAsPropertyset() throws Exception {
         testEchoPrefixVarious("testEchoPrefixAsPropertyset");
     }
 
+    @Test
     public void testEchoPrefixAsNegatedPropertyset() throws Exception {
         testEchoPrefixVarious("testEchoPrefixAsNegatedPropertyset");
     }
 
+    @Test
     public void testEchoPrefixAsDoublyNegatedPropertyset() throws Exception {
         testEchoPrefixVarious("testEchoPrefixAsDoublyNegatedPropertyset");
     }
 
+    @Test
     public void testWithPrefixAndRegex() throws Exception {
-        expectSpecificBuildException("testWithPrefixAndRegex",
-                "The target must fail with prefix and regex attributes set",
-                "Please specify either prefix or regex, but not both");
+    	try {
+    		buildRule.executeTarget("testWithPrefixAndRegex");
+    		fail("BuildException should have been thrown on Prefix and RegEx beng set");
+    	} catch (BuildException ex) {
+    		assertEquals("The target must fail with prefix and regex attributes set", "Please specify either prefix or regex, but not both", ex.getMessage());
+    	}
     }
 
+    @Test
     public void testWithEmptyPrefixAndRegex() throws Exception {
-        expectLogContaining("testEchoWithEmptyPrefixToLog", "test.property="+TEST_VALUE);
+    	buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
+    	assertContains("test.property="+TEST_VALUE, buildRule.getLog());
     }
 
+    @Test
     public void testWithRegex() throws Exception {
-        if (!RegexpMatcherFactory.regexpMatcherPresent(project)) {
-            System.out.println("Test 'testWithRegex' skipped because no regexp matcher is present.");
-            return;
-        }
-        executeTarget("testWithRegex");
-        assertDebuglogContaining("ant.home=");
+        assumeTrue("Test skipped because no regexp matcher is present.", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
+        buildRule.executeTarget("testWithRegex");
+        // the following line has been changed from checking ant.home to ant.version so the test will still work when run outside of an ant script
+        assertContains("ant.version=", buildRule.getFullLog());
     }
 
     private void testEchoPrefixVarious(String target) throws Exception {
-        executeTarget(target);
+        buildRule.executeTarget(target);
         Properties props = loadPropFile(PREFIX_OUTFILE);
         assertEquals("prefix didn't include 'a.set' property",
             "true", props.getProperty("a.set"));
@@ -191,7 +225,7 @@ public class EchoPropertiesTest extends BuildFileTest {
 
     protected Properties loadPropFile(String relativeFilename)
             throws IOException {
-        File f = createRelativeFile( relativeFilename );
+        File f = createRelativeFile(relativeFilename);
         Properties props=new Properties();
         InputStream in=null;
         try  {
@@ -206,47 +240,27 @@ public class EchoPropertiesTest extends BuildFileTest {
     }
 
     protected void assertGoodFile() throws Exception {
-        File f = createRelativeFile( GOOD_OUTFILE );
-        assertTrue(
-            "Did not create "+f.getAbsolutePath(),
-            f.exists() );
+        File f = createRelativeFile(GOOD_OUTFILE);
+        assertTrue("Did not create "+f.getAbsolutePath(),
+            f.exists());
         Properties props=loadPropFile(GOOD_OUTFILE);
         props.list(System.out);
         assertEquals("test property not found ",
                      TEST_VALUE, props.getProperty("test.property"));
-/*
-        // read in the file
-        FileReader fr = new FileReader( f );
-        try {
-            BufferedReader br = new BufferedReader( fr );
-            String read = null;
-            while ( (read = br.readLine()) != null)
-            {
-                if (read.indexOf("test.property" + TEST_VALUE) >= 0)
-                {
-                    // found the property we set - it's good.
-                    return;
-                }
-            }
-            fail( "did not encounter set property in generated file." );
-        } finally {
-            try { fr.close(); } catch(IOException e) {}
-        }
-*/
     }
 
 
-    protected String toAbsolute( String filename ) {
-        return createRelativeFile( filename ).getAbsolutePath();
+    protected String toAbsolute(String filename) {
+        return createRelativeFile(filename).getAbsolutePath();
     }
 
 
-    protected File createRelativeFile( String filename ) {
-        if (filename.equals( "." )) {
-            return getProjectDir();
+    protected File createRelativeFile(String filename) {
+        if (filename.equals(".")) {
+            return buildRule.getProject().getBaseDir();
         }
         // else
-        return new File( getProjectDir(), filename );
+        return new File(buildRule.getProject().getBaseDir(), filename);
     }
 }
 

@@ -88,11 +88,8 @@
     <mkdir dir="${mirror.dir}/tar/bz2" />
     <touch file="${mirror.dir}/asf-logo.gif.md5"/>
     <touch file="${mirror.dir}/asf-logo.gif.bz2"/>
-    <sleep seconds="2"/>
     <touch file="${mirror.dir}/zip/asf-logo.gif.zip"/>
-    <sleep seconds="3"/>
     <touch file="${mirror.dir}/tar/asf-logo.gif.tar"/>
-    <sleep seconds="2"/>
     <touch file="${mirror.dir}/tar/asf-logo-huge.tar.gz"/>
     <touch file="${mirror.dir}/tar/gz/asf-logo.gif.tar.gz"/>
     <touch file="${mirror.dir}/tar/bz2/asf-logo.gif.tar.bz2"/>

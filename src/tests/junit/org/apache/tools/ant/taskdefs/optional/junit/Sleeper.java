@@ -17,21 +17,14 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import junit.framework.TestCase;
 
-/**
- */
-public class Sleeper extends TestCase {
+import org.junit.Test;
 
-    public Sleeper(String name) {
-        super(name);
-    }
+public class Sleeper {
 
-    public void testSleep() {
-        try {
-            Thread.sleep(5 * 1000);
-        } catch (InterruptedException e) {
-        } // end of try-catch
+    @Test
+    public void testSleep() throws InterruptedException {
+        Thread.sleep(5 * 1000);
     }
 
 }

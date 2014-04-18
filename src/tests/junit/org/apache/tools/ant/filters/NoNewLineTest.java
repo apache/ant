@@ -20,24 +20,29 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /** JUnit Testcases for No new line when filterchain used
  */
 
 
-public class NoNewLineTest extends BuildFileTest {
+public class NoNewLineTest  {
 
-    public NoNewLineTest(String name) {
-        super(name);
-    }
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/filters/build.xml");
+        buildRule.configureProject("src/etc/testcases/filters/build.xml");
     }
 
+
+    @Test
     public void testNoAddNewLine() throws IOException {
-        executeTarget("testNoAddNewLine");
+        buildRule.executeTarget("testNoAddNewLine");
     }
 
 

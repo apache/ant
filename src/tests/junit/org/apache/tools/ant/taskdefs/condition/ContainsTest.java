@@ -18,18 +18,17 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testcase for the &lt;contains&gt; condition.
  *
  */
-public class ContainsTest extends TestCase {
+public class ContainsTest  {
 
-    public ContainsTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testCaseSensitive() {
         Contains con = new Contains();
         con.setString("abc");

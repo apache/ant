@@ -18,32 +18,54 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class EchoXMLTest extends BuildFileTest {
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.fail;
 
-    public EchoXMLTest(String name) {
-        super(name);
-    }
+public class EchoXMLTest {
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/echoxml.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/echoxml.xml");
     }
 
+    @After
     public void tearDown() {
-        executeTarget("tearDown");
+        buildRule.executeTarget("tearDown");
     }
 
+    @Test
     public void testPass() {
-        executeTarget("testPass");
+        buildRule.executeTarget("testPass");
     }
 
+    @Test
     public void testFail() {
-        expectBuildExceptionContaining("testFail", "must fail", "${foo}=bar");
+        try {
+            buildRule.executeTarget("testFail");
+            fail("BuildException expected: must fail");
+        } catch (BuildException ex) {
+            assertContains("${foo}=bar", ex.getMessage());
+        }
     }
 
+    @Test
     public void testEmpty() {
-        expectBuildExceptionContaining("testEmpty", "must fail", "No nested XML specified");
+        try {
+            buildRule.executeTarget("testEmpty");
+            fail("BuildException expected: must fail");
+        } catch (BuildException ex) {
+            assertContains("No nested XML specified", ex.getMessage());
+        }
     }
 
 }

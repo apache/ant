@@ -18,68 +18,77 @@
 
 package org.apache.tools.ant.taskdefs.email;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @since Ant 1.6
  */
-public class EmailAddressTest extends TestCase {
+public class EmailAddressTest {
 
-    public EmailAddressTest(String name) {
-        super(name);
-    }
-
-    public void setUp() {
-    }
-
+    @Test
     public void test1() {
         expectNameAddress( new EmailAddress("address (name)") );
     }
 
+    @Test
     public void test2() {
         expectNameAddress( new EmailAddress("(name) address") );
     }
 
+    @Test
     public void test3() {
         expectNameAddress( new EmailAddress("name <address>") );
     }
 
+    @Test
     public void test4() {
         expectNameAddress( new EmailAddress("<address> name") );
     }
 
+    @Test
     public void test5() {
         expectNameAddress( new EmailAddress("<address> (name)") );
     }
 
+    @Test
     public void test6() {
         expectNameAddress( new EmailAddress("(name) <address>") );
     }
 
+    @Test
     public void test7() {
         expectNameAddress2( new EmailAddress("address (<name>)") );
     }
 
+    @Test
     public void test8() {
         expectNameAddress2( new EmailAddress("(<name>) address") );
     }
 
+    @Test
     public void test9() {
         expectNameAddress3( new EmailAddress("address") );
     }
 
+    @Test
     public void testA() {
         expectNameAddress3( new EmailAddress("<address>") );
     }
 
+    @Test
     public void testB() {
         expectNameAddress3( new EmailAddress(" <address> ") );
     }
 
+    @Test
     public void testC() {
         expectNameAddress3( new EmailAddress("< address >") );
     }
 
+    @Test
     public void testD() {
         expectNameAddress3( new EmailAddress(" < address > ") );
     }
@@ -97,8 +106,7 @@ public class EmailAddressTest extends TestCase {
 
     // where only an address is supplied
     private void expectNameAddress3(EmailAddress e) {
-        assertTrue( "Expected null, found <" + e.getName() + ">",
-            e.getName() == null );
+        assertNull("Expected null, found <" + e.getName() + ">", e.getName());
         assertEquals( "address", e.getAddress() );
     }
 }
