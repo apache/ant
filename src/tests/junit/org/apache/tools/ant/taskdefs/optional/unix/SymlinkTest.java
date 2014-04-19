@@ -289,7 +289,9 @@ public class SymlinkTest {
 
     @After
     public void tearDown() {
-        buildRule.executeTarget("tearDown");
+        if (buildRule.getProject() != null) {
+            buildRule.executeTarget("tearDown");
+        }
     }
 
 }
