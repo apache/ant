@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ExecuteWatchdogTest {
 
-    private final static long TIME_OUT = 500;
+    private final static long TIME_OUT = 5000;
 
     private final static String TEST_CLASSPATH = getTestClassPath();
 
