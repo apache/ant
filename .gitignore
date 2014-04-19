@@ -19,3 +19,5 @@ target
 velocity.log*
 lib/optional/*.jar
 src/tests/antunit/core/output
+.idea
+*.iml
