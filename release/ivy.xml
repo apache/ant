@@ -20,7 +20,7 @@
             xsi:noNamespaceSchemaLocation=
 	    "http://ant.apache.org/ivy/schemas/ivy.xsd">
   <info organisation="org/apache"
-        module="ant" revision="1.9.4"/>
+        module="ant" revision="1.9.5"/>
   <publications xmlns:e="urn:ant.apache.org:ivy-extras">  
     <artifact name="ant-parent" type="pom" ext="pom"/>
     <artifact name="ant-parent" type="pom.asc" ext="pom.asc"/>
