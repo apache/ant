@@ -32,10 +32,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion exactly="1.9.4" />
+					<antversion exactly="1.9.5" />
 				</not>
 			</condition>
-			Should be exactly 1.9.4
+			Should be exactly 1.9.5
 
   		</fail>
 	</target>
@@ -45,10 +45,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion atleast="1.9.4" />
+					<antversion atleast="1.9.5" />
 				</not>
 			</condition>
-  	  	Should be at least 1.9.4
+  	  	Should be at least 1.9.5
   		</fail>
 	</target>
 
@@ -57,10 +57,10 @@
 		<fail>
 			<condition>
 				<not>
-					<antversion exactly="1.9.4" />
+					<antversion exactly="1.9.5" />
 				</not>
 			</condition>
-	  	  Should be exactly 1.9.4
+	  	  Should be exactly 1.9.5
 	  	</fail>
 	</target>
 </project>

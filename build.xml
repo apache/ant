@@ -34,10 +34,10 @@
   <property name="name" value="ant"/>
   <!-- this is the groupId of ant in the Maven repository -->
   <property name="groupid" value="org/apache/ant"/>
-  <property name="project.version" value="1.9.4"/>
+  <property name="project.version" value="1.9.5alpha"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
-  <property name="pom.version" value="1.9.4-SNAPSHOT"/>
-  <property name="manifest-version" value="1.9.4"/>
+  <property name="pom.version" value="1.9.5-SNAPSHOT"/>
+  <property name="manifest-version" value="1.9.5"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>

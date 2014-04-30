@@ -25,7 +25,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-parent</artifactId>
-  <version>1.9.4-SNAPSHOT</version>
+  <version>1.9.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>master POM</description>
   <licenses>
