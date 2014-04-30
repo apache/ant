@@ -1,4 +1,4 @@
-Changes from Ant 1.9.3 TO current
+Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
 Changes that could break older environments:
@@ -13,11 +13,11 @@ Changes that could break older environments:
    Bugzilla Report 54769
 
  * when matching an entry of a zip/tarfileset against a pattern a
-   leading slash will be stripped from the entry name.  Most archive
+   leading slash will be stripped from the entry name.  Most archives
    don't contain paths with leading slashes anyway.
    This may cause include/exclude patterns that start with a / to stop
    matching anything.  Such patterns only used to work by accident and
-   only on platforms with multiple file syste roots.
+   only on platforms with multiple file system roots.
    Bugzilla Report 53949
 
  * DirectoryScanner and thus fileset/dirset will now silently drop all
