@@ -1204,8 +1204,10 @@
   </target>
 
   <condition property="buildosxpackage">
-    <os family="mac"/>
-    <isset property="buildosxpackage.required"/>
+    <and>
+       <os family="mac"/>
+       <isset property="buildosxpackage.required"/>
+    </and>
   </condition>
 
   <target name="pkg_distribution" depends="zip_distribution" if="buildosxpackage">
