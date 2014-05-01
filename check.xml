@@ -161,7 +161,7 @@
   	<fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
-  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy" xmlns:fb="http://findbugs.sourceforge.net/">
+  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build" xmlns:fb="http://findbugs.sourceforge.net/">
     <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="1.3.9"
                    inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
     <!-- Load the Findbugs AntTasks -->               
