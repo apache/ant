@@ -1460,7 +1460,7 @@
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*"/>
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*"/>
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*"/>
-
+      <classpath refid="tests-classpath"/>
     </javadoc>
   </target>
 
@@ -1484,7 +1484,7 @@
       <fileset dir="${src.junit}">
         <patternset refid="useful.tests"/>
       </fileset>
-
+      <classpath refid="tests-classpath"/>
     </javadoc>
   </target>
 
