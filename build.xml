@@ -1021,6 +1021,7 @@
 
     <copy todir="${dist.dir}">
       <fileset dir="${basedir}">
+        <include name="CONTRIBUTORS"/>
         <include name="README"/>
         <include name="INSTALL"/>
         <include name="LICENSE"/>
@@ -1031,8 +1032,10 @@
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
+        <include name="contributors.xml"/>
         <include name="fetch.xml"/>
         <include name="get-m2.xml"/>
+        <include name="patch.xml"/>
       </fileset>
     </copy>
 
