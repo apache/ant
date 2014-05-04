@@ -1032,7 +1032,7 @@
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
         <include name="fetch.xml"/>
-	<include name="get-m2.xml"/>
+        <include name="get-m2.xml"/>
       </fileset>
     </copy>
 
@@ -1437,7 +1437,7 @@
     description="--> creates the API documentation" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
-      maxmemory="1000M"	
+      maxmemory="1000M" 
       destdir="${build.javadocs}"
       author="true"
       version="true"
@@ -1548,7 +1548,7 @@
     <echo message="os.version=${os.version}"/>
     <echo message="file.encoding=${file.encoding}"/>
     <echo message="user.language=${user.language}"/>
-  	<echo message="ant.version=${ant.version}"/>
+    <echo message="ant.version=${ant.version}"/>
   </target>
 
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
