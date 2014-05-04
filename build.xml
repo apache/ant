@@ -1117,23 +1117,26 @@
 
     <copy todir="${src.dist.dir}">
       <fileset dir="${basedir}">
-        <include name="README"/>
+        <include name="CONTRIBUTORS"/>
         <include name="INSTALL"/>
+        <include name="KEYS"/>
         <include name="LICENSE"/>
-        <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
         <include name="LICENSE.sax"/>
+        <include name="LICENSE.xerces"/>
         <include name="NOTICE"/>
+        <include name="README"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
-        <include name="KEYS"/>
-        <include name="build.bat"/>
-        <include name="build.sh"/>
         <include name="bootstrap.bat"/>
         <include name="bootstrap.sh"/>
+        <include name="build.bat"/>
+        <include name="build.sh"/>
         <include name="build.xml"/>
+        <include name="contributors.xml"/>
         <include name="fetch.xml"/>
-	<include name="get-m2.xml"/>
+        <include name="get-m2.xml"/>
+        <include name="patch.xml"/>
       </fileset>
     </copy>
 
