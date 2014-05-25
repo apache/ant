@@ -42,15 +42,13 @@ public class BZip2Test {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    private File outputDir;
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/bzip2.xml");
+        outputDir = new File(buildRule.getProject().getProperty("output"));
         buildRule.executeTarget("prepare");
-    }
-
-    @After
-    public void tearDown() {
-        buildRule.executeTarget("cleanup");
     }
 
     @Test
@@ -68,7 +66,7 @@ public class BZip2Test {
 
         File originalFile =
             buildRule.getProject().resolveFile("expected/asf-logo-huge.tar.bz2");
-        File actualFile   = buildRule.getProject().resolveFile("asf-logo-huge.tar.bz2");
+        File actualFile   = new File(outputDir, "asf-logo-huge.tar.bz2");
 
         InputStream originalIn =
             new BufferedInputStream(new FileInputStream(originalFile));
