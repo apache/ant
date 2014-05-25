@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.junit.Before;
@@ -32,15 +33,13 @@ public class BUnzip2Test {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    private File outputDir;
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/bunzip2.xml");
+        outputDir = new File(buildRule.getProject().getProperty("output"));
         buildRule.executeTarget("prepare");
-    }
-
-    @Test
-    public void tearDown() {
-        buildRule.executeTarget("cleanup");
     }
 
     @Test
@@ -56,8 +55,8 @@ public class BUnzip2Test {
     private void testRealTest(String target) throws java.io.IOException {
         buildRule.executeTarget(target);
         assertEquals("File content mismatch after bunzip2",
-                FileUtilities.getFileContents(buildRule.getProject().resolveFile("expected/asf-logo-huge.tar")),
-                FileUtilities.getFileContents(buildRule.getProject().resolveFile("asf-logo-huge.tar")));
+                FileUtilities.getFileContents(new File(outputDir, "asf-logo-huge-from-gzip.tar")),
+                FileUtilities.getFileContents(new File(outputDir, "asf-logo-huge.tar")));
     }
 
     @Test
