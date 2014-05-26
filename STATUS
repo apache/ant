@@ -1,10 +1,10 @@
 Apache Ant Status
-Last modified at 2010-07-20
+Last modified at 2014-05-26
 
 Release:
-    Current:        1.8.3  (in SVN Tag: ANT_183)
-    Maintenance:    1.8.x  (in SVN Branch: ANT_18_BRANCH)
-    Development:    1.9.0  (in SVN Branch: trunk)
+    Current:        1.9.4  (in GIT Tag: ANT_194)
+    Maintenance:    1.9.x  (in GIT Branch: master)
+    Development:    1.9.5  (in GIT Branch: master)
 
 Assets:
     DNS:                ant.apache.org
@@ -14,8 +14,7 @@ Assets:
 
     Web site:           http://ant.apache.org/
 
-    Repositories:       ant
-    Module:             core
+    Repositories:       ant.git
 
 PMC Members
  see http://ant.apache.org/contributors.html
