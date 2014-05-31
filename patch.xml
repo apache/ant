@@ -26,36 +26,23 @@
     <property name="patch.package" value="patch.tar.gz"/>
     <property name="patch.file" value="patch.txt"/>
 
-    <condition property="svn.found">
+    <condition property="git.found">
         <or>
-            <available file="svn" filepath="${env.PATH}"/>
-            <available file="svn.exe" filepath="${env.PATH}"/>
-            <available file="svn.exe" filepath="${env.Path}"/>
+            <available file="git" filepath="${env.PATH}"/>
+            <available file="git.exe" filepath="${env.PATH}"/>
+            <available file="git.exe" filepath="${env.Path}"/>
         </or>
     </condition>
 
     <target name="createpatch">
-        <fail unless="svn.found"
-              message="You need a version of svn to create the patch"/>
-        <exec executable="svn" output="${patch.file}">
+        <fail unless="git.found"
+              message="You need a version of git to create the patch"/>
+        <exec executable="git" output="${patch.file}">
             <arg value="diff"/>
         </exec>
     </target>
 
-    <target name="newfiles" depends="createpatch">
-        <delete file="${patch.package}"/>
-        <exec executable="svn" output="${patch.file}.tmp">
-            <arg value="status"/>
-        </exec>
-        <replace file="${patch.file}.tmp" token="?      " value=""/>
-    </target>
-
-    <target name="patchpackage" depends="newfiles">
-        <tar basedir="${basedir}"
-            tarfile="${patch.package}"
-            compression="gzip"
-            includesfile="${patch.file}.tmp"
-            excludes="${patch.file}.tmp"/>
-        <delete file="${patch.file}.tmp"/>
+    <target name="patchpackage" depends="createpatch">
+        <gzip src="${patch.file}" destfile="${patch.file}.gz"/>
     </target>
 </project>

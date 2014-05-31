@@ -51,9 +51,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     </repository>
   </distributionManagement>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/ant/core/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/ant/core/trunk</developerConnection>
-    <url>http://svn.apache.org/repos/asf/ant/core/trunk</url>
+    <connection>scm:git:https://svn.apache.org/repos/asf/ant.git</connection>
+    <developerConnection>scm:git:https://svn.apache.org/repos/asf/ant.git</developerConnection>
+    <url>https://svn.apache.org/repos/asf/ant.git</url>
   </scm>
   <ciManagement>
     <system>hudson</system>
