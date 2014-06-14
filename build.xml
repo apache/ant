@@ -353,7 +353,10 @@
        ===================================================================
   -->
   <patternset id="useful.tests">
+    <include name="${ant.package}/AntAssert*"/>
     <include name="${ant.package}/BuildFileTest*"/>
+    <include name="${ant.package}/BuildFileRule*"/>
+    <include name="${ant.package}/FileUtilities*"/>
     <include name="${regexp.package}/RegexpMatcherTest*"/>
     <include name="${regexp.package}/RegexpTest*"/>
     <include name="${optional.package}/AbstractXSLTLiaisonTest*"/>
