@@ -60,7 +60,7 @@ public class TarUtils {
 
             public String decode(byte[] buffer) {
                 final int length = buffer.length;
-                StringBuffer result = new StringBuffer(length);
+                StringBuilder result = new StringBuilder(length);
 
                 for (int i = 0; i < length; ++i) {
                     byte b = buffer[i];
@@ -130,10 +130,6 @@ public class TarUtils {
             end--;
             trailer = buffer[end - 1];
         }
-        if (start == end) {
-            throw new IllegalArgumentException(
-                    exceptionMessage(buffer, offset, length, start, trailer));
-        }
 
         for ( ;start < end; start++) {
             final byte currentByte = buffer[start];
@@ -194,7 +190,7 @@ public class TarUtils {
         if (negative) {
             // 2's complement
             val--;
-            val ^= ((long) Math.pow(2, (length - 1) * 8) - 1);
+            val ^= (long) Math.pow(2, (length - 1) * 8) - 1;
         }
         return negative ? -val : val;
     }
@@ -236,7 +232,15 @@ public class TarUtils {
     // Helper method to generate the exception message
     private static String exceptionMessage(byte[] buffer, final int offset,
             final int length, int current, final byte currentByte) {
-        String string = new String(buffer, offset, length); // TODO default charset?
+        // default charset is good enough for an exception message,
+        //
+        // the alternative was to modify parseOctal and
+        // parseOctalOrBinary to receive the ZipEncoding of the
+        // archive (deprecating the existing public methods, of
+        // course) and dealing with the fact that ZipEncoding#decode
+        // can throw an IOException which parseOctal* doesn't declare
+        String string = new String(buffer, offset, length);
+
         string=string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
         final String s = "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
         return s;
@@ -549,8 +553,8 @@ public class TarUtils {
     public static long computeCheckSum(final byte[] buf) {
         long sum = 0;
 
-        for (int i = 0; i < buf.length; ++i) {
-            sum += BYTE_MASK & buf[i];
+        for (byte element : buf) {
+            sum += BYTE_MASK & element;
         }
 
         return sum;
