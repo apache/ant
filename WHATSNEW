@@ -7,12 +7,13 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* TarArchiveInputStream failed to read archives with empty gid/uid
-  fields.
-  Bugzilla Report 56641
+ * TarArchiveInputStream failed to read archives with empty gid/uid
+   fields.
+   Bugzilla Report 56641
 
-* TarArchiveInputStream could throw IOException when reading PAX
-  headers from a "slow" InputStream.
+ * TarArchiveInputStream could throw IOException when reading PAX
+   headers from a "slow" InputStream.
+
 
 Other changes:
 --------------
