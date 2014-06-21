@@ -14,6 +14,9 @@ Fixed bugs:
  * TarArchiveInputStream could throw IOException when reading PAX
    headers from a "slow" InputStream.
 
+ * XMLJunitResultFormatter could throw NullPointerException if Java
+   cannot determine the local hostname.
+   Bugzilla Report 56593
 
 Other changes:
 --------------
