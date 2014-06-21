@@ -11,6 +11,9 @@ Fixed bugs:
   fields.
   Bugzilla Report 56641
 
+* TarArchiveInputStream could throw IOException when reading PAX
+  headers from a "slow" InputStream.
+
 Other changes:
 --------------
 
