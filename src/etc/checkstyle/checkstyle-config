@@ -18,6 +18,19 @@
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.1//EN" "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
 
 <module name="Checker">
+
+  <!-- required licence file -->
+  <module name="Header">
+      <property name="headerFile" value="${config.dir}/RequiredHeader.txt"/>
+      <property name="ignoreLines" value="2"/>
+  </module>
+  
+  <!-- size limits -->
+  <module name="FileLength"/>
+
+  <module name="FileTabCharacter"/>
+  
+
   <module name="TreeWalker">
     <!-- Javadoc requirements -->
     <module name="JavadocType">
@@ -42,12 +55,6 @@
     <module name="ParameterName"/>
     <module name="StaticVariableName"/>
 
-    <!-- required licence file -->
-    <module name="Header">
-        <property name="headerFile" value="${config.dir}/RequiredHeader.txt"/>
-        <property name="ignoreLines" value="2"/>
-    </module>
-
     <!-- Import conventions -->
     <module name="AvoidStarImport"/>
     <module name="IllegalImport"/>
@@ -55,7 +62,6 @@
     <module name="UnusedImports"/>
 
     <!-- size limits -->
-    <module name="FileLength"/>
     <module name="LineLength">
       <property name="max" value="100"/>
       <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
@@ -69,14 +75,12 @@
     <module name="NoWhitespaceBefore"/>
     <module name="OperatorWrap"/>
     <module name="ParenPad"/>
-    <module name="TabCharacter"/>
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
 
     <!-- Modifier Checks -->
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
-
 
     <!-- Checks for blocks -->
     <module name="AvoidNestedBlocks"/>
@@ -87,10 +91,8 @@
     <module name="NeedBraces"/>
     <module name="RightCurly"/>
 
-
     <!-- Checks for common coding problems -->
     <!--<module name="AvoidInlineConditionals"/> -->
-    <module name="DoubleCheckedLocking"/>
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
     <module name="IllegalInstantiation">
@@ -116,19 +118,22 @@
 
     <!-- Miscellaneous other checks. -->
     <module name="ArrayTypeStyle"/>
-    <module name="GenericIllegalRegexp">
-      <property name="format" value="\s+$"/>
-      <property name="message" value="Line has trailing spaces."/>
-    </module>
     <!-- <module name="TodoComment"/> -->
     <module name="UpperEll"/>
     <!-- allow comment suppression of checks -->
     <module name="FileContentsHolder"/>
   </module>
+
+  <module name="RegexpSingleline">
+    <!-- \s matches whitespace character, $ matches end of line. -->
+    <property name="format" value="\s+$"/>
+  </module>
+  
   <!-- <module name="au.com.redhillconsulting.simian.SimianCheck"/> -->
   <module name="SuppressionCommentFilter">
     <property name="offCommentFormat" value="CheckStyle\:([\w\|]+) *OFF"/>
     <property name="onCommentFormat" value="CheckStyle\:([\w\|]+) *ON"/>
     <property name="checkFormat" value="$1"/>
   </module>
+
 </module>

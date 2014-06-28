@@ -91,7 +91,7 @@
   </target>
 
   <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
-    <ivy:cachepath organisation="checkstyle" module="checkstyle" revision="4.4"
+    <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="5.7"
                    inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
     <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
     <mkdir dir="${checkstyle.reportdir}"/>
