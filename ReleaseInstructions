@@ -173,9 +173,6 @@ Note: This document was updated in the context of releasing Ant 1.9.3.
     days pass and there are no major problems, a wider announcement is
     made (ant website, announce@apache.org, etc).
 
-    Announce beta releases at freecode.com (Stefan Bodewig is the
-    owner of Ant's project entry - bug him ;-).
-
 17. As problems in the beta are discovered, there may be a need for
     one or more subsequent betas. The release manager makes this
     call. Each time, the versions are updated and the above process is
@@ -255,9 +252,6 @@ Note: This document was updated in the context of releasing Ant 1.9.3.
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
-
-    Announce release at freecode.com
-    (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
 25. Add a new release tag to doap_Ant.rdf in Ant's site.
 

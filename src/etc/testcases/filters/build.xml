@@ -100,6 +100,39 @@
     </copy>
   </target>
 
+  <target name="testReplaceTokensDoubleEncoded" depends="setUp">
+    <copy todir="${output}">
+      <fileset dir="input" includes="replacetokens.double.test" />
+      <filterchain>
+        <replacetokens>
+          <token key="foo" value=""/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testReplaceTokensDoubleEncodedToSimple" depends="setUp">
+    <copy todir="${output}">
+      <fileset dir="input" includes="replacetokens.double.test" />
+      <filterchain>
+        <replacetokens begintoken="@@" endtoken="@@">
+          <token key="foo" value=""/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testReplaceTokensMustacheStyle" depends="setUp">
+    <copy todir="${output}">
+      <fileset dir="input" includes="replacetokens.mustache.test" />
+      <filterchain>
+        <replacetokens begintoken="{{" endtoken="}}">
+          <token key="foo" value=""/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+  </target>
+
   <target name="testNoAddNewLine" depends="setUp">
     <concat destfile="${output}/nonl">This has no new lines</concat>
     <copy file="${output}/nonl" tofile="${output}/nonl-copyfilter">

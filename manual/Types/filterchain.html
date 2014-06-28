@@ -551,14 +551,14 @@ user defined values.
   <tr>
     <td vAlign=top>tokenchar</td>
     <td vAlign=top>begintoken</td>
-    <td vAlign=top>Character marking the
+    <td vAlign=top>String marking the
     beginning of a token.  Defaults to @</td>
     <td vAlign=top align="center">No</td>
   </tr>
   <tr>
     <td vAlign=top>tokenchar</td>
     <td vAlign=top>endtoken</td>
-    <td vAlign=top>Character marking the
+    <td vAlign=top>String marking the
     end of a token.  Defaults to @</td>
     <td vAlign=top align="center">No</td>
   </tr>
@@ -620,6 +620,31 @@ Convenience method:
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
     &lt;replacetokens&gt;
+      &lt;token key=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
+    &lt;/replacetokens&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</pre></blockquote>
+
+This replaces occurrences of the string {{DATE}} in the data
+with today's date and stores it in the property ${src.file.replaced}.
+<blockquote><pre>
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ReplaceTokens&quot;&gt;
+      &lt;param type=&quot;tokenchar&quot; name=&quot;begintoken&quot; value=&quot;{{&quot;/&gt;
+      &lt;param type=&quot;tokenchar&quot; name=&quot;endtoken&quot; value=&quot;}}&quot;/&gt;
+    &lt;/filterreader&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</pre></blockquote>
+
+Convenience method:
+<blockquote><pre>
+&lt;tstamp/&gt;
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;replacetokens begintoken=&quot;{{&quot; endtoken=&quot;}}&quot;&gt;
       &lt;token key=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
     &lt;/replacetokens&gt;
   &lt;/filterchain&gt;

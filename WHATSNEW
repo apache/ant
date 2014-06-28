@@ -4,8 +4,28 @@ Changes from Ant 1.9.4 TO Ant 1.9.5
 Changes that could break older environments:
 -------------------------------------------
 
+ * The ReplaceTokens filter can now use token-separators longer than
+   one character.  This means it can be used to replace mustache-style
+   {{patterns}} and similar templates.  This is going to break code
+   that invokes the setters on ReplaceTokens via the Java API as their
+   parameters have been changed from char to String.  It may also
+   break build files that specified multi character tokens and relied
+   on Ant silently ignoring all but the first character.
+   Bugzilla Report 56584
+
 Fixed bugs:
 -----------
+
+ * TarArchiveInputStream failed to read archives with empty gid/uid
+   fields.
+   Bugzilla Report 56641
+
+ * TarArchiveInputStream could throw IOException when reading PAX
+   headers from a "slow" InputStream.
+
+ * XMLJunitResultFormatter could throw NullPointerException if Java
+   cannot determine the local hostname.
+   Bugzilla Report 56593
 
 Other changes:
 --------------

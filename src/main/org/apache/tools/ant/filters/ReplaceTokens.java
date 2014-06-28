@@ -24,7 +24,9 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-import org.apache.tools.ant.BuildException;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -52,13 +54,19 @@ public final class ReplaceTokens
     extends BaseParamFilterReader
     implements ChainableReader {
     /** Default "begin token" character. */
-    private static final char DEFAULT_BEGIN_TOKEN = '@';
+    private static final String DEFAULT_BEGIN_TOKEN = "@";
 
     /** Default "end token" character. */
-    private static final char DEFAULT_END_TOKEN = '@';
+    private static final String DEFAULT_END_TOKEN = "@";
 
-    /** Data to be used before reading from stream again */
-    private String queuedData = null;
+    /** Hashtable to holds the original replacee-replacer pairs (String to String). */
+    private Hashtable<String, String> hash = new Hashtable<String, String>();
+
+    /** This map holds the "resolved" tokens (begin- and end-tokens are added to make searching simpler) */
+    private final TreeMap<String, String> resolvedTokens = new TreeMap<String, String>();
+    private boolean resolvedTokensBuilt = false;
+    /** Used for comparisons and lookup into the resolvedTokens map. */
+    private String readBuffer = "";
 
     /** replacement test from a token */
     private String replaceData = null;
@@ -66,26 +74,18 @@ public final class ReplaceTokens
     /** Index into replacement data */
     private int replaceIndex = -1;
 
-    /** Index into queue data */
-    private int queueIndex = -1;
-
-    /** Hashtable to hold the replacee-replacer pairs (String to String). */
-    private Hashtable<String, String> hash = new Hashtable<String, String>();
-
     /** Character marking the beginning of a token. */
-    private char beginToken = DEFAULT_BEGIN_TOKEN;
+    private String beginToken = DEFAULT_BEGIN_TOKEN;
 
     /** Character marking the end of a token. */
-    private char endToken = DEFAULT_END_TOKEN;
+    private String endToken = DEFAULT_END_TOKEN;
 
     /**
      * Constructor for "dummy" instances.
      *
      * @see BaseFilterReader#BaseFilterReader()
      */
-    public ReplaceTokens() {
-        super();
-    }
+    public ReplaceTokens() {}
 
     /**
      * Creates a new filtered reader.
@@ -95,18 +95,6 @@ public final class ReplaceTokens
      */
     public ReplaceTokens(final Reader in) {
         super(in);
-    }
-
-    private int getNextChar() throws IOException {
-        if (queueIndex != -1) {
-            final int ch = queuedData.charAt(queueIndex++);
-            if (queueIndex >= queuedData.length()) {
-                queueIndex = -1;
-            }
-            return ch;
-        }
-
-        return in.read();
     }
 
     /**
@@ -125,63 +113,66 @@ public final class ReplaceTokens
             setInitialized(true);
         }
 
-        if (replaceIndex != -1) {
-            final int ch = replaceData.charAt(replaceIndex++);
-            if (replaceIndex >= replaceData.length()) {
-                replaceIndex = -1;
+        if (!resolvedTokensBuilt) {
+            // build the resolved tokens tree map.
+            for (String key : hash.keySet()) {
+                resolvedTokens.put(beginToken + key + endToken, hash.get(key));
             }
-            return ch;
+            resolvedTokensBuilt = true;
         }
 
-        int ch = getNextChar();
-
-        if (ch == beginToken) {
-            final StringBuffer key = new StringBuffer("");
-            do  {
-                ch = getNextChar();
-                if (ch != -1) {
-                    key.append((char) ch);
-                } else {
-                    break;
-                }
-            } while (ch != endToken);
-
-            if (ch == -1) {
-                if (queuedData == null || queueIndex == -1) {
-                    queuedData = key.toString();
-                } else {
-                    queuedData
-                        = key.toString() + queuedData.substring(queueIndex);
-                }
-                if (queuedData.length() > 0) {
-                    queueIndex = 0;
-                } else {
-                    queueIndex = -1;
-                }
-                return beginToken;
+        // are we currently serving replace data?
+        if (replaceData != null) {
+            if (replaceIndex < replaceData.length()) {
+                return replaceData.charAt(replaceIndex++);
             } else {
-                key.setLength(key.length() - 1);
+                replaceData = null;
+            }
+        }
 
-                final String replaceWith = (String) hash.get(key.toString());
-                if (replaceWith != null) {
-                    if (replaceWith.length() > 0) {
-                        replaceData = replaceWith;
-                        replaceIndex = 0;
-                    }
-                    return read();
+        // is the read buffer empty?
+        if (readBuffer.length() == 0) {
+            int next = in.read();
+            if (next == -1) {
+                return next; // end of stream. all buffers empty.
+            }
+            readBuffer += (char)next;
+        }
+
+        for (;;) {
+            // get the closest tokens
+            SortedMap<String,String> possibleTokens = resolvedTokens.tailMap(readBuffer);
+            if (possibleTokens.isEmpty() || !possibleTokens.firstKey().startsWith(readBuffer)) { // if there is none, then deliver the first char from the buffer.
+                return getFirstCharacterFromReadBuffer();
+            } else if (readBuffer.equals(possibleTokens.firstKey())) { // there exists a nearest token - is it an exact match?
+                // we have found a token. prepare the replaceData buffer.
+                replaceData = resolvedTokens.get(readBuffer);
+                replaceIndex = 0;
+                readBuffer = ""; // destroy the readBuffer - it's contents are being replaced entirely.
+                // get the first character via recursive call.
+                return read();
+            } else { // nearest token is not matching exactly - read one character more.
+                int next = in.read();
+                if (next != -1) {
+                    readBuffer += (char)next;
                 } else {
-                    String newData = key.toString() + endToken;
-                    if (queuedData == null || queueIndex == -1) {
-                        queuedData = newData;
-                    } else {
-                        queuedData = newData + queuedData.substring(queueIndex);
-                    }
-                    queueIndex = 0;
-                    return beginToken;
+                    return getFirstCharacterFromReadBuffer(); // end of stream. deliver remaining characters from buffer.
                 }
             }
         }
-        return ch;
+    }
+
+    /**
+     * @return the first character from the read buffer or -1 if read buffer is empty.
+     */
+    private int getFirstCharacterFromReadBuffer() {
+        if (readBuffer.length() > 0) {
+            int chr = readBuffer.charAt(0);
+            readBuffer = readBuffer.substring(1);
+            return chr;
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -189,7 +180,7 @@ public final class ReplaceTokens
      *
      * @param beginToken the character used to denote the beginning of a token
      */
-    public void setBeginToken(final char beginToken) {
+    public void setBeginToken(final String beginToken) {
         this.beginToken = beginToken;
     }
 
@@ -198,7 +189,7 @@ public final class ReplaceTokens
      *
      * @return the character used to denote the beginning of a token
      */
-    private char getBeginToken() {
+    private String getBeginToken() {
         return beginToken;
     }
 
@@ -207,7 +198,7 @@ public final class ReplaceTokens
      *
      * @param endToken the character used to denote the end of a token
      */
-    public void setEndToken(final char endToken) {
+    public void setEndToken(final String endToken) {
         this.endToken = endToken;
     }
 
@@ -216,7 +207,7 @@ public final class ReplaceTokens
      *
      * @return the character used to denote the end of a token
      */
-    private char getEndToken() {
+    private String getEndToken() {
         return endToken;
     }
 
@@ -238,18 +229,19 @@ public final class ReplaceTokens
      */
     public void addConfiguredToken(final Token token) {
         hash.put(token.getKey(), token.getValue());
+        resolvedTokensBuilt = false; // invalidate to build them again if they have been built already.
     }
 
     /**
      * Returns properties from a specified properties file.
      *
-     * @param fileName The file to load properties from.
+     * @param resource The resource to load properties from.
      */
-    private Properties getProperties(Resource r) {
+    private Properties getProperties(Resource resource) {
         InputStream in = null;
         Properties props = new Properties();
         try {
-            in = r.getInputStream();
+            in = resource.getInputStream();
             props.load(in);
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -305,32 +297,23 @@ public final class ReplaceTokens
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (params[i] != null) {
-                    final String type = params[i].getType();
+            for (Parameter param : params) {
+                if (param != null) {
+                    final String type = param.getType();
                     if ("tokenchar".equals(type)) {
-                        final String name = params[i].getName();
-                        String value = params[i].getValue();
+                        final String name = param.getName();
                         if ("begintoken".equals(name)) {
-                            if (value.length() == 0) {
-                                throw new BuildException("Begin token cannot "
-                                    + "be empty");
-                            }
-                            beginToken = params[i].getValue().charAt(0);
+                            beginToken = param.getValue();
                         } else if ("endtoken".equals(name)) {
-                            if (value.length() == 0) {
-                                throw new BuildException("End token cannot "
-                                    + "be empty");
-                            }
-                            endToken = params[i].getValue().charAt(0);
+                            endToken = param.getValue();
                         }
                     } else if ("token".equals(type)) {
-                        final String name = params[i].getName();
-                        final String value = params[i].getValue();
+                        final String name = param.getName();
+                        final String value = param.getValue();
                         hash.put(name, value);
                     } else if ("propertiesfile".equals(type)) {
                         makeTokensFromProperties(
-                            new FileResource(new File(params[i].getValue())));
+                                new FileResource(new File(param.getValue())));
                     }
                 }
             }

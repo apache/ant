@@ -431,18 +431,22 @@ public class TarInputStream extends FilterInputStream {
                         if (ch == '='){ // end of keyword
                             String keyword = coll.toString("UTF-8");
                             // Get rest of entry
-                            byte[] rest = new byte[len - read];
-                            int got = i.read(rest);
-                            if (got != len - read){
+                            final int restLen = len - read;
+                            byte[] rest = new byte[restLen];
+                            int got = 0;
+                            while (got < restLen && (ch = i.read()) != -1) {
+                                rest[got++] = (byte) ch;
+                            }
+                            if (got != restLen) {
                                 throw new IOException("Failed to read "
                                                       + "Paxheader. Expected "
-                                                      + (len - read)
+                                                      + restLen
                                                       + " bytes, read "
                                                       + got);
                             }
                             // Drop trailing NL
                             String value = new String(rest, 0,
-                                                      len - read - 1, "UTF-8");
+                                                      restLen - 1, "UTF-8");
                             headers.put(keyword, value);
                             break;
                         }
