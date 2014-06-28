@@ -107,6 +107,8 @@ public class CollectionUtils {
      * Creates a comma separated list of all values held in the given
      * collection.
      *
+     * @param c collection to transform
+     * @return string representation of the collection
      * @since Ant 1.8.0
      */
     public static String flattenToString(Collection<?> c) {
@@ -124,6 +126,8 @@ public class CollectionUtils {
      * Dictionary does not know the putAll method. Please use Map.putAll().
      * @param m1 the to directory.
      * @param m2 the from directory.
+     * @param <K> type of the key
+     * @param <V> type of the value
      * @since Ant 1.6
      * @deprecated since 1.6.x.
      */
@@ -164,6 +168,7 @@ public class CollectionUtils {
      * Elements are evaluated lazily.
      * @param e1 the first enumeration.
      * @param e2 the subsequent enumeration.
+     * @param <E> element type
      * @return an enumeration representing e1 followed by e2.
      * @since Ant 1.6.3
      */
@@ -174,6 +179,7 @@ public class CollectionUtils {
     /**
      * Adapt the specified Iterator to the Enumeration interface.
      * @param iter the Iterator to adapt.
+     * @param <E> element type
      * @return an Enumeration.
      */
     public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
@@ -190,6 +196,7 @@ public class CollectionUtils {
     /**
      * Adapt the specified Enumeration to the Iterator interface.
      * @param e the Enumeration to adapt.
+     * @param <E> element type
      * @return an Iterator.
      */
     public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
@@ -209,6 +216,9 @@ public class CollectionUtils {
     /**
      * Returns a collection containing all elements of the iterator.
      *
+     * @param iter the Iterator to convert
+     * @param <T> element type
+     * @return the collection
      * @since Ant 1.8.0
      */
     public static <T> Collection<T> asCollection(final Iterator<? extends T> iter) {
@@ -246,13 +256,16 @@ public class CollectionUtils {
      * Counts how often the given Object occurs in the given
      * collection using equals() for comparison.
      *
+     * @param c collection in which to search
+     * @param o object to search
+     * @return frequency
      * @since Ant 1.8.0
      */
     public static int frequency(Collection<?> c, Object o) {
         // same as Collections.frequency introduced with JDK 1.5
         int freq = 0;
         if (c != null) {
-            for (Iterator<?> i = c.iterator(); i.hasNext(); ) {
+            for (Iterator<?> i = c.iterator(); i.hasNext();) {
                 Object test = i.next();
                 if (o == null ? test == null : o.equals(test)) {
                     freq++;

@@ -71,8 +71,8 @@ public final class DateUtils {
 
     private static final DateFormat DATE_HEADER_FORMAT_INT
     = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
-    
-    
+
+
 // code from Magesh moved from DefaultLogger and slightly modified
     private static final MessageFormat MINUTE_SECONDS
             = new MessageFormat("{0}{1}");
