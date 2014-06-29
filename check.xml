@@ -105,7 +105,7 @@
     </checkstyle>
   </target>
 
-  <target name="htmlreport" description="--> generates a html checkstyle report" depends="init-ivy">
+  <target name="htmlreport" description="--> generates a html checkstyle report">
     <mkdir dir="${checkstyle.reportdir}"/>
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
