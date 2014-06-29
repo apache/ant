@@ -106,7 +106,6 @@
   </target>
 
   <target name="htmlreport" description="--> generates a html checkstyle report">
-    <mkdir dir="${checkstyle.reportdir}"/>
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
@@ -116,7 +115,7 @@
 
   <target name="textreport" description="--> generates a text checkstyle report">
     <xslt in="${checkstyle.raw}" style="${stylesheet.text}"
-           out="${checkstyle.reportdir}/report.txt">
+          out="${checkstyle.reportdir}/report.txt">
     </xslt>
   </target>
 
