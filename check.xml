@@ -39,6 +39,7 @@
   <property name="checkstyle.reportdir" location="${build.dir}/reports/checkstyle"/>
   <property name="checkstyle.raw" location="${checkstyle.reportdir}/raw.xml"/>
   <property name="stylesheet.html" location="${config.dir}/checkstyle-frames.xsl"/>
+  <property name="stylesheet.html.sorted" location="${config.dir}/checkstyle-frames-sortby-check.xsl"/>
   <property name="stylesheet.text" location="${config.dir}/checkstyle-text.xsl"/>
   <property name="stylesheet.xdoc" location="${config.dir}/checkstyle-xdoc.xsl"/>
 
@@ -108,6 +109,11 @@
   <target name="htmlreport" description="--> generates a html checkstyle report">
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
+      <param name="basedir" expression="${checkstyle.basedir}"/>
+      <param name="output.dir" expression="${checkstyle.reportdir}"/>
+    </xslt>
+    <xslt in="${checkstyle.raw}" style="${stylesheet.html.sorted}"
+          out="${checkstyle.reportdir}/html/output-sorted.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
       <param name="output.dir" expression="${checkstyle.reportdir}"/>
     </xslt>
