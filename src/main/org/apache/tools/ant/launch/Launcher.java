@@ -35,6 +35,9 @@ import java.util.ArrayList;
  */
 public class Launcher {
 
+	private Launcher() {
+	}
+
     /**
      * The Ant Home (installation) Directory property.
      * {@value}

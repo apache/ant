@@ -23,6 +23,10 @@ package org.apache.tools.ant.util;
  * @since Ant 1.8.3
  */
 public class UnicodeUtil {
+
+	private UnicodeUtil() {
+	}
+
 	/**
 	 * returns the unicode representation of a char without the leading backslash
 	 * @param ch

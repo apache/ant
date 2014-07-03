@@ -25,6 +25,9 @@ import java.lang.management.ManagementFactory;
  */
 public class ProcessUtil {
 
+	private ProcessUtil() {
+	}
+
 	/**
      * provide id of the current process
      * @param fallback

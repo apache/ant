@@ -27,6 +27,10 @@ package org.apache.tools.ant.util;
  */
 
 public class XmlConstants {
+
+	private XmlConstants() {
+	}
+
     /** property for location of xml schema */
     public static final String PROPERTY_SCHEMA_LOCATION =
             "http://apache.org/xml/properties/schema/external-schemaLocation";

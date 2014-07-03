@@ -23,6 +23,9 @@ package org.apache.tools.ant.taskdefs.optional.junit;
  */
 public class Constants {
 
+	private Constants() {
+	}
+
     static final String METHOD_NAMES = "methods=";
     static final String HALT_ON_ERROR = "haltOnError=";
     static final String HALT_ON_FAILURE = "haltOnFailure=";
