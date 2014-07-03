@@ -18,14 +18,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.Task;
+import java.net.URL;
+
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.AntClassLoader;
-
-import java.net.URL;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * Find a class or resource on the supplied classpath, or the

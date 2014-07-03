@@ -17,11 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.AbstractCvsTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.StringTokenizer;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 
 /**
  * this task allows to find out the client and the server version of a

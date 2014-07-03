@@ -18,10 +18,9 @@
 
 package org.apache.tools.ant.types.resolver;
 
-import org.apache.xml.resolver.Catalog;
-import org.apache.xml.resolver.CatalogEntry;
-
-import org.apache.xml.resolver.helpers.PublicId;
+import com.sun.org.apache.xml.internal.resolver.Catalog;
+import com.sun.org.apache.xml.internal.resolver.CatalogEntry;
+import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
 
 /**
  * This class extends the Catalog class provided by Norman Walsh's

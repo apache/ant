@@ -18,21 +18,19 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-
-import java.io.IOException;
 import java.io.File;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+
+import com.jcraft.jsch.JSchException;
 
 /**
  * Ant task for sending files to remote machine over ssh/scp.

@@ -36,11 +36,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.LayoutPreservingProperties;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.LayoutPreservingProperties;
 
 /**
  * Modifies settings in a property file.

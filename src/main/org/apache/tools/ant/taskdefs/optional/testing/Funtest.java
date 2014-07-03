@@ -18,16 +18,16 @@
 
 package org.apache.tools.ant.taskdefs.optional.testing;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskAdapter;
-import org.apache.tools.ant.util.WorkerAnt;
-import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.taskdefs.Parallel;
 import org.apache.tools.ant.taskdefs.Sequential;
 import org.apache.tools.ant.taskdefs.WaitFor;
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
+import org.apache.tools.ant.util.WorkerAnt;
 
 /**
  * Task to provide functional testing under Ant, with a fairly complex workflow of:

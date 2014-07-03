@@ -17,10 +17,10 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

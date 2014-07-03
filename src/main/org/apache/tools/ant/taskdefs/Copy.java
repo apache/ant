@@ -27,27 +27,28 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.LinkedHashtable;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
-import org.apache.tools.ant.util.FlatFileNameMapper;
 
 /**
  * <p>Copies a file or directory to a new file

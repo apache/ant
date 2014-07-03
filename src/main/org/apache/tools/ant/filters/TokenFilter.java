@@ -19,15 +19,16 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
-import org.apache.tools.ant.util.Tokenizer;
 import org.apache.tools.ant.util.LineTokenizer;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.Tokenizer;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpUtil;
 

@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.DescendingVisitor;
-import org.apache.bcel.classfile.JavaClass;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
+
+import com.sun.org.apache.bcel.internal.classfile.ClassParser;
+import com.sun.org.apache.bcel.internal.classfile.DescendingVisitor;
+import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 
 /**
  * An analyzer capable fo traversing all class - class relationships.

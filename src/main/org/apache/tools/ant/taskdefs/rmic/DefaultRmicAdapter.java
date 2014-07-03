@@ -19,10 +19,10 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;

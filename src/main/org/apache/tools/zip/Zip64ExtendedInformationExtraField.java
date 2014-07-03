@@ -18,10 +18,10 @@
  */
 package org.apache.tools.zip;
 
-import java.util.zip.ZipException;
-
 import static org.apache.tools.zip.ZipConstants.DWORD;
 import static org.apache.tools.zip.ZipConstants.WORD;
+
+import java.util.zip.ZipException;
 
 /**
  * Holds size and other extended information for entries that use Zip64

@@ -17,19 +17,19 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.List;
-import java.util.Stack;
-import java.util.Iterator;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
+import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.util.CollectionUtils;
 
 /**

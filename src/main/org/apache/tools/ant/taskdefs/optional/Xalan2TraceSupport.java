@@ -20,11 +20,14 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.PrintWriter;
 import java.util.TooManyListenersException;
+
 import javax.xml.transform.Transformer;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.xalan.trace.PrintTraceListener;
-import org.apache.xalan.transformer.TransformerImpl;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerImpl;
 
 /**
  * Sets up trace support for a given transformer.

@@ -18,16 +18,16 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Apt;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.Vector;
 
 
 /**

@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.util.Vector;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;

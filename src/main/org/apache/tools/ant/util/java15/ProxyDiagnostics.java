@@ -18,17 +18,17 @@
 
 package org.apache.tools.ant.util.java15;
 
-import org.apache.tools.ant.BuildException;
-
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.ProxySelector;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.Proxy;
-import java.net.SocketAddress;
-import java.net.InetSocketAddress;
-import java.net.InetAddress;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * This class exists to create a string that tells diagnostics about the current

@@ -18,15 +18,16 @@
 
 package org.apache.tools.ant.types.selectors.modifiedselector;
 
-import java.util.Locale;
-import java.util.zip.Checksum;
-import java.util.zip.CRC32;
-import java.util.zip.Adler32;
-import java.util.zip.CheckedInputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.Checksum;
+
 import org.apache.tools.ant.BuildException;
 
 

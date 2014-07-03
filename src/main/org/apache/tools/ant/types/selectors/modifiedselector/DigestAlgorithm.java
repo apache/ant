@@ -21,11 +21,12 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Locale;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Locale;
+
 import org.apache.tools.ant.BuildException;
 
 

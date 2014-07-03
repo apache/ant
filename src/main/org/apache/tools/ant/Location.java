@@ -19,6 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.Serializable;
+
 import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.Locator;
 

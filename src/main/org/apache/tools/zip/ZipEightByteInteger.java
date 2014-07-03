@@ -17,9 +17,9 @@
  */
 package org.apache.tools.zip;
 
-import java.math.BigInteger;
-
 import static org.apache.tools.zip.ZipConstants.BYTE_MASK;
+
+import java.math.BigInteger;
 
 /**
  * Utility class that represents an eight byte integer with conversion

@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.util.Vector;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;

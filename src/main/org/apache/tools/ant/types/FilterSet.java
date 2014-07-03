@@ -26,8 +26,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.VectorSet;
 

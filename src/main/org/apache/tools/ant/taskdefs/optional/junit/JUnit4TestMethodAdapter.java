@@ -20,8 +20,10 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.util.Iterator;
 import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestResult;
+
 import org.junit.runner.Description;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;

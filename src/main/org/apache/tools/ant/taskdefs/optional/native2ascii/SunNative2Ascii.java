@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.native2ascii;
 
 import java.lang.reflect.Method;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;

@@ -22,12 +22,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.util.Date;
 import java.text.DateFormat;
+import java.util.Date;
 
 import org.apache.tools.ant.util.DateUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Writes build events to a PrintStream. Currently, it

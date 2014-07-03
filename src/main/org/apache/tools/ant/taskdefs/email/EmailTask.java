@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs.email;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 

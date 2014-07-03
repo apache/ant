@@ -19,8 +19,9 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
-import org.apache.tools.ant.util.LineTokenizer;
+
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.util.LineTokenizer;
 
 /**
  * Reads the first <code>n</code> lines of a stream.

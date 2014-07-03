@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
 import org.apache.tools.ant.taskdefs.optional.jsp.Jasper41Mangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
 
 
 /**

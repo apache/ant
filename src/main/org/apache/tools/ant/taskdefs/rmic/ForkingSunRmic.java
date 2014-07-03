@@ -19,15 +19,15 @@
 
 package org.apache.tools.ant.taskdefs.rmic;
 
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
-
-import java.io.IOException;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * This is an extension of the sun rmic compiler, which forks rather than

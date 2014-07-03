@@ -18,10 +18,10 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A <code>ContainerMapper</code> that chains the results of the first

@@ -18,12 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.AntTypeDefinition;
-import org.apache.tools.ant.Project;
 
 /**
  * looks for a task or other Ant type that exists. Existence is defined as

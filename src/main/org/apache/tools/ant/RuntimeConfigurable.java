@@ -28,10 +28,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.tools.ant.attribute.EnableAttribute;
-
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
 import org.apache.tools.ant.taskdefs.MacroInstance;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
 

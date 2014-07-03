@@ -41,6 +41,8 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -48,7 +50,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.VectorSet;
-import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.zip.ZipLong;
 
 /**

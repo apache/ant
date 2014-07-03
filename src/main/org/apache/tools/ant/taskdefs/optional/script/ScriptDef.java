@@ -17,25 +17,24 @@
  */
 package org.apache.tools.ant.taskdefs.optional.script;
 
-import org.apache.tools.ant.AntTypeDefinition;
-import org.apache.tools.ant.ComponentHelper;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.MagicNames;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.taskdefs.DefBase;
-
-import java.util.Map;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.io.File;
 
+import org.apache.tools.ant.AntTypeDefinition;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ComponentHelper;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.taskdefs.DefBase;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;

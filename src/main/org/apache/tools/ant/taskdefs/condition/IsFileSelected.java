@@ -16,11 +16,12 @@
  *
  */
 package org.apache.tools.ant.taskdefs.condition;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
-import org.apache.tools.ant.types.selectors.FileSelector;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.selectors.AbstractSelectorContainer;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This is a condition that checks to see if a file passes an embedded selector.

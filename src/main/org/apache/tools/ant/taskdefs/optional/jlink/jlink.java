@@ -22,8 +22,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +36,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import org.apache.tools.ant.util.FileUtils;
 
 // CheckStyle:TypeNameCheck OFF - bc
 /**

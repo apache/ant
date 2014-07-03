@@ -18,6 +18,12 @@
 
 package org.apache.tools.zip;
 
+import static org.apache.tools.zip.ZipConstants.DWORD;
+import static org.apache.tools.zip.ZipConstants.SHORT;
+import static org.apache.tools.zip.ZipConstants.WORD;
+import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
+import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
+
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -35,12 +41,6 @@ import java.util.Map;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipException;
-
-import static org.apache.tools.zip.ZipConstants.DWORD;
-import static org.apache.tools.zip.ZipConstants.SHORT;
-import static org.apache.tools.zip.ZipConstants.WORD;
-import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
-import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
 
 /**
  * Replacement for <code>java.util.ZipFile</code>.

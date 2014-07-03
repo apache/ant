@@ -17,12 +17,12 @@
  */
 package org.apache.tools.ant.listener;
 
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.SubBuildListener;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
-
 import java.io.File;
+
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.SubBuildListener;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a special logger that is designed to make it easier to work

@@ -18,12 +18,13 @@
 
 package org.apache.tools.ant;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
+
 import org.apache.tools.ant.taskdefs.PreSetDef;
 
 /**

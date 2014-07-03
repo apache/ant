@@ -18,10 +18,10 @@
 
 package org.apache.tools.ant.types.resources;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayInputStream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;

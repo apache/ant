@@ -18,21 +18,22 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;

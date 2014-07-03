@@ -18,8 +18,8 @@
 package org.apache.tools.ant.types.resources.selectors;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;

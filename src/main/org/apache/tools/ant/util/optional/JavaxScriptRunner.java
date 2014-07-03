@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant.util.optional;
 
-import org.apache.tools.ant.BuildException;
-
 import java.util.Iterator;
-import org.apache.tools.ant.util.ScriptRunnerBase;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.ReflectWrapper;
+import org.apache.tools.ant.util.ScriptRunnerBase;
 
 /**
  * This class is used to run scripts using JSR 223.

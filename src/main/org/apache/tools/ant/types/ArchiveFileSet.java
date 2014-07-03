@@ -20,11 +20,12 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.zip.UnixStat;
 
 /**

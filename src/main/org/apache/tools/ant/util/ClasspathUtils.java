@@ -19,9 +19,9 @@ package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 

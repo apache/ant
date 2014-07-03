@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.listener;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.NullEnumeration;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;

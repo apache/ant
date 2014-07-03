@@ -17,15 +17,15 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Project;
+import java.io.File;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.AptExternalCompilerAdapter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.JavaEnvUtils;
-
-import java.util.Vector;
-import java.io.File;
 
 /**
  * Apt Task for running the Annotation processing tool for JDK 1.5.  It derives

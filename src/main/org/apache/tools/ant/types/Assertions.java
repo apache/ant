@@ -18,12 +18,12 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * The assertion datatype. This type describes

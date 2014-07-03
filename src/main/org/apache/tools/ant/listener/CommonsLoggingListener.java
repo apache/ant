@@ -18,18 +18,18 @@
 
 package org.apache.tools.ant.listener;
 
-import org.apache.commons.logging.Log;
+import java.io.PrintStream;
+
 import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.BuildLogger;
-import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 
-import java.io.PrintStream;
+import sun.rmi.runtime.Log;
 
 /**
  * Jakarta Commons Logging listener.

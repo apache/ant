@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.taskdefs.XSLTProcess;
 import javax.xml.transform.Transformer;
+
+import org.apache.tools.ant.taskdefs.XSLTProcess;
 
 /**
  * Sets up trace support for a given transformer.

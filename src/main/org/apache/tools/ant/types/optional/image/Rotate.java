@@ -17,11 +17,12 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
-import javax.media.jai.PlanarImage;
+import java.awt.image.BufferedImage;
+import java.awt.image.renderable.ParameterBlock;
+
 import javax.media.jai.InterpolationNearest;
 import javax.media.jai.JAI;
-import java.awt.image.renderable.ParameterBlock;
-import java.awt.image.BufferedImage;
+import javax.media.jai.PlanarImage;
 
 /**
  * ImageOperation to rotate an image by a certain degree

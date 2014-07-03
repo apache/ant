@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Permissions;
 

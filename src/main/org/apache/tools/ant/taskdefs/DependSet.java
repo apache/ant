@@ -21,22 +21,23 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.Date;
 import java.util.Iterator;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.Union;
-import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.TimeComparison;
 import org.apache.tools.ant.types.resources.Resources;
-import org.apache.tools.ant.types.resources.selectors.Not;
-import org.apache.tools.ant.types.resources.selectors.Exists;
-import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
-import org.apache.tools.ant.types.resources.comparators.Reverse;
+import org.apache.tools.ant.types.resources.Restrict;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
+import org.apache.tools.ant.types.resources.comparators.Reverse;
+import org.apache.tools.ant.types.resources.selectors.Exists;
+import org.apache.tools.ant.types.resources.selectors.Not;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 
 /**
  * Examines and removes out of date target files.  If any of the target files

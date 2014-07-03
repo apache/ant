@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.property;
 
-import org.apache.tools.ant.PropertyHelper;
-
 import java.text.ParsePosition;
+
+import org.apache.tools.ant.PropertyHelper;
 
 /**
  * Responsible for locating a property reference inside a String.

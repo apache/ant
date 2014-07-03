@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 /**

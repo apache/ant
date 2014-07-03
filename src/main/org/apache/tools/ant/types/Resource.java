@@ -17,8 +17,8 @@
  */
 package org.apache.tools.ant.types;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Iterator;

@@ -23,7 +23,6 @@
 
 package org.apache.tools.tar;
 
-import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,6 +30,7 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.tools.zip.ZipEncoding;
 import org.apache.tools.zip.ZipEncodingHelper;
 

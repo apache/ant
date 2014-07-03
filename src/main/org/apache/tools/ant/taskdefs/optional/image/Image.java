@@ -17,7 +17,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.image;
 
-import com.sun.media.jai.codec.FileSeekableStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Vector;
+
+import javax.media.jai.JAI;
+import javax.media.jai.PlanarImage;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -33,15 +41,7 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.IdentityMapper;
 
-import javax.media.jai.JAI;
-import javax.media.jai.PlanarImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Vector;
+import com.sun.media.jai.codec.FileSeekableStream;
 
 /**
  * A MatchingTask which relies on <a

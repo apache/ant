@@ -17,12 +17,12 @@
  */
 package org.apache.tools.ant.dispatch;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.UnknownElement;
-import org.apache.tools.ant.Task;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.UnknownElement;
 
 /**
  * Determines and Executes the action method for the task.

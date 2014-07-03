@@ -17,6 +17,19 @@
  */
 package org.apache.tools.ant.helper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Stack;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExtensionPoint;
 import org.apache.tools.ant.Location;
@@ -40,19 +53,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * Sax2 based project reader

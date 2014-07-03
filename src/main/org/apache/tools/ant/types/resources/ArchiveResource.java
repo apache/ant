@@ -22,9 +22,9 @@ import java.util.Stack;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.Reference;
 
 /**
  * A Resource representation of an entry inside an archive.

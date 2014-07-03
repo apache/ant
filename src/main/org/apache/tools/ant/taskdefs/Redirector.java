@@ -17,36 +17,36 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.io.Reader;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PipedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.FilterChain;
-import org.apache.tools.ant.util.LineOrientedOutputStreamRedirector;
-import org.apache.tools.ant.util.StringUtils;
-import org.apache.tools.ant.util.TeeOutputStream;
-import org.apache.tools.ant.util.ReaderInputStream;
-import org.apache.tools.ant.util.LeadPipeInputStream;
-import org.apache.tools.ant.util.LazyFileOutputStream;
-import org.apache.tools.ant.util.OutputStreamFunneler;
 import org.apache.tools.ant.util.ConcatFileInputStream;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.apache.tools.ant.util.LazyFileOutputStream;
+import org.apache.tools.ant.util.LeadPipeInputStream;
+import org.apache.tools.ant.util.LineOrientedOutputStreamRedirector;
+import org.apache.tools.ant.util.OutputStreamFunneler;
+import org.apache.tools.ant.util.ReaderInputStream;
+import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  * The Redirector class manages the setup and connection of input and output

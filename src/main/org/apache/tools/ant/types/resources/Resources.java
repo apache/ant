@@ -19,17 +19,17 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.util.List;
-import java.util.Stack;
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.AbstractCollection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Stack;
+import java.util.Vector;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;

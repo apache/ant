@@ -22,9 +22,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
 
 /**

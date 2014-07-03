@@ -19,11 +19,12 @@
 package org.apache.tools.ant.types;
 
 import java.util.Properties;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.CompositeMapper;
 import org.apache.tools.ant.util.ContainerMapper;
+import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * Element to define a FileNameMapper.

@@ -18,18 +18,17 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.XMLFragment;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.FileUtils;
-
-import org.w3c.dom.Node;
+import org.apache.tools.ant.util.XMLFragment;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Echo XML.

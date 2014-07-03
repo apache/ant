@@ -17,13 +17,13 @@
  */
 package org.apache.tools.ant.property;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Class to resolve properties in a map. This class is explicitly not threadsafe.

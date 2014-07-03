@@ -20,9 +20,9 @@ package org.apache.tools.ant.types;
 
 import java.util.Stack;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.IdentityStack;
 

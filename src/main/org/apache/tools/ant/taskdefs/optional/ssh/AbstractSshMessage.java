@@ -18,19 +18,17 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpProgressMonitor;
-
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.NumberFormat;
 
 import org.apache.tools.ant.BuildException;
+
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpProgressMonitor;
 
 /**
  * Abstract class for ssh upload and download

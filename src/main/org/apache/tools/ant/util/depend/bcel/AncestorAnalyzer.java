@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.JavaClass;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
+
+import com.sun.org.apache.bcel.internal.classfile.ClassParser;
+import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 
 /**
  * A dependency analyzer which returns superclass and superinterface

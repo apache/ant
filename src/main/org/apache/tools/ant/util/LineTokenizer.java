@@ -17,8 +17,8 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.Reader;
 import java.io.IOException;
+import java.io.Reader;
 
 import org.apache.tools.ant.ProjectComponent;
 

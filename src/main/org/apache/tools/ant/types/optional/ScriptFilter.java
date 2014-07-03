@@ -18,10 +18,11 @@
 
 package org.apache.tools.ant.types.optional;
 
-import org.apache.tools.ant.filters.TokenFilter;
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ScriptRunnerBase;

@@ -25,15 +25,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Properties;
 import java.util.Vector;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.JavaResource;
 import org.apache.tools.ant.util.FileUtils;

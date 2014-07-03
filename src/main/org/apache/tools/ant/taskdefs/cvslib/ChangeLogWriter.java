@@ -25,7 +25,6 @@ import java.util.TimeZone;
 
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DOMUtils;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

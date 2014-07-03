@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 

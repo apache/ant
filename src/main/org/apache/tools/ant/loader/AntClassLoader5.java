@@ -18,10 +18,10 @@
 
 package org.apache.tools.ant.loader;
 
-import java.util.Enumeration;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;

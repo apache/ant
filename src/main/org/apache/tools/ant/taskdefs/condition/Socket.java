@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;

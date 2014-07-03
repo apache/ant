@@ -18,8 +18,8 @@
 
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * A worker ant executes a single task in a background thread.

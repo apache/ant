@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.UserInfo;
 import com.jcraft.jsch.UIKeyboardInteractive;
+import com.jcraft.jsch.UserInfo;
+
 
 /**
  * Class containing information on an SSH user.

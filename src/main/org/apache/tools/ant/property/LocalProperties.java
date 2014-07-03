@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.property;
 
-import org.apache.tools.ant.PropertyHelper;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 
 /**
  * Thread local class containing local properties.

@@ -17,15 +17,17 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.OutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-
+import java.net.PasswordAuthentication;
+import java.security.Provider;
+import java.security.Security;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
@@ -33,28 +35,21 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import java.security.Provider;
-import java.security.Security;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-
-import javax.mail.Authenticator;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.SendFailedException;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+
+import sun.rmi.transport.Transport;
+
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeBodyPart;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeMultipart;
 
 /**
  * Uses the JavaMail classes to send Mime format email.

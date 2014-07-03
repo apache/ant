@@ -19,19 +19,16 @@
 package org.apache.tools.ant.types.resolver;
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.tools.ant.BuildException;
-
-import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.ResourceLocation;
+import org.apache.tools.ant.types.XMLCatalog;
 
-import org.apache.xml.resolver.Catalog;
-import org.apache.xml.resolver.CatalogManager;
-
-import org.apache.xml.resolver.tools.CatalogResolver;
+import com.sun.org.apache.xml.internal.resolver.Catalog;
+import com.sun.org.apache.xml.internal.resolver.CatalogManager;
+import com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver;
 
 /**
  * <p>This class extends the CatalogResolver class provided by Norman

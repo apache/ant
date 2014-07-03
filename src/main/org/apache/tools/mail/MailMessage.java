@@ -26,14 +26,14 @@
 
 package org.apache.tools.mail;
 
-import java.io.IOException;
-import java.io.PrintStream;
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
+import java.io.PrintStream;
 import java.net.InetAddress;
-import java.util.Vector;
+import java.net.Socket;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * A class to help send SMTP email.

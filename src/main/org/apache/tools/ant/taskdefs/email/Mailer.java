@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.email;
 
 import java.io.File;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.DateUtils;

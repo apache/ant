@@ -17,8 +17,8 @@
  */
 package org.apache.tools.ant.types.spi;
 
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * ANT Jar-Task SPI extension

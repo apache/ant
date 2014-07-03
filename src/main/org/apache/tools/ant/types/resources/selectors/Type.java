@@ -18,8 +18,8 @@
 package org.apache.tools.ant.types.resources.selectors;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Resource;
 
 /**
  * Type file/dir ResourceSelector.

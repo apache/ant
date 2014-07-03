@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.optional.image;
 
 import javax.media.jai.PlanarImage;
 
+
 /**
  * Interface which represents an Operation which is "drawable", such
  * as a Rectangle, Circle or Text.  The Operation is responsible for

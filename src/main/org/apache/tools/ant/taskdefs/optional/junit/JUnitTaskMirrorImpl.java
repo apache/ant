@@ -19,9 +19,11 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
 import org.apache.tools.ant.AntClassLoader;
 
 /**

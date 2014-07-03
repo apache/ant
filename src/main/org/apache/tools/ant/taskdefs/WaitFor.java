@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;

@@ -30,8 +30,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
+import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 

@@ -23,17 +23,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.tools.ant.taskdefs.PreSetDef;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.taskdefs.PreSetDef;
 import org.apache.tools.ant.util.StringUtils;
 
 /**

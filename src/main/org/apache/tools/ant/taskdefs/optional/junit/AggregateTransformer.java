@@ -22,9 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URL;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -35,16 +33,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.TempFile;
-import org.apache.tools.ant.util.JAXPUtils;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.types.resources.FileResource;
-
+import org.apache.tools.ant.types.resources.URLResource;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.w3c.dom.Document;
 
 /**

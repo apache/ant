@@ -22,11 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.AbstractFileSet;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileList;

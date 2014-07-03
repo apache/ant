@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import java.io.File;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

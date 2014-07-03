@@ -18,16 +18,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.JSchException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
+import com.jcraft.jsch.JSchException;
 
 /**
  * Utility class to carry out an upload scp transfer.

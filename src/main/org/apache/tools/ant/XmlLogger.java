@@ -23,9 +23,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Enumeration;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 

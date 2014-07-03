@@ -19,15 +19,15 @@
 package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.io.File;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Vector;
 
 
 /**

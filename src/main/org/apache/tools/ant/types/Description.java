@@ -17,16 +17,16 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.helper.ProjectHelper2;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.UnknownElement;
-import org.apache.tools.ant.Target;
-import org.apache.tools.ant.helper.ProjectHelperImpl;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.UnknownElement;
+import org.apache.tools.ant.helper.ProjectHelper2;
+import org.apache.tools.ant.helper.ProjectHelperImpl;
 
 
 /**

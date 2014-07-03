@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
 import org.apache.tools.ant.Project;

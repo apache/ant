@@ -17,11 +17,11 @@
  */
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.BuildException;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * A set of helper methods related to string manipulation.

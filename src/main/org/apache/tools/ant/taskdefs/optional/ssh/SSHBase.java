@@ -18,13 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.JSch;
-
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 
 /**
  * Base class for Ant tasks using jsch.

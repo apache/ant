@@ -21,12 +21,13 @@ package org.apache.tools.ant.taskdefs.compilers;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * The implementation of the javac compiler for JDK 1.2

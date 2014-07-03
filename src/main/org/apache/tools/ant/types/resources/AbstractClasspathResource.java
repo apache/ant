@@ -17,17 +17,17 @@
  */
 package org.apache.tools.ant.types.resources;
 
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Stack;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileUtils;
-
-import java.io.FilterInputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Stack;
 
 /**
  *

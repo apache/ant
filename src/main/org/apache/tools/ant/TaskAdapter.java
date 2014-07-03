@@ -19,8 +19,9 @@
 package org.apache.tools.ant;
 
 import java.lang.reflect.Method;
-import org.apache.tools.ant.dispatch.Dispatchable;
+
 import org.apache.tools.ant.dispatch.DispatchUtils;
+import org.apache.tools.ant.dispatch.Dispatchable;
 
 /**
  * Uses introspection to "adapt" an arbitrary Bean which doesn't

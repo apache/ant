@@ -19,10 +19,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Locale;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;

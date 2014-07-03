@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.helper;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Executor;
+import org.apache.tools.ant.Project;
 
 /**
  * Default Target executor implementation. Runs each target individually

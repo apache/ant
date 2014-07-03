@@ -17,12 +17,13 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.Set;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.WeakHashMap;
 import java.util.NoSuchElementException;
-import java.util.ConcurrentModificationException;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 import org.apache.tools.ant.types.Resource;
 
 /**

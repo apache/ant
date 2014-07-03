@@ -19,6 +19,7 @@ package org.apache.tools.ant.property;
 
 import java.text.ParsePosition;
 import java.util.Collection;
+
 import org.apache.tools.ant.Project;
 
 /**

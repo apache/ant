@@ -19,8 +19,8 @@
 package org.apache.tools.ant.util.regexp;
 
 import java.util.Vector;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
+import java.util.regex.MatchResult;
+
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.tools.ant.BuildException;

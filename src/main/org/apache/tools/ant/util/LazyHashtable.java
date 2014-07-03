@@ -17,8 +17,8 @@
  */
 package org.apache.tools.ant.util;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 /** Hashtable implementation that allows delayed construction
  * of expensive objects

@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
 import javax.swing.ImageIcon;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.Base64Converter;
 import org.apache.tools.ant.taskdefs.optional.net.SetProxy;
+import org.apache.tools.ant.util.Base64Converter;
 
 /**
  * Creates a splash screen. The splash screen is displayed

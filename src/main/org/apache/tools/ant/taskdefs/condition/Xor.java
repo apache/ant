@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildException;
-
 import java.util.Enumeration;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * The <tt>Xor</tt> condition type to exclusive or operations.

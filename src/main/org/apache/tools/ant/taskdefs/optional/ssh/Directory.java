@@ -18,12 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.io.File;
 
 /**
  * A helper object for Scp representing a directory in a file system.

@@ -23,24 +23,24 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Touchable;
 import org.apache.tools.ant.types.resources.Union;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Touch a file and/or fileset(s) and/or filelist(s);

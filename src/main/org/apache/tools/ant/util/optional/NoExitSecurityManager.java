@@ -18,6 +18,7 @@
 package org.apache.tools.ant.util.optional;
 
 import java.security.Permission;
+
 import org.apache.tools.ant.ExitException;
 
 /**

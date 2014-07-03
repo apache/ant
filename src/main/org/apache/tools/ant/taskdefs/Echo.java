@@ -24,14 +24,14 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.ResourceUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.LogLevel;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.LogOutputResource;
 import org.apache.tools.ant.types.resources.StringResource;
+import org.apache.tools.ant.util.ResourceUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Writes a message to the Ant logging facilities.

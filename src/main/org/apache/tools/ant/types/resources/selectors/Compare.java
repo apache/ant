@@ -19,16 +19,16 @@ package org.apache.tools.ant.types.resources.selectors;
 
 import java.util.Stack;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Comparison;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.Quantifier;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Union;
-import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
+import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
 
 /**
  * ResourceSelector that compares against "control" Resource(s)

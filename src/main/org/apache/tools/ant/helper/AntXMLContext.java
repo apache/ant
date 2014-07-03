@@ -26,15 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.xml.sax.Locator;
-import org.xml.sax.Attributes;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.util.FileUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * Context information for the ant processing.

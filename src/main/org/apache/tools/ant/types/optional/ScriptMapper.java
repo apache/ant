@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.types.optional;
 
-import org.apache.tools.ant.util.FileNameMapper;
-
 import java.util.ArrayList;
+
+import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * Script support at map time.

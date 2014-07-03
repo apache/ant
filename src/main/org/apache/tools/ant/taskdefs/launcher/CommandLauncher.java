@@ -17,11 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs.launcher;
 
-import java.io.File;
-import java.io.IOException;
-
 import static org.apache.tools.ant.MagicNames.ANT_SHELL_LAUNCHER_REF_ID;
 import static org.apache.tools.ant.MagicNames.ANT_VM_LAUNCHER_REF_ID;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;

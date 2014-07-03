@@ -18,19 +18,19 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.util.Vector;
-import java.util.Iterator;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Vector;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.AbstractSelectorContainer;
+import org.apache.tools.ant.types.selectors.FileSelector;
 
 /**
  * ResourceCollection implementation; like AbstractFileSet with absolute paths.

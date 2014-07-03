@@ -19,20 +19,20 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.Comparison;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.Comparison;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.PropertyOutputStream;
 

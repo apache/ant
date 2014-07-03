@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types.mappers;
 
 import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileNameMapper;
 

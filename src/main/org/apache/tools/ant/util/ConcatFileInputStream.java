@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.io.IOException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;

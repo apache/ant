@@ -18,11 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Locale;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Locale;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;

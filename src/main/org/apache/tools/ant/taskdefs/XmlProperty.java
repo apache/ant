@@ -20,9 +20,11 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-import javax.xml.parsers.DocumentBuilderFactory;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
@@ -37,8 +39,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  * Loads property values from a valid XML file, generating the

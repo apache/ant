@@ -18,10 +18,10 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.dispatch.DispatchUtils;
-
-import java.util.Enumeration;
 import java.io.IOException;
+import java.util.Enumeration;
+
+import org.apache.tools.ant.dispatch.DispatchUtils;
 
 /**
  * Base class for all tasks.

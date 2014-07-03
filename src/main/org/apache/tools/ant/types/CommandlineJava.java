@@ -18,16 +18,16 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.JavaEnvUtils;
-
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 import java.util.Vector;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * A representation of a Java command line that is

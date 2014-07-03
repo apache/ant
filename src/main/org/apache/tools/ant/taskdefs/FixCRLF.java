@@ -18,23 +18,24 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.Reader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.Vector;
+import java.io.Reader;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import org.apache.tools.ant.Project;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.filters.FixCrLfFilter;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.ChainableReader;
-import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.filters.FixCrLfFilter;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.util.FileUtils;
 
 /**

@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildLogger;

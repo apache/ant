@@ -18,14 +18,14 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.ArrayList;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Redirector;
 
 /**

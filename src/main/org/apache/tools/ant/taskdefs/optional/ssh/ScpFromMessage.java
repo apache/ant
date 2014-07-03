@@ -18,20 +18,20 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.ByteArrayOutputStream;
+
+import org.apache.tools.ant.util.FileUtils;
+
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A helper object representing an scp download.

@@ -18,16 +18,16 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectComponent;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * <p>Test for a host being reachable using ICMP "ping" packets &amp; echo operations.

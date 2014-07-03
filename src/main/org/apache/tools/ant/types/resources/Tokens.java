@@ -17,16 +17,16 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.Stack;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Stack;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;

@@ -20,6 +20,7 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**

@@ -20,6 +20,7 @@ package org.apache.tools.ant.filters;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
+
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.util.LineTokenizer;
 

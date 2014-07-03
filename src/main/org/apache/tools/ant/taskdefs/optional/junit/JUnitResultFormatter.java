@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
+
 import junit.framework.TestListener;
+
 import org.apache.tools.ant.BuildException;
 
 /**

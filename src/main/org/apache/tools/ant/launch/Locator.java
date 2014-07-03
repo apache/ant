@@ -17,12 +17,12 @@
  */
 package org.apache.tools.ant.launch;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;

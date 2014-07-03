@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.AntTypeDefinition;
+import org.apache.tools.ant.ComponentHelper;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.attribute.AttributeNamespace;
 
 /**

@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -33,6 +32,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
 /**

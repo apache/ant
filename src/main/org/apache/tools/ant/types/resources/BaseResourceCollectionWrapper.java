@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.resources;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.apache.tools.ant.types.Resource;
 
 /**

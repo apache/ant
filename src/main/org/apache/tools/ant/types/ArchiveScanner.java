@@ -19,15 +19,15 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Iterator;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
-import org.apache.tools.ant.types.resources.FileProvider;
 
 /**
  * ArchiveScanner accesses the pattern matching algorithm in DirectoryScanner,

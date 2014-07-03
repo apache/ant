@@ -35,7 +35,6 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.XmlConstants;
-
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;

@@ -17,29 +17,30 @@
  */
 package org.apache.tools.ant;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
-import java.io.EOFException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.WeakHashMap;
+
+import org.apache.tools.ant.helper.DefaultExecutor;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
-import org.apache.tools.ant.helper.DefaultExecutor;
+import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;

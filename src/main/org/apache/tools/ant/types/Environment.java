@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types;
 
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 
 /**

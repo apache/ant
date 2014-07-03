@@ -17,14 +17,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.script;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.MagicNames;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DynamicConfigurator;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Task;
 
 /**
  * The script execution class. This class finds the defining script task

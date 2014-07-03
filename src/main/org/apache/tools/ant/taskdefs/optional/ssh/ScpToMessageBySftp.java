@@ -18,16 +18,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Session;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * Utility class to carry out an upload by sftp.

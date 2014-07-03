@@ -18,10 +18,11 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.tools.ant.types.Mapper;
 
 /**

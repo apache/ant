@@ -25,12 +25,12 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Vector;
 
-// Ant
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.IntrospectionHelper;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.IntrospectionHelper;
+// Ant
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Path;

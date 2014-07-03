@@ -35,13 +35,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.KeepAliveOutputStream;
 import org.apache.tools.ant.util.KeepAliveInputStream;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
 import org.apache.tools.ant.util.TeeOutputStream;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 /**
  * Executes a command on a remote machine via ssh.

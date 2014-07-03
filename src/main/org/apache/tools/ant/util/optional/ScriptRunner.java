@@ -17,16 +17,14 @@
  */
 package org.apache.tools.ant.util.optional;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+
+import org.apache.bsf.BSFEngine;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
-import org.apache.bsf.BSFEngine;
-
-import java.util.Iterator;
-import java.util.Hashtable;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
 import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 

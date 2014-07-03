@@ -17,10 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitStatusException;
 import org.apache.tools.ant.Location;

@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import java.io.File;
 import java.text.ParseException;
 import java.util.jar.Manifest;
+
 import org.apache.tools.ant.BuildException;
 
 /**

@@ -21,8 +21,8 @@ package org.apache.tools.ant.taskdefs.optional.clearcase;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Task to perform mkattr command to ClearCase.

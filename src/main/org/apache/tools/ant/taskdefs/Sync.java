@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;

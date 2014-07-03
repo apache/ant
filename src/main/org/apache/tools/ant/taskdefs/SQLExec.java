@@ -17,11 +17,32 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.KeepAliveOutputStream;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
@@ -30,32 +51,9 @@ import org.apache.tools.ant.types.resources.Appendable;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
-
-import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.StringTokenizer;
-import java.util.Vector;
-
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Types;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Executes a series of SQL statements on a database using JDBC.

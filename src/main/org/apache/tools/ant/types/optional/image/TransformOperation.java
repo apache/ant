@@ -16,6 +16,7 @@
  *
  */
 package org.apache.tools.ant.types.optional.image;
+
 import javax.media.jai.PlanarImage;
 
 /**

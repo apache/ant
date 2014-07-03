@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;

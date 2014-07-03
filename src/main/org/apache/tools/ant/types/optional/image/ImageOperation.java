@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
-import org.apache.tools.ant.types.DataType;
 import java.util.Vector;
+
+import org.apache.tools.ant.types.DataType;
 
 /**
  *

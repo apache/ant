@@ -18,10 +18,11 @@
 
 package org.apache.tools.ant.types.selectors.modifiedselector;
 
-import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Computes a 'hashvalue' for the content of file using String.hashValue().

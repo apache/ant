@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 

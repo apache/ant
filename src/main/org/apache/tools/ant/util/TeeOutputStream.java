@@ -18,8 +18,8 @@
 
 package org.apache.tools.ant.util;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * A simple T-piece to replicate an output stream into two separate streams

@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.net;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.util.Properties;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;

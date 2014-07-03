@@ -17,31 +17,32 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.JAXPUtils;
-import org.apache.tools.ant.util.ProxySetup;
-import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.launch.Launcher;
-import org.xml.sax.XMLReader;
-
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.PrintStream;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Calendar;
 import java.util.TimeZone;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+
+import org.apache.tools.ant.launch.Launcher;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.ProxySetup;
+import org.xml.sax.XMLReader;
 
 /**
  * A little diagnostic helper that output some information that may help

@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.StringUtils;
 

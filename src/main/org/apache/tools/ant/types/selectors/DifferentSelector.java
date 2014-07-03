@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.BuildException;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This selector selects files against a mapped set of target files, selecting

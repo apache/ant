@@ -21,8 +21,8 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Vector;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;

@@ -18,12 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.windows;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.ExecuteOn;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
-
-import java.io.File;
 
 /**
  * Attrib equivalent for Win32 environments.

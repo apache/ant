@@ -18,13 +18,13 @@
 package org.apache.tools.ant.types.resources.selectors;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-import java.util.Iterator;
-import java.util.Collections;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 
 /**

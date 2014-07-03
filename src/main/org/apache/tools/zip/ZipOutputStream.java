@@ -18,6 +18,15 @@
 
 package org.apache.tools.zip;
 
+import static org.apache.tools.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
+import static org.apache.tools.zip.ZipConstants.DWORD;
+import static org.apache.tools.zip.ZipConstants.INITIAL_VERSION;
+import static org.apache.tools.zip.ZipConstants.SHORT;
+import static org.apache.tools.zip.ZipConstants.WORD;
+import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
+import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
+import static org.apache.tools.zip.ZipConstants.ZIP64_MIN_VERSION;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
@@ -33,15 +42,6 @@ import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.ZipException;
-
-import static org.apache.tools.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
-import static org.apache.tools.zip.ZipConstants.DWORD;
-import static org.apache.tools.zip.ZipConstants.INITIAL_VERSION;
-import static org.apache.tools.zip.ZipConstants.SHORT;
-import static org.apache.tools.zip.ZipConstants.WORD;
-import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
-import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
-import static org.apache.tools.zip.ZipConstants.ZIP64_MIN_VERSION;
 
 /**
  * Reimplementation of {@link java.util.zip.ZipOutputStream

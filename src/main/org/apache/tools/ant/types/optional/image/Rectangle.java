@@ -17,10 +17,11 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
-import javax.media.jai.PlanarImage;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
+import javax.media.jai.PlanarImage;
 
 /**
  *

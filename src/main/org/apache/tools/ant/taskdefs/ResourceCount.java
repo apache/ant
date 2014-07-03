@@ -17,11 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Comparison;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**

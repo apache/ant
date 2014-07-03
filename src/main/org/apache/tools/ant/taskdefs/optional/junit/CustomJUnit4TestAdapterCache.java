@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.JUnit4TestAdapterCache;
 import junit.framework.TestResult;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;

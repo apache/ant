@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.jar.Manifest;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;

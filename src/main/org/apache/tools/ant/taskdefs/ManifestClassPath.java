@@ -20,10 +20,10 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.launch.Locator;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
 /**

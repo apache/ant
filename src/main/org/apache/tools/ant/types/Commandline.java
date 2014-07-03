@@ -19,17 +19,17 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.util.StringTokenizer;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.LinkedList;
-import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Commandline objects help handling command lines specifying processes to

@@ -18,9 +18,14 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.ProjectHelperRepository;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
@@ -31,11 +36,6 @@ import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Vector;
 
 /**
  * Task to import another build file into the current project.

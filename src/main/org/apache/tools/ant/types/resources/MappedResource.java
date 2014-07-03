@@ -17,9 +17,6 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.io.File;
-import java.util.Iterator;
-
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileNameMapper;

@@ -31,7 +31,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 /**
  * Establishes an ssh session with a remote machine, optionally
