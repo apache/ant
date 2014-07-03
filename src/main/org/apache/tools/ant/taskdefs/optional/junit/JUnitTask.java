@@ -134,9 +134,9 @@ public class JUnitTask extends Task {
         = System.getProperty("line.separator");
     private static final String CLASSPATH = "CLASSPATH";
     private CommandlineJava commandline;
-    private Vector tests = new Vector();
-    private Vector batchTests = new Vector();
-    private Vector formatters = new Vector();
+    private Vector<JUnitTest> tests = new Vector<JUnitTest>();
+    private Vector<BatchTest> batchTests = new Vector<BatchTest>();
+    private Vector<FormatterElement> formatters = new Vector<FormatterElement>();
     private File dir = null;
 
     private Integer timeout = null;
@@ -817,7 +817,7 @@ public class JUnitTask extends Task {
 
         setupJUnitDelegate();
 
-        List testLists = new ArrayList();
+        List<List> testLists = new ArrayList<List>();
         /* parallel test execution is only supported for multi-process execution */
         int threads = ((!fork) || (forkMode.getValue().equals(ForkMode.ONCE))
                        ? 1
@@ -830,7 +830,7 @@ public class JUnitTask extends Task {
         } else { /* forkMode.getValue().equals(ForkMode.PER_BATCH) */
             final int count = batchTests.size();
             for (int i = 0; i < count; i++) {
-                BatchTest batchtest = (BatchTest) batchTests.elementAt(i);
+                BatchTest batchtest = batchTests.elementAt(i);
                 testLists.addAll(executeOrQueue(batchtest.elements(), false));
             }
             testLists.addAll(executeOrQueue(tests.elements(), forkPerTest));
@@ -860,7 +860,7 @@ public class JUnitTask extends Task {
      */
     private class JunitTestThread implements Runnable {
 
-        JunitTestThread(JUnitTask master, Iterator iterator, int id) {
+        JunitTestThread(JUnitTask master, Iterator<List> iterator, int id) {
             this.masterTask = master;
             this.iterator = iterator;
             this.id = id;
@@ -876,7 +876,7 @@ public class JUnitTask extends Task {
         }
 
         private JUnitTask masterTask;
-        private Iterator iterator;
+        private Iterator<List> iterator;
         private int id;               
     }
 
@@ -887,10 +887,10 @@ public class JUnitTask extends Task {
      * threads get the same test, or two threads simultaneously pop the list so that a test
      * gets skipped!
      */
-    private List getNextTest(Iterator iter) {
+    private List getNextTest(Iterator<List> iter) {
         synchronized(iter) {
             if (iter.hasNext()) {
-                return (List) iter.next();
+                return iter.next();
             }
             return null;
         }
@@ -907,7 +907,7 @@ public class JUnitTask extends Task {
      * fatal reason, no new tests/batches will be started but the running threads will be
      * permitted to complete.  Additional tests may start in already-running batch-test threads.
      */
-    private void oneJunitThread(Iterator iter, int threadId) {
+    private void oneJunitThread(Iterator<List> iter, int threadId) {
 
         List l;
         log("Starting test thread " + threadId, Project.MSG_VERBOSE);
@@ -923,27 +923,26 @@ public class JUnitTask extends Task {
     }
 
 
-    private void runTestsInThreads(List testList, int numThreads) {
+    private void runTestsInThreads(List<List> testList, int numThreads) {
 
-        Iterator iter = testList.iterator();
+        Iterator<List> iter = testList.iterator();
 
         if (numThreads == 1) {
             /* with just one thread just run the test - don't create any threads */
             oneJunitThread(iter, 0);
-        }
-        else {
-            Thread threads[] = new Thread[numThreads];
+        } else {
+            Thread[] threads = new Thread[numThreads];
             int i;
             boolean exceptionOccurred;
 
             /* Need to split apart tests, which are still grouped in batches */
             /* is there a simpler Java mechanism to do this? */
             /* I assume we don't want to do this with "per batch" forking. */
-            List newlist = new ArrayList();
+            List<List> newlist = new ArrayList<List>();
             if (forkMode.getValue().equals(ForkMode.PER_TEST)) {
-                Iterator i1 = testList.iterator();
+                Iterator<List> i1 = testList.iterator();
                 while (i1.hasNext()) {
-                    List l = (List) i1.next();
+                    List l = i1.next();
                     if (l.size() == 1) {
                          newlist.add(l);
                     } else {
@@ -974,8 +973,7 @@ public class JUnitTask extends Task {
                     for (i = 0; i < numThreads; i++) {
                          threads[i].join();
                     }
-                }
-                catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     exceptionOccurred = true;
                 }
             } while (exceptionOccurred);
@@ -1656,11 +1654,11 @@ public class JUnitTask extends Task {
      * @return enumeration over individual tests
      * @since Ant 1.3
      */
-    protected Enumeration getIndividualTests() {
+    protected Enumeration<JUnitTest> getIndividualTests() {
         final int count = batchTests.size();
         final Enumeration[] enums = new Enumeration[ count + 1];
         for (int i = 0; i < count; i++) {
-            BatchTest batchtest = (BatchTest) batchTests.elementAt(i);
+            BatchTest batchtest = batchTests.elementAt(i);
             enums[i] = batchtest.elements();
         }
         enums[enums.length - 1] = tests.elements();
@@ -1681,9 +1679,9 @@ public class JUnitTask extends Task {
             return;
         }
 
-        Enumeration testsEnum = tests.elements();
+        Enumeration<JUnitTest> testsEnum = tests.elements();
         while (testsEnum.hasMoreElements()) {
-            JUnitTest test = (JUnitTest) testsEnum.nextElement();
+            JUnitTest test = testsEnum.nextElement();
             if (test.hasMethodsSpecified() && test.shouldRun(getProject())) {
                 test.resolveMethods();
             }
@@ -1695,7 +1693,7 @@ public class JUnitTask extends Task {
      * @return enumeration
      * @since Ant 1.3
      */
-    protected Enumeration allTests() {
+    protected Enumeration<JUnitTest> allTests() {
         Enumeration[] enums = {tests.elements(), batchTests.elements()};
         return Enumerations.fromCompound(enums);
     }
@@ -1706,7 +1704,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     private FormatterElement[] mergeFormatters(JUnitTest test) {
-        Vector feVector = (Vector) formatters.clone();
+        Vector<FormatterElement> feVector = (Vector<FormatterElement>) formatters.clone();
         test.addFormattersTo(feVector);
         FormatterElement[] feArray = new FormatterElement[feVector.size()];
         feVector.copyInto(feArray);
@@ -2083,11 +2081,11 @@ public class JUnitTask extends Task {
      * @return a list of tasks to be executed.
      * @since 1.6.2
      */
-    protected Collection executeOrQueue(Enumeration testList,
+    protected Collection<List> executeOrQueue(Enumeration<JUnitTest> testList,
                                         boolean runIndividual) {
-        Map testConfigurations = new HashMap();
+        Map<ForkedTestConfiguration, List> testConfigurations = new HashMap<ForkedTestConfiguration, List>();
         while (testList.hasMoreElements()) {
-            JUnitTest test = (JUnitTest) testList.nextElement();
+            JUnitTest test = testList.nextElement();
             if (test.shouldRun(getProject())) {
                 /* with multi-threaded runs need to defer execution of even */
                 /* individual tests so the threads can pick tests off the queue. */
@@ -2096,9 +2094,9 @@ public class JUnitTask extends Task {
                 } else {
                     ForkedTestConfiguration c =
                         new ForkedTestConfiguration(test);
-                    List l = (List) testConfigurations.get(c);
+                    List<JUnitTest> l = testConfigurations.get(c);
                     if (l == null) {
-                        l = new ArrayList();
+                        l = new ArrayList<JUnitTest>();
                         testConfigurations.put(c, l);
                     }
                     l.add(test);

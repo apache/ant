@@ -256,8 +256,7 @@ public class SSHExec extends SSHBase {
      * If suppressSystemOut is <code>false</code>, normal behavior
      * @since Ant 1.9.0
      */
-    public void setSuppressSystemOut(boolean suppressSystemOut)
-    {
+    public void setSuppressSystemOut(boolean suppressSystemOut) {
         this.suppressSystemOut = suppressSystemOut;
     }
 
@@ -266,8 +265,7 @@ public class SSHExec extends SSHBase {
      * If suppressSystemErr is <code>false</code>, normal behavior
      * @since Ant 1.9.4
      */
-    public void setSuppressSystemErr(boolean suppressSystemErr)
-    {
+    public void setSuppressSystemErr(boolean suppressSystemErr) {
         this.suppressSystemErr = suppressSystemErr;
     }
 

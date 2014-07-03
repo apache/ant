@@ -90,6 +90,7 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
                     testClass = Thread.currentThread().getContextClassLoader()
                         .loadClass(suiteName);
                 } catch (ClassNotFoundException cnfe) {
+                	// ignore
                 }
             }
             if (testClass == null && getClass().getClassLoader() != null) {
@@ -97,6 +98,7 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
                     testClass =
                         getClass().getClassLoader().loadClass(suiteName);
                 } catch (ClassNotFoundException cnfe) {
+                	// ignore
                 }
             }
             if (testClass == null) {

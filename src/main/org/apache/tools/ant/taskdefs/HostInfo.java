@@ -120,8 +120,7 @@ public class HostInfo extends Task {
             while (interfaces.hasMoreElements()) {
                 NetworkInterface currentif = interfaces.nextElement();
                 Enumeration<InetAddress> addrs = currentif.getInetAddresses();
-                while (addrs.hasMoreElements())
-                {
+                while (addrs.hasMoreElements()) {
                     inetAddrs.add(addrs.nextElement());
                 }
             }
@@ -152,8 +151,7 @@ public class HostInfo extends Task {
         }
     }
 
-    private boolean hasHostName(InetAddress addr)
-    {
+    private boolean hasHostName(InetAddress addr) {
         return !addr.getHostAddress().equals(addr.getCanonicalHostName());
     }
 
@@ -240,8 +238,7 @@ public class HostInfo extends Task {
         }
     }
 
-    private void setDomainAndName(String fqdn)
-    {
+    private void setDomainAndName(String fqdn) {
         int idx = fqdn.indexOf('.');
         if (idx > 0) {
             setProperty(NAME, fqdn.substring(0, idx));

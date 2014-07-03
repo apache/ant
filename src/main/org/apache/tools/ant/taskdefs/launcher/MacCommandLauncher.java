@@ -56,8 +56,7 @@ public class MacCommandLauncher extends CommandLauncherProxy {
         System.getProperties().put("user.dir", workingDir.getAbsolutePath());
         try {
             return exec(project, cmd, env);
-        }
-        finally {
+        } finally {
             System.getProperties().put("user.dir", System.getProperty("user.dir"));
         }
     }

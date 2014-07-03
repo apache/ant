@@ -175,16 +175,13 @@ public class CommandLauncher {
             try {
                 launcher = (CommandLauncher) Class.forName(launcherClass)
                     .newInstance();
-            }
-            catch(InstantiationException e) {
+            } catch(InstantiationException e) {
                 System.err.println("Could not instantiate launcher class "
                                    + launcherClass + ": " + e.getMessage());
-            }
-            catch(IllegalAccessException e) {
+            } catch(IllegalAccessException e) {
                 System.err.println("Could not instantiate launcher class "
                                    + launcherClass + ": " + e.getMessage());
-            }
-            catch(ClassNotFoundException e) {
+            } catch(ClassNotFoundException e) {
                 System.err.println("Could not instantiate launcher class "
                                    + launcherClass + ": " + e.getMessage());
             }

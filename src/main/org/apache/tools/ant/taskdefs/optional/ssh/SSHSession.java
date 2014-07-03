@@ -225,27 +225,31 @@ public class SSHSession extends SSHBase {
         int rport = 0;
         public void setLPort(int lport) {
             Integer portKey = new Integer(lport);
-            if (localPortsUsed.contains(portKey))
+            if (localPortsUsed.contains(portKey)) {
                 throw new BuildException("Multiple local tunnels defined to"
                                          + " use same local port " + lport);
+            }
             localPortsUsed.add(portKey);
             this.lport = lport;
         }
         public void setRHost(String rhost) { this.rhost = rhost; }
         public void setRPort(int rport) { this.rport = rport; }
         public int getLPort() {
-            if (lport == 0) throw new BuildException("lport is required for"
-                                                     + " LocalTunnel.");
+            if (lport == 0) {
+            	throw new BuildException("lport is required for LocalTunnel.");
+            }
             return lport;
         }
         public String getRHost() {
-            if (rhost == null) throw new BuildException("rhost is required"
-                                                        + " for LocalTunnel.");
+            if (rhost == null) {
+            	throw new BuildException("rhost is required for LocalTunnel.");
+            }
             return rhost;
         }
         public int getRPort() {
-            if (rport == 0) throw new BuildException("rport is required for"
-                                                     + " LocalTunnel.");
+            if (rport == 0) {
+            	throw new BuildException("rport is required for LocalTunnel.");
+            }
             return rport;
         }
     }
@@ -260,25 +264,29 @@ public class SSHSession extends SSHBase {
         public void setLHost(String lhost) { this.lhost = lhost; }
         public void setRPort(int rport) {
             Integer portKey = new Integer(rport);
-            if (remotePortsUsed.contains(portKey))
-                throw new BuildException("Multiple remote tunnels defined to"
-                                         + " use same remote port " + rport);
+			if (remotePortsUsed.contains(portKey)) {
+				throw new BuildException("Multiple remote tunnels defined to"
+						+ " use same remote port " + rport);
+			}
             remotePortsUsed.add(portKey);
             this.rport = rport;
         }
         public int getLPort() {
-            if (lport == 0) throw new BuildException("lport is required for"
-                                                     + " RemoteTunnel.");
+            if (lport == 0) {
+            	throw new BuildException("lport is required for RemoteTunnel.");
+            }
             return lport;
         }
         public String getLHost() {
-            if (lhost == null) throw new BuildException("lhost is required for"
-                                                        + " RemoteTunnel.");
+            if (lhost == null) { 
+            	throw new BuildException("lhost is required for RemoteTunnel.");
+            }
             return lhost;
         }
         public int getRPort() {
-            if (rport == 0) throw new BuildException("rport is required for"
-                                                     + " RemoteTunnel.");
+            if (rport == 0) { 
+            	throw new BuildException("rport is required for RemoteTunnel.");
+            }
             return rport;
         }
     }
@@ -301,7 +309,7 @@ public class SSHSession extends SSHBase {
      * This is a simple task container.
      */
     public static class NestedSequential implements TaskContainer {
-        private List nested = new ArrayList();
+        private List<Task> nested = new ArrayList<Task>();
 
         /**
          * Add a task or type to the container.
@@ -315,7 +323,7 @@ public class SSHSession extends SSHBase {
         /**
          * @return the list of unknown elements
          */
-        public List getNested() {
+        public List<Task> getNested() {
             return nested;
         }
     }

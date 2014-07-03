@@ -24,7 +24,8 @@ import java.lang.management.ManagementFactory;
  * @since Ant 1.9.4
  */
 public class ProcessUtil {
-    /**
+
+	/**
      * provide id of the current process
      * @param fallback
      * @return current process id
@@ -49,10 +50,13 @@ public class ProcessUtil {
         }
         return fallback;
     }
+
     public static void main(String [] args) {
         System.out.println(getProcessId("<PID>"));
         try {
-        Thread.sleep(120000);
-        } catch (Exception exc) {}
+        	Thread.sleep(120000);
+        } catch (Exception exc) {
+        	// ignore
+        }
     }
 }

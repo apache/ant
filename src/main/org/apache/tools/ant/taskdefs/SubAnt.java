@@ -323,6 +323,7 @@ public class SubAnt extends Task {
             ant = null;
         }
     }
+
     /** whether we should even try to continue after this error */
     private boolean isHardError(Throwable t) {
         if (t instanceof BuildException) {

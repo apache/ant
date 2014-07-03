@@ -231,11 +231,9 @@ public class LayoutPreservingProperties extends Properties {
             LogicalLine line = (LogicalLine) i.next();
             if (line instanceof Blank) {
                 out.println("blank:   \"" + line + "\"");
-            }
-            else if (line instanceof Comment) {
+            } else if (line instanceof Comment) {
                 out.println("comment: \"" + line + "\"");
-            }
-            else if (line instanceof Pair) {
+            } else if (line instanceof Pair) {
                 out.println("pair:    \"" + line + "\"");
             }
         }
@@ -294,8 +292,7 @@ public class LayoutPreservingProperties extends Properties {
                     }
                 }
                 osw.write(line.toString() + LS);
-            }
-            else if (line != null) {
+            } else if (line != null) {
                 osw.write(line.toString() + LS);
             }
         }
@@ -456,28 +453,26 @@ public class LayoutPreservingProperties extends Properties {
             if (c == '\n') {
                 // we have hit out end-of-string marker
                 break;
-            }
-            else if (c == '\\') {
+            } else if (c == '\\') {
                 // possibly an escape sequence
                 c = ch[++i];
-                if (c == 'n')
+                if (c == 'n') {
                     buffy.append('\n');
-                else if (c == 'r')
+                } else if (c == 'r') {
                     buffy.append('\r');
-                else if (c == 'f')
+                } else if (c == 'f') {
                     buffy.append('\f');
-                else if (c == 't')
+                } else if (c == 't') {
                     buffy.append('\t');
-                else if (c == 'u') {
+                } else if (c == 'u') {
                     // handle unicode escapes
                     c = unescapeUnicode(ch, i+1);
                     i += 4;
                     buffy.append(c);
-                }
-                else
+                } else {
                     buffy.append(c);
-            }
-            else {
+                }
+            } else {
                 buffy.append(c);
             }
         }
@@ -694,8 +689,7 @@ public class LayoutPreservingProperties extends Properties {
             Object dolly = null;
             try {
                 dolly = super.clone();
-            }
-            catch (CloneNotSupportedException e) {
+            } catch (CloneNotSupportedException e) {
                 // should be fine
                 e.printStackTrace();
             }
@@ -709,8 +703,7 @@ public class LayoutPreservingProperties extends Properties {
                 // trim leading whitespace only
                 name = text;
                 value = null;
-            }
-            else {
+            } else {
                 name = text.substring(0, pos);
                 value = text.substring(pos+1, text.length());
             }

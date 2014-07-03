@@ -625,8 +625,7 @@ public class Get extends Task {
 
             connection = openConnection(source);
 
-            if (connection == null)
-            {
+            if (connection == null) {
                 return false;
             }
 
@@ -719,19 +718,14 @@ public class Get extends Task {
             if (connection instanceof HttpURLConnection) {
                 HttpURLConnection httpConnection = (HttpURLConnection) connection;
                 int responseCode = httpConnection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
-                        responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                        responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
-                        responseCode == HTTP_MOVED_TEMP)
-                {
+                if (isMoved(responseCode)) {
                     String newLocation = httpConnection.getHeaderField("Location");
                     String message = aSource
                             + (responseCode == HttpURLConnection.HTTP_MOVED_PERM ? " permanently"
                                     : "") + " moved to " + newLocation;
                     log(message, logLevel);
                     URL newURL = new URL(aSource, newLocation);
-                    if (!redirectionAllowed(aSource, newURL))
-                    {
+                    if (!redirectionAllowed(aSource, newURL)) {
                         return null;
                     }
                     return openConnection(newURL);
@@ -766,6 +760,13 @@ public class Get extends Task {
             //course.
             return connection;
         }
+
+		private boolean isMoved(int responseCode) {
+			return responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
+			       responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+			       responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
+			       responseCode == HTTP_MOVED_TEMP;
+		}
 
         private boolean downloadFile()
                 throws FileNotFoundException, IOException {

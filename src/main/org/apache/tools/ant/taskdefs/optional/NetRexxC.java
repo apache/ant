@@ -742,9 +742,8 @@ public class NetRexxC extends MatchingTask {
                 if (!compile && srcFile.lastModified() > javaFile.lastModified()) {
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
-                }
-                // compile case tests against .class file
-                else if (compile && srcFile.lastModified() > classFile.lastModified()) {
+                } else if (compile && srcFile.lastModified() > classFile.lastModified()) {
+                	// compile case tests against .class file
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
                 }
