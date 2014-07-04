@@ -20,6 +20,7 @@ package org.apache.tools.ant.listener;
 
 import java.io.PrintStream;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.BuildEvent;
@@ -29,7 +30,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
 
-import sun.rmi.runtime.Log;
 
 /**
  * Jakarta Commons Logging listener.
@@ -80,31 +80,31 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
             suffix = suffix.replace(' ', '-');
             cat = cat + "." + suffix;
         }
-        PrintStream tmpOut = System.out;
-        PrintStream tmpErr = System.err;
+        final PrintStream tmpOut = System.out;
+        final PrintStream tmpErr = System.err;
         System.setOut(out);
         System.setErr(err);
 
         if (!initialized) {
             try {
                 logFactory = LogFactory.getFactory();
-            } catch (LogConfigurationException e) {
+            } catch (final LogConfigurationException e) {
                 e.printStackTrace(System.err);
                 return null;
             }
         }
 
         initialized = true;
-        Log log = logFactory.getInstance(cat);
+        final Log log = logFactory.getInstance(cat);
         System.setOut(tmpOut);
         System.setErr(tmpErr);
         return log;
     }
 
     /** {@inheritDoc}. */
-    public void buildStarted(BuildEvent event) {
-        String categoryString = PROJECT_LOG;
-        Log log = getLog(categoryString, null);
+    public void buildStarted(final BuildEvent event) {
+        final String categoryString = PROJECT_LOG;
+        final Log log = getLog(categoryString, null);
 
         if (initialized) {
             realLog(log, "Build started.", Project.MSG_INFO, null);
@@ -112,10 +112,10 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     }
 
     /** {@inheritDoc}. */
-    public void buildFinished(BuildEvent event) {
+    public void buildFinished(final BuildEvent event) {
         if (initialized) {
-            String categoryString = PROJECT_LOG;
-            Log log = getLog(categoryString, event.getProject().getName());
+            final String categoryString = PROJECT_LOG;
+            final Log log = getLog(categoryString, event.getProject().getName());
 
             if (event.getException() == null) {
                 realLog(log, "Build finished.", Project.MSG_INFO, null);
@@ -130,9 +130,9 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#targetStarted
      */
     /** {@inheritDoc}. */
-    public void targetStarted(BuildEvent event) {
+    public void targetStarted(final BuildEvent event) {
         if (initialized) {
-            Log log = getLog(TARGET_LOG,
+            final Log log = getLog(TARGET_LOG,
                     event.getTarget().getName());
             // Since task log category includes target, we don't really
             // need this message
@@ -145,10 +145,10 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#targetFinished
      */
     /** {@inheritDoc}. */
-    public void targetFinished(BuildEvent event) {
+    public void targetFinished(final BuildEvent event) {
         if (initialized) {
-            String targetName = event.getTarget().getName();
-            Log log = getLog(TARGET_LOG,
+            final String targetName = event.getTarget().getName();
+            final Log log = getLog(TARGET_LOG,
                     event.getTarget().getName());
             if (event.getException() == null) {
                 realLog(log, "Target end: " + targetName, Project.MSG_DEBUG, null);
@@ -164,17 +164,17 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#taskStarted
      */
     /** {@inheritDoc}. */
-    public void taskStarted(BuildEvent event) {
+    public void taskStarted(final BuildEvent event) {
         if (initialized) {
-            Task task = event.getTask();
+            final Task task = event.getTask();
             Object real = task;
             if (task instanceof UnknownElement) {
-                Object realObj = ((UnknownElement) task).getTask();
+                final Object realObj = ((UnknownElement) task).getTask();
                 if (realObj != null) {
                     real = realObj;
                 }
             }
-            Log log = getLog(real.getClass().getName(), null);
+            final Log log = getLog(real.getClass().getName(), null);
             if (log.isTraceEnabled()) {
                 realLog(log, "Task \"" + task.getTaskName() + "\" started ",
                         Project.MSG_VERBOSE, null);
@@ -186,17 +186,17 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#taskFinished
      */
     /** {@inheritDoc}. */
-    public void taskFinished(BuildEvent event) {
+    public void taskFinished(final BuildEvent event) {
         if (initialized) {
-            Task task = event.getTask();
+            final Task task = event.getTask();
             Object real = task;
             if (task instanceof UnknownElement) {
-                Object realObj = ((UnknownElement) task).getTask();
+                final Object realObj = ((UnknownElement) task).getTask();
                 if (realObj != null) {
                     real = realObj;
                 }
             }
-            Log log = getLog(real.getClass().getName(), null);
+            final Log log = getLog(real.getClass().getName(), null);
             if (event.getException() == null) {
                 if (log.isTraceEnabled()) {
                     realLog(log, "Task \"" + task.getTaskName() + "\" finished.",
@@ -215,7 +215,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#messageLogged
      */
     /** {@inheritDoc}. */
-    public void messageLogged(BuildEvent event) {
+    public void messageLogged(final BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();
             String categoryString = null;
@@ -242,16 +242,16 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
             }
 
-            Log log = getLog(categoryString, categoryDetail);
-            int priority = event.getPriority();
-            String message = event.getMessage();
+            final Log log = getLog(categoryString, categoryDetail);
+            final int priority = event.getPriority();
+            final String message = event.getMessage();
             realLog(log, message, priority , null);
         }
     }
 
-    private void realLog(Log log, String message, int priority, Throwable t) {
-        PrintStream tmpOut = System.out;
-        PrintStream tmpErr = System.err;
+    private void realLog(final Log log, final String message, final int priority, final Throwable t) {
+        final PrintStream tmpOut = System.out;
+        final PrintStream tmpErr = System.err;
         System.setOut(out);
         System.setErr(err);
         switch (priority) {
@@ -300,7 +300,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * This is not used, the logger config is used instead.
      * @param level ignored
      */
-    public void setMessageOutputLevel(int level) {
+    public void setMessageOutputLevel(final int level) {
         // Use the logger config
     }
 
@@ -308,7 +308,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * Set the output print stream.
      * @param output the output stream
      */
-    public void setOutputPrintStream(PrintStream output) {
+    public void setOutputPrintStream(final PrintStream output) {
         this.out = output;
     }
 
@@ -317,7 +317,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * This is ignored.
      * @param emacsMode ignored
      */
-    public void setEmacsMode(boolean emacsMode) {
+    public void setEmacsMode(final boolean emacsMode) {
         // Doesn't make sense for c-l. Use the logger config
     }
 
@@ -325,7 +325,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * Set the error print stream.
      * @param err the error stream
      */
-    public void setErrorPrintStream(PrintStream err) {
+    public void setErrorPrintStream(final PrintStream err) {
         this.err = err;
     }
 

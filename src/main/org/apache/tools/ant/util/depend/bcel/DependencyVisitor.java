@@ -23,7 +23,11 @@ import java.util.StringTokenizer;
 
 import com.sun.org.apache.bcel.internal.classfile.ConstantClass;
 import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
+import com.sun.org.apache.bcel.internal.classfile.ConstantPool;
+import com.sun.org.apache.bcel.internal.classfile.EmptyVisitor;
+import com.sun.org.apache.bcel.internal.classfile.Field;
 import com.sun.org.apache.bcel.internal.classfile.JavaClass;
+import com.sun.org.apache.bcel.internal.classfile.Method;
 
 /**
  * A BCEL visitor implementation to collect class dependency information
@@ -31,7 +35,7 @@ import com.sun.org.apache.bcel.internal.classfile.JavaClass;
  */
 public class DependencyVisitor extends EmptyVisitor {
     /** The collected dependencies */
-    private Hashtable<String, String> dependencies = new Hashtable<String, String>();
+    private final Hashtable<String, String> dependencies = new Hashtable<String, String>();
     /**
      * The current class's constant pool - used to determine class names
      * from class references.
@@ -58,7 +62,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param constantPool the constant pool of the class being visited.
      */
-    public void visitConstantPool(ConstantPool constantPool) {
+    public void visitConstantPool(final ConstantPool constantPool) {
         this.constantPool = constantPool;
     }
 
@@ -67,8 +71,8 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param constantClass the constantClass entry for the class reference
      */
-    public void visitConstantClass(ConstantClass constantClass) {
-        String classname
+    public void visitConstantClass(final ConstantClass constantClass) {
+        final String classname
              = constantClass.getConstantValue(constantPool).toString();
         addSlashClass(classname);
     }
@@ -80,18 +84,18 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param obj the name and type reference being visited.
      */
-    public void visitConstantNameAndType(ConstantNameAndType obj) {
-        String name = obj.getName(constantPool);
+    public void visitConstantNameAndType(final ConstantNameAndType obj) {
+        final String name = obj.getName(constantPool);
         if (obj.getSignature(constantPool).equals("Ljava/lang/Class;")
                 && name.startsWith("class$")) {
             String classname
                 = name.substring("class$".length()).replace('$', '.');
             // does the class have a package structure
-            int index = classname.lastIndexOf(".");
+            final int index = classname.lastIndexOf(".");
             if (index > 0) {
                 char start;
                 // check if the package structure is more than 1 level deep
-                int index2 = classname.lastIndexOf(".", index - 1);
+                final int index2 = classname.lastIndexOf(".", index - 1);
                 if (index2 != -1) {
                     // class name has more than 1 package level 'com.company.Class'
                     start = classname.charAt(index2 + 1);
@@ -124,7 +128,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param field the field being visited
      */
-    public void visitField(Field field) {
+    public void visitField(final Field field) {
         addClasses(field.getSignature());
     }
 
@@ -133,7 +137,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param javaClass the class being visited.
      */
-    public void visitJavaClass(JavaClass javaClass) {
+    public void visitJavaClass(final JavaClass javaClass) {
         addClass(javaClass.getClassName());
     }
 
@@ -142,9 +146,9 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param method the method being visited.
      */
-    public void visitMethod(Method method) {
-        String signature = method.getSignature();
-        int pos = signature.indexOf(")");
+    public void visitMethod(final Method method) {
+        final String signature = method.getSignature();
+        final int pos = signature.indexOf(")");
         addClasses(signature.substring(1, pos));
         addClasses(signature.substring(pos + 1));
     }
@@ -154,7 +158,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param classname the class to be added to the list of dependencies.
      */
-    void addClass(String classname) {
+    void addClass(final String classname) {
         dependencies.put(classname, classname);
     }
 
@@ -164,11 +168,11 @@ public class DependencyVisitor extends EmptyVisitor {
      * @param string the descriptor string, being descriptors separated by
      *      ';' characters.
      */
-    private void addClasses(String string) {
-        StringTokenizer tokens = new StringTokenizer(string, ";");
+    private void addClasses(final String string) {
+        final StringTokenizer tokens = new StringTokenizer(string, ";");
         while (tokens.hasMoreTokens()) {
-            String descriptor = tokens.nextToken();
-            int pos = descriptor.indexOf('L');
+            final String descriptor = tokens.nextToken();
+            final int pos = descriptor.indexOf('L');
             if (pos != -1) {
                 addSlashClass(descriptor.substring(pos + 1));
             }
@@ -181,7 +185,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param classname the class name in slash format
      */
-    private void addSlashClass(String classname) {
+    private void addSlashClass(final String classname) {
         addClass(classname.replace('/', '.'));
     }
 }

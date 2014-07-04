@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.types.resolver;
 
-import com.sun.org.apache.xml.internal.resolver.Catalog;
-import com.sun.org.apache.xml.internal.resolver.CatalogEntry;
-import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
+import org.apache.xml.resolver.Catalog;
+import org.apache.xml.resolver.CatalogEntry;
+import org.apache.xml.resolver.helpers.PublicId;
+
 
 /**
  * This class extends the Catalog class provided by Norman Walsh's
@@ -54,7 +55,7 @@ public class ApacheCatalog extends Catalog {
      * @return the catalog.
      */
     protected Catalog newCatalog() {
-        ApacheCatalog cat = (ApacheCatalog) super.newCatalog();
+        final ApacheCatalog cat = (ApacheCatalog) super.newCatalog();
         cat.setResolver(resolver);
         return cat;
     }
@@ -63,7 +64,7 @@ public class ApacheCatalog extends Catalog {
      * Set the resolver object to callback.
      * @param resolver the apache catalog resolver.
      */
-    public void setResolver(ApacheCatalogResolver resolver) {
+    public void setResolver(final ApacheCatalogResolver resolver) {
         this.resolver = resolver;
     }
 
@@ -84,14 +85,14 @@ public class ApacheCatalog extends Catalog {
      *
      * @param entry The CatalogEntry to process.
      */
-    public void addEntry(CatalogEntry entry) {
+    public void addEntry(final CatalogEntry entry) {
 
-        int type = entry.getEntryType();
+        final int type = entry.getEntryType();
 
         if (type == PUBLIC) {
 
-            String publicid = PublicId.normalize(entry.getEntryArg(0));
-            String systemid = normalizeURI(entry.getEntryArg(1));
+            final String publicid = PublicId.normalize(entry.getEntryArg(0));
+            final String systemid = normalizeURI(entry.getEntryArg(1));
 
             if (resolver == null) {
                 catalogManager.debug
@@ -102,8 +103,8 @@ public class ApacheCatalog extends Catalog {
 
         } else if (type == URI) {
 
-            String uri = normalizeURI(entry.getEntryArg(0));
-            String altURI = normalizeURI(entry.getEntryArg(1));
+            final String uri = normalizeURI(entry.getEntryArg(0));
+            final String altURI = normalizeURI(entry.getEntryArg(1));
 
             if (resolver == null) {
                 catalogManager.debug

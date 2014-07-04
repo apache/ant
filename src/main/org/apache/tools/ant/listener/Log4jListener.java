@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.listener;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.NullEnumeration;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -44,8 +45,8 @@ public class Log4jListener implements BuildListener {
      * Construct the listener and make sure there is a valid appender.
      */
     public Log4jListener() {
-        Logger log = Logger.getLogger(LOG_ANT);
-        Logger rootLog = Logger.getRootLogger();
+        final Logger log = Logger.getLogger(LOG_ANT);
+        final Logger rootLog = Logger.getRootLogger();
         initialized = !(rootLog.getAllAppenders() instanceof NullEnumeration);
         if (!initialized) {
             log.error("No log4j.properties in build area");
@@ -56,9 +57,9 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#buildStarted
      */
     /** {@inheritDoc}. */
-    public void buildStarted(BuildEvent event) {
+    public void buildStarted(final BuildEvent event) {
         if (initialized) {
-            Logger log = Logger.getLogger(Project.class.getName());
+            final Logger log = Logger.getLogger(Project.class.getName());
             log.info("Build started.");
         }
     }
@@ -67,9 +68,9 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#buildFinished
      */
     /** {@inheritDoc}. */
-    public void buildFinished(BuildEvent event) {
+    public void buildFinished(final BuildEvent event) {
         if (initialized) {
-            Logger log = Logger.getLogger(Project.class.getName());
+            final Logger log = Logger.getLogger(Project.class.getName());
             if (event.getException() == null) {
                 log.info("Build finished.");
             } else {
@@ -82,9 +83,9 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#targetStarted
      */
     /** {@inheritDoc}. */
-    public void targetStarted(BuildEvent event) {
+    public void targetStarted(final BuildEvent event) {
         if (initialized) {
-            Logger log = Logger.getLogger(Target.class.getName());
+            final Logger log = Logger.getLogger(Target.class.getName());
             log.info("Target \"" + event.getTarget().getName() + "\" started.");
         }
     }
@@ -93,10 +94,10 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#targetFinished
      */
     /** {@inheritDoc}. */
-    public void targetFinished(BuildEvent event) {
+    public void targetFinished(final BuildEvent event) {
         if (initialized) {
-            String targetName = event.getTarget().getName();
-            Logger cat = Logger.getLogger(Target.class.getName());
+            final String targetName = event.getTarget().getName();
+            final Logger cat = Logger.getLogger(Target.class.getName());
             if (event.getException() == null) {
                 cat.info("Target \"" + targetName + "\" finished.");
             } else {
@@ -110,10 +111,10 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#taskStarted
      */
     /** {@inheritDoc}. */
-    public void taskStarted(BuildEvent event) {
+    public void taskStarted(final BuildEvent event) {
         if (initialized) {
-            Task task = event.getTask();
-            Logger log = Logger.getLogger(task.getClass().getName());
+            final Task task = event.getTask();
+            final Logger log = Logger.getLogger(task.getClass().getName());
             log.info("Task \"" + task.getTaskName() + "\" started.");
         }
     }
@@ -122,10 +123,10 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#taskFinished
      */
     /** {@inheritDoc}. */
-    public void taskFinished(BuildEvent event) {
+    public void taskFinished(final BuildEvent event) {
         if (initialized) {
-            Task task = event.getTask();
-            Logger log = Logger.getLogger(task.getClass().getName());
+            final Task task = event.getTask();
+            final Logger log = Logger.getLogger(task.getClass().getName());
             if (event.getException() == null) {
                 log.info("Task \"" + task.getTaskName() + "\" finished.");
             } else {
@@ -139,7 +140,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#messageLogged
      */
     /** {@inheritDoc}. */
-    public void messageLogged(BuildEvent event) {
+    public void messageLogged(final BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();
             if (categoryObject == null) {
@@ -149,7 +150,7 @@ public class Log4jListener implements BuildListener {
                 }
             }
 
-            Logger log
+            final Logger log
                 = Logger.getLogger(categoryObject.getClass().getName());
             switch (event.getPriority()) {
                 case Project.MSG_ERR:

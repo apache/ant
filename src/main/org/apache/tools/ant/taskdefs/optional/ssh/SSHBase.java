@@ -24,6 +24,7 @@ import org.apache.tools.ant.Task;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 /**
  * Base class for Ant tasks using jsch.
@@ -40,7 +41,7 @@ public abstract class SSHBase extends Task implements LogListener {
     private int port = SSH_PORT;
     private boolean failOnError = true;
     private boolean verbose;
-    private SSHUserInfo userInfo;
+    private final SSHUserInfo userInfo;
 
     /**
      * Constructor for SSHBase.
@@ -55,7 +56,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param host  The new host value
      */
-    public void setHost(String host) {
+    public void setHost(final String host) {
         this.host = host;
     }
 
@@ -73,7 +74,7 @@ public abstract class SSHBase extends Task implements LogListener {
      * @param failure if true throw a build exception when a failure occuries,
      *                otherwise just log the failure and continue
      */
-    public void setFailonerror(boolean failure) {
+    public void setFailonerror(final boolean failure) {
         failOnError = failure;
     }
 
@@ -90,7 +91,7 @@ public abstract class SSHBase extends Task implements LogListener {
      * @param verbose if true output more verbose logging
      * @since Ant 1.6.2
      */
-    public void setVerbose(boolean verbose) {
+    public void setVerbose(final boolean verbose) {
         this.verbose = verbose;
     }
 
@@ -108,7 +109,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param username  The new username value
      */
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         userInfo.setName(username);
     }
 
@@ -118,7 +119,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param password  The new password value
      */
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         userInfo.setPassword(password);
     }
 
@@ -127,7 +128,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param keyfile  The new keyfile value
      */
-    public void setKeyfile(String keyfile) {
+    public void setKeyfile(final String keyfile) {
         userInfo.setKeyfile(keyfile);
     }
 
@@ -136,7 +137,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param passphrase  The new passphrase value
      */
-    public void setPassphrase(String passphrase) {
+    public void setPassphrase(final String passphrase) {
         userInfo.setPassphrase(passphrase);
     }
 
@@ -148,7 +149,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param knownHosts a path to the known hosts file.
      */
-    public void setKnownhosts(String knownHosts) {
+    public void setKnownhosts(final String knownHosts) {
         this.knownHosts = knownHosts;
     }
 
@@ -157,7 +158,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param yesOrNo if true trust the identity of unknown hosts.
      */
-    public void setTrust(boolean yesOrNo) {
+    public void setTrust(final boolean yesOrNo) {
         userInfo.setTrust(yesOrNo);
     }
 
@@ -166,7 +167,7 @@ public abstract class SSHBase extends Task implements LogListener {
      *
      * @param port port number of remote host.
      */
-    public void setPort(int port) {
+    public void setPort(final int port) {
         this.port = port;
     }
 
@@ -195,14 +196,14 @@ public abstract class SSHBase extends Task implements LogListener {
      * @throws JSchException on error
      */
     protected Session openSession() throws JSchException {
-        JSch jsch = new JSch();
+        final JSch jsch = new JSch();
         final SSHBase base = this;
         if(verbose) {
         	JSch.setLogger(new com.jcraft.jsch.Logger(){
-        		public boolean isEnabled(int level){
+        		public boolean isEnabled(final int level){
         			return true;
         		}
-        		public void log(int level, String message){
+        		public void log(final int level, final String message){
         			base.log(message, Project.MSG_INFO);
         		}
         	});
@@ -216,7 +217,7 @@ public abstract class SSHBase extends Task implements LogListener {
             jsch.setKnownHosts(knownHosts);
         }
 
-        Session session = jsch.getSession(userInfo.getName(), host, port);
+        final Session session = jsch.getSession(userInfo.getName(), host, port);
         session.setConfig("PreferredAuthentications",
                 "publickey,keyboard-interactive,password");
         session.setUserInfo(userInfo);

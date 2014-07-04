@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
@@ -36,7 +37,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     private static final int HUNDRED_KILOBYTES = 102400;
 
     private File localFile;
-    private String remotePath;
+    private final String remotePath;
     private List directoryList;
 
     /**
@@ -47,10 +48,10 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aRemotePath the remote path
      * @since Ant 1.7
      */
-    public ScpToMessageBySftp(boolean verbose,
-                              Session session,
-                              File aLocalFile,
-                              String aRemotePath) {
+    public ScpToMessageBySftp(final boolean verbose,
+                              final Session session,
+                              final File aLocalFile,
+                              final String aRemotePath) {
         this(verbose, session, aRemotePath);
 
         this.localFile = aLocalFile;
@@ -64,10 +65,10 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aRemotePath the remote path
      * @since Ant 1.7
      */
-    public ScpToMessageBySftp(boolean verbose,
-                              Session session,
-                              List aDirectoryList,
-                              String aRemotePath) {
+    public ScpToMessageBySftp(final boolean verbose,
+                              final Session session,
+                              final List aDirectoryList,
+                              final String aRemotePath) {
         this(verbose, session, aRemotePath);
 
         this.directoryList = aDirectoryList;
@@ -80,9 +81,9 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aRemotePath the remote path
      * @since Ant 1.6.2
      */
-    private ScpToMessageBySftp(boolean verbose,
-                               Session session,
-                               String aRemotePath) {
+    private ScpToMessageBySftp(final boolean verbose,
+                               final Session session,
+                               final String aRemotePath) {
         super(verbose, session);
         this.remotePath = aRemotePath;
     }
@@ -93,9 +94,9 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aLocalFile the local file
      * @param aRemotePath the remote path
      */
-    public ScpToMessageBySftp(Session session,
-                              File aLocalFile,
-                              String aRemotePath) {
+    public ScpToMessageBySftp(final Session session,
+                              final File aLocalFile,
+                              final String aRemotePath) {
         this(false, session, aLocalFile, aRemotePath);
     }
 
@@ -105,9 +106,9 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aDirectoryList a list of directories
      * @param aRemotePath the remote path
      */
-    public ScpToMessageBySftp(Session session,
-                              List aDirectoryList,
-                              String aRemotePath) {
+    public ScpToMessageBySftp(final Session session,
+                              final List aDirectoryList,
+                              final String aRemotePath) {
         this(false, session, aDirectoryList, aRemotePath);
     }
 
@@ -127,13 +128,13 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     }
 
     private void doSingleTransfer() throws IOException, JSchException {
-        ChannelSftp channel = openSftpChannel();
+        final ChannelSftp channel = openSftpChannel();
         try {
             channel.connect();
             try {
                 sendFileToRemote(channel, localFile, remotePath);
-            } catch (SftpException e) {
-                JSchException schException = new JSchException("Could not send '" + localFile
+            } catch (final SftpException e) {
+                final JSchException schException = new JSchException("Could not send '" + localFile
                         + "' to '" + remotePath + "' - "
                         + e.toString());
                 schException.initCause(e);
@@ -147,14 +148,14 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     }
 
     private void doMultipleTransfer() throws IOException, JSchException {
-        ChannelSftp channel = openSftpChannel();
+        final ChannelSftp channel = openSftpChannel();
         try {
             channel.connect();
 
             try {
                 try {
                     channel.stat(remotePath);
-                } catch (SftpException e) {
+                } catch (final SftpException e) {
                     if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                         // dir does not exist.
                         channel.mkdir(remotePath);
@@ -164,20 +165,20 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                     }
                 }
                 channel.cd(remotePath);
-            } catch (SftpException e) {
+            } catch (final SftpException e) {
                 throw new JSchException("Could not CD to '" + remotePath
                                         + "' - " + e.toString(), e);
             }
             Directory current = null;
             try {
-                for (Iterator i = directoryList.iterator(); i.hasNext();) {
+                for (final Iterator i = directoryList.iterator(); i.hasNext();) {
                     current = (Directory) i.next();
                     if (getVerbose()) {
                         log("Sending directory " + current);
                     }
                     sendDirectory(channel, current);
                 }
-            } catch (SftpException e) {
+            } catch (final SftpException e) {
                 String msg = "Error sending directory";
                 if (current != null && current.getDirectory() != null) {
                     msg += " '" + current.getDirectory().getName() + "'";
@@ -191,25 +192,25 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         }
     }
 
-    private void sendDirectory(ChannelSftp channel,
-                               Directory current)
+    private void sendDirectory(final ChannelSftp channel,
+                               final Directory current)
         throws IOException, SftpException {
-        for (Iterator fileIt = current.filesIterator(); fileIt.hasNext();) {
+        for (final Iterator fileIt = current.filesIterator(); fileIt.hasNext();) {
             sendFileToRemote(channel, (File) fileIt.next(), null);
         }
-        for (Iterator dirIt = current.directoryIterator(); dirIt.hasNext();) {
-            Directory dir = (Directory) dirIt.next();
+        for (final Iterator dirIt = current.directoryIterator(); dirIt.hasNext();) {
+            final Directory dir = (Directory) dirIt.next();
             sendDirectoryToRemote(channel, dir);
         }
     }
 
-    private void sendDirectoryToRemote(ChannelSftp channel,
-                                       Directory directory)
+    private void sendDirectoryToRemote(final ChannelSftp channel,
+                                       final Directory directory)
         throws IOException, SftpException {
-        String dir = directory.getDirectory().getName();
+        final String dir = directory.getDirectory().getName();
         try {
             channel.stat(dir);
-        } catch (SftpException e) {
+        } catch (final SftpException e) {
             // dir does not exist.
             if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 channel.mkdir(dir);
@@ -220,21 +221,21 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         channel.cd("..");
     }
 
-    private void sendFileToRemote(ChannelSftp channel,
-                                  File localFile,
+    private void sendFileToRemote(final ChannelSftp channel,
+                                  final File localFile,
                                   String remotePath)
         throws IOException, SftpException {
-        long filesize = localFile.length();
+        final long filesize = localFile.length();
 
         if (remotePath == null) {
             remotePath = localFile.getName();
         }
 
-        long startTime = System.currentTimeMillis();
-        long totalLength = filesize;
+        final long startTime = System.currentTimeMillis();
+        final long totalLength = filesize;
 
         // only track progress for files larger than 100kb in verbose mode
-        boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
+        final boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
 
         SftpProgressMonitor monitor = null;
         if (trackProgress) {
@@ -248,7 +249,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             channel.put(localFile.getAbsolutePath(), remotePath, monitor);
         } finally {
             if (this.getVerbose()) {
-                long endTime = System.currentTimeMillis();
+                final long endTime = System.currentTimeMillis();
                 logStats(startTime, endTime, (int) totalLength);
             }
         }

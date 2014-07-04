@@ -25,10 +25,10 @@ import java.net.URL;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.ResourceLocation;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.xml.resolver.Catalog;
+import org.apache.xml.resolver.CatalogManager;
+import org.apache.xml.resolver.tools.CatalogResolver;
 
-import com.sun.org.apache.xml.internal.resolver.Catalog;
-import com.sun.org.apache.xml.internal.resolver.CatalogManager;
-import com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver;
 
 /**
  * <p>This class extends the CatalogResolver class provided by Norman
@@ -91,7 +91,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * Set the XMLCatalog object to callback.
      * @param xmlCatalog the XMLCatalog to use.
      */
-    public void setXMLCatalog(XMLCatalog xmlCatalog) {
+    public void setXMLCatalog(final XMLCatalog xmlCatalog) {
         this.xmlCatalog = xmlCatalog;
     }
 
@@ -100,22 +100,22 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * file within a <code>&lt;catalogfiles&gt;</code> fileset.
      * @param file the external catalog file.
      */
-    public void parseCatalog(String file) {
+    public void parseCatalog(final String file) {
 
-        Catalog catalog = getCatalog();
+        final Catalog catalog = getCatalog();
         if (!(catalog instanceof ApacheCatalog)) {
             throw new BuildException("Wrong catalog type found: " + catalog.getClass().getName());
         }
-        ApacheCatalog apacheCatalog = (ApacheCatalog) catalog;
+        final ApacheCatalog apacheCatalog = (ApacheCatalog) catalog;
 
         // Pass in reference to ourselves so we can be called back.
         apacheCatalog.setResolver(this);
 
         try {
             apacheCatalog.parseCatalog(file);
-        } catch (MalformedURLException ex) {
+        } catch (final MalformedURLException ex) {
             throw new BuildException(ex);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new BuildException(ex);
         }
     }
@@ -133,11 +133,11 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * directory in which the catalog is located.
      *
      */
-    public void addPublicEntry(String publicid,
-                               String systemid,
-                               URL base) {
+    public void addPublicEntry(final String publicid,
+                               final String systemid,
+                               final URL base) {
 
-        ResourceLocation dtd = new ResourceLocation();
+        final ResourceLocation dtd = new ResourceLocation();
         dtd.setBase(base);
         dtd.setPublicId(publicid);
         dtd.setLocation(systemid);
@@ -159,11 +159,11 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * directory in which the catalog is located.
      *
      */
-    public void addURIEntry(String uri,
-                            String altURI,
-                            URL base) {
+    public void addURIEntry(final String uri,
+                            final String altURI,
+                            final URL base) {
 
-        ResourceLocation entity = new ResourceLocation();
+        final ResourceLocation entity = new ResourceLocation();
         entity.setBase(base);
         entity.setPublicId(uri);
         entity.setLocation(altURI);

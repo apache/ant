@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import com.sun.org.apache.bcel.internal.classfile.ClassParser;
 import com.sun.org.apache.bcel.internal.classfile.ConstantValue;
+import com.sun.org.apache.bcel.internal.classfile.Field;
 import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
@@ -40,7 +41,7 @@ public final class JavaClassHelper {
      * @return a StringBuffer contains the name=value pairs
      * @exception IOException if an error occurs
      */
-    public static StringBuffer getConstants(byte[] bytes)
+    public static StringBuffer getConstants(final byte[] bytes)
         throws IOException {
         final StringBuffer sb = new StringBuffer();
         final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);

@@ -28,8 +28,10 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.util.FileUtils;
 
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
@@ -51,7 +53,7 @@ public class ScpFromMessage extends AbstractSshMessage {
      * Constructor for ScpFromMessage
      * @param session the ssh session to use
      */
-    public ScpFromMessage(Session session) {
+    public ScpFromMessage(final Session session) {
         super(session);
     }
 
@@ -61,7 +63,7 @@ public class ScpFromMessage extends AbstractSshMessage {
      * @param session the ssh session to use
      * @since Ant 1.7
      */
-    public ScpFromMessage(boolean verbose, Session session) {
+    public ScpFromMessage(final boolean verbose, final Session session) {
         super(verbose, session);
     }
 
@@ -74,11 +76,11 @@ public class ScpFromMessage extends AbstractSshMessage {
      * @param recursive   if true use recursion (-r option to scp)
      * @since Ant 1.6.2
      */
-    public ScpFromMessage(boolean verbose,
-                          Session session,
-                          String aRemoteFile,
-                          File aLocalFile,
-                          boolean recursive) {
+    public ScpFromMessage(final boolean verbose,
+                          final Session session,
+                          final String aRemoteFile,
+                          final File aLocalFile,
+                          final boolean recursive) {
         this(false, session, aRemoteFile, aLocalFile, recursive, false);
     }
 
@@ -89,10 +91,10 @@ public class ScpFromMessage extends AbstractSshMessage {
      * @param aLocalFile  the local file
      * @param recursive   if true use recursion (-r option to scp)
      */
-    public ScpFromMessage(Session session,
-                           String aRemoteFile,
-                           File aLocalFile,
-                           boolean recursive) {
+    public ScpFromMessage(final Session session,
+                           final String aRemoteFile,
+                           final File aLocalFile,
+                           final boolean recursive) {
         this(false, session, aRemoteFile, aLocalFile, recursive);
     }
 
@@ -107,12 +109,12 @@ public class ScpFromMessage extends AbstractSshMessage {
      * modification times
      * @since Ant 1.8.0
      */
-    public ScpFromMessage(boolean verbose,
-                          Session session,
-                          String aRemoteFile,
-                          File aLocalFile,
-                          boolean recursive,
-                          boolean preserveLastModified) {
+    public ScpFromMessage(final boolean verbose,
+                          final Session session,
+                          final String aRemoteFile,
+                          final File aLocalFile,
+                          final boolean recursive,
+                          final boolean preserveLastModified) {
         super(verbose, session);
         this.remoteFile = aRemoteFile;
         this.localFile = aLocalFile;
@@ -131,11 +133,11 @@ public class ScpFromMessage extends AbstractSshMessage {
             command += "-r ";
         }
         command += remoteFile;
-        Channel channel = openExecChannel(command);
+        final Channel channel = openExecChannel(command);
         try {
             // get I/O streams for remote scp
-            OutputStream out = channel.getOutputStream();
-            InputStream in = channel.getInputStream();
+            final OutputStream out = channel.getOutputStream();
+            final InputStream in = channel.getInputStream();
 
             channel.connect();
 
@@ -153,18 +155,18 @@ public class ScpFromMessage extends AbstractSshMessage {
         return preserveLastModified;
     }
 
-    private void startRemoteCpProtocol(InputStream in,
-                                       OutputStream out,
-                                       File localFile)
+    private void startRemoteCpProtocol(final InputStream in,
+                                       final OutputStream out,
+                                       final File localFile)
         throws IOException, JSchException {
         File startFile = localFile;
         while (true) {
             // C0644 filesize filename - header for a regular file
             // T time 0 time 0\n - present if perserve time.
             // D directory - this is the header for a directory.
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             while (true) {
-                int read = in.read();
+                final int read = in.read();
                 if (read < 0) {
                     return;
                 }
@@ -173,7 +175,7 @@ public class ScpFromMessage extends AbstractSshMessage {
                 }
                 stream.write(read);
             }
-            String serverResponse = stream.toString("UTF-8");
+            final String serverResponse = stream.toString("UTF-8");
             if (serverResponse.charAt(0) == 'C') {
                 parseAndFetchFile(serverResponse, startFile, out, in);
             } else if (serverResponse.charAt(0) == 'D') {
@@ -191,14 +193,14 @@ public class ScpFromMessage extends AbstractSshMessage {
         }
     }
 
-    private File parseAndCreateDirectory(String serverResponse,
-                                         File localFile) {
+    private File parseAndCreateDirectory(final String serverResponse,
+                                         final File localFile) {
         int start = serverResponse.indexOf(" ");
         // appears that the next token is not used and it's zero.
         start = serverResponse.indexOf(" ", start + 1);
-        String directoryName = serverResponse.substring(start + 1);
+        final String directoryName = serverResponse.substring(start + 1);
         if (localFile.isDirectory()) {
-            File dir = new File(localFile, directoryName);
+            final File dir = new File(localFile, directoryName);
             dir.mkdir();
             log("Creating: " + dir);
             return dir;
@@ -206,19 +208,19 @@ public class ScpFromMessage extends AbstractSshMessage {
         return null;
     }
 
-    private void parseAndFetchFile(String serverResponse,
-                                   File localFile,
-                                   OutputStream out,
-                                   InputStream in)
+    private void parseAndFetchFile(final String serverResponse,
+                                   final File localFile,
+                                   final OutputStream out,
+                                   final InputStream in)
         throws IOException, JSchException  {
         int start = 0;
         int end = serverResponse.indexOf(" ", start + 1);
         start = end + 1;
         end = serverResponse.indexOf(" ", start + 1);
-        long filesize = Long.parseLong(serverResponse.substring(start, end));
-        String filename = serverResponse.substring(end + 1);
+        final long filesize = Long.parseLong(serverResponse.substring(start, end));
+        final String filename = serverResponse.substring(end + 1);
         log("Receiving: " + filename + " : " + filesize);
-        File transferFile = (localFile.isDirectory())
+        final File transferFile = (localFile.isDirectory())
                 ? new File(localFile, filename)
                 : localFile;
         fetchFile(transferFile, filesize, out, in);
@@ -226,25 +228,25 @@ public class ScpFromMessage extends AbstractSshMessage {
         sendAck(out);
     }
 
-    private void fetchFile(File localFile,
+    private void fetchFile(final File localFile,
                             long filesize,
-                            OutputStream out,
-                           InputStream in)
+                            final OutputStream out,
+                           final InputStream in)
         throws IOException, JSchException {
-        byte[] buf = new byte[BUFFER_SIZE];
+        final byte[] buf = new byte[BUFFER_SIZE];
         sendAck(out);
 
         // read a content of lfile
-        FileOutputStream fos = new FileOutputStream(localFile);
+        final FileOutputStream fos = new FileOutputStream(localFile);
         int length;
         long totalLength = 0;
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
         // only track progress for files larger than 100kb in verbose mode
-        boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
+        final boolean trackProgress = getVerbose() && filesize > HUNDRED_KILOBYTES;
         // since filesize keeps on decreasing we have to store the
         // initial filesize
-        long initFilesize = filesize;
+        final long initFilesize = filesize;
         int percentTransmitted = 0;
 
         try {
@@ -269,7 +271,7 @@ public class ScpFromMessage extends AbstractSshMessage {
                 }
             }
         } finally {
-            long endTime = System.currentTimeMillis();
+            final long endTime = System.currentTimeMillis();
             logStats(startTime, endTime, totalLength);
             fos.flush();
             fos.close();
@@ -280,14 +282,14 @@ public class ScpFromMessage extends AbstractSshMessage {
         }
     }
 
-    private void setLastModified(File localFile) throws JSchException {
+    private void setLastModified(final File localFile) throws JSchException {
         SftpATTRS fileAttributes = null;
-        ChannelSftp channel = openSftpChannel();
+        final ChannelSftp channel = openSftpChannel();
         channel.connect();
         try {
             fileAttributes = channel.lstat(remoteDir(remoteFile)
                                            + localFile.getName());
-        } catch (SftpException e) {
+        } catch (final SftpException e) {
             throw new JSchException("failed to stat remote file", e);
         }
         FileUtils.getFileUtils().setFileLastModified(localFile,
@@ -299,7 +301,7 @@ public class ScpFromMessage extends AbstractSshMessage {
     /**
      * returns the directory part of the remote file, if any.
      */
-    private static String remoteDir(String remoteFile) {
+    private static String remoteDir(final String remoteFile) {
         int index = remoteFile.lastIndexOf("/");
         if (index < 0) {
             index = remoteFile.lastIndexOf("\\");

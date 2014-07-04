@@ -25,9 +25,11 @@ import java.text.NumberFormat;
 
 import org.apache.tools.ant.BuildException;
 
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 /**
@@ -36,10 +38,10 @@ import com.jcraft.jsch.SftpProgressMonitor;
 public abstract class AbstractSshMessage {
     private static final double ONE_SECOND = 1000.0;
 
-    private Session session;
-    private boolean verbose;
+    private final Session session;
+    private final boolean verbose;
     private LogListener listener = new LogListener() {
-        public void log(String message) {
+        public void log(final String message) {
             // do nothing;
         }
     };
@@ -48,7 +50,7 @@ public abstract class AbstractSshMessage {
      * Constructor for AbstractSshMessage
      * @param session the ssh session to use
      */
-    public AbstractSshMessage(Session session) {
+    public AbstractSshMessage(final Session session) {
         this(false, session);
     }
 
@@ -58,7 +60,7 @@ public abstract class AbstractSshMessage {
      * @param session the ssh session to use
      * @since Ant 1.6.2
      */
-    public AbstractSshMessage(boolean verbose, Session session) {
+    public AbstractSshMessage(final boolean verbose, final Session session) {
         this.verbose = verbose;
         this.session = session;
     }
@@ -69,8 +71,8 @@ public abstract class AbstractSshMessage {
      * @return the channel
      * @throws JSchException on error
      */
-    protected Channel openExecChannel(String command) throws JSchException {
-        ChannelExec channel = (ChannelExec) session.openChannel("exec");
+    protected Channel openExecChannel(final String command) throws JSchException {
+        final ChannelExec channel = (ChannelExec) session.openChannel("exec");
         channel.setCommand(command);
 
         return channel;
@@ -82,7 +84,7 @@ public abstract class AbstractSshMessage {
      * @throws JSchException on error
      */
     protected ChannelSftp openSftpChannel() throws JSchException {
-        ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
+        final ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
 
         return channel;
     }
@@ -92,8 +94,8 @@ public abstract class AbstractSshMessage {
      * @param out the output stream to use
      * @throws IOException on error
      */
-    protected void sendAck(OutputStream out) throws IOException {
-        byte[] buf = new byte[1];
+    protected void sendAck(final OutputStream out) throws IOException {
+        final byte[] buf = new byte[1];
         buf[0] = 0;
         out.write(buf);
         out.flush();
@@ -106,9 +108,9 @@ public abstract class AbstractSshMessage {
      * @throws IOException on I/O error
      * @throws BuildException on other errors
      */
-    protected void waitForAck(InputStream in)
+    protected void waitForAck(final InputStream in)
         throws IOException, BuildException {
-        int b = in.read();
+        final int b = in.read();
 
         // b may be 0 for success,
         //          1 for error,
@@ -118,7 +120,7 @@ public abstract class AbstractSshMessage {
             // didn't receive any response
             throw new BuildException("No response from server");
         } else if (b != 0) {
-            StringBuffer sb = new StringBuffer();
+            final StringBuffer sb = new StringBuffer();
 
             int c = in.read();
             while (c > 0 && c != '\n') {
@@ -150,7 +152,7 @@ public abstract class AbstractSshMessage {
      * Set a log listener.
      * @param aListener the log listener
      */
-    public void setLogListener(LogListener aListener) {
+    public void setLogListener(final LogListener aListener) {
         listener = aListener;
     }
 
@@ -158,7 +160,7 @@ public abstract class AbstractSshMessage {
      * Log a message to the log listener.
      * @param message the message to log
      */
-    protected void log(String message) {
+    protected void log(final String message) {
         listener.log(message);
     }
 
@@ -168,11 +170,11 @@ public abstract class AbstractSshMessage {
      * @param timeEnded   the finishing time
      * @param totalLength the total length
      */
-    protected void logStats(long timeStarted,
-                             long timeEnded,
-                             long totalLength) {
-        double duration = (timeEnded - timeStarted) / ONE_SECOND;
-        NumberFormat format = NumberFormat.getNumberInstance();
+    protected void logStats(final long timeStarted,
+                             final long timeEnded,
+                             final long totalLength) {
+        final double duration = (timeEnded - timeStarted) / ONE_SECOND;
+        final NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(2);
         format.setMinimumFractionDigits(1);
         listener.log("File transfer time: " + format.format(duration)
@@ -197,11 +199,11 @@ public abstract class AbstractSshMessage {
      * @param percentTransmitted the current percent transmitted
      * @return the percent that the file is of the total
      */
-    protected final int trackProgress(long filesize, long totalLength,
-                                      int percentTransmitted) {
+    protected final int trackProgress(final long filesize, final long totalLength,
+                                      final int percentTransmitted) {
 
         // CheckStyle:MagicNumber OFF
-        int percent = (int) Math.round(Math.floor((totalLength
+        final int percent = (int) Math.round(Math.floor((totalLength
                                                    / (double) filesize) * 100));
 
         if (percent > percentTransmitted) {
@@ -246,13 +248,13 @@ public abstract class AbstractSshMessage {
         private long totalLength = 0;
         private int percentTransmitted = 0;
 
-        public void init(int op, String src, String dest, long max) {
+        public void init(final int op, final String src, final String dest, final long max) {
             initFileSize = max;
             totalLength = 0;
             percentTransmitted = 0;
         }
 
-        public boolean count(long len) {
+        public boolean count(final long len) {
             totalLength += len;
             percentTransmitted = trackProgress(initFileSize,
                                                totalLength,

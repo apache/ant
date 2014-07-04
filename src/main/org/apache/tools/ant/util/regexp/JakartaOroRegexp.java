@@ -18,6 +18,8 @@
 package org.apache.tools.ant.util.regexp;
 
 import org.apache.oro.text.regex.Perl5Substitution;
+import org.apache.oro.text.regex.Substitution;
+import org.apache.oro.text.regex.Util;
 import org.apache.tools.ant.BuildException;
 
 /***
@@ -40,10 +42,10 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
      * @return the result of the operation
      * @throws BuildException on error
      */
-    public String substitute(String input, String argument, int options)
+    public String substitute(final String input, final String argument, final int options)
         throws BuildException {
         // translate \1 to $1 so that the Perl5Substitution will work
-        StringBuffer subst = new StringBuffer();
+        final StringBuffer subst = new StringBuffer();
         for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '$') {
@@ -52,7 +54,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
             } else if (c == '\\') {
                 if (++i < argument.length()) {
                     c = argument.charAt(i);
-                    int value = Character.digit(c, DECIMAL);
+                    final int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
                         subst.append("$").append(value);
                     } else {
@@ -68,7 +70,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
         }
 
         // Do the substitution
-        Substitution s =
+        final Substitution s =
             new Perl5Substitution(subst.toString(),
                                   Perl5Substitution.INTERPOLATE_ALL);
         return Util.substitute(matcher,
@@ -84,8 +86,8 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
      * @param options the ant regexp options
      * @return the oro substition options
      */
-    protected int getSubsOptions(int options) {
-        boolean replaceAll = RegexpUtil.hasFlag(options, REPLACE_ALL);
+    protected int getSubsOptions(final int options) {
+        final boolean replaceAll = RegexpUtil.hasFlag(options, REPLACE_ALL);
         int subsOptions = 1;
         if (replaceAll) {
             subsOptions = Util.SUBSTITUTE_ALL;
