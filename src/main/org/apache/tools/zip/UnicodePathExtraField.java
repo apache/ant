@@ -21,7 +21,7 @@ package org.apache.tools.zip;
 /**
  * Info-ZIP Unicode Path Extra Field (0x7075):
  *
- * <p>Stores the UTF-8 version of the file name field as stored in the 
+ * <p>Stores the UTF-8 version of the file name field as stored in the
  * local header and central directory header.</p>
  *
  * <p>See {@link
@@ -32,13 +32,13 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
 
     public static final ZipShort UPATH_ID = new ZipShort(0x7075);
 
-    public UnicodePathExtraField () { 
+    public UnicodePathExtraField () {
     }
 
     /**
      * Assemble as unicode path extension from the name given as
      * text as well as the encoded bytes actually written to the archive.
-     * 
+     *
      * @param text The file name
      * @param bytes the bytes actually written to the archive
      * @param off The offset of the encoded filename in <code>bytes</code>.
@@ -52,7 +52,7 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
     /**
      * Assemble as unicode path extension from the name given as
      * text as well as the encoded bytes actually written to the archive.
-     * 
+     *
      * @param name The file name
      * @param bytes the bytes actually written to the archive
      */
@@ -61,7 +61,8 @@ public class UnicodePathExtraField extends AbstractUnicodeExtraField {
     }
 
     /** {@inheritDoc} */
-    public ZipShort getHeaderId() {
+    @Override
+	public ZipShort getHeaderId() {
         return UPATH_ID;
     }
 }

@@ -36,7 +36,8 @@ public class LazyResourceCollectionWrapper extends
 
     private FilteringIterator filteringIterator;
 
-    protected Iterator<Resource> createIterator() {
+    @Override
+	protected Iterator<Resource> createIterator() {
         Iterator<Resource> iterator;
         if (isCache()) {
             if (filteringIterator == null) {
@@ -51,7 +52,8 @@ public class LazyResourceCollectionWrapper extends
         return iterator;
     }
 
-    protected int getSize() {
+    @Override
+	protected int getSize() {
         // to compute the size, just iterate: the iterator will take care of
         // caching
         Iterator<Resource> it = createIterator();
@@ -66,7 +68,7 @@ public class LazyResourceCollectionWrapper extends
     /**
      * Specify if the resource should be filtered or not. This function should
      * be overrided in order to define the filtering algorithm
-     * 
+     *
      * @param r resource considered for filtration
      * @return whether the resource should be filtered or not
      */
@@ -86,7 +88,8 @@ public class LazyResourceCollectionWrapper extends
             this.it = it;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             if (ended) {
                 return false;
             }
@@ -103,7 +106,8 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-        public Resource next() {
+        @Override
+		public Resource next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException();
             }
@@ -112,7 +116,8 @@ public class LazyResourceCollectionWrapper extends
             return r;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException();
         }
     }
@@ -129,7 +134,7 @@ public class LazyResourceCollectionWrapper extends
 
         /**
          * Default constructor
-         * 
+         *
          * @param it
          *            the iterator which will provide the resources to put in
          *            cache
@@ -138,7 +143,8 @@ public class LazyResourceCollectionWrapper extends
             this.it = it;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             synchronized (cachedResources) {
                 // have we already cached the next entry ?
                 if (cachedResources.size() > cusrsor) {
@@ -155,7 +161,8 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-        public Resource next() {
+        @Override
+		public Resource next() {
             // first check that we have some to deliver
             if (!hasNext()) {
                 throw new NoSuchElementException();
@@ -167,7 +174,8 @@ public class LazyResourceCollectionWrapper extends
             }
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException();
         }
     }

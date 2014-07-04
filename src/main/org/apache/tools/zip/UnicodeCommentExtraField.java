@@ -33,13 +33,13 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
 
     public static final ZipShort UCOM_ID = new ZipShort(0x6375);
 
-    public UnicodeCommentExtraField () { 
+    public UnicodeCommentExtraField () {
     }
 
     /**
      * Assemble as unicode comment extension from the name given as
      * text as well as the encoded bytes actually written to the archive.
-     * 
+     *
      * @param text The file name
      * @param bytes the bytes actually written to the archive
      * @param off The offset of the encoded comment in <code>bytes</code>.
@@ -54,7 +54,7 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
     /**
      * Assemble as unicode comment extension from the comment given as
      * text as well as the bytes actually written to the archive.
-     * 
+     *
      * @param comment The file comment
      * @param bytes the bytes actually written to the archive
      */
@@ -63,7 +63,8 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
     }
 
     /** {@inheritDoc} */
-    public ZipShort getHeaderId() {
+    @Override
+	public ZipShort getHeaderId() {
         return UCOM_ID;
     }
 

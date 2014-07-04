@@ -34,7 +34,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * <p>This task takes file and turns them into a URL, which it then assigns
  * to a property. Use when for setting up RMI codebases.</p>
- * 
+ *
  * <p>nested filesets are supported; if present, these are turned into the
  * url with the given separator between them (default = " ").</p>
  *
@@ -151,7 +151,7 @@ public class MakeUrl extends Task {
         StringBuilder urls = new StringBuilder();
         ListIterator<FileSet> list = filesets.listIterator();
         while (list.hasNext()) {
-            FileSet set = (FileSet) list.next();
+            FileSet set = list.next();
             DirectoryScanner scanner = set.getDirectoryScanner(getProject());
             String[] files = scanner.getIncludedFiles();
             for (int i = 0; i < files.length; i++) {
@@ -200,7 +200,7 @@ public class MakeUrl extends Task {
         StringBuilder urls = new StringBuilder();
         ListIterator<Path> list = paths.listIterator();
         while (list.hasNext()) {
-            Path path = (Path) list.next();
+            Path path = list.next();
             String[] elements = path.list();
             for (int i = 0; i < elements.length; i++) {
                 File f = new File(elements[i]);
@@ -234,7 +234,8 @@ public class MakeUrl extends Task {
      * @throws org.apache.tools.ant.BuildException
      *          if something goes wrong with the build
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         validate();
         //now exit here if the property is already set
         if (getProject().getProperty(property) != null) {

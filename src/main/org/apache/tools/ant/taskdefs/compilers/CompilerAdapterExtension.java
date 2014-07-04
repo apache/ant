@@ -20,7 +20,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 /**
  * Extension interface for compilers that support source extensions
  * other than .java.
- * 
+ *
  * @since Ant 1.8.2
  */
 public interface CompilerAdapterExtension {
@@ -32,7 +32,7 @@ public interface CompilerAdapterExtension {
      * <p>For example, most compiler adapters will return [ "java" ],
      * but a compiler adapter that can compile both Java and Groovy
      * source code would return [ "java", "groovy" ].</p>
-     * 
+     *
      * @return list of source file extensions recognized by this
      * compiler adapter.
      */

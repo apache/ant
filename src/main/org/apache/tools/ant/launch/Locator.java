@@ -27,8 +27,6 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;
 
-import org.apache.tools.ant.util.FileUtils;
-
 // CheckStyle:LineLengthCheck OFF - urls are long!
 /**
  * The Locator is a utility class which is used to find certain items

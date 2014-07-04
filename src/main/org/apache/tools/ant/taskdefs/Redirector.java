@@ -61,16 +61,17 @@ public class Redirector {
             .getProperty("file.encoding");
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
-        private String property;
+        private final String property;
 
         private boolean closed = false;
 
-        PropertyOutputStream(String property) {
+        PropertyOutputStream(final String property) {
             super();
             this.property = property;
         }
 
-        public void close() throws IOException {
+        @Override
+		public void close() throws IOException {
             synchronized (outMutex) {
                 if (!closed && !(appendOut && appendProperties)) {
                     setPropertyFromBAOS(this, property);
@@ -139,7 +140,7 @@ public class Redirector {
     private boolean createEmptyFilesErr = true;
 
     /** The task for which this redirector is working */
-    private ProjectComponent managingTask;
+    private final ProjectComponent managingTask;
 
     /** The stream for output data */
     private OutputStream outputStream = null;
@@ -184,13 +185,13 @@ public class Redirector {
     private boolean logInputString = true;
 
     /** Mutex for in */
-    private Object inMutex = new Object();
+    private final Object inMutex = new Object();
 
     /** Mutex for out */
-    private Object outMutex = new Object();
+    private final Object outMutex = new Object();
 
     /** Mutex for err */
-    private Object errMutex = new Object();
+    private final Object errMutex = new Object();
 
     /** Is the output binary or can we safely split it into lines? */
     private boolean outputIsBinary = false;
@@ -201,7 +202,7 @@ public class Redirector {
      * @param managingTask
      *            the task for which the redirector is to work
      */
-    public Redirector(Task managingTask) {
+    public Redirector(final Task managingTask) {
         this((ProjectComponent) managingTask);
     }
 
@@ -212,7 +213,7 @@ public class Redirector {
      *            the project component for which the redirector is to work
      * @since Ant 1.6.3
      */
-    public Redirector(ProjectComponent managingTask) {
+    public Redirector(final ProjectComponent managingTask) {
         this.managingTask = managingTask;
     }
 
@@ -222,8 +223,8 @@ public class Redirector {
      * @param input
      *            the file from which input is read.
      */
-    public void setInput(File input) {
-        setInput((input == null) ? null : new File[] { input });
+    public void setInput(final File input) {
+        setInput((input == null) ? null : new File[] {input});
     }
 
     /**
@@ -232,12 +233,12 @@ public class Redirector {
      * @param input
      *            the files from which input is read.
      */
-    public void setInput(File[] input) {
+    public void setInput(final File[] input) {
         synchronized (inMutex) {
             if (input == null) {
                 this.input = null;
             } else {
-                this.input = (File[]) input.clone();
+                this.input = input.clone();
             }
         }
     }
@@ -248,7 +249,7 @@ public class Redirector {
      * @param inputString
      *            the string which is used as the input source
      */
-    public void setInputString(String inputString) {
+    public void setInputString(final String inputString) {
         synchronized (inMutex) {
             this.inputString = inputString;
         }
@@ -262,7 +263,7 @@ public class Redirector {
      *            true or false.
      * @since Ant 1.7
      */
-    public void setLogInputString(boolean logInputString) {
+    public void setLogInputString(final boolean logInputString) {
         this.logInputString = logInputString;
     }
 
@@ -273,7 +274,7 @@ public class Redirector {
      *            the stream from which input will be read
      * @since Ant 1.6.3
      */
-    /* public */void setInputStream(InputStream inputStream) {
+    /* public */void setInputStream(final InputStream inputStream) {
         synchronized (inMutex) {
             this.inputStream = inputStream;
         }
@@ -286,8 +287,8 @@ public class Redirector {
      * @param out
      *            the file to which output stream is written
      */
-    public void setOutput(File out) {
-        setOutput((out == null) ? null : new File[] { out });
+    public void setOutput(final File out) {
+        setOutput((out == null) ? null : new File[] {out});
     }
 
     /**
@@ -297,12 +298,12 @@ public class Redirector {
      * @param out
      *            the files to which output stream is written
      */
-    public void setOutput(File[] out) {
+    public void setOutput(final File[] out) {
         synchronized (outMutex) {
             if (out == null) {
                 this.out = null;
             } else {
-                this.out = (File[]) out.clone();
+                this.out = out.clone();
             }
         }
     }
@@ -313,7 +314,7 @@ public class Redirector {
      * @param outputEncoding
      *            <code>String</code>.
      */
-    public void setOutputEncoding(String outputEncoding) {
+    public void setOutputEncoding(final String outputEncoding) {
         if (outputEncoding == null) {
             throw new IllegalArgumentException(
                     "outputEncoding must not be null");
@@ -329,7 +330,7 @@ public class Redirector {
      * @param errorEncoding
      *            <code>String</code>.
      */
-    public void setErrorEncoding(String errorEncoding) {
+    public void setErrorEncoding(final String errorEncoding) {
         if (errorEncoding == null) {
             throw new IllegalArgumentException("errorEncoding must not be null");
         }
@@ -344,7 +345,7 @@ public class Redirector {
      * @param inputEncoding
      *            <code>String</code>.
      */
-    public void setInputEncoding(String inputEncoding) {
+    public void setInputEncoding(final String inputEncoding) {
         if (inputEncoding == null) {
             throw new IllegalArgumentException("inputEncoding must not be null");
         }
@@ -361,7 +362,7 @@ public class Redirector {
      *            if true the standard error is sent to the Ant log system and
      *            not sent to output.
      */
-    public void setLogError(boolean logError) {
+    public void setLogError(final boolean logError) {
         synchronized (errMutex) {
             this.logError = logError;
         }
@@ -375,7 +376,7 @@ public class Redirector {
      * @param appendProperties
      *            whether to append properties.
      */
-    public void setAppendProperties(boolean appendProperties) {
+    public void setAppendProperties(final boolean appendProperties) {
         synchronized (outMutex) {
             this.appendProperties = appendProperties;
         }
@@ -387,8 +388,8 @@ public class Redirector {
      * @param error
      *            the file to which error is to be written
      */
-    public void setError(File error) {
-        setError((error == null) ? null : new File[] { error });
+    public void setError(final File error) {
+        setError((error == null) ? null : new File[] {error});
     }
 
     /**
@@ -397,12 +398,12 @@ public class Redirector {
      * @param error
      *            the file to which error is to be written
      */
-    public void setError(File[] error) {
+    public void setError(final File[] error) {
         synchronized (errMutex) {
             if (error == null) {
                 this.error = null;
             } else {
-                this.error = (File[]) error.clone();
+                this.error = error.clone();
             }
         }
     }
@@ -413,7 +414,7 @@ public class Redirector {
      * @param outputProperty
      *            the name of the property to be set with the task's output.
      */
-    public void setOutputProperty(String outputProperty) {
+    public void setOutputProperty(final String outputProperty) {
         if (outputProperty == null
                 || !(outputProperty.equals(this.outputProperty))) {
             synchronized (outMutex) {
@@ -431,7 +432,7 @@ public class Redirector {
      *            if true output and error streams are appended to their
      *            respective files, if specified.
      */
-    public void setAppend(boolean append) {
+    public void setAppend(final boolean append) {
         synchronized (outMutex) {
             appendOut = append;
         }
@@ -449,7 +450,7 @@ public class Redirector {
      *            <code>boolean</code>
      * @since Ant 1.6.3
      */
-    public void setAlwaysLog(boolean alwaysLog) {
+    public void setAlwaysLog(final boolean alwaysLog) {
         synchronized (outMutex) {
             alwaysLogOut = alwaysLog;
         }
@@ -465,7 +466,7 @@ public class Redirector {
      * @param createEmptyFiles
      *            <code>boolean</code>.
      */
-    public void setCreateEmptyFiles(boolean createEmptyFiles) {
+    public void setCreateEmptyFiles(final boolean createEmptyFiles) {
         synchronized (outMutex) {
             createEmptyFilesOut = createEmptyFiles;
         }
@@ -480,7 +481,7 @@ public class Redirector {
      * @param errorProperty
      *            the name of the property to be set with the error output.
      */
-    public void setErrorProperty(String errorProperty) {
+    public void setErrorProperty(final String errorProperty) {
         synchronized (errMutex) {
             if (errorProperty == null
                     || !(errorProperty.equals(this.errorProperty))) {
@@ -496,7 +497,7 @@ public class Redirector {
      * @param inputFilterChains
      *            <code>Vector</code> containing <code>FilterChain</code>.
      */
-    public void setInputFilterChains(Vector<FilterChain> inputFilterChains) {
+    public void setInputFilterChains(final Vector<FilterChain> inputFilterChains) {
         synchronized (inMutex) {
             this.inputFilterChains = inputFilterChains;
         }
@@ -508,7 +509,7 @@ public class Redirector {
      * @param outputFilterChains
      *            <code>Vector</code> containing <code>FilterChain</code>.
      */
-    public void setOutputFilterChains(Vector<FilterChain> outputFilterChains) {
+    public void setOutputFilterChains(final Vector<FilterChain> outputFilterChains) {
         synchronized (outMutex) {
             this.outputFilterChains = outputFilterChains;
         }
@@ -520,7 +521,7 @@ public class Redirector {
      * @param errorFilterChains
      *            <code>Vector</code> containing <code>FilterChain</code>.
      */
-    public void setErrorFilterChains(Vector<FilterChain> errorFilterChains) {
+    public void setErrorFilterChains(final Vector<FilterChain> errorFilterChains) {
         synchronized (errMutex) {
             this.errorFilterChains = errorFilterChains;
         }
@@ -534,7 +535,7 @@ public class Redirector {
      * the same stream.</p>
      * @since 1.9.4
      */
-    public void setBinaryOutput(boolean b) {
+    public void setBinaryOutput(final boolean b) {
         outputIsBinary = b;
     }
 
@@ -549,13 +550,13 @@ public class Redirector {
      * @exception IOException
      *                if the value cannot be read form the stream.
      */
-    private void setPropertyFromBAOS(ByteArrayOutputStream baos,
-            String propertyName) throws IOException {
+    private void setPropertyFromBAOS(final ByteArrayOutputStream baos,
+            final String propertyName) throws IOException {
 
-        BufferedReader in = new BufferedReader(new StringReader(Execute
+        final BufferedReader in = new BufferedReader(new StringReader(Execute
                 .toString(baos)));
         String line = null;
-        StringBuffer val = new StringBuffer();
+        final StringBuffer val = new StringBuffer();
         while ((line = in.readLine()) != null) {
             if (val.length() != 0) {
                 val.append(StringUtils.LINE_SEP);
@@ -574,7 +575,7 @@ public class Redirector {
         synchronized (outMutex) {
             outStreams();
             if (alwaysLogOut || outputStream == null) {
-                OutputStream outputLog = new LogOutputStream(managingTask,
+                final OutputStream outputLog = new LogOutputStream(managingTask,
                         Project.MSG_INFO);
                 outputStream = (outputStream == null) ? outputLog
                         : new TeeOutputStream(outputLog, outputStream);
@@ -583,7 +584,7 @@ public class Redirector {
             if ((outputFilterChains != null && outputFilterChains.size() > 0)
                     || !(outputEncoding.equalsIgnoreCase(inputEncoding))) {
                 try {
-                    LeadPipeInputStream snk = new LeadPipeInputStream();
+                    final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
 
                     InputStream outPumpIn = snk;
@@ -593,7 +594,7 @@ public class Redirector {
 
                     if (outputFilterChains != null
                             && outputFilterChains.size() > 0) {
-                        ChainReaderHelper helper = new ChainReaderHelper();
+                        final ChainReaderHelper helper = new ChainReaderHelper();
                         helper.setProject(managingTask.getProject());
                         helper.setPrimaryReader(reader);
                         helper.setFilterChains(outputFilterChains);
@@ -601,12 +602,12 @@ public class Redirector {
                     }
                     outPumpIn = new ReaderInputStream(reader, outputEncoding);
 
-                    Thread t = new Thread(threadGroup, new StreamPumper(
+                    final Thread t = new Thread(threadGroup, new StreamPumper(
                             outPumpIn, outputStream, true), "output pumper");
                     t.setPriority(Thread.MAX_PRIORITY);
                     outputStream = new PipedOutputStream(snk);
                     t.start();
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     throw new BuildException("error setting up output stream",
                             eyeOhEx);
                 }
@@ -616,7 +617,7 @@ public class Redirector {
         synchronized (errMutex) {
             errorStreams();
             if (alwaysLogErr || errorStream == null) {
-                OutputStream errorLog = new LogOutputStream(managingTask,
+                final OutputStream errorLog = new LogOutputStream(managingTask,
                         Project.MSG_WARN);
                 errorStream = (errorStream == null) ? errorLog
                         : new TeeOutputStream(errorLog, errorStream);
@@ -625,7 +626,7 @@ public class Redirector {
             if ((errorFilterChains != null && errorFilterChains.size() > 0)
                     || !(errorEncoding.equalsIgnoreCase(inputEncoding))) {
                 try {
-                    LeadPipeInputStream snk = new LeadPipeInputStream();
+                    final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
 
                     InputStream errPumpIn = snk;
@@ -635,7 +636,7 @@ public class Redirector {
 
                     if (errorFilterChains != null
                             && errorFilterChains.size() > 0) {
-                        ChainReaderHelper helper = new ChainReaderHelper();
+                        final ChainReaderHelper helper = new ChainReaderHelper();
                         helper.setProject(managingTask.getProject());
                         helper.setPrimaryReader(reader);
                         helper.setFilterChains(errorFilterChains);
@@ -643,12 +644,12 @@ public class Redirector {
                     }
                     errPumpIn = new ReaderInputStream(reader, errorEncoding);
 
-                    Thread t = new Thread(threadGroup, new StreamPumper(
+                    final Thread t = new Thread(threadGroup, new StreamPumper(
                             errPumpIn, errorStream, true), "error pumper");
                     t.setPriority(Thread.MAX_PRIORITY);
                     errorStream = new PipedOutputStream(snk);
                     t.start();
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     throw new BuildException("error setting up error stream",
                             eyeOhEx);
                 }
@@ -667,13 +668,13 @@ public class Redirector {
                                 Project.MSG_VERBOSE);
                 try {
                     inputStream = new ConcatFileInputStream(input);
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     throw new BuildException(eyeOhEx);
                 }
                 ((ConcatFileInputStream) inputStream)
                         .setManagingComponent(managingTask);
             } else if (inputString != null) {
-                StringBuffer buf = new StringBuffer("Using input ");
+                final StringBuffer buf = new StringBuffer("Using input ");
                 if (logInputString) {
                     buf.append('"').append(inputString).append('"');
                 } else {
@@ -685,12 +686,12 @@ public class Redirector {
 
             if (inputStream != null && inputFilterChains != null
                     && inputFilterChains.size() > 0) {
-                ChainReaderHelper helper = new ChainReaderHelper();
+                final ChainReaderHelper helper = new ChainReaderHelper();
                 helper.setProject(managingTask.getProject());
                 try {
                     helper.setPrimaryReader(new InputStreamReader(inputStream,
                             inputEncoding));
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     throw new BuildException("error setting up input stream",
                             eyeOhEx);
                 }
@@ -704,7 +705,7 @@ public class Redirector {
     /** outStreams */
     private void outStreams() {
         if (out != null && out.length > 0) {
-            String logHead = new StringBuffer("Output ").append(
+            final String logHead = new StringBuffer("Output ").append(
                     ((appendOut) ? "appended" : "redirected")).append(" to ")
                     .toString();
             outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE,
@@ -717,7 +718,7 @@ public class Redirector {
                         + outputProperty, Project.MSG_VERBOSE);
             }
             // shield it from being closed by a filtering StreamPumper
-            OutputStream keepAliveOutput = new KeepAliveOutputStream(baos);
+            final OutputStream keepAliveOutput = new KeepAliveOutputStream(baos);
             outputStream = (outputStream == null) ? keepAliveOutput
                     : new TeeOutputStream(outputStream, keepAliveOutput);
         } else {
@@ -727,14 +728,14 @@ public class Redirector {
 
     private void errorStreams() {
         if (error != null && error.length > 0) {
-            String logHead = new StringBuffer("Error ").append(
+            final String logHead = new StringBuffer("Error ").append(
                     ((appendErr) ? "appended" : "redirected")).append(" to ")
                     .toString();
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE,
                     appendErr, createEmptyFilesErr);
         } else if (!(logError || outputStream == null) && errorProperty == null) {
-            long funnelTimeout = 0L;
-            OutputStreamFunneler funneler = new OutputStreamFunneler(
+            final long funnelTimeout = 0L;
+            final OutputStreamFunneler funneler = new OutputStreamFunneler(
                     outputStream, funnelTimeout);
             try {
                 outputStream = funneler.getFunnelInstance();
@@ -743,7 +744,7 @@ public class Redirector {
                     outputStream = new LineOrientedOutputStreamRedirector(outputStream);
                     errorStream = new LineOrientedOutputStreamRedirector(errorStream);
                 }
-            } catch (IOException eyeOhEx) {
+            } catch (final IOException eyeOhEx) {
                 throw new BuildException(
                         "error splitting output/error streams", eyeOhEx);
             }
@@ -755,7 +756,7 @@ public class Redirector {
                         + errorProperty, Project.MSG_VERBOSE);
             }
             // shield it from being closed by a filtering StreamPumper
-            OutputStream keepAliveError = new KeepAliveOutputStream(errorBaos);
+            final OutputStream keepAliveError = new KeepAliveOutputStream(errorBaos);
             errorStream = (error == null || error.length == 0) ? keepAliveError
                     : new TeeOutputStream(errorStream, keepAliveError);
         } else {
@@ -774,7 +775,7 @@ public class Redirector {
      */
     public ExecuteStreamHandler createHandler() throws BuildException {
         createStreams();
-        boolean nonBlockingRead = input == null && inputString == null;
+        final boolean nonBlockingRead = input == null && inputString == null;
         return new PumpStreamHandler(getOutputStream(), getErrorStream(),
                 getInputStream(), nonBlockingRead);
     }
@@ -785,7 +786,7 @@ public class Redirector {
      * @param output
      *            the data to be output
      */
-    protected void handleOutput(String output) {
+    protected void handleOutput(final String output) {
         synchronized (outMutex) {
             if (outPrintStream == null) {
                 outPrintStream = new PrintStream(outputStream);
@@ -809,7 +810,7 @@ public class Redirector {
      * @exception IOException
      *                if the data cannot be read
      */
-    protected int handleInput(byte[] buffer, int offset, int length)
+    protected int handleInput(final byte[] buffer, final int offset, final int length)
             throws IOException {
         synchronized (inMutex) {
             if (inputStream == null) {
@@ -827,7 +828,7 @@ public class Redirector {
      * @param output
      *            the data being flushed.
      */
-    protected void handleFlush(String output) {
+    protected void handleFlush(final String output) {
         synchronized (outMutex) {
             if (outPrintStream == null) {
                 outPrintStream = new PrintStream(outputStream);
@@ -843,7 +844,7 @@ public class Redirector {
      * @param output
      *            the error output data.
      */
-    protected void handleErrorOutput(String output) {
+    protected void handleErrorOutput(final String output) {
         synchronized (errMutex) {
             if (errorPrintStream == null) {
                 errorPrintStream = new PrintStream(errorStream);
@@ -858,7 +859,7 @@ public class Redirector {
      * @param output
      *            the error information being flushed.
      */
-    protected void handleErrorFlush(String output) {
+    protected void handleErrorFlush(final String output) {
         synchronized (errMutex) {
             if (errorPrintStream == null) {
                 errorPrintStream = new PrintStream(errorStream);
@@ -940,19 +941,19 @@ public class Redirector {
                 try {
                     managingTask.log("waiting for " + threadGroup.activeCount()
                             + " Threads:", Project.MSG_DEBUG);
-                    Thread[] thread = new Thread[threadGroup.activeCount()];
+                    final Thread[] thread = new Thread[threadGroup.activeCount()];
                     threadGroup.enumerate(thread);
                     for (int i = 0; i < thread.length && thread[i] != null; i++) {
                         try {
                             managingTask.log(thread[i].toString(),
                                     Project.MSG_DEBUG);
-                        } catch (NullPointerException enPeaEx) {
+                        } catch (final NullPointerException enPeaEx) {
                             // Ignore exception
                         }
                     }
                     wait(STREAMPUMPER_WAIT_INTERVAL);
-                } catch (InterruptedException eyeEx) {
-                    Thread[] thread = new Thread[threadGroup.activeCount()];
+                } catch (final InterruptedException eyeEx) {
+                    final Thread[] thread = new Thread[threadGroup.activeCount()];
                     threadGroup.enumerate(thread);
                     for (int i = 0; i < thread.length && thread[i] != null; i++) {
                         thread[i].interrupt();
@@ -985,7 +986,7 @@ public class Redirector {
             if (baos != null) {
                 try {
                     baos.close();
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     // Ignore exception
                 }
             }
@@ -994,22 +995,22 @@ public class Redirector {
             if (errorBaos != null) {
                 try {
                     errorBaos.close();
-                } catch (IOException eyeOhEx) {
+                } catch (final IOException eyeOhEx) {
                     // Ignore exception
                 }
             }
         }
     }
 
-    private OutputStream foldFiles(File[] file, String logHead, int loglevel,
-            boolean append, boolean createEmptyFiles) {
-        OutputStream result = new LazyFileOutputStream(file[0], append,
+    private OutputStream foldFiles(final File[] file, final String logHead, final int loglevel,
+            final boolean append, final boolean createEmptyFiles) {
+        final OutputStream result = new LazyFileOutputStream(file[0], append,
                 createEmptyFiles);
 
         managingTask.log(logHead + file[0], loglevel);
-        char[] c = new char[logHead.length()];
+        final char[] c = new char[logHead.length()];
         Arrays.fill(c, ' ');
-        String indent = new String(c);
+        final String indent = new String(c);
 
         for (int i = 1; i < file.length; i++) {
             outputStream = new TeeOutputStream(outputStream,

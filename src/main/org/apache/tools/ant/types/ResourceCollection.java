@@ -19,8 +19,6 @@ package org.apache.tools.ant.types;
 
 import java.util.Iterator;
 
-import org.apache.tools.ant.types.resources.FileProvider;
-
 /**
  * Interface describing a collection of Resources.
  * @since Ant 1.7

@@ -33,19 +33,19 @@ import org.apache.tools.ant.ProjectComponent;
  * <p>Test for a host being reachable using ICMP "ping" packets &amp; echo operations.
  * Ping packets are very reliable for assessing reachability in a LAN or WAN,
  * but they do not get through any well-configured firewall. Echo (port 7) may.</p>
- * 
+ *
  * <p>This condition turns unknown host exceptions into false conditions. This is
  * because on a laptop, DNS is one of the first services lost when the network
  * goes; you are implicitly offline.</p>
- * 
+ *
  * <p>If a URL is supplied instead of a host, the hostname is extracted and used in
  * the test--all other parts of the URL are discarded.</p>
- * 
+ *
  * <p>The test may not work through firewalls; that is, something may be reachable
  * using a protocol such as HTTP, while the lower level ICMP packets get dropped
  * on the floor. Similarly, a host may be detected as reachable with ICMP, but not
  * reachable on other ports (i.e. port 80), because of firewalls.</p>
- * 
+ *
  * <p>Requires Java 5+ to work properly. On Java 1.4, if a hostname
  * can be resolved, the destination is assumed to be reachable.</p>
  *
@@ -139,7 +139,8 @@ public class IsReachable extends ProjectComponent implements Condition {
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs
      */
-    public boolean eval() throws BuildException {
+    @Override
+	public boolean eval() throws BuildException {
         if (empty(host) && empty(url)) {
             throw new BuildException(ERROR_NO_HOSTNAME);
         }

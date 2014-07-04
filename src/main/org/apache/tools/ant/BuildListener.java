@@ -37,7 +37,7 @@ public interface BuildListener extends EventListener {
      * <p>This event is fired before the project instance is fully
      * configured.  In particular no properties have been set and the
      * project may not know its name or default target, yet.</p>
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      */

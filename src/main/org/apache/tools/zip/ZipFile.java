@@ -815,7 +815,7 @@ public class ZipFile {
     /**
      * Skips the given number of bytes or throws an EOFException if
      * skipping failed.
-     */ 
+     */
     private void skipBytes(final int count) throws IOException {
         int totalSkipped = 0;
         while (totalSkipped < count) {
@@ -852,7 +852,7 @@ public class ZipFile {
     private void resolveLocalFileHeaderData(Map<ZipEntry, NameAndComment>
                                             entriesWithoutUTF8Flag)
         throws IOException {
-        for (Iterator<ZipEntry> it = entries.iterator(); it.hasNext(); ) {
+        for (Iterator<ZipEntry> it = entries.iterator(); it.hasNext();) {
             // entries is filled in populateFromCentralDirectory and
             // never modified
             Entry ze = (Entry) it.next();
@@ -992,7 +992,8 @@ public class ZipFile {
      */
     private final Comparator<ZipEntry> OFFSET_COMPARATOR =
         new Comparator<ZipEntry>() {
-        public int compare(ZipEntry e1, ZipEntry e2) {
+        @Override
+		public int compare(ZipEntry e1, ZipEntry e2) {
             if (e1 == e2) {
                 return 0;
             }

@@ -100,7 +100,7 @@ public class SSHExec extends SSHBase {
      *
      * @param command  The new command value
      */
-    public void setCommand(String command) {
+    public void setCommand(final String command) {
         this.command = command;
     }
 
@@ -109,7 +109,7 @@ public class SSHExec extends SSHBase {
      * @param f the value to use.
      * @since Ant 1.7.1
      */
-    public void setCommandResource(String f) {
+    public void setCommandResource(final String f) {
         this.commandResource = new FileResource(new File(f));
     }
 
@@ -120,7 +120,7 @@ public class SSHExec extends SSHBase {
      *
      * @param timeout  The new timeout value in seconds
      */
-    public void setTimeout(long timeout) {
+    public void setTimeout(final long timeout) {
         maxwait = timeout;
     }
 
@@ -129,7 +129,7 @@ public class SSHExec extends SSHBase {
      *
      * @param output  The file to write to.
      */
-    public void setOutput(File output) {
+    public void setOutput(final File output) {
         outputFile = output;
     }
 
@@ -139,7 +139,7 @@ public class SSHExec extends SSHBase {
      * @param output  The file to write to.
      * @since Apache Ant 1.9.4
      */
-    public void setErrorOutput(File output) {
+    public void setErrorOutput(final File output) {
         errorFile = output;
     }
 
@@ -150,7 +150,7 @@ public class SSHExec extends SSHBase {
      *
      * @since Ant 1.8.0
      */
-    public void setInput(File input) {
+    public void setInput(final File input) {
         inputFile = input;
     }
 
@@ -162,7 +162,7 @@ public class SSHExec extends SSHBase {
      *
      * @since Ant 1.8.0
      */
-    public void setInputProperty(String inputProperty) {
+    public void setInputProperty(final String inputProperty) {
         this.inputProperty = inputProperty;
     }
 
@@ -173,7 +173,7 @@ public class SSHExec extends SSHBase {
      *
      * @since Ant 1.8.3
      */
-    public void setInputString(String inputString) {
+    public void setInputString(final String inputString) {
         this.inputString = inputString;
     }
 
@@ -184,7 +184,7 @@ public class SSHExec extends SSHBase {
      *
      * @param append  True to append to an existing file, false to overwrite.
      */
-    public void setAppend(boolean append) {
+    public void setAppend(final boolean append) {
         this.append = append;
     }
 
@@ -196,7 +196,7 @@ public class SSHExec extends SSHBase {
      * @param append  True to append to an existing file, false to overwrite.
      * @since Apache Ant 1.9.4
      */
-    public void setErrAppend(boolean appenderr) {
+    public void setErrAppend(final boolean appenderr) {
         this.appenderr = appenderr;
     }
 
@@ -206,7 +206,7 @@ public class SSHExec extends SSHBase {
      * @param property  The name of the property in which the command output
      *      will be stored.
      */
-    public void setOutputproperty(String property) {
+    public void setOutputproperty(final String property) {
         outputProperty = property;
     }
 
@@ -217,7 +217,7 @@ public class SSHExec extends SSHBase {
      *      will be stored.
      * @since Apache Ant 1.9.4
      */
-    public void setErrorproperty (String property) {
+    public void setErrorproperty (final String property) {
         errorProperty = property;
     }
 
@@ -228,7 +228,7 @@ public class SSHExec extends SSHBase {
      *      will be stored.
      * @since Apache Ant 1.9.4
      */
-    public void setResultproperty(String property) {
+    public void setResultproperty(final String property) {
         resultProperty = property;
     }
 
@@ -236,17 +236,17 @@ public class SSHExec extends SSHBase {
      * Whether a pseudo-tty should be allocated.
      * @since Apache Ant 1.8.3
      */
-    public void setUsePty(boolean b) {
+    public void setUsePty(final boolean b) {
         usePty = b;
     }
 
     /**
      * If set, input will be taken from System.in
-     * 
+     *
      * @param useSystemIn True to use System.in as InputStream, false otherwise
      * @since Apache Ant 1.9.4
      */
-    public void setUseSystemIn(boolean useSystemIn) {
+    public void setUseSystemIn(final boolean useSystemIn) {
         this.useSystemIn = useSystemIn;
     }
 
@@ -255,7 +255,7 @@ public class SSHExec extends SSHBase {
      * If suppressSystemOut is <code>false</code>, normal behavior
      * @since Ant 1.9.0
      */
-    public void setSuppressSystemOut(boolean suppressSystemOut) {
+    public void setSuppressSystemOut(final boolean suppressSystemOut) {
         this.suppressSystemOut = suppressSystemOut;
     }
 
@@ -264,7 +264,7 @@ public class SSHExec extends SSHBase {
      * If suppressSystemErr is <code>false</code>, normal behavior
      * @since Ant 1.9.4
      */
-    public void setSuppressSystemErr(boolean suppressSystemErr) {
+    public void setSuppressSystemErr(final boolean suppressSystemErr) {
         this.suppressSystemErr = suppressSystemErr;
     }
 
@@ -273,7 +273,8 @@ public class SSHExec extends SSHBase {
      *
      * @exception BuildException  Most likely a network error or bad parameter.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
 
         if (getHost() == null) {
             throw new BuildException("Host is required.");
@@ -289,7 +290,7 @@ public class SSHExec extends SSHBase {
             throw new BuildException("Command or commandResource is required.");
         }
 
-        int numberOfInputs = (inputFile != null ? 1 : 0)
+        final int numberOfInputs = (inputFile != null ? 1 : 0)
             + (inputProperty != null ? 1 : 0)
             + (inputString != null ? 1 : 0);
         if (numberOfInputs > 1) {
@@ -304,7 +305,7 @@ public class SSHExec extends SSHBase {
         }
 
         Session session = null;
-        StringBuffer output = new StringBuffer();
+        final StringBuffer output = new StringBuffer();
         try {
             session = openSession();
             /* called once */
@@ -313,7 +314,7 @@ public class SSHExec extends SSHBase {
                 executeCommand(session, command, output);
             } else { // read command resource and execute for each command
                 try {
-                    BufferedReader br = new BufferedReader(
+                    final BufferedReader br = new BufferedReader(
                             new InputStreamReader(commandResource.getInputStream()));
                     String cmd;
                     while ((cmd = br.readLine()) != null) {
@@ -323,7 +324,7 @@ public class SSHExec extends SSHBase {
                         output.append("\n");
                     }
                     FileUtils.close(br);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     if (getFailonerror()) {
                         throw new BuildException(e);
                     } else {
@@ -332,7 +333,7 @@ public class SSHExec extends SSHBase {
                     }
                 }
             }
-        } catch (JSchException e) {
+        } catch (final JSchException e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
             } else {
@@ -348,18 +349,18 @@ public class SSHExec extends SSHBase {
         }
     }
 
-    private void executeCommand(Session session, String cmd, StringBuffer sb)
+    private void executeCommand(final Session session, final String cmd, final StringBuffer sb)
         throws BuildException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ByteArrayOutputStream errout = new ByteArrayOutputStream();
-        OutputStream teeErr = suppressSystemErr ? errout : new TeeOutputStream(errout, KeepAliveOutputStream.wrapSystemErr());
-        OutputStream tee = suppressSystemOut ? out : new TeeOutputStream(out, KeepAliveOutputStream.wrapSystemOut());
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ByteArrayOutputStream errout = new ByteArrayOutputStream();
+        final OutputStream teeErr = suppressSystemErr ? errout : new TeeOutputStream(errout, KeepAliveOutputStream.wrapSystemErr());
+        final OutputStream tee = suppressSystemOut ? out : new TeeOutputStream(out, KeepAliveOutputStream.wrapSystemOut());
 
-        InputStream istream = null ;
+        InputStream istream = null;
         if (inputFile != null) {
             try {
-                istream = new FileInputStream(inputFile) ;
-            } catch (IOException e) {
+                istream = new FileInputStream(inputFile);
+            } catch (final IOException e) {
                 // because we checked the existence before, this one
                 // shouldn't happen What if the file exists, but there
                 // are no read permissions?
@@ -368,9 +369,9 @@ public class SSHExec extends SSHBase {
             }
         }
         if (inputProperty != null) {
-            String inputData = getProject().getProperty(inputProperty) ;
+            final String inputData = getProject().getProperty(inputProperty);
             if (inputData != null) {
-                istream = new ByteArrayInputStream(inputData.getBytes()) ;
+                istream = new ByteArrayInputStream(inputData.getBytes());
             }
         }
         if (inputString != null) {
@@ -398,14 +399,15 @@ public class SSHExec extends SSHBase {
             // wait for it to finish
             thread =
                 new Thread() {
-                    public void run() {
+                    @Override
+					public void run() {
                         while (!channel.isClosed()) {
                             if (thread == null) {
                                 return;
                             }
                             try {
                                 sleep(RETRY_INTERVAL);
-                            } catch (Exception e) {
+                            } catch (final Exception e) {
                                 // ignored
                             }
                         }
@@ -438,13 +440,13 @@ public class SSHExec extends SSHBase {
                 }
                 // this is the wrong test if the remote OS is OpenVMS,
                 // but there doesn't seem to be a way to detect it.
-                int ec = channel.getExitStatus();
+                final int ec = channel.getExitStatus();
                 // set resultproperty
                 if (resultProperty != null) {
                     getProject().setNewProperty(resultProperty, Integer.toString(ec));
                 }
                 if (ec != 0) {
-                    String msg = "Remote command failed with exit status " + ec;
+                    final String msg = "Remote command failed with exit status " + ec;
                     if (getFailonerror()) {
                         throw new BuildException(msg);
                     } else {
@@ -452,9 +454,9 @@ public class SSHExec extends SSHBase {
                     }
                 }
             }
-        } catch (BuildException e) {
+        } catch (final BuildException e) {
             throw e;
-        } catch (JSchException e) {
+        } catch (final JSchException e) {
             if (e.getMessage().indexOf("session is down") >= 0) {
                 if (getFailonerror()) {
                     throw new BuildException(TIMEOUT_MESSAGE, e);
@@ -469,7 +471,7 @@ public class SSHExec extends SSHBase {
                         Project.MSG_ERR);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
             } else {
@@ -490,13 +492,13 @@ public class SSHExec extends SSHBase {
      * @param append         if true, append to existing file, else overwrite
      * @exception Exception  most likely an IOException
      */
-    private void writeToFile(String from, boolean append, File to)
+    private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
         FileWriter out = null;
         try {
             out = new FileWriter(to.getAbsolutePath(), append);
-            StringReader in = new StringReader(from);
-            char[] buffer = new char[BUFFER_SIZE];
+            final StringReader in = new StringReader(from);
+            final char[] buffer = new char[BUFFER_SIZE];
             int bytesRead;
             while (true) {
                 bytesRead = in.read(buffer);

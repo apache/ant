@@ -41,6 +41,6 @@ public class UnicodeUtil {
                                 - s.length() + i,
                                 s.charAt(i));
        }
-       return unicodeBuf;	   
+       return unicodeBuf;
    }
 }

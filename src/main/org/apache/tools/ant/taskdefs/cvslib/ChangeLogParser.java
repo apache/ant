@@ -88,11 +88,11 @@ class ChangeLogParser {
         ArrayList names = new ArrayList();
         if (packageName != null) {
             for (StringTokenizer tok = new StringTokenizer(packageName);
-                 tok.hasMoreTokens(); ) {
+                 tok.hasMoreTokens();) {
                 names.add(tok.nextToken());
             }
         }
-        for (Iterator iter = modules.iterator(); iter.hasNext(); ) {
+        for (Iterator iter = modules.iterator(); iter.hasNext();) {
             AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
             names.add(m.getName());
         }

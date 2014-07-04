@@ -90,7 +90,8 @@ public class SQLExec extends JDBCTask {
         /** The enumerated strings */
         public static final String NORMAL = "normal", ROW = "row";
         /** @return the enumerated strings */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {NORMAL, ROW};
         }
     }
@@ -589,7 +590,8 @@ public class SQLExec extends JDBCTask {
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         Vector savedTransaction = (Vector) transactions.clone();
         String savedSqlCommand = sqlCommand;
 
@@ -850,7 +852,8 @@ public class SQLExec extends JDBCTask {
      * @param out the place to print results
      * @throws SQLException on SQL problems.
      */
-    protected void printResults(PrintStream out) throws SQLException {
+    @Deprecated
+	protected void printResults(PrintStream out) throws SQLException {
         ResultSet rs = getStatement().getResultSet();
         try {
             printResults(rs, out);
@@ -954,7 +957,8 @@ public class SQLExec extends JDBCTask {
      * <p>returns null if the connection does not connect to the
      * expected RDBMS.</p>
      */
-    protected Connection getConnection() {
+    @Override
+	protected Connection getConnection() {
         if (conn == null) {
             conn = super.getConnection();
             if (!isValidRdbms(conn)) {
@@ -981,14 +985,15 @@ public class SQLExec extends JDBCTask {
 
         return statement;
     }
-        
+
     /**
      * The action a task should perform on an error,
      * one of "continue", "stop" and "abort"
      */
     public static class OnError extends EnumeratedAttribute {
         /** @return the enumerated values */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {"continue", "stop", "abort"};
         }
     }

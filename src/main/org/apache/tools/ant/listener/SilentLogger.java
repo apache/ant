@@ -22,34 +22,40 @@ import org.apache.tools.ant.DefaultLogger;
 
 /**
  * A logger which logs nothing but build failure and what task might output
- * 
+ *
  * @since 1.9.0
  */
 public class SilentLogger extends DefaultLogger {
 
-    public void buildStarted(BuildEvent event) {
+    @Override
+	public void buildStarted(BuildEvent event) {
         // log nothing
     }
 
-    public void buildFinished(BuildEvent event) {
+    @Override
+	public void buildFinished(BuildEvent event) {
         if (event.getException() != null) {
             super.buildFinished(event);
         }
     }
 
-    public void targetStarted(BuildEvent event) {
+    @Override
+	public void targetStarted(BuildEvent event) {
         // log nothing
     }
 
-    public void targetFinished(BuildEvent event) {
+    @Override
+	public void targetFinished(BuildEvent event) {
         // log nothing
     }
 
-    public void taskStarted(BuildEvent event) {
+    @Override
+	public void taskStarted(BuildEvent event) {
         // log nothing
     }
 
-    public void taskFinished(BuildEvent event) {
+    @Override
+	public void taskFinished(BuildEvent event) {
         // log nothing
     }
 

@@ -321,7 +321,8 @@ public class SignJar extends AbstractJarSignerTask {
      *
      * @throws BuildException on errors
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         //validation logic
         final boolean hasJar = jar != null;
         final boolean hasSignedJar = signedjar != null;
@@ -514,7 +515,7 @@ public class SignJar extends AbstractJarSignerTask {
      * is complex, and best explained in the source itself. Essentially if
      * either file doesnt exist, or the destfile has an out of date timestamp,
      * then the return value is false.</p>
-     * 
+     *
      * <p>If we are signing ourself, the check {@link #isSigned(File)} is used to
      * trigger the process.</p>
      *

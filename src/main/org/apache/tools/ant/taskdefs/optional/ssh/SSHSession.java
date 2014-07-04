@@ -130,7 +130,8 @@ public class SSHSession extends SSHBase {
      * @exception BuildException if one of the nested tasks fails, or
      * network error or bad parameter.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (getHost() == null) {
             throw new BuildException("Host is required.");
         }
@@ -277,13 +278,13 @@ public class SSHSession extends SSHBase {
             return lport;
         }
         public String getLHost() {
-            if (lhost == null) { 
+            if (lhost == null) {
             	throw new BuildException("lhost is required for RemoteTunnel.");
             }
             return lhost;
         }
         public int getRPort() {
-            if (rport == 0) { 
+            if (rport == 0) {
             	throw new BuildException("rport is required for RemoteTunnel.");
             }
             return rport;
@@ -315,7 +316,8 @@ public class SSHSession extends SSHBase {
          *
          * @param task an unknown element.
          */
-        public void addTask(Task task) {
+        @Override
+		public void addTask(Task task) {
             nested.add(task);
         }
 

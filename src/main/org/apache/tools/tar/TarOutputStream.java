@@ -206,11 +206,11 @@ public class TarOutputStream extends FilterOutputStream {
 
     /**
      * Ends the TAR archive without closing the underlying OutputStream.
-     * 
+     *
      * An archive consists of a series of file entries terminated by an
-     * end-of-archive entry, which consists of two 512 blocks of zero bytes. 
+     * end-of-archive entry, which consists of two 512 blocks of zero bytes.
      * POSIX.1 requires two EOF records, like some other implementations.
-     * 
+     *
      * @throws IOException on error
      */
     public void finish() throws IOException {
@@ -377,7 +377,8 @@ public class TarOutputStream extends FilterOutputStream {
      * @param wBuf The buffer to write to the archive.
      * @throws IOException on error
      */
-    public void write(byte[] wBuf) throws IOException {
+    @Override
+	public void write(byte[] wBuf) throws IOException {
         write(wBuf, 0, wBuf.length);
     }
 

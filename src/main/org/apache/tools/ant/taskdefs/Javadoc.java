@@ -278,7 +278,8 @@ public class Javadoc extends Task {
          * Return a string rep for this object.
          * @return the package name.
          */
-        public String toString() {
+        @Override
+		public String toString() {
             return getName();
         }
     }
@@ -362,7 +363,8 @@ public class Javadoc extends Task {
         /**
          * @return the allowed values for the access type.
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             // Protected first so if any GUI tool offers a default
             // based on enum #0, it will be right.
             return new String[] {"protected", "public", "package", "private"};
@@ -862,7 +864,8 @@ public class Javadoc extends Task {
      * @deprecated since 1.5.x.
      *             Use the {@link #setExtdirs(Path)} version.
      */
-    public void setExtdirs(String path) {
+    @Deprecated
+	public void setExtdirs(String path) {
         cmd.createArgument().setValue("-extdirs");
         cmd.createArgument().setValue(path);
     }
@@ -1698,7 +1701,8 @@ public class Javadoc extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         checkTaskName();
 
         Vector<String> packagesToDoc = new Vector<String>();
@@ -2428,7 +2432,8 @@ public class Javadoc extends Task {
                 // are there any java files in this directory?
                 File pd = new File(baseDir, dirs[i]);
                 String[] files = pd.list(new FilenameFilter () {
-                        public boolean accept(File dir1, String name) {
+                        @Override
+						public boolean accept(File dir1, String name) {
                             return name.endsWith(".java")
                                 || (includeNoSourcePackages
                                     && name.equals("package.html"));
@@ -2570,7 +2575,8 @@ public class Javadoc extends Task {
         //
         private String queuedLine = null;
         private boolean sawWarnings = false;
-        protected void processLine(String line, int messageLevel) {
+        @Override
+		protected void processLine(String line, int messageLevel) {
             if (line.contains("warning")) {
                 sawWarnings = true;
             }
@@ -2600,7 +2606,7 @@ public class Javadoc extends Task {
                 queuedLine = null;
             }
         }
-        
+
         public boolean sawWarnings() {
             return sawWarnings;
         }

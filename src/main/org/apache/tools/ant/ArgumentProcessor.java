@@ -27,7 +27,7 @@ import java.util.List;
  * ones. It is then recommended to chose specific 'enough' argument name,
  * avoiding for instance one letter arguments. By the way, if there any
  * conflict, Ant will take precedence.
- * 
+ *
  * @since 1.9
  */
 public interface ArgumentProcessor {
@@ -64,7 +64,7 @@ public interface ArgumentProcessor {
 
     /**
      * Print the usage of the supported arguments
-     * 
+     *
      * @see org.apache.tools.ant.Main#printUsage()
      */
     void printUsage(PrintStream writer);

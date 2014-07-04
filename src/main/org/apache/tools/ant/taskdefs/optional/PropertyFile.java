@@ -71,9 +71,9 @@ import org.apache.tools.ant.util.LayoutPreservingProperties;
  * </ul>
  * Other parameters are:
  * <ul>
- *   <li>comment</li> 
- *   <li>key</li> 
- *   <li>operation</li> 
+ *   <li>comment</li>
+ *   <li>key</li>
+ *   <li>operation</li>
  *   <li>type</li>
  *   <li>value (the final four being eliminated shortly)</li>
  * </ul>
@@ -155,7 +155,8 @@ public class PropertyFile extends Task {
      * Execute the task.
      * @throws BuildException on error.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         checkParameters();
         readFile();
         executeOperation();
@@ -378,7 +379,7 @@ public class PropertyFile extends Task {
          */
         protected void executeOn(Properties props) throws BuildException {
             checkParameters();
-            
+
             if (operation == Operation.DELETE_OPER) {
                 props.remove(key);
                 return;
@@ -614,7 +615,8 @@ public class PropertyFile extends Task {
             public static final int DELETE_OPER =      3;
 
             /** {@inheritDoc}. */
-            public String[] getValues() {
+            @Override
+			public String[] getValues() {
                 return new String[] {"+", "-", "=", "del"};
             }
 
@@ -649,7 +651,8 @@ public class PropertyFile extends Task {
             public static final int STRING_TYPE =      2;
 
             /** {@inheritDoc} */
-            public String[] getValues() {
+            @Override
+			public String[] getValues() {
                 return new String[] {"int", "date", "string"};
             }
 
@@ -715,7 +718,8 @@ public class PropertyFile extends Task {
         }
 
         /** {@inheritDoc}. */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return UNITS;
         }
     }

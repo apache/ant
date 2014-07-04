@@ -78,7 +78,7 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     private boolean finished = false;
 
-    /* 
+    /*
      * Apparently Deflater.setInput gets slowed down a lot on Sun JVMs
      * when it gets handed a really big buffer.  See
      * https://issues.apache.org/bugzilla/show_bug.cgi?id=45396
@@ -268,7 +268,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * whether to use the general purpose bit flag when writing UTF-8
      * filenames or not.
      */
-    private boolean useUTF8Flag = true; 
+    private boolean useUTF8Flag = true;
 
     /**
      * Whether to encode non-encodable file names as UTF-8.
@@ -421,7 +421,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * this mode is not valid when the output stream is not seekable
      * and the uncompressed size is unknown when {@link
      * #putNextEntry} is called.</p>
-     * 
+     *
      * <p>If no entry inside the resulting archive requires Zip64
      * extensions then {@link Zip64Mode#Never Never} will create the
      * smallest archive.  {@link Zip64Mode#AsNeeded AsNeeded} will
@@ -477,7 +477,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      * @throws IOException on error
      * @throws Zip64RequiredException if the entry's uncompressed or
-     * compressed size exceeds 4 GByte and {@link #setUseZip64} 
+     * compressed size exceeds 4 GByte and {@link #setUseZip64}
      * is {@link Zip64Mode#Never}.
      */
     public void closeEntry() throws IOException {
@@ -625,9 +625,9 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      * @throws Zip64RequiredException if the entry's uncompressed or
-     * compressed size is known to exceed 4 GByte and {@link #setUseZip64} 
+     * compressed size is known to exceed 4 GByte and {@link #setUseZip64}
      * is {@link Zip64Mode#Never}.
      */
     public void putNextEntry(ZipEntry archiveEntry) throws IOException {
@@ -1089,7 +1089,7 @@ public class ZipOutputStream extends FilterOutputStream {
 
         // version made by
         // CheckStyle:MagicNumber OFF
-        writeOut(ZipShort.getBytes((ze.getPlatform() << 8) | 
+        writeOut(ZipShort.getBytes((ze.getPlatform() << 8) |
                                    (!hasUsedZip64 ? DATA_DESCRIPTOR_MIN_VERSION
                                                   : ZIP64_MIN_VERSION)));
         written += SHORT;
@@ -1251,7 +1251,8 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      * @deprecated use ZipUtil#toDosTime
      */
-    protected static ZipLong toDosTime(Date time) {
+    @Deprecated
+	protected static ZipLong toDosTime(Date time) {
         return ZipUtil.toDosTime(time);
     }
 
@@ -1264,7 +1265,8 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.26
      * @deprecated use ZipUtil#toDosTime
      */
-    protected static byte[] toDosTime(long t) {
+    @Deprecated
+	protected static byte[] toDosTime(long t) {
         return ZipUtil.toDosTime(t);
     }
 
@@ -1396,7 +1398,8 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.34
      * @deprecated use ZipUtil#adjustToLong
      */
-    protected static long adjustToLong(int i) {
+    @Deprecated
+	protected static long adjustToLong(int i) {
         return ZipUtil.adjustToLong(i);
     }
 

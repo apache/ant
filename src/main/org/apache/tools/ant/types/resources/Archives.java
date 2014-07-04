@@ -72,13 +72,14 @@ public class Archives extends DataType
     /**
      * Sums the sizes of nested archives.
      */
-    public int size() {
+    @Override
+	public int size() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).size();
         }
         dieOnCircularReference();
         int total = 0;
-        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext(); ) {
+        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
             total += i.next().size();
         }
         return total;
@@ -87,13 +88,14 @@ public class Archives extends DataType
     /**
      * Merges the nested collections.
      */
-    public Iterator<Resource> iterator() {
+    @Override
+	public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
         List<Resource> l = new LinkedList<Resource>();
-        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext(); ) {
+        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
             l.addAll(CollectionUtils
                      .asCollection(i.next().iterator()));
         }
@@ -103,7 +105,8 @@ public class Archives extends DataType
     /**
      * @return false
      */
-    public boolean isFilesystemOnly() {
+    @Override
+	public boolean isFilesystemOnly() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).isFilesystemOnly();
         }
@@ -115,7 +118,8 @@ public class Archives extends DataType
      * Overrides the base version.
      * @param r the Reference to set.
      */
-    public void setRefid(Reference r) {
+    @Override
+	public void setRefid(Reference r) {
         if (zips.getResourceCollections().size() > 0
             || tars.getResourceCollections().size() > 0) {
             throw tooManyAttributes();
@@ -128,7 +132,8 @@ public class Archives extends DataType
      * well.
      * @return a cloned instance.
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         try {
             Archives a = (Archives) super.clone();
             a.zips = (Union) zips.clone();
@@ -174,7 +179,8 @@ public class Archives extends DataType
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
+    @Override
+	protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

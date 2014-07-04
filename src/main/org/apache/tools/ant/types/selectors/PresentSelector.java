@@ -51,8 +51,9 @@ public class PresentSelector extends BaseSelector {
     /**
      * @return a string describing this object
      */
-    public String toString() {
-        StringBuilder buf = new StringBuilder("{presentselector targetdir: ");
+    @Override
+	public String toString() {
+        final StringBuilder buf = new StringBuilder("{presentselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
         } else {
@@ -79,7 +80,7 @@ public class PresentSelector extends BaseSelector {
      *
      * @param targetdir the directory to scan looking for matching files.
      */
-    public void setTargetdir(File targetdir) {
+    public void setTargetdir(final File targetdir) {
         this.targetdir = targetdir;
     }
 
@@ -102,7 +103,7 @@ public class PresentSelector extends BaseSelector {
      * @throws BuildException if more than one mapper defined
      * @since Ant 1.8.0
      */
-    public void addConfigured(FileNameMapper fileNameMapper) {
+    public void addConfigured(final FileNameMapper fileNameMapper) {
         if (map != null || mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper");
         }
@@ -121,7 +122,7 @@ public class PresentSelector extends BaseSelector {
      * @param fp An attribute set to either <code>srconly</code or
      *           <code>both</code>.
      */
-    public void setPresent(FilePresence fp) {
+    public void setPresent(final FilePresence fp) {
         if (fp.getIndex() == 0) {
             destmustexist = false;
         }
@@ -131,7 +132,8 @@ public class PresentSelector extends BaseSelector {
      * Checks to make sure all settings are kosher. In this case, it
      * means that the targetdir attribute has been set and we have a mapper.
      */
-    public void verifySettings() {
+    @Override
+	public void verifySettings() {
         if (targetdir == null) {
             setError("The targetdir attribute is required.");
         }
@@ -156,13 +158,14 @@ public class PresentSelector extends BaseSelector {
      * @param file is a java.io.File object the selector can use
      * @return whether the file should be selected or not
      */
-    public boolean isSelected(File basedir, String filename, File file) {
+    @Override
+	public boolean isSelected(final File basedir, final String filename, final File file) {
 
         // throw BuildException on error
         validate();
 
         // Determine file whose existence is to be checked
-        String[] destfiles = map.mapFileName(filename);
+        final String[] destfiles = map.mapFileName(filename);
         // If filename does not match the To attribute of the mapper
         // then filter it out of the files we are considering
         if (destfiles == null) {
@@ -173,8 +176,8 @@ public class PresentSelector extends BaseSelector {
             throw new BuildException("Invalid destination file results for "
                     + targetdir + " with filename " + filename);
         }
-        String destname = destfiles[0];
-        File destfile = FileUtils.getFileUtils().resolveFile(targetdir, destname);
+        final String destname = destfiles[0];
+        final File destfile = FileUtils.getFileUtils().resolveFile(targetdir, destname);
         return destfile.exists() == destmustexist;
     }
 
@@ -186,8 +189,9 @@ public class PresentSelector extends BaseSelector {
         /**
          * @return the values as an array of strings
          */
-        public String[] getValues() {
-            return new String[] { "srconly", "both" };
+        @Override
+		public String[] getValues() {
+            return new String[] {"srconly", "both"};
         }
     }
 

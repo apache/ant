@@ -72,7 +72,8 @@ public class Sync extends Task {
      * @throws BuildException if there is a problem.
      * @see Task#init()
      */
-    public void init()
+    @Override
+	public void init()
         throws BuildException {
         // Instantiate it
         myCopy = new MyCopy();
@@ -97,7 +98,8 @@ public class Sync extends Task {
      * @throws BuildException if there is an error.
      * @see Task#execute()
      */
-    public void execute()
+    @Override
+	public void execute()
         throws BuildException {
         // The destination of the files to copy
         File toDir = myCopy.getToDir();
@@ -324,7 +326,7 @@ public class Sync extends Task {
     private int removeEmptyDirectories(Set preservedEmptyDirectories) {
         int removedCount = 0;
         for (Iterator iter = preservedEmptyDirectories.iterator();
-             iter.hasNext(); ) {
+             iter.hasNext();) {
             File f = (File) iter.next();
             String[] s = f.list();
             if (s == null || s.length == 0) {
@@ -399,7 +401,7 @@ public class Sync extends Task {
             myCopy.add(rc);
         } else {
             if (resources == null) {
-                Restrict r = new Restrict(); 
+                Restrict r = new Restrict();
                 r.add(new Exists());
                 r.add(resources = new Resources());
                 myCopy.add(r);
@@ -464,7 +466,8 @@ public class Sync extends Task {
          * @see Copy#scan(File, File, String[], String[])
          */
         /** {@inheritDoc} */
-        protected void scan(File fromDir, File toDir, String[] files,
+        @Override
+		protected void scan(File fromDir, File toDir, String[] files,
                             String[] dirs) {
             assertTrue("No mapper", mapperElement == null);
 
@@ -482,7 +485,8 @@ public class Sync extends Task {
          * @see Copy#scan(Resource[], File)
          */
         /** {@inheritDoc} */
-        protected Map scan(Resource[] resources, File toDir) {
+        @Override
+		protected Map scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
 
             for (int i = 0; i < resources.length; i++) {
@@ -512,7 +516,8 @@ public class Sync extends Task {
          * @return true always.
          * @since Ant 1.7
          */
-        protected boolean supportsNonFileResources() {
+        @Override
+		protected boolean supportsNonFileResources() {
             return true;
         }
     }
@@ -543,7 +548,8 @@ public class Sync extends Task {
          * @param dir ignored
          * @throws BuildException always
          */
-        public void setDir(File dir) throws BuildException {
+        @Override
+		public void setDir(File dir) throws BuildException {
             throw new BuildException("preserveintarget doesn't support the dir "
                                      + "attribute");
         }
@@ -579,7 +585,7 @@ public class Sync extends Task {
                 PatternSet ps = mergePatterns(getProject());
                 fs.appendIncludes(ps.getIncludePatterns(getProject()));
                 fs.appendExcludes(ps.getExcludePatterns(getProject()));
-                for (Enumeration e = selectorElements(); e.hasMoreElements(); ) {
+                for (Enumeration e = selectorElements(); e.hasMoreElements();) {
                     fs.appendSelector((FileSelector) e.nextElement());
                 }
                 fs.setDefaultexcludes(getDefaultexcludes());

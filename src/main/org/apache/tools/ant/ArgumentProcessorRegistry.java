@@ -39,7 +39,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  * <p>
  * Use the system property <code>ant.argument-processor.debug</code> to enable
  * the print of debug log.
- * 
+ *
  * @since 1.9
  */
 public class ArgumentProcessorRegistry {

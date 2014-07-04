@@ -33,11 +33,11 @@ import org.apache.tools.zip.ZipOutputStream;
  * Contains special treatment for files that should end up in the
  * <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
  * <code>WEB-INF</code> directories of the Web Application Archive.</p>
- * 
+ *
  * <p>(The War task is a shortcut for specifying the particular layout of a WAR file.
  * The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
  * attributes of zipfilesets in a Zip or Jar task.)</p>
- * 
+ *
  * <p>The extended zipfileset element from the zip task
  * (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>)
  * is available in the War task.</p>
@@ -151,7 +151,8 @@ public class War extends Jar {
      * @throws IOException on output error
      * @throws BuildException if invalid configuration
      */
-    protected void initZipOutputStream(ZipOutputStream zOut)
+    @Override
+	protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
         super.initZipOutputStream(zOut);
     }
@@ -171,7 +172,8 @@ public class War extends Jar {
      * @param mode the Unix permissions to set.
      * @throws IOException on output error
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+    @Override
+	protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's
@@ -215,7 +217,8 @@ public class War extends Jar {
      * Make sure we don't think we already have a web.xml next time this task
      * gets executed.
      */
-    protected void cleanUp() {
+    @Override
+	protected void cleanUp() {
         if (addedWebXmlFile == null
             && deploymentDescriptor == null
             && needxmlfile

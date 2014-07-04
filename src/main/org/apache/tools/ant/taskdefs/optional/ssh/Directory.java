@@ -119,13 +119,12 @@ public class Directory {
      * @return the child directory, or null if not found
      */
     public Directory getChild(File dir) {
-        for (Iterator i = childDirectories.iterator(); i.hasNext(); ) {
+        for (Iterator i = childDirectories.iterator(); i.hasNext();) {
             Directory current = (Directory) i.next();
             if (current.getDirectory().equals(dir)) {
                 return current;
             }
         }
-
         return null;
     }
 
@@ -135,7 +134,8 @@ public class Directory {
      * @param obj the object to compare to
      * @return true if this object has an equal directory field as the other object
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -153,7 +153,8 @@ public class Directory {
      * The hashcode method.
      * @return the hash code of the directory field
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return directory.hashCode();
     }
 

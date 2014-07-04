@@ -210,7 +210,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.8.0
      */
     private boolean failOnNoResources = true;
-    
+
     /**
      * For evaluating template params
      *
@@ -617,7 +617,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public boolean getSuppressWarnings() {
         return suppressWarnings;
-    }    
+    }
 
     /**
      * Whether transformation errors should make the build fail.
@@ -978,7 +978,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /** The parameter's value */
         private String expression = null;
-        
+
         /**
          * Type of the expression.
          * @see ParamType
@@ -1011,7 +1011,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * The parameter value -
          * can be a primitive type value or an XPath expression.
          * @param expression the parameter's value/expression.
-         * @see #setType(java.lang.String) 
+         * @see #setType(java.lang.String)
          */
         public void setExpression(String expression) {
             this.expression = expression;
@@ -1024,7 +1024,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         public void setType(String type) {
             this.type = type;
         }
-        
+
         /**
          * Get the parameter name
          *
@@ -1113,7 +1113,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 && ph.testUnlessCondition(unlessCond);
         }
     } // Param
-    
+
     /**
      * Enum for types of the parameter expression.
      *
@@ -1134,7 +1134,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * <p>Default type (if omited) is primitive String. So if the expression is e.g
      * "true" with no type, in XSLT it will be only a text string, not true
      * boolean.</p>
-     * 
+     *
      * @see Param#setType(java.lang.String)
      * @see Param#setExpression(java.lang.String)
      * @since Ant 1.9.3
@@ -1151,7 +1151,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         XPATH_NUMBER,
         XPATH_NODE,
         XPATH_NODESET;
-        
+
         public static final Map<ParamType, QName> XPATH_TYPES;
 
         static {
@@ -1230,11 +1230,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     public void init() throws BuildException {
         super.init();
         xmlCatalog.setProject(getProject());
-        
+
         xpathFactory = XPathFactory.newInstance();
         xpath = xpathFactory.newXPath();
         xpath.setXPathVariableResolver(new XPathVariableResolver() {
-            public Object resolveVariable(QName variableName) {
+            @Override
+			public Object resolveVariable(QName variableName) {
                 return getProject().getProperty(variableName.toString());
             }
         });
@@ -1247,7 +1248,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception BuildException if the stylesheet cannot be loaded.
      * @deprecated since Ant 1.7
      */
-    protected void configureLiaison(File stylesheet) throws BuildException {
+    @Deprecated
+	protected void configureLiaison(File stylesheet) throws BuildException {
         FileResource fr = new FileResource();
         fr.setProject(getProject());
         fr.setFile(stylesheet);
@@ -1314,7 +1316,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             handleTransformationError(ex);
         }
     }
-    
+
     /**
      * Evaluates parameter expression according to its type.
      *
@@ -1530,7 +1532,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              * @return null
              * @throws BuildException never
              */
-            public Object createDynamicElement(String name) throws BuildException {
+            @Override
+			public Object createDynamicElement(String name) throws BuildException {
                 return null;
             }
 
@@ -1541,7 +1544,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              * @param value the value of the attribute
              * @throws BuildException on error
              */
-            public void setDynamicAttribute(String name, String value) throws BuildException {
+            @Override
+			public void setDynamicAttribute(String name, String value) throws BuildException {
                 // only 'name' and 'value' exist.
                 if ("name".equalsIgnoreCase(name)) {
                     this.name = value;
@@ -1576,11 +1580,14 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.6.2
      */
     private class StyleMapper implements FileNameMapper {
-        public void setFrom(String from) {
+        @Override
+		public void setFrom(String from) {
         }
-        public void setTo(String to) {
+        @Override
+		public void setTo(String to) {
         }
-        public String[] mapFileName(String xmlFile) {
+        @Override
+		public String[] mapFileName(String xmlFile) {
             int dotPos = xmlFile.lastIndexOf('.');
             if (dotPos > 0) {
                 xmlFile = xmlFile.substring(0, dotPos);

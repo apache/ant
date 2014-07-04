@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * This ZipEncoding implementation implements a simple 8bit character
  * set, which mets the following restrictions:
- * 
+ *
  * <ul>
  * <li>Characters 0x0000 to 0x007f are encoded as the corresponding
  *        byte values 0x00 to 0x7f.</li>
@@ -36,11 +36,11 @@ import java.util.List;
  *       character in the range 0x0080 to 0x7fff. (No support for
  *       UTF-16 surrogates)
  * </ul>
- * 
+ *
  * <p>These restrictions most notably apply to the most prominent
  * omissions of java-1.4's {@link java.nio.charset.Charset Charset}
  * implementation, Cp437 and Cp850.</p>
- * 
+ *
  * <p>The methods of this class are reentrant.</p>
  */
 class Simple8BitZipEncoding implements ZipEncoding {
@@ -58,7 +58,8 @@ class Simple8BitZipEncoding implements ZipEncoding {
             this.unicode = unicode;
         }
 
-        public int compareTo(Simple8BitChar a) {
+        @Override
+		public int compareTo(Simple8BitChar a) {
             return this.unicode - a.unicode;
         }
 
@@ -117,7 +118,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
 
     /**
      * Return the character code for a given encoded byte.
-     * 
+     *
      * @param b The byte to decode.
      * @return The associated character value.
      */
@@ -147,12 +148,12 @@ class Simple8BitZipEncoding implements ZipEncoding {
 
     /**
      * Pushes the encoded form of the given character to the given byte buffer.
-     * 
+     *
      * @param bb The byte buffer to write to.
      * @param c The character to encode.
      * @return Whether the given unicode character is covered by this encoding.
      *         If {@code false} is returned, nothing is pushed to the
-     *         byte buffer. 
+     *         byte buffer.
      */
     public boolean pushEncodedChar(ByteBuffer bb, char c) {
 
@@ -215,7 +216,8 @@ class Simple8BitZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
-    public boolean canEncode(String name) {
+    @Override
+	public boolean canEncode(String name) {
 
         for (int i=0;i<name.length();++i) {
 
@@ -233,7 +235,8 @@ class Simple8BitZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
-    public ByteBuffer encode(String name) {
+    @Override
+	public ByteBuffer encode(String name) {
         ByteBuffer out = ByteBuffer.allocate(name.length()
                                              + 6 + (name.length() + 1) / 2);
 
@@ -260,7 +263,8 @@ class Simple8BitZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
-    public String decode(byte[] data) throws IOException {
+    @Override
+	public String decode(byte[] data) throws IOException {
         char [] ret = new char[data.length];
 
         for (int i=0;i<data.length;++i) {

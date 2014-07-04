@@ -29,14 +29,14 @@ import java.nio.ByteBuffer;
  * utf-8, because java.io encodes unmappable character as question
  * marks leading to unreadable ZIP entries on some operating
  * systems.</p>
- * 
+ *
  * <p>Furthermore this implementation is unable to tell whether a
  * given name can be safely encoded or not.</p>
- * 
+ *
  * <p>This implementation acts as a last resort implementation, when
  * neither {@link Simple8BitZipEnoding} nor {@link NioZipEncoding} is
  * available.</p>
- * 
+ *
  * <p>The methods of this class are reentrant.</p>
  */
 class FallbackZipEncoding implements ZipEncoding {
@@ -52,7 +52,7 @@ class FallbackZipEncoding implements ZipEncoding {
 
     /**
      * Construct a fallback zip encoding, which uses the given charset.
-     * 
+     *
      * @param charset The name of the charset or {@code null} for
      *                the platform's default character set.
      */
@@ -64,7 +64,8 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
-    public boolean canEncode(String name) {
+    @Override
+	public boolean canEncode(String name) {
         return true;
     }
 
@@ -72,7 +73,8 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
-    public ByteBuffer encode(String name) throws IOException {
+    @Override
+	public ByteBuffer encode(String name) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return ByteBuffer.wrap(name.getBytes());
         } else {
@@ -84,7 +86,8 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
-    public String decode(byte[] data) throws IOException {
+    @Override
+	public String decode(byte[] data) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return new String(data);
         } else {

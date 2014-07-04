@@ -80,7 +80,7 @@ public class CommandLauncher {
 
     /**
      * Launches the given command in a new process.
-     * 
+     *
      * @param project
      *        The project that the command is part of.
      * @param cmd
@@ -104,7 +104,7 @@ public class CommandLauncher {
     /**
      * Launches the given command in a new process, in the given
      * working directory.
-     * 
+     *
      * @param project
      *        The project that the command is part of.
      * @param cmd

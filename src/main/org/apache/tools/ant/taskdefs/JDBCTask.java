@@ -349,7 +349,7 @@ public abstract class JDBCTask extends Task {
             info.put("password", getPassword());
 
             for (Iterator<Property> props = connectionProperties.iterator();
-                 props.hasNext(); ) {
+                 props.hasNext();) {
                 Property p = props.next();
                 String name = p.getName();
                 String value = p.getValue();
@@ -407,7 +407,7 @@ public abstract class JDBCTask extends Task {
                 // in most cases.
                 synchronized (LOADER_MAP) {
                     if (caching) {
-                        loader = (AntClassLoader) LOADER_MAP.get(driver);
+                        loader = LOADER_MAP.get(driver);
                     }
                     if (loader == null) {
                         log("Loading " + driver

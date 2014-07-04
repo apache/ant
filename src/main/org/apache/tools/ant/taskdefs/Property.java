@@ -431,7 +431,8 @@ public class Property extends Task {
      *             deprecated without replacement.
      * @ant.attribute ignore="true"
      */
-    public void setUserProperty(boolean userProperty) {
+    @Deprecated
+	public void setUserProperty(boolean userProperty) {
         log("DEPRECATED: Ignoring request to set user property in Property"
             + " task.", Project.MSG_WARN);
     }
@@ -440,7 +441,8 @@ public class Property extends Task {
      * get the value of this property
      * @return the current value or the empty string
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return value == null ? "" : value;
     }
 
@@ -450,7 +452,8 @@ public class Property extends Task {
      * here is where it is loaded
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (getProject() == null) {
             throw new IllegalStateException("project has not been set");
         }
@@ -520,7 +523,7 @@ public class Property extends Task {
             }
         }
     }
-    
+
     /**
      * load properties from a url
      * @param url url to load from
@@ -651,7 +654,7 @@ public class Property extends Task {
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
         Map osEnv = Execute.getEnvironmentVariables();
-        for (Iterator e = osEnv.entrySet().iterator(); e.hasNext(); ) {
+        for (Iterator e = osEnv.entrySet().iterator(); e.hasNext();) {
             Map.Entry entry = (Map.Entry) e.next();
             props.put(prefix + entry.getKey(), entry.getValue());
         }
@@ -712,7 +715,7 @@ public class Property extends Task {
      */
     private void resolveAllProperties(Map props) throws BuildException {
         PropertyHelper propertyHelper
-            = (PropertyHelper) PropertyHelper.getPropertyHelper(getProject());
+            = PropertyHelper.getPropertyHelper(getProject());
         new ResolvePropertyMap(
                                getProject(),
                                propertyHelper,

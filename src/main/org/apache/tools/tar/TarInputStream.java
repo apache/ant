@@ -506,10 +506,10 @@ public class TarInputStream extends FilterInputStream {
     /**
      * Adds the sparse chunks from the current entry to the sparse chunks,
      * including any additional sparse entries following the current entry.
-     * 
-     * @throws IOException on error 
-     * 
-     * @todo Sparse files get not yet really processed. 
+     *
+     * @throws IOException on error
+     *
+     * @todo Sparse files get not yet really processed.
      */
     private void readGNUSparse() throws IOException {
         /* we do not really process sparse files yet
@@ -543,7 +543,7 @@ public class TarInputStream extends FilterInputStream {
     @Override
     public int read() throws IOException {
         int num = read(oneBuf, 0, 1);
-        return num == -1 ? -1 : ((int) oneBuf[0]) & BYTE_MASK;
+        return num == -1 ? -1 : (oneBuf[0]) & BYTE_MASK;
     }
 
     /**

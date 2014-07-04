@@ -48,7 +48,7 @@ public class JUnit4TestMethodAdapter implements Test {
 
     /**
      * Creates a new adapter for the given class and a method within the class.
-     * 
+     *
      * @param testClass test class containing the method to be executed
      * @param methodNames names of the test methods that are to be executed
      * @exception  java.lang.IllegalArgumentException
@@ -72,7 +72,7 @@ public class JUnit4TestMethodAdapter implements Test {
             }
         }
         this.testClass = testClass;
-        this.methodNames = (String[]) methodNames.clone();
+        this.methodNames = methodNames.clone();
         this.cache = CustomJUnit4TestAdapterCache.getInstance();
 
         // Warning: If 'testClass' is an old-style (pre-JUnit-4) class,
@@ -87,7 +87,8 @@ public class JUnit4TestMethodAdapter implements Test {
         runner = request.getRunner();
     }
 
-    public int countTestCases() {
+    @Override
+	public int countTestCases() {
         return runner.testCount();
     }
 
@@ -103,11 +104,13 @@ public class JUnit4TestMethodAdapter implements Test {
         return testClass;
     }
 
-    public void run(final TestResult result) {
+    @Override
+	public void run(final TestResult result) {
         runner.run(cache.getNotifier(result));
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         String testClassName = testClass.getName();
         StringBuilder buf = new StringBuilder(testClassName.length()
                                               + 12 * methodNames.length)
@@ -144,7 +147,8 @@ public class JUnit4TestMethodAdapter implements Test {
             this.methodNames = methodNames;
         }
 
-        public boolean shouldRun(Description description) {
+        @Override
+		public boolean shouldRun(Description description) {
             if (methodNames.length == 0) {
                 return false;
             }
@@ -165,10 +169,11 @@ public class JUnit4TestMethodAdapter implements Test {
                     }
                 }
             }
-            return false;					
+            return false;
         }
 
-        public String describe() {
+        @Override
+		public String describe() {
             StringBuilder buf = new StringBuilder(40);
             if (methodNames.length == 0) {
                 buf.append("No methods");

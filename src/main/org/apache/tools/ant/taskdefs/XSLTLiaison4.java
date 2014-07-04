@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import javax.xml.transform.Transformer;
-
 /**
  * Extends Proxy interface for XSLT processors: adds support for XSLT parameters
  * of various types (not only String)

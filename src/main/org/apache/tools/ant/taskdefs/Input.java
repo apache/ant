@@ -56,7 +56,7 @@ public class Input extends Task {
          * this allows the use of a custom inputhandler.
          * @param refid the String refid.
          */
-        public void setRefid(String refid) {
+        public void setRefid(final String refid) {
             this.refid = refid;
         }
         /**
@@ -70,7 +70,7 @@ public class Input extends Task {
          * Set the InputHandler classname.
          * @param classname the String classname.
          */
-        public void setClassname(String classname) {
+        public void setClassname(final String classname) {
             this.classname = classname;
         }
         /**
@@ -84,7 +84,7 @@ public class Input extends Task {
          * Set the handler type.
          * @param type a HandlerType.
          */
-        public void setType(HandlerType type) {
+        public void setType(final HandlerType type) {
             this.type = type;
         }
         /**
@@ -101,7 +101,7 @@ public class Input extends Task {
             if (refid != null) {
                try {
                    return (InputHandler) (getProject().getReference(refid));
-               } catch (ClassCastException e) {
+               } catch (final ClassCastException e) {
                    throw new BuildException(
                        refid + " does not denote an InputHandler", e);
                }
@@ -120,16 +120,17 @@ public class Input extends Task {
      * "default", "propertyfile", "greedy", "secure" (since Ant 1.8).
      */
     public static class HandlerType extends EnumeratedAttribute {
-        private static final String[] VALUES = { "default", "propertyfile", "greedy", "secure" };
+        private static final String[] VALUES = {"default", "propertyfile", "greedy", "secure"};
 
         private static final InputHandler[] HANDLERS
-            = { new DefaultInputHandler(),
+            = {new DefaultInputHandler(),
                new PropertyFileInputHandler(),
                new GreedyInputHandler(),
-               new SecureInputHandler() };
+               new SecureInputHandler()};
 
         /** {@inheritDoc} */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return VALUES;
         }
         private InputHandler getInputHandler() {
@@ -152,7 +153,7 @@ public class Input extends Task {
      *
      * @param validargs A comma separated String defining valid input args.
      */
-    public void setValidargs (String validargs) {
+    public void setValidargs (final String validargs) {
         this.validargs = validargs;
     }
 
@@ -163,7 +164,7 @@ public class Input extends Task {
      *
      * @param addproperty Name for the property to be created from input
      */
-    public void setAddproperty (String addproperty) {
+    public void setAddproperty (final String addproperty) {
         this.addproperty = addproperty;
     }
 
@@ -171,7 +172,7 @@ public class Input extends Task {
      * Sets the Message which gets displayed to the user during the build run.
      * @param message The message to be displayed.
      */
-    public void setMessage (String message) {
+    public void setMessage (final String message) {
         this.message = message;
         messageAttribute = true;
     }
@@ -183,7 +184,7 @@ public class Input extends Task {
      * @param defaultvalue Default value for the property if no input
      * is received
      */
-    public void setDefaultvalue (String defaultvalue) {
+    public void setDefaultvalue (final String defaultvalue) {
         this.defaultvalue = defaultvalue;
     }
 
@@ -191,7 +192,7 @@ public class Input extends Task {
      * Set a multiline message.
      * @param msg The message to be displayed.
      */
-    public void addText(String msg) {
+    public void addText(final String msg) {
         if (messageAttribute && "".equals(msg.trim())) {
             return;
         }
@@ -208,7 +209,8 @@ public class Input extends Task {
      * Actual method executed by ant.
      * @throws BuildException on error
      */
-    public void execute () throws BuildException {
+    @Override
+	public void execute () throws BuildException {
         if (addproperty != null
             && getProject().getProperty(addproperty) != null) {
             log("skipping " + getTaskName() + " as property " + addproperty
@@ -218,14 +220,14 @@ public class Input extends Task {
 
         InputRequest request = null;
         if (validargs != null) {
-            Vector<String> accept = StringUtils.split(validargs, ',');
+            final Vector<String> accept = StringUtils.split(validargs, ',');
             request = new MultipleChoiceInputRequest(message, accept);
         } else {
             request = new InputRequest(message);
         }
         request.setDefaultValue(defaultvalue);
 
-        InputHandler h = handler == null
+        final InputHandler h = handler == null
             ? getProject().getInputHandler()
             : handler.getInputHandler();
 

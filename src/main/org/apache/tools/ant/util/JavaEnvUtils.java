@@ -211,7 +211,7 @@ public final class JavaEnvUtils {
      * Searching for changes (grep -r -i -n "@since 1.9" .) in the sources gave
      * only one hit: a new constant in the class SourceVersion.
      * So we have to check that ...
-     * 
+     *
      * @throws Exception if we can't load the class or don't find the new constant.
      *    This is the behavior when searching for new features on older versions.
      * @since Ant 1.9.4

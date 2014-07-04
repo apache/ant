@@ -164,7 +164,8 @@ public class FilterSet extends DataType implements Cloneable {
 
         //inherit doc
         /** {@inheritDoc}. */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return VALUES;
         }
     }
@@ -229,7 +230,7 @@ public class FilterSet extends DataType implements Cloneable {
             readingFiles = true;
             final int size = filtersFiles.size();
             for (int i = 0; i < size; i++) {
-                readFiltersFromFile((File) filtersFiles.get(i));
+                readFiltersFromFile(filtersFiles.get(i));
             }
             filtersFiles.clear();
             readingFiles = false;
@@ -243,7 +244,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @return the filterset from the reference.
      */
     protected FilterSet getRef() {
-        return (FilterSet) getCheckedRef(FilterSet.class, "filterset");
+        return getCheckedRef(FilterSet.class, "filterset");
     }
 
     /**
@@ -461,7 +462,7 @@ public class FilterSet extends DataType implements Cloneable {
 
     /**
      * Adds the properties provided by the specified PropertySet to this filterset.
-     * 
+     *
      * @param propertySet the propertyset to be added to this propertyset
      */
     public synchronized void addConfiguredPropertySet(PropertySet propertySet) {
@@ -492,9 +493,10 @@ public class FilterSet extends DataType implements Cloneable {
      *
      * @throws BuildException if the clone cannot be performed.
      */
-    public synchronized Object clone() throws BuildException {
+    @Override
+	public synchronized Object clone() throws BuildException {
         if (isReference()) {
-            return ((FilterSet) getRef()).clone();
+            return getRef().clone();
         }
         try {
             FilterSet fs = (FilterSet) super.clone();
@@ -621,7 +623,7 @@ public class FilterSet extends DataType implements Cloneable {
         } else if (duplicateToken) {
             // should always be the case...
             if (passedTokens.size() > 0) {
-                value = (String) passedTokens.remove(passedTokens.size() - 1);
+                value = passedTokens.remove(passedTokens.size() - 1);
                 if (passedTokens.size() == 0) {
                     value = beginToken + value + endToken;
                     duplicateToken = false;

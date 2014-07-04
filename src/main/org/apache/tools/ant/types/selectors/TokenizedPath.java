@@ -50,14 +50,14 @@ public class TokenizedPath {
     private final String[] tokenizedPath;
 
     /**
-    * Initialize the TokenizedPath by parsing it. 
+    * Initialize the TokenizedPath by parsing it.
     * @param path The path to tokenize. Must not be
     *                <code>null</code>.
     */
     public TokenizedPath(String path) {
         this(path, SelectorUtils.tokenizePathAsArray(path));
     }
-    
+
     /**
      * Creates a new path as a child of another path.
      *
@@ -86,10 +86,11 @@ public class TokenizedPath {
     /**
      * @return The original path String
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return path;
     }
-    
+
     /**
      * The depth (or length) of a path.
      */
@@ -160,12 +161,14 @@ public class TokenizedPath {
     /**
      * true if the original paths are equal.
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         return o instanceof TokenizedPath
             && path.equals(((TokenizedPath) o).path);
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return path.hashCode();
     }
 
@@ -213,7 +216,7 @@ public class TokenizedPath {
      * this path.
      */
     public TokenizedPattern toPattern() {
-        return new TokenizedPattern(path, tokenizedPath); 
+        return new TokenizedPattern(path, tokenizedPath);
     }
 
 }

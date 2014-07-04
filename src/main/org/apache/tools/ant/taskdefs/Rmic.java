@@ -39,14 +39,14 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 
 /**
  * <p>Runs the rmic compiler against classes.</p>
- * 
+ *
  * <p>Rmic can be run on a single class (as specified with the classname
  * attribute) or a number of classes at once (all classes below base that
  * are neither _Stub nor _Skel classes).  If you want to rmic a single
  * class and this class is a class nested into another class, you have to
  * specify the classname in the form <code>Outer$$Inner</code> instead of
  * <code>Outer.Inner</code>.</p>
- * 
+ *
  * <p>It is possible to refine the set of files that are being rmiced. This can
  * be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>,
  * <i>excludesfile</i> and <i>defaultexcludes</i>
@@ -58,17 +58,17 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * you want to use default exclusions or not. See the section on
  * directory based tasks, on how the
  * inclusion/exclusion of files works, and how to write patterns.</p>
- * 
+ *
  * <p>This task forms an implicit FileSet and
  * supports all attributes of <code>&lt;fileset&gt;</code>
  * (<code>dir</code> becomes <code>base</code>) as well as the nested
  * <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
  * <code>&lt;patternset&gt;</code> elements.</p>
- * 
+ *
  * <p>It is possible to use different compilers. This can be selected
  * with the &quot;build.rmic&quot; property or the <code>compiler</code>
  * attribute. <a name="compilervalues">There are three choices</a>:</p>
- * 
+ *
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>
  *   <li>kaffe (the standard compiler of
@@ -587,7 +587,8 @@ public class Rmic extends MatchingTask {
      * @throws org.apache.tools.ant.BuildException
      * if there's a problem with baseDir or RMIC
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         try {
             compileList.clear();
 

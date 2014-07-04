@@ -86,16 +86,16 @@ public class Main implements AntMain {
     private static PrintStream err = System.err;
 
     /** The build targets. */
-    private Vector<String> targets = new Vector<String>();
+    private final Vector<String> targets = new Vector<String>();
 
     /** Set of properties that can be used by tasks. */
-    private Properties definedProps = new Properties();
+    private final Properties definedProps = new Properties();
 
     /** Names of classes to add as listeners to project. */
-    private Vector<String> listeners = new Vector<String>(1);
+    private final Vector<String> listeners = new Vector<String>(1);
 
     /** File names of property files to load on startup. */
-    private Vector<String> propertyFiles = new Vector<String>(1);
+    private final Vector<String> propertyFiles = new Vector<String>(1);
 
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
@@ -154,13 +154,15 @@ public class Main implements AntMain {
      */
     private boolean proxy = false;
 
-    private Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
+    private final Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
 
-    private static final GetProperty NOPROPERTIES = new GetProperty(){
-        public Object getProperty(String aName) {
+    private static final GetProperty NOPROPERTIES = new GetProperty() {
+        @Override
+		public Object getProperty(final String aName) {
             // No existing property takes precedence
             return null;
-        }};
+        }
+    };
 
 
 
@@ -172,8 +174,8 @@ public class Main implements AntMain {
      * @param t Throwable to print the message of.
      *          Must not be <code>null</code>.
      */
-    private static void printMessage(Throwable t) {
-        String message = t.getMessage();
+    private static void printMessage(final Throwable t) {
+        final String message = t.getMessage();
         if (message != null) {
             System.err.println(message);
         }
@@ -191,9 +193,9 @@ public class Main implements AntMain {
      * @param coreLoader Classloader used for core classes. May be
      *        <code>null</code> in which case the system classloader is used.
      */
-    public static void start(String[] args, Properties additionalUserProperties,
-                             ClassLoader coreLoader) {
-        Main m = new Main();
+    public static void start(final String[] args, final Properties additionalUserProperties,
+                             final ClassLoader coreLoader) {
+        final Main m = new Main();
         m.startAnt(args, additionalUserProperties, coreLoader);
     }
 
@@ -206,12 +208,13 @@ public class Main implements AntMain {
      *
      * @since Ant 1.6
      */
-    public void startAnt(String[] args, Properties additionalUserProperties,
-                         ClassLoader coreLoader) {
+    @Override
+	public void startAnt(final String[] args, final Properties additionalUserProperties,
+                         final ClassLoader coreLoader) {
 
         try {
             processArgs(args);
-        } catch (Throwable exc) {
+        } catch (final Throwable exc) {
             handleLogfile();
             printMessage(exc);
             exit(1);
@@ -219,10 +222,10 @@ public class Main implements AntMain {
         }
 
         if (additionalUserProperties != null) {
-            for (Enumeration<?> e = additionalUserProperties.keys();
+            for (final Enumeration<?> e = additionalUserProperties.keys();
                     e.hasMoreElements();) {
-                String key = (String) e.nextElement();
-                String property = additionalUserProperties.getProperty(key);
+                final String key = (String) e.nextElement();
+                final String property = additionalUserProperties.getProperty(key);
                 definedProps.put(key, property);
             }
         }
@@ -233,17 +236,17 @@ public class Main implements AntMain {
             try {
                 runBuild(coreLoader);
                 exitCode = 0;
-            } catch (ExitStatusException ese) {
+            } catch (final ExitStatusException ese) {
                 exitCode = ese.getStatus();
                 if (exitCode != 0) {
                     throw ese;
                 }
             }
-        } catch (BuildException be) {
+        } catch (final BuildException be) {
             if (err != System.err) {
                 printMessage(be);
             }
-        } catch (Throwable exc) {
+        } catch (final Throwable exc) {
             exc.printStackTrace();
             printMessage(exc);
         } finally {
@@ -258,7 +261,7 @@ public class Main implements AntMain {
      * However, it is possible to do something else.
      * @param exitCode code to exit with
      */
-    protected void exit(int exitCode) {
+    protected void exit(final int exitCode) {
         System.exit(exitCode);
     }
 
@@ -281,7 +284,7 @@ public class Main implements AntMain {
      *
      * @param args Command line arguments. Must not be <code>null</code>.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         start(args, null, null);
     }
 
@@ -303,7 +306,8 @@ public class Main implements AntMain {
      *
      * @deprecated since 1.6.x
      */
-    protected Main(String[] args) throws BuildException {
+    @Deprecated
+	protected Main(final String[] args) throws BuildException {
         processArgs(args);
     }
 
@@ -316,7 +320,7 @@ public class Main implements AntMain {
      *
      * @since Ant 1.6
      */
-    private void processArgs(String[] args) {
+    private void processArgs(final String[] args) {
         String searchForThis = null;
         boolean searchForFile = false;
         PrintStream logTo = null;
@@ -327,10 +331,10 @@ public class Main implements AntMain {
         boolean justPrintVersion = false;
         boolean justPrintDiagnostics = false;
 
-        ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
-        
+        final ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
+
         for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+            final String arg = args[i];
 
             if (arg.equals("-help") || arg.equals("-h")) {
                 justPrintUsage = true;
@@ -350,17 +354,17 @@ public class Main implements AntMain {
                 allowInput = false;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
-                    File logFile = new File(args[i + 1]);
+                    final File logFile = new File(args[i + 1]);
                     i++;
                     logTo = new PrintStream(new FileOutputStream(logFile));
                     isLogFileUsed = true;
-                } catch (IOException ioe) {
-                    String msg = "Cannot write on the specified log file. "
+                } catch (final IOException ioe) {
+                    final String msg = "Cannot write on the specified log file. "
                         + "Make sure the path exists and you have write "
                         + "permissions.";
                     throw new BuildException(msg);
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    String msg = "You must specify a log file when "
+                } catch (final ArrayIndexOutOfBoundsException aioobe) {
+                    final String msg = "You must specify a log file when "
                         + "using the -log argument";
                     throw new BuildException(msg);
                 }
@@ -396,7 +400,7 @@ public class Main implements AntMain {
                 //catch script/ant mismatch with a meaningful message
                 //we could ignore it, but there are likely to be other
                 //version problems, so we stamp down on the configuration now
-                String msg = "Ant's Main method is being handed "
+                final String msg = "Ant's Main method is being handed "
                         + "an option " + arg + " that is only for the launcher class."
                         + "\nThis can be caused by a version mismatch between "
                         + "the ant script/.bat file and Ant itself.";
@@ -405,8 +409,8 @@ public class Main implements AntMain {
                 proxy = true;
             } else if (arg.startsWith("-")) {
                 boolean processed = false;
-                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
-                    int newI = processor.readArguments(args, i);
+                for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    final int newI = processor.readArguments(args, i);
                     if (newI != -1) {
                         List<String> extraArgs = extraArguments.get(processor.getClass());
                         if (extraArgs == null) {
@@ -422,7 +426,7 @@ public class Main implements AntMain {
                 }
                 if (!processed) {
                     // we don't have any more args to recognize!
-                    String msg = "Unknown argument: " + arg;
+                    final String msg = "Unknown argument: " + arg;
                     System.err.println(msg);
                     printUsage();
                     throw new BuildException("");
@@ -458,9 +462,9 @@ public class Main implements AntMain {
                     }
                 } else {
                     // no search file specified: so search an existing default file
-                    Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
+                    final Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
                     do {
-                        ProjectHelper helper = it.next();
+                        final ProjectHelper helper = it.next();
                         searchForThis = helper.getDefaultBuildFile();
                         if (msgOutputLevel >= Project.MSG_VERBOSE) {
                             System.out.println("Searching the default build file: " + searchForThis);
@@ -473,9 +477,9 @@ public class Main implements AntMain {
                 }
             } else {
                 // no build file specified: so search an existing default file
-                Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
+                final Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
                 do {
-                    ProjectHelper helper = it.next();
+                    final ProjectHelper helper = it.next();
                     buildFile = new File(helper.getDefaultBuildFile());
                     if (msgOutputLevel >= Project.MSG_VERBOSE) {
                         System.out.println("Trying the default build file: " + buildFile);
@@ -491,7 +495,7 @@ public class Main implements AntMain {
         }
 
         if (buildFile.isDirectory()) {
-            File whatYouMeant = new File(buildFile, "build.xml");
+            final File whatYouMeant = new File(buildFile, "build.xml");
             if (whatYouMeant.isFile()) {
                 buildFile = whatYouMeant;
             } else {
@@ -525,11 +529,11 @@ public class Main implements AntMain {
     // --------------------------------------------------------
 
     /** Handle the -buildfile, -file, -f argument */
-    private int handleArgBuildFile(String[] args, int pos) {
+    private int handleArgBuildFile(final String[] args, int pos) {
         try {
             buildFile = new File(
                 args[++pos].replace('/', File.separatorChar));
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
             throw new BuildException(
                 "You must specify a buildfile when using the -buildfile argument");
         }
@@ -537,12 +541,12 @@ public class Main implements AntMain {
     }
 
     /** Handle -listener argument */
-    private int handleArgListener(String[] args, int pos) {
+    private int handleArgListener(final String[] args, int pos) {
         try {
             listeners.addElement(args[pos + 1]);
             pos++;
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
-            String msg = "You must specify a classname when "
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
+            final String msg = "You must specify a classname when "
                 + "using the -listener argument";
             throw new BuildException(msg);
         }
@@ -550,7 +554,7 @@ public class Main implements AntMain {
     }
 
     /** Handler -D argument */
-    private int handleArgDefine(String[] args, int argPos) {
+    private int handleArgDefine(final String[] args, int argPos) {
         /* Interestingly enough, we get to here when a user
          * uses -Dname=value. However, in some cases, the OS
          * goes ahead and parses this out to args
@@ -561,10 +565,10 @@ public class Main implements AntMain {
          * I don't know how to predict when the JDK is going
          * to help or not, so we simply look for the equals sign.
          */
-        String arg = args[argPos];
+        final String arg = args[argPos];
         String name = arg.substring(2, arg.length());
         String value = null;
-        int posEq = name.indexOf("=");
+        final int posEq = name.indexOf("=");
         if (posEq > 0) {
             value = name.substring(posEq + 1);
             name = name.substring(0, posEq);
@@ -579,14 +583,14 @@ public class Main implements AntMain {
     }
 
     /** Handle the -logger argument. */
-    private int handleArgLogger(String[] args, int pos) {
+    private int handleArgLogger(final String[] args, int pos) {
         if (loggerClassname != null) {
             throw new BuildException(
                 "Only one logger class may be specified.");
         }
         try {
             loggerClassname = args[++pos];
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
             throw new BuildException(
                 "You must specify a classname when using the -logger argument");
         }
@@ -594,14 +598,14 @@ public class Main implements AntMain {
     }
 
     /** Handle the -inputhandler argument. */
-    private int handleArgInputHandler(String[] args, int pos) {
+    private int handleArgInputHandler(final String[] args, int pos) {
         if (inputHandlerClassname != null) {
             throw new BuildException("Only one input handler class may "
                                      + "be specified.");
         }
         try {
             inputHandlerClassname = args[++pos];
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
             throw new BuildException("You must specify a classname when"
                                      + " using the -inputhandler"
                                      + " argument");
@@ -610,11 +614,11 @@ public class Main implements AntMain {
     }
 
     /** Handle the -propertyfile argument. */
-    private int handleArgPropertyFile(String[] args, int pos) {
+    private int handleArgPropertyFile(final String[] args, int pos) {
         try {
             propertyFiles.addElement(args[++pos]);
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
-            String msg = "You must specify a property filename when "
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
+            final String msg = "You must specify a property filename when "
                 + "using the -propertyfile argument";
             throw new BuildException(msg);
         }
@@ -622,14 +626,14 @@ public class Main implements AntMain {
     }
 
     /** Handle the -nice argument. */
-    private int handleArgNice(String[] args, int pos) {
+    private int handleArgNice(final String[] args, int pos) {
         try {
             threadPriority = Integer.decode(args[++pos]);
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
+        } catch (final ArrayIndexOutOfBoundsException aioobe) {
             throw new BuildException(
                 "You must supply a niceness value (1-10)"
                 + " after the -nice option");
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new BuildException("Unrecognized niceness value: "
                                      + args[pos]);
         }
@@ -648,13 +652,13 @@ public class Main implements AntMain {
 
     /** Load the property files specified by -propertyfile */
     private void loadPropertyFiles() {
-        for (String filename : propertyFiles) {
-            Properties props = new Properties();
+        for (final String filename : propertyFiles) {
+            final Properties props = new Properties();
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(filename);
                 props.load(fis);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 System.out.println("Could not load property file "
                                    + filename + ": " + e.getMessage());
             } finally {
@@ -662,9 +666,9 @@ public class Main implements AntMain {
             }
 
             // ensure that -D properties take precedence
-            Enumeration<?> propertyNames = props.propertyNames();
+            final Enumeration<?> propertyNames = props.propertyNames();
             while (propertyNames.hasMoreElements()) {
-                String name = (String) propertyNames.nextElement();
+                final String name = (String) propertyNames.nextElement();
                 if (definedProps.getProperty(name) == null) {
                     definedProps.put(name, props.getProperty(name));
                 }
@@ -681,8 +685,9 @@ public class Main implements AntMain {
      * @param file   File to find parent of. Must not be <code>null</code>.
      * @return       Parent file or null if none
      */
-    private File getParentFile(File file) {
-        File parent = file.getParentFile();
+    @Deprecated
+	private File getParentFile(final File file) {
+        final File parent = file.getParentFile();
 
         if (parent != null && msgOutputLevel >= Project.MSG_VERBOSE) {
             System.out.println("Searching in " + parent.getAbsolutePath());
@@ -706,7 +711,7 @@ public class Main implements AntMain {
      *
      * @return A handle to the build file if one is found, <code>null</code> if not
      */
-    private File findBuildFile(String start, String suffix) {
+    private File findBuildFile(final String start, final String suffix) {
         if (msgOutputLevel >= Project.MSG_INFO) {
             System.out.println("Searching for " + suffix + " ...");
         }
@@ -743,16 +748,16 @@ public class Main implements AntMain {
      *
      * @exception BuildException if the build fails
      */
-    private void runBuild(ClassLoader coreLoader) throws BuildException {
+    private void runBuild(final ClassLoader coreLoader) throws BuildException {
 
         if (!readyToRun) {
             return;
         }
 
-        ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
+        final ArgumentProcessorRegistry processorRegistry = ArgumentProcessorRegistry.getInstance();
 
-        for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
-            List<String> extraArgs = extraArguments.get(processor.getClass());
+        for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
+            final List<String> extraArgs = extraArguments.get(processor.getClass());
             if (extraArgs != null) {
                 if (processor.handleArg(extraArgs)) {
                     return;
@@ -769,9 +774,9 @@ public class Main implements AntMain {
             addBuildListeners(project);
             addInputHandler(project);
 
-            PrintStream savedErr = System.err;
-            PrintStream savedOut = System.out;
-            InputStream savedIn = System.in;
+            final PrintStream savedErr = System.err;
+            final PrintStream savedOut = System.out;
+            final InputStream savedIn = System.in;
 
             // use a system manager that prevents from System.exit()
             SecurityManager oldsm = null;
@@ -800,7 +805,7 @@ public class Main implements AntMain {
                         project.log("Setting Ant's thread priority to "
                                 + threadPriority, Project.MSG_VERBOSE);
                         Thread.currentThread().setPriority(threadPriority.intValue());
-                    } catch (SecurityException swallowed) {
+                    } catch (final SecurityException swallowed) {
                         //we cannot set the priority here.
                         project.log("A security manager refused to set the -nice value");
                     }
@@ -811,12 +816,12 @@ public class Main implements AntMain {
                 project.setKeepGoingMode(keepGoingMode);
                 if (proxy) {
                     //proxy setup if enabled
-                    ProxySetup proxySetup = new ProxySetup(project);
+                    final ProxySetup proxySetup = new ProxySetup(project);
                     proxySetup.enableProxies();
                 }
 
-                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
-                    List<String> extraArgs = extraArguments.get(processor.getClass());
+                for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    final List<String> extraArgs = extraArguments.get(processor.getClass());
                     if (extraArgs != null) {
                         processor.prepareConfigure(project, extraArgs);
                     }
@@ -824,8 +829,8 @@ public class Main implements AntMain {
 
                 ProjectHelper.configureProject(project, buildFile);
 
-                for (ArgumentProcessor processor : processorRegistry.getProcessors()) {
-                    List<String> extraArgs = extraArguments.get(processor.getClass());
+                for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
+                    final List<String> extraArgs = extraArguments.get(processor.getClass());
                     if (extraArgs != null) {
                         if (processor.handleArg(project, extraArgs)) {
                             return;
@@ -859,17 +864,17 @@ public class Main implements AntMain {
                 System.setErr(savedErr);
                 System.setIn(savedIn);
             }
-        } catch (RuntimeException exc) {
+        } catch (final RuntimeException exc) {
             error = exc;
             throw exc;
-        } catch (Error e) {
+        } catch (final Error e) {
             error = e;
             throw e;
         } finally {
             if (!projectHelp) {
                 try {
                     project.fireBuildFinished(error);
-                } catch (Throwable t) {
+                } catch (final Throwable t) {
                     // yes, I know it is bad style to catch Throwable,
                     // but if we don't, we lose valuable information
                     System.err.println("Caught an exception while logging the"
@@ -893,20 +898,22 @@ public class Main implements AntMain {
         project.init();
 
         // resolve properties
-        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
+        final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         @SuppressWarnings({ "rawtypes", "unchecked" })
+		final
         Map raw = new HashMap(definedProps);
         @SuppressWarnings("unchecked")
+		final
         Map<String, Object> props = raw;
 
-        ResolvePropertyMap resolver = new ResolvePropertyMap(project,
+        final ResolvePropertyMap resolver = new ResolvePropertyMap(project,
                 NOPROPERTIES, propertyHelper.getExpanders());
         resolver.resolveAllProperties(props, null, false);
 
         // set user-define properties
-        for (Entry<String, Object> ent : props.entrySet()) {
-            String arg = ent.getKey();
-            Object value = ent.getValue();
+        for (final Entry<String, Object> ent : props.entrySet()) {
+            final String arg = ent.getKey();
+            final Object value = ent.getValue();
             project.setUserProperty(arg, String.valueOf(value));
         }
 
@@ -923,15 +930,15 @@ public class Main implements AntMain {
      * @param project The project to add listeners to.
      *                Must not be <code>null</code>.
      */
-    protected void addBuildListeners(Project project) {
+    protected void addBuildListeners(final Project project) {
 
         // Add the default listener
         project.addBuildListener(createLogger());
 
         final int count = listeners.size();
         for (int i = 0; i < count; i++) {
-            String className = (String) listeners.elementAt(i);
-            BuildListener listener =
+            final String className = listeners.elementAt(i);
+            final BuildListener listener =
                     (BuildListener) ClasspathUtils.newInstance(className,
                             Main.class.getClassLoader(), BuildListener.class);
             project.setProjectReference(listener);
@@ -948,7 +955,7 @@ public class Main implements AntMain {
      * @exception BuildException if a specified InputHandler
      *                           implementation could not be loaded.
      */
-    private void addInputHandler(Project project) throws BuildException {
+    private void addInputHandler(final Project project) throws BuildException {
         InputHandler handler = null;
         if (inputHandlerClassname == null) {
             handler = new DefaultInputHandler();
@@ -982,7 +989,7 @@ public class Main implements AntMain {
                 logger = (BuildLogger) ClasspathUtils.newInstance(
                         loggerClassname, Main.class.getClassLoader(),
                         BuildLogger.class);
-            } catch (BuildException e) {
+            } catch (final BuildException e) {
                 System.err.println("The specified logger class "
                     + loggerClassname
                     + " could not be used because " + e.getMessage());
@@ -1040,7 +1047,7 @@ public class Main implements AntMain {
         System.out.println("  -noclasspath           Run ant without using CLASSPATH");
         System.out.println("  -autoproxy             Java1.5+: use the OS proxy settings");
         System.out.println("  -main <class>          override Ant's normal entry point");
-        for (ArgumentProcessor processor : ArgumentProcessorRegistry.getInstance().getProcessors()) {
+        for (final ArgumentProcessor processor : ArgumentProcessorRegistry.getInstance().getProcessors()) {
             processor.printUsage(System.out);
         }
     }
@@ -1050,7 +1057,7 @@ public class Main implements AntMain {
      *
      * @exception BuildException if the version information is unavailable
      */
-    private static void printVersion(int logLevel) throws BuildException {
+    private static void printVersion(final int logLevel) throws BuildException {
         System.out.println(getAntVersion());
     }
 
@@ -1063,7 +1070,7 @@ public class Main implements AntMain {
      * Cache of the short Ant version information when it has been loaded.
      */
     private static String shortAntVersion = null;
-    
+
     /**
      * Returns the Ant version information, if available. Once the information
      * has been loaded once, it's cached and returned from the cache on future
@@ -1077,37 +1084,37 @@ public class Main implements AntMain {
     public static synchronized String getAntVersion() throws BuildException {
         if (antVersion == null) {
             try {
-                Properties props = new Properties();
-                InputStream in =
+                final Properties props = new Properties();
+                final InputStream in =
                     Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
                 props.load(in);
                 in.close();
                 shortAntVersion = props.getProperty("VERSION");
 
-                StringBuffer msg = new StringBuffer();
+                final StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant(TM) version ");
                 msg.append(shortAntVersion);
                 msg.append(" compiled on ");
                 msg.append(props.getProperty("DATE"));
                 antVersion = msg.toString();
-            } catch (IOException ioe) {
+            } catch (final IOException ioe) {
                 throw new BuildException("Could not load the version information:"
                                          + ioe.getMessage());
-            } catch (NullPointerException npe) {
+            } catch (final NullPointerException npe) {
                 throw new BuildException("Could not load the version information.");
             }
         }
         return antVersion;
     }
-    
+
     /**
      * Returns the short Ant version information, if available. Once the information
      * has been loaded once, it's cached and returned from the cache on future
      * calls.
-     * 
+     *
      * @return the short Ant version information as a String
      *         (always non-<code>null</code>)
-     *         
+     *
      * @throws BuildException BuildException if the version information is unavailable
      * @since Ant 1.9.3
      */
@@ -1125,7 +1132,7 @@ public class Main implements AntMain {
       * @param project The project to display a description of.
       *                Must not be <code>null</code>.
       */
-    private static void printDescription(Project project) {
+    private static void printDescription(final Project project) {
        if (project.getDescription() != null) {
           project.log(project.getDescription());
        }
@@ -1139,12 +1146,12 @@ public class Main implements AntMain {
      * @param targets the targets to filter.
      * @return the filtered targets.
      */
-    private static Map<String, Target> removeDuplicateTargets(Map<String, Target> targets) {
-        Map<Location, Target> locationMap = new HashMap<Location, Target>();
-        for (Entry<String, Target> entry : targets.entrySet()) {
-            String name = entry.getKey();
-            Target target = entry.getValue();
-            Target otherTarget = locationMap.get(target.getLocation());
+    private static Map<String, Target> removeDuplicateTargets(final Map<String, Target> targets) {
+        final Map<Location, Target> locationMap = new HashMap<Location, Target>();
+        for (final Entry<String, Target> entry : targets.entrySet()) {
+            final String name = entry.getKey();
+            final Target target = entry.getValue();
+            final Target otherTarget = locationMap.get(target.getLocation());
             // Place this entry in the location map if
             //  a) location is not in the map
             //  b) location is in map, but its name is longer
@@ -1155,8 +1162,8 @@ public class Main implements AntMain {
                     target.getLocation(), target); // Smallest name wins
             }
         }
-        Map<String, Target> ret = new HashMap<String, Target>();
-        for (Target target : locationMap.values()) {
+        final Map<String, Target> ret = new HashMap<String, Target>();
+        for (final Target target : locationMap.values()) {
             ret.put(target.getName(), target);
         }
         return ret;
@@ -1171,34 +1178,34 @@ public class Main implements AntMain {
      * @param printSubTargets Whether or not subtarget names should also be
      *                        printed.
      */
-    private static void printTargets(Project project, boolean printSubTargets,
-            boolean printDependencies) {
+    private static void printTargets(final Project project, boolean printSubTargets,
+            final boolean printDependencies) {
         // find the target with the longest name
         int maxLength = 0;
-        Map<String, Target> ptargets = removeDuplicateTargets(project.getTargets());
+        final Map<String, Target> ptargets = removeDuplicateTargets(project.getTargets());
         // split the targets in top-level and sub-targets depending
         // on the presence of a description
-        Vector<String> topNames = new Vector<String>();
-        Vector<String> topDescriptions = new Vector<String>();
-        Vector<Enumeration<String>> topDependencies = new Vector<Enumeration<String>>();
-        Vector<String> subNames = new Vector<String>();
-        Vector<Enumeration<String>> subDependencies = new Vector<Enumeration<String>>();
+        final Vector<String> topNames = new Vector<String>();
+        final Vector<String> topDescriptions = new Vector<String>();
+        final Vector<Enumeration<String>> topDependencies = new Vector<Enumeration<String>>();
+        final Vector<String> subNames = new Vector<String>();
+        final Vector<Enumeration<String>> subDependencies = new Vector<Enumeration<String>>();
 
-        for (Target currentTarget : ptargets.values()) {
-            String targetName = currentTarget.getName();
+        for (final Target currentTarget : ptargets.values()) {
+            final String targetName = currentTarget.getName();
             if (targetName.equals("")) {
                 continue;
             }
-            String targetDescription = currentTarget.getDescription();
+            final String targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
             if (targetDescription == null) {
-                int pos = findTargetPosition(subNames, targetName);
+                final int pos = findTargetPosition(subNames, targetName);
                 subNames.insertElementAt(targetName, pos);
                 if (printDependencies) {
                     subDependencies.insertElementAt(currentTarget.getDependencies(), pos);
                 }
             } else {
-                int pos = findTargetPosition(topNames, targetName);
+                final int pos = findTargetPosition(topNames, targetName);
                 topNames.insertElementAt(targetName, pos);
                 topDescriptions.insertElementAt(targetDescription, pos);
                 if (targetName.length() > maxLength) {
@@ -1221,7 +1228,7 @@ public class Main implements AntMain {
             printTargets(project, subNames, null, subDependencies, "Other targets:", 0);
         }
 
-        String defaultTarget = project.getDefaultTarget();
+        final String defaultTarget = project.getDefaultTarget();
         if (defaultTarget != null && !"".equals(defaultTarget)) {
             // shouldn't need to check but...
             project.log("Default target: " + defaultTarget);
@@ -1238,7 +1245,7 @@ public class Main implements AntMain {
      *
      * @return the correct place in the list for the given name
      */
-    private static int findTargetPosition(Vector<String> names, String name) {
+    private static int findTargetPosition(final Vector<String> names, final String name) {
         final int size = names.size();
         int res = size;
         for (int i = 0; i < size && res == size; i++) {
@@ -1272,18 +1279,18 @@ public class Main implements AntMain {
      *               position so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
-    private static void printTargets(Project project, Vector<String> names,
-                                     Vector<String> descriptions, Vector<Enumeration<String>> dependencies,
-                                     String heading,
-                                     int maxlen) {
+    private static void printTargets(final Project project, final Vector<String> names,
+                                     final Vector<String> descriptions, final Vector<Enumeration<String>> dependencies,
+                                     final String heading,
+                                     final int maxlen) {
         // now, start printing the targets and their descriptions
-        String lSep = System.getProperty("line.separator");
+        final String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
         while (spaces.length() <= maxlen) {
             spaces += spaces;
         }
-        StringBuilder msg = new StringBuilder();
+        final StringBuilder msg = new StringBuilder();
         msg.append(heading + lSep + lSep);
         final int size = names.size();
         for (int i = 0; i < size; i++) {
@@ -1296,7 +1303,7 @@ public class Main implements AntMain {
             }
             msg.append(lSep);
             if (!dependencies.isEmpty()) {
-                Enumeration<String> deps = dependencies.elementAt(i);
+                final Enumeration<String> deps = dependencies.elementAt(i);
                 if (deps.hasMoreElements()) {
                     msg.append("   depends on: ");
                     while (deps.hasMoreElements()) {

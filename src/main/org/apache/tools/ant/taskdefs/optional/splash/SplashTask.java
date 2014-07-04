@@ -71,7 +71,8 @@ public class SplashTask extends Task {
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
-    public void setUseproxy(boolean useProxy) {
+    @Deprecated
+	public void setUseproxy(boolean useProxy) {
         this.useProxy = useProxy;
     }
 
@@ -81,7 +82,8 @@ public class SplashTask extends Task {
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
-    public void setProxy(String proxy) {
+    @Deprecated
+	public void setProxy(String proxy) {
         this.proxy = proxy;
     }
 
@@ -91,7 +93,8 @@ public class SplashTask extends Task {
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
-    public void setPort(String port) {
+    @Deprecated
+	public void setPort(String port) {
         this.port = port;
     }
 
@@ -101,7 +104,8 @@ public class SplashTask extends Task {
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
-    public void setUser(String user) {
+    @Deprecated
+	public void setUser(String user) {
         this.user = user;
     }
 
@@ -111,7 +115,8 @@ public class SplashTask extends Task {
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
-    public void setPassword(String password) {
+    @Deprecated
+	public void setPassword(String password) {
         this.password = password;
     }
 
@@ -140,7 +145,7 @@ public class SplashTask extends Task {
 
     /**
      * Sets the display text presented in the splash window.
-     * optional; defaults to "Building ..." 
+     * optional; defaults to "Building ..."
      * @param displayText the display text presented the splash window
      * @since Ant 1.8.0
      */
@@ -152,7 +157,8 @@ public class SplashTask extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (splash != null) {
             splash.setVisible(false);
             getProject().removeBuildListener(splash);

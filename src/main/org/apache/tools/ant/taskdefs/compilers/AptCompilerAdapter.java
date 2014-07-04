@@ -32,24 +32,24 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * <p>The implementation of the apt compiler for JDK 1.5.</p>
- * 
+ *
  * <p>As usual, the low level entry points for Java tools are neither documented or
  * stable; this entry point may change from that of 1.5.0_01-b08 without any
  * warning at all. The IDE decompile of the tool entry points is as follows:</p>
  * <pre>
  * public class Main {
  * public Main() ;
- * 
+ *
  * public static transient void main(String... strings);
- * 
+ *
  * public static transient int process(String... strings);
- * 
+ *
  * public static transient int process(PrintWriter printWriter,
  *      String... strings);
  * public static transient int process(
  *      AnnotationProcessorFactory annotationProcessorFactory,
  *      String... strings);
- *      
+ *
  * public static transient int process(
  *      AnnotationProcessorFactory annotationProcessorFactory,
  *      PrintWriter printWriter,
@@ -157,7 +157,8 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
      * @return true on success.
      * @throws BuildException if the compilation has problems.
      */
-    public boolean execute() throws BuildException {
+    @Override
+	public boolean execute() throws BuildException {
         attributes.log("Using apt compiler", Project.MSG_VERBOSE);
         //set up the javac options
         Commandline cmd = setupModernJavacCommand();

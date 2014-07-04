@@ -105,14 +105,16 @@ public class Zip extends MatchingTask {
 
     private static final ResourceSelector MISSING_SELECTOR =
         new ResourceSelector() {
-            public boolean isSelected(Resource target) {
+            @Override
+			public boolean isSelected(Resource target) {
                 return !target.isExists();
             }
         };
 
     private static final ResourceUtils.ResourceSelectorProvider
         MISSING_DIR_PROVIDER = new ResourceUtils.ResourceSelectorProvider() {
-                public ResourceSelector
+                @Override
+				public ResourceSelector
                     getTargetSelectorForSource(Resource sr) {
                     return MISSING_SELECTOR;
                 }
@@ -237,7 +239,8 @@ public class Zip extends MatchingTask {
      *             Use setDestFile(File) instead.
      * @ant.attribute ignore="true"
      */
-    public void setZipfile(File zipFile) {
+    @Deprecated
+	public void setZipfile(File zipFile) {
         setDestFile(zipFile);
     }
 
@@ -250,7 +253,8 @@ public class Zip extends MatchingTask {
      *             Use setDestFile(File) instead.
      * @ant.attribute ignore="true"
      */
-    public void setFile(File file) {
+    @Deprecated
+	public void setFile(File file) {
         setDestFile(file);
     }
 
@@ -383,7 +387,8 @@ public class Zip extends MatchingTask {
          * The string values for the enumerated value
          * @return the values
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {"fail", "skip", "create"};
         }
     }
@@ -581,7 +586,8 @@ public class Zip extends MatchingTask {
      * validate and build
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
 
         if (doubleFilePass) {
             skipWriting = true;
@@ -628,7 +634,7 @@ public class Zip extends MatchingTask {
         }
         final int size = resources.size();
         for (int i = 0; i < size; i++) {
-            ResourceCollection rc = (ResourceCollection) resources.elementAt(i);
+            ResourceCollection rc = resources.elementAt(i);
             vfss.addElement(rc);
         }
 
@@ -702,7 +708,7 @@ public class Zip extends MatchingTask {
                     final int addSize = addedFiles.size();
                     for (int i = 0; i < addSize; i++) {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
-                        ne.setName((String) addedFiles.elementAt(i));
+                        ne.setName(addedFiles.elementAt(i));
                     }
                     DirectoryScanner ds =
                         oldFiles.getDirectoryScanner(getProject());
@@ -855,7 +861,7 @@ public class Zip extends MatchingTask {
         for (int i = 0; i < size; i++) {
 
             logWhenWriting("Processing groupfileset ", Project.MSG_VERBOSE);
-            FileSet fs = (FileSet) groupfilesets.elementAt(i);
+            FileSet fs = groupfilesets.elementAt(i);
             FileScanner scanner = fs.getDirectoryScanner(getProject());
             String[] files = scanner.getIncludedFiles();
             File basedir = scanner.getBasedir();
@@ -1249,7 +1255,7 @@ public class Zip extends MatchingTask {
         ArchiveState as = getNonFileSetResourcesToAdd(rc, zipFile,
                                                       needsUpdate);
 
-        FileSet[] fs = (FileSet[]) filesets.toArray(new FileSet[filesets
+        FileSet[] fs = filesets.toArray(new FileSet[filesets
                                                                 .size()]);
         ArchiveState as2 = getResourcesToAdd(fs, zipFile, as.isOutOfDate());
         if (!as.isOutOfDate() && as2.isOutOfDate()) {
@@ -1285,7 +1291,8 @@ public class Zip extends MatchingTask {
      * subclasses in several ways).
      */
     private static final ThreadLocal<Boolean> HAVE_NON_FILE_SET_RESOURCES_TO_ADD = new ThreadLocal<Boolean>() {
-            protected Boolean initialValue() {
+            @Override
+			protected Boolean initialValue() {
                 return Boolean.FALSE;
             }
         };
@@ -1630,7 +1637,8 @@ public class Zip extends MatchingTask {
             // make sure directories are in alpha-order - this also
             // ensures parents come before their children
             Collections.sort(dirs, new Comparator<Resource>() {
-                    public int compare(Resource r1, Resource r2) {
+                    @Override
+					public int compare(Resource r1, Resource r2) {
                         return r1.getName().compareTo(r2.getName());
                     }
                 });
@@ -1739,7 +1747,7 @@ public class Zip extends MatchingTask {
      * @since Ant 1.8.0
      */
     protected final ZipExtraField[] getCurrentExtraFields() {
-        return (ZipExtraField[]) CURRENT_ZIP_EXTRA.get();
+        return CURRENT_ZIP_EXTRA.get();
     }
 
     /**
@@ -2032,7 +2040,8 @@ public class Zip extends MatchingTask {
     protected Resource[] selectFileResources(Resource[] orig) {
         return selectResources(orig,
                                new ResourceSelector() {
-                                   public boolean isSelected(Resource r) {
+                                   @Override
+								public boolean isSelected(Resource r) {
                                        if (!r.isDirectory()) {
                                            return true;
                                        } else if (doFilesonly) {
@@ -2056,7 +2065,8 @@ public class Zip extends MatchingTask {
     protected Resource[] selectDirectoryResources(Resource[] orig) {
         return selectResources(orig,
                                new ResourceSelector() {
-                                   public boolean isSelected(Resource r) {
+                                   @Override
+								public boolean isSelected(Resource r) {
                                        return r.isDirectory();
                                    }
                                });
@@ -2108,7 +2118,8 @@ public class Zip extends MatchingTask {
          * @see EnumeratedAttribute#getValues()
          */
         /** {@inheritDoc} */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
         }
     }
@@ -2184,7 +2195,8 @@ public class Zip extends MatchingTask {
                          .NOT_ENCODEABLE);
         }
 
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {NEVER_KEY, ALWAYS_KEY, N_E_KEY};
         }
 
@@ -2242,7 +2254,8 @@ public class Zip extends MatchingTask {
             MODES.put(A_N_KEY, Zip64Mode.AsNeeded);
         }
 
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {NEVER_KEY, ALWAYS_KEY, A_N_KEY};
         }
 

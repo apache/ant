@@ -168,7 +168,8 @@ public class PathConvert extends Task {
         /**
          * @return the list of values for this enumerated attribute.
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
         }
     }
@@ -225,7 +226,8 @@ public class PathConvert extends Task {
      *             Use the method taking a TargetOs argument instead.
      * @see #setTargetos(PathConvert.TargetOs)
      */
-    public void setTargetos(String target) {
+    @Deprecated
+	public void setTargetos(String target) {
         TargetOs to = new TargetOs();
         to.setValue(target);
         setTargetos(to);
@@ -331,7 +333,8 @@ public class PathConvert extends Task {
      * Do the execution.
      * @throws BuildException if something is invalid.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         Resources savedPath = path;
         String savedPathSep = pathSep; // may be altered in validateSetup
         String savedDirSep = dirSep; // may be altered in validateSetup
@@ -370,7 +373,7 @@ public class PathConvert extends Task {
                 }
             }
             boolean first = true;
-            for (Iterator mappedIter = ret.iterator(); mappedIter.hasNext(); ) {
+            for (Iterator mappedIter = ret.iterator(); mappedIter.hasNext();) {
                 String elem = mapElement((String) mappedIter.next()); // Apply the path prefix map
 
                 // Now convert the path and file separator characters from the

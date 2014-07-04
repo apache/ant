@@ -84,7 +84,7 @@ public class Get extends Task {
     private boolean skipExisting = false;
     private boolean httpUseCaches = true; // on by default
     private Mapper mapperElement = null;
-    private String userAgent = 
+    private String userAgent =
         System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
                            DEFAULT_AGENT_PREFIX + "/"
                            + Main.getShortAntVersion());
@@ -94,7 +94,8 @@ public class Get extends Task {
      *
      * @exception BuildException Thrown in unrecoverable error.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         checkAttributes();
 
         for (Resource r : sources) {
@@ -166,7 +167,8 @@ public class Get extends Task {
      * is false.
      * @deprecated only gets the first configured resource
      */
-    public boolean doGet(int logLevel, DownloadProgress progress)
+    @Deprecated
+	public boolean doGet(int logLevel, DownloadProgress progress)
             throws IOException {
         checkAttributes();
         for (Resource r : sources) {
@@ -430,7 +432,7 @@ public class Get extends Task {
     public void setSkipExisting(boolean s) {
         this.skipExisting = s;
     }
-    
+
     /**
      * HTTP connections only - set the user-agent to be used
      * when communicating with remote server. if null, then
@@ -456,7 +458,7 @@ public class Get extends Task {
     public void setHttpUseCaches(boolean httpUseCache) {
         this.httpUseCaches = httpUseCache;
     }
-    
+
     /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.
@@ -518,7 +520,8 @@ public class Get extends Task {
         /**
          * begin a download
          */
-        public void beginDownload() {
+        @Override
+		public void beginDownload() {
 
         }
 
@@ -526,13 +529,15 @@ public class Get extends Task {
          * tick handler
          *
          */
-        public void onTick() {
+        @Override
+		public void onTick() {
         }
 
         /**
          * end a download
          */
-        public void endDownload() {
+        @Override
+		public void endDownload() {
 
         }
     }
@@ -557,7 +562,8 @@ public class Get extends Task {
         /**
          * begin a download
          */
-        public void beginDownload() {
+        @Override
+		public void beginDownload() {
             dots = 0;
         }
 
@@ -565,7 +571,8 @@ public class Get extends Task {
          * tick handler
          *
          */
-        public void onTick() {
+        @Override
+		public void onTick() {
             out.print(".");
             if (dots++ > DOTS_PER_LINE) {
                 out.flush();
@@ -576,7 +583,8 @@ public class Get extends Task {
         /**
          * end a download
          */
-        public void endDownload() {
+        @Override
+		public void endDownload() {
             out.println();
             out.flush();
         }
@@ -599,7 +607,7 @@ public class Get extends Task {
         private URLConnection connection;
         private int redirections = 0;
         private String userAgent = null;
-        
+
         GetThread(URL source, File dest,
                   boolean h, long t, DownloadProgress p, int l, String userAgent) {
             this.source = source;
@@ -611,7 +619,8 @@ public class Get extends Task {
             this.userAgent = userAgent;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             try {
                 success = get();
             } catch (IOException ioex) {
@@ -684,7 +693,7 @@ public class Get extends Task {
             }
             // Set the user agent
             connection.addRequestProperty("User-Agent", this.userAgent);
-            
+
             // prepare Java 1.1 style credentials
             if (uname != null || pword != null) {
                 String up = uname + ":" + pword;
@@ -762,7 +771,7 @@ public class Get extends Task {
         }
 
 		private boolean isMoved(int responseCode) {
-			return responseCode == HttpURLConnection.HTTP_MOVED_PERM || 
+			return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
 			       responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
 			       responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
 			       responseCode == HTTP_MOVED_TEMP;

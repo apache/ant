@@ -36,7 +36,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     /**
      * Assemble as unicode extension from the name/comment and
      * encoding of the original zip entry.
-     * 
+     *
      * @param text The file name or comment.
      * @param bytes The encoded of the filename or comment in the zip
      * file.
@@ -62,7 +62,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     /**
      * Assemble as unicode extension from the name/comment and
      * encoding of the original zip entry.
-     * 
+     *
      * @param text The file name or comment.
      * @param bytes The encoded of the filename or comment in the zip
      * file.
@@ -128,7 +128,8 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     }
 
     /** {@inheritDoc} */
-    public byte[] getCentralDirectoryData() {
+    @Override
+	public byte[] getCentralDirectoryData() {
         if (data == null) {
             this.assembleData();
         }
@@ -141,7 +142,8 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     }
 
     /** {@inheritDoc} */
-    public ZipShort getCentralDirectoryLength() {
+    @Override
+	public ZipShort getCentralDirectoryLength() {
         if (data == null) {
             assembleData();
         }
@@ -149,17 +151,20 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
     }
 
     /** {@inheritDoc} */
-    public byte[] getLocalFileDataData() {
+    @Override
+	public byte[] getLocalFileDataData() {
         return getCentralDirectoryData();
     }
 
     /** {@inheritDoc} */
-    public ZipShort getLocalFileDataLength() {
+    @Override
+	public ZipShort getLocalFileDataLength() {
         return getCentralDirectoryLength();
     }
 
     /** {@inheritDoc} */
-    public void parseFromLocalFileData(byte[] buffer, int offset, int length)
+    @Override
+	public void parseFromLocalFileData(byte[] buffer, int offset, int length)
         throws ZipException {
 
         if (length < 5) {

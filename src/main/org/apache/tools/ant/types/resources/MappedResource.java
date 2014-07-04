@@ -46,7 +46,8 @@ public class MappedResource extends ResourceDecorator {
     /**
      * Maps the name.
      */
-    public String getName() {
+    @Override
+	public String getName() {
         String name = getResource().getName();
         if (isReference()) {
             return name;
@@ -59,7 +60,8 @@ public class MappedResource extends ResourceDecorator {
      * Not really supported since mapper is never null.
      * @param r reference to set
      */
-    public void setRefid(Reference r) {
+    @Override
+	public void setRefid(Reference r) {
         if (mapper != null) {
             throw noChildrenAllowed();
         }
@@ -70,8 +72,9 @@ public class MappedResource extends ResourceDecorator {
      * Suppress FileProvider
      * @param clazz the type to implement
      */
-    public <T> T as(Class<T> clazz) {
-        return FileProvider.class.isAssignableFrom(clazz) 
+    @Override
+	public <T> T as(Class<T> clazz) {
+        return FileProvider.class.isAssignableFrom(clazz)
                 ? null : getResource().as(clazz);
     }
 
@@ -79,7 +82,8 @@ public class MappedResource extends ResourceDecorator {
      * Get the hash code for this Resource.
      * @since Ant 1.8.1
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         String n = getName();
         return n == null ? super.hashCode() : n.hashCode();
     }
@@ -89,7 +93,8 @@ public class MappedResource extends ResourceDecorator {
      * resource itself.
      * @since Ant 1.8.1
      */
-    public boolean equals(Object other) {
+    @Override
+	public boolean equals(Object other) {
         if (other == null || !other.getClass().equals(getClass())) {
             return false;
         }
@@ -100,7 +105,8 @@ public class MappedResource extends ResourceDecorator {
             && getResource().equals(m.getResource());
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
         }

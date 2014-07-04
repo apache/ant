@@ -43,7 +43,8 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
      * @exception java.io.IOException if there is a problem reading the entry from
      *      the stream.
      */
-    public void read(DataInputStream cpStream) throws IOException {
+    @Override
+	public void read(final DataInputStream cpStream) throws IOException {
         methodDescriptorIndex = cpStream.readUnsignedShort();
     }
 
@@ -54,8 +55,9 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
      * @param constantPool the constant pool of which this entry is a member
      *      and against which this entry is to be resolved.
      */
-    public void resolve(ConstantPool constantPool) {
-        Utf8CPInfo methodClass
+    @Override
+	public void resolve(final ConstantPool constantPool) {
+        final Utf8CPInfo methodClass
                 = (Utf8CPInfo) constantPool.getEntry(methodDescriptorIndex);
         methodClass.resolve(constantPool);
         methodDescriptor = methodClass.getValue();
@@ -66,8 +68,9 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
-    public String toString() {
-        if (! isResolved()) {
+    @Override
+	public String toString() {
+        if (!isResolved()) {
             return "MethodDescriptorIndex: " + methodDescriptorIndex;
         } else {
             return "MethodDescriptor: " + methodDescriptor;

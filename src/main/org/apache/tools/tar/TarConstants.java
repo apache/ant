@@ -67,7 +67,7 @@ public interface TarConstants {
      * be expressed in octal char notation (that's 7 sevens, octal).
      */
     long    MAXID = 07777777L;
- 
+
     /**
      * The length of the checksum field in a header buffer.
      */
@@ -80,7 +80,7 @@ public interface TarConstants {
     int    SIZELEN = 12;
 
     /**
-     * The maximum size of a file in a tar archive 
+     * The maximum size of a file in a tar archive
      * which can be expressed in octal char notation (that's 11 sevens, octal).
      */
     long   MAXSIZE = 077777777777L;
@@ -127,67 +127,67 @@ public interface TarConstants {
 
     /**
      * Length of the prefix field.
-     * 
+     *
      */
     int    PREFIXLEN = 155;
 
     /**
      * The length of the access time field in an old GNU header buffer.
-     * 
+     *
      */
     int    ATIMELEN_GNU = 12;
 
     /**
      * The length of the created time field in an old GNU header buffer.
-     * 
+     *
      */
     int    CTIMELEN_GNU = 12;
 
     /**
-     * The length of the multivolume start offset field in an old GNU header buffer. 
-     * 
+     * The length of the multivolume start offset field in an old GNU header buffer.
+     *
      */
     int    OFFSETLEN_GNU = 12;
 
     /**
-     * The length of the long names field in an old GNU header buffer. 
-     * 
+     * The length of the long names field in an old GNU header buffer.
+     *
      */
     int    LONGNAMESLEN_GNU = 4;
 
     /**
-     * The length of the padding field in an old GNU header buffer. 
-     * 
+     * The length of the padding field in an old GNU header buffer.
+     *
      */
     int    PAD2LEN_GNU = 1;
 
     /**
-     * The sum of the length of all sparse headers in an old GNU header buffer. 
-     * 
+     * The sum of the length of all sparse headers in an old GNU header buffer.
+     *
      */
     int    SPARSELEN_GNU = 96;
 
     /**
-     * The length of the is extension field in an old GNU header buffer. 
-     * 
+     * The length of the is extension field in an old GNU header buffer.
+     *
      */
     int    ISEXTENDEDLEN_GNU = 1;
 
     /**
-     * The length of the real size field in an old GNU header buffer. 
-     * 
+     * The length of the real size field in an old GNU header buffer.
+     *
      */
     int    REALSIZELEN_GNU = 12;
 
     /**
-     * The sum of the length of all sparse headers in a sparse header buffer. 
-     * 
+     * The sum of the length of all sparse headers in a sparse header buffer.
+     *
      */
     int    SPARSELEN_GNU_SPARSE = 504;
 
     /**
-     * The length of the is extension field in a sparse header buffer. 
-     * 
+     * The length of the is extension field in a sparse header buffer.
+     *
      */
     int    ISEXTENDEDLEN_GNU_SPARSE = 1;
 

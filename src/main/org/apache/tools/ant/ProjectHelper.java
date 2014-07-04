@@ -101,7 +101,7 @@ public class ProjectHelper {
      *
      * @since 1.8.2
      */
-    public final static class OnMissingExtensionPoint {
+    public static final class OnMissingExtensionPoint {
 
         /** fail if the extension-point is not defined */
         public static final OnMissingExtensionPoint FAIL = new OnMissingExtensionPoint(
@@ -181,7 +181,7 @@ public class ProjectHelper {
         return extensionStack;
     }
 
-    private final static ThreadLocal<String> targetPrefix = new ThreadLocal<String>();
+    private static final ThreadLocal<String> targetPrefix = new ThreadLocal<String>();
 
     /**
      * The prefix to prepend to imported target names.
@@ -205,7 +205,7 @@ public class ProjectHelper {
         targetPrefix.set(prefix);
     }
 
-    private final static ThreadLocal<String> prefixSeparator = new ThreadLocal<String>() {
+    private static final ThreadLocal<String> prefixSeparator = new ThreadLocal<String>() {
             protected String initialValue() {
                 return ".";
             }
@@ -231,7 +231,7 @@ public class ProjectHelper {
         prefixSeparator.set(sep);
     }
 
-    private final static ThreadLocal<Boolean> inIncludeMode = new ThreadLocal<Boolean>() {
+    private static final ThreadLocal<Boolean> inIncludeMode = new ThreadLocal<Boolean>() {
             protected Boolean initialValue() {
                 return Boolean.FALSE;
             }

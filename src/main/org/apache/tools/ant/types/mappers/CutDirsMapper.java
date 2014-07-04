@@ -38,7 +38,7 @@ public class CutDirsMapper implements FileNameMapper {
     /**
      * The number of leading directories to cut.
      */
-    public void setDirs(int dirs) {
+    public void setDirs(final int dirs) {
         this.dirs =  dirs;
     }
 
@@ -46,23 +46,26 @@ public class CutDirsMapper implements FileNameMapper {
      * Empty implementation.
      * @param ignore ignored.
      */
-    public void setFrom(String ignore) {
+    @Override
+	public void setFrom(final String ignore) {
     }
 
     /**
      * Empty implementation.
      * @param ignore ignored.
      */
-    public void setTo(String ignore) {
+    @Override
+	public void setTo(final String ignore) {
     }
 
     /** {@inheritDoc}. */
-    public String[] mapFileName(final String sourceFileName) {
+    @Override
+	public String[] mapFileName(final String sourceFileName) {
         if (dirs <= 0) {
             throw new BuildException("dirs must be set to a positive number");
         }
-        char fileSep = File.separatorChar;
-        String fileSepCorrected =
+        final char fileSep = File.separatorChar;
+        final String fileSepCorrected =
             sourceFileName.replace('/', fileSep).replace('\\', fileSep);
         int nthMatch = fileSepCorrected.indexOf(fileSep);
         for (int n = 1; nthMatch > -1 && n < dirs; n++) {
@@ -71,6 +74,6 @@ public class CutDirsMapper implements FileNameMapper {
         if (nthMatch == -1) {
             return null;
         }
-        return new String[] { sourceFileName.substring(nthMatch + 1) };
+        return new String[] {sourceFileName.substring(nthMatch + 1)};
     }
 }

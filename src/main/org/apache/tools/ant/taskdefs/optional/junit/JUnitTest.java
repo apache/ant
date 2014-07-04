@@ -55,7 +55,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
 
     /** the names of test methods to execute */
     private String[] methods = null;
-    
+
     /** the name of the result file */
     private String outfile = null;
 
@@ -110,7 +110,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure,
                      boolean filtertrace, String[] methods) {
-        this(name, haltOnError, haltOnFailure, filtertrace, methods, 0);    
+        this(name, haltOnError, haltOnFailure, filtertrace, methods, 0);
     }
 
     /**
@@ -527,7 +527,8 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @since Ant 1.5
      * @return a clone of this test.
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         try {
             JUnitTest t = (JUnitTest) super.clone();
             t.props = props == null ? null : (Properties) props.clone();

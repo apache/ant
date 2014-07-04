@@ -43,7 +43,8 @@ public class MultiRootFileSet extends AbstractFileSet
     private List<File> baseDirs = new ArrayList<File>();
     private Union union;
 
-    public void setDir(File dir) {
+    @Override
+	public void setDir(File dir) {
         throw new BuildException(getDataTypeName()
                                  + " doesn't support the dir attribute");
     }
@@ -96,7 +97,8 @@ public class MultiRootFileSet extends AbstractFileSet
         baseDirs.add(r.getFile());
     }
 
-    public void setRefid(Reference r) {
+    @Override
+	public void setRefid(Reference r) {
         if (!baseDirs.isEmpty()) {
             throw tooManyAttributes();
         }
@@ -108,7 +110,8 @@ public class MultiRootFileSet extends AbstractFileSet
      * as this one.
      * @return the cloned MultiRootFileSet.
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).clone();
         } else {
@@ -123,7 +126,8 @@ public class MultiRootFileSet extends AbstractFileSet
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    public Iterator<Resource> iterator() {
+    @Override
+	public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).iterator();
         }
@@ -134,7 +138,8 @@ public class MultiRootFileSet extends AbstractFileSet
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
-    public int size() {
+    @Override
+	public int size() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).size();
         }
@@ -145,7 +150,8 @@ public class MultiRootFileSet extends AbstractFileSet
      * Always returns true.
      * @return true indicating that all elements will be FileResources.
      */
-    public boolean isFilesystemOnly() {
+    @Override
+	public boolean isFilesystemOnly() {
         return true;
     }
 
@@ -154,7 +160,8 @@ public class MultiRootFileSet extends AbstractFileSet
      *
      * @return a <code>String</code> of included directories.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).toString();
         }
@@ -190,18 +197,20 @@ public class MultiRootFileSet extends AbstractFileSet
         implements ResourceCollection {
 
         private final SetType type;
-        
+
         private Worker(MultiRootFileSet fs, SetType type, File dir) {
             super(fs);
             this.type = type;
             setDir(dir);
         }
 
-        public boolean isFilesystemOnly() {
+        @Override
+		public boolean isFilesystemOnly() {
             return true;
         }
 
-        public Iterator<Resource> iterator() {
+        @Override
+		public Iterator<Resource> iterator() {
             DirectoryScanner ds = getDirectoryScanner(getProject());
             String[] names = type == SetType.file
                 ? ds.getIncludedFiles()
@@ -217,7 +226,8 @@ public class MultiRootFileSet extends AbstractFileSet
                                             names);
         }
 
-        public int size() {
+        @Override
+		public int size() {
             DirectoryScanner ds = getDirectoryScanner(getProject());
             int count = type == SetType.file
                 ? ds.getIncludedFilesCount()

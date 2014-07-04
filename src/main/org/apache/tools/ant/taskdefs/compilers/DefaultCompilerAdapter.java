@@ -97,7 +97,8 @@ public abstract class DefaultCompilerAdapter
      *
      * @param attributes a configured Javac task.
      */
-    public void setJavac(Javac attributes) {
+    @Override
+	public void setJavac(final Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
         destDir = attributes.getDestdir();
@@ -135,8 +136,9 @@ public abstract class DefaultCompilerAdapter
      * but specialized compilers can recognize multiple kinds
      * of files.
      */
-    public String[] getSupportedFileExtensions() {
-        return new String[] { "java" };
+    @Override
+	public String[] getSupportedFileExtensions() {
+        return new String[] {"java"};
     }
 
     /**
@@ -153,7 +155,7 @@ public abstract class DefaultCompilerAdapter
      * @return the compilation class path
      */
     protected Path getCompileClasspath() {
-        Path classpath = new Path(project);
+        final Path classpath = new Path(project);
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
@@ -187,7 +189,7 @@ public abstract class DefaultCompilerAdapter
      * @param cmd the command line
      * @return the command line
      */
-    protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
+    protected Commandline setupJavacCommandlineSwitches(final Commandline cmd) {
         return setupJavacCommandlineSwitches(cmd, false);
     }
 
@@ -198,9 +200,9 @@ public abstract class DefaultCompilerAdapter
      * @param useDebugLevel if true set set the debug level with the -g switch
      * @return the command line
      */
-    protected Commandline setupJavacCommandlineSwitches(Commandline cmd,
-                                                        boolean useDebugLevel) {
-        Path classpath = getCompileClasspath();
+    protected Commandline setupJavacCommandlineSwitches(final Commandline cmd,
+                                                        final boolean useDebugLevel) {
+        final Path classpath = getCompileClasspath();
         // For -sourcepath, use the "sourcepath" value if present.
         // Otherwise default to the "srcdir" value.
         Path sourcepath = null;
@@ -210,7 +212,7 @@ public abstract class DefaultCompilerAdapter
             sourcepath = src;
         }
 
-        String memoryParameterPrefix = assumeJava11() ? "-J-" : "-J-X";
+        final String memoryParameterPrefix = assumeJava11() ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
                 attributes.log("Since fork is false, ignoring "
@@ -251,9 +253,9 @@ public abstract class DefaultCompilerAdapter
         // Just add "sourcepath" to classpath ( for JDK1.1 )
         // as well as "bootclasspath" and "extdirs"
         if (assumeJava11()) {
-            Path cp = new Path(project);
+            final Path cp = new Path(project);
 
-            Path bp = getBootClassPath();
+            final Path bp = getBootClassPath();
             if (bp.size() > 0) {
                 cp.append(bp);
             }
@@ -277,7 +279,7 @@ public abstract class DefaultCompilerAdapter
                 cmd.createArgument().setValue(target);
             }
 
-            Path bp = getBootClassPath();
+            final Path bp = getBootClassPath();
             if (bp.size() > 0) {
                 cmd.createArgument().setValue("-bootclasspath");
                 cmd.createArgument().setPath(bp);
@@ -295,7 +297,7 @@ public abstract class DefaultCompilerAdapter
         }
         if (debug) {
             if (useDebugLevel && !assumeJava11()) {
-                String debugLevel = attributes.getDebugLevel();
+                final String debugLevel = attributes.getDebugLevel();
                 if (debugLevel != null) {
                     cmd.createArgument().setValue("-g:" + debugLevel);
                 } else {
@@ -337,7 +339,7 @@ public abstract class DefaultCompilerAdapter
      * @param cmd the command line
      * @return the command line
      */
-    protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
+    protected Commandline setupModernJavacCommandlineSwitches(final Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
         if (!assumeJava13()) { // -source added with JDK 1.4
             final String t = attributes.getTarget();
@@ -359,7 +361,7 @@ public abstract class DefaultCompilerAdapter
      * @return the command line
      */
     protected Commandline setupModernJavacCommand() {
-        Commandline cmd = new Commandline();
+        final Commandline cmd = new Commandline();
         setupModernJavacCommandlineSwitches(cmd);
 
         logAndAddFilesToCompile(cmd);
@@ -380,8 +382,8 @@ public abstract class DefaultCompilerAdapter
      * @param debugLevelCheck if true set the debug level with the -g switch
      * @return the command line
      */
-    protected Commandline setupJavacCommand(boolean debugLevelCheck) {
-        Commandline cmd = new Commandline();
+    protected Commandline setupJavacCommand(final boolean debugLevelCheck) {
+        final Commandline cmd = new Commandline();
         setupJavacCommandlineSwitches(cmd, debugLevelCheck);
         logAndAddFilesToCompile(cmd);
         return cmd;
@@ -392,11 +394,11 @@ public abstract class DefaultCompilerAdapter
      * &quot;niceSourceList&quot;
      * @param cmd the command line
      */
-    protected void logAndAddFilesToCompile(Commandline cmd) {
+    protected void logAndAddFilesToCompile(final Commandline cmd) {
         attributes.log("Compilation " + cmd.describeArguments(),
                        Project.MSG_VERBOSE);
 
-        StringBuffer niceSourceList = new StringBuffer("File");
+        final StringBuffer niceSourceList = new StringBuffer("File");
         if (compileList.length != 1) {
             niceSourceList.append("s");
         }
@@ -405,7 +407,7 @@ public abstract class DefaultCompilerAdapter
         niceSourceList.append(StringUtils.LINE_SEP);
 
         for (int i = 0; i < compileList.length; i++) {
-            String arg = compileList[i].getAbsolutePath();
+            final String arg = compileList[i].getAbsolutePath();
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    ");
             niceSourceList.append(arg);
@@ -424,7 +426,7 @@ public abstract class DefaultCompilerAdapter
      * system.
      * @return the exit code of the compilation
      */
-    protected int executeExternalCompile(String[] args, int firstFileName) {
+    protected int executeExternalCompile(final String[] args, final int firstFileName) {
         return executeExternalCompile(args, firstFileName, true);
     }
 
@@ -447,8 +449,8 @@ public abstract class DefaultCompilerAdapter
      *
      * @since Ant 1.6
      */
-    protected int executeExternalCompile(String[] args, int firstFileName,
-                                         boolean quoteFiles) {
+    protected int executeExternalCompile(final String[] args, final int firstFileName,
+                                         final boolean quoteFiles) {
         String[] commandArray = null;
         File tmpFile = null;
 
@@ -480,7 +482,7 @@ public abstract class DefaultCompilerAdapter
                     commandArray = new String[firstFileName + 1];
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
                     commandArray[firstFileName] = "@" + tmpFile;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     throw new BuildException("Error creating temporary file",
                                              e, location);
                 } finally {
@@ -491,7 +493,7 @@ public abstract class DefaultCompilerAdapter
             }
 
             try {
-                Execute exe = new Execute(
+                final Execute exe = new Execute(
                                   new LogStreamHandler(attributes,
                                                        Project.MSG_INFO,
                                                        Project.MSG_WARN));
@@ -505,7 +507,7 @@ public abstract class DefaultCompilerAdapter
                 exe.setCommandline(commandArray);
                 exe.execute();
                 return exe.getExitValue();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new BuildException("Error running " + args[0]
                         + " compiler", e, location);
             }
@@ -522,7 +524,8 @@ public abstract class DefaultCompilerAdapter
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.types.Path#addExtdirs instead.
      */
-    protected void addExtdirsToClasspath(Path classpath) {
+    @Deprecated
+	protected void addExtdirsToClasspath(final Path classpath) {
         classpath.addExtdirs(extdirs);
     }
 
@@ -530,7 +533,7 @@ public abstract class DefaultCompilerAdapter
      * Adds the command line arguments specific to the current implementation.
      * @param cmd the command line to use
      */
-    protected void addCurrentCompilerArgs(Commandline cmd) {
+    protected void addCurrentCompilerArgs(final Commandline cmd) {
         cmd.addArguments(getJavac().getCurrentCompilerArgs());
     }
 
@@ -619,7 +622,7 @@ public abstract class DefaultCompilerAdapter
      * Shall we assume command line switches for the given version of Java?
      * @since Ant 1.8.3
      */
-    private boolean assumeJavaXY(String javacXY, String javaEnvVersionXY) {
+    private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
         return javacXY.equals(attributes.getCompilerVersion())
             || ("classic".equals(attributes.getCompilerVersion())
                 && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
@@ -637,7 +640,7 @@ public abstract class DefaultCompilerAdapter
      * specified and the system bootclasspath.
      */
     protected Path getBootClassPath() {
-        Path bp = new Path(project);
+        final Path bp = new Path(project);
         if (bootclasspath != null) {
             bp.append(bootclasspath);
         }
@@ -658,8 +661,8 @@ public abstract class DefaultCompilerAdapter
         return assumeJava11() ? null : "-g:none";
     }
 
-    private void setImplicitSourceSwitch(Commandline cmd,
-                                         String target, String source) {
+    private void setImplicitSourceSwitch(final Commandline cmd,
+                                         final String target, final String source) {
         attributes.log("", Project.MSG_WARN);
         attributes.log("          WARNING", Project.MSG_WARN);
         attributes.log("", Project.MSG_WARN);
@@ -723,7 +726,7 @@ public abstract class DefaultCompilerAdapter
      * <p>support for -source 1.1 and -source 1.2 has been added with
      * JDK 1.4.2 but isn't present in 1.5.0+</p>
      */
-    private String adjustSourceValue(String source) {
+    private String adjustSourceValue(final String source) {
         return (source.equals("1.1") || source.equals("1.2")) ? "1.3" : source;
     }
 }

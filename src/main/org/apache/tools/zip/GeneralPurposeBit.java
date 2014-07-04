@@ -122,7 +122,7 @@ public final class GeneralPurposeBit {
      * Encodes the set bits in a form suitable for ZIP archives.
      */
     public byte[] encode() {
-        return 
+        return
             ZipShort.getBytes((dataDescriptorFlag ? DATA_DESCRIPTOR_FLAG : 0)
                               |
                               (languageEncodingFlag ? UFT8_NAMES_FLAG : 0)

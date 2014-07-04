@@ -113,7 +113,8 @@ public class ExtensionSet
      * @param reference the reference to which this instance is associated
      * @exception BuildException if this instance already has been configured.
      */
-    public void setRefid(final Reference reference)
+    @Override
+	public void setRefid(final Reference reference)
         throws BuildException {
         if (!extensions.isEmpty() || !extensionsFilesets.isEmpty()) {
             throw tooManyAttributes();
@@ -121,7 +122,8 @@ public class ExtensionSet
         super.setRefid(reference);
     }
 
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    @Override
+	protected synchronized void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -129,11 +131,11 @@ public class ExtensionSet
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = extensions.iterator(); i.hasNext(); ) {
+            for (Iterator i = extensions.iterator(); i.hasNext();) {
                 pushAndInvokeCircularReferenceCheck((ExtensionAdapter) i.next(),
                                                     stk, p);
             }
-            for (Iterator i = extensionsFilesets.iterator(); i.hasNext(); ) {
+            for (Iterator i = extensionsFilesets.iterator(); i.hasNext();) {
                 pushAndInvokeCircularReferenceCheck((FileSet) i.next(), stk, p);
             }
             setChecked(true);
@@ -144,7 +146,8 @@ public class ExtensionSet
      * @see java.lang.Object#toString()
      * @return the extensions in a string.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "ExtensionSet" + Arrays.asList(toExtensions(getProject()));
     }
 }

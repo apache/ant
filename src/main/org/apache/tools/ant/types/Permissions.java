@@ -44,12 +44,12 @@ import org.apache.tools.ant.ExitException;
  */
 public class Permissions {
 
-    private List<Permission> grantedPermissions = new LinkedList<Permission>();
-    private List<Permission> revokedPermissions = new LinkedList<Permission>();
+    private final List<Permission> grantedPermissions = new LinkedList<Permission>();
+    private final List<Permission> revokedPermissions = new LinkedList<Permission>();
     private java.security.Permissions granted = null;
     private SecurityManager origSm = null;
     private boolean active = false;
-    private boolean delegateToOldSM;
+    private final boolean delegateToOldSM;
 
     // Mandatory constructor for permission object.
     private static final Class<?>[] PARAMS = {String.class, String.class};
@@ -68,7 +68,7 @@ public class Permissions {
      * will be used if the permission has not been explicitly granted or revoked
      * in this instance.
      */
-    public Permissions(boolean delegateToOldSM) {
+    public Permissions(final boolean delegateToOldSM) {
         this.delegateToOldSM = delegateToOldSM;
     }
 
@@ -76,7 +76,7 @@ public class Permissions {
      * Adds a permission to be granted.
      * @param perm The Permissions.Permission to be granted.
      */
-    public void addConfiguredGrant(Permissions.Permission perm) {
+    public void addConfiguredGrant(final Permissions.Permission perm) {
         grantedPermissions.add(perm);
     }
 
@@ -84,7 +84,7 @@ public class Permissions {
      * Adds a permission to be revoked.
      * @param perm The Permissions.Permission to be revoked
      */
-    public void addConfiguredRevoke(Permissions.Permission perm) {
+    public void addConfiguredRevoke(final Permissions.Permission perm) {
         revokedPermissions.add(perm);
     }
 
@@ -107,17 +107,17 @@ public class Permissions {
      */
     private void init() throws BuildException {
         granted = new java.security.Permissions();
-        for (Permissions.Permission p : revokedPermissions) {
+        for (final Permissions.Permission p : revokedPermissions) {
             if (p.getClassName() == null) {
                 throw new BuildException("Revoked permission " + p + " does not contain a class.");
             }
         }
-        for (Permissions.Permission p : grantedPermissions) {
+        for (final Permissions.Permission p : grantedPermissions) {
             if (p.getClassName() == null) {
                 throw new BuildException("Granted permission " + p
                         + " does not contain a class.");
             } else {
-                java.security.Permission perm = createPermission(p);
+                final java.security.Permission perm = createPermission(p);
                 granted.add(perm);
             }
         }
@@ -146,17 +146,17 @@ public class Permissions {
     }
 
     private java.security.Permission createPermission(
-            Permissions.Permission permission) {
+            final Permissions.Permission permission) {
         try {
             // First add explicitly already resolved permissions will not be
             // resolved when added as unresolved permission.
-            Class<? extends java.security.Permission> clazz = Class.forName(
+            final Class<? extends java.security.Permission> clazz = Class.forName(
                     permission.getClassName()).asSubclass(java.security.Permission.class);
-            String name = permission.getName();
-            String actions = permission.getActions();
-            Constructor<? extends java.security.Permission> ctr = clazz.getConstructor(PARAMS);
-            return ctr.newInstance(new Object[] { name, actions });
-        } catch (Exception e) {
+            final String name = permission.getName();
+            final String actions = permission.getActions();
+            final Constructor<? extends java.security.Permission> ctr = clazz.getConstructor(PARAMS);
+            return ctr.newInstance(new Object[] {name, actions});
+        } catch (final Exception e) {
             // Let the UnresolvedPermission handle it.
             return new UnresolvedPermission(permission.getClassName(),
                     permission.getName(), permission.getActions(), null);
@@ -185,11 +185,12 @@ public class Permissions {
          * Overridden from java.lang.SecurityManager
          * @param status The exit status requested.
          */
-        public void checkExit(int status) {
-            java.security.Permission perm = new java.lang.RuntimePermission("exitVM", null);
+        @Override
+		public void checkExit(final int status) {
+            final java.security.Permission perm = new java.lang.RuntimePermission("exitVM", null);
             try {
                 checkPermission(perm);
-            } catch (SecurityException e) {
+            } catch (final SecurityException e) {
                 throw new ExitException(e.getMessage(), status);
             }
         }
@@ -200,7 +201,8 @@ public class Permissions {
          *
          * @param perm The permission requested.
          */
-        public void checkPermission(java.security.Permission perm) {
+        @Override
+		public void checkPermission(final java.security.Permission perm) {
             if (active) {
                 if (delegateToOldSM && !perm.getName().equals("exitVM")) {
                     boolean permOK = false;
@@ -228,8 +230,8 @@ public class Permissions {
          * throws an exception if this permission is revoked
          * @param perm the permission being checked
          */
-        private void checkRevoked(java.security.Permission perm) {
-            for (Permissions.Permission revoked : revokedPermissions) {
+        private void checkRevoked(final java.security.Permission perm) {
+            for (final Permissions.Permission revoked : revokedPermissions) {
                 if (revoked.matches(perm)) {
                     throw new SecurityException("Permission " + perm + " was revoked.");
                 }
@@ -248,7 +250,7 @@ public class Permissions {
          * Set the class, mandatory.
          * @param aClass The class name of the permission.
          */
-        public void setClass(String aClass) {
+        public void setClass(final String aClass) {
             className = aClass.trim();
         }
 
@@ -264,7 +266,7 @@ public class Permissions {
          * Set the name of the permission.
          * @param aName The name of the permission.
          */
-        public void setName(String aName) {
+        public void setName(final String aName) {
             name = aName.trim();
         }
 
@@ -280,7 +282,7 @@ public class Permissions {
          * Set the actions.
          * @param actions The actions of the permission.
          */
-        public void setActions(String actions) {
+        public void setActions(final String actions) {
             actionString = actions;
             if (actions.length() > 0) {
                 this.actions = parseActions(actions);
@@ -299,7 +301,7 @@ public class Permissions {
          * Learn whether the permission matches in case of a revoked permission.
          * @param perm The permission to check against.
          */
-        boolean matches(java.security.Permission perm) {
+        boolean matches(final java.security.Permission perm) {
             if (!className.equals(perm.getClass().getName())) {
                 return false;
             }
@@ -315,8 +317,8 @@ public class Permissions {
                 }
             }
             if (actions != null) {
-                Set<String> as = parseActions(perm.getActions());
-                int size = as.size();
+                final Set<String> as = parseActions(perm.getActions());
+                final int size = as.size();
                 as.removeAll(actions);
                 if (as.size() == size) {
                     // None of the actions revoked, so all allowed.
@@ -330,11 +332,11 @@ public class Permissions {
          * Parses the actions into a set of separate strings.
          * @param actions The actions to be parsed.
          */
-        private Set<String> parseActions(String actions) {
-            Set<String> result = new HashSet<String>();
-            StringTokenizer tk = new StringTokenizer(actions, ",");
+        private Set<String> parseActions(final String actions) {
+            final Set<String> result = new HashSet<String>();
+            final StringTokenizer tk = new StringTokenizer(actions, ",");
             while (tk.hasMoreTokens()) {
-                String item = tk.nextToken().trim();
+                final String item = tk.nextToken().trim();
                 if (!item.equals("")) {
                     result.add(item);
                 }
@@ -346,7 +348,8 @@ public class Permissions {
          * Get a string description of the permissions.
          * @return string description of the permissions.
          */
-        public String toString() {
+        @Override
+		public String toString() {
             return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
         }
     }

@@ -46,9 +46,11 @@ public class TarUtils {
      * Encapsulates the algorithms used up to Ant 1.8 as ZipEncoding.
      */
     static final ZipEncoding FALLBACK_ENCODING = new ZipEncoding() {
-            public boolean canEncode(String name) { return true; }
+            @Override
+			public boolean canEncode(String name) { return true; }
 
-            public ByteBuffer encode(String name) {
+            @Override
+			public ByteBuffer encode(String name) {
                 final int length = name.length();
                 byte[] buf = new byte[length];
 
@@ -59,7 +61,8 @@ public class TarUtils {
                 return ByteBuffer.wrap(buf);
             }
 
-            public String decode(byte[] buffer) {
+            @Override
+			public String decode(byte[] buffer) {
                 final int length = buffer.length;
                 StringBuilder result = new StringBuilder(length);
 
@@ -146,7 +149,7 @@ public class TarUtils {
         return result;
     }
 
-    /** 
+    /**
      * Compute the value contained in a byte buffer.  If the most
      * significant bit of the first byte in the buffer is set, this
      * bit is ignored and the rest of the buffer is interpreted as a
@@ -303,7 +306,7 @@ public class TarUtils {
     /**
      * Copy a name into a buffer.
      * Copies characters from the name into the buffer
-     * starting at the specified offset. 
+     * starting at the specified offset.
      * If the buffer is longer than the name, the buffer
      * is filled with trailing NULs.
      * If the name is longer than the buffer,
@@ -332,7 +335,7 @@ public class TarUtils {
     /**
      * Copy a name into a buffer.
      * Copies characters from the name into the buffer
-     * starting at the specified offset. 
+     * starting at the specified offset.
      * If the buffer is longer than the name, the buffer
      * is filled with trailing NULs.
      * If the name is longer than the buffer,
@@ -367,7 +370,7 @@ public class TarUtils {
 
     /**
      * Fill buffer with unsigned octal number, padded with leading zeroes.
-     * 
+     *
      * @param value number to convert to octal - treated as unsigned
      * @param buffer destination buffer
      * @param offset starting offset in buffer
@@ -405,7 +408,7 @@ public class TarUtils {
      * Uses {@link #formatUnsignedOctalString} to format
      * the value as an octal string with leading zeros.
      * The converted number is followed by space and NUL
-     * 
+     *
      * @param value The value to write
      * @param buf The buffer to receive the output
      * @param offset The starting offset into the buffer
@@ -426,11 +429,11 @@ public class TarUtils {
 
     /**
      * Write an octal long integer into a buffer.
-     * 
+     *
      * Uses {@link #formatUnsignedOctalString} to format
      * the value as an octal string with leading zeros.
      * The converted number is followed by a space.
-     * 
+     *
      * @param value The value to write as octal
      * @param buf The destinationbuffer.
      * @param offset The starting offset into the buffer.
@@ -451,11 +454,11 @@ public class TarUtils {
     /**
      * Write an long integer into a buffer as an octal string if this
      * will fit, or as a binary number otherwise.
-     * 
+     *
      * Uses {@link #formatUnsignedOctalString} to format
      * the value as an octal string with leading zeros.
      * The converted number is followed by a space.
-     * 
+     *
      * @param value The value to write into the buffer.
      * @param buf The destination buffer.
      * @param offset The starting offset into the buffer.
@@ -488,7 +491,7 @@ public class TarUtils {
                                          final int offset, final int length,
                                          final boolean negative) {
         final int bits = (length - 1) * 8;
-        final long max = 1l << bits;
+        final long max = 1L << bits;
         long val = Math.abs(value);
         if (val >= max) {
             throw new IllegalArgumentException("Value " + value +
@@ -522,7 +525,7 @@ public class TarUtils {
 
     /**
      * Writes an octal value into a buffer.
-     * 
+     *
      * Uses {@link #formatUnsignedOctalString} to format
      * the value as an octal string with leading zeros.
      * The converted number is followed by NUL and then space.

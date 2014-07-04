@@ -38,7 +38,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
 
     /**
      * Launches the given command in a new process.
-     * 
+     *
      * @param project
      *        the Ant project.
      * @param cmd
@@ -63,7 +63,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
      * working directory. Note that under Java 1.4.0 and 1.4.1 on VMS
      * this method only works if <code>workingDir</code> is null or
      * the logical JAVA$FORK_SUPPORT_CHDIR needs to be set to TRUE.
-     * 
+     *
      * @param project
      *        the Ant project.
      * @param cmd

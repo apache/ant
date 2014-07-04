@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Static helper functions for robustly encoding filenames in zip files. 
+ * Static helper functions for robustly encoding filenames in zip files.
  */
 public abstract class ZipEncodingHelper {
 
@@ -42,12 +42,12 @@ public abstract class ZipEncodingHelper {
 
         /**
          * Instantiate a simple encoding holder.
-         * 
+         *
          * @param highChars The characters for byte codes 128 to 255.
-         * 
+         *
          * @see Simple8BitZipEncoding#Simple8BitZipEncoding(char[])
          */
-        SimpleEncodingHolder(char [] highChars) {
+        SimpleEncodingHolder(final char [] highChars) {
             this.highChars = highChars;
         }
 
@@ -66,34 +66,34 @@ public abstract class ZipEncodingHelper {
     private static final Map<String, SimpleEncodingHolder> simpleEncodings;
 
     static {
-        Map<String, SimpleEncodingHolder> se =
+        final Map<String, SimpleEncodingHolder> se =
             new HashMap<String, SimpleEncodingHolder>();
 
-        char[] cp437_high_chars =
-            new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
-                         0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
-                         0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
-                         0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
-                         0x00ff, 0x00d6, 0x00dc, 0x00a2, 0x00a3, 0x00a5,
-                         0x20a7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
-                         0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x2310,
-                         0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
-                         0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561,
-                         0x2562, 0x2556, 0x2555, 0x2563, 0x2551, 0x2557,
-                         0x255d, 0x255c, 0x255b, 0x2510, 0x2514, 0x2534,
-                         0x252c, 0x251c, 0x2500, 0x253c, 0x255e, 0x255f,
-                         0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
-                         0x256c, 0x2567, 0x2568, 0x2564, 0x2565, 0x2559,
-                         0x2558, 0x2552, 0x2553, 0x256b, 0x256a, 0x2518,
-                         0x250c, 0x2588, 0x2584, 0x258c, 0x2590, 0x2580,
-                         0x03b1, 0x00df, 0x0393, 0x03c0, 0x03a3, 0x03c3,
-                         0x00b5, 0x03c4, 0x03a6, 0x0398, 0x03a9, 0x03b4,
-                         0x221e, 0x03c6, 0x03b5, 0x2229, 0x2261, 0x00b1,
-                         0x2265, 0x2264, 0x2320, 0x2321, 0x00f7, 0x2248,
-                         0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2,
-                         0x25a0, 0x00a0 };
+        final char[] cp437_high_chars =
+            new char[] {0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
+                        0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
+                        0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
+                        0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
+                        0x00ff, 0x00d6, 0x00dc, 0x00a2, 0x00a3, 0x00a5,
+                        0x20a7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
+                        0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x2310,
+                        0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
+                        0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561,
+                        0x2562, 0x2556, 0x2555, 0x2563, 0x2551, 0x2557,
+                        0x255d, 0x255c, 0x255b, 0x2510, 0x2514, 0x2534,
+                        0x252c, 0x251c, 0x2500, 0x253c, 0x255e, 0x255f,
+                        0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
+                        0x256c, 0x2567, 0x2568, 0x2564, 0x2565, 0x2559,
+                        0x2558, 0x2552, 0x2553, 0x256b, 0x256a, 0x2518,
+                        0x250c, 0x2588, 0x2584, 0x258c, 0x2590, 0x2580,
+                        0x03b1, 0x00df, 0x0393, 0x03c0, 0x03a3, 0x03c3,
+                        0x00b5, 0x03c4, 0x03a6, 0x0398, 0x03a9, 0x03b4,
+                        0x221e, 0x03c6, 0x03b5, 0x2229, 0x2261, 0x00b1,
+                        0x2265, 0x2264, 0x2320, 0x2321, 0x00f7, 0x2248,
+                        0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2,
+                        0x25a0, 0x00a0};
 
-        SimpleEncodingHolder cp437 = new SimpleEncodingHolder(cp437_high_chars);
+        final SimpleEncodingHolder cp437 = new SimpleEncodingHolder(cp437_high_chars);
 
         se.put("CP437", cp437);
         se.put("Cp437", cp437);
@@ -101,31 +101,31 @@ public abstract class ZipEncodingHelper {
         se.put("IBM437", cp437);
         se.put("ibm437", cp437);
 
-        char[] cp850_high_chars =
-            new char[] { 0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
-                         0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
-                         0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
-                         0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
-                         0x00ff, 0x00d6, 0x00dc, 0x00f8, 0x00a3, 0x00d8,
-                         0x00d7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
-                         0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x00ae,
-                         0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
-                         0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x00c1,
-                         0x00c2, 0x00c0, 0x00a9, 0x2563, 0x2551, 0x2557,
-                         0x255d, 0x00a2, 0x00a5, 0x2510, 0x2514, 0x2534,
-                         0x252c, 0x251c, 0x2500, 0x253c, 0x00e3, 0x00c3,
-                         0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
-                         0x256c, 0x00a4, 0x00f0, 0x00d0, 0x00ca, 0x00cb,
-                         0x00c8, 0x0131, 0x00cd, 0x00ce, 0x00cf, 0x2518,
-                         0x250c, 0x2588, 0x2584, 0x00a6, 0x00cc, 0x2580,
-                         0x00d3, 0x00df, 0x00d4, 0x00d2, 0x00f5, 0x00d5,
-                         0x00b5, 0x00fe, 0x00de, 0x00da, 0x00db, 0x00d9,
-                         0x00fd, 0x00dd, 0x00af, 0x00b4, 0x00ad, 0x00b1,
-                         0x2017, 0x00be, 0x00b6, 0x00a7, 0x00f7, 0x00b8,
-                         0x00b0, 0x00a8, 0x00b7, 0x00b9, 0x00b3, 0x00b2,
-                         0x25a0, 0x00a0 };
+        final char[] cp850_high_chars =
+            new char[] {0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0,
+                        0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef,
+                        0x00ee, 0x00ec, 0x00c4, 0x00c5, 0x00c9, 0x00e6,
+                        0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9,
+                        0x00ff, 0x00d6, 0x00dc, 0x00f8, 0x00a3, 0x00d8,
+                        0x00d7, 0x0192, 0x00e1, 0x00ed, 0x00f3, 0x00fa,
+                        0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x00ae,
+                        0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
+                        0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x00c1,
+                        0x00c2, 0x00c0, 0x00a9, 0x2563, 0x2551, 0x2557,
+                        0x255d, 0x00a2, 0x00a5, 0x2510, 0x2514, 0x2534,
+                        0x252c, 0x251c, 0x2500, 0x253c, 0x00e3, 0x00c3,
+                        0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550,
+                        0x256c, 0x00a4, 0x00f0, 0x00d0, 0x00ca, 0x00cb,
+                        0x00c8, 0x0131, 0x00cd, 0x00ce, 0x00cf, 0x2518,
+                        0x250c, 0x2588, 0x2584, 0x00a6, 0x00cc, 0x2580,
+                        0x00d3, 0x00df, 0x00d4, 0x00d2, 0x00f5, 0x00d5,
+                        0x00b5, 0x00fe, 0x00de, 0x00da, 0x00db, 0x00d9,
+                        0x00fd, 0x00dd, 0x00af, 0x00b4, 0x00ad, 0x00b1,
+                        0x2017, 0x00be, 0x00b6, 0x00a7, 0x00f7, 0x00b8,
+                        0x00b0, 0x00a8, 0x00b7, 0x00b9, 0x00b3, 0x00b2,
+                        0x25a0, 0x00a0};
 
-        SimpleEncodingHolder cp850 = new SimpleEncodingHolder(cp850_high_chars);
+        final SimpleEncodingHolder cp850 = new SimpleEncodingHolder(cp850_high_chars);
 
         se.put("CP850", cp850);
         se.put("Cp850", cp850);
@@ -137,8 +137,8 @@ public abstract class ZipEncodingHelper {
 
     /**
      * Grow a byte buffer, so it has a minimal capacity or at least
-     * the double capacity of the original buffer 
-     * 
+     * the double capacity of the original buffer
+     *
      * @param b The original buffer.
      * @param newCapacity The minimal requested new capacity.
      * @return A byte buffer <code>r</code> with
@@ -147,18 +147,18 @@ public abstract class ZipEncodingHelper {
      *         of <code>r</code>.
      *
      */
-    static ByteBuffer growBuffer(ByteBuffer b, int newCapacity) {
+    static ByteBuffer growBuffer(final ByteBuffer b, final int newCapacity) {
         b.limit(b.position());
         b.rewind();
 
-        int c2 = b.capacity() * 2;
-        ByteBuffer on = ByteBuffer.allocate(c2 < newCapacity ? newCapacity : c2);
+        final int c2 = b.capacity() * 2;
+        final ByteBuffer on = ByteBuffer.allocate(c2 < newCapacity ? newCapacity : c2);
 
         on.put(b);
         return on;
     }
 
- 
+
     /**
      * The hexadecimal digits <code>0,...,9,A,...,F</code> encoded as
      * ASCII bytes.
@@ -172,11 +172,11 @@ public abstract class ZipEncodingHelper {
     /**
      * Append <code>%Uxxxx</code> to the given byte buffer.
      * The caller must assure, that <code>bb.remaining()&gt;=6</code>.
-     * 
+     *
      * @param bb The byte buffer to write to.
      * @param c The character to write.
      */
-    static void appendSurrogate(ByteBuffer bb, char c) {
+    static void appendSurrogate(final ByteBuffer bb, final char c) {
 
         bb.put((byte) '%');
         bb.put((byte) 'U');
@@ -205,13 +205,13 @@ public abstract class ZipEncodingHelper {
 
     /**
      * Instantiates a zip encoding.
-     * 
+     *
      * @param name The name of the zip encoding. Specify {@code null} for
      *             the platform's default encoding.
      * @return A zip encoding for the given encoding name.
      */
-    public static ZipEncoding getZipEncoding(String name) {
- 
+    public static ZipEncoding getZipEncoding(final String name) {
+
         // fallback encoding is good enough for utf-8.
         if (isUTF8(name)) {
             return UTF8_ZIP_ENCODING;
@@ -221,7 +221,7 @@ public abstract class ZipEncodingHelper {
             return new FallbackZipEncoding();
         }
 
-        SimpleEncodingHolder h = simpleEncodings.get(name);
+        final SimpleEncodingHolder h = simpleEncodings.get(name);
 
         if (h!=null) {
             return h.getEncoding();
@@ -229,10 +229,10 @@ public abstract class ZipEncodingHelper {
 
         try {
 
-            Charset cs = Charset.forName(name);
+            final Charset cs = Charset.forName(name);
             return new NioZipEncoding(cs);
 
-        } catch (UnsupportedCharsetException e) {
+        } catch (final UnsupportedCharsetException e) {
             return new FallbackZipEncoding(name);
         }
     }

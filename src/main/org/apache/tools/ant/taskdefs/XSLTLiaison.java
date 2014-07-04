@@ -51,7 +51,7 @@ public interface XSLTLiaison {
      * @param name the parameter name.
      * @param expression the parameter value as an expression string.
      * @throws Exception thrown if any problems happens.
-     * @see XSLTLiaison4#addParam(java.lang.String, java.lang.Object) 
+     * @see XSLTLiaison4#addParam(java.lang.String, java.lang.Object)
      * @since Ant 1.3
      */
     void addParam(String name, String expression) throws Exception;

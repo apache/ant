@@ -44,7 +44,7 @@ public class Type implements ResourceSelector {
      * Implements the type attribute.
      */
     public static class FileDir extends EnumeratedAttribute {
-        private static final String[] VALUES = new String[] { FILE_ATTR, DIR_ATTR, ANY_ATTR };
+        private static final String[] VALUES = new String[] {FILE_ATTR, DIR_ATTR, ANY_ATTR};
 
         /**
          * Default constructor.
@@ -56,7 +56,7 @@ public class Type implements ResourceSelector {
          * Convenience constructor.
          * @param value the String EnumeratedAttribute value.
          */
-        public FileDir(String value) {
+        public FileDir(final String value) {
             setValue(value);
         }
 
@@ -64,7 +64,8 @@ public class Type implements ResourceSelector {
          * Return the possible values.
          * @return a String array.
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return VALUES;
         }
     }
@@ -81,7 +82,7 @@ public class Type implements ResourceSelector {
      * Convenience constructor.
      * @param fd the FileDir type.
      */
-    public Type(FileDir fd) {
+    public Type(final FileDir fd) {
         setType(fd);
     }
 
@@ -89,7 +90,7 @@ public class Type implements ResourceSelector {
      * Set type; file|dir.
      * @param fd a FileDir object.
      */
-    public void setType(FileDir fd) {
+    public void setType(final FileDir fd) {
         type = fd;
     }
 
@@ -98,11 +99,12 @@ public class Type implements ResourceSelector {
      * @param r the Resource to check.
      * @return whether the Resource was selected.
      */
-    public boolean isSelected(Resource r) {
+    @Override
+	public boolean isSelected(final Resource r) {
         if (type == null) {
             throw new BuildException("The type attribute is required.");
         }
-        int i = type.getIndex();
+        final int i = type.getIndex();
         return i == 2 || (r.isDirectory() ? i == 1 : i == 0);
     }
 

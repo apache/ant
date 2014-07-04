@@ -521,7 +521,7 @@ public class DOMElementWriter {
         while (prevEnd < len) {
             final int end = (cdataEndPos < 0 ? len : cdataEndPos);
             // Write out stretches of legal characters in the range [prevEnd, end).
-            for (int prevLegalCharPos = prevEnd; prevLegalCharPos < end; /*empty*/) {
+            for (int prevLegalCharPos = prevEnd; prevLegalCharPos < end;/*empty*/) {
                 int illegalCharPos;
                 for (illegalCharPos = prevLegalCharPos; true; ++illegalCharPos) {
                     if (illegalCharPos >= end

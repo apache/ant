@@ -55,7 +55,8 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * @return the size, as a long, 0 if the Resource does not exist (for
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
-    public long getSize() {
+    @Override
+	public long getSize() {
         if (isExists()) {
             InputStream in = null;
             try {
@@ -86,7 +87,8 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * @throws UnsupportedOperationException if InputStreams are not
      *         supported for this Resource type.
      */
-    public InputStream getInputStream() throws IOException {
+    @Override
+	public InputStream getInputStream() throws IOException {
         InputStream in = getResource().getInputStream();
         if (in != null) {
             in = wrapStream(in);
@@ -102,7 +104,8 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * @throws UnsupportedOperationException if OutputStreams are not
      *         supported for this Resource type.
      */
-    public OutputStream getOutputStream() throws IOException {
+    @Override
+	public OutputStream getOutputStream() throws IOException {
         OutputStream out = getResource().getOutputStream();
         if (out != null) {
             out = wrapStream(out);
@@ -113,14 +116,16 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
     /**
      * Suppress FileProvider, re-implement Appendable
      */
-    public <T> T as(Class<T> clazz) {
+    @Override
+	public <T> T as(Class<T> clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
             if (isAppendSupported()) {
                 final Appendable a =
                     getResource().as(Appendable.class);
                 if (a != null) {
                     return clazz.cast(new Appendable() {
-                        public OutputStream getAppendOutputStream()
+                        @Override
+						public OutputStream getAppendOutputStream()
                                 throws IOException {
                             OutputStream out = a.getAppendOutputStream();
                             if (out != null) {
@@ -134,7 +139,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
             return null;
         }
 
-        return FileProvider.class.isAssignableFrom(clazz) 
+        return FileProvider.class.isAssignableFrom(clazz)
             ? null : getResource().as(clazz);
     }
 
@@ -148,7 +153,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      */
     protected boolean isAppendSupported() {
         return false;
-    }    
+    }
 
     /**
      * Get a content-filtering/transforming InputStream.

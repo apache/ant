@@ -57,7 +57,7 @@ public class AntStructure extends Task {
      * The output file.
      * @param output the output file
      */
-    public void setOutput(File output) {
+    public void setOutput(final File output) {
         this.output = output;
     }
 
@@ -66,7 +66,7 @@ public class AntStructure extends Task {
      * @param p the printer to use.
      * @since Ant 1.7
      */
-    public void add(StructurePrinter p) {
+    public void add(final StructurePrinter p) {
         printer = p;
     }
 
@@ -75,7 +75,8 @@ public class AntStructure extends Task {
      *
      * @exception BuildException if the DTD cannot be written.
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
 
         if (output == null) {
             throw new BuildException("output attribute is required", getLocation());
@@ -85,7 +86,7 @@ public class AntStructure extends Task {
         try {
             try {
                 out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF8"));
-            } catch (UnsupportedEncodingException ue) {
+            } catch (final UnsupportedEncodingException ue) {
                 /*
                  * Plain impossible with UTF8, see
                  * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html
@@ -101,14 +102,14 @@ public class AntStructure extends Task {
 
             printer.printTargetDecl(out);
 
-            for (String typeName : getProject().getCopyOfDataTypeDefinitions()
+            for (final String typeName : getProject().getCopyOfDataTypeDefinitions()
                 .keySet()) {
                 printer.printElementDecl(
                                      out, getProject(), typeName,
                                      getProject().getDataTypeDefinitions().get(typeName));
             }
 
-            for (String tName : getProject().getCopyOfTaskDefinitions().keySet()) {
+            for (final String tName : getProject().getCopyOfTaskDefinitions().keySet()) {
                 printer.printElementDecl(out, getProject(), tName,
                                          getProject().getTaskDefinitions().get(tName));
             }
@@ -119,7 +120,7 @@ public class AntStructure extends Task {
                 throw new IOException("Encountered an error writing Ant"
                                       + " structure");
             }
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             throw new BuildException("Error writing "
                                      + output.getAbsolutePath(), ioe, getLocation());
         } finally {
@@ -136,7 +137,7 @@ public class AntStructure extends Task {
      * are called exactly once, {@link #printElementDecl} once for
      * each declared task and type.</p>
      */
-    public static interface StructurePrinter {
+    public interface StructurePrinter {
         /**
          * Prints the header of the generated output.
          *
@@ -179,14 +180,16 @@ public class AntStructure extends Task {
         private static final String TASKS = "%tasks;";
         private static final String TYPES = "%types;";
 
-        private Hashtable<String, String> visited = new Hashtable<String, String>();
+        private final Hashtable<String, String> visited = new Hashtable<String, String>();
 
-        public void printTail(PrintWriter out) {
+        @Override
+		public void printTail(final PrintWriter out) {
             visited.clear();
         }
 
-        public void printHead(PrintWriter out, Project p, Hashtable<String, Class<?>> tasks,
-                Hashtable<String, Class<?>> types) {
+        @Override
+		public void printHead(final PrintWriter out, final Project p, final Hashtable<String, Class<?>> tasks,
+                final Hashtable<String, Class<?>> types) {
             printHead(out, tasks.keys(), types.keys());
         }
 
@@ -197,14 +200,14 @@ public class AntStructure extends Task {
          * <p>Basically this prints the XML declaration, defines some
          * entities and the project element.</p>
          */
-        private void printHead(PrintWriter out, Enumeration<String> tasks,
-                               Enumeration<String> types) {
+        private void printHead(final PrintWriter out, final Enumeration<String> tasks,
+                               final Enumeration<String> types) {
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
             out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
             out.print("<!ENTITY % tasks \"");
             boolean first = true;
             while (tasks.hasMoreElements()) {
-                String tName = tasks.nextElement();
+                final String tName = tasks.nextElement();
                 if (!first) {
                     out.print(" | ");
                 } else {
@@ -216,7 +219,7 @@ public class AntStructure extends Task {
             out.print("<!ENTITY % types \"");
             first = true;
             while (types.hasMoreElements()) {
-                String typeName = types.nextElement();
+                final String typeName = types.nextElement();
                 if (!first) {
                     out.print(" | ");
                 } else {
@@ -243,7 +246,8 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
-        public void printTargetDecl(PrintWriter out) {
+        @Override
+		public void printTargetDecl(final PrintWriter out) {
             out.print("<!ELEMENT target (");
             out.print(TASKS);
             out.print(" | ");
@@ -259,7 +263,7 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
-        private void printTargetAttrs(PrintWriter out, String tag) {
+        private void printTargetAttrs(final PrintWriter out, final String tag) {
             out.print("<!ATTLIST ");
             out.println(tag);
             out.println("          id                      ID    #IMPLIED");
@@ -276,8 +280,9 @@ public class AntStructure extends Task {
         /**
          * Print the definition for a given element.
          */
-        public void printElementDecl(PrintWriter out, Project p,
-                                     String name, Class<?> element) {
+        @Override
+		public void printElementDecl(final PrintWriter out, final Project p,
+                                     final String name, final Class<?> element) {
 
             if (visited.containsKey(name)) {
                 return;
@@ -287,7 +292,7 @@ public class AntStructure extends Task {
             IntrospectionHelper ih = null;
             try {
                 ih = IntrospectionHelper.getHelper(p, element);
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 /*
                  * TODO - failed to load the class properly.
                  *
@@ -309,7 +314,7 @@ public class AntStructure extends Task {
                 return;
             }
 
-            Vector<String> v = new Vector<String>();
+            final Vector<String> v = new Vector<String>();
             if (ih.supportsCharacters()) {
                 v.addElement("#PCDATA");
             }
@@ -348,14 +353,14 @@ public class AntStructure extends Task {
 
             e = ih.getAttributes();
             while (e.hasMoreElements()) {
-                String attrName = (String) e.nextElement();
+                final String attrName = e.nextElement();
                 if ("id".equals(attrName)) {
                     continue;
                 }
 
                 sb.append(LINE_SEP).append("          ")
                     .append(attrName).append(" ");
-                Class<?> type = ih.getAttributeType(attrName);
+                final Class<?> type = ih.getAttributeType(attrName);
                 if (type.equals(java.lang.Boolean.class)
                     || type.equals(java.lang.Boolean.TYPE)) {
                     sb.append(BOOLEAN).append(" ");
@@ -363,9 +368,9 @@ public class AntStructure extends Task {
                     sb.append("IDREF ");
                 } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
                     try {
-                        EnumeratedAttribute ea =
+                        final EnumeratedAttribute ea =
                             (EnumeratedAttribute) type.newInstance();
-                        String[] values = ea.getValues();
+                        final String[] values = ea.getValues();
                         if (values == null
                             || values.length == 0
                             || !areNmtokens(values)) {
@@ -380,15 +385,15 @@ public class AntStructure extends Task {
                             }
                             sb.append(") ");
                         }
-                    } catch (InstantiationException ie) {
+                    } catch (final InstantiationException ie) {
                         sb.append("CDATA ");
-                    } catch (IllegalAccessException ie) {
+                    } catch (final IllegalAccessException ie) {
                         sb.append("CDATA ");
                     }
                 } else if (type.getSuperclass() != null
                            && type.getSuperclass().getName().equals("java.lang.Enum")) {
                     try {
-                        Object[] values = (Object[]) type.getMethod("values", (Class[])  null)
+                        final Object[] values = (Object[]) type.getMethod("values", (Class[])  null)
                             .invoke(null, (Object[]) null);
                         if (values.length == 0) {
                             sb.append("CDATA ");
@@ -403,7 +408,7 @@ public class AntStructure extends Task {
                             }
                             sb.append(") ");
                         }
-                    } catch (Exception x) {
+                    } catch (final Exception x) {
                         sb.append("CDATA ");
                     }
                 } else {
@@ -416,7 +421,7 @@ public class AntStructure extends Task {
 
             final int count = v.size();
             for (int i = 0; i < count; i++) {
-                String nestedName = (String) v.elementAt(i);
+                final String nestedName = v.elementAt(i);
                 if (!"#PCDATA".equals(nestedName)
                     && !TASKS.equals(nestedName)
                     && !TYPES.equals(nestedName)) {
@@ -430,10 +435,10 @@ public class AntStructure extends Task {
          * @param s the string to test
          * @return true if the string matches the XML-NMTOKEN
          */
-        public static final boolean isNmtoken(String s) {
+        public static final boolean isNmtoken(final String s) {
             final int length = s.length();
             for (int i = 0; i < length; i++) {
-                char c = s.charAt(i);
+                final char c = s.charAt(i);
                 // TODO - we are committing CombiningChar and Extender here
                 if (!Character.isLetterOrDigit(c)
                     && c != '.' && c != '-' && c != '_' && c != ':') {
@@ -451,7 +456,7 @@ public class AntStructure extends Task {
          * @param s the array of string to test
          * @return true if all the strings in the array math XML-NMTOKEN
          */
-        public static final boolean areNmtokens(String[] s) {
+        public static final boolean areNmtokens(final String[] s) {
             for (int i = 0; i < s.length; i++) {
                 if (!isNmtoken(s[i])) {
                     return false;
@@ -466,7 +471,7 @@ public class AntStructure extends Task {
      * @param s the string to test
      * @return true if the string matches the XML-NMTOKEN
      */
-    protected boolean isNmtoken(String s) {
+    protected boolean isNmtoken(final String s) {
         return DTDPrinter.isNmtoken(s);
     }
 
@@ -478,7 +483,7 @@ public class AntStructure extends Task {
      * @param s the array of string to test
      * @return true if all the strings in the array math XML-NMTOKEN
      */
-    protected boolean areNmtokens(String[] s) {
+    protected boolean areNmtokens(final String[] s) {
         return DTDPrinter.areNmtokens(s);
     }
 }

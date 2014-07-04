@@ -35,7 +35,7 @@ public class CommandLauncherProxy extends CommandLauncher {
     /**
      * Launches the given command in a new process. Delegates this
      * method to the proxied launcher.
-     * 
+     *
      * @param project
      *        the Ant project.
      * @param cmd

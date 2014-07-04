@@ -129,7 +129,8 @@ public class Symlink extends DispatchTask {
      * Initialize the task.
      * @throws BuildException on error.
      */
-    public void init() throws BuildException {
+    @Override
+	public void init() throws BuildException {
         super.init();
         setDefaults();
     }
@@ -138,7 +139,8 @@ public class Symlink extends DispatchTask {
      * The standard method for executing any task.
      * @throws BuildException on error.
      */
-    public synchronized void execute() throws BuildException {
+    @Override
+	public synchronized void execute() throws BuildException {
         if (executing) {
             throw new BuildException(
                 "Infinite recursion detected in Symlink.execute()");
@@ -325,7 +327,8 @@ public class Symlink extends DispatchTask {
      *
      * @param action    The action to perform.
      */
-    public void setAction(String action) {
+    @Override
+	public void setAction(String action) {
         super.setAction(action);
     }
 
@@ -383,7 +386,8 @@ public class Symlink extends DispatchTask {
      * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
      * instead
      */
-    public static void deleteSymlink(String path)
+    @Deprecated
+	public static void deleteSymlink(String path)
         throws IOException, FileNotFoundException {
         SYMLINK_UTILS.deleteSymbolicLink(new File(path), null);
     }
@@ -403,7 +407,7 @@ public class Symlink extends DispatchTask {
      * an exception.</p>
      *
      * <p>Since Ant 1.8.0 this method will try to delete the File object if
-     * it reports it wouldn't exist (as symlinks pointing nowhere usually do). 
+     * it reports it wouldn't exist (as symlinks pointing nowhere usually do).
      * Prior version would throw a FileNotFoundException in that case.</p>
      *
      * @param linkfil    A <code>File</code> object of the symlink to delete.
@@ -416,7 +420,8 @@ public class Symlink extends DispatchTask {
      * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
      * instead
      */
-    public static void deleteSymlink(File linkfil)
+    @Deprecated
+	public static void deleteSymlink(File linkfil)
         throws IOException {
         SYMLINK_UTILS.deleteSymbolicLink(linkfil, null);
     }

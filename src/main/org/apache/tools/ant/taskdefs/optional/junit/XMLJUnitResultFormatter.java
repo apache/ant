@@ -76,7 +76,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     private Element rootElement;
     /**
      * Element for the current test.
-     * 
+     *
      * The keying of this map is a bit of a hack: tests are keyed by caseName(className) since
      * the Test we get for Test-start isn't the same as the Test we get during test-assumption-fail,
      * so we can't easily match Test objects without manually iterating over all keys and checking
@@ -109,17 +109,20 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     }
 
     /** {@inheritDoc}. */
-    public void setOutput(OutputStream out) {
+    @Override
+	public void setOutput(OutputStream out) {
         this.out = out;
     }
 
     /** {@inheritDoc}. */
-    public void setSystemOutput(String out) {
+    @Override
+	public void setSystemOutput(String out) {
         formatOutput(SYSTEM_OUT, out);
     }
 
     /** {@inheritDoc}. */
-    public void setSystemError(String out) {
+    @Override
+	public void setSystemError(String out) {
         formatOutput(SYSTEM_ERR, out);
     }
 
@@ -127,7 +130,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * The whole testsuite started.
      * @param suite the testsuite.
      */
-    public void startTestSuite(JUnitTest suite) {
+    @Override
+	public void startTestSuite(JUnitTest suite) {
         doc = getDocumentBuilder().newDocument();
         rootElement = doc.createElement(TESTSUITE);
         String n = suite.getName();
@@ -178,7 +182,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param suite the testsuite.
      * @throws BuildException on error.
      */
-    public void endTestSuite(JUnitTest suite) throws BuildException {
+    @Override
+	public void endTestSuite(JUnitTest suite) throws BuildException {
         rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
         rootElement.setAttribute(ATTR_FAILURES, "" + suite.failureCount());
         rootElement.setAttribute(ATTR_ERRORS, "" + suite.errorCount());
@@ -214,7 +219,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A new Test is started.
      * @param t the test.
      */
-    public void startTest(Test t) {
+    @Override
+	public void startTest(Test t) {
         testStarts.put(createDescription(t), System.currentTimeMillis());
     }
 
@@ -228,7 +234,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A Test is finished.
      * @param test the test.
      */
-    public void endTest(Test test) {
+    @Override
+	public void endTest(Test test) {
         String testDescription = createDescription(test);
 
         // Fix for bug #5637 - if a junit.extensions.TestSetup is
@@ -276,7 +283,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the assertion.
      */
-    public void addFailure(Test test, AssertionFailedError t) {
+    @Override
+	public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
 
@@ -287,7 +295,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the error.
      */
-    public void addError(Test test, Throwable t) {
+    @Override
+	public void addError(Test test, Throwable t) {
         formatError(ERROR, test, t);
     }
 
@@ -324,7 +333,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         nested.appendChild(doc.createCDATASection(output));
     }
 
-    public void testIgnored(Test test) {
+    @Override
+	public void testIgnored(Test test) {
         formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
         if (test != null) {
             ignoredTests.put(createDescription(test), test);
@@ -354,7 +364,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     }
 
-    public void testAssumptionFailure(Test test, Throwable failure) {
+    @Override
+	public void testAssumptionFailure(Test test, Throwable failure) {
         formatSkip(test, failure.getMessage());
         skippedTests.put(createDescription(test), test);
 

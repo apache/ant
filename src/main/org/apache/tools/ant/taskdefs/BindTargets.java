@@ -33,37 +33,38 @@ public class BindTargets extends Task {
 
     private String extensionPoint;
 
-    private List<String> targets = new ArrayList<String>();
+    private final List<String> targets = new ArrayList<String>();
 
     private OnMissingExtensionPoint onMissingExtensionPoint;
 
-    public void setExtensionPoint(String extensionPoint) {
+    public void setExtensionPoint(final String extensionPoint) {
         this.extensionPoint = extensionPoint;
     }
 
-    public void setOnMissingExtensionPoint(String onMissingExtensionPoint) {
+    public void setOnMissingExtensionPoint(final String onMissingExtensionPoint) {
         try {
             this.onMissingExtensionPoint = OnMissingExtensionPoint.valueOf(onMissingExtensionPoint);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new BuildException("Invalid onMissingExtensionPoint: " + onMissingExtensionPoint);
         }
     }
 
-    public void setOnMissingExtensionPoint(OnMissingExtensionPoint onMissingExtensionPoint) {
+    public void setOnMissingExtensionPoint(final OnMissingExtensionPoint onMissingExtensionPoint) {
         this.onMissingExtensionPoint = onMissingExtensionPoint;
     }
 
-    public void setTargets(String target) {
-        String[] inputs = target.split(",");
+    public void setTargets(final String target) {
+        final String[] inputs = target.split(",");
         for (int i = 0; i < inputs.length; i++) {
-            String input = inputs[i].trim();
+            final String input = inputs[i].trim();
             if (input.length() > 0) {
                 targets.add(input);
             }
         }
     }
 
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (extensionPoint == null) {
             throw new BuildException("extensionPoint required", getLocation());
         }
@@ -77,13 +78,13 @@ public class BindTargets extends Task {
         if (onMissingExtensionPoint == null) {
             onMissingExtensionPoint = OnMissingExtensionPoint.FAIL;
         }
-        ProjectHelper helper = (ProjectHelper) getProject().getReference(
+        final ProjectHelper helper = (ProjectHelper) getProject().getReference(
                 ProjectHelper.PROJECTHELPER_REFERENCE);
 
-        for (Iterator<String> itTarget = targets.iterator(); itTarget.hasNext();) {
+        for (final Iterator<String> itTarget = targets.iterator(); itTarget.hasNext();) {
             helper.getExtensionStack().add(
-                    new String[] { extensionPoint, itTarget.next(),
-                                            onMissingExtensionPoint.name() });
+                    new String[] {extensionPoint, itTarget.next(),
+                                            onMissingExtensionPoint.name()});
         }
 
     }

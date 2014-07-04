@@ -123,7 +123,7 @@ public class Scp extends SSHBase {
      */
     public void setPreservelastmodified(boolean yesOrNo) {
     	this.preserveLastModified = yesOrNo;
-    }    
+    }
 
     /**
      * Similiar to {@link #setTodir setTodir} but explicitly states
@@ -145,7 +145,7 @@ public class Scp extends SSHBase {
                                      + "following: user:password@host:/path"
                                      + " - the :password part is optional");
     	}
-    } 
+    }
 
     /**
      * Changes the file name to the given name while receiving it,
@@ -196,7 +196,8 @@ public class Scp extends SSHBase {
      * Initialize this task.
      * @throws BuildException on error
      */
-    public void init() throws BuildException {
+    @Override
+	public void init() throws BuildException {
         super.init();
         this.toUri = null;
         this.fromUri = null;
@@ -207,7 +208,8 @@ public class Scp extends SSHBase {
      * Execute this task.
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (toUri == null) {
             throw exactlyOne(TO_ATTRS);
         }
@@ -362,7 +364,7 @@ public class Scp extends SSHBase {
             // no password, will require keyfile
             setUsername(uri.substring(0, indexOfAt));
         } else {
-            throw new BuildException("no username was given.  Can't authenticate."); 
+            throw new BuildException("no username was given.  Can't authenticate.");
         }
 
         if (getUserInfo().getPassword() == null
