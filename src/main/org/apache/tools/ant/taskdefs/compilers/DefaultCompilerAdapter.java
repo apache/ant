@@ -97,7 +97,6 @@ public abstract class DefaultCompilerAdapter
      *
      * @param attributes a configured Javac task.
      */
-    @Override
 	public void setJavac(final Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
@@ -136,7 +135,6 @@ public abstract class DefaultCompilerAdapter
      * but specialized compilers can recognize multiple kinds
      * of files.
      */
-    @Override
 	public String[] getSupportedFileExtensions() {
         return new String[] {"java"};
     }

@@ -117,13 +117,13 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     private URIResolver uriResolver;
 
     /** transformer output properties */
-    private Vector outputProperties = new Vector();
+    private final Vector outputProperties = new Vector();
 
     /** stylesheet parameters */
-    private Hashtable<String, Object> params = new Hashtable<String, Object>();
+    private final Hashtable<String, Object> params = new Hashtable<String, Object>();
 
     /** factory attributes */
-    private Vector attributes = new Vector();
+    private final Vector attributes = new Vector();
 
     /** whether to suppress warnings */
     private boolean suppressWarnings = false;
@@ -143,9 +143,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param stylesheet a <code>File</code> value
      * @throws Exception on error
      */
-    @Override
-	public void setStylesheet(File stylesheet) throws Exception {
-        FileResource fr = new FileResource();
+	public void setStylesheet(final File stylesheet) throws Exception {
+        final FileResource fr = new FileResource();
         fr.setProject(project);
         fr.setFile(stylesheet);
         setStylesheet(fr);
@@ -156,8 +155,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param stylesheet a {@link org.apache.tools.ant.types.Resource} value
      * @throws Exception on error
      */
-    @Override
-	public void setStylesheet(Resource stylesheet) throws Exception {
+	public void setStylesheet(final Resource stylesheet) throws Exception {
         if (this.stylesheet != null) {
             // resetting the stylesheet - reset transformer
             transformer = null;
@@ -177,8 +175,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param outfile the result file
      * @throws Exception on error
      */
-    @Override
-	public void transform(File infile, File outfile) throws Exception {
+	public void transform(final File infile, final File outfile) throws Exception {
         if (transformer == null) {
             createTransformer();
         }
@@ -188,10 +185,10 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         try {
             fis = new BufferedInputStream(new FileInputStream(infile));
             fos = new BufferedOutputStream(new FileOutputStream(outfile));
-            StreamResult res = new StreamResult(fos);
+            final StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
             res.setSystemId(JAXPUtils.getSystemId(outfile));
-            Source src = getSource(fis, infile);
+            final Source src = getSource(fis, infile);
 
             // set parameters on each transformation, maybe something has changed
             //(e.g. value of file name parameter)
@@ -216,7 +213,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * satisfies the requested configuration.
      * @throws SAXException in case of problem detected by the SAX parser.
      */
-    private Source getSource(InputStream is, File infile)
+    private Source getSource(final InputStream is, final File infile)
         throws ParserConfigurationException, SAXException {
         // todo: is this comment still relevant ??
         // FIXME: need to use a SAXSource as the source for the transform
@@ -224,9 +221,9 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         Source src = null;
         if (entityResolver != null) {
             if (getFactory().getFeature(SAXSource.FEATURE)) {
-                SAXParserFactory spFactory = SAXParserFactory.newInstance();
+                final SAXParserFactory spFactory = SAXParserFactory.newInstance();
                 spFactory.setNamespaceAware(true);
-                XMLReader reader = spFactory.newSAXParser().getXMLReader();
+                final XMLReader reader = spFactory.newSAXParser().getXMLReader();
                 reader.setEntityResolver(entityResolver);
                 src = new SAXSource(reader, new InputSource(is));
             } else {
@@ -242,7 +239,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         return src;
     }
 
-    private Source getSource(InputStream is, Resource resource)
+    private Source getSource(final InputStream is, final Resource resource)
         throws ParserConfigurationException, SAXException {
         // todo: is this comment still relevant ??
         // FIXME: need to use a SAXSource as the source for the transform
@@ -250,9 +247,9 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         Source src = null;
         if (entityResolver != null) {
             if (getFactory().getFeature(SAXSource.FEATURE)) {
-                SAXParserFactory spFactory = SAXParserFactory.newInstance();
+                final SAXParserFactory spFactory = SAXParserFactory.newInstance();
                 spFactory.setNamespaceAware(true);
-                XMLReader reader = spFactory.newSAXParser().getXMLReader();
+                final XMLReader reader = spFactory.newSAXParser().getXMLReader();
                 reader.setEntityResolver(entityResolver);
                 src = new SAXSource(reader, new InputSource(is));
             } else {
@@ -271,14 +268,14 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         return src;
     }
 
-    private String resourceToURI(Resource resource) {
-        FileProvider fp = resource.as(FileProvider.class);
+    private String resourceToURI(final Resource resource) {
+        final FileProvider fp = resource.as(FileProvider.class);
         if (fp != null) {
             return FILE_UTILS.toURI(fp.getFile().getAbsolutePath());
         }
-        URLProvider up = resource.as(URLProvider.class);
+        final URLProvider up = resource.as(URLProvider.class);
         if (up != null) {
-            URL u = up.getURL();
+            final URL u = up.getURL();
             return String.valueOf(u);
         } else {
             return resource.getName();
@@ -301,7 +298,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             xslStream
                 = new BufferedInputStream(stylesheet.getInputStream());
             templatesModTime = stylesheet.getLastModified();
-            Source src = getSource(xslStream, stylesheet);
+            final Source src = getSource(xslStream, stylesheet);
             templates = getFactory().newTemplates(src);
         } finally {
             if (xslStream != null) {
@@ -339,16 +336,16 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             if ("org.apache.xalan.transformer.TransformerImpl"
                 .equals(transformer.getClass().getName())) {
                 try {
-                    Class traceSupport =
+                    final Class traceSupport =
                         Class.forName("org.apache.tools.ant.taskdefs.optional."
                                       + "Xalan2TraceSupport", true,
                                       Thread.currentThread()
                                       .getContextClassLoader());
-                    XSLTTraceSupport ts =
+                    final XSLTTraceSupport ts =
                         (XSLTTraceSupport) traceSupport.newInstance();
                     ts.configureTrace(transformer, traceConfiguration);
-                } catch (Exception e) {
-                    String msg = "Failed to enable tracing because of " + e;
+                } catch (final Exception e) {
+                    final String msg = "Failed to enable tracing because of " + e;
                     if (project != null) {
                         project.log(msg, Project.MSG_WARN);
                     } else {
@@ -356,7 +353,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                     }
                 }
             } else {
-                String msg = "Not enabling trace support for transformer"
+                final String msg = "Not enabling trace support for transformer"
                     + " implementation" + transformer.getClass().getName();
                 if (project != null) {
                     project.log(msg, Project.MSG_WARN);
@@ -402,8 +399,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                         Class.forName(factoryName, true,
                                       Thread.currentThread()
                                       .getContextClassLoader());
-                } catch (ClassNotFoundException cnfe) {
-                    String msg = "Failed to load " + factoryName
+                } catch (final ClassNotFoundException cnfe) {
+                    final String msg = "Failed to load " + factoryName
                         + " via the configured classpath, will try"
                         + " Ant's classpath instead.";
                     if (logger != null) {
@@ -419,16 +416,16 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                     clazz = Class.forName(factoryName);
                 }
                 tfactory = (TransformerFactory) clazz.newInstance();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new BuildException(e);
             }
         }
 
         try { // #51668, #52382
-            Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
+            final Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
             _isNotSecureProcessing.setAccessible(true);
             _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
-        } catch (Exception x) {
+        } catch (final Exception x) {
             if (project != null) {
                 project.log(x.toString(), Project.MSG_DEBUG);
             }
@@ -456,7 +453,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * or null for the default JAXP look up mechanism.
      * @since Ant 1.6
      */
-    public void setFactory(String name) {
+    public void setFactory(final String name) {
         factoryName = name;
     }
 
@@ -467,7 +464,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * string or object.
      * @since Ant 1.6
      */
-    public void setAttribute(String name, Object value) {
+    public void setAttribute(final String name, final Object value) {
         final Object[] pair = new Object[]{name, value};
         attributes.addElement(pair);
     }
@@ -481,7 +478,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @since Ant 1.5
      * @since Ant 1.5
      */
-    public void setOutputProperty(String name, String value) {
+    public void setOutputProperty(final String name, final String value) {
         final String[] pair = new String[]{name, value};
         outputProperties.addElement(pair);
     }
@@ -490,7 +487,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Set the class to resolve entities during the transformation.
      * @param aResolver the resolver class.
      */
-    public void setEntityResolver(EntityResolver aResolver) {
+    public void setEntityResolver(final EntityResolver aResolver) {
         entityResolver = aResolver;
     }
 
@@ -498,7 +495,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Set the class to resolve URIs during the transformation
      * @param aResolver a <code>EntityResolver</code> value
      */
-    public void setURIResolver(URIResolver aResolver) {
+    public void setURIResolver(final URIResolver aResolver) {
         uriResolver = aResolver;
     }
 
@@ -507,8 +504,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param name the name of the parameter
      * @param value the value of the parameter
      */
-    @Override
-	public void addParam(String name, String value) {
+	public void addParam(final String name, final String value) {
         params.put(name, value);
     }
 
@@ -518,8 +514,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param value the value of the parameter
      * @since Ant 1.9.3
      */
-    @Override
-	public void addParam(String name, Object value) {
+	public void addParam(final String name, final Object value) {
         params.put(name, value);
     }
 
@@ -527,8 +522,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Set a logger.
      * @param l a logger.
      */
-    @Override
-	public void setLogger(XSLTLogger l) {
+	public void setLogger(final XSLTLogger l) {
         logger = l;
     }
 
@@ -536,8 +530,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log an error.
      * @param e the exception to log.
      */
-    @Override
-	public void error(TransformerException e) {
+	public void error(final TransformerException e) {
         logError(e, "Error");
     }
 
@@ -545,8 +538,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a fatal error.
      * @param e the exception to log.
      */
-    @Override
-	public void fatalError(TransformerException e) {
+	public void fatalError(final TransformerException e) {
         logError(e, "Fatal Error");
         throw new BuildException("Fatal error during transformation using " + stylesheet + ": " + e.getMessageAndLocation(), e);
     }
@@ -555,22 +547,21 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a warning.
      * @param e the exception to log.
      */
-    @Override
-	public void warning(TransformerException e) {
+	public void warning(final TransformerException e) {
         if (!suppressWarnings) {
             logError(e, "Warning");
         }
     }
 
-    private void logError(TransformerException e, String type) {
+    private void logError(final TransformerException e, final String type) {
         if (logger == null) {
             return;
         }
 
-        StringBuffer msg = new StringBuffer();
-        SourceLocator locator = e.getLocator();
+        final StringBuffer msg = new StringBuffer();
+        final SourceLocator locator = e.getLocator();
         if (locator != null) {
-            String systemid = locator.getSystemId();
+            final String systemid = locator.getSystemId();
             if (systemid != null) {
                 String url = systemid;
                 if (url.startsWith("file:")) {
@@ -580,11 +571,11 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             } else {
                 msg.append("Unknown file");
             }
-            int line = locator.getLineNumber();
+            final int line = locator.getLineNumber();
             if (line != -1) {
                 msg.append(":");
                 msg.append(line);
-                int column = locator.getColumnNumber();
+                final int column = locator.getColumnNumber();
                 if (column != -1) {
                     msg.append(":");
                     msg.append(column);
@@ -611,7 +602,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      *             Use org.apache.tools.ant.util.JAXPUtils#getSystemId instead.
      */
     @Deprecated
-	protected String getSystemId(File file) {
+	protected String getSystemId(final File file) {
         return JAXPUtils.getSystemId(file);
     }
 
@@ -621,23 +612,22 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param xsltTask the XSLTProcess task instance from which this liasion
      *        is to be configured.
      */
-    @Override
-	public void configure(XSLTProcess xsltTask) {
+	public void configure(final XSLTProcess xsltTask) {
         project = xsltTask.getProject();
-        XSLTProcess.Factory factory = xsltTask.getFactory();
+        final XSLTProcess.Factory factory = xsltTask.getFactory();
         if (factory != null) {
             setFactory(factory.getName());
 
             // configure factory attributes
-            for (Enumeration attrs = factory.getAttributes();
+            for (final Enumeration attrs = factory.getAttributes();
                     attrs.hasMoreElements();) {
-                XSLTProcess.Factory.Attribute attr =
+                final XSLTProcess.Factory.Attribute attr =
                         (XSLTProcess.Factory.Attribute) attrs.nextElement();
                 setAttribute(attr.getName(), attr.getValue());
             }
         }
 
-        XMLCatalog xmlCatalog = xsltTask.getXMLCatalog();
+        final XMLCatalog xmlCatalog = xsltTask.getXMLCatalog();
         // use XMLCatalog as the entity resolver and URI resolver
         if (xmlCatalog != null) {
             setEntityResolver(xmlCatalog);
@@ -646,9 +636,9 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
 
         // configure output properties
-        for (Enumeration props = xsltTask.getOutputProperties();
+        for (final Enumeration props = xsltTask.getOutputProperties();
                 props.hasMoreElements();) {
-            XSLTProcess.OutputProperty prop
+            final XSLTProcess.OutputProperty prop
                 = (XSLTProcess.OutputProperty) props.nextElement();
             setOutputProperty(prop.getName(), prop.getValue());
         }

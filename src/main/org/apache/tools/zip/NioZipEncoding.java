@@ -46,7 +46,7 @@ class NioZipEncoding implements ZipEncoding {
      *
      * @param charset The NIO charset to wrap.
      */
-    public NioZipEncoding(Charset charset) {
+    public NioZipEncoding(final Charset charset) {
         this.charset = charset;
     }
 
@@ -54,9 +54,8 @@ class NioZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
-    @Override
-	public boolean canEncode(String name) {
-        CharsetEncoder enc = this.charset.newEncoder();
+	public boolean canEncode(final String name) {
+        final CharsetEncoder enc = this.charset.newEncoder();
         enc.onMalformedInput(CodingErrorAction.REPORT);
         enc.onUnmappableCharacter(CodingErrorAction.REPORT);
 
@@ -67,19 +66,18 @@ class NioZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
-    @Override
-	public ByteBuffer encode(String name) {
-        CharsetEncoder enc = this.charset.newEncoder();
+	public ByteBuffer encode(final String name) {
+        final CharsetEncoder enc = this.charset.newEncoder();
 
         enc.onMalformedInput(CodingErrorAction.REPORT);
         enc.onUnmappableCharacter(CodingErrorAction.REPORT);
 
-        CharBuffer cb = CharBuffer.wrap(name);
+        final CharBuffer cb = CharBuffer.wrap(name);
         ByteBuffer out = ByteBuffer.allocate(name.length()
                                              + (name.length() + 1) / 2);
 
         while (cb.remaining() > 0) {
-            CoderResult res = enc.encode(cb, out,true);
+            final CoderResult res = enc.encode(cb, out,true);
 
             if (res.isUnmappable() || res.isMalformed()) {
 
@@ -115,8 +113,7 @@ class NioZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
-    @Override
-	public String decode(byte[] data) throws IOException {
+	public String decode(final byte[] data) throws IOException {
         return this.charset.newDecoder()
             .onMalformedInput(CodingErrorAction.REPORT)
             .onUnmappableCharacter(CodingErrorAction.REPORT)

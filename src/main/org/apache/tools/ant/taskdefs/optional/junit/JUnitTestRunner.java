@@ -355,7 +355,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /**
      * Run the test.
      */
-    @Override
 	public void run() {
         res = new IgnoredTestResult();
         res.addListener(wrapListener(this));
@@ -678,7 +677,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      *
      * @return 2 if errors occurred, 1 if tests failed else 0.
      */
-    @Override
 	public int getRetCode() {
         return retCode;
     }
@@ -689,7 +687,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * <p>A new Test is started.
      * @param t the test.
      */
-    @Override
 	public void startTest(final Test t) {
         final String testName = JUnitVersionHelper.getTestCaseName(t);
         logTestListenerEvent("startTest(" + testName + ")");
@@ -701,7 +698,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * <p>A Test is finished.
      * @param test the test.
      */
-    @Override
 	public void endTest(final Test test) {
         final String testName = JUnitVersionHelper.getTestCaseName(test);
         logTestListenerEvent("endTest(" + testName + ")");
@@ -745,7 +741,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * @param test the test.
      * @param t    the assertion thrown by the test.
      */
-    @Override
 	public void addFailure(final Test test, final AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
@@ -757,7 +752,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * @param test the test.
      * @param t    the error thrown by the test.
      */
-    @Override
 	public void addError(final Test test, final Throwable t) {
         final String testName = JUnitVersionHelper.getTestCaseName(test);
         logTestListenerEvent("addError(" + testName + ", " + t.getMessage() + ")");
@@ -771,7 +765,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * @since Ant 1.6
      * @param permissions the permissions to use.
      */
-    @Override
 	public void setPermissions(final Permissions permissions) {
         perm = permissions;
     }
@@ -780,7 +773,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * Handle a string destined for standard output.
      * @param output the string to output
      */
-    @Override
 	public void handleOutput(final String output) {
         if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX)) {
             // ignore
@@ -800,14 +792,12 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      *
      * @since Ant 1.6
      */
-    @Override
 	public int handleInput(final byte[] buffer, final int offset, final int length)
         throws IOException {
         return -1;
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void handleErrorOutput(final String output) {
         if (systemError != null) {
             systemError.print(output);
@@ -815,7 +805,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void handleFlush(final String output) {
         if (systemOut != null) {
             systemOut.print(output);
@@ -823,7 +812,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void handleErrorFlush(final String output) {
         if (systemError != null) {
             systemError.print(output);
@@ -866,7 +854,6 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void addFormatter(final JUnitTaskMirror.JUnitResultFormatterMirror f) {
         formatters.addElement(f);
     }
@@ -1058,39 +1045,30 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                            final JUnitTest test) {
         runner.addFormatter(new JUnitResultFormatter() {
 
-            @Override
 			public void startTestSuite(final JUnitTest suite) throws BuildException {
             }
 
-            @Override
 			public void endTestSuite(final JUnitTest suite) throws BuildException {
             }
 
-            @Override
 			public void setOutput(final OutputStream out) {
             }
 
-            @Override
 			public void setSystemOutput(final String out) {
             }
 
-            @Override
 			public void setSystemError(final String err) {
             }
 
-            @Override
 			public void addError(final Test arg0, final Throwable arg1) {
             }
 
-            @Override
 			public void addFailure(final Test arg0, final AssertionFailedError arg1) {
             }
 
-            @Override
 			public void endTest(final Test arg0) {
             }
 
-            @Override
 			public void startTest(final Test arg0) {
                 registerTestCase(JUnitVersionHelper.getTestCaseName(arg0));
             }

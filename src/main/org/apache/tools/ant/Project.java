@@ -2487,7 +2487,6 @@ public class Project implements ResourceFactory {
      * @return the file resource.
      * @since Ant 1.7
      */
-    @Override
 	public Resource getResource(final String name) {
         return new FileResource(getBaseDir(), name);
     }

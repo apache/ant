@@ -145,11 +145,9 @@ public class ResourceUtils {
         logFuture(logTo, source, granularity);
         final ResourceSelectorProvider p =
             new ResourceSelectorProvider() {
-                @Override
 				public ResourceSelector
                     getTargetSelectorForSource(final Resource sr) {
                     return new ResourceSelector() {
-                        @Override
 						public boolean isSelected(final Resource target) {
                             /* Extra I/O, probably wasted:
                                if (target.isDirectory()) {

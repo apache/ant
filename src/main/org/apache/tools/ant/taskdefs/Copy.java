@@ -823,16 +823,16 @@ public class Copy extends Task {
             toCopy = new Resource[v.size()];
             v.copyInto(toCopy);
         } else {
-            toCopy =
-                ResourceUtils.selectOutOfDateSources(this, fromResources,
-                                                     mapper,
-                                                     new ResourceFactory() {
-                           @Override
+			toCopy = ResourceUtils.selectOutOfDateSources(
+					this,
+					fromResources,
+					mapper,
+					new ResourceFactory() {
 						public Resource getResource(final String name) {
-                               return new FileResource(toDir, name);
-                           }
-                                                     },
-                                                     granularity);
+							return new FileResource(toDir, name);
+						}
+					},
+					granularity);
         }
         for (int i = 0; i < toCopy.length; i++) {
             final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());

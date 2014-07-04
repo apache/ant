@@ -109,19 +109,16 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void setOutput(OutputStream out) {
         this.out = out;
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void setSystemOutput(String out) {
         formatOutput(SYSTEM_OUT, out);
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public void setSystemError(String out) {
         formatOutput(SYSTEM_ERR, out);
     }
@@ -130,7 +127,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * The whole testsuite started.
      * @param suite the testsuite.
      */
-    @Override
 	public void startTestSuite(JUnitTest suite) {
         doc = getDocumentBuilder().newDocument();
         rootElement = doc.createElement(TESTSUITE);
@@ -182,7 +178,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param suite the testsuite.
      * @throws BuildException on error.
      */
-    @Override
 	public void endTestSuite(JUnitTest suite) throws BuildException {
         rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
         rootElement.setAttribute(ATTR_FAILURES, "" + suite.failureCount());
@@ -219,7 +214,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A new Test is started.
      * @param t the test.
      */
-    @Override
 	public void startTest(Test t) {
         testStarts.put(createDescription(t), System.currentTimeMillis());
     }
@@ -234,7 +228,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A Test is finished.
      * @param test the test.
      */
-    @Override
 	public void endTest(Test test) {
         String testDescription = createDescription(test);
 
@@ -283,7 +276,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the assertion.
      */
-    @Override
 	public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
@@ -295,7 +287,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the error.
      */
-    @Override
 	public void addError(Test test, Throwable t) {
         formatError(ERROR, test, t);
     }
@@ -333,7 +324,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         nested.appendChild(doc.createCDATASection(output));
     }
 
-    @Override
 	public void testIgnored(Test test) {
         formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
         if (test != null) {
@@ -364,7 +354,6 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     }
 
-    @Override
 	public void testAssumptionFailure(Test test, Throwable failure) {
         formatSkip(test, failure.getMessage());
         skippedTests.put(createDescription(test), test);

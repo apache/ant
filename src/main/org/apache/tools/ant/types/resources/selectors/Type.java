@@ -99,7 +99,6 @@ public class Type implements ResourceSelector {
      * @param r the Resource to check.
      * @return whether the Resource was selected.
      */
-    @Override
 	public boolean isSelected(final Resource r) {
         if (type == null) {
             throw new BuildException("The type attribute is required.");

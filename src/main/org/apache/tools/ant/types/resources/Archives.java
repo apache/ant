@@ -72,14 +72,13 @@ public class Archives extends DataType
     /**
      * Sums the sizes of nested archives.
      */
-    @Override
 	public int size() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).size();
         }
         dieOnCircularReference();
         int total = 0;
-        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
+        for (final Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
             total += i.next().size();
         }
         return total;
@@ -88,14 +87,13 @@ public class Archives extends DataType
     /**
      * Merges the nested collections.
      */
-    @Override
 	public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).iterator();
         }
         dieOnCircularReference();
-        List<Resource> l = new LinkedList<Resource>();
-        for (Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
+        final List<Resource> l = new LinkedList<Resource>();
+        for (final Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
             l.addAll(CollectionUtils
                      .asCollection(i.next().iterator()));
         }
@@ -105,7 +103,6 @@ public class Archives extends DataType
     /**
      * @return false
      */
-    @Override
 	public boolean isFilesystemOnly() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).isFilesystemOnly();
@@ -119,7 +116,7 @@ public class Archives extends DataType
      * @param r the Reference to set.
      */
     @Override
-	public void setRefid(Reference r) {
+	public void setRefid(final Reference r) {
         if (zips.getResourceCollections().size() > 0
             || tars.getResourceCollections().size() > 0) {
             throw tooManyAttributes();
@@ -135,11 +132,11 @@ public class Archives extends DataType
     @Override
 	public Object clone() {
         try {
-            Archives a = (Archives) super.clone();
+            final Archives a = (Archives) super.clone();
             a.zips = (Union) zips.clone();
             a.tars = (Union) tars.clone();
             return a;
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             throw new BuildException(e);
         }
     }
@@ -151,11 +148,11 @@ public class Archives extends DataType
      * and returns an iterator over the collected archives.
      */
     protected Iterator<ArchiveFileSet> grabArchives() {
-        List<ArchiveFileSet> l = new LinkedList<ArchiveFileSet>();
-        for (Resource r : zips) {
+        final List<ArchiveFileSet> l = new LinkedList<ArchiveFileSet>();
+        for (final Resource r : zips) {
             l.add(configureArchive(new ZipFileSet(), r));
         }
-        for (Resource r : tars) {
+        for (final Resource r : tars) {
             l.add(configureArchive(new TarFileSet(), r));
         }
         return l.iterator();
@@ -165,8 +162,8 @@ public class Archives extends DataType
      * Configures the archivefileset based on this type's settings,
      * set the source.
      */
-    protected ArchiveFileSet configureArchive(ArchiveFileSet afs,
-                                              Resource src) {
+    protected ArchiveFileSet configureArchive(final ArchiveFileSet afs,
+                                              final Resource src) {
         afs.setProject(getProject());
         afs.setSrcResource(src);
         return afs;
@@ -180,7 +177,7 @@ public class Archives extends DataType
      * @throws BuildException on error.
      */
     @Override
-	protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
+	protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p)
         throws BuildException {
         if (isChecked()) {
             return;

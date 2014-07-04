@@ -56,7 +56,7 @@ public class LazyResourceCollectionWrapper extends
 	protected int getSize() {
         // to compute the size, just iterate: the iterator will take care of
         // caching
-        Iterator<Resource> it = createIterator();
+        final Iterator<Resource> it = createIterator();
         int size = 0;
         while (it.hasNext()) {
             it.next();
@@ -72,7 +72,7 @@ public class LazyResourceCollectionWrapper extends
      * @param r resource considered for filtration
      * @return whether the resource should be filtered or not
      */
-    protected boolean filterResource(Resource r) {
+    protected boolean filterResource(final Resource r) {
         return false;
     }
 
@@ -84,11 +84,10 @@ public class LazyResourceCollectionWrapper extends
 
         protected final Iterator<Resource> it;
 
-        public FilteringIterator(Iterator<Resource> it) {
+        public FilteringIterator(final Iterator<Resource> it) {
             this.it = it;
         }
 
-        @Override
 		public boolean hasNext() {
             if (ended) {
                 return false;
@@ -106,17 +105,15 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-        @Override
 		public Resource next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException();
             }
-            Resource r = next;
+            final Resource r = next;
             next = null;
             return r;
         }
 
-        @Override
 		public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -139,11 +136,10 @@ public class LazyResourceCollectionWrapper extends
          *            the iterator which will provide the resources to put in
          *            cache
          */
-        public CachedIterator(Iterator<Resource> it) {
+        public CachedIterator(final Iterator<Resource> it) {
             this.it = it;
         }
 
-        @Override
 		public boolean hasNext() {
             synchronized (cachedResources) {
                 // have we already cached the next entry ?
@@ -155,13 +151,12 @@ public class LazyResourceCollectionWrapper extends
                     return false;
                 }
                 // put in cache the next resource
-                Resource r = it.next();
+                final Resource r = it.next();
                 cachedResources.add(r);
             }
             return true;
         }
 
-        @Override
 		public Resource next() {
             // first check that we have some to deliver
             if (!hasNext()) {
@@ -174,7 +169,6 @@ public class LazyResourceCollectionWrapper extends
             }
         }
 
-        @Override
 		public void remove() {
             throw new UnsupportedOperationException();
         }

@@ -157,7 +157,6 @@ public class Main implements AntMain {
     private final Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
 
     private static final GetProperty NOPROPERTIES = new GetProperty() {
-        @Override
 		public Object getProperty(final String aName) {
             // No existing property takes precedence
             return null;
@@ -208,7 +207,6 @@ public class Main implements AntMain {
      *
      * @since Ant 1.6
      */
-    @Override
 	public void startAnt(final String[] args, final Properties additionalUserProperties,
                          final ClassLoader coreLoader) {
 

@@ -182,12 +182,10 @@ public class AntStructure extends Task {
 
         private final Hashtable<String, String> visited = new Hashtable<String, String>();
 
-        @Override
 		public void printTail(final PrintWriter out) {
             visited.clear();
         }
 
-        @Override
 		public void printHead(final PrintWriter out, final Project p, final Hashtable<String, Class<?>> tasks,
                 final Hashtable<String, Class<?>> types) {
             printHead(out, tasks.keys(), types.keys());
@@ -246,7 +244,6 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
-        @Override
 		public void printTargetDecl(final PrintWriter out) {
             out.print("<!ELEMENT target (");
             out.print(TASKS);
@@ -280,7 +277,6 @@ public class AntStructure extends Task {
         /**
          * Print the definition for a given element.
          */
-        @Override
 		public void printElementDecl(final PrintWriter out, final Project p,
                                      final String name, final Class<?> element) {
 

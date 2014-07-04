@@ -71,7 +71,7 @@ public class Get extends Task {
     private static final String DEFAULT_AGENT_PREFIX = "Apache Ant";
     private static final String GZIP_CONTENT_ENCODING = "gzip";
 
-    private Resources sources = new Resources();
+    private final Resources sources = new Resources();
     private File destination; // required
     private boolean verbose = false;
     private boolean quiet = false;
@@ -98,9 +98,9 @@ public class Get extends Task {
 	public void execute() throws BuildException {
         checkAttributes();
 
-        for (Resource r : sources) {
-            URLProvider up = r.as(URLProvider.class);
-            URL source = up.getURL();
+        for (final Resource r : sources) {
+            final URLProvider up = r.as(URLProvider.class);
+            final URL source = up.getURL();
 
             File dest = destination;
             if (destination.isDirectory()) {
@@ -109,14 +109,14 @@ public class Get extends Task {
                     if (path.endsWith("/")) {
                         path = path.substring(0, path.length() - 1);
                     }
-                    int slash = path.lastIndexOf("/");
+                    final int slash = path.lastIndexOf("/");
                     if (slash > -1) {
                         path = path.substring(slash + 1);
                     }
                     dest = new File(destination, path);
                 } else {
-                    FileNameMapper mapper = mapperElement.getImplementation();
-                    String[] d = mapper.mapFileName(source.toString());
+                    final FileNameMapper mapper = mapperElement.getImplementation();
+                    final String[] d = mapper.mapFileName(source.toString());
                     if (d == null) {
                         log("skipping " + r + " - mapper can't handle it",
                             Project.MSG_WARN);
@@ -135,7 +135,7 @@ public class Get extends Task {
             }
 
         //set up logging
-        int logLevel = Project.MSG_INFO;
+        final int logLevel = Project.MSG_INFO;
         DownloadProgress progress = null;
         if (verbose) {
             progress = new VerboseProgress(System.out);
@@ -144,7 +144,7 @@ public class Get extends Task {
         //execute the get
         try {
             doGet(source, dest, logLevel, progress);
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             log("Error getting " + source + " to " + dest);
             if (!ignoreErrors) {
                 throw new BuildException(ioe, getLocation());
@@ -168,12 +168,12 @@ public class Get extends Task {
      * @deprecated only gets the first configured resource
      */
     @Deprecated
-	public boolean doGet(int logLevel, DownloadProgress progress)
+	public boolean doGet(final int logLevel, final DownloadProgress progress)
             throws IOException {
         checkAttributes();
-        for (Resource r : sources) {
-            URLProvider up = r.as(URLProvider.class);
-            URL source = up.getURL();
+        for (final Resource r : sources) {
+            final URLProvider up = r.as(URLProvider.class);
+            final URL source = up.getURL();
             return doGet(source, destination, logLevel, progress);
         }
         /*NOTREACHED*/
@@ -197,7 +197,7 @@ public class Get extends Task {
      * is false.
      * @since Ant 1.8.0
      */
-    public boolean doGet(URL source, File dest, int logLevel,
+    public boolean doGet(final URL source, final File dest, final int logLevel,
                          DownloadProgress progress)
         throws IOException {
 
@@ -221,13 +221,13 @@ public class Get extends Task {
         if (useTimestamp && dest.exists()) {
             timestamp = dest.lastModified();
             if (verbose) {
-                Date t = new Date(timestamp);
+                final Date t = new Date(timestamp);
                 log("local file date : " + t.toString(), logLevel);
             }
             hasTimestamp = true;
         }
 
-        GetThread getThread = new GetThread(source, dest,
+        final GetThread getThread = new GetThread(source, dest,
                                             hasTimestamp, timestamp, progress,
                                             logLevel, userAgent);
         getThread.setDaemon(true);
@@ -235,13 +235,13 @@ public class Get extends Task {
         getThread.start();
         try {
             getThread.join(maxTime * 1000);
-        } catch (InterruptedException ie) {
+        } catch (final InterruptedException ie) {
             log("interrupted waiting for GET to finish",
                 Project.MSG_VERBOSE);
         }
 
         if (getThread.isAlive()) {
-            String msg = "The GET operation took longer than " + maxTime
+            final String msg = "The GET operation took longer than " + maxTime
                 + " seconds, stopping it.";
             if (ignoreErrors) {
                 log(msg);
@@ -257,7 +257,7 @@ public class Get extends Task {
     }
 
     @Override
-    public void log(String msg, int msgLevel) {
+    public void log(final String msg, final int msgLevel) {
         if (!quiet || msgLevel >= Project.MSG_ERR) {
             super.log(msg, msgLevel);
         }
@@ -276,8 +276,8 @@ public class Get extends Task {
             throw new BuildException("at least one source is required",
                                      getLocation());
         }
-        for (Resource r : sources) {
-            URLProvider up = r.as(URLProvider.class);
+        for (final Resource r : sources) {
+            final URLProvider up = r.as(URLProvider.class);
             if (up == null) {
                 throw new BuildException("Only URLProvider resources are"
                                          + " supported", getLocation());
@@ -311,7 +311,7 @@ public class Get extends Task {
      *
      * @param u URL for the file.
      */
-    public void setSrc(URL u) {
+    public void setSrc(final URL u) {
         add(new URLResource(u));
     }
 
@@ -319,7 +319,7 @@ public class Get extends Task {
      * Adds URLs to get.
      * @since Ant 1.8.0
      */
-    public void add(ResourceCollection rc) {
+    public void add(final ResourceCollection rc) {
         sources.add(rc);
     }
 
@@ -328,7 +328,7 @@ public class Get extends Task {
      *
      * @param dest Path to file.
      */
-    public void setDest(File dest) {
+    public void setDest(final File dest) {
         this.destination = dest;
     }
 
@@ -337,7 +337,7 @@ public class Get extends Task {
      *
      * @param v if "true" then be verbose
      */
-    public void setVerbose(boolean v) {
+    public void setVerbose(final boolean v) {
         verbose = v;
     }
 
@@ -347,7 +347,7 @@ public class Get extends Task {
      * @param v if "true" then be quiet
      * @since Ant 1.9.4
      */
-    public void setQuiet(boolean v){
+    public void setQuiet(final boolean v){
         this.quiet = v;
     }
 
@@ -356,7 +356,7 @@ public class Get extends Task {
      *
      * @param v if "true" then don't report download errors up to ant
      */
-    public void setIgnoreErrors(boolean v) {
+    public void setIgnoreErrors(final boolean v) {
         ignoreErrors = v;
     }
 
@@ -378,7 +378,7 @@ public class Get extends Task {
      * cause no end of grief.</p>
      * @param v "true" to enable file time fetching
      */
-    public void setUseTimestamp(boolean v) {
+    public void setUseTimestamp(final boolean v) {
         useTimestamp = v;
     }
 
@@ -388,7 +388,7 @@ public class Get extends Task {
      *
      * @param u username for authentication
      */
-    public void setUsername(String u) {
+    public void setUsername(final String u) {
         this.uname = u;
     }
 
@@ -397,7 +397,7 @@ public class Get extends Task {
      *
      * @param p password for authentication
      */
-    public void setPassword(String p) {
+    public void setPassword(final String p) {
         this.pword = p;
     }
 
@@ -407,7 +407,7 @@ public class Get extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void setMaxTime(long maxTime) {
+    public void setMaxTime(final long maxTime) {
         this.maxTime = maxTime;
     }
 
@@ -418,7 +418,7 @@ public class Get extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void setRetries(int r) {
+    public void setRetries(final int r) {
         this.numberRetries = r;
     }
 
@@ -429,7 +429,7 @@ public class Get extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void setSkipExisting(boolean s) {
+    public void setSkipExisting(final boolean s) {
         this.skipExisting = s;
     }
 
@@ -441,7 +441,7 @@ public class Get extends Task {
      *
      * @since Ant 1.9.3
      */
-    public void setUserAgent(String userAgent) {
+    public void setUserAgent(final String userAgent) {
         this.userAgent = userAgent;
     }
 
@@ -455,7 +455,7 @@ public class Get extends Task {
      *
      * @since Ant 1.8.0
      */
-    public void setHttpUseCaches(boolean httpUseCache) {
+    public void setHttpUseCaches(final boolean httpUseCache) {
         this.httpUseCaches = httpUseCache;
     }
 
@@ -479,7 +479,7 @@ public class Get extends Task {
      * @param fileNameMapper the mapper to add.
      * @since Ant 1.8.0
      */
-    public void add(FileNameMapper fileNameMapper) {
+    public void add(final FileNameMapper fileNameMapper) {
         createMapper().add(fileNameMapper);
     }
 
@@ -520,25 +520,20 @@ public class Get extends Task {
         /**
          * begin a download
          */
-        @Override
 		public void beginDownload() {
-
         }
 
         /**
          * tick handler
          *
          */
-        @Override
 		public void onTick() {
         }
 
         /**
          * end a download
          */
-        @Override
 		public void endDownload() {
-
         }
     }
 
@@ -555,14 +550,13 @@ public class Get extends Task {
          * Construct a verbose progress reporter.
          * @param out the output stream.
          */
-        public VerboseProgress(PrintStream out) {
+        public VerboseProgress(final PrintStream out) {
             this.out = out;
         }
 
         /**
          * begin a download
          */
-        @Override
 		public void beginDownload() {
             dots = 0;
         }
@@ -571,7 +565,6 @@ public class Get extends Task {
          * tick handler
          *
          */
-        @Override
 		public void onTick() {
             out.print(".");
             if (dots++ > DOTS_PER_LINE) {
@@ -583,7 +576,6 @@ public class Get extends Task {
         /**
          * end a download
          */
-        @Override
 		public void endDownload() {
             out.println();
             out.flush();
@@ -608,8 +600,8 @@ public class Get extends Task {
         private int redirections = 0;
         private String userAgent = null;
 
-        GetThread(URL source, File dest,
-                  boolean h, long t, DownloadProgress p, int l, String userAgent) {
+        GetThread(final URL source, final File dest,
+                  final boolean h, final long t, final DownloadProgress p, final int l, final String userAgent) {
             this.source = source;
             this.dest = dest;
             hasTimestamp = h;
@@ -623,9 +615,9 @@ public class Get extends Task {
 		public void run() {
             try {
                 success = get();
-            } catch (IOException ioex) {
+            } catch (final IOException ioex) {
                 ioexception = ioex;
-            } catch (BuildException bex) {
+            } catch (final BuildException bex) {
                 exception = bex;
             }
         }
@@ -638,7 +630,7 @@ public class Get extends Task {
                 return false;
             }
 
-            boolean downloadSucceeded = downloadFile();
+            final boolean downloadSucceeded = downloadFile();
 
             //if (and only if) the use file time option is set, then
             //the saved file now has its timestamp set to that of the
@@ -651,11 +643,11 @@ public class Get extends Task {
         }
 
 
-        private boolean redirectionAllowed(URL aSource, URL aDest) {
+        private boolean redirectionAllowed(final URL aSource, final URL aDest) {
             if (!(aSource.getProtocol().equals(aDest.getProtocol()) || (HTTP
                     .equals(aSource.getProtocol()) && HTTPS.equals(aDest
                     .getProtocol())))) {
-                String message = "Redirection detected from "
+                final String message = "Redirection detected from "
                         + aSource.getProtocol() + " to " + aDest.getProtocol()
                         + ". Protocol switch unsafe, not allowed.";
                 if (ignoreErrors) {
@@ -668,7 +660,7 @@ public class Get extends Task {
 
             redirections++;
             if (redirections > REDIRECT_LIMIT) {
-                String message = "More than " + REDIRECT_LIMIT
+                final String message = "More than " + REDIRECT_LIMIT
                         + " times redirected, giving up";
                 if (ignoreErrors) {
                     log(message, logLevel);
@@ -682,10 +674,10 @@ public class Get extends Task {
             return true;
         }
 
-        private URLConnection openConnection(URL aSource) throws IOException {
+        private URLConnection openConnection(final URL aSource) throws IOException {
 
             // set up the URL connection
-            URLConnection connection = aSource.openConnection();
+            final URLConnection connection = aSource.openConnection();
             // modify the headers
             // NB: things like user authentication could go in here too.
             if (hasTimestamp) {
@@ -696,12 +688,12 @@ public class Get extends Task {
 
             // prepare Java 1.1 style credentials
             if (uname != null || pword != null) {
-                String up = uname + ":" + pword;
+                final String up = uname + ":" + pword;
                 String encoding;
                 // we do not use the sun impl for portability,
                 // and always use our own implementation for consistent
                 // testing
-                Base64Converter encoder = new Base64Converter();
+                final Base64Converter encoder = new Base64Converter();
                 encoding = encoder.encode(up.getBytes());
                 connection.setRequestProperty("Authorization", "Basic "
                         + encoding);
@@ -718,29 +710,29 @@ public class Get extends Task {
             // connect to the remote site (may take some time)
             try {
                 connection.connect();
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
                 //bad URLs can trigger NPEs in some JVMs
                 throw new BuildException("Failed to parse " + source.toString(), e);
             }
 
             // First check on a 301 / 302 (moved) response (HTTP only)
             if (connection instanceof HttpURLConnection) {
-                HttpURLConnection httpConnection = (HttpURLConnection) connection;
-                int responseCode = httpConnection.getResponseCode();
+                final HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                final int responseCode = httpConnection.getResponseCode();
                 if (isMoved(responseCode)) {
-                    String newLocation = httpConnection.getHeaderField("Location");
-                    String message = aSource
+                    final String newLocation = httpConnection.getHeaderField("Location");
+                    final String message = aSource
                             + (responseCode == HttpURLConnection.HTTP_MOVED_PERM ? " permanently"
                                     : "") + " moved to " + newLocation;
                     log(message, logLevel);
-                    URL newURL = new URL(aSource, newLocation);
+                    final URL newURL = new URL(aSource, newLocation);
                     if (!redirectionAllowed(aSource, newURL)) {
                         return null;
                     }
                     return openConnection(newURL);
                 }
                 // next test for a 304 result (HTTP only)
-                long lastModified = httpConnection.getLastModified();
+                final long lastModified = httpConnection.getLastModified();
                 if (responseCode == HttpURLConnection.HTTP_NOT_MODIFIED
                         || (lastModified != 0 && hasTimestamp && timestamp >= lastModified)) {
                     // not modified so no file download. just return
@@ -752,7 +744,7 @@ public class Get extends Task {
                 }
                 // test for 401 result (HTTP only)
                 if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                    String message = "HTTP Authorization failure";
+                    final String message = "HTTP Authorization failure";
                     if (ignoreErrors) {
                         log(message, logLevel);
                         return null;
@@ -770,7 +762,7 @@ public class Get extends Task {
             return connection;
         }
 
-		private boolean isMoved(int responseCode) {
+		private boolean isMoved(final int responseCode) {
 			return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
 			       responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
 			       responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
@@ -786,7 +778,7 @@ public class Get extends Task {
                 try {
                     is = connection.getInputStream();
                     break;
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     log("Error opening connection " + ex, logLevel);
                 }
             }
@@ -807,7 +799,7 @@ public class Get extends Task {
             progress.beginDownload();
             boolean finished = false;
             try {
-                byte[] buffer = new byte[BIG_BUFFER_SIZE];
+                final byte[] buffer = new byte[BIG_BUFFER_SIZE];
                 int length;
                 while (!isInterrupted() && (length = is.read(buffer)) >= 0) {
                     os.write(buffer, 0, length);
@@ -830,9 +822,9 @@ public class Get extends Task {
         }
 
         private void updateTimeStamp() {
-            long remoteTimestamp = connection.getLastModified();
+            final long remoteTimestamp = connection.getLastModified();
             if (verbose)  {
-                Date t = new Date(remoteTimestamp);
+                final Date t = new Date(remoteTimestamp);
                 log("last modified = " + t.toString()
                     + ((remoteTimestamp == 0)
                        ? " - using current time instead"

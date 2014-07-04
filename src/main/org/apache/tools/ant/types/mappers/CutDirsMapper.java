@@ -46,7 +46,6 @@ public class CutDirsMapper implements FileNameMapper {
      * Empty implementation.
      * @param ignore ignored.
      */
-    @Override
 	public void setFrom(final String ignore) {
     }
 
@@ -54,12 +53,10 @@ public class CutDirsMapper implements FileNameMapper {
      * Empty implementation.
      * @param ignore ignored.
      */
-    @Override
 	public void setTo(final String ignore) {
     }
 
     /** {@inheritDoc}. */
-    @Override
 	public String[] mapFileName(final String sourceFileName) {
         if (dirs <= 0) {
             throw new BuildException("dirs must be set to a positive number");

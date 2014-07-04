@@ -44,7 +44,7 @@ public class MultiRootFileSet extends AbstractFileSet
     private Union union;
 
     @Override
-	public void setDir(File dir) {
+	public void setDir(final File dir) {
         throw new BuildException(getDataTypeName()
                                  + " doesn't support the dir attribute");
     }
@@ -53,7 +53,7 @@ public class MultiRootFileSet extends AbstractFileSet
      * Determines the types of resources to return.
      * @param type the types of resources to return
      */
-    public void setType(SetType type) {
+    public void setType(final SetType type) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -64,7 +64,7 @@ public class MultiRootFileSet extends AbstractFileSet
      * Set whether to cache collections.
      * @param b boolean cache flag.
      */
-    public synchronized void setCache(boolean b) {
+    public synchronized void setCache(final boolean b) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -75,13 +75,13 @@ public class MultiRootFileSet extends AbstractFileSet
      * Adds basedirs as a comman separated list.
      * @param b boolean cache flag.
      */
-    public void setBaseDirs(String dirs) {
+    public void setBaseDirs(final String dirs) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (dirs != null && dirs.length() > 0) {
-            String[] ds = dirs.split(",");
-            for (String d : ds) {
+            final String[] ds = dirs.split(",");
+            for (final String d : ds) {
                 baseDirs.add(getProject().resolveFile(d));
             }
         }
@@ -90,7 +90,7 @@ public class MultiRootFileSet extends AbstractFileSet
     /**
      * Adds a basedir as nested element.
      */
-    public void addConfiguredBaseDir(FileResource r) {
+    public void addConfiguredBaseDir(final FileResource r) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
@@ -98,7 +98,7 @@ public class MultiRootFileSet extends AbstractFileSet
     }
 
     @Override
-	public void setRefid(Reference r) {
+	public void setRefid(final Reference r) {
         if (!baseDirs.isEmpty()) {
             throw tooManyAttributes();
         }
@@ -115,7 +115,7 @@ public class MultiRootFileSet extends AbstractFileSet
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).clone();
         } else {
-            MultiRootFileSet fs = (MultiRootFileSet) super.clone();
+            final MultiRootFileSet fs = (MultiRootFileSet) super.clone();
             fs.baseDirs = new ArrayList<File>(baseDirs);
             fs.union = null;
             return fs;
@@ -126,7 +126,6 @@ public class MultiRootFileSet extends AbstractFileSet
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
-    @Override
 	public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).iterator();
@@ -138,7 +137,6 @@ public class MultiRootFileSet extends AbstractFileSet
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
-    @Override
 	public int size() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).size();
@@ -150,7 +148,6 @@ public class MultiRootFileSet extends AbstractFileSet
      * Always returns true.
      * @return true indicating that all elements will be FileResources.
      */
-    @Override
 	public boolean isFilesystemOnly() {
         return true;
     }
@@ -172,7 +169,7 @@ public class MultiRootFileSet extends AbstractFileSet
         if (cache && union != null) {
             return union;
         }
-        Union u = new Union();
+        final Union u = new Union();
         setup(u);
         if (cache) {
             union = u;
@@ -180,8 +177,8 @@ public class MultiRootFileSet extends AbstractFileSet
         return u;
     }
 
-    private void setup(Union u) {
-        for (File d : baseDirs) {
+    private void setup(final Union u) {
+        for (final File d : baseDirs) {
             u.add(new Worker(this, type, d));
         }
     }
@@ -198,26 +195,24 @@ public class MultiRootFileSet extends AbstractFileSet
 
         private final SetType type;
 
-        private Worker(MultiRootFileSet fs, SetType type, File dir) {
+        private Worker(final MultiRootFileSet fs, final SetType type, final File dir) {
             super(fs);
             this.type = type;
             setDir(dir);
         }
 
-        @Override
 		public boolean isFilesystemOnly() {
             return true;
         }
 
-        @Override
 		public Iterator<Resource> iterator() {
-            DirectoryScanner ds = getDirectoryScanner(getProject());
+            final DirectoryScanner ds = getDirectoryScanner(getProject());
             String[] names = type == SetType.file
                 ? ds.getIncludedFiles()
                 : ds.getIncludedDirectories();
             if (type == SetType.both) {
-                String[] files = ds.getIncludedFiles();
-                String[] merged = new String[names.length + files.length];
+                final String[] files = ds.getIncludedFiles();
+                final String[] merged = new String[names.length + files.length];
                 System.arraycopy(names, 0, merged, 0, names.length);
                 System.arraycopy(files, 0, merged, names.length, files.length);
                 names = merged;
@@ -226,9 +221,8 @@ public class MultiRootFileSet extends AbstractFileSet
                                             names);
         }
 
-        @Override
 		public int size() {
-            DirectoryScanner ds = getDirectoryScanner(getProject());
+            final DirectoryScanner ds = getDirectoryScanner(getProject());
             int count = type == SetType.file
                 ? ds.getIncludedFilesCount()
                 : ds.getIncludedDirsCount();

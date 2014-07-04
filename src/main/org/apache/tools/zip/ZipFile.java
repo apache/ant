@@ -146,7 +146,7 @@ public class ZipFile {
      *
      * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(File f) throws IOException {
+    public ZipFile(final File f) throws IOException {
         this(f, null);
     }
 
@@ -158,7 +158,7 @@ public class ZipFile {
      *
      * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(String name) throws IOException {
+    public ZipFile(final String name) throws IOException {
         this(new File(name), null);
     }
 
@@ -172,7 +172,7 @@ public class ZipFile {
      *
      * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(String name, String encoding) throws IOException {
+    public ZipFile(final String name, final String encoding) throws IOException {
         this(new File(name), encoding, true);
     }
 
@@ -186,7 +186,7 @@ public class ZipFile {
      *
      * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(File f, String encoding) throws IOException {
+    public ZipFile(final File f, final String encoding) throws IOException {
         this(f, encoding, true);
     }
 
@@ -202,7 +202,7 @@ public class ZipFile {
      *
      * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(File f, String encoding, boolean useUnicodeExtraFields)
+    public ZipFile(final File f, final String encoding, final boolean useUnicodeExtraFields)
         throws IOException {
         this.archiveName = f.getAbsolutePath();
         this.encoding = encoding;
@@ -211,7 +211,7 @@ public class ZipFile {
         archive = new RandomAccessFile(f, "r");
         boolean success = false;
         try {
-            Map<ZipEntry, NameAndComment> entriesWithoutUTF8Flag =
+            final Map<ZipEntry, NameAndComment> entriesWithoutUTF8Flag =
                 populateFromCentralDirectory();
             resolveLocalFileHeaderData(entriesWithoutUTF8Flag);
             success = true;
@@ -220,7 +220,7 @@ public class ZipFile {
                 try {
                     closed = true;
                     archive.close();
-                } catch (IOException e2) {
+                } catch (final IOException e2) {
                     // swallow, throw the original exception instead
                 }
             }
@@ -254,11 +254,11 @@ public class ZipFile {
      * on a null parameter
      * @param zipfile file to close, can be null
      */
-    public static void closeQuietly(ZipFile zipfile) {
+    public static void closeQuietly(final ZipFile zipfile) {
         if (zipfile != null) {
             try {
                 zipfile.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 //ignore
             }
         }
@@ -287,7 +287,7 @@ public class ZipFile {
      * @since Ant 1.9.0
      */
     public Enumeration<ZipEntry> getEntriesInPhysicalOrder() {
-        ZipEntry[] allEntries = entries.toArray(new ZipEntry[0]);
+        final ZipEntry[] allEntries = entries.toArray(new ZipEntry[0]);
         Arrays.sort(allEntries, OFFSET_COMPARATOR);
         return Collections.enumeration(Arrays.asList(allEntries));
     }
@@ -304,8 +304,8 @@ public class ZipFile {
      * @return the ZipEntry corresponding to the given name - or
      * {@code null} if not present.
      */
-    public ZipEntry getEntry(String name) {
-        LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
+    public ZipEntry getEntry(final String name) {
+        final LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
         return entriesOfThatName != null ? entriesOfThatName.getFirst() : null;
     }
 
@@ -318,8 +318,8 @@ public class ZipFile {
      * given name
      * @since 1.9.2
      */
-    public Iterable<ZipEntry> getEntries(String name) {
-        List<ZipEntry> entriesOfThatName = nameMap.get(name);
+    public Iterable<ZipEntry> getEntries(final String name) {
+        final List<ZipEntry> entriesOfThatName = nameMap.get(name);
         return entriesOfThatName != null ? entriesOfThatName
             : Collections.<ZipEntry>emptyList();
     }
@@ -333,7 +333,7 @@ public class ZipFile {
      * given name
      * @since 1.9.2
      */
-    public Iterable<ZipEntry> getEntriesInPhysicalOrder(String name) {
+    public Iterable<ZipEntry> getEntriesInPhysicalOrder(final String name) {
         ZipEntry[] entriesOfThatName = new ZipEntry[0];
         if (nameMap.containsKey(name)) {
             entriesOfThatName = nameMap.get(name).toArray(entriesOfThatName);
@@ -348,7 +348,7 @@ public class ZipFile {
      * <p>May return false if it is set up to use encryption or a
      * compression method that hasn't been implemented yet.</p>
      */
-    public boolean canReadEntryData(ZipEntry ze) {
+    public boolean canReadEntryData(final ZipEntry ze) {
         return ZipUtil.canHandleEntryData(ze);
     }
 
@@ -360,16 +360,16 @@ public class ZipFile {
      * @throws IOException if unable to create an input stream from the zipentry
      * @throws ZipException if the zipentry uses an unsupported feature
      */
-    public InputStream getInputStream(ZipEntry ze)
+    public InputStream getInputStream(final ZipEntry ze)
         throws IOException, ZipException {
         if (!(ze instanceof Entry)) {
             return null;
         }
         // cast valididty is checked just above
-        OffsetEntry offsetEntry = ((Entry) ze).getOffsetEntry();
+        final OffsetEntry offsetEntry = ((Entry) ze).getOffsetEntry();
         ZipUtil.checkRequestedFeatures(ze);
-        long start = offsetEntry.dataOffset;
-        BoundedInputStream bis =
+        final long start = offsetEntry.dataOffset;
+        final BoundedInputStream bis =
             new BoundedInputStream(start, ze.getCompressedSize());
         switch (ze.getMethod()) {
             case ZipEntry.STORED:
@@ -446,7 +446,7 @@ public class ZipFile {
      */
     private Map<ZipEntry, NameAndComment> populateFromCentralDirectory()
         throws IOException {
-        HashMap<ZipEntry, NameAndComment> noUTF8Flag =
+        final HashMap<ZipEntry, NameAndComment> noUTF8Flag =
             new HashMap<ZipEntry, NameAndComment>();
 
         positionAtCentralDirectory();
@@ -477,14 +477,14 @@ public class ZipFile {
      * added to this map.
      */
     private void
-        readCentralDirectoryEntry(Map<ZipEntry, NameAndComment> noUTF8Flag)
+        readCentralDirectoryEntry(final Map<ZipEntry, NameAndComment> noUTF8Flag)
         throws IOException {
         archive.readFully(CFH_BUF);
         int off = 0;
-        OffsetEntry offset = new OffsetEntry();
-        Entry ze = new Entry(offset);
+        final OffsetEntry offset = new OffsetEntry();
+        final Entry ze = new Entry(offset);
 
-        int versionMadeBy = ZipShort.getValue(CFH_BUF, off);
+        final int versionMadeBy = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
         ze.setPlatform((versionMadeBy >> BYTE_SHIFT) & NIBLET_MASK);
 
@@ -501,7 +501,7 @@ public class ZipFile {
         ze.setMethod(ZipShort.getValue(CFH_BUF, off));
         off += SHORT;
 
-        long time = ZipUtil.dosToJavaTime(ZipLong.getValue(CFH_BUF, off));
+        final long time = ZipUtil.dosToJavaTime(ZipLong.getValue(CFH_BUF, off));
         ze.setTime(time);
         off += WORD;
 
@@ -514,16 +514,16 @@ public class ZipFile {
         ze.setSize(ZipLong.getValue(CFH_BUF, off));
         off += WORD;
 
-        int fileNameLen = ZipShort.getValue(CFH_BUF, off);
+        final int fileNameLen = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
 
-        int extraLen = ZipShort.getValue(CFH_BUF, off);
+        final int extraLen = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
 
-        int commentLen = ZipShort.getValue(CFH_BUF, off);
+        final int commentLen = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
 
-        int diskStart = ZipShort.getValue(CFH_BUF, off);
+        final int diskStart = ZipShort.getValue(CFH_BUF, off);
         off += SHORT;
 
         ze.setInternalAttributes(ZipShort.getValue(CFH_BUF, off));
@@ -532,7 +532,7 @@ public class ZipFile {
         ze.setExternalAttributes(ZipLong.getValue(CFH_BUF, off));
         off += WORD;
 
-        byte[] fileName = new byte[fileNameLen];
+        final byte[] fileName = new byte[fileNameLen];
         archive.readFully(fileName);
         ze.setName(entryEncoding.decode(fileName), fileName);
 
@@ -541,13 +541,13 @@ public class ZipFile {
         // data offset will be filled later
         entries.add(ze);
 
-        byte[] cdExtraData = new byte[extraLen];
+        final byte[] cdExtraData = new byte[extraLen];
         archive.readFully(cdExtraData);
         ze.setCentralDirectoryExtra(cdExtraData);
 
         setSizesAndOffsetFromZip64Extra(ze, offset, diskStart);
 
-        byte[] comment = new byte[commentLen];
+        final byte[] comment = new byte[commentLen];
         archive.readFully(comment);
         ze.setComment(entryEncoding.decode(comment));
 
@@ -568,17 +568,17 @@ public class ZipFile {
      * even if they are never used - and here a field with only one
      * size would be invalid.</p>
      */
-    private void setSizesAndOffsetFromZip64Extra(ZipEntry ze,
-                                                 OffsetEntry offset,
-                                                 int diskStart)
+    private void setSizesAndOffsetFromZip64Extra(final ZipEntry ze,
+                                                 final OffsetEntry offset,
+                                                 final int diskStart)
         throws IOException {
-        Zip64ExtendedInformationExtraField z64 =
+        final Zip64ExtendedInformationExtraField z64 =
             (Zip64ExtendedInformationExtraField)
             ze.getExtraField(Zip64ExtendedInformationExtraField.HEADER_ID);
         if (z64 != null) {
-            boolean hasUncompressedSize = ze.getSize() == ZIP64_MAGIC;
-            boolean hasCompressedSize = ze.getCompressedSize() == ZIP64_MAGIC;
-            boolean hasRelativeHeaderOffset =
+            final boolean hasUncompressedSize = ze.getSize() == ZIP64_MAGIC;
+            final boolean hasCompressedSize = ze.getCompressedSize() == ZIP64_MAGIC;
+            final boolean hasRelativeHeaderOffset =
                 offset.headerOffset == ZIP64_MAGIC;
             z64.reparseCentralDirectoryData(hasUncompressedSize,
                                             hasCompressedSize,
@@ -706,7 +706,7 @@ public class ZipFile {
         throws IOException {
         positionAtEndOfCentralDirectoryRecord();
         boolean found = false;
-        boolean searchedForZip64EOCD =
+        final boolean searchedForZip64EOCD =
             archive.getFilePointer() > ZIP64_EOCDL_LENGTH;
         if (searchedForZip64EOCD) {
             archive.seek(archive.getFilePointer() - ZIP64_EOCDL_LENGTH);
@@ -765,7 +765,7 @@ public class ZipFile {
      */
     private void positionAtEndOfCentralDirectoryRecord()
         throws IOException {
-        boolean found = tryToLocateSignature(MIN_EOCD_SIZE, MAX_EOCD_SIZE,
+        final boolean found = tryToLocateSignature(MIN_EOCD_SIZE, MAX_EOCD_SIZE,
                                              ZipOutputStream.EOCD_SIG);
         if (!found) {
             throw new ZipException("archive is not a ZIP archive");
@@ -777,9 +777,9 @@ public class ZipFile {
      * for the given signature, positions the RandomaccessFile right
      * at the signature if it has been found.
      */
-    private boolean tryToLocateSignature(long minDistanceFromEnd,
-                                         long maxDistanceFromEnd,
-                                         byte[] sig) throws IOException {
+    private boolean tryToLocateSignature(final long minDistanceFromEnd,
+                                         final long maxDistanceFromEnd,
+                                         final byte[] sig) throws IOException {
         boolean found = false;
         long off = archive.length() - minDistanceFromEnd;
         final long stopSearching =
@@ -819,7 +819,7 @@ public class ZipFile {
     private void skipBytes(final int count) throws IOException {
         int totalSkipped = 0;
         while (totalSkipped < count) {
-            int skippedNow = archive.skipBytes(count - totalSkipped);
+            final int skippedNow = archive.skipBytes(count - totalSkipped);
             if (skippedNow <= 0) {
                 throw new EOFException();
             }
@@ -849,42 +849,42 @@ public class ZipFile {
      * <p>Also records the offsets for the data to read from the
      * entries.</p>
      */
-    private void resolveLocalFileHeaderData(Map<ZipEntry, NameAndComment>
+    private void resolveLocalFileHeaderData(final Map<ZipEntry, NameAndComment>
                                             entriesWithoutUTF8Flag)
         throws IOException {
-        for (Iterator<ZipEntry> it = entries.iterator(); it.hasNext();) {
+        for (final Iterator<ZipEntry> it = entries.iterator(); it.hasNext();) {
             // entries is filled in populateFromCentralDirectory and
             // never modified
-            Entry ze = (Entry) it.next();
-            OffsetEntry offsetEntry = ze.getOffsetEntry();
-            long offset = offsetEntry.headerOffset;
+            final Entry ze = (Entry) it.next();
+            final OffsetEntry offsetEntry = ze.getOffsetEntry();
+            final long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
             archive.readFully(SHORT_BUF);
-            int fileNameLen = ZipShort.getValue(SHORT_BUF);
+            final int fileNameLen = ZipShort.getValue(SHORT_BUF);
             archive.readFully(SHORT_BUF);
-            int extraFieldLen = ZipShort.getValue(SHORT_BUF);
+            final int extraFieldLen = ZipShort.getValue(SHORT_BUF);
             int lenToSkip = fileNameLen;
             while (lenToSkip > 0) {
-                int skipped = archive.skipBytes(lenToSkip);
+                final int skipped = archive.skipBytes(lenToSkip);
                 if (skipped <= 0) {
                     throw new IOException("failed to skip file name in"
                                           + " local file header");
                 }
                 lenToSkip -= skipped;
             }
-            byte[] localExtraData = new byte[extraFieldLen];
+            final byte[] localExtraData = new byte[extraFieldLen];
             archive.readFully(localExtraData);
             ze.setExtra(localExtraData);
             offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
                 + SHORT + SHORT + fileNameLen + extraFieldLen;
 
             if (entriesWithoutUTF8Flag.containsKey(ze)) {
-                NameAndComment nc = entriesWithoutUTF8Flag.get(ze);
+                final NameAndComment nc = entriesWithoutUTF8Flag.get(ze);
                 ZipUtil.setNameAndCommentFromExtraFields(ze, nc.name,
                                                          nc.comment);
             }
 
-            String name = ze.getName();
+            final String name = ze.getName();
             LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
             if (entriesOfThatName == null) {
                 entriesOfThatName = new LinkedList<ZipEntry>();
@@ -914,7 +914,7 @@ public class ZipFile {
         private long loc;
         private boolean addDummyByte = false;
 
-        BoundedInputStream(long start, long remaining) {
+        BoundedInputStream(final long start, final long remaining) {
             this.remaining = remaining;
             loc = start;
         }
@@ -935,7 +935,7 @@ public class ZipFile {
         }
 
         @Override
-        public int read(byte[] b, int off, int len) throws IOException {
+        public int read(final byte[] b, final int off, int len) throws IOException {
             if (remaining <= 0) {
                 if (addDummyByte) {
                     addDummyByte = false;
@@ -976,7 +976,7 @@ public class ZipFile {
     private static final class NameAndComment {
         private final byte[] name;
         private final byte[] comment;
-        private NameAndComment(byte[] name, byte[] comment) {
+        private NameAndComment(final byte[] name, final byte[] comment) {
             this.name = name;
             this.comment = comment;
         }
@@ -992,21 +992,20 @@ public class ZipFile {
      */
     private final Comparator<ZipEntry> OFFSET_COMPARATOR =
         new Comparator<ZipEntry>() {
-        @Override
-		public int compare(ZipEntry e1, ZipEntry e2) {
+		public int compare(final ZipEntry e1, final ZipEntry e2) {
             if (e1 == e2) {
                 return 0;
             }
 
-            Entry ent1 = e1 instanceof Entry ? (Entry) e1 : null;
-            Entry ent2 = e2 instanceof Entry ? (Entry) e2 : null;
+            final Entry ent1 = e1 instanceof Entry ? (Entry) e1 : null;
+            final Entry ent2 = e2 instanceof Entry ? (Entry) e2 : null;
             if (ent1 == null) {
                 return 1;
             }
             if (ent2 == null) {
                 return -1;
             }
-            long val = (ent1.getOffsetEntry().headerOffset
+            final long val = (ent1.getOffsetEntry().headerOffset
                         - ent2.getOffsetEntry().headerOffset);
             return val == 0 ? 0 : val < 0 ? -1 : +1;
         }
@@ -1019,7 +1018,7 @@ public class ZipFile {
 
         private final OffsetEntry offsetEntry;
 
-        Entry(OffsetEntry offset) {
+        Entry(final OffsetEntry offset) {
             this.offsetEntry = offset;
         }
 
@@ -1034,10 +1033,10 @@ public class ZipFile {
         }
 
         @Override
-        public boolean equals(Object other) {
+        public boolean equals(final Object other) {
             if (super.equals(other)) {
                 // super.equals would return false if other were not an Entry
-                Entry otherEntry = (Entry) other;
+                final Entry otherEntry = (Entry) other;
                 return offsetEntry.headerOffset
                         == otherEntry.offsetEntry.headerOffset
                     && offsetEntry.dataOffset

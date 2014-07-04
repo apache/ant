@@ -70,7 +70,7 @@ public class SymbolicLinkUtils {
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
      */
-    public boolean isSymbolicLink(File file) throws IOException {
+    public boolean isSymbolicLink(final File file) throws IOException {
         return isSymbolicLink(file.getParentFile(), file.getName());
     }
 
@@ -86,7 +86,7 @@ public class SymbolicLinkUtils {
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
      */
-    public boolean isSymbolicLink(String name) throws IOException {
+    public boolean isSymbolicLink(final String name) throws IOException {
         return isSymbolicLink(new File(name));
     }
 
@@ -103,9 +103,9 @@ public class SymbolicLinkUtils {
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
      */
-    public boolean isSymbolicLink(File parent, String name)
+    public boolean isSymbolicLink(final File parent, final String name)
         throws IOException {
-        File toTest = parent != null
+        final File toTest = parent != null
             ? new File(parent.getCanonicalPath(), name)
             : new File(name);
         return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
@@ -128,7 +128,7 @@ public class SymbolicLinkUtils {
      * @return true if the file is a broken symbolic link.
      * @throws IOException on error.
      */
-    public boolean isDanglingSymbolicLink(String name) throws IOException {
+    public boolean isDanglingSymbolicLink(final String name) throws IOException {
         return isDanglingSymbolicLink(new File(name));
     }
 
@@ -149,7 +149,7 @@ public class SymbolicLinkUtils {
      * @return true if the file is a broken symbolic link.
      * @throws IOException on error.
      */
-    public boolean isDanglingSymbolicLink(File file) throws IOException {
+    public boolean isDanglingSymbolicLink(final File file) throws IOException {
         return isDanglingSymbolicLink(file.getParentFile(), file.getName());
     }
 
@@ -171,14 +171,13 @@ public class SymbolicLinkUtils {
      * @return true if the file is a broken symbolic link.
      * @throws IOException on error.
      */
-    public boolean isDanglingSymbolicLink(File parent, String name)
+    public boolean isDanglingSymbolicLink(final File parent, final String name)
         throws IOException {
-        File f = new File(parent, name);
+        final File f = new File(parent, name);
         if (!f.exists()) {
             final String localName = f.getName();
-            String[] c = parent.list(new FilenameFilter() {
-                    @Override
-					public boolean accept(File d, String n) {
+            final String[] c = parent.list(new FilenameFilter() {
+					public boolean accept(final File d, final String n) {
                         return localName.equals(n);
                     }
                 });
@@ -214,7 +213,7 @@ public class SymbolicLinkUtils {
      * fail.
      * @throws BuildException if the execution of "rm" failed.
      */
-    public void deleteSymbolicLink(File link, Task task)
+    public void deleteSymbolicLink(File link, final Task task)
         throws IOException {
         if (isDanglingSymbolicLink(link)) {
             if (!link.delete()) {
@@ -234,7 +233,7 @@ public class SymbolicLinkUtils {
         }
 
         // find the resource of the existing link:
-        File target = link.getCanonicalFile();
+        final File target = link.getCanonicalFile();
 
         // no reason to try the renaming algorithm if we aren't allowed to
         // write to the target's parent directory.  Let's hope that
@@ -243,7 +242,7 @@ public class SymbolicLinkUtils {
         if (task == null || target.getParentFile().canWrite()) {
 
             // rename the resource, thus breaking the link:
-            File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
+            final File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
                                                   target.getParentFile(), false,
                                                   false);
 
@@ -259,7 +258,7 @@ public class SymbolicLinkUtils {
                 try {
                     FILE_UTILS.rename(target, temp);
                     renamedTarget = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     throw new IOException("Couldn't rename resource when "
                                           + "attempting to delete '" + link
                                           + "'.  Reason: " + e.getMessage());
@@ -276,7 +275,7 @@ public class SymbolicLinkUtils {
                     // return the resource to its original name:
                     try {
                         FILE_UTILS.rename(temp, target);
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         throw new IOException("Couldn't return resource "
                                               + temp
                                               + " to its original name: "

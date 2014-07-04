@@ -87,7 +87,6 @@ public class JUnit4TestMethodAdapter implements Test {
         runner = request.getRunner();
     }
 
-    @Override
 	public int countTestCases() {
         return runner.testCount();
     }
@@ -104,7 +103,6 @@ public class JUnit4TestMethodAdapter implements Test {
         return testClass;
     }
 
-    @Override
 	public void run(final TestResult result) {
         runner.run(cache.getNotifier(result));
     }

@@ -24,10 +24,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Enumeration;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
@@ -68,31 +71,36 @@ public class Tar extends MatchingTask {
      *             Tar.WARN is deprecated and is replaced with
      *             Tar.TarLongFileMode.WARN
      */
-    public static final String WARN = "warn";
+    @Deprecated
+	public static final String WARN = "warn";
     /**
      * @deprecated since 1.5.x.
      *             Tar.FAIL is deprecated and is replaced with
      *             Tar.TarLongFileMode.FAIL
      */
-    public static final String FAIL = "fail";
+    @Deprecated
+	public static final String FAIL = "fail";
     /**
      * @deprecated since 1.5.x.
      *             Tar.TRUNCATE is deprecated and is replaced with
      *             Tar.TarLongFileMode.TRUNCATE
      */
-    public static final String TRUNCATE = "truncate";
+    @Deprecated
+	public static final String TRUNCATE = "truncate";
     /**
      * @deprecated since 1.5.x.
      *             Tar.GNU is deprecated and is replaced with
      *             Tar.TarLongFileMode.GNU
      */
-    public static final String GNU = "gnu";
+    @Deprecated
+	public static final String GNU = "gnu";
     /**
      * @deprecated since 1.5.x.
      *             Tar.OMIT is deprecated and is replaced with
      *             Tar.TarLongFileMode.OMIT
      */
-    public static final String OMIT = "omit";
+    @Deprecated
+	public static final String OMIT = "omit";
 
     // CheckStyle:VisibilityModifier OFF - bc
     File tarFile;
@@ -101,12 +109,10 @@ public class Tar extends MatchingTask {
     private TarLongFileMode longFileMode = new TarLongFileMode();
 
     // need to keep the package private version for backwards compatibility
-    Vector filesets = new Vector();
+    Vector<TarFileSet> filesets = new Vector<TarFileSet>();
     // we must keep two lists since other classes may modify the
     // filesets Vector (it is package private) without us noticing
-    private Vector resourceCollections = new Vector();
-
-    Vector fileSetFiles = new Vector();
+    private final Vector<ResourceCollection> resourceCollections = new Vector<ResourceCollection>();
 
     // CheckStyle:VisibilityModifier ON
 
@@ -122,7 +128,7 @@ public class Tar extends MatchingTask {
      * @return the tar fileset to be used as the nested element.
      */
     public TarFileSet createTarFileSet() {
-        TarFileSet fs = new TarFileSet();
+        final TarFileSet fs = new TarFileSet();
         fs.setProject(getProject());
         filesets.addElement(fs);
         return fs;
@@ -133,7 +139,7 @@ public class Tar extends MatchingTask {
      * @param res a resource collection to archive.
      * @since Ant 1.7
      */
-    public void add(ResourceCollection res) {
+    public void add(final ResourceCollection res) {
         resourceCollections.add(res);
     }
 
@@ -143,7 +149,8 @@ public class Tar extends MatchingTask {
      * @deprecated since 1.5.x.
      *             For consistency with other tasks, please use setDestFile().
      */
-    public void setTarfile(File tarFile) {
+    @Deprecated
+	public void setTarfile(final File tarFile) {
         this.tarFile = tarFile;
     }
 
@@ -152,7 +159,7 @@ public class Tar extends MatchingTask {
      * @since Ant 1.5
      * @param destFile The output of the tar
      */
-    public void setDestFile(File destFile) {
+    public void setDestFile(final File destFile) {
         this.tarFile = destFile;
     }
 
@@ -160,7 +167,7 @@ public class Tar extends MatchingTask {
      * This is the base directory to look in for things to tar.
      * @param baseDir the base directory.
      */
-    public void setBasedir(File baseDir) {
+    public void setBasedir(final File baseDir) {
         this.baseDir = baseDir;
     }
 
@@ -183,7 +190,8 @@ public class Tar extends MatchingTask {
      *             mechanism do the work and also to encapsulate operations on
      *             the mode in its own class.
      */
-    public void setLongfile(String mode) {
+    @Deprecated
+	public void setLongfile(final String mode) {
         log("DEPRECATED - The setLongfile(String) method has been deprecated."
             + " Use setLongfile(Tar.TarLongFileMode) instead.");
         this.longFileMode = new TarLongFileMode();
@@ -205,7 +213,7 @@ public class Tar extends MatchingTask {
      * </ul>
      * @param mode the mode to handle long file names.
      */
-    public void setLongfile(TarLongFileMode mode) {
+    public void setLongfile(final TarLongFileMode mode) {
         this.longFileMode = mode;
     }
 
@@ -219,7 +227,7 @@ public class Tar extends MatchingTask {
      * </ul>
      * @param mode the compression method.
      */
-    public void setCompression(TarCompressionMethod mode) {
+    public void setCompression(final TarCompressionMethod mode) {
         this.compression = mode;
     }
 
@@ -227,7 +235,8 @@ public class Tar extends MatchingTask {
      * do the business
      * @throws BuildException on error
      */
-    public void execute() throws BuildException {
+    @Override
+	public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!",
                                      getLocation());
@@ -243,7 +252,8 @@ public class Tar extends MatchingTask {
                                      getLocation());
         }
 
-        Vector savedFileSets = (Vector) filesets.clone();
+        @SuppressWarnings("unchecked")
+		final Vector<TarFileSet> savedFileSets = (Vector<TarFileSet>) filesets.clone();
         try {
             if (baseDir != null) {
                 if (!baseDir.exists()) {
@@ -252,7 +262,7 @@ public class Tar extends MatchingTask {
                 }
 
                 // add the main fileset to the list of filesets to process.
-                TarFileSet mainFileSet = new TarFileSet(fileset);
+                final TarFileSet mainFileSet = new TarFileSet(fileset);
                 mainFileSet.setDir(baseDir);
                 filesets.addElement(mainFileSet);
             }
@@ -267,12 +277,11 @@ public class Tar extends MatchingTask {
             // check if tar is out of date with respect to each
             // fileset
             boolean upToDate = true;
-            for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-                upToDate &= check((TarFileSet) e.nextElement());
+            for(final TarFileSet tfs : filesets) {
+            	upToDate &= check(tfs);
             }
-            for (Enumeration e = resourceCollections.elements();
-                 e.hasMoreElements();) {
-                upToDate &= check((ResourceCollection) e.nextElement());
+            for(final ResourceCollection rcol : resourceCollections) {
+            	upToDate &= check(rcol);
             }
 
             if (upToDate) {
@@ -281,7 +290,7 @@ public class Tar extends MatchingTask {
                 return;
             }
 
-            File parent = tarFile.getParentFile();
+            final File parent = tarFile.getParentFile();
             if (parent != null && !parent.isDirectory()
                 && !(parent.mkdirs() || parent.isDirectory())) {
                 throw new BuildException("Failed to create missing parent"
@@ -310,16 +319,14 @@ public class Tar extends MatchingTask {
                 }
 
                 longWarningGiven = false;
-                for (Enumeration e = filesets.elements();
-                     e.hasMoreElements();) {
-                    tar((TarFileSet) e.nextElement(), tOut);
+                for(final TarFileSet tfs : filesets) {
+                	tar(tfs, tOut);
                 }
-                for (Enumeration e = resourceCollections.elements();
-                     e.hasMoreElements();) {
-                    tar((ResourceCollection) e.nextElement(), tOut);
+                for(final ResourceCollection rcol : resourceCollections) {
+                	tar(rcol, tOut);
                 }
-            } catch (IOException ioe) {
-                String msg = "Problem creating TAR: " + ioe.getMessage();
+            } catch (final IOException ioe) {
+                final String msg = "Problem creating TAR: " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
             } finally {
                 FileUtils.close(tOut);
@@ -337,8 +344,8 @@ public class Tar extends MatchingTask {
      * @param tarFileSet the fileset that the file came from.
      * @throws IOException on error
      */
-    protected void tarFile(File file, TarOutputStream tOut, String vPath,
-                           TarFileSet tarFileSet)
+    protected void tarFile(final File file, final TarOutputStream tOut, final String vPath,
+                           final TarFileSet tarFileSet)
         throws IOException {
         if (file.equals(tarFile)) {
             // If the archive is built for the first time and it is
@@ -364,8 +371,8 @@ public class Tar extends MatchingTask {
      * @throws IOException on error
      * @since Ant 1.7
      */
-    protected void tarResource(Resource r, TarOutputStream tOut, String vPath,
-                               TarFileSet tarFileSet)
+    protected void tarResource(final Resource r, final TarOutputStream tOut, String vPath,
+                               final TarFileSet tarFileSet)
         throws IOException {
 
         if (!r.isExists()) {
@@ -375,7 +382,7 @@ public class Tar extends MatchingTask {
         boolean preserveLeadingSlashes = false;
 
         if (tarFileSet != null) {
-            String fullpath = tarFileSet.getFullpath(this.getProject());
+            final String fullpath = tarFileSet.getFullpath(this.getProject());
             if (fullpath.length() > 0) {
                 vPath = fullpath;
             } else {
@@ -395,7 +402,7 @@ public class Tar extends MatchingTask {
             preserveLeadingSlashes = tarFileSet.getPreserveLeadingSlashes();
 
             if (vPath.startsWith("/") && !preserveLeadingSlashes) {
-                int l = vPath.length();
+                final int l = vPath.length();
                 if (l <= 1) {
                     // we would end up adding "" to the archive
                     return;
@@ -429,14 +436,14 @@ public class Tar extends MatchingTask {
             }
         }
 
-        TarEntry te = new TarEntry(vPath, preserveLeadingSlashes);
+        final TarEntry te = new TarEntry(vPath, preserveLeadingSlashes);
         te.setModTime(r.getLastModified());
         // preserve permissions
         if (r instanceof ArchiveResource) {
-            ArchiveResource ar = (ArchiveResource) r;
+            final ArchiveResource ar = (ArchiveResource) r;
             te.setMode(ar.getMode());
             if (r instanceof TarResource) {
-                TarResource tr = (TarResource) r;
+                final TarResource tr = (TarResource) r;
                 te.setUserName(tr.getUserName());
                 te.setUserId(tr.getUid());
                 te.setGroupName(tr.getGroup());
@@ -483,7 +490,7 @@ public class Tar extends MatchingTask {
             if (!r.isDirectory()) {
                 in = r.getInputStream();
 
-                byte[] buffer = new byte[BUFFER_SIZE];
+                final byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
                     tOut.write(buffer, 0, count);
@@ -504,7 +511,8 @@ public class Tar extends MatchingTask {
      * @deprecated since 1.5.x.
      *             use the two-arg version instead.
      */
-    protected boolean archiveIsUpToDate(String[] files) {
+    @Deprecated
+	protected boolean archiveIsUpToDate(final String[] files) {
         return archiveIsUpToDate(files, baseDir);
     }
 
@@ -515,9 +523,9 @@ public class Tar extends MatchingTask {
      * @return true if the archive is up to date.
      * @since Ant 1.5.2
      */
-    protected boolean archiveIsUpToDate(String[] files, File dir) {
-        SourceFileScanner sfs = new SourceFileScanner(this);
-        MergingMapper mm = new MergingMapper();
+    protected boolean archiveIsUpToDate(final String[] files, final File dir) {
+        final SourceFileScanner sfs = new SourceFileScanner(this);
+        final MergingMapper mm = new MergingMapper();
         mm.setTo(tarFile.getAbsolutePath());
         return sfs.restrict(files, dir, null, mm).length == 0;
     }
@@ -528,7 +536,7 @@ public class Tar extends MatchingTask {
      * @return true if the archive is up to date.
      * @since Ant 1.7
      */
-    protected boolean archiveIsUpToDate(Resource r) {
+    protected boolean archiveIsUpToDate(final Resource r) {
         return SelectorUtils.isOutOfDate(new FileResource(tarFile), r,
                                          FileUtils.getFileUtils()
                                          .getFileTimestampGranularity());
@@ -563,27 +571,27 @@ public class Tar extends MatchingTask {
      * @return whether the archive is up-to-date
      * @since Ant 1.7
      */
-    protected boolean check(ResourceCollection rc) {
+    protected boolean check(final ResourceCollection rc) {
         boolean upToDate = true;
         if (isFileFileSet(rc)) {
-            FileSet fs = (FileSet) rc;
+            final FileSet fs = (FileSet) rc;
             upToDate = check(fs.getDir(getProject()), getFileNames(fs));
         } else if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
             throw new BuildException("only filesystem resources are supported");
         } else if (rc.isFilesystemOnly()) {
-            HashSet basedirs = new HashSet();
-            HashMap basedirToFilesMap = new HashMap();
-            for (Resource res : rc) {
-                FileResource r = ResourceUtils
+            final Set<File> basedirs = new HashSet<File>();
+            final Map<File, List<String>> basedirToFilesMap = new HashMap<File, List<String>>();
+            for (final Resource res : rc) {
+                final FileResource r = ResourceUtils
                     .asFileResource(res.as(FileProvider.class));
                 File base = r.getBaseDir();
                 if (base == null) {
                     base = Copy.NULL_FILE_PLACEHOLDER;
                 }
                 basedirs.add(base);
-                Vector files = (Vector) basedirToFilesMap.get(base);
+                List<String> files = basedirToFilesMap.get(base);
                 if (files == null) {
-                    files = new Vector();
+                    files = new Vector<String>();
                     basedirToFilesMap.put(base, files);
                 }
                 if (base == Copy.NULL_FILE_PLACEHOLDER) {
@@ -592,19 +600,15 @@ public class Tar extends MatchingTask {
                     files.add(r.getName());
                 }
             }
-            Iterator iter = basedirs.iterator();
-            while (iter.hasNext()) {
-                File base = (File) iter.next();
-                Vector f = (Vector) basedirToFilesMap.get(base);
-                String[] files = (String[]) f.toArray(new String[f.size()]);
-                upToDate &=
-                    check(base == Copy.NULL_FILE_PLACEHOLDER ? null : base,
-                          files);
+            for(final File base : basedirs) {
+            	final File tmpBase = base == Copy.NULL_FILE_PLACEHOLDER ? null : base;
+                final List<String> files = basedirToFilesMap.get(base);
+				check(tmpBase, files);
             }
         } else { // non-file resources
-            Iterator<Resource> iter = rc.iterator();
+            final Iterator<Resource> iter = rc.iterator();
             while (upToDate && iter.hasNext()) {
-                Resource r = iter.next();
+                final Resource r = iter.next();
                 upToDate = archiveIsUpToDate(r);
             }
         }
@@ -620,7 +624,7 @@ public class Tar extends MatchingTask {
      * @return whether the archive is up-to-date
      * @since Ant 1.7
      */
-    protected boolean check(File basedir, String[] files) {
+    protected boolean check(final File basedir, final String[] files) {
         boolean upToDate = true;
         if (!archiveIsUpToDate(files, basedir)) {
             upToDate = false;
@@ -636,6 +640,20 @@ public class Tar extends MatchingTask {
     }
 
     /**
+     * <p>Checks whether the archive is out-of-date with respect to the
+     * given files, ensures that the archive won't contain itself.</p>
+     *
+     * @param basedir base directory for file names
+     * @param files array of relative file names
+     * @return whether the archive is up-to-date
+     * @see #check(File, String[])
+     * @since Ant 1.9.5
+     */
+    protected boolean check(final File basedir, final Collection<String> files) {
+    	return check(basedir, files.toArray(new String[files.size()]));
+    }
+
+    /**
      * Adds the resources contained in this collection to the archive.
      *
      * <p>Uses the file based methods for file resources for backwards
@@ -646,7 +664,7 @@ public class Tar extends MatchingTask {
      * @throws IOException on error.
      * @since Ant 1.7
      */
-    protected void tar(ResourceCollection rc, TarOutputStream tOut)
+    protected void tar(final ResourceCollection rc, final TarOutputStream tOut)
         throws IOException {
         ArchiveFileSet afs = null;
         if (rc instanceof ArchiveFileSet) {
@@ -659,23 +677,23 @@ public class Tar extends MatchingTask {
                                      + "filesets that specify a "
                                      + "single file.");
         }
-        TarFileSet tfs = asTarFileSet(afs);
+        final TarFileSet tfs = asTarFileSet(afs);
 
         if (isFileFileSet(rc)) {
-            FileSet fs = (FileSet) rc;
-            String[] files = getFileNames(fs);
+            final FileSet fs = (FileSet) rc;
+            final String[] files = getFileNames(fs);
             for (int i = 0; i < files.length; i++) {
-                File f = new File(fs.getDir(getProject()), files[i]);
-                String name = files[i].replace(File.separatorChar, '/');
+                final File f = new File(fs.getDir(getProject()), files[i]);
+                final String name = files[i].replace(File.separatorChar, '/');
                 tarFile(f, tOut, name, tfs);
             }
         } else if (rc.isFilesystemOnly()) {
-            for (Resource r : rc) {
-                File f = r.as(FileProvider.class).getFile();
+            for (final Resource r : rc) {
+                final File f = r.as(FileProvider.class).getFile();
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources
-            for (Resource r : rc) {
+            for (final Resource r : rc) {
                 tarResource(r, tOut, r.getName(), tfs);
             }
         }
@@ -688,7 +706,7 @@ public class Tar extends MatchingTask {
      * @return true if the collection is a fileset.
      * @since Ant 1.7
      */
-    protected static boolean isFileFileSet(ResourceCollection rc) {
+    protected static boolean isFileFileSet(final ResourceCollection rc) {
         return rc instanceof FileSet && rc.isFilesystemOnly();
     }
 
@@ -699,11 +717,11 @@ public class Tar extends MatchingTask {
      * @return a list of the filenames.
      * @since Ant 1.7
      */
-    protected static String[] getFileNames(FileSet fs) {
-        DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
-        String[] directories = ds.getIncludedDirectories();
-        String[] filesPerSe = ds.getIncludedFiles();
-        String[] files = new String [directories.length + filesPerSe.length];
+    protected static String[] getFileNames(final FileSet fs) {
+        final DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
+        final String[] directories = ds.getIncludedDirectories();
+        final String[] filesPerSe = ds.getIncludedFiles();
+        final String[] files = new String [directories.length + filesPerSe.length];
         System.arraycopy(directories, 0, files, 0, directories.length);
         System.arraycopy(filesPerSe, 0, files, directories.length,
                          filesPerSe.length);
@@ -719,7 +737,7 @@ public class Tar extends MatchingTask {
      * @return a new TarFileSet.
      * @since Ant 1.7
      */
-    protected TarFileSet asTarFileSet(ArchiveFileSet archiveFileSet) {
+    protected TarFileSet asTarFileSet(final ArchiveFileSet archiveFileSet) {
         TarFileSet tfs = null;
         if (archiveFileSet != null && archiveFileSet instanceof TarFileSet) {
             tfs = (TarFileSet) archiveFileSet;
@@ -740,7 +758,7 @@ public class Tar extends MatchingTask {
 
                 if (archiveFileSet
                     instanceof org.apache.tools.ant.types.TarFileSet) {
-                    org.apache.tools.ant.types.TarFileSet t =
+                    final org.apache.tools.ant.types.TarFileSet t =
                         (org.apache.tools.ant.types.TarFileSet) archiveFileSet;
                     if (t.hasUserNameBeenSet()) {
                         tfs.setUserName(t.getUserName());
@@ -776,7 +794,7 @@ public class Tar extends MatchingTask {
          *
          * @param fileset a <code>FileSet</code> value
          */
-        public TarFileSet(FileSet fileset) {
+        public TarFileSet(final FileSet fileset) {
             super(fileset);
         }
 
@@ -794,7 +812,7 @@ public class Tar extends MatchingTask {
          * @return a list of file and directory names, relative to
          *    the baseDir for the project.
          */
-        public String[] getFiles(Project p) {
+        public String[] getFiles(final Project p) {
             if (files == null) {
                 files = getFileNames(this);
             }
@@ -808,7 +826,7 @@ public class Tar extends MatchingTask {
          * optional, default=0644
          * @param octalString a 3 digit octal string.
          */
-        public void setMode(String octalString) {
+        public void setMode(final String octalString) {
             setFileMode(octalString);
         }
 
@@ -825,7 +843,7 @@ public class Tar extends MatchingTask {
          * Optional, default is <code>false</code>.
          * @param b the leading slashes flag.
          */
-        public void setPreserveLeadingSlashes(boolean b) {
+        public void setPreserveLeadingSlashes(final boolean b) {
             this.preserveLeadingSlashes = b;
         }
 
@@ -865,7 +883,8 @@ public class Tar extends MatchingTask {
         /**
          * @return the possible values for this enumerated type.
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return validModes;
         }
 
@@ -945,7 +964,8 @@ public class Tar extends MatchingTask {
          *  Get valid enumeration values.
          *  @return valid enumeration values
          */
-        public String[] getValues() {
+        @Override
+		public String[] getValues() {
             return new String[] {NONE, GZIP, BZIP2 };
         }
 

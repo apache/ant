@@ -171,9 +171,8 @@ public final class ConcatFilter extends BaseParamFilterReader
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-    @Override
 	public Reader chain(final Reader rdr) {
-        ConcatFilter newFilter = new ConcatFilter(rdr);
+        final ConcatFilter newFilter = new ConcatFilter(rdr);
         newFilter.setPrepend(getPrepend());
         newFilter.setAppend(getAppend());
         // Usually the initialized is set to true. But here it must not.
@@ -190,7 +189,7 @@ public final class ConcatFilter extends BaseParamFilterReader
      */
     private void initialize() throws IOException {
         // get parameters
-        Parameter[] params = getParameters();
+        final Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 if ("prepend".equals(params[i].getName())) {

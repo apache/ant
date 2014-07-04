@@ -96,7 +96,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @param host the host to ping.
      */
-    public void setHost(String host) {
+    public void setHost(final String host) {
         this.host = host;
     }
 
@@ -105,7 +105,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @param url a URL object.
      */
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
@@ -114,7 +114,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @param timeout the timeout in seconds.
      */
-    public void setTimeout(int timeout) {
+    public void setTimeout(final int timeout) {
         this.timeout = timeout;
     }
 
@@ -125,7 +125,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @return true if it is empty
      */
-    private boolean empty(String string) {
+    private boolean empty(final String string) {
         return string == null || string.length() == 0;
     }
 
@@ -139,7 +139,6 @@ public class IsReachable extends ProjectComponent implements Condition {
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs
      */
-    @Override
 	public boolean eval() throws BuildException {
         if (empty(host) && empty(url)) {
             throw new BuildException(ERROR_NO_HOSTNAME);
@@ -154,12 +153,12 @@ public class IsReachable extends ProjectComponent implements Condition {
             }
             try {
                 //get the host of a url
-                URL realURL = new URL(url);
+                final URL realURL = new URL(url);
                 target = realURL.getHost();
                 if (empty(target)) {
                     throw new BuildException(ERROR_NO_HOST_IN_URL + url);
                 }
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 throw new BuildException(ERROR_BAD_URL + url, e);
             }
         }
@@ -167,7 +166,7 @@ public class IsReachable extends ProjectComponent implements Condition {
         InetAddress address;
         try {
             address = InetAddress.getByName(target);
-        } catch (UnknownHostException e1) {
+        } catch (final UnknownHostException e1) {
             log(WARN_UNKNOWN_HOST + target);
             return false;
         }
@@ -179,22 +178,22 @@ public class IsReachable extends ProjectComponent implements Condition {
         try {
             reachableMethod = InetAddress.class.getMethod(METHOD_NAME,
                     parameterTypes);
-            Object[] params = new Object[1];
+            final Object[] params = new Object[1];
             params[0] = new Integer(timeout * SECOND);
             try {
                 reachable = ((Boolean) reachableMethod.invoke(address, params))
                         .booleanValue();
-            } catch (IllegalAccessException e) {
+            } catch (final IllegalAccessException e) {
                 //utterly implausible, but catered for anyway
                 throw new BuildException("When calling " + reachableMethod);
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 //assume this is an IOexception about un readability
-                Throwable nested = e.getTargetException();
+                final Throwable nested = e.getTargetException();
                 log(ERROR_ON_NETWORK + target + ": " + nested.toString());
                 //any kind of fault: not reachable.
                 reachable = false;
             }
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             //java1.4
             log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
             log(MSG_NO_REACHABLE_TEST);

@@ -46,7 +46,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * Constructor with another resource to wrap.
      * @param other the resource to wrap.
      */
-    protected ContentTransformingResource(ResourceCollection other) {
+    protected ContentTransformingResource(final ResourceCollection other) {
         super(other);
     }
 
@@ -61,14 +61,14 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
             InputStream in = null;
             try {
                 in = getInputStream();
-                byte[] buf = new byte[BUFFER_SIZE];
+                final byte[] buf = new byte[BUFFER_SIZE];
                 int size = 0;
                 int readNow;
                 while ((readNow = in.read(buf, 0, buf.length)) > 0) {
                     size += readNow;
                 }
                 return size;
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new BuildException("caught exception while reading "
                                          + getName(), ex);
             } finally {
@@ -117,14 +117,13 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * Suppress FileProvider, re-implement Appendable
      */
     @Override
-	public <T> T as(Class<T> clazz) {
+	public <T> T as(final Class<T> clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
             if (isAppendSupported()) {
                 final Appendable a =
                     getResource().as(Appendable.class);
                 if (a != null) {
                     return clazz.cast(new Appendable() {
-                        @Override
 						public OutputStream getAppendOutputStream()
                                 throws IOException {
                             OutputStream out = a.getAppendOutputStream();

@@ -119,7 +119,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
          * @return <code>true</code> if there are more elements in the
          *         enumeration; <code>false</code> otherwise.
          */
-        @Override
 		public boolean hasMoreElements() {
             return (this.nextResource != null);
         }
@@ -129,7 +128,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
          *
          * @return the next resource in the enumeration
          */
-        @Override
 		public URL nextElement() {
             final URL ret = this.nextResource;
             if (ret == null) {
@@ -1445,7 +1443,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the buildStarted event
      */
-    @Override
 	public void buildStarted(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1456,7 +1453,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the buildFinished event
      */
-    @Override
 	public void buildFinished(final BuildEvent event) {
         cleanup();
     }
@@ -1470,7 +1466,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @since Ant 1.6.2
      */
-    @Override
 	public void subBuildFinished(final BuildEvent event) {
         if (event.getProject() == project) {
             cleanup();
@@ -1484,7 +1479,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @since Ant 1.6.2
      */
-    @Override
 	public void subBuildStarted(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1494,7 +1488,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the targetStarted event
      */
-    @Override
 	public void targetStarted(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1504,7 +1497,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the targetFinished event
      */
-    @Override
 	public void targetFinished(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1514,7 +1506,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the taskStarted event
      */
-    @Override
 	public void taskStarted(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1524,7 +1515,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the taskFinished event
      */
-    @Override
 	public void taskFinished(final BuildEvent event) {
         // Not significant for the class loader.
     }
@@ -1534,7 +1524,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      *
      * @param event the messageLogged event
      */
-    @Override
 	public void messageLogged(final BuildEvent event) {
         // Not significant for the class loader.
     }
