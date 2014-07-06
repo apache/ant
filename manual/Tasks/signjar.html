@@ -27,7 +27,7 @@
 <h2><a name="signjar">SignJar</a></h2>
 <h3>Description</h3>
 <p>Signing a jar allows users to authenticate the publisher.</p>
-<p>Signs JAR files with the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html"><tt>jarsigner</tt> command line tool</a>. 
+<p>Signs JAR files with the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html"><tt>jarsigner</tt> command line tool</a>.
 It will take a named file in the <tt>jar</tt> attribute, and an optional
 <tt>destDir</tt> or <tt>signedJar</tt> attribute. Nested paths are also
 supported; here only an (optional) <tt>destDir</tt> is allowed. If a destination
@@ -40,10 +40,10 @@ Dependency rules
 <li>Nonexistent destination JARs are created/signed</li>
 <li>Out of date destination JARs are created/signed</li>
 <li>If a destination file and a source file are the same,
-and <tt>lazy</tt> is true, the JAR is only signed if it does not 
+and <tt>lazy</tt> is true, the JAR is only signed if it does not
 contain a signature by this alias.</li>
 <li>If a destination file and a source file are the same,
-and <tt>lazy</tt> is false, the JAR is signed.</li> 
+and <tt>lazy</tt> is false, the JAR is signed.</li>
 </ul>
 
 <h3>Parameters</h3>
@@ -91,7 +91,7 @@ and <tt>lazy</tt> is false, the JAR is signed.</li>
   </tr>
   <tr>
     <td valign="top">signedjar</td>
-    <td valign="top">name of signed JAR file. This can only be set when 
+    <td valign="top">name of signed JAR file. This can only be set when
     the <tt>jar</tt> attribute is set.</td>
     <td valign="top" align="center">No.</td>
   </tr>
@@ -143,8 +143,18 @@ block</td>
   </tr>
   <tr>
     <td valign="top">tsacert</td>
-    <td valign="top">alias in the keystore for a timestamp authority for 
+    <td valign="top">alias in the keystore for a timestamp authority for
     timestamped JAR files in Java1.5+</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tsaproxyhost</td>
+    <td valign="top">proxy host to be used when connecting to TSA server</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">getTsaproxyport</td>
+    <td valign="top">proxy port to be used when connecting to TSA server</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -156,14 +166,14 @@ block</td>
       jarsigner command.
       <em>since Ant 1.8.0</em>.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">force</td>
     <td valign="top">Whether to force signing of the jar file even if
       it doesn't seem to be out of date or already signed.
       <em>since Ant 1.8.0</em>.</td>
     <td align="center" valign="top">No; default false</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">sigalg</td>
     <td valign="top">name of signature algorithm</td>
@@ -273,7 +283,7 @@ With trusted timestamping, users can verify that signing occurred before a certi
 
 <p>
 Timestamped JAR files were introduced in Java1.5 and supported in Ant since
-Ant 1.7. Ant does not yet support proxy setup for this signing process. 
+Ant 1.7. Since Ant 1.9.5, Ant can use unauthenticated proxies for this signing process.
 </p>
 
 <p>Common public timestamp authorities include

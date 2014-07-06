@@ -99,6 +99,16 @@ public class SignJar extends AbstractJarSignerTask {
     protected String tsaurl;
 
     /**
+     * Proxy host to be used when connecting to TSA server
+     */
+    protected String tsaproxyhost;
+
+    /**
+     * Proxy port to be used when connecting to TSA server
+     */
+    protected String tsaproxyport;
+
+    /**
      * alias for the TSA in the keystore
      */
     protected String tsacert;
@@ -251,6 +261,42 @@ public class SignJar extends AbstractJarSignerTask {
     }
 
     /**
+     * Get the proxy host to be used when connecting to the TSA url
+     * @return url or null
+     * @since Ant 1.9.5
+     */
+    public String getTsaproxyhost() {
+        return tsaproxyhost;
+    }
+
+    /**
+     *
+     * @param tsaproxyhost the proxy host to be used when connecting to the TSA.
+     * @since Ant 1.9.5
+     */
+    public void setTsaproxyhost(String tsaproxyhost) {
+        this.tsaproxyhost = tsaproxyhost;
+    }
+
+    /**
+     * Get the proxy host to be used when connecting to the TSA url
+     * @return url or null
+     * @since Ant 1.9.5
+     */
+    public String getTsaproxyport() {
+        return tsaproxyport;
+    }
+
+    /**
+     *
+     * @param tsaproxyport the proxy port to be used when connecting to the TSA.
+     * @since Ant 1.9.5
+     */
+    public void setTsaproxyport(String tsaproxyport) {
+        this.tsaproxyport = tsaproxyport;
+    }
+
+    /**
      * get the -tsacert option
      * @since Ant 1.7
      * @return a certificate alias or null
@@ -322,7 +368,7 @@ public class SignJar extends AbstractJarSignerTask {
      * @throws BuildException on errors
      */
     @Override
-	public void execute() throws BuildException {
+        public void execute() throws BuildException {
         //validation logic
         final boolean hasJar = jar != null;
         final boolean hasSignedJar = signedjar != null;
@@ -504,9 +550,25 @@ public class SignJar extends AbstractJarSignerTask {
             addValue(cmd, "-tsa");
             addValue(cmd, tsaurl);
         }
+
         if (tsacert != null) {
             addValue(cmd, "-tsacert");
             addValue(cmd, tsacert);
+        }
+
+        if (tsaproxyhost != null) {
+            final String connectionType;
+            if (tsaurl.startsWith("https")) {
+                connectionType = "https";
+            } else {
+                connectionType = "http";
+            }
+
+            addValue(cmd, "-J-D" + connectionType + ".proxyHost=" + tsaproxyhost);
+
+            if (tsaproxyport != null) {
+                addValue(cmd, "-J-D" + connectionType + ".proxyPort=" + tsaproxyport);
+            }
         }
     }
 

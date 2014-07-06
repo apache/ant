@@ -30,6 +30,10 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * it is now possible to provide proxy configuration when to signjar
+   when using the timestamped authority.
+   Bugzilla Report 56678
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
