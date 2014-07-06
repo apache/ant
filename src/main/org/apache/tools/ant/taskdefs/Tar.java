@@ -72,35 +72,35 @@ public class Tar extends MatchingTask {
      *             Tar.TarLongFileMode.WARN
      */
     @Deprecated
-	public static final String WARN = "warn";
+    public static final String WARN = "warn";
     /**
      * @deprecated since 1.5.x.
      *             Tar.FAIL is deprecated and is replaced with
      *             Tar.TarLongFileMode.FAIL
      */
     @Deprecated
-	public static final String FAIL = "fail";
+    public static final String FAIL = "fail";
     /**
      * @deprecated since 1.5.x.
      *             Tar.TRUNCATE is deprecated and is replaced with
      *             Tar.TarLongFileMode.TRUNCATE
      */
     @Deprecated
-	public static final String TRUNCATE = "truncate";
+    public static final String TRUNCATE = "truncate";
     /**
      * @deprecated since 1.5.x.
      *             Tar.GNU is deprecated and is replaced with
      *             Tar.TarLongFileMode.GNU
      */
     @Deprecated
-	public static final String GNU = "gnu";
+    public static final String GNU = "gnu";
     /**
      * @deprecated since 1.5.x.
      *             Tar.OMIT is deprecated and is replaced with
      *             Tar.TarLongFileMode.OMIT
      */
     @Deprecated
-	public static final String OMIT = "omit";
+    public static final String OMIT = "omit";
 
     // CheckStyle:VisibilityModifier OFF - bc
     File tarFile;
@@ -150,7 +150,7 @@ public class Tar extends MatchingTask {
      *             For consistency with other tasks, please use setDestFile().
      */
     @Deprecated
-	public void setTarfile(final File tarFile) {
+    public void setTarfile(final File tarFile) {
         this.tarFile = tarFile;
     }
 
@@ -191,7 +191,7 @@ public class Tar extends MatchingTask {
      *             the mode in its own class.
      */
     @Deprecated
-	public void setLongfile(final String mode) {
+    public void setLongfile(final String mode) {
         log("DEPRECATED - The setLongfile(String) method has been deprecated."
             + " Use setLongfile(Tar.TarLongFileMode) instead.");
         this.longFileMode = new TarLongFileMode();
@@ -236,7 +236,7 @@ public class Tar extends MatchingTask {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (tarFile == null) {
             throw new BuildException("tarfile attribute must be set!",
                                      getLocation());
@@ -253,7 +253,7 @@ public class Tar extends MatchingTask {
         }
 
         @SuppressWarnings("unchecked")
-		final Vector<TarFileSet> savedFileSets = (Vector<TarFileSet>) filesets.clone();
+        final Vector<TarFileSet> savedFileSets = (Vector<TarFileSet>) filesets.clone();
         try {
             if (baseDir != null) {
                 if (!baseDir.exists()) {
@@ -278,10 +278,10 @@ public class Tar extends MatchingTask {
             // fileset
             boolean upToDate = true;
             for(final TarFileSet tfs : filesets) {
-            	upToDate &= check(tfs);
+                upToDate &= check(tfs);
             }
             for(final ResourceCollection rcol : resourceCollections) {
-            	upToDate &= check(rcol);
+                upToDate &= check(rcol);
             }
 
             if (upToDate) {
@@ -319,11 +319,11 @@ public class Tar extends MatchingTask {
                 }
 
                 longWarningGiven = false;
-                for(final TarFileSet tfs : filesets) {
-                	tar(tfs, tOut);
+                for (final TarFileSet tfs : filesets) {
+                    tar(tfs, tOut);
                 }
-                for(final ResourceCollection rcol : resourceCollections) {
-                	tar(rcol, tOut);
+                for (final ResourceCollection rcol : resourceCollections) {
+                    tar(rcol, tOut);
                 }
             } catch (final IOException ioe) {
                 final String msg = "Problem creating TAR: " + ioe.getMessage();
@@ -512,7 +512,7 @@ public class Tar extends MatchingTask {
      *             use the two-arg version instead.
      */
     @Deprecated
-	protected boolean archiveIsUpToDate(final String[] files) {
+    protected boolean archiveIsUpToDate(final String[] files) {
         return archiveIsUpToDate(files, baseDir);
     }
 
@@ -600,10 +600,10 @@ public class Tar extends MatchingTask {
                     files.add(r.getName());
                 }
             }
-            for(final File base : basedirs) {
-            	final File tmpBase = base == Copy.NULL_FILE_PLACEHOLDER ? null : base;
+            for (final File base : basedirs) {
+                final File tmpBase = base == Copy.NULL_FILE_PLACEHOLDER ? null : base;
                 final List<String> files = basedirToFilesMap.get(base);
-				check(tmpBase, files);
+                check(tmpBase, files);
             }
         } else { // non-file resources
             final Iterator<Resource> iter = rc.iterator();
@@ -650,7 +650,7 @@ public class Tar extends MatchingTask {
      * @since Ant 1.9.5
      */
     protected boolean check(final File basedir, final Collection<String> files) {
-    	return check(basedir, files.toArray(new String[files.size()]));
+        return check(basedir, files.toArray(new String[files.size()]));
     }
 
     /**
@@ -884,7 +884,7 @@ public class Tar extends MatchingTask {
          * @return the possible values for this enumerated type.
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return validModes;
         }
 
@@ -965,7 +965,7 @@ public class Tar extends MatchingTask {
          *  @return valid enumeration values
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {NONE, GZIP, BZIP2 };
         }
 
