@@ -603,7 +603,7 @@ public class Tar extends MatchingTask {
             for (final File base : basedirs) {
                 final File tmpBase = base == Copy.NULL_FILE_PLACEHOLDER ? null : base;
                 final List<String> files = basedirToFilesMap.get(base);
-                check(tmpBase, files);
+                upToDate &= check(tmpBase, files);
             }
         } else { // non-file resources
             final Iterator<Resource> iter = rc.iterator();
