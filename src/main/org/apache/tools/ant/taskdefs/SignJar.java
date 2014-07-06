@@ -368,7 +368,7 @@ public class SignJar extends AbstractJarSignerTask {
      * @throws BuildException on errors
      */
     @Override
-        public void execute() throws BuildException {
+    public void execute() throws BuildException {
         //validation logic
         final boolean hasJar = jar != null;
         final boolean hasSignedJar = signedjar != null;
@@ -549,6 +549,21 @@ public class SignJar extends AbstractJarSignerTask {
         if (tsaurl != null) {
             addValue(cmd, "-tsa");
             addValue(cmd, tsaurl);
+
+            if (tsaproxyhost != null) {
+                final String connectionType;
+                if (tsaurl.startsWith("https")) {
+                    connectionType = "https";
+                } else {
+                    connectionType = "http";
+                }
+
+                addValue(cmd, "-J-D" + connectionType + ".proxyHost=" + tsaproxyhost);
+
+                if (tsaproxyport != null) {
+                    addValue(cmd, "-J-D" + connectionType + ".proxyPort=" + tsaproxyport);
+                }
+            }
         }
 
         if (tsacert != null) {
@@ -556,20 +571,6 @@ public class SignJar extends AbstractJarSignerTask {
             addValue(cmd, tsacert);
         }
 
-        if (tsaproxyhost != null) {
-            final String connectionType;
-            if (tsaurl.startsWith("https")) {
-                connectionType = "https";
-            } else {
-                connectionType = "http";
-            }
-
-            addValue(cmd, "-J-D" + connectionType + ".proxyHost=" + tsaproxyhost);
-
-            if (tsaproxyport != null) {
-                addValue(cmd, "-J-D" + connectionType + ".proxyPort=" + tsaproxyport);
-            }
-        }
     }
 
     /**
