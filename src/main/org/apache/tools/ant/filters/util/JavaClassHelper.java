@@ -20,10 +20,10 @@ package org.apache.tools.ant.filters.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.sun.org.apache.bcel.internal.classfile.ClassParser;
-import com.sun.org.apache.bcel.internal.classfile.ConstantValue;
-import com.sun.org.apache.bcel.internal.classfile.Field;
-import com.sun.org.apache.bcel.internal.classfile.JavaClass;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.JavaClass;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 /**

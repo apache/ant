@@ -19,11 +19,9 @@
 package org.apache.tools.ant.util.regexp;
 
 import java.util.Vector;
-
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 import org.apache.tools.ant.BuildException;
-
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.apache.regexp.internal.RESyntaxException;
 
 /**
  * Implementation of RegexpMatcher for Jakarta-Regexp.

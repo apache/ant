@@ -18,10 +18,8 @@
 package org.apache.tools.ant.util.regexp;
 
 import java.util.Vector;
-
+import org.apache.regexp.RE;
 import org.apache.tools.ant.BuildException;
-
-import com.sun.org.apache.regexp.internal.RE;
 
 /***
  * Regular expression implementation using the Jakarta Regexp package
