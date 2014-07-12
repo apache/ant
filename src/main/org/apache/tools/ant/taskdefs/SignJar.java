@@ -549,21 +549,6 @@ public class SignJar extends AbstractJarSignerTask {
         if (tsaurl != null) {
             addValue(cmd, "-tsa");
             addValue(cmd, tsaurl);
-
-            if (tsaproxyhost != null) {
-                final String connectionType;
-                if (tsaurl.startsWith("https")) {
-                    connectionType = "https";
-                } else {
-                    connectionType = "http";
-                }
-
-                addValue(cmd, "-J-D" + connectionType + ".proxyHost=" + tsaproxyhost);
-
-                if (tsaproxyport != null) {
-                    addValue(cmd, "-J-D" + connectionType + ".proxyPort=" + tsaproxyport);
-                }
-            }
         }
 
         if (tsacert != null) {
@@ -571,6 +556,14 @@ public class SignJar extends AbstractJarSignerTask {
             addValue(cmd, tsacert);
         }
 
+        if (tsaproxyhost != null) {
+            if (tsaurl == null || tsaurl.startsWith("https")) {
+                addProxyFor(cmd, "https");
+            }
+            if (tsaurl == null || !tsaurl.startsWith("https")) {
+                addProxyFor(cmd, "http");
+            }
+        }
     }
 
     /**
@@ -640,5 +633,13 @@ public class SignJar extends AbstractJarSignerTask {
      */
     public void setPreserveLastModified(boolean preserveLastModified) {
         this.preserveLastModified = preserveLastModified;
+    }
+
+    private void addProxyFor(final ExecTask cmd, final String scheme) {
+        addValue(cmd, "-J-D" + scheme + ".proxyHost=" + tsaproxyhost);
+
+        if (tsaproxyport != null) {
+            addValue(cmd, "-J-D" + scheme + ".proxyPort=" + tsaproxyport);
+        }
     }
 }
