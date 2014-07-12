@@ -365,7 +365,7 @@ public class JUnitTask extends Task {
          * @return  array of allowed values
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {"true", "yes", "false", "no",
                                  "on", "off", "withOutAndErr"};
         }
@@ -457,7 +457,7 @@ public class JUnitTask extends Task {
      * @param sysp environment variable to add
      */
     @Deprecated
-	public void addSysproperty(final Environment.Variable sysp) {
+    public void addSysproperty(final Environment.Variable sysp) {
 
         getCommandline().addSysproperty(sysp);
     }
@@ -735,7 +735,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.4
      */
     @Override
-	public void init() {
+    public void init() {
         antRuntimeClasses = new Path(getProject());
         splitJUnit = !addClasspathResource("/junit/framework/TestCase.class");
         addClasspathEntry("/org/apache/tools/ant/launch/AntMain.class");
@@ -782,7 +782,7 @@ public class JUnitTask extends Task {
                 path.add(extra);
             }
             mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
+                public Object run() {
                     return new SplitClassLoader(myLoader, path, getProject(),
                                      new String[] {
                                          "BriefJUnitResultFormatter",
@@ -816,7 +816,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         checkMethodLists();
 
         setupJUnitDelegate();
@@ -870,7 +870,7 @@ public class JUnitTask extends Task {
             this.id = id;
         }
 
-		public void run() {
+        public void run() {
             try {
                 masterTask.oneJunitThread(iterator, id);
             } catch (final BuildException b) {
@@ -1441,7 +1441,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.5
      */
     @Override
-	protected void handleOutput(final String output) {
+    protected void handleOutput(final String output) {
         if (output.startsWith(TESTLISTENER_PREFIX)) {
             log(output, Project.MSG_VERBOSE);
         } else if (runner != null) {
@@ -1471,7 +1471,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     @Override
-	protected int handleInput(final byte[] buffer, final int offset, final int length)
+    protected int handleInput(final byte[] buffer, final int offset, final int length)
         throws IOException {
         if (runner != null) {
             return runner.handleInput(buffer, offset, length);
@@ -1489,7 +1489,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.5.2
      */
     @Override
-	protected void handleFlush(final String output) {
+    protected void handleFlush(final String output) {
         if (runner != null) {
             runner.handleFlush(output);
             if (showOutput) {
@@ -1508,7 +1508,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.5
      */
     @Override
-	public void handleErrorOutput(final String output) {
+    public void handleErrorOutput(final String output) {
         if (runner != null) {
             runner.handleErrorOutput(output);
             if (showOutput) {
@@ -1528,7 +1528,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.5.2
      */
     @Override
-	public void handleErrorFlush(final String output) {
+    public void handleErrorFlush(final String output) {
         if (runner != null) {
             runner.handleErrorFlush(output);
             if (showOutput) {
@@ -2009,7 +2009,7 @@ public class JUnitTask extends Task {
          * @return true if everything is equal
          */
         @Override
-		public boolean equals(final Object other) {
+        public boolean equals(final Object other) {
             if (other == null
                 || other.getClass() != ForkedTestConfiguration.class) {
                 return false;
@@ -2034,7 +2034,7 @@ public class JUnitTask extends Task {
          * @return hash code value
          */
         @Override
-		public int hashCode() {
+        public int hashCode() {
             // CheckStyle:MagicNumber OFF
             return (filterTrace ? 1 : 0)
                 + (haltOnError ? 2 : 0)
@@ -2078,7 +2078,7 @@ public class JUnitTask extends Task {
 
         /** {@inheritDoc}. */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {ONCE, PER_TEST, PER_BATCH};
         }
     }
@@ -2216,7 +2216,7 @@ public class JUnitTask extends Task {
          * @param level the logging level to use.
          */
         @Override
-		protected void processLine(final String line, final int level) {
+        protected void processLine(final String line, final int level) {
             if (line.startsWith(TESTLISTENER_PREFIX)) {
                 task.log(line, Project.MSG_VERBOSE);
             } else {

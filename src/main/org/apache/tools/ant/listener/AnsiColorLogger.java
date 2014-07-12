@@ -208,9 +208,9 @@ public class AnsiColorLogger extends DefaultLogger {
      */
     /** {@inheritDoc}. */
     @Override
-	protected void printMessage(final String message,
-                                      final PrintStream stream,
-                                      final int priority) {
+    protected void printMessage(final String message,
+                                final PrintStream stream,
+                                final int priority) {
         if (message != null && stream != null) {
             if (!colorsSet) {
                 setColors();

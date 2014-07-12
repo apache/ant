@@ -91,7 +91,7 @@ public final class ConcatFilter extends BaseParamFilterReader
      * during reading
      */
     @Override
-	public int read() throws IOException {
+    public int read() throws IOException {
         // do the "singleton" initialization
         if (!getInitialized()) {
             initialize();
@@ -171,7 +171,7 @@ public final class ConcatFilter extends BaseParamFilterReader
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
-	public Reader chain(final Reader rdr) {
+    public Reader chain(final Reader rdr) {
         final ConcatFilter newFilter = new ConcatFilter(rdr);
         newFilter.setPrepend(getPrepend());
         newFilter.setAppend(getAppend());

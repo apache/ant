@@ -176,7 +176,7 @@ public class Copy extends Task {
      *             consistently let the Introspection mechanism work.
      */
     @Deprecated
-	public void setPreserveLastModified(final String preserve) {
+    public void setPreserveLastModified(final String preserve) {
         setPreserveLastModified(Project.toBoolean(preserve));
     }
 
@@ -285,17 +285,17 @@ public class Copy extends Task {
         this.includeEmpty = includeEmpty;
     }
 
-	/**
-	 * Set quiet mode. Used to hide messages when a file or directory to be
-	 * copied does not exist.
-	 *
-	 * @param quiet
-	 *            whether or not to display error messages when a file or
-	 *            directory does not exist. Default is false.
-	 */
-	public void setQuiet(final boolean quiet) {
-		this.quiet = quiet;
-	}
+    /**
+     * Set quiet mode. Used to hide messages when a file or directory to be
+     * copied does not exist.
+     *
+     * @param quiet
+     *            whether or not to display error messages when a file or
+     *            directory does not exist. Default is false.
+     */
+    public void setQuiet(final boolean quiet) {
+        this.quiet = quiet;
+    }
 
     /**
      * Set method of handling mappers that return multiple
@@ -429,7 +429,7 @@ public class Copy extends Task {
      * @exception BuildException if an error occurs.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         final File savedFile = file; // may be altered in validateAttributes
         final File savedDestFile = destFile;
         final File savedDestDir = destDir;
@@ -823,16 +823,14 @@ public class Copy extends Task {
             toCopy = new Resource[v.size()];
             v.copyInto(toCopy);
         } else {
-			toCopy = ResourceUtils.selectOutOfDateSources(
-					this,
-					fromResources,
-					mapper,
-					new ResourceFactory() {
-						public Resource getResource(final String name) {
-							return new FileResource(toDir, name);
-						}
-					},
-					granularity);
+            toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources,
+                                                          mapper,
+                                                          new ResourceFactory() {
+                                            public Resource getResource(final String name) {
+                                                return new FileResource(toDir, name);
+                                            }
+                                                          },
+                                                          granularity);
         }
         for (int i = 0; i < toCopy.length; i++) {
             final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());

@@ -198,15 +198,15 @@ public abstract class SSHBase extends Task implements LogListener {
     protected Session openSession() throws JSchException {
         final JSch jsch = new JSch();
         final SSHBase base = this;
-        if(verbose) {
-        	JSch.setLogger(new com.jcraft.jsch.Logger(){
-        		public boolean isEnabled(final int level){
-        			return true;
-        		}
-        		public void log(final int level, final String message){
-        			base.log(message, Project.MSG_INFO);
-        		}
-        	});
+        if (verbose) {
+            JSch.setLogger(new com.jcraft.jsch.Logger(){
+                    public boolean isEnabled(final int level){
+                        return true;
+                    }
+                    public void log(final int level, final String message){
+                        base.log(message, Project.MSG_INFO);
+                    }
+                });
         }
         if (null != userInfo.getKeyfile()) {
             jsch.addIdentity(userInfo.getKeyfile());

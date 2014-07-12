@@ -71,7 +71,7 @@ public class Redirector {
         }
 
         @Override
-		public void close() throws IOException {
+        public void close() throws IOException {
             synchronized (outMutex) {
                 if (!closed && !(appendOut && appendProperties)) {
                     setPropertyFromBAOS(this, property);

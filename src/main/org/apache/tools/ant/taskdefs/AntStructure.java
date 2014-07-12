@@ -76,7 +76,7 @@ public class AntStructure extends Task {
      * @exception BuildException if the DTD cannot be written.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
 
         if (output == null) {
             throw new BuildException("output attribute is required", getLocation());
@@ -182,12 +182,12 @@ public class AntStructure extends Task {
 
         private final Hashtable<String, String> visited = new Hashtable<String, String>();
 
-		public void printTail(final PrintWriter out) {
+        public void printTail(final PrintWriter out) {
             visited.clear();
         }
 
-		public void printHead(final PrintWriter out, final Project p, final Hashtable<String, Class<?>> tasks,
-                final Hashtable<String, Class<?>> types) {
+        public void printHead(final PrintWriter out, final Project p, final Hashtable<String, Class<?>> tasks,
+                              final Hashtable<String, Class<?>> types) {
             printHead(out, tasks.keys(), types.keys());
         }
 
@@ -244,7 +244,7 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
-		public void printTargetDecl(final PrintWriter out) {
+        public void printTargetDecl(final PrintWriter out) {
             out.print("<!ELEMENT target (");
             out.print(TASKS);
             out.print(" | ");
@@ -277,7 +277,7 @@ public class AntStructure extends Task {
         /**
          * Print the definition for a given element.
          */
-		public void printElementDecl(final PrintWriter out, final Project p,
+        public void printElementDecl(final PrintWriter out, final Project p,
                                      final String name, final Class<?> element) {
 
             if (visited.containsKey(name)) {

@@ -992,7 +992,7 @@ public class ZipFile {
      */
     private final Comparator<ZipEntry> OFFSET_COMPARATOR =
         new Comparator<ZipEntry>() {
-		public int compare(final ZipEntry e1, final ZipEntry e2) {
+        public int compare(final ZipEntry e1, final ZipEntry e2) {
             if (e1 == e2) {
                 return 0;
             }

@@ -552,7 +552,7 @@ public final class IntrospectionHelper {
             if (nestedElement != null) {
                 nc = new NestedCreator(null) {
                     @Override
-					Object create(final Project project, final Object parent, final Object ignore) {
+                    Object create(final Project project, final Object parent, final Object ignore) {
                         return nestedElement;
                     }
                 };
@@ -608,7 +608,7 @@ public final class IntrospectionHelper {
      *                           element instance, or if the creating method fails.
      */
     @Deprecated
-	public Object createElement(final Project project, final Object parent, final String elementName)
+    public Object createElement(final Project project, final Object parent, final String elementName)
             throws BuildException {
         final NestedCreator nc = getNestedCreator(project, "", parent, elementName, null);
         try {
@@ -1049,7 +1049,7 @@ public final class IntrospectionHelper {
         if (java.lang.Object.class == reflectedArg) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException,
                     IllegalAccessException {
                     throw new BuildException(
@@ -1061,7 +1061,7 @@ public final class IntrospectionHelper {
         if (java.lang.String.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, (Object[]) new String[] {value});
                 }
@@ -1071,7 +1071,7 @@ public final class IntrospectionHelper {
         if (java.lang.Character.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
                     if (value.length() == 0) {
                         throw new BuildException("The value \"\" is not a "
@@ -1085,7 +1085,7 @@ public final class IntrospectionHelper {
         if (java.lang.Boolean.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, (Object[]) new Boolean[] {
                             Project.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE });
@@ -1096,7 +1096,7 @@ public final class IntrospectionHelper {
         if (java.lang.Class.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
                         m.invoke(parent, new Object[] {Class.forName(value)});
@@ -1110,7 +1110,7 @@ public final class IntrospectionHelper {
         if (java.io.File.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, new Object[] {p.resolveFile(value)});
                 }
@@ -1120,7 +1120,7 @@ public final class IntrospectionHelper {
         if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				void set(final Project p, final Object parent, final String value) throws InvocationTargetException,
+                void set(final Project p, final Object parent, final String value) throws InvocationTargetException,
                         IllegalAccessException, BuildException {
                     m.invoke(parent, new Object[] {new FileResource(p, p.resolveFile(value))});
                 };
@@ -1130,7 +1130,7 @@ public final class IntrospectionHelper {
         if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
                         final EnumeratedAttribute ea = (EnumeratedAttribute) reflectedArg.newInstance();
@@ -1151,7 +1151,7 @@ public final class IntrospectionHelper {
         if (java.lang.Long.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
                         m.invoke(parent, new Object[] {
@@ -1195,7 +1195,7 @@ public final class IntrospectionHelper {
 
         return new AttributeSetter(m, arg) {
             @Override
-			public void set(final Project p, final Object parent, final String value)
+            public void set(final Project p, final Object parent, final String value)
                     throws InvocationTargetException, IllegalAccessException, BuildException {
                 try {
                     final Object[] args = finalIncludeProject
@@ -1229,14 +1229,13 @@ public final class IntrospectionHelper {
         if (reflectedArg.isEnum()) {
             return new AttributeSetter(m, arg) {
                 @Override
-				public void set(final Project p, final Object parent, final String value)
+                public void set(final Project p, final Object parent, final String value)
                     throws InvocationTargetException, IllegalAccessException,
                     BuildException {
                     Enum<?> setValue;
                     try {
                         @SuppressWarnings({ "unchecked", "rawtypes" })
-						final
-                        Enum<?> enumValue = Enum.valueOf((Class<? extends Enum>) reflectedArg,
+                        final Enum<?> enumValue = Enum.valueOf((Class<? extends Enum>) reflectedArg,
                                 value);
                         setValue = enumValue;
                     } catch (final IllegalArgumentException e) {
@@ -1422,7 +1421,7 @@ public final class IntrospectionHelper {
         }
 
         @Override
-		Object create(final Project project, final Object parent, final Object ignore)
+        Object create(final Project project, final Object parent, final Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
             return getMethod().invoke(parent, new Object[] {});
         }
@@ -1444,12 +1443,12 @@ public final class IntrospectionHelper {
         }
 
         @Override
-		boolean isPolyMorphic() {
+        boolean isPolyMorphic() {
             return true;
         }
 
         @Override
-		Object create(final Project project, final Object parent, Object child)
+        Object create(final Project project, final Object parent, Object child)
                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
             if (child == null) {
                 child = constructor.newInstance(
@@ -1466,7 +1465,7 @@ public final class IntrospectionHelper {
         }
 
         @Override
-		void store(final Object parent, final Object child)
+        void store(final Object parent, final Object child)
                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
             if (behavior == ADD_CONFIGURED) {
                 istore(parent, child);
@@ -1565,7 +1564,7 @@ public final class IntrospectionHelper {
 
         return new NestedCreator(methodAndObject.method) {
             @Override
-			Object create(final Project project, final Object parent, final Object ignore)
+            Object create(final Project project, final Object parent, final Object ignore)
                     throws InvocationTargetException, IllegalAccessException {
                 if (!getMethod().getName().endsWith("Configured")) {
                     getMethod().invoke(parent, new Object[] {realObject});
@@ -1574,12 +1573,12 @@ public final class IntrospectionHelper {
             }
 
             @Override
-			Object getRealObject() {
+            Object getRealObject() {
                 return realObject;
             }
 
             @Override
-			void store(final Object parent, final Object child) throws InvocationTargetException,
+            void store(final Object parent, final Object child) throws InvocationTargetException,
                     IllegalAccessException, InstantiationException {
                 if (getMethod().getName().endsWith("Configured")) {
                     getMethod().invoke(parent, new Object[] {realObject});

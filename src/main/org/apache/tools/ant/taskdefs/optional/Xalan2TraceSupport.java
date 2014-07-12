@@ -28,7 +28,6 @@ import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.xalan.trace.PrintTraceListener;
 import org.apache.xalan.transformer.TransformerImpl;
 
-
 /**
  * Sets up trace support for a given transformer.
  *

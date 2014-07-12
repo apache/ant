@@ -135,7 +135,7 @@ public class Directory {
      * @return true if this object has an equal directory field as the other object
      */
     @Override
-	public boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -154,7 +154,7 @@ public class Directory {
      * @return the hash code of the directory field
      */
     @Override
-	public int hashCode() {
+    public int hashCode() {
         return directory.hashCode();
     }
 

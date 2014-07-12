@@ -139,7 +139,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs
      */
-	public boolean eval() throws BuildException {
+    public boolean eval() throws BuildException {
         if (empty(host) && empty(url)) {
             throw new BuildException(ERROR_NO_HOSTNAME);
         }

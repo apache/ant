@@ -156,7 +156,7 @@ public class PropertyFile extends Task {
      * @throws BuildException on error.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         checkParameters();
         readFile();
         executeOperation();
@@ -616,7 +616,7 @@ public class PropertyFile extends Task {
 
             /** {@inheritDoc}. */
             @Override
-			public String[] getValues() {
+            public String[] getValues() {
                 return new String[] {"+", "-", "=", "del"};
             }
 
@@ -652,7 +652,7 @@ public class PropertyFile extends Task {
 
             /** {@inheritDoc} */
             @Override
-			public String[] getValues() {
+            public String[] getValues() {
                 return new String[] {"int", "date", "string"};
             }
 
@@ -719,7 +719,7 @@ public class PropertyFile extends Task {
 
         /** {@inheritDoc}. */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return UNITS;
         }
     }

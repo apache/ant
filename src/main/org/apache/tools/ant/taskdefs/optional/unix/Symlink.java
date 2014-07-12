@@ -130,7 +130,7 @@ public class Symlink extends DispatchTask {
      * @throws BuildException on error.
      */
     @Override
-	public void init() throws BuildException {
+    public void init() throws BuildException {
         super.init();
         setDefaults();
     }
@@ -140,7 +140,7 @@ public class Symlink extends DispatchTask {
      * @throws BuildException on error.
      */
     @Override
-	public synchronized void execute() throws BuildException {
+    public synchronized void execute() throws BuildException {
         if (executing) {
             throw new BuildException(
                 "Infinite recursion detected in Symlink.execute()");
@@ -328,7 +328,7 @@ public class Symlink extends DispatchTask {
      * @param action    The action to perform.
      */
     @Override
-	public void setAction(String action) {
+    public void setAction(String action) {
         super.setAction(action);
     }
 
@@ -387,7 +387,7 @@ public class Symlink extends DispatchTask {
      * instead
      */
     @Deprecated
-	public static void deleteSymlink(String path)
+    public static void deleteSymlink(String path)
         throws IOException, FileNotFoundException {
         SYMLINK_UTILS.deleteSymbolicLink(new File(path), null);
     }
@@ -421,7 +421,7 @@ public class Symlink extends DispatchTask {
      * instead
      */
     @Deprecated
-	public static void deleteSymlink(File linkfil)
+    public static void deleteSymlink(File linkfil)
         throws IOException {
         SYMLINK_UTILS.deleteSymbolicLink(linkfil, null);
     }

@@ -64,7 +64,7 @@ public class BindTargets extends Task {
     }
 
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (extensionPoint == null) {
             throw new BuildException("extensionPoint required", getLocation());
         }

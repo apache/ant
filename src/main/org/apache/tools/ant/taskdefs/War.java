@@ -152,7 +152,7 @@ public class War extends Jar {
      * @throws BuildException if invalid configuration
      */
     @Override
-	protected void initZipOutputStream(ZipOutputStream zOut)
+    protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
         super.initZipOutputStream(zOut);
     }
@@ -173,7 +173,7 @@ public class War extends Jar {
      * @throws IOException on output error
      */
     @Override
-	protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's
@@ -218,7 +218,7 @@ public class War extends Jar {
      * gets executed.
      */
     @Override
-	protected void cleanUp() {
+    protected void cleanUp() {
         if (addedWebXmlFile == null
             && deploymentDescriptor == null
             && needxmlfile

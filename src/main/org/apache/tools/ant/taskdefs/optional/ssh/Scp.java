@@ -123,7 +123,7 @@ public class Scp extends SSHBase {
      * @since Ant 1.8.0
      */
     public void setPreservelastmodified(final boolean yesOrNo) {
-    	this.preserveLastModified = yesOrNo;
+        this.preserveLastModified = yesOrNo;
     }
 
     /**
@@ -139,13 +139,13 @@ public class Scp extends SSHBase {
     }
 
     private static void validateRemoteUri(final String type, final String aToUri) {
-    	if (!isRemoteUri(aToUri)) {
+        if (!isRemoteUri(aToUri)) {
             throw new BuildException(type + " '" + aToUri + "' is invalid. "
                                      + "The 'remoteToDir' attribute must "
                                      + "have syntax like the "
                                      + "following: user:password@host:/path"
                                      + " - the :password part is optional");
-    	}
+        }
     }
 
     /**
@@ -198,7 +198,7 @@ public class Scp extends SSHBase {
      * @throws BuildException on error
      */
     @Override
-	public void init() throws BuildException {
+    public void init() throws BuildException {
         super.init();
         this.toUri = null;
         this.fromUri = null;
@@ -210,7 +210,7 @@ public class Scp extends SSHBase {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (toUri == null) {
             throw exactlyOne(TO_ATTRS);
         }

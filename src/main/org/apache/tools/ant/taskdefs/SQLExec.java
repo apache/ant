@@ -91,7 +91,7 @@ public class SQLExec extends JDBCTask {
         public static final String NORMAL = "normal", ROW = "row";
         /** @return the enumerated strings */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {NORMAL, ROW};
         }
     }
@@ -591,7 +591,7 @@ public class SQLExec extends JDBCTask {
      * @throws BuildException on error.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         Vector savedTransaction = (Vector) transactions.clone();
         String savedSqlCommand = sqlCommand;
 
@@ -853,7 +853,7 @@ public class SQLExec extends JDBCTask {
      * @throws SQLException on SQL problems.
      */
     @Deprecated
-	protected void printResults(PrintStream out) throws SQLException {
+    protected void printResults(PrintStream out) throws SQLException {
         ResultSet rs = getStatement().getResultSet();
         try {
             printResults(rs, out);
@@ -958,7 +958,7 @@ public class SQLExec extends JDBCTask {
      * expected RDBMS.</p>
      */
     @Override
-	protected Connection getConnection() {
+    protected Connection getConnection() {
         if (conn == null) {
             conn = super.getConnection();
             if (!isValidRdbms(conn)) {
@@ -993,7 +993,7 @@ public class SQLExec extends JDBCTask {
     public static class OnError extends EnumeratedAttribute {
         /** @return the enumerated values */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {"continue", "stop", "abort"};
         }
     }

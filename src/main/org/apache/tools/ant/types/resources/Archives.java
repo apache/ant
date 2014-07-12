@@ -72,7 +72,7 @@ public class Archives extends DataType
     /**
      * Sums the sizes of nested archives.
      */
-	public int size() {
+    public int size() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).size();
         }
@@ -87,7 +87,7 @@ public class Archives extends DataType
     /**
      * Merges the nested collections.
      */
-	public Iterator<Resource> iterator() {
+    public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).iterator();
         }
@@ -103,7 +103,7 @@ public class Archives extends DataType
     /**
      * @return false
      */
-	public boolean isFilesystemOnly() {
+    public boolean isFilesystemOnly() {
         if (isReference()) {
             return ((Archives) getCheckedRef()).isFilesystemOnly();
         }
@@ -116,7 +116,7 @@ public class Archives extends DataType
      * @param r the Reference to set.
      */
     @Override
-	public void setRefid(final Reference r) {
+    public void setRefid(final Reference r) {
         if (zips.getResourceCollections().size() > 0
             || tars.getResourceCollections().size() > 0) {
             throw tooManyAttributes();
@@ -130,7 +130,7 @@ public class Archives extends DataType
      * @return a cloned instance.
      */
     @Override
-	public Object clone() {
+    public Object clone() {
         try {
             final Archives a = (Archives) super.clone();
             a.zips = (Union) zips.clone();
@@ -177,7 +177,7 @@ public class Archives extends DataType
      * @throws BuildException on error.
      */
     @Override
-	protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p)
+    protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p)
         throws BuildException {
         if (isChecked()) {
             return;

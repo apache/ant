@@ -87,7 +87,7 @@ public class TokenizedPath {
      * @return The original path String
      */
     @Override
-	public String toString() {
+    public String toString() {
         return path;
     }
 
@@ -162,13 +162,13 @@ public class TokenizedPath {
      * true if the original paths are equal.
      */
     @Override
-	public boolean equals(Object o) {
+    public boolean equals(Object o) {
         return o instanceof TokenizedPath
             && path.equals(((TokenizedPath) o).path);
     }
 
     @Override
-	public int hashCode() {
+    public int hashCode() {
         return path.hashCode();
     }
 

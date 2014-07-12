@@ -52,7 +52,7 @@ public class PresentSelector extends BaseSelector {
      * @return a string describing this object
      */
     @Override
-	public String toString() {
+    public String toString() {
         final StringBuilder buf = new StringBuilder("{presentselector targetdir: ");
         if (targetdir == null) {
             buf.append("NOT YET SET");
@@ -133,7 +133,7 @@ public class PresentSelector extends BaseSelector {
      * means that the targetdir attribute has been set and we have a mapper.
      */
     @Override
-	public void verifySettings() {
+    public void verifySettings() {
         if (targetdir == null) {
             setError("The targetdir attribute is required.");
         }
@@ -159,7 +159,7 @@ public class PresentSelector extends BaseSelector {
      * @return whether the file should be selected or not
      */
     @Override
-	public boolean isSelected(final File basedir, final String filename, final File file) {
+    public boolean isSelected(final File basedir, final String filename, final File file) {
 
         // throw BuildException on error
         validate();
@@ -190,7 +190,7 @@ public class PresentSelector extends BaseSelector {
          * @return the values as an array of strings
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {"srconly", "both"};
         }
     }

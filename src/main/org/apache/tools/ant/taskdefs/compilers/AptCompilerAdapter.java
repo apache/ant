@@ -157,7 +157,7 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
      * @return true on success.
      * @throws BuildException if the compilation has problems.
      */
-	public boolean execute() throws BuildException {
+    public boolean execute() throws BuildException {
         attributes.log("Using apt compiler", Project.MSG_VERBOSE);
         //set up the javac options
         final Commandline cmd = setupModernJavacCommand();

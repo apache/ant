@@ -139,7 +139,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public void load(final InputStream inStream) throws IOException {
+    public void load(final InputStream inStream) throws IOException {
         final String s = readLines(inStream);
         final byte[] ba = s.getBytes(ResourceUtils.ISO_8859_1);
         final ByteArrayInputStream bais = new ByteArrayInputStream(ba);
@@ -147,7 +147,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public Object put(final Object key, final Object value) throws NullPointerException {
+    public Object put(final Object key, final Object value) throws NullPointerException {
         final Object obj = super.put(key, value);
         // the above call will have failed if key or value are null
         innerSetProperty(key.toString(), value.toString());
@@ -155,7 +155,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public Object setProperty(final String key, final String value)
+    public Object setProperty(final String key, final String value)
         throws NullPointerException {
         final Object obj = super.setProperty(key, value);
         // the above call will have failed if key or value are null
@@ -188,14 +188,14 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public void clear() {
+    public void clear() {
         super.clear();
         keyedPairLines.clear();
         logicalLines.clear();
     }
 
     @Override
-	public Object remove(final Object key) {
+    public Object remove(final Object key) {
         final Object obj = super.remove(key);
         final Integer i = (Integer) keyedPairLines.remove(key);
         if (null != i) {
@@ -208,7 +208,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public Object clone() {
+    public Object clone() {
         final LayoutPreservingProperties dolly =
             (LayoutPreservingProperties) super.clone();
         dolly.keyedPairLines = (HashMap) this.keyedPairLines.clone();
@@ -256,7 +256,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-	public void store(final OutputStream out, final String header) throws IOException {
+    public void store(final OutputStream out, final String header) throws IOException {
         final OutputStreamWriter osw = new OutputStreamWriter(out, ResourceUtils.ISO_8859_1);
 
         int skipLines = 0;
@@ -630,7 +630,7 @@ public class LayoutPreservingProperties extends Properties {
         }
 
         @Override
-		public String toString() {
+        public String toString() {
             return text;
         }
     }
@@ -694,7 +694,7 @@ public class LayoutPreservingProperties extends Properties {
         }
 
         @Override
-		public Object clone() {
+        public Object clone() {
             Object dolly = null;
             try {
                 dolly = super.clone();

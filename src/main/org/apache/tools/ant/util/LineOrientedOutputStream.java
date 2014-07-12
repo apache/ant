@@ -51,7 +51,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * @throws IOException if there is an error.
      */
     @Override
-	public final void write(int cc) throws IOException {
+    public final void write(int cc) throws IOException {
         final byte c = (byte) cc;
         if ((c == LF) || (c == CR)) {
             if (!skip) {
@@ -68,7 +68,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * @throws IOException if there is an error.
      */
     @Override
-	public void flush() throws IOException {
+    public void flush() throws IOException {
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * @throws IOException if there is an error.
      */
     @Override
-	public void close() throws IOException {
+    public void close() throws IOException {
         if (buffer.size() > 0) {
             processBuffer();
         }
@@ -131,7 +131,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * @throws IOException if the data cannot be written into the stream.
      */
     @Override
-	public final void write(byte[] b, int off, int len) throws IOException {
+    public final void write(byte[] b, int off, int len) throws IOException {
         // find the line breaks and pass other chars through in blocks
         int offset = off;
         int blockStartOffset = offset;

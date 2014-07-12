@@ -432,7 +432,7 @@ public class Property extends Task {
      * @ant.attribute ignore="true"
      */
     @Deprecated
-	public void setUserProperty(boolean userProperty) {
+    public void setUserProperty(boolean userProperty) {
         log("DEPRECATED: Ignoring request to set user property in Property"
             + " task.", Project.MSG_WARN);
     }
@@ -442,7 +442,7 @@ public class Property extends Task {
      * @return the current value or the empty string
      */
     @Override
-	public String toString() {
+    public String toString() {
         return value == null ? "" : value;
     }
 
@@ -453,7 +453,7 @@ public class Property extends Task {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (getProject() == null) {
             throw new IllegalStateException("project has not been set");
         }

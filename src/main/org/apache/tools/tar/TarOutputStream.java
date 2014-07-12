@@ -378,7 +378,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @throws IOException on error
      */
     @Override
-	public void write(byte[] wBuf) throws IOException {
+    public void write(byte[] wBuf) throws IOException {
         write(wBuf, 0, wBuf.length);
     }
 

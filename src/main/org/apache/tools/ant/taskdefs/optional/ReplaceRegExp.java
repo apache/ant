@@ -466,7 +466,7 @@ public class ReplaceRegExp extends Task {
      * @throws BuildException is there is a problem in the task execution.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (regex == null) {
             throw new BuildException("No expression to match.");
         }

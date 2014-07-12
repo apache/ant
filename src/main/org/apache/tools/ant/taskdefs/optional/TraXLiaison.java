@@ -143,7 +143,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param stylesheet a <code>File</code> value
      * @throws Exception on error
      */
-	public void setStylesheet(final File stylesheet) throws Exception {
+    public void setStylesheet(final File stylesheet) throws Exception {
         final FileResource fr = new FileResource();
         fr.setProject(project);
         fr.setFile(stylesheet);
@@ -155,7 +155,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param stylesheet a {@link org.apache.tools.ant.types.Resource} value
      * @throws Exception on error
      */
-	public void setStylesheet(final Resource stylesheet) throws Exception {
+    public void setStylesheet(final Resource stylesheet) throws Exception {
         if (this.stylesheet != null) {
             // resetting the stylesheet - reset transformer
             transformer = null;
@@ -175,7 +175,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param outfile the result file
      * @throws Exception on error
      */
-	public void transform(final File infile, final File outfile) throws Exception {
+    public void transform(final File infile, final File outfile) throws Exception {
         if (transformer == null) {
             createTransformer();
         }
@@ -504,7 +504,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param name the name of the parameter
      * @param value the value of the parameter
      */
-	public void addParam(final String name, final String value) {
+    public void addParam(final String name, final String value) {
         params.put(name, value);
     }
 
@@ -514,7 +514,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param value the value of the parameter
      * @since Ant 1.9.3
      */
-	public void addParam(final String name, final Object value) {
+    public void addParam(final String name, final Object value) {
         params.put(name, value);
     }
 
@@ -522,7 +522,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Set a logger.
      * @param l a logger.
      */
-	public void setLogger(final XSLTLogger l) {
+    public void setLogger(final XSLTLogger l) {
         logger = l;
     }
 
@@ -530,7 +530,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log an error.
      * @param e the exception to log.
      */
-	public void error(final TransformerException e) {
+    public void error(final TransformerException e) {
         logError(e, "Error");
     }
 
@@ -538,7 +538,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a fatal error.
      * @param e the exception to log.
      */
-	public void fatalError(final TransformerException e) {
+    public void fatalError(final TransformerException e) {
         logError(e, "Fatal Error");
         throw new BuildException("Fatal error during transformation using " + stylesheet + ": " + e.getMessageAndLocation(), e);
     }
@@ -547,7 +547,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a warning.
      * @param e the exception to log.
      */
-	public void warning(final TransformerException e) {
+    public void warning(final TransformerException e) {
         if (!suppressWarnings) {
             logError(e, "Warning");
         }
@@ -602,7 +602,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      *             Use org.apache.tools.ant.util.JAXPUtils#getSystemId instead.
      */
     @Deprecated
-	protected String getSystemId(final File file) {
+    protected String getSystemId(final File file) {
         return JAXPUtils.getSystemId(file);
     }
 
@@ -612,7 +612,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * @param xsltTask the XSLTProcess task instance from which this liasion
      *        is to be configured.
      */
-	public void configure(final XSLTProcess xsltTask) {
+    public void configure(final XSLTProcess xsltTask) {
         project = xsltTask.getProject();
         final XSLTProcess.Factory factory = xsltTask.getFactory();
         if (factory != null) {

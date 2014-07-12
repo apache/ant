@@ -65,7 +65,7 @@ public class Type implements ResourceSelector {
          * @return a String array.
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return VALUES;
         }
     }
@@ -99,7 +99,7 @@ public class Type implements ResourceSelector {
      * @param r the Resource to check.
      * @return whether the Resource was selected.
      */
-	public boolean isSelected(final Resource r) {
+    public boolean isSelected(final Resource r) {
         if (type == null) {
             throw new BuildException("The type attribute is required.");
         }

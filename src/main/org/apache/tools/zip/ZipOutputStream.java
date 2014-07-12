@@ -1252,7 +1252,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @deprecated use ZipUtil#toDosTime
      */
     @Deprecated
-	protected static ZipLong toDosTime(Date time) {
+    protected static ZipLong toDosTime(Date time) {
         return ZipUtil.toDosTime(time);
     }
 
@@ -1266,7 +1266,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @deprecated use ZipUtil#toDosTime
      */
     @Deprecated
-	protected static byte[] toDosTime(long t) {
+    protected static byte[] toDosTime(long t) {
         return ZipUtil.toDosTime(t);
     }
 
@@ -1399,7 +1399,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @deprecated use ZipUtil#adjustToLong
      */
     @Deprecated
-	protected static long adjustToLong(int i) {
+    protected static long adjustToLong(int i) {
         return ZipUtil.adjustToLong(i);
     }
 

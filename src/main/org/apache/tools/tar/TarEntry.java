@@ -912,7 +912,7 @@ public class TarEntry implements TarConstants {
         int offset = 0;
 
         name = oldStyle ? TarUtils.parseName(header, offset, NAMELEN)
-             : TarUtils.parseName(header, offset, NAMELEN, encoding);
+            : TarUtils.parseName(header, offset, NAMELEN, encoding);
         offset += NAMELEN;
         mode = (int) TarUtils.parseOctalOrBinary(header, offset, MODELEN);
         offset += MODELEN;

@@ -73,7 +73,7 @@ public class Sync extends Task {
      * @see Task#init()
      */
     @Override
-	public void init()
+    public void init()
         throws BuildException {
         // Instantiate it
         myCopy = new MyCopy();
@@ -99,7 +99,7 @@ public class Sync extends Task {
      * @see Task#execute()
      */
     @Override
-	public void execute()
+    public void execute()
         throws BuildException {
         // The destination of the files to copy
         File toDir = myCopy.getToDir();
@@ -467,7 +467,7 @@ public class Sync extends Task {
          */
         /** {@inheritDoc} */
         @Override
-		protected void scan(File fromDir, File toDir, String[] files,
+        protected void scan(File fromDir, File toDir, String[] files,
                             String[] dirs) {
             assertTrue("No mapper", mapperElement == null);
 
@@ -486,7 +486,7 @@ public class Sync extends Task {
          */
         /** {@inheritDoc} */
         @Override
-		protected Map scan(Resource[] resources, File toDir) {
+        protected Map scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
 
             for (int i = 0; i < resources.length; i++) {
@@ -517,7 +517,7 @@ public class Sync extends Task {
          * @since Ant 1.7
          */
         @Override
-		protected boolean supportsNonFileResources() {
+        protected boolean supportsNonFileResources() {
             return true;
         }
     }
@@ -549,7 +549,7 @@ public class Sync extends Task {
          * @throws BuildException always
          */
         @Override
-		public void setDir(File dir) throws BuildException {
+        public void setDir(File dir) throws BuildException {
             throw new BuildException("preserveintarget doesn't support the dir "
                                      + "attribute");
         }

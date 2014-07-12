@@ -63,7 +63,7 @@ public class UnicodeCommentExtraField extends AbstractUnicodeExtraField {
     }
 
     /** {@inheritDoc} */
-	public ZipShort getHeaderId() {
+    public ZipShort getHeaderId() {
         return UCOM_ID;
     }
 

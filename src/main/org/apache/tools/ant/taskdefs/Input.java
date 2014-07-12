@@ -130,7 +130,7 @@ public class Input extends Task {
 
         /** {@inheritDoc} */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return VALUES;
         }
         private InputHandler getInputHandler() {
@@ -210,7 +210,7 @@ public class Input extends Task {
      * @throws BuildException on error
      */
     @Override
-	public void execute () throws BuildException {
+    public void execute () throws BuildException {
         if (addproperty != null
             && getProject().getProperty(addproperty) != null) {
             log("skipping " + getTaskName() + " as property " + addproperty

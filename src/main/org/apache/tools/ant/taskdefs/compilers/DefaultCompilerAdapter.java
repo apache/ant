@@ -97,7 +97,7 @@ public abstract class DefaultCompilerAdapter
      *
      * @param attributes a configured Javac task.
      */
-	public void setJavac(final Javac attributes) {
+    public void setJavac(final Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
         destDir = attributes.getDestdir();
@@ -135,7 +135,7 @@ public abstract class DefaultCompilerAdapter
      * but specialized compilers can recognize multiple kinds
      * of files.
      */
-	public String[] getSupportedFileExtensions() {
+    public String[] getSupportedFileExtensions() {
         return new String[] {"java"};
     }
 
@@ -523,7 +523,7 @@ public abstract class DefaultCompilerAdapter
      *             Use org.apache.tools.ant.types.Path#addExtdirs instead.
      */
     @Deprecated
-	protected void addExtdirsToClasspath(final Path classpath) {
+    protected void addExtdirsToClasspath(final Path classpath) {
         classpath.addExtdirs(extdirs);
     }
 

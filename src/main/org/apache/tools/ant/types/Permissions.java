@@ -186,7 +186,7 @@ public class Permissions {
          * @param status The exit status requested.
          */
         @Override
-		public void checkExit(final int status) {
+        public void checkExit(final int status) {
             final java.security.Permission perm = new java.lang.RuntimePermission("exitVM", null);
             try {
                 checkPermission(perm);
@@ -202,7 +202,7 @@ public class Permissions {
          * @param perm The permission requested.
          */
         @Override
-		public void checkPermission(final java.security.Permission perm) {
+        public void checkPermission(final java.security.Permission perm) {
             if (active) {
                 if (delegateToOldSM && !perm.getName().equals("exitVM")) {
                     boolean permOK = false;
@@ -349,7 +349,7 @@ public class Permissions {
          * @return string description of the permissions.
          */
         @Override
-		public String toString() {
+        public String toString() {
             return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
         }
     }

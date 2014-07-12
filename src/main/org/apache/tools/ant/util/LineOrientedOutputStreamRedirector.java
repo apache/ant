@@ -44,24 +44,24 @@ public class LineOrientedOutputStreamRedirector
     }
 
     @Override
-	protected void processLine(byte[] b) throws IOException {
+    protected void processLine(byte[] b) throws IOException {
         stream.write(b);
         stream.write(EOL);
     }
 
     @Override
-	protected void processLine(String line) throws IOException {
+    protected void processLine(String line) throws IOException {
         stream.write((line + System.getProperty("line.separator")).getBytes());
     }
 
     @Override
-	public void close() throws IOException {
+    public void close() throws IOException {
         super.close();
         stream.close();
     }
 
     @Override
-	public void flush() throws IOException {
+    public void flush() throws IOException {
         super.flush();
         stream.flush();
     }

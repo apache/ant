@@ -588,7 +588,7 @@ public class Rmic extends MatchingTask {
      * if there's a problem with baseDir or RMIC
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         try {
             compileList.clear();
 

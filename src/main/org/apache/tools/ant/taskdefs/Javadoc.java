@@ -279,7 +279,7 @@ public class Javadoc extends Task {
          * @return the package name.
          */
         @Override
-		public String toString() {
+        public String toString() {
             return getName();
         }
     }
@@ -364,7 +364,7 @@ public class Javadoc extends Task {
          * @return the allowed values for the access type.
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             // Protected first so if any GUI tool offers a default
             // based on enum #0, it will be right.
             return new String[] {"protected", "public", "package", "private"};
@@ -865,7 +865,7 @@ public class Javadoc extends Task {
      *             Use the {@link #setExtdirs(Path)} version.
      */
     @Deprecated
-	public void setExtdirs(final String path) {
+    public void setExtdirs(final String path) {
         cmd.createArgument().setValue("-extdirs");
         cmd.createArgument().setValue(path);
     }
@@ -1702,7 +1702,7 @@ public class Javadoc extends Task {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         checkTaskName();
 
         final Vector<String> packagesToDoc = new Vector<String>();
@@ -1718,8 +1718,7 @@ public class Javadoc extends Task {
         checkPackages(packagesToDoc, sourceDirs);
 
         @SuppressWarnings("unchecked")
-		final
-        Vector<SourceFile> sourceFilesToDoc = (Vector<SourceFile>) sourceFiles.clone();
+        final Vector<SourceFile> sourceFilesToDoc = (Vector<SourceFile>) sourceFiles.clone();
         addSourceFiles(sourceFilesToDoc);
 
         checkPackagesToDoc(packagesToDoc, sourceFilesToDoc);
@@ -2370,8 +2369,7 @@ public class Javadoc extends Task {
     private void parsePackages(final Vector<String> pn, final Path sp) {
         final HashSet<String> addedPackages = new HashSet<String>();
         @SuppressWarnings("unchecked")
-		final
-        Vector<DirSet> dirSets = (Vector<DirSet>) packageSets.clone();
+        final Vector<DirSet> dirSets = (Vector<DirSet>) packageSets.clone();
 
         // for each sourcePath entry, add a directoryset with includes
         // taken from packagenames attribute and nested package
@@ -2434,7 +2432,7 @@ public class Javadoc extends Task {
                 // are there any java files in this directory?
                 final File pd = new File(baseDir, dirs[i]);
                 final String[] files = pd.list(new FilenameFilter () {
-						public boolean accept(final File dir1, final String name) {
+                        public boolean accept(final File dir1, final String name) {
                             return name.endsWith(".java")
                                 || (includeNoSourcePackages
                                     && name.equals("package.html"));
@@ -2576,8 +2574,9 @@ public class Javadoc extends Task {
         //
         private String queuedLine = null;
         private boolean sawWarnings = false;
+
         @Override
-		protected void processLine(final String line, final int messageLevel) {
+        protected void processLine(final String line, final int messageLevel) {
             if (line.contains("warning")) {
                 sawWarnings = true;
             }

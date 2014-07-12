@@ -35,8 +35,8 @@ import java.util.StringTokenizer;
  */
 public class Launcher {
 
-	private Launcher() {
-	}
+    private Launcher() {
+    }
 
     /**
      * The Ant Home (installation) Directory property.
@@ -156,7 +156,7 @@ public class Launcher {
 
             final URL url = Locator.fileToURL(element);
             if (launchDiag) {
-            	System.out.println("adding library URL: " + url);
+                System.out.println("adding library URL: " + url);
             }
             libPathURLs.add(url);
         }

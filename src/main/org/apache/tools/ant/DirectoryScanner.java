@@ -146,7 +146,7 @@ public class DirectoryScanner
      *             method instead.
      */
     @Deprecated
-	protected static final String[] DEFAULTEXCLUDES = {
+    protected static final String[] DEFAULTEXCLUDES = {
         // Miscellaneous typical temporary files
         SelectorUtils.DEEP_TREE_MATCH + "/*~",
         SelectorUtils.DEEP_TREE_MATCH + "/#*#",
@@ -619,7 +619,7 @@ public class DirectoryScanner
      *
      * @param basedir The base directory to scan.
      */
-	public void setBasedir(final String basedir) {
+    public void setBasedir(final String basedir) {
         setBasedir(basedir == null ? (File) null
             : new File(basedir.replace('/', File.separatorChar).replace(
             '\\', File.separatorChar)));
@@ -631,7 +631,7 @@ public class DirectoryScanner
      *
      * @param basedir The base directory for scanning.
      */
-	public synchronized void setBasedir(final File basedir) {
+    public synchronized void setBasedir(final File basedir) {
         this.basedir = basedir;
     }
 
@@ -641,7 +641,7 @@ public class DirectoryScanner
      *
      * @return the base directory to be scanned.
      */
-	public synchronized File getBasedir() {
+    public synchronized File getBasedir() {
         return basedir;
     }
 
@@ -662,7 +662,7 @@ public class DirectoryScanner
      * @param isCaseSensitive whether or not the file system should be
      *                        regarded as a case sensitive one.
      */
-	public synchronized void setCaseSensitive(final boolean isCaseSensitive) {
+    public synchronized void setCaseSensitive(final boolean isCaseSensitive) {
         this.isCaseSensitive = isCaseSensitive;
     }
 
@@ -720,7 +720,7 @@ public class DirectoryScanner
      *                 list is given, all elements must be
      *                 non-<code>null</code>.
      */
-	public synchronized void setIncludes(final String[] includes) {
+    public synchronized void setIncludes(final String[] includes) {
         if (includes == null) {
             this.includes = null;
         } else {
@@ -743,7 +743,7 @@ public class DirectoryScanner
      *                 should be excluded. If a non-<code>null</code> list is
      *                 given, all elements must be non-<code>null</code>.
      */
-	public synchronized void setExcludes(final String[] excludes) {
+    public synchronized void setExcludes(final String[] excludes) {
         if (excludes == null) {
             this.excludes = null;
         } else {
@@ -808,7 +808,7 @@ public class DirectoryScanner
      *
      * @param selectors specifies the selectors to be invoked on a scan.
      */
-	public synchronized void setSelectors(final FileSelector[] selectors) {
+    public synchronized void setSelectors(final FileSelector[] selectors) {
         this.selectors = selectors;
     }
 
@@ -833,7 +833,7 @@ public class DirectoryScanner
      * @exception IllegalStateException if the base directory was set
      *            incorrectly (i.e. if it doesn't exist or isn't a directory).
      */
-	public void scan() throws IllegalStateException {
+    public void scan() throws IllegalStateException {
         synchronized (scanLock) {
             if (scanning) {
                 while (scanning) {
@@ -1568,7 +1568,7 @@ public class DirectoryScanner
      * @return the names of the files which matched at least one of the
      *         include patterns and none of the exclude patterns.
      */
-	public String[] getIncludedFiles() {
+    public String[] getIncludedFiles() {
         String[] files;
         synchronized (this) {
             if (filesIncluded == null) {
@@ -1603,7 +1603,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getNotIncludedFiles() {
+    public synchronized String[] getNotIncludedFiles() {
         slowScan();
         final String[] files = new String[filesNotIncluded.size()];
         filesNotIncluded.copyInto(files);
@@ -1621,7 +1621,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getExcludedFiles() {
+    public synchronized String[] getExcludedFiles() {
         slowScan();
         final String[] files = new String[filesExcluded.size()];
         filesExcluded.copyInto(files);
@@ -1639,7 +1639,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getDeselectedFiles() {
+    public synchronized String[] getDeselectedFiles() {
         slowScan();
         final String[] files = new String[filesDeselected.size()];
         filesDeselected.copyInto(files);
@@ -1654,7 +1654,7 @@ public class DirectoryScanner
      * @return the names of the directories which matched at least one of the
      * include patterns and none of the exclude patterns.
      */
-	public String[] getIncludedDirectories() {
+    public String[] getIncludedDirectories() {
         String[] directories;
         synchronized (this) {
             if (dirsIncluded == null) {
@@ -1689,7 +1689,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getNotIncludedDirectories() {
+    public synchronized String[] getNotIncludedDirectories() {
         slowScan();
         final String[] directories = new String[dirsNotIncluded.size()];
         dirsNotIncluded.copyInto(directories);
@@ -1707,7 +1707,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getExcludedDirectories() {
+    public synchronized String[] getExcludedDirectories() {
         slowScan();
         final String[] directories = new String[dirsExcluded.size()];
         dirsExcluded.copyInto(directories);
@@ -1725,7 +1725,7 @@ public class DirectoryScanner
      *
      * @see #slowScan
      */
-	public synchronized String[] getDeselectedDirectories() {
+    public synchronized String[] getDeselectedDirectories() {
         slowScan();
         final String[] directories = new String[dirsDeselected.size()];
         dirsDeselected.copyInto(directories);
@@ -1754,7 +1754,7 @@ public class DirectoryScanner
     /**
      * Add default exclusions to the current exclusions set.
      */
-	public synchronized void addDefaultExcludes() {
+    public synchronized void addDefaultExcludes() {
         final int excludesLength = excludes == null ? 0 : excludes.length;
         String[] newExcludes;
         final String[] defaultExcludesTemp = getDefaultExcludes();
@@ -1777,7 +1777,7 @@ public class DirectoryScanner
      * @return the resource with the given name.
      * @since Ant 1.5.2
      */
-	public synchronized Resource getResource(final String name) {
+    public synchronized Resource getResource(final String name) {
         return new FileResource(basedir, name);
     }
 

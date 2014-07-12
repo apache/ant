@@ -56,7 +56,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
     @Override
-	public long getSize() {
+    public long getSize() {
         if (isExists()) {
             InputStream in = null;
             try {
@@ -88,7 +88,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      *         supported for this Resource type.
      */
     @Override
-	public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         InputStream in = getResource().getInputStream();
         if (in != null) {
             in = wrapStream(in);
@@ -105,7 +105,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      *         supported for this Resource type.
      */
     @Override
-	public OutputStream getOutputStream() throws IOException {
+    public OutputStream getOutputStream() throws IOException {
         OutputStream out = getResource().getOutputStream();
         if (out != null) {
             out = wrapStream(out);
@@ -117,14 +117,14 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * Suppress FileProvider, re-implement Appendable
      */
     @Override
-	public <T> T as(final Class<T> clazz) {
+    public <T> T as(final Class<T> clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
             if (isAppendSupported()) {
                 final Appendable a =
                     getResource().as(Appendable.class);
                 if (a != null) {
                     return clazz.cast(new Appendable() {
-						public OutputStream getAppendOutputStream()
+                        public OutputStream getAppendOutputStream()
                                 throws IOException {
                             OutputStream out = a.getAppendOutputStream();
                             if (out != null) {

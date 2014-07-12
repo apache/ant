@@ -105,14 +105,14 @@ public class Zip extends MatchingTask {
 
     private static final ResourceSelector MISSING_SELECTOR =
         new ResourceSelector() {
-			public boolean isSelected(final Resource target) {
+            public boolean isSelected(final Resource target) {
                 return !target.isExists();
             }
         };
 
     private static final ResourceUtils.ResourceSelectorProvider
         MISSING_DIR_PROVIDER = new ResourceUtils.ResourceSelectorProvider() {
-				public ResourceSelector
+                public ResourceSelector
                     getTargetSelectorForSource(final Resource sr) {
                     return MISSING_SELECTOR;
                 }
@@ -238,7 +238,7 @@ public class Zip extends MatchingTask {
      * @ant.attribute ignore="true"
      */
     @Deprecated
-	public void setZipfile(final File zipFile) {
+    public void setZipfile(final File zipFile) {
         setDestFile(zipFile);
     }
 
@@ -252,7 +252,7 @@ public class Zip extends MatchingTask {
      * @ant.attribute ignore="true"
      */
     @Deprecated
-	public void setFile(final File file) {
+    public void setFile(final File file) {
         setDestFile(file);
     }
 
@@ -386,7 +386,7 @@ public class Zip extends MatchingTask {
          * @return the values
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {"fail", "skip", "create"};
         }
     }
@@ -585,7 +585,7 @@ public class Zip extends MatchingTask {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
 
         if (doubleFilePass) {
             skipWriting = true;
@@ -1290,7 +1290,7 @@ public class Zip extends MatchingTask {
      */
     private static final ThreadLocal<Boolean> HAVE_NON_FILE_SET_RESOURCES_TO_ADD = new ThreadLocal<Boolean>() {
             @Override
-			protected Boolean initialValue() {
+            protected Boolean initialValue() {
                 return Boolean.FALSE;
             }
         };
@@ -1635,7 +1635,7 @@ public class Zip extends MatchingTask {
             // make sure directories are in alpha-order - this also
             // ensures parents come before their children
             Collections.sort(dirs, new Comparator<Resource>() {
-					public int compare(final Resource r1, final Resource r2) {
+                    public int compare(final Resource r1, final Resource r2) {
                         return r1.getName().compareTo(r2.getName());
                     }
                 });
@@ -2037,7 +2037,7 @@ public class Zip extends MatchingTask {
     protected Resource[] selectFileResources(final Resource[] orig) {
         return selectResources(orig,
                                new ResourceSelector() {
-								public boolean isSelected(final Resource r) {
+                                   public boolean isSelected(final Resource r) {
                                        if (!r.isDirectory()) {
                                            return true;
                                        } else if (doFilesonly) {
@@ -2061,7 +2061,7 @@ public class Zip extends MatchingTask {
     protected Resource[] selectDirectoryResources(final Resource[] orig) {
         return selectResources(orig,
                                new ResourceSelector() {
-								public boolean isSelected(final Resource r) {
+                                   public boolean isSelected(final Resource r) {
                                        return r.isDirectory();
                                    }
                                });
@@ -2114,7 +2114,7 @@ public class Zip extends MatchingTask {
          */
         /** {@inheritDoc} */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
         }
     }
@@ -2191,7 +2191,7 @@ public class Zip extends MatchingTask {
         }
 
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {NEVER_KEY, ALWAYS_KEY, N_E_KEY};
         }
 
@@ -2250,7 +2250,7 @@ public class Zip extends MatchingTask {
         }
 
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {NEVER_KEY, ALWAYS_KEY, A_N_KEY};
         }
 

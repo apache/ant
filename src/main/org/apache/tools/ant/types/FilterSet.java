@@ -165,7 +165,7 @@ public class FilterSet extends DataType implements Cloneable {
         //inherit doc
         /** {@inheritDoc}. */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return VALUES;
         }
     }
@@ -494,7 +494,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @throws BuildException if the clone cannot be performed.
      */
     @Override
-	public synchronized Object clone() throws BuildException {
+    public synchronized Object clone() throws BuildException {
         if (isReference()) {
             return getRef().clone();
         }

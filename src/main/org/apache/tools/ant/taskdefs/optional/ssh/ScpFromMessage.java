@@ -229,8 +229,8 @@ public class ScpFromMessage extends AbstractSshMessage {
     }
 
     private void fetchFile(final File localFile,
-                            long filesize,
-                            final OutputStream out,
+                           long filesize,
+                           final OutputStream out,
                            final InputStream in)
         throws IOException, JSchException {
         final byte[] buf = new byte[BUFFER_SIZE];

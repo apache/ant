@@ -1234,7 +1234,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         xpathFactory = XPathFactory.newInstance();
         xpath = xpathFactory.newXPath();
         xpath.setXPathVariableResolver(new XPathVariableResolver() {
-			public Object resolveVariable(final QName variableName) {
+            public Object resolveVariable(final QName variableName) {
                 return getProject().getProperty(variableName.toString());
             }
         });
@@ -1248,7 +1248,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @deprecated since Ant 1.7
      */
     @Deprecated
-	protected void configureLiaison(final File stylesheet) throws BuildException {
+    protected void configureLiaison(final File stylesheet) throws BuildException {
         final FileResource fr = new FileResource();
         fr.setProject(getProject());
         fr.setFile(stylesheet);
@@ -1531,7 +1531,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              * @return null
              * @throws BuildException never
              */
-			public Object createDynamicElement(final String name) throws BuildException {
+            public Object createDynamicElement(final String name) throws BuildException {
                 return null;
             }
 
@@ -1542,7 +1542,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              * @param value the value of the attribute
              * @throws BuildException on error
              */
-			public void setDynamicAttribute(final String name, final String value) throws BuildException {
+            public void setDynamicAttribute(final String name, final String value) throws BuildException {
                 // only 'name' and 'value' exist.
                 if ("name".equalsIgnoreCase(name)) {
                     this.name = value;
@@ -1577,11 +1577,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.6.2
      */
     private class StyleMapper implements FileNameMapper {
-		public void setFrom(final String from) {
+        public void setFrom(final String from) {
         }
-		public void setTo(final String to) {
+        public void setTo(final String to) {
         }
-		public String[] mapFileName(String xmlFile) {
+        public String[] mapFileName(String xmlFile) {
             final int dotPos = xmlFile.lastIndexOf('.');
             if (dotPos > 0) {
                 xmlFile = xmlFile.substring(0, dotPos);

@@ -92,7 +92,7 @@ public class Project implements ResourceFactory {
      *             Use {@link JavaEnvUtils#JAVA_1_0} instead.
      */
     @Deprecated
-	public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
+    public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /**
      * Version constant for Java 1.1 .
      *
@@ -100,7 +100,7 @@ public class Project implements ResourceFactory {
      *             Use {@link JavaEnvUtils#JAVA_1_1} instead.
      */
     @Deprecated
-	public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
+    public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /**
      * Version constant for Java 1.2 .
      *
@@ -108,7 +108,7 @@ public class Project implements ResourceFactory {
      *             Use {@link JavaEnvUtils#JAVA_1_2} instead.
      */
     @Deprecated
-	public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
+    public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /**
      * Version constant for Java 1.3 .
      *
@@ -116,7 +116,7 @@ public class Project implements ResourceFactory {
      *             Use {@link JavaEnvUtils#JAVA_1_3} instead.
      */
     @Deprecated
-	public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
+    public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /**
      * Version constant for Java 1.4 .
      *
@@ -124,7 +124,7 @@ public class Project implements ResourceFactory {
      *             Use {@link JavaEnvUtils#JAVA_1_4} instead.
      */
     @Deprecated
-	public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
+    public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
     /** Default filter start token. */
     public static final String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
@@ -179,7 +179,7 @@ public class Project implements ResourceFactory {
         messageLogged */
     private final ThreadLocal<Boolean> isLoggingMessage = new ThreadLocal<Boolean>() {
             @Override
-			protected Boolean initialValue() {
+            protected Boolean initialValue() {
                 return Boolean.FALSE;
             }
         };
@@ -713,7 +713,7 @@ public class Project implements ResourceFactory {
      * @see #setDefault(String)
      */
     @Deprecated
-	public void setDefaultTarget(final String defaultTarget) {
+    public void setDefaultTarget(final String defaultTarget) {
         setDefault(defaultTarget);
     }
 
@@ -798,7 +798,7 @@ public class Project implements ResourceFactory {
      * @see FilterSet#addFilter(String,String)
      */
     @Deprecated
-	public void addFilter(final String token, final String value) {
+    public void addFilter(final String token, final String value) {
         if (token == null) {
             return;
         }
@@ -818,7 +818,7 @@ public class Project implements ResourceFactory {
      * @see FilterSet#getFilterHash()
      */
     @Deprecated
-	public Hashtable<String, String> getFilters() {
+    public Hashtable<String, String> getFilters() {
         // we need to build the hashtable dynamically
         return globalFilterSet.getFilterHash();
     }
@@ -910,7 +910,7 @@ public class Project implements ResourceFactory {
      *             Use org.apache.tools.ant.util.JavaEnvUtils instead.
      */
     @Deprecated
-	public static String getJavaVersion() {
+    public static String getJavaVersion() {
         return JavaEnvUtils.getJavaVersion();
     }
 
@@ -1461,7 +1461,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public File resolveFile(final String fileName, final File rootDir) {
+    public File resolveFile(final String fileName, final File rootDir) {
         return FILE_UTILS.resolveFile(rootDir, fileName);
     }
 
@@ -1501,7 +1501,7 @@ public class Project implements ResourceFactory {
      * @see PathTokenizer
      */
     @Deprecated
-	public static String translatePath(final String toProcess) {
+    public static String translatePath(final String toProcess) {
         return FileUtils.translatePath(toProcess);
     }
 
@@ -1519,7 +1519,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final String sourceFile, final String destFile)
+    public void copyFile(final String sourceFile, final String destFile)
           throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile);
     }
@@ -1540,7 +1540,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final String sourceFile, final String destFile, final boolean filtering)
+    public void copyFile(final String sourceFile, final String destFile, final boolean filtering)
         throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
             filtering ? globalFilters : null);
@@ -1565,7 +1565,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final String sourceFile, final String destFile, final boolean filtering,
+    public void copyFile(final String sourceFile, final String destFile, final boolean filtering,
                          final boolean overwrite) throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
             filtering ? globalFilters : null, overwrite);
@@ -1595,7 +1595,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final String sourceFile, final String destFile, final boolean filtering,
+    public void copyFile(final String sourceFile, final String destFile, final boolean filtering,
                          final boolean overwrite, final boolean preserveLastModified)
         throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
@@ -1616,7 +1616,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final File sourceFile, final File destFile) throws IOException {
+    public void copyFile(final File sourceFile, final File destFile) throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile);
     }
 
@@ -1636,7 +1636,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final File sourceFile, final File destFile, final boolean filtering)
+    public void copyFile(final File sourceFile, final File destFile, final boolean filtering)
         throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
             filtering ? globalFilters : null);
@@ -1661,7 +1661,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final File sourceFile, final File destFile, final boolean filtering,
+    public void copyFile(final File sourceFile, final File destFile, final boolean filtering,
                          final boolean overwrite) throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
             filtering ? globalFilters : null, overwrite);
@@ -1691,7 +1691,7 @@ public class Project implements ResourceFactory {
      * @deprecated since 1.4.x
      */
     @Deprecated
-	public void copyFile(final File sourceFile, final File destFile, final boolean filtering,
+    public void copyFile(final File sourceFile, final File destFile, final boolean filtering,
                          final boolean overwrite, final boolean preserveLastModified)
         throws IOException {
         FILE_UTILS.copyFile(sourceFile, destFile,
@@ -1714,7 +1714,7 @@ public class Project implements ResourceFactory {
      *                           above 1.1.
      */
     @Deprecated
-	public void setFileLastModified(final File file, final long time)
+    public void setFileLastModified(final File file, final long time)
          throws BuildException {
         FILE_UTILS.setFileLastModified(file, time);
         log("Setting modification time for " + file, MSG_VERBOSE);
@@ -2443,7 +2443,7 @@ public class Project implements ResourceFactory {
          * @return mapped value.
          */
         @Override
-		public Object get(final Object key) {
+        public Object get(final Object key) {
             Object o = getReal(key);
             if (o instanceof UnknownElement) {
                 // Make sure that
@@ -2487,7 +2487,7 @@ public class Project implements ResourceFactory {
      * @return the file resource.
      * @since Ant 1.7
      */
-	public Resource getResource(final String name) {
+    public Resource getResource(final String name) {
         return new FileResource(getBaseDir(), name);
     }
 }

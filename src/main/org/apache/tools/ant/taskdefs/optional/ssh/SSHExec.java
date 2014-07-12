@@ -275,7 +275,7 @@ public class SSHExec extends SSHBase {
      * @exception BuildException  Most likely a network error or bad parameter.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
 
         if (getHost() == null) {
             throw new BuildException("Host is required.");
@@ -401,7 +401,7 @@ public class SSHExec extends SSHBase {
             thread =
                 new Thread() {
                     @Override
-					public void run() {
+                    public void run() {
                         while (!channel.isClosed()) {
                             if (thread == null) {
                                 return;

@@ -37,7 +37,7 @@ public class LazyResourceCollectionWrapper extends
     private FilteringIterator filteringIterator;
 
     @Override
-	protected Iterator<Resource> createIterator() {
+    protected Iterator<Resource> createIterator() {
         Iterator<Resource> iterator;
         if (isCache()) {
             if (filteringIterator == null) {
@@ -53,7 +53,7 @@ public class LazyResourceCollectionWrapper extends
     }
 
     @Override
-	protected int getSize() {
+    protected int getSize() {
         // to compute the size, just iterate: the iterator will take care of
         // caching
         final Iterator<Resource> it = createIterator();
@@ -88,7 +88,7 @@ public class LazyResourceCollectionWrapper extends
             this.it = it;
         }
 
-		public boolean hasNext() {
+        public boolean hasNext() {
             if (ended) {
                 return false;
             }
@@ -105,7 +105,7 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-		public Resource next() {
+        public Resource next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException();
             }
@@ -114,7 +114,7 @@ public class LazyResourceCollectionWrapper extends
             return r;
         }
 
-		public void remove() {
+        public void remove() {
             throw new UnsupportedOperationException();
         }
     }
@@ -140,7 +140,7 @@ public class LazyResourceCollectionWrapper extends
             this.it = it;
         }
 
-		public boolean hasNext() {
+        public boolean hasNext() {
             synchronized (cachedResources) {
                 // have we already cached the next entry ?
                 if (cachedResources.size() > cusrsor) {
@@ -157,7 +157,7 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
-		public Resource next() {
+        public Resource next() {
             // first check that we have some to deliver
             if (!hasNext()) {
                 throw new NoSuchElementException();
@@ -169,7 +169,7 @@ public class LazyResourceCollectionWrapper extends
             }
         }
 
-		public void remove() {
+        public void remove() {
             throw new UnsupportedOperationException();
         }
     }

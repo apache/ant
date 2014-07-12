@@ -40,7 +40,7 @@ public class ProjectHelperTask extends Task {
     }
 
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
         for (Iterator it = projectHelpers.iterator(); it.hasNext();) {
             ProjectHelper helper = (ProjectHelper) it.next();

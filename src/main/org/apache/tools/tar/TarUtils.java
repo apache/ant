@@ -46,9 +46,9 @@ public class TarUtils {
      * Encapsulates the algorithms used up to Ant 1.8 as ZipEncoding.
      */
     static final ZipEncoding FALLBACK_ENCODING = new ZipEncoding() {
-			public boolean canEncode(final String name) { return true; }
+            public boolean canEncode(final String name) { return true; }
 
-			public ByteBuffer encode(final String name) {
+            public ByteBuffer encode(final String name) {
                 final int length = name.length();
                 final byte[] buf = new byte[length];
 
@@ -59,7 +59,7 @@ public class TarUtils {
                 return ByteBuffer.wrap(buf);
             }
 
-			public String decode(final byte[] buffer) {
+            public String decode(final byte[] buffer) {
                 final int length = buffer.length;
                 final StringBuilder result = new StringBuilder(length);
 

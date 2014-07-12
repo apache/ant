@@ -375,7 +375,7 @@ public class FilterChain extends DataType
      * @exception BuildException if this instance already has been configured.
      */
     @Override
-	public void setRefid(Reference r) throws BuildException {
+    public void setRefid(Reference r) throws BuildException {
         if (!filterReaders.isEmpty()) {
             throw tooManyAttributes();
         }
@@ -398,7 +398,7 @@ public class FilterChain extends DataType
     }
 
     @Override
-	protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;

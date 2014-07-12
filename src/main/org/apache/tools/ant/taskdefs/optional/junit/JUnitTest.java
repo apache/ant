@@ -170,7 +170,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
     /**
      * Set the thread id
      * @param thread the Ant id of the thread running this test
-	 * (this is not the system process or thread id)
+     * (this is not the system process or thread id)
      * (this will be 0 in single-threaded mode).
      * @since Ant 1.9.4
      */
@@ -528,7 +528,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @return a clone of this test.
      */
     @Override
-	public Object clone() {
+    public Object clone() {
         try {
             JUnitTest t = (JUnitTest) super.clone();
             t.props = props == null ? null : (Properties) props.clone();

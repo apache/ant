@@ -87,7 +87,7 @@ public class JUnit4TestMethodAdapter implements Test {
         runner = request.getRunner();
     }
 
-	public int countTestCases() {
+    public int countTestCases() {
         return runner.testCount();
     }
 
@@ -103,12 +103,12 @@ public class JUnit4TestMethodAdapter implements Test {
         return testClass;
     }
 
-	public void run(final TestResult result) {
+    public void run(final TestResult result) {
         runner.run(cache.getNotifier(result));
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         String testClassName = testClass.getName();
         StringBuilder buf = new StringBuilder(testClassName.length()
                                               + 12 * methodNames.length)
@@ -146,7 +146,7 @@ public class JUnit4TestMethodAdapter implements Test {
         }
 
         @Override
-		public boolean shouldRun(Description description) {
+        public boolean shouldRun(Description description) {
             if (methodNames.length == 0) {
                 return false;
             }
@@ -171,7 +171,7 @@ public class JUnit4TestMethodAdapter implements Test {
         }
 
         @Override
-		public String describe() {
+        public String describe() {
             StringBuilder buf = new StringBuilder(40);
             if (methodNames.length == 0) {
                 buf.append("No methods");

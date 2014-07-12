@@ -45,7 +45,7 @@ public class ExtensionPoint extends Target {
      * Throws an exception.
      */
     @Override
-	public final void addTask(Task task) {
+    public final void addTask(Task task) {
         throw new BuildException(NO_CHILDREN_ALLOWED);
     }
 
@@ -53,7 +53,7 @@ public class ExtensionPoint extends Target {
      * Throws an exception.
      */
     @Override
-	public final void addDataType(RuntimeConfigurable r) {
+    public final void addDataType(RuntimeConfigurable r) {
         throw new BuildException(NO_CHILDREN_ALLOWED);
     }
 

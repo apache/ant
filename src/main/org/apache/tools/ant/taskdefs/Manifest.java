@@ -167,7 +167,7 @@ public class Manifest {
          * @return a hashcode based on the key and values.
          */
         @Override
-		public int hashCode() {
+        public int hashCode() {
             int hashCode = 0;
 
             if (name != null) {
@@ -184,7 +184,7 @@ public class Manifest {
          * @return true if the key and values are the same.
          */
         @Override
-		public boolean equals(Object rhs) {
+        public boolean equals(Object rhs) {
             if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
             }
@@ -721,7 +721,7 @@ public class Manifest {
          * @since Ant 1.5.2
          */
         @Override
-		public Object clone() {
+        public Object clone() {
             Section cloned = new Section();
             cloned.setName(name);
             Enumeration<String> e = getAttributeKeys();
@@ -761,7 +761,7 @@ public class Manifest {
          * @return a hash value based on the attributes.
          */
         @Override
-		public int hashCode() {
+        public int hashCode() {
             return attributes.hashCode();
         }
 
@@ -771,7 +771,7 @@ public class Manifest {
          * @return true if the attributes are the same.
          */
         @Override
-		public boolean equals(Object rhs) {
+        public boolean equals(Object rhs) {
             if (rhs == null || rhs.getClass() != getClass()) {
                 return false;
             }
@@ -1061,7 +1061,7 @@ public class Manifest {
      *         appears in a Manifest file.
      */
     @Override
-	public String toString() {
+    public String toString() {
         StringWriter sw = new StringWriter();
         try {
             write(new PrintWriter(sw));
@@ -1100,7 +1100,7 @@ public class Manifest {
      * @return a hashcode based on the version, main and sections.
      */
     @Override
-	public int hashCode() {
+    public int hashCode() {
         int hashCode = 0;
 
         if (manifestVersion != null) {
@@ -1118,7 +1118,7 @@ public class Manifest {
      * @return true if the version, main and sections are the same.
      */
     @Override
-	public boolean equals(Object rhs) {
+    public boolean equals(Object rhs) {
         if (rhs == null || rhs.getClass() != getClass()) {
             return false;
         }

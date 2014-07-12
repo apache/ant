@@ -116,7 +116,7 @@ public class EchoXML extends XMLFragment {
         }
         /** {@inheritDoc}. */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[] {IGNORE, ELEMENTS, ALL};
         }
 

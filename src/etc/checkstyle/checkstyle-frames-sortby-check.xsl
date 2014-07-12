@@ -53,8 +53,8 @@
 
     <!--
     Generates the HTML page with the data.
-    -->    
-    <xsl:template name="sorted.html">    
+    -->
+    <xsl:template name="sorted.html">
         <html>
             <head>
                 <title>CheckStyle Audit</title>
@@ -71,17 +71,17 @@
                 <xsl:apply-templates select="." mode="data"/>
             </body>
         </html>
-    </xsl:template>    
+    </xsl:template>
 
 
 
     <!--
     Key for detecting duplicate CheckModules 
-    -->     
+    -->
     <xsl:key name="module" match="file/error" use="@source"/>
-     
-     
-     
+
+
+
     <!--
     Generates the navagation bar.
     --> 
@@ -101,9 +101,9 @@
             </xsl:for-each>
         </ul>
     </xsl:template> 
-     
-     
-     
+
+
+
     <!--
     Generates the data part.
     --> 
@@ -127,10 +127,10 @@
     <!--
     Generates the content table for the given check module.
     @param filter full qualified module name 
-    -->    
+    -->
     <xsl:template name="data">
         <xsl:param name="filter"/>
-        
+
         <table>
             <tr>
                 <th>file</th>
@@ -150,9 +150,9 @@
             </xsl:for-each>
         </table>
     </xsl:template>
-    
-    
-    
+
+
+
     <!--
     Generates the data rows for the current check module.
     Ignores errors in the current file from other modules.
@@ -183,15 +183,15 @@
     <!-- 
     Generates the CSS with the layout instructions.
     Generated so this XSL is the single source of the whole report.
-    -->     
-    <xsl:template name="sorted.css">    
+    -->
+    <xsl:template name="sorted.css">
         body { 
           font:normal 80% arial,helvetica,sanserif;
           color: black; 
           background-color: white; 
           margin: 0; 
           padding: 1em; 
-          min-width: 41em;  
+          min-width: 41em;
         } 
         h1 { 
           font-weight:bold;
@@ -203,9 +203,9 @@
           border: 2px ridge silver; 
         } 
         html<xsl:text disable-output-escaping="yes">&gt;</xsl:text>body h1 { 
-          border-color: gray;   
+          border-color: gray;
         } 
-        
+
         ul#navigation { 
           font-size: 0.83em; 
           float: left; width: 18em; 
@@ -233,7 +233,7 @@
         ul#navigation a:active { 
           color: white; background-color: gray; 
         }
-         
+
         div#content { 
           margin: 0 1em 1em 16em; 
           padding: 0 1em; 
@@ -271,10 +271,10 @@
         }
         table tr:nth-child(odd) td {
           background: #efefef;
-        }        
+        }
         table tr:nth-child(even) td {
           background: #fff;
-        }        
+        }
     </xsl:template> 
 
 
@@ -282,8 +282,8 @@
     <!-- 
     Generates the JavaScript for the dynamic style. 
     Generated so this XSL is the single source of the whole report.
-    -->     
-    <xsl:template name="switch.js">    
+    -->
+    <xsl:template name="switch.js">
         /* 
          * Hides all "hideable" div-containers
          */
@@ -296,11 +296,11 @@
           } 
           return; 
         } 
-        
+
         /* 
          * Shows one div-container and hides the other.
-         * @param id id of the element to show          
-         */         
+         * @param id id of the element to show
+         */
         function change(id) { 
           hideAll(); 
           e = document.getElementById(id); 
@@ -310,11 +310,11 @@
           window.scrollTo(0, 0); 
           return; 
         } 
-        
+
         /* 
          * Shows only the first data row.
-         * Used in body:onload so the user could directly see some messages.         
-         */          
+         * Used in body:onload so the user could directly see some messages.
+         */
         function openFirst() {
           hideAll();
           for (i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> allElements.length; i++) { 
@@ -325,7 +325,7 @@
           } 
           return; 
         }
-    </xsl:template>    
+    </xsl:template>
 
 
 
@@ -333,19 +333,19 @@
     Calculates the index of the last occurence of a substring in a string.
     @param txt the whole string in which to search
     @delimiter the substring to search
-    -->    
+    -->
     <xsl:template name="last-index-of">
         <xsl:param name="txt"/>
         <xsl:param name="remainder" select="$txt"/>
         <xsl:param name="delimiter" select="' '"/>
-    
+
         <xsl:choose>
             <xsl:when test="contains($remainder, $delimiter)">
                 <xsl:call-template name="last-index-of">
                     <xsl:with-param name="txt" select="$txt"/>
                     <xsl:with-param name="remainder" select="substring-after($remainder, $delimiter)"/>
                     <xsl:with-param name="delimiter" select="$delimiter"/>
-                </xsl:call-template>      
+                </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="lastIndex" select="string-length(substring($txt, 1, string-length($txt)-string-length($remainder)))+1"/>

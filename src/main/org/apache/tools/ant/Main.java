@@ -157,7 +157,7 @@ public class Main implements AntMain {
     private final Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
 
     private static final GetProperty NOPROPERTIES = new GetProperty() {
-		public Object getProperty(final String aName) {
+        public Object getProperty(final String aName) {
             // No existing property takes precedence
             return null;
         }
@@ -207,7 +207,7 @@ public class Main implements AntMain {
      *
      * @since Ant 1.6
      */
-	public void startAnt(final String[] args, final Properties additionalUserProperties,
+    public void startAnt(final String[] args, final Properties additionalUserProperties,
                          final ClassLoader coreLoader) {
 
         try {
@@ -305,7 +305,7 @@ public class Main implements AntMain {
      * @deprecated since 1.6.x
      */
     @Deprecated
-	protected Main(final String[] args) throws BuildException {
+    protected Main(final String[] args) throws BuildException {
         processArgs(args);
     }
 
@@ -684,7 +684,7 @@ public class Main implements AntMain {
      * @return       Parent file or null if none
      */
     @Deprecated
-	private File getParentFile(final File file) {
+    private File getParentFile(final File file) {
         final File parent = file.getParentFile();
 
         if (parent != null && msgOutputLevel >= Project.MSG_VERBOSE) {
@@ -898,11 +898,9 @@ public class Main implements AntMain {
         // resolve properties
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         @SuppressWarnings({ "rawtypes", "unchecked" })
-		final
-        Map raw = new HashMap(definedProps);
+        final Map raw = new HashMap(definedProps);
         @SuppressWarnings("unchecked")
-		final
-        Map<String, Object> props = raw;
+        final Map<String, Object> props = raw;
 
         final ResolvePropertyMap resolver = new ResolvePropertyMap(project,
                 NOPROPERTIES, propertyHelper.getExpanders());

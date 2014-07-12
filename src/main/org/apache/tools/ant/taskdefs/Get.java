@@ -95,7 +95,7 @@ public class Get extends Task {
      * @exception BuildException Thrown in unrecoverable error.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         checkAttributes();
 
         for (final Resource r : sources) {
@@ -168,7 +168,7 @@ public class Get extends Task {
      * @deprecated only gets the first configured resource
      */
     @Deprecated
-	public boolean doGet(final int logLevel, final DownloadProgress progress)
+    public boolean doGet(final int logLevel, final DownloadProgress progress)
             throws IOException {
         checkAttributes();
         for (final Resource r : sources) {
@@ -520,20 +520,20 @@ public class Get extends Task {
         /**
          * begin a download
          */
-		public void beginDownload() {
+        public void beginDownload() {
         }
 
         /**
          * tick handler
          *
          */
-		public void onTick() {
+        public void onTick() {
         }
 
         /**
          * end a download
          */
-		public void endDownload() {
+        public void endDownload() {
         }
     }
 
@@ -557,7 +557,7 @@ public class Get extends Task {
         /**
          * begin a download
          */
-		public void beginDownload() {
+        public void beginDownload() {
             dots = 0;
         }
 
@@ -565,7 +565,7 @@ public class Get extends Task {
          * tick handler
          *
          */
-		public void onTick() {
+        public void onTick() {
             out.print(".");
             if (dots++ > DOTS_PER_LINE) {
                 out.flush();
@@ -576,7 +576,7 @@ public class Get extends Task {
         /**
          * end a download
          */
-		public void endDownload() {
+        public void endDownload() {
             out.println();
             out.flush();
         }
@@ -612,7 +612,7 @@ public class Get extends Task {
         }
 
         @Override
-		public void run() {
+        public void run() {
             try {
                 success = get();
             } catch (final IOException ioex) {
@@ -762,12 +762,12 @@ public class Get extends Task {
             return connection;
         }
 
-		private boolean isMoved(final int responseCode) {
-			return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
-			       responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-			       responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
-			       responseCode == HTTP_MOVED_TEMP;
-		}
+        private boolean isMoved(final int responseCode) {
+            return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
+                responseCode == HTTP_MOVED_TEMP;
+        }
 
         private boolean downloadFile()
                 throws FileNotFoundException, IOException {
@@ -792,7 +792,7 @@ public class Get extends Task {
             }
 
             if (GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
-            	is = new GZIPInputStream(is);
+                is = new GZIPInputStream(is);
             }
 
             os = new FileOutputStream(dest);

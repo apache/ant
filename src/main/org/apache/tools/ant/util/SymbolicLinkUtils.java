@@ -177,7 +177,7 @@ public class SymbolicLinkUtils {
         if (!f.exists()) {
             final String localName = f.getName();
             final String[] c = parent.list(new FilenameFilter() {
-					public boolean accept(final File d, final String n) {
+                    public boolean accept(final File d, final String n) {
                         return localName.equals(n);
                     }
                 });

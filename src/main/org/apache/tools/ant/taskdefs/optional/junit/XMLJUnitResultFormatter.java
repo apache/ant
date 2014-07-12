@@ -113,17 +113,17 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     }
 
     /** {@inheritDoc}. */
-	public void setOutput(final OutputStream out) {
+    public void setOutput(final OutputStream out) {
         this.out = out;
     }
 
     /** {@inheritDoc}. */
-	public void setSystemOutput(final String out) {
+    public void setSystemOutput(final String out) {
         formatOutput(SYSTEM_OUT, out);
     }
 
     /** {@inheritDoc}. */
-	public void setSystemError(final String out) {
+    public void setSystemError(final String out) {
         formatOutput(SYSTEM_ERR, out);
     }
 
@@ -131,7 +131,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * The whole testsuite started.
      * @param suite the testsuite.
      */
-	public void startTestSuite(final JUnitTest suite) {
+    public void startTestSuite(final JUnitTest suite) {
         doc = getDocumentBuilder().newDocument();
         rootElement = doc.createElement(TESTSUITE);
         final String n = suite.getName();
@@ -172,7 +172,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                 hostname = localHost.getHostName();
             }
         } catch (final UnknownHostException e) {
-        	// fall back to default 'localhost'
+            // fall back to default 'localhost'
         }
         return hostname;
     }
@@ -182,7 +182,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param suite the testsuite.
      * @throws BuildException on error.
      */
-	public void endTestSuite(final JUnitTest suite) throws BuildException {
+    public void endTestSuite(final JUnitTest suite) throws BuildException {
         rootElement.setAttribute(ATTR_TESTS, "" + suite.runCount());
         rootElement.setAttribute(ATTR_FAILURES, "" + suite.failureCount());
         rootElement.setAttribute(ATTR_ERRORS, "" + suite.errorCount());
@@ -218,13 +218,13 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A new Test is started.
      * @param t the test.
      */
-	public void startTest(final Test t) {
+    public void startTest(final Test t) {
         testStarts.put(createDescription(t), System.currentTimeMillis());
     }
 
     private static String createDescription(final Test test) throws BuildException {
         return JUnitVersionHelper.getTestCaseName(test) + "(" + JUnitVersionHelper.getTestCaseClassName(test) + ")";
-	}
+    }
 
     /**
      * Interface TestListener.
@@ -232,7 +232,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * <p>A Test is finished.
      * @param test the test.
      */
-	public void endTest(final Test test) {
+    public void endTest(final Test test) {
         final String testDescription = createDescription(test);
 
         // Fix for bug #5637 - if a junit.extensions.TestSetup is
@@ -280,7 +280,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the assertion.
      */
-	public void addFailure(final Test test, final AssertionFailedError t) {
+    public void addFailure(final Test test, final AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
 
@@ -291,7 +291,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * @param test the test.
      * @param t the error.
      */
-	public void addError(final Test test, final Throwable t) {
+    public void addError(final Test test, final Throwable t) {
         formatError(ERROR, test, t);
     }
 
@@ -328,7 +328,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         nested.appendChild(doc.createCDATASection(output));
     }
 
-	public void testIgnored(final Test test) {
+    public void testIgnored(final Test test) {
         formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
         if (test != null) {
             ignoredTests.put(createDescription(test), test);
@@ -358,7 +358,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     }
 
-	public void testAssumptionFailure(final Test test, final Throwable failure) {
+    public void testAssumptionFailure(final Test test, final Throwable failure) {
         formatSkip(test, failure.getMessage());
         skippedTests.put(createDescription(test), test);
 

@@ -169,7 +169,7 @@ public class PathConvert extends Task {
          * @return the list of values for this enumerated attribute.
          */
         @Override
-		public String[] getValues() {
+        public String[] getValues() {
             return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
         }
     }
@@ -227,7 +227,7 @@ public class PathConvert extends Task {
      * @see #setTargetos(PathConvert.TargetOs)
      */
     @Deprecated
-	public void setTargetos(String target) {
+    public void setTargetos(String target) {
         TargetOs to = new TargetOs();
         to.setValue(target);
         setTargetos(to);
@@ -334,7 +334,7 @@ public class PathConvert extends Task {
      * @throws BuildException if something is invalid.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         Resources savedPath = path;
         String savedPathSep = pathSep; // may be altered in validateSetup
         String savedDirSep = dirSep; // may be altered in validateSetup

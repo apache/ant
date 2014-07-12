@@ -507,7 +507,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.2
      */
     @Deprecated
-	public void setComprSize(final long size) {
+    public void setComprSize(final long size) {
         setCompressedSize(size);
     }
 

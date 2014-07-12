@@ -94,7 +94,7 @@ public abstract class MappingSelector extends BaseSelector {
      * means that the dest attribute has been set and we have a mapper.
      */
     @Override
-	public void verifySettings() {
+    public void verifySettings() {
         if (targetdir == null) {
             setError("The targetdir attribute is required.");
         }
@@ -120,7 +120,7 @@ public abstract class MappingSelector extends BaseSelector {
      * @return whether the file should be selected or not
      */
     @Override
-	public boolean isSelected(File basedir, String filename, File file) {
+    public boolean isSelected(File basedir, String filename, File file) {
 
         // throw BuildException on error
         validate();

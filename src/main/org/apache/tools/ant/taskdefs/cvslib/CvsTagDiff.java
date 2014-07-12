@@ -168,7 +168,7 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @param p the name of the package to analyse
      */
     @Override
-	public void setPackage(String p) {
+    public void setPackage(String p) {
         mypackage = p;
     }
 
@@ -235,7 +235,7 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @exception BuildException if an error occurs
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         // validate the input parameters
         validate();
 

@@ -64,7 +64,7 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
-	public boolean canEncode(final String name) {
+    public boolean canEncode(final String name) {
         return true;
     }
 
@@ -72,7 +72,7 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
-	public ByteBuffer encode(final String name) throws IOException {
+    public ByteBuffer encode(final String name) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return ByteBuffer.wrap(name.getBytes());
         } else {
@@ -84,7 +84,7 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see
      * org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
-	public String decode(final byte[] data) throws IOException {
+    public String decode(final byte[] data) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return new String(data);
         } else {

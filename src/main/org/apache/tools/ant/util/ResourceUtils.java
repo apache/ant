@@ -145,10 +145,10 @@ public class ResourceUtils {
         logFuture(logTo, source, granularity);
         final ResourceSelectorProvider p =
             new ResourceSelectorProvider() {
-				public ResourceSelector
+                public ResourceSelector
                     getTargetSelectorForSource(final Resource sr) {
                     return new ResourceSelector() {
-						public boolean isSelected(final Resource target) {
+                        public boolean isSelected(final Resource target) {
                             /* Extra I/O, probably wasted:
                                if (target.isDirectory()) {
                                return false;
@@ -842,9 +842,9 @@ public class ResourceUtils {
      * @since Ant 1.9.4
      */
     public static class ReadOnlyTargetFileException extends IOException {
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public ReadOnlyTargetFileException(final File destFile) {
+        public ReadOnlyTargetFileException(final File destFile) {
             super("can't write to read-only destination file " + destFile);
         }
     }

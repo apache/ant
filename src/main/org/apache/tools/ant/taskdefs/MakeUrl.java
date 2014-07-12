@@ -235,7 +235,7 @@ public class MakeUrl extends Task {
      *          if something goes wrong with the build
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         validate();
         //now exit here if the property is already set
         if (getProject().getProperty(property) != null) {

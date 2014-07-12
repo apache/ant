@@ -28,34 +28,34 @@ import org.apache.tools.ant.DefaultLogger;
 public class SilentLogger extends DefaultLogger {
 
     @Override
-	public void buildStarted(BuildEvent event) {
+    public void buildStarted(BuildEvent event) {
         // log nothing
     }
 
     @Override
-	public void buildFinished(BuildEvent event) {
+    public void buildFinished(BuildEvent event) {
         if (event.getException() != null) {
             super.buildFinished(event);
         }
     }
 
     @Override
-	public void targetStarted(BuildEvent event) {
+    public void targetStarted(BuildEvent event) {
         // log nothing
     }
 
     @Override
-	public void targetFinished(BuildEvent event) {
+    public void targetFinished(BuildEvent event) {
         // log nothing
     }
 
     @Override
-	public void taskStarted(BuildEvent event) {
+    public void taskStarted(BuildEvent event) {
         // log nothing
     }
 
     @Override
-	public void taskFinished(BuildEvent event) {
+    public void taskFinished(BuildEvent event) {
         // log nothing
     }
 

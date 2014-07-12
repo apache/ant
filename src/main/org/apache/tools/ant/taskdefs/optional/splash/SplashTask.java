@@ -72,7 +72,7 @@ public class SplashTask extends Task {
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
     @Deprecated
-	public void setUseproxy(boolean useProxy) {
+    public void setUseproxy(boolean useProxy) {
         this.useProxy = useProxy;
     }
 
@@ -83,7 +83,7 @@ public class SplashTask extends Task {
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
     @Deprecated
-	public void setProxy(String proxy) {
+    public void setProxy(String proxy) {
         this.proxy = proxy;
     }
 
@@ -94,7 +94,7 @@ public class SplashTask extends Task {
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
     @Deprecated
-	public void setPort(String port) {
+    public void setPort(String port) {
         this.port = port;
     }
 
@@ -105,7 +105,7 @@ public class SplashTask extends Task {
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
     @Deprecated
-	public void setUser(String user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -116,7 +116,7 @@ public class SplashTask extends Task {
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy
      */
     @Deprecated
-	public void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -158,7 +158,7 @@ public class SplashTask extends Task {
      * @throws BuildException on error
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (splash != null) {
             splash.setVisible(false);
             getProject().removeBuildListener(splash);

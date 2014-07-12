@@ -133,7 +133,7 @@ public class SSHSession extends SSHBase {
      * network error or bad parameter.
      */
     @Override
-	public void execute() throws BuildException {
+    public void execute() throws BuildException {
         if (getHost() == null) {
             throw new BuildException("Host is required.");
         }
@@ -238,19 +238,19 @@ public class SSHSession extends SSHBase {
         public void setRPort(final int rport) { this.rport = rport; }
         public int getLPort() {
             if (lport == 0) {
-            	throw new BuildException("lport is required for LocalTunnel.");
+                throw new BuildException("lport is required for LocalTunnel.");
             }
             return lport;
         }
         public String getRHost() {
             if (rhost == null) {
-            	throw new BuildException("rhost is required for LocalTunnel.");
+                throw new BuildException("rhost is required for LocalTunnel.");
             }
             return rhost;
         }
         public int getRPort() {
             if (rport == 0) {
-            	throw new BuildException("rport is required for LocalTunnel.");
+                throw new BuildException("rport is required for LocalTunnel.");
             }
             return rport;
         }
@@ -266,28 +266,28 @@ public class SSHSession extends SSHBase {
         public void setLHost(final String lhost) { this.lhost = lhost; }
         public void setRPort(final int rport) {
             final Integer portKey = new Integer(rport);
-			if (remotePortsUsed.contains(portKey)) {
-				throw new BuildException("Multiple remote tunnels defined to"
-						+ " use same remote port " + rport);
-			}
+            if (remotePortsUsed.contains(portKey)) {
+                throw new BuildException("Multiple remote tunnels defined to"
+                                         + " use same remote port " + rport);
+            }
             remotePortsUsed.add(portKey);
             this.rport = rport;
         }
         public int getLPort() {
             if (lport == 0) {
-            	throw new BuildException("lport is required for RemoteTunnel.");
+                throw new BuildException("lport is required for RemoteTunnel.");
             }
             return lport;
         }
         public String getLHost() {
             if (lhost == null) {
-            	throw new BuildException("lhost is required for RemoteTunnel.");
+                throw new BuildException("lhost is required for RemoteTunnel.");
             }
             return lhost;
         }
         public int getRPort() {
             if (rport == 0) {
-            	throw new BuildException("rport is required for RemoteTunnel.");
+                throw new BuildException("rport is required for RemoteTunnel.");
             }
             return rport;
         }
@@ -318,7 +318,7 @@ public class SSHSession extends SSHBase {
          *
          * @param task an unknown element.
          */
-		public void addTask(final Task task) {
+        public void addTask(final Task task) {
             nested.add(task);
         }
 

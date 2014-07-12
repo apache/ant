@@ -114,7 +114,7 @@ public class ExtensionSet
      * @exception BuildException if this instance already has been configured.
      */
     @Override
-	public void setRefid(final Reference reference)
+    public void setRefid(final Reference reference)
         throws BuildException {
         if (!extensions.isEmpty() || !extensionsFilesets.isEmpty()) {
             throw tooManyAttributes();
@@ -123,7 +123,7 @@ public class ExtensionSet
     }
 
     @Override
-	protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -147,7 +147,7 @@ public class ExtensionSet
      * @return the extensions in a string.
      */
     @Override
-	public String toString() {
+    public String toString() {
         return "ExtensionSet" + Arrays.asList(toExtensions(getProject()));
     }
 }
