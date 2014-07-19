@@ -19,47 +19,52 @@
 <!-- Manifest tests build file
      author: Conor MacNeill -->
 <project name="manifest-test" basedir="." default="test1">
+  <import file="../buildfiletest-base.xml"/>
 
-  <target name="test1">
-    <jar file="mftest1.jar" manifest="manifests/test1.mf"/>
-    <unjar src="mftest1.jar" dest="manifests">
+  <target name="setUp">
+    <mkdir dir="${output}/manifests"/>
+  </target>
+
+  <target name="test1" depends="setUp">
+    <jar file="${output}/mftest1.jar" manifest="manifests/test1.mf"/>
+    <unjar src="${output}/mftest1.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
   
-  <target name="test2">
-    <jar file="mftest2.jar" manifest="manifests/test2.mf"/>
-    <unjar src="mftest2.jar" dest="manifests">
+  <target name="test2" depends="setUp">
+    <jar file="${output}/mftest2.jar" manifest="manifests/test2.mf"/>
+    <unjar src="${output}/mftest2.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
   
-  <target name="test3">
-    <jar file="mftest3.jar" manifest="manifests/test3.mf"/>
+  <target name="test3" depends="setUp">
+    <jar file="${output}/mftest3.jar" manifest="manifests/test3.mf"/>
   </target>
   
-  <target name="test4">
-    <jar file="mftest4.jar" manifest="manifests/test4.mf"/>
+  <target name="test4" depends="setUp">
+    <jar file="${output}/mftest4.jar" manifest="manifests/test4.mf"/>
   </target>
   
-  <target name="test5">
-    <jar file="mftest5.jar" manifest="manifests/test5.mf"/>
+  <target name="test5" depends="setUp">
+    <jar file="${output}/mftest5.jar" manifest="manifests/test5.mf"/>
   </target>
   
-  <target name="test6">
-    <jar file="mftest6.jar" manifest="manifests/test6.mf"/>
+  <target name="test6" depends="setUp">
+    <jar file="${output}/mftest6.jar" manifest="manifests/test6.mf"/>
   </target>
   
-  <target name="test7">
-    <jar file="mftest7.jar" manifest="manifests/test7.mf"/>
+  <target name="test7" depends="setUp">
+    <jar file="${output}/mftest7.jar" manifest="manifests/test7.mf"/>
   </target>
   
-  <target name="test8">
-    <jar file="mftest8.jar">
+  <target name="test8" depends="setUp">
+    <jar file="${output}/mftest8.jar">
       <manifest>
         <attribute name="Class-Path" value="fubar"/>
         <section name="Test">
@@ -67,15 +72,15 @@
         </section>
       </manifest>
     </jar>
-    <unjar src="mftest8.jar" dest="manifests">
+    <unjar src="${output}/mftest8.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
 
-  <target name="test9">
-    <jar file="mftest9.jar">
+  <target name="test9" depends="setUp">
+    <jar file="${output}/mftest9.jar">
       <manifest>
         <attribute name="Class-Path" value="fubar"/>
         <section name="Test">
@@ -85,24 +90,24 @@
     </jar>
   </target>
 
-  <target name="test10">
-    <jar file="mftest10.jar">
+  <target name="test10" depends="setUp">
+    <jar file="${output}/mftest10.jar">
       <manifest>
         <attribute value="fubar"/>
       </manifest>
     </jar>
   </target>
 
-  <target name="test11">
-    <jar file="mftest11.jar">
+  <target name="test11" depends="setUp">
+    <jar file="${output}/mftest11.jar">
       <manifest>
         <attribute name="Test"/>
       </manifest>
     </jar>
   </target>
 
-  <target name="test12">
-    <jar file="mftest12.jar">
+  <target name="test12" depends="setUp">
+    <jar file="${output}/mftest12.jar">
       <manifest>
         <section>
           <attribute name="TestAttr" value="Test"/>
@@ -111,8 +116,8 @@
     </jar>
   </target>
 
-  <target name="test13">
-    <jar file="mftest13.jar">
+  <target name="test13" depends="setUp">
+    <jar file="${output}/mftest13.jar">
       <manifest>
         <attribute name="Test" value="Test1"/>
         <attribute name="Test" value="Test2"/>
@@ -120,8 +125,8 @@
     </jar>
   </target>
 
-  <target name="test14">
-    <jar file="mftest14.jar">
+  <target name="test14" depends="setUp">
+    <jar file="${output}/mftest14.jar">
       <manifest>
         <attribute name="Class-path" value="Test1"/>
         <attribute name="Class-path" value="Test2"/>
@@ -129,7 +134,7 @@
         <attribute name="class-Path" value="Test4"/>
       </manifest>
     </jar>
-    <unjar src="mftest14.jar" dest="manifests">
+    <unjar src="${output}/mftest14.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
@@ -140,8 +145,8 @@
     <manifest />
   </target>
 
-  <target name="testLongLine">
-    <jar file="mftestLongLine.jar">
+  <target name="testLongLine" depends="setUp">
+    <jar file="${output}/mftestLongLine.jar">
       <manifest>
         <attribute name="Class-path" 
                    value="${test.longline}"/>
@@ -150,15 +155,15 @@
         <attribute name="${test.notlongname}" value="${test.value}" />
       </manifest>
     </jar>
-    <unjar src="mftestLongLine.jar" dest="manifests">
+    <unjar src="${output}/mftestLongLine.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
 
-  <target name="testOrder1">
-    <jar file="mftestOrder1.jar">
+  <target name="testOrder1" depends="setUp">
+    <jar file="${output}/mftestOrder1.jar">
       <manifest>
         <section name="Test1">
           <attribute name="TestAttr1" value="Test1"/>
@@ -169,15 +174,15 @@
         </section>
       </manifest>
     </jar>
-    <unjar src="mftestOrder1.jar" dest="manifests">
+    <unjar src="${output}/mftestOrder1.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
 
-  <target name="testOrder2">
-    <jar file="mftestOrder2.jar">
+  <target name="testOrder2" depends="setUp">
+    <jar file="${output}/mftestOrder2.jar">
       <manifest>
         <section name="Test2">
           <attribute name="TestAttrx" value="Testx"/>
@@ -188,39 +193,39 @@
         </section>
       </manifest>
     </jar>
-    <unjar src="mftestOrder2.jar" dest="manifests">
+    <unjar src="${output}/mftestOrder2.jar" dest="${output}/manifests">
       <patternset>
         <include name="META-INF/MANIFEST.MF"/>
       </patternset>
     </unjar>
   </target>
   
-  <target name="testReplace">
-    <copy file="manifests/test2.mf" toFile="mftest.mf" />
-    <manifest file="mftest.mf" />
+  <target name="testReplace" depends="setUp">
+    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf" />
+    <manifest file="${output}/mftest.mf" />
   </target>
 
-  <target name="testUpdate">
-    <copy file="manifests/test2.mf" toFile="mftest.mf" />
-    <manifest file="mftest.mf" mode="update">
+  <target name="testUpdate" depends="setUp">
+    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf" />
+    <manifest file="${output}/mftest.mf" mode="update">
       <attribute name="Foo" value="Bar" />
     </manifest>
 
-    <copy file="manifests/test2.mf" toFile="mftest2.mf" />
-    <manifest file="mftest2.mf" mode="update">
+    <copy file="manifests/test2.mf" toFile="${output}/mftest2.mf" />
+    <manifest file="${output}/mftest2.mf" mode="update">
       <section name="Test">
         <attribute name="Foo" value="Bar" />
       </section>
     </manifest>
-    <manifest file="mftest2.mf" mode="update">
+    <manifest file="${output}/mftest2.mf" mode="update">
       <section name="Test">
         <attribute name="Foo" value="Baz" />
       </section>
     </manifest>
   </target>
 
-  <target name="testFrom">
-    <manifest file="mftestfrom.mf" >
+  <target name="testFrom" depends="setUp">
+    <manifest file="${output}/mftestfrom.mf" >
       <section name="Test">
         <attribute name="before" value="before" />
         <attribute name="From" value="illegal"/>
@@ -229,42 +234,35 @@
     </manifest>
   </target>
   
-  <target name="testIllegalName">
-    <manifest file="mftestillegalname.mf">
+  <target name="testIllegalName" depends="setUp">
+    <manifest file="${output}/mftestillegalname.mf">
       <attribute name="has blank" value="value"/>
     </manifest>
   </target>
 
-  <target name="testIllegalNameInSection">
-    <manifest file="mftestillegalnameinsection.mf">
+  <target name="testIllegalNameInSection" depends="setUp">
+    <manifest file="${output}/mftestillegalnameinsection.mf">
       <section name="s1">
         <attribute name="has blank" value="value"/>
       </section>
     </manifest>
   </target>
 
-  <target name="testIllegalNameBegin">
-    <manifest file="mftestillegalnamebegin.mf">
+  <target name="testIllegalNameBegin" depends="setUp">
+    <manifest file="${output}/mftestillegalnamebegin.mf">
       <attribute name="-name" value="value"/>
     </manifest>
   </target>
 
-  <target name="testIllegalName2">
-    <manifest file="mftestillegalnamebegin.mf">
+  <target name="testIllegalName2" depends="setUp">
+    <manifest file="${output}/mftestillegalnamebegin.mf">
       <attribute name="has.point" value="value"/>
     </manifest>
   </target>
 
-  <target name="testIllegalName3">
-    <manifest file="mftestillegalnamebegin.mf">
+  <target name="testIllegalName3" depends="setUp">
+    <manifest file="${output}/mftestillegalnamebegin.mf">
       <attribute name="has*star" value="value"/>
     </manifest>
-  </target>
-
-  <target name="clean">
-    <delete>
-      <fileset dir="." includes="mftest*"/>
-    </delete>
-    <delete dir="manifests/META-INF"/>
   </target>
 </project>

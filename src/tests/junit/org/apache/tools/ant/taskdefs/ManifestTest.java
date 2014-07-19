@@ -49,8 +49,8 @@ public class ManifestTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-    public static final String EXPANDED_MANIFEST
-        = "src/etc/testcases/taskdefs/manifests/META-INF/MANIFEST.MF";
+    private File expandedManifest;
+    private File outDir;
 
     public static final String LONG_LINE
         = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich" +
@@ -71,11 +71,13 @@ public class ManifestTest {
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/manifest.xml");
+        outDir = new File(buildRule.getProject().getProperty("output"));
+        expandedManifest = new File(outDir, "manifests/META-INF/MANIFEST.MF");
     }
 
     @After
     public void tearDown() {
-        buildRule.executeTarget("clean");
+        buildRule.executeTarget("tearDown");
     }
 
     /**
@@ -84,7 +86,7 @@ public class ManifestTest {
     @Test
     public void test1() throws ManifestException, IOException {
         buildRule.executeTarget("test1");
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         String version = manifest.getManifestVersion();
         assertEquals("Manifest was not created with correct version - ", "1.0", version);
     }
@@ -95,7 +97,7 @@ public class ManifestTest {
     @Test
     public void test2() throws ManifestException, IOException {
         buildRule.executeTarget("test2");
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         String version = manifest.getManifestVersion();
         assertEquals("Manifest was not created with correct version - ", "2.0", version);
     }
@@ -171,7 +173,7 @@ public class ManifestTest {
     @Test
     public void test8() throws IOException, ManifestException {
         buildRule.executeTarget("test8");
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
         assertEquals("Class-Path attribute was not set correctly - ", "fubar", classpath);
@@ -253,7 +255,7 @@ public class ManifestTest {
     @Test
     public void test14() throws IOException, ManifestException {
         buildRule.executeTarget("test14");
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
         assertEquals("Class-Path attribute was not set correctly - ",
@@ -273,7 +275,7 @@ public class ManifestTest {
         p.setUserProperty("test.value", VALUE);
         buildRule.executeTarget("testLongLine");
 
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         Manifest.Section mainSection = manifest.getMainSection();
         String classpath = mainSection.getAttributeValue("class-path");
         assertEquals("Class-Path attribute was not set correctly - ",
@@ -286,7 +288,7 @@ public class ManifestTest {
         value = mainSection.getAttributeValue(NOT_LONG_NAME);
         assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
         
-        BufferedReader in = new BufferedReader(new FileReader(new File(System.getProperty("root"), EXPANDED_MANIFEST)));
+        BufferedReader in = new BufferedReader(new FileReader(expandedManifest));
         
         Set set = new HashSet();
         String read = in.readLine();
@@ -313,7 +315,7 @@ public class ManifestTest {
     public void testOrder1() throws IOException, ManifestException {
         buildRule.executeTarget("testOrder1");
 
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         Enumeration e = manifest.getSectionNames();
         String section1 = (String)e.nextElement();
         String section2 = (String)e.nextElement();
@@ -337,7 +339,7 @@ public class ManifestTest {
     public void testOrder2() throws IOException, ManifestException {
         buildRule.executeTarget("testOrder2");
 
-        Manifest manifest = getManifest(EXPANDED_MANIFEST);
+        Manifest manifest = getManifest(expandedManifest);
         Enumeration e = manifest.getSectionNames();
         String section1 = (String)e.nextElement();
         String section2 = (String)e.nextElement();
@@ -373,7 +375,7 @@ public class ManifestTest {
     @Test
     public void testReplace() throws IOException, ManifestException {
         buildRule.executeTarget("testReplace");
-        Manifest mf = getManifest("src/etc/testcases/taskdefs/mftest.mf");
+        Manifest mf = getManifest(new File(outDir, "mftest.mf"));
         assertNotNull(mf);
         assertEquals(Manifest.getDefaultManifest(), mf);
     }
@@ -384,7 +386,7 @@ public class ManifestTest {
     @Test
     public void testUpdate() throws IOException, ManifestException {
         buildRule.executeTarget("testUpdate");
-        Manifest mf = getManifest("src/etc/testcases/taskdefs/mftest.mf");
+        Manifest mf = getManifest(new File(outDir, "mftest.mf"));
         assertNotNull(mf);
         assertTrue(!Manifest.getDefaultManifest().equals(mf));
         String mfAsString = mf.toString();
@@ -392,7 +394,7 @@ public class ManifestTest {
         assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));
         assertTrue(mfAsString.indexOf("Foo: Bar") > -1);
 
-        mf = getManifest("src/etc/testcases/taskdefs/mftest2.mf");
+        mf = getManifest(new File(outDir, "mftest2.mf"));
         assertNotNull(mf);
         mfAsString = mf.toString();
         assertNotNull(mfAsString);
@@ -459,8 +461,8 @@ public class ManifestTest {
     /**
      * Reads mftest.mf.
      */
-    private Manifest getManifest(String filename) throws IOException, ManifestException {
-        FileReader r = new FileReader(new File(System.getProperty("root"), filename));
+    private Manifest getManifest(File file) throws IOException, ManifestException {
+        FileReader r = new FileReader(file);
         try {
             return new Manifest(r);
         } finally {
