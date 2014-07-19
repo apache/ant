@@ -47,10 +47,10 @@ public class ExecTaskTest {
     private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
     private static final int TIME_TO_WAIT = 1;
     /** maximum time allowed for the build in milliseconds */
-    private static final int MAX_BUILD_TIME = 4000;
-    private static final int SECURITY_MARGIN = 3000; // wait 3 second extras
+    private static final int MAX_BUILD_TIME = 6000;
+    private static final int SECURITY_MARGIN = 4000; // wait 4 second extras
     // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
-    // the test failed with 2 s of margin on Windows Jenkins slaves on during July 2014
+    // the test randomly failed with 3 s of margin on Windows Jenkins slaves on during July 2014
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
