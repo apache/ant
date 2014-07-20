@@ -288,16 +288,22 @@ public class ManifestTest {
         value = mainSection.getAttributeValue(NOT_LONG_NAME);
         assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
         
-        BufferedReader in = new BufferedReader(new FileReader(expandedManifest));
-        
         Set set = new HashSet();
+        FileReader fin = new FileReader(expandedManifest);
+        try {
+        BufferedReader in = new BufferedReader(fin);
+        
         String read = in.readLine();
         while (read != null)
         {
             set.add(read);
             read = in.readLine();
         }
-        
+            in.close();
+        } finally {
+            fin.close();
+        }
+
         assertTrue("Manifest file should have contained string ", set
                 .remove(" NOT_LONG"));
         assertTrue("Manifest file should have contained string ", set
