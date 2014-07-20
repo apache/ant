@@ -181,7 +181,7 @@ public final class DateUtils {
      * + 11/22 for rounding
      * </pre>
      *
-     * @param cal the calander.
+     * @param cal the calendar.
      *
      * @return The phase of the moon as a number between 0 and 7 with
      *         0 meaning new moon and 4 meaning full moon.

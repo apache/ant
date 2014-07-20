@@ -709,7 +709,7 @@ public class PropertyFile extends Task {
 
         /**
          * Convert the value to a Calendar field index.
-         * @return the calander value.
+         * @return the calendar value.
          */
         public int getCalendarField() {
             String key = getValue().toLowerCase();

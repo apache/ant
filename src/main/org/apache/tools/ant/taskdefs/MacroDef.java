@@ -695,7 +695,7 @@ public class MacroDef extends AntlibDefinition  {
      * runtime info.
      *
      * @param obj an <code>Object</code> value
-     * @param same if true test for sameness, otherwise just similiar
+     * @param same if true test for sameness, otherwise just similar
      * @return a <code>boolean</code> value
      */
     private boolean sameOrSimilar(Object obj, boolean same) {

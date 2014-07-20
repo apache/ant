@@ -353,7 +353,7 @@ public final class SortFilter extends BaseParamFilterReader
     }
 
     /**
-     * Sorts the read lines (<code>lines</code>)acording to the sorting
+     * Sorts the read lines (<code>lines</code>) according to the sorting
      * criteria defined by the user.
      *
      */

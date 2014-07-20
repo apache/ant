@@ -202,7 +202,7 @@ public class JarLibResolveTask extends Task {
 
     /**
      * Check if specified file satisfies extension.
-     * If it does then set the relevent property
+     * If it does then set the relevant property
      * else throw a BuildException.
      *
      * @param file the candidate library

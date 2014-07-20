@@ -37,7 +37,7 @@ Ant behaviour.
 <p>
 An <code>ArgumentProcessor</code> is called each time Ant parse an unknown
 argument, an <code>ArgumentProcessor</code> doesn't take precedence over Ant to
-parse already suported options. It is then recommended to thrid party
+parse already suported options. It is then recommended to third party
 <code>ArgumentProcessor</code> implementation to chose specific 'enough'
 argument name, avoiding for instance one letter arguments.
 </p>
@@ -47,7 +47,7 @@ It is also called at the different phases so different behaviour can be
 implemented. It is called just after every arguments are parsed, just
 before the project is being configured (the build file being parsed),
 and just after. Some of the methods to be implemented return a boolean:
-if <code>true</code> is returned, Ant will terminate immediatly, without
+if <code>true</code> is returned, Ant will terminate immediately, without
 error.
 </p>
 

@@ -609,7 +609,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
     /**
      * Specific configuration for the TRaX liaison.
-     * @param xsltTask the XSLTProcess task instance from which this liasion
+     * @param xsltTask the XSLTProcess task instance from which this liaison
      *        is to be configured.
      */
     public void configure(final XSLTProcess xsltTask) {

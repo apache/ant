@@ -266,7 +266,7 @@ public class Os implements Condition {
                             || OS_NAME.indexOf("98") >= 0
                             || OS_NAME.indexOf("me") >= 0
                             //wince isn't really 9x, but crippled enough to
-                            //be a muchness. Ant doesnt run on CE, anyway.
+                            //be a muchness. Ant doesn't run on CE, anyway.
                             || OS_NAME.indexOf("ce") >= 0);
                     isNT = !is9x;
                 }

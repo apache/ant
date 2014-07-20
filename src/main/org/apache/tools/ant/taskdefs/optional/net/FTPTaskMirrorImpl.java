@@ -844,7 +844,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 return relativePath;
             }
             /**
-             * get thge relative path of this file
+             * get the relative path of this file
              * @param currentPath          base path
              * @param currentRelativePath  relative path of the base path with regards to remote dir
              * @return relative path
@@ -1359,7 +1359,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 ftp.deleteFile(ftpFiles[0].getName());
             }
             // delegate the deletion of the local temp file to the delete task
-            // because of race conditions occuring on Windows
+            // because of race conditions occurring on Windows
             Delete mydelete = new Delete();
             mydelete.bindToOwner(task);
             mydelete.setFile(tempFile.getCanonicalFile());

@@ -279,7 +279,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
         writer.newLine();
         writer.write("public class ");
         writer.write(className);
-        // If this class does not extend TC, Ant doesnt run these
+        // If this class does not extend TC, Ant doesn't run these
         writer.write(" extends TestCase {");
         writer.newLine();
         // standard String-constructor

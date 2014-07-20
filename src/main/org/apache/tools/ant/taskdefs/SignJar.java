@@ -395,7 +395,7 @@ public class SignJar extends AbstractJarSignerTask {
             throw new BuildException(ERROR_SIGNEDJAR_AND_PATHS);
         }
 
-        //this isnt strictly needed, but by being fussy now,
+        //this isn't strictly needed, but by being fussy now,
         //we can change implementation details later
         if (!hasDestDir && hasMapper) {
             throw new BuildException(ERROR_MAPPER_WITHOUT_DEST);
@@ -569,7 +569,7 @@ public class SignJar extends AbstractJarSignerTask {
     /**
      * <p>Compare a jar file with its corresponding signed jar. The logic for this
      * is complex, and best explained in the source itself. Essentially if
-     * either file doesnt exist, or the destfile has an out of date timestamp,
+     * either file doesn't exist, or the destfile has an out of date timestamp,
      * then the return value is false.</p>
      *
      * <p>If we are signing ourself, the check {@link #isSigned(File)} is used to

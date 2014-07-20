@@ -327,7 +327,7 @@ public class MailMessage {
     // RFC 822 s4.1:
     //   "Header fields are NOT required to occur in any particular order,
     //    except that the message body MUST occur AFTER the headers"
-    // (the same section specifies a reccommended order, which we ignore)
+    // (the same section specifies a recommended order, which we ignore)
    final int size = headersKeys.size();
    for (int i = 0; i < size; i++) {
       String name = (String) headersKeys.elementAt(i);

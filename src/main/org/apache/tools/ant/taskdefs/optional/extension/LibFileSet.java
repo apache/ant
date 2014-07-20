@@ -21,7 +21,7 @@ import org.apache.tools.ant.types.FileSet;
 
 /**
  * LibFileSet represents a fileset containing libraries.
- * Asociated with the libraries is data pertaining to
+ * Associated with the libraries is data pertaining to
  * how they are to be handled when building manifests.
  *
  */

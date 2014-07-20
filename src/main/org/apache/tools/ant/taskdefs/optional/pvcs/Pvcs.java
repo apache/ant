@@ -51,7 +51,7 @@ import org.apache.tools.ant.util.FileUtils;
  * of PVCS (get and pcli) and must have access to the repository. Note that the way to specify
  * the repository is platform dependent so use property to specify location of repository.
  * <br>
- * This version has been tested agains PVCS version 6.5 and 6.6 under Windows and Solaris.
+ * This version has been tested against PVCS version 6.5 and 6.6 under Windows and Solaris.
 
  *
  * <b>19-04-2001</b> <p>The task now has a more robust

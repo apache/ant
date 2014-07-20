@@ -698,7 +698,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * weblogic jar file can remain the same. If the Interfaces, ie. the
      * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbc. This is not strictly true
-     * for the xml files. If the JNDI name changes then the jar doesnt have to
+     * for the xml files. If the JNDI name changes then the jar doesn't have to
      * be rebuild, but if the resources references change then it does. At
      * this point the weblogic jar gets rebuilt if the xml files change at
      * all.
@@ -794,7 +794,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             }
                         }
                     } else {
-                        // a file doesnt exist rebuild
+                        // a file doesn't exist rebuild
 
                         log("File " + filepath + " not present in weblogic jar",
                             Project.MSG_VERBOSE);

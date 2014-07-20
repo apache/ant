@@ -31,7 +31,7 @@ import java.io.OutputStream;
 public abstract class LineOrientedOutputStream extends OutputStream {
 
     /** Initial buffer size. */
-    private static final int INTIAL_SIZE = 132;
+    private static final int INITIAL_SIZE = 132;
 
     /** Carriage return */
     private static final int CR = 0x0d;
@@ -40,7 +40,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
     private static final int LF = 0x0a;
 
     private ByteArrayOutputStream buffer
-        = new ByteArrayOutputStream(INTIAL_SIZE);
+        = new ByteArrayOutputStream(INITIAL_SIZE);
     private boolean skip = false;
 
     /**

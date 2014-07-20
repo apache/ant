@@ -617,7 +617,7 @@ public class Execute {
         for (int i = 0; i < env.length; i++) {
             String keyValue = env[i];
             String key = keyValue.substring(0, keyValue.indexOf('='));
-            // Find the key in the current enviroment copy
+            // Find the key in the current environment copy
             // and remove it.
 
             // Try without changing case first

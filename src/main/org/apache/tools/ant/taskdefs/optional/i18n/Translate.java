@@ -575,7 +575,7 @@ public class Translate extends MatchingTask {
 
                     // we found a starttoken, is there an endtoken following?
                     // start at token+tokenlength because start and end
-                    // token may be indentical
+                    // token may be identical
                     int endIndex = line.indexOf(endToken, startIndex
                                                 + startToken.length());
                     if (endIndex < 0) {

@@ -136,7 +136,7 @@ public class ManifestTask extends Task {
     }
 
     /**
-     * Checks the attribute agains the Jar-specification.
+     * Checks the attribute against the Jar-specification.
      *
      * Jar-Specification <i>"Name-Value pairs and Sections"</i>: <pre>
      *   name:       alphanum *headerchar

@@ -54,7 +54,7 @@ public class DemuxOutputStream extends OutputStream {
     private static final int MAX_SIZE = 1024;
 
     /** Initial buffer size. */
-    private static final int INTIAL_SIZE = 132;
+    private static final int INITIAL_SIZE = 132;
 
     /** Carriage return */
     private static final int CR = 0x0d;
@@ -100,7 +100,7 @@ public class DemuxOutputStream extends OutputStream {
         BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         if (bufferInfo == null) {
             bufferInfo = new BufferInfo();
-            bufferInfo.buffer = new ByteArrayOutputStream(INTIAL_SIZE);
+            bufferInfo.buffer = new ByteArrayOutputStream(INITIAL_SIZE);
             bufferInfo.crSeen = false;
             buffers.put(current, bufferInfo);
         }

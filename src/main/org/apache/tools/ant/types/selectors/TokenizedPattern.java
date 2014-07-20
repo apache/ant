@@ -161,7 +161,7 @@ public class TokenizedPattern {
      */
     public TokenizedPattern withoutLastToken() {
         if (tokenizedPattern.length == 0) {
-            throw new IllegalStateException("cant strip a token from nothing");
+            throw new IllegalStateException("can't strip a token from nothing");
         } else if (tokenizedPattern.length == 1) {
             return EMPTY_PATTERN;
         } else {

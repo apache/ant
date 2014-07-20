@@ -1131,7 +1131,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * </ul>
      * <p>The parameter will be then passed to the XSLT template.</p>
      *
-     * <p>Default type (if omited) is primitive String. So if the expression is e.g
+     * <p>Default type (if omitted) is primitive String. So if the expression is e.g
      * "true" with no type, in XSLT it will be only a text string, not true
      * boolean.</p>
      *

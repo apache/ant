@@ -144,7 +144,7 @@ public class JspNameMangler implements JspMangler {
     /**
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
-     * not supported, as jasper in tomcat4.0 doesnt either
+     * not supported, as jasper in tomcat4.0 doesn't either
      * @param path not used
      * @return null always.
      */

@@ -198,7 +198,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      */
     public void buildFinished(BuildEvent event) {
         if (event.getException() == null && fileSuccess != null) {
-            // build successfull!
+            // build successful!
             play(event.getProject(), fileSuccess, loopsSuccess, durationSuccess);
         } else if (event.getException() != null && fileFail != null) {
             play(event.getProject(), fileFail, loopsFail, durationFail);

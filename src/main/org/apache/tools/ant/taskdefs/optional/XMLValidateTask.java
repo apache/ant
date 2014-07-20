@@ -98,7 +98,7 @@ public class XMLValidateTask extends Task {
     private final Vector propertyList = new Vector();
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
-    /** Message for successfull validation */
+    /** Message for successful validation */
     public static final String MESSAGE_FILES_VALIDATED
         = " file(s) have been successfully validated.";
 

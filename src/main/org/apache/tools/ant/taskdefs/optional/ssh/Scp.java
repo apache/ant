@@ -82,7 +82,7 @@ public class Scp extends SSHBase {
     }
 
     /**
-     * Similiar to {@link #setFile setFile} but explicitly states that
+     * Similar to {@link #setFile setFile} but explicitly states that
      * the file is a local file.  This is the only way to specify a
      * local file with a @ character.
      * @param aFromUri a string representing the source of the copy.
@@ -94,7 +94,7 @@ public class Scp extends SSHBase {
     }
 
     /**
-     * Similiar to {@link #setFile setFile} but explicitly states that
+     * Similar to {@link #setFile setFile} but explicitly states that
      * the file is a remote file.
      * @param aFromUri a string representing the source of the copy.
      * @since Ant 1.6.2
@@ -106,7 +106,7 @@ public class Scp extends SSHBase {
      }
 
     /**
-     * Similiar to {@link #setTodir setTodir} but explicitly states
+     * Similar to {@link #setTodir setTodir} but explicitly states
      * that the directory is a local.  This is the only way to specify
      * a local directory with a @ character.
      * @param aToUri a string representing the target of the copy.
@@ -127,7 +127,7 @@ public class Scp extends SSHBase {
     }
 
     /**
-     * Similiar to {@link #setTodir setTodir} but explicitly states
+     * Similar to {@link #setTodir setTodir} but explicitly states
      * that the directory is a remote.
      * @param aToUri a string representing the target of the copy.
      * @since Ant 1.6.2

@@ -224,7 +224,7 @@ public class PropertySet extends DataType implements ResourceCollection {
     }
 
     /**
-     * Set whether to reevaluate the set everytime the set is used.
+     * Set whether to reevaluate the set every time the set is used.
      * Default is true.
      *
      * @param dynamic if true, reevaluate the property set each time

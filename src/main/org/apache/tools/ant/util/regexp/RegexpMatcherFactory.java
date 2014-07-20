@@ -104,7 +104,7 @@ public class RegexpMatcherFactory {
     public static boolean regexpMatcherPresent(Project project) {
         try {
             // The factory throws a BuildException if no usable matcher
-            // cant be instantiated. We dont need the matcher itself here.
+            // cannot be instantiated. We dont need the matcher itself here.
             new RegexpMatcherFactory().newRegexpMatcher(project);
             return true;
         } catch (Throwable ex) {

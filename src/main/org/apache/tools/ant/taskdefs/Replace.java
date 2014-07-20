@@ -482,7 +482,7 @@ public class Replace extends MatchingTask {
 
     /**
      * Do the execution.
-     * @throws BuildException if we cant build
+     * @throws BuildException if we can't build
      */
     public void execute() throws BuildException {
 
