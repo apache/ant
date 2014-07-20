@@ -1009,11 +1009,11 @@ public class Main implements AntMain {
     private static void printUsage() {
         System.out.println("ant [options] [target [target2 [target3] ...]]");
         System.out.println("Options: ");
-        System.out.println("  -help, -h              print this message");
-        System.out.println("  -projecthelp, -p       print project help information");
+        System.out.println("  -help, -h              print this message and exit");
+        System.out.println("  -projecthelp, -p       print project help information and exit");
         System.out.println("  -version               print the version information and exit");
         System.out.println("  -diagnostics           print information that might be helpful to");
-        System.out.println("                         diagnose or report problems.");
+        System.out.println("                         diagnose or report problems and exit");
         System.out.println("  -quiet, -q             be extra quiet");
         System.out.println("  -silent, -S            print nothing but task outputs and build failures");
         System.out.println("  -verbose, -v           be extra verbose");
