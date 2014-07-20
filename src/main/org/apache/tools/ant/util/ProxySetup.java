@@ -34,7 +34,6 @@ public class ProxySetup {
 
     /**
      * Java1.5 property that enables use of system proxies.
-     * @value
      */
     public static final String USE_SYSTEM_PROXIES = "java.net.useSystemProxies";
     /** the http proxyhost property */

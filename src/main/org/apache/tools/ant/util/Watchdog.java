@@ -46,7 +46,7 @@ public class Watchdog implements Runnable {
 
     /**
      * Constructor for Watchdog.
-     * @param timeout the timeout to use in milliseconds (must be >= 1).
+     * @param timeout the timeout to use in milliseconds (must be &gt;= 1).
      */
     public Watchdog(long timeout) {
         if (timeout < 1) {

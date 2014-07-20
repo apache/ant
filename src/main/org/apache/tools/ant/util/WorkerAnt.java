@@ -26,7 +26,7 @@ import org.apache.tools.ant.Task;
  * After the run, any exception thrown is turned into a buildexception, which can be
  * rethrown, the finished attribute is set, then notifyAll() is called,
  * so that anyone waiting on the same notify object gets woken up.
- * </p>
+ * <p>
  * This class is effectively a superset of
  * {@link org.apache.tools.ant.taskdefs.Parallel.TaskRunnable}
  *
@@ -49,7 +49,7 @@ public class WorkerAnt extends Thread {
 
     /**
      * Create the worker.
-     * <p/>
+     * <p>
      * This does not start the thread, merely configures it.
      * @param task the task
      * @param notify what to notify
@@ -61,7 +61,7 @@ public class WorkerAnt extends Thread {
 
     /**
      * Create the worker, using the worker as the notification point.
-     * <p/>
+     * <p>
      * This does not start the thread, merely configures it.
      * @param task the task
      */
@@ -83,7 +83,7 @@ public class WorkerAnt extends Thread {
 
     /**
      * Get whatever was thrown, which may or may not be a buildException.
-     * Assertion: getException() instanceof BuildException <=> getBuildException()==getException()
+     * Assertion: getException() instanceof BuildException &lt;=&gt; getBuildException()==getException()
      * @return the exception.
      */
     public synchronized Throwable getException() {

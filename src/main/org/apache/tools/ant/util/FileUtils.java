@@ -1346,21 +1346,21 @@ public class FileUtils {
      * test whether a file or directory exists, with an error in the
      * upper/lower case spelling of the name.
      * Using this method is only interesting on case insensitive file systems
-     * (Windows).<br/>
+     * (Windows).<br>
      * It will return true only if 3 conditions are met :
-     * <br/>
+     * <br>
      * <ul>
      *   <li>operating system is case insensitive</li>
      *   <li>file exists</li>
      *   <li>actual name from directory reading is different from the
      *       supplied argument</li>
      * </ul>
-     *  <br/>
+     * <br>
      * the purpose is to identify files or directories on case-insensitive
-     * filesystems whose case is not what is expected.<br/>
+     * filesystems whose case is not what is expected.<br>
      * Possibly to rename them afterwards to the desired upper/lowercase
      * combination.
-     * <br/>
+     *
      * @param localFile file to test
      * @return true if the file exists and the case of the actual file
      *              is not the case of the parameter
@@ -1591,7 +1591,7 @@ public class FileUtils {
     /**
      * Calculates the relative path between two files.
      * <p>
-     * Implementation note:<br/> This function may throw an IOException if an I/O error occurs
+     * Implementation note:<br>This function may throw an IOException if an I/O error occurs
      * because its use of the canonical pathname may require filesystem queries.
      * </p>
      *

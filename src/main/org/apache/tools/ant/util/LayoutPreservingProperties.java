@@ -40,7 +40,7 @@ import java.util.Properties;
  * class to there, but it also keeps track of the contents of the
  * input stream from which it was loaded (if applicable), so that it can
  * write out the properties in as close a form as possible to the input.</p>
- * If no changes occur to property values, the output should be the same
+ * <p>If no changes occur to property values, the output should be the same
  * as the input, except for the leading date stamp, as normal for a
  * properties file. Properties added are appended to the file. Properties
  * whose values are changed are changed in place. Properties that are
@@ -63,7 +63,7 @@ import java.util.Properties;
  *
  * # and finally
  * gamma=rays</pre>
- * </p>The resulting collection sequence of logical lines depends on whether
+ * <p>The resulting collection sequence of logical lines depends on whether
  * or not <code>removeComments</code> was set at the time the second stream
  * is loaded. If it is set, then the resulting list of lines is</p>
  * <pre> # the first line

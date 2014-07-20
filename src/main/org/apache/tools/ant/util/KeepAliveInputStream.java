@@ -32,7 +32,6 @@ import java.io.InputStream;
  *   in.close();
  * }
  * </pre>
- * </p>
  *
  * @since Ant 1.6
  */

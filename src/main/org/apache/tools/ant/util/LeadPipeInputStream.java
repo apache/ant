@@ -103,7 +103,7 @@ public class LeadPipeInputStream extends PipedInputStream {
 
     /**
      * Set the size of the buffer.
-     * @param size   the new buffer size.  Ignored if <= current size.
+     * @param size   the new buffer size.  Ignored if &lt;= current size.
      */
     public synchronized void setBufferSize(int size) {
         if (size > buffer.length) {

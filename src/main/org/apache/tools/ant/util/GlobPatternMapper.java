@@ -24,7 +24,7 @@ import org.apache.tools.ant.BuildException;
  * Implementation of FileNameMapper that does simple wildcard pattern
  * replacements.
  *
- * <p>This does simple translations like *.foo -> *.bar where the
+ * <p>This does simple translations like *.foo -&gt; *.bar where the
  * prefix to .foo will be left unchanged. It only handles a single *
  * character, use regular expressions for more complicated
  * situations.</p>

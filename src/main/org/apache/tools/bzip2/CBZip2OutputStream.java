@@ -613,7 +613,7 @@ public class CBZip2OutputStream extends OutputStream
      * @throws IOException
      *             if an I/O error occurs in the specified stream.
      * @throws IllegalArgumentException
-     *             if <code>(blockSize < 1) || (blockSize > 9)</code>.
+     *             if <code>(blockSize &lt; 1) || (blockSize &gt; 9)</code>.
      * @throws NullPointerException
      *             if <code>out == null</code>.
      *

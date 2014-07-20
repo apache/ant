@@ -29,11 +29,10 @@ import java.io.PrintStream;
  * <p>
  * In code-language it means that it is not necessary to do:
  * <pre>
- * if (out != System.out && out!= System.err) {
+ * if (out != System.out &amp;&amp; out != System.err) {
  *   out.close();
  * }
  * </pre>
- * </p>
  *
  */
 public class KeepAliveOutputStream extends FilterOutputStream {

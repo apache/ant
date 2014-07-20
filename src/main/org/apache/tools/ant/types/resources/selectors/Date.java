@@ -64,7 +64,7 @@ public class Date implements ResourceSelector {
 
     /**
      * Set the date and time as a String.
-     * @param s the date & time to use.
+     * @param s the date and time to use.
      */
     public synchronized void setDateTime(String s) {
         dateTime = s;
@@ -72,8 +72,8 @@ public class Date implements ResourceSelector {
     }
 
     /**
-     * Get the date & time in String format.
-     * @return a String representing a date & time.
+     * Get the date and time in String format.
+     * @return a String representing a date and time.
      */
     public synchronized String getDatetime() {
         return dateTime;

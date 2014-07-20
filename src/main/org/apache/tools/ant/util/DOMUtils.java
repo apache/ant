@@ -56,7 +56,7 @@ public class DOMUtils {
      *   &lt;b/&gt;
      * &lt;/a&gt;
      * </pre>
-     * and returns <code>&lt;b&gt;</code>.</p>
+     * and returns <code>&lt;b&gt;</code>.
      *
      * @param parent element that will receive the new element as child.
      * @param name name of the new element.
@@ -80,7 +80,6 @@ public class DOMUtils {
      * <pre>
      * &lt;a&gt;b&lt;/a&gt;
      * </pre>
-     * </p>
      *
      * @param parent element that will receive the new element as child.
      * @param content text content.
@@ -102,7 +101,6 @@ public class DOMUtils {
      * <pre>
      * &lt;a&gt;&lt;[!CDATA[b]]&gt;&lt;/a&gt;
      * </pre>
-     * </p>
      *
      * @param parent element that will receive the new element as child.
      * @param content text content.
@@ -126,7 +124,6 @@ public class DOMUtils {
      *   &lt;b&gt;c&lt;/b&gt;
      * &lt;/a&gt;
      * </pre>
-     * </p>
      *
      * @param parent element that will receive the new element as child.
      * @param name of the child element.
@@ -148,11 +145,9 @@ public class DOMUtils {
      * creates
      * <pre>
      * &lt;a&gt;
-     *   &lt;b&gt;&lt;![CDATA[c]]>&lt;/b&gt;
+     *   &lt;b&gt;&lt;![CDATA[c]]&gt;&lt;/b&gt;
      * &lt;/a&gt;
      * </pre>
-     * </pre>
-     * </p>
      *
      * @param parent element that will receive the new element as child.
      * @param name of the child element.

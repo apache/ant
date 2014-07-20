@@ -385,7 +385,7 @@ public class Funtest extends Task {
 
     /**
      * Run the functional test sequence.
-     * <p/>
+     * <p>
      * This is a fairly complex workflow -what is going on is that we try to clean up
      * no matter how the run ended, and to retain the innermost exception that got thrown
      * during cleanup. That is, if teardown fails after the tests themselves failed, it is the

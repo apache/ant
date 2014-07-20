@@ -86,7 +86,7 @@ public class ScriptFixBSFPath {
      * </ol>
      *
      * Assume a simple model for the loader:
-     *  thisloader<-customloader
+     *  thisloader&lt;-customloader
      *  or
      *  thisloader
      *

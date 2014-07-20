@@ -31,16 +31,16 @@ import java.util.Locale;
 /**
  * The Locator is a utility class which is used to find certain items
  * in the environment.
- *
+ * <p>
  * It is used at boot time in the launcher, and cannot make use of any of Ant's other classes.
- *
- * This is a surprisingly brittle piece of code, and has had lots of bugs filed against it.
- * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>}
- * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=8031">use File.toURI().toURL().toExternalForm()</a>}
- * {@link <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42222">Locator implementation not encoding URI strings properly: spaces in paths</a>}
- * It also breaks Eclipse 3.3 Betas
- * {@link <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=183283">Exception if installation path has spaces</a>}
- *
+ * <p>
+ * This is a surprisingly brittle piece of code, and has had lots of bugs filed against it:
+ * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>,
+ * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=8031">use File.toURI().toURL().toExternalForm()</a>,
+ * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42222">Locator implementation not encoding URI strings properly: spaces in paths</a>.
+ * It also breaks Eclipse 3.3 Betas:
+ * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=183283">Exception if installation path has spaces</a>.
+ * <p>
  * Be very careful when making changes to this class, as a break will upset a lot of people.
  * @since Ant 1.6
  */
