@@ -79,7 +79,7 @@
 
 
   <target name="init-ivy">
-    <property name="ivy.version"  value="2.2.0"/>
+    <property name="ivy.version"  value="2.4.0-rc1"/>
     <property name="ivy.jar.url"  value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
     <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
@@ -191,7 +191,6 @@
       </style>  
     </xslt>
   </target>
-  
   
   <target name="rat" description="--> Runs the ReleaseAuditingTool"  depends="init-ivy">
     <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
