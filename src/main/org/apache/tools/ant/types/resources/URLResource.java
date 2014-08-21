@@ -265,7 +265,14 @@ public class URLResource extends Resource implements URLProvider {
         if (!isExists(false)) {
             return 0L;
         }
-        return conn.getLastModified();
+        try {
+            connect();
+            long lastModified = conn.getLastModified();
+            close();
+            return lastModified;
+        } catch (IOException e) {
+            return UNKNOWN_DATETIME;
+        }
     }
 
     /**

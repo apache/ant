@@ -27,6 +27,11 @@ Fixed bugs:
    cannot determine the local hostname.
    Bugzilla Report 56593
 
+ * URLResource#getLastModified tried to access the connection to the
+   URL without making sure it was established, potentially leading to
+   a NullPointerException.
+   Bugzilla Report 56873
+
 Other changes:
 --------------
 
