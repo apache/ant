@@ -263,16 +263,10 @@ public class URLResource extends Resource implements URLProvider {
             return ((Resource) getCheckedRef()).getLastModified();
         }
         if (!isExists(false)) {
-            return 0L;
-        }
-        try {
-            connect();
-            long lastModified = conn.getLastModified();
-            close();
-            return lastModified;
-        } catch (IOException e) {
             return UNKNOWN_DATETIME;
         }
+        // isExists has already opened the connection
+        return conn.getLastModified();
     }
 
     /**
