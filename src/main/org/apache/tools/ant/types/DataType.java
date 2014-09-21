@@ -241,14 +241,16 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @since Ant 1.7
      */
     protected <T> T getCheckedRef(final Class<T> requiredClass,
-                                   final String dataTypeName, final Project project) {
+                                  final String dataTypeName, final Project project) {
         if (project == null) {
             throw new BuildException("No Project specified");
         }
         dieOnCircularReference(project);
         Object o = ref.getReferencedObject(project);
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
-            log("Class " + o.getClass() + " is not a subclass of " + requiredClass,
+            log("Class " + displayName(o.getClass())
+                    + " is not a subclass of "
+                    + displayName(requiredClass),
                     Project.MSG_VERBOSE);
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
@@ -356,6 +358,10 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
         }
         dt.setChecked(isChecked());
         return dt;
+    }
+
+    private String displayName(Class<?> clazz) {
+        return clazz.getName() + " (loaded via " + clazz.getClassLoader() +")";
     }
 }
 
