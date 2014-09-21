@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -273,12 +274,12 @@ public class TarOutputStream extends FilterOutputStream {
         }
         Map<String, String> paxHeaders = new HashMap<String, String>();
         final String entryName = entry.getName();
-        boolean paxHeaderContainsPath = handleLongName(entryName, paxHeaders, "path",
+        boolean paxHeaderContainsPath = handleLongName(entry, entryName, paxHeaders, "path",
                                                        TarConstants.LF_GNUTYPE_LONGNAME, "file name");
 
         final String linkName = entry.getLinkName();
-        boolean paxHeaderContainsLinkPath = linkName != null
-            && handleLongName(linkName, paxHeaders, "linkpath",
+        boolean paxHeaderContainsLinkPath = linkName != null && linkName.length() > 0
+            && handleLongName(entry, linkName, paxHeaders, "linkpath",
                               TarConstants.LF_GNUTYPE_LONGLINK, "link name");
 
         if (bigNumberMode == BIGNUMBER_POSIX) {
@@ -299,7 +300,7 @@ public class TarOutputStream extends FilterOutputStream {
         }
 
         if (paxHeaders.size() > 0) {
-            writePaxHeaders(entryName, paxHeaders);
+            writePaxHeaders(entry, entryName, paxHeaders);
         }
 
         entry.writeEntryHeader(recordBuf, encoding,
@@ -465,7 +466,8 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Writes a PAX extended header with the given map as contents.
      */
-    void writePaxHeaders(String entryName,
+    void writePaxHeaders(TarEntry entry,
+                         String entryName,
                          Map<String, String> headers) throws IOException {
         String name = "./PaxHeaders.X/" + stripTo7Bits(entryName);
         if (name.length() >= TarConstants.NAMELEN) {
@@ -478,6 +480,7 @@ public class TarOutputStream extends FilterOutputStream {
         }
         TarEntry pex = new TarEntry(name,
                                     TarConstants.LF_PAX_EXTENDED_HEADER_LC);
+        transferModTime(entry, pex);
 
         StringWriter w = new StringWriter();
         for (Map.Entry<String, String> h : headers.entrySet()) {
@@ -537,7 +540,8 @@ public class TarOutputStream extends FilterOutputStream {
                                  TarConstants.MAXSIZE);
         addPaxHeaderForBigNumber(paxHeaders, "gid", entry.getGroupId(),
                                  TarConstants.MAXID);
-        addPaxHeaderForBigNumber(paxHeaders, "mtime",                                 entry.getModTime().getTime() / 1000,
+        addPaxHeaderForBigNumber(paxHeaders, "mtime",
+                                 entry.getModTime().getTime() / 1000,
                                  TarConstants.MAXSIZE);
         addPaxHeaderForBigNumber(paxHeaders, "uid", entry.getUserId(),
                                  TarConstants.MAXID);
@@ -594,6 +598,7 @@ public class TarOutputStream extends FilterOutputStream {
      *   <li>it truncates the name if longFileMode is TRUNCATE</li>
      * </ul></p>
      *
+     * @param entry entry the name belongs to
      * @param name the name to write
      * @param paxHeaders current map of pax headers
      * @param paxHeaderName name of the pax header to write
@@ -601,7 +606,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @param fieldName the name of the field
      * @return whether a pax header has been written.
      */
-    private boolean handleLongName(String name,
+    private boolean handleLongName(TarEntry entry , String name,
                                    Map<String, String> paxHeaders,
                                    String paxHeaderName, byte linkType, String fieldName)
         throws IOException {
@@ -619,6 +624,7 @@ public class TarOutputStream extends FilterOutputStream {
                     new TarEntry(TarConstants.GNU_LONGLINK, linkType);
 
                 longLinkEntry.setSize(len + 1); // +1 for NUL
+                transferModTime(entry, longLinkEntry);
                 putNextEntry(longLinkEntry);
                 write(encodedName.array(), encodedName.arrayOffset(), len);
                 write(0); // NUL terminator
@@ -630,5 +636,14 @@ public class TarOutputStream extends FilterOutputStream {
             }
         }
         return false;
+    }
+
+    private void transferModTime(TarEntry from, TarEntry to) {
+        Date fromModTime = from.getModTime();
+        long fromModTimeSeconds = fromModTime.getTime() / 1000;
+        if (fromModTimeSeconds < 0 || fromModTimeSeconds > TarConstants.MAXSIZE) {
+            fromModTime = new Date(0);
+        }
+        to.setModTime(fromModTime);
     }
 }

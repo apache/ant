@@ -32,6 +32,11 @@ Fixed bugs:
    a NullPointerException when using FTP.
    Bugzilla Report 56873
 
+ * Long-Name and -link or PAX-header entries in TAR archives
+   always had the current time as last modfication time, creating
+   archives that are different at the byte level each time an
+   archive was built.
+
 Other changes:
 --------------
 
