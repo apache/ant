@@ -178,6 +178,9 @@ public class ScriptRunnerHelper {
 
     private ClasspathUtils.Delegate getClassPathDelegate() {
         if (cpDelegate == null) {
+            if (projectComponent == null) {
+                throw new IllegalStateException("Can't access classpath without a project component");
+            }
             cpDelegate = ClasspathUtils.getDelegate(projectComponent);
         }
         return cpDelegate;
