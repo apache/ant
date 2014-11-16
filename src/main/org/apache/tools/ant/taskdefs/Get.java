@@ -774,7 +774,7 @@ public class Get extends Task {
             for (int i = 0; i < numberRetries; i++) {
                 // this three attempt trick is to get round quirks in different
                 // Java implementations. Some of them take a few goes to bind
-                // property; we ignore the first couple of such failures.
+                // properly; we ignore the first couple of such failures.
                 try {
                     is = connection.getInputStream();
                     break;
