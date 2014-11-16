@@ -134,6 +134,15 @@ plain text' authentication is used. This is only secure over an HTTPS link.
       <em>since Ant 1.9.3</em></td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">tryGzipEncoding</td>
+    <td valign="top">When set to true Ant will tell the server it is
+      willing to accept gzip encoding to reduce the amount of data to
+      transfer and uncompress the content transparently.<br/>
+      Setting this to true also means Ant will uncompress
+      <code>.tar.gz</code> and similar files automatically.<br/>
+      <em>since Ant 1.9.5</em></td>
+    <td align="center" valign="top">No; default "false"</td>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>any resource collection</h4>

@@ -83,6 +83,7 @@ public class Get extends Task {
     private int numberRetries = NUMBER_RETRIES;
     private boolean skipExisting = false;
     private boolean httpUseCaches = true; // on by default
+    private boolean tryGzipEncoding = false;
     private Mapper mapperElement = null;
     private String userAgent =
         System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
@@ -460,6 +461,19 @@ public class Get extends Task {
     }
 
     /**
+     * Whether to transparently try to reduce bandwidth by telling the
+     * server ant would support gzip encoding.
+     *
+     * <p>Setting this to true also means Ant will uncompress
+     * <code>.tar.gz</code> and similar files automatically.</p>
+     *
+     * @since Ant 1.9.5
+     */
+    public void setTryGzipEncoding(boolean b) {
+        tryGzipEncoding = b;
+    }
+
+    /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.
      * @exception BuildException if more than one mapper is defined.
@@ -699,7 +713,9 @@ public class Get extends Task {
                         + encoding);
             }
 
-            connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
+            if (tryGzipEncoding) {
+                connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
+            }
 
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)
@@ -791,7 +807,8 @@ public class Get extends Task {
                         getLocation());
             }
 
-            if (GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
+            if (tryGzipEncoding
+                && GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
                 is = new GZIPInputStream(is);
             }
 

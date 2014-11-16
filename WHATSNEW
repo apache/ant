@@ -13,6 +13,14 @@ Changes that could break older environments:
    on Ant silently ignoring all but the first character.
    Bugzilla Report 56584
 
+ * The changes that added <get>'s support for gzip encoding
+   automatically uncompressed content that would not have been touched
+   before - like when downloading .tar.gz files.  A new flag has been
+   added to control the behavior and its default will make <get> work
+   as it did in 1.9.3.  I.e. if you want it to work like 1.9.4
+   you have to explicitly set tryGzipEncoding to true.
+   Bugzilla Report 57048
+
 Fixed bugs:
 -----------
 
