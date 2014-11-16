@@ -27,16 +27,6 @@
   <property name="undef-ip4" value="0.0.0.0" />
   <property name="undef-ip6" value="::" />
       
-  <property name="apache-hostname" value="www.apache.org" />
-  <property name="apache-domain" value="apache.org" />
-  <property name="apache-realhost" value="eos" />
-  <property name="apache-realhost.alt" value="aurora-2012" />
-  <property name="apache-ip4" value="140.211.11.131" />
-  <property name="apache-ip4.alt" value="192.87.106.229"/>
-
-  <property name="apache-realhost.gump" value="www" />
-  <property name="apache-domain.gump" value="apache.org" />
-
   <property name="xs4all-hostname" value="www.xs4all.nl" />
   <property name="xs4all-domain" value="xs4all.nl" />
   <property name="xs4all-realhost" value="www" />
@@ -50,59 +40,19 @@
       <!-- Do not know what to expect here, machine dependent -->
   </target>
 
-    <target name="testApache" depends="setUp">
-      <hostinfo prefix="apache" host="${apache-hostname}"/>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-realhost}" arg2="${apache.NAME}"/>
-          <equals arg1="${apache-realhost.alt}" arg2="${apache.NAME}"/>
-          <equals arg1="${apache-realhost.gump}" arg2="${apache.NAME}"/>
-        </or>
-      </au:assertTrue>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-domain}" arg2="${apache.DOMAIN}"/>
-          <equals arg1="${apache-domain.gump}" arg2="${apache.DOMAIN}"/>
-        </or>
-      </au:assertTrue>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-ip4}" arg2="${apache.ADDR4}"/>
-          <equals arg1="${apache-ip4.alt}" arg2="${apache.ADDR4}"/>
-        </or>
-      </au:assertTrue>
+    <target name="testForward" depends="setUp">
+      <hostinfo host="${xs4all-hostname}"/>
+      <au:assertEquals expected="${xs4all-realhost}" actual="${NAME}"/>
+      <au:assertEquals expected="${xs4all-domain}" actual="${DOMAIN}"/>
+      <au:assertEquals expected="${xs4all-ip4}" actual="${ADDR4}"/>
     </target>
-
-    <target name="testApacheNoPrefix" depends="setUp">
-      <hostinfo host="${apache-hostname}"/>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-realhost}" arg2="${NAME}"/>
-          <equals arg1="${apache-realhost.alt}" arg2="${NAME}"/>
-          <equals arg1="${apache-realhost.gump}" arg2="${NAME}"/>
-        </or>
-      </au:assertTrue>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-domain}" arg2="${DOMAIN}"/>
-          <equals arg1="${apache-domain.gump}" arg2="${DOMAIN}"/>
-        </or>
-      </au:assertTrue>
-      <au:assertTrue>
-        <or>
-          <equals arg1="${apache-ip4}" arg2="${ADDR4}"/>
-          <equals arg1="${apache-ip4.alt}" arg2="${ADDR4}"/>
-        </or>
-      </au:assertTrue>
-    </target>
-
+    
     <target name="testReverse" depends="setUp">
       <hostinfo prefix="reverse" host="${xs4all-ip4}"/>
       <au:assertEquals expected="${xs4all-realhost}" actual="${reverse.NAME}"/>
       <au:assertEquals expected="${xs4all-domain}" actual="${reverse.DOMAIN}"/>
       <au:assertEquals expected="${xs4all-ip4}" actual="${reverse.ADDR4}"/>
     </target>
-    
     
     <target name="testUndef" depends="setUp">
       <hostinfo prefix="undef" host="${undef-name}"/>
