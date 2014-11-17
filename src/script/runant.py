@@ -25,7 +25,9 @@
     This script has been tested with Python2.0/Win2K
 
  created:         2001-04-11
- author:          Pierre Dittgen pierre.dittgen@criltelecom.com
+ updated:         2014-09-03
+ author:          Pierre Dittgen <pierre.dittgen@criltelecom.com>
+ maintainer:      Vitold Sedyshev <vit1251@gmail.com>
 
  Assumptions:
 
@@ -34,7 +36,7 @@
 import os, os.path, string, sys
 
 # Change it to 1 to get extra debug information
-debug = 0
+debug = False
 
 #######################################################################
 
@@ -54,7 +56,10 @@ if not os.environ.has_key('JAVACMD'):
         if not os.path.exists(os.environ['JAVA_HOME']):
             print "Warning: JAVA_HOME is not defined correctly."
         else:
-            JAVACMD = os.path.join(os.environ['JAVA_HOME'], 'bin', 'java')
+            JAVA_HOME = os.environ['JAVA_HOME']
+            while JAVA_HOME[0] == JAVA_HOME[-1] == "\"":
+             JAVA_HOME = JAVA_HOME[1:-1]
+            JAVACMD = os.path.join(JAVA_HOME, 'bin', 'java')
     else:
         print "Warning: JAVA_HOME not set."
 else:
@@ -88,13 +93,16 @@ CLASSPATH = ""
 if os.environ.has_key('CLASSPATH'):
     CLASSPATH = "-lib " + os.environ['CLASSPATH']
 
+while JAVACMD[0] == JAVACMD[-1] == "\"":
+    JAVACMD = JAVACMD[1:-1]
+
 # Builds the commandline
-cmdline = ('%s %s -classpath %s -Dant.home=%s %s ' + \
+cmdline = ('"%s" %s -classpath %s -Dant.home=%s %s ' + \
     'org.apache.tools.ant.launch.Launcher %s %s %s') \
      % (JAVACMD, ANT_OPTS, LOCALCLASSPATH, ANT_HOME, OPTS, ANT_ARGS, \
         CLASSPATH, string.join(sys.argv[1:], ' '))
 
-if debug:
+if debug is True:
     print '\n%s\n\n' % (cmdline)
 sys.stdout.flush()
 
