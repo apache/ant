@@ -33,8 +33,6 @@
  of a reference classpath so that you have the list of classes/methods
  that are not used at all in a given classpath.
 
- @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
-
 -->
 
 <!-- default output directory is current directory -->

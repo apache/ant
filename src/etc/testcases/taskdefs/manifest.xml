@@ -16,8 +16,7 @@
   limitations under the License.
 -->
 
-<!-- Manifest tests build file
-     author: Conor MacNeill -->
+<!-- Manifest tests build file -->
 <project name="manifest-test" basedir="." default="test1">
   <import file="../buildfiletest-base.xml"/>
 

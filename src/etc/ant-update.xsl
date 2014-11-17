@@ -29,8 +29,6 @@
   
   !!!! Use at your own risk. !!!!
   
-  @author <a href="sbailliez@apache.org">Stephane Bailliez</a>
-  
 -->
  
  

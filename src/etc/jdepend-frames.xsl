@@ -28,8 +28,6 @@
  It creates a set of HTML files a la javadoc where you can browse easily
  through all packages and classes.
 
- @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
-
   -->
 <xsl:param name="output.dir" select="'.'"/>
 

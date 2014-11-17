@@ -19,13 +19,10 @@
 
  runant.py
 
-    This script is a translation of the runant.pl written by Steve Loughran.
+    This script is a translation of the runant.pl
     It runs ant with/out arguments, it should be quite portable (thanks to
     the python os library)
     This script has been tested with Python2.0/Win2K
-
- created:         2001-04-11
- author:          Pierre Dittgen pierre.dittgen@criltelecom.com
 
  Assumptions:
 

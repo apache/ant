@@ -23,9 +23,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!--
-  @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
-  -->
 <xsl:param name="output.dir" select="'.'"/>
 
 <!-- default max value for the metrics -->
