@@ -45,6 +45,10 @@ Fixed bugs:
    archives that are different at the byte level each time an
    archive was built.
 
+ * runant.py should now work as well when the path of the Java executable
+   contains spaces.
+   github pull request #1
+
 Other changes:
 --------------
 

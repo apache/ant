@@ -51,7 +51,10 @@ if not os.environ.has_key('JAVACMD'):
         if not os.path.exists(os.environ['JAVA_HOME']):
             print "Warning: JAVA_HOME is not defined correctly."
         else:
-            JAVACMD = os.path.join(os.environ['JAVA_HOME'], 'bin', 'java')
+            JAVA_HOME = os.environ['JAVA_HOME']
+            while JAVA_HOME[0] == JAVA_HOME[-1] == "\"":
+                JAVA_HOME = JAVA_HOME[1:-1]
+            JAVACMD = os.path.join(JAVA_HOME, 'bin', 'java')
     else:
         print "Warning: JAVA_HOME not set."
 else:
@@ -85,8 +88,11 @@ CLASSPATH = ""
 if os.environ.has_key('CLASSPATH'):
     CLASSPATH = "-lib " + os.environ['CLASSPATH']
 
+while JAVACMD[0] == JAVACMD[-1] == "\"":
+    JAVACMD = JAVACMD[1:-1]
+
 # Builds the commandline
-cmdline = ('%s %s -classpath %s -Dant.home=%s %s ' + \
+cmdline = ('"%s" %s -classpath %s -Dant.home=%s %s ' + \
     'org.apache.tools.ant.launch.Launcher %s %s %s') \
      % (JAVACMD, ANT_OPTS, LOCALCLASSPATH, ANT_HOME, OPTS, ANT_ARGS, \
         CLASSPATH, string.join(sys.argv[1:], ' '))
