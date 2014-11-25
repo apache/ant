@@ -21,3 +21,7 @@ lib/optional/*.jar
 src/tests/antunit/core/output
 .idea
 *.iml
+/src/GPATH
+/src/GRTAGS
+/src/GSYMS
+/src/GTAGS
