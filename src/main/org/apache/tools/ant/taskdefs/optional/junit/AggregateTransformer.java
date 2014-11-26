@@ -37,6 +37,7 @@ import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.TempFile;
 import org.apache.tools.ant.taskdefs.XSLTProcess;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.URLResource;
@@ -90,11 +91,11 @@ public class AggregateTransformer {
     protected File toDir;
 
     /**
-     * The params that will be sent to the XSL transformation
+     * The internal XSLT task used to perform the transformation.
      *
-     * @since Ant 1.7
+     * @since Ant 1.10
      */
-    private List params;
+    private XSLTProcess xsltTask;
 
     /**
      * Instance of a utility class to use for file operations.
@@ -129,7 +130,8 @@ public class AggregateTransformer {
      */
     public AggregateTransformer(Task task) {
         this.task = task;
-        params = new Vector();
+        xsltTask = new XSLTProcess();
+        xsltTask.bindToOwner(task);
     }
 
     /**
@@ -209,9 +211,27 @@ public class AggregateTransformer {
      * @since Ant 1.7
      */
     public XSLTProcess.Param createParam() {
-        XSLTProcess.Param p = new XSLTProcess.Param();
-        params.add(p);
-        return p;
+        return xsltTask.createParam();
+    }
+
+    /**
+     * Creates a classpath to be used for the internal XSLT task.
+     *
+     * @return the classpath to be configured
+     * @since Ant 1.10
+     */
+    public Path createClasspath() {
+        return xsltTask.createClasspath();
+    }
+
+    /**
+     * Creates a factory configuration to be used for the internal XSLT task.
+     *
+     * @return the factory description to be configured
+     * @since Ant 1.10
+     */
+    public XSLTProcess.Factory createFactory() {
+        return xsltTask.createFactory();
     }
 
     /**
@@ -224,9 +244,6 @@ public class AggregateTransformer {
 
         TempFile tempFileTask = new TempFile();
         tempFileTask.bindToOwner(task);
-
-        XSLTProcess xsltTask = new XSLTProcess();
-        xsltTask.bindToOwner(task);
 
         xsltTask.setXslResource(getStylesheet());
 
@@ -245,13 +262,6 @@ public class AggregateTransformer {
             outputFile = new File(toDir, "junit-noframes.html");
         }
         xsltTask.setOut(outputFile);
-        for (Iterator i = params.iterator(); i.hasNext();) {
-            XSLTProcess.Param param = (XSLTProcess.Param) i.next();
-            XSLTProcess.Param newParam = xsltTask.createParam();
-            newParam.setProject(task.getProject());
-            newParam.setName(param.getName());
-            newParam.setExpression(param.getExpression());
-        }
         XSLTProcess.Param paramx = xsltTask.createParam();
         paramx.setProject(task.getProject());
         paramx.setName("output.dir");
