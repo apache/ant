@@ -59,11 +59,6 @@ public class XMLResultAggregatorTest {
         }
         XMLResultAggregator task = new XMLResultAggregator();
         task.setTodir(d);
-        AggregateTransformer report = task.createReport();
-        report.setTodir(d);
-        FileSet fs = new FileSet();
-        fs.setFile(xml);
-        task.addFileSet(fs);
         Project project = new Project();
         DefaultLogger logger = new DefaultLogger();
         logger.setOutputPrintStream(System.out);
@@ -72,6 +67,11 @@ public class XMLResultAggregatorTest {
         project.addBuildListener(logger);
         project.init();
         task.setProject(project);
+        AggregateTransformer report = task.createReport();
+        report.setTodir(d);
+        FileSet fs = new FileSet();
+        fs.setFile(xml);
+        task.addFileSet(fs);
         /* getResourceAsStream override unnecessary on JDK 7. Ought to work around JAXP #6723276 in JDK 6, but causes a TypeCheckError in FunctionCall for reasons TBD:
         Thread.currentThread().setContextClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
             public InputStream getResourceAsStream(String name) {
