@@ -49,6 +49,9 @@ Fixed bugs:
    contains spaces.
    github pull request #1
 
+ * <junitreport> now supports nested <classpath> and <factory> elements.
+   Bugzilla Report 47002
+
 Other changes:
 --------------
 
