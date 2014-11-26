@@ -93,7 +93,7 @@ public class AggregateTransformer {
     /**
      * The internal XSLT task used to perform the transformation.
      *
-     * @since Ant 1.10
+     * @since Ant 1.9.5
      */
     private XSLTProcess xsltTask;
 
@@ -218,7 +218,7 @@ public class AggregateTransformer {
      * Creates a classpath to be used for the internal XSLT task.
      *
      * @return the classpath to be configured
-     * @since Ant 1.10
+     * @since Ant 1.9.5
      */
     public Path createClasspath() {
         return xsltTask.createClasspath();
@@ -228,7 +228,7 @@ public class AggregateTransformer {
      * Creates a factory configuration to be used for the internal XSLT task.
      *
      * @return the factory description to be configured
-     * @since Ant 1.10
+     * @since Ant 1.9.5
      */
     public XSLTProcess.Factory createFactory() {
         return xsltTask.createFactory();
