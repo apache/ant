@@ -169,9 +169,18 @@ public class Classloader extends Task {
                 return;
             }
 
-            String loaderName = (name == null) ? SYSTEM_LOADER_REF : name;
+            String loaderName;
+            Object obj;
+            if (name == null || SYSTEM_LOADER_REF.equals(name)) {
+                name = null;
+                loaderName = SYSTEM_LOADER_REF;
+                obj = getProject().getCoreLoader();
+            }
+            else {
+                loaderName = name;
+                obj = getProject().getReference(loaderName);
+            }
 
-            Object obj = getProject().getReference(loaderName);
             if (reset) {
                 // Are any other references held ? Can we 'close' the loader
                 // so it removes the locks on jars ?
