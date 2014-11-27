@@ -161,17 +161,17 @@ public class Classloader extends Task {
      */
     public void execute() {
         try {
-            // Gump friendly - don't mess with the core loader if only classpath
-            if ("only".equals(getProject().getProperty("build.sysclasspath"))
-                && (name == null || SYSTEM_LOADER_REF.equals(name))) {
-                log("Changing the system loader is disabled "
-                    + "by build.sysclasspath=only", Project.MSG_WARN);
-                return;
-            }
-
             String loaderName;
             Object obj;
             if (name == null || SYSTEM_LOADER_REF.equals(name)) {
+                if ("only".equals(getProject()
+                                  .getProperty("build.sysclasspath"))) {
+                    // Gump friendly - don't mess with the core loader
+                    // if only the system classpath is to be used
+                    log("Changing the system loader is disabled "
+                        + "by build.sysclasspath=only", Project.MSG_WARN);
+                    return;
+                }
                 name = null;
                 loaderName = SYSTEM_LOADER_REF;
                 obj = getProject().getCoreLoader();
