@@ -764,8 +764,6 @@ public class Main implements AntMain {
         }
 
         final Project project = new Project();
-        if (coreLoader == null || coreLoader instanceof AntClassLoader == false)
-            coreLoader = new AntClassLoader(coreLoader, project, null, true);
         project.setCoreLoader(coreLoader);
 
         Throwable error = null;
