@@ -49,6 +49,7 @@ import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
+import junit.framework.JUnit4TestAdapter;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite.
@@ -487,6 +488,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             (Test) junit4TestAdapterClass
                             .getConstructor(formalParams).
                             newInstance(actualParams);
+
+
+			 ((JUnit4TestAdapter)suite).sort(new org.junit.runner.manipulation.Sorter(new java.util.Comparator(){
+				public int compare(Object o1, Object o2) {
+					if(Math.random()>0.5) return 1; else return -1;
+ 				}
+			}));
                     } else {
                         // Use JUnit 3.
 
