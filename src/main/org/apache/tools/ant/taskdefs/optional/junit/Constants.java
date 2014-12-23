@@ -38,6 +38,11 @@ public class Constants {
     static final String TERMINATED_SUCCESSFULLY = "terminated successfully";
     static final String LOG_FAILED_TESTS="logfailedtests=";
     static final String SKIP_NON_TESTS = "skipNonTests=";
+
     /** @since Ant 1.9.4 */
     static final String THREADID="threadid=";
+
+    /** @since Ant 1.9.5 */
+    static final String SHUFFLE_TESTS = "shuffleTests=";
+    static final String SHUFFLE_SEED = "shuffleSeed=";
 }
