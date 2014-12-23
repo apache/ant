@@ -522,7 +522,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             .getConstructor(formalParams).
                             newInstance(actualParams);
 
-                        if(shuffleTests){
+                        if (!testMethodsSpecified && shuffleTests) {
                             Class comparator = Class.forName("org.apache.tools.ant.taskdefs.optional.junit.RandomComparator");
                             comparator.getMethod("apply", junit4TestAdapterClass, Long.TYPE).invoke(null,
                                     suite, shuffleSeed);

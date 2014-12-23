@@ -12,7 +12,7 @@ import org.junit.runner.manipulation.Sorter;
 public class RandomComparator implements Comparator<Description> {
     @Override
     public int compare(Description o1, Description o2) {
-        return checkSum(o1.getMethodName()) - checkSum(o2.getMethodName());
+        return checkSum(o1.getDisplayName()) - checkSum(o2.getDisplayName());
     }
 
     private final long seed;
