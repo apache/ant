@@ -82,7 +82,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private IgnoredTestResult res;
 
     /**
-     * Do we filter junit.*.* stack frames out of failure and eror exceptions.
+     * Do we filter junit.*.* stack frames out of failure and error exceptions.
      */
     private static boolean filtertrace = true;
 
