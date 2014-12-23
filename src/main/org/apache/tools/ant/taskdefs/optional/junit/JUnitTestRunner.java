@@ -43,13 +43,13 @@ import junit.framework.TestFailure;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
-import junit.framework.JUnit4TestAdapter;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite.
@@ -168,7 +168,15 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /** Names of test methods to execute */
     private String[] methods = null;
-    
+
+
+    /** Shuffle the order of test methods */
+    private final boolean shuffleTests;
+
+    /** Set the seed for the random generator */
+    private final long shuffleSeed;
+
+
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.
@@ -292,7 +300,21 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, boolean logTestListenerEvents,
                            ClassLoader loader) {
-        super();
+
+        this(test, methods, haltOnError, filtertrace, haltOnFailure, showOutput,
+                logTestListenerEvents, loader, false, 0);
+    }
+
+    /**
+     * @since 1.9.5
+     * Constructor to specify the shuffle and shuffle seed
+     */
+
+    public JUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
+            boolean filtertrace, boolean haltOnFailure,
+            boolean showOutput, boolean logTestListenerEvents,
+            ClassLoader loader, boolean shuffleTests, long shuffleSeed) {
+
         JUnitTestRunner.filtertrace = filtertrace; // TODO clumsy, should use instance field somehow
         this.junitTest = test;
         this.haltOnError = haltOnError;
@@ -301,10 +323,21 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         this.logTestListenerEvents = logTestListenerEvents;
         this.methods = methods != null ? (String[]) methods.clone() : null;
         this.loader = loader;
+        this.shuffleTests = shuffleTests;
+
+
+        if (this.shuffleTests && shuffleSeed == 0l){
+            this.shuffleSeed = System.nanoTime();
+        } else {
+            this.shuffleSeed = shuffleSeed;
+        }
+
     }
+
 
     private PrintStream savedOut = null;
     private PrintStream savedErr = null;
+
 
     private PrintStream createEmptyStream() {
         return new PrintStream(
@@ -489,12 +522,11 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             .getConstructor(formalParams).
                             newInstance(actualParams);
 
-
-			 ((JUnit4TestAdapter)suite).sort(new org.junit.runner.manipulation.Sorter(new java.util.Comparator(){
-				public int compare(Object o1, Object o2) {
-					if(Math.random()>0.5) return 1; else return -1;
- 				}
-			}));
+                        if(shuffleTests){
+                            Class comparator = Class.forName("org.apache.tools.ant.taskdefs.optional.junit.RandomComparator");
+                            comparator.getMethod("apply", junit4TestAdapterClass, Long.TYPE).invoke(null,
+                                    suite, shuffleSeed);
+                        }
                     } else {
                         // Use JUnit 3.
 
@@ -891,7 +923,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
      * <tr><td>methods</td><td>Comma-separated list of names of individual
      * test methods to execute.
      * </td><td>null</td></tr>
+
+     * <tr><td>shuffleTests</td><td>To shuffle the test methods execution order?
+     * </td><td>false</td></tr>
      *
+     * <tr><td>shuffleSeed</td><td>Set the seed for the random generator to
+     * shuffle the tests. Ant will use a different seed every time if set to 0.
+     * </td><td>0</td></tr>
      * </table>
      * @param args the command line arguments.
      * @throws IOException on error.
@@ -907,6 +945,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         boolean logFailedTests = true;
         boolean logTestListenerEvents = false;
         boolean skipNonTests = false;
+        boolean shuffleTests = false;
+        long shuffleSeed = 0;
+
         int antThreadID = 0; /* Ant id of thread running this unit test, 0 in single-threaded mode */
 
         if (args.length == 0) {
@@ -965,6 +1006,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     args[i].substring(Constants.SKIP_NON_TESTS.length()));
             } else if (args[i].startsWith(Constants.THREADID)) {
                 antThreadID = Integer.parseInt( args[i].substring(Constants.THREADID.length()) );
+            } else if (args[i].startsWith(Constants.SHUFFLE_SEED)) {
+                shuffleSeed = Long.parseLong(args[i].substring(Constants.SHUFFLE_SEED.length()));
+            } else if (args[i].startsWith(Constants.SHUFFLE_TESTS)) {
+                shuffleTests = Project.toBoolean(args[i].substring(Constants.SHUFFLE_TESTS.length()));
             }
         }
 
@@ -1008,7 +1053,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     t.setThread(antThreadID);
                     code = launch(t, testMethodNames, haltError, stackfilter, haltFail,
                                   showOut, outputToFormat,
-                                  logTestListenerEvents);
+                                  logTestListenerEvents, shuffleTests, shuffleSeed);
                     errorOccurred = (code == ERRORS);
                     failureOccurred = (code != SUCCESS);
                     if (errorOccurred || failureOccurred) {
@@ -1037,7 +1082,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             t.setSkipNonTests(skipNonTests);
             returnCode = launch(
                 t, methods, haltError, stackfilter, haltFail,
-                showOut, outputToFormat, logTestListenerEvents);
+                showOut, outputToFormat, logTestListenerEvents, shuffleTests, shuffleSeed);
         }
 
         registerNonCrash();
@@ -1176,10 +1221,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private static int launch(JUnitTest t, String[] methods, boolean haltError,
                               boolean stackfilter, boolean haltFail,
                               boolean showOut, boolean outputToFormat,
-                              boolean logTestListenerEvents) {
+                              boolean logTestListenerEvents, boolean shuffleTests, long shuffleSeed) {
         JUnitTestRunner runner =
             new JUnitTestRunner(t, methods, haltError, stackfilter, haltFail, showOut,
-                                logTestListenerEvents, null);
+                                logTestListenerEvents, null, shuffleTests, shuffleSeed);
         runner.forked = true;
         runner.outputToFormatters = outputToFormat;
         transferFormatters(runner, t);

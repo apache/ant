@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -183,6 +182,22 @@ public class JUnitTask extends Task {
     private int     threads     = 1;
     private String  failureProperty;
     private String  errorProperty;
+
+
+
+    /**
+     * @since Ant 1.9.5
+     * whether to shuffle the tests methods
+     */
+    private boolean shuffleTests = false;
+    /**
+     * @since Ant 1.9.5
+     *
+     * the seed for the random generator.
+     * If set to 0, ant will use a different seed every time
+     */
+    private long shuffleSeed = 0;
+
 
     private static final int STRING_BUFFER_SIZE = 128;
     /**
@@ -473,6 +488,23 @@ public class JUnitTask extends Task {
         String testString = sysp.getContent();
         getProject().log("sysproperty added : " + testString, Project.MSG_DEBUG);
         getCommandline().addSysproperty(sysp);
+    }
+
+    /**
+     * Randomize the unit tests execution order
+     * @param shuffleTests
+     */
+    public void setShuffleTests(boolean shuffleTests) {
+        this.shuffleTests = shuffleTests;
+    }
+
+    /**
+     * Set the seed for the random generator to randomize the tests order
+     * Ant will generate a seed if this is unset, or set to zero.
+     * @param shuffleSeed
+     */
+    public void setShuffleSeed(long shuffleSeed) {
+        this.shuffleSeed = shuffleSeed;
     }
 
     /**
@@ -813,6 +845,15 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
+
+        if (shuffleTests) {
+            if (shuffleSeed == 0) {
+                shuffleSeed = System.nanoTime();
+            }
+            log("Test methods will be shuffled with seed " + shuffleSeed +
+                    ", set shuffleSeed=" + shuffleSeed + " to get the same execution order.");
+        }
+
         checkMethodLists();
 
         setupJUnitDelegate();
@@ -1185,6 +1226,10 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS
                                       + String.valueOf(getEnableTestListenerEvents()));
 
+        if(shuffleTests) {
+            cmd.createArgument().setValue(Constants.SHUFFLE_TESTS + String.valueOf(shuffleTests));
+            cmd.createArgument().setValue(Constants.SHUFFLE_SEED + String.valueOf(shuffleSeed));
+        }
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
@@ -1585,7 +1630,7 @@ public class JUnitTask extends Task {
                                          test.getFiltertrace(),
                                          test.getHaltonfailure(), false,
                                          getEnableTestListenerEvents(),
-                                         classLoader);
+                                         classLoader, shuffleTests, shuffleSeed);
             if (summary) {
 
                 JUnitTaskMirror.SummaryJUnitResultFormatterMirror f =

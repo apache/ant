@@ -62,11 +62,14 @@ public interface JUnitTaskMirror {
      * @param showOutput    if true show output.
      * @param logTestListenerEvents if true log test listener events.
      * @param classLoader      the classloader to use to create the runner.
+     * @param randomizeTestOrder whether to randomize the order of test methods
+     * @param randomUnitTestSeed seed for the random generator
      * @return the test runner.
      */
     JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test, String[] methods, boolean haltOnError,
             boolean filterTrace, boolean haltOnFailure, boolean showOutput,
-            boolean logTestListenerEvents, AntClassLoader classLoader);
+            boolean logTestListenerEvents, AntClassLoader classLoader,
+            boolean randomizeTestOrder, long randomUnitTestSeed);
 
     /**
      * Create a summary result formatter.
