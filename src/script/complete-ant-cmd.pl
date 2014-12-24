@@ -31,14 +31,14 @@
 #     }
 #     compctl -K ant_complete ant build.sh
 
-my $cmdLine = $ENV{'COMP_LINE'};
+my $cmdLine = "$ENV{'ANT_ARGS'} $ENV{'COMP_LINE'}";
 my $antCmd = $ARGV[0];
 my $word = $ARGV[1];
 
 my @completions;
 if ($word =~ /^-/) {
     list( restrict( $word, getArguments() ));
-} elsif ($cmdLine =~ /-(f|buildfile)\s+\S*$/) {
+} elsif ($cmdLine =~ /-(f|file|buildfile)\s+\S*$/) {
     list( getBuildFiles($word) );
 } else {
     list( restrict( $word, getTargets() ));
@@ -58,7 +58,7 @@ sub restrict {
 }
 
 sub getArguments {
-    qw(-buildfile -debug -emacs -f -find -help -listener -logfile 
+    qw(-buildfile -debug -emacs -f -file -find -help -listener -logfile 
        -logger -projecthelp -quiet -verbose -version); 
 }
 
@@ -72,7 +72,7 @@ sub getTargets {
 
     # Look for build-file
     my $buildFile = 'build.xml';
-    if ($cmdLine =~ /-(f|buildfile)\s+(\S+)/) {
+    if ($cmdLine =~ /-(f|file|buildfile)\s+(\S+)(?!.*\s-(f|file|buildfile)\s)/) {
         $buildFile = $2;
     }
     return () unless (-f $buildFile);

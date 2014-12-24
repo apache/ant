@@ -52,12 +52,19 @@ Fixed bugs:
  * <junitreport> now supports nested <classpath> and <factory> elements.
    Bugzilla Report 47002
 
+ * complete-ant-cmd.pl now also knows about the -file option.
+   Bugzilla Report 57371
+
 Other changes:
 --------------
 
  * it is now possible to provide proxy configuration when to signjar
    when using the timestamped authority.
    Bugzilla Report 56678
+
+ * complete-ant-cmd.pl now also analyzes the ANT_ARGS environment
+   variable.
+   Bugzilla Report 57371
 
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
