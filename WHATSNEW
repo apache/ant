@@ -55,6 +55,11 @@ Fixed bugs:
  * complete-ant-cmd.pl now also knows about the -file option.
    Bugzilla Report 57371
 
+ * the br-replace template inside the XSLT stylesheets used by
+   <junitreport> could cause stack overflows or out-of-memory errors
+   when applied to big outputs.
+   Bugzilla Report 57341
+
 Other changes:
 --------------
 
