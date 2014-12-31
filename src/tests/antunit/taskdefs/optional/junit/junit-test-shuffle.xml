@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../../antunit-base.xml"/>
+
+  <path id="junit">
+    <fileset dir="../../../../../../lib/optional" includes="junit*"/>
+    <fileset dir="../../../../../../lib/optional" includes="hamcrest-core*"/>
+  </path>
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="compile">
+    <javac srcdir="src" destdir="${output}" debug="yes"/>
+  </target>
+
+  <property name="testOutputFile" value="${output}/JUnit4Test_ORDER.txt" />
+  <macrodef name="run-junit">
+    <attribute name="fork"/>
+    <attribute name="seed"/>
+    <attribute name="shuffle"/>
+    <sequential>
+      <junit fork="@{fork}" haltonfailure="yes" showoutput="true"
+             outputtoformatters="true" shuffleTests="@{shuffle}" shuffleSeed="@{seed}">
+        <classpath>
+          <pathelement location="${output}"/>
+          <path refid="junit"/>
+        </classpath>
+        <test name="JUnit4Test" todir="${output}"/>
+        <sysproperty key="testOutputFile" value="${testOutputFile}"/>
+        <formatter type="plain" />
+      </junit>
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="run-junit-verify">
+    <attribute name="same" />
+    <sequential>
+      <junit haltonfailure="yes" showoutput="true" outputtoformatters="true">
+        <classpath>
+          <pathelement location="${output}"/>
+          <path refid="junit"/>
+        </classpath>
+        <test name="JUnit4TestOrderVerify" todir="${output}"/>
+        <sysproperty key="testOutputFile" value="${testOutputFile}"/>
+        <sysproperty key="expectToBeTheSame" value="@{same}"/>
+        <formatter type="plain" />
+      </junit>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="resetOutput">
+    <sequential>
+     <delete file="${testOutputFile}" />
+    </sequential>
+  </macrodef>
+
+  <target name="testShuffleTests" depends="setUp,compile">
+
+    <!-- delete the file -->
+    <resetOutput />
+    <run-junit fork="true" seed="0" shuffle="true"/>
+    <run-junit fork="false" seed="0" shuffle="true"/>
+    <!-- verify the two lines should not be the same -->
+    <run-junit-verify same="false" />
+
+    <resetOutput />
+    <run-junit fork="true" seed="372734234" shuffle="true"/>
+    <run-junit fork="false" seed="372734234" shuffle="true"/>
+    <!-- the two lines should be the same -->
+    <run-junit-verify same="true" />
+
+    <resetOutput />
+    <run-junit fork="false" seed="372734234" shuffle="false"/>
+    <run-junit fork="false" seed="372734234" shuffle="false"/>
+    <!-- the two lines should be the same -->
+    <run-junit-verify same="true" />
+
+  </target>
+</project>
+
