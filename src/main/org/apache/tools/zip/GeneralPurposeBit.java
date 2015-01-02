@@ -23,7 +23,7 @@ package org.apache.tools.zip;
  *
  * @since Ant 1.9.0
  */
-public final class GeneralPurposeBit {
+public final class GeneralPurposeBit implements Cloneable {
     /**
      * Indicates that the file is encrypted.
      */
@@ -167,5 +167,15 @@ public final class GeneralPurposeBit {
             && g.strongEncryptionFlag == strongEncryptionFlag
             && g.languageEncodingFlag == languageEncodingFlag
             && g.dataDescriptorFlag == dataDescriptorFlag;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ex) {
+            // impossible
+            throw new RuntimeException("GeneralPurposeBit is not Cloneable?", ex);
+        }
     }
 }

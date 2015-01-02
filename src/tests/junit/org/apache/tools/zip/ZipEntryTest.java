@@ -215,4 +215,14 @@ public class ZipEntryTest {
         ZipEntry entry2 = new ZipEntry("bar");
         assertFalse(entry1.equals(entry2));
     }
+
+    @Test
+    public void testCopyConstructor() throws Exception {
+        ZipEntry archiveEntry = new ZipEntry("fred");
+        archiveEntry.setUnixMode(0664);
+        archiveEntry.setMethod(ZipEntry.DEFLATED);
+        archiveEntry.getGeneralPurposeBit().useStrongEncryption(true);
+        ZipEntry copy = new ZipEntry(archiveEntry);
+        assertEquals(archiveEntry, copy);
+    }
 }
