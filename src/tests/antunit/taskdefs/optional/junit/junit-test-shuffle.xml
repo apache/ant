@@ -95,6 +95,18 @@
     <!-- the two lines should be the same -->
     <run-junit-verify same="true" />
 
+    <!-- Verify test can run when methods attribute are specified  -->
+    <junit fork="true" haltonfailure="yes" showoutput="true"
+        outputtoformatters="true" shuffleTests="true" shuffleSeed="0">
+        <classpath>
+            <pathelement location="${output}"/>
+            <path refid="junit"/>
+        </classpath>
+        <test name="JUnit4Test" todir="${output}" methods="testA,testB,testC" />
+        <sysproperty key="testOutputFile" value="${testOutputFile}"/>
+        <formatter type="plain" />
+    </junit>
+
   </target>
 </project>
 
