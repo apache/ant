@@ -130,7 +130,7 @@ public class ZipFile {
     /**
      * Whether the file is closed.
      */
-    private boolean closed;
+    private volatile boolean closed;
 
     // cached buffers
     private final byte[] DWORD_BUF = new byte[DWORD];
@@ -216,9 +216,9 @@ public class ZipFile {
             resolveLocalFileHeaderData(entriesWithoutUTF8Flag);
             success = true;
         } finally {
+            closed = !success;
             if (!success) {
                 try {
-                    closed = true;
                     archive.close();
                 } catch (final IOException e2) {
                     // swallow, throw the original exception instead

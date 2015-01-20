@@ -60,6 +60,10 @@ Fixed bugs:
    when applied to big outputs.
    Bugzilla Report 57341
 
+ * removed spurious warning about inclosed ZipFiles when reading the
+   archive failed.
+   Port of https://issues.apache.org/jira/browse/COMPRESS-297
+
 Other changes:
 --------------
 
