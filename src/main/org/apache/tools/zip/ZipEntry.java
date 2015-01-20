@@ -349,12 +349,18 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     private ZipExtraField[] copyOf(ZipExtraField[] src){
-        return Arrays.copyOf(src, src.length);
+        return copyOf(src, src.length);
+    }
+
+    private ZipExtraField[] copyOf(ZipExtraField[] src, int length){
+        ZipExtraField[] cpy = new ZipExtraField[length];
+        System.arraycopy(src, 0, cpy, 0, Math.min(src.length, length));
+        return cpy;
     }
 
     private ZipExtraField[] getMergedFields() {
         final ZipExtraField[] zipExtraFields =
-            Arrays.copyOf(extraFields, extraFields.length + 1);
+            copyOf(extraFields, extraFields.length + 1);
         zipExtraFields[zipExtraFields.length] = unparseableExtra;
         return zipExtraFields;
     }
@@ -367,7 +373,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     private ZipExtraField[] getAllExtraFields() {
         final ZipExtraField[] allExtraFieldsNoCopy = getAllExtraFieldsNoCopy();
         return (allExtraFieldsNoCopy == extraFields)
-            ? copyOf( allExtraFieldsNoCopy) : allExtraFieldsNoCopy;
+            ? copyOf(allExtraFieldsNoCopy) : allExtraFieldsNoCopy;
     }
 
     /**
@@ -401,7 +407,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                     removeExtraField(ze.getHeaderId());
                 }
                 final ZipExtraField[] zipExtraFields =
-                    Arrays.copyOf(extraFields, extraFields.length + 1);
+                    copyOf(extraFields, extraFields.length + 1);
                 zipExtraFields[extraFields.length] = ze;
                 extraFields = zipExtraFields;
             }
