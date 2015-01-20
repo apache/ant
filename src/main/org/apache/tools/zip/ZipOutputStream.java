@@ -26,7 +26,10 @@ import static org.apache.tools.zip.ZipConstants.WORD;
 import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
 import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
 import static org.apache.tools.zip.ZipConstants.ZIP64_MIN_VERSION;
+import static org.apache.tools.zip.ZipLong.putLong;
+import static org.apache.tools.zip.ZipShort.putShort;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
@@ -34,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -72,6 +76,34 @@ import java.util.zip.ZipException;
 public class ZipOutputStream extends FilterOutputStream {
 
     private static final int BUFFER_SIZE = 512;
+    private static final int LFH_SIG_OFFSET = 0;
+    private static final int LFH_VERSION_NEEDED_OFFSET = 4;
+    private static final int LFH_GPB_OFFSET = 6;
+    private static final int LFH_METHOD_OFFSET = 8;
+    private static final int LFH_TIME_OFFSET = 10;
+    private static final int LFH_CRC_OFFSET = 14;
+    private static final int LFH_COMPRESSED_SIZE_OFFSET = 18;
+    private static final int LFH_ORIGINAL_SIZE_OFFSET = 22;
+    private static final int LFH_FILENAME_LENGTH_OFFSET = 26;
+    private static final int LFH_EXTRA_LENGTH_OFFSET = 28;
+    private static final int LFH_FILENAME_OFFSET = 30;
+    private static final int CFH_SIG_OFFSET = 0;
+    private static final int CFH_VERSION_MADE_BY_OFFSET = 4;
+    private static final int CFH_VERSION_NEEDED_OFFSET = 6;
+    private static final int CFH_GPB_OFFSET = 8;
+    private static final int CFH_METHOD_OFFSET = 10;
+    private static final int CFH_TIME_OFFSET = 12;
+    private static final int CFH_CRC_OFFSET = 16;
+    private static final int CFH_COMPRESSED_SIZE_OFFSET = 20;
+    private static final int CFH_ORIGINAL_SIZE_OFFSET = 24;
+    private static final int CFH_FILENAME_LENGTH_OFFSET = 28;
+    private static final int CFH_EXTRA_LENGTH_OFFSET = 30;
+    private static final int CFH_COMMENT_LENGTH_OFFSET = 32;
+    private static final int CFH_DISK_NUMBER_OFFSET = 34;
+    private static final int CFH_INTERNAL_ATTRIBUTES_OFFSET = 36;
+    private static final int CFH_EXTERNAL_ATTRIBUTES_OFFSET = 38;
+    private static final int CFH_LFH_OFFSET = 42;
+    private static final int CFH_FILENAME_OFFSET = 46;
 
     /**
      * indicates if this archive is finished.
@@ -208,6 +240,8 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     private static final byte[] LZERO = {0, 0, 0, 0};
 
+    private static final byte[] ONE = ZipLong.getBytes(1L);
+
     /**
      * Holds the offsets of the LFH starts for each entry.
      *
@@ -286,6 +320,8 @@ public class ZipOutputStream extends FilterOutputStream {
     private boolean hasUsedZip64 = false;
 
     private Zip64Mode zip64Mode = Zip64Mode.AsNeeded;
+
+    private final Calendar calendarInstance = Calendar.getInstance();
 
     /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
@@ -459,9 +495,7 @@ public class ZipOutputStream extends FilterOutputStream {
         }
 
         cdOffset = written;
-        for (ZipEntry ze : entries) {
-            writeCentralFileHeader(ze);
-        }
+        writeCentralDirectoryInChunks();
         cdLength = written - cdOffset;
         writeZip64CentralDirectory();
         writeCentralDirectoryEnd();
@@ -469,6 +503,21 @@ public class ZipOutputStream extends FilterOutputStream {
         entries.clear();
         def.end();
         finished = true;
+    }
+
+    private void writeCentralDirectoryInChunks() throws IOException {
+        final int NUM_PER_WRITE = 1000;
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(70 * NUM_PER_WRITE);
+        int count = 0;
+        for (ZipEntry ze : entries) {
+            byteArrayOutputStream.write(createCentralFileHeader(ze));
+            if (++count > NUM_PER_WRITE){
+                writeCounted(byteArrayOutputStream.toByteArray());
+                byteArrayOutputStream.reset();
+                count = 0;
+            }
+        }
+        writeCounted(byteArrayOutputStream.toByteArray());
     }
 
     /**
@@ -481,17 +530,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * is {@link Zip64Mode#Never}.
      */
     public void closeEntry() throws IOException {
-        if (finished) {
-            throw new IOException("Stream has already been finished");
-        }
-
-        if (entry == null) {
-            throw new IOException("No current entry to close");
-        }
-
-        if (!entry.hasWritten) {
-            write(EMPTY, 0, 0);
-        }
+        preClose();
 
         flushDeflater();
 
@@ -503,12 +542,30 @@ public class ZipOutputStream extends FilterOutputStream {
         final boolean actuallyNeedsZip64 =
             handleSizesAndCrc(bytesWritten, realCrc, effectiveMode);
 
+        closeEntry(actuallyNeedsZip64);
+    }
+
+    private void closeEntry(boolean actuallyNeedsZip64) throws IOException {
         if (raf != null) {
             rewriteSizesAndCrc(actuallyNeedsZip64);
         }
 
         writeDataDescriptor(entry.entry);
         entry = null;
+    }
+
+    private void preClose() throws IOException {
+        if (finished) {
+            throw new IOException("Stream has already been finished");
+        }
+
+        if (entry == null) {
+            throw new IOException("No current entry to close");
+        }
+
+        if (!entry.hasWritten) {
+            write(EMPTY, 0, 0);
+        }
     }
 
     /**
@@ -564,14 +621,33 @@ public class ZipOutputStream extends FilterOutputStream {
             entry.entry.setCrc(crc);
         }
 
-        final boolean actuallyNeedsZip64 = effectiveMode == Zip64Mode.Always
-            || entry.entry.getSize() >= ZIP64_MAGIC
-            || entry.entry.getCompressedSize() >= ZIP64_MAGIC;
+        return checkIfNeedsZip64(effectiveMode);
+    }
+
+    /**
+     * Ensures the current entry's size and CRC information is set to
+     * the values just written, verifies it isn't too big in the
+     * Zip64Mode.Never case and returns whether the entry would
+     * require a Zip64 extra field.
+     */
+    private boolean checkIfNeedsZip64(Zip64Mode effectiveMode)
+            throws ZipException {
+        final boolean actuallyNeedsZip64 = isZip64Required(entry.entry,
+                                                           effectiveMode);
         if (actuallyNeedsZip64 && effectiveMode == Zip64Mode.Never) {
             throw new Zip64RequiredException(Zip64RequiredException
                                              .getEntryTooBigMessage(entry.entry));
         }
         return actuallyNeedsZip64;
+    }
+
+    private boolean isZip64Required(ZipEntry entry1, Zip64Mode requestedMode) {
+        return requestedMode == Zip64Mode.Always || isTooLageForZip32(entry1);
+    }
+
+    private boolean isTooLageForZip32(ZipEntry zipArchiveEntry){
+        return zipArchiveEntry.getSize() >= ZIP64_MAGIC
+            || zipArchiveEntry.getCompressedSize() >= ZIP64_MAGIC;
     }
 
     /**
@@ -654,13 +730,15 @@ public class ZipOutputStream extends FilterOutputStream {
             // just a placeholder, real data will be in data
             // descriptor or inserted later via RandomAccessFile
             ZipEightByteInteger size = ZipEightByteInteger.ZERO;
+            ZipEightByteInteger compressedSize = ZipEightByteInteger.ZERO;
             if (entry.entry.getMethod() == STORED
                 && entry.entry.getSize() != -1) {
                 // actually, we already know the sizes
                 size = new ZipEightByteInteger(entry.entry.getSize());
+                compressedSize = size;
             }
             z64.setSize(size);
-            z64.setCompressedSize(size);
+            z64.setCompressedSize(compressedSize);
             entry.entry.setExtra();
         }
 
@@ -794,15 +872,31 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     @Override
     public void write(byte[] b, int offset, int length) throws IOException {
+        if (entry == null) {
+            throw new IllegalStateException("No current entry");
+        }
         ZipUtil.checkRequestedFeatures(entry.entry);
         entry.hasWritten = true;
         if (entry.entry.getMethod() == DEFLATED) {
             writeDeflated(b, offset, length);
         } else {
-            writeOut(b, offset, length);
-            written += length;
+            writeCounted(b, offset, length);
         }
         crc.update(b, offset, length);
+    }
+
+    /**
+     * Write bytes to output or random access file.
+     * @param data the byte array to write
+     * @throws IOException on error
+     */
+    private void writeCounted(byte[] data) throws IOException {
+        writeCounted(data, 0, data.length);
+    }
+
+    private void writeCounted(byte[] data, int offset, int length) throws IOException {
+        writeOut(data, offset, length);
+        written += length;
     }
 
     /**
@@ -906,8 +1000,7 @@ public class ZipOutputStream extends FilterOutputStream {
     protected final void deflate() throws IOException {
         int len = def.deflate(buf, 0, buf.length);
         if (len > 0) {
-            writeOut(buf, 0, len);
-            written += len;
+            writeCounted(buf, 0, len);
         }
     }
 
@@ -927,76 +1020,71 @@ public class ZipOutputStream extends FilterOutputStream {
             addUnicodeExtraFields(ze, encodable, name);
         }
 
-        offsets.put(ze, Long.valueOf(written));
+        final byte[] localHeader = createLocalFileHeader(ze, name, encodable);
+        final long localHeaderStart = written;
+        offsets.put(ze, localHeaderStart);
+        entry.localDataStart = localHeaderStart + LFH_CRC_OFFSET; // At crc offset
+        writeCounted(localHeader);
+        entry.dataStart = written;
+    }
 
-        writeOut(LFH_SIG);
-        written += WORD;
+    private byte[] createLocalFileHeader(ZipEntry ze, ByteBuffer name, boolean encodable)  {
+        byte[] extra = ze.getLocalFileDataExtra();
+        final int nameLen = name.limit() - name.position();
+        int len= LFH_FILENAME_OFFSET + nameLen + extra.length;
+        byte[] buf = new byte[len];
+
+        System.arraycopy(LFH_SIG,  0, buf, LFH_SIG_OFFSET, WORD);
 
         //store method in local variable to prevent multiple method calls
         final int zipMethod = ze.getMethod();
 
-        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod,
-                                                         !encodable
-                                                         && fallbackToUTF8,
-                                                         hasZip64Extra(ze));
-        written += WORD;
+        putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze)),
+                 buf, LFH_VERSION_NEEDED_OFFSET);
+
+        GeneralPurposeBit generalPurposeBit =
+            getGeneralPurposeBits(zipMethod, !encodable && fallbackToUTF8);
+        generalPurposeBit.encode(buf, LFH_GPB_OFFSET);
 
         // compression method
-        writeOut(ZipShort.getBytes(zipMethod));
-        written += SHORT;
+        putShort(zipMethod, buf, LFH_METHOD_OFFSET);
 
-        // last mod. time and date
-        writeOut(ZipUtil.toDosTime(ze.getTime()));
-        written += WORD;
+        ZipUtil.toDosTime(calendarInstance, ze.getTime(), buf, LFH_TIME_OFFSET);
 
         // CRC
+        if (zipMethod == DEFLATED || raf != null) {
+            System.arraycopy(LZERO, 0, buf, LFH_CRC_OFFSET, WORD);
+        } else {
+            putLong(ze.getCrc(), buf, LFH_CRC_OFFSET);
+        }
+
         // compressed length
         // uncompressed length
-        entry.localDataStart = written;
-        if (zipMethod == DEFLATED || raf != null) {
-            writeOut(LZERO);
-            if (hasZip64Extra(entry.entry)) {
-                // point to ZIP64 extended information extra field for
-                // sizes, may get rewritten once sizes are known if
-                // stream is seekable
-                writeOut(ZipLong.ZIP64_MAGIC.getBytes());
-                writeOut(ZipLong.ZIP64_MAGIC.getBytes());
-            } else {
-                writeOut(LZERO);
-                writeOut(LZERO);
-            }
-        } else {
-            writeOut(ZipLong.getBytes(ze.getCrc()));
-            byte[] size = ZipLong.ZIP64_MAGIC.getBytes();
-            if (!hasZip64Extra(ze)) {
-                size = ZipLong.getBytes(ze.getSize());
-            }
-            writeOut(size);
-            writeOut(size);
+        if (hasZip64Extra(entry.entry)){
+            // point to ZIP64 extended information extra field for
+            // sizes, may get rewritten once sizes are known if
+            // stream is seekable
+            ZipLong.ZIP64_MAGIC.putLong(buf, LFH_COMPRESSED_SIZE_OFFSET);
+            ZipLong.ZIP64_MAGIC.putLong(buf, LFH_ORIGINAL_SIZE_OFFSET);
+        } else if (zipMethod == DEFLATED || raf != null) {
+            System.arraycopy(LZERO, 0, buf, LFH_COMPRESSED_SIZE_OFFSET, WORD);
+            System.arraycopy(LZERO, 0, buf, LFH_ORIGINAL_SIZE_OFFSET, WORD);
+        } else { // Stored
+            putLong(ze.getSize(), buf, LFH_COMPRESSED_SIZE_OFFSET);
+            putLong(ze.getSize(), buf, LFH_ORIGINAL_SIZE_OFFSET);
         }
-        // CheckStyle:MagicNumber OFF
-        written += 12;
-        // CheckStyle:MagicNumber ON
-
         // file name length
-        writeOut(ZipShort.getBytes(name.limit()));
-        written += SHORT;
+        putShort(nameLen, buf, LFH_FILENAME_LENGTH_OFFSET);
 
         // extra field length
-        byte[] extra = ze.getLocalFileDataExtra();
-        writeOut(ZipShort.getBytes(extra.length));
-        written += SHORT;
+        putShort(extra.length, buf, LFH_EXTRA_LENGTH_OFFSET);
 
         // file name
-        writeOut(name.array(), name.arrayOffset(),
-                 name.limit() - name.position());
-        written += name.limit();
+        System.arraycopy(name.array(), name.arrayOffset(), buf,
+                         LFH_FILENAME_OFFSET, nameLen);
 
-        // extra field
-        writeOut(extra);
-        written += extra.length;
-
-        entry.dataStart = written;
+        System.arraycopy(extra, 0, buf, LFH_FILENAME_OFFSET + nameLen, extra.length);
+        return buf;
     }
 
     /**
@@ -1045,18 +1133,15 @@ public class ZipOutputStream extends FilterOutputStream {
         if (ze.getMethod() != DEFLATED || raf != null) {
             return;
         }
-        writeOut(DD_SIG);
-        writeOut(ZipLong.getBytes(ze.getCrc()));
-        int sizeFieldSize = WORD;
+        writeCounted(DD_SIG);
+        writeCounted(ZipLong.getBytes(ze.getCrc()));
         if (!hasZip64Extra(ze)) {
-            writeOut(ZipLong.getBytes(ze.getCompressedSize()));
-            writeOut(ZipLong.getBytes(ze.getSize()));
+            writeCounted(ZipLong.getBytes(ze.getCompressedSize()));
+            writeCounted(ZipLong.getBytes(ze.getSize()));
         } else {
-            sizeFieldSize = DWORD;
-            writeOut(ZipEightByteInteger.getBytes(ze.getCompressedSize()));
-            writeOut(ZipEightByteInteger.getBytes(ze.getSize()));
+            writeCounted(ZipEightByteInteger.getBytes(ze.getCompressedSize()));
+            writeCounted(ZipEightByteInteger.getBytes(ze.getSize()));
         }
-        written += 2 * WORD + 2 * sizeFieldSize;
     }
 
     /**
@@ -1068,73 +1153,41 @@ public class ZipOutputStream extends FilterOutputStream {
      * Zip64Mode#Never}.
      */
     protected void writeCentralFileHeader(ZipEntry ze) throws IOException {
-        writeOut(CFH_SIG);
-        written += WORD;
+        byte[] centralFileHeader = createCentralFileHeader(ze);
+        writeCounted(centralFileHeader);
+    }
 
-        final long lfhOffset = offsets.get(ze).longValue();
+    private byte[] createCentralFileHeader(ZipEntry ze) throws IOException {
+        final long lfhOffset = offsets.get(ze);
         final boolean needsZip64Extra = hasZip64Extra(ze)
-            || ze.getCompressedSize() >= ZIP64_MAGIC
-            || ze.getSize() >= ZIP64_MAGIC
-            || lfhOffset >= ZIP64_MAGIC;
+                || ze.getCompressedSize() >= ZIP64_MAGIC
+                || ze.getSize() >= ZIP64_MAGIC
+                || lfhOffset >= ZIP64_MAGIC;
 
         if (needsZip64Extra && zip64Mode == Zip64Mode.Never) {
             // must be the offset that is too big, otherwise an
-            // exception would have been throw in putNextEntry or
-            // closeEntry
+            // exception would have been throw in putArchiveEntry or
+            // closeArchiveEntry
             throw new Zip64RequiredException(Zip64RequiredException
-                                             .ARCHIVE_TOO_BIG_MESSAGE);
+                    .ARCHIVE_TOO_BIG_MESSAGE);
         }
+
 
         handleZip64Extra(ze, lfhOffset, needsZip64Extra);
 
-        // version made by
-        // CheckStyle:MagicNumber OFF
-        writeOut(ZipShort.getBytes((ze.getPlatform() << 8) |
-                                   (!hasUsedZip64 ? DATA_DESCRIPTOR_MIN_VERSION
-                                                  : ZIP64_MIN_VERSION)));
-        written += SHORT;
+        return createCentralFileHeader(ze, getName(ze), lfhOffset, needsZip64Extra);
+    }
 
-        final int zipMethod = ze.getMethod();
-        final boolean encodable = zipEncoding.canEncode(ze.getName());
-        writeVersionNeededToExtractAndGeneralPurposeBits(zipMethod,
-                                                         !encodable
-                                                         && fallbackToUTF8,
-                                                         needsZip64Extra);
-        written += WORD;
-
-        // compression method
-        writeOut(ZipShort.getBytes(zipMethod));
-        written += SHORT;
-
-        // last mod. time and date
-        writeOut(ZipUtil.toDosTime(ze.getTime()));
-        written += WORD;
-
-        // CRC
-        // compressed length
-        // uncompressed length
-        writeOut(ZipLong.getBytes(ze.getCrc()));
-        if (ze.getCompressedSize() >= ZIP64_MAGIC
-            || ze.getSize() >= ZIP64_MAGIC) {
-            writeOut(ZipLong.ZIP64_MAGIC.getBytes());
-            writeOut(ZipLong.ZIP64_MAGIC.getBytes());
-        } else {
-            writeOut(ZipLong.getBytes(ze.getCompressedSize()));
-            writeOut(ZipLong.getBytes(ze.getSize()));
-        }
-        // CheckStyle:MagicNumber OFF
-        written += 12;
-        // CheckStyle:MagicNumber ON
-
-        ByteBuffer name = getName(ze);
-
-        writeOut(ZipShort.getBytes(name.limit()));
-        written += SHORT;
-
-        // extra field length
+    /**
+     * Writes the central file header entry.
+     * @param ze the entry to write
+     * @param name The encoded name
+     * @param lfhOffset Local file header offset for this file
+     * @throws IOException on error
+     */
+    private byte[] createCentralFileHeader(ZipEntry ze, ByteBuffer name, long lfhOffset,
+                                           boolean needsZip64Extra) throws IOException {
         byte[] extra = ze.getCentralDirectoryExtra();
-        writeOut(ZipShort.getBytes(extra.length));
-        written += SHORT;
 
         // file comment length
         String comm = ze.getComment();
@@ -1143,39 +1196,73 @@ public class ZipOutputStream extends FilterOutputStream {
         }
 
         ByteBuffer commentB = getEntryEncoding(ze).encode(comm);
+        final int nameLen = name.limit() - name.position();
+        final int commentLen = commentB.limit() - commentB.position();
+        int len= CFH_FILENAME_OFFSET + nameLen + extra.length + commentLen;
+        byte[] buf = new byte[len];
 
-        writeOut(ZipShort.getBytes(commentB.limit()));
-        written += SHORT;
+        System.arraycopy(CFH_SIG,  0, buf, CFH_SIG_OFFSET, WORD);
+
+        // version made by
+        // CheckStyle:MagicNumber OFF
+        putShort((ze.getPlatform() << 8) | (!hasUsedZip64 ? DATA_DESCRIPTOR_MIN_VERSION : ZIP64_MIN_VERSION),
+                buf, CFH_VERSION_MADE_BY_OFFSET);
+
+        final int zipMethod = ze.getMethod();
+        final boolean encodable = zipEncoding.canEncode(ze.getName());
+        putShort(versionNeededToExtract(zipMethod, needsZip64Extra), buf, CFH_VERSION_NEEDED_OFFSET);
+        getGeneralPurposeBits(zipMethod, !encodable && fallbackToUTF8).encode(buf, CFH_GPB_OFFSET);
+
+        // compression method
+        putShort(zipMethod, buf, CFH_METHOD_OFFSET);
+
+
+        // last mod. time and date
+        ZipUtil.toDosTime(calendarInstance, ze.getTime(), buf, CFH_TIME_OFFSET);
+
+        // CRC
+        // compressed length
+        // uncompressed length
+        putLong(ze.getCrc(), buf, CFH_CRC_OFFSET);
+        if (ze.getCompressedSize() >= ZIP64_MAGIC
+                || ze.getSize() >= ZIP64_MAGIC) {
+            ZipLong.ZIP64_MAGIC.putLong(buf, CFH_COMPRESSED_SIZE_OFFSET);
+            ZipLong.ZIP64_MAGIC.putLong(buf, CFH_ORIGINAL_SIZE_OFFSET);
+        } else {
+            putLong(ze.getCompressedSize(), buf, CFH_COMPRESSED_SIZE_OFFSET);
+            putLong(ze.getSize(), buf, CFH_ORIGINAL_SIZE_OFFSET);
+        }
+
+        putShort(nameLen, buf, CFH_FILENAME_LENGTH_OFFSET);
+
+        // extra field length
+        putShort(extra.length, buf, CFH_EXTRA_LENGTH_OFFSET);
+
+        putShort(commentLen, buf, CFH_COMMENT_LENGTH_OFFSET);
 
         // disk number start
-        writeOut(ZERO);
-        written += SHORT;
+        System.arraycopy(ZERO, 0, buf, CFH_DISK_NUMBER_OFFSET, SHORT);
 
         // internal file attributes
-        writeOut(ZipShort.getBytes(ze.getInternalAttributes()));
-        written += SHORT;
+        putShort(ze.getInternalAttributes(), buf, CFH_INTERNAL_ATTRIBUTES_OFFSET);
 
         // external file attributes
-        writeOut(ZipLong.getBytes(ze.getExternalAttributes()));
-        written += WORD;
+        putLong(ze.getExternalAttributes(), buf, CFH_EXTERNAL_ATTRIBUTES_OFFSET);
 
         // relative offset of LFH
-        writeOut(ZipLong.getBytes(Math.min(lfhOffset, ZIP64_MAGIC)));
-        written += WORD;
+        putLong(Math.min(lfhOffset, ZIP64_MAGIC), buf, CFH_LFH_OFFSET);
 
         // file name
-        writeOut(name.array(), name.arrayOffset(),
-                 name.limit() - name.position());
-        written += name.limit();
+        System.arraycopy(name.array(), name.arrayOffset(), buf, CFH_FILENAME_OFFSET, nameLen);
 
-        // extra field
-        writeOut(extra);
-        written += extra.length;
+        int extraStart = CFH_FILENAME_OFFSET + nameLen;
+        System.arraycopy(extra, 0, buf, extraStart, extra.length);
+
+        int commentStart = extraStart + commentLen;
 
         // file comment
-        writeOut(commentB.array(), commentB.arrayOffset(),
-                 commentB.limit() - commentB.position());
-        written += commentB.limit();
+        System.arraycopy(commentB.array(), commentB.arrayOffset(), buf, commentStart, commentLen);
+        return buf;
     }
 
     /**
@@ -1210,11 +1297,11 @@ public class ZipOutputStream extends FilterOutputStream {
      * and {@link Zip64Mode #setUseZip64} is {@link Zip64Mode#Never}.
      */
     protected void writeCentralDirectoryEnd() throws IOException {
-        writeOut(EOCD_SIG);
+        writeCounted(EOCD_SIG);
 
         // disk numbers
-        writeOut(ZERO);
-        writeOut(ZERO);
+        writeCounted(ZERO);
+        writeCounted(ZERO);
 
         // number of entries
         int numberOfEntries = entries.size();
@@ -1230,18 +1317,18 @@ public class ZipOutputStream extends FilterOutputStream {
 
         byte[] num = ZipShort.getBytes(Math.min(numberOfEntries,
                                                 ZIP64_MAGIC_SHORT));
-        writeOut(num);
-        writeOut(num);
+        writeCounted(num);
+        writeCounted(num);
 
         // length and location of CD
-        writeOut(ZipLong.getBytes(Math.min(cdLength, ZIP64_MAGIC)));
-        writeOut(ZipLong.getBytes(Math.min(cdOffset, ZIP64_MAGIC)));
+        writeCounted(ZipLong.getBytes(Math.min(cdLength, ZIP64_MAGIC)));
+        writeCounted(ZipLong.getBytes(Math.min(cdOffset, ZIP64_MAGIC)));
 
         // ZIP file comment
         ByteBuffer data = this.zipEncoding.encode(comment);
-        writeOut(ZipShort.getBytes(data.limit()));
-        writeOut(data.array(), data.arrayOffset(),
-                 data.limit() - data.position());
+        int dataLen = data.limit() - data.position();
+        writeCounted(ZipShort.getBytes(dataLen));
+        writeCounted(data.array(), data.arrayOffset(), dataLen);
     }
 
     /**
@@ -1291,8 +1378,6 @@ public class ZipOutputStream extends FilterOutputStream {
             throw new ZipException("Failed to encode name: " + ex.getMessage());
         }
     }
-
-    private static final byte[] ONE = ZipLong.getBytes(1L);
 
     /**
      * Writes the &quot;ZIP64 End of central dir record&quot; and
@@ -1409,33 +1494,28 @@ public class ZipOutputStream extends FilterOutputStream {
         }
     }
 
-    private void writeVersionNeededToExtractAndGeneralPurposeBits(final int
-                                                                  zipMethod,
-                                                                  final boolean
-                                                                  utfFallback,
-                                                                  final boolean
-                                                                  zip64)
-        throws IOException {
-
-        // CheckStyle:MagicNumber OFF
-        int versionNeededToExtract = INITIAL_VERSION;
+    private GeneralPurposeBit getGeneralPurposeBits(final int zipMethod, final boolean utfFallback) {
         GeneralPurposeBit b = new GeneralPurposeBit();
         b.useUTF8ForNames(useUTF8Flag || utfFallback);
-        if (zipMethod == DEFLATED && raf == null) {
-            // requires version 2 as we are going to store length info
-            // in the data descriptor
-            versionNeededToExtract = DATA_DESCRIPTOR_MIN_VERSION;
+        if (isDeflatedToOutputStream(zipMethod)) {
             b.useDataDescriptor(true);
         }
-        if (zip64) {
-            versionNeededToExtract = ZIP64_MIN_VERSION;
-        }
-        // CheckStyle:MagicNumber ON
+        return b;
+    }
 
-        // version needed to extract
-        writeOut(ZipShort.getBytes(versionNeededToExtract));
-        // general purpose bit flag
-        writeOut(b.encode());
+    private int versionNeededToExtract(final int zipMethod, final boolean zip64) {
+        if (zip64) {
+            return ZIP64_MIN_VERSION;
+        }
+        // requires version 2 as we are going to store length info
+        // in the data descriptor
+        return (isDeflatedToOutputStream(zipMethod)) ?
+                DATA_DESCRIPTOR_MIN_VERSION :
+                INITIAL_VERSION;
+    }
+
+    private boolean isDeflatedToOutputStream(int zipMethod) {
+        return zipMethod == DEFLATED && raf == null;
     }
 
     /**

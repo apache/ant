@@ -49,12 +49,32 @@ public abstract class ZipUtil {
      * @return the date as a byte array
      */
     public static byte[] toDosTime(long t) {
-        Calendar c = Calendar.getInstance();
+        byte[] result = new byte[4];
+        toDosTime(t, result, 0);
+        return result;
+    }
+
+    /**
+     * Convert a Date object to a DOS date/time field.
+     *
+     * <p>Stolen from InfoZip's <code>fileio.c</code></p>
+     * @param t number of milliseconds since the epoch
+     * @param buf the output buffer
+     * @param offset
+     *         The offset within the output buffer of the first byte to be written.
+     *         must be non-negative and no larger than <tt>buf.length-4</tt>
+     */
+    public static void toDosTime(long t, byte[] buf, int offset) {
+        toDosTime(Calendar.getInstance(), t, buf, offset);
+    }
+
+    static void toDosTime(Calendar c, long t, byte[] buf, int offset) {
         c.setTimeInMillis(t);
 
         int year = c.get(Calendar.YEAR);
         if (year < 1980) {
-            return copy(DOS_TIME_MIN); // stop callers from changing the array
+            System.arraycopy(DOS_TIME_MIN, 0, buf, offset, DOS_TIME_MIN.length);// stop callers from changing the array
+            return;
         }
         int month = c.get(Calendar.MONTH) + 1;
         long value =  ((year - 1980) << 25)
@@ -63,7 +83,7 @@ public abstract class ZipUtil {
             |         (c.get(Calendar.HOUR_OF_DAY) << 11)
             |         (c.get(Calendar.MINUTE) << 5)
             |         (c.get(Calendar.SECOND) >> 1);
-        return ZipLong.getBytes(value);
+        ZipLong.putLong(value, buf, offset);
     }
 
     /**

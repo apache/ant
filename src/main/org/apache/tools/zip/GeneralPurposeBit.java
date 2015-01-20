@@ -122,15 +122,28 @@ public final class GeneralPurposeBit implements Cloneable {
      * Encodes the set bits in a form suitable for ZIP archives.
      */
     public byte[] encode() {
-        return
-            ZipShort.getBytes((dataDescriptorFlag ? DATA_DESCRIPTOR_FLAG : 0)
-                              |
-                              (languageEncodingFlag ? UFT8_NAMES_FLAG : 0)
-                              |
-                              (encryptionFlag ? ENCRYPTION_FLAG : 0)
-                              |
-                              (strongEncryptionFlag ? STRONG_ENCRYPTION_FLAG : 0)
-                              );
+        byte[] result = new byte[2];
+        encode(result, 0);
+        return result;
+    }
+
+    /**
+     * Encodes the set bits in a form suitable for ZIP archives.
+     *
+     * @param buf the output buffer
+     * @param  offset
+     *         The offset within the output buffer of the first byte to be written.
+     *         must be non-negative and no larger than <tt>buf.length-2</tt>
+     */
+    public void encode(byte[] buf, int offset) {
+        ZipShort.putShort((dataDescriptorFlag ? DATA_DESCRIPTOR_FLAG : 0)
+                          |
+                          (languageEncodingFlag ? UFT8_NAMES_FLAG : 0)
+                          |
+                          (encryptionFlag ? ENCRYPTION_FLAG : 0)
+                          |
+                          (strongEncryptionFlag ? STRONG_ENCRYPTION_FLAG : 0)
+                          , buf, offset);
     }
 
     /**

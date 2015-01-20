@@ -75,6 +75,9 @@ Other changes:
    variable.
    Bugzilla Report 57371
 
+ * ported some of the write-optimization of Commons Compress 1.10 to
+   the ZIP package
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
