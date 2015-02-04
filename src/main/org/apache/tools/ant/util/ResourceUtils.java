@@ -435,11 +435,15 @@ public class ResourceUtils {
                     copyUsingFileChannels(sourceFile, destFile);
                     copied = true;
                 } catch (final IOException ex) {
-                    project.log("Attempt to copy " + sourceFile
-                                + " to " + destFile + " using NIO Channels"
-                                + " failed due to '" + ex.getMessage()
-                                + "'.  Falling back to streams.",
-                                Project.MSG_WARN);
+                    String msg = "Attempt to copy " + sourceFile
+                        + " to " + destFile + " using NIO Channels"
+                        + " failed due to '" + ex.getMessage()
+                        + "'.  Falling back to streams.";
+                    if (project != null) {
+                        project.log(msg, Project.MSG_WARN);
+                    } else {
+                        System.err.println(msg);
+                    }
                 }
             }
             if (!copied) {
@@ -828,8 +832,13 @@ public class ResourceUtils {
             if (a != null) {
                 return a.getAppendOutputStream();
             }
-            project.log("Appendable OutputStream not available for non-appendable resource "
-                    + resource + "; using plain OutputStream", Project.MSG_VERBOSE);
+            String msg = "Appendable OutputStream not available for non-appendable resource "
+                + resource + "; using plain OutputStream";
+            if (project != null) {
+                project.log(msg, Project.MSG_VERBOSE);
+            } else {
+                System.out.println(msg);
+            }
         }
         return resource.getOutputStream();
     }

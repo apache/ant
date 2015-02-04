@@ -64,6 +64,12 @@ Fixed bugs:
    archive failed.
    Port of https://issues.apache.org/jira/browse/COMPRESS-297
 
+ * FileUtils.rename which is used by several tasks can throw a
+   NullPointerException if the "normal" renameTo operation fails and
+   an exception occurs while rename falls back to copying and deleting
+   the file.
+   Bugzilla Report 57533
+
 Other changes:
 --------------
 
