@@ -77,16 +77,19 @@ sub getTargets {
     }
     return () unless (-f $buildFile);
 
-    # Run "ant -projecthelp" to list targets.  Keep a cache of results in a
-    # cache-file.
+    # Run "ant -projecthelp -debug" to list targets (-debug is required to get
+    # "Other targets", i.e. targets without a description).  Keep a cache of
+    # results in a cache-file.
     my $cacheFile = $buildFile;
     $cacheFile =~ s|(.*/)?(.*)|${1}.ant-targets-${2}|;
     if ((!-e $cacheFile) || (-z $cacheFile) || (-M $buildFile) < (-M $cacheFile)) {
         open( CACHE, '>'.$cacheFile ) || die "can\'t write $cacheFile: $!\n";
-        open( HELP, "$antCmd -projecthelp -f '$buildFile'|" ) || return(); 
+        open( HELP, "$antCmd -projecthelp -debug -buildfile '$buildFile'|" ) || return(); 
         my %targets;
         while( <HELP> ) {
-            if (/^\s+(\S+)/) {
+            # Exclude target names starting with dash, because they cannot be
+            # specified on the command line.
+            if (/^\s+\+Target:\s+(?!-)(\S+)/) {
                 $targets{$1}++;
             }
         }

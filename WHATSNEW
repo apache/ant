@@ -70,6 +70,13 @@ Fixed bugs:
    the file.
    Bugzilla Report 57533
 
+ * complete-ant-cmd.pl would incorrectly suggest words from the build
+   file description.
+   Bugzilla Report 51931
+
+ * complete-ant-cmd.pl now also completes tasks without a description.
+   Bugzilla Report 57542
+
 Other changes:
 --------------
 
