@@ -77,6 +77,10 @@ Fixed bugs:
  * complete-ant-cmd.pl now also completes tasks without a description.
    Bugzilla Report 57542
 
+ * LocalPropertyStack could run into ConcurrentModificationException
+   when tasks spawned new child threads that accessed the properties.
+   Bugzilla Report 55074
+
 Other changes:
 --------------
 

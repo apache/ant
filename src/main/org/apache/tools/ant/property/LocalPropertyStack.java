@@ -17,10 +17,9 @@
  */
 package org.apache.tools.ant.property;
 
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.tools.ant.PropertyHelper;
 
@@ -31,6 +30,7 @@ import org.apache.tools.ant.PropertyHelper;
  */
 public class LocalPropertyStack {
     private final LinkedList<Map<String, Object>> stack = new LinkedList<Map<String, Object>>();
+    private final Object LOCK = new Object();
 
     // --------------------------------------------------
     //
@@ -43,8 +43,11 @@ public class LocalPropertyStack {
      * @param property the name of the local property.
      */
     public void addLocal(String property) {
-        if (!stack.isEmpty()) {
-            stack.getFirst().put(property, NullReturn.NULL);
+        synchronized (LOCK) {
+            Map<String, Object> map = stack.peek();
+            if (map != null) {
+                map.put(property, NullReturn.NULL);
+            }
         }
     }
 
@@ -52,14 +55,18 @@ public class LocalPropertyStack {
      * Enter the local scope.
      */
     public void enterScope() {
-        stack.addFirst(new HashMap<String, Object>());
+        synchronized (LOCK) {
+            stack.addFirst(new ConcurrentHashMap<String, Object>());
+        }
     }
 
     /**
      * Exit the local scope.
      */
     public void exitScope() {
-        stack.removeFirst().clear();
+        synchronized (LOCK) {
+            stack.removeFirst().clear();
+        }
     }
 
     // --------------------------------------------------
@@ -73,9 +80,11 @@ public class LocalPropertyStack {
      * @return a copy.
      */
     public LocalPropertyStack copy() {
-        LocalPropertyStack ret = new LocalPropertyStack();
-        ret.stack.addAll(stack);
-        return ret;
+        synchronized (LOCK) {
+            LocalPropertyStack ret = new LocalPropertyStack();
+            ret.stack.addAll(stack);
+            return ret;
+        }
     }
 
     // --------------------------------------------------
@@ -91,10 +100,12 @@ public class LocalPropertyStack {
      * @return Object value.
      */
     public Object evaluate(String property, PropertyHelper helper) {
-        for (Map<String, Object> map : stack) {
-            Object ret = map.get(property);
-            if (ret != null) {
-                return ret;
+        synchronized (LOCK) {
+            for (Map<String, Object> map : stack) {
+                Object ret = map.get(property);
+                if (ret != null) {
+                    return ret;
+                }
             }
         }
         return null;
@@ -137,9 +148,11 @@ public class LocalPropertyStack {
     }
 
     private Map<String, Object> getMapForProperty(String property) {
-        for (Map<String, Object> map : stack) {
-            if (map.get(property) != null) {
-                return map;
+        synchronized (LOCK) {
+            for (Map<String, Object> map : stack) {
+                if (map.get(property) != null) {
+                    return map;
+                }
             }
         }
         return null;
