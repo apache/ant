@@ -219,10 +219,10 @@ public final class JavaEnvUtils {
     private static void checkForJava9() throws Exception {
     	Class<?> clazz = Class.forName("javax.lang.model.SourceVersion");
     	clazz.getDeclaredField("RELEASE_9");
-	}
+    }
 
 
-	/**
+    /**
      * Returns the version of Java this class is running under.
      * This number can be used for comparisons; it will always be
      * @return the version of Java as a number 10x the major/minor,
@@ -425,7 +425,7 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector<String>();
         switch(javaVersionNumber) {
-        	case VERSION_1_9:
+            case VERSION_1_9:
             case VERSION_1_8:
             case VERSION_1_7:
             case VERSION_1_6:
