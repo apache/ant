@@ -202,8 +202,8 @@ public class Javac extends MatchingTask {
      * must make sure that your version of jikes supports the -source
      * switch.</p>
      *
-     * <p>Legal values are 1.3, 1.4, 1.5, and 5 - by default, no
-     * -source argument will be used at all.</p>
+     * <p>Legal values are 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, and 5, 6, 7, 8 and 9
+     * - by default, no -source argument will be used at all.</p>
      *
      * @param v  Value to assign to source.
      */
@@ -606,7 +606,7 @@ public class Javac extends MatchingTask {
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * values depend on the compiler, for jdk 1.4 the valid values are
-     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "5", "6", "7" and "8".
+     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "5", "6", "7", "8", "9".
      * @param target the target VM
      */
     public void setTarget(final String target) {

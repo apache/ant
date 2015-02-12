@@ -385,6 +385,8 @@ public final class JavaEnvUtils {
             // fall back to JRE bin directory, also catches JDK 1.0 and 1.1
             // where java.home points to the root of the JDK and Mac OS X where
             // the whole directory layout is different from Sun's
+            // and also catches JDK 1.9 (and probably later) which
+            // merged JDK and JRE dirs
             return getJreExecutable(command);
         }
     }
