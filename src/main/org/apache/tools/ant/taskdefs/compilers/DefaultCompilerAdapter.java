@@ -613,7 +613,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.9.4
      */
     protected boolean assumeJava19() {
-        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_1_8);
+        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_1_9);
     }
 
     /**
@@ -690,6 +690,9 @@ public abstract class DefaultCompilerAdapter
         }
         if (assumeJava18()) {
             return "1.8 in JDK 1.8";
+        }
+        if (assumeJava19()) {
+            return "1.9 in JDK 1.9";
         }
         return "";
     }
