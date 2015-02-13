@@ -115,7 +115,8 @@ public class JavaEnvUtilsTest {
         assertTrue(j+" is normalized and in the JDK dir",
                    j.startsWith(javaHomeParent));
 
-        if (Os.isFamily("mac") && JavaEnvUtils.getJavaVersionNumber() <= JavaEnvUtils.VERSION_1_6) {
+        if ((Os.isFamily("mac") && JavaEnvUtils.getJavaVersionNumber() <= JavaEnvUtils.VERSION_1_6)
+            || JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_9)) {
             assertTrue(j+" is normalized and in the JRE dir",
                        j.startsWith(javaHome));
         } else {
