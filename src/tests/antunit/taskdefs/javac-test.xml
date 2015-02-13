@@ -220,7 +220,7 @@ public class Adapter implements CompilerAdapter {
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
     
-    <sequential if:set="jdk1.5+" unless:set="jdk1.9+">
+    <sequential unless:set="jdk1.9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5"/>
       <delete dir="${javac-dir}/classes"/>
@@ -278,7 +278,7 @@ public class Adapter implements CompilerAdapter {
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
 
-    <sequential if:set="jdk1.5+" unless:set="jdk1.9+">
+    <sequential unless:set="jdk1.9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5" target="1.5"/>
       <delete dir="${javac-dir}/classes"/>

@@ -316,7 +316,7 @@ public class BTest extends TestCase {
     </au:expectfailure>
   </target>
 
-  <target name="testTestMethods" if="jdk1.5+">
+  <target name="testTestMethods">
     <condition property="source" value="6">
       <isset property="jdk1.6+"/>
     </condition>
