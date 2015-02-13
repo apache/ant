@@ -21,10 +21,15 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
+    <available property="jdk1.6+" classname="java.net.CookieStore"/>
+    <condition property="source" value="6">
+      <isset property="jdk1.6+"/>
+    </condition>
+    <property name="source" value="1.4"/>
     <mkdir dir="${output}"/>
     <javac srcdir="${src.dir}"
            includes="*.java"
-           source="1.4"
+           source="${source}"
            debug="true"
            destdir="${output}"
         />
