@@ -236,8 +236,8 @@ public final class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * Note that Ant now requires JDK 1.4+ so {@link #JAVA_1_0} through
-     * {@link #JAVA_1_3} need no longer be tested for.
+     * Note that Ant now requires JDK 1.5+ so {@link #JAVA_1_0} through
+     * {@link #JAVA_1_4} need no longer be tested for.
      * @param version the version to check against the current version.
      * @return true if the version of Java is the same as the given version.
      * @since Ant 1.5
@@ -250,8 +250,8 @@ public final class JavaEnvUtils {
      * Compares the current Java version to the passed in String -
      * assumes the argument is one of the constants defined in this
      * class.
-     * Note that Ant now requires JDK 1.4+ so {@link #JAVA_1_0} through
-     * {@link #JAVA_1_3} need no longer be tested for.
+     * Note that Ant now requires JDK 1.5+ so {@link #JAVA_1_0} through
+     * {@link #JAVA_1_4} need no longer be tested for.
      * @param version the version to check against the current version.
      * @return true if the version of Java is the same or higher than the
      * given version.
