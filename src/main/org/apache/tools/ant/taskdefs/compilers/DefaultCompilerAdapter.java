@@ -716,7 +716,9 @@ public abstract class DefaultCompilerAdapter
         return t.equals("1") || t.equals("2") || t.equals("3") || t.equals("4")
             || ((t.equals("5") || t.equals("6"))
                 && !assumeJava15() && !assumeJava16())
-            || (t.equals("7") && !assumeJava17());
+            || (t.equals("7") && !assumeJava17())
+            || (t.equals("8") && !assumeJava18())
+            || (t.equals("9") && !assumeJava19());
     }
 
 
