@@ -198,7 +198,7 @@ public class Adapter implements CompilerAdapter {
     <au:assertLogContains text="adapter called" />
   </target>
 
-  <target name="testSourceAttributes" xmlns:if="ant:if">
+  <target name="testSourceAttributes" xmlns:if="ant:if" xmlns:unless="ant:unless">
     <delete dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/classes" />
@@ -212,13 +212,15 @@ public class Adapter implements CompilerAdapter {
     <au:expectfailure>
       <testJavac source="notValid"/>
     </au:expectfailure>
-  	
-    <echo>JDK 1.4+</echo>
-    <testJavac source="1.4"/>
-    <delete dir="${javac-dir}/classes"/>
-    <mkdir dir="${javac-dir}/classes"/>
-  	
-    <sequential if:set="jdk1.5+">
+
+    <sequential unless:set="jdk1.9+">
+      <echo>JDK 1.4+</echo>
+      <testJavac source="1.4"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+    
+    <sequential if:set="jdk1.5+" unless:set="jdk1.9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5"/>
       <delete dir="${javac-dir}/classes"/>
@@ -254,7 +256,7 @@ public class Adapter implements CompilerAdapter {
     </sequential>
   </target>	
 	
-  <target name="testTargetAttributes" xmlns:if="ant:if">
+  <target name="testTargetAttributes" xmlns:if="ant:if" xmlns:unless="ant:unless">
     <delete dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/classes" />
@@ -269,12 +271,14 @@ public class Adapter implements CompilerAdapter {
       <testJavac target="notValid"/>
     </au:expectfailure>
 
-    <echo>JDK 1.4+</echo>
-    <testJavac source="1.4" target="1.4"/>
-    <delete dir="${javac-dir}/classes"/>
-    <mkdir dir="${javac-dir}/classes"/>
-  	
-    <sequential if:set="jdk1.5+">
+    <sequential unless:set="jdk1.9+">
+      <echo>JDK 1.4+</echo>
+      <testJavac source="1.4" target="1.4"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+
+    <sequential if:set="jdk1.5+" unless:set="jdk1.9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5" target="1.5"/>
       <delete dir="${javac-dir}/classes"/>

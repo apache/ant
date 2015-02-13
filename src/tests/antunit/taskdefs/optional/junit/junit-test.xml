@@ -317,6 +317,10 @@ public class BTest extends TestCase {
   </target>
 
   <target name="testTestMethods" if="jdk1.5+">
+    <condition property="source" value="6">
+      <isset property="jdk1.6+"/>
+    </condition>
+    <property name="source" value="5"/>
     <echo file="${input}/T1.java">public class T1 extends
 			junit.framework.TestCase {
 			public void testOK() {}
@@ -331,7 +335,7 @@ public class BTest extends TestCase {
 			public void bad() {
 			throw new RuntimeException("failed");}
 			}</echo>
-    <javac srcdir="${input}" destdir="${output}" includes="T1.java,T2.java" source="5" includeantruntime="false">
+    <javac srcdir="${input}" destdir="${output}" includes="T1.java,T2.java" source="${source}" includeantruntime="false">
       <classpath>
         <path refid="junit" />
       </classpath>
