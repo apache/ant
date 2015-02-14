@@ -95,6 +95,9 @@ Other changes:
  * ported some of the write-optimization of Commons Compress 1.10 to
    the ZIP package
 
+ * adapted unit tests to Java9 and added "javac1.9" as valid option
+   for javac's compiler attribute.
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
