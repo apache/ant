@@ -339,7 +339,13 @@
       public void bad() {
       throw new RuntimeException("failed");}
       }</echo>
-    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}" includes="T1.java,T2.java" source="5">
+    <available property="jdk1.6+" classname="java.net.CookieStore"/>
+    <condition property="source" value="6">
+      <isset property="jdk1.6+"/>
+    </condition>
+    <property name="source" value="1.4"/>
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}" includes="T1.java,T2.java"
+           source="${source}">
 
     </javac>
     <junit fork="false" printsummary="true" haltonerror="true">
