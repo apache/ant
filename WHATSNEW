@@ -98,6 +98,9 @@ Other changes:
  * adapted unit tests to Java9 and added "javac1.9" as valid option
    for javac's compiler attribute.
 
+ * performance improvements for <intersect>
+   Bugzilla Report 57588
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 

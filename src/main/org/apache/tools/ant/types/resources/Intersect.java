@@ -17,10 +17,11 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
@@ -45,17 +46,16 @@ public class Intersect extends BaseResourceCollectionContainer {
                 + " resource collection" + ((size == 1) ? "" : "s")
                 + " is undefined.");
         }
-        List<Resource> al = new ArrayList<Resource>();
         Iterator<ResourceCollection> rc = rcs.iterator();
-        al.addAll(collect(rc.next()));
+        Set<Resource> s = new LinkedHashSet<Resource>(collect(rc.next()));
         while (rc.hasNext()) {
-            al.retainAll(collect(rc.next()));
+            s.retainAll(collect(rc.next()));
         }
-        return al;
+        return s;
     }
 
-    private List<Resource> collect(ResourceCollection rc) {
-        List<Resource> result = new ArrayList<Resource>();
+    private Set<Resource> collect(ResourceCollection rc) {
+        Set<Resource> result = new LinkedHashSet<Resource>();
         for (Resource r : rc) {
             result.add(r);
         }
