@@ -228,5 +228,22 @@ Concatenation of strings :</p>
 <p>Each time called, a &quot;.&quot; will be appended to &quot;progress&quot;
 </p>
 
+<p>Pumps the project version to the next minor version (increase minor and set path=0):
+<blockquote><pre>&lt;target name="nextMinorVersion"&gt;
+   &lt;property
+     name="header"
+     value="##Generated file - do not modify!"/&gt;
+   &lt;propertyfile file="version.properties" comment="${header}"&gt;
+     &lt;entry key="product.build.major"   type="int"  value="3" /&gt;
+     &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;
+     &lt;entry key="product.build.patch"   type="int"  value="0" /&gt;
+     &lt;entry key="product.build.date"    type="date" value="now" /&gt;
+  &lt;/propertyfile&gt;
+&lt;/target&gt;
+</pre></blockquote>
+After running this target the version changed e.g. from 3.2.2 to 3.3.0.
+</p>
+
+
 </body>
 </html>
