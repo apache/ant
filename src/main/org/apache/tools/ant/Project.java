@@ -151,6 +151,7 @@ public class Project implements ResourceFactory {
 
     /** Map from target names to targets (String to Target). */
     private final Hashtable<String, Target> targets = new Hashtable<String, Target>();
+
     /** Set of global filters. */
     private final FilterSet globalFilterSet = new FilterSet();
     {
