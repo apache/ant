@@ -50,7 +50,10 @@ or the following attributes.</p>
     <td valign="top">includesfile</td>
     <td valign="top">the name of a file; each line of this file is
       taken to be an include pattern. You can specify more than one
-      include file by using a nested includesfile elements.</td>
+      include file by using a nested includesfile elements.
+      <b>Note:</b> if the file is empty and there are no other
+      patterns defined for the fileset, all files will be included.
+    </td>
   </tr>
   <tr>
     <td valign="top">excludes</td>
