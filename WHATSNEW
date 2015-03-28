@@ -81,7 +81,7 @@ Fixed bugs:
    when tasks spawned new child threads that accessed the properties.
    Bugzilla Report 55074
 
- * TarArchiveEntry's constructor with a File and a String arg didn't
+ * TarEntry's constructor with a File and a String arg didn't
    normalize the name.
 
 Other changes:
