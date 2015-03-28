@@ -257,7 +257,7 @@ public class TarEntry implements TarConstants {
      * @param file The file that the entry represents.
      */
     public TarEntry(File file) {
-        this(file, normalizeFileName(file.getPath(), false));
+        this(file, file.getPath());
     }
 
     /**
@@ -270,6 +270,7 @@ public class TarEntry implements TarConstants {
     public TarEntry(File file, String fileName) {
         this();
 
+        String normalizedName = normalizeFileName(fileName, false);
         this.file = file;
 
         this.linkName = "";
@@ -278,18 +279,18 @@ public class TarEntry implements TarConstants {
             this.mode = DEFAULT_DIR_MODE;
             this.linkFlag = LF_DIR;
 
-            int nameLength = fileName.length();
-            if (nameLength == 0 || fileName.charAt(nameLength - 1) != '/') {
-                this.name = fileName + "/";
+            int nameLength = normalizedName.length();
+            if (nameLength == 0 || normalizedName.charAt(nameLength - 1) != '/') {
+                this.name = normalizedName + "/";
             } else {
-                this.name = fileName;
+                this.name = normalizedName;
             }
             this.size = 0;
         } else {
             this.mode = DEFAULT_FILE_MODE;
             this.linkFlag = LF_NORMAL;
             this.size = file.length();
-            this.name = fileName;
+            this.name = normalizedName;
         }
 
         this.modTime = file.lastModified() / MILLIS_PER_SECOND;
