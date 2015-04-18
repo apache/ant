@@ -65,6 +65,14 @@ import org.apache.tools.mail.MailMessage;
  *    to send failure messages to</li>
  *    <li> MailLogger.success.to [required if success mail to be sent] - Address
  *    to send success messages to</li>
+ *    <li> MailLogger.failure.cc [no default] - Address
+ *    to send failure messages to carbon copy (cc)</li>
+ *    <li> MailLogger.success.to [no default] - Address
+ *    to send success messages to carbon copy (cc)</li>
+ *    <li> MailLogger.failure.bcc [no default] - Address
+ *    to send failure messages to blind carbon copy (bcc)</li>
+ *    <li> MailLogger.success.bcc [no default] - Address
+ *    to send success messages to blind carbon copy (bcc)</li>
  *    <li> MailLogger.failure.subject [default: "Build Failure"] - Subject of
  *    failed build</li>
  *    <li> MailLogger.success.subject [default: "Build Success"] - Subject of
@@ -151,6 +159,8 @@ public class MailLogger extends DefaultLogger {
                 .from(getValue(properties, "from", null))
                 .replytoList(getValue(properties, "replyto", ""))
                 .toList(getValue(properties, prefix + ".to", null))
+                .toCcList(getValue(properties, prefix + ".cc", ""))
+                .toBccList(getValue(properties, prefix + ".bcc", ""))
                 .mimeType(getValue(properties, "mimeType", DEFAULT_MIME_TYPE))
                 .charset(getValue(properties, "charset", ""))
                 .body(getValue(properties, prefix + ".body", ""))
@@ -234,6 +244,22 @@ public class MailLogger extends DefaultLogger {
         }
         public Values toList(String toList) {
             this.toList = toList;
+            return this;
+        }
+        private String toCcList;
+        public String toCcList() {
+            return toCcList;
+        }
+        public Values toCcList(String toCcList) {
+            this.toCcList = toCcList;
+            return this;
+        }
+        private String toBccList;
+        public String toBccList() {
+            return toBccList;
+        }
+        public Values toBccList(String toBccList) {
+            this.toBccList = toBccList;
             return this;
         }
         private String subject;
@@ -392,8 +418,10 @@ public class MailLogger extends DefaultLogger {
         mailer.setReplyToList(replyToList);
         Vector<EmailAddress> toList = vectorizeEmailAddresses(values.toList());
         mailer.setToList(toList);
-        mailer.setCcList(new Vector<EmailAddress>());
-        mailer.setBccList(new Vector<EmailAddress>());
+        Vector<EmailAddress> toCcList = vectorizeEmailAddresses(values.toCcList());
+        mailer.setCcList(toCcList);
+        Vector<EmailAddress> toBccList = vectorizeEmailAddresses(values.toBccList());
+        mailer.setBccList(toBccList);
         mailer.setFiles(new Vector<File>());
         mailer.setSubject(values.subject());
         mailer.setHeaders(new Vector<Header>());

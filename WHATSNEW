@@ -104,6 +104,9 @@ Other changes:
  * performance improvements for <intersect>
    Bugzilla Report 57588
 
+ * MailLogger can now add CC and BCC addresses.
+   Bugzilla Report 57789.
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
