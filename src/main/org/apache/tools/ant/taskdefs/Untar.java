@@ -58,6 +58,10 @@ public class Untar extends Expand {
      */
     private UntarCompressionMethod compression = new UntarCompressionMethod();
 
+    public Untar() {
+        super(null);
+    }
+
     /**
      * Set decompression algorithm to use; default=none.
      *
@@ -72,18 +76,6 @@ public class Untar extends Expand {
      */
     public void setCompression(UntarCompressionMethod method) {
         compression = method;
-    }
-
-    /**
-     * No encoding support in Untar.
-     * @param encoding not used
-     * @throws BuildException always
-     * @since Ant 1.6
-     */
-    public void setEncoding(String encoding) {
-        throw new BuildException("The " + getTaskName()
-                                 + " task doesn't support the encoding"
-                                 + " attribute", getLocation());
     }
 
     /**
@@ -157,7 +149,8 @@ public class Untar extends Expand {
         try {
             tis =
                 new TarInputStream(compression.decompress(name,
-                                                          new BufferedInputStream(stream)));
+                                                          new BufferedInputStream(stream)),
+                                   getEncoding());
             log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
             TarEntry te = null;
             boolean empty = true;

@@ -34,4 +34,15 @@
     </copy>
   </target>
 
+  <target name="test-refid-check-encoding">
+    <tarfileset id="test-refid2"
+                encoding="utf-8"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <tarfileset id="ref4"
+                  encoding="utf-8"
+                  refid="test-refid2"/>
+    </au:expectfailure>
+  </target>
+
 </project>

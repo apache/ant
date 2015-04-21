@@ -72,11 +72,27 @@ public class Expand extends Task {
 
     public static final String NATIVE_ENCODING = "native-encoding";
 
-    private String encoding = "UTF8";
+    private String encoding;
     /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    /**
+     * Creates an Expand instance and sets encoding to UTF-8.
+     */
+    public Expand() {
+        this("UTF8");
+    }
+
+    /**
+     * Creates an Expand instance and sets the given encoding.
+     *
+     * @since Ant 1.9.5
+     */
+    protected Expand(String encoding) {
+        this.encoding = encoding;
+    }
 
     /**
      * Whether try ing to expand an empty archive would be an error.

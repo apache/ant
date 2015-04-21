@@ -100,12 +100,13 @@ archive.</p>
   </tr>
   <tr>
     <td valign="top">encoding</td>
-    <td valign="top"><b>Note:</b> This attribute is not available for
-    the <code>untar</code> task.<br>
+    <td valign="top">
     The character encoding that has been used for filenames
     inside the zip file.  For a list of possible values see the <a
     href="http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html">Supported Encodings</a>.<br/>
-    Defaults to &quot;UTF8&quot;, use the magic value
+    Defaults to &quot;UTF8&quot; for the <code>unzip</code> and the
+    platform's default encoding for the <code>untar</code> task.  Use
+    the magic value
     <code>native-encoding</code> for the platform's default character
     encoding.
       <br/>See also the <a href="zip.html#encoding">discussion in the

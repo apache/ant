@@ -33,8 +33,6 @@ import org.apache.tools.ant.Project;
  */
 public class ZipFileSet extends ArchiveFileSet {
 
-    private String encoding = null;
-
     /** Constructor for ZipFileSet */
     public ZipFileSet() {
         super();
@@ -54,34 +52,6 @@ public class ZipFileSet extends ArchiveFileSet {
      */
     protected ZipFileSet(ZipFileSet fileset) {
         super(fileset);
-        encoding = fileset.encoding;
-    }
-
-    /**
-     * Set the encoding used for this ZipFileSet.
-     * @param enc encoding as String.
-     * @since Ant 1.7
-     */
-    public void setEncoding(String enc) {
-        checkZipFileSetAttributesAllowed();
-        this.encoding = enc;
-    }
-
-    /**
-     * Get the encoding used for this ZipFileSet.
-     * @return String encoding.
-     * @since Ant 1.7
-     */
-    public String getEncoding() {
-        if (isReference()) {
-            AbstractFileSet ref = getRef(getProject());
-            if (ref instanceof ZipFileSet) {
-                return ((ZipFileSet) ref).getEncoding();
-            } else {
-                return null;
-            }
-        }
-        return encoding;
     }
 
     /**
@@ -90,7 +60,7 @@ public class ZipFileSet extends ArchiveFileSet {
      */
     protected ArchiveScanner newArchiveScanner() {
         ZipScanner zs = new ZipScanner();
-        zs.setEncoding(encoding);
+        zs.setEncoding(getEncoding());
         return zs;
     }
 

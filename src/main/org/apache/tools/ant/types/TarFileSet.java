@@ -180,6 +180,7 @@ public class TarFileSet extends ArchiveFileSet {
      */
     protected ArchiveScanner newArchiveScanner() {
         TarScanner zs = new TarScanner();
+        zs.setEncoding(getEncoding());
         return zs;
     }
 

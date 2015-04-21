@@ -57,8 +57,12 @@
     <untar src="." dest="${output}/untar" />
   </target>
 
-  <target name="encoding">
-    <untar src="expected/asf-logo.gif.tar" dest="${output}/untar" encoding="foo"/>
+  <target name="encodingTest">
+    <mkdir dir="${output}/untartestin"/>
+    <touch file="${output}/untartestin/foo"/>
+    <tar tarfile="${output}/untartest.tar" basedir="${output}/untartestin" encoding="UnicodeBig"/>
+    <mkdir dir="${output}/untartestout"/>
+    <untar src="${output}/untartest.tar" dest="${output}/untartestout" encoding="UnicodeBig"/>
   </target>
 
   <target name="resourceCollection">

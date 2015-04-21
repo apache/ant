@@ -58,7 +58,7 @@ public class TarScanner extends ArchiveScanner {
 
         try {
             try {
-                ti = new TarInputStream(src.getInputStream());
+                ti = new TarInputStream(src.getInputStream(), encoding);
             } catch (IOException ex) {
                 throw new BuildException("problem opening " + srcFile, ex);
             }

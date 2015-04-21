@@ -124,6 +124,12 @@ public class Tar extends MatchingTask {
     private TarCompressionMethod compression = new TarCompressionMethod();
 
     /**
+     * Encoding to use for filenames, defaults to the platform's
+     * default encoding.
+     */
+    private String encoding;
+
+    /**
      * Add a new fileset with the option to specify permissions
      * @return the tar fileset to be used as the nested element.
      */
@@ -232,6 +238,20 @@ public class Tar extends MatchingTask {
     }
 
     /**
+     * Encoding to use for filenames, defaults to the platform's
+     * default encoding.
+     *
+     * <p>For a list of possible values see <a
+     * href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.</p>
+     * @param encoding the encoding name
+     *
+     * @since Ant 1.9.5
+     */
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
      * do the business
      * @throws BuildException on error
      */
@@ -304,7 +324,8 @@ public class Tar extends MatchingTask {
                 tOut = new TarOutputStream(
                     compression.compress(
                         new BufferedOutputStream(
-                            new FileOutputStream(tarFile))));
+                            new FileOutputStream(tarFile))),
+                    encoding);
                 tOut.setDebug(true);
                 if (longFileMode.isTruncateMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);

@@ -84,12 +84,10 @@ public class UntarTest {
 
     @Test
     public void testEncoding() {
-        try {
-            buildRule.executeTarget("encoding");
-            fail("<untar> overrides setEncoding.");
-        } catch (BuildException ex) {
-            assertEquals("The untar task doesn't support the encoding attribute", ex.getMessage());
-        }
+        buildRule.executeTarget("encodingTest");
+        String filename = buildRule.getProject().getProperty("output") + "/untartestout/foo";
+        assertTrue("foo has been properly named",
+                   buildRule.getProject().resolveFile(filename).exists());
     }
 
     @Test
