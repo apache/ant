@@ -84,7 +84,7 @@ Fixed bugs:
  * TarEntry's constructor with a File and a String arg didn't
    normalize the name.
 
- * Between 1.8.4 and 1.9.5 TarInputStream started to parse file
+ * Between 1.8.4 and 1.9.0 TarInputStream started to parse file
    names using the platform's default encoding rather than as ASCII.
    This has been a breaking change that has never been marked as such
    (in fact it went unnoticed).  In order to allow <untar> and
