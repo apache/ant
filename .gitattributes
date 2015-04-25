@@ -1,0 +1,43 @@
+*.bat   eol=crlf
+*.bz2   binary
+*.cmd   eol=crlf
+*.css   text
+*.dtd   text
+*.g     text
+*.gif   binary
+*.gz    binary
+*.html  text diff=html
+*.ico   binary
+*.inc   text
+*.jar   binary
+*.jpg   binary
+*.jsp   text
+*.md    text
+*.md5   text
+*.md5sum text
+*.mf    text
+*.pl    text diff=perl
+*.properties text
+*.py    text diff=python
+*.result text
+*.sample     text
+*.sh            eol=lf
+*.tar   binary
+*.test  text
+*.txt   text
+*.wxs   text
+*.xml   text
+*.xsd   text
+*.xsl   text
+*.zip   binary
+.gitattributes text
+.gitignore text
+CONTRIBUTORS text
+INSTALL text
+KEY     text
+LICENSE text
+NOTICE  text
+README  text
+ReleaseInstructions text
+STATUS  text
+WHATSNEW text
