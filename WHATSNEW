@@ -117,6 +117,10 @@ Other changes:
  * MailLogger can now add CC and BCC addresses.
    Bugzilla Report 57789.
 
+ * <scp>'s buffer size has been increased from 1k to 100k to match
+   <ftp> and <get>.
+   github pull requests #8 and #9
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
