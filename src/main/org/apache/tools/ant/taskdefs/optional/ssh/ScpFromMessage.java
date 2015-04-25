@@ -42,7 +42,7 @@ public class ScpFromMessage extends AbstractSshMessage {
 
     private static final int HUNDRED_KILOBYTES = 102400;
     private static final byte LINE_FEED = 0x0a;
-    private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 100*1024;
 
     private String remoteFile;
     private File localFile;
