@@ -22,7 +22,7 @@
   <property name="dirname" value="work" />
   <property name="dir" location="${output}/${dirname}" />
   <property name="zip" location="${output}/${dirname}.zip" />
-  <property name="jar" location="${output}/${dirname}.jar" />
+  <property name="jar" location="${antunit.tmpdir}/${dirname}.jar" />
   <property name="file" location="${output}/${dirname}/file.txt" />
     
   <condition property="offline">
