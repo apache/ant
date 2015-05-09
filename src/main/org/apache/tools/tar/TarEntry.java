@@ -119,10 +119,10 @@ public class TarEntry implements TarConstants {
     private int mode;
 
     /** The entry's user id. */
-    private int userId;
+    private long userId;
 
     /** The entry's group id. */
-    private int groupId;
+    private long groupId;
 
     /** The entry's size. */
     private long size;
@@ -422,9 +422,12 @@ public class TarEntry implements TarConstants {
      * Get this entry's user id.
      *
      * @return This entry's user id.
+     * @deprecated use #getLongUserId instead as user ids can be
+     * bigger than {@link Integer.MAX_INT}
      */
+    @Deprecated
     public int getUserId() {
-        return userId;
+        return (int) (userId & 0xffffffff);
     }
 
     /**
@@ -433,6 +436,26 @@ public class TarEntry implements TarConstants {
      * @param userId This entry's new user id.
      */
     public void setUserId(int userId) {
+        setUserId((long) userId);
+    }
+
+    /**
+     * Get this entry's user id.
+     *
+     * @return This entry's user id.
+     * @since 1.9.5
+     */
+    public long getLongUserId() {
+        return userId;
+    }
+
+    /**
+     * Set this entry's user id.
+     *
+     * @param userId This entry's new user id.
+     * @since 1.9.5
+     */
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -440,9 +463,12 @@ public class TarEntry implements TarConstants {
      * Get this entry's group id.
      *
      * @return This entry's group id.
+     * @deprecated use #getLongGroupId instead as group ids can be
+     * bigger than {@link Integer.MAX_INT}
      */
+    @Deprecated
     public int getGroupId() {
-        return groupId;
+        return (int) (groupId & 0xffffffff);
     }
 
     /**
@@ -451,6 +477,26 @@ public class TarEntry implements TarConstants {
      * @param groupId This entry's new group id.
      */
     public void setGroupId(int groupId) {
+        setGroupId((long) groupId);
+    }
+
+    /**
+     * Get this entry's group id.
+     *
+     * @return This entry's group id.
+     * @since 1.9.5
+     */
+    public long getLongGroupId() {
+        return groupId;
+    }
+
+    /**
+     * Set this entry's group id.
+     *
+     * @param groupId This entry's new group id.
+     * @since 1.9.5
+     */
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 

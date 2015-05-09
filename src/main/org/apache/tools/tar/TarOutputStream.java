@@ -161,7 +161,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Set the long file mode.
      * This can be LONGFILE_ERROR(0), LONGFILE_TRUNCATE(1) or LONGFILE_GNU(2).
-     * This specifies the treatment of long file names (names >= TarConstants.NAMELEN).
+     * This specifies the treatment of long file names (names &gt;= TarConstants.NAMELEN).
      * Default is LONGFILE_ERROR.
      * @param longFileMode the mode to use
      */
@@ -512,7 +512,7 @@ public class TarOutputStream extends FilterOutputStream {
 
     private String stripTo7Bits(String name) {
         final int length = name.length();
-        StringBuffer result = new StringBuffer(length);
+        StringBuilder result = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             char stripped = (char) (name.charAt(i) & 0x7F);
             if (stripped != 0) { // would be read as Trailing null
@@ -538,12 +538,12 @@ public class TarOutputStream extends FilterOutputStream {
                                             TarEntry entry) {
         addPaxHeaderForBigNumber(paxHeaders, "size", entry.getSize(),
                                  TarConstants.MAXSIZE);
-        addPaxHeaderForBigNumber(paxHeaders, "gid", entry.getGroupId(),
+        addPaxHeaderForBigNumber(paxHeaders, "gid", entry.getLongGroupId(),
                                  TarConstants.MAXID);
         addPaxHeaderForBigNumber(paxHeaders, "mtime",
                                  entry.getModTime().getTime() / 1000,
                                  TarConstants.MAXSIZE);
-        addPaxHeaderForBigNumber(paxHeaders, "uid", entry.getUserId(),
+        addPaxHeaderForBigNumber(paxHeaders, "uid", entry.getLongUserId(),
                                  TarConstants.MAXID);
         // star extensions by J\u00f6rg Schilling
         addPaxHeaderForBigNumber(paxHeaders, "SCHILY.devmajor",
@@ -564,11 +564,11 @@ public class TarOutputStream extends FilterOutputStream {
 
     private void failForBigNumbers(TarEntry entry) {
         failForBigNumber("entry size", entry.getSize(), TarConstants.MAXSIZE);
-        failForBigNumber("group id", entry.getGroupId(), TarConstants.MAXID);
+        failForBigNumberWithPosixMessage("group id", entry.getLongGroupId(), TarConstants.MAXID);
         failForBigNumber("last modification time",
                          entry.getModTime().getTime() / 1000,
                          TarConstants.MAXSIZE);
-        failForBigNumber("user id", entry.getUserId(), TarConstants.MAXID);
+        failForBigNumber("user id", entry.getLongUserId(), TarConstants.MAXID);
         failForBigNumber("mode", entry.getMode(), TarConstants.MAXID);
         failForBigNumber("major device number", entry.getDevMajor(),
                          TarConstants.MAXID);
@@ -577,6 +577,14 @@ public class TarOutputStream extends FilterOutputStream {
     }
 
     private void failForBigNumber(String field, long value, long maxValue) {
+        failForBigNumber(field, value, maxValue, "");
+    }
+
+    private void failForBigNumberWithPosixMessage(String field, long value, long maxValue) {
+        failForBigNumber(field, value, maxValue, " Use STAR or POSIX extensions to overcome this limit");
+    }
+
+    private void failForBigNumber(String field, long value, long maxValue, String additionalMsg) {
         if (value < 0 || value > maxValue) {
             throw new RuntimeException(field + " '" + value
                                        + "' is too big ( > "

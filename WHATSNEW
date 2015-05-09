@@ -121,6 +121,11 @@ Other changes:
    <ftp> and <get>.
    github pull requests #8 and #9
 
+ * The <tar> package can now deal with group and user ids bigger than
+   0x80000000.
+   https://issues.apache.org/jira/browse/COMPRESS-314
+   https://issues.apache.org/jira/browse/COMPRESS-315
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 
