@@ -15,7 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns:au="antlib:org.apache.ant.antunit">
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../../antunit-base.xml" />
 
   <tokens id="testrc">
     <string value="1,2,3,4,5" />
@@ -150,6 +152,71 @@
     <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
       <resourcecount>
         <last count="-1"><resources refid="testrc" /></last>
+      </resourcecount>
+    </au:expectfailure>
+  </target>
+
+  <target name="testallbutfirst5">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <allbutfirst count="5"><resources refid="testrc" /></allbutfirst>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testallbutfirst4">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <allbutfirst count="4"><resources refid="testrc" /></allbutfirst>
+          <string value="5" />
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testallbutfirst3">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <allbutfirst count="3"><resources refid="testrc" /></allbutfirst>
+          <resources>
+            <string value="4" />
+            <string value="5" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testallbutfirst">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <allbutfirst><resources refid="testrc" /></allbutfirst>
+          <resources>
+            <string value="2" />
+            <string value="3" />
+            <string value="4" />
+            <string value="5" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testallbutfirst6">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <allbutfirst count="6"><resources refid="testrc" /></allbutfirst>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testallbutfirst-1">
+    <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
+      <resourcecount>
+        <allbutfirst count="-1"><resources refid="testrc" /></allbutfirst>
       </resourcecount>
     </au:expectfailure>
   </target>
