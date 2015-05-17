@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.Resource;
 public class AllButFirst extends SizeLimitCollection {
 
     /**
-     * Take the first <code>count</code> elements.
+     * Take all elements except for the first <code>count</code> elements.
      * @return a Collection of Resources.
      */
     protected Collection<Resource> getCollection() {

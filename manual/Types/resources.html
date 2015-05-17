@@ -359,6 +359,10 @@ Ant's "legacy" datatypes have been modified to behave as Resource Collections:
     nested collection</li>
   <li><a href="#last">last</a> - last <i>n</i> resources from a
     nested collection</li>
+  <li><a href="#allbutfirst">allbutfirst</a> - all except the
+    first <i>n</i> resources from a nested collection</li>
+  <li><a href="#allbutlast">last</a> - all except the last <i>n</i>
+    resources from a nested collection</li>
   <li><a href="#tokens">tokens</a> - <a href="#string">string</a> tokens
     gathered from a nested collection</li>
   <li><a href="#union">union</a> - set union of nested resource collections</li>
@@ -951,6 +955,64 @@ larger collection. <strong>Since Ant 1.7.1</strong>.</p>
     <tr>
       <td valign="top">count</td>
       <td valign="top">The number of resources to include</td>
+      <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="allbutfirst">allbutfirst</a></h4>
+<p>Includes all elements except for the first <i>count</i> resources
+from a nested resource collection.  This can be used in conjunction
+with the <a href="#sort">sort</a> collection, for example, to select
+all but the first few oldest, largest, etc. resources from a larger
+collection. <strong>Since Ant 1.9.5</strong>.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">count</td>
+      <td valign="top">The number of resources to exclude</td>
+      <td valign="top" align="center">No, default 1</td>
+    </tr>
+    <tr>
+      <td valign="top">cache</td>
+      <td valign="top">Whether to cache results; disabling
+        may seriously impact performance</td>
+      <td valign="top" align="center">No, default <i>true</i></td>
+    </tr>
+  </table>
+  <h4>Parameters specified as nested elements</h4>
+  <p>A single resource collection is required.</p>
+</blockquote>
+
+<h4><a name="allbutlast">allbutlast</a></h4>
+<p>Includes all elements except for the last <i>count</i> resources
+from a nested resource collection.  This can be used in conjunction
+with the <a href="#sort">sort</a> collection, for example, to select
+all but the last few oldest, largest, etc. resources from a larger
+collection. <strong>Since Ant 1.9.5</strong>.</p>
+<blockquote>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">count</td>
+      <td valign="top">The number of resources to exclude</td>
       <td valign="top" align="center">No, default 1</td>
     </tr>
     <tr>

@@ -128,7 +128,11 @@ Other changes:
 
  * <scp> has new attributes fileMode and dirMode that control the
    permissions on the remote side when sending data via SSH.
-   Bugzilla Report 43271
+   Bugzilla Report 43271.
+
+ * New <allbutlast> and <allbutfirst> resource collections can be used
+   to select all but a given subset of a resource collection.
+   Bugzilla Report 57834.
 
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
