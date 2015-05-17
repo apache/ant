@@ -89,7 +89,7 @@ Fixed bugs:
    This has been a breaking change that has never been marked as such
    (in fact it went unnoticed).  In order to allow <untar> and
    <tarfileset> to work on platforms who's encoding doesn't match the
-   encoding of file names inside the archive, the both now support
+   encoding of file names inside the archive, both now support
    encoding attributes.
    The attribute has also been added to <tar> for symmetry.
    Bugzilla Report 57822
@@ -97,7 +97,7 @@ Fixed bugs:
 Other changes:
 --------------
 
- * it is now possible to provide proxy configuration when to signjar
+ * it is now possible to provide proxy configuration to signjar
    when using the timestamped authority.
    Bugzilla Report 56678
 
@@ -121,7 +121,7 @@ Other changes:
    <ftp> and <get>.
    github pull requests #8 and #9
 
- * The <tar> package can now deal with group and user ids bigger than
+ * The tar package can now deal with group and user ids bigger than
    0x80000000.
    https://issues.apache.org/jira/browse/COMPRESS-314
    https://issues.apache.org/jira/browse/COMPRESS-315
