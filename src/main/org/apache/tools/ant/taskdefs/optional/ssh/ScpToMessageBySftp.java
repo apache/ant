@@ -117,6 +117,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @throws IOException on i/o errors
      * @throws JSchException on errors detected by scp
      */
+    @Override
     public void execute() throws IOException, JSchException {
         if (directoryList != null) {
             doMultipleTransfer();
@@ -159,6 +160,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                     if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                         // dir does not exist.
                         channel.mkdir(remotePath);
+                        channel.chmod(getDirMode(), remotePath);
                     } else {
                         throw new JSchException("failed to access remote dir '"
                                                 + remotePath + "'", e);
@@ -214,6 +216,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             // dir does not exist.
             if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 channel.mkdir(dir);
+                channel.chmod(getDirMode(), dir);
             }
         }
         channel.cd(dir);
@@ -247,6 +250,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                 log("Sending: " + localFile.getName() + " : " + filesize);
             }
             channel.put(localFile.getAbsolutePath(), remotePath, monitor);
+            channel.chmod(getFileMode(), remotePath);
         } finally {
             if (this.getVerbose()) {
                 final long endTime = System.currentTimeMillis();

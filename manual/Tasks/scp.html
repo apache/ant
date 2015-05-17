@@ -182,6 +182,24 @@ for more information.  This task has been tested with jsch-0.1.2 and later.</p>
     1.8.0</em></td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
+  <tr>
+    <td valign="top">filemode</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+      and other modes in the standard Unix fashion.  Only applies to
+      uploaded files.  Note the actual permissions of the remote
+      file will be governed by this setting and the UMASK on the
+      remote server. Default is 644. <em>since Ant 1.9.5</em>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dirmode</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+      and other modes in the standard Unix fashion.  Only applies to
+      uploaded dirs.  Note the actual permissions of the remote
+      dir will be governed by this setting and the UMASK on the
+      remote server. Default is 644. <em>since Ant 1.9.5</em>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
@@ -261,7 +279,7 @@ system (via the ps command). The best approach is to use the
 <p>
 
 <p><strong>Unix Note:</strong> File permissions are not retained when files
-are copied; they end up with the default <code>UMASK</code> permissions
+are downloaded; they end up with the default <code>UMASK</code> permissions
 instead. This is caused by the lack of any means to query or set file
 permissions in the current Java runtimes. If you need a permission-
 preserving copy function, use <code>&lt;exec executable="scp" ... &gt;</code>

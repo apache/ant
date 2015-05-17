@@ -37,10 +37,13 @@ public class ScpToMessage extends AbstractSshMessage {
 
     private static final int HUNDRED_KILOBYTES = 102400;
     private static final int BUFFER_SIZE = 100*1024;
+    private static final int DEFAULT_DIR_MODE = 0755;
+    private static final int DEFAULT_FILE_MODE = 0644;
 
     private File localFile;
     private String remotePath;
     private List directoryList;
+    private Integer fileMode, dirMode;
 
     /**
      * Constructor for ScpToMessage
@@ -137,6 +140,7 @@ public class ScpToMessage extends AbstractSshMessage {
      * @throws IOException on i/o errors
      * @throws JSchException on errors detected by scp
      */
+    @Override
     public void execute() throws IOException, JSchException {
         if (directoryList != null) {
             doMultipleTransfer();
@@ -201,7 +205,9 @@ public class ScpToMessage extends AbstractSshMessage {
     private void sendDirectoryToRemote(final Directory directory,
                                         final InputStream in,
                                         final OutputStream out) throws IOException {
-        String command = "D0755 0 ";
+        String command = "D0";
+        command += Integer.toOctalString(getDirMode());
+        command += " 0 ";
         command += directory.getDirectory().getName();
         command += "\n";
 
@@ -220,7 +226,9 @@ public class ScpToMessage extends AbstractSshMessage {
                                    final OutputStream out) throws IOException {
         // send "C0644 filesize filename", where filename should not include '/'
         final long filesize = localFile.length();
-        String command = "C0644 " + filesize + " ";
+        String command = "C0";
+        command += Integer.toOctalString(getFileMode());
+        command += " " + filesize + " ";
         command += localFile.getName();
         command += "\n";
 
@@ -287,4 +295,37 @@ public class ScpToMessage extends AbstractSshMessage {
     public String getRemotePath() {
         return remotePath;
     }
+
+    /**
+     * Set the file mode, defaults to 0644.
+     * @since Ant 1.9.5
+     */
+    public void setFileMode(int fileMode) {
+        this.fileMode = fileMode;
+    }
+
+    /**
+     * Get the file mode.
+     * @since Ant 1.9.5
+     */
+    public int getFileMode() {
+        return fileMode != null ? fileMode.intValue() : DEFAULT_FILE_MODE;
+    }
+
+    /**
+     * Set the dir mode, defaults to 0755.
+     * @since Ant 1.9.5
+     */
+    public void setDirMode(int dirMode) {
+        this.dirMode = dirMode;
+    }
+
+    /**
+     * Get the dir mode.
+     * @since Ant 1.9.5
+     */
+    public int getDirMode() {
+        return dirMode != null ? dirMode.intValue() : DEFAULT_DIR_MODE;
+    }
+
 }

@@ -126,6 +126,10 @@ Other changes:
    https://issues.apache.org/jira/browse/COMPRESS-314
    https://issues.apache.org/jira/browse/COMPRESS-315
 
+ * <scp> has new attributes fileMode and dirMode that control the
+   permissions on the remote side when sending data via SSH.
+   Bugzilla Report 43271
+
 Changes from Ant 1.9.3 TO Ant 1.9.4
 ===================================
 

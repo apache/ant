@@ -52,6 +52,7 @@ public class Scp extends SSHBase {
     private List fileSets = null;
     private boolean isFromRemote, isToRemote;
     private boolean isSftp = false;
+    private Integer fileMode, dirMode;
 
     /**
      * Sets the file to be transferred.  This can either be a remote
@@ -181,6 +182,22 @@ public class Scp extends SSHBase {
     }
 
     /**
+     * Set the file mode, defaults to "644".
+     * @since Ant 1.9.5
+     */
+    public void setFileMode(String fileMode) {
+        this.fileMode = Integer.parseInt(fileMode, 8);
+    }
+
+    /**
+     * Set the dir mode, defaults to "755".
+     * @since Ant 1.9.5
+     */
+    public void setDirMode(String dirMode) {
+        this.dirMode = Integer.parseInt(dirMode, 8);
+    }
+
+    /**
      * Adds a FileSet transfer to remote host.  NOTE: Either
      * addFileSet() or setFile() are required.  But, not both.
      *
@@ -307,6 +324,12 @@ public class Scp extends SSHBase {
                                                      list, file);
                 }
                 message.setLogListener(this);
+                if (fileMode != null) {
+                    message.setFileMode(fileMode.intValue());
+                }
+                if (dirMode != null) {
+                    message.setDirMode(dirMode.intValue());
+                }
                 message.execute();
             }
         } finally {
@@ -335,6 +358,12 @@ public class Scp extends SSHBase {
                                            file);
             }
             message.setLogListener(this);
+            if (fileMode != null) {
+                message.setFileMode(fileMode.intValue());
+            }
+            if (dirMode != null) {
+                message.setDirMode(dirMode.intValue());
+            }
             message.execute();
         } finally {
             if (session != null) {
