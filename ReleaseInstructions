@@ -298,15 +298,15 @@ build.xml
   right before a release :
 
     the project.version gets bumped to the exact release
-    number, for instance 1.9.2
+    number, for instance 1.9.5
 
   right after a release :
  
     project.version property in build.xml gets bumped to
-    [newversion]alpha, for example 1.9.2alpha
+    [newversion]alpha, for example 1.9.5alpha
 
     manifest-version gets bumped to the exact next release number
-    for example 1.9.2
+    for example 1.9.5
 
     pom.version gets bumped to [newversion]-SNAPSHOT
 
