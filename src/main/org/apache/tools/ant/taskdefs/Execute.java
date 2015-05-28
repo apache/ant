@@ -189,7 +189,7 @@ public class Execute {
      * It is a notorious troublespot pre-Java1.5, and should be approached
      * with extreme caution.
      *
-     * @return
+     * @return command and arguments to get our environment
      */
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
