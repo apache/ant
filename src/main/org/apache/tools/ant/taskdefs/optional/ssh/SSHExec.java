@@ -194,7 +194,7 @@ public class SSHExec extends SSHBase {
      * <code>setErrorOutput</code>. Default is false, that is, overwrite
      * the file.
      *
-     * @param append  True to append to an existing file, false to overwrite.
+     * @param appenderr  True to append to an existing file, false to overwrite.
      * @since Apache Ant 1.9.4
      */
     public void setErrAppend(final boolean appenderr) {

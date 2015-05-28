@@ -423,7 +423,7 @@ public class TarEntry implements TarConstants {
      *
      * @return This entry's user id.
      * @deprecated use #getLongUserId instead as user ids can be
-     * bigger than {@link Integer.MAX_INT}
+     * bigger than {@link Integer#MAX_VALUE}
      */
     @Deprecated
     public int getUserId() {
@@ -464,7 +464,7 @@ public class TarEntry implements TarConstants {
      *
      * @return This entry's group id.
      * @deprecated use #getLongGroupId instead as group ids can be
-     * bigger than {@link Integer.MAX_INT}
+     * bigger than {@link Integer#MAX_VALUE}
      */
     @Deprecated
     public int getGroupId() {

@@ -212,7 +212,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
      *
      * @param other another DeweyDecimal to compare with
      * @return result
-     * @see java.lang.Comparable#compareTo()
+     * @see java.lang.Comparable#compareTo(Object)
      */
     public int compareTo(DeweyDecimal other) {
         final int max = Math.max(other.components.length, components.length);

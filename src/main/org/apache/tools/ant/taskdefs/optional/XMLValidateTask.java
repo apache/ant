@@ -451,8 +451,8 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     *
-     * @return
+     * Returns a SAX-based XMLReader or a SAX-based Parser.
+     * @return reader or parser
      */
     private Object createDefaultReaderOrParser() {
         Object reader;
@@ -465,7 +465,7 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * create a reader if the use of the class did not specify another one.
+     * Create a reader if the use of the class did not specify another one.
      * If a BuildException is thrown, the caller may revert to an alternate
      * reader.
      * @return a new reader.

@@ -2256,7 +2256,7 @@ public class JUnitTask extends Task {
      * indicate that something went wrong with a test inside the batch
      * without giving it a real name.</p>
      *
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=45227
+     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=45227"
      */
     private static JUnitTest createDummyTestForBatchTest(final JUnitTest test) {
         final JUnitTest t = (JUnitTest) test.clone();

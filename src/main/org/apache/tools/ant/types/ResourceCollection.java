@@ -39,9 +39,10 @@ public interface ResourceCollection extends Iterable<Resource> {
 
     /**
      * Indicate whether this ResourceCollection is composed entirely of
-     * Resources accessible via local filesystem conventions.  If true,
+     * Resources accessible via local filesystem conventions. If true,
      * all resources returned from this collection should
-     * respond with a {@link FileProvider} when asked via {@link Resource#as}.
+     * respond with a {@link org.apache.tools.ant.types.resources.FileProvider}
+     * when asked via {@link Resource#as}.
      * @return whether this is a filesystem-only resource collection.
      */
     boolean isFilesystemOnly();

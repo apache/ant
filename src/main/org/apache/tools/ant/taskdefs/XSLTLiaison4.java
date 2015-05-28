@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+
 /**
  * Extends Proxy interface for XSLT processors: adds support for XSLT parameters
  * of various types (not only String)
@@ -35,7 +36,7 @@ public interface XSLTLiaison4 extends XSLTLiaison3 {
      * @param value the parameter value as String, Boolean, int, etc.
      * @throws Exception thrown if any problems happens.
      * @since Ant 1.9.3
-     * @see Transformer#setParameter(java.lang.String, java.lang.Object)
+     * @see javax.xml.transform.Transformer#setParameter(java.lang.String, java.lang.Object)
      */
     void addParam(String name, Object value) throws Exception;
 }

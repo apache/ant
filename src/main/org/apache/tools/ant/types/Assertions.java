@@ -151,7 +151,7 @@ public class Assertions extends DataType implements Cloneable {
 
     /**
      * what is the final size of this object
-     * @return
+     * @return number of assertions
      */
     private int getFinalSize() {
         return assertionList.size() + (enableSystemAssertions != null ? 1 : 0);

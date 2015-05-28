@@ -325,7 +325,7 @@ public class ModifiedSelector extends BaseExtendSelector
         } else {
             if (algorithmClass != null) {
                 // use Algorithm specified by classname
-                algorithm = (Algorithm) loadClass(
+                algorithm = loadClass(
                     algorithmClass,
                     "is not an Algorithm.",
                     Algorithm.class);
@@ -344,7 +344,7 @@ public class ModifiedSelector extends BaseExtendSelector
         } else {
             if (cacheClass != null) {
                 // use Cache specified by classname
-                cache = (Cache) loadClass(cacheClass, "is not a Cache.", Cache.class);
+                cache = loadClass(cacheClass, "is not a Cache.", Cache.class);
             } else {
                 // nothing specified - use default
                 cache = defaultCache;
@@ -488,7 +488,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * @param basedir as described in BaseExtendSelector
      * @param filename as described in BaseExtendSelector
      * @param cacheKey the name for the key for storing the hashvalue
-     * @return
+     * @return <tt>true</tt> if the file is selected otherwise <tt>false</tt>
      */
     private boolean isSelected(File basedir, String filename, String cacheKey) {
         validate();

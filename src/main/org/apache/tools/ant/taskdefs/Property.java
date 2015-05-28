@@ -556,7 +556,7 @@ public class Property extends Task {
      * @param isXml <tt>true</tt> if we should try to load from xml
      * @throws IOException if something goes wrong
      * @since 1.8.0
-     * @see http://java.sun.com/dtd/properties.dtd
+     * @see "http://java.sun.com/dtd/properties.dtd"
      * @see java.util.Properties#loadFromXML(InputStream)
      */
     private void loadProperties(

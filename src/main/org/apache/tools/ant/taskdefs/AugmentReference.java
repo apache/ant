@@ -81,7 +81,7 @@ public class AugmentReference extends Task implements TypeAdapter {
 
     /**
      * Needed if two different targets reuse the same instance.
-     * @see https://issues.apache.org/bugzilla/show_bug.cgi?id=50894
+     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=50894"
      */
     private synchronized void restoreWrapperId() {
         if (id != null) {

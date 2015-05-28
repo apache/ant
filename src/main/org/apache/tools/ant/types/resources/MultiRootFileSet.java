@@ -72,8 +72,8 @@ public class MultiRootFileSet extends AbstractFileSet
     }
 
     /**
-     * Adds basedirs as a comman separated list.
-     * @param b boolean cache flag.
+     * Adds basedirs as a comma separated list.
+     * @param dirs directories as CSV
      */
     public void setBaseDirs(final String dirs) {
         if (isReference()) {
@@ -89,6 +89,7 @@ public class MultiRootFileSet extends AbstractFileSet
 
     /**
      * Adds a basedir as nested element.
+     * @param r basedir
      */
     public void addConfiguredBaseDir(final FileResource r) {
         if (isReference()) {

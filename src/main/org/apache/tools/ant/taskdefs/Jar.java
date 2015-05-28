@@ -956,7 +956,7 @@ public class Jar extends Zip {
     // CheckStyle:LineLength OFF - Link is too long.
     /**
      * Check against packaging spec
-     * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
+     * @see "http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning"
      */
     // CheckStyle:LineLength ON
     private void checkJarSpec() {
