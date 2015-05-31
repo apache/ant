@@ -48,6 +48,8 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
     Switch to that branch.
 
+    $ git checkout -b prepare_Ant_1.9.5
+
 6.  Make sure that your directory tree is clean by running git status.
     Some tests leave behind leftovers which end up in the source
     distribution otherwise.
