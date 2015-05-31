@@ -19,14 +19,16 @@
 <project name="signit">
   <!-- use this property file to enter your default key id -->
   <property file="${user.home}/gnupg.properties"/>
+  <property name="bouncycastle.jdk" value="15on"/>
+  <property name="bouncycastle.version" value="1.49"/>
   <taskdef resource="org/apache/commons/openpgp/ant/antlib.xml">
     <classpath>
       <pathelement
-        location="${user.home}/.m2/repository/org/bouncycastle/bcprov-jdk12/130/bcprov-jdk12-130.jar"/>
+        location="${user.home}/.m2/repository/org/bouncycastle/bcprov-jdk${bouncycastle.jdk}/${bouncycastle.version}/bcprov-jdk${bouncycastle.jdk}-${bouncycastle.version}.jar"/>
       <pathelement
         location="${user.home}/.m2/repository/org/apache/commons/commons-openpgp/1.0-SNAPSHOT/commons-openpgp-1.0-SNAPSHOT.jar"/>
       <pathelement
-        location="${user.home}/.m2/repository/org/bouncycastle/bcpg-jdk12/130/bcpg-jdk12-130.jar"/>
+        location="${user.home}/.m2/repository/org/bouncycastle/bcpg-jdk${bouncycastle.jdk}/${bouncycastle.version}/bcpg-jdk${bouncycastle.jdk}-${bouncycastle.version}.jar"/>
     </classpath>
   </taskdef>
   <condition property="gpg.dir" value="${user.home}/AppData/Roaming/gnupg">
