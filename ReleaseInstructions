@@ -218,7 +218,9 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
     Add a new release at https://reporter.apache.org/
 
-20. You can now reacquaint yourself with your family and friends.
+20. If you've created a temporary branch you can delete it now. 
+
+21. You can now reacquaint yourself with your family and friends.
 
 (*)  Mirrors : the srcdownload.html, bindownload.html and
      manualdownload.html each list a number of mirrors. For ant 1.6.0
