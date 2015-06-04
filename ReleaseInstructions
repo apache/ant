@@ -176,7 +176,7 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
        4 hours later, the artefacts will be in the maven central repository.
       
 
-    * Make README.html points to the new RELEASE-NOTES or is a copy of
+    * Make README.html point to the new RELEASE-NOTES or is a copy of
       it.
 
 16. Update the ant.apache.org site :
@@ -197,14 +197,14 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
      
-    Change the version of the manual published on the site: svn copy the manual into
-    the production folder, using a command similar to :
-    svn merge https://svn.apache.org/repos/asf/ant/core/tags/ANT_193/manual/ ./manual/
-    followed by a commit.
+    Change the version of the manual published on the site: copy the manual into
+    the production folder - since the site still uses svn and Ant
+    proper uses git there currently is no way to use the scm for this.
 
-17. Address the available version tags in BugZilla. Create a new version 1.9.6.
+17. Address the available version tags in BugZilla. Create new
+    milestones and versions 1.9.6.
     Assign all existing 1.9.5 bugs to 1.9.6.
-    Note that such massive changes can be done at once by choosing the
+    Note that such changes can be done at once by choosing the
     link "Change several bugs at once" at the bottom of the bug list
     displaying the 1.9.5 bugs.
 
@@ -215,6 +215,8 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     announce@apache.org, dev@ant and user@ant.
 
 19. Add a new release tag to doap_Ant.rdf in Ant's site.
+
+    Add a new release at https://reporter.apache.org/
 
 20. You can now reacquaint yourself with your family and friends.
 
