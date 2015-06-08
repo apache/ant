@@ -126,7 +126,10 @@ value, in the file <code>${src}/build.properties</code></p>
      &lt;substitution id="id" expression="beta\1alpha"/&gt;<br>
      &lt;substitution refid="id"/&gt;
 </blockquote>
+
+
 <h3>Examples</h3>
+
 <blockquote>
   <pre>
 &lt;replaceregexp byline=&quot;true&quot;&gt;
@@ -141,6 +144,7 @@ value, in the file <code>${src}/build.properties</code></p>
  with &quot;NewProperty&quot; in a properties file, preserving the existing
 value, in all files ending in <code>.properties</code> in the current directory</p>
 
+<br>
 <blockquote>
 <pre>&lt;replaceregexp match="\s+" replace=" " flags="g" byline="true"&gt;
     &lt;fileset dir="${html.dir}" includes="**/*.html"/&gt;
@@ -148,7 +152,6 @@ value, in all files ending in <code>.properties</code> in the current directory<
 </pre></blockquote>
 <p>replaces all whitespaces (blanks, tabs, etc) by one blank remaining the
 line separator. So with input
-
 <blockquote>
 <pre>
 &lt;html&gt;    &lt;body&gt;
@@ -156,11 +159,45 @@ line separator. So with input
 &lt;&lt;TAB&gt;&gt; &lt;/body&gt;&lt;/html&gt;
 </pre></blockquote>
 would converted to
+<blockquote>
 <pre>
 &lt;html&gt; &lt;body&gt;
  &lt;h1&gt; T E S T &lt;/h1&gt; &lt;/body&gt;&lt;/html&gt;
 </pre>
+</blockquote>
 </p>
+
+<br><!-- small distance from code of the previous example -->
+<blockquote>
+<pre>&lt;replaceregexp match="\\n" replace="${line.separator}" flags="g" byline="true"&gt;
+    &lt;fileset dir="${dir}"/&gt;
+&lt;/replaceregexp&gt;
+</pre></blockquote>
+<p>replaces all <tt>\n</tt> markers (beware the quoting of the backslash) by a line break.
+So with input
+<blockquote>
+<pre>
+one\ntwo\nthree
+</pre></blockquote>
+would converted to
+<blockquote>
+<pre>
+one
+two
+three
+</pre>
+</blockquote>
+Beware that inserting line breaks could break file syntax. For example in xml:
+<blockquote>
+<pre>
+&lt;root&gt;
+  &lt;text&gt;line breaks \n should work in text&lt;/text&gt;
+  &lt;attribute value=&quot;but breaks \n attributes&quot; /&gt;
+&lt;/root&gt;
+</pre>
+</blockquote>
+</p>
+
 
 
 </body>
