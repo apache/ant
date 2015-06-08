@@ -26,7 +26,7 @@
 <h2><a name="schemavalidate">SchemaValidate</a></h2>
 <h3>Description</h3>
 
-<p>This task validates XML files described by an XML Schema.
+<p>This <tt>schemavalidate</tt> task validates XML files described by an XML Schema.
 The task extends the XmlValidate task with XSD-specific features.</p>
 <ol>
 <li>The parser is created validating and namespace aware
@@ -253,7 +253,7 @@ Validate a document against an XML schema. The document does not declare
 any schema itself, which is why the <tt>noNamespaceFile</tt> is needed. 
 <pre>
     &lt;presetdef name="validate-soap"&gt;
-      &lt;schemavalidate &gt;
+      &lt;schemavalidate&gt;
         &lt;schema namespace="http://schemas.xmlsoap.org/ws/2003/03/addressing"
           file="${soap.dir}/ws-addressing.xsd" /&gt;
         &lt;schema namespace="http://www.w3.org/2003/05/soap-envelope"
