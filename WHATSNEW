@@ -7,6 +7,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * ArrayIndexOutOfBoundsException when ZIP extra fields are read and
+   the entry contains an UnparseableExtraField.
+   https://issues.apache.org/jira/browse/COMPRESS-317
+
 Other changes:
 --------------
 

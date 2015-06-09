@@ -361,7 +361,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     private ZipExtraField[] getMergedFields() {
         final ZipExtraField[] zipExtraFields =
             copyOf(extraFields, extraFields.length + 1);
-        zipExtraFields[zipExtraFields.length] = unparseableExtra;
+        zipExtraFields[extraFields.length] = unparseableExtra;
         return zipExtraFields;
     }
 
