@@ -39,6 +39,9 @@ public class JavaConstantResource extends AbstractClasspathResource {
     protected InputStream openInputStream(ClassLoader cl) throws IOException {
         Class<?> clazz;
         String constant = getName();
+        if (constant == null) {
+            throw new IOException("Attribute 'name' must be set.");
+        }
         int index1 = constant.lastIndexOf('.');
         if (index1 < 0) {
             throw new IOException("No class name in " + constant);

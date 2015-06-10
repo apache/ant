@@ -43,6 +43,8 @@ explicit use beginning in <b>Ant 1.7</b>.
   <li><a href="#gzipresource">gzipresource</a> - a GZip compressed resource.</li>
   <li><a href="#javaresource">javaresource</a> - a resource loadable
         via a Java classloader.</li>
+  <li><a href="#javaconstant">javaconstant</a> - a constant in a class loadable
+        via a Java classloader.</li>
   <li><a href="#propertyresource">propertyresource</a> - an Ant property.</li>
   <li><a href="#string">string</a> - a text string.</li>
   <li><a href="#tarentry">tarentry</a> - an entry in a tar file.</li>
@@ -164,9 +166,49 @@ implementations are also usable as single-element
 where <b>&lt;classpath&gt;</b> is a <a
 href="../using.html#path">path-like structure</a>.</p>
 
+
+<h4><a name="javaconstant">javaconstant</a></h4>
+<p>Loads the value of a java constant. As a specialisation of 
+<a href="#javaresource">javaresource</a> all of its attributes and nested elements are
+supported. A constant must be specified as <tt>public static</tt> otherwise it could not be loaded.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the resource. Must be specified as full qualified
+      field name.
+    </td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h5>Examples</h5>
+This loads the value of the constant <tt>VERSION</tt> of the <tt>org.acme.Main</tt> class
+into the <tt>version</tt>-property. The classpath for finding that class is provided via
+nested classpath element.
+<pre><code>&lt;loadresource property=&quot;version&quot;&gt;
+   &lt;javaconstant name=&quot;org.acme.Main.VERSION&quot;&gt;
+     &lt;classpath&gt;
+       &lt;pathelement location=&quot;${acme.lib.dir}&quot;/&gt;
+     &lt;/classpath&gt;
+   &lt;/javaconstant&gt;
+ &lt;/loadresource&gt;
+</code></pre>
+
+Create a new file <tt>c:/temp/org.apache.tools.ant.Main.DEFAULT_BUILD_FILENAME</tt> with the content
+of that constant (<tt>build.xml</tt>).
+<pre><code>&lt;copy todir=&quot;c:/temp&quot;&gt;
+  &lt;javaconstant name=&quot;org.apache.tools.ant.Main.DEFAULT_BUILD_FILENAME&quot;/&gt;
+&lt;/copy&gt;</code></pre>
+
+
 <h4><a name="zipentry">zipentry</a></h4>
 
-<p>Represents an entry in a ZIP archive.  The archive can be specified
+<p>Represents an entry in a ZIP archive. The archive can be specified
 using the archive attribute or a nested single-element resource
 collection.  <code>zipentry</code> only supports file system resources
 as nested elements.</p>

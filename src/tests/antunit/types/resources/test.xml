@@ -400,4 +400,61 @@
     </au:assertTrue>
   </target>
 
+  <target name="testJavaConstant">
+    <property name="test.tmp.dir" value="${antunit.tmpdir}/testJavaConstant"/>
+    <mkdir dir="${test.tmp.dir}"/>
+    <echo file="${test.tmp.dir}/SomeClass.java">
+      public class SomeClass {
+          public  static final String CONSTANT   = "constant";
+          public         final String NOT_STATIC = "not-static";
+          private static final String PRIVATE    = "private";
+      }
+    </echo>
+    <javac srcdir="${test.tmp.dir}" destdir="${test.tmp.dir}"/>
+    <path id="tmp.cp">
+      <pathelement location="${test.tmp.dir}"/>
+    </path>
+
+    <loadresource property="actual">
+      <javaconstant name="org.apache.tools.ant.Main.DEFAULT_BUILD_FILENAME"/>
+    </loadresource>
+    <au:assertEquals message="could not read java constant" expected="build.xml" actual="${actual}" />
+
+    <!-- 
+    We can't test for special error messages using built-in tasks 
+    because they catch these messages 
+    -->
+    <au:expectfailure>
+      <loadresource property="p">
+        <javaconstant/>
+      </loadresource>
+    </au:expectfailure>
+    <au:expectfailure>
+      <loadresource property="p">
+        <javaconstant name="org.apache.tools.ant.MissingClass"/>
+      </loadresource>
+    </au:expectfailure>
+    <au:expectfailure>
+      <loadresource property="p">
+        <javaconstant name="SomeClass.CONSTANT2" classpathref="tmp.cp"/>
+      </loadresource>
+     </au:expectfailure>
+    <au:expectfailure>
+      <loadresource property="p">
+        <javaconstant name="SomeClass.PRIVATE">
+          <classpath>
+            <pathelement location="${test.tmp.dir}"/>
+          </classpath>
+        </javaconstant>
+      </loadresource>
+     </au:expectfailure>
+    <au:expectfailure>
+      <loadresource property="p">
+        <javaconstant name="SomeClass.NOT_STATIC"/>
+      </loadresource>
+     </au:expectfailure>
+    
+    <delete dir="${test.tmp.dir}"/>
+  </target>
+
 </project>
