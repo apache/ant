@@ -27,8 +27,8 @@ import java.lang.reflect.Field;
  * This lets you extract values off the classpath and use them elsewhere
  * @since Ant 1.7
  */
-
 public class JavaConstantResource extends AbstractClasspathResource {
+
     /**
      * open the input stream from a specific classloader
      *
@@ -37,20 +37,18 @@ public class JavaConstantResource extends AbstractClasspathResource {
      * @throws IOException if an error occurs.
      */
     protected InputStream openInputStream(ClassLoader cl) throws IOException {
-        Class<?> clazz;
         String constant = getName();
         if (constant == null) {
             throw new IOException("Attribute 'name' must be set.");
         }
-        int index1 = constant.lastIndexOf('.');
-        if (index1 < 0) {
+        int index = constant.lastIndexOf('.');
+        if (index < 0) {
             throw new IOException("No class name in " + constant);
         }
-        int index = index1;
         String classname = constant.substring(0, index);
         String fieldname = constant.substring(index + 1, constant.length());
         try {
-            clazz =
+            Class<?> clazz =
                 cl != null
                 ? Class.forName(classname, true, cl)
                 : Class.forName(classname);
