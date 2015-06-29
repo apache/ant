@@ -23,18 +23,7 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     For more information on performing branching and merging, please visit
     http://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell
 
-
-3.  Before a build :
-
-    the project.version property in build.xml governs the output of
-    ant -version and the naming of the distribution files.
-
-    Update the following files for version number:
-    
-    see at the end of this document the list of files containing
-    version information
-
-4.  Ensure you have all the external libraries that Ant uses in your
+3.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  All dependencies are either provided by
     JDK 1.5.0 or downloadable using
     ant -f fetch.xml -Ddest=optional.
@@ -42,7 +31,7 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     the build with -verbose option and scan for lines beginning with
     "Unable to load...". 
 
-5.  Create a branch just for the release, even if you've decided to
+4.  Create a branch just for the release, even if you've decided to
     not work with long lived branches in step 2.  This branch can be
     removed after the release.
 
@@ -50,9 +39,13 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
     $ git checkout -b prepare_Ant_1.9.5
 
-6.  Make sure that your directory tree is clean by running git status.
+5.  Make sure that your directory tree is clean by running git status.
     Some tests leave behind leftovers which end up in the source
     distribution otherwise.
+
+6.  Set the version number in several files to the required new
+    versions.  See the end of this file for a list of files containing
+    version information.
 
 7.  Next bootstrap, build and run the tests.  Then build the
     distribution on the branch. It is important that this be a clean
@@ -73,7 +66,7 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     http://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
     You have to build it using maven
     
-    You can create a property file .gnupg.properties in your home directory 
+    You can create a property file gnupg.properties in your home directory 
     with your key id
     and pass your key passphrase on the command line with -Dpassword=****
 
