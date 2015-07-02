@@ -13,8 +13,9 @@ Fixed bugs:
 
 Other changes:
 --------------
- * Hidden <javaconstant> resource is published now. It reads the
-   value of a specified java constant.
+
+* Hidden <javaconstant> resource is published now. It reads the
+  value of a specified java constant.
 
 
 Changes from Ant 1.9.4 TO Ant 1.9.5
