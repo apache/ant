@@ -169,7 +169,7 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
        4 hours later, the artefacts will be in the maven central repository.
       
 
-    * Make README.html point to the new RELEASE-NOTES or is a copy of
+    * Make README.html point to the new RELEASE-NOTES or a copy of
       it.
 
 16. Update the ant.apache.org site :
