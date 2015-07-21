@@ -1258,7 +1258,7 @@ public class ZipOutputStream extends FilterOutputStream {
         int extraStart = CFH_FILENAME_OFFSET + nameLen;
         System.arraycopy(extra, 0, buf, extraStart, extra.length);
 
-        int commentStart = extraStart + commentLen;
+        int commentStart = extraStart + extra.length;
 
         // file comment
         System.arraycopy(commentB.array(), commentB.arrayOffset(), buf, commentStart, commentLen);

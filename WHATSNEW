@@ -7,6 +7,11 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * ZipOutputStream could cause an ArrayIndexOutOfBoundsException when
+   adding entries with comments.  This never happens when using Ant as
+   a build tool but may affect users using Ant's zip package as a
+   library.
+
 Other changes:
 --------------
 
