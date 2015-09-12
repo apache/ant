@@ -18,11 +18,33 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testExpandArchiveWithMultipleStreams">
+  <target name="setup">
     <mkdir dir="${output}"/>
+  </target>
+
+  <target name="testExpandArchiveWithMultipleStreams" depends="setup">
     <bunzip2  src="bzip2/multiple.bz2" dest="${output}"/>
     <au:assertFilesMatch expected="bzip2/expected"
                          actual="${output}/multiple"/>
   </target>
 
+  <target name="testWithNonFileResourceToFile" depends="setup">
+    <bunzip2 dest="${output}/greeting.txt">
+      <url url="http://ant.apache.org/webtest/bunzip2/greeting.txt.bz2"/>
+    </bunzip2>
+    <get src="http://ant.apache.org/webtest/gunzip/greeting.txt"
+         dest="${output}/orig.greeting.txt"/>
+    <au:assertFilesMatch expected="${output}/orig.greeting.txt"
+                         actual="${output}/greeting.txt"/>
+  </target>
+
+  <target name="testWithNonFileResourceToDir" depends="setup">
+    <bunzip2 dest="${output}">
+      <url url="http://ant.apache.org/webtest/bunzip2/greeting.txt.bz2"/>
+    </bunzip2>
+    <get src="http://ant.apache.org/webtest/gunzip/greeting.txt"
+         dest="${output}/orig.greeting.txt"/>
+    <au:assertFilesMatch expected="${output}/orig.greeting.txt"
+                         actual="${output}/greeting.txt"/>
+  </target>
 </project>
