@@ -38,7 +38,7 @@
                          actual="${output}/asf-logo.gif"/>
   </target>
 
-  <target name="XtestWithNonFileResourceToFile" depends="setup">
+  <target name="testWithNonFileResourceToFile" depends="setup">
     <gunzip dest="${output}/greeting.txt">
       <url url="http://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>
@@ -48,7 +48,7 @@
                          actual="${output}/greeting.txt"/>
   </target>
 
-  <target name="XtestWithNonFileResourceToDir" depends="setup">
+  <target name="testWithNonFileResourceToDir" depends="setup">
     <gunzip dest="${output}">
       <url url="http://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>

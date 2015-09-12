@@ -131,6 +131,10 @@ public abstract class Unpack extends Task {
         }
 
         if (dest == null) {
+            if (source == null) {
+                throw new BuildException("dest is required when using a non-filesystem source",
+                                         getLocation());
+            }
             dest = new File(source.getParent());
         }
 
@@ -141,7 +145,8 @@ public abstract class Unpack extends Task {
     }
 
     private void createDestFile(String defaultExtension) {
-        String sourceName = source.getName();
+        String sourceName = source == null
+            ? getLastNamePart(srcResource) : source.getName();
         int len = sourceName.length();
         if (defaultExtension != null
             && len > defaultExtension.length()
@@ -192,4 +197,9 @@ public abstract class Unpack extends Task {
         return false;
     }
 
+    private String getLastNamePart(Resource r) {
+        String n = r.getName();
+        int idx = n.lastIndexOf("/");
+        return idx < 0 ? n : n.substring(idx + 1);
+    }
 }
