@@ -12,6 +12,8 @@ Fixed bugs:
    a build tool but may affect users using Ant's zip package as a
    library.
 
+ * <gunzip> and <bunzip2> didn't work for non-filesystem resources.
+
 Other changes:
 --------------
 
