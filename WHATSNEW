@@ -14,6 +14,11 @@ Fixed bugs:
 
  * <gunzip> and <bunzip2> didn't work for non-filesystem resources.
 
+ * <jar> ignored the zip64Mode attribute when creating manifest-only
+   jars.  This resulted in jar files that couldn't be read by Java5.
+   Bugzilla Report 58428
+
+
 Other changes:
 --------------
 

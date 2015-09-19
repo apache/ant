@@ -914,6 +914,7 @@ public class Jar extends Zip {
             zOut = new ZipOutputStream(getDestFile());
 
             zOut.setEncoding(getEncoding());
+            zOut.setUseZip64(getZip64Mode().getMode());
             if (isCompress()) {
                 zOut.setMethod(ZipOutputStream.DEFLATED);
             } else {
