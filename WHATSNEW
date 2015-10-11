@@ -18,6 +18,10 @@ Fixed bugs:
    jars.  This resulted in jar files that couldn't be read by Java5.
    Bugzilla Report 58428
 
+ * <untar> will now detect GNU tar longname/link records even if they
+   don't use the names used by GNU tar itself.  star is known to
+   create archives of that kind.
+   https://issues.apache.org/jira/browse/COMPRESS-324
 
 Other changes:
 --------------
