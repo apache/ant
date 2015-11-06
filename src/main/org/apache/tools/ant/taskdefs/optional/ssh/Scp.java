@@ -29,6 +29,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.util.ResourceUtils;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -49,7 +54,7 @@ public class Scp extends SSHBase {
     private String fromUri;
     private String toUri;
     private boolean preserveLastModified = false;
-    private List fileSets = null;
+    private List<ResourceCollection> rcs = null;
     private boolean isFromRemote, isToRemote;
     private boolean isSftp = false;
     private Integer fileMode, dirMode;
@@ -203,11 +208,20 @@ public class Scp extends SSHBase {
      *
      * @param set FileSet to send to remote host.
      */
-    public void addFileset(final FileSet set) {
-        if (fileSets == null) {
-            fileSets = new LinkedList();
+    public void addFileset(FileSet set) {
+        add(set);
+    }
+
+    /**
+     * Adds a ResourceCollection of local files to transfer to remote host.
+     * @param set ResourceCollection to send to remote host.
+     * @since Ant 1.9.7
+     */
+    public void add(ResourceCollection res) {
+        if (rcs == null) {
+            rcs = new LinkedList<ResourceCollection>();
         }
-        fileSets.add(set);
+        rcs.add(res);
     }
 
     /**
@@ -219,7 +233,7 @@ public class Scp extends SSHBase {
         super.init();
         this.toUri = null;
         this.fromUri = null;
-        this.fileSets = null;
+        this.rcs = null;
     }
 
     /**
@@ -231,15 +245,15 @@ public class Scp extends SSHBase {
         if (toUri == null) {
             throw exactlyOne(TO_ATTRS);
         }
-        if (fromUri == null && fileSets == null) {
+        if (fromUri == null && rcs == null) {
             throw exactlyOne(FROM_ATTRS, "one or more nested filesets");
         }
         try {
             if (isFromRemote && !isToRemote) {
                 download(fromUri, toUri);
             } else if (!isFromRemote && isToRemote) {
-                if (fileSets != null) {
-                    upload(fileSets, toUri);
+                if (rcs != null) {
+                    upload(rcs, toUri);
                 } else {
                     upload(fromUri, toUri);
                 }
@@ -299,18 +313,26 @@ public class Scp extends SSHBase {
         }
     }
 
-    private void upload(final List fileSet, final String toSshUri)
+    private void upload(final List<ResourceCollection> rcs, final String toSshUri)
         throws IOException, JSchException {
         final String file = parseUri(toSshUri);
 
         Session session = null;
         try {
-            final List list = new ArrayList(fileSet.size());
-            for (final Iterator i = fileSet.iterator(); i.hasNext();) {
-                final FileSet set = (FileSet) i.next();
-                final Directory d = createDirectory(set);
-                if (d != null) {
-                    list.add(d);
+            final List<Directory> list = new ArrayList<Directory>(rcs.size());
+            for (final Iterator<ResourceCollection> i = rcs.iterator(); i.hasNext();) {
+                final ResourceCollection rc = (ResourceCollection) i.next();
+                if (rc instanceof FileSet && rc.isFilesystemOnly()) {
+                    FileSet fs = (FileSet) rc;
+                    final Directory d = createDirectory(fs);
+                    if (d != null) {
+                        list.add(d);
+                    }
+                } else {
+                	List<Directory> ds = createDirectoryCollection(rc);
+                	if (ds !=null) {
+                		list.addAll(ds);
+                	}
                 }
             }
             if (!list.isEmpty()) {
@@ -451,6 +473,50 @@ public class Scp extends SSHBase {
             root = null;
         }
         return root;
+    }
+
+    private List<Directory> createDirectoryCollection(final ResourceCollection rc) {
+        // not a fileset or contains non-file resources
+        if (!rc.isFilesystemOnly()) {
+            throw new BuildException("Only FileSystem resources are supported.");
+        }
+
+        List<Directory> ds = new ArrayList<Directory>();
+        for (Resource r : rc) {
+	        if (!r.isExists()) {
+                throw new BuildException("Could not find resource " + r.toLongString() + " to scp.");
+            }
+
+            FileProvider fp = r.as(FileProvider.class);
+            if (fp == null) {
+                throw new BuildException("Resource " + r.toLongString() + " is not a file.");
+            }
+
+            FileResource fr = ResourceUtils.asFileResource(fp);
+            File baseDir = fr.getBaseDir();
+            if (baseDir == null) {
+                throw new BuildException("basedir for resource " + r.toLongString() + " is undefined.");
+            }
+
+            // if the basedir is set, the name will be relative to that
+            String name = r.getName();
+            Directory root = new Directory(baseDir);
+            Directory current = root;
+            File currentParent = baseDir;
+            final String[] path = Directory.getPath(name);
+            for (int i = 0; i < path.length; i++) {
+                final File file = new File(currentParent, path[i]);
+                if (file.isDirectory()) {
+                    current.addDirectory(new Directory(file));
+                    current = current.getChild(file);
+                    currentParent = current.getDirectory();
+                } else if (file.isFile()) {
+                    current.addFile(file);
+                }
+            }
+            ds.add(root);
+    	}
+        return ds;
     }
 
     private void setFromUri(final String fromUri) {
