@@ -29,6 +29,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.FilesMatch;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.resources.Sort;
+import org.apache.tools.ant.types.resources.comparators.Name;
+import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.junit.After;
 import org.junit.Before;
@@ -145,6 +148,36 @@ public class ScpTest {
             assertTrue("Assert file '" + f.getPath() + "' and file '" +
                     f2.getPath() + "'", match.eval() );
         }
+    }
+
+    @Test
+    public void testMultiResourceCollectionUpload() throws IOException {
+        assertNotNull("system property scp.tmp must be set", tempDir);
+        List uploadList = new ArrayList();
+        for (int i = 0; i < 5; i++) {
+            uploadList.add(createTemporaryFile());
+        }
+
+        Scp scp = createTask();
+
+        // reverse order resource collection
+        Sort sort = new Sort();
+        sort.setProject(scp.getProject());
+        Reverse reverse = new Reverse();
+        reverse.add(new Name());
+        sort.add(reverse);
+
+        FilenameSelector selector = new FilenameSelector();
+        selector.setName("scp*");
+        FileSet fileset = new FileSet();
+        fileset.setProject(scp.getProject());
+        fileset.setDir(tempDir);
+        fileset.addFilename(selector);
+        sort.add(fileset);
+        scp.add(sort);
+
+        scp.setTodir(sshHostUri);
+        scp.execute();
     }
 
     @Test
