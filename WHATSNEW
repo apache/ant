@@ -26,6 +26,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * <scp> now supports (filesystem-only) resource collections in
+   addition to filesets.
+   Bugzilla Report 50769
 
 Changes from Ant 1.9.5 TO Ant 1.9.6
 ===================================
