@@ -113,11 +113,17 @@ public class ScriptRunnerCreator {
         if (!manager.equals(AUTO) && !manager.equals(checkManager)) {
             return null;
         }
-        if (scriptLoader.getResource(LoaderUtils.classNameToResource(managerClass)) == null) {
-            return null;
-        }
         if (managerClass.equals(BSF_MANAGER)) {
+            if (scriptLoader.getResource(LoaderUtils.classNameToResource(managerClass)) == null) {
+                return null;
+            }
             new ScriptFixBSFPath().fixClassLoader(scriptLoader, language);
+        } else {
+            try {
+                Class.forName(managerClass, true, scriptLoader);
+            } catch (Exception ex) {
+                return null;
+            }
         }
         try {
             runner = (ScriptRunnerBase) Class.forName(

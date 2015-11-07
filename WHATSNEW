@@ -30,6 +30,9 @@ Fixed bugs:
    create archives of that kind.
    https://issues.apache.org/jira/browse/COMPRESS-324
 
+ * <script> could fail to find javax.script on JDK9 with Jigsaw.
+   Bugzilla Report 58271
+
 Other changes:
 --------------
 
