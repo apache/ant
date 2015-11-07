@@ -4,6 +4,13 @@ Changes from Ant 1.9.6 TO Ant 1.9.7
 Changes that could break older environments:
 -------------------------------------------
 
+ * <exec> and <apply> used to ignore the dir attribute if it was the
+   same as the current working directory.  They now no longer do,
+   which changes the behavior for vmlauncher="false" which would have
+   used the project's basedir rather than the current working
+   directory in that case.
+   Bugzilla Report 58555
+
 Fixed bugs:
 -----------
 

@@ -362,9 +362,7 @@ public class Execute {
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
-        workingDirectory =
-            (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
-            ? null : wd;
+        workingDirectory = wd;
     }
 
     /**

@@ -95,7 +95,12 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">dir</td>
     <td valign="top">the directory in which the command should be executed.</td>
-    <td align="center" valign="top">No</td>
+    <td align="center" valign="top">No.<br/>
+      <strong>Note:</strong> the default used when dir has not been
+      specified depends on the <code>vmlauncher</code> attribute.  If
+      <code>vmlauncher</code> is <code>true</code> the task will use
+      the current working directory, otherwise it uses the project's basedir.
+    </td>
   </tr>
   <tr>
     <td valign="top">relative</td>
