@@ -100,7 +100,7 @@ public class ScpTest {
         assertFalse("Assert that the testFile does not exist.", testFile.exists());
 
         // download
-        scpTask = createTask(); 
+        scpTask = createTask();
         scpTask.setFile( sshHostUri + "/" + uploadFile.getName() );
         scpTask.setTodir( testFile.getPath() );
         scpTask.execute();
@@ -150,24 +150,24 @@ public class ScpTest {
     @Test
     public void testRemoteToDir() throws IOException {
         Scp scpTask = createTask();
-        
+
         // first try an invalid URI
         try {
             scpTask.setRemoteTodir( "host:/a/path/without/an/at" );
             fail("Expected a BuildException to be thrown due to invalid"
-                    + " remoteToDir"); 
+                    + " remoteToDir");
         }
         catch (BuildException e)
         {
             // expected
             //TODO we should be asserting a value in here
         }
-        
+
         // And this one should work
         scpTask.setRemoteTodir( "user:password@host:/a/path/with/an/at" );
         // no exception
     }
-    
+
     public void addCleanup( File file ) {
         cleanUpList.add( file );
     }
