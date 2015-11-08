@@ -203,10 +203,11 @@ for more information.  This task has been tested with jsch-0.1.2 and later.</p>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
-<h4>fileset</h4>
- <p><a href="../Types/fileset.html">FileSet</a>s are used to select
-sets of files to copy.
- To use a fileset, the <code>todir</code> attribute must be set.</p>
+<h4>fileset or resource collections</h4>
+ <p><a href="../Types/fileset.html">FileSet</a>s or <a href="../Types/resources.html#collection">Resource Collection</a>s are used to select
+ groups of files to copy. To use a fileset or a resource collection, the <code>todir</code> attribute must be set.</p>
+
+Prior to Ant 1.9.7 only &lt;fileset&gt; has been supported as a nested element.
 
 <h3>Examples</h3>
 <p><b>Copy a single local file to a remote machine</b></p>
@@ -253,9 +254,18 @@ authentication.</b></p>
       &lt;include name=&quot;**/*.java&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/scp&gt;
-
+</pre>
+<p><b>Copy a set of files to a remote directory in reverse last-modified order</b></p>
+<pre>
   &lt;scp todir=&quot;user:password@somehost:/home/chuck&quot;&gt;
-    &lt;fileset dir=&quot;src_dir&quot; excludes=&quot;**/*.java&quot;/&gt;
+    &lt;sort&gt;
+      &lt;reverse&gt;
+        &lt;date /&gt;
+      &lt;/reverse&gt;
+      &lt;fileset dir=&quot;src_dir&quot;&gt;
+        &lt;include name=&quot;**/*&quot; /&gt;
+      &lt;/fileset&gt;
+    &lt;/sort&gt;
   &lt;/scp&gt;
 </pre>
 
