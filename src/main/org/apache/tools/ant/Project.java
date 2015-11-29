@@ -1845,7 +1845,7 @@ public class Project implements ResourceFactory {
         for (int j = 0; j < root.length; j++) {
             buf.append((j == 0) ? " `" : ", `").append(root[j]).append('\'');
         }
-        buf.append(" is " + ret);
+        buf.append(" is ").append(ret);
         log(buf.toString(), MSG_VERBOSE);
 
         final Vector<Target> complete = (returnAll) ? ret : new Vector<Target>(ret);

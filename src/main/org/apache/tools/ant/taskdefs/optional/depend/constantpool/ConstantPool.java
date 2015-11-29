@@ -348,7 +348,7 @@ public class ConstantPool {
         final int size = entries.size();
 
         for (int i = 0; i < size; ++i) {
-            sb.append("[" + i + "] = " + getEntry(i) + "\n");
+            sb.append('[').append(i).append("] = ").append(getEntry(i)).append('\n');
         }
 
         return sb.toString();

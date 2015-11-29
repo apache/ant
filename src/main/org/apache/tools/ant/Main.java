@@ -1287,7 +1287,7 @@ public class Main implements AntMain {
             spaces += spaces;
         }
         final StringBuilder msg = new StringBuilder();
-        msg.append(heading + lSep + lSep);
+        msg.append(heading).append(lSep).append(lSep);
         final int size = names.size();
         for (int i = 0; i < size; i++) {
             msg.append(" ");
