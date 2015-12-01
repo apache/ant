@@ -208,8 +208,6 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
 19. Add a new release tag to doap_Ant.rdf in Ant's site.
 
-    Add a new release at https://reporter.apache.org/
-
 20. Update the Apache Reporter System
 
     https://reporter.apache.org/addrelease.html?ant
