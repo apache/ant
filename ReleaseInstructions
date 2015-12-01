@@ -160,15 +160,14 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
       https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
 
-    *  release the maven artifacts using the web interface of nexus under https://repository.apache.org
-       login using your Apache credentials
-       in the left pane, below "build promotion", click on the "Stagings Repositories" links
-       expand org.apache.ant 
-       select the checkbox next to the upload that you just did
-       and click the button "Release".
-       4 hours later, the artefacts will be in the maven central repository.
+    * release the maven artifacts using the web interface of nexus under https://repository.apache.org
+      login using your Apache credentials
+      in the left pane, below "build promotion", click on the "Stagings Repositories" links
+      expand org.apache.ant 
+      select the checkbox next to the upload that you just did
+      and click the button "Release".
+      4 hours later, the artefacts will be in the maven central repository.
       
-
     * Make README.html point to the new RELEASE-NOTES or a copy of
       it.
 
@@ -211,9 +210,13 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
     Add a new release at https://reporter.apache.org/
 
-20. If you've created a temporary branch you can delete it now. 
+20. Update the Apache Reporter System
 
-21. You can now reacquaint yourself with your family and friends.
+    https://reporter.apache.org/addrelease.html?ant
+
+21. If you've created a temporary branch you can delete it now. 
+
+22. You can now reacquaint yourself with your family and friends.
 
 (*)  Mirrors : the srcdownload.html, bindownload.html and
      manualdownload.html each list a number of mirrors. For ant 1.6.0
