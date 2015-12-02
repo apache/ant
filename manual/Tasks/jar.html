@@ -559,7 +559,7 @@ Sealed: false</code></pre></blockquote>
   The following shows how to create a jar file specifying a service
   with an implementation of the JDK6 scripting interface:
 </p>
-<blockquote><pre>&lt;jar jarfile="pinky.jar"&gt;
+<blockquote><pre>&lt;jar destfile="pinky.jar"&gt;
   &lt;fileset dir="build/classes"/&gt;
   &lt;service type="javax.script.ScriptEngineFactory"
            provider="org.acme.PinkyLanguage"/&gt;
@@ -573,7 +573,7 @@ Sealed: false</code></pre></blockquote>
   with two implementations of the JDK6 scripting interface:
 </p>
 <blockquote><pre>
-&lt;jar jarfile="pinkyandbrain.jar"&gt;
+&lt;jar destfile="pinkyandbrain.jar"&gt;
   &lt;fileset dir="classes"/&gt;
   &lt;service type="javax.script.ScriptEngineFactory"&gt;
     &lt;provider classname="org.acme.PinkyLanguage"/&gt;
