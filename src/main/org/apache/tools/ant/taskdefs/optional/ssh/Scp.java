@@ -124,8 +124,8 @@ public class Scp extends SSHBase {
     }
 
     /**
-     * Sets flag to determine if file timestamp from
-     * remote system is to be preserved during copy.
+     * Sets flag to determine if file timestamp
+     * is to be preserved during copy.
      * @since Ant 1.8.0
      */
     public void setPreservelastmodified(final boolean yesOrNo) {
@@ -340,7 +340,7 @@ public class Scp extends SSHBase {
                 ScpToMessage message = null;
                 if (!isSftp) {
                     message = new ScpToMessage(getVerbose(), session,
-                                               list, file);
+                                               list, file, preserveLastModified);
                 } else {
                     message = new ScpToMessageBySftp(getVerbose(), session,
                                                      list, file);
@@ -372,7 +372,8 @@ public class Scp extends SSHBase {
             if (!isSftp) {
                 message =
                     new ScpToMessage(getVerbose(), session,
-                                     getProject().resolveFile(fromPath), file);
+                                     getProject().resolveFile(fromPath), file,
+                                     preserveLastModified);
             } else {
                 message =
                     new ScpToMessageBySftp(getVerbose(), session,
