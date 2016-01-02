@@ -104,8 +104,8 @@
   <property name="chmod.maxparallel" value="250"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
-  <property name="javac.target" value="1.5"/>
-  <property name="javac.source" value="1.5"/>
+  <property name="javac.target" value="1.6"/>
+  <property name="javac.source" value="1.6"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
