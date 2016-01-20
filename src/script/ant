@@ -35,7 +35,8 @@ for arg in "$@" ; do
     if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ] ; then
       show_help=true
     fi
-    ant_exec_args="$ant_exec_args \"$arg\""
+    # wrap all arguments as "" strings, escape any internal back-slash or double-quote characters
+    ant_exec_args="$ant_exec_args \"$(printf '%s' "$arg" | sed -e 's@"\|\\@\\\0@g' )\""
   fi
 done
 
@@ -333,4 +334,5 @@ ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -
 if $ant_exec_debug ; then
     echo $ant_exec_command $ant_exec_args
 fi
-eval $ant_exec_command "$ant_exec_args"
+
+eval $ant_exec_command $ant_exec_args
