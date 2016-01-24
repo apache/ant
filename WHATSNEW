@@ -33,6 +33,11 @@ Fixed bugs:
  * <script> could fail to find javax.script on JDK9 with Jigsaw.
    Bugzilla Report 58271
 
+ * <import> sometimes failed to normalize file names which could lead
+   to files getting imported twice which in turn could lead to targets
+   getting executed twice.
+   Bugzilla Report 58886
+
 Other changes:
 --------------
 

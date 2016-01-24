@@ -241,7 +241,7 @@ public class ImportTask extends Task {
 
         if (file != null) {
             if (isExistingAbsoluteFile(file)) {
-                return new FileResource(new File(file));
+                return new FileResource(FILE_UTILS.normalize(file));
             }
 
             File buildFile =
