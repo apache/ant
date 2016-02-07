@@ -41,6 +41,10 @@ Fixed bugs:
  * TarInputStream now properly extraxt directory entries with a
    non-zero size.
 
+ * <union> would drop file resources pointing to the same file but
+   using different names.
+   Bugzilla Report 57965
+
 Other changes:
 --------------
 
