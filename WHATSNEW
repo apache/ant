@@ -38,6 +38,9 @@ Fixed bugs:
    getting executed twice.
    Bugzilla Report 58886
 
+ * TarInputStream now properly extraxt directory entries with a
+   non-zero size.
+
 Other changes:
 --------------
 

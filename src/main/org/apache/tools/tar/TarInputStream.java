@@ -177,6 +177,9 @@ public class TarInputStream extends FilterInputStream {
      */
     @Override
     public int available() throws IOException {
+        if (isDirectory()) {
+            return 0;
+        }
         if (entrySize - entryOffset > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
         }
@@ -195,6 +198,9 @@ public class TarInputStream extends FilterInputStream {
      */
     @Override
     public long skip(long numToSkip) throws IOException {
+        if (numToSkip <= 0 || isDirectory()) {
+            return 0;
+        }
         // REVIEW
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
@@ -563,7 +569,7 @@ public class TarInputStream extends FilterInputStream {
     public int read(byte[] buf, int offset, int numToRead) throws IOException {
         int totalRead = 0;
 
-        if (entryOffset >= entrySize) {
+        if (entryOffset >= entrySize || isDirectory()) {
             return -1;
         }
 
@@ -655,6 +661,10 @@ public class TarInputStream extends FilterInputStream {
      */
     public boolean canReadEntryData(TarEntry te) {
         return !te.isGNUSparse();
+    }
+
+    private boolean isDirectory() {
+        return currEntry != null && currEntry.isDirectory();
     }
 }
 
