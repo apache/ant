@@ -33,7 +33,7 @@
 
   <target name="testDefaultTarget">
     <au:assertPropertyEquals
-       name="ant.project.default-target" value="default target"/>
+       name="ant.project.default-target" value="antunit"/>
   </target>
 
   <target name="testInvokedTargets">
