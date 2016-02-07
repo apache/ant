@@ -48,6 +48,9 @@ Other changes:
    addition to filesets.
    Bugzilla Report 50769
 
+ * The <http> condition has a new optional attribute followRedirects.
+   Bugzilla Report 58840
+
 Changes from Ant 1.9.5 TO Ant 1.9.6
 ===================================
 
