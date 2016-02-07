@@ -45,6 +45,7 @@ import org.apache.tools.ant.listener.SilentLogger;
 import org.apache.tools.ant.property.GetProperty;
 import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ProxySetup;
 
@@ -917,6 +918,16 @@ public class Main implements AntMain {
                                 buildFile.getAbsolutePath());
         project.setUserProperty(MagicNames.ANT_FILE_TYPE,
                                 MagicNames.ANT_FILE_TYPE_FILE);
+
+        // this list doesn't contain the build files default target,
+        // which may be added later unless targets have been specified
+        // on the command line. Therefore the property gets set again
+        // in Project#executeTargets when we can be sure the list is
+        // complete.
+        // Setting it here allows top-level tasks to access the
+        // property.
+        project.setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
+                                CollectionUtils.flattenToString(targets));
     }
 
     /**

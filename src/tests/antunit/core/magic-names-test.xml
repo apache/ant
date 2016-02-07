@@ -17,7 +17,9 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit"
          name="magicnames-test"
-         default="default target">
+         default="antunit">
+
+  <import file="../antunit-base.xml" />
 
   <target name="default target"/>
 
