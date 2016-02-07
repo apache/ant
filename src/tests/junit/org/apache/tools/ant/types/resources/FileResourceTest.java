@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Test Java API of {@link FileResource}.
@@ -118,5 +119,19 @@ public class FileResourceTest {
         FileResource parentSibling = f.getResource("../../bar").as(FileResource.class);
         assertEquals(root, parentSibling.getBaseDir());
         assertEquals("bar", parentSibling.getName());
+    }
+
+    @Test
+    public void testEqualsUsesFiles() {
+        FileResource f1 = new FileResource(new File(root, "foo/a"));
+        FileResource f2 = new FileResource(new File(root + "/foo"), "a");
+        assertEquals(f1, f2);
+    }
+
+    @Test
+    public void testEqualsUsesRelativeNames() {
+        FileResource f1 = new FileResource(root, "foo/a");
+        FileResource f2 = new FileResource(new File(root + "/foo"), "a");
+        assertNotEquals(f1, f2);
     }
 }

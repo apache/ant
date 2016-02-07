@@ -282,7 +282,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
             if (of == null) {
                 return 1;
             }
-            return f.compareTo(of);
+            int compareFiles = f.compareTo(of);
+            return compareFiles != 0 ? compareFiles
+                : getName().compareTo(another.getName());
         }
         return super.compareTo(another);
     }
@@ -305,7 +307,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
         FileResource otherfr = (FileResource) another;
         return getFile() == null
             ? otherfr.getFile() == null
-            : getFile().equals(otherfr.getFile());
+            : getFile().equals(otherfr.getFile()) && getName().equals(otherfr.getName());
     }
 
     /**
