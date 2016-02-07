@@ -284,6 +284,9 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @since Ant 1.7
      */
     public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
         if (isReference()) {
             return getCheckedRef().equals(other);
         }
