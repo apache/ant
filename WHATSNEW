@@ -45,6 +45,11 @@ Fixed bugs:
    using different names.
    Bugzilla Report 57965
 
+ * <replace>'s result was undefined when using the replacefilterfile
+   attribute and some keys inside the properties files have been
+   substrings of other keys. Keys are now sorted by descending size.
+   Bugzilla Report 58997
+
 Other changes:
 --------------
 
