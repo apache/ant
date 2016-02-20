@@ -100,4 +100,97 @@ world=Ant
        resource="${output}/text.txt" value="Hello, Ant!"/>
   </target>
 
+  <target name="testLongestFilterWins" depends="setUp,ph.defineHelpers">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/filter.properties"><![CDATA[
+a=1
+ab=2
+abc=3
+abcd=4
+abcde=5
+abcdef=6
+abcdefg=7
+abcdefgh=8
+abcdefghi=9
+abcdefghij=10
+abcdefghijk=11
+abcdefghijkl=12
+abcdefghijklm=13
+abcdefghijklmn=14
+abcdefghijklmno=15
+abcdefghijklmnop=16
+abcdefghijklmnopq=17
+abcdefghijklmnopqr=18
+abcdefghijklmnopqrs=19
+abcdefghijklmnopqrst=20
+abcdefghijklmnopqrstu=21
+abcdefghijklmnopqrstuv=22
+abcdefghijklmnopqrstuvw=23
+abcdefghijklmnopqrstuvwx=24
+abcdefghijklmnopqrstuvwxy=25
+abcdefghijklmnopqrstuvwxyz=26
+    ]]></echo>
+    <echo file="${output}/text.txt"><![CDATA[
+a
+ab
+abc
+abcd
+abcde
+abcdef
+abcdefg
+abcdefgh
+abcdefghi
+abcdefghij
+abcdefghijk
+abcdefghijkl
+abcdefghijklm
+abcdefghijklmn
+abcdefghijklmno
+abcdefghijklmnop
+abcdefghijklmnopq
+abcdefghijklmnopqr
+abcdefghijklmnopqrs
+abcdefghijklmnopqrst
+abcdefghijklmnopqrstu
+abcdefghijklmnopqrstuv
+abcdefghijklmnopqrstuvw
+abcdefghijklmnopqrstuvwx
+abcdefghijklmnopqrstuvwxy
+abcdefghijklmnopqrstuvwxyz
+    ]]></echo>
+    <echo file="${output}/expected.txt"><![CDATA[
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+    ]]></echo>
+    <replace replacefilterresource="${input}/filter.properties">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertFilesMatch expected="${output}/expected.txt"
+                         actual="${output}/text.txt"/>
+  </target>
+
 </project>
