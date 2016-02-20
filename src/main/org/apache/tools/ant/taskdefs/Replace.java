@@ -31,11 +31,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -960,7 +960,8 @@ public class Replace extends MatchingTask {
      * strings are tried later.
      */
     private Iterator<Object> getOrderedIterator(Properties props) {
-        Set<Object> keys = new TreeSet(new Comparator<Object>() {
+        List<Object> keys = new ArrayList<Object>(props.keySet());
+        Collections.sort(keys, new Comparator<Object>() {
                 @Override
                 public int compare(Object key1, Object key2) {
                     return compare(key1.toString(), key2.toString());
@@ -970,7 +971,6 @@ public class Replace extends MatchingTask {
                     return key2.length() - key1.length();
                 }
             });
-        keys.addAll(props.keySet());
         return keys.iterator();
     }
 }
