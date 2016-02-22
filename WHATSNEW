@@ -50,6 +50,12 @@ Fixed bugs:
    substrings of other keys. Keys are now sorted by descending size.
    Bugzilla Report 58997
 
+ * Ant fails to run when arguments contain double-quote character.
+   Bugzilla Report 58898
+
+ * Ant fails to run if ANT_HOME contains a double-quote character.
+   Bugzilla Report 58874
+
 Other changes:
 --------------
 
