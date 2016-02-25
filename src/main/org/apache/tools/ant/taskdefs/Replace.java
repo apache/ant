@@ -962,7 +962,7 @@ public class Replace extends MatchingTask {
     private Iterator<Object> getOrderedIterator(Properties props) {
         List<Object> keys = new ArrayList<Object>(props.keySet());
         Collections.sort(keys, new Comparator<Object>() {
-                @Override
+                //Override annotation is not supported as long as we want to support building Ant on Java 1.5
                 public int compare(Object key1, Object key2) {
                     return compare(key1.toString(), key2.toString());
                 }
