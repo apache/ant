@@ -142,11 +142,16 @@ public class Java extends Task {
      */
     protected void checkConfiguration() throws BuildException {
         String classname = getCommandLine().getClassname();
-        if (classname == null && getCommandLine().getJar() == null) {
+        String module = getCommandLine().getModule();
+        if (classname == null && getCommandLine().getJar() == null && module == null) {
             throw new BuildException("Classname must not be null.");
         }
         if (!fork && getCommandLine().getJar() != null) {
             throw new BuildException("Cannot execute a jar in non-forked mode."
+                                     + " Please set fork='true'. ");
+        }
+        if (!fork && getCommandLine().getModule() != null) {
+            throw new BuildException("Cannot execute a module in non-forked mode."
                                      + " Please set fork='true'. ");
         }
         if (spawn && !fork) {
@@ -290,6 +295,36 @@ public class Java extends Task {
     }
 
     /**
+     * Set the modulepath to be used when running the Java class.
+     *
+     * @param mp an Ant Path object containing the modulepath.
+     * @since ???
+     */
+    public void setModulepath(Path mp) {
+        createModulepath().append(mp);
+    }
+
+    /**
+     * Add a path to the modulepath.
+     *
+     * @return created modulepath.
+     * @since ???
+     */
+    public Path createModulepath() {
+        return getCommandLine().createModulepath(getProject()).createPath();
+    }
+
+    /**
+     * Add a path to the upgrademodulepath.
+     *
+     * @return created upgrademodulepath.
+     * @since ???
+     */
+    public Path createUpgrademodulepath() {
+        return getCommandLine().createUpgrademodulepath(getProject()).createPath();
+    }
+
+    /**
      * Set the permissions for the application run inside the same JVM.
      * @since Ant 1.6
      * @return Permissions.
@@ -316,8 +351,8 @@ public class Java extends Task {
      * @throws BuildException if there is also a main class specified.
      */
     public void setJar(File jarfile) throws BuildException {
-        if (getCommandLine().getClassname() != null) {
-            throw new BuildException("Cannot use 'jar' and 'classname' "
+        if (getCommandLine().getClassname() != null || getCommandLine().getModule() != null) {
+            throw new BuildException("Cannot use 'jar' with 'classname' or 'module' "
                                      + "attributes in same command.");
         }
         getCommandLine().setJar(jarfile.getAbsolutePath());
@@ -336,6 +371,22 @@ public class Java extends Task {
                                      + "attributes in same command");
         }
         getCommandLine().setClassname(s);
+    }
+
+    /**
+     * Set the Java module to execute.
+     *
+     * @param module the name of the module.
+     *
+     * @throws BuildException if the jar attribute has been set.
+     * @since ???
+     */
+    public void setModule(String module) throws BuildException {
+        if (getCommandLine().getJar() != null) {
+            throw new BuildException("Cannot use 'jar' and 'module' "
+                                     + "attributes in same command");
+        }
+        getCommandLine().setModule(module);
     }
 
     /**

@@ -41,6 +41,8 @@ import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
+import org.apache.tools.ant.types.Path;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -118,8 +120,92 @@ public class JavaTest {
             buildRule.executeTarget("testClassnameAndJar");
             fail("Build exception should have been thrown - both classname and JAR are not allowed");
         } catch (BuildException ex) {
-            assertEquals("Cannot use 'jar' and 'classname' attributes in same command.", ex.getMessage());
+            assertEquals("Cannot use 'jar' with 'classname' or 'module' attributes in same command.", ex.getMessage());
         }
+    }
+
+    @Test
+    public void testJarAndModule() {
+        try {
+            buildRule.executeTarget("testJarAndModule");
+            fail("Build exception should have been thrown - both module and JAR are not allowed");
+        } catch (BuildException ex) {
+            assertEquals("Cannot use 'jar' and 'module' attributes in same command", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testModuleAndJar() {
+        try {
+            buildRule.executeTarget("testModuleAndJar");
+            fail("Build exception should have been thrown - both module and JAR are not allowed");
+        } catch (BuildException ex) {
+            assertEquals("Cannot use 'jar' with 'classname' or 'module' attributes in same command.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testClassnameAndModule() {
+        buildRule.executeTarget("testClassnameAndModule");
+    }
+
+    @Test
+    public void testModuleAndClassname() {
+        buildRule.executeTarget("testModuleAndClassname");
+    }
+
+    @Test
+    public void testModule() {
+        buildRule.executeTarget("testModule");
+    }
+
+    @Test
+    public void testModuleCommandLine() {
+        final String moduleName = "TestModule"; //NOI18N
+        final String arg = "appArg";    //NOI18N
+        final Java java = new Java();
+        java.setFork(true);
+        java.setModule(moduleName);
+        java.setJvmargs("-Xmx128M");
+        java.setArgs(arg);
+        final String[] cmdLine = java.getCommandLine().getCommandline();
+        Assert.assertNotNull("Has command line.", cmdLine);
+        assertEquals("Command line should have 5 elements", 5, cmdLine.length);
+        assertEquals("Last command line element should be java argument: " + arg,
+                arg,
+                cmdLine[cmdLine.length-1]);
+        assertEquals("The command line element at index 3 should be module name: " + moduleName,
+                moduleName,
+                cmdLine[cmdLine.length-2]);
+        assertEquals("The command line element at index 2 should be -m",
+                "-m",
+                cmdLine[cmdLine.length-3]);
+    }
+
+    @Test
+    public void testModuleAndClassnameCommandLine() {
+        final String moduleName = "TestModule"; //NOI18N
+        final String className = "org.apache.Test"; //NOI18N
+        final String moduleClassPair= String.format("%s/%s", moduleName, className);
+        final String arg = "appArg";    //NOI18N
+        final Java java = new Java();
+        java.setFork(true);
+        java.setModule(moduleName);
+        java.setClassname(className);
+        java.setJvmargs("-Xmx128M");    //NOI18N
+        java.setArgs(arg);
+        final String[] cmdLine = java.getCommandLine().getCommandline();
+        Assert.assertNotNull("Has command line.", cmdLine);
+        assertEquals("Command line should have 5 elements", 5, cmdLine.length);
+        assertEquals("Last command line element should be java argument: " + arg,
+                arg,
+                cmdLine[cmdLine.length-1]);
+        assertEquals("The command line element at index 3 should be module class pair: " + moduleClassPair,
+                moduleClassPair,
+                cmdLine[cmdLine.length-2]);
+        assertEquals("The command line element at index 2 should be -m",
+                "-m",
+                cmdLine[cmdLine.length-3]);
     }
 
     @Test
