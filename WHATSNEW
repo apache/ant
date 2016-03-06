@@ -56,6 +56,10 @@ Fixed bugs:
  * Ant fails to run if ANT_HOME contains a double-quote character.
    Bugzilla Report 58874
 
+ * Definer's way to parse URLs from classloader breaks with
+   recent Java 9 builds (b108).
+   Bugzilla Report 59130
+
 Other changes:
 --------------
 

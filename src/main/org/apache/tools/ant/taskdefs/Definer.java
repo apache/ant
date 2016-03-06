@@ -256,7 +256,7 @@ public abstract class Definer extends DefBase {
                 URL url = urls.nextElement();
 
                 int fmt = this.format;
-                if (url.toString().toLowerCase(Locale.ENGLISH).endsWith(".xml")) {
+                if (url.getPath().toLowerCase(Locale.ENGLISH).endsWith(".xml")) {
                     fmt = Format.XML;
                 }
 
