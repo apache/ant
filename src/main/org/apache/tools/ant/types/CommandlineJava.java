@@ -347,7 +347,7 @@ public class CommandlineJava implements Cloneable {
         if (executableType == ExecutableType.MODULE) {
             javaCommand.setExecutable(createModuleClassPair(
                     parseModuleFromModuleClassPair(javaCommand.getExecutable()),
-                    classname));
+                    classname), false);
         } else {
             javaCommand.setExecutable(classname);
             executableType = ExecutableType.CLASS;
@@ -382,17 +382,18 @@ public class CommandlineJava implements Cloneable {
         } else {
             switch (executableType) {
                 case JAR:
-                    javaCommand.setExecutable(module);
+                    javaCommand.setExecutable(module, false);
                     break;
                 case CLASS:
                     javaCommand.setExecutable(createModuleClassPair(
                             module,
-                            javaCommand.getExecutable()));
+                            javaCommand.getExecutable()), false);
                     break;
                 case MODULE:
                     javaCommand.setExecutable(createModuleClassPair(
                             module,
-                            parseClassFromModuleClassPair(javaCommand.getExecutable())));
+                            parseClassFromModuleClassPair(javaCommand.getExecutable())),
+                                              false);
                     break;
             }
         }
@@ -543,7 +544,8 @@ public class CommandlineJava implements Cloneable {
             listIterator.add("-m");
         }
         // this is the classname to run as well as its arguments.
-        // in case of 'executeJar', the executable is a jar file.
+        // in case of ExecutableType.JAR, the executable is a jar file,
+        // in case of ExecutableType.MODULE, the executable is a module name, portentially including a class name.
         javaCommand.addCommandToList(listIterator);
     }
 

@@ -318,11 +318,25 @@ public class Commandline implements Cloneable {
      * @param executable the String executable name.
      */
     public void setExecutable(String executable) {
+        setExecutable(executable, true);
+    }
+
+    /**
+     * Set the executable to run.
+     *
+     * @param executable the String executable name.
+     * @param translateFileSeparator if {@code true} all file separators in the string
+     * are converted to the platform specific value.
+     *
+     * @since Ant 1.9.7
+     */
+    public void setExecutable(String executable, boolean translateFileSeparator) {
         if (executable == null || executable.length() == 0) {
             return;
         }
-        this.executable = executable.replace('/', File.separatorChar)
-            .replace('\\', File.separatorChar);
+        this.executable = translateFileSeparator
+            ? executable.replace('/', File.separatorChar).replace('\\', File.separatorChar)
+            : executable;
     }
 
     /**
