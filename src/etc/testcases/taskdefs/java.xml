@@ -44,6 +44,9 @@
   <property name="pipeapp"
     value="org.apache.tools.ant.taskdefs.JavaTest$$PipeEntryPoint" />
 
+  <property name="module"
+    value="TestModule" />
+
   <target name="testNoJarNoClassname">
     <java/>
   </target>
@@ -59,6 +62,26 @@
 
   <target name="testClassnameAndJar">
     <java classname="${app}" jar="test.jar"  />
+  </target>
+
+  <target name="testModuleAndJar">
+    <java module="${module}" jar="test.jar"  />
+  </target>
+
+  <target name="testJarAndModule">
+    <java jar="test.jar" module="${module}"  />
+  </target>
+
+  <target name="testClassnameAndModule">
+    <java classname="${app}" module="${module}" fork="true"/>
+  </target>
+
+  <target name="testModuleAndClassname">
+    <java module="${module}" classname="${app}" fork="true"/>
+  </target>
+
+  <target name="testModule">
+    <java module="${module}" fork="true"/>
   </target>
 
   <target name="testRun">
