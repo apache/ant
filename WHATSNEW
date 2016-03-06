@@ -70,6 +70,9 @@ Other changes:
  * The <http> condition has a new optional attribute followRedirects.
    Bugzilla Report 58840
 
+ * <java> now supports Java9 modules.
+   https://github.com/apache/ant/pull/15
+
 Changes from Ant 1.9.5 TO Ant 1.9.6
 ===================================
 
