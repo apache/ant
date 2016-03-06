@@ -407,7 +407,7 @@ public class CommandlineJava implements Cloneable {
      * @since ???
      */
     public String getModule() {
-        if(executableType == ExecutableType.MODULE) {
+        if (executableType == ExecutableType.MODULE) {
             return parseModuleFromModuleClassPair(javaCommand.getExecutable());
         }
         return null;
