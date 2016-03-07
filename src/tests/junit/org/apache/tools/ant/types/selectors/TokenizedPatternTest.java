@@ -22,6 +22,7 @@ import java.io.File;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TokenizedPatternTest {
@@ -59,6 +60,18 @@ public class TokenizedPatternTest {
         assertTrue(new TokenizedPattern(DOT_SVN_PATTERN).matchPath(p, true));
         assertTrue(new TokenizedPattern(DOT_SVN_PATTERN)
                    .withoutLastToken().matchPath(p, true));
+    }
+
+    @Test
+    /**
+     * this test illustrates the behavior described in bugzilla 59114
+     * meaning that the pattern "**" matches the empty path
+     * but the pattern "*" does not
+     */
+    public void testEmptyFolderWithStarStar() {
+        TokenizedPath p = TokenizedPath.EMPTY_PATH;
+        assertTrue(new TokenizedPattern(SelectorUtils.DEEP_TREE_MATCH).matchPath(p, true));
+        assertFalse(new TokenizedPattern("*").matchPath(p, true));
     }
 
 }
