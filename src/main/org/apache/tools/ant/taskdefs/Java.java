@@ -315,6 +315,16 @@ public class Java extends Task {
     }
 
     /**
+     * Set the modulepath to use by reference.
+     *
+     * @param r a reference to an existing modulepath.
+     * @since 1.9.7
+     */
+    public void setModulepathRef(Reference r) {
+        createModulepath().setRefid(r);
+    }
+
+    /**
      * Add a path to the upgrademodulepath.
      *
      * @return created upgrademodulepath.
