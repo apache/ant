@@ -374,7 +374,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Set the module to execute.
      * @param module  the module name.
-     * @since ???
+     * @since 1.9.7
      */
     public void setModule(final String module) {
         if (executableType == null) {
@@ -404,7 +404,7 @@ public class CommandlineJava implements Cloneable {
      * @return the name of the module to run or <tt>null</tt> if there is no module.
      * @see #getJar()
      * @see #getClassname()
-     * @since ???
+     * @since 1.9.7
      */
     public String getModule() {
         if(executableType == ExecutableType.MODULE) {
@@ -442,7 +442,7 @@ public class CommandlineJava implements Cloneable {
      * Create a modulepath.
      * @param p the project to use to create the path.
      * @return a path to be configured.
-     * @since ???
+     * @since 1.9.7
      */
     public Path createModulepath(Project p) {
         if (modulepath == null) {
@@ -455,7 +455,7 @@ public class CommandlineJava implements Cloneable {
      * Create an upgrademodulepath.
      * @param p the project to use to create the path.
      * @return a path to be configured.
-     * @since ???
+     * @since 1.9.7
      */
     public Path createUpgrademodulepath(Project p) {
         if (upgrademodulepath == null) {
@@ -672,7 +672,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Get the modulepath.
      * @return modulepath or null.
-     * @since ???
+     * @since 1.9.7
      */
     public Path getModulepath() {
         return modulepath;
@@ -681,7 +681,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Get the upgrademodulepath.
      * @return upgrademodulepath or null.
-     * @since ???
+     * @since 1.9.7
      */
     public Path getUpgrademodulepath() {
         return upgrademodulepath;
@@ -783,7 +783,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Determine whether the modulepath has been specified.
      * @return true if the modulepath is to be used.
-     * @since ???
+     * @since 1.9.7
      */
     public boolean haveModulepath() {
         Path fullClasspath = modulepath != null
@@ -795,7 +795,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Determine whether the upgrademodulepath has been specified.
      * @return true if the upgrademodulepath is to be used.
-     * @since ???
+     * @since 1.9.7
      */
     public boolean haveUpgrademodulepath() {
         Path fullClasspath = upgrademodulepath != null
@@ -846,7 +846,7 @@ public class CommandlineJava implements Cloneable {
      * @param module the module name.
      * @param classname the classname or <code>null</code>.
      * @return the main module with optional classname command line argument.
-     * @since ???
+     * @since 1.9.7
      */
     private static String createModuleClassPair(final String module, final String classname) {
         return classname == null ?
@@ -858,7 +858,7 @@ public class CommandlineJava implements Cloneable {
      * Parses a module name from JDK 9 main module command line argument.
      * @param moduleClassPair a module with optional classname or <code>null</code>.
      * @return the module name or <code>null</code>.
-     * @since ???
+     * @since 1.9.7
      */
     private static String parseModuleFromModuleClassPair(final String moduleClassPair) {
         if (moduleClassPair == null) {
@@ -872,7 +872,7 @@ public class CommandlineJava implements Cloneable {
      * Parses a classname from JDK 9 main module command line argument.
      * @param moduleClassPair a module with optional classname or <code>null</code>.
      * @return the classname or <code>null</code>.
-     * @since ???
+     * @since 1.9.7
      */
     private static String parseClassFromModuleClassPair(final String moduleClassPair) {
         if (moduleClassPair == null) {
@@ -886,7 +886,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Type of execution.
-     * @since ???
+     * @since 1.9.7
      */
     private enum ExecutableType {
         /**
