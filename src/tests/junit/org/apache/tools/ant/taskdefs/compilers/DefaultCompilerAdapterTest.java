@@ -18,12 +18,23 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.types.Commandline;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 
 public class DefaultCompilerAdapterTest {
@@ -174,6 +185,127 @@ public class DefaultCompilerAdapterTest {
         testSource(null, "javac1.9", "", "9");
     }
 
+    @Test
+    public void testSingleModuleCompilation() throws IOException {
+        final File workDir = createWorkDir("testSMC");
+        try {
+            final File src = new File(workDir, "src");
+            src.mkdir();
+            final File java1 = createFile(src,"org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src,"org/apache/ant/tests/J2.java");
+            final File modules = new File(workDir, "modules");
+            modules.mkdir();
+            final Project prj = new Project();
+            prj.setBaseDir(workDir);
+            final LogCapturingJavac javac = new LogCapturingJavac();
+            javac.setProject(prj);
+            final Commandline[] cmd = new Commandline[1];
+            final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
+                @Override
+                public boolean execute() throws BuildException {
+                    cmd[0] = setupModernJavacCommand();
+                    return true;
+                }
+            };
+            final Path srcPath = new Path(prj);
+            srcPath.setLocation(src);
+            javac.setSrcdir(srcPath);
+            javac.createModulepath().setLocation(modules);
+            javac.setSource("9");
+            javac.setTarget("9");
+            javac.setIncludeantruntime(false);
+            javac.add(impl);
+            javac.execute();
+            Assert.assertNotNull(cmd[0]);
+            final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
+            //No modulesourcepath
+            assertEquals(-1, cmdLine.indexOf("-modulesourcepath"));
+            //The -sourcepath has to be followed by src
+            int index = cmdLine.indexOf("-sourcepath");
+            Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
+            assertEquals(src.getAbsolutePath(), cmdLine.get(index + 1));
+            //The -modulepath has to be followed by modules
+            index = cmdLine.indexOf("-modulepath");
+            Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
+            assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
+            //J1.java & J2.java has to be in files list
+            final Set<String> expected = new TreeSet<String>();
+            Collections.addAll(expected, java1.getAbsolutePath(), java2.getAbsolutePath());
+            final Set<String> actual = new TreeSet<String>();
+            actual.addAll(cmdLine.subList(cmdLine.size() - 2, cmdLine.size()));
+            assertEquals(expected, actual);
+        } finally {
+            delete(workDir);
+        }
+    }
+
+    @Test
+    public void testMultiModuleCompilation() throws IOException {
+        final File workDir = createWorkDir("testMMC");
+        try {
+            final File src = new File(workDir, "src");
+            src.mkdir();
+            final File java1 = createFile(src,"main/m1/lin64/classes/org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src,"main/m2/lin32/classes/org/apache/ant/tests/J2.java");
+            final File java3 = createFile(src,"main/m3/sol/classes/org/apache/ant/tests/J3.java");
+            final File modules = new File(workDir, "modules");
+            modules.mkdir();
+            final File build = new File(workDir, "build");
+            build.mkdirs();
+            final Project prj = new Project();
+            prj.setBaseDir(workDir);
+            final LogCapturingJavac javac = new LogCapturingJavac();
+            javac.setProject(prj);
+            final Commandline[] cmd = new Commandline[1];
+            final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
+                @Override
+                public boolean execute() throws BuildException {
+                    cmd[0] = setupModernJavacCommand();
+                    return true;
+                }
+            };
+            final String moduleSrcPathStr = "src/main/*/{lin{32,64},sol}/classes";
+            final Path moduleSourcePath = new Path(prj);
+            moduleSourcePath.setPath(moduleSrcPathStr);
+            javac.setModulesourcepath(moduleSourcePath);
+            javac.createModulepath().setLocation(modules);
+            javac.setSource("9");
+            javac.setTarget("9");
+            javac.setDestdir(build);
+            javac.setIncludeantruntime(false);
+            javac.add(impl);
+            javac.execute();
+            Assert.assertNotNull(cmd[0]);
+            final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
+            //No sourcepath
+            assertEquals(-1, cmdLine.indexOf("-sourcepath"));
+            //The -modulesourcepath has to be followed by the pattern
+            int index = cmdLine.indexOf("-modulesourcepath");
+            Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
+            String expectedModSrcPath = String.format("%s/%s",
+                    workDir.getAbsolutePath(),
+                    moduleSrcPathStr)
+                    .replace('/', File.separatorChar)
+                    .replace('\\', File.separatorChar);
+            assertEquals(expectedModSrcPath, cmdLine.get(index + 1));
+            //The -modulepath has to be followed by modules
+            index = cmdLine.indexOf("-modulepath");
+            Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
+            assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
+            //J1.java, J2.java & J3.java has to be in files list
+            final Set<String> expectedFiles = new TreeSet<String>();
+            Collections.addAll(expectedFiles,
+                    java1.getAbsolutePath(),
+                    java2.getAbsolutePath(),
+                    java3.getAbsolutePath());
+            final Set<String> actualFiles = new TreeSet<String>();
+            actualFiles.addAll(cmdLine.subList(cmdLine.size() - 3, cmdLine.size()));
+            assertEquals(expectedFiles, actualFiles);
+        } finally {
+            delete(workDir);
+        }
+    }
+
     private void commonSourceDowngrades(String javaVersion) {
         testSource("1.3", javaVersion,
                    "If you specify -target 1.1 you now must also specify"
@@ -220,4 +352,35 @@ public class DefaultCompilerAdapterTest {
             assertEquals(expectedSource, args[1]);
         }
     }
+
+    private File createWorkDir(String testName) {
+        final File tmp = new File(System.getProperty("java.io.tmpdir"));   //NOI18N
+        final File destDir = new File(tmp, String.format("%s%s%d",
+                getClass().getName(),
+                testName,
+                System.currentTimeMillis()/1000));
+        destDir.mkdirs();
+        return destDir;
+    }
+
+    private File createFile(File folder, String relativePath) throws IOException {
+        final File file = new File(
+                folder,
+                relativePath.replace('/', File.separatorChar).replace('\\', File.separatorChar));
+        FileUtils.getFileUtils().createNewFile(file, true);
+        return file;
+    }
+
+    private void delete(File f) {
+        if (f.isDirectory()) {
+            final File[] clds = f.listFiles();
+            if (clds != null) {
+                for (File cld : clds) {
+                    delete(cld);
+                }
+            }
+        }
+        f.delete();
+    }
+
 }
