@@ -1059,9 +1059,7 @@ public class Javac extends MatchingTask {
         resetFileLists();
 
         // scan source directories and dest directory to build up
-        // compile lists
-        // Both src and modulesourcepath can be passed to javac, in this case
-        // the src becomes a part of the unnamed module.
+        // compile list
         if (hasPath(src)) {
             final String[] list = src.list();
             for (int i = 0; i < list.length; i++) {
