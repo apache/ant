@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
@@ -28,10 +29,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Path;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Testcase for <javac>.
@@ -243,5 +247,86 @@ public class JavacTest {
         project.setNewProperty("ant.build.javac.target", "1.4");
         javac.setTarget("1.5");
         assertEquals("1.5", javac.getTarget());
+    }
+
+    @Test
+    public void testModulesourcepathOrSrcDirRequired() {
+        try {
+            javac.checkParameters();
+            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
+        } catch (BuildException e) {
+            //pass
+        }
+    }
+
+    @Test
+    public void testModulesourcepathAndSrcDirForbidden() {
+        try {
+            javac.checkParameters();
+            final Path p = new Path(project);
+            p.setPath("src");
+            javac.setSrcdir(p);
+            final Path mp = new Path(project);
+            p.setPath("modsrc");
+            javac.setModulesourcepath(mp);
+            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
+        } catch (BuildException e) {
+            //pass
+        }
+    }
+
+    @Test
+    public void testModulesourcepathAndSourcepathForbidden() {
+        try {
+            javac.checkParameters();
+            final Path p = new Path(project);
+            p.setPath("src");
+            javac.setSourcepath(p);
+            final Path mp = new Path(project);
+            p.setPath("modsrc");
+            javac.setModulesourcepath(mp);
+            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
+        } catch (BuildException e) {
+            //pass
+        }
+    }
+
+    @Test
+    public void testSrcDir() {
+        final Path p = new Path(project);
+        p.setPath("src");
+        javac.setSrcdir(p);
+        javac.checkParameters();
+    }
+
+    @Test
+    public void testModulesourcepath() {
+        final File tmp = new File(System.getProperty("java.io.tmpdir"));   //NOI18N
+        final File destDir = new File(tmp, String.format("%stestMP%d",
+                getClass().getName(),
+                System.currentTimeMillis()/1000));
+        destDir.mkdirs();
+        try {
+            final Path p = new Path(project);
+            p.setPath("src");
+            javac.setModulesourcepath(p);
+            javac.setDestdir(destDir);
+            javac.checkParameters();
+        } finally {
+            destDir.delete();
+        }
+    }
+
+    @Test
+    public void testModulesourcepathRequiresDestdir() {
+        try {
+            final Path p = new Path(project);
+            p.setPath("src");
+            javac.setModulesourcepath(p);
+            javac.checkParameters();
+            fail("Build exception should have been thrown - modulesourcepath requires destdir");
+        } catch (BuildException e) {
+            //pass
+        }
     }
 }
