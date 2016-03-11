@@ -306,6 +306,56 @@ public class DefaultCompilerAdapterTest {
         }
     }
 
+    @Test
+    public void testMultiModuleCompilationWithExcludes() throws IOException {
+        final File workDir = createWorkDir("testMMCWE");
+        try {
+            final File src = new File(workDir, "src");
+            src.mkdir();
+            final File java1 = createFile(src,"main/m1/lin/classes/org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src,"main/m3/sol/classes/org/apache/ant/tests/J2.java");
+            final File java3 = createFile(src,"main/m3/sol/classes/org/apache/ant/invisible/J3.java");
+            final File build = new File(workDir, "build");
+            build.mkdirs();
+            final Project prj = new Project();
+            prj.setBaseDir(workDir);
+            final LogCapturingJavac javac = new LogCapturingJavac();
+            javac.setProject(prj);
+            final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
+                @Override
+                public boolean execute() throws BuildException {
+                    setupModernJavacCommand();
+                    return true;
+                }
+            };
+            final String moduleSrcPathStr = "src/main/*/{lin,sol}/classes";
+            final Path moduleSourcePath = new Path(prj);
+            moduleSourcePath.setPath(moduleSrcPathStr);
+            javac.setModulesourcepath(moduleSourcePath);
+            javac.setSource("9");
+            javac.setTarget("9");
+            javac.setDestdir(build);
+            javac.setIncludeantruntime(false);
+            javac.createExclude().setName("org/**/invisible/**");
+            javac.add(impl);
+            javac.execute();
+            final File[] compileList = impl.compileList;
+            Assert.assertNotNull(compileList);
+            //J1.java, J2.java has to be in files list but not J3.java
+            final Set<String> expectedFiles = new TreeSet<String>();
+            Collections.addAll(expectedFiles,
+                    java1.getAbsolutePath(),
+                    java2.getAbsolutePath());
+            final Set<String> actualFiles = new TreeSet<String>();
+            for (File compileFile : compileList) {
+                actualFiles.add(compileFile.getAbsolutePath());
+            }
+            assertEquals(expectedFiles, actualFiles);
+        } finally {
+            delete(workDir);
+        }
+    }
+
     private void commonSourceDowngrades(String javaVersion) {
         testSource("1.3", javaVersion,
                    "If you specify -target 1.1 you now must also specify"
