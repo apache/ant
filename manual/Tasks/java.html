@@ -54,9 +54,9 @@ attributes.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">classname</td>
+    <td valign="top"><a name="classname">classname</a></td>
     <td valign="top">the Java class to execute.</td>
-    <td align="center" valign="top">Either <tt>jar</tt> or <tt>classname</tt></td>
+    <td align="center" valign="top">Either <tt>jar</tt>, <tt>classname</tt> or <tt>module</tt></td>
   </tr>
   <tr>
     <td valign="top">jar</td>
@@ -64,7 +64,7 @@ attributes.</p>
     Main-Class entry in the manifest). Fork must be set to true if this option is selected.
     See notes below for more details.
     </td>
-    <td align="center" valign="top">Either <tt>jar</tt> or <tt>classname</tt></td>
+    <td align="center" valign="top">Either <tt>jar</tt>, <tt>classname</tt> or <tt>module</tt></td>
   </tr>
   <tr>
     <td valign="top">args</td>
@@ -117,6 +117,25 @@ attributes.</p>
     <td valign="top">maxmemory</td>
     <td valign="top">Max amount of memory to allocate to the forked VM
       (ignored if fork is disabled)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">module</td>
+    <td valign="top">The initial or main module to resolve. To specify
+    the module main class use the <a href="#classname">classname</a> attribute.
+    Fork must be set to true if this option is selected.<em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">Either <tt>jar</tt>, <tt>classname</tt> or <tt>module</tt></td>
+  </tr>
+  <tr>
+    <td valign="top">modulepath</td>
+    <td valign="top">Specify where to find application modules. A list of directories of modules, module files or exploded modules.<em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulepathref</td>
+    <td valign="top">The modulepath to use, given as <a
+      href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.7</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -312,6 +331,18 @@ error and would mean the build exits.
 , then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will
 exit, as the class was run by the build JVM.</p>
 
+<a name="modulepath"><h4>modulepath</h4>
+<i><b>Since Ant 1.9.7</b></i>
+<p><code>Java</code>'s <i>modulepath</i> attribute is a <a
+href="../using.html#path">PATH like structure</a> and can also be set via a nested
+<i>modulepath</i> element.</p>
+
+<a name="upgrademodulepath"><h4>upgrademodulepath</h4>
+<i><b>Since Ant 1.9.7</b></i>
+<p>The location of modules that replace upgradeable modules in the runtime image
+can be specified using this <a href="../using.html#path">PATH like structure</a>.</p>
+
+
 <h3>JAR file execution</h3>
 
 <p>The parameter of the <tt>jar</tt> attribute is of type <tt>File</tt>;
@@ -400,6 +431,31 @@ log-prefix to <code>[java1.4]</code>.
 JVM, as it takes different parameters for other JVMs,
 That JVM can be started from <code>&lt;exec&gt;</code> if required.</p>
 
+<pre>
+       &lt;java
+           fork=&quot;true&quot;
+           failonerror=&quot;true&quot;
+           maxmemory=&quot;128m&quot;
+           module=&quot;TestModule&quot;
+           modulepath=&quot;lib:dist/test.jar&quot;/&gt;
+</pre>
+Runs the module TestModule resolved on the modulepath <tt>lib/:dist/test.jar</tt>
+with a maximum memory of 128MB. Any non zero return code breaks the build.
 
+<pre>
+       &lt;java
+           fork=&quot;true&quot;
+           failonerror=&quot;true&quot;
+           maxmemory=&quot;128m&quot;
+           module=&quot;TestModule&quot;
+           classname=&quot;Main&quot;&gt;
+         &lt;modulepath&gt;
+           &lt;pathelement location=&quot;lib&quot;/&gt;
+           &lt;pathelement location=&quot;dist/test.jar&quot;/&gt;
+         &lt;/modulepath&gt;
+       &lt;/java&gt;
+</pre>
+Runs the class Main in module TestModule resolved on the modulepath <tt>lib/:dist/test.jar</tt>
+with a maximum memory of 128MB. Any non zero return code breaks the build.
 </body>
 </html>
