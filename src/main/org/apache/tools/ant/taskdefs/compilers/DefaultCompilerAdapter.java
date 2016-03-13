@@ -73,7 +73,10 @@ public abstract class DefaultCompilerAdapter
     protected Path bootclasspath;
     protected Path extdirs;
     protected Path compileClasspath;
+    protected Path modulepath;
+    protected Path upgrademodulepath;
     protected Path compileSourcepath;
+    protected Path moduleSourcepath;
     protected Project project;
     protected Location location;
     protected boolean includeAntRuntime;
@@ -112,13 +115,20 @@ public abstract class DefaultCompilerAdapter
         extdirs = attributes.getExtdirs();
         compileList = attributes.getFileList();
         compileClasspath = attributes.getClasspath();
+        modulepath = attributes.getModulepath();
+        upgrademodulepath = attributes.getUpgrademodulepath();
         compileSourcepath = attributes.getSourcepath();
+        moduleSourcepath = attributes.getModulesourcepath();
         project = attributes.getProject();
         location = attributes.getLocation();
         includeAntRuntime = attributes.getIncludeantruntime();
         includeJavaRuntime = attributes.getIncludejavaruntime();
         memoryInitialSize = attributes.getMemoryInitialSize();
         memoryMaximumSize = attributes.getMemoryMaximumSize();
+        if (moduleSourcepath != null && src == null && compileSourcepath == null) {
+            //Compatibility to prevent NPE from Jikes, Jvc, Kjc
+            compileSourcepath = new Path(getProject());
+        }
     }
 
     /**
@@ -180,6 +190,45 @@ public abstract class DefaultCompilerAdapter
         }
 
         return classpath;
+    }
+
+    /**
+     * Builds the modulepath.
+     * @return the modulepath
+     * @since 1.9.7
+     */
+    protected Path getModulepath() {
+        final Path mp = new Path(getProject());
+        if (modulepath != null) {
+            mp.addExisting(modulepath);
+        }
+        return mp;
+    }
+
+    /**
+     * Builds the upgrademodulepath.
+     * @return the upgrademodulepath
+     * @since 1.9.7
+     */
+    protected Path getUpgrademodulepath() {
+        final Path ump = new Path(getProject());
+        if (upgrademodulepath != null) {
+            ump.addExisting(upgrademodulepath);
+        }
+        return ump;
+    }
+
+    /**
+     * Builds the modulesourcepath for multi module compilation.
+     * @return the modulesourcepath
+     * @since 1.9.7
+     */
+    protected Path getModulesourcepath() {
+        final Path msp = new Path(getProject());
+        if (moduleSourcepath != null) {
+            msp.add(moduleSourcepath);
+        }
+        return msp;
     }
 
     /**
@@ -349,6 +398,21 @@ public abstract class DefaultCompilerAdapter
             } else if (t != null && mustSetSourceForTarget(t)) {
                 setImplicitSourceSwitch(cmd, t, adjustSourceValue(t));
             }
+        }
+        final Path msp = getModulesourcepath();
+        if (msp.size() > 0) {
+            cmd.createArgument().setValue("-modulesourcepath");
+            cmd.createArgument().setPath(msp);
+        }
+        final Path mp = getModulepath();
+        if (mp.size() > 0) {
+            cmd.createArgument().setValue("-modulepath");
+            cmd.createArgument().setPath(mp);
+        }
+        final Path ump = getUpgrademodulepath();
+        if (ump.size() > 0) {
+            cmd.createArgument().setValue("-upgrademodulepath");
+            cmd.createArgument().setPath(ump);
         }
         return cmd;
     }

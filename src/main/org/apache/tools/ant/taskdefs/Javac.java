@@ -19,12 +19,17 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -93,12 +98,20 @@ public class Javac extends MatchingTask {
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
 
+    private static final char GROUP_START_MARK = '{';   //modulesourcepath group start character
+    private static final char GROUP_END_MARK = '}';   //modulesourcepath group end character
+    private static final char GROUP_SEP_MARK = ',';   //modulesourcepath group element separator character
+    private static final String MODULE_MARKER = "*";    //modulesourcepath module name marker
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private Path src;
     private File destDir;
     private Path compileClasspath;
+    private Path modulepath;
+    private Path upgrademodulepath;
     private Path compileSourcepath;
+    private Path moduleSourcepath;
     private String encoding;
     private boolean debug = false;
     private boolean optimize = false;
@@ -311,6 +324,49 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Set the modulesourcepath to be used for this compilation.
+     * @param msp  the modulesourcepath
+     * @since 1.9.7
+     */
+    public void setModulesourcepath(final Path msp) {
+        if (moduleSourcepath == null) {
+            moduleSourcepath = msp;
+        } else {
+            moduleSourcepath.append(msp);
+        }
+    }
+
+    /**
+     * Gets the modulesourcepath to be used for this compilation.
+     * @return the modulesourcepath
+     * @since 1.9.7
+     */
+    public Path getModulesourcepath() {
+        return moduleSourcepath;
+    }
+
+    /**
+     * Adds a path to modulesourcepath.
+     * @return a modulesourcepath to be configured
+     * @since 1.9.7
+     */
+    public Path createModulesourcepath() {
+        if (moduleSourcepath == null) {
+            moduleSourcepath = new Path(getProject());
+        }
+        return moduleSourcepath.createPath();
+    }
+
+    /**
+     * Adds a reference to a modulesourcepath defined elsewhere.
+     * @param r a reference to a modulesourcepath
+     * @since 1.9.7
+     */
+    public void setModulesourcepathRef(final Reference r) {
+        createModulesourcepath().setRefid(r);
+    }
+
+    /**
      * Set the classpath to be used for this compilation.
      *
      * @param classpath an Ant Path object containing the compilation classpath.
@@ -348,6 +404,92 @@ public class Javac extends MatchingTask {
      */
     public void setClasspathRef(final Reference r) {
         createClasspath().setRefid(r);
+    }
+
+    /**
+     * Set the modulepath to be used for this compilation.
+     * @param mp an Ant Path object containing the modulepath.
+     * @since 1.9.7
+     */
+    public void setModulepath(final Path mp) {
+        if (modulepath == null) {
+            modulepath = mp;
+        } else {
+            modulepath.append(mp);
+        }
+    }
+
+    /**
+     * Gets the modulepath to be used for this compilation.
+     * @return the modulepath
+     * @since 1.9.7
+     */
+    public Path getModulepath() {
+        return modulepath;
+    }
+
+    /**
+     * Adds a path to the modulepath.
+     * @return a modulepath to be configured
+     * @since 1.9.7
+     */
+    public Path createModulepath() {
+        if (modulepath == null) {
+            modulepath = new Path(getProject());
+        }
+        return modulepath.createPath();
+    }
+
+    /**
+     * Adds a reference to a modulepath defined elsewhere.
+     * @param r a reference to a modulepath
+     * @since 1.9.7
+     */
+    public void setModulepathRef(final Reference r) {
+        createModulepath().setRefid(r);
+    }
+
+    /**
+     * Set the upgrademodulepath to be used for this compilation.
+     * @param ump an Ant Path object containing the upgrademodulepath.
+     * @since 1.9.7
+     */
+    public void setUpgrademodulepath(final Path ump) {
+        if (upgrademodulepath == null) {
+            upgrademodulepath = ump;
+        } else {
+            upgrademodulepath.append(ump);
+        }
+    }
+
+    /**
+     * Gets the upgrademodulepath to be used for this compilation.
+     * @return the upgrademodulepath
+     * @since 1.9.7
+     */
+    public Path getUpgrademodulepath() {
+        return upgrademodulepath;
+    }
+
+    /**
+     * Adds a path to the upgrademodulepath.
+     * @return an upgrademodulepath to be configured
+     * @since 1.9.7
+     */
+    public Path createUpgrademodulepath() {
+        if (upgrademodulepath == null) {
+            upgrademodulepath = new Path(getProject());
+        }
+        return upgrademodulepath.createPath();
+    }
+
+    /**
+     * Adds a reference to the upgrademodulepath defined elsewhere.
+     * @param r a reference to an upgrademodulepath
+     * @since 1.9.7
+     */
+    public void setUpgrademodulepathRef(final Reference r) {
+        createUpgrademodulepath().setRefid(r);
     }
 
     /**
@@ -917,20 +1059,44 @@ public class Javac extends MatchingTask {
         resetFileLists();
 
         // scan source directories and dest directory to build up
-        // compile lists
-        final String[] list = src.list();
-        for (int i = 0; i < list.length; i++) {
-            final File srcDir = getProject().resolveFile(list[i]);
-            if (!srcDir.exists()) {
-                throw new BuildException("srcdir \""
-                                         + srcDir.getPath()
-                                         + "\" does not exist!", getLocation());
+        // compile list
+        if (hasPath(src)) {
+            final String[] list = src.list();
+            for (int i = 0; i < list.length; i++) {
+                final File srcDir = getProject().resolveFile(list[i]);
+                if (!srcDir.exists()) {
+                    throw new BuildException("srcdir \""
+                                             + srcDir.getPath()
+                                             + "\" does not exist!", getLocation());
+                }
+
+                final DirectoryScanner ds = this.getDirectoryScanner(srcDir);
+                final String[] files = ds.getIncludedFiles();
+
+                scanDir(srcDir, destDir != null ? destDir : srcDir, files);
             }
-
-            final DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-            final String[] files = ds.getIncludedFiles();
-
-            scanDir(srcDir, destDir != null ? destDir : srcDir, files);
+        } else {
+            assert hasPath(moduleSourcepath) : "Either srcDir or moduleSourcepath must be given";
+            final FileUtils fu = FileUtils.getFileUtils();
+            for (String pathElement : moduleSourcepath.list()) {
+                boolean valid = false;
+                for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(getProject().getBaseDir(), pathElement).entrySet()) {
+                    final String moduleName = modules.getKey();
+                    for (File srcDir : modules.getValue()) {
+                        if (srcDir.exists()) {
+                            valid = true;
+                            final DirectoryScanner ds = getDirectoryScanner(srcDir);
+                            final String[] files = ds.getIncludedFiles();
+                            scanDir(srcDir, fu.resolveFile(destDir, moduleName), files);
+                        }
+                    }
+                }
+                if (!valid) {
+                    throw new BuildException("modulesourcepath \""
+                                             + pathElement
+                                             + "\" does not exist!", getLocation());
+                }
+            }
         }
 
         compile();
@@ -1106,13 +1272,23 @@ public class Javac extends MatchingTask {
      * @exception BuildException if an error occurs
      */
     protected void checkParameters() throws BuildException {
-        if (src == null) {
-            throw new BuildException("srcdir attribute must be set!",
+        if (hasPath(src)) {
+            if (hasPath(moduleSourcepath)) {
+                throw new BuildException("modulesourcepath cannot be combined with srcdir attribute!",
+                    getLocation());
+            }
+        } else if (hasPath(moduleSourcepath)) {
+            if (hasPath(src) || hasPath(compileSourcepath)) {
+                throw new BuildException("modulesourcepath cannot be combined with srcdir or sourcepath !",
+                    getLocation());
+            }
+            if (destDir == null) {
+                throw new BuildException("modulesourcepath requires destdir attribute to be set!",
                                      getLocation());
-        }
-        if (src.size() == 0) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     getLocation());
+            }
+        } else {
+            throw new BuildException("either srcdir or modulesourcepath attribute must be set!",
+                    getLocation());
         }
 
         if (destDir != null && !destDir.isDirectory()) {
@@ -1248,6 +1424,226 @@ public class Javac extends MatchingTask {
             } finally {
                 os.close();
             }
+        }
+    }
+
+    /**
+     * Checks if a path exists and is non empty.
+     * @param path to be checked
+     * @return true if the path is non <code>null</code> and non empty.
+     * @since 1.9.7
+     */
+    private static boolean hasPath(final Path path) {
+        return path != null && path.size() > 0;
+    }
+
+    /**
+     * Resolves the modulesourcepath element possibly containing groups
+     * and module marks to module names and source roots.
+     * @param projectDir the project directory
+     * @param element the modulesourcepath elemement
+     * @return a mapping from module name to module source roots
+     * @since 1.9.7
+     */
+    private static Map<String,Collection<File>> resolveModuleSourcePathElement(
+            final File projectDir,
+            final String element) {
+        final Map<String,Collection<File>> result = new TreeMap<String, Collection<File>>();
+        for (CharSequence resolvedElement : expandGroups(element)) {
+            findModules(projectDir, resolvedElement.toString(), result);
+        }
+        return result;
+    }
+
+    /**
+     * Expands the groups in the modulesourcepath entry to alternatives.
+     * <p>
+     * The <code>'*'</code> is a token representing the name of any of the modules in the compilation module set.
+     * The <code>'{' ... ',' ... '}'</code> express alternates for expansion.
+     * An example of the modulesourcepath entry is <code>src/&#42;/{linux,share}/classes</code>
+     * </p>
+     * @param element the entry to expand groups in
+     * @return the possible alternatives
+     * @since 1.9.7
+     */
+    private static Collection<? extends CharSequence> expandGroups(
+            final CharSequence element) {
+        List<StringBuilder> result = new ArrayList<StringBuilder>();
+        result.add(new StringBuilder());
+        StringBuilder resolved = new StringBuilder();
+        for (int i = 0; i < element.length(); i++) {
+            final char c = element.charAt(i);
+            switch (c) {
+                case GROUP_START_MARK:
+                    final int end = getGroupEndIndex(element, i);
+                    if (end < 0) {
+                        throw new BuildException(String.format(
+                                "Unclosed group %s, starting at: %d",
+                                element,
+                                i));
+                    }
+                    final Collection<? extends CharSequence> parts = resolveGroup(element.subSequence(i+1, end));
+                    switch (parts.size()) {
+                        case 0:
+                            break;
+                        case 1:
+                            resolved.append(parts.iterator().next());
+                            break;
+                        default:
+                            final List<StringBuilder> oldRes = result;
+                            result = new ArrayList<StringBuilder>(oldRes.size() * parts.size());
+                            for (CharSequence part : parts) {
+                                for (CharSequence prefix : oldRes) {
+                                    result.add(new StringBuilder(prefix).append(resolved).append(part));
+                                }
+                            }
+                            resolved = new StringBuilder();
+                    }
+                    i = end;
+                    break;
+                default:
+                    resolved.append(c);
+            }
+        }
+        for (StringBuilder prefix : result) {
+            prefix.append(resolved);
+        }
+        return result;
+    }
+
+    /**
+     * Resolves the group to alternatives.
+     * @param group the group to resolve
+     * @return the possible alternatives
+     * @since 1.9.7
+     */
+    private static Collection<? extends CharSequence> resolveGroup(final CharSequence group) {
+        final Collection<CharSequence> result = new ArrayList<CharSequence>();
+        int start = 0;
+        int depth = 0;
+        for (int i = 0; i < group.length(); i++) {
+            final char c = group.charAt(i);
+            switch (c) {
+                case GROUP_START_MARK:
+                    depth++;
+                    break;
+                case GROUP_END_MARK:
+                    depth--;
+                    break;
+                case GROUP_SEP_MARK:
+                    if (depth == 0) {
+                        result.addAll(expandGroups(group.subSequence(start, i)));
+                        start = i + 1;
+                    }
+                    break;
+            }
+        }
+        result.addAll(expandGroups(group.subSequence(start, group.length())));
+        return result;
+    }
+
+    /**
+     * Finds the index of an enclosing brace of the group.
+     * @param element the element to find the enclosing brace in
+     * @param start the index of the opening brace.
+     * @return return the index of an enclosing brace of the group or -1 if not found
+     * @since 1.9.7
+     */
+    private static int getGroupEndIndex(
+            final CharSequence element,
+            final int start) {
+        int depth = 0;
+        for (int i = start; i < element.length(); i++) {
+            final char c = element.charAt(i);
+            switch (c) {
+                case GROUP_START_MARK:
+                    depth++;
+                    break;
+                case GROUP_END_MARK:
+                    depth--;
+                    if (depth == 0) {
+                        return i;
+                    }
+                    break;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Finds modules in the expanded modulesourcepath entry.
+     * @param root the project root
+     * @param pattern the expanded modulesourcepath entry
+     * @param collector the map to put modules into
+     * @since 1.9.7
+     */
+    private static void findModules(
+            final File root,
+            String pattern,
+            final Map<String,Collection<File>> collector) {
+        pattern = pattern
+                .replace('/', File.separatorChar)
+                .replace('\\', File.separatorChar);
+        final int startIndex = pattern.indexOf(MODULE_MARKER);
+        if (startIndex == -1) {
+            findModules(root, pattern, null, collector);
+        } else {
+            if (startIndex == 0) {
+                throw new BuildException("The modulesourcepath entry must be a folder.");
+            }
+            final int endIndex = startIndex + MODULE_MARKER.length();
+            if (pattern.charAt(startIndex - 1) != File.separatorChar) {
+                    throw new BuildException("The module mark must be preceded by separator");
+            }
+            if (endIndex < pattern.length() && pattern.charAt(endIndex) != File.separatorChar) {
+                throw new BuildException("The module mark must be followed by separator");
+            }
+            if (pattern.indexOf(MODULE_MARKER, endIndex) != -1) {
+                throw new BuildException("The modulesourcepath entry must contain at most one module mark");
+            }
+            final String pathToModule = pattern.substring(0,startIndex);
+            final String pathInModule = endIndex == pattern.length() ?
+                    null :
+                    pattern.substring(endIndex+1);  //+1 the separator
+            findModules(root, pathToModule, pathInModule, collector);
+        }
+    }
+
+    /**
+     * Finds modules in the expanded modulesourcepath entry.
+     * @param root the project root
+     * @param pathToModule the path to modules folder
+     * @param pathInModule the path in module to source folder
+     * @param collector the map to put modules into
+     * @since 1.9.7
+     */
+    private static void findModules(
+        final File root,
+        final String pathToModule,
+        final String pathInModule,
+        final Map<String,Collection<File>> collector) {
+        final FileUtils fu = FileUtils.getFileUtils();
+        final File f = fu.resolveFile(root, pathToModule);
+        if (!f.isDirectory()) {
+            return;
+        }
+        final File[] modules = f.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        });
+        for (File module : modules) {
+            final String moduleName = module.getName();
+            final File moduleSourceRoot = pathInModule == null ?
+                    module :
+                    new File(module, pathInModule);
+            Collection<File> moduleRoots = collector.get(moduleName);
+            if (moduleRoots == null) {
+                moduleRoots = new ArrayList<File>();
+                collector.put(moduleName, moduleRoots);
+            }
+            moduleRoots.add(moduleSourceRoot);
         }
     }
 

@@ -135,7 +135,7 @@ invoking the compiler.</p>
     <td valign="top">srcdir</td>
     <td valign="top">Location of the java files. (See the
      <a href="#srcdirnote">note</a> below.)</td>
-    <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements are present.</td>
+    <td align="center" valign="top">Yes, unless nested <code>&lt;src&gt;</code> elements or <code>modulesourcepath</code> attribute or elements are present.</td>
   </tr>
   <tr>
     <td valign="top">destdir</td>
@@ -459,6 +459,51 @@ invoking the compiler.</p>
     </td>
     <td align="center" valign="top">No - default is "true"</td>
   </tr>
+  <tr>
+    <td valign="top">modulepath</td>
+    <td valign="top">
+      Specify where to find application modules. A list of directories of modules, module files or exploded modules.
+      <em>since Ant 1.9.7</em>
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulepathref</td>
+    <td valign="top">
+      The modulepath to use, given as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulesourcepath</td>
+    <td valign="top">
+      Specify where to find input source files for multiple module compilation.
+      <em>since Ant 1.9.7</em>
+    </td>
+    <td align="center" valign="top">Yes, unless <code>srcdir</code> attribute or nested <code>&lt;src&gt;</code> elements are present</td>
+  </tr>
+  <tr>
+    <td valign="top">modulesourcepathref</td>
+    <td valign="top">
+      The modulesourcepath to use, given as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">upgrademodulepath</td>
+    <td valign="top">
+      Specify the location of modules that replace upgradeable modules in the runtime image.
+      <em>since Ant 1.9.7</em>
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">upgrademodulepathref</td>
+    <td valign="top">
+      The upgrademodulepath to use, given as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
@@ -468,17 +513,23 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <h4><code>srcdir</code>, <code>classpath</code>, <code>sourcepath</code>,
-<code>bootclasspath</code> and <code>extdirs</code></h4>
+<code>bootclasspath</code>, <code>modulepath</code>, <code>modulesourcepath</code>,
+<code>upgrademodulepath</code> and <code>extdirs</code></h4>
 <p><code>&lt;javac&gt;</code>'s <code>srcdir</code>, <code>classpath</code>,
-<code>sourcepath</code>, <code>bootclasspath</code>, and
-<code>extdirs</code> attributes are
+<code>sourcepath</code>, <code>bootclasspath</code>,
+<code>extdirs</code>, <code>modulepath</code>, <code>modulesourcepath</code>,
+and <code>upgrademodulepath</code> attributes are
 <a href="../using.html#path">path-like structures</a>
 and can also be set via nested
 <code>&lt;src&gt;</code> (note the different name!),
 <code>&lt;classpath&gt;</code>,
 <code>&lt;sourcepath&gt;</code>,
-<code>&lt;bootclasspath&gt;</code> and
-<code>&lt;extdirs&gt;</code> elements, respectively.</p>
+<code>&lt;bootclasspath&gt;</code>,
+<code>&lt;extdirs&gt;</code>,
+<code>&lt;modulepath&gt;</code>,
+<code>&lt;modulesourcepath&gt;</code> and
+<code>&lt;upgrademodulepath&gt;</code>
+elements, respectively.</p>
 
 <h4>compilerarg</h4>
 
@@ -709,6 +760,31 @@ the <tt>&lt;compilerarg&gt;</tt> element:
 </pre>
 <p>in which case your compiler adapter can support attributes and
   nested elements of its own.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         includeantruntime=&quot;false&quot;
+         modulepath=&quot;modules&quot;
+         source=&quot;9&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files in a single module under the <code>${src}</code> directory,
+  and stores the <code>.class</code> files in the <code>${build}</code> directory. The compilation uses
+  application modules located in <code>modules</code> folder.The source level is <code>9</code> to enable modules.</p>
+
+<pre>  &lt;javac modulesourcepath=&quot;${src}/*/{gen,lin{32,64}}/classes&quot;
+         destdir=&quot;${build}&quot;
+         includeantruntime=&quot;false&quot;
+         modulepath=&quot;modules&quot;
+         source=&quot;9&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files in <code>gen/classes</code>, <code>lin32/classes</code> and
+  <code>lin64/classes</code> in all source modules under the <code>${src}</code> directory.
+  Generates module directories in the <code>${build}</code> directory. Each generated module directory under
+  the <code>${build}</code> directory contains <code>.class</code> files from corresponding source module.
+  The <code>*</code> is a token representing the name of any of the modules in the compilation module set.
+  The <code>{ ... , ... }</code> express alternates for expansion.
+  The compilation uses application modules located in <code>modules</code> folder.The source level is
+  <code>9</code> to enable modules.</p>
 
 <h3>Jikes Notes</h3>
 
