@@ -1061,42 +1061,10 @@ public class Javac extends MatchingTask {
         // scan source directories and dest directory to build up
         // compile list
         if (hasPath(src)) {
-            final String[] list = src.list();
-            for (int i = 0; i < list.length; i++) {
-                final File srcDir = getProject().resolveFile(list[i]);
-                if (!srcDir.exists()) {
-                    throw new BuildException("srcdir \""
-                                             + srcDir.getPath()
-                                             + "\" does not exist!", getLocation());
-                }
-
-                final DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-                final String[] files = ds.getIncludedFiles();
-
-                scanDir(srcDir, destDir != null ? destDir : srcDir, files);
-            }
+            collectFileListFromSourcePath();
         } else {
             assert hasPath(moduleSourcepath) : "Either srcDir or moduleSourcepath must be given";
-            final FileUtils fu = FileUtils.getFileUtils();
-            for (String pathElement : moduleSourcepath.list()) {
-                boolean valid = false;
-                for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(getProject().getBaseDir(), pathElement).entrySet()) {
-                    final String moduleName = modules.getKey();
-                    for (File srcDir : modules.getValue()) {
-                        if (srcDir.exists()) {
-                            valid = true;
-                            final DirectoryScanner ds = getDirectoryScanner(srcDir);
-                            final String[] files = ds.getIncludedFiles();
-                            scanDir(srcDir, fu.resolveFile(destDir, moduleName), files);
-                        }
-                    }
-                }
-                if (!valid) {
-                    throw new BuildException("modulesourcepath \""
-                                             + pathElement
-                                             + "\" does not exist!", getLocation());
-                }
-            }
+            collectFileListFromModulePath();
         }
 
         compile();
@@ -1142,6 +1110,46 @@ public class Javac extends MatchingTask {
                 System.arraycopy(newFiles, 0, newCompileList,
                                  compileList.length, newFiles.length);
                 compileList = newCompileList;
+            }
+        }
+    }
+
+    private void collectFileListFromSourcePath() {
+        final String[] list = src.list();
+        for (int i = 0; i < list.length; i++) {
+            final File srcDir = getProject().resolveFile(list[i]);
+            if (!srcDir.exists()) {
+                throw new BuildException("srcdir \""
+                                         + srcDir.getPath()
+                                         + "\" does not exist!", getLocation());
+            }
+
+            final DirectoryScanner ds = this.getDirectoryScanner(srcDir);
+            final String[] files = ds.getIncludedFiles();
+
+            scanDir(srcDir, destDir != null ? destDir : srcDir, files);
+        }
+    }
+    
+    private void collectFileListFromModulePath() {
+        final FileUtils fu = FileUtils.getFileUtils();
+        for (String pathElement : moduleSourcepath.list()) {
+            boolean valid = false;
+            for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(getProject().getBaseDir(), pathElement).entrySet()) {
+                final String moduleName = modules.getKey();
+                for (File srcDir : modules.getValue()) {
+                    if (srcDir.exists()) {
+                        valid = true;
+                        final DirectoryScanner ds = getDirectoryScanner(srcDir);
+                        final String[] files = ds.getIncludedFiles();
+                        scanDir(srcDir, fu.resolveFile(destDir, moduleName), files);
+                    }
+                }
+            }
+            if (!valid) {
+                throw new BuildException("modulesourcepath \""
+                                         + pathElement
+                                         + "\" does not exist!", getLocation());
             }
         }
     }
@@ -1601,10 +1609,10 @@ public class Javac extends MatchingTask {
             if (pattern.indexOf(MODULE_MARKER, endIndex) != -1) {
                 throw new BuildException("The modulesourcepath entry must contain at most one module mark");
             }
-            final String pathToModule = pattern.substring(0,startIndex);
+            final String pathToModule = pattern.substring(0, startIndex);
             final String pathInModule = endIndex == pattern.length() ?
                     null :
-                    pattern.substring(endIndex+1);  //+1 the separator
+                    pattern.substring(endIndex + 1);  //+1 the separator
             findModules(root, pathToModule, pathInModule, collector);
         }
     }
