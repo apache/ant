@@ -73,6 +73,9 @@ Other changes:
  * <java> now supports Java9 modules.
    https://github.com/apache/ant/pull/15
 
+ * <javac> now supports Java9 modules.
+   https://github.com/apache/ant/pull/16
+
 Changes from Ant 1.9.5 TO Ant 1.9.6
 ===================================
 
