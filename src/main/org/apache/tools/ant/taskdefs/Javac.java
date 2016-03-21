@@ -1636,7 +1636,6 @@ public class Javac extends MatchingTask {
             return;
         }
         final File[] modules = f.listFiles(new FileFilter() {
-            @Override
             public boolean accept(File pathname) {
                 return pathname.isDirectory();
             }
