@@ -562,6 +562,13 @@ public class ProjectHelper {
             + System.getProperty("line.separator")
             + ex.getLocation().toString()
             + ex.getMessage();
+        if (ex instanceof ExitStatusException) {
+            int exitStatus = ((ExitStatusException) ex).getStatus();
+            if (newLocation == null) {
+                return new ExitStatusException(errorMessage, exitStatus);
+            }
+            return new ExitStatusException(errorMessage, exitStatus, newLocation);
+        }
         if (newLocation == null) {
             return new BuildException(errorMessage, ex);
         }
