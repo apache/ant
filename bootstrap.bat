@@ -49,6 +49,10 @@ set CLASSDIR=build\classes
 
 SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
 
+echo Content of %JAVA_HOME%
+dir %JAVA_HOME%
+echo Content of %JAVA_HOME%\bin
+dir %JAVA_HOME%\bin
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
 echo JAVAC=%JAVAC%
