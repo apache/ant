@@ -60,6 +60,10 @@ Fixed bugs:
    recent Java 9 builds (b108).
    Bugzilla Report 59130
 
+ * <ant> and <antcall> now preserve the ext status set by an <exit>
+   task.
+   Bugzilla Report 59228
+
 Other changes:
 --------------
 
