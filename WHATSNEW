@@ -1,3 +1,18 @@
+Changes from Ant 1.9.7 TO Ant 1.10.0
+====================================
+
+Changes that could break older environments:
+-------------------------------------------
+
+ * Ant 1.10.x requires Java8 or newer at compile or build time.
+   The 1.9.x series wil stay compatible with Java5.
+
+Fixed bugs:
+-----------
+
+Other changes:
+--------------
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
