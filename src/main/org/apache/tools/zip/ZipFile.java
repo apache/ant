@@ -24,6 +24,7 @@ import static org.apache.tools.zip.ZipConstants.WORD;
 import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC;
 import static org.apache.tools.zip.ZipConstants.ZIP64_MAGIC_SHORT;
 
+import java.io.Closeable;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +73,7 @@ import java.util.zip.ZipException;
  * </ul>
  *
  */
-public class ZipFile {
+public class ZipFile implements Closeable {
     private static final int HASH_SIZE = 509;
     static final int NIBLET_MASK = 0x0f;
     static final int BYTE_SHIFT = 8;
