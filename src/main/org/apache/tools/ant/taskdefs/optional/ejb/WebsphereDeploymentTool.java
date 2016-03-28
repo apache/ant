@@ -832,29 +832,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             throw new BuildException(msg, ioe);
         } finally {
             // need to close files and perhaps rename output
-            if (genericJar != null) {
-                try {
-                    genericJar.close();
-                } catch (IOException closeException) {
-                    // Ignore
-                }
-            }
-
-            if (wasJar != null) {
-                try {
-                    wasJar.close();
-                } catch (IOException closeException) {
-                    // Ignore
-                }
-            }
+            FileUtils.close(genericJar);
+            FileUtils.close(wasJar);
+            FileUtils.close(newJarStream);
 
             if (newJarStream != null) {
-                try {
-                    newJarStream.close();
-                } catch (IOException closeException) {
-                    // Ignore
-                }
-
                 try {
                     FILE_UTILS.rename(newwasJarFile, websphereJarFile);
                 } catch (IOException renameException) {

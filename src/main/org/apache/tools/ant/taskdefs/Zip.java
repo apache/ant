@@ -1911,14 +1911,11 @@ public class Zip extends MatchingTask {
                                      getLocation());
         }
 
-        final FileInputStream fIn = new FileInputStream(file);
-        try {
+        try (FileInputStream fIn = new FileInputStream(file)) {
             // ZIPs store time with a granularity of 2 seconds, round up
             zipFile(fIn, zOut, vPath,
                     file.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0),
                     null, mode);
-        } finally {
-            fIn.close();
         }
     }
 

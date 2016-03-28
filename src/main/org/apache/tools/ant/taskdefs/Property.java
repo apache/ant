@@ -533,13 +533,8 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Loading " + url, Project.MSG_VERBOSE);
         try {
-            InputStream is = url.openStream();
-            try {
+            try (InputStream is = url.openStream()) {
                 loadProperties(props, is, url.getFile().endsWith(".xml"));
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
             }
             addProperties(props);
         } catch (IOException ex) {

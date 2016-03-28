@@ -147,16 +147,13 @@ class PlainMailer extends Mailer {
         int length;
         final int maxBuf = 1024;
         byte[] buf = new byte[maxBuf];
-        FileInputStream finstr = new FileInputStream(file);
 
-        try {
-            BufferedInputStream in = new BufferedInputStream(finstr, buf.length);
+        try (FileInputStream finstr = new FileInputStream(file);
+             BufferedInputStream in = new BufferedInputStream(finstr, buf.length)) {
 
             while ((length = in.read(buf)) != -1) {
                 out.write(buf, 0, length);
             }
-        } finally {
-            finstr.close();
         }
     }
 

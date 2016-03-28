@@ -72,7 +72,7 @@ import java.util.zip.ZipException;
  * </ul>
  *
  */
-public class ZipFile {
+public class ZipFile implements AutoCloseable {
     private static final int HASH_SIZE = 509;
     static final int NIBLET_MASK = 0x0f;
     static final int BYTE_SHIFT = 8;

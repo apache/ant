@@ -126,17 +126,13 @@ public class Message extends ProjectComponent {
                 : new BufferedWriter(new OutputStreamWriter(ps));
             if (messageSource != null) {
                 // Read message from a file
-                Reader freader = getReader(messageSource);
-
-                try {
-                    BufferedReader in = new BufferedReader(freader);
+                try (Reader freader = getReader(messageSource);
+                     BufferedReader in = new BufferedReader(freader)) {
                     String line = null;
                     while ((line = in.readLine()) != null) {
                         out.write(getProject().replaceProperties(line));
                         out.newLine();
                     }
-                } finally {
-                    freader.close();
                 }
             } else {
                 out.write(getProject().replaceProperties(buffer.substring(0)));

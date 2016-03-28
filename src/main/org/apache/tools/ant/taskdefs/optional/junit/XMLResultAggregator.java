@@ -213,9 +213,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @throws IOException thrown if there is an error while writing the content.
      */
     protected void writeDOMTree(Document doc, File file) throws IOException {
-        OutputStream os = new FileOutputStream(file);
-        try {
-            PrintWriter wri = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(os), "UTF8"));
+        try (OutputStream os = new FileOutputStream(file);
+             PrintWriter wri = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(os), "UTF8"))) {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
             wri.flush();
@@ -223,8 +222,6 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             if (wri.checkError()) {
                 throw new IOException("Error while writing DOM content");
             }
-        } finally {
-            os.close();
         }
     }
 

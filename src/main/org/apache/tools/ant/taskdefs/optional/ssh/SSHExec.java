@@ -495,9 +495,7 @@ public class SSHExec extends SSHBase {
      */
     private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
-        FileWriter out = null;
-        try {
-            out = new FileWriter(to.getAbsolutePath(), append);
+        try (FileWriter out = new FileWriter(to.getAbsolutePath(), append)) {
             final StringReader in = new StringReader(from);
             final char[] buffer = new char[BUFFER_SIZE];
             int bytesRead;
@@ -509,10 +507,6 @@ public class SSHExec extends SSHBase {
                 out.write(buffer, 0, bytesRead);
             }
             out.flush();
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 

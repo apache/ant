@@ -490,19 +490,13 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 + pathComponent.lastModified() + "-" + pathComponent.length();
         String classpath = pathMap.get(absPathPlusTimeAndLength);
         if (classpath == null) {
-            JarFile jarFile = null;
-            try {
-                jarFile = new JarFile(pathComponent);
+            try (JarFile jarFile = new JarFile(pathComponent)) {
                 final Manifest manifest = jarFile.getManifest();
                 if (manifest == null) {
                     return;
                 }
                 classpath = manifest.getMainAttributes()
                     .getValue(Attributes.Name.CLASS_PATH);
-            } finally {
-                if (jarFile != null) {
-                    jarFile.close();
-                }
             }
             if (classpath == null) {
                 classpath = "";
@@ -1602,8 +1596,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
     }
 
     private static boolean readFully(final File f, final byte[] b) throws IOException {
-        final FileInputStream fis = new FileInputStream(f);
-        try {
+        try (FileInputStream fis = new FileInputStream(f)) {
             final int len = b.length;
             int count = 0, x = 0;
             while (count != len) {
@@ -1614,8 +1607,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                 count += x;
             }
             return count == len;
-        } finally {
-            fis.close();
         }
     }
 

@@ -834,13 +834,7 @@ public class SQLExec extends JDBCTask {
                 throw e;
             }
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    //ignore
-                }
-            }
+            FileUtils.close(resultSet);
         }
     }
 
@@ -854,13 +848,8 @@ public class SQLExec extends JDBCTask {
      */
     @Deprecated
     protected void printResults(PrintStream out) throws SQLException {
-        ResultSet rs = getStatement().getResultSet();
-        try {
+        try (ResultSet rs = getStatement().getResultSet()) {
             printResults(rs, out);
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
         }
     }
 

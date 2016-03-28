@@ -96,9 +96,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                         }
                     } finally {
                         FileUtils.close(inStream);
-                        if (zipFile != null) {
-                            zipFile.close();
-                        }
+                        FileUtils.close(zipFile);
                     }
                 } catch (IOException ioe) {
                     // ignore

@@ -177,11 +177,8 @@ public abstract class Pack extends Task {
      */
     protected void zipResource(Resource resource, OutputStream zOut)
         throws IOException {
-        InputStream rIn = resource.getInputStream();
-        try {
+        try (InputStream rIn = resource.getInputStream()) {
             zipFile(rIn, zOut);
-        } finally {
-            rIn.close();
         }
     }
 

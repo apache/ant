@@ -40,16 +40,11 @@ class UUMailer extends PlainMailer {
                  + "readable.");
         }
 
-        FileInputStream finstr = new FileInputStream(file);
-
-        try {
-            BufferedInputStream in = new BufferedInputStream(finstr);
+        try (FileInputStream finstr = new FileInputStream(file);
+             BufferedInputStream in = new BufferedInputStream(finstr)) {
             UUEncoder encoder = new UUEncoder(file.getName());
 
             encoder.encode(in, out);
-
-        } finally {
-            finstr.close();
         }
     }
 }

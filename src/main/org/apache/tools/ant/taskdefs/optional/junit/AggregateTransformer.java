@@ -168,12 +168,9 @@ public class AggregateTransformer {
     protected void setXmlfile(File xmlfile) throws BuildException {
         try {
             DocumentBuilder builder = privateDBFactory.newDocumentBuilder();
-            InputStream in = new FileInputStream(xmlfile);
-            try {
+            try (InputStream in = new FileInputStream(xmlfile)) {
                 Document doc = builder.parse(in);
                 setXmlDocument(doc);
-            } finally {
-                in.close();
             }
         } catch (Exception e) {
             throw new BuildException("Error while parsing document: " + xmlfile, e);

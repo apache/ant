@@ -1420,8 +1420,7 @@ public class Javac extends MatchingTask {
                 continue;
             }
             log("Creating empty " + pkgInfoClass);
-            final OutputStream os = new FileOutputStream(pkgInfoClass);
-            try {
+            try (OutputStream os = new FileOutputStream(pkgInfoClass)) {
                 os.write(PACKAGE_INFO_CLASS_HEADER);
                 final byte[] name = pkg.getBytes("UTF-8");
                 final int length = name.length + /* "/package-info" */ 13;
@@ -1429,8 +1428,6 @@ public class Javac extends MatchingTask {
                 os.write((byte) length % 256);
                 os.write(name);
                 os.write(PACKAGE_INFO_CLASS_FOOTER);
-            } finally {
-                os.close();
             }
         }
     }

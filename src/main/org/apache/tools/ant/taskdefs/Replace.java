@@ -354,7 +354,7 @@ public class Replace extends MatchingTask {
      * a StringBuffer. Compatible with the Replacefilter.
      * @since 1.7
      */
-    private class FileInput /* JDK 5: implements Closeable */ {
+    private class FileInput implements AutoCloseable {
         private StringBuffer outputBuffer;
         private final InputStream is;
         private Reader reader;
@@ -418,7 +418,7 @@ public class Replace extends MatchingTask {
      * Replacefilter.
      * @since 1.7
      */
-    private class FileOutput /* JDK 5: implements Closeable */ {
+    private class FileOutput implements AutoCloseable {
         private StringBuffer inputBuffer;
         private final OutputStream os;
         private Writer writer;
@@ -667,10 +667,8 @@ public class Replace extends MatchingTask {
             File temp = FILE_UTILS.createTempFile("rep", ".tmp",
                     src.getParentFile(), false, true);
             try {
-                FileInput in = new FileInput(src);
-                try {
-                    FileOutput out = new FileOutput(temp);
-                    try {
+                try (FileInput in = new FileInput(src);
+                     FileOutput out = new FileOutput(temp)) {
                         out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
 
                         while (in.readChunk()) {
@@ -682,11 +680,6 @@ public class Replace extends MatchingTask {
                         flushFilterChain();
 
                         out.flush();
-                    } finally {
-                        out.close();
-                    }
-                } finally {
-                    in.close();
                 }
                 boolean changes = (replaceCount != repCountStart);
                 if (changes) {

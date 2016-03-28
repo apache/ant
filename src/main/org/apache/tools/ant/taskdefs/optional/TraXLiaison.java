@@ -293,17 +293,11 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         // and avoid keeping the handle until the object is garbaged.
         // (always keep control), otherwise you won't be able to delete
         // the file quickly on windows.
-        InputStream xslStream = null;
-        try {
-            xslStream
-                = new BufferedInputStream(stylesheet.getInputStream());
+        try (InputStream xslStream =
+             new BufferedInputStream(stylesheet.getInputStream())) {
             templatesModTime = stylesheet.getLastModified();
             final Source src = getSource(xslStream, stylesheet);
             templates = getFactory().newTemplates(src);
-        } finally {
-            if (xslStream != null) {
-                xslStream.close();
-            }
         }
     }
 

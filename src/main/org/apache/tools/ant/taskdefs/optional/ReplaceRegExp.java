@@ -356,13 +356,13 @@ public class ReplaceRegExp extends Task {
         try {
             boolean changes = false;
 
-            InputStream is = new FileInputStream(f);
-            try {
-                Reader r = encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is);
-                OutputStream os = new FileOutputStream(temp);
+            try (InputStream is = new FileInputStream(f);
+                 OutputStream os = new FileOutputStream(temp)) {
+                Reader r = null;
+                Writer w = null;
                 try {
-                    Writer w = encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os);
-
+                    r = encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is);
+                    w = encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os);
                     log("Replacing pattern '" + regex.getPattern(getProject())
                         + "' with '" + subs.getExpression(getProject())
                         + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
@@ -426,15 +426,10 @@ public class ReplaceRegExp extends Task {
                     } else {
                         changes = multilineReplace(r, w, options);
                     }
-
-                    r.close();
-                    w.close();
-
                 } finally {
-                    os.close();
+                    FileUtils.close(r);
+                    FileUtils.close(w);
                 }
-            } finally {
-                is.close();
             }
             if (changes) {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);

@@ -866,30 +866,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
             throw new BuildException(msg, ioe);
         } finally {
-            // need to close files and perhaps rename output
-            if (genericJar != null) {
-                try {
-                    genericJar.close();
-                } catch (IOException closeException) {
-                    // empty
-                }
-            }
-
-            if (wlJar != null) {
-                try {
-                    wlJar.close();
-                } catch (IOException closeException) {
-                    // empty
-                }
-            }
+            FileUtils.close(genericJar);
+            FileUtils.close(wlJar);
+            FileUtils.close(newJarStream);
 
             if (newJarStream != null) {
-                try {
-                    newJarStream.close();
-                } catch (IOException closeException) {
-                    // empty
-                }
-
                 try {
                     FILE_UTILS.rename(newWLJarFile, weblogicJarFile);
                 } catch (IOException renameException) {

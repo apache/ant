@@ -349,13 +349,7 @@ public class Jar extends Zip {
             }
             return null;
         } finally {
-            if (zf != null) {
-                try {
-                    zf.close();
-                } catch (IOException e) {
-                    // TODO - log an error?  throw an exception?
-                }
-            }
+            FileUtils.close(zf);
         }
     }
 
@@ -388,13 +382,7 @@ public class Jar extends Zip {
             }
             return false;
         } finally {
-            if (zf != null) {
-                try {
-                    zf.close();
-                } catch (IOException e) {
-                    // TODO - log an error?  throw an exception?
-                }
-            }
+            FileUtils.close(zf);
         }
     }
 
@@ -1144,9 +1132,7 @@ public class Jar extends Zip {
     protected static void grabFilesAndDirs(String file, List<String> dirs,
                                                  List<String> files)
         throws IOException {
-        org.apache.tools.zip.ZipFile zf = null;
-        try {
-            zf = new org.apache.tools.zip.ZipFile(file, "utf-8");
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(file, "utf-8")) {
             Enumeration<org.apache.tools.zip.ZipEntry> entries = zf.getEntries();
             HashSet<String> dirSet = new HashSet<String>();
             while (entries.hasMoreElements()) {
@@ -1166,10 +1152,6 @@ public class Jar extends Zip {
                 }
             }
             dirs.addAll(dirSet);
-        } finally {
-            if (zf != null) {
-                zf.close();
-            }
         }
     }
 
