@@ -669,17 +669,17 @@ public class Replace extends MatchingTask {
             try {
                 try (FileInput in = new FileInput(src);
                      FileOutput out = new FileOutput(temp)) {
-                        out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
+                    out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
 
-                        while (in.readChunk()) {
-                            if (processFilterChain()) {
-                                out.process();
-                            }
+                    while (in.readChunk()) {
+                        if (processFilterChain()) {
+                            out.process();
                         }
+                    }
 
-                        flushFilterChain();
+                    flushFilterChain();
 
-                        out.flush();
+                    out.flush();
                 }
                 boolean changes = (replaceCount != repCountStart);
                 if (changes) {
