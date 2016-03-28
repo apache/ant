@@ -171,9 +171,7 @@ public class TarResource extends ArchiveResource {
             log(e.getMessage(), Project.MSG_DEBUG);
             throw new BuildException(e);
         } finally {
-            if (i != null) {
-                FileUtils.close(i);
-            }
+            FileUtils.close(i);
         }
         setEntry(null);
     }

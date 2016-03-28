@@ -26,6 +26,7 @@ import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Prints short summary output of the test to Ant's logging system.
@@ -202,11 +203,7 @@ public class SummaryJUnitResultFormatter
             writeOutputLine(sb.toString().getBytes());
         } finally {
             if (out != System.out && out != System.err) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // ignore
-                }
+                FileUtils.close(out);
             }
         }
     }

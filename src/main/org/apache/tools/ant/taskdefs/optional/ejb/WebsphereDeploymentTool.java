@@ -848,13 +848,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
             }
 
+            FileUtils.close(newJarStream);
             if (newJarStream != null) {
-                try {
-                    newJarStream.close();
-                } catch (IOException closeException) {
-                    // Ignore
-                }
-
                 try {
                     FILE_UTILS.rename(newwasJarFile, websphereJarFile);
                 } catch (IOException renameException) {

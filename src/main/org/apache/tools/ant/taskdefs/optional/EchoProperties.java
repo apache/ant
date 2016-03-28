@@ -362,13 +362,7 @@ public class EchoProperties extends Task {
                 log(ioe.getMessage(), Project.MSG_INFO);
             }
         } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException ex) {
-                    //ignore
-                }
-            }
+            FileUtils.close(os);
         }
     }
 

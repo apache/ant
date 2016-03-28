@@ -630,13 +630,7 @@ public class Property extends Task {
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(is);
             if (cleanup && cL != null) {
                 ((AntClassLoader) cL).cleanup();
             }

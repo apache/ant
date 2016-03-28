@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.tools.ant.util.FileUtils;
+
 /**
  * Copies standard output and error of subprocesses to standard output and
  * error of the parent process.
@@ -119,11 +121,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         if (input != null) {
             inputThread = createPump(input, os, true, nonBlockingRead);
         } else {
-            try {
-                os.close();
-            } catch (IOException e) {
-                //ignore
-            }
+            FileUtils.close(os);
         }
     }
 

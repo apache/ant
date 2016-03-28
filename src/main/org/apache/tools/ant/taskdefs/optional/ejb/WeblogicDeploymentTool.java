@@ -883,13 +883,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
             }
 
+            FileUtils.close(newJarStream);
             if (newJarStream != null) {
-                try {
-                    newJarStream.close();
-                } catch (IOException closeException) {
-                    // empty
-                }
-
                 try {
                     FILE_UTILS.rename(newWLJarFile, weblogicJarFile);
                 } catch (IOException renameException) {

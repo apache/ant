@@ -42,6 +42,8 @@ import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.apache.tools.ant.util.FileUtils;
+
 /**
  * Compiles EJB stubs and skeletons for the iPlanet Application
  * Server (iAS).  The class will read a standard EJB descriptor (as well as an
@@ -1483,11 +1485,7 @@ public class IPlanetEjbc {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // Do nothing
-                }
+                FileUtils.close(reader);
             }
         }
     }  // End of RedirectOutput inner class

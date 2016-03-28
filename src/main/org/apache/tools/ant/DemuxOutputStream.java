@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.WeakHashMap;
 
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Logs content written by a thread and forwards the buffers onto the
@@ -113,11 +114,7 @@ public class DemuxOutputStream extends OutputStream {
     private void resetBufferInfo() {
         Thread current = Thread.currentThread();
         BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
-        try {
-            bufferInfo.buffer.close();
-        } catch (IOException e) {
-            // Shouldn't happen
-        }
+        FileUtils.close(bufferInfo.buffer);
         bufferInfo.buffer = new ByteArrayOutputStream();
         bufferInfo.crSeen = false;
     }

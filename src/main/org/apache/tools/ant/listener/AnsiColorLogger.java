@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Uses ANSI Color Code Sequences to colorize messages
@@ -193,13 +194,7 @@ public class AnsiColorLogger extends DefaultLogger {
         } catch (IOException ioe) {
             //Ignore - we will use the defaults.
         } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    //Ignore - We do not want this to stop the build.
-                }
-            }
+            FileUtils.close(in);
         }
     }
 

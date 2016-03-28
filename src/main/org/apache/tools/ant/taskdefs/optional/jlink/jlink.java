@@ -312,13 +312,7 @@ public class jlink {
             } catch (IOException ioe) {
                 //do nothing
             } finally {
-                if (input != null) {
-                    try {
-                        input.close();
-                    } catch (IOException e) {
-                        //do nothing
-                    }
-                }
+                FileUtils.close(input);
             }
         }
         System.out.println("From " + file.getPath() + " and prefix " + prefix

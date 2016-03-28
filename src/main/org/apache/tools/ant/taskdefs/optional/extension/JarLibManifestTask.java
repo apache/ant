@@ -29,6 +29,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Generates a manifest that declares all the dependencies.
@@ -219,13 +220,7 @@ public final class JarLibManifestTask extends Task {
             manifest.write(output);
             output.flush();
         } finally {
-            if (null != output) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(output);
         }
     }
 

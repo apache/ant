@@ -1564,13 +1564,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 transferred++;
             }
         } finally {
-            if (instream != null) {
-                try {
-                    instream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(instream);
         }
     }
 
@@ -1702,13 +1696,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 }
             }
         } finally {
-            if (outstream != null) {
-                try {
-                    outstream.close();
-                } catch (IOException ex) {
-                    // ignore it
-                }
-            }
+            FileUtils.close(outstream);
         }
     }
 
