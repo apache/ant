@@ -40,6 +40,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -353,13 +354,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 + "-" + ioe.getMessage(), Project.MSG_WARN);
         } finally {
             // Close up the file input stream for the class file
-            if (iStream != null) {
-                try {
-                    iStream.close();
-                } catch (IOException closeException) {
-                    // ignore
-                }
-            }
+            FileUtils.close(iStream);
         }
     }
 
@@ -535,13 +530,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             ejbFiles = handler.getFiles();
 
         } finally {
-            if (descriptorStream != null) {
-                try {
-                    descriptorStream.close();
-                } catch (IOException closeException) {
-                    // ignore
-                }
-            }
+            FileUtils.close(descriptorStream);
         }
 
         return ejbFiles;
@@ -858,13 +847,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 + ioe.getMessage();
             throw new BuildException(msg, ioe);
         } finally {
-            if (jarStream != null) {
-                try {
-                    jarStream.close();
-                } catch (IOException closeException) {
-                    // ignore
-                }
-            }
+            FileUtils.close(jarStream);
         }
     } // end of writeJar
 

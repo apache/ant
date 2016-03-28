@@ -293,9 +293,7 @@ public class DefaultLogger implements BuildLogger {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
                 } finally {
-                    if (r != null) {
-                        FileUtils.close(r);
-                    }
+                    FileUtils.close(r);
                 }
 
             } else {

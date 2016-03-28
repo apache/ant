@@ -123,13 +123,7 @@ public class CVSPass extends Task {
         } catch (IOException e) {
             throw new BuildException(e);
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(reader);
             FileUtils.close(writer);
         }
     }

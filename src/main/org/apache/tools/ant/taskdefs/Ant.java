@@ -456,11 +456,7 @@ public class Ant extends Task {
             }
 
             if (output != null && out != null) {
-                try {
-                    out.close();
-                } catch (final Exception ex) {
-                    //ignore
-                }
+                FileUtils.close(out);
             }
             dir = savedDir;
             antFile = savedAntFile;

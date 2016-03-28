@@ -201,7 +201,6 @@ public class DefaultCompilerAdapterTest {
             javac.setProject(prj);
             final Commandline[] cmd = new Commandline[1];
             final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
-                @Override
                 public boolean execute() throws BuildException {
                     cmd[0] = setupModernJavacCommand();
                     return true;
@@ -258,7 +257,6 @@ public class DefaultCompilerAdapterTest {
             javac.setProject(prj);
             final Commandline[] cmd = new Commandline[1];
             final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
-                @Override
                 public boolean execute() throws BuildException {
                     cmd[0] = setupModernJavacCommand();
                     return true;
@@ -322,7 +320,6 @@ public class DefaultCompilerAdapterTest {
             final LogCapturingJavac javac = new LogCapturingJavac();
             javac.setProject(prj);
             final DefaultCompilerAdapter impl = new DefaultCompilerAdapter() {
-                @Override
                 public boolean execute() throws BuildException {
                     setupModernJavacCommand();
                     return true;

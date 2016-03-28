@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
@@ -159,11 +160,7 @@ public class ArgumentProcessorRegistry {
                 return getProcessor(processorClassName);
             }
         } finally {
-            try {
-                isr.close();
-            } catch (IOException e) {
-                // ignore
-            }
+            FileUtils.close(isr);
         }
         return null;
     }

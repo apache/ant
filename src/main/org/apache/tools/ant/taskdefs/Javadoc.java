@@ -1823,12 +1823,8 @@ public class Javadoc extends Task {
 
             out.logFlush();
             err.logFlush();
-            try {
-                out.close();
-                err.close();
-            } catch (final IOException e) {
-                // ignore
-            }
+            FileUtils.close(out);
+            FileUtils.close(err);
         }
     }
 
