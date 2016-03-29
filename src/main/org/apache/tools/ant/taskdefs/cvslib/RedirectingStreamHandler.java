@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A dummy stream handler that just passes stuff to the parser.
@@ -49,13 +50,8 @@ class RedirectingStreamHandler
 
     public void stop() {
         super.stop();
-        try {
-            getErr().close();
-            getOut().close();
-        } catch (final IOException e) {
-            // plain impossible
-            throw new BuildException(e);
-        }
+        FileUtils.close(getErr());
+        FileUtils.close(getOut());
     }
 }
 

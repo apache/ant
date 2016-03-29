@@ -692,19 +692,11 @@ public class SQLExec extends JDBCTask {
                 }
             } finally {
                 try {
-                    if (getStatement() != null) {
-                        getStatement().close();
-                    }
+                    FileUtils.close(getStatement());
                 } catch (SQLException ex) {
                     // ignore
                 }
-                try {
-                    if (getConnection() != null) {
-                        getConnection().close();
-                    }
-                } catch (SQLException ex) {
-                    // ignore
-                }
+                FileUtils.close(getConnection());
             }
 
             log(goodSql + " of " + totalSql + " SQL statements executed successfully");

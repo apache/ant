@@ -267,15 +267,9 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
                 }
             } else {
                 // must be a zip of some sort
-                ZipFile zipFile = null;
-                try {
-                    zipFile = new ZipFile(element);
+                try (ZipFile zipFile = new ZipFile(element)) {
                     if (zipFile.getEntry(resourceLocation) != null) {
                         return element;
-                    }
-                } finally {
-                    if (zipFile != null) {
-                        zipFile.close();
                     }
                 }
             }

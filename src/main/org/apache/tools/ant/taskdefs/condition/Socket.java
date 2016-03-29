@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Condition to wait for a TCP/IP socket to have a listener. Its attributes are:
@@ -73,13 +74,7 @@ public class Socket extends ProjectComponent implements Condition {
         } catch (IOException e) {
             return false;
         } finally {
-          if (s != null) {
-            try {
-              s.close();
-            } catch (IOException ioe) {
-              // Intentionally left blank
-            }
-          }
+            FileUtils.close(s);
         }
         return true;
     }

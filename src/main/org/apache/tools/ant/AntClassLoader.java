@@ -1407,12 +1407,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      */
     public synchronized void cleanup() {
         for (final Enumeration<JarFile> e = jarFiles.elements(); e.hasMoreElements();) {
-            final JarFile jarFile = e.nextElement();
-            try {
-                jarFile.close();
-            } catch (final IOException ioe) {
-                // ignore
-            }
+            FileUtils.close(e.nextElement());
         }
         jarFiles = new Hashtable<File, JarFile>();
         if (project != null) {
