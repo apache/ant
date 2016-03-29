@@ -111,7 +111,9 @@ public abstract class SSHBase extends Task implements LogListener {
      * @since Ant 1.9.7
      */
     public void setServerAliveCountMax(final int countMax) {
-        if (countMax <= 0) throw new IllegalArgumentException("ssh server alive count max setting cannot be negative or zero");
+        if (countMax <= 0) {
+            throw new BuildException("ssh server alive count max setting cannot be negative or zero");
+        }
         this.serverAliveCountMax = countMax;
     }
 
@@ -129,7 +131,9 @@ public abstract class SSHBase extends Task implements LogListener {
      * @since Ant 1.9.7
      */
     public void setServerAliveIntervalSeconds(final int interval) {
-        if (interval < 0) throw new IllegalArgumentException("ssh server alive interval setting cannot be negative");
+        if (interval < 0) {
+            throw new BuildException("ssh server alive interval setting cannot be negative");
+        }
         this.serverAliveIntervalSeconds = interval;
     }
 
@@ -260,9 +264,9 @@ public abstract class SSHBase extends Task implements LogListener {
                 "publickey,keyboard-interactive,password");
         session.setUserInfo(userInfo);
 
-        if (serverAliveIntervalSeconds > 0) {
-            session.setServerAliveCountMax(serverAliveCountMax);
-            session.setServerAliveInterval(serverAliveIntervalSeconds * 1000);
+        if (getServerAliveIntervalSeconds() > 0) {
+            session.setServerAliveCountMax(getServerAliveCountMax());
+            session.setServerAliveInterval(getServerAliveIntervalSeconds() * 1000);
         }
 
         log("Connecting to " + host + ":" + port);
