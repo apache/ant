@@ -230,6 +230,23 @@ and won't work with versions of jsch earlier than
       <em>since Ant 1.9.4</em></td>
     <td align="center" valign="top">No, defaults to false</td>
   </tr>
+  <tr>
+    <td valign="top">serverAliveIntervalSeconds</td>
+    <td valign="top">Sets a timeout interval in seconds after which if no data has
+      been received from the server, the task will send a message through
+      the encrypted channel to request a response from the server.
+      <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No, the default is 0, indicating
+      that these messages will not be sent to the server</td>
+  </tr>
+  <tr>
+    <td valign="top">serverAliveCountMax</td>
+    <td valign="top">The number of server alive messages which may be
+      sent without receiving any messages back from the server. Only
+      used if serverAliveIntervalSeconds is not 0.
+      <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No, defaults to 3</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
