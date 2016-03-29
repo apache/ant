@@ -425,12 +425,11 @@ public class JavaCC extends Task {
         String packagePrefix = null;
         String mainClass = null;
 
-        AntClassLoader l = null;
-        try {
-            l = AntClassLoader.newAntClassLoader(null, null,
-                                                 path
-                                                 .concatSystemClasspath("ignore"),
-                                                 true);
+        try (AntClassLoader l =
+             AntClassLoader.newAntClassLoader(null, null,
+                                              path
+                                              .concatSystemClasspath("ignore"),
+                                              true)) {
             String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
             InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
                                                    + ".class");
@@ -498,10 +497,6 @@ public class JavaCC extends Task {
                 throw new BuildException("unknown task type " + type);
             }
             return packagePrefix + mainClass;
-        } finally {
-            if (l != null) {
-                l.cleanup();
-            }
         }
     }
 

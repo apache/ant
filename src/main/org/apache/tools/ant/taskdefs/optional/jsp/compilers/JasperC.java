@@ -166,17 +166,11 @@ public class JasperC extends DefaultJspCompilerAdapter {
      * @since Ant 1.6.2
      */
     private boolean isTomcat5x() {
-        AntClassLoader l = null;
-        try {
-            l = getProject().createClassLoader(getClasspath());
+        try (AntClassLoader l = getProject().createClassLoader(getClasspath())) {
             l.loadClass("org.apache.jasper.tagplugins.jstl.If");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
-        } finally {
-            if (l != null) {
-                l.cleanup();
-            }
         }
     }
 }

@@ -439,13 +439,10 @@ public class JspC extends MatchingTask {
 
         File dest = getActualDestDir();
 
-        AntClassLoader al = null;
-        try {
+        try (AntClassLoader al = getProject().createClassLoader(compilerClasspath)) {
             //bind to a compiler
             JspCompilerAdapter compiler =
-                JspCompilerAdapterFactory
-                .getCompiler(compilerName, this,
-                             al = getProject().createClassLoader(compilerClasspath));
+                JspCompilerAdapterFactory.getCompiler(compilerName, this, al);
 
             //if we are a webapp, hand off to the compiler, which had
             //better handle it
@@ -513,10 +510,6 @@ public class JspC extends MatchingTask {
                 } else {
                     log("all files are up to date", Project.MSG_VERBOSE);
                 }
-            }
-        } finally {
-            if (al != null) {
-                al.cleanup();
             }
         }
     }

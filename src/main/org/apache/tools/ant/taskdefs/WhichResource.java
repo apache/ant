@@ -135,11 +135,10 @@ public class WhichResource extends Task {
             getProject().log("using system classpath: " + classpath,
                              Project.MSG_DEBUG);
         }
-        AntClassLoader loader = null;
-        try {
-            loader = AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
-                                                      getProject(),
-                                                      classpath, false);
+        try (AntClassLoader loader =
+             AntClassLoader.newAntClassLoader(getProject().getCoreLoader(),
+                                              getProject(),
+                                              classpath, false)) {
             String loc = null;
             if (classname != null) {
                 //convert a class name into a resource
@@ -161,10 +160,6 @@ public class WhichResource extends Task {
                 //set the property
                 loc = url.toExternalForm();
                 getProject().setNewProperty(property, loc);
-            }
-        } finally {
-            if (loader != null) {
-                loader.cleanup();
             }
         }
     }

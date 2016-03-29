@@ -379,9 +379,7 @@ public class Depend extends MatchingTask {
         if (checkPath != null) {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
-            AntClassLoader loader = null;
-            try {
-                loader = getProject().createClassLoader(checkPath);
+            try (AntClassLoader loader = getProject().createClassLoader(checkPath)) {
 
                 Hashtable classpathFileCache = new Hashtable();
                 Object nullFileMarker = new Object();
@@ -442,10 +440,6 @@ public class Depend extends MatchingTask {
                             dependencies.put(jarFile, jarFile);
                         }
                     }
-                }
-            } finally {
-                if (loader != null) {
-                    loader.cleanup();
                 }
             }
         } else {

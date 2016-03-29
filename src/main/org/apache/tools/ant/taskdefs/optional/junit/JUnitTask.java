@@ -1360,12 +1360,10 @@ public class JUnitTask extends Task {
         if (!cmd.haveClasspath()) {
             return;
         }
-        AntClassLoader loader = null;
-        try {
-            loader =
-                AntClassLoader.newAntClassLoader(null, getProject(),
-                                                 cmd.createClasspath(getProject()),
-                                                 true);
+        try (AntClassLoader loader =
+             AntClassLoader.newAntClassLoader(null, getProject(),
+                                              cmd.createClasspath(getProject()),
+                                              true)) {
             final String projectResourceName =
                 LoaderUtils.classNameToResource(Project.class.getName());
             URL previous = null;
@@ -1385,10 +1383,6 @@ public class JUnitTask extends Task {
                 }
             } catch (final Exception ex) {
                 // Ignore exception
-            }
-        } finally {
-            if (loader != null) {
-                loader.cleanup();
             }
         }
     }
