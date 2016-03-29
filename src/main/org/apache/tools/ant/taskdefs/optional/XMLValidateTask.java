@@ -287,42 +287,40 @@ public class XMLValidateTask extends Task {
      */
     public void execute() throws BuildException {
         try {
-        int fileProcessed = 0;
-        if (file == null && (filesets.size() == 0)) {
-            throw new BuildException(
-                "Specify at least one source - " + "a file or a fileset.");
-        }
+            int fileProcessed = 0;
+            if (file == null && (filesets.size() == 0)) {
+                throw new BuildException(
+                    "Specify at least one source - " + "a file or a fileset.");
+            }
 
-
-
-        if (file != null) {
-            if (file.exists() && file.canRead() && file.isFile()) {
-                doValidate(file);
-                fileProcessed++;
-            } else {
-                String errorMsg = "File " + file + " cannot be read";
-                if (failOnError) {
-                    throw new BuildException(errorMsg);
+            if (file != null) {
+                if (file.exists() && file.canRead() && file.isFile()) {
+                    doValidate(file);
+                    fileProcessed++;
                 } else {
-                    log(errorMsg, Project.MSG_ERR);
+                    String errorMsg = "File " + file + " cannot be read";
+                    if (failOnError) {
+                        throw new BuildException(errorMsg);
+                    } else {
+                        log(errorMsg, Project.MSG_ERR);
+                    }
                 }
             }
-        }
 
-        final int size = filesets.size();
-        for (int i = 0; i < size; i++) {
+            final int size = filesets.size();
+            for (int i = 0; i < size; i++) {
 
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] files = ds.getIncludedFiles();
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                String[] files = ds.getIncludedFiles();
 
-            for (int j = 0; j < files.length; j++) {
-                File srcFile = new File(fs.getDir(getProject()), files[j]);
-                doValidate(srcFile);
-                fileProcessed++;
+                for (int j = 0; j < files.length; j++) {
+                    File srcFile = new File(fs.getDir(getProject()), files[j]);
+                    doValidate(srcFile);
+                    fileProcessed++;
+                }
             }
-        }
-        onSuccessfulValidation(fileProcessed);
+            onSuccessfulValidation(fileProcessed);
         } finally {
             cleanup();
         }
