@@ -80,6 +80,11 @@ Other changes:
  * <javac> now supports Java9 modules.
    https://github.com/apache/ant/pull/16
 
+ * <sshexec> and <scp> have two new attributes serverAliveInterval and
+   serverAliveCountMax that can be used to keep a intermediaries from
+   closing idle connections.
+   Bugzilla Report 59162
+
 Changes from Ant 1.9.5 TO Ant 1.9.6
 ===================================
 
