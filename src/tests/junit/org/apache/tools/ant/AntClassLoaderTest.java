@@ -40,8 +40,8 @@ import org.junit.Test;
  */
 public class AntClassLoaderTest {
 	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     private AntClassLoader loader;
 
