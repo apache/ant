@@ -18,6 +18,7 @@
 package org.apache.tools.ant;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,7 +49,6 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
-import org.apache.tools.ant.util.ReflectUtil;
 import org.apache.tools.ant.util.VectorSet;
 import org.apache.tools.zip.ZipLong;
 
@@ -69,7 +69,7 @@ import org.apache.tools.zip.ZipLong;
  * </p>
  *
  */
-public class AntClassLoader extends ClassLoader implements SubBuildListener {
+public class AntClassLoader extends ClassLoader implements SubBuildListener, Closeable {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -1539,20 +1539,15 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
         return "AntClassLoader[" + getClasspath() + "]";
     }
 
-    private static Class<?> subClassToLoad = null;
-    private static final Class<?>[] CONSTRUCTOR_ARGS = new Class[] {
-        ClassLoader.class, Project.class, Path.class, Boolean.TYPE
-    };
+    /** {@inheritDoc} */
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+        return getNamedResources(name);
+    }
 
-    static {
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            try {
-                subClassToLoad =
-                    Class.forName("org.apache.tools.ant.loader.AntClassLoader5");
-            } catch (final ClassNotFoundException e) {
-                // this is Java5 but the installation is lacking our subclass
-            }
-        }
+    /** {@inheritDoc} */
+    public void close() {
+        cleanup();
     }
 
     /**
@@ -1562,15 +1557,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
                                                    final Project project,
                                                    final Path path,
                                                    final boolean parentFirst) {
-        if (subClassToLoad != null) {
-            return (AntClassLoader)
-                ReflectUtil.newInstance(subClassToLoad,
-                                        CONSTRUCTOR_ARGS,
-                                        new Object[] {
-                                            parent, project, path,
-                                            Boolean.valueOf(parentFirst)
-                                        });
-        }
         return new AntClassLoader(parent, project, path, parentFirst);
     }
 
