@@ -250,29 +250,29 @@ public class JavacTest {
 
     @Test(expected = BuildException.class)
     public void testModulesourcepathOrSrcDirRequired() {
-            javac.checkParameters();
+        javac.checkParameters();
     }
 
     @Test(expected = BuildException.class)
     public void testModulesourcepathAndSrcDirForbidden() {
-            javac.checkParameters();
-            final Path p = new Path(project);
-            p.setPath("src");
-            javac.setSrcdir(p);
-            final Path mp = new Path(project);
-            p.setPath("modsrc");
-            javac.setModulesourcepath(mp);
+        javac.checkParameters();
+        final Path p = new Path(project);
+        p.setPath("src");
+        javac.setSrcdir(p);
+        final Path mp = new Path(project);
+        p.setPath("modsrc");
+        javac.setModulesourcepath(mp);
     }
 
     @Test(expected = BuildException.class)
     public void testModulesourcepathAndSourcepathForbidden() {
-            javac.checkParameters();
-            final Path p = new Path(project);
-            p.setPath("src");
-            javac.setSourcepath(p);
-            final Path mp = new Path(project);
-            p.setPath("modsrc");
-            javac.setModulesourcepath(mp);
+        javac.checkParameters();
+        final Path p = new Path(project);
+        p.setPath("src");
+        javac.setSourcepath(p);
+        final Path mp = new Path(project);
+        p.setPath("modsrc");
+        javac.setModulesourcepath(mp);
     }
 
     @Test
@@ -303,9 +303,9 @@ public class JavacTest {
 
     @Test(expected = BuildException.class)
     public void testModulesourcepathRequiresDestdir() {
-            final Path p = new Path(project);
-            p.setPath("src");
-            javac.setModulesourcepath(p);
-            javac.checkParameters();
+        final Path p = new Path(project);
+        p.setPath("src");
+        javac.setModulesourcepath(p);
+        javac.checkParameters();
     }
 }
