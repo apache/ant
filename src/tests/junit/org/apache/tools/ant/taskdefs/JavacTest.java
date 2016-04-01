@@ -35,7 +35,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Testcase for <javac>.
@@ -249,19 +248,13 @@ public class JavacTest {
         assertEquals("1.5", javac.getTarget());
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testModulesourcepathOrSrcDirRequired() {
-        try {
             javac.checkParameters();
-            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
-        } catch (BuildException e) {
-            //pass
-        }
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testModulesourcepathAndSrcDirForbidden() {
-        try {
             javac.checkParameters();
             final Path p = new Path(project);
             p.setPath("src");
@@ -269,15 +262,10 @@ public class JavacTest {
             final Path mp = new Path(project);
             p.setPath("modsrc");
             javac.setModulesourcepath(mp);
-            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
-        } catch (BuildException e) {
-            //pass
-        }
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testModulesourcepathAndSourcepathForbidden() {
-        try {
             javac.checkParameters();
             final Path p = new Path(project);
             p.setPath("src");
@@ -285,10 +273,6 @@ public class JavacTest {
             final Path mp = new Path(project);
             p.setPath("modsrc");
             javac.setModulesourcepath(mp);
-            fail("Build exception should have been thrown - neither srcDir nor modulesourcepath");
-        } catch (BuildException e) {
-            //pass
-        }
     }
 
     @Test
@@ -317,16 +301,11 @@ public class JavacTest {
         }
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testModulesourcepathRequiresDestdir() {
-        try {
             final Path p = new Path(project);
             p.setPath("src");
             javac.setModulesourcepath(p);
             javac.checkParameters();
-            fail("Build exception should have been thrown - modulesourcepath requires destdir");
-        } catch (BuildException e) {
-            //pass
-        }
     }
 }
