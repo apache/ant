@@ -6,7 +6,7 @@ Authors: Conor MacNeill
          Antoine Levy-Lambert
 
 Note: This document was updated in the context of releasing Ant
-      1.9.7 which was the first release cut from the 1.0.x branch.
+      1.9.7 which was the first release cut from the 1.9.x branch.
       Please interpret the branch names, tags, etc. according to
       your context.
 
@@ -58,7 +58,7 @@ Note: This document was updated in the context of releasing Ant
       if you've got mvn installed
 
       $ mvn versions:set -DnewVersion=1.9.7 -DgenerateBackupPoms=false
-      
+
       inside src/etc/poms should do the trick.
 
     * ivy.xml in release subdirectory (version should already be correct here)
