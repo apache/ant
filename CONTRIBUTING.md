@@ -23,11 +23,24 @@ changes on the
 first. This way you can make sure you're not wasting your time on
 something that isn't considered to be in Ant's scope.
 
+Branches
+--------
+
+The master branch is where we develop the next release of Ant 1.10.x -
+any patch or PR against this branch must be buildable using Java8.
+
+The branch 1.9.x is where we develop the next release of Ant 1.9.x -
+any patch or PR against this branch must be buildable using Java5.
+
+Please state clearly whether you are targeting 1.9.x or 1.10.x -
+usually we port changes from 1.9.x to 1.10.x but not necessarily the
+other way around.
+
 Making Changes
 --------------
 
 + Create a topic branch from where you want to base your work (this is
-  usually the master branch).
+  usually the master or the 1.9.x branch, see above).
 + Make commits of logical units.
 + Respect the original code style:
   + Only use spaces for indentation.
