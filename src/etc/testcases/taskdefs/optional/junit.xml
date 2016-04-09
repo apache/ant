@@ -339,11 +339,7 @@
       public void bad() {
       throw new RuntimeException("failed");}
       }</echo>
-    <available property="jdk1.6+" classname="java.net.CookieStore"/>
-    <condition property="source" value="6">
-      <isset property="jdk1.6+"/>
-    </condition>
-    <property name="source" value="5"/>
+    <property name="source" value="8"/>
     <javac srcdir="${tmp.dir}" destdir="${tmp.dir}" includes="T1.java,T2.java"
            source="${source}">
 

@@ -17,9 +17,7 @@
 -->
 <project name="docs" default="txt2html">
 
-    <available property="jdk1.5+" classname="java.net.Proxy"/>
     <target name="txt2html">
-        <fail unless="jdk1.5+" message="Tomcat BuildUtils requires Java5+"/>
         <property name="build.dir" value="build"/>
         <tempfile property="temp.dir"/>
         <mkdir dir="${temp.dir}/org/apache/tomcat/buildutil"/>

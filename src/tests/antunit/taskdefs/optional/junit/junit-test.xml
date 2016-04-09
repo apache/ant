@@ -317,10 +317,7 @@ public class BTest extends TestCase {
   </target>
 
   <target name="testTestMethods">
-    <condition property="source" value="6">
-      <isset property="jdk1.6+"/>
-    </condition>
-    <property name="source" value="5"/>
+    <property name="source" value="8"/>
     <echo file="${input}/T1.java">public class T1 extends
 			junit.framework.TestCase {
 			public void testOK() {}

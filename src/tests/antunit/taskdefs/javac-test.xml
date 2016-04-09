@@ -221,33 +221,12 @@ public class Adapter implements CompilerAdapter {
     </sequential>
     
     <sequential unless:set="jdk1.9+">
-      <echo>JDK 1.5+</echo>
-      <testJavac source="1.5"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-    
-    <sequential if:set="jdk1.6+">
-      <echo>JDK 1.6+</echo>
-      <testJavac source="1.6"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-  		
-    <sequential if:set="jdk1.7+">
-      <echo>JDK 1.7+</echo>
-      <testJavac source="1.7"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-    
-    <sequential if:set="jdk1.8+">
       <echo>JDK 1.8+</echo>
       <testJavac source="1.8"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
-            
+
     <sequential if:set="jdk1.9+">
       <echo>JDK 1.9+</echo>
       <testJavac source="1.9"/>
@@ -272,40 +251,12 @@ public class Adapter implements CompilerAdapter {
     </au:expectfailure>
 
     <sequential unless:set="jdk1.9+">
-      <echo>JDK 1.4+</echo>
-      <testJavac source="1.4" target="1.4"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-
-    <sequential unless:set="jdk1.9+">
-      <echo>JDK 1.5+</echo>
-      <testJavac source="1.5" target="1.5"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-    
-    <sequential if:set="jdk1.6+">
-      <echo>JDK 1.6+</echo>
-      <testJavac source="1.6" target="1.6"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-        
-    <sequential if:set="jdk1.7+">
-      <echo>JDK 1.7+</echo>
-      <testJavac source="1.7" target="1.7"/>
-      <delete dir="${javac-dir}/classes"/>
-      <mkdir dir="${javac-dir}/classes"/>
-    </sequential>
-    
-    <sequential if:set="jdk1.8+">
       <echo>JDK 1.8+</echo>
       <testJavac source="1.8" target="1.8"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
-            
+
     <sequential if:set="jdk1.9+">
       <echo>JDK 1.9+</echo>
       <testJavac source="1.9" target="1.9"/>

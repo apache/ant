@@ -30,10 +30,6 @@
   <condition property="jdk1.9+">
     <contains string="${java.version}" substring="1.9."/>
   </condition>
-  <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
-  <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
-  <available property="jdk1.6+" classname="java.net.CookieStore"/>
-  <available property="jdk1.5+" classname="java.net.Proxy"/>
   <condition property="build.sysclasspath.only">
     <equals arg1="${build.sysclasspath}" arg2="only"/>
   </condition>

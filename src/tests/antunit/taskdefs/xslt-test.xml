@@ -187,18 +187,7 @@ undefined='<xsl:value-of select="$undefined"/>'
     </xslt>
   </target>
 
-
-  <target name="testTraceJdk14" unless="jdk1.5+" depends="setUp">
-    <xslt in="${legacy.dir}/data.xml"
-          out="${output}/out.xml"
-          style="${legacy.dir}/printParams.xsl">
-      <param name="set" expression="myvalue"/>
-      <trace templates="true"/>
-    </xslt>
-    <au:assertLogContains text="Failed to enable tracing" level="warning"/>
-  </target>
-
-  <target name="testTraceJdk15+" if="jdk1.5+" depends="setUp">
+  <target name="testTrace" depends="setUp">
     <xslt in="${legacy.dir}/data.xml"
           out="${output}/out.xml"
           style="${legacy.dir}/printParams.xsl">

@@ -56,11 +56,7 @@
 package org.example;
 public class Foo {}
 ]]></echo>
-      <available property="jdk1.6+" classname="java.net.CookieStore"/>
-      <condition property="source" value="6">
-        <isset property="jdk1.6+"/>
-      </condition>
-      <property name="source" value="1.4"/>
+      <property name="source" value="8"/>
       <javac srcdir="${tmp.dir.nonascii}"
              destdir="${tmp.dir.nonascii}" source="${source}"/>
       <tempfile property="test.jar" destdir="${tmp.dir}" suffix="test" prefix=".jar" deleteonexit="true"/>

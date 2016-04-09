@@ -22,7 +22,7 @@
   <target name="setUp">
   </target>
 
-  <target name="test-secure-input" if="jdk1.6+">
+  <target name="test-secure-input">
     <input message="secure-input:>" addproperty="the.password">
       <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
     </input>
