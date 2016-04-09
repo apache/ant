@@ -7,6 +7,9 @@ Changes that could break older environments:
  * Ant 1.10.x requires Java8 or newer at compile or build time.
    The 1.9.x series wil stay compatible with Java5.
 
+ * The <apt> task has been removed since apt itself has been removed
+   with Java8.
+
 Fixed bugs:
 -----------
 
