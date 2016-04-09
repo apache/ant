@@ -5,103 +5,160 @@ Authors: Conor MacNeill
          Magesh Umasankar
          Antoine Levy-Lambert
 
-Note: This document was updated in the context of releasing Ant 1.9.5.
+Note: This document was updated in the context of releasing Ant
+      1.9.7 which was the first release cut from the 1.0.x branch.
       Please interpret the branch names, tags, etc. according to
       your context.
+
+      It reflects the way Stefan prefers to cut the release, parts of
+      this process haven't even been discussed on the dev list and may
+      change with later releases.
 
 1.  Propose a release plan for vote.  This should set out the timetable for
     the release under ideal circumstances.  
 
-    The issue of whether to create a branch for the release should be
-    discussed in the release vote.
+    In reality, you send a note to the list that you intend to cut the
+    release and wait for a few days whether anybody objects.
 
-2.  We used until Ant 1.6 to create branches, for instance ANT_16_BRANCH
-    to allow parallel development on master and on the current branch.
-    Given the slow development speed we've reached with 1.9.x this
-    doesn't seem to be necessary anymore.
+    We haven't created extra branches for releases in a long time and
+    with out new 1.9.x LTS policy there is a permanent branch for
+    Java5 compatible releases anyway. So no extra branch for the
+    releases is needed.
 
-    For more information on performing branching and merging, please visit
-    http://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell
+    This document assumes you are familiar with git
+    http://git-scm.com/book/en/v2/
+    may be a good guide if you are not.
 
-3.  Ensure you have all the external libraries that Ant uses in your
+2.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  All dependencies are either provided by
     JDK 1.5.0 or downloadable using
-    ant -f fetch.xml -Ddest=optional.
+    ant -f fetch.xml -Ddest=optional
     To find out whether you have all the libraries you need, execute
     the build with -verbose option and scan for lines beginning with
     "Unable to load...". 
 
-4.  Create a branch just for the release, even if you've decided to
-    not work with long lived branches in step 2.  This branch can be
-    removed after the release.
+3.  We don't want tags for failed votes to end up on out branches so
+    the release is first created from a detached head.
 
-    Switch to that branch.
+    Checkout the HEAD of the 1.9.x branch as a detached head:
 
-    $ git checkout -b prepare_Ant_1.9.5
+    $ git checkout 1.9.x^0
 
-5.  Make sure that your directory tree is clean by running git status.
+4.  Make sure that your directory tree is clean by running git status.
     Some tests leave behind leftovers which end up in the source
     distribution otherwise.
 
-6.  Set the version number in several files to the required new
-    versions.  See the end of this file for a list of files containing
-    version information.
+5.  Set the version number in several files to the required new
+    versions. These are:
 
-7.  Next bootstrap, build and run the tests.  Then build the
-    distribution on the branch. It is important that this be a clean
-    build. Tag this with a tag ANT_195_RC1.
+    * manual/cover.html (version should already be correct here)
+    * manual/credits.html  (version should already be correct here)
+    * build.xml properties : project.version,manifest-version,pom.version
+    * POM files under src/etc/poms and subdirectories
+      if you've got mvn installed
 
-    The file release.sh gives an idea of how to do this build process.
+      $ mvn versions:set -DnewVersion=1.9.7 -DgenerateBackupPoms=false
+      
+      inside src/etc/poms should do the trick.
+
+    * ivy.xml in release subdirectory (version should already be correct here)
+    * WHATSNEW (version should already be correct here)
+    * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
+
+6.  Next bootstrap, build and run the tests.
+
+    $ ./bootstrap.sh
+    $ ./build.sh
+    $ ./build.sh test
+    # if you've got maven installed
+    $ mvn -f src/etc/poms/pom.xml -DskipTests  package
+
+7.  Then build the distribution. It is important that this be a clean
+    build.
+
+    # clean
+    $ rm -rf bootstrap build dist distribution java-repository target
+    $ ./build.sh dist-lite
+    $ ./dist/bin/ant -nouserlib -lib lib/optional distribution
+
     build.xml specifies that the code should be compiled with
     source=1.5 and target=1.5.
 
-    git tag -s -m "Tagging RC1 for version 1.9.5 of Ant" ANT_195_RC1
-    git push --tags
+8.  Commit your changes, tag them, push them.
 
-8.  Sign the distribution files using the script release/signit.xml
+    $ git tag -s -m "Tagging RC1 for version 1.9.7 of Ant" ANT_197_RC1
+    $ git push
+    $ git push --tags
+
+9.  Ensure that the GPG key you use is inside the KEYS file in Ant's
+    git repository
+    <https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-common.git;a=blob;f=KEYS;h=dc62b011b1b429bd6de913f8f2bce79b715f96db;hb=HEAD>
+    - and that you copy the KEYS file to /www/www.apache.org/dist/ant
+
+    Also make sure you have sent the key that you use to a public
+    keyserver.
+
+10. Sign the distribution files
+
+    There are two aproaches, one uses Ant and a few libraries, the
+    other requires you to run gnupg manually. The first version didn't
+    work for Stefan when he built the first release candidate for
+    1.9.7.
+
+    a. Using the script release/signit.xml
 
     This script requires using commons-openpgp to sign the artefacts,
 
     This tool can be checked out from 
     http://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
-    You have to build it using maven
-    
+    You have to build it using maven.
+
+    $ mvn install
+
+    The script assumes commons-openpgp (and bouncycastle) are in your
+    local maven repository.
+
     You can create a property file gnupg.properties in your home directory 
-    with your key id
+    with your key id - like
+
+    keyid=5F6B8B72
+
+    or use -Dkeyid
+
     and pass your key passphrase on the command line with -Dpassword=****
 
-    Before you do that, ensure that the key you use is inside the KEYS
-    file in Ant's git repository
-    <https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-common.git;a=blob;f=KEYS;h=dc62b011b1b429bd6de913f8f2bce79b715f96db;hb=HEAD> -
-    and that you copy the KEYS file to
-    /www/www.apache.org/dist/ant
+    $ ./build.sh -f release/signit.xml -Dpassword=****
 
-    Also make sure you have sent the key that you use to a public
-    keyserver.
+    b. Using gpg
 
-9.  Convert the part of the WHATSNEW file covering the changes
+    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --detach-sign --armor $i; done
+    $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --detach-sign --armor $i; done
+
+11. Convert the part of the WHATSNEW file covering the changes
     since the last release into HTML for the README file on the
     website. See the previous release directories for examples of these files.
     Add instructions and warnings (GNU tar format issues, etc).
 
     Use the target txt2html of docs.xml
 
+    $ ./build.sh -f docs.xml txt2html
+
     This target generates a file build/html/WHATSNEW.html
 
     Add an html head element with a title like "Release Notes of Apache Ant
-    1.9.5" (from the default txt2html)
+    1.9.7" (from the default txt2html)
 
     Cut all sections about previous releases to keep only the current release,
-    and save as  RELEASE-NOTES-1.9.5.html inside the distribution folder.
+    and save as  RELEASE-NOTES-1.9.7.html inside the distribution folder.
 
-    Copy the file RELEASE-NOTES-1.9.5.html also as README.html
+    Copy the file RELEASE-NOTES-1.9.7.html also as README.html
 
-10. The distribution is now ready to go.
+12. The distribution is now ready to go.
     Create a SVN sandbox on your computer with https://dist.apache.org/repos/dist/dev/ant in it
     Copy the distribution folder to the location of the sandbox.
     svn add the files and commit into https://dist.apache.org/repos/dist/dev/ant
 
-11. Upload the maven artifacts located under java-repository/org/apache/ant
+13. Upload the maven artifacts located under java-repository/org/apache/ant
     these artifacts comprise currently for each ant jar of one POM
     file, the corresponding jar file and the corresponding GPG
     signatures (x.pom, x.jar, x.pom.asc, x.jar.asc) MD5 and SHA1 are
@@ -111,9 +168,9 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
 
       https://repository.apache.org (nexus repository)
 
-    using the build file release/upload.xml
+    using the build file release/upload.xml - this requires Ivy
 
-      ant -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f upload.xml
+      $ ./build.sh -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f upload.xml
 
     After the upload, you need to access the web interface of nexus
     under https://repository.apache.org login using your Apache
@@ -122,6 +179,11 @@ Note: This document was updated in the context of releasing Ant 1.9.5.
     checkbox next to the upload that you just did click the button
     "Close" on the top of the table listing the uploads make a note of
     the location of the staging repository for the vote email
+
+
+
+
+
 
 
 12. Once this is committed send a release vote email on dev@ant.
