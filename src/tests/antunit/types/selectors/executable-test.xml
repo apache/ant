@@ -56,7 +56,7 @@
     <!-- no idea how to do this -->
   </target>
 
-  <target name="testNotexecutable" depends="createTestdir">
+  <target name="testNotexecutable" depends="createTestdir" if="unix">
     <au:assertTrue>
       <resourcecount when="equal" count="0">
         <fileset dir="${output}">
@@ -66,7 +66,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testAsFalseConditions" depends="createTestdir">
+  <target name="testAsFalseConditions" depends="createTestdir" if="unix">
     <au:assertFalse>
       <isfileselected file="${output}/${file}">
         <executable/>
