@@ -180,13 +180,7 @@ Note: This document was updated in the context of releasing Ant
     "Close" on the top of the table listing the uploads make a note of
     the location of the staging repository for the vote email
 
-
-
-
-
-
-
-12. Once this is committed send a release vote email on dev@ant.
+14. Once this is committed send a release vote email on dev@ant.
     The email will typically mention :
        - the git tag for the release including commit hash,
        - the location of the tarballs, including revision number in
@@ -195,6 +189,11 @@ Note: This document was updated in the context of releasing Ant
 
     The vote will only pass if at least three PMC members have voted +1
     and more +1s than -1s have been cast.  The vote will run for 3 days.
+
+
+
+
+
 
 13. Update the files listed at the end of the document (files containing 
     version information) to prepare the development of the next
