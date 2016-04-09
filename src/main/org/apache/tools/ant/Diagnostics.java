@@ -42,6 +42,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.ProxySetup;
+import org.apache.tools.ant.util.java15.ProxyDiagnostics;
 import org.xml.sax.XMLReader;
 
 /**
@@ -691,25 +692,10 @@ public final class Diagnostics {
         printProperty(out, ProxySetup.SOCKS_PROXY_USERNAME);
         printProperty(out, ProxySetup.SOCKS_PROXY_PASSWORD);
 
-        if (JavaEnvUtils.getJavaVersionNumber() < JAVA_1_5_NUMBER) {
-            return;
-        }
         printProperty(out, ProxySetup.USE_SYSTEM_PROXIES);
-        final String proxyDiagClassname = "org.apache.tools.ant.util.java15.ProxyDiagnostics";
-        try {
-            Class<?> proxyDiagClass = Class.forName(proxyDiagClassname);
-            Object instance = proxyDiagClass.newInstance();
-            out.println("Java1.5+ proxy settings:");
-            out.println(instance.toString());
-        } catch (ClassNotFoundException e) {
-            //not included, do nothing
-        } catch (IllegalAccessException e) {
-            //not included, do nothing
-        } catch (InstantiationException e) {
-            //not included, do nothing
-        } catch (NoClassDefFoundError e) {
-            // not included, to nothing
-        }
+        ProxyDiagnostics proxyDiag = new ProxyDiagnostics();
+        out.println("Java1.5+ proxy settings:");
+        out.println(proxyDiag.toString());
     }
 
 }
