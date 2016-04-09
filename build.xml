@@ -500,16 +500,6 @@
       </or>
     </condition>
 
-    <!-- http client needs commons logging -->
-    <condition property="apache-httpclient.present">
-      <and>
-        <available
-          classname="org.apache.commons.httpclient.HttpClient"
-          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-        <isset property="commons.logging.present"/>
-      </and>
-    </condition>
-
     <available property="rhino.present"
       classname="org.mozilla.javascript.Scriptable"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
