@@ -36,6 +36,7 @@ import org.apache.tools.ant.types.selectors.DependSelector;
 import org.apache.tools.ant.types.selectors.DepthSelector;
 import org.apache.tools.ant.types.selectors.DifferentSelector;
 import org.apache.tools.ant.types.selectors.ExtendSelector;
+import org.apache.tools.ant.types.selectors.ExecutableSelector;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.MajoritySelector;
@@ -48,6 +49,7 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SizeSelector;
+import org.apache.tools.ant.types.selectors.SymlinkSelector;
 import org.apache.tools.ant.types.selectors.TypeSelector;
 import org.apache.tools.ant.types.selectors.WritableSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
@@ -795,6 +797,14 @@ public abstract class AbstractFileSet extends DataType
 
     public void addWritable(WritableSelector w) {
         appendSelector(w);
+    }
+
+    public void addExecutable(ExecutableSelector e) {
+        appendSelector(e);
+    }
+
+    public void addSymlink(SymlinkSelector e) {
+        appendSelector(e);
     }
 
     /**

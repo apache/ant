@@ -92,6 +92,10 @@
         Select files if they are readable.</li>
       <li><a href="#writable"><code>&lt;writable&gt;</code></a> -
         Select files if they are writable.</li>
+      <li><a href="#executable"><code>&lt;executable&gt;</code></a> -
+        Select files if they are executable.</li>
+      <li><a href="#symlink"><code>&lt;symlink&gt;</code></a> -
+        Select files if they are symlink.</li>
     </ul>
 
     <h4><a name="containsselect">Contains Selector</a></h4>
@@ -1009,13 +1013,33 @@
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
 
-      <h4><a name="writable">Writable Selector</a></h4>
+      <h4><a name="symlink">Writable Selector</a></h4>
 
       <p>The <code>&lt;writable&gt;</code> selector selects only files
         that are writable.  Ant only invokes
         <code>java.io.File#canWrite</code> so if a file is unwritable
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
+
+      <h4><a name="executable">Executable Selector</a></h4>
+
+      <p>The <code>&lt;executable&gt;</code> selector selects only files
+        that are executable.  Ant only invokes
+        <code>java.nio.file.Files#isExecutable</code> so if a file is not executable
+        but the Java VM cannot detect this state, this selector will
+        still select the file.</p>
+
+      <p><em>Since Ant 1.10.0</em></p>
+
+      <h4><a name="symlink">Symlink Selector</a></h4>
+
+      <p>The <code>&lt;symlink&gt;</code> selector selects only files
+        that are symbolic links.  Ant only invokes
+        <code>java.nio.file.Files#isSymbolicLink</code> so if a file
+        is a symbolic link but the Java VM cannot detect this state,
+        this selector will not select the file.</p>
+
+      <p><em>Since Ant 1.10.0</em></p>
 
       <h4><a name="scriptselector">Script Selector</a></h4>
 
