@@ -375,9 +375,6 @@
       </not>
     </condition>
     <property name="ignoresystemclasses" value="false"/>
-    <available property="jdk1.6+" classname="java.net.CookieStore"/>
-    <available property="jdk1.7+" classname="java.nio.file.FileSystem"/>
-    <available property="jdk1.8+" classname="java.lang.reflect.Executable"/>
     <condition property="jdk1.9+">
       <contains string="${java.version}" substring="1.9."/>
     </condition>
@@ -543,10 +540,7 @@
       property="javadoc.doclint.none" 
       value="-Xdoclint:none" 
       else="">
-      <and>
-        <isset property="jdk1.8+"/>
-        <not><isset property="withDoclint"/></not>
-      </and>
+      <not><isset property="withDoclint"/></not>
     </condition>
   </target>
 
