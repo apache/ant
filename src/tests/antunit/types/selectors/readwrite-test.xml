@@ -66,7 +66,7 @@
 
   <target name="makeFileUnwritable"
           depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
-  <target name="makeFileUnwritable-Unix" id="unix">
+  <target name="makeFileUnwritable-Unix" if="unix">
     <chmod file="${output}/${file}" perm="444"/>
   </target>
   <target name="makeFileUnwritable-Windows" unless="unix">
