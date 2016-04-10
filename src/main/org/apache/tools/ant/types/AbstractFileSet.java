@@ -43,6 +43,7 @@ import org.apache.tools.ant.types.selectors.MajoritySelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
 import org.apache.tools.ant.types.selectors.OrSelector;
+import org.apache.tools.ant.types.selectors.OwnedBySelector;
 import org.apache.tools.ant.types.selectors.PresentSelector;
 import org.apache.tools.ant.types.selectors.ReadableSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
@@ -799,12 +800,25 @@ public abstract class AbstractFileSet extends DataType
         appendSelector(w);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addExecutable(ExecutableSelector e) {
         appendSelector(e);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addSymlink(SymlinkSelector e) {
         appendSelector(e);
+    }
+
+    /**
+     * @since 1.10.0
+     */
+    public void addOwnedBy(OwnedBySelector o) {
+        appendSelector(o);
     }
 
     /**

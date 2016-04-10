@@ -16,7 +16,7 @@ Fixed bugs:
 Other changes:
 --------------
 
- * New file selectors <executable> and <symlink>
+ * New file selectors <executable>, <symlink> and <ownedBy>.
 
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================

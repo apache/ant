@@ -312,12 +312,25 @@ public abstract class AbstractSelectorContainer extends DataType
         appendSelector(w);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addExecutable(ExecutableSelector e) {
         appendSelector(e);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addSymlink(SymlinkSelector e) {
         appendSelector(e);
+    }
+
+    /**
+     * @since 1.10.0
+     */
+    public void addOwnedBy(OwnedBySelector o) {
+        appendSelector(o);
     }
 
     /**

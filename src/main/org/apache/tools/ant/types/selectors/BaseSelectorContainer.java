@@ -315,12 +315,25 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(w);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addExecutable(ExecutableSelector e) {
         appendSelector(e);
     }
 
+    /**
+     * @since 1.10.0
+     */
     public void addSymlink(SymlinkSelector e) {
         appendSelector(e);
+    }
+
+    /**
+     * @since 1.10.0
+     */
+    public void addOwnedBy(OwnedBySelector o) {
+        appendSelector(o);
     }
 
     /**

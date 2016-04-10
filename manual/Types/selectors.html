@@ -96,6 +96,8 @@
         Select files if they are executable.</li>
       <li><a href="#symlink"><code>&lt;symlink&gt;</code></a> -
         Select files if they are symlink.</li>
+      <li><a href="#ownedBy"><code>&lt;ownedBy&gt;</code></a> -
+        Select files if they are owned by a given user.</li>
     </ul>
 
     <h4><a name="containsselect">Contains Selector</a></h4>
@@ -1040,6 +1042,29 @@
         this selector will not select the file.</p>
 
       <p><em>Since Ant 1.10.0</em></p>
+
+      <h4><a name="ownedBy">OwnedBy Selector</a></h4>
+
+      <p>The <code>&lt;ownedBy&gt;</code> selector selects only files
+        that are owned by the given user.  Ant only invokes
+        <code>java.nio.file.Files#getOwner</code> so if a file system
+        doesn't support the operation this selector will not select
+        the file.</p>
+
+      <p><em>Since Ant 1.10.0</em></p>
+
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Required</b></td>
+        </tr>
+        <tr>
+          <td valign="top">owner</td>
+          <td valign="top">Username of the expected owner</td>
+          <td valign="top" align="center">yes</td>
+        </tr>
+      </table>
 
       <h4><a name="scriptselector">Script Selector</a></h4>
 
