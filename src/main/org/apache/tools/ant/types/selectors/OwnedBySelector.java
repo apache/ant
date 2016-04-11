@@ -45,7 +45,7 @@ public class OwnedBySelector implements FileSelector, ResourceSelector {
 
     /**
      * Sets the User-Name to look for.
-     * @param the user name
+     * @param owner the user name
      */
     public void setOwner(String owner) {
         this.owner = owner;
