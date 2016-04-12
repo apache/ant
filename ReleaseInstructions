@@ -190,36 +190,25 @@ Note: This document was updated in the context of releasing Ant
     The vote will only pass if at least three PMC members have voted +1
     and more +1s than -1s have been cast.  The vote will run for 3 days.
 
-
-
-
-
-
-13. Update the files listed at the end of the document (files containing 
-    version information) to prepare the development of the next
-    version of Ant on the master branch.
-
-14. If the vote fails, address the problems and recreate the next RC
+15. If the vote fails, address the problems and recreate the next RC
     build.
 
-15. Once the vote has passed, tag the last RC created with the final tag
+16. Once the vote has passed, tag the last RC created with the final tag
 
-    $ git tag -s -m "Tagging version 1.9.5 of Ant" ANT_195 HASH_OF_LAST_RC
+    $ git tag -s -m "Tagging version 1.9.7 of Ant" rel/1.9.7 HASH_OF_LAST_RC
     $ git push --tags
 
-15. The distrib artifacts should be published the apache dist. It is
+17. The distrib artifacts should be published the apache dist. It is
     managed via svnpubsub so the release should be committed to the
     subversion repository
     https://dist.apache.org/repos/dist/release/ant/.
 
-    In order to keep the main dist area of a reasonable size, old releases
-    should be removed. They will disapear from the main dist but will still be
-    available via the archive. To do so, just use the "svn rm" command against
-    the artifacts or folders to remove.
-
     * commit the new release files to
 
       https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
+
+    * Make https://dist.apache.org/repos/dist/release/ant/README.html
+      point to the new RELEASE-NOTES or a copy of it.
 
     * release the maven artifacts using the web interface of nexus under https://repository.apache.org
       login using your Apache credentials
@@ -227,10 +216,65 @@ Note: This document was updated in the context of releasing Ant
       expand org.apache.ant 
       select the checkbox next to the upload that you just did
       and click the button "Release".
-      4 hours later, the artefacts will be in the maven central repository.
+      4 hours later, the artifacts will be in the maven central repository.
       
-    * Make README.html point to the new RELEASE-NOTES or a copy of
-      it.
+18. Update the Apache Reporter System
+
+    https://reporter.apache.org/addrelease.html?ant
+
+19. Address the available version tags in BugZilla. Create new
+    milestone 1.9.8 and version 1.9.7.
+
+20. Add a new release tag to doap_Ant.rdf in Ant's site.
+
+21. checkout the 1.9.x branch, merge the tag but don't push the
+    commit
+
+    $ git checkout 1.9.x
+    $ git merge rel/1.9.7
+
+    Set the version number in several files to the required version of
+    the next 1.9.x release. These are:
+
+    * manual/cover.html
+    * manual/credits.html
+    * build.xml properties : project.version,manifest-version,pom.version
+
+      project.version property in build.xml gets bumped to
+      [newversion]alpha, for example 1.9.8alpha
+
+      manifest-version gets bumped to the exact next release number
+      for example 1.9.8.
+
+      pom.version gets bumped to [newversion]-SNAPSHOT
+      for example 1.9.8-SNAPSHOT.
+
+    * POM files under src/etc/poms and subdirectories
+      if you've got mvn installed
+
+      $ mvn versions:set -DnewVersion=1.9.8-SNAPSHOT -DgenerateBackupPoms=false
+
+      inside src/etc/poms should do the trick.
+
+    * ivy.xml in release subdirectory
+    * WHATSNEW (add a new section)
+    * src/etc/testcases/taskdefs/conditions/antversion.xml
+
+    Amend the merge commit
+
+    $ git add -u
+    $ git commit -a --amend
+    $ git push
+
+22. checkout the master branch, merge the 1.9.x branch
+
+    $ git checkout master
+    $ git merge 1.9.x
+    $ git push
+
+23. wait a few hours for the mirrors to catch up
+
+
 
 16. Update the ant.apache.org site :
 
@@ -254,26 +298,11 @@ Note: This document was updated in the context of releasing Ant
     the production folder - since the site still uses svn and Ant
     proper uses git there currently is no way to use the scm for this.
 
-17. Address the available version tags in BugZilla. Create new
-    milestones and versions 1.9.6.
-    Assign all existing 1.9.5 bugs to 1.9.6.
-    Note that such changes can be done at once by choosing the
-    link "Change several bugs at once" at the bottom of the bug list
-    displaying the 1.9.5 bugs.
-
 18. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
-
-19. Add a new release tag to doap_Ant.rdf in Ant's site.
-
-20. Update the Apache Reporter System
-
-    https://reporter.apache.org/addrelease.html?ant
-
-21. If you've created a temporary branch you can delete it now. 
 
 22. You can now reacquaint yourself with your family and friends.
 
