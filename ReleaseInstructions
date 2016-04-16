@@ -304,10 +304,8 @@ Note: This document was updated in the context of releasing Ant
 
 26. You can now reacquaint yourself with your family and friends.
 
-
-
-
-
+27. After a few days "svn rm" the older release artifacts and release
+    notes from https://dist.apache.org/repos/dist/release/ant/
 
 Related Information
 
