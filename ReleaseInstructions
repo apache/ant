@@ -274,11 +274,13 @@ Note: This document was updated in the context of releasing Ant
 
 23. wait a few hours for the mirrors to catch up
 
-
-
-16. Update the ant.apache.org site :
+24. Update the ant.apache.org site :
 
     The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
+
+    Copy the manual of the release into the production folder - since
+    the site still uses svn and Ant proper uses git there currently is
+    no way to use the scm for this.
 
     Update the following files for version number:
 
@@ -293,32 +295,17 @@ Note: This document was updated in the context of releasing Ant
     Generate the html files by invoking 'ant'
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
-     
-    Change the version of the manual published on the site: copy the manual into
-    the production folder - since the site still uses svn and Ant
-    proper uses git there currently is no way to use the scm for this.
 
-18. At this point in time, the release is done and announcements are made.
+25. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
 
-22. You can now reacquaint yourself with your family and friends.
+26. You can now reacquaint yourself with your family and friends.
 
-(*)  Mirrors : the srcdownload.html, bindownload.html and
-     manualdownload.html each list a number of mirrors. For ant 1.6.0
-     the mirrors picked up the new version in 8 hours or less, the
-     release having been done at midnight on Dec 18th, the mirrors had
-     it on Dec 19th at 8 am. The
-     srcdownload/bindownload/manualdownload pages all contain a note
-     advising users to be patient immediately after the release.
-
-(+)  Don't expect the old releases to disappear from
-     www.apache.org/dist as soon as the new releases are there.
-     The rsync process from people.a.o to www.a.o adds files once per
-     hour but only deletes once per day.
-
+27. After a few days "svn rm" the older release artifacts and release
+    notes from https://dist.apache.org/repos/dist/release/ant/
 
 Related Information
 
