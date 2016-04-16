@@ -5,8 +5,9 @@ Authors: Conor MacNeill
          Magesh Umasankar
          Antoine Levy-Lambert
 
-Note: This document was updated in the context of releasing Ant
-      1.9.7 which was the first release cut from the 1.9.x branch.
+Note: This document was adapted from the one created in the context of
+      releasing Ant 1.9.7. It assumes the first release created from
+      master will be 1.10.
       Please interpret the branch names, tags, etc. according to
       your context.
 
@@ -31,7 +32,7 @@ Note: This document was updated in the context of releasing Ant
 
 2.  Ensure you have all the external libraries that Ant uses in your
     lib/optional directory.  All dependencies are either provided by
-    JDK 1.5.0 or downloadable using
+    JDK 1.8.0 or downloadable using
     ant -f fetch.xml -Ddest=optional
     To find out whether you have all the libraries you need, execute
     the build with -verbose option and scan for lines beginning with
@@ -40,9 +41,9 @@ Note: This document was updated in the context of releasing Ant
 3.  We don't want tags for failed votes to end up on out branches so
     the release is first created from a detached head.
 
-    Checkout the HEAD of the 1.9.x branch as a detached head:
+    Checkout the HEAD of the master branch as a detached head:
 
-    $ git checkout 1.9.x^0
+    $ git checkout master^0
 
 4.  Make sure that your directory tree is clean by running git status.
     Some tests leave behind leftovers which end up in the source
@@ -57,7 +58,7 @@ Note: This document was updated in the context of releasing Ant
     * POM files under src/etc/poms and subdirectories
       if you've got mvn installed
 
-      $ mvn versions:set -DnewVersion=1.9.7 -DgenerateBackupPoms=false
+      $ mvn versions:set -DnewVersion=1.10.0 -DgenerateBackupPoms=false
 
       inside src/etc/poms should do the trick.
 
@@ -82,11 +83,11 @@ Note: This document was updated in the context of releasing Ant
     $ ./dist/bin/ant -nouserlib -lib lib/optional distribution
 
     build.xml specifies that the code should be compiled with
-    source=1.5 and target=1.5.
+    source=1.8 and target=1.8.
 
 8.  Commit your changes, tag them, push them.
 
-    $ git tag -s -m "Tagging RC1 for version 1.9.7 of Ant" ANT_197_RC1
+    $ git tag -s -m "Tagging RC1 for version 1.10.0 of Ant" ANT_1.10.0_RC1
     $ git push
     $ git push --tags
 
@@ -146,12 +147,12 @@ Note: This document was updated in the context of releasing Ant
     This target generates a file build/html/WHATSNEW.html
 
     Add an html head element with a title like "Release Notes of Apache Ant
-    1.9.7" (from the default txt2html)
+    1.10.0" (from the default txt2html)
 
     Cut all sections about previous releases to keep only the current release,
-    and save as  RELEASE-NOTES-1.9.7.html inside the distribution folder.
+    and save as  RELEASE-NOTES-1.10.0.html inside the distribution folder.
 
-    Copy the file RELEASE-NOTES-1.9.7.html also as README.html
+    Copy the file RELEASE-NOTES-1.10.0.html also as README.html
 
 12. The distribution is now ready to go.
     Create a SVN sandbox on your computer with https://dist.apache.org/repos/dist/dev/ant in it
@@ -195,7 +196,7 @@ Note: This document was updated in the context of releasing Ant
 
 16. Once the vote has passed, tag the last RC created with the final tag
 
-    $ git tag -s -m "Tagging version 1.9.7 of Ant" rel/1.9.7 HASH_OF_LAST_RC
+    $ git tag -s -m "Tagging version 1.10.0 of Ant" rel/1.10.0 HASH_OF_LAST_RC
     $ git push --tags
 
 17. The distrib artifacts should be published the apache dist. It is
@@ -223,36 +224,36 @@ Note: This document was updated in the context of releasing Ant
     https://reporter.apache.org/addrelease.html?ant
 
 19. Address the available version tags in BugZilla. Create new
-    milestone 1.9.8 and version 1.9.7.
+    milestone 1.10.1 and version 1.10.0.
 
 20. Add a new release tag to doap_Ant.rdf in Ant's site.
 
-21. checkout the 1.9.x branch, merge the tag but don't push the
+21. checkout the master branch, merge the tag but don't push the
     commit
 
-    $ git checkout 1.9.x
-    $ git merge rel/1.9.7
+    $ git checkout master
+    $ git merge rel/1.10.0
 
     Set the version number in several files to the required version of
-    the next 1.9.x release. These are:
+    the next 1.10.x release. These are:
 
     * manual/cover.html
     * manual/credits.html
     * build.xml properties : project.version,manifest-version,pom.version
 
       project.version property in build.xml gets bumped to
-      [newversion]alpha, for example 1.9.8alpha
+      [newversion]alpha, for example 1.10.1alpha
 
       manifest-version gets bumped to the exact next release number
-      for example 1.9.8.
+      for example 1.10.1.
 
       pom.version gets bumped to [newversion]-SNAPSHOT
-      for example 1.9.8-SNAPSHOT.
+      for example 1.10.1-SNAPSHOT.
 
     * POM files under src/etc/poms and subdirectories
       if you've got mvn installed
 
-      $ mvn versions:set -DnewVersion=1.9.8-SNAPSHOT -DgenerateBackupPoms=false
+      $ mvn versions:set -DnewVersion=1.10.1-SNAPSHOT -DgenerateBackupPoms=false
 
       inside src/etc/poms should do the trick.
 
@@ -266,21 +267,19 @@ Note: This document was updated in the context of releasing Ant
     $ git commit -a --amend
     $ git push
 
-22. checkout the master branch, merge the 1.9.x branch
+22. wait a few hours for the mirrors to catch up
 
-    $ git checkout master
-    $ git merge 1.9.x
-    $ git push
-
-23. wait a few hours for the mirrors to catch up
-
-24. Update the ant.apache.org site :
+23. Update the ant.apache.org site :
 
     The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
 
     Copy the manual of the release into the production folder - since
     the site still uses svn and Ant proper uses git there currently is
     no way to use the scm for this.
+
+    [TODO once there is the first release of 1.10.0, we'll likely need
+    to restructure the site to allow two versions of the manual to
+    exist in parallel]
 
     Update the following files for version number:
 
@@ -296,16 +295,19 @@ Note: This document was updated in the context of releasing Ant
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
 
-25. At this point in time, the release is done and announcements are made.
+24. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
 
-26. You can now reacquaint yourself with your family and friends.
+25. You can now reacquaint yourself with your family and friends.
 
-27. After a few days "svn rm" the older release artifacts and release
+26. After a few days "svn rm" the older release artifacts and release
     notes from https://dist.apache.org/repos/dist/release/ant/
+
+    "older" here means any older 1.10.x release but not the latest
+    1.9.x release.
 
 Related Information
 
