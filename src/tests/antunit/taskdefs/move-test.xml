@@ -134,13 +134,10 @@
     <mkdir dir="${input}"/>
     <touch file="${output}/${file}"/>
   </target>
-  <target name="makeFileUnwritable"
-          depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
-  <target name="makeFileUnwritable-Unix" id="unix">
-    <chmod file="${output}/${file}" perm="444"/>
-  </target>
-  <target name="makeFileUnwritable-Windows" unless="unix">
-    <attrib file="${output}/${file}" readonly="true"/>
+  <target name="makeFileUnwritable" depends="createTestdir">
+    <setpermissions mode="444">
+      <file file="${output}/${file}"/>
+    </setpermissions>
   </target>
 
   <target name="testMoveOverReadOnlyFile" depends="makeFileUnwritable">

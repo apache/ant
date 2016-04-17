@@ -100,8 +100,7 @@
        ===================================================================
   -->
   <property name="debug" value="true"/>
-  <property name="chmod.fail" value="true"/>
-  <property name="chmod.maxparallel" value="250"/>
+  <property name="setpermissions.fail" value="true"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.8"/>
@@ -914,18 +913,20 @@
       <include name="*.pl"/>
     </fixcrlf>
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
-      failonerror="${chmod.fail}"/>
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
-      failonerror="${chmod.fail}" maxparallel="${chmod.maxparallel}"/>
-    <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+      <dirset dir="${dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+      <fileset dir="${dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
         <include name="**/*.pl"/>
         <include name="**/*.py"/>
       </fileset>
-    </chmod>
+    </setpermissions>
 
   </target>
 
@@ -1026,18 +1027,20 @@
       </fileset>
     </copy>
 
-    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
-      failonerror="${chmod.fail}"/>
-    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
-      failonerror="${chmod.fail}" maxparallel="${chmod.maxparallel}"/>
-    <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+      <dirset dir="${dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+      <fileset dir="${dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
         <include name="**/*.pl"/>
         <include name="**/*.py"/>
       </fileset>
-    </chmod>
+    </setpermissions>
 
     <!-- publish some useful stylesheets -->
     <copy todir="${dist.etc}">
@@ -1144,18 +1147,21 @@
       <exclude name="${tests.etc.dir}/taskdefs/fixcrlf/input/Junk?.java"/>
     </fixcrlf>
 
-    <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"
-      failonerror="${chmod.fail}"/>
-    <chmod perm="ugo+r" dir="${src.dist.dir}" failonerror="${chmod.fail}"/>
-    <chmod perm="ugo+x" failonerror="${chmod.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+      <dirset dir="${src.dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+      <fileset dir="${src.dist.dir}"/>
+    </setpermissions>
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${src.dist.dir}">
-        <include name="**/.sh"/>
-        <include name="**/.pl"/>
-        <include name="**/.py"/>
+        <include name="**/*.sh"/>
+        <include name="**/*.pl"/>
+        <include name="**/*.py"/>
         <include name="**/ant"/>
         <include name="**/antRun"/>
       </fileset>
-    </chmod>
+    </setpermissions>
 
   </target>
 

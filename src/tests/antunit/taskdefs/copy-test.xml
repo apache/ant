@@ -312,13 +312,10 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${input}"/>
     <touch file="${output}/${file}"/>
   </target>
-  <target name="makeFileUnwritable"
-          depends="createTestdir,makeFileUnwritable-Unix,makeFileUnwritable-Windows"/>
-  <target name="makeFileUnwritable-Unix" id="unix">
-    <chmod file="${output}/${file}" perm="444"/>
-  </target>
-  <target name="makeFileUnwritable-Windows" unless="unix">
-    <attrib file="${output}/${file}" readonly="true"/>
+  <target name="makeFileUnwritable" depends="createTestdir">
+    <setpermissions mode="444">
+      <file file="${output}/${file}"/>
+    </setpermissions>
   </target>
 
   <target name="testCopyOverReadOnlyFile" depends="makeFileUnwritable">
@@ -453,14 +450,9 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${output}"/>
     <touch file="${input}/somefile"/>
     <touch file="${output}/somefile"/>
-    <exec executable="chmod" osfamily="unix">
-      <arg value="-w"/>
-      <arg file="${output}/somefile"/>
-    </exec>
-    <exec executable="attrib" osfamily="dos">
-      <arg value="+r"/>
-      <arg file="${output}/somefile"/>
-    </exec>
+    <setpermissions mode="444">
+      <file file="${output}/somefile"/>
+    </setpermissions>
     <au:expectfailure>
       <copy todir="${output}" file="${input}/somefile"
             overwrite="true"/>

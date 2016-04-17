@@ -47,13 +47,10 @@
     </au:assertTrue>
   </target>
 
-  <target name="makeFileExecutable"
-          depends="createTestdir,makeFileExecutable-Unix,makeFileExecutable-Windows"/>
-  <target name="makeFileExecutable-Unix" if="unix">
-    <chmod file="${output}/${file}" perm="755"/>
-  </target>
-  <target name="makeFileExecutable-Windows" unless="unix">
-    <!-- no idea how to do this -->
+  <target name="makeFileExecutable" depends="createTestdir">
+    <setpermissions mode="755">
+      <file file="${output}/${file}"/>
+    </setpermissions>
   </target>
 
   <target name="testNotexecutable" depends="createTestdir" if="unix">
