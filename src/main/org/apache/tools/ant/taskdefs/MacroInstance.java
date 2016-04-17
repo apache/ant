@@ -81,7 +81,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * @param value the value of the attribute
      */
     public void setDynamicAttribute(String name, String value) {
-        map.put(name, value);
+        map.put(name.toLowerCase(Locale.ENGLISH), value);
     }
 
     /**
