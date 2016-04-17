@@ -7,6 +7,11 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+ * setDynamicAttribute on MacroInstance now lower-cases the attribute
+   name in order to allow users of the API to use the attributes names
+   they have specified.
+   Bugzilla Report 59339
+
 Other changes:
 --------------
 
