@@ -25,13 +25,16 @@
   <condition property="unix">
     <os family="unix"/>
   </condition>
+  <condition property="windows">
+    <os family="windows"/>
+  </condition>
 
   <target name="createTestdir">
     <mkdir dir="${output}"/>
     <touch file="${output}/${file}"/>
   </target>
 
-  <target name="testSymlink" depends="makeSymlink" if="unix">
+  <target name="testSymlink" depends="makeSymlink">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <fileset dir="${output}">
@@ -53,8 +56,11 @@
   <target name="makeSymlink-Unix" if="unix">
     <symlink link="${output}/${link}" resource="${output}/${file}"/>
   </target>
-  <target name="makeSymlink-Windows" unless="unix">
-    <!-- no idea how to do this -->
+  <target name="makeSymlink-Windows" if="windows">
+    <exec executable="mklink">
+      <arg file="${output}/${link}"/>
+      <arg file="${output}/${file}"/>
+    </exec>
   </target>
 
   <target name="testNoSymlink" depends="createTestdir">
@@ -75,7 +81,7 @@
     </au:assertFalse>
   </target>
 
-  <target name="testAsTrueConditions" depends="makeSymlink" if="unix">
+  <target name="testAsTrueConditions" depends="makeSymlink">
     <au:assertTrue>
       <isfileselected file="${output}/${link}">
         <symlink/>
