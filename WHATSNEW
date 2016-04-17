@@ -23,6 +23,9 @@ Other changes:
 
  * New file selectors <executable>, <symlink> and <ownedBy>.
 
+ * New task <setpermissions> that provides the ability to set POSIX
+   compatible permssions via NIO's PosixFilePermission
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
