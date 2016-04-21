@@ -511,6 +511,26 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Add a path to the modulepath.
+     *
+     * @return created modulepath.
+     * @since 1.10
+     */
+    public Path createModulepath() {
+        return getCommandline().createModulepath(getProject()).createPath();
+    }
+
+    /**
+     * Add a path to the upgrademodulepath.
+     *
+     * @return created upgrademodulepath.
+     * @since 1.10
+     */
+    public Path createUpgrademodulepath() {
+        return getCommandline().createUpgrademodulepath(getProject()).createPath();
+    }
+
+    /**
      * Adds an environment variable; used when forking.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
@@ -749,7 +769,7 @@ public class JUnitTask extends Task {
             loader.loadClass("junit.framework.Test"); // sanity check
         } catch (final ClassNotFoundException e) {
             throw new BuildException(
-                    "The <classpath> for <junit> must include junit.jar "
+                    "The <classpath> or <modulepath> for <junit> must include junit.jar "
                     + "if not in Ant's own classpath",
                     e, task.getLocation());
         }
@@ -777,9 +797,13 @@ public class JUnitTask extends Task {
         if (splitJUnit) {
             final Path path = new Path(getProject());
             path.add(antRuntimeClasses);
-            final Path extra = getCommandline().getClasspath();
+            Path extra = getCommandline().getClasspath();
             if (extra != null) {
                 path.add(extra);
+            }
+            extra = getCommandline().getModulepath();
+            if (extra != null && !hasJunit(path)) {
+                path.add(expandModulePath(extra));
             }
             mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
@@ -818,7 +842,7 @@ public class JUnitTask extends Task {
     @Override
     public void execute() throws BuildException {
         checkMethodLists();
-
+        checkModules();
         setupJUnitDelegate();
 
         final List<List> testLists = new ArrayList<List>();
@@ -1692,6 +1716,74 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Checks a validity of module specific options.
+     * @since 1.10
+     */
+    private void checkModules() {
+        if (hasPath(getCommandline().getModulepath()) ||
+            hasPath(getCommandline().getUpgrademodulepath())) {
+            for (int i = 0, count = batchTests.size(); i < count; i++) {
+                if(!batchTests.elementAt(i).getFork()) {
+                    throw new BuildException("The module path requires fork attribute to be set to true.");
+                }
+            }
+            for (int i = 0, count = tests.size(); i < count; i++) {
+                if (!tests.elementAt(i).getFork()) {
+                    throw new BuildException("The module path requires fork attribute to be set to true.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks is a junit is on given path.
+     * @param path the {@link Path} to check
+     * @return true when given {@link Path} contains junit
+     * @since 1.10
+     */
+    private boolean hasJunit(final Path path) {
+        try (AntClassLoader loader = AntClassLoader.newAntClassLoader(
+                null,
+                getProject(),
+                path,
+                true)) {
+            try {
+                return loader.getResource("junit.framework.Test") != null;
+            } catch (final Exception ex) {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Expands a module path to flat path of jars and root folders usable by classloader.
+     * @param modulePath to be expanded
+     * @return the expanded path
+     * @since 1.10
+     */
+    private Path expandModulePath(Path modulePath) {
+        final Path expanded = new Path(getProject());
+        for (String path : modulePath.list()) {
+            final File modulePathEntry = getProject().resolveFile(path);
+            if (modulePathEntry.isDirectory() && !hasModuleInfo(modulePathEntry)) {
+                final File[] modules = modulePathEntry.listFiles((dir,name)->name.toLowerCase().endsWith(".jar"));
+                if (modules != null) {
+                    for (File module : modules) {
+                        expanded.add(new Path(getProject(), String.format(
+                                "%s%s%s",   //NOI18N
+                                path,
+                                File.separator,
+                                module.getName())));
+                    }
+                }
+            } else {
+                expanded.add(new Path(getProject(), path));
+            }
+        }
+        return expanded;
+    }
+
+    /**
      * return an enumeration listing each test, then each batchtest
      * @return enumeration
      * @since Ant 1.3
@@ -1886,16 +1978,23 @@ public class JUnitTask extends Task {
      */
     private void createClassLoader() {
         final Path userClasspath = getCommandline().getClasspath();
-        if (userClasspath != null) {
+        final Path userModulepath = getCommandline().getModulepath();
+        if (userClasspath != null || userModulepath != null) {
             if (reloading || classLoader == null) {
                 deleteClassLoader();
-                final Path classpath = (Path) userClasspath.clone();
+                final Path path = new Path(getProject());
+                if (userClasspath != null) {
+                    path.add((Path) userClasspath.clone());
+                }
+                if (userModulepath != null && !hasJunit(path)) {
+                    path.add(expandModulePath(userModulepath));
+                }
                 if (includeAntRuntime) {
                     log("Implicitly adding " + antRuntimeClasses
                         + " to CLASSPATH", Project.MSG_VERBOSE);
-                    classpath.append(antRuntimeClasses);
+                    path.append(antRuntimeClasses);
                 }
-                classLoader = getProject().createClassLoader(classpath);
+                classLoader = getProject().createClassLoader(path);
                 if (getClass().getClassLoader() != null
                     && getClass().getClassLoader() != Project.class.getClassLoader()) {
                     classLoader.setParent(getClass().getClassLoader());
@@ -2273,5 +2372,25 @@ public class JUnitTask extends Task {
         w.write(String.valueOf(text));
         w.newLine();
         s.println(text);
+    }
+
+    /**
+     * Checks if a path exists and is non empty.
+     * @param path to be checked
+     * @return true if the path is non <code>null</code> and non empty.
+     * @since 1.10
+     */
+    private static boolean hasPath(final Path path) {
+        return path != null && path.size() > 0;
+    }
+
+    /**
+     * Checks if a given folder is an unpacked module.
+     * @param root the fodler to be checked
+     * @return true if the root is an unpacked module
+     * @since 1.10
+     */
+    private static boolean hasModuleInfo(final File root) {
+        return new File(root, "module-info.class").exists();    //NOI18N
     }
 }
