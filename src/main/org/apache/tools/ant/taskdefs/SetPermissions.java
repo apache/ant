@@ -31,6 +31,7 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.util.PermissionUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Sets {@link PosixFilePermission}s for resources.
@@ -95,18 +96,31 @@ public class SetPermissions extends Task {
         if (resources == null) {
             throw new BuildException("At least one resource-collection is required");
         }
-        for (Resource r : resources) {
-            try {
-                PermissionUtils.setPermissions(r, permissions);
-            } catch (IOException ioe) {
-                String msg = "Failed to set permissions on " + r + " due to "
-                    + ioe.getMessage();
-                if (failonerror) {
-                    throw new BuildException(msg, ioe);
-                } else {
-                    log("Warning: " + msg, Project.MSG_ERR);
-                }
-            }
+        Resource currentResource = null;
+        try {
+	        for (Resource r : resources) {
+	        	currentResource = r;
+	            try {
+	                PermissionUtils.setPermissions(r, permissions);
+	            } catch (IOException ioe) {
+	                maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
+	            }
+	        }
+        } catch (UnsupportedOperationException uoe) {
+        	maybeThrowException(null, "the associated file system of resource '%s' does not support the PosixFileAttributeView", currentResource);
+        } catch (ClassCastException uoe) {
+        	maybeThrowException(null, "some specified permissions are not of type PosixFilePermission: %s", StringUtils.join(permissions, ", "));
+        } catch (SecurityException uoe) {
+        	maybeThrowException(null, "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'", currentResource);
         }
     }
+
+	private void maybeThrowException(Exception ioe, String msgFormat, Object... msgArgs) {
+		String msg = String.format(msgFormat, msgArgs);
+		if (failonerror) {
+		    throw new BuildException(msg, ioe);
+		} else {
+		    log("Warning: " + msg, Project.MSG_ERR);
+		}
+	}
 }
