@@ -17,13 +17,15 @@
  */
 package org.apache.tools.ant.util;
 
-import java.util.Vector;
-
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Vector;
+
+import org.junit.Test;
 
 /**
  * Test for StringUtils
@@ -33,7 +35,7 @@ public class StringUtilsTest {
     @Test
     public void testSplit(){
         final String data = "a,b,,";
-        Vector res = StringUtils.split(data, ',');
+        Vector<String> res = StringUtils.split(data, ',');
         assertEquals(4, res.size());
         assertEquals("a", res.elementAt(0));
         assertEquals("b", res.elementAt(1));
@@ -44,7 +46,7 @@ public class StringUtilsTest {
     @Test
     public void testSplitLines(){
         final String data = "a\r\nb\nc\nd\ne";
-        Vector res = StringUtils.lineSplit(data);
+        Vector<String> res = StringUtils.lineSplit(data);
         assertEquals(5, res.size());
         assertEquals("a\r", res.elementAt(0));
         assertEquals("b", res.elementAt(1));
@@ -53,7 +55,8 @@ public class StringUtilsTest {
         assertEquals("e", res.elementAt(4));
     }
 
-    @Test
+    @SuppressWarnings("deprecation")
+	@Test
     public void testReplace() {
         final String data = "abcabcabca";
         String res = StringUtils.replace(data, "a", "");
@@ -166,5 +169,26 @@ public class StringUtilsTest {
             prefix + name + suffix, 
             StringUtils.removePrefix(input, "bla")
         );
-    }    
+    }
+    
+    @Test
+    public void testJoin() {
+    	assertEquals("a, b, c", StringUtils.join(Arrays.asList("a", "b", "c"), ", "));
+    }
+    
+    @Test
+    public void testJoinEmptyArray() {
+    	assertEquals("", StringUtils.join(new String[]{}, ", "));
+    }
+    
+    @Test
+    public void testJoinNullArray() {
+    	assertEquals("", StringUtils.join((Collection<String>)null, ", "));
+    }
+
+    @Test
+    public void testJoinNullSeparator() {
+    	assertEquals("abc", StringUtils.join(Arrays.asList("a", "b", "c"), null));
+    }
+    
 }
