@@ -259,7 +259,7 @@ public class Get extends Task {
 
     @Override
     public void log(final String msg, final int msgLevel) {
-        if (!quiet || msgLevel >= Project.MSG_ERR) {
+        if (!quiet || msgLevel <= Project.MSG_ERR) {
             super.log(msg, msgLevel);
         }
     }

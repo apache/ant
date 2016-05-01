@@ -12,6 +12,9 @@ Fixed bugs:
    they have specified.
    Bugzilla Report 59339
 
+ * <get>'s quiet attribute was broken, it didn't suppress any messages.
+   Bugzilla Report 59379
+
 Other changes:
 --------------
 
