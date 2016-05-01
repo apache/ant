@@ -135,22 +135,22 @@ public class Get extends Task {
                 }
             }
 
-        //set up logging
-        final int logLevel = Project.MSG_INFO;
-        DownloadProgress progress = null;
-        if (verbose) {
-            progress = new VerboseProgress(System.out);
-        }
-
-        //execute the get
-        try {
-            doGet(source, dest, logLevel, progress);
-        } catch (final IOException ioe) {
-            log("Error getting " + source + " to " + dest);
-            if (!ignoreErrors) {
-                throw new BuildException(ioe, getLocation());
+            //set up logging
+            final int logLevel = Project.MSG_INFO;
+            DownloadProgress progress = null;
+            if (verbose) {
+                progress = new VerboseProgress(System.out);
             }
-        }
+
+            //execute the get
+            try {
+                doGet(source, dest, logLevel, progress);
+            } catch (final IOException ioe) {
+                log("Error getting " + source + " to " + dest);
+                if (!ignoreErrors) {
+                    throw new BuildException(ioe, getLocation());
+                }
+            }
         }
     }
 
