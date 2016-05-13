@@ -487,7 +487,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             //make sure m_LocalDir exists, create it if it doesn't
             File dir = getProject().resolveFile(localPath);
             if (!dir.exists()) {
-                boolean done = dir.mkdirs();
+                boolean done = dir.mkdirs() || dir.exists();
                 if (!done) {
                     String msg = "Directory " + localPath + " creation was not "
                             + "successful for an unknown reason";
