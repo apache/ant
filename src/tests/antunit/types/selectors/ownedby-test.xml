@@ -21,6 +21,10 @@
 
   <property name="file" value="testfile"/>
 
+  <condition property="unix">
+    <os family="unix"/>
+  </condition>
+
   <target name="createTestdir">
     <mkdir dir="${output}"/>
     <touch file="${output}/${file}"/>
@@ -36,8 +40,8 @@
     </au:expectfailure>
   </target>
 
-  <!-- not sure whether this works on Windows, Jenkins will tell us -->
-  <target name="testOwnedBy" depends="createTestdir">
+  <!-- at least on Jenkins the file is owned by BUILTIN\Administrators -->
+  <target name="testOwnedBy" depends="createTestdir" if="unix">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <fileset dir="${output}">
@@ -54,7 +58,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="testAsTrueConditions" depends="createTestdir">
+  <target name="testAsTrueConditions" depends="createTestdir" if="unix">
     <au:assertTrue>
       <isfileselected file="${output}/${file}">
         <ownedBy owner="${user.name}"/>
