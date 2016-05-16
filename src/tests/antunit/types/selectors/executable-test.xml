@@ -48,7 +48,7 @@
   </target>
 
   <target name="makeFileExecutable" depends="createTestdir">
-    <setpermissions mode="755">
+    <setpermissions mode="755" nonPosixMode="pass">
       <file file="${output}/${file}"/>
     </setpermissions>
   </target>
