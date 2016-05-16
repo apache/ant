@@ -297,6 +297,9 @@ public final class StringUtils {
      * @return the joined string
      */
     public static String join(Object[] array, CharSequence separator) {
+        if (array == null) {
+            return "";
+        }
     	return join(Arrays.asList(array), separator);
     }
 

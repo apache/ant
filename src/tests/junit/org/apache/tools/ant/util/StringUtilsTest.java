@@ -182,8 +182,13 @@ public class StringUtilsTest {
     }
     
     @Test
-    public void testJoinNullArray() {
+    public void testJoinNullCollection() {
     	assertEquals("", StringUtils.join((Collection<String>)null, ", "));
+    }
+
+    @Test
+    public void testJoinNullArray() {
+    	assertEquals("", StringUtils.join((String[])null, ", "));
     }
 
     @Test
