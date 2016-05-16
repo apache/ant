@@ -19,6 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -38,7 +41,13 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * <p>This task provides a subset of {@link Chmod}'s and {@link
  * org.apache.tools.ant.taskdefs.optional.windows.Attrib}'s abilities
- * in a platform independent way.</p>
+ * in less platform dependent way.</p>
+ *
+ * <p>It requires a file system that supports PosixFilePermissions for
+ * its full potential. It can optionally fall back to
+ * DosFilePermissions (only changing the readonly state) on file
+ * systems that don't support POSIX permissions. See {@link
+ * SetPermissions.NonPosixMode}</p>
  *
  * @since Ant 1.10.0
  */
@@ -47,6 +56,28 @@ public class SetPermissions extends Task {
         EnumSet.noneOf(PosixFilePermission.class);
     private Resources resources = null;
     private boolean failonerror = true;
+    private NonPosixMode nonPosixMode = NonPosixMode.fail;
+
+    /**
+     * Options for dealing with file systems that don't support POSIX
+     * permissions.
+     */
+    public enum NonPosixMode {
+        /** Fail the build. */
+        fail,
+        /** Log an error and go on. */
+        pass,
+        /**
+         * Try DosFilePermissions - setting the read-only flag - and
+         * fail the build if that fails as well.
+         */
+        tryDosOrFail,
+        /**
+         * Try DosFilePermissions - setting the read-only flag - and
+         * log an error and go on if that fails as well.
+         */
+        tryDosOrPass;
+    }
 
     /**
      * Adds permissions as a comma separated list.
@@ -75,10 +106,24 @@ public class SetPermissions extends Task {
     /**
      * Set whether to fail when errors are encountered. If false, note errors
      * to the output but keep going. Default is true.
+     * <p>Only applies to IO and SecurityExceptions, see {@link
+     * #setNonPosixMode} for ways to deal with file-systems that don't
+     * support PosixPermissions.</p>
      * @param failonerror true or false.
      */
     public void setFailOnError(final boolean failonerror) {
         this.failonerror = failonerror;
+    }
+
+    /**
+     * Set what to do if changing the permissions of a file is not
+     * possible because the file-system doesn't support POSIX file
+     * permissions.
+     * <p>The default is {@link NonPosixMode#fail}.</p>
+     * @param m what to do if changing the permissions of a file is not possible
+     */
+    public void setNonPosixMode(NonPosixMode m) {
+        this.nonPosixMode = m;
     }
 
     /**
@@ -101,13 +146,11 @@ public class SetPermissions extends Task {
 	        for (Resource r : resources) {
 	        	currentResource = r;
 	            try {
-	                PermissionUtils.setPermissions(r, permissions, null);
+	                PermissionUtils.setPermissions(r, permissions, this::posixPermissionsNotSupported);
 	            } catch (IOException ioe) {
 	                maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
 	            }
 	        }
-        } catch (UnsupportedOperationException uoe) {
-        	maybeThrowException(null, "the associated file system of resource '%s' does not support the PosixFileAttributeView", currentResource);
         } catch (ClassCastException uoe) {
         	maybeThrowException(null, "some specified permissions are not of type PosixFilePermission: %s", StringUtils.join(permissions, ", "));
         } catch (SecurityException uoe) {
@@ -123,4 +166,55 @@ public class SetPermissions extends Task {
 		    log("Warning: " + msg, Project.MSG_ERR);
 		}
 	}
+
+    private void posixPermissionsNotSupported(Path p) {
+        String msg = String.format("the associated path '%s' does"
+                                   + " not support the PosixFileAttributeView", p);
+        switch (nonPosixMode) {
+        case fail:
+            throw new BuildException(msg);
+        case pass:
+            log("Warning: " + msg, Project.MSG_ERR);
+            break;
+        case tryDosOrFail:
+            tryDos(p, true);
+            break;
+        case tryDosOrPass:
+            tryDos(p, false);
+            break;
+        }
+    }
+
+    private void tryDos(Path p, boolean failIfDosIsNotSupported) {
+        log("Falling back to DosFileAttributeView");
+        boolean readOnly = !isWritable();
+        DosFileAttributeView view = Files.getFileAttributeView(p, DosFileAttributeView.class);
+        if (view != null) {
+            try {
+                view.setReadOnly(readOnly);
+            } catch (IOException ioe) {
+                maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s",
+                                    p, ioe.getMessage());
+            } catch (SecurityException uoe) {
+        	maybeThrowException(null, "the SecurityManager denies role "
+                                    + "accessUserInformation or write access for "
+                                    + "SecurityManager.checkWrite for resource '%s'",
+                                    p);
+            }
+        } else {
+            String msg = String.format("the associated path '%s' does"
+                                       + " not support the DosFileAttributeView", p);
+            if (failIfDosIsNotSupported) {
+                throw new BuildException(msg);
+            } else {
+                log("Warning: " + msg, Project.MSG_ERR);
+            }
+        }
+    }
+
+    private boolean isWritable() {
+        return permissions.contains(PosixFilePermission.OWNER_WRITE)
+            || permissions.contains(PosixFilePermission.GROUP_WRITE)
+            || permissions.contains(PosixFilePermission.OTHERS_WRITE);
+    }
 }

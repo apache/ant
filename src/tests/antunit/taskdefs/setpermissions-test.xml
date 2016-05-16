@@ -33,7 +33,8 @@
 
   <target name="testPermissionsSetViaPermissionsAttribute"
           depends="setUp">
-    <setpermissions permissions="OWNER_READ,GROUP_READ,OTHERS_READ">
+    <setpermissions permissions="OWNER_READ,GROUP_READ,OTHERS_READ"
+                    nonPosixMode="tryDosOrFail">
       <file file="${file}"/>
     </setpermissions>
     <au:assertFalse>
@@ -50,7 +51,7 @@
 
   <target name="testPermissionsSetViaModeAttribute"
           depends="setUp">
-    <setpermissions mode="444">
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
       <file file="${file}"/>
     </setpermissions>
     <au:assertFalse>

@@ -66,6 +66,19 @@
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">nonPosixMode</td>
+    <td valign="top">What to do if changing the permissions of a file
+      is not possible because the file-system doesn't support POSIX
+      file permissions. Possible options are <code>fail</code> (fail
+      the build), <code>pass</code> (just log an
+      error), <code>tryDosOrFail</code> (at least try to set the
+      read-only flag on DOS file systems, fail if that isn't possible
+      either) and <code>tryDosOrPass</code> (at least try to set the
+      read-only flag on DOS file systems, just log an error if that
+      isn't possible either).</td>
+    <td valign="top" align="center">No, defaults to <code>fail</code></td>
+  </tr>
+  <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Whether to stop the build if setting permissions
       fails.</td>
