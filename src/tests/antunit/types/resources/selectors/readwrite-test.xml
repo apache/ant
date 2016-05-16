@@ -71,7 +71,7 @@
   </target>
 
   <target name="makeFileUnwritable" depends="createTestdir">
-    <setpermissions mode="444">
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
       <file file="${output}/${file}"/>
     </setpermissions>
   </target>

@@ -313,7 +313,7 @@ public class NullByteStreamResource extends Resource {
     <touch file="${output}/${file}"/>
   </target>
   <target name="makeFileUnwritable" depends="createTestdir">
-    <setpermissions mode="444">
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
       <file file="${output}/${file}"/>
     </setpermissions>
   </target>
@@ -450,7 +450,7 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${output}"/>
     <touch file="${input}/somefile"/>
     <touch file="${output}/somefile"/>
-    <setpermissions mode="444">
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
       <file file="${output}/somefile"/>
     </setpermissions>
     <au:expectfailure>
