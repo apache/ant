@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
@@ -282,7 +283,10 @@ public final class StringUtils {
      * @return the joined string
      */
     public static String join(Collection<?> collection, CharSequence separator) {
-    	return collection.stream().map( o -> String.valueOf(o) ).collect(Collectors.joining(separator));
+        if (collection == null) {
+            return "";
+        }
+    	return collection.stream().map( o -> String.valueOf(o) ).collect(joining(separator));
     }
 
     /**
@@ -294,5 +298,9 @@ public final class StringUtils {
      */
     public static String join(Object[] array, CharSequence separator) {
     	return join(Arrays.asList(array), separator);
+    }
+
+    private static Collector<CharSequence,?,String> joining(CharSequence separator) {
+        return separator == null ? Collectors.joining() : Collectors.joining(separator);
     }
 }
