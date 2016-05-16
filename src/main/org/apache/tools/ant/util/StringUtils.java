@@ -286,7 +286,7 @@ public final class StringUtils {
         if (collection == null) {
             return "";
         }
-    	return collection.stream().map( o -> String.valueOf(o) ).collect(joining(separator));
+        return collection.stream().map( o -> String.valueOf(o) ).collect(joining(separator));
     }
 
     /**
@@ -300,7 +300,7 @@ public final class StringUtils {
         if (array == null) {
             return "";
         }
-    	return join(Arrays.asList(array), separator);
+        return join(Arrays.asList(array), separator);
     }
 
     private static Collector<CharSequence,?,String> joining(CharSequence separator) {

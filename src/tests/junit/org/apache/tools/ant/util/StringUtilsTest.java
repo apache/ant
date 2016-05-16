@@ -56,7 +56,7 @@ public class StringUtilsTest {
     }
 
     @SuppressWarnings("deprecation")
-	@Test
+        @Test
     public void testReplace() {
         final String data = "abcabcabca";
         String res = StringUtils.replace(data, "a", "");
@@ -122,17 +122,17 @@ public class StringUtilsTest {
 
     @Test
     public void testParseHumanSizes() throws Exception {
-    	final long KILOBYTE = 1024;
-    	final long MEGABYTE = KILOBYTE * 1024;
-    	final long GIGABYTE = MEGABYTE * 1024;
-    	final long TERABYTE = GIGABYTE * 1024;
-    	final long PETABYTE = TERABYTE * 1024;
-    	assertEquals(StringUtils.parseHumanSizes("1K"), KILOBYTE);
-    	assertEquals(StringUtils.parseHumanSizes("1M"), MEGABYTE);
-    	assertEquals(StringUtils.parseHumanSizes("1G"), GIGABYTE);
-    	assertEquals(StringUtils.parseHumanSizes("1T"), TERABYTE);
-    	assertEquals(StringUtils.parseHumanSizes("1P"), PETABYTE);
-    	assertEquals(StringUtils.parseHumanSizes("1"), 1L);
+        final long KILOBYTE = 1024;
+        final long MEGABYTE = KILOBYTE * 1024;
+        final long GIGABYTE = MEGABYTE * 1024;
+        final long TERABYTE = GIGABYTE * 1024;
+        final long PETABYTE = TERABYTE * 1024;
+        assertEquals(StringUtils.parseHumanSizes("1K"), KILOBYTE);
+        assertEquals(StringUtils.parseHumanSizes("1M"), MEGABYTE);
+        assertEquals(StringUtils.parseHumanSizes("1G"), GIGABYTE);
+        assertEquals(StringUtils.parseHumanSizes("1T"), TERABYTE);
+        assertEquals(StringUtils.parseHumanSizes("1P"), PETABYTE);
+        assertEquals(StringUtils.parseHumanSizes("1"), 1L);
     }
 
     @Test
@@ -173,27 +173,27 @@ public class StringUtilsTest {
     
     @Test
     public void testJoin() {
-    	assertEquals("a, b, c", StringUtils.join(Arrays.asList("a", "b", "c"), ", "));
+        assertEquals("a, b, c", StringUtils.join(Arrays.asList("a", "b", "c"), ", "));
     }
     
     @Test
     public void testJoinEmptyArray() {
-    	assertEquals("", StringUtils.join(new String[]{}, ", "));
+        assertEquals("", StringUtils.join(new String[]{}, ", "));
     }
     
     @Test
     public void testJoinNullCollection() {
-    	assertEquals("", StringUtils.join((Collection<String>)null, ", "));
+        assertEquals("", StringUtils.join((Collection<String>)null, ", "));
     }
 
     @Test
     public void testJoinNullArray() {
-    	assertEquals("", StringUtils.join((String[])null, ", "));
+        assertEquals("", StringUtils.join((String[])null, ", "));
     }
 
     @Test
     public void testJoinNullSeparator() {
-    	assertEquals("abc", StringUtils.join(Arrays.asList("a", "b", "c"), null));
+        assertEquals("abc", StringUtils.join(Arrays.asList("a", "b", "c"), null));
     }
     
 }
