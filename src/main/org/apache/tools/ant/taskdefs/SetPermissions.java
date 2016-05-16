@@ -101,7 +101,7 @@ public class SetPermissions extends Task {
 	        for (Resource r : resources) {
 	        	currentResource = r;
 	            try {
-	                PermissionUtils.setPermissions(r, permissions);
+	                PermissionUtils.setPermissions(r, permissions, null);
 	            } catch (IOException ioe) {
 	                maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
 	            }

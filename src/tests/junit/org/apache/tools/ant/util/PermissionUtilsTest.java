@@ -105,8 +105,8 @@ public class PermissionUtilsTest {
                        PosixFilePermission.OWNER_WRITE,
                        PosixFilePermission.OWNER_EXECUTE,
                        PosixFilePermission.GROUP_READ);
-        PermissionUtils.setPermissions(new FileResource(f), s);
-        assertEquals(s, PermissionUtils.getPermissions(new FileResource(f)));
+        PermissionUtils.setPermissions(new FileResource(f), s, null);
+        assertEquals(s, PermissionUtils.getPermissions(new FileResource(f), null));
     }
 
     @Test
@@ -127,8 +127,8 @@ public class PermissionUtilsTest {
                        PosixFilePermission.OWNER_WRITE,
                        PosixFilePermission.OWNER_EXECUTE,
                        PosixFilePermission.GROUP_READ);
-        PermissionUtils.setPermissions(r, s);
-        assertEquals(s, PermissionUtils.getPermissions(r));
+        PermissionUtils.setPermissions(r, s, null);
+        assertEquals(s, PermissionUtils.getPermissions(r, null));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class PermissionUtilsTest {
                        PosixFilePermission.OWNER_WRITE,
                        PosixFilePermission.OWNER_EXECUTE,
                        PosixFilePermission.GROUP_READ);
-        PermissionUtils.setPermissions(r, s);
-        assertEquals(s, PermissionUtils.getPermissions(r));
+        PermissionUtils.setPermissions(r, s, null);
+        assertEquals(s, PermissionUtils.getPermissions(r, null));
     }
 }

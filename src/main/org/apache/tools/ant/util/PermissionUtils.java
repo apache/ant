@@ -21,9 +21,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.ArchiveResource;
@@ -48,7 +51,7 @@ public class PermissionUtils {
      * @return the "mode"
      */
     public static int modeFromPermissions(Set<PosixFilePermission> permissions,
-                                           FileType type) {
+                                          FileType type) {
         int mode;
         switch (type) {
         case SYMLINK:
@@ -101,12 +104,24 @@ public class PermissionUtils {
      *
      * @param resource the resource to set permissions for
      * @param permissions the permissions
+     * @param posixNotSupportedCallback optional callback that is
+     * invoked for a file provider resource if the file-system holding
+     * the file doesn't support PosixFilePermissions. The Path
+     * corresponding to the file is passed to the callback.
      */
-    public static void setPermissions(Resource r, Set<PosixFilePermission> permissions)
+    public static void setPermissions(Resource r, Set<PosixFilePermission> permissions,
+                                      Consumer<Path> posixNotSupportedCallback)
         throws IOException {
         FileProvider f = r.as(FileProvider.class);
         if (f != null) {
-            Files.setPosixFilePermissions(f.getFile().toPath(), permissions);
+            Path p = f.getFile().toPath();
+            PosixFileAttributeView view =
+                Files.getFileAttributeView(p, PosixFileAttributeView.class);
+            if (view != null) {
+                view.setPermissions(permissions);
+            } else if (posixNotSupportedCallback != null) {
+                posixNotSupportedCallback.accept(p);
+            }
         } else if (r instanceof ArchiveResource) {
             ((ArchiveResource) r).setMode(modeFromPermissions(permissions,
                                                               FileType.of(r)));
@@ -114,8 +129,10 @@ public class PermissionUtils {
     }
 
     /**
-     * Sets permissions of a {@link Resource} - doesn't returns an
-     * empty set for unsupported resource types.
+     * Sets permissions of a {@link Resource} - returns an empty set
+     * for unsupported resource types or file systems that don't
+     * support PosixFilePermissions and no fallback has been
+     * provided..
      *
      * <p>Supported types are:</p>
      * <ul>
@@ -124,12 +141,25 @@ public class PermissionUtils {
      * </ul>
      *
      * @param resource the resource to read permissions from
+     * @param posixNotSupportedFallback optional fallback function to provide
+     * permissions for file system that don't support
+     * PosixFilePermissions. The Path corresponding to the file is
+     * passed to the callback.
      * @return the permissions
      */
-    public static Set<PosixFilePermission> getPermissions(Resource r) throws IOException {
+    public static Set<PosixFilePermission> getPermissions(Resource r,
+            Function<Path, Set<PosixFilePermission>> posixNotSupportedFallback)
+        throws IOException {
         FileProvider f = r.as(FileProvider.class);
         if (f != null) {
-            return Files.getPosixFilePermissions(f.getFile().toPath());
+            Path p = f.getFile().toPath();
+            PosixFileAttributeView view =
+                Files.getFileAttributeView(p, PosixFileAttributeView.class);
+            if (view != null) {
+                return view.readAttributes().permissions();
+            } else if (posixNotSupportedFallback != null) {
+                return posixNotSupportedFallback.apply(p);
+            }
         } else if (r instanceof ArchiveResource) {
             return permissionsFromMode(((ArchiveResource) r).getMode());
         }
