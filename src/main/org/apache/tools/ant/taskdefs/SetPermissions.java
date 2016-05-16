@@ -143,29 +143,29 @@ public class SetPermissions extends Task {
         }
         Resource currentResource = null;
         try {
-	        for (Resource r : resources) {
-	        	currentResource = r;
-	            try {
-	                PermissionUtils.setPermissions(r, permissions, this::posixPermissionsNotSupported);
-	            } catch (IOException ioe) {
-	                maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
-	            }
-	        }
+            for (Resource r : resources) {
+                currentResource = r;
+                try {
+                    PermissionUtils.setPermissions(r, permissions, this::posixPermissionsNotSupported);
+                } catch (IOException ioe) {
+                    maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
+                }
+            }
         } catch (ClassCastException uoe) {
-        	maybeThrowException(null, "some specified permissions are not of type PosixFilePermission: %s", StringUtils.join(permissions, ", "));
+            maybeThrowException(null, "some specified permissions are not of type PosixFilePermission: %s", StringUtils.join(permissions, ", "));
         } catch (SecurityException uoe) {
-        	maybeThrowException(null, "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'", currentResource);
+            maybeThrowException(null, "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'", currentResource);
         }
     }
 
-	private void maybeThrowException(Exception ioe, String msgFormat, Object... msgArgs) {
-		String msg = String.format(msgFormat, msgArgs);
-		if (failonerror) {
-		    throw new BuildException(msg, ioe);
-		} else {
-		    log("Warning: " + msg, Project.MSG_ERR);
-		}
-	}
+    private void maybeThrowException(Exception ioe, String msgFormat, Object... msgArgs) {
+        String msg = String.format(msgFormat, msgArgs);
+        if (failonerror) {
+            throw new BuildException(msg, ioe);
+        } else {
+            log("Warning: " + msg, Project.MSG_ERR);
+        }
+    }
 
     private void posixPermissionsNotSupported(Path p) {
         String msg = String.format("the associated path '%s' does"
