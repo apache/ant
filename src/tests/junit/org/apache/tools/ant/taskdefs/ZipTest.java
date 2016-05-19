@@ -297,4 +297,12 @@ public class ZipTest {
         }
     }
 
+    @Test
+    public void testRegexpMapper() throws IOException {
+        buildRule.executeTarget("testRegexpMapper1");
+        File testFile = new File(buildRule.getOutputDir(), "regexp.zip");
+        long l = testFile.lastModified();
+        buildRule.executeTarget("testRegexpMapper2");
+        assertEquals(l, testFile.lastModified());
+    }
 }

@@ -15,6 +15,10 @@ Fixed bugs:
  * <get>'s quiet attribute was broken, it didn't suppress any messages.
    Bugzilla Report 59379
 
+ * <zip>'s check whether an archive is already up-to-date failed on
+   NTFS filesystems and re-created archives more often than necessary.
+   Bugzilla Report 59562
+
 Other changes:
 --------------
 
