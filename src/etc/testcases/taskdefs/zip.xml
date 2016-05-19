@@ -283,5 +283,24 @@
     <zip destFile="${output}/test3.zip" basedir="${output}/ziptest" update="true"/>
   </target>
 
+  <target name="testRegexpMapper1">
+    <mkdir dir="${output}/regexp.src"/>
+    <touch file="${output}/regexp.src/file1"/>
+    <zip destFile="${output}/regexp.zip">
+      <mappedresources>
+       <fileset dir="${output}/regexp.src" includes="file1" />
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+      </mappedresources>
+    </zip>
+  </target>
+  <target name="testRegexpMapper2">
+    <sleep seconds="3" />
+    <zip destFile="${output}/regexp.zip">
+      <mappedresources>
+       <fileset dir="${output}/regexp.src" includes="file1" />
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+      </mappedresources>
+    </zip>
+  </target>
 
 </project>

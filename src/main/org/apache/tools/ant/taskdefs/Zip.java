@@ -78,7 +78,11 @@ import org.apache.tools.zip.ZipOutputStream.UnicodeExtraFieldPolicy;
  */
 public class Zip extends MatchingTask {
     private static final int BUFFER_SIZE = 8 * 1024;
-    private static final int ROUNDUP_MILLIS = 1999; // 2 seconds - 1
+    /**
+     * The granularity of timestamps inside a ZIP archive.
+     */
+    private static final int ZIP_FILE_TIMESTAMP_GRANULARITY = 2000;
+    private static final int ROUNDUP_MILLIS = ZIP_FILE_TIMESTAMP_GRANULARITY - 1;
     // CheckStyle:VisibilityModifier OFF - bc
 
     protected File zipFile;
@@ -1548,7 +1552,8 @@ public class Zip extends MatchingTask {
         final Resource[] rs = selectFileResources(initial);
         Resource[] result =
             ResourceUtils.selectOutOfDateSources(this, rs, mapper,
-                                                 getZipScanner());
+                                                 getZipScanner(),
+                                                 ZIP_FILE_TIMESTAMP_GRANULARITY);
         if (!doFilesonly) {
             final Union u = new Union();
             u.addAll(Arrays.asList(selectDirectoryResources(initial)));
