@@ -116,6 +116,20 @@ public class JUnitTestRunnerTest{
         //assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
 
+    // check that JUnit 4 synthetic AssertionFailedError gets message and cause from AssertionError
+    @Test
+    public void testJUnit4AssertionError(){
+        TestRunner runner = createRunnerForTestMethod(AssertionErrorTest.class,"throwsAssertionError");
+        runner.run();
+
+        AssertionFailedError failure = runner.getFormatter().getFailure();
+        assertEquals("failure message", failure.getMessage());
+
+        Throwable cause = failure.getCause();
+        assertEquals(RuntimeException.class, cause.getClass());
+        assertEquals("cause message", cause.getMessage());
+    }
+
     protected TestRunner createRunner(Class<?> clazz){
         return new TestRunner(new JUnitTest(clazz.getName()), null, 
                                             true, true, true);
@@ -145,6 +159,7 @@ public class JUnitTestRunnerTest{
 
     // dummy formatter just to catch the error
     private final static class ResultFormatter implements JUnitResultFormatter {
+        private AssertionFailedError failure;
         private Throwable error;
         public void setSystemOutput(String output){}
         public void setSystemError(String output){}
@@ -153,7 +168,12 @@ public class JUnitTestRunnerTest{
         public void setOutput(java.io.OutputStream out){}
         public void startTest(junit.framework.Test t) {}
         public void endTest(junit.framework.Test test) {}
-        public void addFailure(junit.framework.Test test, AssertionFailedError t) { }
+        public void addFailure(junit.framework.Test test, AssertionFailedError t) {
+            failure = t;
+        }
+        AssertionFailedError getFailure() {
+            return failure;
+        }
         public void addError(junit.framework.Test test, Throwable t) {
             error = t;
         }
@@ -211,6 +231,14 @@ public class JUnitTestRunnerTest{
         public InvalidSuiteTestCase(String name){ super(name); }
         public static junit.framework.Test suite(){
             throw new NullPointerException("thrown on purpose");
+        }
+    }
+
+    public static class AssertionErrorTest {
+        @Test public void throwsAssertionError() {
+            AssertionError assertionError = new AssertionError("failure message");
+            assertionError.initCause(new RuntimeException("cause message"));
+            throw assertionError;
         }
     }
 }

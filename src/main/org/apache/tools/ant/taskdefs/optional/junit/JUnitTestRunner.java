@@ -1240,6 +1240,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     final String msg = t.getMessage();
                     final AssertionFailedError failure = msg != null
                         ? new AssertionFailedError(msg) : new AssertionFailedError();
+                    failure.initCause(t.getCause());
                     failure.setStackTrace(t.getStackTrace());
                     testListener.addFailure(test, failure);
                 } else {

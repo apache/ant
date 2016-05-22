@@ -38,6 +38,10 @@ Other changes:
  * New task <setpermissions> that provides the ability to set POSIX
    compatible permssions via NIO's PosixFilePermission
 
+ * <junit> now initializes the cause of the AssertionFailedError when
+   converting from AssertionError.
+   Bugzilla Report 58982
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
