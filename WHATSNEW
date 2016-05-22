@@ -10,6 +10,11 @@ Changes that could break older environments:
  * The <apt> task has been removed since apt itself has been removed
    with Java8.
 
+ * <fileset>/<zipfileset>/<tarfileset> exhibited undefined
+   behavior when both the dir and file attribute have been used on the
+   same instance. This will now cause the build to fail.
+   Bugzilla Report 59402
+
 Fixed bugs:
 -----------
 
