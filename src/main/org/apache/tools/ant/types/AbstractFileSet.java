@@ -67,6 +67,7 @@ public abstract class AbstractFileSet extends DataType
     private List<FileSelector> selectors = new ArrayList<FileSelector>();
 
     private File dir;
+    private boolean fileAttributeUsed;
     private boolean useDefaultExcludes = true;
     private boolean caseSensitive = true;
     private boolean followSymlinks = true;
@@ -130,6 +131,9 @@ public abstract class AbstractFileSet extends DataType
     public synchronized void setDir(File dir) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
+        }
+        if (fileAttributeUsed && !getDir().equals(dir)) {
+            throw dirAndFileAreMutuallyExclusive();
         }
         this.dir = dir;
         directoryScanner = null;
@@ -228,7 +232,11 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             throw tooManyAttributes();
         }
+        if (getDir() != null) {
+            throw dirAndFileAreMutuallyExclusive();
+        }
         setDir(file.getParentFile());
+        fileAttributeUsed = true;
         createInclude().setName(file.getName());
     }
 
@@ -918,5 +926,9 @@ public abstract class AbstractFileSet extends DataType
             }
             setChecked(true);
         }
+    }
+
+    private BuildException dirAndFileAreMutuallyExclusive() {
+        return new BuildException("you can only specify one of the dir and file attributes");
     }
 }

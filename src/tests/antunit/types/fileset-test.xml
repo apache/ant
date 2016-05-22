@@ -64,4 +64,22 @@
     <au:assertLogContains text="fileset-test.xml"/>
   </target>
 
+  <target name="test-fileset-dir-and-file-exception">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedmessage="you can only specify one of the dir and file attributes">
+      <copy todir="${output}">
+        <fileset dir="foo" file="bar" />
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-fileset-file-and-dir-exception">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedmessage="you can only specify one of the dir and file attributes">
+      <copy todir="${output}">
+        <fileset file="bar" dir="foo"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
 </project>

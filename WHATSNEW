@@ -4,6 +4,11 @@ Changes from Ant 1.9.7 TO Ant 1.9.8
 Changes that could break older environments:
 -------------------------------------------
 
+ * <fileset>/<zipfileset>/<tarfileset> exhibited undefined
+   behavior when both the dir and file attribute have been used on the
+   same instance. This will now cause the build to fail.
+   Bugzilla Report 59402
+
 Fixed bugs:
 -----------
 

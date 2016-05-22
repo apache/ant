@@ -382,7 +382,6 @@ public abstract class AbstractJarSignerTask extends Task {
             FileSet sourceJar = new FileSet();
             sourceJar.setProject(getProject());
             sourceJar.setFile(jar);
-            sourceJar.setDir(jar.getParentFile());
             sources.add(sourceJar);
         }
         return sources;
