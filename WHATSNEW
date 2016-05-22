@@ -27,6 +27,10 @@ Fixed bugs:
 Other changes:
 --------------
 
+ * <junit> now initializes the cause of the AssertionFailedError when
+   converting from AssertionError.
+   Bugzilla Report 58982
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
