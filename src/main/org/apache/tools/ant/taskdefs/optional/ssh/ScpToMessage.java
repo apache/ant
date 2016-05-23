@@ -61,7 +61,18 @@ public class ScpToMessage extends AbstractSshMessage {
      * @since Ant 1.7
      */
     public ScpToMessage(final boolean verbose, final Session session) {
-        super(verbose, session);
+        this(verbose, false, session);
+    }
+
+    /**
+     * Constructor for ScpToMessage
+     * @param verbose if true do verbose logging
+     * @param compressed if true use compression
+     * @param session the ssh session to use
+     * @since Ant 1.9.8
+     */
+    public ScpToMessage(final boolean verbose, boolean compressed, final Session session) {
+        super(verbose, compressed, session);
     }
 
     /**
@@ -78,7 +89,26 @@ public class ScpToMessage extends AbstractSshMessage {
                         final File aLocalFile,
                         final String aRemotePath,
                         final boolean preserveLastModified) {
-        this(verbose, session, aRemotePath);
+        this(verbose, false, session, aLocalFile, aRemotePath, preserveLastModified);
+    }
+
+    /**
+     * Constructor for a local file to remote.
+     * @param verbose if true do verbose logging
+     * @param compressed if true use compression
+     * @param session the scp session to use
+     * @param aLocalFile the local file
+     * @param aRemotePath the remote path
+     * @param preserveLastModified whether to preserve the last modified timestamps
+     * @since Ant 1.9.8
+     */
+    public ScpToMessage(final boolean verbose,
+                        final boolean compressed,
+                        final Session session,
+                        final File aLocalFile,
+                        final String aRemotePath,
+                        final boolean preserveLastModified) {
+        this(verbose, compressed, session, aRemotePath);
         this.localFile = aLocalFile;
         this.preserveLastModified = preserveLastModified;
     }
@@ -97,7 +127,26 @@ public class ScpToMessage extends AbstractSshMessage {
                         final List aDirectoryList,
                         final String aRemotePath,
                         final boolean preserveLastModified) {
-        this(verbose, session, aRemotePath);
+        this(verbose, false, session, aDirectoryList, aRemotePath, preserveLastModified);
+    }
+
+    /**
+     * Constructor for a local directories to remote.
+     * @param verbose if true do verbose logging
+     * @param compressed whether to use compression
+     * @param session the scp session to use
+     * @param aDirectoryList a list of directories
+     * @param aRemotePath the remote path
+     * @param preserveLastModified whether to preserve the last modified timestamps
+     * @since Ant 1.9.8
+     */
+    public ScpToMessage(final boolean verbose,
+                        final boolean compressed,
+                        final Session session,
+                        final List aDirectoryList,
+                        final String aRemotePath,
+                        final boolean preserveLastModified) {
+        this(verbose, compressed, session, aRemotePath);
         this.directoryList = aDirectoryList;
         this.preserveLastModified = preserveLastModified;
     }
@@ -142,7 +191,22 @@ public class ScpToMessage extends AbstractSshMessage {
     private ScpToMessage(final boolean verbose,
                          final Session session,
                          final String aRemotePath) {
-        super(verbose, session);
+        this(verbose, false, session, aRemotePath);
+    }
+
+    /**
+     * Constructor for ScpToMessage.
+     * @param verbose if true do verbose logging
+     * @param compressed if true use compression
+     * @param session the scp session to use
+     * @param aRemotePath the remote path
+     * @since Ant 1.9.8
+     */
+    private ScpToMessage(final boolean verbose,
+                         final boolean compressed,
+                         final Session session,
+                         final String aRemotePath) {
+        super(verbose, compressed, session);
         this.remotePath = aRemotePath;
     }
 
@@ -187,7 +251,15 @@ public class ScpToMessage extends AbstractSshMessage {
     }
 
     private void doSingleTransfer() throws IOException, JSchException {
-        final String cmd = "scp -t " + (getPreserveLastModified() ? "-p " : "") + remotePath;
+        StringBuilder sb = new StringBuilder("scp -t ");
+        if (getPreserveLastModified()) {
+            sb.append("-p ");
+        }
+        if (getCompressed()) {
+            sb.append("-C ");
+        }
+        sb.append(remotePath);
+        final String cmd = sb.toString();
         final Channel channel = openExecChannel(cmd);
         try {
 
@@ -206,10 +278,15 @@ public class ScpToMessage extends AbstractSshMessage {
     }
 
     private void doMultipleTransfer() throws IOException, JSchException {
-        final Channel channel =
-            openExecChannel("scp -r -d -t "
-                            + (getPreserveLastModified() ? "-p " : "")
-                            + remotePath);
+        StringBuilder sb = new StringBuilder("scp -r -d -t ");
+        if (getPreserveLastModified()) {
+            sb.append("-p ");
+        }
+        if (getCompressed()) {
+            sb.append("-C ");
+        }
+        sb.append(remotePath);
+        final Channel channel = openExecChannel(sb.toString());
         try {
             final OutputStream out = channel.getOutputStream();
             final InputStream in = channel.getInputStream();

@@ -42,6 +42,9 @@ Other changes:
    converting from AssertionError.
    Bugzilla Report 58982
 
+ * <scp> now supports compression via the optional compressed attribute.
+   Bugzilla Report 47552
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

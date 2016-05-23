@@ -40,6 +40,7 @@ public abstract class AbstractSshMessage {
 
     private final Session session;
     private final boolean verbose;
+    private final boolean compressed;
     private LogListener listener = new LogListener() {
         public void log(final String message) {
             // do nothing;
@@ -61,7 +62,19 @@ public abstract class AbstractSshMessage {
      * @since Ant 1.6.2
      */
     public AbstractSshMessage(final boolean verbose, final Session session) {
+        this(verbose, false, session);
+    }
+
+    /**
+     * Constructor for AbstractSshMessage
+     * @param verbose if true do verbose logging
+     * @param compression if true use compression
+     * @param session the ssh session to use
+     * @since Ant 1.9.8
+     */
+    public AbstractSshMessage(boolean verbose, boolean compressed, Session session) {
         this.verbose = verbose;
+        this.compressed = compressed;
         this.session = session;
     }
 
@@ -189,6 +202,15 @@ public abstract class AbstractSshMessage {
      */
     protected final boolean getVerbose() {
         return verbose;
+    }
+
+    /**
+     * Is the compressed attribute set.
+     * @return true if the compressed attribute is set
+     * @since Ant 1.9.8
+     */
+    protected final boolean getCompressed() {
+        return compressed;
     }
 
     /**
