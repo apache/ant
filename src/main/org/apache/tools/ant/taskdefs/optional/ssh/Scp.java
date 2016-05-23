@@ -54,6 +54,7 @@ public class Scp extends SSHBase {
     private String fromUri;
     private String toUri;
     private boolean preserveLastModified = false;
+    private boolean compressed = false;
     private List<ResourceCollection> rcs = null;
     private boolean isFromRemote, isToRemote;
     private boolean isSftp = false;
@@ -110,6 +111,15 @@ public class Scp extends SSHBase {
         setFromUri(aFromUri);
         this.isFromRemote = true;
      }
+
+     /**
+     * Sets flag to determine if compression should
+     * be used for the copy.
+     * @since Ant 1.9.8
+     */
+    public void setCompressed(boolean compressed) {
+        this.compressed = compressed;
+    }
 
     /**
      * Similar to {@link #setTodir setTodir} but explicitly states
@@ -295,7 +305,8 @@ public class Scp extends SSHBase {
                     new ScpFromMessage(getVerbose(), session, file,
                                        getProject().resolveFile(toPath),
                                        fromSshUri.endsWith("*"),
-                                       preserveLastModified);
+                                       preserveLastModified,
+                                       compressed);
             } else {
                 message =
                     new ScpFromMessageBySftp(getVerbose(), session, file,
@@ -339,7 +350,7 @@ public class Scp extends SSHBase {
                 session = openSession();
                 ScpToMessage message = null;
                 if (!isSftp) {
-                    message = new ScpToMessage(getVerbose(), session,
+                    message = new ScpToMessage(getVerbose(), compressed, session,
                                                list, file, preserveLastModified);
                 } else {
                     message = new ScpToMessageBySftp(getVerbose(), session,
@@ -371,7 +382,7 @@ public class Scp extends SSHBase {
             ScpToMessage message = null;
             if (!isSftp) {
                 message =
-                    new ScpToMessage(getVerbose(), session,
+                    new ScpToMessage(getVerbose(), compressed, session,
                                      getProject().resolveFile(fromPath), file,
                                      preserveLastModified);
             } else {

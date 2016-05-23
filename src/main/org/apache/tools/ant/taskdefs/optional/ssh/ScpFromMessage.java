@@ -115,7 +115,29 @@ public class ScpFromMessage extends AbstractSshMessage {
                           final File aLocalFile,
                           final boolean recursive,
                           final boolean preserveLastModified) {
-        super(verbose, session);
+        this(verbose, session, aRemoteFile, aLocalFile, recursive, preserveLastModified, false);
+    }
+
+    /**
+     * Constructor for ScpFromMessage.
+     * @param verbose if true log extra information
+     * @param session the Scp session to use
+     * @param aRemoteFile the remote file name
+     * @param aLocalFile  the local file
+     * @param recursive   if true use recursion (-r option to scp)
+     * @param preserveLastModified whether to preserve file
+     * @param compressed  if true use compression (-C option to scp)
+     * modification times
+     * @since Ant 1.9.8
+     */
+    public ScpFromMessage(boolean verbose,
+                          Session session,
+                          String aRemoteFile,
+                          File aLocalFile,
+                          boolean recursive,
+                          boolean preserveLastModified,
+                          boolean compressed) {
+        super(verbose, compressed, session);
         this.remoteFile = aRemoteFile;
         this.localFile = aLocalFile;
         this.isRecursive = recursive;
@@ -131,6 +153,9 @@ public class ScpFromMessage extends AbstractSshMessage {
         String command = "scp -f ";
         if (isRecursive) {
             command += "-r ";
+        }
+        if (getCompressed()) {
+            command += "-C ";
         }
         command += remoteFile;
         final Channel channel = openExecChannel(command);
