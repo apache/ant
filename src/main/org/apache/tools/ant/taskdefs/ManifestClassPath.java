@@ -115,11 +115,8 @@ public class ManifestClassPath extends Task {
             if (pathEntry.isDirectory() && !relPath.endsWith("/")) {
                 relPath = relPath + '/';
             }
-            try {
-                relPath = Locator.encodeURI(relPath);
-            } catch (UnsupportedEncodingException exc) {
-                throw new BuildException(exc);
-            }
+            relPath = Locator.encodeURI(relPath);
+
             // Manifest's ClassPath: attribute always uses forward
             // slashes '/', and is space-separated. Ant will properly
             // format it on 72 columns with proper line continuation
