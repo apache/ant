@@ -378,8 +378,6 @@ public class Symlink extends DispatchTask {
      *
      * @param path    A string containing the path of the symlink to delete.
      *
-     * @throws FileNotFoundException   When the path results in a
-     *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>
      *                                   or <code>File.delete</code> fail.
      * @deprecated use
@@ -388,7 +386,7 @@ public class Symlink extends DispatchTask {
      */
     @Deprecated
     public static void deleteSymlink(String path)
-        throws IOException, FileNotFoundException {
+        throws IOException {
         SYMLINK_UTILS.deleteSymbolicLink(new File(path), null);
     }
 

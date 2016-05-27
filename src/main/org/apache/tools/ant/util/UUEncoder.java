@@ -81,7 +81,7 @@ public class UUEncoder {
     /**
      * Encode a string to the output.
      */
-    private void encodeString(String n) throws IOException {
+    private void encodeString(String n) {
         PrintStream writer = new PrintStream(out);
         writer.print(n);
         writer.flush();

@@ -1024,8 +1024,7 @@ public class Jar extends Zip {
      * @since Ant 1.6.2
      */
     protected final void writeIndexLikeList(List<String> dirs, List<String> files,
-                                            PrintWriter writer)
-        throws IOException {
+                                            PrintWriter writer) {
         // JarIndex is sorting the directories by ascending order.
         // it has no value but cosmetic since it will be read into a
         // hashtable by the classloader, but we'll do so anyway.
