@@ -23,6 +23,7 @@ import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;
@@ -59,10 +60,6 @@ public final class Locator {
     private static final int SPACE = 0x20;
     private static final int DEL = 0x7F;
 
-    /**
-     * encoding used to represent URIs
-     */
-    public static final String URI_ENCODING = "UTF-8";
     // stolen from org.apache.xerces.impl.XMLEntityManager#getUserDir()
     // of the Xerces-J team
     // which ASCII characters need to be escaped
@@ -315,11 +312,11 @@ public final class Locator {
             } else if (c >= 0x0000 && c < 0x0080) {
                 sb.write(c);
             } else { // #50543
-                byte[] bytes = String.valueOf(c).getBytes(URI_ENCODING);
+                byte[] bytes = String.valueOf(c).getBytes(StandardCharsets.UTF_8);
                 sb.write(bytes, 0, bytes.length);
             }
         }
-        return sb.toString(URI_ENCODING);
+        return sb.toString(StandardCharsets.UTF_8.name());
     }
 
     /**
@@ -327,10 +324,9 @@ public final class Locator {
      * The URI is escaped
      * @param path String to encode.
      * @return The encoded string, according to URI norms
-     * @throws UnsupportedEncodingException if UTF-8 is not available
      * @since Ant 1.7
      */
-    public static String encodeURI(String path) throws UnsupportedEncodingException {
+    public static String encodeURI(String path) {
         int i = 0;
         int len = path.length();
         int ch = 0;
@@ -362,7 +358,7 @@ public final class Locator {
             // get UTF-8 bytes for the remaining sub-string
             byte[] bytes = null;
             byte b;
-            bytes = path.substring(i).getBytes(URI_ENCODING);
+            bytes = path.substring(i).getBytes(StandardCharsets.UTF_8);
             len = bytes.length;
 
             // for each byte
