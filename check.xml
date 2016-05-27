@@ -92,6 +92,12 @@
   </target>
 
   <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
+    <echo>Checkstyle deactavated because of Java8 use</echo>
+    <!--TODO: test CS in conjuntion with Java8. Current problem is that CS doesnt work with Java8 features like method references
+        src/main/org/apache/tools/ant/taskdefs/SetPermissions.java:89:28: expecting RPAREN, found ':'
+          .map(String::trim)
+                     ^^ 
+        
     <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="5.7"
                    inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
     <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
@@ -104,9 +110,12 @@
         <exclude name="**/CVSPass.java"/>
       </fileset>
     </checkstyle>
+    
+    -->
   </target>
 
   <target name="htmlreport" description="--> generates a html checkstyle report">
+    <!-- deactivated due CS-deactivation
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
@@ -117,12 +126,15 @@
       <param name="basedir" expression="${checkstyle.basedir}"/>
       <param name="output.dir" expression="${checkstyle.reportdir}"/>
     </xslt>
+    -->
   </target>
 
   <target name="textreport" description="--> generates a text checkstyle report">
+    <!-- deactivated due CS-deactivation
     <xslt in="${checkstyle.raw}" style="${stylesheet.text}"
           out="${checkstyle.reportdir}/report.txt">
     </xslt>
+    -->
   </target>
 
   <target name="textreport-display" depends="textreport" description="--> generates a text checkstyle report and displays it immediately">
@@ -131,10 +143,12 @@
   </target>
 
   <target name="xdocreport" description="--> generates a xdoc checkstyle report">
+    <!-- deactivated due CS-deactivation
     <xslt in="${checkstyle.raw}" style="${stylesheet.xdoc}"
            out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </xslt>
+    -->
   </target>
 
   <target name="dumphtml" depends="checkstyle, htmlreport" description="--> runs the checkstyle and generates a html report"/>
