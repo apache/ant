@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:if="ant:if" xmlns:unless="ant:unless">
 
   <description>
     Check Ants codebase against certain code styleguide rules using
@@ -73,7 +73,7 @@
             value="${rat.report.dir}/report.html"
             description="RAT-Report file"/>
   <property name="rat.version"
-            value="0.7"
+            value="0.11"
             description="Which Version of RAT to use"/>
 
 
@@ -92,30 +92,30 @@
   </target>
 
   <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
-    <echo>Checkstyle deactavated because of Java8 use</echo>
-    <!--TODO: test CS in conjuntion with Java8. Current problem is that CS doesnt work with Java8 features like method references
-        src/main/org/apache/tools/ant/taskdefs/SetPermissions.java:89:28: expecting RPAREN, found ':'
-          .map(String::trim)
-                     ^^ 
-        
-    <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="5.7"
-                   inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
-    <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
-    <mkdir dir="${checkstyle.reportdir}"/>
-    <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
-      <formatter type="xml" toFile="${checkstyle.raw}"/>
-      <fileset dir="${java.dir}">
-        <include name="${tocheck}"/>
-        <exclude name="**/bzip2/*.java"/>
-        <exclude name="**/CVSPass.java"/>
-      </fileset>
-    </checkstyle>
-    
-    -->
+    <available property="antlr.present" classname="antlr.CommonAST"/>
+    <echo if:set="antlr.present">
+        Found antlr on the classpath.
+        Having a wrong antlr version on the same classpath as Checkstyle may produce errors like
+            'Can't find/access AST Node typecom.puppycrawl.tools.checkstyle.api.DetailAST'
+        Skip running Checkstyle.
+    </echo>
+    <sequential unless:set="antlr.present">
+      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.18"
+                     inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
+      <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath" />
+      <mkdir dir="${checkstyle.reportdir}"/>
+      <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
+        <formatter type="xml" toFile="${checkstyle.raw}"/>
+        <fileset dir="${java.dir}">
+          <include name="${tocheck}"/>
+          <exclude name="**/bzip2/*.java"/>
+          <exclude name="**/CVSPass.java"/>
+        </fileset>
+      </checkstyle>
+    </sequential>
   </target>
 
-  <target name="htmlreport" description="--> generates a html checkstyle report">
-    <!-- deactivated due CS-deactivation
+  <target name="htmlreport" description="--> generates a html checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
@@ -126,15 +126,12 @@
       <param name="basedir" expression="${checkstyle.basedir}"/>
       <param name="output.dir" expression="${checkstyle.reportdir}"/>
     </xslt>
-    -->
   </target>
 
-  <target name="textreport" description="--> generates a text checkstyle report">
-    <!-- deactivated due CS-deactivation
+  <target name="textreport" description="--> generates a text checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.text}"
           out="${checkstyle.reportdir}/report.txt">
     </xslt>
-    -->
   </target>
 
   <target name="textreport-display" depends="textreport" description="--> generates a text checkstyle report and displays it immediately">
@@ -142,13 +139,11 @@
       <echo>${report}</echo>
   </target>
 
-  <target name="xdocreport" description="--> generates a xdoc checkstyle report">
-    <!-- deactivated due CS-deactivation
+  <target name="xdocreport" description="--> generates a xdoc checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.xdoc}"
            out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </xslt>
-    -->
   </target>
 
   <target name="dumphtml" depends="checkstyle, htmlreport" description="--> runs the checkstyle and generates a html report"/>
