@@ -151,17 +151,28 @@ public class SetPermissions extends Task {
                     maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s", r, ioe.getMessage());
                 }
             }
-        } catch (ClassCastException uoe) {
-            maybeThrowException(null, "some specified permissions are not of type PosixFilePermission: %s", StringUtils.join(permissions, ", "));
-        } catch (SecurityException uoe) {
-            maybeThrowException(null, "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'", currentResource);
+        } catch (ClassCastException cce) {
+            maybeThrowException(null, 
+                "some specified permissions are not of type PosixFilePermission: %s", 
+                StringUtils.join(permissions, ", "));
+        } catch (SecurityException se) {
+            maybeThrowException(null, 
+                "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'",
+                currentResource);
+        } catch (BuildException be) {
+            // maybe thrown by callback method this::posixPermissionsNotSupported.
+            maybeThrowException(be, be.getMessage());
         }
     }
 
-    private void maybeThrowException(Exception ioe, String msgFormat, Object... msgArgs) {
+    private void maybeThrowException(Exception exc, String msgFormat, Object... msgArgs) {
         String msg = String.format(msgFormat, msgArgs);
         if (failonerror) {
-            throw new BuildException(msg, ioe);
+            if (exc instanceof BuildException) {
+                throw (BuildException)exc;
+            } else {
+                throw new BuildException(msg, exc);
+            }              
         } else {
             log("Warning: " + msg, Project.MSG_ERR);
         }
@@ -196,7 +207,7 @@ public class SetPermissions extends Task {
                 maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s",
                                     p, ioe.getMessage());
             } catch (SecurityException uoe) {
-        	maybeThrowException(null, "the SecurityManager denies role "
+                maybeThrowException(null, "the SecurityManager denies role "
                                     + "accessUserInformation or write access for "
                                     + "SecurityManager.checkWrite for resource '%s'",
                                     p);
