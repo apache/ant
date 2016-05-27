@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="apache-ant" default="main" basedir="." xmlns:if="ant:if">
+<project name="apache-ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D on each invocation) -->
@@ -100,7 +100,6 @@
        ===================================================================
   -->
   <property name="debug" value="true"/>
-  <antversion property="ant1.10+" atleast="1.10"/>
   <property name="setpermissions.fail" value="true"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
@@ -913,13 +912,13 @@
       <include name="*.pl"/>
     </fixcrlf>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <dirset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
@@ -1027,13 +1026,13 @@
       </fileset>
     </copy>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <dirset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
@@ -1147,13 +1146,13 @@
       <exclude name="${tests.etc.dir}/taskdefs/fixcrlf/input/Junk?.java"/>
     </fixcrlf>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <dirset dir="${src.dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}">
       <fileset dir="${src.dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}" if:set="ant1.10+">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}">
       <fileset dir="${src.dist.dir}">
         <include name="**/*.sh"/>
         <include name="**/*.pl"/>
