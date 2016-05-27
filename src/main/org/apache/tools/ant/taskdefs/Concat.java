@@ -383,7 +383,7 @@ public class Concat extends Task implements ResourceCollection {
         private ConcatResource(ResourceCollection c) {
             this.c = c;
         }
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             if (binary) {
                 ConcatResourceInputStream result = new ConcatResourceInputStream(c);
                 result.setManagingComponent(this);

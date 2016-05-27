@@ -1026,8 +1026,7 @@ public class Zip extends MatchingTask {
      * Determine a Resource's Unix mode or return the given default
      * value if not available.
      */
-    private int getUnixMode(final Resource r, final ZipFile zf, final int defaultMode)
-        throws IOException {
+    private int getUnixMode(final Resource r, final ZipFile zf, final int defaultMode) {
 
         int unixMode = defaultMode;
         if (zf != null) {

@@ -1210,11 +1210,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *
      * @return the entry's certificates or null is the container is
      *         not a jar or it has no certificates.
-     *
-     * @exception IOException if the manifest cannot be read.
      */
-    private Certificate[] getCertificates(final File container, final String entry)
-        throws IOException {
+    private Certificate[] getCertificates(final File container, final String entry) {
         if (container.isDirectory()) {
             return null;
         }
