@@ -430,6 +430,8 @@ public final class JavaEnvUtils {
             case VERSION_1_9:
             case VERSION_1_8:
             case VERSION_1_7:
+                jrePackages.addElement("jdk");
+                // fall through
             case VERSION_1_6:
             case VERSION_1_5:
                 //In Java1.5, the apache stuff moved.
@@ -483,6 +485,8 @@ public final class JavaEnvUtils {
             case VERSION_1_9:
             case VERSION_1_8:
             case VERSION_1_7:
+                tests.addElement("jdk.net.Sockets");
+                // fall through
             case VERSION_1_6:
             case VERSION_1_5:
                 tests.addElement(
