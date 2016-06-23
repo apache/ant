@@ -24,6 +24,11 @@ Fixed bugs:
    NTFS filesystems and re-created archives more often than necessary.
    Bugzilla Report 59562
 
+ * AntClassLoader didn't delegate to the parent loader for classes in
+   the "jdk" package or one of its subpackages. This hierarchy has
+   been introduced with Java 7.
+   Bugzilla Report 59556
+
 Other changes:
 --------------
 
