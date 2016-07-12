@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
@@ -1766,7 +1767,7 @@ public class JUnitTask extends Task {
         for (String path : modulePath.list()) {
             final File modulePathEntry = getProject().resolveFile(path);
             if (modulePathEntry.isDirectory() && !hasModuleInfo(modulePathEntry)) {
-                final File[] modules = modulePathEntry.listFiles((dir,name)->name.toLowerCase().endsWith(".jar"));
+                final File[] modules = modulePathEntry.listFiles((dir,name)->name.toLowerCase(Locale.ENGLISH).endsWith(".jar"));
                 if (modules != null) {
                     for (File module : modules) {
                         expanded.add(new Path(getProject(), String.format(
