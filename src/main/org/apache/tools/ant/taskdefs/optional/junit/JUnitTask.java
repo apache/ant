@@ -1749,7 +1749,8 @@ public class JUnitTask extends Task {
                 path,
                 true)) {
             try {
-                return loader.getResource("junit.framework.Test") != null;
+                loader.loadClass("junit.framework.Test");
+                return true;
             } catch (final Exception ex) {
                 return false;
             }
