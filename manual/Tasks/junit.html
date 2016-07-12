@@ -840,7 +840,7 @@ The <code>-XaddExports</code> java option makes the non-exported test package <c
     &lt;junit fork="true"
         jvm="${platform.java}"&gt;
         &lt;jvmarg line="-addmods ${test.module.name}"/&gt;
-        &lt;jvmarg value="-XaddExports:${test.module.name}/my.test=junit"/&gt;
+        &lt;jvmarg value="-XaddExports:${test.module.name}/my.test=junit,ALL-UNNAMED"/&gt;
         &lt;modulepath&gt;
             &lt;pathelement path="${modules}:${build.classes}:${libs.junit}"/&gt;
         &lt;/modulepath&gt;
@@ -851,7 +851,7 @@ The <code>-XaddExports</code> java option makes the non-exported test package <c
 <p>Runs my.test.TestCase as a black-box test in the forked VM given by the <code>platform.java</code> property.
 The junit library is used as an automatic module. The tests module-info requires the tested module and junit.<br/>
 The <code>-addmods</code> java option enables the test module.<br/>
-The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the junit module.
-Another possibility is to export the test package in the tests module-info by <code>exports my.test</code> directive<br/>
+The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the junit module and Ant's test runner.
+Another possibility is to export the test package in the tests module-info by <code>exports my.test</code> directive.<br/>
 </body>
 </html>
