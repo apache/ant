@@ -515,7 +515,7 @@ public class JUnitTask extends Task {
      * Add a path to the modulepath.
      *
      * @return created modulepath.
-     * @since 1.10
+     * @since 1.10.0
      */
     public Path createModulepath() {
         return getCommandline().createModulepath(getProject()).createPath();
@@ -525,7 +525,7 @@ public class JUnitTask extends Task {
      * Add a path to the upgrademodulepath.
      *
      * @return created upgrademodulepath.
-     * @since 1.10
+     * @since 1.10.0
      */
     public Path createUpgrademodulepath() {
         return getCommandline().createUpgrademodulepath(getProject()).createPath();
@@ -1718,7 +1718,7 @@ public class JUnitTask extends Task {
 
     /**
      * Checks a validity of module specific options.
-     * @since 1.10
+     * @since 1.10.0
      */
     private void checkModules() {
         if (hasPath(getCommandline().getModulepath()) ||
@@ -1740,7 +1740,7 @@ public class JUnitTask extends Task {
      * Checks is a junit is on given path.
      * @param path the {@link Path} to check
      * @return true when given {@link Path} contains junit
-     * @since 1.10
+     * @since 1.10.0
      */
     private boolean hasJunit(final Path path) {
         try (AntClassLoader loader = AntClassLoader.newAntClassLoader(
@@ -1761,7 +1761,7 @@ public class JUnitTask extends Task {
      * Expands a module path to flat path of jars and root folders usable by classloader.
      * @param modulePath to be expanded
      * @return the expanded path
-     * @since 1.10
+     * @since 1.10.0
      */
     private Path expandModulePath(Path modulePath) {
         final Path expanded = new Path(getProject());
@@ -2380,7 +2380,7 @@ public class JUnitTask extends Task {
      * Checks if a path exists and is non empty.
      * @param path to be checked
      * @return true if the path is non <code>null</code> and non empty.
-     * @since 1.10
+     * @since 1.10.0
      */
     private static boolean hasPath(final Path path) {
         return path != null && path.size() > 0;
@@ -2390,7 +2390,7 @@ public class JUnitTask extends Task {
      * Checks if a given folder is an unpacked module.
      * @param root the fodler to be checked
      * @return true if the root is an unpacked module
-     * @since 1.10
+     * @since 1.10.0
      */
     private static boolean hasModuleInfo(final File root) {
         return new File(root, "module-info.class").exists();    //NOI18N
