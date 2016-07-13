@@ -371,6 +371,21 @@ subelement.</p>
 
 <p><em>since Ant 1.6.</em></p>
 
+<h4>modulepath</h4>
+
+<p>The location of modules can be specified using this <a href="../using.html#path">PATH like structure</a>.<br/>
+The modulepath requires <i>fork</i> to be set to <code>true</code>.
+
+<p><em>since Ant 1.10</em></p>
+
+<h4>upgrademodulepath</h4>
+
+<p>The location of modules that replace upgradeable modules in the runtime image
+can be specified using this <a href="../using.html#path">PATH like structure</a>.<br/>
+The upgrademodulepath requires <i>fork</i> to be set to <code>true</code>.
+
+<p><em>since Ant 1.10</em></p>
+
 <h4>formatter</h4>
 
 <p>The results of the tests can be printed in different
@@ -796,7 +811,47 @@ the single <code>&lt;test/&gt;</code> will run. So only the failing test cases a
 The two nested formatters are for displaying (for the user) and for updating the collector
 class.
 </p>
-
-
+<pre>
+    &lt;junit fork="true"
+        jvm="${platform.java}"&gt;
+        &lt;jvmarg value="-Xpatch:${module.name}=${build.test.classes}"/&gt;
+        &lt;jvmarg line="-addmods ${module.name}"/&gt;
+        &lt;jvmarg value="-XaddReads:${module.name}=ALL-UNNAMED"/&gt;
+        &lt;jvmarg value="-XaddExports:${module.name}/my.test=ALL-UNNAMED"/&gt;
+        &lt;classpath&gt;
+            &lt;pathelement path="${libs.junit}"/&gt;
+        &lt;/classpath&gt;
+        &lt;modulepath&gt;
+            &lt;pathelement path="${modules}:${build.classes}"/&gt;
+        &lt;/modulepath&gt;
+        &lt;formatter type="plain"/&gt;
+        &lt;test name="my.test.TestCase"/&gt;
+    &lt;/junit&gt;
+</pre>
+<p>Runs my.test.TestCase as a white-box test in the forked VM given by the <code>platform.java</code> property.
+The junit library is a part of an unnamed module while the tested project and required modules are on the module path. The tests
+do not have module-info file and are executed in the project module given by <code>module.name</code> property.<br/>
+The <code>-Xpatch</code> java option executes the tests built into <code>${build.test.classes}</code> in a module given
+by <code>module.name</code> property.<br/>
+The <code>-addmods</code> java option enables the tested module.<br/>
+The <code>-XaddReads</code> java option makes the unnamed module containing the junit readable by tested module.<br/>
+The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the unnamed module containing the junit.<br/>
+<pre>
+    &lt;junit fork="true"
+        jvm="${platform.java}"&gt;
+        &lt;jvmarg line="-addmods ${test.module.name}"/&gt;
+        &lt;jvmarg value="-XaddExports:${test.module.name}/my.test=junit,ALL-UNNAMED"/&gt;
+        &lt;modulepath&gt;
+            &lt;pathelement path="${modules}:${build.classes}:${libs.junit}"/&gt;
+        &lt;/modulepath&gt;
+        &lt;formatter type="plain"/&gt;
+        &lt;test name="my.test.TestCase"/&gt;
+    &lt;/junit&gt;
+</pre>
+<p>Runs my.test.TestCase as a black-box test in the forked VM given by the <code>platform.java</code> property.
+The junit library is used as an automatic module. The tests module-info requires the tested module and junit.<br/>
+The <code>-addmods</code> java option enables the test module.<br/>
+The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the junit module and Ant's test runner.
+Another possibility is to export the test package in the tests module-info by <code>exports my.test</code> directive.<br/>
 </body>
 </html>
