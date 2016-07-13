@@ -27,18 +27,33 @@ import static org.apache.tools.ant.AntAssert.assertNotContains;
 import static org.apache.tools.ant.AntAssert.assertContains;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.apache.tools.ant.BuildException;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.launcher.CommandLauncher;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.ForkMode;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.LoaderUtils;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -395,4 +410,193 @@ public class JUnitTaskTest {
 
     }
 
+    @Test(expected = BuildException.class)
+    public void testModulePathNeedsFork() throws Exception {
+        final Project project = new Project();
+        project.init();
+        JUnitTask task = new JUnitTask();
+        task.setProject(project);
+        final Path p = new Path(project);
+        p.setPath("modules");
+        task.createModulepath().add(p);
+        task.addTest(new JUnitTest("org.apache.tools.ant.taskdefs.optional.junit.TestTest"));
+        task.execute();
+    }
+
+    @Test(expected = BuildException.class)
+    public void testUpgradeModulePathNeedsFork() throws Exception {
+        final Project project = new Project();
+        project.init();
+        JUnitTask task = new JUnitTask();
+        task.setProject(project);
+        final Path p = new Path(project);
+        p.setPath("modules");
+        task.createUpgrademodulepath().add(p);
+        task.addTest(new JUnitTest("org.apache.tools.ant.taskdefs.optional.junit.TestTest"));
+        task.execute();
+    }
+
+    @Test
+    public void testJunitOnCpArguments() throws Exception {
+        final File tmp = new File(System.getProperty("java.io.tmpdir"));    //NOI18N
+        final File workDir = new File(tmp, String.format("%s_testJCP%d",    //NOI18N
+                getClass().getName(),
+                System.currentTimeMillis()/1000));
+        workDir.mkdirs();
+        try {
+            final File modulesDir = new File(workDir,"modules");    //NOI18N
+            modulesDir.mkdirs();
+
+            final Project project = new Project();
+            project.init();
+            project.setBaseDir(workDir);
+            final MockCommandLauncher mockProcLauncher = new MockCommandLauncher();
+            project.addReference(
+                    MagicNames.ANT_VM_LAUNCHER_REF_ID,
+                    mockProcLauncher);
+            JUnitTask task = new JUnitTask();
+            task.setDir(workDir);
+            task.setFork(true);
+            task.setProject(project);
+            final File junit = LoaderUtils.getResourceSource(
+                    JUnitTask.class.getClassLoader(),
+                    "junit/framework/Test.class");    //NOI18N
+            final Path cp = new Path(project);
+            cp.setPath(junit.getAbsolutePath());
+            task.createClasspath().add(cp);
+            final Path mp = new Path(project);
+            mp.setPath(modulesDir.getName());
+            task.createModulepath().add(mp);
+            task.addTest(new JUnitTest("org.apache.tools.ant.taskdefs.optional.junit.TestTest"));
+            task.execute();
+            assertNotNull(mockProcLauncher.cmd);
+            String resCp = null;
+            String resMp = null;
+            Set<String> resExports = new TreeSet<>();
+            for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
+                if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                    resCp = mockProcLauncher.cmd[++i];
+                } else if ("-modulepath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                    resMp = mockProcLauncher.cmd[++i];
+                } else if (mockProcLauncher.cmd[i].startsWith("-XaddExports:")) {   //NOI18N
+                    resExports.add(mockProcLauncher.cmd[i]);
+                } else if (JUnitTestRunner.class.getName().equals(mockProcLauncher.cmd[i])) {
+                    break;
+                }
+            }
+            assertTrue("No exports", resExports.isEmpty());
+            assertEquals("Expected classpath", cp.toString(), resCp);
+            assertEquals("Expected modulepath", mp.toString(), resMp);
+        } finally {
+            delete(workDir);
+        }
+    }
+
+    @Test
+    public void testJunitOnMpArguments() throws Exception {
+        final File tmp = new File(System.getProperty("java.io.tmpdir"));    //NOI18N
+        final File workDir = new File(tmp, String.format("%s_testJMP%d",    //NOI18N
+                getClass().getName(),
+                System.currentTimeMillis()/1000));
+        workDir.mkdirs();
+        try {
+            final File modulesDir = new File(workDir,"modules");    //NOI18N
+            modulesDir.mkdirs();
+
+            final Project project = new Project();
+            project.init();
+            project.setBaseDir(workDir);
+            final MockCommandLauncher mockProcLauncher = new MockCommandLauncher();
+            project.addReference(
+                    MagicNames.ANT_VM_LAUNCHER_REF_ID,
+                    mockProcLauncher);
+            JUnitTask task = new JUnitTask();
+            task.setDir(workDir);
+            task.setFork(true);
+            task.setProject(project);
+            final File junit = LoaderUtils.getResourceSource(
+                    JUnitTask.class.getClassLoader(),
+                    "junit/framework/Test.class");    //NOI18N
+            final Path mp = new Path(project);
+            mp.add(new Path(project, junit.getAbsolutePath()));
+            mp.add(new Path(project, modulesDir.getName()));
+            task.createModulepath().add(mp);
+            task.addTest(new JUnitTest("org.apache.tools.ant.taskdefs.optional.junit.TestTest"));       //NOI18N
+            task.execute();
+            assertNotNull(mockProcLauncher.cmd);
+            String resCp = null;
+            String resMp = null;
+            Set<String> resExports = new TreeSet<>();
+            for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
+                if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                    resCp = mockProcLauncher.cmd[++i];
+                } else if ("-modulepath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                    resMp = mockProcLauncher.cmd[++i];
+                } else if (mockProcLauncher.cmd[i].startsWith("-XaddExports:")) {   //NOI18N
+                    resExports.add(mockProcLauncher.cmd[i]);
+                } else if (JUnitTestRunner.class.getName().equals(mockProcLauncher.cmd[i])) {
+                    break;
+                }
+            }
+            assertTrue("No exports", resExports.isEmpty());
+            assertNull("No classpath", resCp);
+            assertEquals("Expected modulepath", mp.toString(), resMp);
+        } finally {
+            delete(workDir);
+        }
+    }
+
+    private void delete(File f) {
+        if (f.isDirectory()) {
+            final File[] clds = f.listFiles();
+            if (clds != null) {
+                for (File cld : clds) {
+                    delete(cld);
+                }
+            }
+        }
+        f.delete();
+    }
+
+    private static final class MockCommandLauncher extends CommandLauncher {
+        private String[] cmd;
+
+        @Override
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException {
+            this.cmd = Arrays.copyOf(cmd, cmd.length);
+            return new MockProcess();
+        }
+
+        private static class MockProcess extends Process {
+
+            @Override
+            public OutputStream getOutputStream() {
+                return new ByteArrayOutputStream();
+            }
+
+            @Override
+            public InputStream getInputStream() {
+                return new ByteArrayInputStream(new byte[0]);
+            }
+
+            @Override
+            public InputStream getErrorStream() {
+                return new ByteArrayInputStream(new byte[0]);
+            }
+
+            @Override
+            public int waitFor() throws InterruptedException {
+                return exitValue();
+            }
+
+            @Override
+            public int exitValue() {
+                return 0;
+            }
+
+            @Override
+            public void destroy() {
+            }
+        }
+    }
 }
