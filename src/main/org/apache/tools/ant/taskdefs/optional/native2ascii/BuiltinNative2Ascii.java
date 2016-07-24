@@ -31,7 +31,6 @@ import java.io.Writer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.Native2AsciiUtils;
 import org.apache.tools.ant.util.StringUtils;
 
@@ -44,23 +43,14 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
 
     static final String IMPLEMENTATION_NAME = "builtin";
 
+    @Override
     public final boolean convert(Native2Ascii args, File srcFile,
                                  File destFile) throws BuildException {
         boolean reverse = args.getReverse();
         String encoding = args.getEncoding();
-        BufferedReader input = null;
-        try {
-            input = getReader(srcFile, encoding, reverse);
-            try {
-                Writer output = getWriter(destFile, encoding, reverse);
-                try {
-                    translate(input, output, reverse);
-                } finally {
-                    FileUtils.close(output);
-                }
-            } finally {
-                FileUtils.close(input);
-            }
+        try (BufferedReader input = getReader(srcFile, encoding, reverse);
+             Writer output = getWriter(destFile, encoding, reverse)) {
+            translate(input, output, reverse);
             return true;
         } catch (IOException ex) {
             throw new BuildException("Exception trying to translate data", ex);
