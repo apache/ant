@@ -82,7 +82,7 @@ public class Adapter implements Native2AsciiAdapter {
       </sequential>
     </macrodef>
     <presetdef name="native2ascii-def">
-      <native2ascii src="${input}" dest="${output}"
+      <native2ascii src="${input}" dest="${output}" encoding="UTF-8"
                     includes="**/*.properties"/>
     </presetdef>
   </target>
