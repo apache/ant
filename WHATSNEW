@@ -39,6 +39,11 @@ Other changes:
  * <scp> now supports compression via the optional compressed attribute.
    Bugzilla Report 47552
 
+ * a new implementation "builtin" has been added to <native2ascii> and
+   is the default when running on JDK9+ since the tool itself has been
+   removed from the JDK.
+   Bugzilla Report 59855
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

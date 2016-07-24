@@ -109,6 +109,13 @@ public class Adapter implements Native2AsciiAdapter {
                             expected="${umlauts.expected}"/>
   </target>
 
+  <target name="testUTF8-To-ASCII-builtin" depends="-setup-UTF8-To-ASCII"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
+                            expected="${umlauts.expected}"/>
+  </target>
+
   <target name="-setup-ASCII-To-UTF8" depends="-real-test-macros">
     <mkdir dir="${input}"/>
     <mkdir dir="${output}"/>
