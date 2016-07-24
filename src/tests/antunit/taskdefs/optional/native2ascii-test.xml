@@ -95,12 +95,6 @@ public class Adapter implements Native2AsciiAdapter {
               value="\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc"/>
   </target>
 
-  <target name="testUTF8-To-ASCII" depends="-setup-UTF8-To-ASCII">
-    <native2ascii-def/>
-    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
-                            expected="${umlauts.expected}"/>
-  </target>
-
   <target name="testUTF8-To-ASCII-sun" depends="-setup-UTF8-To-ASCII"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
           unless="jdk1.9+">
@@ -127,6 +121,13 @@ public class Adapter implements Native2AsciiAdapter {
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
           unless="jdk1.9+">
     <native2ascii-def implementation="sun" reverse="true"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="testASCII-To-UTF8-builtin" depends="-setup-ASCII-To-UTF8"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin" reverse="true"/>
     <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
                             expected="${umlauts.expected}"/>
   </target>

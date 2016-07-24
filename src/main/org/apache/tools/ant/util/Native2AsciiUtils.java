@@ -48,4 +48,42 @@ public class Native2AsciiUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * Replaces Unicode-Escapes.
+     * <p>Expects to be called once per line if applied to a file.</p>
+     * @param line the input line
+     * @return the translated line
+     */
+    public static String ascii2native(String line) {
+        StringBuilder sb = new StringBuilder();
+        int inputLen = line.length();
+        for (int i = 0; i < inputLen; i++) {
+            char c = line.charAt(i);
+            if (c != '\\' || i >= inputLen - 5) {
+                sb.append(c);
+            } else { // backslash with enough remaining characters
+                char u = line.charAt(++i);
+                if (u == 'u') {
+                    int unescaped = tryParse(line, i + 1);
+                    if (unescaped >= 0) {
+                        sb.append((char) unescaped);
+                        i += 4;
+                        continue;
+                    }
+                }
+                // not a unicode escape
+                sb.append(c).append(u);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static int tryParse(String line, int startIdx) {
+        try {
+            return Integer.parseInt(line.substring(startIdx, startIdx + 4), 16);
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
+    }
 }

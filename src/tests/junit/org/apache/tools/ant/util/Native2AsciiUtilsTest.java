@@ -43,4 +43,34 @@ public class Native2AsciiUtilsTest {
         assertEquals("\\u00e4\\u01f6\\u12fc",
                      Native2AsciiUtils.native2ascii("\u00e4\u01f6\u12fc"));
     }
+
+    @Test
+    public void doesntTouchNonEscapes() {
+        StringBuilder sb = new StringBuilder();
+        for (char i = 0; i < 128; i++) {
+            sb.append(i);
+        }
+        assertEquals(sb.toString(), Native2AsciiUtils.ascii2native(sb.toString()));
+    }
+
+    @Test
+    public void unescapes() {
+        assertEquals("\u00e4\u00f6\u00fc",
+                     Native2AsciiUtils.ascii2native("\\u00e4\\u00f6\\u00fc"));
+    }
+
+    @Test
+    public void leavesNonUnicodeBackslashesAlone() {
+        assertEquals("\\abcdef", Native2AsciiUtils.ascii2native("\\abcdef"));
+        assertEquals("\\u012j", Native2AsciiUtils.ascii2native("\\u012j"));
+    }
+
+    @Test
+    public void dealsWithUnfinishedEscapes() {
+        assertEquals("\u00e4", Native2AsciiUtils.ascii2native("\\u00e4"));
+        assertEquals("\\u00e", Native2AsciiUtils.ascii2native("\\u00e"));
+        assertEquals("\\u00", Native2AsciiUtils.ascii2native("\\u00"));
+        assertEquals("\\u0", Native2AsciiUtils.ascii2native("\\u0"));
+    }
+
 }

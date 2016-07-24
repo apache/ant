@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -45,20 +46,15 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
 
     public final boolean convert(Native2Ascii args, File srcFile,
                                  File destFile) throws BuildException {
+        boolean reverse = args.getReverse();
+        String encoding = args.getEncoding();
         BufferedReader input = null;
         try {
-            if (args.getEncoding() != null) {
-                input = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(srcFile), args.getEncoding()));
-            } else {
-                input = new BufferedReader(new FileReader(srcFile));
-            }
+            input = getReader(srcFile, encoding, reverse);
             try {
-                BufferedWriter output = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(destFile),
-                                           "ASCII"));
+                Writer output = getWriter(destFile, encoding, reverse);
                 try {
-                    translate(input, output, args.getReverse());
+                    translate(input, output, reverse);
                 } finally {
                     FileUtils.close(output);
                 }
@@ -71,11 +67,37 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         }
     }
 
+    private BufferedReader getReader(File srcFile, String encoding,
+                                     boolean reverse) throws IOException {
+        if (!reverse && encoding != null) {
+            return new BufferedReader(new InputStreamReader(
+                new FileInputStream(srcFile), encoding));
+        }
+        return new BufferedReader(new FileReader(srcFile));
+    }
+
+    private Writer getWriter(File destFile, String encoding,
+                             boolean reverse) throws IOException {
+        if (!reverse) {
+            encoding = "ASCII";
+        }
+        if (encoding != null) {
+            return new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(destFile),
+                                       encoding));
+        }
+        return new BufferedWriter(new FileWriter(destFile));
+    }
+
     private void translate(BufferedReader input, Writer output,
                            boolean reverse) throws IOException {
         String line = null;
         while ((line = input.readLine()) != null) {
-            output.write(Native2AsciiUtils.native2ascii(line));
+            if (!reverse) {
+                output.write(Native2AsciiUtils.native2ascii(line));
+            } else {
+                output.write(Native2AsciiUtils.ascii2native(line));
+            }
             output.write(StringUtils.LINE_SEP);
         }
     }
