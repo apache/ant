@@ -43,9 +43,6 @@ public class Native2AsciiAdapterFactory {
         if (shouldUseKaffee()) {
             return KaffeNative2Ascii.IMPLEMENTATION_NAME;
         }
-        if (shouldUseSun()) {
-            return SunNative2Ascii.IMPLEMENTATION_NAME;
-        }
         return BuiltinNative2Ascii.IMPLEMENTATION_NAME;
     }
 
@@ -85,8 +82,7 @@ public class Native2AsciiAdapterFactory {
         if ((shouldUseKaffee() && choice == null)
             || KaffeNative2Ascii.IMPLEMENTATION_NAME.equals(choice)) {
             return new KaffeNative2Ascii();
-        } else if ((shouldUseSun() && choice == null)
-                   || SunNative2Ascii.IMPLEMENTATION_NAME.equals(choice)) {
+        } else if (SunNative2Ascii.IMPLEMENTATION_NAME.equals(choice)) {
             return new SunNative2Ascii();
         } else if (BuiltinNative2Ascii.IMPLEMENTATION_NAME.equals(choice)) {
             return new BuiltinNative2Ascii();
@@ -120,12 +116,5 @@ public class Native2AsciiAdapterFactory {
 
     private static final boolean shouldUseKaffee() {
         return JavaEnvUtils.isKaffe() || JavaEnvUtils.isClasspathBased();
-    }
-
-    private static final boolean shouldUseSun() {
-        return JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8);
     }
 }
