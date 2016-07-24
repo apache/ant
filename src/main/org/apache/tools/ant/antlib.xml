@@ -140,5 +140,7 @@
                 classname="org.apache.tools.ant.filters.SortFilter"/>
   <componentdef name="uniqfilter" onerror="ignore"
                 classname="org.apache.tools.ant.filters.UniqFilter"/>
+  <componentdef name="native2asciifilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.Native2AsciiFilter"/>
 </antlib>
 

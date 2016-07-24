@@ -44,6 +44,9 @@ Other changes:
    removed from the JDK.
    Bugzilla Report 59855
 
+ * added a new <native2asciifilter> filter that can perform non-ASCII
+   to Unicode-escape conversions.
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
