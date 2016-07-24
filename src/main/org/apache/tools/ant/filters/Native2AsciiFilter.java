@@ -39,6 +39,7 @@ public class Native2AsciiFilter extends TokenFilter.ChainableReaderFilter {
         this.reverse = reverse;
     }
 
+    @Override
     public String filter(String line) {
         return reverse
             ? Native2AsciiUtils.ascii2native(line)
