@@ -61,9 +61,14 @@
       with the <code>implementation</code> attribute or a nested element.
       <a name="implementationvalues">Here are the choices of the attribute</a>:</p>
     <ul>
-      <li>default - the default converter (kaffe or sun) for the platform.</li>
-      <li>sun (the standard converter of the JDK)</li>
-      <li>kaffe (the standard converter of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
+      <li>default - the default converter for the platform - kaffee
+        when run on Kaffee, builtin if JDK9 or newer is detected, sun
+        otherwise.</li>
+      <li>sun (the standard converter of the JDK < 9)</li>
+      <li>kaffe (the standard converter
+        of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
+      <li>builtin - Ant's internal implementation used for
+        JDK9+. <em>since ant 1.9.8</em></li>
     </ul>
 
     <table border="1" cellpadding="2" cellspacing="0">
@@ -76,7 +81,7 @@
         <td>reverse</td>
         <td>Reverse the sense of the conversion,
           i.e. convert from ASCII to native <b>only supported by the
-            sun converter</b></td>
+            sun and builtin converters</b></td>
         <td align="center">No</td>
       </tr>
       <tr>

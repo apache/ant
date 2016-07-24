@@ -65,4 +65,71 @@ public class Adapter implements Native2AsciiAdapter {
     </native2ascii>
     <au:assertLogContains text="adapter called"/>
   </target>
+
+  <target name="-real-test-macros">
+    <macrodef name="assertTranslatedOutput">
+      <attribute name="file"/>
+      <attribute name="expected"/>
+      <attribute name="encoding"/>
+      <sequential>
+        <loadfile srcFile="${output}/@{file}" encoding="@{encoding}"
+                  property="@{file}.actual">
+          <filterchain>
+            <striplinebreaks/>
+          </filterchain>
+        </loadfile>
+        <au:assertEquals expected="@{expected}" actual="${@{file}.actual}"/>
+      </sequential>
+    </macrodef>
+    <presetdef name="native2ascii-def">
+      <native2ascii src="${input}" dest="${output}" encoding="UTF-8"
+                    includes="**/*.properties"/>
+    </presetdef>
+  </target>
+
+  <target name="-setup-UTF8-To-ASCII" depends="-real-test-macros">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/umlauts.properties" encoding="UTF-8">äöü=ÄÖÜ</echo>
+    <property name="umlauts.expected"
+              value="\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc"/>
+  </target>
+
+  <target name="testUTF8-To-ASCII-sun" depends="-setup-UTF8-To-ASCII"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
+          unless="jdk1.9+">
+    <native2ascii-def implementation="sun"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="testUTF8-To-ASCII-builtin" depends="-setup-UTF8-To-ASCII"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="-setup-ASCII-To-UTF8" depends="-real-test-macros">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/umlauts.properties" encoding="ASCII">\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc</echo>
+    <property name="umlauts.expected" value="äöü=ÄÖÜ"/>
+  </target>
+
+  <target name="testASCII-To-UTF8-sun" depends="-setup-ASCII-To-UTF8"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
+          unless="jdk1.9+">
+    <native2ascii-def implementation="sun" reverse="true"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="testASCII-To-UTF8-builtin" depends="-setup-ASCII-To-UTF8"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin" reverse="true"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
+                            expected="${umlauts.expected}"/>
+  </target>
+
 </project>
