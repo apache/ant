@@ -53,6 +53,7 @@ echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
 echo JAVAC=%JAVAC%
 echo CLASSPATH=%CLASSPATH%
+echo ANT_HOME=%ANT_HOME%
 
 if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
