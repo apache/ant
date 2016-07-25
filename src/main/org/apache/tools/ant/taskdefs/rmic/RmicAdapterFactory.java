@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Creates the necessary rmic adapter, given basic criteria.
@@ -95,9 +96,13 @@ public final class RmicAdapterFactory {
         throws BuildException {
         //handle default specially by choosing the sun or kaffe compiler
         if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length() == 0) {
-            rmicType = KaffeRmic.isAvailable()
-                ? KaffeRmic.COMPILER_NAME
-                : SunRmic.COMPILER_NAME;
+            if (KaffeRmic.isAvailable()) {
+                rmicType = KaffeRmic.COMPILER_NAME;
+            } else if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+                rmicType = ForkingSunRmic.COMPILER_NAME;
+            } else {
+                rmicType = SunRmic.COMPILER_NAME;
+            }
         }
         if (SunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new SunRmic();
