@@ -41,6 +41,10 @@ Fixed bugs:
    been introduced with Java 7.
    Bugzilla Report 59556
 
+ * The ant wrapper script used on Unix-like operating systems only
+   worked on OSes where sed is GNU sed.
+   Bugzilla Report 59898
+
 Other changes:
 --------------
 

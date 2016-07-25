@@ -36,7 +36,7 @@ for arg in "$@" ; do
       show_help=true
     fi
     # wrap all arguments as "" strings, escape any internal back-slash or double-quote characters
-    ant_exec_args="$ant_exec_args \"$(printf '%s' "$arg" | sed -e 's@"\|\\@\\\0@g' )\""
+    ant_exec_args="$ant_exec_args \"$(printf '%s\n' "$arg" | sed -e 's@"\|\\@\\\0@g' )\""
   fi
 done
 
