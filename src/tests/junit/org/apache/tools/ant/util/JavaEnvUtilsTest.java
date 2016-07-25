@@ -28,6 +28,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * TestCase for JavaEnvUtils.
@@ -137,4 +138,10 @@ public class JavaEnvUtilsTest {
                 JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.getJavaVersion()));
     }
   
+    @Test
+    public void isJavaVersionSupportsBothVersionsOfJava9() {
+        assumeTrue(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9));
+        assertTrue("JAVA_1_9 is not considered equal to JAVA_9",
+                JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_9));
+    }
 }

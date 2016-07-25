@@ -27,6 +27,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * The implementation of the rmic for SUN's JDK.
@@ -54,6 +55,9 @@ public class SunRmic extends DefaultRmicAdapter {
                                          + "available.  A common solution is to "
                                          + "set the environment variable "
                                          + "JAVA_HOME";
+    public static final String ERROR_NO_RMIC_ON_CLASSPATH_JAVA_9 = "Cannot use SUN rmic, as it is not "
+                                         + "available.  The class we try to use is part of the jdk.rmic module which may not be. "
+                                         + "Please use the 'forking' compiler for JDK 9+";
     /** Error message to use when there is an error starting the sun rmic compiler */
     public static final String ERROR_RMIC_FAILED = "Error starting SUN rmic: ";
 
@@ -84,6 +88,10 @@ public class SunRmic extends DefaultRmicAdapter {
                                        (new Object[] {cmd.getArguments()}));
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
+            if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+                throw new BuildException(ERROR_NO_RMIC_ON_CLASSPATH_JAVA_9,
+                                         getRmic().getLocation());
+            }
             throw new BuildException(ERROR_NO_RMIC_ON_CLASSPATH,
                                      getRmic().getLocation());
         } catch (Exception ex) {

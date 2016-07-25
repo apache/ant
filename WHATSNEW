@@ -67,6 +67,12 @@ Other changes:
  * added a new <native2asciifilter> filter that can perform non-ASCII
    to Unicode-escape conversions.
 
+ * <rmic> defaults to the "forking" compiler on JDK 9+ as the
+   implementation class of rmic is not exported by its containing
+   module and thus not accessible to Ant without applying -XaddExports
+   magic.
+   Bugzilla Report 59860
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

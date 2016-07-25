@@ -137,7 +137,7 @@ public class RmicAdvancedTest {
      * test weblogic
      */
     @Test
-    @Ignore("WLRmin tests don't work")
+    @Ignore("WLRmic tests don't work")
     public void XtestWlrmic() throws Exception {
         buildRule.executeTarget("testWlrmic");
     }
@@ -146,7 +146,7 @@ public class RmicAdvancedTest {
      *  test weblogic's stripping of -J args
      */
     @Test
-    @Ignore("WLRmin tests don't work")
+    @Ignore("WLRmic tests don't work")
     public void XtestWlrmicJArg() throws Exception {
         buildRule.executeTarget("testWlrmicJArg");
     }
@@ -155,8 +155,7 @@ public class RmicAdvancedTest {
      * test the forking compiler
      */
     @Test
-    @Ignore("WLRmin tests don't work")
-    public void NotestForking() throws Exception {
+    public void testForking() throws Exception {
         buildRule.executeTarget("testForking");
     }
 
