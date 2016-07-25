@@ -212,12 +212,6 @@
     </condition>
     <property name="rmic.compiler" value="sun"/>
     <available property="wlrmic.present" classname="weblogic.rmic"/>
-    <condition property="rmic6.present">
-      <and>
-        <isset property="rmic.present"/>
-        <available classname="java.util.ServiceLoader"/>
-      </and>
-    </condition>
   </target>
 
   <target name="testDefault" depends="init">
@@ -433,23 +427,6 @@
     <property name="build.rmic" value=""/>
     <base-rmic />
     <assertBaseCompiled/>
-  </target>
-
-  <!--
-  This test stamps on the XML parser settings on java6, so it is disabled.
-  -->
-  <target name="testXnew" if="rmic.present" unless="rmic6.present" depends="init">
-    <base-rmic compiler="${rmic.compiler}">
-      <compilerarg value="-Xnew"/>
-    </base-rmic>
-    <assertBaseCompiled/>
-  </target>
-
-  <target name="testXnewDest" if="rmic.present" unless="rmic6.present" depends="init">
-    <dest-rmic compiler="${rmic.compiler}">
-      <compilerarg value="-Xnew"/>
-    </dest-rmic>
-    <assertBaseCompiledInDest/>
   </target>
 
   <target name="testXnewForked" if="rmic.present" depends="init">
