@@ -18,6 +18,9 @@ Changes that could break older environments:
  * <native2ascii> will default to the buitin implementation on Java8
    as well (sun isn't available for Java9+ anyway).
 
+ * The ant.java.version property will now hold the value "9" rather
+   than "1.9" if running on Java 9.
+
 Fixed bugs:
 -----------
 

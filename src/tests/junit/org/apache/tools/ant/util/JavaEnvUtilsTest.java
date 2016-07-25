@@ -115,7 +115,7 @@ public class JavaEnvUtilsTest {
         assertTrue(j+" is normalized and in the JDK dir",
                    j.startsWith(javaHomeParent));
 
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_9)) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
             assertTrue(j + " is normalized and in the JRE dir",
                        j.startsWith(javaHome));
         } else {
@@ -135,9 +135,6 @@ public class JavaEnvUtilsTest {
         assertTrue(
                 "Current java version is not at least the current java version...",
                 JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.getJavaVersion()));
-        assertFalse(
-                "In case the current java version is higher than 9.0 definitely a new algorithem will be needed",
-                JavaEnvUtils.isAtLeastJavaVersion("9.0"));
     }
   
 }

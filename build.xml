@@ -373,9 +373,7 @@
       </not>
     </condition>
     <property name="ignoresystemclasses" value="false"/>
-    <condition property="jdk1.9+">
-      <contains string="${java.version}" substring="1.9."/>
-    </condition>
+    <available property="jdk9+" classname="java.lang.module.ModuleDescriptor"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="harmony"
                classname="org.apache.harmony.luni.util.Base64"/>

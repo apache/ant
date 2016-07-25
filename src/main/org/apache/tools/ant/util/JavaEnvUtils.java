@@ -55,6 +55,9 @@ public final class JavaEnvUtils {
     /** floating version of the JVM */
     private static int javaVersionNumber;
 
+    /** Version of currently running VM. */
+    private static final DeweyDecimal parsedJavaVersion;
+
     /** Version constant for Java 1.0 */
     public static final String JAVA_1_0 = "1.0";
     /** Number Version constant for Java 1.0 */
@@ -100,10 +103,27 @@ public final class JavaEnvUtils {
     /** Number Version constant for Java 1.8 */
     public static final int VERSION_1_8 = 18;
 
-    /** Version constant for Java 1.9 */
+    /**
+     * Version constant for Java 1.9
+     * @deprecated use #JAVA_9 instead
+     */
     public static final String JAVA_1_9 = "1.9";
-    /** Number Version constant for Java 1.9 */
+    /**
+     * Number Version constant for Java 1.9
+     * @deprecated use #VERSION_9 instead
+     */
     public static final int VERSION_1_9 = 19;
+
+    /**
+     * Version constant for Java 9
+     * @since Ant 1.9.8
+     */
+    public static final String JAVA_9 = "9";
+    /**
+     * Number Version constant for Java 9
+     * @since Ant 1.9.8
+     */
+    public static final int VERSION_9 = 90;
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
@@ -158,13 +178,14 @@ public final class JavaEnvUtils {
             Class.forName("java.lang.reflect.Executable");
             javaVersion = JAVA_1_8;
             javaVersionNumber++;
-            checkForJava9();
-            javaVersion = JAVA_1_9;
-            javaVersionNumber++;
+            Class.forName("java.lang.module.ModuleDescriptor");
+            javaVersion = JAVA_9;
+            javaVersionNumber = VERSION_9;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
             // we have
         }
+        parsedJavaVersion = new DeweyDecimal(javaVersion);
         kaffeDetected = false;
         try {
             Class.forName("kaffe.util.NotImplemented");
@@ -197,7 +218,11 @@ public final class JavaEnvUtils {
 
     /**
      * Returns the version of Java this class is running under.
-     * @return the version of Java as a String, e.g. "1.6"
+     *
+     * <p>Up until Java 8 Java version numbers were 1.VERSION -
+     * e.g. 1.8.x for Java 8, starting with Java 9 it became 9.x.</p>
+     *
+     * @return the version of Java as a String, e.g. "1.6" or "9"
      */
     public static String getJavaVersion() {
         return javaVersion;
@@ -205,31 +230,28 @@ public final class JavaEnvUtils {
 
 
     /**
-     * Checks for a give Java 9 runtime.
-     * At the time of writing the actual version of the JDK was 1.9.0_b06.
-     * Searching for new classes gave no hits, so we need another aproach.
-     * Searching for changes (grep -r -i -n "@since 1.9" .) in the sources gave
-     * only one hit: a new constant in the class SourceVersion.
-     * So we have to check that ...
-     *
-     * @throws Exception if we can't load the class or don't find the new constant.
-     *    This is the behavior when searching for new features on older versions.
-     * @since Ant 1.9.4
-     */
-    private static void checkForJava9() throws Exception {
-    	Class<?> clazz = Class.forName("javax.lang.model.SourceVersion");
-    	clazz.getDeclaredField("RELEASE_9");
-    }
-
-
-    /**
      * Returns the version of Java this class is running under.
-     * This number can be used for comparisons; it will always be
+     * <p>This number can be used for comparisons.</p>
      * @return the version of Java as a number 10x the major/minor,
-     * e.g Java1.5 has a value of 15
+     * e.g Java1.5 has a value of 15 and Java9 the value 90 - major
+     * will be 1 for all versions of Java prior to Java 9, minor will
+     * be 0 for all versions of Java starting with Java 9.
+     * @deprecated use #getParsedJavaVersion instead
      */
     public static int getJavaVersionNumber() {
         return javaVersionNumber;
+    }
+
+    /**
+     * Returns the version of Java this class is running under.
+     * <p>This number can be used for comparisons.</p>
+     * @return the version of Java as major.minor, e.g Java1.5 has a
+     * value of 1.5 and Java9 the value 9 - major will be 1 for all
+     * versions of Java prior to Java 9, minor will be 0 for all
+     * versions of Java starting with Java 9.
+     */
+    public static DeweyDecimal getParsedJavaVersion() {
+        return parsedJavaVersion;
     }
 
     /**
@@ -243,7 +265,8 @@ public final class JavaEnvUtils {
      * @since Ant 1.5
      */
     public static boolean isJavaVersion(String version) {
-        return javaVersion.equals(version);
+        return javaVersion.equals(version)
+            || (javaVersion.equals(JAVA_9) && JAVA_1_9.equals(version));
     }
 
     /**
@@ -258,7 +281,7 @@ public final class JavaEnvUtils {
      * @since Ant 1.7
      */
     public static boolean isAtLeastJavaVersion(String version) {
-        return javaVersion.compareTo(version) >= 0;
+        return parsedJavaVersion.compareTo(new DeweyDecimal(version)) >= 0;
     }
 
     /**
@@ -385,7 +408,7 @@ public final class JavaEnvUtils {
             // fall back to JRE bin directory, also catches JDK 1.0 and 1.1
             // where java.home points to the root of the JDK and Mac OS X where
             // the whole directory layout is different from Sun's
-            // and also catches JDK 1.9 (and probably later) which
+            // and also catches JDK 9 (and probably later) which
             // merged JDK and JRE dirs
             return getJreExecutable(command);
         }
@@ -427,7 +450,7 @@ public final class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector<String>();
         switch(javaVersionNumber) {
-            case VERSION_1_9:
+            case VERSION_9:
             case VERSION_1_8:
             case VERSION_1_7:
                 jrePackages.addElement("jdk");
@@ -482,7 +505,7 @@ public final class JavaEnvUtils {
         Vector<String> tests = new Vector<String>();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
-            case VERSION_1_9:
+            case VERSION_9:
             case VERSION_1_8:
             case VERSION_1_7:
                 tests.addElement("jdk.net.Sockets");

@@ -672,12 +672,23 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
-     * Shall we assume JDK 1.9 command line switches?
-     * @return true if JDK 1.9
+     * Shall we assume JDK 9 command line switches?
+     * @return true if JDK 9
      * @since Ant 1.9.4
+     * @deprecated use #assumeJava9 instead
      */
     protected boolean assumeJava19() {
-        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_1_9);
+        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
+            || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
+    }
+
+    /**
+     * Shall we assume JDK 9 command line switches?
+     * @return true if JDK 9
+     * @since Ant 1.9.8
+     */
+    protected boolean assumeJava9() {
+        return assumeJava19();
     }
 
     /**
@@ -686,12 +697,10 @@ public abstract class DefaultCompilerAdapter
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
         return javacXY.equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY));
+            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY) &&
+                ("classic".equals(attributes.getCompilerVersion())
+                 || "modern".equals(attributes.getCompilerVersion())
+                 || "extJavac".equals(attributes.getCompilerVersion())));
     }
 
     /**
@@ -755,8 +764,8 @@ public abstract class DefaultCompilerAdapter
         if (assumeJava18()) {
             return "1.8 in JDK 1.8";
         }
-        if (assumeJava19()) {
-            return "1.9 in JDK 1.9";
+        if (assumeJava9()) {
+            return "9 in JDK 9";
         }
         return "";
     }
@@ -782,7 +791,7 @@ public abstract class DefaultCompilerAdapter
                 && !assumeJava15() && !assumeJava16())
             || (t.equals("7") && !assumeJava17())
             || (t.equals("8") && !assumeJava18())
-            || (t.equals("9") && !assumeJava19());
+            || (t.equals("9") && !assumeJava9());
     }
 
 
