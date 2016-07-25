@@ -116,7 +116,7 @@ public class JavaEnvUtilsTest {
                    j.startsWith(javaHomeParent));
 
         if ((Os.isFamily("mac") && JavaEnvUtils.getJavaVersionNumber() <= JavaEnvUtils.VERSION_1_6)
-            || JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_9)) {
+            || JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
             assertTrue(j+" is normalized and in the JRE dir",
                        j.startsWith(javaHome));
         } else {
@@ -136,9 +136,6 @@ public class JavaEnvUtilsTest {
         assertTrue(
                 "Current java version is not at least the current java version...",
                 JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.getJavaVersion()));
-        assertFalse(
-                "In case the current java version is higher than 9.0 definitely a new algorithem will be needed",
-                JavaEnvUtils.isAtLeastJavaVersion("9.0"));
     }
   
 }

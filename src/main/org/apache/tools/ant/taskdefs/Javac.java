@@ -85,6 +85,7 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC9 = "javac9";
     private static final String JAVAC19 = "javac1.9";
     private static final String JAVAC18 = "javac1.8";
     private static final String JAVAC17 = "javac1.7";
@@ -166,8 +167,8 @@ public class Javac extends MatchingTask {
             return JAVAC17;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
             return JAVAC18;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_9)) {
-            return JAVAC19;
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
+            return JAVAC9;
         } else {
             return CLASSIC;
         }
@@ -912,7 +913,8 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(final String anImplementation) {
-        if (JAVAC19.equalsIgnoreCase(anImplementation)
+        if (JAVAC9.equalsIgnoreCase(anImplementation)
+                || JAVAC19.equalsIgnoreCase(anImplementation)
                 || JAVAC18.equalsIgnoreCase(anImplementation)
                 || JAVAC17.equalsIgnoreCase(anImplementation)
                 || JAVAC16.equalsIgnoreCase(anImplementation)
@@ -927,7 +929,7 @@ public class Javac extends MatchingTask {
         }
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             final String nextSelected = assumedJavaVersion();
-            if (JAVAC19.equalsIgnoreCase(nextSelected)
+            if (JAVAC9.equalsIgnoreCase(nextSelected)
                     || JAVAC18.equalsIgnoreCase(nextSelected)
                     || JAVAC17.equalsIgnoreCase(nextSelected)
                     || JAVAC16.equalsIgnoreCase(nextSelected)
@@ -1194,12 +1196,12 @@ public class Javac extends MatchingTask {
      * @param compilerImpl the name of the compiler implementation
      * @return true if compilerImpl is "modern", "classic",
      * "javac1.1", "javac1.2", "javac1.3", "javac1.4", "javac1.5",
-     * "javac1.6", "javac1.7", "javac1.8" or "javac1.9".
+     * "javac1.6", "javac1.7", "javac1.8", "javac1.9" or "javac9".
      */
     protected boolean isJdkCompiler(final String compilerImpl) {
         return MODERN.equals(compilerImpl)
             || CLASSIC.equals(compilerImpl)
-            || JAVAC19.equals(compilerImpl)
+            || JAVAC9.equals(compilerImpl)
             || JAVAC18.equals(compilerImpl)
             || JAVAC17.equals(compilerImpl)
             || JAVAC16.equals(compilerImpl)

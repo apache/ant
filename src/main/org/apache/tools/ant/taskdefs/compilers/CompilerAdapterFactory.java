@@ -122,7 +122,8 @@ public final class CompilerAdapterFactory {
                 || compilerType.equalsIgnoreCase("javac1.6")
                 || compilerType.equalsIgnoreCase("javac1.7")
                 || compilerType.equalsIgnoreCase("javac1.8")
-                || compilerType.equalsIgnoreCase("javac1.9")) {
+                || compilerType.equalsIgnoreCase("javac1.9")
+                || compilerType.equalsIgnoreCase("javac9")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
