@@ -97,7 +97,7 @@ public class Adapter implements Native2AsciiAdapter {
 
   <target name="testUTF8-To-ASCII-sun" depends="-setup-UTF8-To-ASCII"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
-          unless="jdk1.9+">
+          unless="jdk9+">
     <native2ascii-def implementation="sun"/>
     <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
                             expected="${umlauts.expected}"/>
@@ -119,7 +119,7 @@ public class Adapter implements Native2AsciiAdapter {
 
   <target name="testASCII-To-UTF8-sun" depends="-setup-ASCII-To-UTF8"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
-          unless="jdk1.9+">
+          unless="jdk9+">
     <native2ascii-def implementation="sun" reverse="true"/>
     <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
                             expected="${umlauts.expected}"/>

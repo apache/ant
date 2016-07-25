@@ -213,14 +213,14 @@ public class Adapter implements CompilerAdapter {
       <testJavac source="notValid"/>
     </au:expectfailure>
 
-    <sequential unless:set="jdk1.9+">
+    <sequential unless:set="jdk9+">
       <echo>JDK 1.4+</echo>
       <testJavac source="1.4"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
     
-    <sequential unless:set="jdk1.9+">
+    <sequential unless:set="jdk9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5"/>
       <delete dir="${javac-dir}/classes"/>
@@ -248,9 +248,9 @@ public class Adapter implements CompilerAdapter {
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
             
-    <sequential if:set="jdk1.9+">
-      <echo>JDK 1.9+</echo>
-      <testJavac source="1.9"/>
+    <sequential if:set="jdk9+">
+      <echo>JDK 9+</echo>
+      <testJavac source="9"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
@@ -271,14 +271,14 @@ public class Adapter implements CompilerAdapter {
       <testJavac target="notValid"/>
     </au:expectfailure>
 
-    <sequential unless:set="jdk1.9+">
+    <sequential unless:set="jdk9+">
       <echo>JDK 1.4+</echo>
       <testJavac source="1.4" target="1.4"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
 
-    <sequential unless:set="jdk1.9+">
+    <sequential unless:set="jdk9+">
       <echo>JDK 1.5+</echo>
       <testJavac source="1.5" target="1.5"/>
       <delete dir="${javac-dir}/classes"/>
@@ -306,9 +306,9 @@ public class Adapter implements CompilerAdapter {
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
             
-    <sequential if:set="jdk1.9+">
-      <echo>JDK 1.9+</echo>
-      <testJavac source="1.9" target="1.9"/>
+    <sequential if:set="jdk9+">
+      <echo>JDK 9+</echo>
+      <testJavac source="9" target="9"/>
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
