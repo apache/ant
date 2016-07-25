@@ -346,26 +346,6 @@ public class RmicAdvancedTest {
     }
 
     /**
-     * test that passes -Xnew to sun's rmic.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testXnew() throws Exception {
-        buildRule.executeTarget("testXnew");
-    }
-
-    /**
-     * test that passes -Xnew to sun's rmic.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testXnewDest() throws Exception {
-        buildRule.executeTarget("testXnewDest");
-    }
-
-    /**
      * test that passes -Xnew to sun's rmic running in a different VM.
      *
      * @throws Exception
