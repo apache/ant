@@ -44,6 +44,8 @@ public class JavahAdapterFactory {
             return Kaffeh.IMPLEMENTATION_NAME;
         } else if (JavaEnvUtils.isGij()) {
             return Gcjh.IMPLEMENTATION_NAME;
+        } else if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            return ForkingJavah.IMPLEMENTATION_NAME;
         }
         return SunJavah.IMPLEMENTATION_NAME;
     }
@@ -87,6 +89,10 @@ public class JavahAdapterFactory {
         } else if ((JavaEnvUtils.isGij() && choice == null)
             || Gcjh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Gcjh();
+        } else if ((JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
+                    && choice == null)
+                   || ForkingJavah.IMPLEMENTATION_NAME.equals(choice)) {
+            return new ForkingJavah();
         } else if (SunJavah.IMPLEMENTATION_NAME.equals(choice)) {
             return new SunJavah();
         } else if (choice != null) {

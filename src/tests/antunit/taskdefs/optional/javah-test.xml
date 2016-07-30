@@ -110,4 +110,26 @@ public class Foo {
     <javah-fileset/>
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
+
+  <target name="testSimpleCompileSun" depends="-setupForRealJavahTests"
+          if="sunjavah.present">
+    <javah-single implementation="sun"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testCompileUsingFilesetSun" depends="-setupForRealJavahTests"
+          if="sunjavah.present">
+    <javah-fileset implementation="sun"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testSimpleCompileForking" depends="-setupForRealJavahTests">
+    <javah-single implementation="forking"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testCompileUsingFilesetForking" depends="-setupForRealJavahTests">
+    <javah-fileset implementation="forking"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
 </project>

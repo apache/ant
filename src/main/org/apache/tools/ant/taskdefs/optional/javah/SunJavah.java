@@ -69,7 +69,7 @@ public class SunJavah implements JavahAdapter {
         return ej.fork(javah) == 0;
     }
 
-    private Commandline setupJavahCommand(Javah javah) {
+    static Commandline setupJavahCommand(Javah javah) {
         Commandline cmd = new Commandline();
 
         if (javah.getDestdir() != null) {
