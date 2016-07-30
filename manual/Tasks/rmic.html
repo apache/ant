@@ -61,7 +61,9 @@ attribute. or a nested element.
     running on JDK 9+.</li>
   <li>xnew - the sun compiler forked into a separate process,
       with the -Xnew option (since Ant 1.7).
-      This is the most reliable way to use -Xnew</li>
+    This is the most reliable way to use -Xnew.
+    <br></br>JDK9 has removed support for -Xnew and starting with Ant
+    1.9.8 this option will be rejected by ant when running on JDK9.</li>
     <li> "" (empty string). This has the same behaviour as not setting the compiler attribute.
     First the value of <tt>build.rmic</tt> is used if defined, and if not, the default
     for the platform is chosen. If build.rmic is set to this, you get the default.

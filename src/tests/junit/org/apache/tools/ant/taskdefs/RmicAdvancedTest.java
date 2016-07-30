@@ -24,11 +24,13 @@ import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -352,6 +354,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnew() throws Exception {
+        // skipped via unless attribute for JDK > 6
         buildRule.executeTarget("testXnew");
     }
 
@@ -362,6 +365,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewDest() throws Exception {
+        // skipped via unless attribute for JDK > 6
         buildRule.executeTarget("testXnewDest");
     }
 
@@ -372,7 +376,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForked() throws Exception {
-        buildRule.executeTarget("testXnewForked");
+        xnewTest("testXnewForked");
     }
 
     /**
@@ -382,7 +386,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedDest() throws Exception {
-        buildRule.executeTarget("testXnewForkedDest");
+        xnewTest("testXnewForkedDest");
     }
 
     /**
@@ -392,7 +396,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompiler() throws Exception {
-        buildRule.executeTarget("testXnewCompiler");
+        xnewTest("testXnewCompiler");
     }
 
     /**
@@ -402,7 +406,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerDest() throws Exception {
-        buildRule.executeTarget("testXnewCompilerDest");
+        xnewTest("testXnewCompilerDest");
     }
 
     /**
@@ -443,6 +447,19 @@ public class RmicAdvancedTest {
     @Test
     public void testIIOPDest() throws Exception {
         buildRule.executeTarget("testIIOPDest");
+    }
+
+    private void xnewTest(String target) {
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            buildRule.executeTarget(target);
+        } else {
+            try {
+                buildRule.executeTarget(target);
+                fail("Target should have thrown a BuildException");
+            } catch (BuildException ex) {
+                assertEquals("JDK9 has removed support for -Xnew", ex.getMessage());
+            }
+        }
     }
 
     /**
