@@ -15,7 +15,7 @@ Changes that could break older environments:
    same instance. This will now cause the build to fail.
    Bugzilla Report 59402
 
- * <native2ascii> will default to the buitin implementation on Java8
+ * <native2ascii> will default to the builtin implementation on Java8
    as well (sun isn't available for Java9+ anyway).
 
  * The ant.java.version property will now hold the value "9" rather
