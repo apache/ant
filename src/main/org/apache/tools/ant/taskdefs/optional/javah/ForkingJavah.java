@@ -45,6 +45,7 @@ public class ForkingJavah implements JavahAdapter {
      * @return true if the compilation was successful.
      * @throws BuildException if there is an error.
      */
+    @Override
     public boolean compile(Javah javah) throws BuildException {
         Commandline cmd = SunJavah.setupJavahCommand(javah);
         Project project = javah.getProject();

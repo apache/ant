@@ -25,6 +25,9 @@ Changes that could break older environments:
    be used when running on Java 9 since this option has been removed.
    Bugzilla Report 59906
 
+ * <javah> will default to the "forking" implementation on Java8
+   as well.
+
 Fixed bugs:
 -----------
 
