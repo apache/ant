@@ -37,12 +37,16 @@ systems are used.</p>
 with the <code>implementation</code> attribute or a nested element.  <a
 name="implementationvalues">Here are the choices of the attribute</a>:</p>
 <ul>
-  <li>default - the default compiler (kaffeh or sun) for the platform.</li>
-  <li>sun (the standard compiler of the JDK)</li>
+  <li>default - the default compiler for the platform.</li>
+  <li>sun (the standard compiler of the JDK) - default when not
+    running on Kaffee or gcj/gij or Java9.</li>
   <li>kaffeh (the native standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
   <li>gcjh (the native standard compiler
   of <a href="http://gcc.gnu.org/java/"
-  target="_top">gcj and gij</a>) <em>since Apache Ant 1.8.2</em></li>
+        target="_top">gcj and gij</a>) <em>since Apache Ant 1.8.2</em></li>
+  <li>forking - runs the javah executable via its command line
+    interface in a separate process. Default wehn running on
+    Java9. <em>since Ant 1.9.8</em></li>
 </ul>
 
 <p><b>Note:</b> if you are using this task to work on multiple files

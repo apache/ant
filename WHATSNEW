@@ -81,6 +81,9 @@ Other changes:
    magic.
    Bugzilla Report 59860
 
+ * a new implementation "forking" has been added to <javah> and is
+   used as default when running on JDK9.
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

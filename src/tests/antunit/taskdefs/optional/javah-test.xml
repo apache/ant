@@ -62,4 +62,74 @@ public class Adapter implements JavahAdapter {
     </javah>
     <au:assertLogContains text="adapter called" />
   </target>
+
+  <target name="-setupForRealJavahTests">
+    <condition property="sunjavah.present">
+      <or>
+        <available classname="com.sun.tools.javah.oldjavah.Main"/>
+        <available classname="com.sun.tools.javah.Main"/>
+      </or>
+    </condition>
+    <mkdir dir="${input}/org/example"/>
+    <mkdir dir="${output}/org/example"/>
+    <echo file="${input}/org/example/Foo.java">
+      <![CDATA[
+package org.example;
+public class Foo {
+    public Foo() {}
+    public native String bar(Object baz);
+}
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <presetdef name="javah-single">
+      <javah destdir="${output}">
+        <class name="org.example.Foo"/>
+        <classpath>
+          <pathelement location="${output}"/>
+        </classpath>
+      </javah>
+    </presetdef>
+    <presetdef name="javah-fileset">
+      <javah destdir="${output}">
+        <fileset dir="${output}">
+  	  <include name="**/*.class"/>
+        </fileset>
+        <classpath>
+  	  <pathelement location="${output}"/>
+        </classpath>
+      </javah>
+    </presetdef>
+  </target>
+
+  <target name="testSimpleCompile" depends="-setupForRealJavahTests">
+    <javah-single/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testCompileUsingFileset" depends="-setupForRealJavahTests">
+    <javah-fileset/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testSimpleCompileSun" depends="-setupForRealJavahTests"
+          if="sunjavah.present">
+    <javah-single implementation="sun"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testCompileUsingFilesetSun" depends="-setupForRealJavahTests"
+          if="sunjavah.present">
+    <javah-fileset implementation="sun"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testSimpleCompileForking" depends="-setupForRealJavahTests">
+    <javah-single implementation="forking"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
+
+  <target name="testCompileUsingFilesetForking" depends="-setupForRealJavahTests">
+    <javah-fileset implementation="forking"/>
+    <au:assertFileExists file="${output}/org_example_Foo.h"/>
+  </target>
 </project>
