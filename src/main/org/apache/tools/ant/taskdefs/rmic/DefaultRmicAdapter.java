@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -248,6 +250,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         compilerArgs = preprocessCompilerArgs(compilerArgs);
         cmd.addArguments(compilerArgs);
 
+        verifyArguments(cmd);
+
         logAndAddFilesToCompile(cmd);
         return cmd;
      }
@@ -347,6 +351,16 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
 
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
+    }
+
+    private void verifyArguments(Commandline cmd) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            for (String arg : cmd.getArguments()) {
+                if ("-Xnew".equals(arg)) {
+                    throw new BuildException("JDK9 has removed support for -Xnew");
+                }
+            }
+        }
     }
 
     /**
