@@ -108,6 +108,7 @@ public class Javac extends MatchingTask {
 
     private Path src;
     private File destDir;
+    private File nativeHeaderDir;
     private Path compileClasspath;
     private Path modulepath;
     private Path upgrademodulepath;
@@ -283,6 +284,26 @@ public class Javac extends MatchingTask {
      */
     public File getDestdir() {
         return destDir;
+    }
+
+    /**
+     * Set the destination directory into which the generated native
+     * header files should be placed.
+     * @param nhDir where to place generated native header files
+     * @since Ant 1.9.8
+     */
+    public void setNativeHeaderDir(final File nhDir) {
+        this.nativeHeaderDir = nhDir;
+    }
+
+    /**
+     * Gets the destination directory into which the generated native
+     * header files should be placed.
+     * @return where to place generated native header files
+     * @since Ant 1.9.8
+     */
+    public File getNativeHeaderDir() {
+        return nativeHeaderDir;
     }
 
     /**

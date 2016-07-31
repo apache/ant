@@ -18,10 +18,16 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="javac-dir" location="${output}/javac-dir" />
-  <property name="build-dir" location="${javac-dir}/build" />
+  <target name="setup">
+    <property name="javac-dir" location="${output}/javac-dir" />
+    <property name="build-dir" location="${javac-dir}/build" />
+    <presetdef name="testJavac">
+      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes"
+             includeantruntime="false"/>
+    </presetdef>
+  </target>
 
-  <target name="test-includeDestClasses">
+  <target name="test-includeDestClasses" depends="setup">
     <property name="DATE" value="09/10/1999 4:30 pm" />
     <delete dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/src" />
@@ -54,7 +60,7 @@
     </au:assertFalse>
   </target>
 
-  <target name="test-updated-property">
+  <target name="test-updated-property" depends="setup">
     <delete quiet="yes" dir="${build-dir}" />
     <mkdir dir="${build-dir}" />
     <javac srcdir="javac-dir/good-src" destdir="${build-dir}" updatedProperty="classes-updated" />
@@ -67,7 +73,7 @@
     </au:assertFalse>
   </target>
 
-  <target name="test-error-property">
+  <target name="test-error-property" depends="setup">
     <delete quiet="yes" dir="${build-dir}" />
     <mkdir dir="${build-dir}" />
     <javac srcdir="javac-dir/good-src" destdir="${build-dir}" failOnError="false" errorProperty="compile-failed" />
@@ -80,7 +86,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="setUpForPackageInfoJava">
+  <target name="setUpForPackageInfoJava" depends="setup">
     <mkdir dir="${javac-dir}/src/a" />
     <mkdir dir="${build-dir}" />
     <echo file="${javac-dir}/src/a/package-info.java">
@@ -151,7 +157,7 @@
     <au:assertFileDoesntExist file="${build-dir}/a/package-info.class"/>
   </target>
 
-  <target name="-create-javac-adapter">
+  <target name="-create-javac-adapter" depends="setup">
     <property name="adapter.dir" location="${output}/adapter" />
     <mkdir dir="${input}/org/example" />
     <echo file="${input}/org/example/Adapter.java">
@@ -198,16 +204,14 @@ public class Adapter implements CompilerAdapter {
     <au:assertLogContains text="adapter called" />
   </target>
 
-  <target name="testSourceAttributes" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  <target name="testSourceAttributes" depends="setup"
+          xmlns:if="ant:if" xmlns:unless="ant:unless">
     <delete dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/classes" />
     <echo file="${javac-dir}/src/A.java">
       public class A { }
     </echo>
-  	<presetdef name="testJavac">
-      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" includeantruntime="false"/>  	    
-  	</presetdef>
 
     <au:expectfailure>
       <testJavac source="notValid"/>
@@ -256,16 +260,14 @@ public class Adapter implements CompilerAdapter {
     </sequential>
   </target>	
 	
-  <target name="testTargetAttributes" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  <target name="testTargetAttributes" depends="setup"
+          xmlns:if="ant:if" xmlns:unless="ant:unless">
     <delete dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/src" />
     <mkdir dir="${javac-dir}/classes" />
     <echo file="${javac-dir}/src/A.java">
       public class A { }
     </echo>
-    <presetdef name="testJavac">
-      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" includeantruntime="false"/>       
-    </presetdef>
 
     <au:expectfailure>
       <testJavac target="notValid"/>
@@ -313,4 +315,31 @@ public class Adapter implements CompilerAdapter {
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
   </target> 
+
+  <target name="testJavacWithNativeHeaderGeneration" if="jdk1.8+" depends="setup">
+    <mkdir dir="${javac-dir}/src/org/example" />
+    <mkdir dir="${javac-dir}/classes"/>
+    <mkdir dir="${javac-dir}/headers"/>
+    <echo file="${javac-dir}/src/org/example/Foo.java">
+      <![CDATA[
+package org.example;
+public class Foo {
+    public Foo() {}
+    public native String bar(Object baz);
+}
+]]></echo>
+    <echo file="${javac-dir}/src/org/example/Bar.java">
+      <![CDATA[
+package org.example;
+public class Bar {
+    public Bar() {}
+    public String xyzzy(Object baz) {
+        return new Foo().bar(baz);
+    }
+}
+]]></echo>
+      <testJavac nativeheaderdir="${javac-dir}/headers"/>
+      <au:assertFileExists file="${javac-dir}/headers/org_example_Foo.h"/>
+      <au:assertFileDoesntExist file="${javac-dir}/headers/org_example_Bar.h"/>
+  </target>
 </project>
