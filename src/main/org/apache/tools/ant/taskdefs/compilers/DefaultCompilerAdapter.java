@@ -414,6 +414,16 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setValue("-upgrademodulepath");
             cmd.createArgument().setPath(ump);
         }
+        if (attributes.getNativeHeaderDir() != null) {
+            if (assumeJava13() || assumeJava14() || assumeJava15()
+                || assumeJava16() || assumeJava17()) {
+                attributes.log("Support for javac -h has been added in Java8,"
+                               + " ignoring it");
+            } else {
+                cmd.createArgument().setValue("-h");
+                cmd.createArgument().setFile(attributes.getNativeHeaderDir());
+            }
+        }
         return cmd;
     }
 

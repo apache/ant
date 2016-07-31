@@ -125,6 +125,15 @@ classpath of the <code>&lt;javac&gt;</code> task, and does not release them.
 The side effect of this is that you will not be able to delete or move
 those files later on in the build.  The workaround is to fork when
 invoking the compiler.</p>
+<p>If you are using Java 8 or above and your source contains native
+  methods or fields annotated with the <code>@Native</code> annotation
+  you can set the <code>nativeheaderdir</code> attribute in order to
+  use the <code>-h</code> switch of <code>javac</code> to generate the
+  native header files. Note that the logic Ant uses to determine which
+  files to compile does not take native headers into account, i.e. if
+  the <code>.class</code> is more recent than the
+  corresponding <code>.java</code> file the file will not get compiled
+  even if a native header file generated for it would be outdated.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -503,6 +512,14 @@ invoking the compiler.</p>
     <td valign="top">
       The upgrademodulepath to use, given as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.
       <em>since Ant 1.9.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">nativeheaderdir</td>
+    <td valign="top">
+      Specify where to place generated native header files. Ignored
+      when running on JDK &lt; 8.
+      <em>Since Ant 1.9.8</em>.
     <td align="center" valign="top">No</td>
   </tr>
 </table>
