@@ -73,7 +73,7 @@ public class DateSelectorTest {
         } catch (BuildException be3) {
             assertEquals("Date of this is not a date"
                         + " Cannot be parsed correctly. It should be in"
-                        + " MM/DD/YYYY HH:MM AM_PM format.", be3.getMessage());
+                        + " 'MM/dd/yyyy hh:mm a' format.", be3.getMessage());
         }
 
         s = new DateSelector();

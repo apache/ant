@@ -137,10 +137,10 @@ public class Date implements ResourceSelector {
             throw new BuildException(MILLIS_OR_DATETIME);
         }
         if (millis == null) {
-            DateFormat df = ((pattern == null)
-                ? DateFormat.getDateTimeInstance(
-                    DateFormat.SHORT, DateFormat.SHORT, Locale.US)
-                : new SimpleDateFormat(pattern));
+            String p = pattern == null ? "MM/dd/yyyy hh:mm a" : pattern;
+            DateFormat df = pattern == null
+                ? new SimpleDateFormat(p, Locale.US)
+                : new SimpleDateFormat(p);
             try {
                 long m = df.parse(dateTime).getTime();
                 if (m < 0) {
@@ -151,9 +151,8 @@ public class Date implements ResourceSelector {
                 setMillis(m);
             } catch (ParseException pe) {
                 throw new BuildException("Date of " + dateTime
-                        + " Cannot be parsed correctly. It should be in"
-                        + (pattern == null
-                        ? " MM/DD/YYYY HH:MM AM_PM" : pattern) + " format.");
+                        + " Cannot be parsed correctly. It should be in '"
+                        + p + "' format.");
             }
         }
         return when.evaluate(r.getLastModified(), millis.longValue(), granularity);

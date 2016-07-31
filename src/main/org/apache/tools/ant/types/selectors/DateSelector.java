@@ -209,11 +209,10 @@ public class DateSelector extends BaseExtendSelector {
             setError("You must provide a datetime or the number of "
                     + "milliseconds.");
         } else if (millis < 0 && dateTime != null) {
-            // check millis and only set it once.
-            DateFormat df = ((pattern == null)
-                ? DateFormat.getDateTimeInstance(
-                    DateFormat.SHORT, DateFormat.SHORT, Locale.US)
-                : new SimpleDateFormat(pattern));
+            String p = pattern == null ? "MM/dd/yyyy hh:mm a" : pattern;
+            DateFormat df = pattern == null
+                ? new SimpleDateFormat(p, Locale.US)
+                : new SimpleDateFormat(p);
 
             try {
                 setMillis(df.parse(dateTime).getTime());
@@ -224,9 +223,8 @@ public class DateSelector extends BaseExtendSelector {
                 }
             } catch (ParseException pe) {
                 setError("Date of " + dateTime
-                        + " Cannot be parsed correctly. It should be in"
-                        + ((pattern == null)
-                        ? " MM/DD/YYYY HH:MM AM_PM" : pattern) + " format.");
+                        + " Cannot be parsed correctly. It should be in '"
+                         + p + "' format.", pe);
             }
         }
     }
