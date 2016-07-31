@@ -61,23 +61,29 @@ public class Touch extends Task {
 
     public static final DateFormatFactory DEFAULT_DF_FACTORY
         = new DateFormatFactory() {
-        /*
-         * The initial version used DateFormat.SHORT for the
-         * time format, which ignores seconds.  If we want
-         * seconds as well, we need DateFormat.MEDIUM, which
-         * in turn would break all old build files.
-         *
-         * First try to parse with DateFormat.SHORT and if
-         * that fails with MEDIUM - throw an exception if both
-         * fail.
-         */
+
+        private ThreadLocal<DateFormat> primary =
+            new ThreadLocal<DateFormat>() {
+                @Override
+                protected DateFormat initialValue() {
+                    return new SimpleDateFormat("MM/dd/yyyy hh:mm a",
+                                                Locale.US);
+                }
+            };
+        private ThreadLocal<DateFormat> fallback =
+            new ThreadLocal<DateFormat>() {
+                @Override
+                protected DateFormat initialValue() {
+                    return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a",
+                                                Locale.US);
+                }
+            };
+
         public DateFormat getPrimaryFormat() {
-            return DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.SHORT, Locale.US);
+            return primary.get();
         }
         public DateFormat getFallbackFormat() {
-            return DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.MEDIUM, Locale.US);
+            return fallback.get();
         }
     };
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

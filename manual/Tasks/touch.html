@@ -74,8 +74,10 @@ resource collections (which also includes directories).  Prior to Apache Ant
   </tr>
   <tr>
     <td valign="top">pattern</td>
-    <td valign="top">SimpleDateFormat-compatible pattern string.
-       Defaults to MM/DD/YYYY HH:MM AM_or_PM or MM/DD/YYYY HH:MM:SS AM_or_PM.
+    <td valign="top">SimpleDateFormat-compatible pattern string using
+       the current locale.
+       Defaults to "MM/dd/YYYY hh:mm a" or "MM/dd/yyyy hh:mm:ss a"
+       using the US locale.
        <b>Since Ant 1.6.3</b></td>
     <td valign="top" align="center">No</td>
   </tr>

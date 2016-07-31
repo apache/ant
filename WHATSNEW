@@ -40,6 +40,15 @@ Fixed bugs:
    worked on OSes where sed is GNU sed.
    Bugzilla Report 59898
 
+ * <touch>'s default pattern as well as the default patterns used by
+   the <date> (resource) selectors depended on the JDK being used - or
+   rather the locale provider being used and the default locale
+   provider changed with Java 9.
+   They are now fixed and the documentation has been updated to
+   reflect the real patterns used rather than a non-formal description
+   of the expected format.
+   Bugzilla Report 59909
+
 Other changes:
 --------------
 

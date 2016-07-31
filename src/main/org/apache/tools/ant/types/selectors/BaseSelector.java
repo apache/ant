@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.DataType;
 public abstract class BaseSelector extends DataType implements FileSelector {
 
     private String errmsg = null;
-
+    private Throwable cause;
 
     /**
      * Do nothing constructor.
@@ -51,6 +51,19 @@ public abstract class BaseSelector extends DataType implements FileSelector {
     public void setError(String msg) {
         if (errmsg == null) {
             errmsg = msg;
+        }
+    }
+
+    /**
+     * Allows all selectors to indicate a setup error. Note that only
+     * the first error message is recorded.
+     *
+     * @param msg The error message any BuildException should throw.
+     */
+    public void setError(String msg, Throwable cause) {
+        if (errmsg == null) {
+            errmsg = msg;
+            this.cause = cause;
         }
     }
 
@@ -87,7 +100,7 @@ public abstract class BaseSelector extends DataType implements FileSelector {
             verifySettings();
         }
         if (getError() != null) {
-            throw new BuildException(errmsg);
+            throw new BuildException(errmsg, cause);
         }
         if (!isReference()) {
             dieOnCircularReference();

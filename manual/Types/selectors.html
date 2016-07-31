@@ -173,9 +173,9 @@
       <tr>
         <td valign="top">datetime</td>
         <td valign="top">Specifies the date and time to test for.
-          Should be in the format MM/DD/YYYY HH:MM AM_or_PM, or
-          an alternative pattern specified via the <i>pattern</i>
-          attribute.
+          Should be in the format "MM/dd/yyyy hh:mm a" using the US
+          locale, or an alternative pattern specified via
+          the <i>pattern</i> attribute.
         </td>
         <td valign="top" align="center" rowspan="2">At least one of the two.</td>
       </tr>
@@ -212,7 +212,8 @@
       <tr>
         <td valign="top">pattern</td>
         <td valign="top">The <CODE>SimpleDateFormat</CODE>-compatible pattern
-          to use when interpreting the <i>datetime</i> attribute.
+          to use when interpreting the <i>datetime</i> attribute using
+          the current locale.
           <i>Since Ant 1.6.2</i>
         </td>
         <td valign="top" align="center">No</td>
