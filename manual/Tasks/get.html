@@ -107,7 +107,10 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   </tr>  
   <tr>
     <td valign="top">retries</td>
-    <td valign="top">the per download number of retries on error<br/>
+    <td valign="top">The number of attempts to make for opening the URI.<br/>
+      The name of the attribute is misleading as a value of 1 means
+      "don't retry on error" and a value of 0 meant don't even try to
+      reach the URI at all.<br/>
       <em>since Ant 1.8.0</em></td>
     <td align="center" valign="top">No; default "3"</td>
   </tr>

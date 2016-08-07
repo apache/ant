@@ -49,6 +49,9 @@ Fixed bugs:
    of the expected format.
    Bugzilla Report 59909
 
+ * Clarified the documentation of <get>'s retries attribute.
+   Bugzilla Report 59930
+
 Other changes:
 --------------
 

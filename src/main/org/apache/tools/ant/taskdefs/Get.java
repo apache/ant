@@ -413,13 +413,22 @@ public class Get extends Task {
     }
 
     /**
-     * The number of retries to attempt upon error, defaults to 3.
+     * The number of attempts to make for opening the URI, defaults to 3.
      *
-     * @param r retry count
+     * <p>The name of the method is misleading as a value of 1 means
+     * "don't retry on error" and a value of 0 meant don't even try to
+     * reach the URI at all.</p>
+     *
+     * @param r number of attempts to make
      *
      * @since Ant 1.8.0
      */
     public void setRetries(final int r) {
+        if (r <= 0) {
+            log("Setting retries to " + r
+                + " will make the task not even try to reach the URI at all",
+                Project.MSG_WARN);
+        }
         this.numberRetries = r;
     }
 
