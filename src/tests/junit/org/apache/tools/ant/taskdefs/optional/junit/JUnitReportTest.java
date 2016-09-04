@@ -23,14 +23,19 @@ import static org.junit.Assert.assertTrue;
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.security.Permission;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -177,4 +182,46 @@ public class JUnitReportTest {
         assertContains("key1=value1,key2=value2", buildRule.getLog());
         commonIndexFileAssertions();
     }
+
+    @Test
+    public void testWithSecurityManagerAndXalanFactory() throws Exception {
+        try {
+            String factoryName = TransformerFactory.newInstance().getClass().getName();
+            Assume.assumeTrue("TraxFactory is " + factoryName + " and not Xalan",
+                              "org.apache.xalan.processor.TransformerFactoryImpl"
+                              .equals(factoryName));
+        } catch (TransformerFactoryConfigurationError exc) {
+            throw new RuntimeException(exc);
+        }
+        try {
+            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            buildRule.executeTarget("testWithStyleFromClasspath");
+            commonIndexFileAssertions();
+        } finally {
+            System.setSecurityManager(null);
+        }
+    }
+
+    @Test
+    public void testWithSecurityManagerAndJDKFactory() throws Exception {
+        ClassLoader orig = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
+                public InputStream getResourceAsStream(String name) {
+                    if (name.startsWith("META-INF/services/")) {
+                        // work around JAXP #6723276 in JDK 6
+                        return new ByteArrayInputStream(new byte[0]);
+                    }
+                    return super.getResourceAsStream(name);
+                }
+            });
+            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            buildRule.executeTarget("testWithStyleFromClasspath");
+            commonIndexFileAssertions();
+        } finally {
+            System.setSecurityManager(null);
+            Thread.currentThread().setContextClassLoader(orig);
+        }
+    }
+
 }
