@@ -67,6 +67,8 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         }
         File xsl = getFile("/taskdefs/optional/xalan-redirect-in.xsl");
         liaison.setStylesheet(xsl);
+        ((TraXLiaison) liaison)
+            .setFeature("http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions", true);
         File out = new File("xalan2-redirect-out-dummy.tmp");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xsl");
         ClassLoader orig = Thread.currentThread().getContextClassLoader();
