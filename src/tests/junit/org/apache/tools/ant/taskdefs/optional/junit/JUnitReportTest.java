@@ -40,11 +40,11 @@ import org.junit.Test;
  *
  */
 public class JUnitReportTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
 
-	@Before
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/junitreport.xml");
     }
@@ -54,11 +54,11 @@ public class JUnitReportTest {
      * output is selected via the default.
      * Needs reports1 task from junitreport.xml.
      */
-	@Test
+    @Test
     public void testNoFileJUnitNoFrames() {
         buildRule.executeTarget("reports1");
         assertFalse("No file junit-noframes.html expected", (new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists()));
-        
+
     }
 
     public void assertIndexCreated() {
@@ -71,23 +71,23 @@ public class JUnitReportTest {
 
     @Test
     public void testEmptyFile() throws Exception {
-    	buildRule.executeTarget("testEmptyFile");
+        buildRule.executeTarget("testEmptyFile");
         assertIndexCreated();
-    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_EMPTY_FILE, buildRule.getLog());
+        assertContains("Required text not found in log", XMLResultAggregator.WARNING_EMPTY_FILE, buildRule.getLog());
     }
 
     @Test
     public void testIncompleteFile() throws Exception {
         buildRule.executeTarget("testIncompleteFile");
         assertIndexCreated();
-    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED, buildRule.getLog());
+        assertContains("Required text not found in log", XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED, buildRule.getLog());
     }
-    
+
     @Test
     public void testWrongElement() throws Exception {
         buildRule.executeTarget("testWrongElement");
         assertIndexCreated();
-    	assertContains("Required text not found in log", XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT, buildRule.getLog());
+        assertContains("Required text not found in log", XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT, buildRule.getLog());
     }
 
     // Bugzilla Report 34963
@@ -196,8 +196,8 @@ public class JUnitReportTest {
 
     @Test
     public void testWithParams() throws Exception {
-    	buildRule.executeTarget("testWithParams");
-    	assertContains("key1=value1,key2=value2", buildRule.getLog());
+        buildRule.executeTarget("testWithParams");
+        assertContains("key1=value1,key2=value2", buildRule.getLog());
         File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
         // tests one the file object
         assertTrue("No index.html present. Not generated?", reportFile.exists() );
