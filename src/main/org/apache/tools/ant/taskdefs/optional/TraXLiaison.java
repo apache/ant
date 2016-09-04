@@ -665,8 +665,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
     private void applyReflectionHackForExtensionMethods() {
         // Jigsaw doesn't allow reflection to work, so we can stop trying
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)
-            && !JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
             try { // #51668, #52382
                 final Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
                 _isNotSecureProcessing.setAccessible(true);
