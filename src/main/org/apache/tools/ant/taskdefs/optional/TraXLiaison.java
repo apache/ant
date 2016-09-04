@@ -64,6 +64,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -422,15 +423,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             }
         }
 
-        try { // #51668, #52382
-            final Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
-            _isNotSecureProcessing.setAccessible(true);
-            _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
-        } catch (final Exception x) {
-            if (project != null) {
-                project.log(x.toString(), Project.MSG_DEBUG);
-            }
-        }
+        applyReflectionHackForExtensionMethods();
 
         tfactory.setErrorListener(this);
 
@@ -454,7 +447,6 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         }
         return tfactory;
     }
-
 
     /**
      * Set the factory name to use instead of JAXP default lookup.
@@ -670,4 +662,21 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
         traceConfiguration = xsltTask.getTraceConfiguration();
     }
+
+    private void applyReflectionHackForExtensionMethods() {
+        // Jigsaw doesn't allow reflection to work, so we can stop trying
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)
+            && !JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            try { // #51668, #52382
+                final Field _isNotSecureProcessing = tfactory.getClass().getDeclaredField("_isNotSecureProcessing");
+                _isNotSecureProcessing.setAccessible(true);
+                _isNotSecureProcessing.set(tfactory, Boolean.TRUE);
+            } catch (final Exception x) {
+                if (project != null) {
+                    project.log(x.toString(), Project.MSG_DEBUG);
+                }
+            }
+        }
+    }
+
 }
