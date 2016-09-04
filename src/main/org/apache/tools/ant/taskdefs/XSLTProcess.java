@@ -39,6 +39,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
@@ -53,6 +54,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
@@ -1462,7 +1464,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * the list of factory attributes to use for TraXLiaison
          */
-        private final Vector attributes = new Vector();
+        private final List<Attribute> attributes = new ArrayList<Attribute>();
+
+        /**
+         * the list of factory features to use for TraXLiaison
+         */
+        private final List<Feature> features = new ArrayList<Feature>();
 
         /**
          * @return the name of the factory.
@@ -1484,7 +1491,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @param attr the newly created factory attribute
          */
         public void addAttribute(final Attribute attr) {
-            attributes.addElement(attr);
+            attributes.add(attr);
         }
 
         /**
@@ -1492,7 +1499,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @return the enumeration of attributes
          */
         public Enumeration getAttributes() {
-            return attributes.elements();
+            return Collections.enumeration(attributes);
+        }
+
+        /**
+         * Create an instance of a factory feature.
+         * @param feature the newly created feature
+         * @since Ant 1.9.8
+         */
+        public void addFeature(final Feature feature) {
+            features.add(feature);
+        }
+
+        /**
+         * The configured features.
+         * @since Ant 1.9.8
+         */
+        public Iterable<Feature> getFeatures() {
+            return features;
         }
 
         /**
@@ -1503,7 +1527,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          *  <li>http://xml.apache.org/xalan/features/incremental (true|false) </li>
          * </ul>
          */
-        public static class Attribute implements DynamicConfigurator {
+        public static class Attribute
+            extends ProjectComponent
+            implements DynamicConfigurator {
 
             /** attribute name, mostly processor specific */
             private String name;
@@ -1519,7 +1545,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
 
             /**
-             * @return the output property value.
+             * @return the attribute value.
              */
             public Object getValue() {
                 return value;
@@ -1560,11 +1586,61 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                             this.value = value;
                         }
                     }
+                } else if ("valueref".equalsIgnoreCase(name)) {
+                    this.value = getProject().getReference(value);
+                } else if ("classloaderforpath".equalsIgnoreCase(name)) {
+                    this.value =
+                        ClasspathUtils.getClassLoaderForPath(getProject(),
+                                                             new Reference(getProject(),
+                                                                           value));
                 } else {
                     throw new BuildException("Unsupported attribute: " + name);
                 }
             }
         } // -- class Attribute
+
+        /**
+         * A feature for the TraX factory.
+         * @since Ant 1.9.8
+         */
+        public static class Feature {
+            private String name;
+            private boolean value;
+
+            public Feature() { }
+            public Feature(String name, boolean value) {
+                this.name = name;
+                this.value = value;
+            }
+
+            /**
+             * @param name the feature name.
+             */
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            /**
+             * @param value the feature value.
+             */
+            public void setValue(boolean value) {
+                this.value = value;
+            }
+
+            /**
+             * @return the feature name.
+             */
+            public String getName() {
+                return name;
+            }
+
+            /**
+             * @return the feature value.
+             */
+            public boolean getValue() {
+                return value;
+            }
+        }
     } // -- class Factory
 
     /**

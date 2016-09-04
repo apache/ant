@@ -29,6 +29,8 @@ import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -43,6 +45,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.w3c.dom.Document;
 
 /**
@@ -96,6 +99,11 @@ public class AggregateTransformer {
      * @since Ant 1.9.5
      */
     private XSLTProcess xsltTask;
+
+    /**
+     * The JAXP factory used for the internal XSLT task.
+     */
+    private XSLTProcess.Factory xsltFactory;
 
     /**
      * Instance of a utility class to use for file operations.
@@ -228,7 +236,8 @@ public class AggregateTransformer {
      * @since Ant 1.9.5
      */
     public XSLTProcess.Factory createFactory() {
-        return xsltTask.createFactory();
+        return xsltFactory != null ? xsltFactory
+            : (xsltFactory = xsltTask.createFactory());
     }
 
     /**
@@ -263,6 +272,7 @@ public class AggregateTransformer {
         paramx.setProject(task.getProject());
         paramx.setName("output.dir");
         paramx.setExpression(toDir.getAbsolutePath());
+        configureForRedirectExtension();
         final long t0 = System.currentTimeMillis();
         try {
             xsltTask.execute();
@@ -340,4 +350,28 @@ public class AggregateTransformer {
         return JAXPUtils.getSystemId(file);
     }
 
+    private static final String JDK_INTERNAL_FACTORY = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+
+    /**
+     * If we end up using the JDK's own TraX factory on Java 9+, then
+     * set the features and attributes necessary to allow redirect
+     * extensions to be used.
+     * @since Ant 1.9.8
+     */
+    protected void configureForRedirectExtension() {
+        XSLTProcess.Factory factory = createFactory();
+        String factoryName = factory.getName();
+        if (factoryName == null) {
+            try {
+                factoryName = TransformerFactory.newInstance().getClass().getName();
+            } catch (TransformerFactoryConfigurationError exc) {
+                throw new BuildException(exc);
+            }
+        }
+        if (JDK_INTERNAL_FACTORY.equals(factoryName)
+            && JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            factory.addFeature(new XSLTProcess.Factory.Feature("http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions",
+                                                               true));
+        }
+    }
 }

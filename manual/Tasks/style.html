@@ -395,7 +395,7 @@ Used to specify factory settings.
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>attribute </h4>
+<h4>attribute</h4>
 <p>Used to specify settings of the processor factory.
 The attribute names and values are entirely processor specific
 so you must be aware of the implementation to figure them out.
@@ -431,7 +431,66 @@ And in Saxon 7.x:
   <tr>
     <td valign="top">value</td>
     <td valign="top">value of the attribute.</td>
+    <td align="center" valign="middle" rowspan="3">Exactly one of these</td>
+  </tr>
+  <tr>
+    <td valign="top">valueref</td>
+    <td valign="top">value of the attribute is the value of the
+      project reference with the given id. <em>since Ant 1.9.8</em></td>
+  </tr>
+  <tr>
+    <td valign="top">classloaderforpath</td>
+    <td valign="top">value of the attribute is a classloader that uses
+      the classpath specified by a path that is the project reference
+      with the given id. <em>since Ant 1.9.8</em></td>
+  </tr>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+  &lt;path id="extension-path"&gt;
+    ...
+  &lt;/path&gt;
+
+
+  &lt;xslt ...&gt;
+    &lt;factory&gt;
+      &lt;attribute name="jdk.xml.transform.extensionClassLoader"
+                 classloaderforpath="extension-path"/&gt;
+    &lt;/factory&gt;
+  &lt;/xslt ...&gt;
+</pre>
+<p>Sets the classloader to use when loading extension functions to a
+  classloader using the <code>path</code> with the
+  id <code>extension-path</code>.
+</blockquote>
+<h4>feature</h4>
+<p><em>since Ant 1.9.8</em></p>
+<p>Used to specify settings of the processor factory.  The feature
+names are mostly processor specific so you must be aware of the
+implementation to figure them out.  Read the documentation of your
+processor. The only feature all implementations are required to
+support
+is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
+<blockquote>
+<h4>Parameters</h4>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">Name of the feature</td>
     <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">value of the feature. A boolean value
+    (i.e. permitted values are true,false,yes,no,on,off).</td>
+    <td align="center" valign="top">No, defaults to false</td>
   </tr>
 </table>
 </blockquote>
