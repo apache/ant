@@ -1462,7 +1462,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * the list of factory attributes to use for TraXLiaison
          */
-        private final Vector attributes = new Vector();
+        private final List<Attribute> attributes = new ArrayList<Attribute>();
+
+        /**
+         * the list of factory features to use for TraXLiaison
+         */
+        private final List<Feature> features = new ArrayList<Feature>();
 
         /**
          * @return the name of the factory.
@@ -1484,7 +1489,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @param attr the newly created factory attribute
          */
         public void addAttribute(final Attribute attr) {
-            attributes.addElement(attr);
+            attributes.add(attr);
         }
 
         /**
@@ -1492,7 +1497,24 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @return the enumeration of attributes
          */
         public Enumeration getAttributes() {
-            return attributes.elements();
+            return Collections.enumeration(attributes);
+        }
+
+        /**
+         * Create an instance of a factory feature.
+         * @param feature the newly created feature
+         * @since Ant 1.9.8
+         */
+        public void addFeature(final Feature feature) {
+            features.add(feature);
+        }
+
+        /**
+         * The configured features.
+         * @since Ant 1.9.8
+         */
+        public Iterable<Feature> getFeatures() {
+            return features;
         }
 
         /**
@@ -1519,7 +1541,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
 
             /**
-             * @return the output property value.
+             * @return the attribute value.
              */
             public Object getValue() {
                 return value;
@@ -1565,6 +1587,49 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 }
             }
         } // -- class Attribute
+
+        /**
+         * A feature for the TraX factory.
+         * @since Ant 1.9.8
+         */
+        public static class Feature {
+            private String name;
+            private boolean value;
+
+            public Feature() { }
+            public Feature(String name, boolean value) {
+                this.name = name;
+                this.value = value;
+            }
+
+            /**
+             * @param name the feature name.
+             */
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            /**
+             * @param value the feature value.
+             */
+            public void setValue(boolean value) {
+                this.value = value;
+            }
+
+            /**
+             * @return the feature name.
+             */
+            public String getName() {
+                return name;
+            }
+
+            /**
+             * @return the feature value.
+             */
+            public boolean getValue() {
+                return value;
+            }
+        }
     } // -- class Factory
 
     /**

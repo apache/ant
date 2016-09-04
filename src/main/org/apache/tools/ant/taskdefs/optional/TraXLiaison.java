@@ -28,8 +28,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -123,7 +127,10 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     private final Hashtable<String, Object> params = new Hashtable<String, Object>();
 
     /** factory attributes */
-    private final Vector attributes = new Vector();
+    private final List<Object[]> attributes = new ArrayList<Object[]>();
+
+    /** factory features */
+    private final Map<String, Boolean> features = new HashMap<String, Boolean>();
 
     /** whether to suppress warnings */
     private boolean suppressWarnings = false;
@@ -436,8 +443,16 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         // specific attributes for the transformer
         final int size = attributes.size();
         for (int i = 0; i < size; i++) {
-            final Object[] pair = (Object[]) attributes.elementAt(i);
+            final Object[] pair = attributes.get(i);
             tfactory.setAttribute((String) pair[0], pair[1]);
+        }
+
+        for (Map.Entry<String, Boolean> feature : features.entrySet()) {
+            try {
+                tfactory.setFeature(feature.getKey(), feature.getValue());
+            } catch (TransformerConfigurationException ex) {
+                throw new BuildException(ex);
+            }
         }
 
         if (uriResolver != null) {
@@ -466,7 +481,17 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      */
     public void setAttribute(final String name, final Object value) {
         final Object[] pair = new Object[]{name, value};
-        attributes.addElement(pair);
+        attributes.add(pair);
+    }
+
+    /**
+     * Set a custom feature for the JAXP factory implementation.
+     * @param name the feature name.
+     * @param value the value of the feature
+     * @since Ant 1.9.8
+     */
+    public void setFeature(final String name, final boolean value) {
+        features.put(name, value);
     }
 
     /**
@@ -624,6 +649,10 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                 final XSLTProcess.Factory.Attribute attr =
                         (XSLTProcess.Factory.Attribute) attrs.nextElement();
                 setAttribute(attr.getName(), attr.getValue());
+            }
+            for (final XSLTProcess.Factory.Feature feature
+                     : factory.getFeatures()) {
+                setFeature(feature.getName(), feature.getValue());
             }
         }
 

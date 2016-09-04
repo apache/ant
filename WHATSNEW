@@ -83,6 +83,9 @@ Other changes:
    nativeheaderdir attribute.
    Bugzilla Report 59905
 
+ * it is now possible to set features of the TraX factory used by <xslt>
+   and <junitreport>.
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
