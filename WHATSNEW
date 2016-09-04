@@ -86,6 +86,9 @@ Other changes:
  * it is now possible to set features of the TraX factory used by <xslt>
    and <junitreport>.
 
+ * it is now possible to use references to Ant types and classloaders
+   built around Ant <path>s as values for TraX factory attributes.
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

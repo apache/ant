@@ -431,9 +431,39 @@ And in Saxon 7.x:
   <tr>
     <td valign="top">value</td>
     <td valign="top">value of the attribute.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="middle" rowspan="3">Exactly one of these</td>
+  </tr>
+  <tr>
+    <td valign="top">valueref</td>
+    <td valign="top">value of the attribute is the value of the
+      project reference with the given id. <em>since Ant 1.9.8</em></td>
+  </tr>
+  <tr>
+    <td valign="top">classloaderforpath</td>
+    <td valign="top">value of the attribute is a classloader that uses
+      the classpath specified by a path that is the project reference
+      with the given id. <em>since Ant 1.9.8</em></td>
   </tr>
 </table>
+
+<h4>Examples</h4>
+
+<pre>
+  &lt;path id="extension-path"&gt;
+    ...
+  &lt;/path&gt;
+
+
+  &lt;xslt ...&gt;
+    &lt;factory&gt;
+      &lt;attribute name="jdk.xml.transform.extensionClassLoader"
+                 classloaderforpath="extension-path"/&gt;
+    &lt;/factory&gt;
+  &lt;/xslt ...&gt;
+</pre>
+<p>Sets the classloader to use when loading extension functions to a
+  classloader using the <code>path</code> with the
+  id <code>extension-path</code>.
 </blockquote>
 <h4>feature</h4>
 <p><em>since Ant 1.9.8</em></p>

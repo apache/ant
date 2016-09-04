@@ -39,6 +39,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
@@ -53,6 +54,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
@@ -1525,7 +1527,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          *  <li>http://xml.apache.org/xalan/features/incremental (true|false) </li>
          * </ul>
          */
-        public static class Attribute implements DynamicConfigurator {
+        public static class Attribute
+            extends ProjectComponent
+            implements DynamicConfigurator {
 
             /** attribute name, mostly processor specific */
             private String name;
@@ -1582,6 +1586,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                             this.value = value;
                         }
                     }
+                } else if ("valueref".equalsIgnoreCase(name)) {
+                    this.value = getProject().getReference(value);
+                } else if ("classloaderforpath".equalsIgnoreCase(name)) {
+                    this.value =
+                        ClasspathUtils.getClassLoaderForPath(getProject(),
+                                                             new Reference(getProject(),
+                                                                           value));
                 } else {
                     throw new BuildException("Unsupported attribute: " + name);
                 }
