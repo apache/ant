@@ -250,13 +250,13 @@ public class DefaultCompilerAdapterTest {
             Assert.assertNotNull(cmd[0]);
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No modulesourcepath
-            assertEquals(-1, cmdLine.indexOf("-modulesourcepath"));
+            assertEquals(-1, cmdLine.indexOf("--module-source-path"));
             //The -sourcepath has to be followed by src
             int index = cmdLine.indexOf("-sourcepath");
             Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
             assertEquals(src.getAbsolutePath(), cmdLine.get(index + 1));
-            //The -modulepath has to be followed by modules
-            index = cmdLine.indexOf("-modulepath");
+            //The --module-path has to be followed by modules
+            index = cmdLine.indexOf("--module-path");
             Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
             assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
             //J1.java & J2.java has to be in files list
@@ -310,8 +310,8 @@ public class DefaultCompilerAdapterTest {
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No sourcepath
             assertEquals(-1, cmdLine.indexOf("-sourcepath"));
-            //The -modulesourcepath has to be followed by the pattern
-            int index = cmdLine.indexOf("-modulesourcepath");
+            //The --module-source-path has to be followed by the pattern
+            int index = cmdLine.indexOf("--module-source-path");
             Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
             String expectedModSrcPath = String.format("%s/%s",
                     workDir.getAbsolutePath(),
@@ -319,8 +319,8 @@ public class DefaultCompilerAdapterTest {
                     .replace('/', File.separatorChar)
                     .replace('\\', File.separatorChar);
             assertEquals(expectedModSrcPath, cmdLine.get(index + 1));
-            //The -modulepath has to be followed by modules
-            index = cmdLine.indexOf("-modulepath");
+            //The --module-path has to be followed by modules
+            index = cmdLine.indexOf("--module-path");
             Assert.assertTrue(index != -1 && index < cmdLine.size() - 1);
             assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
             //J1.java, J2.java & J3.java has to be in files list
