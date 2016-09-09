@@ -411,7 +411,7 @@ public abstract class DefaultCompilerAdapter
         }
         final Path ump = getUpgrademodulepath();
         if (ump.size() > 0) {
-            cmd.createArgument().setValue("-upgrademodulepath");
+            cmd.createArgument().setValue("--upgrade-module-path");
             cmd.createArgument().setPath(ump);
         }
         if (attributes.getNativeHeaderDir() != null) {
