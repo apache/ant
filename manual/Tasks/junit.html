@@ -814,10 +814,10 @@ class.
 <pre>
     &lt;junit fork="true"
         jvm="${platform.java}"&gt;
-        &lt;jvmarg value="-Xpatch:${module.name}=${build.test.classes}"/&gt;
-        &lt;jvmarg line="-addmods ${module.name}"/&gt;
-        &lt;jvmarg value="-XaddReads:${module.name}=ALL-UNNAMED"/&gt;
-        &lt;jvmarg value="-XaddExports:${module.name}/my.test=ALL-UNNAMED"/&gt;
+        &lt;jvmarg line="--patch-module ${module.name}=${build.test.classes}"/&gt;
+        &lt;jvmarg line="--add-modules ${module.name}"/&gt;
+        &lt;jvmarg line="--add-reads ${module.name}=ALL-UNNAMED"/&gt;
+        &lt;jvmarg line="--add-exports ${module.name}/my.test=ALL-UNNAMED"/&gt;
         &lt;classpath&gt;
             &lt;pathelement path="${libs.junit}"/&gt;
         &lt;/classpath&gt;
@@ -831,16 +831,16 @@ class.
 <p>Runs my.test.TestCase as a white-box test in the forked VM given by the <code>platform.java</code> property.
 The junit library is a part of an unnamed module while the tested project and required modules are on the module path. The tests
 do not have module-info file and are executed in the project module given by <code>module.name</code> property.<br/>
-The <code>-Xpatch</code> java option executes the tests built into <code>${build.test.classes}</code> in a module given
+The <code>--patch-module</code> java option executes the tests built into <code>${build.test.classes}</code> in a module given
 by <code>module.name</code> property.<br/>
-The <code>-addmods</code> java option enables the tested module.<br/>
-The <code>-XaddReads</code> java option makes the unnamed module containing the junit readable by tested module.<br/>
-The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the unnamed module containing the junit.<br/>
+The <code>--add-modules</code> java option enables the tested module.<br/>
+The <code>--add-reads</code> java option makes the unnamed module containing the junit readable by tested module.<br/>
+The <code>--add-exports</code> java option makes the non-exported test package <code>my.test</code> accessible from the unnamed module containing the junit.<br/>
 <pre>
     &lt;junit fork="true"
         jvm="${platform.java}"&gt;
-        &lt;jvmarg line="-addmods ${test.module.name}"/&gt;
-        &lt;jvmarg value="-XaddExports:${test.module.name}/my.test=junit,ALL-UNNAMED"/&gt;
+        &lt;jvmarg line="--add-modules ${test.module.name}"/&gt;
+        &lt;jvmarg line="--add-exports ${test.module.name}/my.test=junit,ALL-UNNAMED"/&gt;
         &lt;modulepath&gt;
             &lt;pathelement path="${modules}:${build.classes}:${libs.junit}"/&gt;
         &lt;/modulepath&gt;
@@ -850,8 +850,8 @@ The <code>-XaddExports</code> java option makes the non-exported test package <c
 </pre>
 <p>Runs my.test.TestCase as a black-box test in the forked VM given by the <code>platform.java</code> property.
 The junit library is used as an automatic module. The tests module-info requires the tested module and junit.<br/>
-The <code>-addmods</code> java option enables the test module.<br/>
-The <code>-XaddExports</code> java option makes the non-exported test package <code>my.test</code> accessible from the junit module and Ant's test runner.
+The <code>--add-modules</code> java option enables the test module.<br/>
+The <code>--add-exports</code> java option makes the non-exported test package <code>my.test</code> accessible from the junit module and Ant's test runner.
 Another possibility is to export the test package in the tests module-info by <code>exports my.test</code> directive.<br/>
 </body>
 </html>

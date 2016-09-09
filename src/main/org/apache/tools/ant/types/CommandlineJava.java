@@ -520,13 +520,13 @@ public class CommandlineJava implements Cloneable {
         }
         //module path
         if (haveModulepath()) {
-            listIterator.add("-modulepath");
+            listIterator.add("--module-path");
             listIterator.add(
                     modulepath.concatSystemClasspath("ignore").toString());
         }
         //upgrade module path
         if (haveUpgrademodulepath()) {
-            listIterator.add("-upgrademodulepath");
+            listIterator.add("--upgrade-module-path");
             listIterator.add(
                     upgrademodulepath.concatSystemClasspath("ignore").toString());
         }
