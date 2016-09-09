@@ -476,10 +476,10 @@ public class JUnitTaskTest {
             for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
                 if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resCp = mockProcLauncher.cmd[++i];
-                } else if ("-modulepath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                } else if ("--module-path".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resMp = mockProcLauncher.cmd[++i];
-                } else if (mockProcLauncher.cmd[i].startsWith("-XaddExports:")) {   //NOI18N
-                    resExports.add(mockProcLauncher.cmd[i]);
+                } else if (mockProcLauncher.cmd[i].equals("--add-exports")) {   //NOI18N
+                    resExports.add(mockProcLauncher.cmd[++i]);
                 } else if (JUnitTestRunner.class.getName().equals(mockProcLauncher.cmd[i])) {
                     break;
                 }
@@ -530,10 +530,10 @@ public class JUnitTaskTest {
             for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
                 if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resCp = mockProcLauncher.cmd[++i];
-                } else if ("-modulepath".equals(mockProcLauncher.cmd[i])) { //NOI18N
+                } else if ("--module-path".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resMp = mockProcLauncher.cmd[++i];
-                } else if (mockProcLauncher.cmd[i].startsWith("-XaddExports:")) {   //NOI18N
-                    resExports.add(mockProcLauncher.cmd[i]);
+                } else if (mockProcLauncher.cmd[i].equals("--add-exports")) {   //NOI18N
+                    resExports.add(mockProcLauncher.cmd[++i]);
                 } else if (JUnitTestRunner.class.getName().equals(mockProcLauncher.cmd[i])) {
                     break;
                 }

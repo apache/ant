@@ -401,12 +401,12 @@ public abstract class DefaultCompilerAdapter
         }
         final Path msp = getModulesourcepath();
         if (msp.size() > 0) {
-            cmd.createArgument().setValue("-modulesourcepath");
+            cmd.createArgument().setValue("--module-source-path");
             cmd.createArgument().setPath(msp);
         }
         final Path mp = getModulepath();
         if (mp.size() > 0) {
-            cmd.createArgument().setValue("-modulepath");
+            cmd.createArgument().setValue("--module-path");
             cmd.createArgument().setPath(mp);
         }
         final Path ump = getUpgrademodulepath();
