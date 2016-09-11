@@ -1749,7 +1749,9 @@ public class JUnitTask extends Task {
      * @since 1.9.8
      */
     private boolean hasJunit(final Path path) {
-        try (AntClassLoader loader = AntClassLoader.newAntClassLoader(
+        AntClassLoader loader = null;
+        try {
+            loader = AntClassLoader.newAntClassLoader(
                 null,
                 getProject(),
                 path,
@@ -1759,6 +1761,10 @@ public class JUnitTask extends Task {
                 return true;
             } catch (final Exception ex) {
                 return false;
+            }
+        } finally {
+            if (loader != null) {
+                loader.close();
             }
         }
     }
