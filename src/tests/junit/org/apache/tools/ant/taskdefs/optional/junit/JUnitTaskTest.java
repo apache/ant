@@ -563,7 +563,8 @@ public class JUnitTaskTest {
 
         @Override
         public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException {
-            this.cmd = Arrays.copyOf(cmd, cmd.length);
+            this.cmd = new String[cmd.length];
+            System.arraycopy(cmd, 0, this.cmd, 0, cmd.length);
             return new MockProcess();
         }
 
