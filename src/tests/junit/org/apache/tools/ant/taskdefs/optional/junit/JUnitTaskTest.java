@@ -472,7 +472,7 @@ public class JUnitTaskTest {
             assertNotNull(mockProcLauncher.cmd);
             String resCp = null;
             String resMp = null;
-            Set<String> resExports = new TreeSet<>();
+            Set<String> resExports = new TreeSet<String>();
             for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
                 if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resCp = mockProcLauncher.cmd[++i];
@@ -526,7 +526,7 @@ public class JUnitTaskTest {
             assertNotNull(mockProcLauncher.cmd);
             String resCp = null;
             String resMp = null;
-            Set<String> resExports = new TreeSet<>();
+            Set<String> resExports = new TreeSet<String>();
             for (int i = 1; i< mockProcLauncher.cmd.length; i++) {
                 if ("-classpath".equals(mockProcLauncher.cmd[i])) { //NOI18N
                     resCp = mockProcLauncher.cmd[++i];

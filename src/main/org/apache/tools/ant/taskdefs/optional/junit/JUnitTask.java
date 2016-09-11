@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -1755,7 +1756,7 @@ public class JUnitTask extends Task {
                 null,
                 getProject(),
                 path,
-                true)) {
+                true);
             try {
                 loader.loadClass("junit.framework.Test");
                 return true;
@@ -1780,7 +1781,11 @@ public class JUnitTask extends Task {
         for (String path : modulePath.list()) {
             final File modulePathEntry = getProject().resolveFile(path);
             if (modulePathEntry.isDirectory() && !hasModuleInfo(modulePathEntry)) {
-                final File[] modules = modulePathEntry.listFiles((dir,name)->name.toLowerCase(Locale.ENGLISH).endsWith(".jar"));
+                final File[] modules = modulePathEntry.listFiles(new FilenameFilter() {
+                        public boolean accept(File dir, String name) {
+                            return name.toLowerCase(Locale.ENGLISH).endsWith(".jar");
+                        }
+                    });
                 if (modules != null) {
                     for (File module : modules) {
                         expanded.add(new Path(getProject(), String.format(
