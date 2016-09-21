@@ -69,6 +69,22 @@ attribute) the implicit fileset formed by this task.</p>
   to an <code>&lt;xsl:param&gt;</code> declaration.</p>
 <p>This task supports the use of a nested <a href="../Types/xmlcatalog.html">xmlcatalog</a>
 element which is used to perform Entity and URI resolution.</p>
+
+<p><b>Note on XSLT extension functions</b>: when using the default
+  TraX implementation of the Java class library and
+  a <code>SecurityManager</code> is active - e.g. when running from
+  within an IDE - XSLT extension functions cannot be used as "secure
+  processing" is active in Java 7 and above. Ant contains a special
+  "hack" that allows XSLT extensions to be used in Java 7 and 8, but
+  this hack fails for Java 9. If you want to use extensions like the
+  redirect extension that are provided by the Java class library
+  itself, you can allow them by enabling the
+  feature <code>http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions</code>
+  in Java 9 and above. If you need to use an extension function not
+  provided by Java itself you can set the
+  attribute <code>jdk.xml.transform.extensionClassLoader</code> to a
+  classloader (reference to an Ant PATH-like structure).</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

@@ -92,6 +92,12 @@ Other changes:
  * it is now possible to use references to Ant types and classloaders
    built around Ant <path>s as values for TraX factory attributes.
 
+ * <junitreport> now enables the feature
+   http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions
+   when run on Java 9 so the redirect extension function can be used
+   if when a SecurityManager is active.
+   Bugzilla Report 60060
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
