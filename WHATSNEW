@@ -109,6 +109,9 @@ Other changes:
  * it is now possible to use references to Ant types and classloaders
    built around Ant <path>s as values for TraX factory attributes.
 
+ * AntClassLoader and its subclasses register themselves as parallel
+   capable.
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 

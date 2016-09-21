@@ -27,6 +27,10 @@ import org.apache.tools.ant.types.Path;
  *             Just use {@link AntClassLoader} itself.
  */
 public class AntClassLoader5 extends AntClassLoader {
+    static {
+        registerAsParallelCapable();
+    }
+
     /**
      * Creates a classloader for the given project using the classpath given.
      *

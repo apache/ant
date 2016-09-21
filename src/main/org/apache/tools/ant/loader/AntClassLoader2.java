@@ -25,6 +25,10 @@ import org.apache.tools.ant.AntClassLoader;
  *             Just use {@link AntClassLoader} itself.
  */
 public class AntClassLoader2 extends AntClassLoader {
+    static {
+        registerAsParallelCapable();
+    }
+
     /** No args constructor. */
     public AntClassLoader2() {
     }

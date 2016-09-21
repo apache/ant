@@ -73,6 +73,10 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /**
      * An enumeration of all resources of a given name found within the
      * classpath of this class loader. This enumeration is used by the
