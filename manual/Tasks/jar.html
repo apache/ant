@@ -90,6 +90,11 @@ to a value other than its default, <code>"add"</code>.</b></p>
 
 <p>To cryptographically sign your JAR file, use the <a href="signjar.html">SignJar task</a> on the JAR that you create from this task.</p>
 
+<p>For creating a simple version of a <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238 multi release jar</a>,
+you don't need any special tools. Just set the required manifest entry and place the files where required, as you could see 
+in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this kind of jar, e.g. decreasing the size by deleting 
+'same' classes from the versions-branches, you have to do more ...</p> 
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -583,6 +588,36 @@ Sealed: false</code></pre></blockquote>
 </pre></blockquote>
 
 
+<a name="jep238-example"/>
+<h4>JEP238 example: a Multi-Release JAR Files</h4>
+<p>
+  Here we want to create a <i>Multi-Release JAR File</i> according the specification
+  <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238</a>.
+  It defines on top of a JAR the possibility to place additional or overwriting classes 
+  in a jar, which are available according to the Java version you run.<br> 
+  Basically it sais, that you have to set the manifest entry <tt>Multi-Release: true</tt> 
+  and place all additional or overwriting classes in 
+  <tt>META-INF/versions/<i>number</i>/package-structure</tt>, e.g. 
+  <tt>META-INF/versions/9/org/apache/ant/MyClass.class</tt>
+</p>
+<p>
+  In this example we expect that the normal classes are compiled into
+  <code>${java.classes}</code> and the Java9 classes are compiled into 
+  <code>${java9.classes}</code>. 
+</p>
+<blockquote><pre>
+    &lt;jar destfile=&quot;mrjar.jar&quot;&gt;
+      &lt;manifest&gt;
+        &lt;!-- special mf-entry according to the spec --&gt;
+        &lt;attribute name=&quot;Multi-Release&quot; value=&quot;true&quot;/&gt;
+      &lt;/manifest&gt;
+      &lt;!-- directory structure according to the spec ... --&gt;
+      &lt;!-- ... default classes loadable by old (&lt;Java9) versions --&gt;
+      &lt;fileset dir=&quot;${java.classes}&quot;/&gt;
+      &lt;!-- ... per release classes, require Java9+ for loadable via standard ClassLoader --&gt;
+      &lt;zipfileset prefix=&quot;META-INF/versions/9/&quot; dir=&quot;${java9.classes}&quot;/&gt;
+    &lt;/jar&gt;
+</pre></blockquote>
 
 </body>
 </html>

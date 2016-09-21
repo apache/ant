@@ -301,7 +301,13 @@ Main-Class: MyClass
         </classpath>
       </javaconstant>
     </loadresource>
-    <au:assertEquals expected="Java8" actual="${valueFrom8}"/>
+    <au:assertTrue>
+      <or>
+    	<equals arg1="Java8" arg2="${valueFrom8}"/>
+        <!-- maybe we are running on an early version of Java9 -->
+    	<equals arg1="Java9" arg2="${valueFrom8}"/>
+      </or>
+    </au:assertTrue>
     <au:assertNestedResourceExists>
       <zipentry zipfile="${antunit.tmpdir}/mrjar.jar" name="META-INF/versions/9/org/apache/ant/test/MRJarTest.class"/>
     </au:assertNestedResourceExists>
