@@ -112,6 +112,13 @@ Other changes:
  * AntClassLoader and its subclasses register themselves as parallel
    capable.
 
+ * <junitreport> now enables the feature
+   http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions
+   when run on Java 9 so the redirect extension function can be used
+   if when a SecurityManager is active.
+   Bugzilla Report 60060
+>>>>>>> 1.9.x
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
