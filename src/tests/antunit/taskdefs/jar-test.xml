@@ -249,4 +249,65 @@ Main-Class: MyClass
         resource="${output}/META-INF/MANIFEST.MF"/>
   </target>
 
+  <target name="testMultiReleaseJar" description="http://openjdk.java.net/jeps/238">
+    <!-- Preparation of the 'MultiRelease-Project' -->
+    <property name="java8.src"  value="${input}/src/java"/>
+    <property name="java9.src"  value="${input}/src/java9"/>
+    <property name="java10.src" value="${input}/src/java10"/>
+    <property name="java8.classes"  value="${input}/build/classes"/>
+    <property name="java9.classes"  value="${input}/build/classes9"/>
+    <property name="java10.classes" value="${input}/build/classes10"/>
+    <macrodef name="create">
+      <attribute name="version" />
+      <sequential>
+        <local name="src"/>
+        <local name="classes"/>
+        <property name="src" value="${java@{version}.src}"/>
+        <property name="classes" value="${java@{version}.classes}"/>
+        <mkdir dir="${src}/org/apache/ant/test"/>
+        <echo file="${src}/org/apache/ant/test/MRJarTest.java">
+          package org.apache.ant.test;
+          public class MRJarTest {
+            public static final String VERSION = "Java@{version}";
+          }
+        </echo>
+        <mkdir dir="${classes}"/>
+        <javac srcdir="${src}" destdir="${classes}" debug="on" includeantruntime="false"/>
+      </sequential>
+    </macrodef>
+    <create version="8"/>
+    <create version="9"/>
+    <create version="10"/>
+    
+    <!-- Now create the MultiReleaseJar -->
+    <jar destfile="${antunit.tmpdir}/mrjar.jar">
+      <manifest>
+        <!-- special mf-entry according to the spec -->
+        <attribute name="Multi-Release" value="true"/>
+      </manifest>
+      <!-- directory structure according to the spec ... -->
+      <!-- ... default classes loadable by old (<Java9) versions -->
+      <fileset dir="${java8.classes}"/>
+      <!-- ... per release classes, require Java9+ for loadable via standard ClassLoader -->
+      <zipfileset prefix="META-INF/versions/9/" dir="${java9.classes}"/>
+      <zipfileset prefix="META-INF/versions/10/" dir="${java10.classes}"/>
+    </jar>
+    
+    <!-- Now some tests -->
+    <loadresource property="valueFrom8">
+      <javaconstant name="org.apache.ant.test.MRJarTest.VERSION">
+        <classpath>
+          <pathelement location="${antunit.tmpdir}/mrjar.jar"/>
+        </classpath>
+      </javaconstant>
+    </loadresource>
+    <au:assertEquals expected="Java8" actual="${valueFrom8}"/>
+    <au:assertNestedResourceExists>
+      <zipentry zipfile="${antunit.tmpdir}/mrjar.jar" name="META-INF/versions/9/org/apache/ant/test/MRJarTest.class"/>
+    </au:assertNestedResourceExists>
+    <au:assertNestedResourceExists>
+      <zipentry zipfile="${antunit.tmpdir}/mrjar.jar" name="META-INF/versions/10/org/apache/ant/test/MRJarTest.class"/>
+    </au:assertNestedResourceExists>
+  </target>
+
 </project>
