@@ -64,6 +64,10 @@ Fixed bugs:
  * Clarified the documentation of <get>'s retries attribute.
    Bugzilla Report 59930
 
+ * The ant wrapper script failed if backticks were passed on the
+   command line.
+   Bugzilla Report 60150, 59445
+
 Other changes:
 --------------
 
