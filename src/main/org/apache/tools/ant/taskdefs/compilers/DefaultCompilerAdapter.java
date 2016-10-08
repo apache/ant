@@ -70,6 +70,7 @@ public abstract class DefaultCompilerAdapter
     protected boolean depend = false;
     protected boolean verbose = false;
     protected String target;
+    protected String release;
     protected Path bootclasspath;
     protected Path extdirs;
     protected Path compileClasspath;
@@ -111,6 +112,7 @@ public abstract class DefaultCompilerAdapter
         depend = attributes.getDepend();
         verbose = attributes.getVerbose();
         target = attributes.getTarget();
+        release = attributes.getRelease();
         bootclasspath = attributes.getBootclasspath();
         extdirs = attributes.getExtdirs();
         compileList = attributes.getFileList();
@@ -321,15 +323,17 @@ public abstract class DefaultCompilerAdapter
                 cmd.createArgument().setValue("-sourcepath");
                 cmd.createArgument().setPath(sourcepath);
             }
-            if (target != null) {
-                cmd.createArgument().setValue("-target");
-                cmd.createArgument().setValue(target);
-            }
+            if (release == null || !assumeJava19()) {
+                if (target != null) {
+                    cmd.createArgument().setValue("-target");
+                    cmd.createArgument().setValue(target);
+                }
 
-            final Path bp = getBootClassPath();
-            if (bp.size() > 0) {
-                cmd.createArgument().setValue("-bootclasspath");
-                cmd.createArgument().setPath(bp);
+                final Path bp = getBootClassPath();
+                if (bp.size() > 0) {
+                    cmd.createArgument().setValue("-bootclasspath");
+                    cmd.createArgument().setPath(bp);
+                }
             }
 
             if (extdirs != null && extdirs.size() > 0) {
@@ -390,13 +394,27 @@ public abstract class DefaultCompilerAdapter
         setupJavacCommandlineSwitches(cmd, true);
         if (!assumeJava13()) { // -source added with JDK 1.4
             final String t = attributes.getTarget();
-            if (attributes.getSource() != null) {
-                cmd.createArgument().setValue("-source");
-                cmd.createArgument()
-                    .setValue(adjustSourceValue(attributes.getSource()));
+            final String s = attributes.getSource();
+            if (release == null || !assumeJava19()) {
+                if (release != null) {
+                    attributes.log("Support for javac --release has been added"
+                                   + " in Java9 ignoring it");
+                }
+                if (s != null) {
+                    cmd.createArgument().setValue("-source");
+                    cmd.createArgument().setValue(adjustSourceValue(s));
 
-            } else if (t != null && mustSetSourceForTarget(t)) {
-                setImplicitSourceSwitch(cmd, t, adjustSourceValue(t));
+                } else if (t != null && mustSetSourceForTarget(t)) {
+                    setImplicitSourceSwitch(cmd, t, adjustSourceValue(t));
+                }
+            } else { // Java 9+ and release has been set
+                if (t != null || s != null || getBootClassPath().size() > 0) {
+                    attributes.log("Ignoring source, target and bootclasspath"
+                                   + " as release has been set",
+                                   Project.MSG_WARN);
+                }
+                cmd.createArgument().setValue("--release");
+                cmd.createArgument().setValue(release);
             }
         }
         final Path msp = getModulesourcepath();

@@ -67,6 +67,7 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * <li>includejavaruntime
  * <li>source
  * <li>compiler
+ * <li>release
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -121,6 +122,7 @@ public class Javac extends MatchingTask {
     private boolean depend = false;
     private boolean verbose = false;
     private String targetAttribute;
+    private String release;
     private Path bootclasspath;
     private Path extdirs;
     private Boolean includeAntRuntime;
@@ -785,6 +787,32 @@ public class Javac extends MatchingTask {
         return targetAttribute != null
             ? targetAttribute
             : getProject().getProperty(MagicNames.BUILD_JAVAC_TARGET);
+    }
+
+    /**
+     * Sets the version to use for the {@code --release} switch that
+     * combines {@code source}, {@code target} and setting the
+     * bootclasspath.
+     *
+     * Values depend on the compiler, for jdk 9 the valid values are
+     * "6", "7", "8", "9".
+     * @param release the value of the release attribute
+     * @since Ant 1.9.8
+     */
+    public void setRelease(final String release) {
+        this.release = release;
+    }
+
+    /**
+     * Gets the version to use for the {@code --release} switch that
+     * combines {@code source}, {@code target} and setting the
+     * bootclasspath.
+     *
+     * @return the value of the release attribute
+     * @since Ant 1.9.8
+     */
+    public String getRelease() {
+        return release;
     }
 
     /**
