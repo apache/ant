@@ -68,6 +68,18 @@ public class DefaultCompilerAdapterTest {
         }
     }
 
+    private static class SourceTargetHelperNoOverride extends DefaultCompilerAdapter {
+
+        public boolean execute() { return false; }
+
+        /**
+         * public to avoid classloader issues.
+         */
+        public Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
+            return super.setupModernJavacCommandlineSwitches(cmd);
+        }
+    }
+
     @Test
     public void testSourceIsIgnoredForJavac13() {
         testSource(null, "javac1.3", "", null, "1.1");
@@ -385,6 +397,56 @@ public class DefaultCompilerAdapterTest {
         } finally {
             delete(workDir);
         }
+    }
+
+    @Test
+    public void releaseIsIgnoredForJava8() {
+        LogCapturingJavac javac = new LogCapturingJavac();
+        Project p = new Project();
+        javac.setProject(p);
+        javac.setCompiler("javac8");
+        javac.setSource("6");
+        javac.setTarget("6");
+        javac.setRelease("6");
+        javac.setSourcepath(new Path(p));
+        SourceTargetHelperNoOverride sth = new SourceTargetHelperNoOverride();
+        sth.setJavac(javac);
+        Commandline cmd = new Commandline();
+        sth.setupModernJavacCommandlineSwitches(cmd);
+        assertContains("Support for javac --release has been added in "
+                       + "Java9 ignoring it", javac.getLog());
+        String[] args = cmd.getCommandline();
+        assertEquals(7, args.length);
+        assertEquals("-classpath", args[0]);
+        assertEquals("-target", args[2]);
+        assertEquals("6", args[3]);
+        assertEquals("-g:none", args[4]);
+        assertEquals("-source", args[5]);
+        assertEquals("6", args[6]);
+    }
+
+    @Test
+    public void releaseIsUsedForJava9() {
+        LogCapturingJavac javac = new LogCapturingJavac();
+        Project p = new Project();
+        javac.setProject(p);
+        javac.setCompiler("javac9");
+        javac.setSource("6");
+        javac.setTarget("6");
+        javac.setRelease("6");
+        javac.setSourcepath(new Path(p));
+        SourceTargetHelperNoOverride sth = new SourceTargetHelperNoOverride();
+        sth.setJavac(javac);
+        Commandline cmd = new Commandline();
+        sth.setupModernJavacCommandlineSwitches(cmd);
+        assertContains("Ignoring source, target and bootclasspath as "
+                       + "release has been set", javac.getLog());
+        String[] args = cmd.getCommandline();
+        assertEquals(5, args.length);
+        assertEquals("-classpath", args[0]);
+        assertEquals("-g:none", args[2]);
+        assertEquals("--release", args[3]);
+        assertEquals("6", args[4]);
     }
 
     private void commonSourceDowngrades(String javaVersion) {

@@ -122,6 +122,10 @@ Other changes:
    if when a SecurityManager is active.
    Bugzilla Report 60060
 
+ * support for javac's --release switch introduced with Java9 has been
+   added.
+   Bugzilla Report 60172
+
 Changes from Ant 1.9.6 TO Ant 1.9.7
 ===================================
 
