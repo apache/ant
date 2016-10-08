@@ -35,8 +35,13 @@ for arg in "$@" ; do
     if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ] ; then
       show_help=true
     fi
-    # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
-    ant_exec_args="$ant_exec_args \"$(printf '%s\n' "$arg" | sed -e 's@\$\|`\|"\|\\@\\\0@g' )\""
+    # escape $, ", and \ characters by inserting a \ 
+    esc_arg=`echo "$arg" | sed -e 's@[$"\\]@\\\\\\\\\0@g' `
+    # escape ` by inserting a \ 
+    esc_arg=`echo "$esc_arg" | sed -e 's@\`@\\\\\`@g'`
+    # wrap escaped arg as a quoted argument
+    quoted_arg="\"$esc_arg\""
+    ant_exec_args="$ant_exec_args $quoted_arg"
   fi
 done
 
