@@ -21,6 +21,9 @@ no_config=false
 use_jikes_default=false
 ant_exec_debug=false
 show_help=false
+
+esc_tool=sed
+
 for arg in "$@" ; do
   if [ "$arg" = "--noconfig" ] ; then
     no_config=true
@@ -35,12 +38,49 @@ for arg in "$@" ; do
     if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ] ; then
       show_help=true
     fi
-    # escape $, ", and \ characters by inserting a \ 
-    esc_arg=`echo "$arg" | sed -e 's@[$"\\]@\\\\\\\\\0@g' `
-    # escape ` by inserting a \ 
-    esc_arg=`echo "$esc_arg" | sed -e 's@\`@\\\\\`@g'`
-    # wrap escaped arg as a quoted argument
+
+    # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
+    #  use printf to avoid echo modification behaviors such as escape and line continuation
+    #  pad the value with leading/trailing X to protect trailing newlines and whitespace from awk and sed
+    esc_arg="X${arg}X"
+    case "$esc_tool" in
+      'sed')
+        #  mac sed does not support group-0, so pattern uses group-1
+        esc_arg="$(printf '%s' "$esc_arg" | sed -e 's@\([$"\\`]\)@\\\1@g')"
+        ;;
+      'awk')
+        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\\/, "\\\\"); print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\$/, "\\$");  print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\"/, "\\\""); print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/`/,  "\\`");  print }' )"
+        ;;
+#      'bash')
+#        # does not depend upon `sed` or `echo` quirks
+#        # tested with bash `[ -n "${BASH_VERSION}" ]`
+#        # tested with zsh `[ -n "${ZSH_NAME}" ]`
+#        # tested with ksh93+ `ksh_ver="$(echo "$KSH_VERSION" | grep -m 1 -o '[0-9]\+' | head -n 1)"; [ "$ksh_ver" -gt 88 ]`
+#        # fails in ksh88, dash, ash
+#        esc_arg="${esc_arg//\\/\\\\}" # must be first since later patterns introduce backslash chars
+#        esc_arg="${esc_arg//\$/\\\$}"
+#        esc_arg="${esc_arg//\"/\\\"}"
+#        esc_arg="${esc_arg//\`/\\\`}"
+#        ;;
+      '*')
+        echo "could not determine escaping tool"
+        exit 1
+        ;;
+    esac
+    # remove the padding Xs added above
+    esc_arg="${esc_arg#X}"
+    esc_arg="${esc_arg%X}"
     quoted_arg="\"$esc_arg\""
+
+    if $ant_exec_debug
+    then
+        # using printf to avoid echo line continuation and escape interpretation
+        printf "arg       : %s\n" "$arg"
+        printf "quoted_arg: %s\n" "$quoted_arg"
+    fi
     ant_exec_args="$ant_exec_args $quoted_arg"
   fi
 done
@@ -337,7 +377,7 @@ else
 fi
 ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -Dant.home=\"\$ANT_HOME\" -Dant.library.dir=\"\$ANT_LIB\" $ant_sys_opts org.apache.tools.ant.launch.Launcher $ANT_ARGS -cp \"\$CLASSPATH\""
 if $ant_exec_debug ; then
-    echo $ant_exec_command $ant_exec_args
+    echo "$ant_exec_command $ant_exec_args"
 fi
 
-eval $ant_exec_command $ant_exec_args
+eval "$ant_exec_command $ant_exec_args"
