@@ -485,7 +485,9 @@ public class JUnitTaskTest {
                 }
             }
             assertTrue("No exports", resExports.isEmpty());
-            assertEquals("Expected classpath", cp.toString(), resCp);
+            if (System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null) {
+                assertEquals("Expected classpath", cp.toString(), resCp);
+            }
             assertEquals("Expected modulepath", mp.toString(), resMp);
         } finally {
             delete(workDir);
@@ -539,7 +541,9 @@ public class JUnitTaskTest {
                 }
             }
             assertTrue("No exports", resExports.isEmpty());
-            assertNull("No classpath", resCp);
+            if (System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null) {
+                assertNull("No classpath", resCp);
+            }
             assertEquals("Expected modulepath", mp.toString(), resMp);
         } finally {
             delete(workDir);

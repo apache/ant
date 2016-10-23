@@ -65,6 +65,14 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         } catch (Exception exc) {
             Assume.assumeNoException("xalan redirect is not on the classpath", exc);
         }
+        try {
+            String factoryName = TransformerFactory.newInstance().getClass().getName();
+            Assume.assumeFalse("TraxFactory is Xalan",
+                              "org.apache.xalan.processor.TransformerFactoryImpl"
+                              .equals(factoryName));
+        } catch (TransformerFactoryConfigurationError exc) {
+            throw new RuntimeException(exc);
+        }
         File xsl = getFile("/taskdefs/optional/xalan-redirect-in.xsl");
         liaison.setStylesheet(xsl);
         ((TraXLiaison) liaison)
