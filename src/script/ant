@@ -24,6 +24,15 @@ show_help=false
 
 esc_tool=sed
 
+# if awk esc_tool is chosen, use nawk when available
+if [ "$esc_tool" = "awk" ]
+then
+  awk_exec=awk
+  # Solaris_awk does not support gsub, but Solaris_nawk does
+  # `command -v` behavior is part of posix spec
+  command -v nawk >/dev/null && awk_exec=nawk
+fi
+
 for arg in "$@" ; do
   if [ "$arg" = "--noconfig" ] ; then
     no_config=true
@@ -40,19 +49,21 @@ for arg in "$@" ; do
     fi
 
     # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
-    #  use printf to avoid echo modification behaviors such as escape and line continuation
-    #  pad the value with leading/trailing X to protect trailing newlines and whitespace from awk and sed
+    #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
+    #  pad the value with leading/trailing X to protect whitespace
     esc_arg="X${arg}X"
     case "$esc_tool" in
       'sed')
-        #  mac sed does not support group-0, so pattern uses group-1
-        esc_arg="$(printf '%s' "$esc_arg" | sed -e 's@\([$"\\`]\)@\\\1@g')"
+        # Mac bsd_sed does not support group-0, so pattern uses group-1
+        # Solaris sed only proceses lines with trailing newline, passing in an extra newline
+        # sed will consume the trailing newline
+        esc_arg="$(printf '%s\n' "$esc_arg" | sed -e 's@\([$"\\`]\)@\\\1@g')"
         ;;
       'awk')
-        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\\/, "\\\\"); print }' )"
-        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\$/, "\\$");  print }' )"
-        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/\"/, "\\\""); print }' )"
-        esc_arg="$(printf '%s' "$esc_arg" | awk '{ gsub(/`/,  "\\`");  print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | "$awk_exec" '{ gsub(/\\/, "\\\\"); print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | "$awk_exec" '{ gsub(/\$/, "\\$");  print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | "$awk_exec" '{ gsub(/\"/, "\\\""); print }' )"
+        esc_arg="$(printf '%s' "$esc_arg" | "$awk_exec" '{ gsub(/`/,  "\\`");  print }' )"
         ;;
 #      'bash')
 #        # does not depend upon `sed` or `echo` quirks
