@@ -199,6 +199,12 @@ Set -Ddest=LOCATION on the command line
     <echoproperties />
   </target>
 
+  <target name="ivy"
+    description="load Ivy dependency manager"
+    depends="init">
+    <f2 project="org.apache.ivy" archive="ivy" />
+  </target>
+
   <target name="logging"
     description="load logging libraries"
     depends="init">
