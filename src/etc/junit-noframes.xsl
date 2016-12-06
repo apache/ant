@@ -470,13 +470,13 @@
 <xsl:template name="br-replace">
     <xsl:param name="word"/>
     <xsl:param name="splitlimit">32</xsl:param>
-    <xsl:variable name="secondhalflen" select="(string-length($word)+(string-length($word) mod 2)) div 2"/>
-    <xsl:variable name="secondhalfword" select="substring($word, $secondhalflen)"/>
+    <xsl:variable name="secondhalfstartindex" select="(string-length($word)+(string-length($word) mod 2)) div 2"/>
+    <xsl:variable name="secondhalfword" select="substring($word, $secondhalfstartindex)"/>
     <!-- When word is very big, a recursive replace is very heap/stack expensive, so subdivide on line break after middle of string -->
     <xsl:choose>
       <xsl:when test="(string-length($word) > $splitlimit) and (contains($secondhalfword, '&#xa;'))">
         <xsl:variable name="secondhalfend" select="substring-after($secondhalfword, '&#xa;')"/>
-        <xsl:variable name="firsthalflen" select="string-length($word) - $secondhalflen"/>
+        <xsl:variable name="firsthalflen" select="string-length($word) - string-length($secondhalfword)"/>
         <xsl:variable name="firsthalfword" select="substring($word, 1, $firsthalflen)"/>
         <xsl:variable name="firsthalfend" select="substring-before($secondhalfword, '&#xa;')"/>
         <xsl:call-template name="br-replace">
