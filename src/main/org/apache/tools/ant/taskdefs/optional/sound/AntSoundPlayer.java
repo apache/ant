@@ -36,7 +36,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -135,9 +135,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
                 }
                 audioClip.drain();
             } finally {
-                if (audioClip != null) {
-                    audioClip.close();
-                }
+                FileUtils.close(audioClip);
             }
         } else {
             project.log("Can't get data from file " + file.getName());
