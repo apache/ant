@@ -1696,7 +1696,7 @@ public class FileUtils {
      */
     public String getDefaultEncoding() {
         InputStreamReader is = new InputStreamReader(
-            new InputStream() {
+            new InputStream() { //NOSONAR
                 public int read() {
                     return -1;
                 }

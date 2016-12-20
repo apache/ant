@@ -187,9 +187,9 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         BufferedReader in = null;
         try {
             if (encoding != null) {
-                in = new BufferedReader(new InputStreamReader(r.getInputStream(), encoding));
+                in = new BufferedReader(new InputStreamReader(r.getInputStream(), encoding)); //NOSONAR
             }   else {
-                in = new BufferedReader(new InputStreamReader(r.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(r.getInputStream())); //NOSONAR
             }
         } catch (Exception e) {
             throw new BuildException("Could not get InputStream from "

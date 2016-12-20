@@ -299,7 +299,7 @@ public class CvsTagDiff extends AbstractCvsTask {
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new FileReader(tmpFile));
+            reader = new BufferedReader(new FileReader(tmpFile)); //NOSONAR
 
             // entries are of the form:
             //CVS 1.11

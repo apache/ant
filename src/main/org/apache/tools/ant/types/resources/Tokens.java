@@ -60,8 +60,8 @@ public class Tokens extends BaseResourceCollectionWrapper {
         ConcatResourceInputStream cat = new ConcatResourceInputStream(rc);
         cat.setManagingComponent(this);
 
+        InputStreamReader rdr = null;
         try {
-            InputStreamReader rdr = null;
             if (encoding == null) {
                 rdr = new InputStreamReader(cat);
             } else {
@@ -81,6 +81,7 @@ public class Tokens extends BaseResourceCollectionWrapper {
         } catch (IOException e) {
             throw new BuildException("Error reading tokens", e);
         } finally {
+            FileUtils.close(rdr);
             FileUtils.close(cat);
         }
     }

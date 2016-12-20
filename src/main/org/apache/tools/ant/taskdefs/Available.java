@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -421,16 +422,21 @@ public class Available extends Task implements Condition {
      * Check if a given resource can be loaded.
      */
     private boolean checkResource(String resource) {
-        if (loader != null) {
-            return (loader.getResourceAsStream(resource) != null);
-        } else {
-            ClassLoader cL = this.getClass().getClassLoader();
-            if (cL != null) {
-                return (cL.getResourceAsStream(resource) != null);
+        InputStream is = null;
+        try {
+            if (loader != null) {
+                is = loader.getResourceAsStream(resource);
             } else {
-                return
-                    (ClassLoader.getSystemResourceAsStream(resource) != null);
+                ClassLoader cL = this.getClass().getClassLoader();
+                if (cL != null) {
+                    is = cL.getResourceAsStream(resource);
+                } else {
+                    is = ClassLoader.getSystemResourceAsStream(resource);
+                }
             }
+            return is != null;
+        } finally {
+            FileUtils.close(is);
         }
     }
 

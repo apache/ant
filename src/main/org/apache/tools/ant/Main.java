@@ -355,7 +355,10 @@ public class Main implements AntMain {
                 try {
                     final File logFile = new File(args[i + 1]);
                     i++;
-                    logTo = new PrintStream(new FileOutputStream(logFile));
+                    // life-cycle of FileOutputStream is controlled by
+                    // logTo which becomes "out" and is closed in
+                    // handleLogfile
+                    logTo = new PrintStream(new FileOutputStream(logFile)); //NOSONAR
                     isLogFileUsed = true;
                 } catch (final IOException ioe) {
                     final String msg = "Cannot write on the specified log file. "

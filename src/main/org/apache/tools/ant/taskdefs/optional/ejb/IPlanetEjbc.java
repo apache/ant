@@ -727,7 +727,8 @@ public class IPlanetEjbc {
                 } else {
                     location = (String) fileDtds.get(publicId);
                     if (location != null) {
-                        inputStream = new FileInputStream(location);
+                        // closed when the InputSource is closed
+                        inputStream = new FileInputStream(location); //NOSONAR
                     }
                 }
             } catch (IOException e) {

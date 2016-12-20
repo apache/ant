@@ -133,15 +133,19 @@ public class DirectoryIterator implements ClassFileIterator {
                         FileInputStream inFileStream
                             = new FileInputStream(element);
 
-                        if (element.getName().endsWith(".class")) {
+                        try {
+                            if (element.getName().endsWith(".class")) {
 
-                            // create a data input stream from the jar
-                            // input stream
-                            ClassFile javaClass = new ClassFile();
+                                // create a data input stream from the jar
+                                // input stream
+                                ClassFile javaClass = new ClassFile();
 
-                            javaClass.read(inFileStream);
+                                javaClass.read(inFileStream);
 
-                            nextElement = javaClass;
+                                nextElement = javaClass;
+                            }
+                        } finally {
+                            inFileStream.close();
                         }
                     }
                 } else {
