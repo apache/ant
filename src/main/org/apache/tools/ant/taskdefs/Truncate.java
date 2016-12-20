@@ -167,7 +167,7 @@ public class Truncate extends Task {
         }
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(f, READ_WRITE);
+            raf = new RandomAccessFile(f, READ_WRITE); //NOSONAR
         } catch (Exception e) {
             throw new BuildException("Could not open " + f + " for writing", e);
         }

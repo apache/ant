@@ -370,8 +370,10 @@ public class ZipFile implements Closeable {
         final OffsetEntry offsetEntry = ((Entry) ze).getOffsetEntry();
         ZipUtil.checkRequestedFeatures(ze);
         final long start = offsetEntry.dataOffset;
+        // doesn't get closed if the method is not supported, but
+        // doesn't hold any resources either
         final BoundedInputStream bis =
-            new BoundedInputStream(start, ze.getCompressedSize());
+            new BoundedInputStream(start, ze.getCompressedSize()); //NOSONAR
         switch (ze.getMethod()) {
             case ZipEntry.STORED:
                 return bis;

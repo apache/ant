@@ -260,7 +260,7 @@ public class PropertyFile extends Task {
             throw new BuildException(x, getLocation());
         }
         try {
-            OutputStream os = new FileOutputStream(propertyfile);
+            OutputStream os = new FileOutputStream(propertyfile); //NOSONAR
             try {
                 try {
                     os.write(baos.toByteArray());

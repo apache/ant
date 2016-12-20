@@ -184,7 +184,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
         }
 
         try {
-            in = new BufferedReader(new InputStreamReader(r.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(r.getInputStream())); //NOSONAR
         } catch (Exception e) {
             throw new BuildException("Could not get InputStream from "
                     + r.toLongString(), e);
