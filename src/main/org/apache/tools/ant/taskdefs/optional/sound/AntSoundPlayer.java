@@ -135,7 +135,9 @@ public class AntSoundPlayer implements LineListener, BuildListener {
                 }
                 audioClip.drain();
             } finally {
-                audioClip.close();
+                if (audioClip != null) {
+                    audioClip.close();
+                }
             }
         } else {
             project.log("Can't get data from file " + file.getName());
