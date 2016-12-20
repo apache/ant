@@ -85,7 +85,7 @@ public class SetPermissions extends Task {
      */
     public void setPermissions(String perms) {
         if (perms != null) {
-            Arrays.stream(perms.split(","))
+            Arrays.stream(perms.split(",")) //NOSONAR
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(s -> Enum.valueOf(PosixFilePermission.class, s))
