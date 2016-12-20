@@ -196,16 +196,13 @@ public class ResourceList extends DataType implements ResourceCollection {
             crh.setFilterChains(filterChains);
             crh.setProject(getProject());
             Union streamResources = new Union();
-            BufferedReader reader = new BufferedReader(crh.getAssembledReader());
-            try {
+            try (BufferedReader reader = new BufferedReader(crh.getAssembledReader())) {
                 streamResources.setCache(true);
 
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     streamResources.add(parse(line));
                 }
-            } finally {
-                reader.close();
             }
 
             return streamResources;

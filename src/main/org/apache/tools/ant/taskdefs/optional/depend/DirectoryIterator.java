@@ -130,10 +130,8 @@ public class DirectoryIterator implements ClassFileIterator {
                     } else {
 
                         // we have a file. create a stream for it
-                        FileInputStream inFileStream
-                            = new FileInputStream(element);
-
-                        try {
+                        try (FileInputStream inFileStream
+                             = new FileInputStream(element)) {
                             if (element.getName().endsWith(".class")) {
 
                                 // create a data input stream from the jar
@@ -144,8 +142,6 @@ public class DirectoryIterator implements ClassFileIterator {
 
                                 nextElement = javaClass;
                             }
-                        } finally {
-                            inFileStream.close();
                         }
                     }
                 } else {

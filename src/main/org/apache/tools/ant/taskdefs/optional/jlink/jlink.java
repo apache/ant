@@ -222,8 +222,7 @@ public class jlink {
         if (!f.exists()) {
             return;
         }
-        ZipFile zipf = new ZipFile(f);
-        try {
+        try (ZipFile zipf = new ZipFile(f)) {
             Enumeration entries = zipf.entries();
 
             while (entries.hasMoreElements()) {
@@ -268,8 +267,6 @@ public class jlink {
                     output.closeEntry();
                 }
             }
-        } finally {
-            zipf.close();
         }
     }
 
