@@ -117,25 +117,25 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             DataLine.Info   info = new DataLine.Info(Clip.class, format,
                                              AudioSystem.NOT_SPECIFIED);
             try {
-            try {
-                audioClip = (Clip) AudioSystem.getLine(info);
-                audioClip.addLineListener(this);
-                audioClip.open(audioInputStream);
-            } catch (LineUnavailableException e) {
-                project.log("The sound device is currently unavailable");
-                return;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                try {
+                    audioClip = (Clip) AudioSystem.getLine(info);
+                    audioClip.addLineListener(this);
+                    audioClip.open(audioInputStream);
+                } catch (LineUnavailableException e) {
+                    project.log("The sound device is currently unavailable");
+                    return;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            if (duration != null) {
-                playClip(audioClip, duration.longValue());
-            } else {
-                playClip(audioClip, loops);
-            }
-            audioClip.drain();
+                if (duration != null) {
+                    playClip(audioClip, duration.longValue());
+                } else {
+                    playClip(audioClip, loops);
+                }
+                audioClip.drain();
             } finally {
-            audioClip.close();
+                audioClip.close();
             }
         } else {
             project.log("Can't get data from file " + file.getName());

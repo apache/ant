@@ -224,52 +224,52 @@ public class jlink {
         }
         ZipFile zipf = new ZipFile(f);
         try {
-        Enumeration entries = zipf.entries();
+            Enumeration entries = zipf.entries();
 
-        while (entries.hasMoreElements()) {
-            ZipEntry inputEntry = (ZipEntry) entries.nextElement();
-            //Ignore manifest entries.  They're bound to cause conflicts between
-            //files that are being merged.  User should supply their own
-            //manifest file when doing the merge.
-            String inputEntryName = inputEntry.getName();
-            int index = inputEntryName.indexOf("META-INF");
+            while (entries.hasMoreElements()) {
+                ZipEntry inputEntry = (ZipEntry) entries.nextElement();
+                //Ignore manifest entries.  They're bound to cause conflicts between
+                //files that are being merged.  User should supply their own
+                //manifest file when doing the merge.
+                String inputEntryName = inputEntry.getName();
+                int index = inputEntryName.indexOf("META-INF");
 
-            if (index < 0) {
-                //META-INF not found in the name of the entry. Go ahead and process it.
-                try {
-                    output.putNextEntry(processEntry(zipf, inputEntry));
-                } catch (ZipException ex) {
-                    //If we get here, it could be because we are trying to put a
-                    //directory entry that already exists.
-                    //For example, we're trying to write "com", but a previous
-                    //entry from another mergefile was called "com".
-                    //In that case, just ignore the error and go on to the
-                    //next entry.
-                    String mess = ex.getMessage();
+                if (index < 0) {
+                    //META-INF not found in the name of the entry. Go ahead and process it.
+                    try {
+                        output.putNextEntry(processEntry(zipf, inputEntry));
+                    } catch (ZipException ex) {
+                        //If we get here, it could be because we are trying to put a
+                        //directory entry that already exists.
+                        //For example, we're trying to write "com", but a previous
+                        //entry from another mergefile was called "com".
+                        //In that case, just ignore the error and go on to the
+                        //next entry.
+                        String mess = ex.getMessage();
 
-                    if (mess.indexOf("duplicate") >= 0) {
-                        //It was the duplicate entry.
-                        continue;
-                    } else {
-                        // I hate to admit it, but we don't know what happened
-                        // here.  Throw the Exception.
-                        throw ex;
+                        if (mess.indexOf("duplicate") >= 0) {
+                            //It was the duplicate entry.
+                            continue;
+                        } else {
+                            // I hate to admit it, but we don't know what happened
+                            // here.  Throw the Exception.
+                            throw ex;
+                        }
                     }
-                }
 
-                InputStream in = zipf.getInputStream(inputEntry);
-                int len = buffer.length;
-                int count = -1;
+                    InputStream in = zipf.getInputStream(inputEntry);
+                    int len = buffer.length;
+                    int count = -1;
 
-                while ((count = in.read(buffer, 0, len)) > 0) {
-                    output.write(buffer, 0, count);
+                    while ((count = in.read(buffer, 0, len)) > 0) {
+                        output.write(buffer, 0, count);
+                    }
+                    in.close();
+                    output.closeEntry();
                 }
-                in.close();
-                output.closeEntry();
             }
-        }
         } finally {
-        zipf.close();
+            zipf.close();
         }
     }
 
