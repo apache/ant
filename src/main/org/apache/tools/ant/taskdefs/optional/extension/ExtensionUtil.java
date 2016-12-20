@@ -29,6 +29,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A set of useful methods relating to extensions.
@@ -142,7 +143,7 @@ public final class ExtensionUtil {
         } catch (final Exception e) {
             throw new BuildException(e.getMessage(), e);
         } finally {
-            close(jarFile);
+            FileUtils.close(jarFile);
         }
     }
 
@@ -215,17 +216,8 @@ public final class ExtensionUtil {
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
         } finally {
-            close(jarFile);
+            FileUtils.close(jarFile);
         }
     }
 
-    private static void close(JarFile device) {
-        if (null != device) {
-            try {
-                device.close();
-            } catch (IOException e) {
-                //ignore
-            }
-        }
-    }
 }
