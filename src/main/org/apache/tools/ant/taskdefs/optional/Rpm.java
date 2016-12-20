@@ -149,11 +149,13 @@ public class Rpm extends Task {
             }
         } else {
             if (output != null) {
+                FileOutputStream fos = null;
                 try {
-                    BufferedOutputStream bos
-                        = new BufferedOutputStream(new FileOutputStream(output));
+                    fos = new FileOutputStream(output);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
                     outputstream = new PrintStream(bos);
                 } catch (IOException e) {
+                    FileUtils.close(fos);
                     throw new BuildException(e, getLocation());
                 }
             } else if (!quiet) {
@@ -162,11 +164,13 @@ public class Rpm extends Task {
                 outputstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             if (error != null) {
+                FileOutputStream fos = null;
                 try {
-                    BufferedOutputStream bos
-                        = new BufferedOutputStream(new FileOutputStream(error));
+                    fos = new FileOutputStream(error);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
                     errorstream = new PrintStream(bos);
                 }  catch (IOException e) {
+                    FileUtils.close(fos);
                     throw new BuildException(e, getLocation());
                 }
             } else if (!quiet) {

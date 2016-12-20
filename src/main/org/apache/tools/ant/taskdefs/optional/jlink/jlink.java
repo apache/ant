@@ -223,6 +223,7 @@ public class jlink {
             return;
         }
         ZipFile zipf = new ZipFile(f);
+        try {
         Enumeration entries = zipf.entries();
 
         while (entries.hasMoreElements()) {
@@ -267,7 +268,9 @@ public class jlink {
                 output.closeEntry();
             }
         }
+        } finally {
         zipf.close();
+        }
     }
 
 
