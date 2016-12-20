@@ -151,7 +151,7 @@ public class Rpm extends Task {
             if (output != null) {
                 FileOutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(output);
+                    fos = new FileOutputStream(output); //NOSONAR
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     outputstream = new PrintStream(bos);
                 } catch (IOException e) {
