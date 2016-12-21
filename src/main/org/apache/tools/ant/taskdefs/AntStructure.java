@@ -390,8 +390,7 @@ public class AntStructure extends Task {
                     } catch (final IllegalAccessException ie) {
                         sb.append("CDATA ");
                     }
-                } else if (type.getSuperclass() != null
-                           && type.getSuperclass().getName().equals("java.lang.Enum")) {
+                } else if (Enum.class.isAssignableFrom(type)) {
                     try {
                         final Object[] values = (Object[]) type.getMethod("values", (Class[])  null)
                             .invoke(null, (Object[]) null);
