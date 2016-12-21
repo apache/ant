@@ -137,7 +137,7 @@ public class StreamPumper implements Runnable {
                 if (autoflush) {
                     os.flush();
                 }
-                if (finish) {
+                if (finish) { //NOSONAR
                     break;
                 }
             }
