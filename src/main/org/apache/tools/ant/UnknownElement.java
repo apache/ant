@@ -646,7 +646,8 @@ public class UnknownElement extends Task {
             return false;
         }
         for (int i = 0; i < childrenSize; ++i) {
-            UnknownElement child = (UnknownElement) children.get(i);
+            // children cannot be null childrenSize would have been 0
+            UnknownElement child = (UnknownElement) children.get(i); //NOSONAR
             if (!child.similar(other.children.get(i))) {
                 return false;
             }

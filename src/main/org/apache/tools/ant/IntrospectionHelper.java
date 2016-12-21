@@ -407,13 +407,15 @@ public final class IntrospectionHelper {
                     + " doesn't support the \"" + attributeName + "\" attribute.";
             throw new UnsupportedAttributeException(msg, attributeName);
         }
-        try {
-            as.setObject(p, element, value);
-        } catch (final IllegalAccessException ie) {
-            // impossible as getMethods should only return public methods
-            throw new BuildException(ie);
-        } catch (final InvocationTargetException ite) {
-            throw extractBuildException(ite);
+        if (as != null) { // possible if value == null
+            try {
+                as.setObject(p, element, value);
+            } catch (final IllegalAccessException ie) {
+                // impossible as getMethods should only return public methods
+                throw new BuildException(ie);
+            } catch (final InvocationTargetException ite) {
+                throw extractBuildException(ite);
+            }
         }
     }
 

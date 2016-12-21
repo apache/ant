@@ -197,9 +197,12 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                     }
                     break;
                 case STATE_EXPECT_NAME:
+                    // macroName cannot be null as this state is only
+                    // ever reached from STATE_EXPECT_BRACKET after it
+                    // has been set
                     if (ch == '}') {
                         state = STATE_NORMAL;
-                        String name = macroName.toString().toLowerCase(Locale.ENGLISH);
+                        String name = macroName.toString().toLowerCase(Locale.ENGLISH); //NOSONAR
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
                             ret.append("@{");
@@ -210,7 +213,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                         }
                         macroName = null;
                     } else {
-                        macroName.append(ch);
+                        macroName.append(ch); //NOSONAR
                     }
                     break;
                 default:
@@ -224,8 +227,11 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 ret.append('@');
                 break;
             case STATE_EXPECT_NAME:
+                // macroName cannot be null as this state is only
+                // ever reached from STATE_EXPECT_BRACKET after it
+                // has been set
                 ret.append("@{");
-                ret.append(macroName.toString());
+                ret.append(macroName.toString()); //NOSONAR
                 break;
             default:
                 break;

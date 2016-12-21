@@ -384,10 +384,12 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                     if (containingPath != null && nodeName.equals(PATH)) {
                         // A "path" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (container instanceof Path && nodeName.equals(REF_ID)) {
+                    } else if (containingPath != null
+                               && container instanceof Path && nodeName.equals(REF_ID)) {
                         // A "refid" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (container instanceof Path && nodeName.equals(LOCATION)) {
+                    } else if (containingPath != null && container instanceof Path
+                               && nodeName.equals(LOCATION)) {
                         // A "location" attribute for a node within a
                         // Path object.
                         containingPath.setLocation(resolveFile(attributeValue));
