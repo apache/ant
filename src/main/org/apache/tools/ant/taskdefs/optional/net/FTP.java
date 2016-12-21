@@ -747,7 +747,7 @@ public class FTP extends Task implements FTPTaskConfig {
                     try {
                         ftp.changeWorkingDirectory(directory);
                     } catch (IOException ioe) {
-                        throw new BuildException(ioe, getLocation());
+                        throw new BuildException(ioe, getLocation()); //NOSONAR
                     }
                 }
                 getProject().log("remote system is case sensitive : " + remoteSystemCaseSensitive,
@@ -1155,7 +1155,7 @@ public class FTP extends Task implements FTPTaskConfig {
                                      Project.MSG_ERR);
                 } finally {
                     if (!comeback) {
-                        throw new BuildException("could not cd back to " + dir
+                        throw new BuildException("could not cd back to " + dir //NOSONAR
                                                  + " while checking a symlink");
                     }
                 }

@@ -254,6 +254,7 @@ public class SymbolicLinkUtils {
             }
 
             boolean renamedTarget = false;
+            boolean success = false;
             try {
                 try {
                     FILE_UTILS.rename(target, temp);
@@ -270,20 +271,26 @@ public class SymbolicLinkUtils {
                                           + " (was it a real file? is this "
                                           + "not a UNIX system?)");
                 }
+                success = true;
             } finally {
                 if (renamedTarget) {
                     // return the resource to its original name:
                     try {
                         FILE_UTILS.rename(temp, target);
                     } catch (final IOException e) {
-                        throw new IOException("Couldn't return resource "
-                                              + temp
-                                              + " to its original name: "
-                                              + target.getAbsolutePath()
-                                              + ". Reason: " + e.getMessage()
-                                              + "\n THE RESOURCE'S NAME ON DISK"
-                                              + " HAS BEEN CHANGED BY THIS"
-                                              + " ERROR!\n");
+                        String msg = "Couldn't return resource "
+                            + temp
+                            + " to its original name: "
+                            + target.getAbsolutePath()
+                            + ". Reason: " + e.getMessage()
+                            + "\n THE RESOURCE'S NAME ON DISK"
+                            + " HAS BEEN CHANGED BY THIS"
+                            + " ERROR!\n";
+                        if (success) {
+                            throw new IOException(msg); //NOSONAR
+                        } else {
+                            System.err.println(msg);
+                        }
                     }
                 }
             }

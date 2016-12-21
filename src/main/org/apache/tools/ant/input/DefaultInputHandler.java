@@ -48,6 +48,7 @@ public class DefaultInputHandler implements InputHandler {
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         BufferedReader r = null;
+        boolean success = false;
         try {
             r = new BufferedReader(new InputStreamReader(getInputStream()));
             do {
@@ -61,12 +62,15 @@ public class DefaultInputHandler implements InputHandler {
                                              + " Console.", e);
                 }
             } while (!request.isInputValid());
+            success = true;
         } finally {
             if (r != null) {
                 try {
                     r.close();
                 } catch (IOException e) {
-                    throw new BuildException("Failed to close input.", e);
+                    if (success) { // don't hide inner exception
+                        throw new BuildException("Failed to close input.", e); //NOSONAR
+                    }
                 }
             }
         }

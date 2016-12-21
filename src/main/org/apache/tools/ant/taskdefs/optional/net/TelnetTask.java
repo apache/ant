@@ -98,6 +98,7 @@ public class TelnetTask extends Task {
 
        /**  Create the telnet client object */
        AntTelnetClient telnet = null;
+       boolean success = false;
        try {
            telnet = new AntTelnetClient();
            try {
@@ -118,13 +119,18 @@ public class TelnetTask extends Task {
                }
                task.execute(telnet);
            }
+           success = true;
        } finally {
            if (telnet != null && telnet.isConnected()) {
                try {
                    telnet.disconnect();
                } catch (IOException e) {
-                   throw new BuildException("Error disconnecting from "
-                                            + server);
+                    String msg = "Error disconnecting from " + server;
+                    if (success) {
+                        throw new BuildException(msg); //NOSONAR
+                    } else { // don't hide inner exception
+                        log(msg, Project.MSG_ERR);
+                    }
                }
            }
        }

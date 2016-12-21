@@ -117,6 +117,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @throws BuildException if unable to write the output
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
+        boolean success = false;
         try {
             StringBuffer sb = new StringBuffer("Tests run: ");
             sb.append(suite.runCount());
@@ -158,12 +159,15 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                     throw new BuildException("Unable to write output", ioex);
                 }
             }
+            success = true;
         } finally {
             if (out != null) {
                 try {
                     wri.close();
                 } catch (IOException ioex) {
-                    throw new BuildException("Unable to flush output", ioex);
+                    if (success) {
+                        throw new BuildException("Unable to flush output", ioex); //NOSONAR
+                    }
                 } finally {
                     if (out != System.out && out != System.err) {
                         FileUtils.close(out);
