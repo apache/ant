@@ -67,7 +67,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
         }
 
         cmd.setExecutable(c.getName());
-        if (!c.getName().equals(RMIC_CLASSNAMES[RMIC_CLASSNAMES.length - 1])) {
+        if (!c.getName().equals(RMIC_CLASSNAMES[RMIC_CLASSNAMES.length - 1])) { //NOSONAR
             // only supported since Kaffe 1.1.2
             cmd.createArgument().setValue("-verbose");
             getRmic().log(Commandline.describeCommand(cmd));

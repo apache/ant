@@ -44,21 +44,16 @@ class ChangeLogParser {
     private static final int GET_REVISION = 4;
     private static final int GET_PREVIOUS_REV = 5;
 
-// FIXME formatters are not thread-safe
-
     /** input format for dates read in from cvs log */
-    private static final SimpleDateFormat INPUT_DATE
+    private final SimpleDateFormat inputDate
         = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
     /**
      * New formatter used to parse CVS date/timestamp.
      */
-    private static final SimpleDateFormat CVS1129_INPUT_DATE =
+    private final SimpleDateFormat cvs1129InputDate =
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
     static {
-        TimeZone utc = TimeZone.getTimeZone("UTC");
-        INPUT_DATE.setTimeZone(utc);
-        CVS1129_INPUT_DATE.setTimeZone(utc);
     }
 
     //The following is data used while processing stdout of CVS command
@@ -102,6 +97,10 @@ class ChangeLogParser {
         for (int i = 0; i < moduleNames.length; i++) {
             moduleNameLengths[i] = moduleNames[i].length();
         }
+
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        inputDate.setTimeZone(utc);
+        cvs1129InputDate.setTimeZone(utc);
     }
 
     /**
@@ -297,10 +296,10 @@ class ChangeLogParser {
      */
     private Date parseDate(final String date) {
         try {
-            return INPUT_DATE.parse(date);
+            return inputDate.parse(date);
         } catch (ParseException e) {
             try {
-                return CVS1129_INPUT_DATE.parse(date);
+                return cvs1129InputDate.parse(date);
             } catch (ParseException e2) {
                 throw new IllegalStateException("Invalid date format: " + date);
             }

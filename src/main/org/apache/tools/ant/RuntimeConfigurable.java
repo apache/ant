@@ -52,7 +52,8 @@ public class RuntimeConfigurable implements Serializable {
     private String elementTag = null;
 
     /** List of child element wrappers. */
-    private List<RuntimeConfigurable> children = null;
+    // picking ArrayList rather than List as arrayList is Serializable
+    private ArrayList<RuntimeConfigurable> children = null;
 
     /** The element to configure. It is only used during
      * maybeConfigure.
@@ -589,7 +590,7 @@ public class RuntimeConfigurable implements Serializable {
 
         // Children (this is a shadow of UnknownElement#children)
         if (r.children != null) {
-            List<RuntimeConfigurable> newChildren = new ArrayList<RuntimeConfigurable>();
+            ArrayList<RuntimeConfigurable> newChildren = new ArrayList<RuntimeConfigurable>();
             newChildren.addAll(r.children);
             if (children != null) {
                 newChildren.addAll(children);

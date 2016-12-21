@@ -362,7 +362,7 @@ public final class SortFilter extends BaseParamFilterReader
             if (reverse) {
                 Collections.sort(lines, new Comparator<String>() {
                         public int compare(String s1, String s2) {
-                            return (-s1.compareTo(s2));
+                            return (-s1.compareTo(s2)); //NOSONAR
                         }
                     });
             } else {

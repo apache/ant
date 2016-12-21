@@ -975,7 +975,7 @@ class BlockSort {
             runningOrder[i] = i;
         }
 
-        for (int h = 364; h != 1;) {
+        for (int h = 364; h != 1;) { //NOSONAR
             h /= 3;
             for (int i = h; i <= 255; i++) {
                 final int vv = runningOrder[i];

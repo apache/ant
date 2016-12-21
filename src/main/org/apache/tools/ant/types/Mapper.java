@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * Element to define a FileNameMapper.
  *
  */
-public class Mapper extends DataType implements Cloneable {
+public class Mapper extends DataType {
     // CheckStyle:VisibilityModifier OFF - bc
 
     protected MapperType type = null;

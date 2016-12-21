@@ -1066,7 +1066,7 @@ public class Manifest {
         try {
             write(new PrintWriter(sw));
         } catch (IOException e) {
-            return null;
+            return "";
         }
         return sw.toString();
     }

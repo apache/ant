@@ -45,8 +45,7 @@ import org.apache.tools.ant.filters.TokenFilter;
  * FilterChain may contain a chained set of filter readers.
  *
  */
-public class FilterChain extends DataType
-    implements Cloneable {
+public class FilterChain extends DataType {
 
     private Vector<Object> filterReaders = new Vector<Object>();
 

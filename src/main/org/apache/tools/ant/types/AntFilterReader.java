@@ -27,8 +27,7 @@ import org.apache.tools.ant.Project;
  * An AntFilterReader is a wrapper class that encloses the classname
  * and configuration of a Configurable FilterReader.
  */
-public final class AntFilterReader
-    extends DataType implements Cloneable {
+public final class AntFilterReader extends DataType {
 
     private String className;
 

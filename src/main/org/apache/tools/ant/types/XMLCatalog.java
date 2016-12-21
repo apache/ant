@@ -119,7 +119,7 @@ import org.xml.sax.XMLReader;
  *
  */
 public class XMLCatalog extends DataType
-    implements Cloneable, EntityResolver, URIResolver {
+    implements EntityResolver, URIResolver {
 
     /** helper for some File.toURL connversions */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

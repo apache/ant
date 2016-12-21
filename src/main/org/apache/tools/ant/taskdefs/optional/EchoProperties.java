@@ -440,6 +440,24 @@ public class EchoProperties extends Task {
             Tuple that = (Tuple) o;
             return key.compareTo(that.key);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (o == null || o.getClass() != getClass()) {
+                return false;
+            }
+            Tuple that = (Tuple) o;
+            return (key == null ? that.key == null : key.equals(that.key))
+                && (value == null ? that.value == null : value.equals(that.value));
+        }
+
+        @Override
+        public int hashCode() {
+            return key != null ? key.hashCode() : 0;
+        }
     }
 
     private List sortProperties(Properties props) {

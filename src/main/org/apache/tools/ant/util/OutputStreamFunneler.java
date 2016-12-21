@@ -143,8 +143,14 @@ public class OutputStreamFunneler {
         if (!funnel.closed) {
             try {
                 if (timeoutMillis > 0) {
+                    final long start = System.currentTimeMillis();
+                    final long end = start + timeoutMillis;
+                    long now = System.currentTimeMillis();
                     try {
-                        wait(timeoutMillis);
+                        while (now < end) {
+                            wait(end - now);
+                            now = System.currentTimeMillis();
+                        }
                     } catch (InterruptedException eyeEx) {
                         //ignore
                     }
