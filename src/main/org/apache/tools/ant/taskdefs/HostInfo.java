@@ -43,11 +43,11 @@ import org.apache.tools.ant.Task;
 public class HostInfo extends Task {
     private static final String DEF_REM_ADDR6 = "::";
 
-    private static final String DEF_REM_ADDR4 = "0.0.0.0";
+    private static final String DEF_REM_ADDR4 = "0.0.0.0"; //NOSONAR
 
     private static final String DEF_LOCAL_ADDR6 = "::1";
 
-    private static final String DEF_LOCAL_ADDR4 = "127.0.0.1";
+    private static final String DEF_LOCAL_ADDR4 = "127.0.0.1"; //NOSONAR
 
     private static final String DEF_LOCAL_NAME = "localhost";
     private static final String DEF_DOMAIN = "localdomain";

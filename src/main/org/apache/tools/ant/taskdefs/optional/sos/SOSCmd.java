@@ -53,7 +53,7 @@ public interface SOSCmd {
     /** The username option */
     String FLAG_USERNAME = "-name";
     /** The password option */
-    String FLAG_PASSWORD = "-password";
+    String FLAG_PASSWORD = "-password"; //NOSONAR
     /** The log option */
     String FLAG_COMMENT = "-log";
     /** The workdir option */

@@ -93,7 +93,7 @@ public final class StringUtils {
     public static String getStackTrace(Throwable t) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw, true);
-        t.printStackTrace(pw);
+        t.printStackTrace(pw); //NOSONAR
         pw.flush();
         pw.close();
         return sw.toString();
