@@ -302,7 +302,7 @@ public class Permissions {
          * @param perm The permission to check against.
          */
         boolean matches(final java.security.Permission perm) {
-            if (!className.equals(perm.getClass().getName())) {
+            if (!className.equals(perm.getClass().getName())) { //NOSONAR
                 return false;
             }
             if (name != null) {
