@@ -1038,12 +1038,12 @@ public class ZipFile implements Closeable {
         @Override
         public boolean equals(final Object other) {
             if (super.equals(other)) {
-                // super.equals would return false if other were not an Entry
+                // super.equals would return false if other were null or not an Entry
                 final Entry otherEntry = (Entry) other;
                 return offsetEntry.headerOffset
-                        == otherEntry.offsetEntry.headerOffset
+                        == otherEntry.offsetEntry.headerOffset //NOSONAR
                     && offsetEntry.dataOffset
-                        == otherEntry.offsetEntry.dataOffset;
+                        == otherEntry.offsetEntry.dataOffset; //NOSONAR
             }
             return false;
         }
