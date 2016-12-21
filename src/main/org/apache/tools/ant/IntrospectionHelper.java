@@ -408,14 +408,14 @@ public final class IntrospectionHelper {
             throw new UnsupportedAttributeException(msg, attributeName);
         }
         if (as != null) { // possible if value == null
-        try {
-            as.setObject(p, element, value);
-        } catch (final IllegalAccessException ie) {
-            // impossible as getMethods should only return public methods
-            throw new BuildException(ie);
-        } catch (final InvocationTargetException ite) {
-            throw extractBuildException(ite);
-        }
+            try {
+                as.setObject(p, element, value);
+            } catch (final IllegalAccessException ie) {
+                // impossible as getMethods should only return public methods
+                throw new BuildException(ie);
+            } catch (final InvocationTargetException ite) {
+                throw extractBuildException(ite);
+            }
         }
     }
 
