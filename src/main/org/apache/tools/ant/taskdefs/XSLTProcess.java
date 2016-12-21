@@ -831,7 +831,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (outFileName == null || outFileName.length == 0) {
                 log("Skipping " + inFile + " it cannot get mapped to output.", Project.MSG_VERBOSE);
                 return;
-            } else if (outFileName == null || outFileName.length > 1) {
+            } else if (outFileName.length > 1) {
                 log("Skipping " + inFile + " its mapping is ambiguos.", Project.MSG_VERBOSE);
                 return;
             }

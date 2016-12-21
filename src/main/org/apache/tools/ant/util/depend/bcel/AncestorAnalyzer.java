@@ -42,7 +42,7 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
     public AncestorAnalyzer() {
         // force BCEL classes to load now
         try {
-            new ClassParser("force");
+            new ClassParser("force"); //NOSONAR
         } catch (Exception e) {
             // all released versions of BCEL may throw an IOException
             // here, but BCEL's trunk does no longer declare to do so

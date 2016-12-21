@@ -401,7 +401,7 @@ public class Jar extends Zip {
      */
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
-        mergeManifestsMain = "merge".equals(config.getValue());
+        mergeManifestsMain = config != null && "merge".equals(config.getValue());
 
         if (filesetManifestConfig != null
             && !filesetManifestConfig.getValue().equals("skip")) {

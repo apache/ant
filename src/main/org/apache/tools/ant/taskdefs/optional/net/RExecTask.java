@@ -362,7 +362,7 @@ public class RExecTask extends Task {
             } catch (IOException e) {
                 throw new BuildException("Can't connect to " + server);
             }
-            if (userid != null && password != null && command != null
+            if (userid != null && password != null && command != null //NOSONAR
                 && rexecTasks.size() == 0) {
                 // simple one-shot execution
                 rexec.rexec(userid, password, command);

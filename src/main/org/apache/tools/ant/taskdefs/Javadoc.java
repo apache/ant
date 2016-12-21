@@ -2026,7 +2026,8 @@ public class Javadoc extends Task {
                     // is the href a valid URL
                     try {
                         final URL base = new URL("file://.");
-                        new URL(base, la.getHref());
+                        // created for the side effect of throwing a MalformedURLException
+                        new URL(base, la.getHref()); //NOSONAR
                         link = la.getHref();
                     } catch (final MalformedURLException mue) {
                         // ok - just skip

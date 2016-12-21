@@ -267,7 +267,7 @@ public class Scp extends SSHBase {
                 } else {
                     upload(fromUri, toUri);
                 }
-            } else if (isFromRemote && isToRemote) {
+            } else if (isFromRemote && isToRemote) { //NOSONAR
                 throw new BuildException(
                     "Copying from a remote server to a remote server is not supported.");
             } else {

@@ -107,7 +107,7 @@ public class TelnetTask extends Task {
                throw new BuildException("Can't connect to " + server);
            }
            /**  Login if userid and password were specified */
-           if (userid != null && password != null) {
+           if (userid != null && password != null) { //NOSONAR
                login(telnet);
            }
            /**  Process each sub command */
