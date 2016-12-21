@@ -151,7 +151,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     + " is not declared static");
             }
             if (timeout == null) {
-                run();
+                run(); //NOSONAR
             } else {
                 thread = new Thread(this, "ExecuteJava");
                 Task currentThreadTask

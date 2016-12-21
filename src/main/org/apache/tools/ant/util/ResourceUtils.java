@@ -72,7 +72,7 @@ public class ResourceUtils {
      */
     public static final String ISO_8859_1 = "ISO-8859-1";
 
-    private static final long MAX_IO_CHUNK_SIZE = 16*1024*1024; // 16 MB
+    private static final long MAX_IO_CHUNK_SIZE = 16*1024*1024l; // 16 MB
 
     /**
      * Tells which source files should be reprocessed based on the
@@ -630,7 +630,7 @@ public class ResourceUtils {
                 }
                 expected = in1.readLine();
             }
-            return in2.readLine() == null ? 0 : -1;
+            return in2.readLine() == null ? 0 : -1; //NOSONAR
         } finally {
             FileUtils.close(in1);
             FileUtils.close(in2);

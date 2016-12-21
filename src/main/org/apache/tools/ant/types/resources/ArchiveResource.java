@@ -216,7 +216,7 @@ public abstract class ArchiveResource extends Resource {
         if (isReference()) {
             return getCheckedRef().equals(another);
         }
-        if (another == null || !(another.getClass().equals(getClass()))) {
+        if (another == null || another.getClass() != getClass()) {
             return false;
         }
         ArchiveResource r = (ArchiveResource) another;

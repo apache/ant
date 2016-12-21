@@ -95,7 +95,7 @@ public class MappedResource extends ResourceDecorator {
      */
     @Override
     public boolean equals(Object other) {
-        if (other == null || !other.getClass().equals(getClass())) {
+        if (other == null || other.getClass() != getClass()) {
             return false;
         }
         MappedResource m = (MappedResource) other;
