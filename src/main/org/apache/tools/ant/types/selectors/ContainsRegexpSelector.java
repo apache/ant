@@ -189,6 +189,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
             throw new BuildException("Could not get InputStream from "
                     + r.toLongString(), e);
         }
+        boolean success = false;
         try {
             teststr = in.readLine();
 
@@ -202,7 +203,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
                 }
                 teststr = in.readLine();
             }
-
+            success = true;
             return false;
         } catch (IOException ioe) {
             throw new BuildException("Could not read " + r.toLongString());
@@ -210,8 +211,10 @@ public class ContainsRegexpSelector extends BaseExtendSelector
             try {
                 in.close();
             } catch (Exception e) {
-                throw new BuildException("Could not close "
-                                         + r.toLongString());
+                if (success) {
+                    throw new BuildException("Could not close " //NOSONAR
+                                             + r.toLongString());
+                }
             }
         }
     }

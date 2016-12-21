@@ -75,6 +75,7 @@ public class SunRmic extends DefaultRmicAdapter {
         LogOutputStream logstr = new LogOutputStream(getRmic(),
                                                      Project.MSG_WARN);
 
+        boolean success = false;
         try {
             Class c = Class.forName(RMIC_CLASSNAME);
             Constructor cons
@@ -86,6 +87,7 @@ public class SunRmic extends DefaultRmicAdapter {
             Boolean ok =
                 (Boolean) doRmic.invoke(rmic,
                                        (new Object[] {cmd.getArguments()}));
+            success = true;
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
             if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
@@ -105,7 +107,11 @@ public class SunRmic extends DefaultRmicAdapter {
             try {
                 logstr.close();
             } catch (IOException e) {
-                throw new BuildException(e);
+                // swallow if there was an error before so that
+                // original error will be passed up
+                if (success) {
+                    throw new BuildException(e); //NOSONAR
+                }
             }
         }
     }
