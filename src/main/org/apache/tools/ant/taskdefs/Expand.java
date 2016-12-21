@@ -191,7 +191,7 @@ public class Expand extends Task {
                 log("extracting " + ze.getName(), Project.MSG_DEBUG);
                 try {
                     extractFile(fileUtils, srcF, dir,
-                                is = zf.getInputStream(ze),
+                                is = zf.getInputStream(ze), //NOSONAR
                                 ze.getName(), new Date(ze.getTime()),
                                 ze.isDirectory(), mapper);
                 } finally {
