@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -771,12 +772,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @throws BuildException if a temp directory cannot be created.
      */
     private File createTempDir() throws IOException {
-        File tmpDir = File.createTempFile("genic", null, null);
-        tmpDir.delete();
-        if (!tmpDir.mkdir()) {
-            throw new IOException("Cannot create the temporary directory '" + tmpDir + "'.");
-        }
-        return tmpDir;
+        return Files.createTempDirectory("genic").toFile();
     }
 
     /**
