@@ -868,7 +868,7 @@ public class NetRexxC extends MatchingTask {
             PrintWriter w = null;
             int rc =
                 COM.ibm.netrexx.process.NetRexxC.main(new Rexx(compileArgs),
-                                                      w = new PrintWriter(out));
+                                                      w = new PrintWriter(out)); //NOSONAR
             String sdir = srcDir.getAbsolutePath();
             String ddir = destDir.getAbsolutePath();
             boolean doReplace = !(sdir.equals(ddir));
