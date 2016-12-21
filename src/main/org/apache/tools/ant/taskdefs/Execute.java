@@ -113,7 +113,7 @@ public class Execute {
                 procEnvironment = System.getenv();
                 return procEnvironment;
             } catch (Exception x) {
-                x.printStackTrace();
+                x.printStackTrace(); //NOSONAR
             }
         }
 
@@ -162,7 +162,7 @@ public class Execute {
                 procEnvironment.put(var.substring(0, eq), var.substring(eq + 1));
             }
         } catch (java.io.IOException exc) {
-            exc.printStackTrace();
+            exc.printStackTrace(); //NOSONAR
             // Just try to see how much we got
         }
         return procEnvironment;

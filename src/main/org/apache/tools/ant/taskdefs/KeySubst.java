@@ -153,7 +153,7 @@ public class KeySubst extends Task {
             System.out.println(KeySubst.replace("$f ${VERSION} f ${b} jj $",
                                                 hash));
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
         }
     }
 

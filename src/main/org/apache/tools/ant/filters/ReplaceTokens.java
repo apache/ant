@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -244,7 +245,11 @@ public final class ReplaceTokens
             in = resource.getInputStream();
             props.load(in);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            if (getProject() != null) {
+                getProject().log("getProperties failed, " + ioe.getMessage(), Project.MSG_ERR);
+            } else {
+                ioe.printStackTrace(); //NOSONAR
+            }
         } finally {
             FileUtils.close(in);
         }

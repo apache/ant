@@ -1023,7 +1023,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     }
                 }
             } catch (final IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             }
         } else {
             final JUnitTest t = new JUnitTest(args[0]);

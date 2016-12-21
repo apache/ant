@@ -246,7 +246,7 @@ public class Main implements AntMain {
                 printMessage(be);
             }
         } catch (final Throwable exc) {
-            exc.printStackTrace();
+            exc.printStackTrace(); //NOSONAR
             printMessage(exc);
         } finally {
             handleLogfile();
@@ -881,11 +881,11 @@ public class Main implements AntMain {
                     // but if we don't, we lose valuable information
                     System.err.println("Caught an exception while logging the"
                                        + " end of the build.  Exception was:");
-                    t.printStackTrace();
+                    t.printStackTrace(); //NOSONAR
                     if (error != null) {
                         System.err.println("There has been an error prior to"
                                            + " that:");
-                        error.printStackTrace();
+                        error.printStackTrace(); //NOSONAR
                     }
                     throw new BuildException(t); //NOSONAR
                 }

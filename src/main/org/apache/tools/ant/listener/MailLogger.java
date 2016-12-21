@@ -177,7 +177,7 @@ public class MailLogger extends DefaultLogger {
             }
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
-            e.printStackTrace(System.err);
+            e.printStackTrace(System.err); //NOSONAR
         }
     }
 

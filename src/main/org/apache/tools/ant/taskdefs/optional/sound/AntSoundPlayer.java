@@ -109,7 +109,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             project.log("Audio format is not yet supported: "
                 + uafe.getMessage());
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            ioe.printStackTrace(); //NOSONAR
         }
 
         if (audioInputStream != null) {
@@ -125,7 +125,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
                     project.log("The sound device is currently unavailable");
                     return;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); //NOSONAR
                 }
 
                 if (duration != null) {

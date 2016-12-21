@@ -401,7 +401,7 @@ public class PropertyFile extends Task {
             } catch (NullPointerException npe) {
                 // Default to string type
                 // which means do nothing
-                npe.printStackTrace();
+                npe.printStackTrace(); //NOSONAR
             }
 
             if (newValue == null) {
