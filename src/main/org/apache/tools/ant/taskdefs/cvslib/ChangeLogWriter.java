@@ -34,18 +34,18 @@ import org.w3c.dom.Element;
  */
 public class ChangeLogWriter {
     /** output format for dates written to xml file */
-    private static final SimpleDateFormat OUTPUT_DATE
+    private final SimpleDateFormat outputDate
         = new SimpleDateFormat("yyyy-MM-dd");
     /** output format for times written to xml file */
-    private static final SimpleDateFormat OUTPUT_TIME
+    private static SimpleDateFormat outputTime
         = new SimpleDateFormat("HH:mm");
     /** stateless helper for writing the XML document */
     private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();
 
-    static {
+    public ChangeLogWriter() {
         TimeZone utc = TimeZone.getTimeZone("UTC");
-        OUTPUT_DATE.setTimeZone(utc);
-        OUTPUT_TIME.setTimeZone(utc);
+        outputDate.setTimeZone(utc);
+        outputTime.setTimeZone(utc);
     }
 
     /**
@@ -87,9 +87,9 @@ public class ChangeLogWriter {
                             final CVSEntry entry) throws IOException {
         Element ent = doc.createElement("entry");
         DOMUtils.appendTextElement(ent, "date",
-                                   OUTPUT_DATE.format(entry.getDate()));
+                                   outputDate.format(entry.getDate()));
         DOMUtils.appendTextElement(ent, "time",
-                                   OUTPUT_TIME.format(entry.getDate()));
+                                   outputTime.format(entry.getDate()));
         DOMUtils.appendCDATAElement(ent, "author", entry.getAuthor());
 
         final Enumeration enumeration = entry.getFiles().elements();
