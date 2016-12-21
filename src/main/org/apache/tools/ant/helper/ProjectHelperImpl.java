@@ -600,7 +600,8 @@ public class ProjectHelperImpl extends ProjectHelper {
     private static void handleElement(ProjectHelperImpl helperImpl, DocumentHandler parent,
             Target target, String elementName, AttributeList attrs) throws SAXParseException {
         if (elementName.equals("description")) {
-            new DescriptionHandler(helperImpl, parent);
+            // created for side effect
+            new DescriptionHandler(helperImpl, parent); //NOSONAR
         } else if (helperImpl.project.getDataTypeDefinitions().get(elementName) != null) {
             new DataTypeHandler(helperImpl, parent, target).init(elementName, attrs);
         } else {

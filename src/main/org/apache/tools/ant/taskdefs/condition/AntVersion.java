@@ -78,7 +78,8 @@ public class AntVersion extends Task implements Condition {
         }
         if (atLeast != null) {
             try {
-                new DeweyDecimal(atLeast);
+                // only created for side effect
+                new DeweyDecimal(atLeast); //NOSONAR
             } catch (NumberFormatException e) {
                 throw new BuildException(
                     "The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : "
@@ -86,7 +87,8 @@ public class AntVersion extends Task implements Condition {
             }
         } else {
             try {
-                new DeweyDecimal(exactly);
+                // only created for side effect
+                new DeweyDecimal(exactly); //NOSONAR
             } catch (NumberFormatException e) {
                 throw new BuildException(
                     "The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : "

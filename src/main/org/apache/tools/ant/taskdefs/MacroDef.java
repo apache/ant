@@ -183,7 +183,9 @@ public class MacroDef extends AntlibDefinition  {
         ret.setTaskName("sequential");
         ret.setNamespace("");
         ret.setQName("sequential");
-        new RuntimeConfigurable(ret, "sequential");
+        // stores RuntimeConfigurable as "RuntimeConfigurableWrapper"
+        // in ret as side effect
+        new RuntimeConfigurable(ret, "sequential"); //NOSONAR
         final int size = nestedSequential.getNested().size();
         for (int i = 0; i < size; ++i) {
             UnknownElement e =
