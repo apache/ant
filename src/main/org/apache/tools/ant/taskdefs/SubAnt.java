@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
-
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Calls a given target for all defined sub-builds. This is an extension
@@ -255,7 +255,7 @@ public class SubAnt extends Task {
                     log("Target '" + file
                         + "' failed with message '"
                         + thrownException.getMessage() + "'.", Project.MSG_ERR);
-                    thrownException.printStackTrace(System.err);
+                    log(StringUtils.getStackTrace(thrownException), Project.MSG_ERR);
                     if (buildException == null) {
                         buildException =
                             new BuildException(thrownException);

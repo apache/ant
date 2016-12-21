@@ -195,10 +195,6 @@ public class AntClassLoaderTest {
             int startMessage = log.indexOf("CLASSPATH element ");
             assertTrue(startMessage >= 0);
             assertTrue(log.indexOf("foo.jar is not a JAR", startMessage) > 0);
-            log = errBuffer.toString();
-            startMessage = log.indexOf("CLASSPATH element ");
-            assertTrue(startMessage >= 0);
-            assertTrue(log.indexOf("foo.jar is not a JAR", startMessage) > 0);
         } finally {
             System.setErr(sysErr);
         }

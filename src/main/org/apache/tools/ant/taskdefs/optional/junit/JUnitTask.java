@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.SplitClassLoader;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Runs JUnit tests.
@@ -1299,7 +1300,7 @@ public class JUnitTask extends Task {
                             + " testcase not started or mixing ant versions?";
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
+                log(StringUtils.getStackTrace(e), Project.MSG_INFO);
                 // ignored.
             } finally {
                 FileUtils.close(br);

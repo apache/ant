@@ -30,7 +30,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Creates new Continuus ccm task and sets it as the default.
@@ -322,7 +322,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
             } // end of if ()
         } catch (NullPointerException npe) {
             log("error procession stream , null pointer exception", Project.MSG_ERR);
-            npe.printStackTrace();
+            log(StringUtils.getStackTrace(npe), Project.MSG_ERR);
             throw new BuildException(npe.getClass().getName());
         } catch (Exception e) {
             log("error procession stream " + e.getMessage(), Project.MSG_ERR);
