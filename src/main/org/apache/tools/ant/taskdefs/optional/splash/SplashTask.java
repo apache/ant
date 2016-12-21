@@ -53,6 +53,7 @@ public class SplashTask extends Task {
     private String progressRegExp = null;
     private String displayText = null;
 
+    // class instance so we'll never show two splash screens at the same time
     private static SplashScreen splash = null;
 
     /**
@@ -163,7 +164,7 @@ public class SplashTask extends Task {
             splash.setVisible(false);
             getProject().removeBuildListener(splash);
             splash.dispose();
-            splash = null;
+            splash = null; //NOSONAR
         }
 
         log("Creating new SplashScreen", Project.MSG_VERBOSE);
@@ -248,7 +249,7 @@ public class SplashTask extends Task {
 
                 try {
                     ImageIcon img = new ImageIcon(bout.toByteArray());
-                    splash = new SplashScreen(img, progressRegExp, displayText);
+                    splash = new SplashScreen(img, progressRegExp, displayText); //NOSONAR
                     success = true;
                 } catch (Throwable e) {
                     logHeadless(e);
@@ -268,7 +269,7 @@ public class SplashTask extends Task {
             }
         } else {
             try {
-                splash = new SplashScreen("Image Unavailable.", progressRegExp,
+                splash = new SplashScreen("Image Unavailable.", progressRegExp, //NOSONAR
                                           displayText);
                 success = true;
             } catch (Throwable e) {
