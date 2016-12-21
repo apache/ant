@@ -115,7 +115,7 @@ public class AggregateTransformer {
     /**
      * Used to ensure the uniqueness of a property
      */
-    private static int counter = 0;
+    private volatile static int counter = 0;
 
     /** the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt> */
     protected String format = FRAMES;
@@ -260,7 +260,7 @@ public class AggregateTransformer {
         xsltTask.setIn(((XMLResultAggregator) task).getDestinationFile());
         File outputFile = null;
         if (format.equals(FRAMES)) {
-            String tempFileProperty = getClass().getName() + String.valueOf(counter++);
+            String tempFileProperty = getClass().getName() + String.valueOf(counter++); //NOSONAR
             File tmp = FILE_UTILS.resolveFile(project.getBaseDir(), project
                     .getProperty("java.io.tmpdir"));
             tempFileTask.setDestDir(tmp);
