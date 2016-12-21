@@ -37,7 +37,7 @@ public class ChangeLogWriter {
     private final SimpleDateFormat outputDate
         = new SimpleDateFormat("yyyy-MM-dd");
     /** output format for times written to xml file */
-    private static SimpleDateFormat outputTime
+    private SimpleDateFormat outputTime
         = new SimpleDateFormat("HH:mm");
     /** stateless helper for writing the XML document */
     private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();

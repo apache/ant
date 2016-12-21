@@ -158,7 +158,7 @@ public class StringResource extends Resource {
      * @return hash code as int.
      */
     @Override
-    public synchronized int hashCode() {
+    public synchronized int hashCode() { //NOSONAR
         // super.equals + super.compareTo are consistent with this implementation
         if (isReference()) {
             return getCheckedRef().hashCode();
