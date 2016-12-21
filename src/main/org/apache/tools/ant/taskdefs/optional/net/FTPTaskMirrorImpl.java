@@ -648,7 +648,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     try {
                         ftp.changeWorkingDirectory(directory);
                     } catch (IOException ioe) {
-                        throw new BuildException(ioe, task.getLocation());
+                        throw new BuildException(ioe, task.getLocation()); //NOSONAR
                     }
                 }
                 task.log("remote system is case sensitive : "
@@ -1061,7 +1061,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                                           Project.MSG_ERR);
                 } finally {
                     if (!comeback) {
-                        throw new BuildException("could not cd back to " + dir
+                        throw new BuildException("could not cd back to " + dir //NOSONAR
                                                  + " while checking a symlink");
                     }
                 }

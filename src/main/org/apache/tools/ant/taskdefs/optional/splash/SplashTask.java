@@ -262,7 +262,7 @@ public class SplashTask extends Task {
                     // swallow if there was an error before so that
                     // original error will be passed up
                     if (success) {
-                        throw new BuildException(ioe);
+                        throw new BuildException(ioe); //NOSONAR
                     }
                 }
             }

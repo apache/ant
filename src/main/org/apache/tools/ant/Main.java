@@ -887,7 +887,7 @@ public class Main implements AntMain {
                                            + " that:");
                         error.printStackTrace();
                     }
-                    throw new BuildException(t);
+                    throw new BuildException(t); //NOSONAR
                 }
             } else if (error != null) {
                 project.log(error.toString(), Project.MSG_ERR);
