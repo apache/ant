@@ -445,8 +445,10 @@ class BlockSort {
     private int[] eclass;
 
     private int[] getEclass() {
-        return eclass == null
-            ? (eclass = new int[quadrant.length / 2]) : eclass;
+        if (eclass == null) {
+            eclass = new int[quadrant.length / 2];
+        }
+        return eclass;
     }
 
     /*
