@@ -352,7 +352,7 @@ public class Parallel extends Task
                             // System.out.println("Thread " + i + " is still
                             // alive ");
                             // still running - wait for it
-                            semaphore.wait();
+                            semaphore.wait(); //NOSONAR
                             continue outer2;
                         }
                     }
