@@ -312,7 +312,13 @@ public class Parallel extends Task
                 Thread timeoutThread = new Thread() {
                     public synchronized void run() {
                         try {
-                            wait(timeout);
+                            final long start = System.currentTimeMillis();
+                            final long end = start + timeout;
+                            long now = System.currentTimeMillis();
+                            while (now < end) {
+                                wait(end - now);
+                                now = System.currentTimeMillis();
+                            }
                             synchronized (semaphore) {
                                 stillRunning = false;
                                 timedOut = true;

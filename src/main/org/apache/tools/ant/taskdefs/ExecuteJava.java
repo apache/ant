@@ -53,6 +53,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     private Long timeout = null;
     private volatile Throwable caught = null;
     private volatile boolean timedOut = false;
+    private boolean done = false;
     private Thread thread = null;
 
     /**
@@ -168,7 +169,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     thread.start();
                     w.start();
                     try {
+                    while (!done) {
                         wait();
+                    }
                     } catch (InterruptedException e) {
                         // ignore
                     }
@@ -228,6 +231,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 perm.restoreSecurityManager();
             }
             synchronized (this) {
+                done = true;
                 notifyAll();
             }
         }
@@ -243,6 +247,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             timedOut = true;
             thread.interrupt();
         }
+        done = true;
         notifyAll();
     }
 

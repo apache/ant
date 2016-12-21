@@ -117,9 +117,13 @@ public class WorkerAnt extends Thread {
      * @throws InterruptedException if the execution was interrupted
      */
     public void waitUntilFinished(long timeout) throws InterruptedException {
+        final long start = System.currentTimeMillis();
+        final long end = start + timeout;
         synchronized (notify) {
-            if (!finished) {
-                notify.wait(timeout);
+            long now = System.currentTimeMillis();
+            while (!finished && now < end) {
+                notify.wait(end - now);
+                now = System.currentTimeMillis();
             }
         }
     }
