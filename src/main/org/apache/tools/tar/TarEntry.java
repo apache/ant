@@ -333,7 +333,7 @@ public class TarEntry implements TarConstants {
      * @return True if the entries are equal.
      */
     public boolean equals(TarEntry it) {
-        return getName().equals(it.getName());
+        return it != null && getName().equals(it.getName());
     }
 
     /**

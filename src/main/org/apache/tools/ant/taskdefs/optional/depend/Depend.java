@@ -197,7 +197,7 @@ public class Depend extends MatchingTask {
                     dependencyList = new Vector();
                     className = line.substring(prependLength);
                     dependencyMap.put(className, dependencyList);
-                } else {
+                } else if (dependencyList != null) {
                     dependencyList.addElement(line);
                 }
             }

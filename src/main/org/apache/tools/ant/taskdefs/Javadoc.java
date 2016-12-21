@@ -1772,10 +1772,12 @@ public class Javadoc extends Task {
                 useExternalFile, tmpList, srcListWriter);
 
             if (useExternalFile) {
-                srcListWriter.flush();
+                srcListWriter.flush(); //NOSONAR
             }
         } catch (final IOException e) {
-            tmpList.delete();
+            if (tmpList != null) {
+                tmpList.delete();
+            }
             throw new BuildException("Error creating temporary file",
                                      e, getLocation());
         } finally {
