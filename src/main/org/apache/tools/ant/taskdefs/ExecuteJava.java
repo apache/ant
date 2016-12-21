@@ -169,9 +169,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     thread.start();
                     w.start();
                     try {
-                    while (!done) {
-                        wait();
-                    }
+                        while (!done) {
+                            wait();
+                        }
                     } catch (InterruptedException e) {
                         // ignore
                     }
