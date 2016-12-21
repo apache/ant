@@ -146,7 +146,7 @@ public class DirectoryScanner
      *             method instead.
      */
     @Deprecated
-    protected static final String[] DEFAULTEXCLUDES = {
+    protected static final String[] DEFAULTEXCLUDES = { //NOSONAR
         // Miscellaneous typical temporary files
         SelectorUtils.DEEP_TREE_MATCH + "/*~",
         SelectorUtils.DEEP_TREE_MATCH + "/#*#",

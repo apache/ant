@@ -36,12 +36,9 @@ import java.util.Vector;
  */
 public class CollectionUtils {
 
-    /**
-     * Collections.emptyList() is Java5+.
-     */
     @SuppressWarnings("rawtypes")
     @Deprecated
-    public static final List EMPTY_LIST = Collections.EMPTY_LIST;
+    public static final List EMPTY_LIST = Collections.EMPTY_LIST; //NOSONAR
 
     /**
      * Please use Vector.equals() or List.equals().

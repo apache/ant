@@ -247,7 +247,7 @@ public class Length extends Task implements Condition {
 
     /** EnumeratedAttribute operation mode */
     public static class FileMode extends EnumeratedAttribute {
-        static final String[] MODES = new String[] {EACH, ALL};
+        static final String[] MODES = new String[] {EACH, ALL}; //NOSONAR
 
         /**
          * Return the possible values for FileMode.

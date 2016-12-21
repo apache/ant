@@ -33,7 +33,7 @@ public class JspNameMangler implements JspMangler {
     /**
      * this is the list of keywords which can not be used as classnames
      */
-    public static final String[] keywords = {
+    public static final String[] keywords = { //NOSONAR
             "assert",
             "abstract", "boolean", "break", "byte",
             "case", "catch", "char", "class",

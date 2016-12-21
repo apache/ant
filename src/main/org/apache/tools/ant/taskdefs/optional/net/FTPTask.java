@@ -108,7 +108,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
     private ClassLoader mirrorLoader;
     private FTPTaskMirror delegate = null;
 
-    public static final String[] ACTION_STRS = {
+    public static final String[] ACTION_STRS = { //NOSONAR
         "sending",
         "getting",
         "deleting",
@@ -119,7 +119,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         "site"
     };
 
-    public static final String[] COMPLETED_ACTION_STRS = {
+    public static final String[] COMPLETED_ACTION_STRS = { //NOSONAR
         "sent",
         "retrieved",
         "deleted",
@@ -130,7 +130,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         "site command executed"
     };
 
-    public static final String[] ACTION_TARGET_STRS = {
+    public static final String[] ACTION_TARGET_STRS = { //NOSONAR
         "files",
         "files",
         "files",

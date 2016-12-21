@@ -963,33 +963,33 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    protected static final byte[] LFH_SIG = ZipLong.LFH_SIG.getBytes();
+    protected static final byte[] LFH_SIG = ZipLong.LFH_SIG.getBytes(); //NOSONAR
     /**
      * data descriptor signature
      *
      * @since 1.1
      */
-    protected static final byte[] DD_SIG = ZipLong.DD_SIG.getBytes();
+    protected static final byte[] DD_SIG = ZipLong.DD_SIG.getBytes(); //NOSONAR
     /**
      * central file header signature
      *
      * @since 1.1
      */
-    protected static final byte[] CFH_SIG = ZipLong.CFH_SIG.getBytes();
+    protected static final byte[] CFH_SIG = ZipLong.CFH_SIG.getBytes(); //NOSONAR
     /**
      * end of central dir signature
      *
      * @since 1.1
      */
-    protected static final byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L);
+    protected static final byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L); //NOSONAR
     /**
      * ZIP64 end of central dir signature
      */
-    static final byte[] ZIP64_EOCD_SIG = ZipLong.getBytes(0X06064B50L);
+    static final byte[] ZIP64_EOCD_SIG = ZipLong.getBytes(0X06064B50L); //NOSONAR
     /**
      * ZIP64 end of central dir locator signature
      */
-    static final byte[] ZIP64_EOCD_LOC_SIG = ZipLong.getBytes(0X07064B50L);
+    static final byte[] ZIP64_EOCD_LOC_SIG = ZipLong.getBytes(0X07064B50L); //NOSONAR
 
     /**
      * Writes next block of compressed data to the output stream.

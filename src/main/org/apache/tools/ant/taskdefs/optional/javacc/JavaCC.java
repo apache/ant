@@ -77,7 +77,7 @@ public class JavaCC extends Task {
     protected static final int TASKDEF_TYPE_JJTREE = 2;
     protected static final int TASKDEF_TYPE_JJDOC = 3;
 
-    protected static final String[] ARCHIVE_LOCATIONS =
+    protected static final String[] ARCHIVE_LOCATIONS = //NOSONAR
         new String[] {
         "JavaCC.zip",
         "bin/lib/JavaCC.zip",
@@ -85,7 +85,7 @@ public class JavaCC extends Task {
         "javacc.jar", // used by jpackage for JavaCC 3.x
     };
 
-    protected static final int[] ARCHIVE_LOCATIONS_VS_MAJOR_VERSION =
+    protected static final int[] ARCHIVE_LOCATIONS_VS_MAJOR_VERSION = //NOSONAR
         new int[] {
         1,
         2,

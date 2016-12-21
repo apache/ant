@@ -49,7 +49,7 @@ public class Base64Converter {
 
     // CheckStyle:ConstantNameCheck OFF - bc
     /** Provided for BC purposes */
-    public static final char[] alphabet = ALPHABET;
+    public static final char[] alphabet = ALPHABET; //NOSONAR
     // CheckStyle:ConstantNameCheck ON
 
 

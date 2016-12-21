@@ -144,7 +144,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private String initialSiteCommand = null;
     private boolean enableRemoteVerification = true;
 
-    protected static final String[] ACTION_STRS = {
+    protected static final String[] ACTION_STRS = { //NOSONAR
         "sending",
         "getting",
         "deleting",
@@ -155,7 +155,7 @@ public class FTP extends Task implements FTPTaskConfig {
         "site"
     };
 
-    protected static final String[] COMPLETED_ACTION_STRS = {
+    protected static final String[] COMPLETED_ACTION_STRS = { //NOSONAR
         "sent",
         "retrieved",
         "deleted",
@@ -166,7 +166,7 @@ public class FTP extends Task implements FTPTaskConfig {
         "site command executed"
     };
 
-    protected static final String[] ACTION_TARGET_STRS = {
+    protected static final String[] ACTION_TARGET_STRS = { //NOSONAR
         "files",
         "files",
         "files",
