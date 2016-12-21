@@ -49,6 +49,7 @@ import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.VectorSet;
 import org.apache.tools.zip.ZipLong;
 
@@ -405,6 +406,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     protected void log(final String message, final int priority) {
         if (project != null) {
             project.log(message, priority);
+        } else if (priority < Project.MSG_INFO) {
+            System.err.println(message);
         }
     }
 
@@ -1018,7 +1021,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
                             final String msg = "CLASSPATH element " + file
                                 + " is not a JAR.";
                             log(msg, Project.MSG_WARN);
-                            System.err.println(msg);
                             return null;
                         }
                         jarFile = new JarFile(file);
@@ -1041,8 +1043,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         } catch (final Exception e) {
             final String msg = "Unable to obtain resource from " + file + ": ";
             log(msg + e, Project.MSG_WARN);
-            System.err.println(msg);
-            e.printStackTrace();
+            log(StringUtils.getStackTrace(e), Project.MSG_WARN);
         }
         return null;
     }

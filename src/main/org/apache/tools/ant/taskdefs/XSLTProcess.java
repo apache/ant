@@ -58,6 +58,7 @@ import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Processes a set of XML documents via XSLT. This is
@@ -952,7 +953,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 try {
                     resolveProcessor(PROCESSOR_TRAX);
                 } catch (final Throwable e1) {
-                    e1.printStackTrace();
+                    log(StringUtils.getStackTrace(e1), Project.MSG_ERR);
                     handleError(e1);
                 }
             }

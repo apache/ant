@@ -27,6 +27,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * EXPERIMENTAL
@@ -238,7 +239,7 @@ public class Classloader extends Task {
             // TODO add exceptions
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log(StringUtils.getStackTrace(ex), Project.MSG_ERR);
         }
     }
 }

@@ -700,7 +700,7 @@ public class LayoutPreservingProperties extends Properties {
                 dolly = super.clone();
             } catch (final CloneNotSupportedException e) {
                 // should be fine
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             }
             return dolly;
         }

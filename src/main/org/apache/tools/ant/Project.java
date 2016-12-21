@@ -873,7 +873,7 @@ public class Project implements ResourceFactory {
             try {
                 setBasedir(".");
             } catch (final BuildException ex) {
-                ex.printStackTrace();
+                ex.printStackTrace(); //NOSONAR
             }
         }
         return baseDir;

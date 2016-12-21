@@ -472,7 +472,7 @@ public final class Diagnostics {
         // report error if something weird happens...this is diagnostic.
         if (error != null) {
             out.println("Error while running org.apache.env.Which");
-            error.printStackTrace();
+            error.printStackTrace(out); //NOSONAR
         }
     }
 

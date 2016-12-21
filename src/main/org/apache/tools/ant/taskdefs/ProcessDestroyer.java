@@ -84,7 +84,7 @@ class ProcessDestroyer implements Runnable {
         } catch (NoSuchMethodException e) {
             // it just won't be added as a shutdown hook... :(
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
         }
     }
 
@@ -100,14 +100,14 @@ class ProcessDestroyer implements Runnable {
                 addShutdownHookMethod.invoke(Runtime.getRuntime(), args);
                 added = true;
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             } catch (InvocationTargetException e) {
                 Throwable t = e.getTargetException();
                 if (t != null && t.getClass() == IllegalStateException.class) {
                     // shutdown already is in progress
                     running = true;
                 } else {
-                    e.printStackTrace();
+                    e.printStackTrace(); //NOSONAR
                 }
             }
         }
@@ -129,14 +129,14 @@ class ProcessDestroyer implements Runnable {
                     System.err.println("Could not remove shutdown hook");
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             } catch (InvocationTargetException e) {
                 Throwable t = e.getTargetException();
                 if (t != null && t.getClass() == IllegalStateException.class) {
                     // shutdown already is in progress
                     running = true;
                 } else {
-                    e.printStackTrace();
+                    e.printStackTrace(); //NOSONAR
                 }
             }
             // start the hook thread, a unstarted thread may not be

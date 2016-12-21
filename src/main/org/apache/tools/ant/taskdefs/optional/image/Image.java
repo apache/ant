@@ -40,6 +40,7 @@ import org.apache.tools.ant.types.optional.image.TransformOperation;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.StringUtils;
 
 import com.sun.media.jai.codec.FileSeekableStream;
 
@@ -392,7 +393,7 @@ public class Image extends MatchingTask {
             }
 
         } catch (Exception err) {
-            err.printStackTrace();
+            log(StringUtils.getStackTrace(err), Project.MSG_ERR);
             throw new BuildException(err.getMessage());
         }
     }

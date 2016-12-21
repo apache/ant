@@ -57,7 +57,7 @@ public class ProxySetup {
     /** the http proxy username property */
     public static final String HTTP_PROXY_USERNAME = "http.proxyUser";
     /** the http proxy password property */
-    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword"; //NOSONAR
     /** the socks proxy host property */
     public static final String SOCKS_PROXY_HOST = "socksProxyHost";
     /** the socks proxy port property */
@@ -65,7 +65,7 @@ public class ProxySetup {
     /** the socks proxy username property */
     public static final String SOCKS_PROXY_USERNAME = "java.net.socks.username";
     /** the socks proxy password property */
-    public static final String SOCKS_PROXY_PASSWORD = "java.net.socks.password";
+    public static final String SOCKS_PROXY_PASSWORD = "java.net.socks.password"; //NOSONAR
 
     /**
      * create a proxy setup class bound to this project

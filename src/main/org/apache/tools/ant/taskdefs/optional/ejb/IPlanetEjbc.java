@@ -43,6 +43,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Compiles EJB stubs and skeletons for the iPlanet Application
@@ -310,7 +311,7 @@ public class IPlanetEjbc {
             // SAXException or ParserConfigurationException may be thrown
             System.out.println("An exception was generated while trying to ");
             System.out.println("create a new SAXParser.");
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
             return;
         }
 
@@ -443,7 +444,7 @@ public class IPlanetEjbc {
             p.destroy();
         } catch (IOException e) {
             log("An IOException has occurred while trying to execute ejbc.");
-            e.printStackTrace();
+            log(StringUtils.getStackTrace(e));
         } catch (InterruptedException e) {
             // Do nothing
         }
@@ -1484,7 +1485,7 @@ public class IPlanetEjbc {
                     System.out.println(text);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             } finally {
                 FileUtils.close(reader);
             }

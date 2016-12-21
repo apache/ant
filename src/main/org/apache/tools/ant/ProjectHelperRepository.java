@@ -108,7 +108,7 @@ public class ProjectHelperRepository {
                                + e.getClass().getName()
                                + ": " + e.getMessage() + ")");
             if (DEBUG) {
-                e.printStackTrace(System.err);
+                e.printStackTrace(System.err); //NOSONAR
             }
         }
     }
@@ -175,7 +175,7 @@ public class ProjectHelperRepository {
                                + ProjectHelper.HELPER_PROPERTY + " ("
                                + e.getMessage() + ")");
             if (DEBUG) {
-                e.printStackTrace(System.err);
+                e.printStackTrace(System.err); //NOSONAR
             }
         }
         return null;
@@ -203,7 +203,7 @@ public class ProjectHelperRepository {
             System.out.println("Unable to load ProjectHelper from service "
                     + ProjectHelper.SERVICE_ID + " (" + e.getMessage() + ")");
             if (DEBUG) {
-                e.printStackTrace(System.err);
+                e.printStackTrace(System.err); //NOSONAR
             }
         }
         return null;

@@ -117,7 +117,7 @@ public class Launcher {
             System.err.println(e.getMessage());
         } catch (final Throwable t) {
             exitCode = EXIT_CODE_ERROR;
-            t.printStackTrace(System.err);
+            t.printStackTrace(System.err); //NOSONAR
         }
         if (exitCode != 0) {
             if (launchDiag) {
@@ -297,7 +297,7 @@ public class Launcher {
                     "Failed to locate" + mainClassname);
             thrown = cnfe;
         } catch (final Throwable t) {
-            t.printStackTrace(System.err);
+            t.printStackTrace(System.err); //NOSONAR
             thrown=t;
         }
         if(thrown!=null) {

@@ -38,6 +38,7 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * <p>Collects all failing test <i>cases</i> and creates a new JUnit test class containing
@@ -260,7 +261,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
             createClassFooter();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log(StringUtils.getStackTrace(e));
         } finally {
             FileUtils.close(writer);
         }

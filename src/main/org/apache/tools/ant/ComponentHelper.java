@@ -971,7 +971,7 @@ public class ComponentHelper  {
                     Throwable t = ex.getTargetException();
                     out.println("Cause: The constructor threw the exception");
                     out.println(t.toString());
-                    t.printStackTrace(out);
+                    t.printStackTrace(out); //NOSONAR
                 }  catch (NoClassDefFoundError ncdfe) {
                     jars = true;
                     out.println("Cause:  A class needed by class " + classname

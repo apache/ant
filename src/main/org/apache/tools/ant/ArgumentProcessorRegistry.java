@@ -93,7 +93,7 @@ public class ArgumentProcessorRegistry {
                     + SERVICE_ID + " (" + e.getClass().getName() + ": "
                     + e.getMessage() + ")");
             if (DEBUG) {
-                e.printStackTrace(System.err);
+                e.printStackTrace(System.err); //NOSONAR
             }
         }
     }

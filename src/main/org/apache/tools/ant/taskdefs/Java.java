@@ -40,6 +40,7 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.KeepAliveInputStream;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -997,11 +998,7 @@ public class Java extends Task {
      * @since 1.6.2
      */
     private void log(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter w = new PrintWriter(sw);
-        t.printStackTrace(w);
-        w.close();
-        log(sw.toString(), Project.MSG_ERR);
+        log(StringUtils.getStackTrace(t), Project.MSG_ERR);
     }
 
     /**

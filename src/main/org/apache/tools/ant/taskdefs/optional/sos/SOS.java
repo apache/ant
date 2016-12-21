@@ -41,7 +41,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     private String sosCmdDir = null;
     private String sosUsername = null;
-    private String sosPassword = "";
+    private String sosPassword = null;
     private String projectPath = null;
     private String vssServerPath = null;
     private String sosServerPath = null;
@@ -269,7 +269,7 @@ public abstract class SOS extends Task implements SOSCmd {
      * @return empty string if it wasn't set.
      */
     protected String getPassword() {
-        return sosPassword;
+        return sosPassword == null ? "" : sosPassword;
     }
 
     /**

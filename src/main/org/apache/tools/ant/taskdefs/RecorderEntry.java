@@ -111,7 +111,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             } else {
                 out.println(StringUtils.LINE_SEP + "BUILD FAILED"
                             + StringUtils.LINE_SEP);
-                error.printStackTrace(out);
+                error.printStackTrace(out); //NOSONAR
             }
         }
         cleanup();

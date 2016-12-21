@@ -137,7 +137,7 @@ public class PropertiesfileCache implements Cache {
                 cache.load(bis);
                 bis.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             }
         }
         // after loading the cache is up to date with the file
@@ -164,7 +164,7 @@ public class PropertiesfileCache implements Cache {
                 bos.flush();
                 bos.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             }
         }
         cacheDirty = false;

@@ -1313,7 +1313,7 @@ public class Javadoc extends Task {
      * cannot be static in inner classes.) The first letter
      * from each element is used to build up the scope string.
      */
-    static final String[] SCOPE_ELEMENTS = {
+    static final String[] SCOPE_ELEMENTS = { //NOSONAR
         "overview", "packages", "types", "constructors",
         "methods", "fields"
     };
