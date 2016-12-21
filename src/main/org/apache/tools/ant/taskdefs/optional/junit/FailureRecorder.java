@@ -97,7 +97,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
      * Location and name of the generated JUnit class.
      * Lazy instantiated via getLocationName().
      */
-    private static String locationName;
+    private String locationName;
 
     /**
      * Returns the (lazy evaluated) location for the collector class.

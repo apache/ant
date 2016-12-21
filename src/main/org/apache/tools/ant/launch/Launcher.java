@@ -65,7 +65,7 @@ public class Launcher {
     /**
      * launch diagnostics flag; for debugging trouble at launch time.
      */
-    public static boolean launchDiag = false;
+    public boolean launchDiag = false;
 
     /**
      * The location of a per-user library directory.
@@ -107,9 +107,11 @@ public class Launcher {
      */
     public static void main(final String[] args) {
         int exitCode;
+        boolean launchDiag = false;
         try {
             final Launcher launcher = new Launcher();
             exitCode = launcher.run(args);
+            launchDiag = launcher.launchDiag;
         } catch (final LaunchException e) {
             exitCode = EXIT_CODE_ERROR;
             System.err.println(e.getMessage());

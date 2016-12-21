@@ -81,10 +81,10 @@ public class Main implements AntMain {
     private File buildFile; /* null */
 
     /** Stream to use for logging. */
-    private static PrintStream out = System.out;
+    private PrintStream out = System.out;
 
     /** Stream that we are using for logging error messages. */
-    private static PrintStream err = System.err;
+    private PrintStream err = System.err;
 
     /** The build targets. */
     private final Vector<String> targets = new Vector<String>();
@@ -143,7 +143,7 @@ public class Main implements AntMain {
      * Whether or not a logfile is being used. This is used to
      * check if the output streams must be closed.
      */
-    private static boolean isLogFileUsed = false;
+    private boolean isLogFileUsed = false;
 
     /**
      * optional thread priority
@@ -269,7 +269,7 @@ public class Main implements AntMain {
      *
      * @since Ant 1.6
      */
-    private static void handleLogfile() {
+    private void handleLogfile() {
         if (isLogFileUsed) {
             FileUtils.close(out);
             FileUtils.close(err);
