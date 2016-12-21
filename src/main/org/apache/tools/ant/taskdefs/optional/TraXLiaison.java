@@ -341,7 +341,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         }
 
         if (traceConfiguration != null) {
-            if ("org.apache.xalan.transformer.TransformerImpl"
+            if ("org.apache.xalan.transformer.TransformerImpl" //NOSONAR
                 .equals(transformer.getClass().getName())) {
                 try {
                     final Class traceSupport =
