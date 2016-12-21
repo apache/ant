@@ -236,8 +236,10 @@ public class AggregateTransformer {
      * @since Ant 1.9.5
      */
     public XSLTProcess.Factory createFactory() {
-        return xsltFactory != null ? xsltFactory
-            : (xsltFactory = xsltTask.createFactory());
+        if (xsltFactory == null) {
+            xsltFactory = xsltTask.createFactory();
+        }
+        return xsltFactory;
     }
 
     /**

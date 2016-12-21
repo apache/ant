@@ -403,7 +403,8 @@ public class Sync extends Task {
             if (resources == null) {
                 Restrict r = new Restrict();
                 r.add(new Exists());
-                r.add(resources = new Resources());
+                resources = new Resources();
+                r.add(resources);
                 myCopy.add(r);
             }
             resources.add(rc);
