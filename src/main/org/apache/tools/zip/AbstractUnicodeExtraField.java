@@ -54,7 +54,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
         try {
             unicodeName = text.getBytes("UTF-8");
         } catch (final UnsupportedEncodingException e) {
-            throw new RuntimeException("FATAL: UTF-8 encoding not supported.",
+            throw new RuntimeException("FATAL: UTF-8 encoding not supported.", //NOSONAR
                                        e);
         }
     }
