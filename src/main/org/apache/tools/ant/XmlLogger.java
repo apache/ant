@@ -264,7 +264,7 @@ public class XmlLogger implements BuildLogger {
             if (!threadStack.empty()) {
                 TimedElement poppedStack = threadStack.pop();
                 if (poppedStack != targetElement) {
-                    throw new RuntimeException("Mismatch - popped element = " + poppedStack
+                    throw new RuntimeException("Mismatch - popped element = " + poppedStack //NOSONAR
                             + " finished target element = " + targetElement);
                 }
                 if (!threadStack.empty()) {
@@ -316,7 +316,7 @@ public class XmlLogger implements BuildLogger {
         Task task = event.getTask();
         TimedElement taskElement = tasks.get(task);
         if (taskElement == null) {
-            throw new RuntimeException("Unknown task " + task + " not in " + tasks);
+            throw new RuntimeException("Unknown task " + task + " not in " + tasks); //NOSONAR
         }
         long totalTime = System.currentTimeMillis() - taskElement.startTime;
         taskElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
@@ -334,7 +334,7 @@ public class XmlLogger implements BuildLogger {
         if (!threadStack.empty()) {
             TimedElement poppedStack = threadStack.pop();
             if (poppedStack != taskElement) {
-                throw new RuntimeException("Mismatch - popped element = " + poppedStack
+                throw new RuntimeException("Mismatch - popped element = " + poppedStack //NOSONAR
                         + " finished task element = " + taskElement);
             }
         }

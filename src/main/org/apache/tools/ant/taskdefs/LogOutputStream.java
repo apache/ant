@@ -77,7 +77,7 @@ public class LogOutputStream extends LineOrientedOutputStream {
             super.processBuffer();
         } catch (IOException e) {
             // impossible since *our* processLine doesn't throw an IOException
-            throw new RuntimeException("Impossible IOException caught: " + e);
+            throw new RuntimeException("Impossible IOException caught: " + e); //NOSONAR
         }
     }
 

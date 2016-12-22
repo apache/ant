@@ -327,7 +327,7 @@ public class MailLogger extends DefaultLogger {
      *      property is not present in properties.
      */
     private String getValue(Hashtable<String, Object> properties, String name,
-                            String defaultValue) throws Exception {
+                            String defaultValue) {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
 
@@ -336,7 +336,7 @@ public class MailLogger extends DefaultLogger {
         }
 
         if (value == null) {
-            throw new Exception("Missing required parameter: " + propertyName);
+            throw new RuntimeException("Missing required parameter: " + propertyName); //NOSONAR
         }
 
         return value;
