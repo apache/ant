@@ -1836,7 +1836,7 @@ public class Project implements ResourceFactory {
             if (st == null) {
                 tsort(root[i], targetTable, state, visiting, ret);
             } else if (st == VISITING) {
-                throw new RuntimeException("Unexpected node in visiting state: "
+                throw new BuildException("Unexpected node in visiting state: "
                     + root[i]);
             }
         }
@@ -1855,7 +1855,7 @@ public class Project implements ResourceFactory {
             if (st == null) {
                 tsort(curTarget, targetTable, state, visiting, complete);
             } else if (st == VISITING) {
-                throw new RuntimeException("Unexpected node in visiting state: "
+                throw new BuildException("Unexpected node in visiting state: "
                     + curTarget);
             }
         }
@@ -1941,7 +1941,7 @@ public class Project implements ResourceFactory {
         }
         final String p = visiting.pop();
         if (root != p) {
-            throw new RuntimeException("Unexpected internal error: expected to "
+            throw new BuildException("Unexpected internal error: expected to "
                 + "pop " + root + " but got " + p);
         }
         state.put(root, VISITED);

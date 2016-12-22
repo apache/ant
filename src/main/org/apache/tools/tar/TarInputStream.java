@@ -276,7 +276,7 @@ public class TarInputStream extends FilterInputStream {
             while (numToSkip > 0) {
                 long skipped = skip(numToSkip);
                 if (skipped <= 0) {
-                    throw new RuntimeException("failed to skip current tar"
+                    throw new IOException("failed to skip current tar"
                                                + " entry");
                 }
                 numToSkip -= skipped;

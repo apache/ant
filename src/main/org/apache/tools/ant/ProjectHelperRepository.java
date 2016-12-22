@@ -62,7 +62,7 @@ public class ProjectHelperRepository {
             PROJECTHELPER2_CONSTRUCTOR = ProjectHelper2.class.getConstructor();
         } catch (Exception e) {
             // ProjectHelper2 must be available
-            throw new RuntimeException(e);
+            throw new BuildException(e);
         }
     }
 
@@ -263,7 +263,7 @@ public class ProjectHelperRepository {
                 return helper;
             }
         }
-        throw new RuntimeException("BUG: at least the ProjectHelper2 should "
+        throw new BuildException("BUG: at least the ProjectHelper2 should "
                                    + "have supported the file " + buildFile);
     }
 
@@ -286,7 +286,7 @@ public class ProjectHelperRepository {
                 return helper;
             }
         }
-        throw new RuntimeException("BUG: at least the ProjectHelper2 should "
+        throw new BuildException("BUG: at least the ProjectHelper2 should "
                                    + "have supported the file " + antlib);
     }
 

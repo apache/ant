@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * A class file iterator which iterates through the contents of a Java jar
  * file.
@@ -79,7 +81,7 @@ public class JarFileIterator implements ClassFileIterator {
                 text += ": " + message;
             }
 
-            throw new RuntimeException("Problem reading JAR file: " + text);
+            throw new BuildException("Problem reading JAR file: " + text);
         }
 
         return nextElement;

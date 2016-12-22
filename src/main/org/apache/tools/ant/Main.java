@@ -978,10 +978,6 @@ public class Main implements AntMain {
         project.setInputHandler(handler);
     }
 
-    // TODO: (Jon Skeet) Any reason for writing a message and then using a bare
-    // RuntimeException rather than just using a BuildException here? Is it
-    // in case the message could end up being written to no loggers (as the
-    // loggers could have failed to be created due to this failure)?
     /**
      * Creates the default build logger for sending build events to the ant
      * log.
@@ -1003,7 +999,7 @@ public class Main implements AntMain {
                 System.err.println("The specified logger class "
                     + loggerClassname
                     + " could not be used because " + e.getMessage());
-                throw new RuntimeException();
+                throw e;
             }
         } else {
             logger = new DefaultLogger();
