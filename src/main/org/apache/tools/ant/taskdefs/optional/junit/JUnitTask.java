@@ -702,10 +702,10 @@ public class JUnitTask extends Task {
     /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
-     * @throws Exception under ??? circumstances
+     * @throws Exception never
      * @since Ant 1.2
      */
-    public JUnitTask() throws Exception {
+    public JUnitTask() throws Exception { //NOSONAR
     }
 
     /**

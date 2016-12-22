@@ -143,7 +143,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Constructor for TraXLiaison.
      * @throws Exception never
      */
-    public TraXLiaison() throws Exception {
+    public TraXLiaison() throws Exception { //NOSONAR
     }
 
     /**

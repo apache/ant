@@ -1603,7 +1603,7 @@ public class FileUtils {
      *
      * @since Ant 1.7
      */
-    public static String getRelativePath(File fromFile, File toFile) throws Exception {
+    public static String getRelativePath(File fromFile, File toFile) throws Exception { //NOSONAR
         String fromPath = fromFile.getCanonicalPath();
         String toPath = toFile.getCanonicalPath();
 

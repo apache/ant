@@ -1380,7 +1380,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     private void setLiaisonDynamicFileParameters(
-        final XSLTLiaison liaison, final File inFile) throws Exception {
+        final XSLTLiaison liaison, final File inFile) throws Exception { //NOSONAR
         if (fileNameParameter != null) {
             liaison.addParam(fileNameParameter, inFile.getName());
         }

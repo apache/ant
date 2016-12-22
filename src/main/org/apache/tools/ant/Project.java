@@ -1430,7 +1430,7 @@ public class Project implements ResourceFactory {
                             "Target '" + curtarget.getName()
                             + "' failed with message '"
                             + thrownException.getMessage() + "'.", MSG_ERR);
-                        thrownException.printStackTrace(System.err);
+                        thrownException.printStackTrace(System.err); //NOSONAR
                         if (buildException == null) {
                             buildException =
                                 new BuildException(thrownException);

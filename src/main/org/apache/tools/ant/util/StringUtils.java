@@ -195,7 +195,7 @@ public final class StringUtils {
      * @throws Exception if there is a problem.
      * @since Ant 1.7
      */
-    public static long parseHumanSizes(String humanSize) throws Exception {
+    public static long parseHumanSizes(String humanSize) throws Exception { //NOSONAR
         long factor = 1L;
         char s = humanSize.charAt(0);
         switch (s) {
