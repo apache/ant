@@ -126,7 +126,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         }
     }
 
-    private ReflectWrapper createEngine() throws Exception {
+    private ReflectWrapper createEngine() {
         if (engine != null) {
             return engine;
         }

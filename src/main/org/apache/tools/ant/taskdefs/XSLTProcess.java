@@ -721,7 +721,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @return the requested class.
      * @exception Exception if the class could not be loaded.
      */
-    private Class loadClass(final String classname) throws Exception {
+    private Class loadClass(final String classname) throws ClassNotFoundException {
         setupLoader();
         if (loader == null) {
             return Class.forName(classname);
@@ -1380,7 +1380,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @since Ant 1.7
      */
     private void setLiaisonDynamicFileParameters(
-        final XSLTLiaison liaison, final File inFile) throws Exception {
+        final XSLTLiaison liaison, final File inFile) throws Exception { //NOSONAR
         if (fileNameParameter != null) {
             liaison.addParam(fileNameParameter, inFile.getName());
         }

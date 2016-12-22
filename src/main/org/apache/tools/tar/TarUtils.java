@@ -265,7 +265,7 @@ public class TarUtils {
                 return parseName(buffer, offset, length, FALLBACK_ENCODING);
             } catch (final IOException ex2) {
                 // impossible
-                throw new RuntimeException(ex2);
+                throw new RuntimeException(ex2); //NOSONAR
             }
         }
     }
@@ -324,7 +324,7 @@ public class TarUtils {
                                        FALLBACK_ENCODING);
             } catch (final IOException ex2) {
                 // impossible
-                throw new RuntimeException(ex2);
+                throw new RuntimeException(ex2); //NOSONAR
             }
         }
     }

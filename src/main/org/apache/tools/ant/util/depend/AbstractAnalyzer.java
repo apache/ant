@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.ZipFile;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.VectorSet;
 
@@ -80,7 +81,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      */
     public Enumeration<File> getFileDependencies() {
         if (!supportsFileDependencies()) {
-            throw new RuntimeException("File dependencies are not supported "
+            throw new BuildException("File dependencies are not supported "
                 + "by this analyzer");
         }
         if (!determined) {

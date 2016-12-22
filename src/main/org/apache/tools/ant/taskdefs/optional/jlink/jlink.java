@@ -144,7 +144,7 @@ public class jlink {
      * a rational manner to outfile.
      * @throws Exception on error.
      */
-    public void link() throws Exception {
+    public void link() throws Exception { //NOSONAR
         ZipOutputStream output = new ZipOutputStream(new FileOutputStream(outfile));
 
         if (compression) {

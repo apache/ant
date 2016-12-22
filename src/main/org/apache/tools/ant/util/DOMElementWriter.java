@@ -494,7 +494,7 @@ public class DOMElementWriter {
         try {
             encodedata(out, value);
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex); //NOSONAR
         }
         return out.toString();
     }

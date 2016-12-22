@@ -846,7 +846,7 @@ public class TarEntry implements TarConstants {
                 writeEntryHeader(outbuf, TarUtils.FALLBACK_ENCODING, false);
             } catch (IOException ex2) {
                 // impossible
-                throw new RuntimeException(ex2);
+                throw new RuntimeException(ex2); //NOSONAR
             }
         }
     }
@@ -932,7 +932,7 @@ public class TarEntry implements TarConstants {
                 parseTarHeader(header, TarUtils.DEFAULT_ENCODING, true);
             } catch (IOException ex2) {
                 // not really possible
-                throw new RuntimeException(ex2);
+                throw new RuntimeException(ex2); //NOSONAR
             }
         }
     }
@@ -1095,7 +1095,8 @@ public class TarEntry implements TarConstants {
         try {
             buffer1 = expected.getBytes("ASCII");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e); // Should not happen
+            // Should not happen
+            throw new RuntimeException(e); //NOSONAR
         }
         return isEqual(buffer1, 0, buffer1.length, buffer, offset, length,
                        false);

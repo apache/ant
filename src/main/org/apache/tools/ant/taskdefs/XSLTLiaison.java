@@ -44,7 +44,7 @@ public interface XSLTLiaison {
      * @throws Exception thrown if any problems happens.
      * @since Ant 1.4
      */
-    void setStylesheet(File stylesheet) throws Exception;
+    void setStylesheet(File stylesheet) throws Exception; //NOSONAR
 
     /**
      * Add a parameter to be set during the XSL transformation.
@@ -54,7 +54,7 @@ public interface XSLTLiaison {
      * @see XSLTLiaison4#addParam(java.lang.String, java.lang.Object)
      * @since Ant 1.3
      */
-    void addParam(String name, String expression) throws Exception;
+    void addParam(String name, String expression) throws Exception; //NOSONAR
 
     /**
      * Perform the transformation of a file into another.
@@ -64,6 +64,6 @@ public interface XSLTLiaison {
      * @see #setStylesheet(File)
      * @since Ant 1.4
      */
-    void transform(File infile, File outfile) throws Exception;
+    void transform(File infile, File outfile) throws Exception; //NOSONAR
 
 } //-- XSLTLiaison

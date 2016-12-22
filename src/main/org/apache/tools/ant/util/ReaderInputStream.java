@@ -148,7 +148,7 @@ public class ReaderInputStream extends InputStream {
         try {
             in.mark(limit);
         } catch (IOException ioe) {
-            throw new RuntimeException(ioe.getMessage());
+            throw new RuntimeException(ioe.getMessage()); //NOSONAR
         }
     }
 
