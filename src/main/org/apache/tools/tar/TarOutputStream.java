@@ -586,7 +586,7 @@ public class TarOutputStream extends FilterOutputStream {
 
     private void failForBigNumber(String field, long value, long maxValue, String additionalMsg) {
         if (value < 0 || value > maxValue) {
-            throw new RuntimeException(field + " '" + value
+            throw new RuntimeException(field + " '" + value //NOSONAR
                                        + "' is too big ( > "
                                        + maxValue + " )");
         }
@@ -638,7 +638,7 @@ public class TarOutputStream extends FilterOutputStream {
                 write(0); // NUL terminator
                 closeEntry();
             } else if (longFileMode != LONGFILE_TRUNCATE) {
-                throw new RuntimeException(fieldName + " '" + name
+                throw new RuntimeException(fieldName + " '" + name //NOSONAR
                                            + "' is too long ( > "
                                            + TarConstants.NAMELEN + " bytes)");
             }
