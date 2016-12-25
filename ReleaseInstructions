@@ -132,8 +132,8 @@ Note: This document was adapted from the one created in the context of
 
     b. Using gpg
 
-    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --detach-sign --armor $i; done
-    $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --detach-sign --armor $i; done
+    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --use-agent --detach-sign --armor $i; done
+    $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --use-agent --detach-sign --armor $i; done
 
 11. Convert the part of the WHATSNEW file covering the changes
     since the last release into HTML for the README file on the
@@ -171,7 +171,7 @@ Note: This document was adapted from the one created in the context of
 
     using the build file release/upload.xml - this requires Ivy
 
-      $ ./build.sh -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f upload.xml
+      $ ./build.sh -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f release/upload.xml
 
     After the upload, you need to access the web interface of nexus
     under https://repository.apache.org login using your Apache
