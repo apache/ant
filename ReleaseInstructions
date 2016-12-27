@@ -138,7 +138,6 @@ Note: This document was adapted from the one created in the context of
 11. Convert the part of the WHATSNEW file covering the changes
     since the last release into HTML for the README file on the
     website. See the previous release directories for examples of these files.
-    Add instructions and warnings (GNU tar format issues, etc).
 
     Use the target txt2html of docs.xml
 
@@ -152,7 +151,7 @@ Note: This document was adapted from the one created in the context of
     Cut all sections about previous releases to keep only the current release,
     and save as  RELEASE-NOTES-1.10.0.html inside the distribution folder.
 
-    Copy the file RELEASE-NOTES-1.10.0.html also as README.html
+    Copy the contents of RELEASE-NOTES-1.10.0.html also into README.html
 
 12. The distribution is now ready to go.
     Create a SVN sandbox on your computer with https://dist.apache.org/repos/dist/dev/ant in it
