@@ -230,6 +230,10 @@ Note: This document was adapted from the one created in the context of
 21. checkout the master branch, merge the tag but don't push the
     commit
 
+    [if a release of Ant 1.9.x happened at the same time, deal with
+    the 1.9.x tag on the 1.9.x branch first and merge the 1.9.x branch
+    to master before proceeding here]
+
     $ git checkout master
     $ git merge rel/1.10.0
 
