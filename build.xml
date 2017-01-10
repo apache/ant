@@ -292,6 +292,12 @@
     <filename name="${optional.package}/Xalan2TraceSupport*"/>
   </selector>
 
+  <selector id="needs.xz">
+      <or>
+         <filename name="${optional.package}/xz/Xz*"/>
+      </or>
+  </selector>
+
   <selector id="ant.launcher">
     <filename name="${ant.package}/launch/"/>
   </selector>
@@ -318,6 +324,7 @@
         <selector refid="needs.junit4"/>
         <selector refid="needs.netrexx"/>
         <selector refid="needs.swing"/>
+        <selector refid="needs.xz"/>
         <selector refid="ant.launcher"/>
       </or>
     </not>
@@ -505,6 +512,9 @@
     <available property="jsch.present"
       classname="com.jcraft.jsch.Session"
       classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
+    <available property="xz.present"
+      classname="org.tukaani.xz.XZOutputStream"
+      classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <property name="build.compiler" value="modern"/>
 
@@ -592,6 +602,7 @@
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing" unless="swing.present"/>
             <selector refid="needs.jsch" unless="jsch.present"/>
+            <selector refid="needs.xz" unless="xz.present"/>
             <selector refid="needs.xmlschema" unless="xmlschema.present"/>
             <selector refid="needs.apache-xalan2"
                       unless="recent.xalan2.present"/>
@@ -764,6 +775,7 @@
     <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
     <optional-jar dep="apache-xalan2"/>
+    <optional-jar dep="xz"/>
 
   </target>
 
@@ -857,6 +869,7 @@
     <optional-src-jar dep="jsch"/>
     <optional-src-jar dep="jdepend"/>
     <optional-src-jar dep="apache-xalan2"/>
+    <optional-src-jar dep="xz"/>
 
   </target>
 

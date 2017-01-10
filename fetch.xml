@@ -334,8 +334,12 @@ Set -Ddest=LOCATION on the command line
     <get src="ftp://ftp.software.ibm.com/software/awdtools/netrexx/NetRexx.zip" dest="${temp.dir}/NetRexx.zip" skipexisting="true"/>
   </target>
 
+  <target name="xz" depends="init" description="loads XZ for Java">
+    <f2 project="org.tukaani" archive="xz"/>
+  </target>
+
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="ivy,logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai,netrexx" />
+    depends="ivy,logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai,netrexx,xz" />
 
 </project>

@@ -158,6 +158,12 @@
     <artifact name="ant-testutil" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-testutil" type="source" ext="jar" e:classifier="sources" />
     <artifact name="ant-testutil" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-xz" type="pom" ext="pom"/>
+    <artifact name="ant-xz" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-xz" type="jar" ext="jar"/>
+    <artifact name="ant-xz" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-xz" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-xz" type="source.asc" ext="jar.asc" e:classifier="sources" />
   </publications>
   <dependencies/> 
 </ivy-module>
