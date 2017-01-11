@@ -38,7 +38,7 @@
 
     <target name="testFailTwo" if="xz.present">
         <au:expectfailure expectedmessage="xz cannot handle multiple resources at once. (2 resources were selected.)" message="Should have thrown an exception">
-            <xz destfile="${output}/file.gz">
+            <xz destfile="${output}/file.xz">
                 <fileset dir="${output}" />
             </xz>
         </au:expectfailure>
