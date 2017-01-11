@@ -98,6 +98,7 @@
         <configuration>
           <excludes>
             <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
+            <exclude>org/apache/tools/ant/types/optional/xz/*</exclude>
             <exclude>org/apache/tools/ant/types/resolver/**</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>

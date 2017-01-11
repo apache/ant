@@ -295,6 +295,7 @@
   <selector id="needs.xz">
       <or>
          <filename name="${optional.package}/xz/"/>
+         <filename name="${type.package}/optional/xz/"/>
       </or>
   </selector>
 

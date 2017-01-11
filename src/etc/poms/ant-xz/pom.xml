@@ -57,6 +57,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <configuration>
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/xz/*</include>
+            <include>org/apache/tools/ant/types/optional/xz/*</include>
           </includes>
         </configuration>
       </plugin>
