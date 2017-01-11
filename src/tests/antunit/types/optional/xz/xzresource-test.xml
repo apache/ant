@@ -24,7 +24,7 @@
     <available property="xz.present" classname="org.tukaani.xz.XZOutputStream"/>
   </target>
 
-  <target name="testDocumentationClaimsOnCopy">
+  <target name="testDocumentationClaimsOnCopy" if="xz.present">
     <copy todir="${output}">
       <xzresource>
         <file file="../../../../../etc/testcases/taskdefs/expected/asf-logo.gif.xz"/>
