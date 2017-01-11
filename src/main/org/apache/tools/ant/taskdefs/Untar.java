@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -190,6 +192,11 @@ public class Untar extends Expand {
          *  BZIP2 compression
          */
         private static final String BZIP2 = "bzip2";
+        /**
+         *  XZ compression
+         * @since 1.10.1
+         */
+        private static final String XZ = "xz";
 
 
         /**
@@ -206,7 +213,7 @@ public class Untar extends Expand {
          * @return valid values
          */
         public String[] getValues() {
-            return new String[] {NONE, GZIP, BZIP2};
+            return new String[] {NONE, GZIP, BZIP2, XZ};
         }
 
         /**
@@ -226,6 +233,8 @@ public class Untar extends Expand {
             final String v = getValue();
             if (GZIP.equals(v)) {
                 return new GZIPInputStream(istream);
+            } else if (XZ.equals(v)) {
+                return newXZInputStream(istream);
             } else {
                 if (BZIP2.equals(v)) {
                     final char[] magic = new char[] {'B', 'Z'};
@@ -239,6 +248,27 @@ public class Untar extends Expand {
                 }
             }
             return istream;
+        }
+
+        private static InputStream newXZInputStream(InputStream istream)
+            throws BuildException {
+            try {
+                Class<? extends InputStream> clazz =
+                    Class.forName("org.tukaani.xz.XZInputStream")
+                    .asSubclass(InputStream.class);
+                Constructor<? extends InputStream> c =
+                    clazz.getConstructor(InputStream.class);
+                return c.newInstance(istream);
+            } catch (ClassNotFoundException ex) {
+                throw new BuildException("xz uncompression requires the XZ for Java library",
+                                         ex);
+            } catch (NoSuchMethodException
+                     | InstantiationException
+                     | IllegalAccessException
+                     | InvocationTargetException
+                     ex) {
+                throw new BuildException("failed to create XZInputStream", ex);
+            }
         }
     }
 }
