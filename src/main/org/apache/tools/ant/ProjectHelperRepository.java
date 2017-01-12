@@ -46,7 +46,7 @@ public class ProjectHelperRepository {
         "ant.project-helper-repo.debug";
 
     // The message log level is not accessible here because everything
-    // is instanciated statically
+    // is instantiated statically
     private static final boolean DEBUG =
         "true".equals(System.getProperty(DEBUG_PROJECT_HELPER_REPOSITORY));
 

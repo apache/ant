@@ -70,13 +70,13 @@ in the same order they've been found in an internal 'repository':
         service declarations in the META-INF: it searches in the classpath for a
         file <code>META-INF/services/org.apache.tools.ant.ProjectHelper</code>.
         This file will just contain the fully qualified name of the
-        implementation of <code>ProjectHelper</code> to instanciate;</li>
+        implementation of <code>ProjectHelper</code> to instantiate;</li>
     <li>it will also search with the system class loader for
         <code>ProjectHelper</code> service declarations in the META-INF;</li>
     <li>last but not least it will add its default <code>ProjectHelper</code>
         that can parse classical build.xml files.</li>
 </ul>
-In case of an error while trying to instanciate a <code>ProjectHelper</code>, Ant
+In case of an error while trying to instantiate a <code>ProjectHelper</code>, Ant
 will log an error but won't stop.  If you want further debugging
 info about the <code>ProjectHelper</code> internal 'repository', use the <b>system</b>
 property <code>ant.project-helper-repo.debug</code> and set it to
@@ -104,7 +104,7 @@ The class <code>org.apache.tools.ant.ProjectHelper</code> is the API expected to
 be implemented. So write your own <code>ProjectHelper</code> by extending that
 abstract class. You are then expected to implement at least the function
 <code>parse(Project project, Object source)</code>. Note also that your
-implementation will be instanciated by Ant, and it is expecting a default
+implementation will be instantiated by Ant, and it is expecting a default
 constructor with no arguments.
 </p>
 
