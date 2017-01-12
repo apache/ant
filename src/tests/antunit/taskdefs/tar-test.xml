@@ -24,6 +24,7 @@
   <target name="setUp">
     <mkdir dir="${input}" />
     <mkdir dir="${output}" />
+    <available property="xz.present" classname="org.tukaani.xz.XZOutputStream"/>
   </target>
 
   <target name="testTarFilesetHandlesFilesetReferences" depends="setUp">
@@ -115,4 +116,47 @@
     <untar dest="${output}" src="${output}/x.tar"/>
     <au:assertFileExists file="${output}/${longfile.file.name}"/>
   </target>
+
+  <target name="testGzipCompression" depends="setUp">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.gz" compression="gzip">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <gunzip dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.gz"/>
+    </gunzip>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
+  <target name="testBzip2Compression" depends="setUp">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.bz2" compression="bzip2">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <bunzip2 dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.bz2"/>
+    </bunzip2>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
+  <target name="testXzCompression" depends="setUp" if="xz.present">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.xz" compression="xz">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <unxz dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.xz"/>
+    </unxz>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
 </project>

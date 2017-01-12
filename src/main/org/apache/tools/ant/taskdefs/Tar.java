@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -230,6 +232,7 @@ public class Tar extends MatchingTask {
      * <li>  none - no compression
      * <li>  gzip - Gzip compression
      * <li>  bzip2 - Bzip2 compression
+     * <li>xz - XZ compression, requires XZ for Java
      * </ul>
      * @param mode the compression method.
      */
@@ -971,7 +974,11 @@ public class Tar extends MatchingTask {
          *    BZIP2 compression
          */
         private static final String BZIP2 = "bzip2";
-
+        /**
+         *  XZ compression
+         * @since 1.10.1
+         */
+        private static final String XZ = "xz";
 
         /**
          * Default constructor
@@ -987,7 +994,7 @@ public class Tar extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] {NONE, GZIP, BZIP2 };
+            return new String[] {NONE, GZIP, BZIP2, XZ };
         }
 
         /**
@@ -1003,6 +1010,8 @@ public class Tar extends MatchingTask {
             final String v = getValue();
             if (GZIP.equals(v)) {
                 return new GZIPOutputStream(ostream);
+            } else if (XZ.equals(v)) {
+                return newXZOutputStream(ostream);
             } else {
                 if (BZIP2.equals(v)) {
                     ostream.write('B');
@@ -1011,6 +1020,29 @@ public class Tar extends MatchingTask {
                 }
             }
             return ostream;
+        }
+
+        private static OutputStream newXZOutputStream(OutputStream ostream)
+            throws BuildException {
+            try {
+                Class<?> fClazz = Class.forName("org.tukaani.xz.FilterOptions");
+                Class<?> oClazz = Class.forName("org.tukaani.xz.LZMA2Options");
+                Class<? extends OutputStream> sClazz =
+                    Class.forName("org.tukaani.xz.XZOutputStream")
+                    .asSubclass(OutputStream.class);
+                Constructor<? extends OutputStream> c =
+                    sClazz.getConstructor(OutputStream.class, fClazz);
+                return c.newInstance(ostream, oClazz.newInstance());
+            } catch (ClassNotFoundException ex) {
+                throw new BuildException("xz compression requires the XZ for Java library",
+                                         ex);
+            } catch (NoSuchMethodException
+                     | InstantiationException
+                     | IllegalAccessException
+                     | InvocationTargetException
+                     ex) {
+                throw new BuildException("failed to create XZOutputStream", ex);
+            }
         }
     }
 }
