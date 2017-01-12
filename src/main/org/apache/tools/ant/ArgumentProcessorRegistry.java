@@ -48,7 +48,7 @@ public class ArgumentProcessorRegistry {
     private static final String DEBUG_ARGUMENT_PROCESSOR_REPOSITORY = "ant.argument-processor-repo.debug";
 
     // The message log level is not accessible here because everything
-    // is instanciated statically
+    // is instantiated statically
     private static final boolean DEBUG = "true".equals(System.getProperty(DEBUG_ARGUMENT_PROCESSOR_REPOSITORY));
 
     private static final String SERVICE_ID = "META-INF/services/org.apache.tools.ant.ArgumentProcessor";
@@ -128,7 +128,7 @@ public class ArgumentProcessorRegistry {
         } catch (Exception e) {
             throw new BuildException("The argument processor class"
                     + processorClass.getClass().getName()
-                    + " could not be instanciated with a default constructor",
+                    + " could not be instantiated with a default constructor",
                     e);
         }
         return processor;
