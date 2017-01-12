@@ -49,6 +49,7 @@ explicit use beginning in <b>Ant 1.7</b>.
   <li><a href="#string">string</a> - a text string.</li>
   <li><a href="#tarentry">tarentry</a> - an entry in a tar file.</li>
   <li><a href="#url">url</a> - a URL.</li>
+  <li><a href="#xzresource">xzresource</a> - an XZ compressed resource.</li>
   <li><a href="#zipentry">zipentry</a> - an entry in a zip file.</li>
 </ul>
 
@@ -276,6 +277,18 @@ element.</p>
 resource providing compression of the resource's contents on the fly.
 A single element resource collection must be specified as a nested
 element.</p>
+
+<h4><a name="xzresource">xzresource</a></h4>
+
+<p>This is not a stand-alone resource, but a wrapper around another
+resource providing compression of the resource's contents on the fly.
+A single element resource collection must be specified as a nested
+element.</p>
+
+<p>XZ compression support has been added with Apache Ant 1.10.1 and
+depends on external libraries not included in the Ant distribution.
+See <a href="../install.html#librarydependencies">Library
+Dependencies</a> for more information.</p>
 
 <h4><a name="url">url</a></h4>
 

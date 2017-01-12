@@ -18,13 +18,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -72,6 +72,7 @@ public class Untar extends Expand {
      *   <li>none - no compression
      *   <li>gzip - Gzip compression
      *   <li>bzip2 - Bzip2 compression
+     *   <li>xz - XZ compression, requires XZ for Java
      * </ul>
      *
      * @param method compression method

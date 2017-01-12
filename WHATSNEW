@@ -1,6 +1,16 @@
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 
+Other changes:
+--------------
+
+ * new tasks <xz> and <unxz> and resource <xzresource> for XZ
+   compression. Also the compression attribute of <tar>/<untar> now
+   accepts "xz" as valid value.
+   The tasks and type are contained in the new ant-xz.jar and require
+   the library XZ for Java to be on the CLASSPATH.
+   Bugzilla Report 60350
+
 Changes from Ant 1.9.7 TO Ant 1.10.0
 ====================================
 
