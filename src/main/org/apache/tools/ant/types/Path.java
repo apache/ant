@@ -66,8 +66,9 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 public class Path extends DataType implements Cloneable, ResourceCollection {
     // CheckStyle:VisibilityModifier OFF - bc
 
+    // non-final as some IDE integrations (at least Eclipse) want to override it
     /** The system classpath as a Path object */
-    public static final Path systemClasspath =
+    public static Path systemClasspath = //NOSONAR
         new Path(null, System.getProperty("java.class.path"));
 
 
