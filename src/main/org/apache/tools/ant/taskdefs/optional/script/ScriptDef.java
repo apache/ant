@@ -67,7 +67,7 @@ public class ScriptDef extends DefBase {
 
     /**
      * Set the project.
-     * @param project the project that this def belows to.
+     * @param project the project that this definition belongs to.
      */
     public void setProject(Project project) {
         super.setProject(project);
@@ -237,7 +237,6 @@ public class ScriptDef extends DefBase {
                     + "attributes");
             }
 
-
             nestedElementMap.put(nestedElement.name, nestedElement);
         }
 
@@ -368,12 +367,30 @@ public class ScriptDef extends DefBase {
     }
 
     /**
+     * Defines the language (required).
+     *
+     * @param language the scripting language name for the script.
+     */
+    public void setCompiled(boolean compiled) {
+        helper.setCompiled(compiled);
+    }
+
+    /**
      * Load the script from an external file ; optional.
      *
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
         helper.setSrc(file);
+    }
+
+    /**
+     * Set the encoding of the script from an external file ; optional.
+     *
+     * @param encoding the encoding of the file containing the script source.
+     */
+    public void setEncoding(String encoding) {
+        helper.setEncoding(encoding);
     }
 
     /**
@@ -394,4 +411,3 @@ public class ScriptDef extends DefBase {
         helper.add(resource);
     }
 }
-

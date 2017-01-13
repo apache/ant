@@ -19,12 +19,13 @@ package org.apache.tools.ant.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,6 +35,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.PropertyResource;
+import org.apache.tools.ant.types.resources.StringResource;
 
 /**
  * This is a common abstract base case for script runners.
@@ -50,6 +53,11 @@ public abstract class ScriptRunnerBase {
 
     /** Script content */
     private String script = "";
+
+    private String encoding;
+
+    /** Enable script compilation. */
+    private boolean compiled;
 
     /** Project this runner is used in */
     private Project project;
@@ -187,7 +195,35 @@ public abstract class ScriptRunnerBase {
     }
 
     /**
+     * Whether to use script compilation if available. 
+     * @since Ant 1.10.1
+     * @param compiled if true, compile the script if possible.
+     */
+    public final void setCompiled(boolean compiled) {
+        this.compiled = compiled;
+    }
+
+    /**
+     * Get the compiled attribute.
+     * @since Ant 1.10.1
+     * @return the attribute.
+     */
+    public final boolean getCompiled() {
+        return compiled;
+    }
+
+    /**
+     * Set encoding of the script from an external file; optional.
+     * @since Ant 1.10.1
+     * @param encoding  encoding of the external file containing the script source.
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
      * Load the script from an external file; optional.
+     * @since Ant 1.10.1
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
@@ -195,11 +231,18 @@ public abstract class ScriptRunnerBase {
         if (!file.exists()) {
             throw new BuildException("file " + filename + " not found.");
         }
+        InputStream in = null;
         try {
-            readSource(new FileReader(file), filename);
+            in = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             //this can only happen if the file got deleted a short moment ago
             throw new BuildException("file " + filename + " not found.");
+        }
+
+        try {
+            readSource(in, filename);
+        } finally {
+             FileUtils.close(in);
         }
     }
 
@@ -208,18 +251,24 @@ public abstract class ScriptRunnerBase {
      * @param reader the reader; this is closed afterwards.
      * @param name the name to use in error messages
      */
-    private void readSource(Reader reader, String name) {
-        BufferedReader in = null;
+    private void readSource(InputStream in, String name) {
+        Reader reader = null;
         try {
-            in = new BufferedReader(reader);
-            script += FileUtils.safeReadFully(in);
+            if (null == encoding) {
+                reader = new InputStreamReader(in);
+            } else {
+                reader = new InputStreamReader(in, encoding);
+            }
+            reader = new BufferedReader(reader);
+            script += FileUtils.safeReadFully(reader);
+        } catch(UnsupportedEncodingException e) {
+            throw new BuildException("Failed to decode " + name + " with encoding " + encoding, e);
         } catch (IOException ex) {
             throw new BuildException("Failed to read " + name, ex);
         } finally {
-            FileUtils.close(in);
+            FileUtils.close(reader);
         }
     }
-
 
     /**
      * Add a resource to the source list.
@@ -228,6 +277,20 @@ public abstract class ScriptRunnerBase {
      * @throws BuildException if the resource cannot be read
      */
     public void loadResource(Resource sourceResource) {
+    	if(sourceResource instanceof StringResource) {
+    		// Note: StringResource uses UTF-8 by default to encode/decode, not the default platform encoding
+    		script += ((StringResource) sourceResource).getValue();
+    		return;
+    	}
+    	if(sourceResource instanceof PropertyResource) {
+    		script += ((PropertyResource) sourceResource).getValue();
+    		return;
+    	}
+
+    	// Concat resource
+    	
+    	// FileResource : OK for default encoding
+
         String name = sourceResource.toLongString();
         InputStream in = null;
         try {
@@ -238,7 +301,12 @@ public abstract class ScriptRunnerBase {
             throw new BuildException(
                 "Failed to open " + name + " -it is not readable", e);
         }
-        readSource(new InputStreamReader(in), name);
+
+        try {
+            readSource(in, name);
+        } finally {
+            FileUtils.close(in);
+        }
     }
 
     /**
@@ -356,5 +424,4 @@ public abstract class ScriptRunnerBase {
         Thread.currentThread().setContextClassLoader(
                  origLoader);
     }
-
 }
