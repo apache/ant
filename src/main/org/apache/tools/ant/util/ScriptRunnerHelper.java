@@ -31,9 +31,11 @@ import org.apache.tools.ant.types.resources.Union;
 public class ScriptRunnerHelper {
     private ClasspathUtils.Delegate cpDelegate = null;
     private File    srcFile;
+    private String  encoding;
     private String  manager = "auto";
     private String  language;
     private String  text;
+    private boolean compiled = false;
     private boolean setBeans = true;
     private ProjectComponent projectComponent;
     private ClassLoader scriptLoader = null;
@@ -53,6 +55,12 @@ public class ScriptRunnerHelper {
      */
     public ScriptRunnerBase getScriptRunner() {
         ScriptRunnerBase runner = getRunner();
+        runner.setCompiled(compiled);
+
+        if (encoding != null) {
+        	// set it first, because runner.setSrc() loads immediately the file
+            runner.setEncoding(encoding);
+        }
         if (srcFile != null) {
             runner.setSrc(srcFile);
         }
@@ -108,6 +116,16 @@ public class ScriptRunnerHelper {
     }
 
     /**
+     * Set the encoding of the script from an external file ; optional.
+     *
+     * @param encoding the encoding of the file containing the script source.
+     * @since Ant 1.10.1
+     */
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+    /**
      * Add script text.
      *
      * @param text a component of the script text to be added.
@@ -140,6 +158,28 @@ public class ScriptRunnerHelper {
      */
     public String getLanguage() {
         return language;
+    }
+
+    /**
+     * Enable the compilation of the script if possible.
+     * If this is true and the compilation feature is available in
+     * the script engine, the script is compiled before the first
+     * evaluation, and should be cached for future evaluations.
+     * Otherwise, a script is evaluated is used.
+     * The default is false.
+     *
+     * @param compiled the value to set.
+     */
+    public void setCompiled(boolean compiled) {
+        this.compiled = compiled;
+    }
+
+    /**
+     * Get the compilation feature.
+     * @return the compilation feature.
+     */
+    public boolean getCompiled() {
+        return this.compiled;
     }
 
     /**
