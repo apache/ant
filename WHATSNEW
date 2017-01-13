@@ -1,6 +1,13 @@
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
 
+Fixed bugs:
+-----------
+
+ * Ant 1.9.8 made Path#systemClasspath final which broke the Eclipse
+   integration.
+   Bugzilla Report 60582
+
 Changes from Ant 1.9.7 TO Ant 1.9.8
 ===================================
 
