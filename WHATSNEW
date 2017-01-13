@@ -4,7 +4,7 @@ Changes from Ant 1.10.0 TO Ant 1.10.1
 Fixed bugs:
 -----------
 
- * Ant 1.9.8 made Path#systemClasspath final which broke the Eclipse
+ * Ant 1.10.0 made Path#systemClasspath final which broke the Eclipse
    integration.
    Bugzilla Report 60582
 
