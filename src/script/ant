@@ -63,7 +63,7 @@ for arg in "$@" ; do
     # Solaris sed only processes lines with trailing newline, passing in an extra newline
     # subshell (heirloom and posix) will trim the added trailing newline
     esc_arg="`printf '%s\n' "$esc_arg" | sed -e 's@\([$\"\`\\]\)@\\\\\\1@g' `"
-    
+
     if [ "$PROTECT_NL" = "true" ] ; then
       # remove the padding X added above, this syntax is POSIX compatible but not heirloom-sh
       esc_arg="${esc_arg%X}"
