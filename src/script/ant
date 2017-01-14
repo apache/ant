@@ -22,6 +22,19 @@ use_jikes_default=false
 ant_exec_debug=false
 show_help=false
 
+if [ -z "$PROTECT_NL" ]
+then
+  PROTECT_NL=true
+  os=`uname -s`
+  rel=`uname -r`
+  # heirloom bourne-shell used by Solaris 10 is not POSIX
+  #  it lacks features necessary to protect trailing NL from subshell trimming
+  if [ "$os" = SunOS -a "$rel" = "5.10" ]
+  then
+    PROTECT_NL=false
+  fi
+fi
+
 for arg in "$@" ; do
   if [ "$arg" = "--noconfig" ] ; then
     no_config=true
@@ -37,17 +50,24 @@ for arg in "$@" ; do
       show_help=true
     fi
 
+    if [ "$PROTECT_NL" = "true" ] ; then
+      # pad the value with X to protect trailing NLs from subshell output trimming
+      esc_arg="${arg}X"
+    else
+      esc_arg="${arg}"
+    fi
+
     # wrap all arguments as "" strings, escape any internal back-slash, double-quote, $, or back-tick characters
     #  use printf to avoid echo interpretation behaviors such as escapes and line continuation
-    #  pad the value with X to protect leading/trailing whitespace from subshell output trimming
-    esc_arg="X${arg}X"
     # Mac bsd_sed does not support group-0, so pattern uses group-1
-    # Solaris sed only proceses lines with trailing newline, passing in an extra newline
-    # subshell assignment will trim the added trailing newline
-    esc_arg="$(printf '%s\n' "$esc_arg" | sed -e 's@\([$"\\`]\)@\\\1@g')"
-    # remove the padding Xs added above
-    esc_arg="${esc_arg#X}"
-    esc_arg="${esc_arg%X}"
+    # Solaris sed only processes lines with trailing newline, passing in an extra newline
+    # subshell (heirloom and posix) will trim the added trailing newline
+    esc_arg="`printf '%s\n' "$esc_arg" | sed -e 's@\([$\"\`\\]\)@\\\\\\1@g' `"
+
+    if [ "$PROTECT_NL" = "true" ] ; then
+      # remove the padding X added above, this syntax is POSIX compatible but not heirloom-sh
+      esc_arg="${esc_arg%X}"
+    fi
     quoted_arg="\"$esc_arg\""
 
     if $ant_exec_debug
@@ -352,7 +372,8 @@ else
 fi
 ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -Dant.home=\"\$ANT_HOME\" -Dant.library.dir=\"\$ANT_LIB\" $ant_sys_opts org.apache.tools.ant.launch.Launcher $ANT_ARGS -cp \"\$CLASSPATH\""
 if $ant_exec_debug ; then
-    echo "$ant_exec_command $ant_exec_args"
+    # using printf to avoid echo line continuation and escape interpretation confusion
+    printf "%s\n" "$ant_exec_command $ant_exec_args"
 fi
 
 eval "$ant_exec_command $ant_exec_args"
