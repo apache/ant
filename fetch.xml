@@ -340,6 +340,6 @@ Set -Ddest=LOCATION on the command line
 
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="ivy,logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai,netrexx,xz" />
+    depends="ivy,logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai,xz,netrexx" />
 
 </project>
