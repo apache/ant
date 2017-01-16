@@ -188,8 +188,13 @@ public class ScriptDef extends DefBase {
         }
 
         if (helper.getLanguage() == null) {
-            throw new BuildException("<scriptdef> requires a language attribute "
+            throw new BuildException("scriptdef requires a language attribute "
                 + "to specify the script language");
+        }
+
+        if (helper.getSrc() == null && helper.getEncoding() != null) {
+            throw new BuildException("scriptdef requires a src attribute "
+                    + "if the encoding is set");
         }
 
         // Check if need to set the loader
@@ -367,9 +372,9 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Defines the language (required).
+     * Defines the compilation feature (optional).
      *
-     * @param language the scripting language name for the script.
+     * @param compiled enables the script compilation if available.
      */
     public void setCompiled(boolean compiled) {
         helper.setCompiled(compiled);

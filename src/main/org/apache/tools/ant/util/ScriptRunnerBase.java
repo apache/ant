@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -223,7 +223,6 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Load the script from an external file; optional.
-     * @since Ant 1.10.1
      * @param file the file containing the script source.
      */
     public void setSrc(File file) {
@@ -231,6 +230,7 @@ public abstract class ScriptRunnerBase {
         if (!file.exists()) {
             throw new BuildException("file " + filename + " not found.");
         }
+
         InputStream in = null;
         try {
             in = new FileInputStream(file);
@@ -239,8 +239,15 @@ public abstract class ScriptRunnerBase {
             throw new BuildException("file " + filename + " not found.");
         }
 
+        final Charset charset;
+        if (null == encoding) {
+        	charset = null;
+        } else {
+        	charset = Charset.forName(encoding);
+        }
+
         try {
-            readSource(in, filename);
+            readSource(in, filename, charset);
         } finally {
              FileUtils.close(in);
         }
@@ -250,19 +257,18 @@ public abstract class ScriptRunnerBase {
      * Read some source in from the given reader
      * @param reader the reader; this is closed afterwards.
      * @param name the name to use in error messages
+     * @param charset the encoding for the reader, may be null.
      */
-    private void readSource(InputStream in, String name) {
+    private void readSource(InputStream in, String name, Charset charset) {
         Reader reader = null;
         try {
-            if (null == encoding) {
+            if (null == charset) {
                 reader = new InputStreamReader(in);
             } else {
-                reader = new InputStreamReader(in, encoding);
+                reader = new InputStreamReader(in, charset);
             }
             reader = new BufferedReader(reader);
             script += FileUtils.safeReadFully(reader);
-        } catch(UnsupportedEncodingException e) {
-            throw new BuildException("Failed to decode " + name + " with encoding " + encoding, e);
         } catch (IOException ex) {
             throw new BuildException("Failed to read " + name, ex);
         } finally {
@@ -278,7 +284,6 @@ public abstract class ScriptRunnerBase {
      */
     public void loadResource(Resource sourceResource) {
     	if(sourceResource instanceof StringResource) {
-    		// Note: StringResource uses UTF-8 by default to encode/decode, not the default platform encoding
     		script += ((StringResource) sourceResource).getValue();
     		return;
     	}
@@ -286,10 +291,6 @@ public abstract class ScriptRunnerBase {
     		script += ((PropertyResource) sourceResource).getValue();
     		return;
     	}
-
-    	// Concat resource
-    	
-    	// FileResource : OK for default encoding
 
         String name = sourceResource.toLongString();
         InputStream in = null;
@@ -299,11 +300,11 @@ public abstract class ScriptRunnerBase {
             throw new BuildException("Failed to open " + name, e);
         } catch (UnsupportedOperationException e) {
             throw new BuildException(
-                "Failed to open " + name + " -it is not readable", e);
+                "Failed to open " + name + " - it is not readable", e);
         }
 
         try {
-            readSource(in, name);
+            readSource(in, name, (Charset) null);
         } finally {
             FileUtils.close(in);
         }

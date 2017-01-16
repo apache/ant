@@ -31,11 +31,7 @@ import org.apache.tools.ant.util.ScriptRunnerBase;
  */
 public class JavaxScriptRunner extends ScriptRunnerBase {
     private ReflectWrapper engine;
-
-    /** Debug constant */
-    private static final boolean DEBUG = Boolean.getBoolean("JavaxScriptRunner.DEBUG");
-
-    private String compiledScriptRefName; 
+    private ReflectWrapper compiledScript;
 
     /**
      * Get the name of the manager prefix.
@@ -86,16 +82,14 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         ClassLoader origLoader = replaceContextLoader();
         try {
 
-            if(DEBUG) System.out.println("-- JavaxScriptRunner.evaluateScript : compile enabled [" + getCompiled() + "]");
-
             if (getCompiled()) {
 
-            	if (null == compiledScriptRefName) {
-            		compiledScriptRefName = execName + ".compiledScript.0123456789";
-            	}
-                ReflectWrapper scriptRefObj = getProject().getReference(compiledScriptRefName);
+                final String compiledScriptRefName = execName + ".compiledScript.0123456789";
+                if (null == compiledScript) {
+                    compiledScript = getProject().getReference(compiledScriptRefName);
+                }
 
-                if (null == scriptRefObj) {
+                if (null == compiledScript) {
 
                     ReflectWrapper engine = createEngine();
                     if (engine == null) {
@@ -104,51 +98,36 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
                             + getLanguage());
                     }
 
-                    final Class engineClass = Class.forName("javax.script.ScriptEngine");
-                    final Class compilableClass = Class.forName("javax.script.Compilable");
+                    final Class engineClass = Class.forName("javax.script.ScriptEngine", true, getClass().getClassLoader());
+                    final Class compilableClass = Class.forName("javax.script.Compilable", true, getClass().getClassLoader());
                     final Object wrappedObject = engine.getObject();
 
-                    if (DEBUG) System.out.println("-- JavaxScriptRunner.evaluateScript : wrappedObject [" + wrappedObject.getClass().getName() + "]");
-                    if (engineClass.isAssignableFrom(wrappedObject.getClass()) && compilableClass.isAssignableFrom(wrappedObject.getClass())) {
+                    if (engineClass.isAssignableFrom(wrappedObject.getClass()) &&
+                        compilableClass.isAssignableFrom(wrappedObject.getClass())) {
 
-                        if(DEBUG) System.out.println("-- JavaxScriptRunner.evaluateScript : compilable [" + wrappedObject.getClass().getName() + "]");
+                        getProject().log("compile script " + execName, Project.MSG_VERBOSE);
 
-                        {
-                            getProject().log("compile script" + compiledScriptRefName, Project.MSG_VERBOSE);
-
-                            // compilable engine
-                            final Object compiledScript = engine.invoke("compile", String.class, getScript());
-                            scriptRefObj = new ReflectWrapper(compiledScript);
-                        }
-
-                        getProject().log("store compiled script, ref " + compiledScriptRefName, Project.MSG_DEBUG);
+                        final Object compiled = engine.invoke("compile", String.class, getScript());
+                        compiledScript = new ReflectWrapper(compiled);
 
                     } else {
-                        getProject().log("script compilation not available", Project.MSG_DEBUG);
-                        scriptRefObj = new ReflectWrapper(null);
+                        getProject().log("script compilation not available", Project.MSG_VERBOSE);
+                        compiledScript = new ReflectWrapper(null);
                     }
-
-                    getProject().addReference(compiledScriptRefName, scriptRefObj);
+                    getProject().addReference(compiledScriptRefName, compiledScript);
                 }
 
-                if (null != scriptRefObj.getObject()) {
+                if (null != compiledScript.getObject()) {
 
-                    if (DEBUG) System.out.println("-- JavaxScriptRunner.evaluateScript : execute compiled script");
+                    final ReflectWrapper simpleBindings = new ReflectWrapper(getClass().getClassLoader(), "javax.script.SimpleBindings");
 
-                    final Object simpleBindings;
-                    {
-                        final Class simpleBindingsClass  = Class.forName("javax.script.SimpleBindings");
-                        simpleBindings = simpleBindingsClass.newInstance();
-                    }
+                    applyBindings(simpleBindings);
 
-                    applyBindings(new ReflectWrapper(simpleBindings));
-                    if (DEBUG) System.out.println("-- JavaxScriptRunner.evaluateScript : bindings applied");
+                    getProject().log("run compiled script " + execName, Project.MSG_DEBUG);
 
-                    getProject().log("run compiled script, ref " + compiledScriptRefName, Project.MSG_DEBUG);
+                    final Class bindingsClass  = Class.forName("javax.script.Bindings", true, getClass().getClassLoader());
 
-                    final Class bindingsClass  = Class.forName("javax.script.Bindings");
-
-                    return scriptRefObj.invoke("eval", bindingsClass, simpleBindings);
+                    return compiledScript.invoke("eval", bindingsClass, simpleBindings.getObject());
                 }
             }
 
