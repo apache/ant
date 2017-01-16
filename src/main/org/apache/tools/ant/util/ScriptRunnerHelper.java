@@ -58,7 +58,7 @@ public class ScriptRunnerHelper {
         runner.setCompiled(compiled);
 
         if (encoding != null) {
-        	// set it first, because runner.setSrc() loads immediately the file
+            // set it first, because runner.setSrc() loads immediately the file
             runner.setEncoding(encoding);
         }
         if (srcFile != null) {
@@ -116,14 +116,32 @@ public class ScriptRunnerHelper {
     }
 
     /**
+     * Get the external script file ; optional.
+     * @return the file containing the script source.
+     * @since Ant 1.10.1
+     */
+    public File getSrc() {
+        return srcFile;
+    }
+
+    /**
      * Set the encoding of the script from an external file ; optional.
      *
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.1
      */
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
+     * Get the external file encoding.
+     * @return the encoding of the file containing the script source.
+     * @since Ant 1.10.1
+     */
+    public String getEncoding() {
+        return encoding;
+    }
 
     /**
      * Add script text.
