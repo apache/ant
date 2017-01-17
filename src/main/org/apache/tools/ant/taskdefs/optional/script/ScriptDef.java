@@ -194,7 +194,7 @@ public class ScriptDef extends DefBase {
 
         if (helper.getSrc() == null && helper.getEncoding() != null) {
             throw new BuildException("scriptdef requires a src attribute "
-                    + "if the encoding is set");
+                + "if the encoding is set");
         }
 
         // Check if need to set the loader
@@ -372,7 +372,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Defines the compilation feature (optional).
+     * Defines the compilation feature ; optional.
      *
      * @param compiled enables the script compilation if available.
      */
