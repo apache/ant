@@ -183,7 +183,7 @@ public class ScriptRunnerHelper {
      * If this is true and the compilation feature is available in
      * the script engine, the script is compiled before the first
      * evaluation, and should be cached for future evaluations.
-     * Otherwise, a script is evaluated is used.
+     * Otherwise, the script is evaluated each time.
      * The default is false.
      *
      * @param compiled the value to set.

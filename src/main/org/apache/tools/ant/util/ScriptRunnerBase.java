@@ -283,11 +283,11 @@ public abstract class ScriptRunnerBase {
      * @throws BuildException if the resource cannot be read
      */
     public void loadResource(Resource sourceResource) {
-    	if(sourceResource instanceof StringResource) {
+    	if (sourceResource instanceof StringResource) {
     		script += ((StringResource) sourceResource).getValue();
     		return;
     	}
-    	if(sourceResource instanceof PropertyResource) {
+    	if (sourceResource instanceof PropertyResource) {
     		script += ((PropertyResource) sourceResource).getValue();
     		return;
     	}
