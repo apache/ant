@@ -84,14 +84,14 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
 
             if (getCompiled()) {
 
-                final String compiledScriptRefName = execName + ".compiledScript.0123456789";
+                final String compiledScriptRefName = execName + ".compiled." + getScript().hashCode() + "." + getProject().hashCode();
                 if (null == compiledScript) {
                     compiledScript = getProject().getReference(compiledScriptRefName);
                 }
 
                 if (null == compiledScript) {
 
-                    ReflectWrapper engine = createEngine();
+                    final ReflectWrapper engine = createEngine();
                     if (engine == null) {
                         throw new BuildException(
                             "Unable to create javax script engine for "
@@ -111,7 +111,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
                         compiledScript = new ReflectWrapper(compiled);
 
                     } else {
-                        getProject().log("script compilation not available", Project.MSG_VERBOSE);
+                        getProject().log("script compilation not available for " + execName, Project.MSG_VERBOSE);
                         compiledScript = new ReflectWrapper(null);
                     }
                     getProject().addReference(compiledScriptRefName, compiledScript);
@@ -123,7 +123,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
 
                     applyBindings(simpleBindings);
 
-                    getProject().log("run compiled script " + execName, Project.MSG_DEBUG);
+                    getProject().log("run compiled script " + compiledScriptRefName, Project.MSG_DEBUG);
 
                     final Class bindingsClass  = Class.forName("javax.script.Bindings", true, getClass().getClassLoader());
 
@@ -173,15 +173,9 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             String key = (String) i.next();
             Object value = getBeans().get(key);
             if ("FX".equalsIgnoreCase(getLanguage())) {
-                engine.invoke(
-                    "put", String.class, key
-                    + ":" + value.getClass().getName(),
-                    Object.class, value);
-            } else {
-                engine.invoke(
-                    "put", String.class, key,
-                    Object.class, value);
+                key += ":" + value.getClass().getName(); 
             }
+            engine.invoke("put", String.class, key, Object.class, value);
         }
     }
 

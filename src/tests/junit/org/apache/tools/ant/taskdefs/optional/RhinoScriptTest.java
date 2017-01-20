@@ -17,12 +17,14 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the examples of the &lt;script&gt; task docs.
@@ -64,4 +66,24 @@ public class RhinoScriptTest {
         assertTrue(index > -1);
     }
 
+    @Test
+    public void testUseSrcAndEncoding() {
+        final String readerEncoding = "UTF-8";
+        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", readerEncoding);
+        buildRule.executeTarget("useSrcAndEncoding");
+    }
+
+    @Test
+    public void testUseSrcAndEncodingFailure() {
+        final String readerEncoding = "ISO-8859-1";
+        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", readerEncoding);
+        try {
+            buildRule.executeTarget("useSrcAndEncoding");
+            fail("should have failed with reader's encoding [" + readerEncoding +
+                "] different from the writer's encoding [" + buildRule.getProject().getProperty("useSrcAndEncoding.encoding") + "]");
+        }
+        catch(BuildException e) {
+            assertTrue(e.getMessage().matches("expected <eacute \\[\u00e9]> but was <eacute \\[\u00c3\u00a9]>"));
+        }
+    }
 }
