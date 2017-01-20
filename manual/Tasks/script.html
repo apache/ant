@@ -103,6 +103,11 @@ different location values.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">encoding</td>
+    <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.1.</em></td>
+    <td valign="top" align="center">No - defaults to default JVM encoding</td>
+  </tr>
+  <tr>
     <td valign="top">setbeans</td>
     <td valign="top">
       This attribute controls whether to set variables for
@@ -282,7 +287,7 @@ filesizes of all files a <code>&lt;fileset/&gt;</code> caught.</p>
       // Access to Ant-Properties by their names
       dir      = <font color=blue>project</font>.getProperty("fs.dir");
       includes = <font color=blue>MyProject</font>.getProperty("fs.includes");
-      excludes = <font color=blue>self.getProject()</font>  .<font color=blue>getProperty("fs.excludes")</font>;
+      excludes = <font color=blue>self.getProject()</font>.<font color=blue>getProperty("fs.excludes")</font>;
 
       // Create a &lt;fileset dir="" includes=""/&gt;
       fs = project.<font color=blue>createDataType("fileset")</font>;

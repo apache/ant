@@ -17,6 +17,10 @@
 -->
 <project name="testproject" default="def" basedir=".">
 
+  <import file="../../buildfiletest-base.xml"/>
+
+  <property name="root" location="../../../../.."/>
+
   <target name="def">
     <fail>This build-file is intended to be run from the test cases</fail>
   </target>
@@ -41,6 +45,24 @@
     <script language="beanshell"><![CDATA[
        self.log("I'm here", org.apache.tools.ant.Project.MSG_INFO);
     ]]></script>
+  </target>
+
+  <target name="useSrcAndEncoding">
+    <mkdir dir="${output}" />
+    <property name="useSrcAndEncoding.encoding" value="UTF-8"/>
+    <property name="useSrcAndEncoding.reader.encoding" value="${useSrcAndEncoding.encoding}"
+      description="Set a different encoding to raise a failure (ex. ISO-8859-1)" />
+    <property name="useSrcAndEncoding.file" location="${output}/script.useSrcAndEncoding.js"/>
+    <property name="useSrcAndEncoding.expectedProp" value="eacute [&#233;]" />
+
+    <echo file="${useSrcAndEncoding.file}" encoding="${useSrcAndEncoding.encoding}"
+      message="project.setNewProperty('useSrcAndEncoding.prop', '${useSrcAndEncoding.expectedProp}');"/>
+
+    <script language="javascript" src="${useSrcAndEncoding.file}" encoding="${useSrcAndEncoding.reader.encoding}"/>
+    <condition property="useSrcAndEncoding.testOK" >
+      <equals arg1="${useSrcAndEncoding.expectedProp}" arg2="${useSrcAndEncoding.prop}" />
+    </condition>
+    <fail message="expected &lt;${useSrcAndEncoding.expectedProp}&gt; but was &lt;${useSrcAndEncoding.prop}&gt;" unless="useSrcAndEncoding.testOK" />
   </target>
 
 </project>
