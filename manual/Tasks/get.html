@@ -170,6 +170,29 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   name will be skipped.  If the returned name is a relative path, it
   will be considered relative to the <em>dest</em> attribute.</p>
 
+<h4>header</h4>
+<p>Any arbitrary number of HTTP headers can be added to a request.<br/>
+  The attributes of a nested <pre>&lt;header/&gt; </pre> node are as follow:
+<p></p>
+
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name or key of this header.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The value to assign to the.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 <p>Gets the index page of http://ant.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
@@ -234,6 +257,17 @@ the <a href="input.html">input task</a> to query for a password.</p>
   &lt;url url=&quot;http://ant.apache.org/faq.html&quot;/&gt;
 &lt;/get&gt;
 </pre>
+
+<p>With custom HTTP headers</p>
+<pre>
+&lt;get src=&quot;http://ant.apache.org/index.html&quot; dest=&quot;downloads&quot;&gt;
+  &lt;header name=&quot;header1&quot; value==&quot;headerValue1&quot; /&gt;
+  &lt;header name=&quot;header2&quot; value==&quot;headerValue2&quot; /&gt;
+  &lt;header name=&quot;header3&quot; value==&quot;headerValue3&quot; /&gt;
+
+&lt;/get&gt;
+</pre>
+
 <p>Gets the index and FAQ pages of http://ant.apache.org/, and stores
   them in the directory <code>downloads</code> which will be created if
   necessary.</p>
