@@ -143,10 +143,9 @@ public class GetTest {
         String log = buildRule.getLog();
         AntAssert.assertContains("Adding header 'header1'", log);
 
-        String firstHeaderLogTrimmed = log.replaceFirst("Adding header ", "");
-        String allHeaderLogsTrimmed = log.replaceAll("Adding header ", "");
+        int actualHeaderCount = log.split("Adding header ").length - 1;
 
-        assertEquals("Only one header has been added", firstHeaderLogTrimmed, allHeaderLogsTrimmed);
+        assertEquals("Only one header has been added", 1, actualHeaderCount);
     }
 
     @Test
