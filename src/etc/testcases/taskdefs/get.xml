@@ -98,21 +98,21 @@
     </fail>
   </target>
 
-  <target name="testTwoHeaders">
+  <target name="testTwoHeadersAreAddedOK">
     <get src="http://www.apache.org/" dest="get.tmp">
       <header name="header1" value="header1Value"/>
       <header name="header2" value="header2Value"/>
     </get>
   </target>
 
-  <target name="testEmptyHeaders">
+  <target name="testEmptyHeadersAreNeverAdded">
     <get src="http://www.apache.org/" dest="get.tmp">
       <header name="" value="headerValue"/>
       <header name="header2" value=""/>
     </get>
   </target>
 
-  <target name="testDuplicateHeaderNames">
+  <target name="testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded">
     <get src="http://www.apache.org/" dest="get.tmp">
       <header name="header1" value="headerValue1"/>
       <header name="header1" value="headerValue2"/>
@@ -120,7 +120,7 @@
     </get>
   </target>
 
-  <target name="testHeaderSpacesTrimmed">
+  <target name="testHeaderSpaceTrimmed">
     <get src="http://www.apache.org/" dest="get.tmp">
       <header name="  header1     " value="  headerValue1  "/>
     </get>

@@ -17,15 +17,13 @@
  */
 package org.apache.tools.ant.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
 
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test for StringUtils
@@ -195,5 +193,24 @@ public class StringUtilsTest {
     public void testJoinNullSeparator() {
         assertEquals("abc", StringUtils.join(Arrays.asList("a", "b", "c"), null));
     }
-    
+
+    @Test
+    public void testTrimToNullWithNullInput(){
+        assertNull(StringUtils.trimToNull(null));
+    }
+
+    @Test
+    public void testTrimToNullWithEmptyInput(){
+        assertNull(StringUtils.trimToNull(""));
+    }
+
+    @Test
+    public void testTrimToNullWithBlankSpaceInput(){
+        assertNull(StringUtils.trimToNull("   "));
+    }
+
+    @Test
+    public void testTrimToNullWithInputPaddedWithSpace(){
+        assertEquals("aaBcDeF",StringUtils.trimToNull(" aaBcDeF  "));
+    }
 }

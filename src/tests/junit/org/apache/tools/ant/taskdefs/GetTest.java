@@ -124,8 +124,8 @@ public class GetTest {
     }
 
     @Test
-    public void testTwoHeaders() {
-        buildRule.executeTarget("testTwoHeaders");
+    public void testTwoHeadersAreAddedOK() {
+        buildRule.executeTarget("testTwoHeadersAreAddedOK");
         String log = buildRule.getLog();
         AntAssert.assertContains("Adding header 'header1'", log);
         AntAssert.assertContains("Adding header 'header2'", log);
@@ -133,13 +133,13 @@ public class GetTest {
 
     @Test
     public void testEmptyHeadersAreNeverAdded() {
-        buildRule.executeTarget("testEmptyHeaders");
+        buildRule.executeTarget("testEmptyHeadersAreNeverAdded");
         AntAssert.assertNotContains("Adding header", buildRule.getLog());
     }
 
     @Test
     public void testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded() {
-        buildRule.executeTarget("testDuplicateHeaderNames");
+        buildRule.executeTarget("testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded");
         String log = buildRule.getLog();
         AntAssert.assertContains("Adding header 'header1'", log);
 
@@ -150,7 +150,7 @@ public class GetTest {
 
     @Test
     public void testHeaderSpaceTrimmed() {
-        buildRule.executeTarget("testHeaderSpacesTrimmed");
+        buildRule.executeTarget("testHeaderSpaceTrimmed");
         AntAssert.assertContains("Adding header 'header1'", buildRule.getLog());
     }
 

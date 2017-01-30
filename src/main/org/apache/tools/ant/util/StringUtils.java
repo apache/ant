@@ -306,4 +306,25 @@ public final class StringUtils {
     private static Collector<CharSequence,?,String> joining(CharSequence separator) {
         return separator == null ? Collectors.joining() : Collectors.joining(separator);
     }
+
+
+    /**
+     * @param inputString String to trim
+     * @return null if the input string is null or empty or contain only empty spaces.
+     * It returns the input string without leading and trailing spaces otherwise.
+     *
+     */
+    public static String trimToNull(String inputString) {
+
+        if (inputString == null) {
+            return null;
+        }
+
+       String tmpString = inputString.trim();
+        if ("".equals(tmpString)) {
+            return null;
+        }
+        return tmpString;
+    }
+
 }

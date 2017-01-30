@@ -45,6 +45,8 @@ import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -495,27 +497,13 @@ public class Get extends Task {
      */
     public void addConfiguredHeader(Header header) {
         if (header != null) {
-            String key = trimToNull(header.getName());
-            String value = trimToNull(header.getValue());
+            String key = StringUtils.trimToNull(header.getName());
+            String value = StringUtils.trimToNull(header.getValue());
             if (key != null && value != null) {
                 this.headers.put(key, value);
             }
         }
     }
-
-    private String trimToNull(String inputString) {
-
-        if (inputString == null) {
-            return null;
-        }
-
-        inputString = inputString.trim();
-        if ("".equals(inputString)) {
-            return null;
-        }
-        return inputString;
-    }
-
 
     /**
      * Define the mapper to map source to destination files.
@@ -761,13 +749,13 @@ public class Get extends Task {
                 connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
             }
 
-            if (!headers.isEmpty()) {
-                for (final Map.Entry<String, String> header : headers.entrySet()) {
-                    //we do not log the header value as it may contain sensitive data like passwords
-                    log(String.format("Adding header '%s' ", header.getKey()));
-                    connection.setRequestProperty(header.getKey(), header.getValue());
-                }
+
+            for (final Map.Entry<String, String> header : headers.entrySet()) {
+                //we do not log the header value as it may contain sensitive data like passwords
+                log(String.format("Adding header '%s' ", header.getKey()));
+                connection.setRequestProperty(header.getKey(), header.getValue());
             }
+
 
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)

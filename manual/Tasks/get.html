@@ -183,12 +183,12 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">The name or key of this header.</td>
+    <td valign="top">The name or key of this header. Cannot be null or empty. Leading and trailing spaces are removed</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">The value to assign to the.</td>
+    <td valign="top">The value to assign to the header. Cannot be null or empty. Leading and trailing spaces are removed</td>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
@@ -261,10 +261,9 @@ the <a href="input.html">input task</a> to query for a password.</p>
 <p>With custom HTTP headers</p>
 <pre>
 &lt;get src=&quot;http://ant.apache.org/index.html&quot; dest=&quot;downloads&quot;&gt;
-  &lt;header name=&quot;header1&quot; value==&quot;headerValue1&quot; /&gt;
-  &lt;header name=&quot;header2&quot; value==&quot;headerValue2&quot; /&gt;
-  &lt;header name=&quot;header3&quot; value==&quot;headerValue3&quot; /&gt;
-
+  &lt;header name=&quot;header1&quot; value=&quot;headerValue1&quot; /&gt;
+  &lt;header name=&quot;header2&quot; value=&quot;headerValue2&quot; /&gt;
+  &lt;header name=&quot;header3&quot; value=&quot;headerValue3&quot; /&gt;
 &lt;/get&gt;
 </pre>
 
