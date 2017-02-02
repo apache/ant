@@ -88,7 +88,6 @@ Note: This document was adapted from the one created in the context of
 8.  Commit your changes, tag them, push them.
 
     $ git tag -s -m "Tagging RC1 for version 1.10.0 of Ant" ANT_1.10.0_RC1
-    $ git push
     $ git push --tags
 
 9.  Ensure that the GPG key you use is inside the KEYS file in Ant's
