@@ -8,6 +8,12 @@ Fixed bugs:
    integration.
    Bugzilla Report 60582
 
+ * the wrapper script still didn't work on Solaris 10, but worked on
+   Solaris 11.
+   The "fixed" script should work in most cases but will not preserve
+   newlines present in command line arguments.
+   Bugzilla Report 60562
+
 Other changes:
 --------------
 
