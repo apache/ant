@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.After;
@@ -25,6 +26,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -103,6 +105,8 @@ public class GetTest {
     public void test7() {
         try {
             buildRule.executeTarget("test7");
+            AntAssert.assertNotContains("Adding header", buildRule.getLog());
+
             fail("userAgent may not be null or empty");
         } catch (BuildException ex) {
             //TODO assert value
@@ -117,6 +121,37 @@ public class GetTest {
     @Test
     public void testUseTomorrow() {
         buildRule.executeTarget("testUseTomorrow");
+    }
+
+    @Test
+    public void testTwoHeadersAreAddedOK() {
+        buildRule.executeTarget("testTwoHeadersAreAddedOK");
+        String log = buildRule.getLog();
+        AntAssert.assertContains("Adding header 'header1'", log);
+        AntAssert.assertContains("Adding header 'header2'", log);
+    }
+
+    @Test
+    public void testEmptyHeadersAreNeverAdded() {
+        buildRule.executeTarget("testEmptyHeadersAreNeverAdded");
+        AntAssert.assertNotContains("Adding header", buildRule.getLog());
+    }
+
+    @Test
+    public void testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded() {
+        buildRule.executeTarget("testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded");
+        String log = buildRule.getLog();
+        AntAssert.assertContains("Adding header 'header1'", log);
+
+        int actualHeaderCount = log.split("Adding header ").length - 1;
+
+        assertEquals("Only one header has been added", 1, actualHeaderCount);
+    }
+
+    @Test
+    public void testHeaderSpaceTrimmed() {
+        buildRule.executeTarget("testHeaderSpaceTrimmed");
+        AntAssert.assertContains("Adding header 'header1'", buildRule.getLog());
     }
 
 }

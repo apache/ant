@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs.email;
 
 /**
- * Class representing a generic e-mail header.
+ * Class representing a generic key-value header.
+ * TODO: This should be moved out of the email package
+ *
  * @since Ant 1.7
  */
 public class Header {

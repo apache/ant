@@ -36,6 +36,7 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Main;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.email.Header;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -44,6 +45,10 @@ import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Gets a particular file from a URL source.
@@ -89,6 +94,9 @@ public class Get extends Task {
         System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
                            DEFAULT_AGENT_PREFIX + "/"
                            + Main.getShortAntVersion());
+
+    // Store headers as key/value pair without duplicate in keyz
+    private Map<String, String> headers = new LinkedHashMap<String, String>();
 
     /**
      * Does the work.
@@ -483,6 +491,21 @@ public class Get extends Task {
     }
 
     /**
+     * Add a nested header
+     * @param header to be added
+     *
+     */
+    public void addConfiguredHeader(Header header) {
+        if (header != null) {
+            String key = StringUtils.trimToNull(header.getName());
+            String value = StringUtils.trimToNull(header.getValue());
+            if (key != null && value != null) {
+                this.headers.put(key, value);
+            }
+        }
+    }
+
+    /**
      * Define the mapper to map source to destination files.
      * @return a mapper to be configured.
      * @exception BuildException if more than one mapper is defined.
@@ -725,6 +748,14 @@ public class Get extends Task {
             if (tryGzipEncoding) {
                 connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
             }
+
+
+            for (final Map.Entry<String, String> header : headers.entrySet()) {
+                //we do not log the header value as it may contain sensitive data like passwords
+                log(String.format("Adding header '%s' ", header.getKey()));
+                connection.setRequestProperty(header.getKey(), header.getValue());
+            }
+
 
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)

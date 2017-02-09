@@ -98,6 +98,34 @@
     </fail>
   </target>
 
+  <target name="testTwoHeadersAreAddedOK">
+    <get src="http://www.apache.org/" dest="get.tmp">
+      <header name="header1" value="header1Value"/>
+      <header name="header2" value="header2Value"/>
+    </get>
+  </target>
+
+  <target name="testEmptyHeadersAreNeverAdded">
+    <get src="http://www.apache.org/" dest="get.tmp">
+      <header name="" value="headerValue"/>
+      <header name="header2" value=""/>
+    </get>
+  </target>
+
+  <target name="testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded">
+    <get src="http://www.apache.org/" dest="get.tmp">
+      <header name="header1" value="headerValue1"/>
+      <header name="header1" value="headerValue2"/>
+      <header name="header1" value="headerValue3"/>
+    </get>
+  </target>
+
+  <target name="testHeaderSpaceTrimmed">
+    <get src="http://www.apache.org/" dest="get.tmp">
+      <header name="  header1     " value="  headerValue1  "/>
+    </get>
+  </target>
+
   <target name="cleanup">
     <delete>
       <fileset dir="${basedir}" includes="get.tmp" />
