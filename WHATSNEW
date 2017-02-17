@@ -1,6 +1,13 @@
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
 
+Other changes:
+--------------
+
+ * Added forceCsvQuoteChar option to <csv> task. When enabled the
+   values always get quoted.
+   Github Pull Request #32
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 

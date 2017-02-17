@@ -274,6 +274,11 @@ public class SQLExec extends JDBCTask {
     private String rowCountProperty = null;
 
     /**
+     * The name of the property to force the csv quote character
+    */
+    private boolean forceCsvQuoteChar = false;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      * @param srcFile the file containing the SQL command.
@@ -587,6 +592,13 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
+     * Force the csv quote character
+     */
+    public void setForceCsvQuoteChar(boolean forceCsvQuoteChar) {
+        this.forceCsvQuoteChar = forceCsvQuoteChar;
+    }
+
+    /**
      * Load the sql file and then execute it
      * @throws BuildException on error.
      */
@@ -859,7 +871,7 @@ public class SQLExec extends JDBCTask {
             int columnCount = md.getColumnCount();
             if (columnCount > 0) {
                 if (showheaders) {
-                    out.print(md.getColumnName(1));
+                    out.print(maybeQuote(md.getColumnName(1)));
                     for (int col = 2; col <= columnCount; col++) {
                          out.print(csvColumnSep);
                          out.print(maybeQuote(md.getColumnName(col)));
@@ -893,9 +905,7 @@ public class SQLExec extends JDBCTask {
     }
 
     private String maybeQuote(String s) {
-        if (csvQuoteChar == null || s == null
-            || (s.indexOf(csvColumnSep) == -1 && s.indexOf(csvQuoteChar) == -1)
-            ) {
+        if (csvQuoteChar == null || s == null || (!forceCsvQuoteChar && s.indexOf(csvColumnSep) == -1 && s.indexOf(csvQuoteChar) == -1)) {
             return s;
         }
         StringBuffer sb = new StringBuffer(csvQuoteChar);
