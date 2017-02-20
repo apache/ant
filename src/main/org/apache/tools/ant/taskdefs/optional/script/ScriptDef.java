@@ -375,7 +375,7 @@ public class ScriptDef extends DefBase {
      * Defines the compilation feature ; optional.
      *
      * @param compiled enables the script compilation if available.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      */
     public void setCompiled(boolean compiled) {
         helper.setCompiled(compiled);
@@ -394,7 +394,7 @@ public class ScriptDef extends DefBase {
      * Sets the encoding of the script from an external file ; optional.
      *
      * @param encoding the encoding of the file containing the script source.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      */
     public void setEncoding(String encoding) {
         helper.setEncoding(encoding);

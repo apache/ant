@@ -196,7 +196,7 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Whether to use script compilation if available. 
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      * @param compiled if true, compile the script if possible.
      */
     public final void setCompiled(boolean compiled) {
@@ -205,7 +205,7 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Get the compiled attribute.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      * @return the attribute.
      */
     public final boolean getCompiled() {
@@ -214,7 +214,7 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Set encoding of the script from an external file; optional.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      * @param encoding  encoding of the external file containing the script source.
      */
     public void setEncoding(String encoding) {

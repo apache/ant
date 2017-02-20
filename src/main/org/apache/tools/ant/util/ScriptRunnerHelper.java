@@ -118,7 +118,7 @@ public class ScriptRunnerHelper {
     /**
      * Get the external script file ; optional.
      * @return the file containing the script source.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      */
     public File getSrc() {
         return srcFile;
@@ -128,7 +128,7 @@ public class ScriptRunnerHelper {
      * Set the encoding of the script from an external file ; optional.
      *
      * @param encoding the encoding of the file containing the script source.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -137,7 +137,7 @@ public class ScriptRunnerHelper {
     /**
      * Get the external file encoding.
      * @return the encoding of the file containing the script source.
-     * @since Ant 1.10.1
+     * @since Ant 1.10.2
      */
     public String getEncoding() {
         return encoding;
