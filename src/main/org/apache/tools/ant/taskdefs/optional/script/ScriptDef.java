@@ -40,7 +40,7 @@ import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;
 
 /**
- * Define a task using a script
+ * Defines a task using a script.
  *
  * @since Ant 1.6
  */
@@ -67,7 +67,7 @@ public class ScriptDef extends DefBase {
 
     /**
      * Set the project.
-     * @param project the project that this def belows to.
+     * @param project the project that this definition belongs to.
      */
     public void setProject(Project project) {
         super.setProject(project);
@@ -76,7 +76,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * set the name under which this script will be activated in a build
+     * Sets the name under which this script will be activated in a build
      * file
      *
      * @param name the name of the script
@@ -104,7 +104,7 @@ public class ScriptDef extends DefBase {
         private String name;
 
         /**
-         * Set the attribute name
+         * Sets the attribute name
          *
          * @param name the attribute name
          */
@@ -114,7 +114,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Add an attribute definition to this script.
+     * Adds an attribute definition to this script.
      *
      * @param attribute the attribute definition.
      */
@@ -136,7 +136,7 @@ public class ScriptDef extends DefBase {
         private String className;
 
         /**
-         * set the tag name for this nested element
+         * Sets the tag name for this nested element
          *
          * @param name the name of this nested element
          */
@@ -145,7 +145,7 @@ public class ScriptDef extends DefBase {
         }
 
         /**
-         * Set the type of this element. This is the name of an
+         * Sets the type of this element. This is the name of an
          * Ant task or type which is to be used when this element is to be
          * created. This is an alternative to specifying the class name directly
          *
@@ -157,7 +157,7 @@ public class ScriptDef extends DefBase {
         }
 
         /**
-         * Set the classname of the class to be used for the nested element.
+         * Sets the classname of the class to be used for the nested element.
          * This specifies the class directly and is an alternative to specifying
          * the Ant type name.
          *
@@ -170,7 +170,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Add a nested element definition.
+     * Adds a nested element definition.
      *
      * @param nestedElement the nested element definition.
      */
@@ -179,7 +179,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Define the script.
+     * Defines the script.
      */
     public void execute() {
         if (name == null) {
@@ -188,8 +188,13 @@ public class ScriptDef extends DefBase {
         }
 
         if (helper.getLanguage() == null) {
-            throw new BuildException("<scriptdef> requires a language attribute "
+            throw new BuildException("scriptdef requires a language attribute "
                 + "to specify the script language");
+        }
+
+        if (helper.getSrc() == null && helper.getEncoding() != null) {
+            throw new BuildException("scriptdef requires a src attribute "
+                + "if the encoding is set");
         }
 
         // Check if need to set the loader
@@ -237,7 +242,6 @@ public class ScriptDef extends DefBase {
                     + "attributes");
             }
 
-
             nestedElementMap.put(nestedElement.name, nestedElement);
         }
 
@@ -253,7 +257,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Find or create the script repository - it is stored in the project.
+     * Finds or creates the script repository - it is stored in the project.
      * This method is synchronized on the project under {@link MagicNames#SCRIPT_REPOSITORY}
      * @return the current script repository registered as a reference.
      */
@@ -273,7 +277,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Create a nested element to be configured.
+     * Creates a nested element to be configured.
      *
      * @param elementName the name of the nested element.
      * @return object representing the element name.
@@ -318,7 +322,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Execute the script.
+     * Executes the script.
      *
      * @param attributes collection of attributes
      * @param elements a list of nested element values.
@@ -330,7 +334,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Execute the script.
+     * Executes the script.
      * This is called by the script instance to execute the script for this
      * definition.
      *
@@ -368,7 +372,17 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Defines the compilation feature ; optional.
+     *
+     * @param compiled enables the script compilation if available.
+     * @since Ant 1.10.1
+     */
+    public void setCompiled(boolean compiled) {
+        helper.setCompiled(compiled);
+    }
+
+    /**
+     * Loads the script from an external file ; optional.
      *
      * @param file the file containing the script source.
      */
@@ -377,7 +391,17 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Set the script text.
+     * Sets the encoding of the script from an external file ; optional.
+     *
+     * @param encoding the encoding of the file containing the script source.
+     * @since Ant 1.10.1
+     */
+    public void setEncoding(String encoding) {
+        helper.setEncoding(encoding);
+    }
+
+    /**
+     * Sets the script text.
      *
      * @param text a component of the script text to be added.
      */
@@ -386,12 +410,11 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Add any source resource.
-     * @since Ant1.7.1
+     * Adds any source resource.
+     * @since Ant 1.7.1
      * @param resource source of script
      */
     public void add(ResourceCollection resource) {
         helper.add(resource);
     }
 }
-

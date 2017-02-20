@@ -116,6 +116,20 @@ more information on writing scripts, please refer to the
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">encoding</td>
+    <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.1.</em></td>
+    <td valign="top" align="center">No - defaults to default JVM encoding</td>
+  </tr>
+  <tr>
+    <td valign="top">compiled</td>
+    <td valign="top">If true, the script is compiled before the first
+    evaluation for faster multiple executions, on the condition that the <em>manager</em> is "javax" and the
+    target engine implements <code>javax.script.Compilable</code>.
+    Note that the <code>bsf</code> manager may automatically compiles the script. 
+    <em>since Ant 1.10.1.</em></td>
+    <td valign="top" align="center">No - defaults to false</td>
+  </tr>
+  <tr>
     <td valign="top">uri</td>
     <td valign="top">
       The XML namespace uri that this definition should live in.
