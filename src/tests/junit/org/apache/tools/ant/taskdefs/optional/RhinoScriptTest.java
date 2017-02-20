@@ -35,7 +35,7 @@ public class RhinoScriptTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/script.xml");

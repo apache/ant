@@ -241,15 +241,15 @@ public abstract class ScriptRunnerBase {
 
         final Charset charset;
         if (null == encoding) {
-        	charset = null;
+            charset = null;
         } else {
-        	charset = Charset.forName(encoding);
+            charset = Charset.forName(encoding);
         }
 
         try {
             readSource(in, filename, charset);
         } finally {
-             FileUtils.close(in);
+            FileUtils.close(in);
         }
     }
 
@@ -283,14 +283,14 @@ public abstract class ScriptRunnerBase {
      * @throws BuildException if the resource cannot be read
      */
     public void loadResource(Resource sourceResource) {
-    	if (sourceResource instanceof StringResource) {
-    		script += ((StringResource) sourceResource).getValue();
-    		return;
-    	}
-    	if (sourceResource instanceof PropertyResource) {
-    		script += ((PropertyResource) sourceResource).getValue();
-    		return;
-    	}
+        if (sourceResource instanceof StringResource) {
+            script += ((StringResource) sourceResource).getValue();
+            return;
+        }
+        if (sourceResource instanceof PropertyResource) {
+            script += ((PropertyResource) sourceResource).getValue();
+            return;
+        }
 
         String name = sourceResource.toLongString();
         InputStream in = null;
