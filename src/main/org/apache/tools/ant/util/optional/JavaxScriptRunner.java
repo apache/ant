@@ -21,6 +21,7 @@ package org.apache.tools.ant.util.optional;
 import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.ReflectWrapper;
 import org.apache.tools.ant.util.ScriptRunnerBase;
@@ -84,7 +85,10 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
 
             if (getCompiled()) {
 
-                final String compiledScriptRefName = execName + ".compiled." + getScript().hashCode() + "." + getProject().hashCode();
+                final String compiledScriptRefName = MagicNames.SCRIPT_CACHE + "." + getLanguage() +
+                    "." + getScript().hashCode() + "." +
+                    (null == getClass().getClassLoader() ? 0 : getClass().getClassLoader().hashCode());
+
                 if (null == compiledScript) {
                     compiledScript = getProject().getReference(compiledScriptRefName);
                 }
