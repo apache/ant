@@ -8,6 +8,10 @@ Other changes:
    values always get quoted.
    Github Pull Request #32
 
+ * Added <encoding> attributes to various script related tasks and a
+   compiled attribute to scriptdef.
+   Github Pull Request #30
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 
