@@ -56,6 +56,12 @@ public final class MagicNames {
     public static final String SCRIPT_REPOSITORY = "org.apache.ant.scriptrepo";
 
     /**
+     * The name of the script cache used by the script runner.
+     * Value {@value}
+     */
+    public static final String SCRIPT_CACHE = "org.apache.ant.scriptcache";
+
+    /**
      * The name of the reference to the System Class Loader.
      * Value {@value}
      **/
