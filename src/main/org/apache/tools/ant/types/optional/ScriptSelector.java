@@ -220,4 +220,13 @@ public class ScriptSelector extends BaseSelector {
         this.selected = selected;
     }
 
+    /**
+     * Set the encoding of the script from an external file ; optional.
+     *
+     * @param encoding the encoding of the file containing the script source.
+     * @since Ant 1.10.2
+     */
+    public void setEncoding(String encoding) {
+        helper.setEncoding(encoding);
+    }
 }
