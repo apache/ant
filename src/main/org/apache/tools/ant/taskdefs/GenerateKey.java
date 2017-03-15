@@ -73,6 +73,10 @@ public class GenerateKey extends Task {
         public String getValue() {
             return value;
         }
+
+        public boolean isComplete() {
+            return name != null && value != null;
+        }
     }
 
     /**
@@ -119,9 +123,11 @@ public class GenerateKey extends Task {
                 firstPass = false;
 
                 final DnameParam param = (DnameParam) params.elementAt(i);
-                sb.append(encode(param.getName()));
-                sb.append('=');
-                sb.append(encode(param.getValue()));
+                if (param.isComplete()) {
+                    sb.append(encode(param.getName()));
+                    sb.append('=');
+                    sb.append(encode(param.getValue()));
+                }
             }
 
             return sb.toString();
