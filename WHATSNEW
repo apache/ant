@@ -12,6 +12,9 @@ Other changes:
    compiled attribute to scriptdef.
    Github Pull Request #30
 
+ * Added support for jarsigner's -tsadigestalg to <signjar>.
+   Bugzilla Report 60665
+
 Fixed bugs:
 -----------
 

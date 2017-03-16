@@ -129,6 +129,11 @@ public class SignJar extends AbstractJarSignerTask {
     private String digestAlg;
 
     /**
+     * tsa digest algorithm
+     */
+    private String tsaDigestAlg;
+
+    /**
      * error string for unit test verification: {@value}
      */
     public static final String ERROR_TODIR_AND_SIGNEDJAR
@@ -363,6 +368,24 @@ public class SignJar extends AbstractJarSignerTask {
     }
 
     /**
+     * TSA Digest Algorithm; optional
+     *
+     * @param digestAlg the tsa digest algorithm
+     * @since Ant 1.10.2
+     */
+    public void setTSADigestAlg(String digestAlg) {
+        this.tsaDigestAlg = digestAlg;
+    }
+
+    /**
+     * TSA Digest Algorithm; optional
+     * @since Ant 1.10.2
+     */
+    public String getTSADigestAlg() {
+        return tsaDigestAlg;
+    }
+
+    /**
      * sign the jar(s)
      *
      * @throws BuildException on errors
@@ -563,6 +586,11 @@ public class SignJar extends AbstractJarSignerTask {
             if (tsaurl == null || !tsaurl.startsWith("https")) {
                 addProxyFor(cmd, "http");
             }
+        }
+
+        if (tsaDigestAlg != null) {
+            addValue(cmd, "-tsadigestalg");
+            addValue(cmd, tsaDigestAlg);
         }
     }
 
