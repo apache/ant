@@ -15,6 +15,9 @@ Other changes:
    values always get quoted.
    Github Pull Request #32
 
+ * added "regexp" attribute to <linecontainsregexp>
+   Bugzilla Report 60968
+
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
 
