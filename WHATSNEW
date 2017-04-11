@@ -1,6 +1,13 @@
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
 
+Fixed bugs:
+-----------
+
+ * <genkey>'s <dname> child now skips <param>s that lack a key or
+   value.
+   Bugzilla Report 60767
+
 Other changes:
 --------------
 
@@ -15,12 +22,8 @@ Other changes:
  * Added support for jarsigner's -tsadigestalg to <signjar>.
    Bugzilla Report 60665
 
-Fixed bugs:
------------
-
- * <genkey>'s <dname> child now skips <param>s that lack a key or
-   value.
-   Bugzilla Report 60767
+ * added "regexp" attribute to <linecontainsregexp>
+   Bugzilla Report 60968
 
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
