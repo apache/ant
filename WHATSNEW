@@ -1,19 +1,19 @@
 Changes from Ant 1.9.9 TO Ant 1.9.10
 ====================================
 
-Other changes:
---------------
-
- * Added forceCsvQuoteChar option to <csv> task. When enabled the
-   values always get quoted.
-   Github Pull Request #32
-
 Fixed bugs:
 -----------
 
  * <genkey>'s <dname> child now skips <param>s that lack a key or
    value.
    Bugzilla Report 60767
+
+Other changes:
+--------------
+
+ * Added forceCsvQuoteChar option to <csv> task. When enabled the
+   values always get quoted.
+   Github Pull Request #32
 
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
