@@ -186,10 +186,9 @@ public class Project implements ResourceFactory {
         };
 
     /**
-     * The Ant core classloader--may be <code>null</code> if using
-     * parent classloader.
+     * The Ant core classloader
      */
-    private ClassLoader coreLoader = null;
+    private AntClassLoader coreLoader = null;
 
     /** Records the latest task to be executed on a thread. */
     private final Map<Thread,Task> threadTasks =
@@ -303,7 +302,8 @@ public class Project implements ResourceFactory {
      */
     public void init() throws BuildException {
         initProperties();
-
+        if (coreLoader == null)
+            setCoreLoader(null);
         ComponentHelper.getComponentHelper(this).initDefaultDefinitions();
     }
 
@@ -362,18 +362,31 @@ public class Project implements ResourceFactory {
     /**
      * Set the core classloader for the project. If a <code>null</code>
      * classloader is specified, the parent classloader should be used.
+     * <p>
+     * <em>Since Ant 1.9.5</em>, if the argument is not a
+     * non-<code>null</code> instance of {@link AntClassLoader}, then
+     * an ant class loader will be constructed around the specified
+     * class loader. This ensures that the core class loader is always
+     * an ant class loader which can be modified using the
+     * &lt;classloader&gt; task.
      *
      * @param coreLoader The classloader to use for the project.
      *                   May be <code>null</code>.
      */
     public void setCoreLoader(final ClassLoader coreLoader) {
-        this.coreLoader = coreLoader;
+        if (coreLoader == null || coreLoader instanceof AntClassLoader == false)
+            this.coreLoader = createClassLoader(coreLoader, null);
+        else
+            this.coreLoader = (AntClassLoader)coreLoader;
     }
 
     /**
      * Return the core classloader to use for this project.
-     * This may be <code>null</code>, indicating that
-     * the parent classloader should be used.
+     * <p>
+     * <em>Since Ant 1.9.5</em> the returned loader will always be a
+     * non-<code>null</code> instance of {@link AntClassLoader}.
+     * In older versions, this might be <code>null</code>,
+     * indicating that the parent classloader should be used.
      *
      * @return the core classloader to use for this project.
      *
