@@ -19,8 +19,8 @@
 package org.apache.tools.ant.taskdefs.optional.xz;
 
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -44,7 +44,7 @@ public class Xz extends Pack {
     protected void pack() {
         XZOutputStream zOut = null;
         try {
-            zOut = new XZOutputStream(new FileOutputStream(zipFile),
+            zOut = new XZOutputStream(Files.newOutputStream(zipFile.toPath()),
                                       new LZMA2Options());
             zipResource(getSrcResource(), zOut);
         } catch (IOException ioe) {

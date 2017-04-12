@@ -21,10 +21,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Enumeration;
@@ -198,7 +199,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
         try {
             Random rand = new Random(System.currentTimeMillis());
             tmp = new File("pvcs_ant_" + rand.nextLong() + ".log");
-            FileOutputStream fos = new FileOutputStream(tmp);
+            OutputStream fos = Files.newOutputStream(tmp.toPath());
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log(commandLine.describeCommand(), Project.MSG_VERBOSE);
             try {

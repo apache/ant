@@ -20,7 +20,6 @@ package org.apache.tools.ant.util;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PushbackReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -250,7 +250,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param dest the file to write to
      */
     public void saveAs(final File dest) throws IOException {
-        final FileOutputStream fos = new FileOutputStream(dest);
+        final OutputStream fos = Files.newOutputStream(dest.toPath());
         store(fos, null);
         fos.close();
     }

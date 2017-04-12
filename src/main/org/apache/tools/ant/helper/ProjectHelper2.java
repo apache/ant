@@ -18,13 +18,13 @@
 package org.apache.tools.ant.helper;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -247,7 +247,7 @@ public class ProjectHelper2 extends ProjectHelper {
             String uri = null;
             if (buildFile != null) {
                 uri = FILE_UTILS.toURI(buildFile.getAbsolutePath());
-                inputStream = new FileInputStream(buildFile);
+                inputStream = Files.newInputStream(buildFile.toPath());
             } else {
                 uri = url.toString();
                 int pling = -1;
@@ -538,10 +538,10 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
                 context.getProject().log("file=" + file, Project.MSG_DEBUG);
                 try {
-                    InputSource inputSource = new InputSource(new FileInputStream(file));
+                    InputSource inputSource = new InputSource(Files.newInputStream(file.toPath()));
                     inputSource.setSystemId(FILE_UTILS.toURI(file.getAbsolutePath()));
                     return inputSource;
-                } catch (FileNotFoundException fne) {
+                } catch (IOException fne) {
                     context.getProject().log(file.getAbsolutePath() + " could not be found",
                                              Project.MSG_WARN);
                 }

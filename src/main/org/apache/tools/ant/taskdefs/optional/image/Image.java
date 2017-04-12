@@ -18,8 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.image;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -316,9 +317,9 @@ public class Image extends MatchingTask {
                 newFile.delete();
             }
 
-            FileOutputStream stream = null;
+            OutputStream stream = null;
             try {
-                stream = new FileOutputStream(newFile);
+                stream = Files.newOutputStream(newFile.toPath());
 
                 JAI.create("encode", image, stream,
                            str_encoding.toUpperCase(Locale.ENGLISH),

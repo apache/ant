@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,6 +28,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.nio.file.Files;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -1243,7 +1243,7 @@ public class JUnitTask extends Task {
             props.put(key, p.get(key));
         }
         try {
-            final FileOutputStream outstream = new FileOutputStream(propsFile);
+            final OutputStream outstream = Files.newOutputStream(propsFile.toPath());
             props.store(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
         } catch (final java.io.IOException e) {
@@ -1953,7 +1953,7 @@ public class JUnitTask extends Task {
                         final File outFile = getOutput(fe, test);
                         if (outFile != null) {
                             try {
-                                out = new FileOutputStream(outFile);
+                                out = Files.newOutputStream(outFile.toPath());
                             } catch (final IOException e) {
                                 // ignore
                             }

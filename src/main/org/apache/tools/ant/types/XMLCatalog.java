@@ -19,13 +19,13 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -677,7 +677,7 @@ public class XMLCatalog extends DataType
                 File resFile = new File(fileName);
                 if (resFile.exists() && resFile.canRead()) {
                     try {
-                        source = new InputSource(new FileInputStream(resFile));
+                        source = new InputSource(Files.newInputStream(resFile.toPath()));
                         String sysid = JAXPUtils.getSystemId(resFile);
                         source.setSystemId(sysid);
                         log("catalog entry matched a readable file: '"

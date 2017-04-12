@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -303,10 +303,10 @@ public class Jar extends Zip {
     private Manifest getManifest(File manifestFile) {
 
         Manifest newManifest = null;
-        FileInputStream fis = null;
+        InputStream fis = null;
         InputStreamReader isr = null;
         try {
-            fis = new FileInputStream(manifestFile);
+            fis = Files.newInputStream(manifestFile.toPath());
             if (manifestEncoding == null) {
                 isr = new InputStreamReader(fis);
             } else {

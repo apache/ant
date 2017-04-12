@@ -18,11 +18,10 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -216,7 +215,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     public InputStream getInputStream() throws IOException {
         return isReference()
             ? ((Resource) getCheckedRef()).getInputStream()
-            : new FileInputStream(getNotNullFile());
+            : Files.newInputStream(getNotNullFile().toPath());
     }
 
     /**
@@ -256,7 +255,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
                 p.mkdirs();
             }
         }
-        return append ? new FileOutputStream(f.getAbsolutePath(), true) : new FileOutputStream(f);
+        return FileUtils.newOutputStream(f.toPath(), append);
     }
 
     /**

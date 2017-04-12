@@ -20,11 +20,11 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -97,7 +97,7 @@ public class Untar extends Expand {
      */
     /** {@inheritDoc} */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
-        FileInputStream fis = null;
+        InputStream fis = null;
         if (!srcF.exists()) {
             throw new BuildException("Unable to untar "
                     + srcF
@@ -105,7 +105,7 @@ public class Untar extends Expand {
                     getLocation());
         }
         try {
-            fis = new FileInputStream(srcF);
+            fis = Files.newInputStream(srcF.toPath());
             expandStream(srcF.getPath(), fis, dir);
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath()

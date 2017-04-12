@@ -17,12 +17,13 @@
  */
 package org.apache.tools.ant;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
@@ -185,7 +186,7 @@ public class XmlLogger implements BuildLogger {
             // up everything
             OutputStream stream = outStream;
             if (stream == null) {
-                stream = new FileOutputStream(outFilename);
+                stream = Files.newOutputStream(Paths.get(outFilename));
             }
             out = new OutputStreamWriter(stream, "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

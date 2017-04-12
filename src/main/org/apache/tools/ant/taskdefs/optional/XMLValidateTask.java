@@ -18,8 +18,8 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Vector;
 
 import org.apache.tools.ant.AntClassLoader;
@@ -550,7 +550,7 @@ public class XMLValidateTask extends Task {
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
-            InputSource is = new InputSource(new FileInputStream(afile));
+            InputSource is = new InputSource(Files.newInputStream(afile.toPath()));
             String uri = FILE_UTILS.toURI(afile.getAbsolutePath());
             is.setSystemId(uri);
             xmlReader.parse(is);

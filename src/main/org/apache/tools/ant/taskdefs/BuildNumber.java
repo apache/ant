@@ -18,9 +18,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
@@ -84,10 +85,10 @@ public class BuildNumber
             String.valueOf(buildNumber + 1));
 
         // Write the properties file back out
-        FileOutputStream output = null;
+        OutputStream output = null;
 
         try {
-            output = new FileOutputStream(myFile);
+            output = Files.newOutputStream(myFile.toPath());
 
             final String header = "Build Number for ANT. Do not edit!";
 
@@ -144,12 +145,12 @@ public class BuildNumber
      */
     private Properties loadProperties()
          throws BuildException {
-        FileInputStream input = null;
+        InputStream input = null;
 
         try {
             final Properties properties = new Properties();
 
-            input = new FileInputStream(myFile);
+            input = Files.newInputStream(myFile.toPath());
             properties.load(input);
             return properties;
         } catch (final IOException ioe) {

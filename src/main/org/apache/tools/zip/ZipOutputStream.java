@@ -31,12 +31,12 @@ import static org.apache.tools.zip.ZipShort.putShort;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -355,7 +355,7 @@ public class ZipOutputStream extends FilterOutputStream {
                 }
                 _raf = null;
             }
-            out = new FileOutputStream(file);
+            out = Files.newOutputStream(file.toPath());
         }
         raf = _raf;
     }

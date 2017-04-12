@@ -21,8 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +28,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -369,7 +368,7 @@ public class Replace extends MatchingTask {
         FileInput(File source) throws IOException {
             outputBuffer = new StringBuffer();
             buffer = new char[BUFF_SIZE];
-            is = new FileInputStream(source);
+            is = Files.newInputStream(source.toPath());
             try {
                 reader = new BufferedReader(encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is));
             } finally {
@@ -429,7 +428,7 @@ public class Replace extends MatchingTask {
          * @throws IOException When the file cannot be read from.
          */
         FileOutput(File out) throws IOException {
-            os = new FileOutputStream(out);
+            os = Files.newOutputStream(out.toPath());
             try {
                 writer = new BufferedWriter(encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os));
             } finally {

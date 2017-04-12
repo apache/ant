@@ -19,11 +19,11 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -355,10 +355,10 @@ public class Main implements AntMain {
                 try {
                     final File logFile = new File(args[i + 1]);
                     i++;
-                    // life-cycle of FileOutputStream is controlled by
+                    // life-cycle of OutputStream is controlled by
                     // logTo which becomes "out" and is closed in
                     // handleLogfile
-                    logTo = new PrintStream(new FileOutputStream(logFile)); //NOSONAR
+                    logTo = new PrintStream(Files.newOutputStream(logFile.toPath())); //NOSONAR
                     isLogFileUsed = true;
                 } catch (final IOException ioe) {
                     final String msg = "Cannot write on the specified log file. "
@@ -656,9 +656,9 @@ public class Main implements AntMain {
     private void loadPropertyFiles() {
         for (final String filename : propertyFiles) {
             final Properties props = new Properties();
-            FileInputStream fis = null;
+            InputStream fis = null;
             try {
-                fis = new FileInputStream(filename);
+                fis = Files.newInputStream(Paths.get(filename));
                 props.load(fis);
             } catch (final IOException e) {
                 System.out.println("Could not load property file "

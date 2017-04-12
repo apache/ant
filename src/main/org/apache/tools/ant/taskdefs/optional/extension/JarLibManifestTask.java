@@ -18,8 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.jar.Attributes;
@@ -214,9 +215,9 @@ public final class JarLibManifestTask extends Task {
      * @throws IOException if error writing file
      */
     private void writeManifest(final Manifest manifest) throws IOException {
-        FileOutputStream output = null;
+        OutputStream output = null;
         try {
-            output = new FileOutputStream(destFile);
+            output = Files.newOutputStream(destFile.toPath());
             manifest.write(output);
             output.flush();
         } finally {

@@ -18,11 +18,11 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -176,7 +176,7 @@ public class AggregateTransformer {
     protected void setXmlfile(File xmlfile) throws BuildException {
         try {
             DocumentBuilder builder = privateDBFactory.newDocumentBuilder();
-            try (InputStream in = new FileInputStream(xmlfile)) {
+            try (InputStream in = Files.newInputStream(xmlfile.toPath())) {
                 Document doc = builder.parse(in);
                 setXmlDocument(doc);
             }

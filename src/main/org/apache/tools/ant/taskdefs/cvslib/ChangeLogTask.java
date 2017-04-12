@@ -18,12 +18,12 @@
 package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -386,7 +386,7 @@ public class ChangeLogTask extends AbstractCvsTask {
          throws BuildException {
         if (null != usersFile) {
             try {
-                userList.load(new FileInputStream(usersFile));
+                userList.load(Files.newInputStream(usersFile.toPath()));
             } catch (final IOException ioe) {
                 throw new BuildException(ioe.toString(), ioe);
             }
@@ -462,10 +462,10 @@ public class ChangeLogTask extends AbstractCvsTask {
      */
     private void writeChangeLog(final CVSEntry[] entrySet)
          throws BuildException {
-        FileOutputStream output = null;
+        OutputStream output = null;
 
         try {
-            output = new FileOutputStream(destFile);
+            output = Files.newOutputStream(destFile.toPath());
 
             final PrintWriter writer =
                 new PrintWriter(new OutputStreamWriter(output, "UTF-8"));

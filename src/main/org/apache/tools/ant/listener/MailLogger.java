@@ -18,10 +18,11 @@
 package org.apache.tools.ant.listener;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -119,7 +120,7 @@ public class MailLogger extends DefaultLogger {
         if (filename != null) {
             InputStream is = null;
             try {
-                is = new FileInputStream(filename);
+                is = Files.newInputStream(Paths.get(filename));
                 fileProperties.load(is);
             } catch (IOException ioe) {
                 // ignore because properties file is not required

@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -651,7 +650,7 @@ public class SQLExec extends JDBCTask {
                         FileProvider fp =
                             output.as(FileProvider.class);
                         if (fp != null) {
-                            os = new FileOutputStream(fp.getFile(), append);
+                            os = FileUtils.newOutputStream(fp.getFile().toPath(), append);
                         } else {
                             if (append) {
                                 Appendable a =

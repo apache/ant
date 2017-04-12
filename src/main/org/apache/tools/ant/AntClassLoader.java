@@ -20,12 +20,12 @@ package org.apache.tools.ant;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
@@ -787,7 +787,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             if (jarFile == null && file.isDirectory()) {
                 final File resource = new File(file, resourceName);
                 if (resource.exists()) {
-                    return new FileInputStream(resource);
+                    return Files.newInputStream(resource.toPath());
                 }
             } else {
                 if (jarFile == null) {
@@ -1579,7 +1579,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     private static boolean readFully(final File f, final byte[] b) throws IOException {
-        try (FileInputStream fis = new FileInputStream(f)) {
+        try (InputStream fis = Files.newInputStream(f.toPath())) {
             final int len = b.length;
             int count = 0, x = 0;
             while (count != len) {

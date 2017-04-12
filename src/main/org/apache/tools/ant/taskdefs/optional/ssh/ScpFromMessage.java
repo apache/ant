@@ -21,10 +21,10 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.util.FileUtils;
 
@@ -262,7 +262,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         sendAck(out);
 
         // read a content of lfile
-        final FileOutputStream fos = new FileOutputStream(localFile);
+        final OutputStream fos = Files.newOutputStream(localFile.toPath());
         int length;
         long totalLength = 0;
         final long startTime = System.currentTimeMillis();

@@ -19,10 +19,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -206,7 +206,7 @@ public class Ant extends Task {
                 outfile = getProject().resolveFile(output);
             }
             try {
-                out = new PrintStream(new FileOutputStream(outfile));
+                out = new PrintStream(Files.newOutputStream(outfile.toPath()));
                 DefaultLogger logger = new DefaultLogger();
                 logger.setMessageOutputLevel(Project.MSG_INFO);
                 logger.setOutputPrintStream(out);

@@ -20,11 +20,10 @@ package org.apache.tools.ant.taskdefs;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1177,7 +1176,7 @@ public class Zip extends MatchingTask {
         }
         OutputStream os = null;
         try {
-            os = new FileOutputStream(zipFile);
+            os = Files.newOutputStream(zipFile.toPath());
             // CheckStyle:MagicNumber OFF
             // Cf. PKZIP specification.
             final byte[] empty = new byte[22];
@@ -1915,7 +1914,7 @@ public class Zip extends MatchingTask {
                                      getLocation());
         }
 
-        try (FileInputStream fIn = new FileInputStream(file)) {
+        try (InputStream fIn = Files.newInputStream(file.toPath())) {
             // ZIPs store time with a granularity of 2 seconds, round up
             zipFile(fIn, zOut, vPath,
                     file.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0),

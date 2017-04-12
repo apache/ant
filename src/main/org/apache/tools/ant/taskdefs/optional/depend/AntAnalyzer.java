@@ -18,9 +18,10 @@
 package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -80,7 +81,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                     InputStream inStream = null;
                     try {
                         if (container.getName().endsWith(".class")) {
-                            inStream = new FileInputStream(container.getPath());
+                            inStream = Files.newInputStream(Paths.get(container.getPath()));
                         } else {
                             zipFile = new ZipFile(container.getPath());
                             String entryName

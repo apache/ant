@@ -20,10 +20,10 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -201,8 +201,7 @@ public abstract class AbstractCvsTask extends Task {
                 try {
                     setOutputStream(new PrintStream(
                                         new BufferedOutputStream(
-                                            new FileOutputStream(output
-                                                                 .getPath(),
+                                            FileUtils.newOutputStream(Paths.get(output.getPath()),
                                                                  append))));
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
@@ -241,7 +240,7 @@ public abstract class AbstractCvsTask extends Task {
                 try {
                     setErrorStream(new PrintStream(
                                        new BufferedOutputStream(
-                                           new FileOutputStream(error.getPath(),
+                                           FileUtils.newOutputStream(Paths.get(error.getPath()),
                                                                 append))));
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());

@@ -20,14 +20,13 @@ package org.apache.tools.ant.taskdefs.optional.native2ascii;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
@@ -61,7 +60,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
                                      boolean reverse) throws IOException {
         if (!reverse && encoding != null) {
             return new BufferedReader(new InputStreamReader(
-                new FileInputStream(srcFile), encoding));
+                Files.newInputStream(srcFile.toPath()), encoding));
         }
         return new BufferedReader(new FileReader(srcFile));
     }
@@ -73,7 +72,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         }
         if (encoding != null) {
             return new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(destFile),
+                new OutputStreamWriter(Files.newOutputStream(destFile.toPath()),
                                        encoding));
         }
         return new BufferedWriter(new FileWriter(destFile));

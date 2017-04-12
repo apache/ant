@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -83,7 +82,7 @@ public class EchoXML extends XMLFragment {
         OutputStream os = null;
         try {
             if (file != null) {
-                os = new FileOutputStream(file.getAbsolutePath(), append);
+                os = FileUtils.newOutputStream(file.toPath(), append);
             } else {
                 os = new LogOutputStream(this, Project.MSG_INFO);
             }

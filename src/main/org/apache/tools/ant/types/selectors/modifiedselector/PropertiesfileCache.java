@@ -22,8 +22,9 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
@@ -133,7 +134,7 @@ public class PropertiesfileCache implements Cache {
         if ((cachefile != null) && cachefile.isFile() && cachefile.canRead()) {
             try {
                 BufferedInputStream bis = new BufferedInputStream(
-                    new FileInputStream(cachefile));
+                    Files.newInputStream(cachefile.toPath()));
                 cache.load(bis);
                 bis.close();
             } catch (Exception e) {
@@ -159,7 +160,7 @@ public class PropertiesfileCache implements Cache {
         if ((cachefile != null) && cache.propertyNames().hasMoreElements()) {
             try {
                 BufferedOutputStream bos = new BufferedOutputStream(
-                      new FileOutputStream(cachefile));
+                      Files.newOutputStream(cachefile.toPath()));
                 cache.store(bos, null);
                 bos.flush();
                 bos.close();

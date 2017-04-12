@@ -18,7 +18,8 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
@@ -367,10 +368,10 @@ public class FilterSet extends DataType implements Cloneable {
         }
         if (filtersFile.isFile()) {
            log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
-           FileInputStream in = null;
+           InputStream in = null;
            try {
               Properties props = new Properties();
-              in = new FileInputStream(filtersFile);
+              in = Files.newInputStream(filtersFile.toPath());
               props.load(in);
 
               Enumeration<?> e = props.propertyNames();

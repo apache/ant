@@ -20,12 +20,12 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -378,7 +378,7 @@ public class FormatterElement {
         public void write(int b) throws IOException {
             synchronized (this) {
                 if (outputStream == null) {
-                    outputStream = new BufferedOutputStream(new FileOutputStream(file));
+                    outputStream = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
                 }
             }
             outputStream.write(b);

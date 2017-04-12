@@ -19,9 +19,10 @@ package org.apache.tools.ant.taskdefs.email;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
@@ -148,7 +149,7 @@ class PlainMailer extends Mailer {
         final int maxBuf = 1024;
         byte[] buf = new byte[maxBuf];
 
-        try (FileInputStream finstr = new FileInputStream(file);
+        try (InputStream finstr = Files.newInputStream(file.toPath());
              BufferedInputStream in = new BufferedInputStream(finstr, buf.length)) {
 
             while ((length = in.read(buf)) != -1) {

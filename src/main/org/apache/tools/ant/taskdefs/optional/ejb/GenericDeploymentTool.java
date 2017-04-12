@@ -18,10 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -327,10 +326,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                                 File inputFile,
                                 String logicalFilename)
         throws BuildException {
-        FileInputStream iStream = null;
+        InputStream iStream = null;
         try {
             if (!addedfiles.contains(logicalFilename)) {
-                iStream = new FileInputStream(inputFile);
+                iStream = Files.newInputStream(inputFile.toPath());
                 // Create the zip entry and add it to the jar file
                 ZipEntry zipEntry = new ZipEntry(logicalFilename.replace('\\', '/'));
                 jStream.putNextEntry(zipEntry);
@@ -514,7 +513,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     protected Hashtable parseEjbFiles(String descriptorFileName, SAXParser saxParser)
                             throws IOException, SAXException {
-        FileInputStream descriptorStream = null;
+        InputStream descriptorStream = null;
         Hashtable ejbFiles = null;
 
         try {
@@ -524,7 +523,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
              * get hold of all the classfile names for the descriptor.
              */
             descriptorStream
-                = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
+                = Files.newInputStream(new File(config.descriptorDir, descriptorFileName).toPath());
             saxParser.parse(new InputSource(descriptorStream), handler);
 
             ejbFiles = handler.getFiles();
@@ -776,7 +775,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             try {
                 File manifestFile = (File) files.get(MANIFEST);
                 if (manifestFile != null && manifestFile.exists()) {
-                    in = new FileInputStream(manifestFile);
+                    in = Files.newInputStream(manifestFile.toPath());
                 } else {
                     String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
                     in = this.getClass().getResourceAsStream(defaultManifest);
@@ -797,7 +796,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             // Create the streams necessary to write the jarfile
 
-            jarStream = new JarOutputStream(new FileOutputStream(jarfile), manifest);
+            jarStream = new JarOutputStream(Files.newOutputStream(jarfile.toPath()), manifest);
             jarStream.setMethod(JarOutputStream.DEFLATED);
 
             // Loop through all the class files found and add them to the jar

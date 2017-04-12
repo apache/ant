@@ -19,12 +19,13 @@ package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -417,9 +418,9 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @exception BuildException if an error occurs
      */
     private void writeTagDiff(CvsTagEntry[] entries) throws BuildException {
-        FileOutputStream output = null;
+        OutputStream output = null;
         try {
-            output = new FileOutputStream(mydestfile);
+            output = Files.newOutputStream(mydestfile.toPath());
             PrintWriter writer = new PrintWriter(
                                      new OutputStreamWriter(output, "UTF-8"));
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

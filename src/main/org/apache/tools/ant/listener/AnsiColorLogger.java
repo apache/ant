@@ -17,10 +17,11 @@
  */
 package org.apache.tools.ant.listener;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.apache.tools.ant.DefaultLogger;
@@ -162,7 +163,7 @@ public class AnsiColorLogger extends DefaultLogger {
             Properties prop = new Properties();
 
             if (userColorFile != null) {
-                in = new FileInputStream(userColorFile);
+                in = Files.newInputStream(Paths.get(userColorFile));
             } else {
                 in = getClass().getResourceAsStream(systemColorFile);
             }

@@ -20,9 +20,10 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -350,9 +351,9 @@ public class Expand extends Task {
             } else {
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int length = 0;
-                FileOutputStream fos = null;
+                OutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(f);
+                    fos = Files.newOutputStream(f.toPath());
 
                     while ((length =
                             compressedInputStream.read(buffer)) >= 0) {

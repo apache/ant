@@ -19,11 +19,10 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.Project;
@@ -192,8 +191,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             try {
                 owningTask.log("Resolved " + publicId + " to local file "
                     + dtdFile, Project.MSG_VERBOSE);
-                return new InputSource(new FileInputStream(dtdFile));
-            } catch (FileNotFoundException ex) {
+                return new InputSource(Files.newInputStream(dtdFile.toPath()));
+            } catch (IOException ex) {
                 // ignore
             }
         }

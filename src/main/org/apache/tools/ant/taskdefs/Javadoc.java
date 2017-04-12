@@ -20,18 +20,18 @@ package org.apache.tools.ant.taskdefs;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -2516,7 +2516,7 @@ public class Javadoc extends Task {
             : FILE_UTILS.getDefaultEncoding();
         // we load the whole file as one String (toc/index files are
         // generally small, because they only contain frameset declaration):
-        final InputStream fin = new FileInputStream(file);
+        final InputStream fin = Files.newInputStream(file.toPath());
         String fileContents;
         try {
             fileContents =
@@ -2532,7 +2532,7 @@ public class Javadoc extends Task {
             // we need to patch the file!
             final String patchedFileContents = patchContent(fileContents, fixData);
             if (!patchedFileContents.equals(fileContents)) {
-                final FileOutputStream fos = new FileOutputStream(file);
+                final OutputStream fos = Files.newOutputStream(file.toPath());
                 try {
                     final OutputStreamWriter w = new OutputStreamWriter(fos, enc);
                     w.write(patchedFileContents);

@@ -21,10 +21,10 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -192,15 +192,15 @@ public class PropertyFile extends Task {
             if (propertyfile.exists()) {
                 log("Updating property file: "
                     + propertyfile.getAbsolutePath());
-                try (FileInputStream fis = new FileInputStream(propertyfile);
+                try (InputStream fis = Files.newInputStream(propertyfile.toPath());
                      BufferedInputStream bis = new BufferedInputStream(fis)) {
                     properties.load(bis);
                 }
             } else {
                 log("Creating new property file: "
                     + propertyfile.getAbsolutePath());
-                try (FileOutputStream out =
-                     new FileOutputStream(propertyfile.getAbsolutePath())) {
+                try (OutputStream out =
+                     Files.newOutputStream(propertyfile.toPath())) {
                     out.flush();
                 }
             }
@@ -249,7 +249,7 @@ public class PropertyFile extends Task {
             throw new BuildException(x, getLocation());
         }
         try {
-            OutputStream os = new FileOutputStream(propertyfile); //NOSONAR
+            OutputStream os = Files.newOutputStream(propertyfile.toPath()); //NOSONAR
             try {
                 try {
                     os.write(baos.toByteArray());

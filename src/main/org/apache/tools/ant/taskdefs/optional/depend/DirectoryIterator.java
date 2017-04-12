@@ -18,8 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Stack;
 import java.util.Vector;
@@ -130,8 +131,8 @@ public class DirectoryIterator implements ClassFileIterator {
                     } else {
 
                         // we have a file. create a stream for it
-                        try (FileInputStream inFileStream
-                             = new FileInputStream(element)) {
+                        try (InputStream inFileStream
+                             = Files.newInputStream(element.toPath())) {
                             if (element.getName().endsWith(".class")) {
 
                                 // create a data input stream from the jar

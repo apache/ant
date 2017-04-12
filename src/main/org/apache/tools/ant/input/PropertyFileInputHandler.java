@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.input;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
@@ -82,7 +83,7 @@ public class PropertyFileInputHandler implements InputHandler {
             props = new Properties();
 
             try {
-                props.load(new FileInputStream(propsFile));
+                props.load(Files.newInputStream(Paths.get(propsFile)));
             } catch (IOException e) {
                 throw new BuildException("Couldn't load " + propsFile, e);
             }

@@ -20,9 +20,9 @@ package org.apache.tools.ant.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
@@ -119,7 +119,7 @@ public class ConcatFileInputStream extends InputStream {
             log("Opening " + file[index], Project.MSG_VERBOSE);
             try {
                 currentStream = new BufferedInputStream(
-                    new FileInputStream(file[index]));
+                    Files.newInputStream(file[index].toPath()));
             } catch (IOException eyeOhEx) {
                 log("Failed to open " + file[index], Project.MSG_ERR);
                 throw eyeOhEx;

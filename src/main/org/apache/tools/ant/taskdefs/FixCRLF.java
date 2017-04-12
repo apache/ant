@@ -20,11 +20,11 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -421,7 +421,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                 reader = new BufferedReader(
                     ((encoding == null) ? new FileReader(srcFile)
                     : new InputStreamReader(
-                    new FileInputStream(srcFile), encoding)), INBUFLEN);
+                    Files.newInputStream(srcFile.toPath()), encoding)), INBUFLEN);
 
                 nextLine();
             } catch (IOException e) {

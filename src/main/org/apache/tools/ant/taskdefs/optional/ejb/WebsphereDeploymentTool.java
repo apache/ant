@@ -18,9 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -775,7 +775,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         newwasJarFile.delete();
                     }
 
-                    newJarStream = new JarOutputStream(new FileOutputStream(newwasJarFile));
+                    newJarStream = new JarOutputStream(Files.newOutputStream(newwasJarFile.toPath()));
                     newJarStream.setLevel(0);
 
                     //Copy files from old websphere jar

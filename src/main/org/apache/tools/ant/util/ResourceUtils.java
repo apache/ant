@@ -21,8 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +28,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -777,17 +776,13 @@ public class ResourceUtils {
                                   + " for " + destFile);
         }
 
-        FileInputStream in = null;
-        FileOutputStream out = null;
         FileChannel srcChannel = null;
         FileChannel destChannel = null;
 
         try {
-            in = new FileInputStream(sourceFile);
-            out = new FileOutputStream(destFile);
-
-            srcChannel = in.getChannel();
-            destChannel = out.getChannel();
+            srcChannel = FileChannel.open(sourceFile.toPath(), StandardOpenOption.READ);
+            destChannel = FileChannel.open(destFile.toPath(), StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 
             long position = 0;
             final long count = srcChannel.size();
@@ -799,8 +794,6 @@ public class ResourceUtils {
         } finally {
             FileUtils.close(srcChannel);
             FileUtils.close(destChannel);
-            FileUtils.close(out);
-            FileUtils.close(in);
         }
     }
 

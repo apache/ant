@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -56,11 +57,11 @@ public class GUnzip extends Unpack {
             log("Expanding " + srcResource.getName() + " to "
                         + dest.getAbsolutePath());
 
-            FileOutputStream out = null;
+            OutputStream out = null;
             GZIPInputStream zIn = null;
             InputStream fis = null;
             try {
-                out = new FileOutputStream(dest);
+                out = Files.newOutputStream(dest.toPath());
                 fis = srcResource.getInputStream();
                 zIn = new GZIPInputStream(fis);
                 byte[] buffer = new byte[BUFFER_SIZE];

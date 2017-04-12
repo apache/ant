@@ -21,12 +21,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -1346,7 +1345,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             // create a local temporary file
             FILE_UTILS.createNewFile(tempFile);
             long localTimeStamp = tempFile.lastModified();
-            BufferedInputStream instream = new BufferedInputStream(new FileInputStream(tempFile));
+            BufferedInputStream instream = new BufferedInputStream(Files.newInputStream(tempFile.toPath()));
             ftp.storeFile(tempFile.getName(), instream);
             instream.close();
             boolean success = FTPReply.isPositiveCompletion(ftp.getReplyCode());
@@ -1535,7 +1534,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 task.log("transferring " + file.getAbsolutePath());
             }
 
-            instream = new BufferedInputStream(new FileInputStream(file));
+            instream = new BufferedInputStream(Files.newInputStream(file.toPath()));
 
             createParents(ftp, filename);
 
@@ -1666,7 +1665,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             if (!pdir.exists()) {
                 pdir.mkdirs();
             }
-            outstream = new BufferedOutputStream(new FileOutputStream(file));
+            outstream = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             ftp.retrieveFile(resolveFile(filename), outstream);
 
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {

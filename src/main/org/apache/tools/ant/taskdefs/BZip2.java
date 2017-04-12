@@ -20,8 +20,9 @@ package org.apache.tools.ant.taskdefs;
 
 
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -44,7 +45,7 @@ public class BZip2 extends Pack {
         CBZip2OutputStream zOut = null;
         try {
             BufferedOutputStream bos =
-                new BufferedOutputStream(new FileOutputStream(zipFile));
+                new BufferedOutputStream(Files.newOutputStream(zipFile.toPath()));
             bos.write('B');
             bos.write('Z');
             zOut = new CBZip2OutputStream(bos);

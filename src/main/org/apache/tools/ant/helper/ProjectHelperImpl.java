@@ -18,10 +18,11 @@
 package org.apache.tools.ant.helper;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
@@ -110,7 +111,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                 + "default plugin");
         }
         File bFile = (File) source;
-        FileInputStream inputStream = null;
+        InputStream inputStream = null;
         InputSource inputSource = null;
 
         this.project = project;
@@ -124,7 +125,7 @@ public class ProjectHelperImpl extends ProjectHelper {
                 parser = new XMLReaderAdapter(JAXPUtils.getXMLReader());
             }
             String uri = FILE_UTILS.toURI(bFile.getAbsolutePath());
-            inputStream = new FileInputStream(bFile);
+            inputStream = Files.newInputStream(bFile.toPath());
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
             project.log("parsing buildfile " + bFile + " with URI = " + uri, Project.MSG_VERBOSE);
@@ -302,10 +303,10 @@ public class ProjectHelperImpl extends ProjectHelper {
                             + "' for compliance with other XML tools", Project.MSG_WARN);
                 }
                 try {
-                    InputSource inputSource = new InputSource(new FileInputStream(file));
+                    InputSource inputSource = new InputSource(Files.newInputStream(file.toPath()));
                     inputSource.setSystemId(FILE_UTILS.toURI(file.getAbsolutePath()));
                     return inputSource;
-                } catch (FileNotFoundException fne) {
+                } catch (IOException fne) {
                     helperImpl.project.log(file.getAbsolutePath() + " could not be found",
                             Project.MSG_WARN);
                 }

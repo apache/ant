@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -356,8 +355,8 @@ public class ReplaceRegExp extends Task {
         try {
             boolean changes = false;
 
-            try (InputStream is = new FileInputStream(f);
-                 OutputStream os = new FileOutputStream(temp)) {
+            try (InputStream is = Files.newInputStream(f.toPath());
+                 OutputStream os = Files.newOutputStream(temp.toPath())) {
                 Reader r = null;
                 Writer w = null;
                 try {

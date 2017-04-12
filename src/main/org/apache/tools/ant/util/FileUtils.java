@@ -31,6 +31,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1705,6 +1708,22 @@ public class FileUtils {
             return is.getEncoding();
         } finally {
             close(is);
+        }
+    }
+
+    /**
+     * Opens a new OutputStream for the given Path.
+     * @param path the path of the file
+     * @param whether to append to or a replace an existing file
+     * @return a stream ready to write to the file
+     * @since Ant 1.10.2
+     */
+    public static OutputStream newOutputStream(Path path, boolean append) throws IOException {
+        if (append) {
+            return Files.newOutputStream(path, StandardOpenOption.CREATE, StandardOpenOption.APPEND,
+                StandardOpenOption.WRITE);
+        } else {
+            return Files.newOutputStream(path);
         }
     }
 }

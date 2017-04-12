@@ -18,15 +18,15 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -576,12 +576,12 @@ public final class Diagnostics {
         //create the file
         long now = System.currentTimeMillis();
         File tempFile = null;
-        FileOutputStream fileout = null;
-        FileInputStream filein = null;
+        OutputStream fileout = null;
+        InputStream filein = null;
         try {
             tempFile = File.createTempFile("diag", "txt", tempDirectory);
             //do some writing to it
-            fileout = new FileOutputStream(tempFile);
+            fileout = Files.newOutputStream(tempFile.toPath());
             byte[] buffer = new byte[KILOBYTE];
             for (int i = 0; i < TEST_FILE_SIZE; i++) {
                 fileout.write(buffer);
@@ -591,7 +591,7 @@ public final class Diagnostics {
 
             // read to make sure the file has been written completely
             Thread.sleep(1000);
-            filein = new FileInputStream(tempFile);
+            filein = Files.newInputStream(tempFile.toPath());
             int total = 0;
             int read = 0;
             while ((read = filein.read(buffer, 0, KILOBYTE)) > 0) {

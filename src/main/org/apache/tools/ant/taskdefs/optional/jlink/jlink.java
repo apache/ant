@@ -24,10 +24,10 @@ package org.apache.tools.ant.taskdefs.optional.jlink;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.CRC32;
@@ -145,7 +145,7 @@ public class jlink {
      * @throws Exception on error.
      */
     public void link() throws Exception { //NOSONAR
-        ZipOutputStream output = new ZipOutputStream(new FileOutputStream(outfile));
+        ZipOutputStream output = new ZipOutputStream(Files.newOutputStream(Paths.get(outfile)));
 
         if (compression) {
             output.setMethod(ZipOutputStream.DEFLATED);
@@ -303,7 +303,7 @@ public class jlink {
             // see if the file is in fact a .class file, and determine its actual name.
             InputStream input = null;
             try {
-                input = new FileInputStream(file);
+                input = Files.newInputStream(file.toPath());
                 String className = ClassNameReader.getClassName(input);
 
                 if (className != null) {
@@ -337,7 +337,7 @@ public class jlink {
         if (!compress) {
             entry.setCrc(calcChecksum(file));
         }
-        FileInputStream input = new FileInputStream(file);
+        InputStream input = Files.newInputStream(file.toPath());
 
         addToOutputStream(output, input, entry);
     }
@@ -422,7 +422,7 @@ public class jlink {
      * is not compressed.
      */
     private long calcChecksum(File f) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(f));
+        BufferedInputStream in = new BufferedInputStream(Files.newInputStream(f.toPath()));
 
         return calcChecksum(in);
     }

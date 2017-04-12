@@ -19,9 +19,10 @@ package org.apache.tools.ant.taskdefs.email;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.UUEncoder;
@@ -40,7 +41,7 @@ class UUMailer extends PlainMailer {
                  + "readable.");
         }
 
-        try (FileInputStream finstr = new FileInputStream(file);
+        try (InputStream finstr = Files.newInputStream(file.toPath());
              BufferedInputStream in = new BufferedInputStream(finstr)) {
             UUEncoder encoder = new UUEncoder(file.getName());
 

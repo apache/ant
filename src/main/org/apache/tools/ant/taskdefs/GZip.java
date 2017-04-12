@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -41,7 +42,7 @@ public class GZip extends Pack {
     protected void pack() {
         GZIPOutputStream zOut = null;
         try {
-            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
+            zOut = new GZIPOutputStream(Files.newOutputStream(zipFile.toPath()));
             zipResource(getSrcResource(), zOut);
         } catch (IOException ioe) {
             String msg = "Problem creating gzip " + ioe.getMessage();

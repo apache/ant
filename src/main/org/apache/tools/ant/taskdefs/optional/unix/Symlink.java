@@ -32,12 +32,12 @@ package org.apache.tools.ant.taskdefs.optional.unix;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -437,7 +437,7 @@ public class Symlink extends DispatchTask {
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(
-                new FileOutputStream(new File(dir, linkFileName)));
+                Files.newOutputStream(new File(dir, linkFileName).toPath()));
             properties.store(bos, "Symlinks from " + dir);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
@@ -567,7 +567,7 @@ public class Symlink extends DispatchTask {
                 Properties lnks = new Properties();
                 InputStream is = null;
                 try {
-                    is = new BufferedInputStream(new FileInputStream(inc));
+                    is = new BufferedInputStream(Files.newInputStream(inc.toPath()));
                     lnks.load(is);
                     pf = pf.getCanonicalFile();
                 } catch (FileNotFoundException fnfe) {

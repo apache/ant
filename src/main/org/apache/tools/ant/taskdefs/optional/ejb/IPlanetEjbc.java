@@ -20,10 +20,11 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -729,7 +730,7 @@ public class IPlanetEjbc {
                     location = (String) fileDtds.get(publicId);
                     if (location != null) {
                         // closed when the InputSource is closed
-                        inputStream = new FileInputStream(location); //NOSONAR
+                        inputStream = Files.newInputStream(Paths.get(location)); //NOSONAR
                     }
                 }
             } catch (IOException e) {

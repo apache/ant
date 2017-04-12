@@ -22,13 +22,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -360,7 +360,7 @@ public class SSHExec extends SSHBase {
         InputStream istream = null;
         if (inputFile != null) {
             try {
-                istream = new FileInputStream(inputFile);
+                istream = Files.newInputStream(inputFile.toPath());
             } catch (final IOException e) {
                 // because we checked the existence before, this one
                 // shouldn't happen What if the file exists, but there

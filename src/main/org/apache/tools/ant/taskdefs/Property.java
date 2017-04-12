@@ -18,10 +18,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -575,9 +575,9 @@ public class Property extends Task {
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
             if (file.exists()) {
-                FileInputStream  fis = null;
+                InputStream  fis = null;
                 try {
-                    fis = new FileInputStream(file);
+                    fis = Files.newInputStream(file.toPath());
                     loadProperties(props, fis, file.getName().endsWith(".xml"));
                 } finally {
                     FileUtils.close(fis);

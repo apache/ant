@@ -20,7 +20,8 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.zip.Adler32;
@@ -121,7 +122,7 @@ public class ChecksumAlgorithm implements Algorithm {
         try {
             if (file.canRead()) {
                  checksum.reset();
-                 FileInputStream fis = new FileInputStream(file);
+                 InputStream fis = Files.newInputStream(file.toPath());
                  CheckedInputStream check = new CheckedInputStream(fis, checksum);
                  BufferedInputStream in = new BufferedInputStream(check);
                  while (in.read() != -1) {

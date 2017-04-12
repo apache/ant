@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -139,7 +139,7 @@ public class Concat extends Task implements ResourceCollection {
                     reader = new BufferedReader(new FileReader(file));
                 } else {
                     reader = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(file),
+                        new InputStreamReader(Files.newInputStream(file.toPath()),
                                               this.encoding));
                 }
                 value = FileUtils.safeReadFully(reader);

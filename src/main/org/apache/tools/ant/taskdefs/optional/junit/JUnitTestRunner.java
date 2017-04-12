@@ -22,15 +22,17 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -940,8 +942,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     System.exit(ERRORS);
                 }
             } else if (args[i].startsWith(Constants.PROPSFILE)) {
-                final FileInputStream in = new FileInputStream(args[i]
-                                                         .substring(Constants.PROPSFILE.length()));
+                final InputStream in = Files.newInputStream(Paths.get(args[i]
+                                                     .substring(Constants.PROPSFILE.length())));
                 props.load(in);
                 in.close();
             } else if (args[i].startsWith(Constants.SHOWOUTPUT)) {

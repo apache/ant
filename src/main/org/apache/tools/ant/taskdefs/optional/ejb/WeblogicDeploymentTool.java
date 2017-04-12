@@ -18,10 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -496,9 +495,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 DescriptorHandler handler
                     = getWeblogicDescriptorHandler(ejbDescriptor.getParentFile());
 
-                saxParser.parse(new InputSource
-                    (new FileInputStream(weblogicDD)),
-                        handler);
+                saxParser.parse(new InputSource(Files.newInputStream(weblogicDD.toPath())),
+                                handler);
 
                 Hashtable ht = handler.getFiles();
                 Enumeration e = ht.keys();
@@ -810,7 +808,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         newWLJarFile.delete();
                     }
 
-                    newJarStream = new JarOutputStream(new FileOutputStream(newWLJarFile));
+                    newJarStream = new JarOutputStream(Files.newOutputStream(newWLJarFile.toPath()));
                     newJarStream.setLevel(0);
 
                     //Copy files from old weblogic jar

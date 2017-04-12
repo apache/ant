@@ -17,9 +17,9 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Paths;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -27,6 +27,7 @@ import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.SubBuildListener;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -356,7 +357,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     private void openFileImpl(boolean append) throws BuildException {
         if (out == null) {
             try {
-                out = new PrintStream(new FileOutputStream(filename, append));
+                out = new PrintStream(FileUtils.newOutputStream(Paths.get(filename), append));
             } catch (IOException ioe) {
                 throw new BuildException("Problems opening file using a "
                                          + "recorder entry", ioe);

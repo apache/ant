@@ -19,13 +19,13 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -290,9 +290,9 @@ public class EchoProperties extends Task {
                 return;
             }
 
-            FileInputStream in = null;
+            InputStream in = null;
             try {
-                in = new FileInputStream(inFile);
+                in = Files.newInputStream(inFile.toPath());
                 Properties props = new Properties();
                 props.load(in);
                 allProps.putAll(props);
@@ -352,7 +352,7 @@ public class EchoProperties extends Task {
                     }
                     return;
                 }
-                os = new FileOutputStream(this.destfile);
+                os = Files.newOutputStream(this.destfile.toPath());
                 saveProperties(allProps, os);
             }
         } catch (IOException ioe) {

@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.xz;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Unpack;
@@ -57,11 +58,11 @@ public class Unxz extends Unpack {
             log("Expanding " + srcResource.getName() + " to "
                         + dest.getAbsolutePath());
 
-            FileOutputStream out = null;
+            OutputStream out = null;
             XZInputStream zIn = null;
             InputStream fis = null;
             try {
-                out = new FileOutputStream(dest);
+                out = Files.newOutputStream(dest.toPath());
                 fis = srcResource.getInputStream();
                 zIn = new XZInputStream(fis);
                 byte[] buffer = new byte[BUFFER_SIZE];

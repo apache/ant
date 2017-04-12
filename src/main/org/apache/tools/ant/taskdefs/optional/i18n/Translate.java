@@ -20,11 +20,12 @@ package org.apache.tools.ant.taskdefs.optional.i18n;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
@@ -407,9 +408,9 @@ public class Translate extends MatchingTask {
     private void processBundle(final String bundleFile, final int i,
                                final boolean checkLoaded) throws BuildException {
         final File propsFile = getProject().resolveFile(bundleFile + ".properties");
-        FileInputStream ins = null;
+        InputStream ins = null;
         try {
-            ins = new FileInputStream(propsFile);
+            ins = Files.newInputStream(propsFile.toPath());
             loaded = true;
             bundleLastModified[i] = propsFile.lastModified();
             log("Using " + propsFile, Project.MSG_DEBUG);
@@ -429,7 +430,7 @@ public class Translate extends MatchingTask {
      * Load resourceMap with key value pairs.  Values of existing keys
      * are not overwritten.  Bundle's encoding scheme is used.
      */
-    private void loadResourceMap(FileInputStream ins) throws BuildException {
+    private void loadResourceMap(InputStream ins) throws BuildException {
         try {
             BufferedReader in = null;
             InputStreamReader isr = new InputStreamReader(ins, bundleEncoding);
@@ -551,9 +552,9 @@ public class Translate extends MatchingTask {
         BufferedWriter out = null;
         BufferedReader in = null;
         try {
-            FileOutputStream fos = new FileOutputStream(dest);
+            OutputStream fos = Files.newOutputStream(dest.toPath());
             out = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
-            FileInputStream fis = new FileInputStream(src);
+            InputStream fis = Files.newInputStream(src.toPath());
             in = new BufferedReader(new InputStreamReader(fis, srcEncoding));
             String line;
             LineTokenizer lineTokenizer = new LineTokenizer();

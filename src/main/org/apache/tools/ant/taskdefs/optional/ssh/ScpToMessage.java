@@ -19,10 +19,10 @@
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 
@@ -363,7 +363,7 @@ public class ScpToMessage extends AbstractSshMessage {
         waitForAck(in);
 
         // send a content of lfile
-        final FileInputStream fis = new FileInputStream(localFile);
+        final InputStream fis = Files.newInputStream(localFile.toPath());
         final byte[] buf = new byte[BUFFER_SIZE];
         final long startTime = System.currentTimeMillis();
         long totalLength = 0;

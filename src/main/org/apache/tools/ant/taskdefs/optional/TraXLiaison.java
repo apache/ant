@@ -21,13 +21,12 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -191,8 +190,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         InputStream fis = null;
         OutputStream fos = null;
         try {
-            fis = new BufferedInputStream(new FileInputStream(infile));
-            fos = new BufferedOutputStream(new FileOutputStream(outfile));
+            fis = new BufferedInputStream(Files.newInputStream(infile.toPath()));
+            fos = new BufferedOutputStream(Files.newOutputStream(outfile.toPath()));
             final StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
             res.setSystemId(JAXPUtils.getSystemId(outfile));

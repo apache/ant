@@ -19,12 +19,13 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
@@ -227,10 +228,10 @@ public class ManifestTask extends Task {
         BuildException error = null;
 
         if (manifestFile.exists()) {
-            FileInputStream fis = null;
+            InputStream fis = null;
             InputStreamReader isr = null;
             try {
-                fis = new FileInputStream(manifestFile);
+                fis = Files.newInputStream(manifestFile.toPath());
                 if (encoding == null) {
                     isr = new InputStreamReader(fis, "UTF-8");
                 } else {
@@ -276,7 +277,7 @@ public class ManifestTask extends Task {
 
         PrintWriter w = null;
         try {
-            FileOutputStream fos = new FileOutputStream(manifestFile);
+            OutputStream fos = Files.newOutputStream(manifestFile.toPath());
             OutputStreamWriter osw = new OutputStreamWriter(fos, Manifest.JAR_ENCODING);
             w = new PrintWriter(osw);
             toWrite.write(w, flattenClassPaths);

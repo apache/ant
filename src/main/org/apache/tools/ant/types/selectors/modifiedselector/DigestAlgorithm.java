@@ -20,7 +20,8 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -158,12 +159,12 @@ public class DigestAlgorithm implements Algorithm {
             if (!file.canRead()) {
                 return null;
             }
-            FileInputStream fis = null;
+            InputStream fis = null;
 
             byte[] buf = new byte[readBufferSize];
             try {
                 messageDigest.reset();
-                fis = new FileInputStream(file);
+                fis = Files.newInputStream(file.toPath());
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
                 while (dis.read(buf, 0, readBufferSize) != -1) {

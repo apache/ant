@@ -19,10 +19,11 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -471,8 +472,8 @@ public class Checksum extends MatchingTask implements Condition {
      */
     private boolean generateChecksums() throws BuildException {
         boolean checksumMatches = true;
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
+        InputStream fis = null;
+        OutputStream fos = null;
         byte[] buf = new byte[readBufferSize];
         try {
             for (Map.Entry<File, Object> e : includeFileMap.entrySet()) {
@@ -481,7 +482,7 @@ public class Checksum extends MatchingTask implements Condition {
                 if (!isCondition) {
                     log("Calculating " + algorithm + " checksum for " + src, Project.MSG_VERBOSE);
                 }
-                fis = new FileInputStream(src);
+                fis = Files.newInputStream(src.toPath());
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
                 while (dis.read(buf, 0, readBufferSize) != -1) {
@@ -523,7 +524,7 @@ public class Checksum extends MatchingTask implements Condition {
                         }
                     } else {
                         File dest = (File) destination;
-                        fos = new FileOutputStream(dest);
+                        fos = Files.newOutputStream(dest.toPath());
                         fos.write(format.format(new Object[] {
                                                     checksum,
                                                     src.getName(),

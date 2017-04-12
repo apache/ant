@@ -19,10 +19,10 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
@@ -149,9 +149,9 @@ public class Rpm extends Task {
             }
         } else {
             if (output != null) {
-                FileOutputStream fos = null;
+                OutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(output); //NOSONAR
+                    fos = Files.newOutputStream(output.toPath()); //NOSONAR
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     outputstream = new PrintStream(bos);
                 } catch (IOException e) {
@@ -164,9 +164,9 @@ public class Rpm extends Task {
                 outputstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             if (error != null) {
-                FileOutputStream fos = null;
+                OutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(error);
+                    fos = Files.newOutputStream(error.toPath());
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     errorstream = new PrintStream(bos);
                 }  catch (IOException e) {

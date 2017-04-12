@@ -19,12 +19,13 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -85,9 +86,9 @@ public class AntStructure extends Task {
 
         PrintWriter out = null;
         try {
-            FileOutputStream fos = null;
+            OutputStream fos = null;
             try {
-                fos = new FileOutputStream(output);
+                fos = Files.newOutputStream(output.toPath());
                 out = new PrintWriter(new OutputStreamWriter(fos, "UTF8"));
             } catch (final UnsupportedEncodingException ue) {
                 FileUtils.close(fos);
