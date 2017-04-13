@@ -19,7 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -51,7 +52,7 @@ public class UpToDate extends Task implements Condition {
     private String value;
     private File sourceFile;
     private File targetFile;
-    private Vector sourceFileSets = new Vector();
+    private List<FileSet> sourceFileSets = new Vector<>();
     private Union sourceResources = new Union();
 
     // CheckStyle:VisibilityModifier OFF - bc
@@ -110,7 +111,7 @@ public class UpToDate extends Task implements Condition {
      * @param fs the source files
      */
     public void addSrcfiles(final FileSet fs) {
-        sourceFileSets.addElement(fs);
+        sourceFileSets.add(fs);
     }
 
     /**
@@ -150,24 +151,23 @@ public class UpToDate extends Task implements Condition {
      * see if the target(s) is/are up-to-date.
      * @return true if the target(s) is/are up-to-date
      */
+    @Override
     public boolean eval() {
-        if (sourceFileSets.size() == 0 && sourceResources.size() == 0
+        if (sourceFileSets.isEmpty() && sourceResources.isEmpty()
             && sourceFile == null) {
-            throw new BuildException("At least one srcfile or a nested "
-                                     + "<srcfiles> or <srcresources> element "
-                                     + "must be set.");
+            throw new BuildException(
+                "At least one srcfile or a nested <srcfiles> or <srcresources> element must be set.");
         }
 
-        if ((sourceFileSets.size() > 0 || sourceResources.size() > 0)
+        if (!(sourceFileSets.isEmpty() && sourceResources.isEmpty())
             && sourceFile != null) {
-            throw new BuildException("Cannot specify both the srcfile "
-                                     + "attribute and a nested <srcfiles> "
-                                     + "or <srcresources> element.");
+            throw new BuildException(
+                "Cannot specify both the srcfile attribute and a nested <srcfiles> or <srcresources> element.");
         }
 
         if (targetFile == null && mapperElement == null) {
-            throw new BuildException("The targetfile attribute or a nested "
-                                     + "mapper element must be set.");
+            throw new BuildException(
+                "The targetfile attribute or a nested mapper element must be set.");
         }
 
         // if the target file is not there, then it can't be up-to-date
@@ -179,8 +179,8 @@ public class UpToDate extends Task implements Condition {
 
         // if the source file isn't there, throw an exception
         if (sourceFile != null && !sourceFile.exists()) {
-            throw new BuildException(sourceFile.getAbsolutePath()
-                                     + " not found.");
+            throw new BuildException("%s not found.",
+                sourceFile.getAbsolutePath());
         }
 
         boolean upToDate = true;
@@ -204,12 +204,12 @@ public class UpToDate extends Task implements Condition {
         // reasons.  If we use the code for union below, we'll always
         // scan all filesets, even if we know the target is out of
         // date after the first test.
-        Enumeration e = sourceFileSets.elements();
-        while (upToDate && e.hasMoreElements()) {
-            FileSet fs = (FileSet) e.nextElement();
+
+        Iterator<FileSet> iter = sourceFileSets.iterator();
+        while (upToDate && iter.hasNext()) {
+            FileSet fs = iter.next();
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            upToDate = scanDir(fs.getDir(getProject()),
-                                           ds.getIncludedFiles());
+            upToDate = scanDir(fs.getDir(getProject()), ds.getIncludedFiles());
         }
 
         if (upToDate) {
@@ -223,12 +223,12 @@ public class UpToDate extends Task implements Condition {
         return upToDate;
     }
 
-
     /**
      * Sets property to true if target file(s) have a more recent timestamp
      * than (each of) the corresponding source file(s).
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute is required.",
@@ -264,14 +264,11 @@ public class UpToDate extends Task implements Condition {
     }
 
     private FileNameMapper getMapper() {
-        FileNameMapper mapper = null;
         if (mapperElement == null) {
             MergingMapper mm = new MergingMapper();
             mm.setTo(targetFile.getAbsolutePath());
-            mapper = mm;
-        } else {
-            mapper = mapperElement.getImplementation();
+            return mm;
         }
-        return mapper;
+        return mapperElement.getImplementation();
     }
 }

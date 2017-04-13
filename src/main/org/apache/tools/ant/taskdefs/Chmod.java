@@ -58,6 +58,7 @@ public class Chmod extends ExecuteOn {
      * @param project the project for this task.
      * @see org.apache.tools.ant.ProjectComponent#setProject
      */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         defaultSet.setProject(project);
@@ -77,6 +78,7 @@ public class Chmod extends ExecuteOn {
      * The directory which holds the files whose permissions must be changed.
      * @param src the directory.
      */
+    @Override
     public void setDir(File src) {
         defaultSet.setDir(src);
     }
@@ -154,6 +156,7 @@ public class Chmod extends ExecuteOn {
     /**
      * Check the attributes and nested elements.
      */
+    @Override
     protected void checkConfiguration() {
         if (!havePerm) {
             throw new BuildException("Required attribute perm not set in chmod",
@@ -170,6 +173,7 @@ public class Chmod extends ExecuteOn {
      * Carry out the chmoding.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
         /*
          * In Ant 1.1, <chmod dir="foo" /> means, change the permissions
@@ -188,7 +192,7 @@ public class Chmod extends ExecuteOn {
         } else if (isValidOs()) {
             // we are chmodding the given directory
             Execute execute = prepareExec();
-            Commandline cloned = (Commandline) cmdl.clone();
+            Commandline cloned = cmdl.clone();
             cloned.createArgument().setValue(defaultSet.getDir(getProject())
                                              .getPath());
             try {
@@ -210,6 +214,7 @@ public class Chmod extends ExecuteOn {
      * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the executable attribute", getLocation());
@@ -222,6 +227,7 @@ public class Chmod extends ExecuteOn {
      * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setCommand(Commandline cmdl) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the command attribute", getLocation());
@@ -233,6 +239,7 @@ public class Chmod extends ExecuteOn {
      * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the skipemptyfileset attribute", getLocation());
@@ -244,6 +251,7 @@ public class Chmod extends ExecuteOn {
      * @throws BuildException always.
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the addsourcefile attribute", getLocation());
@@ -254,6 +262,7 @@ public class Chmod extends ExecuteOn {
      * Always include unix.
      * @return true if the os is valid.
      */
+    @Override
     protected boolean isValidOs() {
         return getOs() == null && getOsFamily() == null
             ? Os.isFamily(Os.FAMILY_UNIX) : super.isValidOs();

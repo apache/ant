@@ -36,8 +36,8 @@ public class LocalProperties
      * @return the localproperties.
      */
     public static synchronized LocalProperties get(Project project) {
-        LocalProperties l = (LocalProperties) project.getReference(
-            MagicNames.REFID_LOCAL_PROPERTIES);
+        LocalProperties l =
+            project.getReference(MagicNames.REFID_LOCAL_PROPERTIES);
         if (l == null) {
             l = new LocalProperties();
             project.addReference(MagicNames.REFID_LOCAL_PROPERTIES, l);
@@ -62,12 +62,9 @@ public class LocalProperties
      * Get the initial value.
      * @return a new localproperties stack.
      */
+    @Override
     protected synchronized LocalPropertyStack initialValue() {
         return new LocalPropertyStack();
-    }
-
-    private LocalPropertyStack current() {
-        return (LocalPropertyStack) get();
     }
 
     // --------------------------------------------------
@@ -81,17 +78,17 @@ public class LocalProperties
      * @param property the property name to add.
      */
     public void addLocal(String property) {
-        current().addLocal(property);
+        get().addLocal(property);
     }
 
     /** enter the scope */
     public void enterScope() {
-        current().enterScope();
+        get().enterScope();
     }
 
     /** exit the scope */
     public void exitScope() {
-        current().exitScope();
+        get().exitScope();
     }
 
     // --------------------------------------------------
@@ -105,7 +102,7 @@ public class LocalProperties
      * To be called from the parallel thread itself.
      */
     public void copy() {
-        set(current().copy());
+        set(get().copy());
     }
 
     // --------------------------------------------------
@@ -120,8 +117,9 @@ public class LocalProperties
      * @param helper the invoking PropertyHelper.
      * @return Object value.
      */
+    @Override
     public Object evaluate(String property, PropertyHelper helper) {
-        return current().evaluate(property, helper);
+        return get().evaluate(property, helper);
     }
 
     /**
@@ -131,9 +129,10 @@ public class LocalProperties
      * @param propertyHelper the invoking PropertyHelper.
      * @return true if this entity 'owns' the property.
      */
+    @Override
     public boolean setNew(
         String property, Object value, PropertyHelper propertyHelper) {
-        return current().setNew(property, value, propertyHelper);
+        return get().setNew(property, value, propertyHelper);
     }
 
     /**
@@ -143,10 +142,9 @@ public class LocalProperties
      * @param propertyHelper the invoking PropertyHelper.
      * @return true if this entity 'owns' the property.
      */
+    @Override
     public boolean set(
         String property, Object value, PropertyHelper propertyHelper) {
-        return current().set(property, value, propertyHelper);
+        return get().set(property, value, propertyHelper);
     }
 }
-
-

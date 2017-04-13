@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant;
 
-import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.property.GetProperty;
 import org.apache.tools.ant.property.NullReturn;
-import org.apache.tools.ant.property.ParseNextProperty;
 import org.apache.tools.ant.property.ParseProperties;
 import org.apache.tools.ant.property.PropertyExpander;
 
@@ -184,52 +182,41 @@ public class PropertyHelper implements GetProperty {
         }
     };
 
-    private static final PropertyExpander DEFAULT_EXPANDER = new PropertyExpander() {
-        public String parsePropertyName(
-            String s, ParsePosition pos, ParseNextProperty notUsed) {
+    private static final PropertyExpander DEFAULT_EXPANDER =
+        (s, pos, notUsed) -> {
             int index = pos.getIndex();
             //directly check near, triggering characters:
-            if (s.length() - index >= 3
-                    && '$' == s.charAt(index) && '{' == s.charAt(index + 1)) {
+            if (s.length() - index >= 3 && '$' == s.charAt(index)
+                && '{' == s.charAt(index + 1)) {
                 int start = index + 2;
                 //defer to String.indexOf() for protracted check:
                 int end = s.indexOf('}', start);
                 if (end < 0) {
-                    throw new BuildException("Syntax error in property: "
-                            + s.substring(index));
+                    throw new BuildException(
+                        "Syntax error in property: " + s.substring(index));
                 }
                 pos.setIndex(end + 1);
-                return start == end ? "" :  s.substring(start, end);
+                return start == end ? "" : s.substring(start, end);
             }
             return null;
-        }
-    };
+        };
 
     /** dummy */
-    private static final PropertyExpander SKIP_DOUBLE_DOLLAR
-        = new PropertyExpander() {
-            // CheckStyle:LineLengthCheck OFF see too long
-            /**
-             * {@inheritDoc}
-             * @see org.apache.tools.ant.property.PropertyExpander#parsePropertyName(java.lang.String, java.text.ParsePosition, org.apache.tools.ant.PropertyHelper)
-             */
-            // CheckStyle:LineLengthCheck ON
-            public String parsePropertyName(
-                String s, ParsePosition pos, ParseNextProperty notUsed) {
-                int index = pos.getIndex();
-                if (s.length() - index >= 2) {
-                    /* check for $$; if found, advance by one--
-                     * this expander is at the bottom of the stack
-                     * and will thus be the last consulted,
-                     * so the next thing that ParseProperties will do
-                     * is advance the parse position beyond the second $
-                     */
-                    if ('$' == s.charAt(index) && '$' == s.charAt(++index)) {
-                        pos.setIndex(index);
-                    }
+    private static final PropertyExpander SKIP_DOUBLE_DOLLAR =
+        (s, pos, notUsed) -> {
+            int index = pos.getIndex();
+            if (s.length() - index >= 2) {
+                /* check for $$; if found, advance by one--
+                 * this expander is at the bottom of the stack
+                 * and will thus be the last consulted,
+                 * so the next thing that ParseProperties will do
+                 * is advance the parse position beyond the second $
+                 */
+                if ('$' == s.charAt(index) && '$' == s.charAt(++index)) {
+                    pos.setIndex(index);
                 }
-                return null;
             }
+            return null;
         };
 
     /**
@@ -248,24 +235,24 @@ public class PropertyHelper implements GetProperty {
 
     private Project project;
     private PropertyHelper next;
-    private final Hashtable<Class<? extends Delegate>, List<Delegate>> delegates = new Hashtable<Class<? extends Delegate>, List<Delegate>>();
+    private final Hashtable<Class<? extends Delegate>, List<Delegate>> delegates = new Hashtable<>();
 
     /** Project properties map (usually String to String). */
-    private Hashtable<String, Object> properties = new Hashtable<String, Object>();
+    private Hashtable<String, Object> properties = new Hashtable<>();
 
     /**
      * Map of "user" properties (as created in the Ant task, for example).
      * Note that these key/value pairs are also always put into the
      * project properties, so only the project properties need to be queried.
      */
-    private Hashtable<String, Object> userProperties = new Hashtable<String, Object>();
+    private Hashtable<String, Object> userProperties = new Hashtable<>();
 
     /**
      * Map of inherited "user" properties - that are those "user"
      * properties that have been created by tasks and not been set
      * from the command line or a GUI tool.
      */
-    private Hashtable<String, Object> inheritedProperties = new Hashtable<String, Object>();
+    private Hashtable<String, Object> inheritedProperties = new Hashtable<>();
 
     /**
      * Default constructor.
@@ -900,7 +887,7 @@ public class PropertyHelper implements GetProperty {
     public Hashtable<String, Object> getProperties() {
         //avoid concurrent modification:
         synchronized (properties) {
-            return new Hashtable<String, Object>(properties);
+            return new Hashtable<>(properties);
         }
         // There is a better way to save the context. This shouldn't
         // delegate to next, it's for backward compatibility only.
@@ -917,7 +904,7 @@ public class PropertyHelper implements GetProperty {
     public Hashtable<String, Object> getUserProperties() {
         //avoid concurrent modification:
         synchronized (userProperties) {
-            return new Hashtable<String, Object>(userProperties);
+            return new Hashtable<>(userProperties);
         }
     }
 
@@ -932,7 +919,7 @@ public class PropertyHelper implements GetProperty {
     public Hashtable<String, Object> getInheritedProperties() {
         //avoid concurrent modification:
         synchronized (inheritedProperties) {
-            return new Hashtable<String, Object>(inheritedProperties);
+            return new Hashtable<>(inheritedProperties);
         }
     }
 
@@ -982,7 +969,7 @@ public class PropertyHelper implements GetProperty {
         synchronized (inheritedProperties) {
             Enumeration<String> e = inheritedProperties.keys();
             while (e.hasMoreElements()) {
-                String arg = e.nextElement().toString();
+                String arg = e.nextElement();
                 if (other.getUserProperty(arg) != null) {
                     continue;
                 }
@@ -1036,7 +1023,7 @@ public class PropertyHelper implements GetProperty {
         int prev = 0;
         int pos;
         //search for the next instance of $ from the 'prev' position
-        while ((pos = value.indexOf("$", prev)) >= 0) {
+        while ((pos = value.indexOf('$', prev)) >= 0) {
 
             //if there was any text before this, add it as a fragment
             //TODO, this check could be modified to go if pos>prev;
@@ -1096,10 +1083,10 @@ public class PropertyHelper implements GetProperty {
             for (Class<? extends Delegate> key : getDelegateInterfaces(delegate)) {
                 List<Delegate> list = delegates.get(key);
                 if (list == null) {
-                    list = new ArrayList<Delegate>();
+                    list = new ArrayList<>();
                 } else {
                     //copy on write, top priority
-                    list = new ArrayList<Delegate>(list);
+                    list = new ArrayList<>(list);
                     list.remove(delegate);
                 }
                 list.add(0, delegate);
@@ -1129,7 +1116,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8.0
      */
     protected static Set<Class<? extends Delegate>> getDelegateInterfaces(Delegate d) {
-        final HashSet<Class<? extends Delegate>> result = new HashSet<Class<? extends Delegate>>();
+        final HashSet<Class<? extends Delegate>> result = new HashSet<>();
         Class<?> c = d.getClass();
         while (c != null) {
             Class<?>[] ifs = c.getInterfaces();

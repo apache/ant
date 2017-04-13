@@ -32,7 +32,7 @@ public class InvokeDynamicCPInfo extends ConstantCPInfo {
     private int nameAndTypeIndex;
     /** the name and type CP info pointed to */
     private NameAndTypeCPInfo nameAndTypeCPInfo;
-    /** */
+
     /** Constructor.  */
     public InvokeDynamicCPInfo() {
         super(CONSTANT_INVOKEDYNAMIC, 1);
@@ -46,6 +46,7 @@ public class InvokeDynamicCPInfo extends ConstantCPInfo {
      * @exception java.io.IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         bootstrapMethodAttrIndex = cpStream.readUnsignedShort();
         nameAndTypeIndex = cpStream.readUnsignedShort();
@@ -56,16 +57,14 @@ public class InvokeDynamicCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
-        String value;
         if (isResolved()) {
-            value = "Name = " + nameAndTypeCPInfo.getName() + ", type = " + nameAndTypeCPInfo.getType();
-        } else {
-            value = "BootstrapMethodAttrIndex inx = " + bootstrapMethodAttrIndex
-            + "NameAndType index = " + nameAndTypeIndex;
+            return "Name = " + nameAndTypeCPInfo.getName() + ", type = "
+                + nameAndTypeCPInfo.getType();
         }
-
-        return value;
+        return "BootstrapMethodAttrIndex inx = " + bootstrapMethodAttrIndex
+            + "NameAndType index = " + nameAndTypeIndex;
     }
     /**
      * Resolve this constant pool entry with respect to its dependents in
@@ -74,6 +73,7 @@ public class InvokeDynamicCPInfo extends ConstantCPInfo {
      * @param constantPool the constant pool of which this entry is a member
      *      and against which this entry is to be resolved.
      */
+    @Override
     public void resolve(ConstantPool constantPool) {
         nameAndTypeCPInfo
                 = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
@@ -82,4 +82,3 @@ public class InvokeDynamicCPInfo extends ConstantCPInfo {
     }
 
 }
-

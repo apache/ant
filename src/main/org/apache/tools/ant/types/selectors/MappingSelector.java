@@ -40,18 +40,9 @@ public abstract class MappingSelector extends BaseSelector {
     protected File targetdir = null;
     protected Mapper mapperElement = null;
     protected FileNameMapper map = null;
-    protected int granularity = 0;
+    protected int granularity = (int) FILE_UTILS.getFileTimestampGranularity();
 
     // CheckStyle:VisibilityModifier ON
-
-    /**
-     * Creates a new <code>MappingSelector</code> instance.
-     *
-     */
-    public MappingSelector() {
-        granularity = (int) FILE_UTILS.getFileTimestampGranularity();
-    }
-
 
     /**
      * The name of the file or directory which is checked for out-of-date
@@ -140,8 +131,7 @@ public abstract class MappingSelector extends BaseSelector {
         String destname = destfiles[0];
         File destfile = FILE_UTILS.resolveFile(targetdir, destname);
 
-        boolean selected = selectionTest(file, destfile);
-        return selected;
+        return selectionTest(file, destfile);
     }
 
     /**

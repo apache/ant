@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.net.bsd.RExecClient;
@@ -68,7 +68,7 @@ public class RExecTask extends Task {
     /**
      *  The list of read/write commands for this session
      */
-    private Vector rexecTasks = new Vector();
+    private List<RExecSubTask> rexecTasks = new Vector<>();
 
     /**
      *  If true, adds a CR to beginning of login script
@@ -97,7 +97,7 @@ public class RExecTask extends Task {
          */
         public void execute(AntRExecClient rexec)
                 throws BuildException {
-            throw new BuildException("Shouldn't be able instantiate a SubTask directly");
+            throw new BuildException("Shouldn't be able to instantiate a SubTask directly");
         }
 
         /**
@@ -127,6 +127,7 @@ public class RExecTask extends Task {
          * @param rexec the task to use
          * @throws BuildException on error
          */
+        @Override
         public void execute(AntRExecClient rexec)
                throws BuildException {
            rexec.sendString(taskString, echoString);
@@ -153,6 +154,7 @@ public class RExecTask extends Task {
          * @param rexec the task to use
          * @throws BuildException on error
          */
+        @Override
         public void execute(AntRExecClient rexec)
                throws BuildException {
             rexec.waitForString(taskString, timeout);
@@ -202,7 +204,7 @@ public class RExecTask extends Task {
         public void waitForString(String s, Integer timeout) {
             InputStream is = this.getInputStream();
             try {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 int windowStart = -s.length();
                 if (timeout == null || timeout.intValue() == 0) {
                     while (windowStart < 0
@@ -253,6 +255,7 @@ public class RExecTask extends Task {
                 throw new BuildException(e, getLocation());
             }
         }
+
         /**
          * Read from the rexec session until the EOF is found or
          * the timeout has been reached
@@ -261,15 +264,15 @@ public class RExecTask extends Task {
         public void waitForEOF(Integer timeout) {
             InputStream is = this.getInputStream();
             try {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 if (timeout == null || timeout.intValue() == 0) {
                 int read;
                     while ((read = is.read()) != -1) {
                         char c = (char) read;
                         sb.append(c);
                         if (c == '\n') {
-                        log(sb.toString(), Project.MSG_INFO);
-                        sb.delete(0, sb.length());
+                            log(sb.toString(), Project.MSG_INFO);
+                            sb.delete(0, sb.length());
                         }
                     }
                 } else {
@@ -281,24 +284,24 @@ public class RExecTask extends Task {
                             Thread.sleep(PAUSE_TIME);
                         }
                         if (is.available() == 0) {
-                        log(sb.toString(), Project.MSG_INFO);
-                            throw new BuildException(
-                                                     "Response timed-out waiting for EOF",
-                                                     getLocation());
+                            log(sb.toString(), Project.MSG_INFO);
+                                throw new BuildException(
+                                                         "Response timed-out waiting for EOF",
+                                                         getLocation());
                         }
                         read =  is.read();
                         if (read != -1) {
-                        char c = (char) read;
-                        sb.append(c);
-                        if (c == '\n') {
+                            char c = (char) read;
+                            sb.append(c);
+                            if (c == '\n') {
                                 log(sb.toString(), Project.MSG_INFO);
                                 sb.delete(0, sb.length());
-                        }
+                            }
                         }
                     }
                 }
                 if (sb.length() > 0) {
-                log(sb.toString(), Project.MSG_INFO);
+                    log(sb.toString(), Project.MSG_INFO);
                 }
             } catch (BuildException be) {
                 throw be;
@@ -306,8 +309,8 @@ public class RExecTask extends Task {
                 throw new BuildException(e, getLocation());
             }
         }
-
     }
+
     /**
      *  A string to wait for from the server.
      *  A subTask &lt;read&gt; tag was found.  Create the object,
@@ -316,10 +319,11 @@ public class RExecTask extends Task {
      */
 
     public RExecSubTask createRead() {
-        RExecSubTask task = (RExecSubTask) new RExecRead();
-        rexecTasks.addElement(task);
+        RExecSubTask task = new RExecRead();
+        rexecTasks.add(task);
         return task;
     }
+
     /**
      *  Add text to send to the server
      *  A subTask &lt;write&gt; tag was found.  Create the object,
@@ -327,16 +331,18 @@ public class RExecTask extends Task {
      * @return a write sub task
      */
     public RExecSubTask createWrite() {
-        RExecSubTask task = (RExecSubTask) new RExecWrite();
-        rexecTasks.addElement(task);
+        RExecSubTask task = new RExecWrite();
+        rexecTasks.add(task);
         return task;
     }
+
     /**
      *  Verify that all parameters are included.
      *  Connect and possibly login.
      *  Iterate through the list of Reads and writes.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         /**  A server name is required to continue */
         if (server == null) {
@@ -363,7 +369,7 @@ public class RExecTask extends Task {
                 throw new BuildException("Can't connect to " + server);
             }
             if (userid != null && password != null && command != null //NOSONAR
-                && rexecTasks.size() == 0) {
+                && rexecTasks.isEmpty()) {
                 // simple one-shot execution
                 rexec.rexec(userid, password, command);
             } else {
@@ -384,13 +390,14 @@ public class RExecTask extends Task {
                     String msg = "Error disconnecting from " + server;
                     if (success) {
                         throw new BuildException(msg); //NOSONAR
-                    } else { // don't hide inner exception
-                        log(msg, Project.MSG_ERR);
                     }
+                    // don't hide inner exception
+                    log(msg, Project.MSG_ERR);
                 }
             }
         }
     }
+
     /**
      *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitly
@@ -404,6 +411,7 @@ public class RExecTask extends Task {
         rexec.waitForString("assword:");
         rexec.sendString(password, false);
     }
+
     /**
      * Set the the command to execute on the server;
      * @param c a <code>String</code> value
@@ -419,6 +427,7 @@ public class RExecTask extends Task {
     public void setInitialCR(boolean b) {
         this.addCarriageReturn = b;
     }
+
     /**
      *  Set the the login password to use
      * required if <tt>userid</tt> is set.
@@ -452,6 +461,7 @@ public class RExecTask extends Task {
     public void setTimeout(Integer i) {
         this.defaultTimeout = i;
     }
+
     /**
      * Set the the login id to use on the server;
      * required if <tt>password</tt> is set.
@@ -473,9 +483,7 @@ public class RExecTask extends Task {
             login(rexec);
         }
         /**  Process each sub command */
-        Enumeration tasksToRun = rexecTasks.elements();
-        while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-            RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
+        for (RExecSubTask task : rexecTasks) {
             if (task instanceof RExecRead && defaultTimeout != null) {
                 ((RExecRead) task).setDefaultTimeout(defaultTimeout);
             }

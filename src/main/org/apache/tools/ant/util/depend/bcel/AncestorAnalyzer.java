@@ -19,8 +19,10 @@ package org.apache.tools.ant.util.depend.bcel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
+
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.tools.ant.BuildException;
@@ -61,33 +63,33 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
      * @param classes a vector to be populated with the names of the
      *      dependency classes.
      */
+    @Override
     protected void determineDependencies(Vector<File> files, Vector<String> classes) {
         // we get the root classes and build up a set of
         // classes upon which they depend
-        Hashtable<String, String> dependencies = new Hashtable<String, String>();
-        Hashtable<File, File> containers = new Hashtable<File, File>();
-        Hashtable<String, String> toAnalyze = new Hashtable<String, String>();
-        Hashtable<String, String> nextAnalyze = new Hashtable<String, String>();
+        Set<String> dependencies = new HashSet<>();
+        Set<File> containers = new HashSet<>();
+        Set<String> toAnalyze = new HashSet<>();
+        Set<String> nextAnalyze = new HashSet<>();
 
         for (Enumeration<String> e = getRootClasses(); e.hasMoreElements();) {
-            String classname = e.nextElement();
-            toAnalyze.put(classname, classname);
+            toAnalyze.add(e.nextElement());
         }
 
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 2;
-        while (toAnalyze.size() != 0 && count++ < maxCount) {
+        while (!toAnalyze.isEmpty() && count++ < maxCount) {
             nextAnalyze.clear();
-            for (String classname : toAnalyze.keySet()) {
-                dependencies.put(classname, classname);
+            for (String classname : toAnalyze) {
+                dependencies.add(classname);
                 try {
                     File container = getClassContainer(classname);
                     if (container == null) {
                         continue;
                     }
-                    containers.put(container, container);
+                    containers.add(container);
 
-                    ClassParser parser = null;
+                    ClassParser parser;
                     if (container.getName().endsWith(".class")) {
                         parser = new ClassParser(container.getPath());
                     } else {
@@ -96,18 +98,16 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
                     }
 
                     JavaClass javaClass = parser.parse();
-                    String[] interfaces = javaClass.getInterfaceNames();
-                    for (int i = 0; i < interfaces.length; ++i) {
-                        String interfaceName = interfaces[i];
-                        if (!dependencies.containsKey(interfaceName)) {
-                            nextAnalyze.put(interfaceName, interfaceName);
+                    for (String interfaceName : javaClass.getInterfaceNames()) {
+                        if (!dependencies.contains(interfaceName)) {
+                            nextAnalyze.add(interfaceName);
                         }
                     }
 
                     if (javaClass.isClass()) {
                         String superClass = javaClass.getSuperclassName();
-                        if (!dependencies.containsKey(superClass)) {
-                            nextAnalyze.put(superClass, superClass);
+                        if (!dependencies.contains(superClass)) {
+                            nextAnalyze.add(superClass);
                         }
                     }
                 } catch (IOException ioe) {
@@ -115,20 +115,16 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
                 }
             }
 
-            Hashtable<String, String> temp = toAnalyze;
+            Set<String> temp = toAnalyze;
             toAnalyze = nextAnalyze;
             nextAnalyze = temp;
         }
 
-        files.removeAllElements();
-        for (File f : containers.keySet()) {
-            files.add(f);
-        }
+        files.clear();
+        files.addAll(containers);
 
-        classes.removeAllElements();
-        for (String dependency : dependencies.keySet()) {
-            classes.add(dependency);
-        }
+        classes.clear();
+        classes.addAll(dependencies);
     }
 
     /**
@@ -136,6 +132,7 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
      *
      * @return true if the analyzer provides dependency file information.
      */
+    @Override
     protected boolean supportsFileDependencies() {
         return true;
     }

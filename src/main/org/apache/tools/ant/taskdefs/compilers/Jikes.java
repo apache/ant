@@ -43,6 +43,7 @@ public class Jikes extends DefaultCompilerAdapter {
      * @return true if the compilation succeeded
      * @throws BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
         attributes.log("Using jikes compiler", Project.MSG_VERBOSE);
 
@@ -50,7 +51,7 @@ public class Jikes extends DefaultCompilerAdapter {
 
         // For -sourcepath, use the "sourcepath" value if present.
         // Otherwise default to the "srcdir" value.
-        Path sourcepath = null;
+        Path sourcepath;
         if (compileSourcepath != null) {
             sourcepath = compileSourcepath;
         } else {
@@ -58,14 +59,14 @@ public class Jikes extends DefaultCompilerAdapter {
         }
         // If the buildfile specifies sourcepath="", then don't
         // output any sourcepath.
-        if (sourcepath.size() > 0) {
+        if (!sourcepath.isEmpty()) {
             cmd.createArgument().setValue("-sourcepath");
             cmd.createArgument().setPath(sourcepath);
         }
 
         Path classpath = new Path(project);
 
-        if (bootclasspath == null || bootclasspath.size() == 0) {
+        if (bootclasspath == null || bootclasspath.isEmpty()) {
             // no bootclasspath, therefore, get one from the java runtime
             includeJavaRuntime = true;
         } else {
@@ -82,7 +83,7 @@ public class Jikes extends DefaultCompilerAdapter {
             classpath.append(new Path(project, jikesPath));
         }
 
-        if (extdirs != null && extdirs.size() > 0) {
+        if (!(extdirs == null || extdirs.isEmpty())) {
             cmd.createArgument().setValue("-extdirs");
             cmd.createArgument().setPath(extdirs);
         }
@@ -136,7 +137,7 @@ public class Jikes extends DefaultCompilerAdapter {
         if (attributes.getSource() != null) {
             cmd.createArgument().setValue("-source");
             String source = attributes.getSource();
-            if (source.equals("1.1") || source.equals("1.2")) {
+            if ("1.1".equals(source) || "1.2".equals(source)) {
                 // support for -source 1.1 and -source 1.2 has been
                 // added with JDK 1.4.2, Jikes doesn't like it
                 attributes.log("Jikes doesn't support '-source " + source
@@ -151,7 +152,7 @@ public class Jikes extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
 
         Path boot = getBootClassPath();
-        if (boot.size() > 0) {
+        if (!boot.isEmpty()) {
             cmd.createArgument().setValue("-bootclasspath");
             cmd.createArgument().setPath(boot);
         }
@@ -161,7 +162,7 @@ public class Jikes extends DefaultCompilerAdapter {
     }
 
     private void addPropertyParams(Commandline cmd) {
-        /**
+        /*
          * TODO
          * Perhaps we shouldn't use properties for these
          * three options (emacs mode, warnings and pedantic),

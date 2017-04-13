@@ -61,8 +61,8 @@ public class ResourceCount extends Task implements Condition {
     public void setRefid(Reference r) {
         Object o = r.getReferencedObject();
         if (!(o instanceof ResourceCollection)) {
-            throw new BuildException(r.getRefId()
-                + " doesn\'t denote a ResourceCollection");
+            throw new BuildException("%s doesn\'t denote a ResourceCollection",
+                r.getRefId());
         }
         add((ResourceCollection) o);
     }
@@ -70,6 +70,7 @@ public class ResourceCount extends Task implements Condition {
     /**
      * Execute as a Task.
      */
+    @Override
     public void execute() {
         if (rc == null) {
             throw new BuildException(ONE_NESTED_MESSAGE);
@@ -86,6 +87,7 @@ public class ResourceCount extends Task implements Condition {
      * @return true if the specified ResourceCollection satisfies the set criteria.
      * @throws BuildException if an error occurs.
      */
+    @Override
     public boolean eval() {
         if (rc == null) {
             throw new BuildException(ONE_NESTED_MESSAGE);
@@ -93,7 +95,7 @@ public class ResourceCount extends Task implements Condition {
         if (count == null) {
             throw new BuildException(COUNT_REQUIRED);
         }
-        return when.evaluate(new Integer(rc.size()).compareTo(count));
+        return when.evaluate(Integer.valueOf(rc.size()).compareTo(count));
     }
 
     /**
@@ -101,7 +103,7 @@ public class ResourceCount extends Task implements Condition {
      * @param c number of Resources as int.
      */
     public void setCount(int c) {
-        count = new Integer(c);
+        count = Integer.valueOf(c);
     }
 
     /**

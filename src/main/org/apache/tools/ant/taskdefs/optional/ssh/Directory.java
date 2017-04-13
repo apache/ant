@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -31,8 +32,8 @@ import java.util.StringTokenizer;
 public class Directory {
 
     private File directory;
-    private Set childDirectories;
-    private ArrayList files;
+    private Set<Directory> childDirectories;
+    private List<File> files;
     private Directory parent;
 
     /**
@@ -50,8 +51,8 @@ public class Directory {
      */
     public Directory(File directory , Directory parent) {
         this.parent = parent;
-        this.childDirectories = new LinkedHashSet();
-        this.files = new ArrayList();
+        this.childDirectories = new LinkedHashSet<>();
+        this.files = new ArrayList<>();
         this.directory = directory;
     }
 
@@ -77,7 +78,7 @@ public class Directory {
      * Get an iterator over the child Directories.
      * @return an iterator
      */
-    public Iterator directoryIterator() {
+    public Iterator<Directory> directoryIterator() {
         return childDirectories.iterator();
     }
 
@@ -85,7 +86,7 @@ public class Directory {
      * Get an iterator over the files.
      * @return an iterator
      */
-    public Iterator filesIterator() {
+    public Iterator<File> filesIterator() {
         return files.iterator();
     }
 
@@ -119,8 +120,7 @@ public class Directory {
      * @return the child directory, or null if not found
      */
     public Directory getChild(File dir) {
-        for (Iterator i = childDirectories.iterator(); i.hasNext();) {
-            Directory current = (Directory) i.next();
+        for (Directory current : childDirectories) {
             if (current.getDirectory().equals(dir)) {
                 return current;
             }

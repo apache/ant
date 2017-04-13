@@ -32,10 +32,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class VmsCommandLauncher extends Java13CommandLauncher {
 
-    public VmsCommandLauncher() {
-        super();
-    }
-
     /**
      * Launches the given command in a new process.
      *
@@ -53,7 +49,8 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     public Process exec(Project project, String[] cmd, String[] env)
         throws IOException {
         File cmdFile = createCommandFile(cmd, env);
-        Process p = super.exec(project, new String[] {cmdFile.getPath()}, env);
+        Process p =
+            super.exec(project, new String[] { cmdFile.getPath() }, env);
         deleteAfter(cmdFile, p);
         return p;
     }
@@ -80,9 +77,8 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     public Process exec(Project project, String[] cmd, String[] env,
                         File workingDir) throws IOException {
         File cmdFile = createCommandFile(cmd, env);
-        Process p = super.exec(project, new String[] {
-                cmdFile.getPath()
-            }, env, workingDir);
+        Process p = super.exec(project, new String[] { cmdFile.getPath() }, env,
+            workingDir);
         deleteAfter(cmdFile, p);
         return p;
     }
@@ -98,9 +94,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     private File createCommandFile(String[] cmd, String[] env)
         throws IOException {
         File script = FILE_UTILS.createTempFile("ANT", ".COM", null, true, true);
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(script));
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
 
             // add the environment as logicals to the DCL script
             if (env != null) {
@@ -123,8 +117,6 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
                 out.newLine();
                 out.write(cmd[i]);
             }
-        } finally {
-            FileUtils.close(out);
         }
         return script;
     }

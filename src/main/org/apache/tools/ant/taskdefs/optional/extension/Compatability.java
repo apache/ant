@@ -51,6 +51,7 @@ public final class Compatability {
      *
      * @return the name of compatibility level
      */
+    @Override
     public String toString() {
         return name;
     }

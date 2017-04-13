@@ -66,12 +66,12 @@ public final class DateUtils {
      * some other code is using the format in parallel.
      * Deprecated since ant 1.8
      */
+    @Deprecated
     public static final DateFormat DATE_HEADER_FORMAT
         = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
-    private static final DateFormat DATE_HEADER_FORMAT_INT
-    = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
-
+    private static final DateFormat DATE_HEADER_FORMAT_INT =
+        new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
 // code from Magesh moved from DefaultLogger and slightly modified
     private static final MessageFormat MINUTE_SECONDS
@@ -215,7 +215,7 @@ public final class DateUtils {
                                   cal.get(Calendar.DAY_OF_MONTH),
                                   cal.get(Calendar.DAY_OF_WEEK),
                                   cal.get(Calendar.MILLISECOND));
-        StringBuffer tzMarker = new StringBuffer(offset < 0 ? "-" : "+");
+        StringBuilder tzMarker = new StringBuilder(offset < 0 ? "-" : "+");
         offset = Math.abs(offset);
         int hours = offset / (ONE_HOUR * ONE_MINUTE * ONE_SECOND);
         int minutes = offset / (ONE_MINUTE * ONE_SECOND) - ONE_HOUR * hours;

@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -148,7 +149,7 @@ public class TokenizedPath {
                     return true;
                 }
                 base = new File(base, tokenizedPath[i]);
-            } catch (java.io.IOException ioe) {
+            } catch (IOException ioe) {
                 String msg = "IOException caught while checking "
                     + "for links, couldn't get canonical path!";
                 // will be caught and redirected to Ant's logging system
@@ -189,8 +190,8 @@ public class TokenizedPath {
             }
             String[] files = base.list();
             if (files == null) {
-                throw new BuildException("IO error scanning directory "
-                                         + base.getAbsolutePath());
+                throw new BuildException("IO error scanning directory %s",
+                    base.getAbsolutePath());
             }
             boolean found = false;
             boolean[] matchCase = cs ? CS_SCAN_ONLY : CS_THEN_NON_CS;

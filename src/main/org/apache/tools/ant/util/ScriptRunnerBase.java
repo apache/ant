@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
@@ -65,7 +64,7 @@ public abstract class ScriptRunnerBase {
     private ClassLoader scriptLoader;
 
     /** Beans to be provided to the script */
-    private Map beans = new HashMap();
+    private final Map<String,Object> beans = new HashMap<>();
 
     /**
      * Add a list of named objects to the list to be exported to the script
@@ -73,19 +72,17 @@ public abstract class ScriptRunnerBase {
      * @param dictionary a map of objects to be placed into the script context
      *        indexed by String names.
      */
-    public void addBeans(Map dictionary) {
-        for (Iterator i = dictionary.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
+    public void addBeans(Map<String,?> dictionary) {
+        dictionary.forEach((k, v) -> {
             try {
-                Object val = dictionary.get(key);
-                addBean(key, val);
+                addBean(k, v);
             } catch (BuildException ex) {
                 // The key is in the dictionary but cannot be retrieved
                 // This is usually due references that refer to tasks
                 // that have not been taskdefed in the current run.
                 // Ignore
             }
-        }
+        });
     }
 
     /**
@@ -101,7 +98,6 @@ public abstract class ScriptRunnerBase {
         for (int i = 1; isValid && i < key.length(); i++) {
             isValid = Character.isJavaIdentifierPart(key.charAt(i));
         }
-
         if (isValid) {
             beans.put(key, bean);
         }
@@ -111,7 +107,7 @@ public abstract class ScriptRunnerBase {
      * Get the beans used for the script.
      * @return the map of beans.
      */
-    protected Map getBeans() {
+    protected Map<String, Object> getBeans() {
         return beans;
     }
 
@@ -226,29 +222,15 @@ public abstract class ScriptRunnerBase {
      */
     public void setSrc(File file) {
         String filename = file.getPath();
-        if (!file.exists()) {
-            throw new BuildException("file " + filename + " not found.");
-        }
 
-        InputStream in = null;
-        try {
-            in = Files.newInputStream(file.toPath());
+        try (InputStream in = Files.newInputStream(file.toPath())) {
+            final Charset charset = null == encoding ? Charset.defaultCharset()
+                : Charset.forName(encoding);
+
+            readSource(in, filename, charset);
         } catch (IOException e) {
             //this can only happen if the file got deleted a short moment ago
-            throw new BuildException("file " + filename + " not found.");
-        }
-
-        final Charset charset;
-        if (null == encoding) {
-            charset = null;
-        } else {
-            charset = Charset.forName(encoding);
-        }
-
-        try {
-            readSource(in, filename, charset);
-        } finally {
-            FileUtils.close(in);
+            throw new BuildException("file " + filename + " not found.", e);
         }
     }
 
@@ -259,19 +241,11 @@ public abstract class ScriptRunnerBase {
      * @param charset the encoding for the reader, may be null.
      */
     private void readSource(InputStream in, String name, Charset charset) {
-        Reader reader = null;
-        try {
-            if (null == charset) {
-                reader = new InputStreamReader(in);
-            } else {
-                reader = new InputStreamReader(in, charset);
-            }
-            reader = new BufferedReader(reader);
+        try (Reader reader =
+            new BufferedReader(new InputStreamReader(in, charset))) {
             script += FileUtils.safeReadFully(reader);
         } catch (IOException ex) {
             throw new BuildException("Failed to read " + name, ex);
-        } finally {
-            FileUtils.close(reader);
         }
     }
 
@@ -292,20 +266,13 @@ public abstract class ScriptRunnerBase {
         }
 
         String name = sourceResource.toLongString();
-        InputStream in = null;
-        try {
-            in = sourceResource.getInputStream();
+        try (InputStream in = sourceResource.getInputStream()) {
+            readSource(in, name, Charset.defaultCharset());
         } catch (IOException e) {
             throw new BuildException("Failed to open " + name, e);
         } catch (UnsupportedOperationException e) {
             throw new BuildException(
                 "Failed to open " + name + " - it is not readable", e);
-        }
-
-        try {
-            readSource(in, name, (Charset) null);
-        } finally {
-            FileUtils.close(in);
         }
     }
 
@@ -316,9 +283,7 @@ public abstract class ScriptRunnerBase {
      * @throws BuildException if a resource cannot be read
      */
     public void loadResources(ResourceCollection collection) {
-        for (Resource resource : collection) {
-            loadResource(resource);
-        }
+        collection.forEach(this::loadResource);
     }
 
     /**
@@ -394,8 +359,7 @@ public abstract class ScriptRunnerBase {
      */
     protected void checkLanguage() {
         if (language == null) {
-            throw new BuildException(
-                "script language must be specified");
+            throw new BuildException("script language must be specified");
         }
     }
 

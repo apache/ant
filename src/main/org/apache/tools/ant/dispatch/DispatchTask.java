@@ -37,6 +37,7 @@ public abstract class DispatchTask extends Task implements Dispatchable {
      * Get the action parameter name.
      * @return the <code>String</code> "action" by default (can be overridden).
      */
+    @Override
     public String getActionParameterName() {
         return "action";
     }

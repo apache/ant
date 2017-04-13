@@ -21,7 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Destroys all registered <code>Process</code>es when the VM exits.
@@ -30,7 +30,8 @@ import java.util.Iterator;
  */
 class ProcessDestroyer implements Runnable {
     private static final int THREAD_DIE_TIMEOUT = 20000;
-    private HashSet processes = new HashSet();
+
+    private Set<Process> processes = new HashSet<>();
     // methods to register and unregister shutdown hooks
     private Method addShutdownHookMethod;
     private Method removeShutdownHookMethod;
@@ -49,6 +50,7 @@ class ProcessDestroyer implements Runnable {
         public ProcessDestroyerImpl() {
             super("ProcessDestroyer Shutdown Hook");
         }
+        @Override
         public void run() {
             if (shouldDestroy) {
                 ProcessDestroyer.this.run();
@@ -74,12 +76,11 @@ class ProcessDestroyer implements Runnable {
         try {
             // check to see if the shutdown hook methods exists
             // (support pre-JDK 1.3 and Non-Sun VMs)
-            Class[] paramTypes = {Thread.class};
             addShutdownHookMethod =
-                Runtime.class.getMethod("addShutdownHook", paramTypes);
+                Runtime.class.getMethod("addShutdownHook", Thread.class);
 
             removeShutdownHookMethod =
-                Runtime.class.getMethod("removeShutdownHook", paramTypes);
+                Runtime.class.getMethod("removeShutdownHook", Thread.class);
             // wait to add shutdown hook as needed
         } catch (NoSuchMethodException e) {
             // it just won't be added as a shutdown hook... :(
@@ -95,9 +96,8 @@ class ProcessDestroyer implements Runnable {
     private void addShutdownHook() {
         if (addShutdownHookMethod != null && !running) {
             destroyProcessThread = new ProcessDestroyerImpl();
-            Object[] args = {destroyProcessThread};
             try {
-                addShutdownHookMethod.invoke(Runtime.getRuntime(), args);
+                addShutdownHookMethod.invoke(Runtime.getRuntime(), destroyProcessThread);
                 added = true;
             } catch (IllegalAccessException e) {
                 e.printStackTrace(); //NOSONAR
@@ -119,13 +119,9 @@ class ProcessDestroyer implements Runnable {
      */
     private void removeShutdownHook() {
         if (removeShutdownHookMethod != null && added && !running) {
-            Object[] args = {destroyProcessThread};
             try {
-                Boolean removed =
-                    (Boolean) removeShutdownHookMethod.invoke(
-                        Runtime.getRuntime(),
-                        args);
-                if (!removed.booleanValue()) {
+                if (!Boolean.TRUE.equals(removeShutdownHookMethod
+                    .invoke(Runtime.getRuntime(), destroyProcessThread))) {
                     System.err.println("Could not remove shutdown hook");
                 }
             } catch (IllegalAccessException e) {
@@ -180,7 +176,7 @@ class ProcessDestroyer implements Runnable {
     public boolean add(Process process) {
         synchronized (processes) {
             // if this list is empty, register the shutdown hook
-            if (processes.size() == 0) {
+            if (processes.isEmpty()) {
                 addShutdownHook();
             }
             return processes.add(process);
@@ -198,7 +194,7 @@ class ProcessDestroyer implements Runnable {
     public boolean remove(Process process) {
         synchronized (processes) {
             boolean processRemoved = processes.remove(process);
-            if (processRemoved && processes.size() == 0) {
+            if (processRemoved && processes.isEmpty()) {
                 removeShutdownHook();
             }
             return processRemoved;
@@ -208,13 +204,11 @@ class ProcessDestroyer implements Runnable {
     /**
      * Invoked by the VM when it is exiting.
      */
+    @Override
     public void run() {
         synchronized (processes) {
             running = true;
-            Iterator e = processes.iterator();
-            while (e.hasNext()) {
-                ((Process) e.next()).destroy();
-            }
+            processes.forEach(Process::destroy);
         }
     }
 }

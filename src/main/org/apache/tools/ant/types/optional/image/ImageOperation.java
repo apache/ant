@@ -27,7 +27,7 @@ import org.apache.tools.ant.types.DataType;
  */
 public abstract class ImageOperation extends DataType {
      // CheckStyle:VisibilityModifier OFF - bc
-    protected Vector<ImageOperation> instructions = new Vector<ImageOperation>();
+    protected Vector<ImageOperation> instructions = new Vector<>();
      // CheckStyle:VisibilityModifier ON
 
     /**

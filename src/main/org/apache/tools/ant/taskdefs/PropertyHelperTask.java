@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
@@ -69,7 +68,7 @@ public class PropertyHelperTask extends Task {
     }
 
     private PropertyHelper propertyHelper;
-    private List delegates;
+    private List<Object> delegates;
 
     /**
      * Add a new PropertyHelper to be set on the Project.
@@ -104,13 +103,14 @@ public class PropertyHelperTask extends Task {
      * Execute the task.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
         if (getProject() == null) {
             throw new BuildException("Project instance not set");
         }
         if (propertyHelper == null && delegates == null) {
-            throw new BuildException("Either a new PropertyHelper"
-                    + " or one or more PropertyHelper delegates are required");
+            throw new BuildException(
+                "Either a new PropertyHelper or one or more PropertyHelper delegates are required");
         }
         PropertyHelper ph = propertyHelper;
         if (ph == null) {
@@ -120,8 +120,7 @@ public class PropertyHelperTask extends Task {
         }
         synchronized (ph) {
             if (delegates != null) {
-                for (Iterator iter = delegates.iterator(); iter.hasNext();) {
-                    Object o = iter.next();
+                for (Object o : delegates) {
                     PropertyHelper.Delegate delegate = o instanceof DelegateElement
                             ? ((DelegateElement) o).resolve() : (PropertyHelper.Delegate) o;
                     log("Adding PropertyHelper delegate " + delegate, Project.MSG_DEBUG);
@@ -136,9 +135,9 @@ public class PropertyHelperTask extends Task {
         }
     }
 
-    private synchronized List getAddDelegateList() {
+    private synchronized List<Object> getAddDelegateList() {
         if (delegates == null) {
-            delegates = new ArrayList();
+            delegates = new ArrayList<>();
         }
         return delegates;
     }

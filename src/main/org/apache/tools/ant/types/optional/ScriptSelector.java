@@ -59,6 +59,7 @@ public class ScriptSelector extends BaseSelector {
      * Set the project.
      * @param project the owner of this component.
      */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);
@@ -166,6 +167,7 @@ public class ScriptSelector extends BaseSelector {
      *
      * @return whether the file should be selected or not
      */
+    @Override
     public boolean isSelected(File basedir, String filename, File file) {
         init();
         setSelected(true);

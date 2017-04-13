@@ -18,9 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.IOException;
-
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
@@ -58,6 +55,7 @@ public class LogStreamHandler extends PumpStreamHandler {
     /**
      * Stop the log stream handler.
      */
+    @Override
     public void stop() {
         super.stop();
         FileUtils.close(getErr());

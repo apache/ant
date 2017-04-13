@@ -30,6 +30,7 @@ import org.apache.tools.ant.util.WeakishReference;
  * WeakishReference(Object) constructor, and both that and this are thin
  * facades on the underlying no-longer-abstract base class.
  */
+@Deprecated
 public class WeakishReference12 extends WeakishReference.HardReference  {
 
 

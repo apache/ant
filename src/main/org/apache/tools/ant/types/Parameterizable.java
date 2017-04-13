@@ -27,5 +27,5 @@ public interface Parameterizable {
      *
      * @param parameters an array of name/type/value parameters.
      */
-    void setParameters(Parameter[] parameters);
+    void setParameters(Parameter... parameters);
 }

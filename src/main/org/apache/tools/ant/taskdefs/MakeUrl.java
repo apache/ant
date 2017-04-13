@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -42,6 +41,13 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class MakeUrl extends Task {
+    // error message strings
+    /** Missing file */
+    public static final String ERROR_MISSING_FILE = "A source file is missing: ";
+    /** No property defined */
+    public static final String ERROR_NO_PROPERTY = "No property defined";
+    /** No files defined */
+    public static final String ERROR_NO_FILES = "No files defined";
 
     /**
      * name of the property to set
@@ -61,25 +67,17 @@ public class MakeUrl extends Task {
     /**
      * filesets of nested files to add to this url
      */
-    private List<FileSet> filesets = new LinkedList<FileSet>();
+    private List<FileSet> filesets = new LinkedList<>();
 
     /**
      * paths to add
      */
-    private List<Path> paths = new LinkedList<Path>();
+    private List<Path> paths = new LinkedList<>();
 
     /**
      * validation flag
      */
     private boolean validate = true;
-
-    // error message strings
-    /** Missing file */
-    public static final String ERROR_MISSING_FILE = "A source file is missing: ";
-    /** No property defined */
-    public static final String ERROR_NO_PROPERTY = "No property defined";
-    /** No files defined */
-    public static final String ERROR_NO_FILES = "No files defined";
 
     /**
      * set the name of a property to fill with the URL
@@ -149,13 +147,10 @@ public class MakeUrl extends Task {
         }
         int count = 0;
         StringBuilder urls = new StringBuilder();
-        ListIterator<FileSet> list = filesets.listIterator();
-        while (list.hasNext()) {
-            FileSet set = list.next();
-            DirectoryScanner scanner = set.getDirectoryScanner(getProject());
-            String[] files = scanner.getIncludedFiles();
-            for (int i = 0; i < files.length; i++) {
-                File f = new File(scanner.getBasedir(), files[i]);
+        for (FileSet fs : filesets) {
+            DirectoryScanner scanner = fs.getDirectoryScanner(getProject());
+            for (String file : scanner.getIncludedFiles()) {
+                File f = new File(scanner.getBasedir(), file);
                 validateFile(f);
                 String asUrl = toURL(f);
                 urls.append(asUrl);
@@ -181,9 +176,8 @@ public class MakeUrl extends Task {
         if (count > 0) {
             urls.delete(urls.length() - separator.length(), urls.length());
             return new String(urls);
-        } else {
-            return "";
         }
+        return "";
     }
 
 
@@ -198,12 +192,9 @@ public class MakeUrl extends Task {
         }
         int count = 0;
         StringBuilder urls = new StringBuilder();
-        ListIterator<Path> list = paths.listIterator();
-        while (list.hasNext()) {
-            Path path = list.next();
-            String[] elements = path.list();
-            for (int i = 0; i < elements.length; i++) {
-                File f = new File(elements[i]);
+        for (Path path : paths) {
+            for (String element : path.list()) {
+                File f = new File(element);
                 validateFile(f);
                 String asUrl = toURL(f);
                 urls.append(asUrl);
@@ -224,7 +215,7 @@ public class MakeUrl extends Task {
      */
     private void validateFile(File fileToCheck) {
         if (validate && !fileToCheck.exists()) {
-            throw new BuildException(ERROR_MISSING_FILE + fileToCheck.toString());
+            throw new BuildException(ERROR_MISSING_FILE + fileToCheck);
         }
     }
 
@@ -243,23 +234,23 @@ public class MakeUrl extends Task {
         }
         String url;
         String filesetURL = filesetsToURL();
-        if (file != null) {
+        if (file == null) {
+            url = filesetURL;
+        } else {
             validateFile(file);
             url = toURL(file);
             //and add any files if also defined
-            if (filesetURL.length() > 0) {
+            if (!filesetURL.isEmpty()) {
                 url = url + separator + filesetURL;
             }
-        } else {
-            url = filesetURL;
         }
         //add path URLs
         String pathURL = pathsToURL();
-        if (pathURL.length() > 0) {
-            if (url.length() > 0) {
-                url = url + separator + pathURL;
-            } else {
+        if (!pathURL.isEmpty()) {
+            if (url.isEmpty()) {
                 url = pathURL;
+            } else {
+                url = url + separator + pathURL;
             }
         }
         log("Setting " + property + " to URL " + url, Project.MSG_VERBOSE);
@@ -287,12 +278,9 @@ public class MakeUrl extends Task {
      * @return the file converted to a URL
      */
     private String toURL(File fileToConvert) {
-        String url;
         //create the URL
         //ant equivalent of  fileToConvert.toURI().toURL().toExternalForm();
-        url = FileUtils.getFileUtils().toURI(fileToConvert.getAbsolutePath());
-
-        return url;
+        return FileUtils.getFileUtils().toURI(fileToConvert.getAbsolutePath());
     }
 
 }

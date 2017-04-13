@@ -54,6 +54,7 @@ public class BlockFor extends WaitFor {
      * @throws BuildTimeoutException on timeout, using the text in {@link #text}
      *
      */
+    @Override
     protected void processTimeout() throws BuildTimeoutException {
         super.processTimeout();
         throw new BuildTimeoutException(text, getLocation());

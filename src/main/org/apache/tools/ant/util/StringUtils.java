@@ -152,7 +152,7 @@ public final class StringUtils {
      * @since Ant 1.7
      */
     public static String resolveBackSlash(String input) {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         boolean backSlashSeen = false;
         for (int i = 0; i < input.length(); ++i) {
             char c = input.charAt(i);
@@ -255,9 +255,8 @@ public final class StringUtils {
     public static String removeSuffix(String string, String suffix) {
         if (string.endsWith(suffix)) {
             return string.substring(0, string.length() - suffix.length());
-        } else {
-            return string;
         }
+        return string;
     }
 
     /**
@@ -270,9 +269,8 @@ public final class StringUtils {
     public static String removePrefix(String string, String prefix) {
         if (string.startsWith(prefix)) {
             return string.substring(prefix.length());
-        } else {
-            return string;
         }
+        return string;
     }
     
     /**
@@ -286,7 +284,8 @@ public final class StringUtils {
         if (collection == null) {
             return "";
         }
-        return collection.stream().map( o -> String.valueOf(o) ).collect(joining(separator));
+        return collection.stream().map(String::valueOf)
+            .collect(joining(separator));
     }
 
     /**
@@ -307,7 +306,6 @@ public final class StringUtils {
         return separator == null ? Collectors.joining() : Collectors.joining(separator);
     }
 
-
     /**
      * @param inputString String to trim
      * @return null if the input string is null or empty or contain only empty spaces.
@@ -315,16 +313,11 @@ public final class StringUtils {
      *
      */
     public static String trimToNull(String inputString) {
-
         if (inputString == null) {
             return null;
         }
-
-       String tmpString = inputString.trim();
-        if ("".equals(tmpString)) {
-            return null;
-        }
-        return tmpString;
+        String tmpString = inputString.trim();
+        return tmpString.isEmpty() ? null : tmpString;
     }
 
 }

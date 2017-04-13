@@ -102,6 +102,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void buildStarted(final BuildEvent event) {
         final String categoryString = PROJECT_LOG;
         final Log log = getLog(categoryString, null);
@@ -112,6 +113,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void buildFinished(final BuildEvent event) {
         if (initialized) {
             final String categoryString = PROJECT_LOG;
@@ -130,6 +132,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#targetStarted
      */
     /** {@inheritDoc}. */
+    @Override
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
             final Log log = getLog(TARGET_LOG,
@@ -145,6 +148,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#targetFinished
      */
     /** {@inheritDoc}. */
+    @Override
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
             final String targetName = event.getTarget().getName();
@@ -164,6 +168,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#taskStarted
      */
     /** {@inheritDoc}. */
+    @Override
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -186,6 +191,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#taskFinished
      */
     /** {@inheritDoc}. */
+    @Override
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -215,16 +221,16 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * @see BuildListener#messageLogged
      */
     /** {@inheritDoc}. */
+    @Override
     public void messageLogged(final BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();
-            String categoryString = null;
+            String categoryString;
             String categoryDetail = null;
 
             if (categoryObject == null) {
                 categoryObject = event.getTarget();
                 if (categoryObject == null) {
-                    categoryObject = event.getProject();
                     categoryString = PROJECT_LOG;
                     categoryDetail = event.getProject().getName();
                 } else {
@@ -300,6 +306,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * This is not used, the logger config is used instead.
      * @param level ignored
      */
+    @Override
     public void setMessageOutputLevel(final int level) {
         // Use the logger config
     }
@@ -308,6 +315,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * Set the output print stream.
      * @param output the output stream
      */
+    @Override
     public void setOutputPrintStream(final PrintStream output) {
         this.out = output;
     }
@@ -317,6 +325,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * This is ignored.
      * @param emacsMode ignored
      */
+    @Override
     public void setEmacsMode(final boolean emacsMode) {
         // Doesn't make sense for c-l. Use the logger config
     }
@@ -325,6 +334,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
      * Set the error print stream.
      * @param err the error stream
      */
+    @Override
     public void setErrorPrintStream(final PrintStream err) {
         this.err = err;
     }

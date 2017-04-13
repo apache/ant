@@ -30,7 +30,7 @@ import org.apache.tools.ant.Project;
  * @since Ant 1.8.0
  */
 public class ResolvePropertyMap implements GetProperty {
-    private final Set<String> seen = new HashSet<String>();
+    private final Set<String> seen = new HashSet<>();
     private final ParseProperties parseProperties;
     private final GetProperty master;
     private Map<String, Object> map;
@@ -58,10 +58,11 @@ public class ResolvePropertyMap implements GetProperty {
      * @param name name of the property.
      * @return the property value, or null for no match or for name being null.
      */
+    @Override
     public Object getProperty(String name) {
         if (seen.contains(name)) {
-            throw new BuildException(
-                "Property " + name + " was circularly " + "defined.");
+            throw new BuildException("Property %s was circularly defined.",
+                name);
         }
 
         try {
@@ -110,6 +111,7 @@ public class ResolvePropertyMap implements GetProperty {
      * @param map the map to resolve properties in.
      * @deprecated since Ant 1.8.2, use the three-arg method instead.
      */
+    @Deprecated
     public void resolveAllProperties(Map<String, Object> map) {
         resolveAllProperties(map, null, false);
     }
@@ -121,6 +123,7 @@ public class ResolvePropertyMap implements GetProperty {
      * will finally receive - may be null.
      * @deprecated since Ant 1.8.2, use the three-arg method instead.
      */
+    @Deprecated
     public void resolveAllProperties(Map<String, Object> map, String prefix) {
         resolveAllProperties(map, null, false);
     }

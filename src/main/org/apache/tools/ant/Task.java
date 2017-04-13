@@ -81,10 +81,6 @@ public abstract class Task extends ProjectComponent {
      */
     private boolean invalid;
 
-    /** Sole constructor. */
-    public Task() {
-    }
-
     /**
      * Sets the target container of this task.
      *
@@ -197,12 +193,10 @@ public abstract class Task extends ProjectComponent {
      * @exception BuildException if the task cannot be configured.
      */
     public void maybeConfigure() throws BuildException {
-        if (!invalid) {
-            if (wrapper != null) {
-                wrapper.maybeConfigure(getProject());
-            }
-        } else {
+        if (invalid) {
             getReplacement();
+        } else if (wrapper != null) {
+            wrapper.maybeConfigure(getProject());
         }
     }
 
@@ -290,10 +284,10 @@ public abstract class Task extends ProjectComponent {
      *                 be logged.
      */
     public void log(String msg, int msgLevel) {
-        if (getProject() != null) {
-            getProject().log(this, msg, msgLevel);
-        } else {
+        if (getProject() == null) {
             super.log(msg, msgLevel);
+        } else {
+            getProject().log(this, msg, msgLevel);
         }
     }
 
@@ -323,10 +317,10 @@ public abstract class Task extends ProjectComponent {
      * @since 1.7
      */
     public void log(String msg, Throwable t, int msgLevel) {
-        if (getProject() != null) {
-            getProject().log(this, msg, t, msgLevel);
-        } else {
+        if (getProject() == null) {
             super.log(msg, msgLevel);
+        } else {
+            getProject().log(this, msg, t, msgLevel);
         }
     }
 
@@ -340,7 +334,11 @@ public abstract class Task extends ProjectComponent {
      * is still fired, but with the exception as the cause.
      */
     public final void perform() {
-        if (!invalid) {
+        if (invalid) {
+            UnknownElement ue = getReplacement();
+            Task task = ue.getTask();
+            task.perform();
+        } else {
             getProject().fireTaskStarted(this);
             Throwable reason = null;
             try {
@@ -363,10 +361,6 @@ public abstract class Task extends ProjectComponent {
             } finally {
                 getProject().fireTaskFinished(this, reason);
             }
-        } else {
-            UnknownElement ue = getReplacement();
-            Task task = ue.getTask();
-            task.perform();
         }
     }
 

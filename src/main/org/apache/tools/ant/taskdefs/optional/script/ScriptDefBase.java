@@ -36,10 +36,10 @@ import org.apache.tools.ant.Task;
 public class ScriptDefBase extends Task implements DynamicConfigurator {
 
     /** Nested elements */
-    private Map nestedElementMap = new HashMap();
+    private Map<String, List<Object>> nestedElementMap = new HashMap<>();
 
     /** Attributes */
-    private Map attributes = new HashMap();
+    private Map<String, String> attributes = new HashMap<>();
 
     private String text;
 
@@ -47,19 +47,20 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * Locate the script defining task and execute the script by passing
      * control to it
      */
+    @Override
     public void execute() {
         getScript().executeScript(attributes, nestedElementMap, this);
     }
 
     private ScriptDef getScript() {
         String name = getTaskType();
-        Map scriptRepository
-            = (Map) getProject().getReference(MagicNames.SCRIPT_REPOSITORY);
+        Map<String, ScriptDef> scriptRepository =
+            getProject().getReference(MagicNames.SCRIPT_REPOSITORY);
         if (scriptRepository == null) {
             throw new BuildException("Script repository not found for " + name);
         }
 
-        ScriptDef definition = (ScriptDef) scriptRepository.get(getTaskType());
+        ScriptDef definition = scriptRepository.get(getTaskType());
         if (definition == null) {
             throw new BuildException("Script definition not found for " + name);
         }
@@ -72,12 +73,10 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * @param name the nested element name
      * @return the element to be configured
      */
+    @Override
     public Object createDynamicElement(String name)  {
-        List nestedElementList = (List) nestedElementMap.get(name);
-        if (nestedElementList == null) {
-            nestedElementList = new ArrayList();
-            nestedElementMap.put(name, nestedElementList);
-        }
+        List<Object> nestedElementList =
+            nestedElementMap.computeIfAbsent(name, k -> new ArrayList<>());
         Object element = getScript().createNestedElement(name);
         nestedElementList.add(element);
         return element;
@@ -89,13 +88,14 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * @param name the attribute name.
      * @param value the attribute's string value
      */
+    @Override
     public void setDynamicAttribute(String name, String value) {
         ScriptDef definition = getScript();
         if (!definition.isAttributeSupported(name)) {
-                throw new BuildException("<" + getTaskType()
-                    + "> does not support the \"" + name + "\" attribute");
+            throw new BuildException(
+                "<%s> does not support the \"%s\" attribute", getTaskType(),
+                name);
         }
-
         attributes.put(name, value);
     }
 

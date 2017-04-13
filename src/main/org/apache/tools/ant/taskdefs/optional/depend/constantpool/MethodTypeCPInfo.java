@@ -30,6 +30,7 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
     private int methodDescriptorIndex;
     /** the value of the method descriptor pointed to */
     private String methodDescriptor;
+
     /** Constructor.  */
     public MethodTypeCPInfo() {
         super(CONSTANT_METHODTYPE, 1);
@@ -63,6 +64,7 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
         methodDescriptor = methodClass.getValue();
         super.resolve(constantPool);
     }
+
     /**
      * Print a readable version of the constant pool entry.
      *
@@ -70,13 +72,10 @@ public class MethodTypeCPInfo extends ConstantCPInfo {
      */
     @Override
     public String toString() {
-        if (!isResolved()) {
-            return "MethodDescriptorIndex: " + methodDescriptorIndex;
-        } else {
+        if (isResolved()) {
             return "MethodDescriptor: " + methodDescriptor;
-
         }
+        return "MethodDescriptorIndex: " + methodDescriptorIndex;
     }
 
 }
-

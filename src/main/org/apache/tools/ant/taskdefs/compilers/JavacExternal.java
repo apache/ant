@@ -40,6 +40,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
      * @return true if the compilation succeeded
      * @throws BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
         attributes.log("Using external javac compiler", Project.MSG_VERBOSE);
 
@@ -82,7 +83,8 @@ public class JavacExternal extends DefaultCompilerAdapter {
                             true);
 
         } catch (IOException e) {
-            throw new BuildException("Failed to create a temporary file for \"-V\" switch");
+            throw new BuildException(
+                "Failed to create a temporary file for \"-V\" switch");
         } finally {
             FileUtils.delete(vmsFile);
         }

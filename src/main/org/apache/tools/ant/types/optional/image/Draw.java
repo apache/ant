@@ -49,11 +49,13 @@ public class Draw extends TransformOperation {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void addRectangle(Rectangle rect) {
         instructions.add(rect);
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void addText(Text text) {
         instructions.add(text);
     }
@@ -75,13 +77,12 @@ public class Draw extends TransformOperation {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = image.getAsBufferedImage();
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
+        Graphics2D graphics = bi.createGraphics();
 
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
                 log("\tDrawing to x=" + xloc + " y=" + yloc);
@@ -92,11 +93,8 @@ public class Draw extends TransformOperation {
                 BufferedImage child = op.getAsBufferedImage();
                 log("\tDrawing to x=" + xloc + " y=" + yloc);
                 graphics.drawImage(child, null, xloc, yloc);
-                PlanarImage.wrapRenderedImage(bi);
             }
         }
-        image = PlanarImage.wrapRenderedImage(bi);
-
-        return image;
+        return PlanarImage.wrapRenderedImage(bi);
     }
 }

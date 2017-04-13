@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.splash;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -237,9 +236,9 @@ public class SplashTask extends Task {
 
         boolean success = false;
         if (in != null) {
-            DataInputStream din = new DataInputStream(in);
-            try {
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            try (
+                DataInputStream din = new DataInputStream(in);
+                ByteArrayOutputStream bout = new ByteArrayOutputStream()){
                 int data;
                 while ((data = din.read()) != -1) {
                     bout.write((byte) data);
@@ -257,15 +256,6 @@ public class SplashTask extends Task {
             } catch (Exception e) {
                 throw new BuildException(e);
             } finally {
-                try {
-                    din.close();
-                } catch (IOException ioe) {
-                    // swallow if there was an error before so that
-                    // original error will be passed up
-                    if (success) {
-                        throw new BuildException(ioe); //NOSONAR
-                    }
-                }
             }
         } else {
             try {

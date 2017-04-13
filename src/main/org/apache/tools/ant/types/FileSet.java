@@ -49,12 +49,12 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
      * as this one.
      * @return the cloned fileset
      */
-    public Object clone() {
+    @Override
+    public FileSet clone() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).clone();
-        } else {
-            return super.clone();
         }
+        return (FileSet) super.clone();
     }
 
     /**
@@ -62,6 +62,7 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).iterator();
@@ -75,6 +76,7 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
      * @return number of elements as int.
      * @since Ant 1.7
      */
+    @Override
     public int size() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).size();
@@ -87,6 +89,7 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
      * @return true indicating that all elements will be FileResources.
      * @since Ant 1.7
      */
+    @Override
     public boolean isFilesystemOnly() {
         return true;
     }

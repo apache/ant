@@ -43,7 +43,6 @@ public class Taskdef extends Typedef {
      * This sets the adapter and the adaptto classes to
      * TaskAdapter and Task.
      */
-
     public Taskdef() {
         setAdapterClass(TaskAdapter.class);
         setAdaptToClass(Task.class);

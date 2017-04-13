@@ -114,6 +114,7 @@ public class FileResourceIterator implements Iterator<Resource> {
      * Find out whether this FileResourceIterator has more elements.
      * @return whether there are more Resources to iterate over.
      */
+    @Override
     public boolean hasNext() {
         return pos < files.length;
     }
@@ -122,6 +123,7 @@ public class FileResourceIterator implements Iterator<Resource> {
      * Get the next element from this FileResourceIterator.
      * @return the next Object.
      */
+    @Override
     public Resource next() {
         return nextResource();
     }
@@ -129,6 +131,7 @@ public class FileResourceIterator implements Iterator<Resource> {
     /**
      * Not implemented.
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

@@ -24,9 +24,10 @@ import java.io.PrintStream;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.DateUtils;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -257,48 +258,30 @@ public class DefaultLogger implements BuildLogger {
         // Filter out messages based on priority
         if (priority <= msgOutputLevel) {
 
-            StringBuffer message = new StringBuffer();
-            if (event.getTask() != null && !emacsMode) {
+            StringBuilder message = new StringBuilder();
+            if (event.getTask() == null || emacsMode) {
+                //emacs mode or there is no task
+                message.append(event.getMessage());
+            } else {
                 // Print out the name of the task if we're in one
                 String name = event.getTask().getTaskName();
                 String label = "[" + name + "] ";
                 int size = LEFT_COLUMN_SIZE - label.length();
-                StringBuffer tmp = new StringBuffer();
-                for (int i = 0; i < size; i++) {
-                    tmp.append(" ");
-                }
-                tmp.append(label);
-                label = tmp.toString();
+                final String prefix = size > 0 ? Stream.generate(() -> " ")
+                    .limit(size).collect(Collectors.joining()) + label : label;
 
-                BufferedReader r = null;
-                try {
-                    r = new BufferedReader(
-                            new StringReader(event.getMessage()));
-                    String line = r.readLine();
-                    boolean first = true;
-                    do {
-                        if (first) {
-                            if (line == null) {
-                                message.append(label);
-                                break;
-                            }
-                        } else {
-                            message.append(StringUtils.LINE_SEP);
-                        }
-                        first = false;
-                        message.append(label).append(line);
-                        line = r.readLine();
-                    } while (line != null);
+                try (BufferedReader r =
+                    new BufferedReader(new StringReader(event.getMessage()))) {
+
+                    message.append(r.lines().map(line -> prefix + line)
+                        .collect(Collectors.joining(StringUtils.LINE_SEP)));
+                    if (message.length() == 0) {
+                        message.append(prefix);
+                    }
                 } catch (IOException e) {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
-                } finally {
-                    FileUtils.close(r);
                 }
-
-            } else {
-                //emacs mode or there is no task
-                message.append(event.getMessage());
             }
             Throwable ex = event.getException();
             if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
@@ -361,8 +344,7 @@ public class DefaultLogger implements BuildLogger {
     protected String getTimestamp() {
         Date date = new Date(System.currentTimeMillis());
         DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        String finishTime = formatter.format(date);
-        return finishTime;
+        return formatter.format(date);
     }
 
     /**

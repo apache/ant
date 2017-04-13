@@ -175,7 +175,6 @@ public class SetProxy extends Task {
      * apply to all network connections
      * Relevant docs: buglist #4183340
      */
-
     public void applyWebProxySettings() {
         boolean settingsChanged = false;
         boolean enablingProxy = false;
@@ -261,6 +260,7 @@ public class SetProxy extends Task {
      *
      * @exception BuildException thrown in unrecoverable error.
      */
+    @Override
     public void execute() throws BuildException {
         applyWebProxySettings();
     }
@@ -275,6 +275,7 @@ public class SetProxy extends Task {
             auth = new PasswordAuthentication(user, pass.toCharArray());
         }
 
+        @Override
         protected PasswordAuthentication getPasswordAuthentication() {
             return auth;
         }

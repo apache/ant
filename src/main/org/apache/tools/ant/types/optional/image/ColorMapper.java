@@ -24,9 +24,6 @@ import java.awt.Color;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public final class ColorMapper {
-    /** private constructor for Utility class */
-    private ColorMapper() {
-    }
 
     /** black string */
     public static final String COLOR_BLACK = "black";
@@ -69,34 +66,42 @@ public final class ColorMapper {
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
     public static Color getColorByName(String colorName) {
-        if (colorName.equalsIgnoreCase(COLOR_BLACK)) {
-            return Color.black;
-        } else if (colorName.equalsIgnoreCase(COLOR_BLUE)) {
+        switch (colorName.toLowerCase()) {
+        case COLOR_BLUE:
             return Color.blue;
-        } else if (colorName.equalsIgnoreCase(COLOR_CYAN)) {
+        case COLOR_CYAN:
             return Color.cyan;
-        } else if (colorName.equalsIgnoreCase(COLOR_DARKGRAY) || colorName.equalsIgnoreCase(COLOR_DARKGREY)) {
+        case COLOR_DARKGRAY:
+        case COLOR_DARKGREY:
             return Color.darkGray;
-        } else if (colorName.equalsIgnoreCase(COLOR_GRAY) || colorName.equalsIgnoreCase(COLOR_GREY)) {
+        case COLOR_GRAY:
+        case COLOR_GREY:
             return Color.gray;
-        } else if (colorName.equalsIgnoreCase(COLOR_LIGHTGRAY) || colorName.equalsIgnoreCase(COLOR_LIGHTGREY)) {
+        case COLOR_LIGHTGRAY:
+        case COLOR_LIGHTGREY:
             return Color.lightGray;
-        } else if (colorName.equalsIgnoreCase(COLOR_GREEN)) {
+        case COLOR_GREEN:
             return Color.green;
-        } else if (colorName.equalsIgnoreCase(COLOR_MAGENTA)) {
+        case COLOR_MAGENTA:
             return Color.magenta;
-        } else if (colorName.equalsIgnoreCase(COLOR_ORANGE)) {
+        case COLOR_ORANGE:
             return Color.orange;
-        } else if (colorName.equalsIgnoreCase(COLOR_PINK)) {
+        case COLOR_PINK:
             return Color.pink;
-        } else if (colorName.equalsIgnoreCase(COLOR_RED)) {
+        case COLOR_RED:
             return Color.red;
-        } else if (colorName.equalsIgnoreCase(COLOR_WHITE)) {
+        case COLOR_WHITE:
             return Color.white;
-        } else if (colorName.equalsIgnoreCase(COLOR_YELLOW)) {
+        case COLOR_YELLOW:
             return Color.yellow;
+        case COLOR_BLACK:
+        default:
+            return Color.black;
         }
-        return Color.black;
+    }
+
+    /** private constructor for Utility class */
+    private ColorMapper() {
     }
 
 }

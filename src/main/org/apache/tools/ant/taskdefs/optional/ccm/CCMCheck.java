@@ -29,12 +29,20 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
-
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
  * @ant.task ignore="true"
  */
 public class CCMCheck extends Continuus {
+    /**
+     * -comment flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "/comment";
+
+    /**
+     *  -task flag -- associate checkout task with task
+     */
+    public static final String FLAG_TASK = "/task";
 
     private File file = null;
     private String comment = null;
@@ -42,14 +50,9 @@ public class CCMCheck extends Continuus {
 
     // CheckStyle:VisibilityModifier OFF - bc
 
-    protected Vector filesets = new Vector();
+    protected Vector<FileSet> filesets = new Vector<>();
 
     // CheckStyle:VisibilityModifier ON
-
-    /** Constructor for CCMCheck. */
-    public CCMCheck() {
-        super();
-    }
 
     /**
      * Get the value of file.
@@ -84,7 +87,6 @@ public class CCMCheck extends Continuus {
         this.comment = v;
     }
 
-
     /**
      * Get the value of task.
      * @return value of task.
@@ -101,7 +103,6 @@ public class CCMCheck extends Continuus {
     public void setTask(String v) {
         this.task = v;
     }
-
 
     /**
      * Adds a set of files to copy.
@@ -120,9 +121,10 @@ public class CCMCheck extends Continuus {
      * </p>
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
 
-        if (file == null && filesets.size() == 0) {
+        if (file == null && filesets.isEmpty()) {
             throw new BuildException(
                 "Specify at least one source - a file or a fileset.");
         }
@@ -131,7 +133,7 @@ public class CCMCheck extends Continuus {
             throw new BuildException("CCMCheck cannot be generated for directories");
         }
 
-        if (file != null  && filesets.size() > 0) {
+        if (file != null && !filesets.isEmpty()) {
             throw new BuildException("Choose between file and fileset !");
         }
 
@@ -140,14 +142,11 @@ public class CCMCheck extends Continuus {
             return;
         }
 
-        int sizeofFileSet = filesets.size();
-        for (int i = 0; i < sizeofFileSet; i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
+        for (FileSet fs : filesets) {
+            final File basedir = fs.getDir(getProject());
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] srcFiles = ds.getIncludedFiles();
-            for (int j = 0; j < srcFiles.length; j++) {
-                File src = new File(fs.getDir(getProject()), srcFiles[j]);
-                setFile(src);
+            for (String srcFile : ds.getIncludedFiles()) {
+                setFile(new File(basedir, srcFile));
                 doit();
             }
         }
@@ -170,11 +169,10 @@ public class CCMCheck extends Continuus {
 
         int result = run(commandLine);
         if (Execute.isFailure(result)) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -195,14 +193,4 @@ public class CCMCheck extends Continuus {
         }
     }
 
-    /**
-     * -comment flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "/comment";
-
-    /**
-     *  -task flag -- associate checkout task with task
-     */
-    public static final String FLAG_TASK = "/task";
 }
-

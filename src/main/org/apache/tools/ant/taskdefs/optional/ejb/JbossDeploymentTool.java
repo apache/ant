@@ -53,14 +53,14 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * @param ejbFiles the hashtable of files to populate.
      * @param ddPrefix the prefix to use.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
+    @Override
+    protected void addVendorFiles(Hashtable<String, File> ejbFiles, String ddPrefix) {
         File jbossDD = new File(getConfig().descriptorDir, ddPrefix + JBOSS_DD);
         if (jbossDD.exists()) {
             ejbFiles.put(META_DIR + JBOSS_DD, jbossDD);
         } else {
-            log("Unable to locate jboss deployment descriptor. "
-                + "It was expected to be in " + jbossDD.getPath(),
-                Project.MSG_WARN);
+            log("Unable to locate jboss deployment descriptor. It was expected to be in "
+                + jbossDD.getPath(), Project.MSG_WARN);
             return;
         }
         String descriptorFileName = JBOSS_CMP10D;
@@ -73,8 +73,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
         if (jbossCMPD.exists()) {
             ejbFiles.put(META_DIR + descriptorFileName, jbossCMPD);
         } else {
-            log("Unable to locate jboss cmp descriptor. "
-                + "It was expected to be in "
+            log("Unable to locate jboss cmp descriptor. It was expected to be in "
                 + jbossCMPD.getPath(), Project.MSG_VERBOSE);
             return;
         }
@@ -84,15 +83,15 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
      */
+    @Override
     File getVendorOutputJarFile(String baseName) {
         if (getDestDir() == null && getParent().getDestdir() == null) {
             throw new BuildException("DestDir not specified");
         }
         if (getDestDir() == null) {
             return new File(getParent().getDestdir(), baseName + jarSuffix);
-        } else {
-            return new File(getDestDir(), baseName + jarSuffix);
         }
+        return new File(getDestDir(), baseName + jarSuffix);
     }
 
     /**
@@ -102,6 +101,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      *                        valid
      * @since ant 1.6
      */
+    @Override
     public void validateConfigured() throws BuildException {
     }
 

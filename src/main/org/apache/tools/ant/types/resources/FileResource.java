@@ -105,9 +105,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Get the file represented by this FileResource.
      * @return the File.
      */
+    @Override
     public File getFile() {
         if (isReference()) {
-            return ((FileResource) getCheckedRef()).getFile();
+            return getCheckedRef().getFile();
         }
         dieOnCircularReference();
         synchronized (this) {
@@ -138,7 +139,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     public File getBaseDir() {
         if (isReference()) {
-            return ((FileResource) getCheckedRef()).getBaseDir();
+            return getCheckedRef().getBaseDir();
         }
         dieOnCircularReference();
         return baseDir;
@@ -148,6 +149,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Overrides the super version.
      * @param r the Reference to set.
      */
+    @Override
     public void setRefid(Reference r) {
         if (file != null || baseDir != null) {
             throw tooManyAttributes();
@@ -161,9 +163,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * only will be returned.
      * @return the name of this resource.
      */
+    @Override
     public String getName() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getName();
+            return getCheckedRef().getName();
         }
         File b = getBaseDir();
         return b == null ? getNotNullFile().getName()
@@ -174,8 +177,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Learn whether this file exists.
      * @return true if this resource exists.
      */
+    @Override
     public boolean isExists() {
-        return isReference() ? ((Resource) getCheckedRef()).isExists()
+        return isReference() ? getCheckedRef().isExists()
             : getNotNullFile().exists();
     }
 
@@ -183,9 +187,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Get the modification time in milliseconds since 01.01.1970 .
      * @return 0 if the resource does not exist.
      */
+    @Override
     public long getLastModified() {
         return isReference()
-            ? ((Resource) getCheckedRef()).getLastModified()
+            ? getCheckedRef().getLastModified()
             : getNotNullFile().lastModified();
     }
 
@@ -193,8 +198,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Learn whether the resource is a directory.
      * @return boolean flag indicating if the resource is a directory.
      */
+    @Override
     public boolean isDirectory() {
-        return isReference() ? ((Resource) getCheckedRef()).isDirectory()
+        return isReference() ? getCheckedRef().isDirectory()
             : getNotNullFile().isDirectory();
     }
 
@@ -202,8 +208,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Get the size of this Resource.
      * @return the size, as a long, 0 if the Resource does not exist.
      */
+    @Override
     public long getSize() {
-        return isReference() ? ((Resource) getCheckedRef()).getSize()
+        return isReference() ? getCheckedRef().getSize()
             : getNotNullFile().length();
     }
 
@@ -212,9 +219,9 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return an InputStream object.
      * @throws IOException if an error occurs.
      */
+    @Override
     public InputStream getInputStream() throws IOException {
-        return isReference()
-            ? ((Resource) getCheckedRef()).getInputStream()
+        return isReference() ? getCheckedRef().getInputStream()
             : Files.newInputStream(getNotNullFile().toPath());
     }
 
@@ -226,9 +233,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @throws UnsupportedOperationException if OutputStreams are not
      *         supported for this Resource type.
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((FileResource) getCheckedRef()).getOutputStream();
+            return getCheckedRef().getOutputStream();
         }
         return getOutputStream(false);
     }
@@ -236,9 +244,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     /**
      * {@inheritDoc}
      */
+    @Override
     public OutputStream getAppendOutputStream() throws IOException {
         if (isReference()) {
-            return ((FileResource) getCheckedRef()).getAppendOutputStream();
+            return getCheckedRef().getAppendOutputStream();
         }
         return getOutputStream(true);
     }
@@ -264,9 +273,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @return a negative integer, zero, or a positive integer as this FileResource
      *         is less than, equal to, or greater than the specified Resource.
      */
+    @Override
     public int compareTo(Resource another) {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).compareTo(another);
+            return getCheckedRef().compareTo(another);
         }
         if (this.equals(another)) {
             return 0;
@@ -293,6 +303,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @param another the other Object to compare.
      * @return true if another is a FileResource representing the same file.
      */
+    @Override
     public boolean equals(Object another) {
         if (this == another) {
             return true;
@@ -313,6 +324,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Get the hash code for this Resource.
      * @return hash code as int.
      */
+    @Override
     public int hashCode() {
         if (isReference()) {
             return getCheckedRef().hashCode();
@@ -324,6 +336,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Get the string representation of this Resource.
      * @return this FileResource formatted as a String.
      */
+    @Override
     public String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
@@ -339,9 +352,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Fulfill the ResourceCollection contract.
      * @return whether this Resource is a FileResource.
      */
+    @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((FileResource) getCheckedRef()).isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         return true;
@@ -351,9 +365,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * Implement the Touchable interface.
      * @param modTime new last modification time.
      */
+    @Override
     public void touch(long modTime) {
         if (isReference()) {
-            ((FileResource) getCheckedRef()).touch(modTime);
+            getCheckedRef().touch(modTime);
             return;
         }
         if (!getNotNullFile().setLastModified(modTime)) {
@@ -382,6 +397,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      * @throws BuildException if desired
      * @since Ant1.8
      */
+    @Override
     public Resource getResource(String path) {
         File newfile = FILE_UTILS.resolveFile(getFile(), path);
         FileResource fileResource = new FileResource(newfile);
@@ -389,5 +405,10 @@ public class FileResource extends Resource implements Touchable, FileProvider,
             fileResource.setBaseDir(getBaseDir());
         }
         return fileResource;
+    }
+    
+    @Override
+    protected FileResource getCheckedRef() {
+        return (FileResource) super.getCheckedRef();
     }
 }

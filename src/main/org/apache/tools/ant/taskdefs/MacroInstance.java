@@ -23,11 +23,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
@@ -50,13 +48,13 @@ import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
  */
 public class MacroInstance extends Task implements DynamicAttribute, TaskContainer {
     private MacroDef macroDef;
-    private Map<String, String>      map = new HashMap<String, String>();
-    private Map<String, MacroDef.TemplateElement>      nsElements = null;
-    private Map<String, UnknownElement>      presentElements;
-    private Hashtable<String, String> localAttributes;
-    private String    text = null;
-    private String    implicitTag =     null;
-    private List<Task>      unknownElements = new ArrayList<Task>();
+    private Map<String, String> map = new HashMap<>();
+    private Map<String, MacroDef.TemplateElement> nsElements = null;
+    private Map<String, UnknownElement> presentElements;
+    private Map<String, String> localAttributes;
+    private String text = null;
+    private String implicitTag = null;
+    private List<Task> unknownElements = new ArrayList<>();
 
     /**
      * Called from MacroDef.MyAntTypeDefinition#create()
@@ -80,6 +78,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * @param name the name of the attribute
      * @param value the value of the attribute
      */
+    @Override
     public void setDynamicAttribute(String name, String value) {
         map.put(name.toLowerCase(Locale.ENGLISH), value);
     }
@@ -91,22 +90,22 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * @deprecated since 1.6.x.
      * @throws BuildException always
      */
+    @Deprecated
     public Object createDynamicElement(String name) throws BuildException {
         throw new BuildException("Not implemented any more");
     }
 
     private Map<String, MacroDef.TemplateElement> getNsElements() {
         if (nsElements == null) {
-            nsElements = new HashMap<String, MacroDef.TemplateElement>();
-            for (Entry<String, MacroDef.TemplateElement> entry : macroDef.getElements().entrySet()) {
-            nsElements.put((String) entry.getKey(),
-                           entry.getValue());
-            MacroDef.TemplateElement te = (MacroDef.TemplateElement)
-                entry.getValue();
-            if (te.isImplicit()) {
-                implicitTag = te.getName();
+            nsElements = new HashMap<>();
+            for (Map.Entry<String, MacroDef.TemplateElement> entry : macroDef
+                .getElements().entrySet()) {
+                nsElements.put(entry.getKey(), entry.getValue());
+                MacroDef.TemplateElement te = entry.getValue();
+                if (te.isImplicit()) {
+                    implicitTag = te.getName();
+                }
             }
-         }
         }
         return nsElements;
     }
@@ -116,6 +115,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      *
      * @param nestedTask a nested element.
      */
+    @Override
     public void addTask(Task nestedTask) {
         unknownElements.add(nestedTask);
     }
@@ -124,15 +124,15 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         if (implicitTag != null) {
             return;
         }
-        for (Iterator<Task> i = unknownElements.iterator(); i.hasNext();) {
-            UnknownElement ue = (UnknownElement) i.next();
+        for (Task task : unknownElements) {
+            UnknownElement ue = (UnknownElement) task;
             String name = ProjectHelper.extractNameFromComponentName(
                 ue.getTag()).toLowerCase(Locale.ENGLISH);
             if (getNsElements().get(name) == null) {
-                throw new BuildException("unsupported element " + name);
+                throw new BuildException("unsupported element %s", name);
             }
             if (presentElements.get(name) != null) {
-                throw new BuildException("Element " + name + " already present");
+                throw new BuildException("Element %s already present", name);
             }
             presentElements.put(name, ue);
         }
@@ -142,13 +142,14 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * Embedded element in macro instance
      */
     public static class Element implements TaskContainer {
-        private List<Task> unknownElements = new ArrayList<Task>();
+        private List<Task> unknownElements = new ArrayList<>();
 
         /**
          * Add an unknown element (to be snipped into the macroDef instance)
          *
          * @param nestedTask an unknown element
          */
+        @Override
         public void addTask(Task nestedTask) {
             unknownElements.add(nestedTask);
         }
@@ -169,8 +170,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         if (s == null) {
             return null;
         }
-        StringBuffer ret = new StringBuffer();
-        StringBuffer macroName = null;
+        StringBuilder ret = new StringBuilder();
+        StringBuilder macroName = null;
 
         int state = STATE_NORMAL;
         for (int i = 0; i < s.length(); ++i) {
@@ -186,7 +187,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 case STATE_EXPECT_BRACKET:
                     if (ch == '{') {
                         state = STATE_EXPECT_NAME;
-                        macroName = new StringBuffer();
+                        macroName = new StringBuilder();
                     } else if (ch == '@') {
                         state = STATE_NORMAL;
                         ret.append('@');
@@ -203,7 +204,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                     if (ch == '}') {
                         state = STATE_NORMAL;
                         String name = macroName.toString().toLowerCase(Locale.ENGLISH); //NOSONAR
-                        String value = (String) macroMapping.get(name);
+                        String value = macroMapping.get(name);
                         if (value == null) {
                             ret.append("@{");
                             ret.append(name);
@@ -292,40 +293,36 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 rc.addChild(child.getWrapper());
                 ret.addChild(child);
             } else if (templateElement.isImplicit()) {
-                if (unknownElements.size() == 0 && !templateElement.isOptional()) {
+                if (unknownElements.isEmpty() && !templateElement.isOptional()) {
                     throw new BuildException(
-                        "Missing nested elements for implicit element "
-                        + templateElement.getName());
+                        "Missing nested elements for implicit element %s",
+                        templateElement.getName());
                 }
-                for (Iterator<Task> i = unknownElements.iterator();
-                     i.hasNext();) {
-                    UnknownElement child
-                        = copy((UnknownElement) i.next(), true);
+                for (Task task : unknownElements) {
+                    UnknownElement child = copy((UnknownElement) task, true);
                     rc.addChild(child.getWrapper());
                     ret.addChild(child);
                 }
             } else {
                 UnknownElement presentElement =
-                    (UnknownElement) presentElements.get(tag);
+                    presentElements.get(tag);
                 if (presentElement == null) {
                     if (!templateElement.isOptional()) {
                         throw new BuildException(
-                            "Required nested element "
-                            + templateElement.getName() + " missing");
+                            "Required nested element %s missing",
+                            templateElement.getName());
                     }
                     continue;
                 }
                 String presentText =
                     presentElement.getWrapper().getText().toString();
-                if (!"".equals(presentText)) {
+                if (!presentText.isEmpty()) {
                     rc.addText(macroSubs(presentText, localAttributes));
                 }
                 List<UnknownElement> list = presentElement.getChildren();
                 if (list != null) {
-                    for (Iterator<UnknownElement> i = list.iterator();
-                         i.hasNext();) {
-                        UnknownElement child
-                            = copy(i.next(), true);
+                    for (UnknownElement unknownElement2 : list) {
+                        UnknownElement child = copy(unknownElement2, true);
                         rc.addChild(child.getWrapper());
                         ret.addChild(child);
                     }
@@ -341,14 +338,15 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      * and calls perform on the unknown element.
      *
      */
+    @Override
     public void execute() {
-        presentElements = new HashMap<String, UnknownElement>();
+        presentElements = new HashMap<>();
         getNsElements();
         processTasks();
-        localAttributes = new Hashtable<String, String>();
-        Set<String> copyKeys = new HashSet<String>(map.keySet());
+        localAttributes = new Hashtable<>();
+        Set<String> copyKeys = new HashSet<>(map.keySet());
         for (Attribute attribute : macroDef.getAttributes()) {
-            String value = (String) map.get(attribute.getName());
+            String value = map.get(attribute.getName());
             if (value == null && "description".equals(attribute.getName())) {
                 value = getDescription();
             }
@@ -357,21 +355,19 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 value = macroSubs(value, localAttributes);
             }
             if (value == null) {
-                throw new BuildException(
-                    "required attribute " + attribute.getName() + " not set");
+                throw new BuildException("required attribute %s not set",
+                    attribute.getName());
             }
             localAttributes.put(attribute.getName(), value);
             copyKeys.remove(attribute.getName());
         }
-        if (copyKeys.contains("id")) {
-            copyKeys.remove("id");
-        }
+        copyKeys.remove("id");
+
         if (macroDef.getText() != null) {
             if (text == null) {
                 String defaultText =  macroDef.getText().getDefault();
                 if (!macroDef.getText().getOptional() && defaultText == null) {
-                    throw new BuildException(
-                        "required text missing");
+                    throw new BuildException("required text missing");
                 }
                 text = defaultText == null ? "" : defaultText;
             }
@@ -379,24 +375,20 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 text = text.trim();
             }
             localAttributes.put(macroDef.getText().getName(), text);
-        } else {
-            if (text != null && !text.trim().equals("")) {
-                throw new BuildException(
-                    "The \"" + getTaskName() + "\" macro does not support"
-                    + " nested text data.");
-            }
-        }
-        if (copyKeys.size() != 0) {
+        } else if (!(text == null || text.trim().isEmpty())) {
             throw new BuildException(
-                "Unknown attribute" + (copyKeys.size() > 1 ? "s " : " ")
-                + copyKeys);
+                "The \"%s\" macro does not support nested text data.",
+                getTaskName());
+        }
+        if (!copyKeys.isEmpty()) {
+            throw new BuildException("Unknown attribute"
+                + (copyKeys.size() > 1 ? "s " : " ") + copyKeys);
         }
 
         // need to set the project on unknown element
         UnknownElement c = copy(macroDef.getNestedTask(), false);
         c.init();
-        LocalProperties localProperties
-            = LocalProperties.get(getProject());
+        LocalProperties localProperties = LocalProperties.get(getProject());
         localProperties.enterScope();
         try {
             c.perform();

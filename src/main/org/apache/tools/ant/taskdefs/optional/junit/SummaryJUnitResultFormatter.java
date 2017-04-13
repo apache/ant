@@ -52,12 +52,6 @@ public class SummaryJUnitResultFormatter
     private String systemError = null;
 
     /**
-     * Empty
-     */
-    public SummaryJUnitResultFormatter() {
-    }
-
-    /**
      *  Insures that a line of log output is written and flushed as a single
      *  operation, to prevent lines from being spliced into other lines.
      *  (Hopefully this solves the issue of run on lines -
@@ -81,9 +75,10 @@ public class SummaryJUnitResultFormatter
      * The testsuite started.
      * @param suite the testsuite.
      */
+    @Override
     public void startTestSuite(JUnitTest suite) {
         String newLine = System.getProperty("line.separator");
-        StringBuffer sb = new StringBuffer("Running ");
+        StringBuilder sb = new StringBuilder("Running ");
         int antThreadID = suite.getThread();
 
         sb.append(suite.getName());
@@ -99,12 +94,14 @@ public class SummaryJUnitResultFormatter
      * Empty
      * @param t not used.
      */
+    @Override
     public void startTest(Test t) {
     }
     /**
      * Empty
      * @param test not used.
      */
+    @Override
     public void endTest(Test test) {
     }
     /**
@@ -121,6 +118,7 @@ public class SummaryJUnitResultFormatter
      * @param test not used.
      * @param t not used.
      */
+    @Override
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
@@ -129,20 +127,24 @@ public class SummaryJUnitResultFormatter
      * @param test not used.
      * @param t not used.
      */
+    @Override
     public void addError(Test test, Throwable t) {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setOutput(OutputStream out) {
         this.out = out;
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -152,6 +154,7 @@ public class SummaryJUnitResultFormatter
      * the summary.
      * @param value if true write System.out and System.err to the summary.
      */
+    @Override
     public void setWithOutAndErr(boolean value) {
         withOutAndErr = value;
     }
@@ -161,9 +164,10 @@ public class SummaryJUnitResultFormatter
      * @param suite the testsuite.
      * @throws BuildException if there is an error.
      */
+    @Override
     public void endTestSuite(JUnitTest suite) throws BuildException {
         String newLine = System.getProperty("line.separator");
-        StringBuffer sb = new StringBuffer("Tests run: ");
+        StringBuilder sb = new StringBuilder("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());

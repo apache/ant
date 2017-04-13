@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,21 +53,22 @@ public class ScriptDef extends DefBase {
     private String name;
 
     /** Attributes definitions of this script */
-    private List attributes = new ArrayList();
+    private List<Attribute> attributes = new ArrayList<>();
 
     /** Nested Element definitions of this script */
-    private List nestedElements = new ArrayList();
+    private List<NestedElement> nestedElements = new ArrayList<>();
 
     /** The attribute names as a set */
-    private Set attributeSet;
+    private Set<String> attributeSet;
 
     /** The nested element definitions indexed by their names */
-    private Map nestedElementMap;
+    private Map<String, NestedElement> nestedElementMap;
 
     /**
      * Set the project.
      * @param project the project that this definition belongs to.
      */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);
@@ -181,20 +181,21 @@ public class ScriptDef extends DefBase {
     /**
      * Defines the script.
      */
+    @Override
     public void execute() {
         if (name == null) {
-            throw new BuildException("scriptdef requires a name attribute to "
-                + "name the script");
+            throw new BuildException(
+                "scriptdef requires a name attribute to name the script");
         }
 
         if (helper.getLanguage() == null) {
-            throw new BuildException("scriptdef requires a language attribute "
-                + "to specify the script language");
+            throw new BuildException(
+                "scriptdef requires a language attribute to specify the script language");
         }
 
         if (helper.getSrc() == null && helper.getEncoding() != null) {
-            throw new BuildException("scriptdef requires a src attribute "
-                + "if the encoding is set");
+            throw new BuildException(
+                "scriptdef requires a src attribute if the encoding is set");
         }
 
         // Check if need to set the loader
@@ -202,51 +203,47 @@ public class ScriptDef extends DefBase {
             helper.setClassLoader(createLoader());
         }
 
-        attributeSet = new HashSet();
-        for (Iterator i = attributes.iterator(); i.hasNext();) {
-            Attribute attribute = (Attribute) i.next();
+        attributeSet = new HashSet<>();
+        for (Attribute attribute : attributes) {
             if (attribute.name == null) {
-                throw new BuildException("scriptdef <attribute> elements "
-                    + "must specify an attribute name");
+                throw new BuildException(
+                    "scriptdef <attribute> elements must specify an attribute name");
             }
-
             if (attributeSet.contains(attribute.name)) {
-                throw new BuildException("scriptdef <" + name + "> declares "
-                    + "the " + attribute.name + " attribute more than once");
+                throw new BuildException(
+                    "scriptdef <%s> declares the %s attribute more than once",
+                    name, attribute.name);
             }
             attributeSet.add(attribute.name);
         }
 
-        nestedElementMap = new HashMap();
-        for (Iterator i = nestedElements.iterator(); i.hasNext();) {
-            NestedElement nestedElement = (NestedElement) i.next();
+        nestedElementMap = new HashMap<>();
+        for (NestedElement nestedElement : nestedElements) {
             if (nestedElement.name == null) {
-                throw new BuildException("scriptdef <element> elements "
-                    + "must specify an element name");
+                throw new BuildException(
+                    "scriptdef <element> elements must specify an element name");
             }
             if (nestedElementMap.containsKey(nestedElement.name)) {
-                throw new BuildException("scriptdef <" + name + "> declares "
-                    + "the " + nestedElement.name + " nested element more "
-                    + "than once");
+                throw new BuildException(
+                    "scriptdef <%s> declares the %s nested element more than once",
+                    name, nestedElement.name);
             }
 
             if (nestedElement.className == null
                 && nestedElement.type == null) {
-                throw new BuildException("scriptdef <element> elements "
-                    + "must specify either a classname or type attribute");
+                throw new BuildException(
+                    "scriptdef <element> elements must specify either a classname or type attribute");
             }
             if (nestedElement.className != null
                 && nestedElement.type != null) {
-                throw new BuildException("scriptdef <element> elements "
-                    + "must specify only one of the classname and type "
-                    + "attributes");
+                throw new BuildException(
+                    "scriptdef <element> elements must specify only one of the classname and type attributes");
             }
-
             nestedElementMap.put(nestedElement.name, nestedElement);
         }
 
         // find the script repository - it is stored in the project
-        Map scriptRepository = lookupScriptRepository();
+        Map<String, ScriptDef> scriptRepository = lookupScriptRepository();
         name = ProjectHelper.genComponentName(getURI(), name);
         scriptRepository.put(name, this);
         AntTypeDefinition def = new AntTypeDefinition();
@@ -261,14 +258,14 @@ public class ScriptDef extends DefBase {
      * This method is synchronized on the project under {@link MagicNames#SCRIPT_REPOSITORY}
      * @return the current script repository registered as a reference.
      */
-    private Map lookupScriptRepository() {
-        Map scriptRepository = null;
+    private Map<String, ScriptDef> lookupScriptRepository() {
+        Map<String, ScriptDef> scriptRepository;
         Project p = getProject();
         synchronized (p) {
             scriptRepository =
-                    (Map) p.getReference(MagicNames.SCRIPT_REPOSITORY);
+                    p.getReference(MagicNames.SCRIPT_REPOSITORY);
             if (scriptRepository == null) {
-                scriptRepository = new HashMap();
+                scriptRepository = new HashMap<>();
                 p.addReference(MagicNames.SCRIPT_REPOSITORY,
                         scriptRepository);
             }
@@ -283,14 +280,14 @@ public class ScriptDef extends DefBase {
      * @return object representing the element name.
      */
     public Object createNestedElement(String elementName) {
-        NestedElement definition
-            = (NestedElement) nestedElementMap.get(elementName);
+        NestedElement definition = nestedElementMap.get(elementName);
         if (definition == null) {
-            throw new BuildException("<" + name + "> does not support "
-                + "the <" + elementName + "> nested element");
+            throw new BuildException(
+                "<%s> does not support the <%s> nested element", name,
+                elementName);
         }
 
-        Object instance = null;
+        Object instance;
         String classname = definition.className;
         if (classname == null) {
             instance = getProject().createTask(definition.type);
@@ -298,11 +295,6 @@ public class ScriptDef extends DefBase {
                 instance = getProject().createDataType(definition.type);
             }
         } else {
-            /*
-            // try the context classloader
-            ClassLoader loader
-                = Thread.currentThread().getContextClassLoader();
-            */
             ClassLoader loader = createLoader();
 
             try {
@@ -310,13 +302,13 @@ public class ScriptDef extends DefBase {
             } catch (BuildException e) {
                 instance = ClasspathUtils.newInstance(classname, ScriptDef.class.getClassLoader());
             }
-
             getProject().setProjectReference(instance);
         }
 
         if (instance == null) {
-            throw new BuildException("<" + name + "> is unable to create "
-                + "the <" + elementName + "> nested element");
+            throw new BuildException(
+                "<%s> is unable to create the <%s> nested element", name,
+                elementName);
         }
         return instance;
     }
@@ -329,7 +321,9 @@ public class ScriptDef extends DefBase {
      * @deprecated since 1.7.
      *             Use executeScript(attribute, elements, instance) instead.
      */
-    public void executeScript(Map attributes, Map elements) {
+    @Deprecated
+    public void executeScript(Map<String, String> attributes,
+        Map<String, List<Object>> elements) {
         executeScript(attributes, elements, null);
     }
 
@@ -342,7 +336,8 @@ public class ScriptDef extends DefBase {
      * @param elements   a list of nested element values.
      * @param instance   the script instance; can be null
      */
-    public void executeScript(Map attributes, Map elements, ScriptDefBase instance) {
+    public void executeScript(Map<String, String> attributes,
+        Map<String, List<Object>> elements, ScriptDefBase instance) {
         ScriptRunnerBase runner = helper.getScriptRunner();
         runner.addBean("attributes", attributes);
         runner.addBean("elements", elements);

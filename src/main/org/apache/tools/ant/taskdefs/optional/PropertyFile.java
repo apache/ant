@@ -31,7 +31,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -139,7 +138,7 @@ public class PropertyFile extends Task {
     private File                propertyfile;
     private boolean             useJDKProperties;
 
-    private Vector entries = new Vector();
+    private Vector<Entry> entries = new Vector<>();
 
     /* ========================================================================
      *
@@ -174,10 +173,7 @@ public class PropertyFile extends Task {
     }
 
     private void executeOperation() throws BuildException {
-        for (Enumeration e = entries.elements(); e.hasMoreElements();) {
-            Entry entry = (Entry) e.nextElement();
-            entry.executeOn(properties);
-        }
+        entries.forEach(e -> e.executeOn(properties));
     }
 
     private void readFile() throws BuildException {
@@ -266,7 +262,7 @@ public class PropertyFile extends Task {
     }
 
     private boolean checkParam(File param) {
-        return !(param == null);
+        return param != null;
     }
 
     /**
@@ -384,8 +380,8 @@ public class PropertyFile extends Task {
                 } else if (type == Type.STRING_TYPE) {
                     executeString(oldValue);
                 } else {
-                    throw new BuildException("Unknown operation type: "
-                                             + type);
+                    throw new BuildException("Unknown operation type: %d",
+                        type);
                 }
             } catch (NullPointerException npe) {
                 // Default to string type
@@ -447,7 +443,6 @@ public class PropertyFile extends Task {
             newValue = fmt.format(currentValue.getTime());
         }
 
-
         /**
          * Handle operations for type <code>int</code>.
          *
@@ -458,7 +453,6 @@ public class PropertyFile extends Task {
         private void executeInteger(String oldValue) throws BuildException {
             int currentValue = DEFAULT_INT_VALUE;
             int newV  = DEFAULT_INT_VALUE;
-
 
             DecimalFormat fmt = (pattern != null) ? new DecimalFormat(pattern)
                 : new DecimalFormat();
@@ -535,15 +529,17 @@ public class PropertyFile extends Task {
                                          + "properties (key:" + key + ")");
             }
             if (value == null && defaultValue == null  && operation != Operation.DELETE_OPER) {
-                throw new BuildException("\"value\" and/or \"default\" "
-                                         + "attribute must be specified (key:" + key + ")");
+                throw new BuildException(
+                    "\"value\" and/or \"default\" attribute must be specified (key: %s)",
+                    key);
             }
             if (key == null) {
                 throw new BuildException("key is mandatory");
             }
             if (type == Type.STRING_TYPE && pattern != null) {
-                throw new BuildException("pattern is not supported for string "
-                                         + "properties (key:" + key + ")");
+                throw new BuildException(
+                    "pattern is not supported for string properties (key: %s)",
+                    key);
             }
         }
 
@@ -582,7 +578,7 @@ public class PropertyFile extends Task {
                     ret = defaultValue;
                 }
             } else {
-                ret = (oldValue == null) ? defaultValue : oldValue;
+                ret = oldValue == null ? defaultValue : oldValue;
             }
 
             return ret;
@@ -606,7 +602,7 @@ public class PropertyFile extends Task {
             /** {@inheritDoc}. */
             @Override
             public String[] getValues() {
-                return new String[] {"+", "-", "=", "del"};
+                return new String[] { "+", "-", "=", "del" };
             }
 
             /**
@@ -617,9 +613,11 @@ public class PropertyFile extends Task {
             public static int toOperation(String oper) {
                 if ("+".equals(oper)) {
                     return INCREMENT_OPER;
-                } else if ("-".equals(oper)) {
+                }
+                if ("-".equals(oper)) {
                     return DECREMENT_OPER;
-                } else if ("del".equals(oper)) {
+                }
+                if ("del".equals(oper)) {
                     return DELETE_OPER;
                 }
                 return EQUALS_OPER;
@@ -642,7 +640,7 @@ public class PropertyFile extends Task {
             /** {@inheritDoc} */
             @Override
             public String[] getValues() {
-                return new String[] {"int", "date", "string"};
+                return new String[] { "int", "date", "string" };
             }
 
             /**
@@ -653,7 +651,8 @@ public class PropertyFile extends Task {
             public static int toType(String type) {
                 if ("int".equals(type)) {
                     return INTEGER_TYPE;
-                } else if ("date".equals(type)) {
+                }
+                if ("date".equals(type)) {
                     return DATE_TYPE;
                 }
                 return STRING_TYPE;
@@ -677,23 +676,22 @@ public class PropertyFile extends Task {
         private static final String MONTH = "month";
         private static final String YEAR = "year";
 
-        private static final String[] UNITS
-            = {MILLISECOND, SECOND, MINUTE, HOUR,
-               DAY, WEEK, MONTH, YEAR };
+        private static final String[] UNITS =
+            { MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR };
 
-        private Map calendarFields = new HashMap();
+        private Map<String, Integer> calendarFields = new HashMap<>();
 
         /** no arg constructor */
         public Unit() {
             calendarFields.put(MILLISECOND,
-                               new Integer(Calendar.MILLISECOND));
-            calendarFields.put(SECOND, new Integer(Calendar.SECOND));
-            calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
-            calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
-            calendarFields.put(DAY, new Integer(Calendar.DATE));
-            calendarFields.put(WEEK, new Integer(Calendar.WEEK_OF_YEAR));
-            calendarFields.put(MONTH, new Integer(Calendar.MONTH));
-            calendarFields.put(YEAR, new Integer(Calendar.YEAR));
+                Integer.valueOf(Calendar.MILLISECOND));
+            calendarFields.put(SECOND, Integer.valueOf(Calendar.SECOND));
+            calendarFields.put(MINUTE, Integer.valueOf(Calendar.MINUTE));
+            calendarFields.put(HOUR, Integer.valueOf(Calendar.HOUR_OF_DAY));
+            calendarFields.put(DAY, Integer.valueOf(Calendar.DATE));
+            calendarFields.put(WEEK, Integer.valueOf(Calendar.WEEK_OF_YEAR));
+            calendarFields.put(MONTH, Integer.valueOf(Calendar.MONTH));
+            calendarFields.put(YEAR, Integer.valueOf(Calendar.YEAR));
         }
 
         /**
@@ -701,9 +699,7 @@ public class PropertyFile extends Task {
          * @return the calendar value.
          */
         public int getCalendarField() {
-            String key = getValue().toLowerCase();
-            Integer i = (Integer) calendarFields.get(key);
-            return i.intValue();
+            return calendarFields.get(getValue().toLowerCase()).intValue();
         }
 
         /** {@inheritDoc}. */

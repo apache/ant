@@ -70,12 +70,6 @@ public class Classloader extends Task {
     private boolean parentFirst = true;
     private String parentName = null;
 
-    /**
-     * Default constructor
-     */
-    public Classloader() {
-    }
-
     /** Name of the loader. If none, the default loader will be modified
      *
      * @param name the name of this loader
@@ -101,6 +95,7 @@ public class Classloader extends Task {
      * @param b if true reverse the normal classloader lookup.
      * @deprecated use setParentFirst with a negated argument instead
      */
+    @Deprecated
     public void setReverse(boolean b) {
         this.parentFirst = !b;
     }
@@ -156,17 +151,17 @@ public class Classloader extends Task {
         return this.classpath.createPath();
     }
 
-
     /**
      * do the classloader manipulation.
      */
+    @Override
     public void execute() {
         try {
             // Gump friendly - don't mess with the core loader if only classpath
             if ("only".equals(getProject().getProperty("build.sysclasspath"))
                 && (name == null || SYSTEM_LOADER_REF.equals(name))) {
-                log("Changing the system loader is disabled "
-                    + "by build.sysclasspath=only", Project.MSG_WARN);
+                log("Changing the system loader is disabled by build.sysclasspath=only",
+                    Project.MSG_WARN);
                 return;
             }
 
@@ -186,6 +181,7 @@ public class Classloader extends Task {
                 return;
             }
 
+            @SuppressWarnings("resource")
             AntClassLoader acl = (AntClassLoader) obj;
             boolean existingLoader = acl != null;
 

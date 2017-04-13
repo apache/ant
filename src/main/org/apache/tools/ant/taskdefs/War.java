@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 
-
 /**
  * <p>An extension of &lt;jar&gt; to create a WAR archive.
  * Contains special treatment for files that should end up in the
@@ -49,6 +48,10 @@ import org.apache.tools.zip.ZipOutputStream;
  */
 public class War extends Jar {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    /** path to web.xml file */
+    private static final String XML_DESCRIPTOR_PATH = "WEB-INF/web.xml";
+
     /**
      * our web.xml deployment descriptor
      */
@@ -59,10 +62,6 @@ public class War extends Jar {
      */
     private boolean needxmlfile = true;
     private File addedWebXmlFile;
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    /** path to web.xml file */
-    private static final String XML_DESCRIPTOR_PATH = "WEB-INF/web.xml";
 
     /** Constructor for the War Task. */
     public War() {
@@ -92,9 +91,8 @@ public class War extends Jar {
     public void setWebxml(File descr) {
         deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: "
-                                     + deploymentDescriptor
-                                     + " does not exist.");
+            throw new BuildException("Deployment descriptor:  does not exist.",
+                deploymentDescriptor);
         }
 
         // Create a ZipFileSet for this file, and pass it up.
@@ -103,7 +101,6 @@ public class War extends Jar {
         fs.setFullpath(XML_DESCRIPTOR_PATH);
         super.addFileset(fs);
     }
-
 
     /**
      * Set the policy on the web.xml file, that is, whether or not it is needed
@@ -117,7 +114,6 @@ public class War extends Jar {
      * add files under WEB-INF/lib/
      * @param fs the zip file set to add
      */
-
     public void addLib(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/lib/");
@@ -190,13 +186,10 @@ public class War extends Jar {
                 //check to see if we warn or not
                 if (!FILE_UTILS.fileNameEquals(addedWebXmlFile, file)) {
                     logWhenWriting("Warning: selected " + archiveType
-                                   + " files include a second "
-                                   + XML_DESCRIPTOR_PATH
-                                   + " which will be ignored.\n"
-                                   + "The duplicate entry is at " + file + '\n'
-                                   + "The file that will be used is "
-                                   + addedWebXmlFile,
-                                   Project.MSG_WARN);
+                        + " files include a second " + XML_DESCRIPTOR_PATH
+                        + " which will be ignored.\nThe duplicate entry is at "
+                        + file + "\nThe file that will be used is "
+                        + addedWebXmlFile, Project.MSG_WARN);
                 }
             } else {
                 //no added file, yet
@@ -212,7 +205,6 @@ public class War extends Jar {
         }
     }
 
-
     /**
      * Make sure we don't think we already have a web.xml next time this task
      * gets executed.
@@ -224,8 +216,8 @@ public class War extends Jar {
             && needxmlfile
             && !isInUpdateMode()
             && hasUpdatedFile()) {
-            throw new BuildException("No WEB-INF/web.xml file was added.\n"
-                    + "If this is your intent, set needxmlfile='false' ");
+            throw new BuildException(
+                "No WEB-INF/web.xml file was added.\nIf this is your intent, set needxmlfile='false' ");
         }
         addedWebXmlFile = null;
         super.cleanUp();

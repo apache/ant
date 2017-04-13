@@ -20,9 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.Hashtable;
-
+import java.util.List;
 import javax.xml.parsers.SAXParser;
 
 import org.apache.tools.ant.AntClassLoader;
@@ -330,6 +330,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     /* ------------- */
 
     /** {@inheritDoc}. */
+    @Override
     public void processDescriptor(String aDescriptorName, SAXParser saxParser) {
 
         descriptorName = aDescriptorName;
@@ -347,7 +348,8 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /** {@inheritDoc}. */
-    protected void writeJar(String baseName, File jarfile, Hashtable ejbFiles, String publicId)
+    @Override
+    protected void writeJar(String baseName, File jarfile, Hashtable<String, File> ejbFiles, String publicId)
     throws BuildException {
 
         // create the generic jar first
@@ -367,10 +369,11 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /** {@inheritDoc}. */
-    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
+    @Override
+    protected void addVendorFiles(Hashtable<String, File> ejbFiles, String ddPrefix) {
 
-    // JOnAS-specific descriptor deployment
-    jonasDescriptorName = getJonasDescriptorName();
+        // JOnAS-specific descriptor deployment
+        jonasDescriptorName = getJonasDescriptorName();
         File jonasDD = new File(getConfig().descriptorDir, jonasDescriptorName);
 
         if (jonasDD.exists()) {
@@ -382,6 +385,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /** {@inheritDoc}. */
+    @Override
     protected File getVendorOutputJarFile(String baseName) {
         return new File(getDestDir(), baseName + suffix);
     }
@@ -459,6 +463,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /** {@inheritDoc}. */
+    @Override
     protected String getJarBaseName(String descriptorFileName) {
 
         String baseName = null;
@@ -500,6 +505,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /** {@inheritDoc}. */
+    @Override
     protected void registerKnownDTDs(DescriptorHandler handler) {
         handler.registerDTD(EJB_JAR_1_1_PUBLIC_ID,
                     jonasroot + File.separator + "xml" + File.separator + EJB_JAR_1_1_DTD);
@@ -519,15 +525,12 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param ejbFiles the hashtable.
      */
     private void addGenICGeneratedFiles(
-        File genericJarFile, Hashtable ejbFiles) {
-        Java genicTask = null;    // GenIC task
-        String genicClass = null; // GenIC class (3 are supported for various
-                                  // versions
+        File genericJarFile, Hashtable<String, File> ejbFiles) {
         if (nogenic) {
             return;
         }
 
-        genicTask = new Java(getTask());
+        Java genicTask = new Java(getTask()); // GenIC task
         genicTask.setTaskName("genic");
         genicTask.setFork(true);
 
@@ -554,13 +557,8 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         genicTask.createArg().setValue("-d");
         genicTask.createArg().setFile(outputdir);
 
-        // work around a bug of GenIC 2.5
-        String key;
-        File f;
-        Enumeration keys = ejbFiles.keys();
-        while (keys.hasMoreElements()) {
-            key = (String) keys.nextElement();
-            f = new File(outputdir + File.separator + key);
+        for (String key : ejbFiles.keySet()) {
+            File f = new File(outputdir + File.separator + key);
             f.getParentFile().mkdirs();
         }
         log("Worked around a bug of GenIC 2.5.", Project.MSG_VERBOSE);
@@ -582,15 +580,18 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         log("Using classpath: " + classpath.toString(), Project.MSG_VERBOSE);
         genicTask.setClasspath(classpath);
 
+        String genicClass; // GenIC class (3 are supported for various
+        // versions
+        // work around a bug of GenIC 2.5
+        
         // class name (search in the classpath provided for the ejbjar element)
         genicClass = getGenicClassName(classpath);
         if (genicClass == null) {
             log("Cannot find GenIC class in classpath.", Project.MSG_ERR);
             throw new BuildException("GenIC class not found, please check the classpath.");
-        } else {
-            log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);
-            genicTask.setClassname(genicClass);
-        }
+        } 
+        log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);
+        genicTask.setClassname(genicClass);
 
         // keepgenerated
         if (keepgenerated) {
@@ -731,33 +732,38 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param saxParser          not used.
      * @throws BuildException if there is an error.
      */
+    @Override
     protected void checkConfiguration(String descriptorFileName,
                       SAXParser saxParser) throws BuildException {
 
         // jonasroot
         if (jonasroot == null) {
-            throw new BuildException("The jonasroot attribut is not set.");
-        } else if (!jonasroot.isDirectory()) {
-            throw new BuildException("The jonasroot attribut '" + jonasroot
-                + "' is not a valid directory.");
+            throw new BuildException("The jonasroot attribute is not set.");
+        }
+        if (!jonasroot.isDirectory()) {
+            throw new BuildException(
+                "The jonasroot attribute '%s' is not a valid directory.",
+                jonasroot);
         }
 
         // orb
-        if (orb != null && !orb.equals(RMI_ORB) && !orb.equals(JEREMIE_ORB)
-            && !orb.equals(DAVID_ORB)) {
-            throw new BuildException("The orb attribut '" + orb
-                + "' is not valid (must be either "
-                + RMI_ORB + ", " + JEREMIE_ORB + " or " + DAVID_ORB + ").");
+        final List<String> validOrbs =
+            Arrays.asList(RMI_ORB, JEREMIE_ORB, DAVID_ORB);
+
+        if (orb != null && !validOrbs.contains(orb)) {
+            throw new BuildException(
+                "The orb attribute '%s' is not valid (must be one of %s.", orb,
+                validOrbs);
         }
 
         // additionalargs
-        if (additionalargs != null && additionalargs.equals("")) {
-            throw new BuildException("Empty additionalargs attribut.");
+        if (additionalargs != null && additionalargs.isEmpty()) {
+            throw new BuildException("Empty additionalargs attribute.");
         }
 
         // javac
-        if (javac != null && javac.equals("")) {
-            throw new BuildException("Empty javac attribut.");
+        if (javac != null && javac.isEmpty()) {
+            throw new BuildException("Empty javac attribute.");
         }
     }
 
@@ -776,17 +782,15 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Delete a file. If the file is a directory, delete recursivly all the
+     * Delete a file. If the file is a directory, delete recursively all the
      * files inside.
      *
      * @param aFile file to delete.
      */
     private void deleteAllFiles(File aFile) {
         if (aFile.isDirectory()) {
-            File[] someFiles = aFile.listFiles();
-
-            for (int i = 0; i < someFiles.length; i++) {
-                deleteAllFiles(someFiles[i]);
+            for (File child : aFile.listFiles()) {
+                deleteAllFiles(child);
             }
         }
         aFile.delete();
@@ -800,22 +804,19 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param rootDir the current sub-directory to scan.
      * @param hashtable the hashtable where to add the files.
      */
-    private void addAllFiles(File file, String rootDir, Hashtable hashtable) {
-
+    private void addAllFiles(File file, String rootDir, Hashtable<String, File> hashtable) {
         if (!file.exists()) {
             throw new IllegalArgumentException();
         }
-
         String newRootDir;
         if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (rootDir.length() > 0) {
-                    newRootDir = rootDir + File.separator + files[i].getName();
+            for (File child : file.listFiles()) {
+                if (rootDir.isEmpty()) {
+                    newRootDir = child.getName();
                 } else {
-                    newRootDir = files[i].getName();
+                    newRootDir = rootDir + File.separator + child.getName();
                 }
-                addAllFiles(files[i], newRootDir, hashtable);
+                addAllFiles(child, newRootDir, hashtable);
             }
         } else {
             hashtable.put(rootDir, file);

@@ -34,12 +34,13 @@ public class Xor extends ConditionBase implements Condition {
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs.
      */
+    @Override
     public boolean eval() throws BuildException {
-        Enumeration e = getConditions();
+        Enumeration<Condition> e = getConditions();
         //initial state is false.
         boolean state = false;
         while (e.hasMoreElements()) {
-            Condition c = (Condition) e.nextElement();
+            Condition c = e.nextElement();
             //every condition is xored against the previous one
             state ^= c.eval();
         }

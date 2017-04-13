@@ -17,7 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
-import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * A <code>ContainerMapper</code> that returns the results of its
@@ -28,17 +28,11 @@ import java.util.Iterator;
 public class FirstMatchMapper extends ContainerMapper {
 
     /** {@inheritDoc}. */
+    @Override
     public String[] mapFileName(String sourceFileName) {
-        for (Iterator iter = getMappers().iterator(); iter.hasNext();) {
-            FileNameMapper mapper = (FileNameMapper) iter.next();
-            if (mapper != null) {
-                String[] mapped = mapper.mapFileName(sourceFileName);
-                if (mapped != null) {
-                    return mapped;
-                }
-            }
-        }
-        return null;
+        return getMappers().stream().filter(Objects::nonNull)
+            .map(m -> m.mapFileName(sourceFileName)).filter(Objects::nonNull)
+            .findFirst().orElse(null);
     }
 
 }

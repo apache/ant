@@ -226,6 +226,7 @@ public abstract class SSHBase extends Task implements LogListener {
      * This initializizs the known hosts and sets the default port.
      * @throws BuildException on error
      */
+    @Override
     public void init() throws BuildException {
         super.init();
         this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
@@ -241,14 +242,17 @@ public abstract class SSHBase extends Task implements LogListener {
         final JSch jsch = new JSch();
         final SSHBase base = this;
         if (verbose) {
-            JSch.setLogger(new com.jcraft.jsch.Logger(){
-                    public boolean isEnabled(final int level){
-                        return true;
-                    }
-                    public void log(final int level, final String message){
-                        base.log(message, Project.MSG_INFO);
-                    }
-                });
+            JSch.setLogger(new com.jcraft.jsch.Logger() {
+                @Override
+                public boolean isEnabled(final int level) {
+                    return true;
+                }
+
+                @Override
+                public void log(final int level, final String message) {
+                    base.log(message, Project.MSG_INFO);
+                }
+            });
         }
         if (null != userInfo.getKeyfile()) {
             jsch.addIdentity(userInfo.getKeyfile());

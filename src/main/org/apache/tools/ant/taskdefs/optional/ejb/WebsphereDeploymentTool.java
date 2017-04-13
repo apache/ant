@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -32,6 +31,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.taskdefs.optional.ejb.EjbJar.DTDLocation;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -148,7 +148,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         return wasClasspath.createPath();
     }
 
-
     /**
      * Set the websphere classpath.
      * @param wasClasspath the websphere classpath.
@@ -156,7 +155,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setWASClasspath(Path wasClasspath) {
         this.wasClasspath = wasClasspath;
     }
-
 
     /** Sets the DB Vendor for the Entity Bean mapping ; optional.
      * <p>
@@ -177,7 +175,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.dbVendor = dbvendor;
     }
 
-
     /**
      * Sets the name of the Database to create; optional.
      *
@@ -187,7 +184,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.dbName = dbName;
     }
 
-
     /**
      * Sets the name of the schema to create; optional.
      *
@@ -196,7 +192,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setDbschema(String dbSchema) {
         this.dbSchema = dbSchema;
     }
-
 
     /**
      * Flag, default false, to only generate the deployment
@@ -208,7 +203,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.codegen = codegen;
     }
 
-
     /**
      * Flag, default true, to only output error messages.
      *
@@ -217,7 +211,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setQuiet(boolean quiet) {
         this.quiet = quiet;
     }
-
 
     /**
      * Flag to disable the validation steps; optional, default false.
@@ -228,7 +221,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.novalidate = novalidate;
     }
 
-
     /**
      * Flag to disable warning and informational messages; optional, default false.
      *
@@ -238,7 +230,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.nowarn = nowarn;
     }
 
-
     /**
      * Flag to disable informational messages; optional, default false.
      *
@@ -247,7 +238,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setNoinform(boolean noinform) {
         this.noinform = noinform;
     }
-
 
     /**
      * Flag to enable internal tracing when set, optional, default false.
@@ -276,7 +266,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         use35MappingRules = attr;
     }
 
-
     /**
      * Set the rebuild flag to false to only update changes in the jar rather
      * than rerunning ejbdeploy; optional, default true.
@@ -285,7 +274,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setRebuild(boolean rebuild) {
         this.alwaysRebuild = rebuild;
     }
-
 
     /**
      * String value appended to the basename of the deployment
@@ -297,7 +285,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.jarSuffix = inString;
     }
 
-
     /**
      * This controls whether the generic file used as input to
      * ejbdeploy is retained; optional, default false.
@@ -306,7 +293,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setKeepgeneric(boolean inValue) {
         this.keepGeneric = inValue;
     }
-
 
     /**
      * Decide, whether ejbdeploy should be called or not;
@@ -318,7 +304,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.ejbdeploy = ejbdeploy;
     }
 
-
     /**
      * Setter used to store the location of the Sun's Generic EJB DTD. This
      * can be a file on the system or a resource on the classpath.
@@ -329,7 +314,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.ejb11DTD = inString;
     }
 
-
     /**
      * Set the value of the oldCMP scheme. This is an antonym for newCMP
      * @ant.attribute ignore="true"
@@ -338,7 +322,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     public void setOldCMP(boolean oldCMP) {
         this.newCMP = !oldCMP;
     }
-
 
     /**
      * Set the value of the newCMP scheme. The old CMP scheme locates the
@@ -353,7 +336,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.newCMP = newCMP;
     }
 
-
     /**
      * The directory, where ejbdeploy will write temporary files;
      * optional, defaults to '_ejbdeploy_temp'.
@@ -363,23 +345,19 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.tempdir = tempdir;
     }
 
-
     /** {@inheritDoc}. */
+    @Override
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
         // register all the DTDs, both the ones that are known and
         // any supplied by the user
         handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
 
-        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
-
+        for (DTDLocation dtdLocation : getConfig().dtdLocations) {
             handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
         }
-
         return handler;
     }
-
 
     /**
      * Get a description handler.
@@ -389,13 +367,12 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     protected DescriptorHandler getWebsphereDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
             new DescriptorHandler(getTask(), srcDir) {
+                @Override
                 protected void processElement() {
                 }
             };
 
-        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
-
+        for (DTDLocation dtdLocation : getConfig().dtdLocations) {
             handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
         }
         return handler;
@@ -407,9 +384,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * @param ejbFiles a hashtable entryname -> file.
      * @param baseName a prefix to use.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+    @Override
+    protected void addVendorFiles(Hashtable<String, File> ejbFiles, String baseName) {
 
-        String ddPrefix = (usingBaseJarName() ? "" : baseName);
+        String ddPrefix = usingBaseJarName() ? "" : baseName;
         String dbPrefix = (dbVendor == null) ? "" : dbVendor + "-";
 
         // Get the Extensions document
@@ -419,8 +397,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WAS_EXT,
                 websphereEXT);
         } else {
-            log("Unable to locate websphere extensions. "
-                + "It was expected to be in "
+            log("Unable to locate websphere extensions. It was expected to be in "
                 + websphereEXT.getPath(), Project.MSG_VERBOSE);
         }
 
@@ -430,17 +407,15 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + WAS_BND,
                 websphereBND);
         } else {
-            log("Unable to locate websphere bindings. "
-                + "It was expected to be in "
+            log("Unable to locate websphere bindings. It was expected to be in "
                 + websphereBND.getPath(), Project.MSG_VERBOSE);
         }
 
         if (!newCMP) {
             log("The old method for locating CMP files has been DEPRECATED.",
                 Project.MSG_VERBOSE);
-            log("Please adjust your websphere descriptor and set "
-                + "newCMP=\"true\" to use the new CMP descriptor "
-                + "inclusion mechanism. ", Project.MSG_VERBOSE);
+            log("Please adjust your websphere descriptor and set newCMP=\"true\" to use the new CMP descriptor inclusion mechanism. ",
+                Project.MSG_VERBOSE);
         } else {
             // We attempt to put in the MAP and Schema files of CMP beans
             try {
@@ -468,24 +443,23 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
                 // Theres nothing else to see here...keep moving sonny
             } catch (Exception e) {
-                String msg = "Exception while adding Vendor specific files: "
-                    + e.toString();
-
-                throw new BuildException(msg, e);
+                throw new BuildException(
+                    "Exception while adding Vendor specific files: "
+                        + e.toString(),
+                    e);
             }
         }
     }
-
 
     /**
      * Get the vendor specific name of the Jar that will be output. The
      * modification date of this jar will be checked against the dependent
      * bean classes.
      */
+    @Override
     File getVendorOutputJarFile(String baseName) {
         return new File(getDestDir(), baseName + jarSuffix);
     }
-
 
     /**
      * Gets the options for the EJB Deploy operation
@@ -494,7 +468,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     protected String getOptions() {
         // Set the options
-        StringBuffer options = new StringBuffer();
+        StringBuilder options = new StringBuilder();
 
         if (dbVendor != null) {
             options.append(" -dbvendor ").append(dbVendor);
@@ -541,7 +515,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
         return options.toString();
     }
-
 
     /**
      * Helper method invoked by execute() for each websphere jar to be built.
@@ -603,15 +576,16 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             }
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling ejbdeploy. Details: " + e.toString();
-
-            throw new BuildException(msg, e);
+            throw new BuildException(
+                "Exception while calling ejbdeploy. Details: " + e.toString(),
+                e);
         }
     }
 
     /** {@inheritDoc}. */
-    protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId)
-         throws BuildException {
+    @Override
+    protected void writeJar(String baseName, File jarFile,
+        Hashtable<String, File> files, String publicId) throws BuildException {
         if (ejbdeploy) {
             // create the -generic.jar, if required
             File genericJarFile = super.getVendorOutputJarFile(baseName);
@@ -633,23 +607,22 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         }
     }
 
-
     /**
      * Called to validate that the tool parameters have been configured.
      * @throws BuildException if there is an error.
      */
+    @Override
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
         if (ejbdeploy) {
             String home = getTask().getProject().getProperty("websphere.home");
             if (home == null) {
-                throw new BuildException("The 'websphere.home' property must "
-                    + "be set when 'ejbdeploy=true'");
+                throw new BuildException(
+                    "The 'websphere.home' property must be set when 'ejbdeploy=true'");
             }
             websphereHome = getTask().getProject().resolveFile(home);
         }
     }
-
 
     /**
      * Helper method to check to see if a websphere EBJ1.1 jar needs to be
@@ -696,34 +669,32 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 genericJar = new JarFile(genericJarFile);
                 wasJar = new JarFile(websphereJarFile);
 
-                Hashtable genericEntries = new Hashtable();
-                Hashtable wasEntries = new Hashtable();
-                Hashtable replaceEntries = new Hashtable();
+                Hashtable<String, JarEntry> genericEntries = new Hashtable<>();
+                Hashtable<String, JarEntry> wasEntries = new Hashtable<>();
+                Hashtable<String, JarEntry> replaceEntries = new Hashtable<>();
 
                 //get the list of generic jar entries
-                for (Enumeration e = genericJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = (JarEntry) e.nextElement();
-
+                for (Enumeration<JarEntry> e = genericJar.entries(); e.hasMoreElements();) {
+                    JarEntry je = e.nextElement();
                     genericEntries.put(je.getName().replace('\\', '/'), je);
                 }
                 //get the list of websphere jar entries
-                for (Enumeration e = wasJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = (JarEntry) e.nextElement();
-
+                for (Enumeration<JarEntry> e = wasJar.entries(); e.hasMoreElements();) {
+                    JarEntry je = e.nextElement();
                     wasEntries.put(je.getName(), je);
                 }
 
                 //Cycle Through generic and make sure its in websphere
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
-                for (Enumeration e = genericEntries.keys(); e.hasMoreElements();) {
-                    String filepath = (String) e.nextElement();
+                for (Enumeration<String> e = genericEntries.keys(); e.hasMoreElements();) {
+                    String filepath = e.nextElement();
 
                     if (wasEntries.containsKey(filepath)) {
                         // File name/path match
                         // Check files see if same
-                        JarEntry genericEntry = (JarEntry) genericEntries.get(filepath);
-                        JarEntry wasEntry = (JarEntry) wasEntries.get(filepath);
+                        JarEntry genericEntry = genericEntries.get(filepath);
+                        JarEntry wasEntry = wasEntries.get(filepath);
 
                         if ((genericEntry.getCrc() != wasEntry.getCrc())
                             || (genericEntry.getSize() != wasEntry.getSize())) {
@@ -735,7 +706,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
                                 classname = classname.substring(0, classname.lastIndexOf(".class"));
 
-                                Class genclass = genericLoader.loadClass(classname);
+                                Class<?> genclass = genericLoader.loadClass(classname);
 
                                 if (genclass.isInterface()) {
                                     //Interface changed   rebuild jar.
@@ -743,14 +714,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                                         + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
                                     break;
-                                } else {
-                                    //Object class Changed   update it.
-                                    replaceEntries.put(filepath, genericEntry);
                                 }
+                                //Object class Changed   update it.
+                                replaceEntries.put(filepath, genericEntry);
                             } else {
                                 // is it the manifest. If so ignore it
                                 if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
-                                    //File other then class changed   rebuild
+                                    //File other then class changed  rebuild
                                     log("Non class file " + genericEntry.getName()
                                         + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
@@ -779,11 +749,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     newJarStream.setLevel(0);
 
                     //Copy files from old websphere jar
-                    for (Enumeration e = wasEntries.elements(); e.hasMoreElements();) {
-                        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-                        int bytesRead;
-                        InputStream is;
-                        JarEntry je = (JarEntry) e.nextElement();
+                    for (Enumeration<JarEntry> e = wasEntries.elements(); e.hasMoreElements();) {
+                        JarEntry je = e.nextElement();
 
                         if (je.getCompressedSize() == -1
                             || je.getCompressedSize() == je.getSize()) {
@@ -792,12 +759,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                             newJarStream.setLevel(JAR_COMPRESS_LEVEL);
                         }
 
+                        InputStream is;
                         // Update with changed Bean class
                         if (replaceEntries.containsKey(je.getName())) {
                             log("Updating Bean class from generic Jar " + je.getName(),
                                 Project.MSG_VERBOSE);
                             // Use the entry from the generic jar
-                            je = (JarEntry) replaceEntries.get(je.getName());
+                            je = replaceEntries.get(je.getName());
                             is = genericJar.getInputStream(je);
                         } else {
                             //use fle from original websphere jar
@@ -806,6 +774,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         }
                         newJarStream.putNextEntry(new JarEntry(je.getName()));
 
+                        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+                        int bytesRead;
                         while ((bytesRead = is.read(buffer)) != -1) {
                             newJarStream.write(buffer, 0, bytesRead);
                         }
@@ -819,17 +789,15 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 rebuild = true;
             }
         } catch (ClassNotFoundException cnfe) {
-            String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
-                 + ". Details: "
-                 + cnfe.getMessage();
-
-            throw new BuildException(cnfmsg, cnfe);
+            throw new BuildException(
+                "ClassNotFoundException while processing ejb-jar file. Details: "
+                    + cnfe.getMessage(),
+                cnfe);
         } catch (IOException ioe) {
-            String msg = "IOException while processing ejb-jar file "
-                 + ". Details: "
-                 + ioe.getMessage();
-
-            throw new BuildException(msg, ioe);
+            throw new BuildException(
+                "IOException while processing ejb-jar file . Details: "
+                    + ioe.getMessage(),
+                ioe);
         } finally {
             // need to close files and perhaps rename output
             FileUtils.close(genericJar);
@@ -846,14 +814,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             }
             if (genericLoader != null
                 && genericLoader instanceof AntClassLoader) {
+                @SuppressWarnings("resource")
                 AntClassLoader loader = (AntClassLoader) genericLoader;
                 loader.cleanup();
             }
         }
-
         return rebuild;
     }
-
 
     /**
      * Helper method invoked by isRebuildRequired to get a ClassLoader for a

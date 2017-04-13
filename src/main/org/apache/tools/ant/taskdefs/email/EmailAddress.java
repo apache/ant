@@ -119,7 +119,7 @@ public class EmailAddress {
     private String trim(String t, boolean trimAngleBrackets) {
         int start = 0;
         int end = t.length();
-        boolean trim = false;
+        boolean trim;
         do {
             trim = false;
             if (t.charAt(end - 1) == ')'
@@ -140,7 +140,6 @@ public class EmailAddress {
         return t.substring(start, end);
     }
 
-
     /**
      * Sets the personal / display name of the address.
      *
@@ -149,7 +148,6 @@ public class EmailAddress {
     public void setName(String name) {
         this.name = name;
     }
-
 
     /**
      * Sets the email address.
@@ -160,20 +158,18 @@ public class EmailAddress {
         this.address = address;
     }
 
-
     /**
      * Constructs a string "name &lt;address&gt;" or "address"
      *
      * @return a string representation of the address
      */
+    @Override
     public String toString() {
         if (name == null) {
             return address;
-        } else {
-            return name + " <" + address + ">";
         }
+        return name + " <" + address + ">";
     }
-
 
     /**
      * Returns the address
@@ -184,7 +180,6 @@ public class EmailAddress {
         return address;
     }
 
-
     /**
      * Returns the display name
      *
@@ -194,4 +189,3 @@ public class EmailAddress {
         return name;
     }
 }
-

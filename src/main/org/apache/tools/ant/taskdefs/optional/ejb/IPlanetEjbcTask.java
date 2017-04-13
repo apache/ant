@@ -188,6 +188,7 @@ public class IPlanetEjbcTask extends Task {
      * Does the work.
      * @throws BuildException if there is a problem.
      */
+    @Override
     public void execute() throws BuildException {
         checkConfiguration();
 
@@ -202,41 +203,42 @@ public class IPlanetEjbcTask extends Task {
     private void checkConfiguration() throws BuildException {
 
         if (ejbdescriptor == null) {
-            String msg = "The standard EJB descriptor must be specified using "
-                            + "the \"ejbdescriptor\" attribute.";
+            String msg =
+                "The standard EJB descriptor must be specified using the \"ejbdescriptor\" attribute.";
             throw new BuildException(msg, getLocation());
         }
         if ((!ejbdescriptor.exists()) || (!ejbdescriptor.isFile())) {
             String msg = "The standard EJB descriptor (" + ejbdescriptor
-                            + ") was not found or isn't a file.";
+                + ") was not found or isn't a file.";
             throw new BuildException(msg, getLocation());
         }
 
         if (iasdescriptor == null) {
-            String msg = "The iAS-speific XML descriptor must be specified using"
-                            + " the \"iasdescriptor\" attribute.";
+            String msg =
+                "The iAS-speific XML descriptor must be specified using the \"iasdescriptor\" attribute.";
             throw new BuildException(msg, getLocation());
         }
         if ((!iasdescriptor.exists()) || (!iasdescriptor.isFile())) {
             String msg = "The iAS-specific XML descriptor (" + iasdescriptor
-                            + ") was not found or isn't a file.";
+                + ") was not found or isn't a file.";
             throw new BuildException(msg, getLocation());
         }
 
         if (dest == null) {
-            String msg = "The destination directory must be specified using "
-                            + "the \"dest\" attribute.";
+            String msg =
+                "The destination directory must be specified using the \"dest\" attribute.";
             throw new BuildException(msg, getLocation());
         }
         if ((!dest.exists()) || (!dest.isDirectory())) {
-            String msg = "The destination directory (" + dest + ") was not "
-                            + "found or isn't a directory.";
+            String msg = "The destination directory (" + dest
+                + ") was not found or isn't a directory.";
             throw new BuildException(msg, getLocation());
         }
 
         if ((iashome != null) && (!iashome.isDirectory())) {
-            String msg = "If \"iashome\" is specified, it must be a valid "
-                            + "directory (it was set to " + iashome + ").";
+            String msg =
+                "If \"iashome\" is specified, it must be a valid directory (it was set to "
+                    + iashome + ").";
             throw new BuildException(msg, getLocation());
         }
     }
@@ -248,21 +250,13 @@ public class IPlanetEjbcTask extends Task {
      * @throws BuildException If the parser cannot be created or configured.
      */
     private SAXParser getParser() throws BuildException {
-
-        SAXParser saxParser = null;
         try {
             SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             saxParserFactory.setValidating(true);
-            saxParser = saxParserFactory.newSAXParser();
-        } catch (SAXException e) {
-            String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException(msg, e, getLocation());
-        } catch (ParserConfigurationException e) {
-            String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException(msg, e, getLocation());
+            return saxParserFactory.newSAXParser();
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new BuildException("Unable to create a SAXParser: " + e.getMessage(), e, getLocation());
         }
-
-        return saxParser;
     }
 
     /**
@@ -284,21 +278,23 @@ public class IPlanetEjbcTask extends Task {
         if (iashome != null) {
             ejbc.setIasHomeDir(iashome);
         }
-
         try {
             ejbc.execute();
         } catch (IOException e) {
-            String msg = "An IOException occurred while trying to read the XML "
-                            + "descriptor file: " + e.getMessage();
-            throw new BuildException(msg, e, getLocation());
+            throw new BuildException(
+                "An IOException occurred while trying to read the XML descriptor file: "
+                    + e.getMessage(),
+                e, getLocation());
         } catch (SAXException e) {
-            String msg = "A SAXException occurred while trying to read the XML "
-                            + "descriptor file: " + e.getMessage();
-            throw new BuildException(msg, e, getLocation());
+            throw new BuildException(
+                "A SAXException occurred while trying to read the XML descriptor file: "
+                    + e.getMessage(),
+                e, getLocation());
         } catch (IPlanetEjbc.EjbcException e) {
-            String msg = "An exception occurred while trying to run the ejbc "
-                            + "utility: " + e.getMessage();
-            throw new BuildException(msg, e, getLocation());
+            throw new BuildException(
+                "An exception occurred while trying to run the ejbc utility: "
+                    + e.getMessage(),
+                e, getLocation());
         }
     }
 
@@ -309,13 +305,9 @@ public class IPlanetEjbcTask extends Task {
      * @return Path The classpath to be used for EJBc.
      */
     private Path getClasspath() {
-        Path cp = null;
         if (classpath == null) {
-            cp = (new Path(getProject())).concatSystemClasspath("last");
-        } else {
-            cp = classpath.concatSystemClasspath("ignore");
-        }
-
-        return cp;
+            return new Path(getProject()).concatSystemClasspath("last");
+        } 
+        return classpath.concatSystemClasspath("ignore");
     }
 }

@@ -43,6 +43,7 @@ public class TeeOutputStream extends OutputStream {
      * Close both output streams.
      * @throws IOException on error.
      */
+    @Override
     public void close() throws IOException {
         try {
             left.close();
@@ -55,6 +56,7 @@ public class TeeOutputStream extends OutputStream {
      * Flush both output streams.
      * @throws IOException on error
      */
+    @Override
     public void flush() throws IOException {
         left.flush();
         right.flush();
@@ -65,6 +67,7 @@ public class TeeOutputStream extends OutputStream {
      * @param b an array of bytes.
      * @throws IOException on error.
      */
+    @Override
     public void write(byte[] b) throws IOException {
         left.write(b);
         right.write(b);
@@ -77,6 +80,7 @@ public class TeeOutputStream extends OutputStream {
      * @param len   the number of bytes to write.
      * @throws IOException on error.
      */
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         left.write(b, off, len);
         right.write(b, off, len);
@@ -87,9 +91,9 @@ public class TeeOutputStream extends OutputStream {
      * @param b the byte to write.
      * @throws IOException on error.
      */
+    @Override
     public void write(int b) throws IOException {
         left.write(b);
         right.write(b);
     }
 }
-

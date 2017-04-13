@@ -41,6 +41,7 @@ public class HasFreeSpace implements Condition {
      * @return true if there enough free space.
      * @throws BuildException if there is a problem.
      */
+    @Override
     public boolean eval() throws BuildException {
         validate();
         try {
@@ -48,11 +49,11 @@ public class HasFreeSpace implements Condition {
                 //reflection to avoid bootstrap/build problems
                 File fs = new File(partition);
                 ReflectWrapper w = new ReflectWrapper(fs);
-                long free = ((Long) w.invoke("getFreeSpace")).longValue();
+                long free = w.<Long> invoke("getFreeSpace").longValue();
                 return free >= StringUtils.parseHumanSizes(needed);
-            } else {
-                throw new BuildException("HasFreeSpace condition not supported on Java5 or less.");
             }
+            throw new BuildException(
+                "HasFreeSpace condition not supported on Java5 or less.");
         } catch (Exception e) {
             throw new BuildException(e);
         }

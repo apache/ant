@@ -62,14 +62,17 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
      * @param srcDir the source file.
      * @return the descriptor handler.
      */
+    @Override
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = super.getDescriptorHandler(srcDir);
         if (toplinkDTD != null) {
-            handler.registerDTD("-//The Object People, Inc.//"
-                + "DTD TOPLink for WebLogic CMP 2.5.1//EN", toplinkDTD);
+            handler.registerDTD(
+                "-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                toplinkDTD);
         } else {
-            handler.registerDTD("-//The Object People, Inc.//"
-                + "DTD TOPLink for WebLogic CMP 2.5.1//EN", TL_DTD_LOC);
+            handler.registerDTD(
+                "-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                TL_DTD_LOC);
         }
         return handler;
     }
@@ -80,12 +83,12 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
      * @param ejbFiles the hashtable to add files to.
      * @param ddPrefix the prefix to use.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
+    @Override
+    protected void addVendorFiles(Hashtable<String, File> ejbFiles, String ddPrefix) {
         super.addVendorFiles(ejbFiles, ddPrefix);
         // Then the toplink deployment descriptor
 
         // Setup a naming standard here?.
-
 
         File toplinkDD = new File(getConfig().descriptorDir, ddPrefix + toplinkDescriptor);
 
@@ -93,8 +96,7 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
             ejbFiles.put(META_DIR + toplinkDescriptor,
                          toplinkDD);
         } else {
-            log("Unable to locate toplink deployment descriptor. "
-                + "It was expected to be in "
+            log("Unable to locate toplink deployment descriptor. It was expected to be in "
                 + toplinkDD.getPath(), Project.MSG_WARN);
         }
     }
@@ -103,11 +105,12 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
      * Called to validate that the tool parameters have been configured.
      * @throws BuildException if there is an error.
      */
+    @Override
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
         if (toplinkDescriptor == null) {
-            throw new BuildException("The toplinkdescriptor attribute must "
-                + "be specified");
+            throw new BuildException(
+                "The toplinkdescriptor attribute must be specified");
         }
     }
 }

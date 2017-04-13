@@ -41,12 +41,6 @@ import org.apache.tools.ant.util.regexp.RegexpUtil;
 public class ContainsRegexpSelector extends BaseExtendSelector
         implements ResourceSelector {
 
-    private String userProvidedExpression = null;
-    private RegularExpression myRegExp = null;
-    private Regexp myExpression = null;
-    private boolean caseSensitive = true;
-    private boolean multiLine = false;
-    private boolean singleLine = false;
     /** Key to used for parameterized custom selector */
     public static final String EXPRESSION_KEY = "expression";
     /** Parameter name for the casesensitive attribute. */
@@ -56,21 +50,19 @@ public class ContainsRegexpSelector extends BaseExtendSelector
     /** Parameter name for the singleline attribute. */
     private static final String SL_KEY = "singleline";
 
-    /**
-     * Creates a new <code>ContainsRegexpSelector</code> instance.
-     */
-    public ContainsRegexpSelector() {
-    }
+    private String userProvidedExpression = null;
+    private RegularExpression myRegExp = null;
+    private Regexp myExpression = null;
+    private boolean caseSensitive = true;
+    private boolean multiLine = false;
+    private boolean singleLine = false;
 
     /**
      * @return a string describing this object
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder(
-                "{containsregexpselector expression: ");
-        buf.append(userProvidedExpression);
-        buf.append("}");
-        return buf.toString();
+        return String.format("{containsregexpselector expression: %s}",
+            userProvidedExpression);
     }
 
     /**
@@ -116,7 +108,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -166,11 +158,7 @@ public class ContainsRegexpSelector extends BaseExtendSelector
      * @return whether the Resource is selected or not
      */
     public boolean isSelected(Resource r) {
-        String teststr = null;
-        BufferedReader in = null;
-
         // throw BuildException on error
-
         validate();
 
         if (r.isDirectory()) {
@@ -183,40 +171,25 @@ public class ContainsRegexpSelector extends BaseExtendSelector
             myExpression = myRegExp.getRegexp(getProject());
         }
 
-        try {
-            in = new BufferedReader(new InputStreamReader(r.getInputStream())); //NOSONAR
-        } catch (Exception e) {
-            throw new BuildException("Could not get InputStream from "
-                    + r.toLongString(), e);
-        }
-        boolean success = false;
-        try {
-            teststr = in.readLine();
-
-            while (teststr != null) {
-
-                if (myExpression.matches(teststr,
-                                         RegexpUtil.asOptions(caseSensitive,
-                                                              multiLine,
-                                                              singleLine))) {
-                    return true;
-                }
-                teststr = in.readLine();
-            }
-            success = true;
-            return false;
-        } catch (IOException ioe) {
-            throw new BuildException("Could not read " + r.toLongString());
-        } finally {
+        try (BufferedReader in =
+            new BufferedReader(new InputStreamReader(r.getInputStream()))) {
             try {
-                in.close();
-            } catch (Exception e) {
-                if (success) {
-                    throw new BuildException("Could not close " //NOSONAR
-                                             + r.toLongString());
+                String teststr = in.readLine();
+
+                while (teststr != null) {
+                    if (myExpression.matches(teststr, RegexpUtil
+                        .asOptions(caseSensitive, multiLine, singleLine))) {
+                        return true;
+                    }
+                    teststr = in.readLine();
                 }
+                return false;
+            } catch (IOException ioe) {
+                throw new BuildException("Could not read " + r.toLongString());
             }
+        } catch (IOException e) {
+            throw new BuildException(
+                "Could not get InputStream from " + r.toLongString(), e);
         }
     }
 }
-

@@ -274,4 +274,3 @@ public abstract class Mailer {
         return DateUtils.getDateForHeader();
     }
 }
-

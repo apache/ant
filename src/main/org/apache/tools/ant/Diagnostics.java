@@ -54,9 +54,6 @@ import org.xml.sax.XMLReader;
  */
 public final class Diagnostics {
 
-    /** the version number for java 1.5 returned from JavaEnvUtils */
-    private static final int JAVA_1_5_NUMBER = 15;
-
     /**
      * value for which a difference between clock and temp file time triggers
      * a warning.
@@ -113,8 +110,7 @@ public final class Diagnostics {
         if (home == null) {
             return null;
         }
-        File libDir = new File(home, "lib");
-        return listJarFiles(libDir);
+        return listJarFiles(new File(home, "lib"));
 
     }
 
@@ -124,13 +120,8 @@ public final class Diagnostics {
      * @return array of files (or null for no such directory)
      */
     private static File[] listJarFiles(File libDir) {
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        };
-        File[] files  = libDir.listFiles(filter);
-        return files;
+        return libDir
+            .listFiles((FilenameFilter) (dir, name) -> name.endsWith(".jar"));
     }
 
     /**
@@ -173,8 +164,7 @@ public final class Diagnostics {
             return "Could not create an XML Parser";
         }
         // check to what is in the classname
-        String saxParserName = saxParser.getClass().getName();
-        return saxParserName;
+        return saxParser.getClass().getName();
     }
 
     /**
@@ -187,8 +177,7 @@ public final class Diagnostics {
             return "Could not create an XSLT Processor";
         }
         // check to what is in the classname
-        String processorName = transformer.getClass().getName();
-        return processorName;
+        return transformer.getClass().getName();
     }
 
     /**
@@ -216,17 +205,15 @@ public final class Diagnostics {
      */
     private static Transformer getXSLTProcessor() {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        if (transformerFactory == null) {
-            return null;
+        if (transformerFactory != null) {
+            try {
+                return transformerFactory.newTransformer();
+            } catch (Exception e) {
+                // ignore
+                ignoreThrowable(e);
+            }
         }
-        Transformer transformer = null;
-        try {
-            transformer = transformerFactory.newTransformer();
-        } catch (Exception e) {
-            // ignore
-            ignoreThrowable(e);
-        }
-        return transformer;
+        return null;
     }
 
     /**

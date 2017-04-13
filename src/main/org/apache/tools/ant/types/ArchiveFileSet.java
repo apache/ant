@@ -110,6 +110,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param dir the directory for the fileset
      * @throws BuildException on error
      */
+    @Override
     public void setDir(File dir) throws BuildException {
         checkAttributesAllowed();
         if (src != null) {
@@ -191,13 +192,10 @@ public abstract class ArchiveFileSet extends FileSet {
             return ((ArchiveFileSet) getCheckedRef()).getSrc();
         }
         dieOnCircularReference();
-        if (src != null) {
-            FileProvider fp = src.as(FileProvider.class);
-            if (fp != null) {
-                return fp.getFile();
-            }
+        if (src == null) {
+            return null;
         }
-        return null;
+        return src.asOptional(FileProvider.class).map(FileProvider::getFile).orElse(null);
     }
 
     /**
@@ -212,6 +210,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @since Ant 1.8
      */
     // TODO is the above true? AFAICT the calls look circular :/
+    @Override
     protected Object getCheckedRef(Project p) {
         return getRef(p);
     }
@@ -288,11 +287,7 @@ public abstract class ArchiveFileSet extends FileSet {
     public String getEncoding() {
         if (isReference()) {
             AbstractFileSet ref = getRef(getProject());
-            if (ref instanceof ArchiveFileSet) {
-                return ((ArchiveFileSet) ref).getEncoding();
-            } else {
-                return null;
-            }
+            return ref instanceof ArchiveFileSet ? ((ArchiveFileSet) ref).getEncoding() : null;
         }
         return encoding;
     }
@@ -310,6 +305,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @param p the project to use
      * @return a directory scanner
      */
+    @Override
     public DirectoryScanner getDirectoryScanner(Project p) {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
@@ -340,6 +336,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((ResourceCollection) (getRef(getProject()))).iterator();
@@ -356,6 +353,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return size of the collection as int.
      * @since Ant 1.7
      */
+    @Override
     public int size() {
         if (isReference()) {
             return ((ResourceCollection) (getRef(getProject()))).size();
@@ -375,6 +373,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return whether this is a filesystem-only resource collection.
      * @since Ant 1.7
      */
+    @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
             return ((ArchiveFileSet) getCheckedRef()).isFilesystemOnly();
@@ -505,11 +504,13 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the cloned archiveFileSet
      * @since Ant 1.6
      */
-    public Object clone() {
+    @Override
+    public ArchiveFileSet clone() {
         if (isReference()) {
-            return getCheckedRef(ArchiveFileSet.class, getDataTypeName(), getProject()).clone();
+            return getCheckedRef(ArchiveFileSet.class, getDataTypeName(),
+                getProject()).clone();
         }
-        return super.clone();
+        return (ArchiveFileSet) super.clone();
     }
 
     /**
@@ -518,6 +519,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return for file based archivefilesets, included files as a list
      * of semicolon-separated filenames. else just the name of the zip.
      */
+    @Override
     public String toString() {
         if (hasDir && getProject() != null) {
             return super.toString();
@@ -530,6 +532,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the prefix.
      * @deprecated since 1.7.
      */
+    @Deprecated
     public String getPrefix() {
         return prefix;
     }
@@ -539,6 +542,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the full pathname.
      * @deprecated since 1.7.
      */
+    @Deprecated
     public String getFullpath() {
         return fullpath;
     }
@@ -547,6 +551,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the file mode.
      * @deprecated since 1.7.
      */
+    @Deprecated
     public int getFileMode() {
         return fileMode;
     }
@@ -555,6 +560,7 @@ public abstract class ArchiveFileSet extends FileSet {
      * @return the dir mode.
      * @deprecated since 1.7.
      */
+    @Deprecated
     public int getDirMode() {
         return dirMode;
     }
@@ -577,6 +583,7 @@ public abstract class ArchiveFileSet extends FileSet {
         }
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {

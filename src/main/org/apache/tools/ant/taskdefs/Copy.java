@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -75,7 +76,7 @@ public class Copy extends Task {
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
     protected File destDir = null;  // the destination directory
-    protected Vector<ResourceCollection> rcs = new Vector<ResourceCollection>();
+    protected Vector<ResourceCollection> rcs = new Vector<>();
     // here to provide API backwards compatibility
     protected Vector<ResourceCollection> filesets = rcs;
 
@@ -88,15 +89,15 @@ public class Copy extends Task {
     protected boolean includeEmpty = true;
     protected boolean failonerror = true;
 
-    protected Hashtable<String, String[]> fileCopyMap = new LinkedHashtable<String, String[]>();
-    protected Hashtable<String, String[]> dirCopyMap = new LinkedHashtable<String, String[]>();
-    protected Hashtable<File, File> completeDirMap = new LinkedHashtable<File, File>();
+    protected Hashtable<String, String[]> fileCopyMap = new LinkedHashtable<>();
+    protected Hashtable<String, String[]> dirCopyMap = new LinkedHashtable<>();
+    protected Hashtable<File, File> completeDirMap = new LinkedHashtable<>();
 
     protected Mapper mapperElement = null;
     protected FileUtils fileUtils;
     //CheckStyle:VisibilityModifier ON
-    private final Vector<FilterChain> filterChains = new Vector<FilterChain>();
-    private final Vector<FilterSet> filterSets = new Vector<FilterSet>();
+    private final Vector<FilterChain> filterChains = new Vector<>();
+    private final Vector<FilterSet> filterSets = new Vector<>();
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;
@@ -474,18 +475,17 @@ public class Copy extends Task {
                separate lists and then each list is handled in one go.
             */
 
-            final HashMap<File, List<String>> filesByBasedir = new HashMap<File, List<String>>();
-            final HashMap<File, List<String>> dirsByBasedir = new HashMap<File, List<String>>();
-            final HashSet<File> baseDirs = new HashSet<File>();
-            final ArrayList<Resource> nonFileResources = new ArrayList<Resource>();
-            final int size = rcs.size();
-            for (int i = 0; i < size; i++) {
-                final ResourceCollection rc = rcs.elementAt(i);
+            final Map<File, List<String>> filesByBasedir = new HashMap<>();
+            final Map<File, List<String>> dirsByBasedir = new HashMap<>();
+            final Set<File> baseDirs = new HashSet<>();
+            final List<Resource> nonFileResources = new ArrayList<>();
+
+            for (ResourceCollection rc : rcs) {
 
                 // Step (1) - beware of the ZipFileSet
                 if (rc instanceof FileSet && rc.isFilesystemOnly()) {
                     final FileSet fs = (FileSet) rc;
-                    DirectoryScanner ds = null;
+                    DirectoryScanner ds;
                     try {
                         ds = fs.getDirectoryScanner(getProject());
                     } catch (final BuildException e) {
@@ -493,12 +493,11 @@ public class Copy extends Task {
                             || !getMessage(e).endsWith(DirectoryScanner
                                                        .DOES_NOT_EXIST_POSTFIX)) {
                             throw e;
-                        } else {
-                            if (!quiet) {
-                                log("Warning: " + getMessage(e), Project.MSG_ERR);
-                            }
-                            continue;
                         }
+                        if (!quiet) {
+                            log("Warning: " + getMessage(e), Project.MSG_ERR);
+                        }
+                        continue;
                     }
                     final File fromDir = fs.getDir(getProject());
 
@@ -574,7 +573,7 @@ public class Copy extends Task {
                 }
             }
 
-            if (nonFileResources.size() > 0 || singleResource != null) {
+            if (!nonFileResources.isEmpty() || singleResource != null) {
                 final Resource[] nonFiles =
                     nonFileResources.toArray(new Resource[nonFileResources.size()]);
                 // restrict to out-of-date resources
@@ -645,8 +644,9 @@ public class Copy extends Task {
         }
     }
 
-    private void iterateOverBaseDirs(
-        final HashSet<File> baseDirs, final HashMap<File, List<String>> dirsByBasedir, final HashMap<File, List<String>> filesByBasedir) {
+    private void iterateOverBaseDirs(final Set<File> baseDirs,
+        final Map<File, List<String>> dirsByBasedir,
+        final Map<File, List<String>> filesByBasedir) {
 
         for (final File f : baseDirs) {
             final List<String> files = filesByBasedir.get(f);
@@ -672,7 +672,7 @@ public class Copy extends Task {
      * @exception BuildException if an error occurs.
      */
     protected void validateAttributes() throws BuildException {
-        if (file == null && rcs.size() == 0) {
+        if (file == null && rcs.isEmpty()) {
             throw new BuildException(
                 "Specify at least one source--a file or a resource collection.");
         }
@@ -686,36 +686,36 @@ public class Copy extends Task {
         if (file != null && file.isDirectory()) {
             throw new BuildException("Use a resource collection to copy directories.");
         }
-        if (destFile != null && rcs.size() > 0) {
+        if (destFile != null && !rcs.isEmpty()) {
             if (rcs.size() > 1) {
                 throw new BuildException(
                     "Cannot concatenate multiple files into a single file.");
-            } else {
-                final ResourceCollection rc = rcs.elementAt(0);
-                if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
-                    throw new BuildException("Only FileSystem resources are"
-                                             + " supported.");
-                }
-                if (rc.size() == 0) {
-                    throw new BuildException(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE);
-                } else if (rc.size() == 1) {
-                    final Resource res = rc.iterator().next();
-                    final FileProvider r = res.as(FileProvider.class);
-                    if (file == null) {
-                        if (r != null) {
-                            file = r.getFile();
-                        } else {
-                            singleResource = res;
-                        }
-                        rcs.removeElementAt(0);
+            }
+            final ResourceCollection rc = rcs.elementAt(0);
+            if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
+                throw new BuildException(
+                    "Only FileSystem resources are supported.");
+            }
+            if (rc.isEmpty()) {
+                throw new BuildException(MSG_WHEN_COPYING_EMPTY_RC_TO_FILE);
+            }
+            if (rc.size() == 1) {
+                final Resource res = rc.iterator().next();
+                final FileProvider r = res.as(FileProvider.class);
+                if (file == null) {
+                    if (r != null) {
+                        file = r.getFile();
                     } else {
-                        throw new BuildException(
-                            "Cannot concatenate multiple files into a single file.");
+                        singleResource = res;
                     }
+                    rcs.removeElementAt(0);
                 } else {
                     throw new BuildException(
                         "Cannot concatenate multiple files into a single file.");
                 }
+            } else {
+                throw new BuildException(
+                    "Cannot concatenate multiple files into a single file.");
             }
         }
         if (destFile != null) {
@@ -811,34 +811,28 @@ public class Copy extends Task {
      */
     protected Map<Resource, String[]> buildMap(final Resource[] fromResources, final File toDir,
                            final FileNameMapper mapper) {
-        final HashMap<Resource, String[]> map = new HashMap<Resource, String[]>();
-        Resource[] toCopy = null;
+        final Map<Resource, String[]> map = new HashMap<>();
+        Resource[] toCopy;
         if (forceOverwrite) {
-            final Vector<Resource> v = new Vector<Resource>();
+            final List<Resource> v = new ArrayList<>();
             for (int i = 0; i < fromResources.length; i++) {
                 if (mapper.mapFileName(fromResources[i].getName()) != null) {
-                    v.addElement(fromResources[i]);
+                    v.add(fromResources[i]);
                 }
             }
-            toCopy = new Resource[v.size()];
-            v.copyInto(toCopy);
+            toCopy = v.toArray(new Resource[v.size()]);
         } else {
             toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources,
                                                           mapper,
-                                                          new ResourceFactory() {
-                                            public Resource getResource(final String name) {
-                                                return new FileResource(toDir, name);
-                                            }
-                                                          },
+                                                          (ResourceFactory) name -> new FileResource(toDir, name),
                                                           granularity);
         }
         for (int i = 0; i < toCopy.length; i++) {
             final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
-            for (int j = 0; j < mappedFiles.length; j++) {
-                if (mappedFiles[j] == null) {
-                    throw new BuildException("Can't copy a resource without a"
-                                             + " name if the mapper doesn't"
-                                             + " provide one.");
+            for (String mappedFile : mappedFiles) {
+                if (mappedFile == null) {
+                    throw new BuildException(
+                        "Can't copy a resource without a name if the mapper doesn't provide one.");
                 }
             }
 
@@ -861,7 +855,7 @@ public class Copy extends Task {
      * This is a good method for subclasses to override.
      */
     protected void doFileOperations() {
-        if (fileCopyMap.size() > 0) {
+        if (!fileCopyMap.isEmpty()) {
             log("Copying " + fileCopyMap.size()
                 + " file" + (fileCopyMap.size() == 1 ? "" : "s")
                 + " to " + destDir.getAbsolutePath());
@@ -870,9 +864,7 @@ public class Copy extends Task {
                 final String fromFile = e.getKey();
                 final String[] toFiles = e.getValue();
 
-                for (int i = 0; i < toFiles.length; i++) {
-                    final String toFile = toFiles[i];
-
+                for (final String toFile : toFiles) {
                     if (fromFile.equals(toFile)) {
                         log("Skipping self-copy of " + fromFile, verbosity);
                         continue;
@@ -916,8 +908,8 @@ public class Copy extends Task {
         if (includeEmpty) {
             int createCount = 0;
             for (final String[] dirs : dirCopyMap.values()) {
-                for (int i = 0; i < dirs.length; i++) {
-                    final File d = new File(dirs[i]);
+                for (String dir : dirs) {
+                    final File d = new File(dir);
                     if (!d.exists()) {
                         if (!(d.mkdirs() || d.isDirectory())) {
                             log("Unable to create directory "
@@ -947,7 +939,7 @@ public class Copy extends Task {
      * @since Ant 1.7
      */
     protected void doResourceOperations(final Map<Resource, String[]> map) {
-        if (map.size() > 0) {
+        if (!map.isEmpty()) {
             log("Copying " + map.size()
                 + " resource" + (map.size() == 1 ? "" : "s")
                 + " to " + destDir.getAbsolutePath());
@@ -1026,7 +1018,7 @@ public class Copy extends Task {
             baseDir = getKeyFile(baseDir);
             List<String> l = m.get(baseDir);
             if (l == null) {
-                l = new ArrayList<String>(names.length);
+                l = new ArrayList<>(names.length);
                 m.put(baseDir, l);
             }
             l.addAll(java.util.Arrays.asList(names));
@@ -1085,7 +1077,7 @@ public class Copy extends Task {
      */
     private String getDueTo(final Exception ex) {
         final boolean baseIOException = ex.getClass() == IOException.class;
-        final StringBuffer message = new StringBuffer();
+        final StringBuilder message = new StringBuilder();
         if (!baseIOException || ex.getMessage() == null) {
             message.append(ex.getClass().getName());
         }

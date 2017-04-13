@@ -74,23 +74,24 @@ public class Arc extends BasicShape implements DrawOperation {
      * @todo refactor using an EnumeratedAttribute
      */
     public void setType(String strType) {
-        if (strType.equalsIgnoreCase("open")) {
+        if ("open".equalsIgnoreCase(strType)) {
             type = Arc2D.OPEN;
-        } else if (strType.equalsIgnoreCase("pie")) {
+        } else if ("pie".equalsIgnoreCase(strType)) {
             type = Arc2D.PIE;
-        } else if (strType.equalsIgnoreCase("chord")) {
+        } else if ("chord".equalsIgnoreCase(strType)) {
             type = Arc2D.CHORD;
         }
     }
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeDrawOperation() {
         BufferedImage bi = new BufferedImage(width + (stroke_width * 2),
             height + (stroke_width * 2), BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
+        Graphics2D graphics = bi.createGraphics();
 
-        if (!stroke.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(stroke)) {
             BasicStroke bStroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
             graphics.setStroke(bStroke);
@@ -98,24 +99,21 @@ public class Arc extends BasicShape implements DrawOperation {
                 height, start, stop, type));
         }
 
-        if (!fill.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(fill)) {
             graphics.setColor(ColorMapper.getColorByName(fill));
             graphics.fill(new Arc2D.Double(stroke_width, stroke_width,
                 width, height, start, stop, type));
         }
 
-
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 PlanarImage img = ((DrawOperation) instr).executeDrawOperation();
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
-                graphics = (Graphics2D) bi.getGraphics();
                 PlanarImage image = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
+                graphics = bi.createGraphics();
             }
         }
         return PlanarImage.wrapRenderedImage(bi);

@@ -19,7 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import org.apache.tools.ant.BuildException;
@@ -39,12 +39,12 @@ public class ExtensionSet
     /**
      * ExtensionAdapter objects representing extensions.
      */
-    private final ArrayList extensions = new ArrayList();
+    private final List<ExtensionAdapter> extensions = new ArrayList<>();
 
     /**
      * Filesets specifying all the extensions wanted.
      */
-    private final ArrayList extensionsFilesets = new ArrayList();
+    private final List<FileSet> extensionsFilesets = new ArrayList<>();
 
     /**
      * Adds an extension that this library requires.
@@ -98,9 +98,9 @@ public class ExtensionSet
             return ((ExtensionSet) getCheckedRef()).toExtensions(proj);
         }
         dieOnCircularReference();
-        final ArrayList extensionsList = ExtensionUtil.toExtensions(extensions);
+        final List<Extension> extensionsList = ExtensionUtil.toExtensions(extensions);
         ExtensionUtil.extractExtensions(proj, extensionsList, extensionsFilesets);
-        return (Extension[]) extensionsList.toArray(new Extension[extensionsList.size()]);
+        return extensionsList.toArray(new Extension[extensionsList.size()]);
     }
 
     /**
@@ -123,7 +123,7 @@ public class ExtensionSet
     }
 
     @Override
-    protected synchronized void dieOnCircularReference(Stack stk, Project p)
+    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
             return;
@@ -131,12 +131,11 @@ public class ExtensionSet
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator i = extensions.iterator(); i.hasNext();) {
-                pushAndInvokeCircularReferenceCheck((ExtensionAdapter) i.next(),
-                                                    stk, p);
+            for (ExtensionAdapter extensionAdapter : extensions) {
+                pushAndInvokeCircularReferenceCheck(extensionAdapter, stk, p);
             }
-            for (Iterator i = extensionsFilesets.iterator(); i.hasNext();) {
-                pushAndInvokeCircularReferenceCheck((FileSet) i.next(), stk, p);
+            for (FileSet fileSet : extensionsFilesets) {
+                pushAndInvokeCircularReferenceCheck(fileSet, stk, p);
             }
             setChecked(true);
         }

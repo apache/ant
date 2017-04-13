@@ -29,11 +29,6 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
 
     private static final int DECIMAL = 10;
 
-    /** Constructor for JakartaOroRegexp */
-    public JakartaOroRegexp() {
-        super();
-    }
-
     /**
      * Perform a substitution on the regular expression.
      * @param input The string to substitute on
@@ -45,7 +40,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
     public String substitute(final String input, final String argument, final int options)
         throws BuildException {
         // translate \1 to $1 so that the Perl5Substitution will work
-        final StringBuffer subst = new StringBuffer();
+        final StringBuilder subst = new StringBuilder();
         for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '$') {
@@ -56,7 +51,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
                     c = argument.charAt(i);
                     final int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
-                        subst.append("$").append(value);
+                        subst.append('$').append(value);
                     } else {
                         subst.append(c);
                     }
@@ -87,12 +82,8 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
      * @return the oro substition options
      */
     protected int getSubsOptions(final int options) {
-        final boolean replaceAll = RegexpUtil.hasFlag(options, REPLACE_ALL);
-        int subsOptions = 1;
-        if (replaceAll) {
-            subsOptions = Util.SUBSTITUTE_ALL;
-        }
-        return subsOptions;
+        return RegexpUtil.hasFlag(options, REPLACE_ALL) ? Util.SUBSTITUTE_ALL
+            : 1;
     }
 
 }

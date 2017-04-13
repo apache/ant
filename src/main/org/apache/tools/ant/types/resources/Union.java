@@ -17,12 +17,12 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
@@ -84,8 +84,7 @@ public class Union extends BaseResourceCollectionContainer {
         if (isReference()) {
             return getCheckedRef(Union.class, getDataTypeName()).list();
         }
-        final Collection<String> result = getAllToStrings();
-        return result.toArray(new String[result.size()]);
+        return streamResources().map(Object::toString).toArray(String[]::new);
     }
 
     /**
@@ -96,14 +95,14 @@ public class Union extends BaseResourceCollectionContainer {
         if (isReference()) {
             return getCheckedRef(Union.class, getDataTypeName()).listResources();
         }
-        final Collection<Resource> result = getAllResources();
-        return result.toArray(new Resource[result.size()]);
+        return streamResources().toArray(Resource[]::new);
     }
 
     /**
      * Unify the contained Resources.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
         return getAllResources();
     }
@@ -117,7 +116,8 @@ public class Union extends BaseResourceCollectionContainer {
     @Deprecated
     @SuppressWarnings("unchecked")
     protected <T> Collection<T> getCollection(boolean asString) { // TODO untypable
-        return asString ? (Collection<T>) getAllToStrings() : (Collection<T>) getAllResources();
+        return asString ? (Collection<T>) getAllToStrings()
+            : (Collection<T>) getAllResources();
     }
 
     /**
@@ -125,12 +125,8 @@ public class Union extends BaseResourceCollectionContainer {
      * @return Collection<String>
      */
     protected Collection<String> getAllToStrings() {
-        final Set<Resource> allResources = getAllResources();
-        final ArrayList<String> result = new ArrayList<String>(allResources.size());
-        for (Resource r : allResources) {
-            result.add(r.toString());
-        }
-        return result;
+        return streamResources(Object::toString)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -138,19 +134,17 @@ public class Union extends BaseResourceCollectionContainer {
      * @return Set<Resource>
      */
     protected Set<Resource> getAllResources() {
-        final List<ResourceCollection> resourceCollections = getResourceCollections();
-        if (resourceCollections.isEmpty()) {
-            return Collections.emptySet();
-        }
-        final LinkedHashSet<Resource> result = new LinkedHashSet<Resource>(
-                resourceCollections.size() * 2);
-        for (ResourceCollection resourceCollection : resourceCollections) {
-            for (Resource r : resourceCollection) {
-                result.add(r);
-            }
-        }
-        return result;
+        return streamResources()
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-}
+    private Stream<? extends Resource> streamResources() {
+        return streamResources(Function.identity());
+    }
 
+    private <T> Stream<? extends T> streamResources(
+        Function<? super Resource, ? extends T> mapper) {
+        return getResourceCollections().stream()
+            .flatMap(ResourceCollection::stream).map(mapper).distinct();
+    }
+}

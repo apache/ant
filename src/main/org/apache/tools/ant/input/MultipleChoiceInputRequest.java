@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.input;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Vector;
 
@@ -33,26 +34,39 @@ public class MultipleChoiceInputRequest extends InputRequest {
      * @param prompt The prompt to show to the user.  Must not be null.
      * @param choices holds all input values that are allowed.
      *                Must not be null.
+     * @deprecated Use {@link #MultipleChoiceInputRequest(String,Collection)} instead
      */
+    @Deprecated
     public MultipleChoiceInputRequest(String prompt, Vector<String> choices) {
+        this(prompt, (Collection<String>) choices);
+    }
+
+    /**
+     * @param prompt The prompt to show to the user.  Must not be null.
+     * @param choices holds all input values that are allowed.
+     *                Must not be null.
+     */
+    public MultipleChoiceInputRequest(String prompt, Collection<String> choices) {
         super(prompt);
         if (choices == null) {
             throw new IllegalArgumentException("choices must not be null");
         }
-        this.choices = new LinkedHashSet<String>(choices);
+        this.choices = new LinkedHashSet<>(choices);
     }
 
     /**
      * @return The possible values.
      */
     public Vector<String> getChoices() {
-        return new Vector<String>(choices);
+        return new Vector<>(choices);
     }
 
     /**
      * @return true if the input is one of the allowed values.
      */
+    @Override
     public boolean isInputValid() {
-        return choices.contains(getInput()) || ("".equals(getInput()) && getDefaultValue() != null);
+        return choices.contains(getInput())
+            || ("".equals(getInput()) && getDefaultValue() != null);
     }
 }

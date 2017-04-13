@@ -69,6 +69,7 @@ public class Filter extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         boolean isFiltersFromFile =
             filtersFile != null && token == null && value == null;
@@ -76,9 +77,9 @@ public class Filter extends Task {
             filtersFile == null && token != null && value != null;
 
         if (!isFiltersFromFile && !isSingleFilter) {
-            throw new BuildException("both token and value parameters, or "
-                                     + "only a filtersFile parameter is "
-                                     + "required", getLocation());
+            throw new BuildException(
+                "both token and value parameters, or only a filtersFile parameter is required",
+                getLocation());
         }
 
         if (isSingleFilter) {

@@ -22,10 +22,13 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
+
 
 /**
  * ResourceCollection representing the intersection
@@ -38,27 +41,23 @@ public class Intersect extends BaseResourceCollectionContainer {
      * Calculate the intersection of the nested ResourceCollections.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
         List<ResourceCollection> rcs = getResourceCollections();
         int size = rcs.size();
         if (size < 2) {
-            throw new BuildException("The intersection of " + size
-                + " resource collection" + ((size == 1) ? "" : "s")
-                + " is undefined.");
+            throw new BuildException(
+                "The intersection of %d resource %s is undefined.", size,
+                size == 1 ? "collection" : "collections");
         }
+
+        final Function<ResourceCollection, Set<Resource>> toSet =
+            c -> c.stream().collect(Collectors.toSet());
+
         Iterator<ResourceCollection> rc = rcs.iterator();
-        Set<Resource> s = new LinkedHashSet<Resource>(collect(rc.next()));
-        while (rc.hasNext()) {
-            s.retainAll(collect(rc.next()));
-        }
+        Set<Resource> s = new LinkedHashSet<>(toSet.apply(rc.next()));
+        rc.forEachRemaining(c -> s.retainAll(toSet.apply(c)));
         return s;
     }
 
-    private Set<Resource> collect(ResourceCollection rc) {
-        Set<Resource> result = new LinkedHashSet<Resource>();
-        for (Resource r : rc) {
-            result.add(r);
-        }
-        return result;
-    }
 }

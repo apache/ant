@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -28,78 +30,33 @@ import java.util.NoSuchElementException;
  */
 public final class Enumerations {
 
-        private Enumerations() {
-        }
+    private Enumerations() {
+    }
 
-        /**
-         * creates an enumeration from an array of objects.
-         * @param       array   the array of object to enumerate.
-         * @return the enumeration over the array of objects.
-         */
-        public static Enumeration fromArray(Object[] array) {
-                return new ArrayEnumeration(array);
-        }
+    /**
+     * creates an enumeration from an array of objects.
+     * @param       array   the array of object to enumerate.
+     * @return the enumeration over the array of objects.
+     */
+    @SafeVarargs
+    public static <T> Enumeration<T> fromArray(T... array) {
+        return Collections.enumeration(Arrays.asList(array));
+    }
 
-        /**
-        * creates an enumeration from an array of enumeration. The created enumeration
-        * will sequentially enumerate over all elements of each enumeration and skip
-        * <tt>null</tt> enumeration elements in the array.
-        * @param        enums   the array of enumerations.
-        * @return the enumeration over the array of enumerations.
-         */
-        public static Enumeration fromCompound(Enumeration[] enums) {
-                return new CompoundEnumeration(enums);
-        }
+    /**
+    * creates an enumeration from an array of enumeration. The created enumeration
+    * will sequentially enumerate over all elements of each enumeration and skip
+    * <tt>null</tt> enumeration elements in the array.
+    * @param        enums   the array of enumerations.
+    * @return the enumeration over the array of enumerations.
+     */
+    @SafeVarargs
+    public static <T> Enumeration<T> fromCompound(Enumeration<? extends T>... enums) {
+        return new CompoundEnumeration<>(enums);
+    }
 
 }
 
-
-/**
- * Convenient enumeration over an array of objects.
- */
-class ArrayEnumeration implements Enumeration {
-
-        /** object array */
-        private Object[] array;
-
-        /** current index */
-        private int pos;
-
-        /**
-         * Initialize a new enumeration that wraps an array.
-         * @param       array   the array of object to enumerate.
-         */
-        public ArrayEnumeration(Object[] array) {
-                this.array = array;
-                this.pos = 0;
-        }
-        /**
-         * Tests if this enumeration contains more elements.
-         *
-         * @return  <code>true</code> if and only if this enumeration object
-         *           contains at least one more element to provide;
-         *          <code>false</code> otherwise.
-         */
-        public boolean hasMoreElements() {
-                return (pos < array.length);
-        }
-
-        /**
-         * Returns the next element of this enumeration if this enumeration
-         * object has at least one more element to provide.
-         *
-         * @return     the next element of this enumeration.
-         * @throws  NoSuchElementException  if no more elements exist.
-         */
-        public Object nextElement() throws NoSuchElementException {
-                if (hasMoreElements()) {
-                        Object o = array[pos];
-                        pos++;
-                        return o;
-                }
-                throw new NoSuchElementException();
-        }
-}
 /**
  * Convenient enumeration over an array of enumeration. For example:
  * <pre>
@@ -130,48 +87,49 @@ class ArrayEnumeration implements Enumeration {
  * }
  * </pre>
  */
- class CompoundEnumeration implements Enumeration {
+ class CompoundEnumeration<T> implements Enumeration<T> {
 
-        /** enumeration array */
-        private Enumeration[] enumArray;
+    /** enumeration array */
+    private Enumeration<? extends T>[] enumArray;
 
-        /** index in the enums array */
-        private int index = 0;
+    /** index in the enums array */
+    private int index = 0;
 
-    public CompoundEnumeration(Enumeration[] enumarray) {
-                this.enumArray = enumarray;
+    @SafeVarargs
+    public CompoundEnumeration(Enumeration<? extends T>... enumarray) {
+        this.enumArray = enumarray;
     }
 
-        /**
-         * Tests if this enumeration contains more elements.
-         *
-         * @return  <code>true</code> if and only if this enumeration object
-         *           contains at least one more element to provide;
-         *          <code>false</code> otherwise.
-         */
+    /**
+     * Tests if this enumeration contains more elements.
+     *
+     * @return  <code>true</code> if and only if this enumeration object
+     *           contains at least one more element to provide;
+     *          <code>false</code> otherwise.
+     */
+    @Override
     public boolean hasMoreElements() {
-                while (index < enumArray.length) {
-                        if (enumArray[index] != null && enumArray[index].hasMoreElements()) {
-                                return true;
-                        }
-                        index++;
-                }
-                return false;
+        while (index < enumArray.length) {
+            if (enumArray[index] != null && enumArray[index].hasMoreElements()) {
+                    return true;
+            }
+            index++;
+        }
+        return false;
     }
 
-        /**
-         * Returns the next element of this enumeration if this enumeration
-         * object has at least one more element to provide.
-         *
-         * @return     the next element of this enumeration.
-         * @throws  NoSuchElementException  if no more elements exist.
-         */
-    public Object nextElement() throws NoSuchElementException {
-                if (hasMoreElements()) {
-                        return enumArray[index].nextElement();
-                }
-                throw new NoSuchElementException();
+    /**
+     * Returns the next element of this enumeration if this enumeration
+     * object has at least one more element to provide.
+     *
+     * @return     the next element of this enumeration.
+     * @throws  NoSuchElementException  if no more elements exist.
+     */
+    @Override
+    public T nextElement() throws NoSuchElementException {
+        if (hasMoreElements()) {
+            return enumArray[index].nextElement();
+        }
+        throw new NoSuchElementException();
     }
 }
-
-

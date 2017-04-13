@@ -50,13 +50,14 @@ public abstract class Definer extends DefBase {
 
     /**
      * the extension of an antlib file for autoloading.
-     * {@value[
+     * {@value /antlib.xml}
      */
     private static final String ANTLIB_XML = "/antlib.xml";
 
     private static final ThreadLocal<Map<URL, Location>> RESOURCE_STACK = new ThreadLocal<Map<URL, Location>>() {
+        @Override
         protected Map<URL, Location> initialValue() {
-            return new HashMap<URL, Location>();
+            return new HashMap<>();
         }
     };
 
@@ -120,8 +121,10 @@ public abstract class Definer extends DefBase {
          * get the values
          * @return an array of the allowed values for this attribute.
          */
+        @Override
         public String[] getValues() {
-            return new String[] {POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE, POLICY_FAILALL};
+            return new String[] { POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE,
+                POLICY_FAILALL };
         }
     }
 
@@ -138,8 +141,9 @@ public abstract class Definer extends DefBase {
          * get the values
          * @return an array of the allowed values for this attribute.
          */
+        @Override
         public String[] getValues() {
-            return new String[] {"properties", "xml"};
+            return new String[] { "properties", "xml" };
         }
     }
 
@@ -202,6 +206,7 @@ public abstract class Definer extends DefBase {
      *
      * @exception BuildException if an error occurs
      */
+    @Override
     public void execute() throws BuildException {
         ClassLoader al = createLoader();
 
@@ -223,23 +228,22 @@ public abstract class Definer extends DefBase {
                 setResource(makeResourceFromURI(uri1));
             } else {
                 throw new BuildException(
-                        "Only antlib URIs can be located from the URI alone,"
-                                + " not the URI '" + getURI() + "'");
+                    "Only antlib URIs can be located from the URI alone, not the URI '"
+                        + getURI() + "'");
             }
         }
 
         if (name != null) {
             if (classname == null) {
-                throw new BuildException(
-                    "classname attribute of " + getTaskName() + " element "
-                    + "is undefined", getLocation());
+                throw new BuildException("classname attribute of "
+                    + getTaskName() + " element is undefined", getLocation());
             }
             addDefinition(al, name, classname);
         } else {
             if (classname != null) {
-                String msg = "You must not specify classname "
-                    + "together with file or resource.";
-                throw new BuildException(msg, getLocation());
+                throw new BuildException(
+                    "You must not specify classname together with file or resource.",
+                    getLocation());
             }
             final Enumeration<URL> urls;
             if (file == null) {
@@ -263,21 +267,19 @@ public abstract class Definer extends DefBase {
                 if (fmt == Format.PROPERTIES) {
                     loadProperties(al, url);
                     break;
+                } else if (RESOURCE_STACK.get().get(url) != null) {
+                    log("Warning: Recursive loading of " + url
+                        + " ignored"
+                        + " at " + getLocation()
+                        + " originally loaded at "
+                        + RESOURCE_STACK.get().get(url),
+                        Project.MSG_WARN);
                 } else {
-                    if (RESOURCE_STACK.get().get(url) != null) {
-                        log("Warning: Recursive loading of " + url
-                            + " ignored"
-                            + " at " + getLocation()
-                            + " originally loaded at "
-                            + RESOURCE_STACK.get().get(url),
-                            Project.MSG_WARN);
-                    } else {
-                        try {
-                            RESOURCE_STACK.get().put(url, getLocation());
-                            loadAntlib(al, url);
-                        } finally {
-                            RESOURCE_STACK.get().remove(url);
-                        }
+                    try {
+                        RESOURCE_STACK.get().put(url, getLocation());
+                        loadAntlib(al, url);
+                    } finally {
+                        RESOURCE_STACK.get().remove(url);
                     }
                 }
             }
@@ -290,7 +292,6 @@ public abstract class Definer extends DefBase {
      * @param uri the xml namespace uri that to convert.
      * @return the name of a resource. It may not exist
      */
-
     public static String makeResourceFromURI(String uri) {
         String path = uri.substring(MagicNames.ANTLIB_PREFIX.length());
         String resource;
@@ -391,9 +392,7 @@ public abstract class Definer extends DefBase {
      * @param url the url to get the definitions from
      */
     protected void loadProperties(ClassLoader al, URL url) {
-        InputStream is = null;
-        try {
-            is = url.openStream();
+        try (InputStream is = url.openStream()) {
             if (is == null) {
                 log("Could not load definitions from " + url,
                     Project.MSG_WARN);
@@ -401,16 +400,13 @@ public abstract class Definer extends DefBase {
             }
             Properties props = new Properties();
             props.load(is);
-            Enumeration<?> keys = props.keys();
-            while (keys.hasMoreElements()) {
-                name = ((String) keys.nextElement());
+            for (String key : props.stringPropertyNames()) {
+                name = key;
                 classname = props.getProperty(name);
                 addDefinition(al, name, classname);
             }
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
-        } finally {
-            FileUtils.close(is);
         }
     }
 
@@ -559,7 +555,6 @@ public abstract class Definer extends DefBase {
         this.adaptToClass = adaptToClass;
     }
 
-
     /**
      * Add a definition using the attributes of Definer
      *
@@ -601,15 +596,16 @@ public abstract class Definer extends DefBase {
                 ComponentHelper.getComponentHelper(getProject())
                         .addDataTypeDefinition(def);
             } catch (ClassNotFoundException cnfe) {
-                String msg = getTaskName() + " class " + classname
-                        + " cannot be found"
-                        + "\n using the classloader " + al;
-                throw new BuildException(msg, cnfe, getLocation());
+                throw new BuildException(
+                    getTaskName() + " class " + classname
+                        + " cannot be found\n using the classloader " + al,
+                    cnfe, getLocation());
             } catch (NoClassDefFoundError ncdfe) {
-                String msg = getTaskName() + " A class needed by class "
-                        + classname + " cannot be found: " + ncdfe.getMessage()
-                        + "\n using the classloader " + al;
-                throw new BuildException(msg, ncdfe, getLocation());
+                throw new BuildException(
+                    getTaskName() + " A class needed by class " + classname
+                        + " cannot be found: " + ncdfe.getMessage()
+                        + "\n using the classloader " + al,
+                    ncdfe, getLocation());
             }
         } catch (BuildException ex) {
             switch (onError) {
@@ -633,7 +629,7 @@ public abstract class Definer extends DefBase {
      */
     private void tooManyDefinitions() {
         throw new BuildException(
-            "Only one of the attributes name, file and resource"
-            + " can be set", getLocation());
+            "Only one of the attributes name, file and resource can be set",
+            getLocation());
     }
 }

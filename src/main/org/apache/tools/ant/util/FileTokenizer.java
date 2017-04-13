@@ -34,6 +34,7 @@ public class FileTokenizer extends ProjectComponent implements Tokenizer {
      * @return the complete input
      * @throws IOException if error reading
      */
+    @Override
     public String getToken(Reader in) throws IOException {
         return FileUtils.readFully(in);
     }
@@ -42,6 +43,7 @@ public class FileTokenizer extends ProjectComponent implements Tokenizer {
      * Return the intra-token string
      * @return an empty string always
      */
+    @Override
     public String getPostToken() {
         return "";
     }

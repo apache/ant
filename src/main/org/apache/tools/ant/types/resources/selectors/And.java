@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.types.resources.selectors;
 
-import java.util.Iterator;
-
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -37,7 +35,7 @@ public class And extends ResourceSelectorContainer implements ResourceSelector {
      * Convenience constructor.
      * @param r the ResourceSelector[] to add.
      */
-    public And(ResourceSelector[] r) {
+    public And(ResourceSelector... r) {
         super(r);
     }
 
@@ -47,12 +45,7 @@ public class And extends ResourceSelectorContainer implements ResourceSelector {
      * @return whether the Resource was selected.
      */
     public boolean isSelected(Resource r) {
-        for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
-            if (!i.next().isSelected(r)) {
-                return false;
-            }
-        }
-        return true;
+        return getResourceSelectors().stream().allMatch(s -> s.isSelected(r));
     }
 
 }

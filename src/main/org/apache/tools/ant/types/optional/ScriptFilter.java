@@ -53,6 +53,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * Set the project.
      * @param project the owner of this component.
      */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);
@@ -105,6 +106,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      * @param token the token to be filtered
      * @return the filtered token
      */
+    @Override
     public String filter(String token) {
         init();
         setToken(token);

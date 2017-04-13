@@ -18,19 +18,15 @@
 package org.apache.tools.ant.types.resources;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.comparators.DelegatedResourceComparator;
 import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
-import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * ResourceCollection that sorts another ResourceCollection.
@@ -48,15 +44,10 @@ public class Sort extends BaseResourceCollectionWrapper {
      * Sort the contained elements.
      * @return a Collection of Resources.
      */
+    @Override
     protected synchronized Collection<Resource> getCollection() {
-        ResourceCollection rc = getResourceCollection();
-        Iterator<Resource> iter = rc.iterator();
-        if (!(iter.hasNext())) {
-            return Collections.emptySet();
-        }
-        List<Resource> result = (List<Resource>) CollectionUtils.asCollection(iter);
-        Collections.sort(result, comp);
-        return result;
+        return getResourceCollection().stream().map(Resource.class::cast)
+            .sorted(comp).collect(Collectors.toList());
     }
 
     /**
@@ -80,6 +71,7 @@ public class Sort extends BaseResourceCollectionWrapper {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {

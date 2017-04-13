@@ -27,19 +27,18 @@ import java.io.File;
  */
 public class Jasper41Mangler implements JspMangler {
 
-
     /**
      * map from a jsp file to a java filename; does not do packages
      *
      * @param jspFile file
      * @return java filename
      */
+    @Override
     public String mapJspToJavaName(File jspFile) {
         String jspUri = jspFile.getAbsolutePath();
         int start = jspUri.lastIndexOf(File.separatorChar) + 1;
         int end = jspUri.length();
-        StringBuffer modifiedClassName;
-        modifiedClassName = new StringBuffer(jspUri.length() - start);
+        StringBuilder modifiedClassName = new StringBuilder(jspUri.length() - start);
         if (!Character.isJavaIdentifierStart(jspUri.charAt(start))
             || jspUri.charAt(start) == '_') {
             // If the first char is not a start of Java identifier or is _
@@ -78,7 +77,6 @@ public class Jasper41Mangler implements JspMangler {
         // CheckStyle:MagicNumber ON
     }
 
-
     /**
      * taking in the substring representing the path relative to the source dir
      * return a new string representing the destination path
@@ -86,6 +84,7 @@ public class Jasper41Mangler implements JspMangler {
      * @return null as this is not implemented.
      * @todo
      */
+    @Override
     public String mapPath(String path) {
         return null;
     }

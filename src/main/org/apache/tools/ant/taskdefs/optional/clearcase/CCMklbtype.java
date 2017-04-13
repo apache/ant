@@ -94,6 +94,39 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCMklbtype extends ClearCase {
+    /**
+     * -replace flag -- replace existing label definition of the same type
+     */
+    public static final String FLAG_REPLACE = "-replace";
+    /**
+     * -global flag -- creates a label type that is global to the VOB or to VOBs that use this VOB
+     */
+    public static final String FLAG_GLOBAL = "-global";
+    /**
+     * -ordinary flag -- creates a label type that can be used only in the current VOB
+     */
+    public static final String FLAG_ORDINARY = "-ordinary";
+    /**
+     * -pbranch flag -- allows label type to be used once per branch
+     */
+    public static final String FLAG_PBRANCH = "-pbranch";
+    /**
+     * -shared flag -- sets the way mastership is checked by ClearCase
+     */
+    public static final String FLAG_SHARED = "-shared";
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+
     private String mTypeName = null;
     private String mVOB = null;
     private String mComment = null;
@@ -111,9 +144,9 @@ public class CCMklbtype extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // Check for required attributes
         if (getTypeName() == null) {
@@ -132,13 +165,12 @@ public class CCMklbtype extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getTypeSpecifier(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -152,11 +184,9 @@ public class CCMklbtype extends ClearCase {
         if (getOrdinary()) {
             // -ordinary
             cmd.createArgument().setValue(FLAG_ORDINARY);
-        } else {
-            if (getGlobal()) {
-                // -global
-                cmd.createArgument().setValue(FLAG_GLOBAL);
-            }
+        } else if (getGlobal()) {
+            // -global
+            cmd.createArgument().setValue(FLAG_GLOBAL);
         }
 
         if (getPbranch()) {
@@ -172,19 +202,16 @@ public class CCMklbtype extends ClearCase {
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
+        } else if (getCommentFile() != null) {
+            // -cfile
+            getCommentFileCommand(cmd);
         } else {
-            if (getCommentFile() != null) {
-                // -cfile
-                getCommentFileCommand(cmd);
-            } else {
-                cmd.createArgument().setValue(FLAG_NOCOMMENT);
-            }
+            cmd.createArgument().setValue(FLAG_NOCOMMENT);
         }
 
         // type-name@vob
         cmd.createArgument().setValue(getTypeSpecifier());
     }
-
 
     /**
      * Set type-name string
@@ -348,7 +375,6 @@ public class CCMklbtype extends ClearCase {
         return mCfile;
     }
 
-
     /**
      * Get the 'comment' command
      *
@@ -392,49 +418,11 @@ public class CCMklbtype extends ClearCase {
      *         specified, otherwise an empty string
      */
     private String getTypeSpecifier() {
-        String typenm = null;
-
-        typenm = getTypeName();
+        String typenm = getTypeName();
         if (getVOB() != null) {
             typenm += "@" + getVOB();
         }
-
         return typenm;
     }
 
-
-    /**
-     * -replace flag -- replace existing label definition of the same type
-     */
-    public static final String FLAG_REPLACE = "-replace";
-    /**
-     * -global flag -- creates a label type that is global to the VOB or to VOBs that use this VOB
-     */
-    public static final String FLAG_GLOBAL = "-global";
-    /**
-     * -ordinary flag -- creates a label type that can be used only in the current VOB
-     */
-    public static final String FLAG_ORDINARY = "-ordinary";
-    /**
-     * -pbranch flag -- allows label type to be used once per branch
-     */
-    public static final String FLAG_PBRANCH = "-pbranch";
-    /**
-     * -shared flag -- sets the way mastership is checked by ClearCase
-     */
-    public static final String FLAG_SHARED = "-shared";
-    /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-    /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-    /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
-
 }
-

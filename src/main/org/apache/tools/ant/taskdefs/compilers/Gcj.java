@@ -31,16 +31,19 @@ import org.apache.tools.ant.types.Path;
  * @since Ant 1.4
  */
 public class Gcj extends DefaultCompilerAdapter {
+    private static final String [] CONFLICT_WITH_DASH_C = {
+        "-o" , "--main=", "-D", "-fjni", "-L"
+    };
 
     /**
      * Performs a compile using the gcj compiler.
      * @return true if the compilation succeeded
      * @throws BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
-        Commandline cmd;
         attributes.log("Using gcj compiler", Project.MSG_VERBOSE);
-        cmd = setupGCJCommand();
+        Commandline cmd = setupGCJCommand();
 
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
@@ -60,7 +63,7 @@ public class Gcj extends DefaultCompilerAdapter {
         // gcj doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
         Path p = getBootClassPath();
-        if (p.size() > 0) {
+        if (!p.isEmpty()) {
             classpath.append(p);
         }
 
@@ -89,8 +92,8 @@ public class Gcj extends DefaultCompilerAdapter {
 
             if (!destDir.exists()
                 && !(destDir.mkdirs() || destDir.isDirectory())) {
-                throw new BuildException("Can't make output directories. "
-                                         + "Maybe permission is wrong. ");
+                throw new BuildException(
+                    "Can't make output directories. Maybe permission is wrong.");
             }
         }
 
@@ -152,9 +155,5 @@ public class Gcj extends DefaultCompilerAdapter {
         }
         return nativeBuild;
     }
-
-    private static final String [] CONFLICT_WITH_DASH_C = {
-        "-o" , "--main=", "-D", "-fjni", "-L"
-    };
 
 }

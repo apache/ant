@@ -22,11 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -88,10 +90,10 @@ public class Ant extends Task {
     private boolean inheritRefs = false;
 
     /** the properties to pass to the new project */
-    private Vector<Property> properties = new Vector<Property>();
+    private List<Property> properties = new Vector<>();
 
     /** the references to pass to the new project */
-    private Vector<Reference> references = new Vector<Reference>();
+    private List<Reference> references = new Vector<>();
 
     /** the temporary project created to run the build file */
     private Project newProject;
@@ -100,10 +102,10 @@ public class Ant extends Task {
     private PrintStream out = null;
 
     /** the sets of properties to pass to the new project */
-    private Vector<PropertySet> propertySets = new Vector<PropertySet>();
+    private List<PropertySet> propertySets = new Vector<>();
 
     /** the targets to call on the new project */
-    private Vector<String> targets = new Vector<String>();
+    private List<String> targets = new Vector<>();
 
     /** whether the target attribute was specified **/
     private boolean targetAttributeSet = false;
@@ -164,6 +166,7 @@ public class Ant extends Task {
     /**
      * Creates a Project instance for the project to call.
      */
+    @Override
     public void init() {
         newProject = getProject().createSubProject();
         newProject.setJavaVersionProperty();
@@ -195,11 +198,11 @@ public class Ant extends Task {
 
         Iterator<BuildListener> iter = getBuildListeners();
         while (iter.hasNext()) {
-            newProject.addBuildListener((BuildListener) iter.next());
+            newProject.addBuildListener(iter.next());
         }
 
         if (output != null) {
-            File outfile = null;
+            File outfile;
             if (dir != null) {
                 outfile = FILE_UTILS.resolveFile(dir, output);
             } else {
@@ -246,6 +249,7 @@ public class Ant extends Task {
      * @see Task#handleOutput(String)
      * @since Ant 1.5
      */
+    @Override
     public void handleOutput(String outputToHandle) {
         if (newProject != null) {
             newProject.demuxOutput(outputToHandle, false);
@@ -268,6 +272,7 @@ public class Ant extends Task {
      * @see Task#handleInput(byte[], int, int)
      * @since Ant 1.6
      */
+    @Override
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (newProject != null) {
@@ -284,6 +289,7 @@ public class Ant extends Task {
      * @see Task#handleFlush(String)
      * @since Ant 1.5.2
      */
+    @Override
     public void handleFlush(String toFlush) {
         if (newProject != null) {
             newProject.demuxFlush(toFlush, false);
@@ -301,6 +307,7 @@ public class Ant extends Task {
      * @see Task#handleErrorOutput(String)
      * @since Ant 1.5
      */
+    @Override
     public void handleErrorOutput(String errorOutputToHandle) {
         if (newProject != null) {
             newProject.demuxOutput(errorOutputToHandle, true);
@@ -317,6 +324,7 @@ public class Ant extends Task {
      * @see Task#handleErrorFlush(String)
      * @since Ant 1.5.2
      */
+    @Override
     public void handleErrorFlush(String errorOutputToFlush) {
         if (newProject != null) {
             newProject.demuxFlush(errorOutputToFlush, true);
@@ -330,10 +338,11 @@ public class Ant extends Task {
      * @throws BuildException if a target tries to call itself;
      * probably also if a BuildException is thrown by the new project.
      */
+    @Override
     public void execute() throws BuildException {
         File savedDir = dir;
         String savedAntFile = antFile;
-        Vector<String> locals = new VectorSet<String>(targets);
+        Vector<String> locals = new VectorSet<>(targets);
         try {
             getNewProject();
 
@@ -366,7 +375,7 @@ public class Ant extends Task {
             antFile = file.getAbsolutePath();
 
             log("calling target(s) "
-                + ((locals.size() > 0) ? locals.toString() : "[default]")
+                + (!locals.isEmpty() ? locals.toString() : "[default]")
                 + " in build file " + antFile, Project.MSG_VERBOSE);
             newProject.setUserProperty(MagicNames.ANT_FILE , antFile);
 
@@ -377,14 +386,14 @@ public class Ant extends Task {
                 && file.equals(getProject().resolveFile(thisAntFile))
                 && getOwningTarget() != null) {
 
-                if (getOwningTarget().getName().equals("")) {
-                    if (getTaskName().equals("antcall")) {
-                        throw new BuildException("antcall must not be used at"
-                                                 + " the top level.");
+                if ("".equals(getOwningTarget().getName())) {
+                    if ("antcall".equals(getTaskName())) {
+                        throw new BuildException(
+                            "antcall must not be used at the top level.");
                     }
-                    throw new BuildException(getTaskName() + " task at the"
-                                + " top level must not invoke"
-                                + " its own build file.");
+                    throw new BuildException(
+                        "%s task at the top level must not invoke its own build file.",
+                        getTaskName());
                 }
             }
 
@@ -395,7 +404,7 @@ public class Ant extends Task {
                     ex, getLocation());
             }
 
-            if (locals.size() == 0) {
+            if (locals.isEmpty()) {
                 String defaultTarget = newProject.getDefaultTarget();
                 if (defaultTarget != null) {
                     locals.add(defaultTarget);
@@ -409,30 +418,25 @@ public class Ant extends Task {
                 String owningTargetName = getOwningTarget().getName();
 
                 if (locals.contains(owningTargetName)) {
-                    throw new BuildException(getTaskName() + " task calling "
-                                             + "its own parent target.");
+                    throw new BuildException(
+                        "%s task calling its own parent target.",
+                        getTaskName());
                 }
-                boolean circular = false;
-                for (Iterator<String> it = locals.iterator();
-                     !circular && it.hasNext();) {
-                    Target other =
-                        getProject().getTargets().get(it.next());
-                    circular |= (other != null
-                                 && other.dependsOn(owningTargetName));
-                }
-                if (circular) {
-                    throw new BuildException(getTaskName()
-                                             + " task calling a target"
-                                             + " that depends on"
-                                             + " its parent target \'"
-                                             + owningTargetName
-                                             + "\'.");
+                
+                final Map<String, Target> targetsMap = getProject().getTargets();
+
+                if (locals.stream().map(targetsMap::get)
+                    .filter(Objects::nonNull)
+                    .anyMatch(other -> other.dependsOn(owningTargetName))) {
+                    throw new BuildException(
+                        "%s task calling a target that depends on its parent target '%s'.",
+                        getTaskName(), owningTargetName);
                 }
             }
 
             addReferences();
 
-            if (locals.size() > 0 && !(locals.size() == 1
+            if (!locals.isEmpty() && !(locals.size() == 1
                                        && "".equals(locals.get(0)))) {
                 BuildException be = null;
                 try {
@@ -484,10 +488,10 @@ public class Ant extends Task {
     private void overrideProperties() throws BuildException {
         // remove duplicate properties - last property wins
         // Needed for backward compatibility
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for (int i = properties.size() - 1; i >= 0; --i) {
             Property p = properties.get(i);
-            if (p.getName() != null && !p.getName().equals("")) {
+            if (p.getName() != null && !"".equals(p.getName())) {
                 if (set.contains(p.getName())) {
                     properties.remove(i);
                 } else {
@@ -495,12 +499,9 @@ public class Ant extends Task {
                 }
             }
         }
-        Enumeration<Property> e = properties.elements();
-        while (e.hasMoreElements()) {
-            Property p = e.nextElement();
-            p.setProject(newProject);
-            p.execute();
-        }
+        properties.stream().peek(p -> p.setProject(newProject))
+            .forEach(Property::execute);
+
         if (useNativeBasedir) {
             addAlmostAll(getProject().getInheritedProperties(),
                          PropertyType.INHERITED);
@@ -517,14 +518,13 @@ public class Ant extends Task {
      * @throws BuildException if a reference does not have a refid.
      */
     private void addReferences() throws BuildException {
-        @SuppressWarnings("unchecked")
-        Hashtable<String, Object> thisReferences
-            = (Hashtable<String, Object>) getProject().getReferences().clone();
+        Map<String, Object> thisReferences =
+            new HashMap<>(getProject().getReferences());
         for (Reference ref : references) {
             String refid = ref.getRefId();
             if (refid == null) {
-                throw new BuildException("the refid attribute is required"
-                                         + " for reference elements");
+                throw new BuildException(
+                    "the refid attribute is required for reference elements");
             }
             if (!thisReferences.containsKey(refid)) {
                 log("Parent project doesn't contain any reference '"
@@ -544,7 +544,7 @@ public class Ant extends Task {
         // Now add all references that are not defined in the
         // subproject, if inheritRefs is true
         if (inheritRefs) {
-            Hashtable<String, Object> newReferences = newProject.getReferences();
+            Map<String, Object> newReferences = newProject.getReferences();
             for (String key : thisReferences.keySet()) {
                 if (newReferences.containsKey(key)) {
                     continue;
@@ -576,32 +576,32 @@ public class Ant extends Task {
         Class<?> c = orig.getClass();
         Object copy = orig;
         try {
-            Method cloneM = c.getMethod("clone", new Class[0]);
+            Method cloneM = c.getMethod("clone");
             if (cloneM != null) {
-                copy = cloneM.invoke(orig, new Object[0]);
+                copy = cloneM.invoke(orig);
                 log("Adding clone of reference " + oldKey, Project.MSG_DEBUG);
             }
         } catch (Exception e) {
             // not Clonable
         }
 
-
         if (copy instanceof ProjectComponent) {
             ((ProjectComponent) copy).setProject(newProject);
         } else {
             try {
                 Method setProjectM =
-                    c.getMethod("setProject", new Class[] {Project.class});
+                    c.getMethod("setProject", Project.class);
                 if (setProjectM != null) {
-                    setProjectM.invoke(copy, new Object[] {newProject});
+                    setProjectM.invoke(copy, newProject);
                 }
             } catch (NoSuchMethodException e) {
                 // ignore this if the class being referenced does not have
                 // a set project method.
             } catch (Exception e2) {
-                String msg = "Error setting new project instance for "
-                    + "reference with id " + oldKey;
-                throw new BuildException(msg, e2, getLocation());
+                throw new BuildException(
+                    "Error setting new project instance for "
+                        + "reference with id " + oldKey,
+                    e2, getLocation());
             }
         }
         newProject.addReference(newKey, copy);
@@ -617,29 +617,31 @@ public class Ant extends Task {
      * user property or an inherited property).
      * @since Ant 1.8.0
      */
-    private void addAlmostAll(Hashtable<?, ?> props, PropertyType type) {
-        Enumeration<?> e = props.keys();
-        while (e.hasMoreElements()) {
-            String key = e.nextElement().toString();
+    private void addAlmostAll(Map<?, ?> props, PropertyType type) {
+        props.forEach((k, v) -> {
+            String key = k.toString();
             if (MagicNames.PROJECT_BASEDIR.equals(key)
-                || MagicNames.ANT_FILE.equals(key)) {
+                    || MagicNames.ANT_FILE.equals(key)) {
                 // basedir and ant.file get special treatment in execute()
-                continue;
+                return;
             }
-
-            String value = props.get(key).toString();
-            if (type == PropertyType.PLAIN) {
+            String value = v.toString();
+            switch (type) {
+            case PLAIN:
                 // don't re-set user properties, avoid the warning message
                 if (newProject.getProperty(key) == null) {
                     // no user property
                     newProject.setNewProperty(key, value);
                 }
-            } else if (type == PropertyType.USER) {
+                break;
+            case USER:
                 newProject.setUserProperty(key, value);
-            } else if (type == PropertyType.INHERITED) {
+                break;
+            case INHERITED:
                 newProject.setInheritedProperty(key, value);
+                break;
             }
-        }
+        });
     }
 
     /**
@@ -671,7 +673,7 @@ public class Ant extends Task {
      * @param targetToAdd the name of the target to invoke.
      */
     public void setTarget(String targetToAdd) {
-        if (targetToAdd.equals("")) {
+        if ("".equals(targetToAdd)) {
             throw new BuildException("target attribute must not be empty");
         }
         targets.add(targetToAdd);
@@ -697,7 +699,7 @@ public class Ant extends Task {
         Property p = new Property(true, getProject());
         p.setProject(getNewProject());
         p.setTaskName("property");
-        properties.addElement(p);
+        properties.add(p);
         return p;
     }
 
@@ -707,7 +709,7 @@ public class Ant extends Task {
      * @param ref <code>Reference</code> to add.
      */
     public void addReference(Reference ref) {
-        references.addElement(ref);
+        references.add(ref);
     }
 
     /**
@@ -721,7 +723,7 @@ public class Ant extends Task {
                 "nested target is incompatible with the target attribute");
         }
         String name = t.getName();
-        if (name.equals("")) {
+        if ("".equals(name)) {
             throw new BuildException("target name must not be empty");
         }
         targets.add(name);
@@ -734,7 +736,7 @@ public class Ant extends Task {
      * @since Ant 1.6
      */
     public void addPropertyset(PropertySet ps) {
-        propertySets.addElement(ps);
+        propertySets.add(ps);
     }
 
     /**
@@ -760,13 +762,9 @@ public class Ant extends Task {
      * Helper class that implements the nested &lt;reference&gt;
      * element of &lt;ant&gt; and &lt;antcall&gt;.
      */
+    @SuppressWarnings("deprecation")
     public static class Reference
         extends org.apache.tools.ant.types.Reference {
-
-        /** Creates a reference to be configured by Ant. */
-        public Reference() {
-            super();
-        }
 
         private String targetid = null;
 
@@ -823,10 +821,7 @@ public class Ant extends Task {
         }
     }
 
-    private static final class PropertyType {
-        private PropertyType() {}
-        private static final PropertyType PLAIN = new PropertyType();
-        private static final PropertyType INHERITED = new PropertyType();
-        private static final PropertyType USER = new PropertyType();
+    private enum PropertyType {
+        PLAIN, INHERITED, USER;
     }
 }

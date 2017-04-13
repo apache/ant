@@ -26,9 +26,9 @@ import org.apache.tools.ant.BuildException;
 public class CvsUser {
     /** The user's Id */
     private String userID;
+
     /** The user's full name */
     private String displayName;
-
 
     /**
      * Set the user's fullname
@@ -39,7 +39,6 @@ public class CvsUser {
         this.displayName = displayName;
     }
 
-
     /**
      * Set the user's id
      *
@@ -48,7 +47,6 @@ public class CvsUser {
     public void setUserid(final String userID) {
         this.userID = userID;
     }
-
 
     /**
      * Get the user's id.
@@ -59,7 +57,6 @@ public class CvsUser {
         return userID;
     }
 
-
     /**
      * Get the user's full name
      *
@@ -69,7 +66,6 @@ public class CvsUser {
         return displayName;
     }
 
-
     /**
      * Validate that this object is configured.
      *
@@ -78,16 +74,11 @@ public class CvsUser {
      */
     public void validate() throws BuildException {
         if (null == userID) {
-            final String message = "Username attribute must be set.";
-
-            throw new BuildException(message);
+            throw new BuildException("Username attribute must be set.");
         }
         if (null == displayName) {
-            final String message =
-                "Displayname attribute must be set for userID " + userID;
-
-            throw new BuildException(message);
+            throw new BuildException(
+                "Displayname attribute must be set for userID %s", userID);
         }
     }
 }
-

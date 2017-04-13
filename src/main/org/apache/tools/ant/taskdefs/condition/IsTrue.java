@@ -44,6 +44,7 @@ public class IsTrue extends ProjectComponent implements Condition {
      * @return the value
      * @throws BuildException if someone forgot to spec a value
      */
+    @Override
     public boolean eval() throws BuildException {
         if (value == null) {
             throw new BuildException("Nothing to test for truth");
@@ -52,4 +53,3 @@ public class IsTrue extends ProjectComponent implements Condition {
     }
 
 }
-

@@ -32,12 +32,6 @@ import org.apache.tools.ant.util.regexp.RegexpUtil;
  * @since 1.5
  */
 public class FilenameSelector extends BaseExtendSelector {
-
-    private String pattern = null;
-    private String regex = null;
-    private boolean casesensitive = true;
-
-    private boolean negated = false;
     /** Used for parameterized custom selector */
     public static final String NAME_KEY = "name";
     /** Used for parameterized custom selector */
@@ -47,16 +41,15 @@ public class FilenameSelector extends BaseExtendSelector {
     /** Used for parameterized custom selector */
     public static final String REGEX_KEY = "regex";
 
+    private String pattern = null;
+    private String regex = null;
+    private boolean casesensitive = true;
+
+    private boolean negated = false;
+
     // caches for performance reasons
     private RegularExpression reg;
     private Regexp expression;
-
-    /**
-     * Creates a new <code>FilenameSelector</code> instance.
-     *
-     */
-    public FilenameSelector() {
-    }
 
     /**
      * @return a string describing this object
@@ -129,7 +122,7 @@ public class FilenameSelector extends BaseExtendSelector {
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -178,18 +171,16 @@ public class FilenameSelector extends BaseExtendSelector {
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
         if (pattern != null) {
-            return (SelectorUtils.matchPath(pattern, filename,
-                                            casesensitive) == !(negated));
-        } else {
-            if (reg == null) {
-                reg = new RegularExpression();
-                reg.setPattern(regex);
-                expression = reg.getRegexp(getProject());
-            }
-            int options = RegexpUtil.asOptions(casesensitive);
-            return expression.matches(filename, options) == !negated;
+            return SelectorUtils.matchPath(pattern, filename,
+                casesensitive) == !(negated);
         }
+        if (reg == null) {
+            reg = new RegularExpression();
+            reg.setPattern(regex);
+            expression = reg.getRegexp(getProject());
+        }
+        int options = RegexpUtil.asOptions(casesensitive);
+        return expression.matches(filename, options) == !negated;
     }
 
 }
-

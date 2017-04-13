@@ -17,7 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -41,7 +41,7 @@ import org.apache.tools.ant.property.LocalProperties;
 public class Sequential extends Task implements TaskContainer {
 
     /** Optional Vector holding the nested tasks */
-    private Vector nestedTasks = new Vector();
+    private List<Task> nestedTasks = new Vector<>();
 
     /**
      * Add a nested task to Sequential.
@@ -49,8 +49,9 @@ public class Sequential extends Task implements TaskContainer {
      * @param nestedTask  Nested task to execute Sequential
      * <p>
      */
+    @Override
     public void addTask(Task nestedTask) {
-        nestedTasks.addElement(nestedTask);
+        nestedTasks.add(nestedTask);
     }
 
     /**
@@ -58,15 +59,13 @@ public class Sequential extends Task implements TaskContainer {
      *
      * @throws BuildException if one of the nested tasks fails.
      */
+    @Override
     public void execute() throws BuildException {
         LocalProperties localProperties
             = LocalProperties.get(getProject());
         localProperties.enterScope();
         try {
-            for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
-                Task nestedTask = (Task) i.next();
-                nestedTask.perform();
-            }
+            nestedTasks.forEach(Task::perform);
         } finally {
             localProperties.exitScope();
         }

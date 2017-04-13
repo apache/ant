@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.resolver;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.tools.ant.BuildException;
@@ -104,7 +103,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
 
         final Catalog catalog = getCatalog();
         if (!(catalog instanceof ApacheCatalog)) {
-            throw new BuildException("Wrong catalog type found: " + catalog.getClass().getName());
+            throw new BuildException("Wrong catalog type found: %s", catalog.getClass().getName());
         }
         final ApacheCatalog apacheCatalog = (ApacheCatalog) catalog;
 
@@ -113,9 +112,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
 
         try {
             apacheCatalog.parseCatalog(file);
-        } catch (final MalformedURLException ex) {
-            throw new BuildException(ex);
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             throw new BuildException(ex);
         }
     }

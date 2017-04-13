@@ -66,6 +66,7 @@ public class AntResolver implements ExtensionResolver {
      * @return the file resolved
      * @throws BuildException if the file cannot be resolved
      */
+    @Override
     public File resolve(final Extension extension,
                          final Project project) throws BuildException {
         validate();
@@ -111,6 +112,7 @@ public class AntResolver implements ExtensionResolver {
      * Returns a string representation
      * @return the string representation
      */
+    @Override
     public String toString() {
         return "Ant[" + antfile + "==>" + destfile + "]";
     }

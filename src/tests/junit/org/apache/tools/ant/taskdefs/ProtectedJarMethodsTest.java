@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
@@ -50,8 +51,8 @@ public class ProtectedJarMethodsTest {
     public void testGrabFilesAndDirs() throws IOException {
         buildRule.executeTarget("testIndexTests");
         String archive = buildRule.getProject().getProperty(tempJar);
-        ArrayList dirs = new ArrayList();
-        ArrayList files = new ArrayList();
+        List<String> dirs = new ArrayList<>();
+        List<String> files = new ArrayList<>();
         String[] expectedDirs = new String[] {
             "META-INF/",
             "sub/",
@@ -61,14 +62,14 @@ public class ProtectedJarMethodsTest {
         };
         Jar.grabFilesAndDirs(archive, dirs, files);
         assertEquals(expectedDirs.length, dirs.size());
-        for (int i = 0; i < expectedDirs.length; i++) {
-            assertTrue("Found " + expectedDirs[i],
-                       dirs.contains(expectedDirs[i]));
+        for (String expectedDir : expectedDirs) {
+            assertTrue("Found " + expectedDir,
+                       dirs.contains(expectedDir));
         }
         assertEquals(expectedFiles.length, files.size());
-        for (int i = 0; i < expectedFiles.length; i++) {
-            assertTrue("Found " + expectedFiles[i],
-                       files.contains(expectedFiles[i]));
+        for (String expectedFile : expectedFiles) {
+            assertTrue("Found " + expectedFile,
+                       files.contains(expectedFile));
         }
     }
 
@@ -81,26 +82,23 @@ public class ProtectedJarMethodsTest {
 
     @Test
     public void testFindJarNameNoMatch() {
-        assertNull(Jar.findJarName("foo", new String[] {"bar"}));
+        assertNull(Jar.findJarName("foo", new String[] { "bar" }));
     }
 
     @Test
     public void testFindJarNameSimpleMatches() {
-        assertEquals("foo", Jar.findJarName("foo", new String[] {"foo"}));
-        assertEquals("lib/foo", Jar.findJarName("foo",
-                                                new String[] {"lib/foo"}));
-        assertEquals("foo", Jar.findJarName("bar" + File.separatorChar + "foo",
-                                            new String[] {"foo"}));
+        assertEquals("foo", Jar.findJarName("foo", new String[] { "foo" }));
         assertEquals("lib/foo",
-                     Jar.findJarName("bar" + File.separatorChar + "foo",
-                                     new String[] {"lib/foo"}));
+            Jar.findJarName("foo", new String[] { "lib/foo" }));
+        assertEquals("foo", Jar.findJarName("bar" + File.separatorChar + "foo",
+            new String[] { "foo" }));
+        assertEquals("lib/foo", Jar.findJarName(
+            "bar" + File.separatorChar + "foo", new String[] { "lib/foo" }));
     }
 
     @Test
     public void testFindJarNameLongestMatchWins() {
-        assertEquals("lib/foo",
-                     Jar.findJarName("lib/foo", 
-                                     new String[] {"foo", "lib/foo", 
-                                                   "lib/bar/foo"}));
+        assertEquals("lib/foo", Jar.findJarName("lib/foo",
+            new String[] { "foo", "lib/foo", "lib/bar/foo" }));
     }
 }

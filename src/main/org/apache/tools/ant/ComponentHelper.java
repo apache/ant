@@ -59,31 +59,31 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ComponentHelper  {
     /** Map of component name to lists of restricted definitions */
-    private Map<String, List<AntTypeDefinition>>          restrictedDefinitions = new HashMap<String, List<AntTypeDefinition>>();
+    private Map<String, List<AntTypeDefinition>>          restrictedDefinitions = new HashMap<>();
 
     /** Map from component name to anttypedefinition */
-    private final Hashtable<String, AntTypeDefinition> antTypeTable = new Hashtable<String, AntTypeDefinition>();
+    private final Hashtable<String, AntTypeDefinition> antTypeTable = new Hashtable<>();
 
     /** Map of tasks generated from antTypeTable */
-    private final Hashtable<String, Class<?>> taskClassDefinitions = new Hashtable<String, Class<?>>();
+    private final Hashtable<String, Class<?>> taskClassDefinitions = new Hashtable<>();
 
     /** flag to rebuild taskClassDefinitions */
     private boolean rebuildTaskClassDefinitions = true;
 
     /** Map of types generated from antTypeTable */
-    private final Hashtable<String, Class<?>> typeClassDefinitions = new Hashtable<String, Class<?>>();
+    private final Hashtable<String, Class<?>> typeClassDefinitions = new Hashtable<>();
 
     /** flag to rebuild typeClassDefinitions */
     private boolean rebuildTypeClassDefinitions = true;
 
     /** Set of namespaces that have been checked for antlibs */
-    private final HashSet<String> checkedNamespaces = new HashSet<String>();
+    private final HashSet<String> checkedNamespaces = new HashSet<>();
 
     /**
      * Stack of antlib contexts used to resolve definitions while
      *   processing antlib
      */
-    private Stack<String> antLibStack = new Stack<String>();
+    private Stack<String> antLibStack = new Stack<>();
 
     /** current antlib uri */
     private String antLibCurrentUri = null;
@@ -189,7 +189,6 @@ public class ComponentHelper  {
      */
     public void setProject(Project project) {
         this.project = project;
-//        antTypeTable = new Hashtable<String, AntTypeDefinition>(project);
     }
 
     /**
@@ -205,13 +204,13 @@ public class ComponentHelper  {
      * @return A deep copy of the restrictredDefinition
      */
     private Map<String, List<AntTypeDefinition>> getRestrictedDefinition() {
-        final Map<String, List<AntTypeDefinition>> result = new HashMap<String, List<AntTypeDefinition>>();
+        final Map<String, List<AntTypeDefinition>> result = new HashMap<>();
         synchronized (restrictedDefinitions) {
             for (Map.Entry<String, List<AntTypeDefinition>> entry : restrictedDefinitions.entrySet()) {
                 List<AntTypeDefinition> entryVal = entry.getValue();
                 synchronized (entryVal) {
                     //copy the entryVal
-                    entryVal = new ArrayList<AntTypeDefinition> (entryVal);
+                    entryVal = new ArrayList<>(entryVal);
                 }
                 result.put(entry.getKey(), entryVal);
             }
@@ -750,7 +749,7 @@ public class ComponentHelper  {
      */
     public void exitAntLib() {
         antLibStack.pop();
-        antLibCurrentUri = (antLibStack.size() == 0) ? null : (String) antLibStack.peek();
+        antLibCurrentUri = (antLibStack.isEmpty()) ? null : (String) antLibStack.peek();
     }
 
     /**
@@ -759,9 +758,7 @@ public class ComponentHelper  {
     private void initTasks() {
         ClassLoader classLoader = getClassLoader(null);
         Properties props = getDefaultDefinitions(false);
-        Enumeration<?> e = props.propertyNames();
-        while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
+        for (String name : props.stringPropertyNames()) {
             String className = props.getProperty(name);
             AntTypeDefinition def = new AntTypeDefinition();
             def.setName(name);
@@ -902,7 +899,7 @@ public class ComponentHelper  {
             probablyIDE = true;
             antHomeLib = "ANT_HOME" + File.separatorChar + "lib";
         }
-        StringBuffer dirListingText = new StringBuffer();
+        StringBuilder dirListingText = new StringBuilder();
         final String tab = "        -";
         dirListingText.append(tab);
         dirListingText.append(antHomeLib);
@@ -1026,20 +1023,20 @@ public class ComponentHelper  {
                 + " declarations have taken place.");
         if (uri.length() > 0) {
             final List<AntTypeDefinition> matches = findTypeMatches(uri);
-            if (matches.size() > 0) {
-                out.println();
-                out.println("The definitions in the namespace " + uri + " are:");
-                for (AntTypeDefinition def : matches) {
-                    String local = ProjectHelper.extractNameFromComponentName(def.getName());
-                    out.println("    " + local);
-                }
-            } else {
+            if (matches.isEmpty()) {
                 out.println("No types or tasks have been defined in this namespace yet");
                 if (isAntlib) {
                     out.println();
                     out.println("This appears to be an antlib declaration. ");
                     out.println("Action: Check that the implementing library exists in one of:");
                     out.println(dirListing);
+                }
+            } else {
+                out.println();
+                out.println("The definitions in the namespace " + uri + " are:");
+                for (AntTypeDefinition def : matches) {
+                    String local = ProjectHelper.extractNameFromComponentName(def.getName());
+                    out.println("    " + local);
                 }
             }
         }

@@ -58,15 +58,14 @@ public class ScriptCommandLauncher extends CommandLauncherProxy {
             if (workingDir == null) {
                 return exec(project, cmd, env);
             }
-            throw new IOException("Cannot locate antRun script: "
-                                  + "No project provided");
+            throw new IOException(
+                "Cannot locate antRun script: No project provided");
         }
         // Locate the auxiliary script
         String antHome = project.getProperty(MagicNames.ANT_HOME);
         if (antHome == null) {
-            throw new IOException("Cannot locate antRun script: "
-                                  + "Property '" + MagicNames.ANT_HOME
-                                  + "' not found");
+            throw new IOException("Cannot locate antRun script: Property '"
+                + MagicNames.ANT_HOME + "' not found");
         }
         String antRun = FILE_UTILS.resolveFile(project.getBaseDir(),
                                                antHome + File.separator

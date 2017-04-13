@@ -103,12 +103,12 @@ public abstract class ArchiveResource extends Resource {
     public void addConfigured(ResourceCollection a) {
         checkChildrenAllowed();
         if (archive != null) {
-            throw new BuildException("you must not specify more than one"
-                                     + " archive");
+            throw new BuildException(
+                "you must not specify more than one archive");
         }
         if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections"
-                                     + " are supported as archives");
+            throw new BuildException(
+                "only single argument resource collections are supported as archives");
         }
         archive = a.iterator().next();
     }
@@ -118,17 +118,17 @@ public abstract class ArchiveResource extends Resource {
      * @return the archive as a Resource.
      */
     public Resource getArchive() {
-        return isReference()
-            ? ((ArchiveResource) getCheckedRef()).getArchive() : archive;
+        return isReference() ? getCheckedRef().getArchive() : archive;
     }
 
     /**
      * Get the last modified date of this Resource.
      * @return the last modification date.
      */
+    @Override
     public long getLastModified() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getLastModified();
+            return getCheckedRef().getLastModified();
         }
         checkEntry();
         return super.getLastModified();
@@ -138,9 +138,10 @@ public abstract class ArchiveResource extends Resource {
      * Get the size of this Resource.
      * @return the long size of this Resource.
      */
+    @Override
     public long getSize() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getSize();
+            return getCheckedRef().getSize();
         }
         checkEntry();
         return super.getSize();
@@ -150,9 +151,10 @@ public abstract class ArchiveResource extends Resource {
      * Learn whether this Resource represents a directory.
      * @return boolean flag indicating whether the entry is a directory.
      */
+    @Override
     public boolean isDirectory() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).isDirectory();
+            return getCheckedRef().isDirectory();
         }
         checkEntry();
         return super.isDirectory();
@@ -162,9 +164,10 @@ public abstract class ArchiveResource extends Resource {
      * Find out whether this Resource represents an existing Resource.
      * @return boolean existence flag.
      */
+    @Override
     public boolean isExists() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).isExists();
+            return getCheckedRef().isExists();
         }
         checkEntry();
         return super.isExists();
@@ -176,7 +179,7 @@ public abstract class ArchiveResource extends Resource {
      */
     public int getMode() {
         if (isReference()) {
-            return ((ArchiveResource) getCheckedRef()).getMode();
+            return getCheckedRef().getMode();
         }
         checkEntry();
         return mode;
@@ -186,6 +189,7 @@ public abstract class ArchiveResource extends Resource {
      * Overrides the super version.
      * @param r the Reference to set.
      */
+    @Override
     public void setRefid(Reference r) {
         if (archive != null || modeSet) {
             throw tooManyAttributes();
@@ -199,6 +203,7 @@ public abstract class ArchiveResource extends Resource {
      * @return a negative integer, zero, or a positive integer as this Resource
      *         is less than, equal to, or greater than the specified Resource.
      */
+    @Override
     public int compareTo(Resource another) {
         return this.equals(another) ? 0 : super.compareTo(another);
     }
@@ -209,6 +214,7 @@ public abstract class ArchiveResource extends Resource {
      * @return true if another is a Resource representing
      *              the same entry in the same archive.
      */
+    @Override
     public boolean equals(Object another) {
         if (this == another) {
             return true;
@@ -216,7 +222,7 @@ public abstract class ArchiveResource extends Resource {
         if (isReference()) {
             return getCheckedRef().equals(another);
         }
-        if (another == null || another.getClass() != getClass()) {
+        if (another == null || !another.getClass().equals(getClass())) {
             return false;
         }
         ArchiveResource r = (ArchiveResource) another;
@@ -228,6 +234,7 @@ public abstract class ArchiveResource extends Resource {
      * Get the hash code for this Resource.
      * @return hash code as int.
      */
+    @Override
     public int hashCode() {
         return super.hashCode()
             * (getArchive() == null ? NULL_ARCHIVE : getArchive().hashCode());
@@ -237,6 +244,7 @@ public abstract class ArchiveResource extends Resource {
      * Format this Resource as a String.
      * @return String representatation of this Resource.
      */
+    @Override
     public String toString() {
         return isReference() ? getCheckedRef().toString()
             : getArchive().toString() + ':' + getName();
@@ -260,10 +268,10 @@ public abstract class ArchiveResource extends Resource {
             throw new BuildException("archive attribute not set");
         }
         if (!r.isExists()) {
-            throw new BuildException(r.toString() + " does not exist.");
+            throw new BuildException("%s does not exist.", r);
         }
         if (r.isDirectory()) {
-            throw new BuildException(r + " denotes a directory.");
+            throw new BuildException("%s denotes a directory.", r);
         }
         fetchEntry();
         haveEntry = true;
@@ -277,6 +285,7 @@ public abstract class ArchiveResource extends Resource {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
@@ -289,5 +298,10 @@ public abstract class ArchiveResource extends Resource {
             }
             setChecked(true);
         }
+    }
+
+    @Override
+    protected ArchiveResource getCheckedRef() {
+        return (ArchiveResource) super.getCheckedRef();
     }
 }

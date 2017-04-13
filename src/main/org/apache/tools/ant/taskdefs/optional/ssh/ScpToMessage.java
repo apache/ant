@@ -42,7 +42,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     private File localFile;
     private String remotePath;
-    private List directoryList;
+    private List<Directory> directoryList;
     private Integer fileMode, dirMode;
     private boolean preserveLastModified;
 
@@ -124,7 +124,7 @@ public class ScpToMessage extends AbstractSshMessage {
      */
     public ScpToMessage(final boolean verbose,
                         final Session session,
-                        final List aDirectoryList,
+                        final List<Directory> aDirectoryList,
                         final String aRemotePath,
                         final boolean preserveLastModified) {
         this(verbose, false, session, aDirectoryList, aRemotePath, preserveLastModified);
@@ -143,7 +143,7 @@ public class ScpToMessage extends AbstractSshMessage {
     public ScpToMessage(final boolean verbose,
                         final boolean compressed,
                         final Session session,
-                        final List aDirectoryList,
+                        final List<Directory> aDirectoryList,
                         final String aRemotePath,
                         final boolean preserveLastModified) {
         this(verbose, compressed, session, aRemotePath);
@@ -176,22 +176,9 @@ public class ScpToMessage extends AbstractSshMessage {
      */
     public ScpToMessage(final boolean verbose,
                         final Session session,
-                        final List aDirectoryList,
+                        final List<Directory> aDirectoryList,
                         final String aRemotePath) {
         this(verbose, session, aDirectoryList, aRemotePath, false);
-    }
-
-    /**
-     * Constructor for ScpToMessage.
-     * @param verbose if true do verbose logging
-     * @param session the scp session to use
-     * @param aRemotePath the remote path
-     * @since Ant 1.6.2
-     */
-    private ScpToMessage(final boolean verbose,
-                         final Session session,
-                         final String aRemotePath) {
-        this(verbose, false, session, aRemotePath);
     }
 
     /**
@@ -229,7 +216,7 @@ public class ScpToMessage extends AbstractSshMessage {
      * @param aRemotePath the remote path
      */
     public ScpToMessage(final Session session,
-                         final List aDirectoryList,
+                         final List<Directory> aDirectoryList,
                          final String aRemotePath) {
         this(false, session, aDirectoryList, aRemotePath);
     }
@@ -262,7 +249,6 @@ public class ScpToMessage extends AbstractSshMessage {
         final String cmd = sb.toString();
         final Channel channel = openExecChannel(cmd);
         try {
-
             final OutputStream out = channel.getOutputStream();
             final InputStream in = channel.getInputStream();
 
@@ -294,8 +280,7 @@ public class ScpToMessage extends AbstractSshMessage {
             channel.connect();
 
             waitForAck(in);
-            for (final Iterator i = directoryList.iterator(); i.hasNext();) {
-                final Directory current = (Directory) i.next();
+            for (Directory current : directoryList) {
                 sendDirectory(current, in, out);
             }
         } finally {
@@ -308,12 +293,11 @@ public class ScpToMessage extends AbstractSshMessage {
     private void sendDirectory(final Directory current,
                                final InputStream in,
                                final OutputStream out) throws IOException {
-        for (final Iterator fileIt = current.filesIterator(); fileIt.hasNext();) {
-            sendFileToRemote((File) fileIt.next(), in, out);
+        for (final Iterator<File> fileIt = current.filesIterator(); fileIt.hasNext();) {
+            sendFileToRemote(fileIt.next(), in, out);
         }
-        for (final Iterator dirIt = current.directoryIterator(); dirIt.hasNext();) {
-            final Directory dir = (Directory) dirIt.next();
-            sendDirectoryToRemote(dir, in, out);
+        for (final Iterator<Directory> dirIt = current.directoryIterator(); dirIt.hasNext();) {
+            sendDirectoryToRemote(dirIt.next(), in, out);
         }
     }
 

@@ -41,9 +41,11 @@ public class IsSet extends ProjectComponent implements Condition {
      * @return true if the property exists
      * @exception BuildException if the property attribute is not set
      */
+    @Override
     public boolean eval() throws BuildException {
         if (property == null) {
-            throw new BuildException("No property specified for isset " + "condition");
+            throw new BuildException(
+                "No property specified for isset condition");
         }
         return getProject().getProperty(property) != null;
     }

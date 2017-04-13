@@ -71,13 +71,11 @@ public class IsSigned extends DataType implements Condition {
      */
     public static boolean isSigned(File zipFile, String name)
         throws IOException {
-        ZipFile jarFile = null;
-        try {
-            jarFile = new ZipFile(zipFile);
+        try (ZipFile jarFile = new ZipFile(zipFile)) {
             if (null == name) {
-                Enumeration entries = jarFile.getEntries();
+                Enumeration<ZipEntry> entries = jarFile.getEntries();
                 while (entries.hasMoreElements()) {
-                    String eName = ((ZipEntry) entries.nextElement()).getName();
+                    String eName = entries.nextElement().getName();
                     if (eName.startsWith(SIG_START)
                         && eName.endsWith(SIG_END)) {
                         return true;
@@ -98,8 +96,6 @@ public class IsSigned extends DataType implements Condition {
             }
 
             return shortSig || longSig;
-        } finally {
-            ZipFile.closeQuietly(jarFile);
         }
     }
 
@@ -109,6 +105,7 @@ public class IsSigned extends DataType implements Condition {
      * specified, if the file contains a signature.
      * @return true if the file is signed.
      */
+    @Override
     public boolean eval() {
         if (file == null) {
             throw new BuildException("The file attribute must be set.");
@@ -135,7 +132,7 @@ public class IsSigned extends DataType implements Condition {
     }
 
     private static String replaceInvalidChars(final String name) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         final int len = name.length();
         boolean changes = false;
         for (int i = 0; i < len; i++) {

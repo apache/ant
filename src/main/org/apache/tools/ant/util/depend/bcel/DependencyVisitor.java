@@ -17,8 +17,10 @@
  */
 package org.apache.tools.ant.util.depend.bcel;
 
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.bcel.classfile.ConstantClass;
@@ -35,7 +37,7 @@ import org.apache.bcel.classfile.Method;
  */
 public class DependencyVisitor extends EmptyVisitor {
     /** The collected dependencies */
-    private final Hashtable<String, String> dependencies = new Hashtable<String, String>();
+    private final Set<String> dependencies = new HashSet<>();
     /**
      * The current class's constant pool - used to determine class names
      * from class references.
@@ -49,7 +51,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *      visited classes depend.
      */
     public Enumeration<String> getDependencies() {
-        return dependencies.keys();
+        return Collections.enumeration(dependencies);
     }
 
     /** Clear the current set of collected dependencies. */
@@ -62,6 +64,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param constantPool the constant pool of the class being visited.
      */
+    @Override
     public void visitConstantPool(final ConstantPool constantPool) {
         this.constantPool = constantPool;
     }
@@ -71,6 +74,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param constantClass the constantClass entry for the class reference
      */
+    @Override
     public void visitConstantClass(final ConstantClass constantClass) {
         final String classname
              = constantClass.getConstantValue(constantPool).toString();
@@ -84,18 +88,19 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param obj the name and type reference being visited.
      */
+    @Override
     public void visitConstantNameAndType(final ConstantNameAndType obj) {
         final String name = obj.getName(constantPool);
-        if (obj.getSignature(constantPool).equals("Ljava/lang/Class;")
+        if ("Ljava/lang/Class;".equals(obj.getSignature(constantPool))
                 && name.startsWith("class$")) {
             String classname
                 = name.substring("class$".length()).replace('$', '.');
             // does the class have a package structure
-            final int index = classname.lastIndexOf(".");
+            final int index = classname.lastIndexOf('.');
             if (index > 0) {
                 char start;
                 // check if the package structure is more than 1 level deep
-                final int index2 = classname.lastIndexOf(".", index - 1);
+                final int index2 = classname.lastIndexOf('.', index - 1);
                 if (index2 != -1) {
                     // class name has more than 1 package level 'com.company.Class'
                     start = classname.charAt(index2 + 1);
@@ -128,6 +133,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param field the field being visited
      */
+    @Override
     public void visitField(final Field field) {
         addClasses(field.getSignature());
     }
@@ -137,6 +143,7 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param javaClass the class being visited.
      */
+    @Override
     public void visitJavaClass(final JavaClass javaClass) {
         addClass(javaClass.getClassName());
     }
@@ -146,9 +153,10 @@ public class DependencyVisitor extends EmptyVisitor {
      *
      * @param method the method being visited.
      */
+    @Override
     public void visitMethod(final Method method) {
         final String signature = method.getSignature();
-        final int pos = signature.indexOf(")");
+        final int pos = signature.indexOf(')');
         addClasses(signature.substring(1, pos));
         addClasses(signature.substring(pos + 1));
     }
@@ -159,7 +167,7 @@ public class DependencyVisitor extends EmptyVisitor {
      * @param classname the class to be added to the list of dependencies.
      */
     void addClass(final String classname) {
-        dependencies.put(classname, classname);
+        dependencies.add(classname);
     }
 
     /**

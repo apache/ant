@@ -66,7 +66,6 @@ public final class DefaultDefinitions {
 
     private void componentDef(String ns, String name, String classname) {
         AntTypeDefinition def = new AntTypeDefinition();
-        String n = ProjectHelper.genComponentName(ns, name);
         def.setName(ProjectHelper.genComponentName(ns, name));
         def.setClassName(classname);
         def.setClassLoader(getClass().getClassLoader());

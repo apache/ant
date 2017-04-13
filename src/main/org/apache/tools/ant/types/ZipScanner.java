@@ -52,31 +52,20 @@ public class ZipScanner extends ArchiveScanner {
      * resources found inside the archive that matched all include
      * patterns and didn't match any exclude patterns.
      */
+    @Override
     protected void fillMapsFromArchive(Resource src, String encoding,
             Map<String, Resource> fileEntries, Map<String, Resource> matchFileEntries,
             Map<String, Resource> dirEntries, Map<String, Resource> matchDirEntries) {
-        ZipEntry entry = null;
-        ZipFile zf = null;
 
-        File srcFile = null;
-        FileProvider fp = src.as(FileProvider.class);
-        if (fp != null) {
-            srcFile = fp.getFile();
-        } else {
-            throw new BuildException("Only file provider resources are supported");
-        }
+        File srcFile = src.asOptional(FileProvider.class)
+            .map(FileProvider::getFile).orElseThrow(() -> new BuildException(
+                "Only file provider resources are supported"));
+        
+        try (ZipFile zf = new ZipFile(srcFile, encoding)) {
 
-        try {
-            try {
-                zf = new ZipFile(srcFile, encoding);
-            } catch (ZipException ex) {
-                throw new BuildException("Problem reading " + srcFile, ex);
-            } catch (IOException ex) {
-                throw new BuildException("Problem opening " + srcFile, ex);
-            }
             Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {
-                entry = e.nextElement();
+                ZipEntry entry = e.nextElement();
                 Resource r = new ZipResource(srcFile, encoding, entry);
                 String name = entry.getName();
                 if (entry.isDirectory()) {
@@ -92,8 +81,10 @@ public class ZipScanner extends ArchiveScanner {
                     }
                 }
             }
-        } finally {
-            ZipFile.closeQuietly(zf);
+        } catch (ZipException ex) {
+            throw new BuildException("Problem reading " + srcFile, ex);
+        } catch (IOException ex) {
+            throw new BuildException("Problem opening " + srcFile, ex);
         }
     }
 }

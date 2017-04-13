@@ -89,6 +89,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * Sets the stream the formatter is supposed to write its results to.
      * @param out the output stream to write to
      */
+    @Override
     public void setOutput(OutputStream out) {
         this.out = out;
         output = new BufferedWriter(new java.io.OutputStreamWriter(out));
@@ -98,6 +99,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @see JUnitResultFormatter#setSystemOutput(String)
      */
     /** {@inheritDoc}. */
+    @Override
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
@@ -106,6 +108,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @see JUnitResultFormatter#setSystemError(String)
      */
     /** {@inheritDoc}. */
+    @Override
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -115,15 +118,15 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * The whole testsuite started.
      * @param suite the test suite
      */
+    @Override
     public void startTestSuite(JUnitTest suite) {
         if (output == null) {
             return; // Quick return - no output do nothing.
         }
-        StringBuffer sb = new StringBuffer("Testsuite: ");
-        sb.append(suite.getName());
-        sb.append(StringUtils.LINE_SEP);
         try {
-            output.write(sb.toString());
+            output
+                .write(new StringBuilder("Testsuite: ").append(suite.getName())
+                    .append(StringUtils.LINE_SEP).toString());
             output.flush();
         } catch (IOException ex) {
             throw new BuildException(ex);
@@ -134,8 +137,9 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * The whole testsuite ended.
      * @param suite the test suite
      */
+    @Override
     public void endTestSuite(JUnitTest suite) {
-        StringBuffer sb = new StringBuffer("Tests run: ");
+        StringBuilder sb = new StringBuilder("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());
@@ -190,6 +194,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * A test started.
      * @param test a test
      */
+    @Override
     public void startTest(Test test) {
     }
 
@@ -197,6 +202,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * A test ended.
      * @param test a test
      */
+    @Override
     public void endTest(Test test) {
     }
 
@@ -218,6 +224,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param test a test
      * @param t    the assertion failed by the test
      */
+    @Override
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
@@ -227,6 +234,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param test  a test
      * @param error the error thrown by the test
      */
+    @Override
     public void addError(Test test, Throwable error) {
         formatError("\tCaused an ERROR", test, error);
     }
@@ -239,9 +247,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     protected String formatTest(Test test) {
         if (test == null) {
             return "Null Test: ";
-        } else {
-            return "Testcase: " + test.toString() + ":";
         }
+        return "Testcase: " + test.toString() + ":";
     }
 
     /**
@@ -271,6 +278,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     }
 
 
+    @Override
     public void testIgnored(Test test) {
         formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
     }
@@ -294,6 +302,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     }
 
+    @Override
     public void testAssumptionFailure(Test test, Throwable cause) {
         formatSkip(test, cause.getMessage());
     }

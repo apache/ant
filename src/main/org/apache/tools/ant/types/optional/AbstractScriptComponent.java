@@ -45,6 +45,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * Set the project.
      * @param project the owner of this component.
      */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);

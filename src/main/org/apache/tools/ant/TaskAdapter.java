@@ -81,7 +81,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
             // don't have to check for interface, since then
             // taskClass would be abstract too.
             try {
-                final Method executeM = taskClass.getMethod("execute", (Class[]) null);
+                final Method executeM = taskClass.getMethod("execute");
                 // don't have to check for public, since
                 // getMethod finds public method only.
                 // don't have to check for abstract, since then
@@ -122,10 +122,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
      */
     public void execute() throws BuildException {
         try {
-            Method setLocationM = proxy.getClass().getMethod(
-                "setLocation", new Class[] {Location.class});
+            Method setLocationM =
+                proxy.getClass().getMethod("setLocation", Location.class);
             if (setLocationM != null) {
-                setLocationM.invoke(proxy, new Object[] {getLocation()});
+                setLocationM.invoke(proxy, getLocation());
             }
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have
@@ -137,10 +137,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
         }
 
         try {
-            Method setProjectM = proxy.getClass().getMethod(
-                "setProject", new Class[] {Project.class});
+            Method setProjectM =
+                proxy.getClass().getMethod("setProject", Project.class);
             if (setProjectM != null) {
-                setProjectM.invoke(proxy, new Object[] {getProject()});
+                setProjectM.invoke(proxy, getProject());
             }
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have

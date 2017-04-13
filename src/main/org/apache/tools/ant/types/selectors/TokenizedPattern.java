@@ -19,6 +19,8 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Provides reusable path pattern matching.  PathPattern is preferable
@@ -114,12 +116,7 @@ public class TokenizedPattern {
      * Does the tokenized pattern contain the given string?
      */
     public boolean containsPattern(String pat) {
-        for (int i = 0; i < tokenizedPattern.length; i++) {
-            if (tokenizedPattern[i].equals(pat)) {
-                return true;
-            }
-        }
-        return false;
+        return Stream.of(tokenizedPattern).anyMatch(Predicate.isEqual(pat));
     }
 
     /**
@@ -162,16 +159,16 @@ public class TokenizedPattern {
     public TokenizedPattern withoutLastToken() {
         if (tokenizedPattern.length == 0) {
             throw new IllegalStateException("can't strip a token from nothing");
-        } else if (tokenizedPattern.length == 1) {
-            return EMPTY_PATTERN;
-        } else {
-            String toStrip = tokenizedPattern[tokenizedPattern.length - 1];
-            int index = pattern.lastIndexOf(toStrip);
-            String[] tokens = new String[tokenizedPattern.length - 1];
-            System.arraycopy(tokenizedPattern, 0, tokens, 0,
-                             tokenizedPattern.length - 1);
-            return new TokenizedPattern(pattern.substring(0, index), tokens);
         }
+        if (tokenizedPattern.length == 1) {
+            return EMPTY_PATTERN;
+        }
+        String toStrip = tokenizedPattern[tokenizedPattern.length - 1];
+        int index = pattern.lastIndexOf(toStrip);
+        String[] tokens = new String[tokenizedPattern.length - 1];
+        System.arraycopy(tokenizedPattern, 0, tokens, 0,
+                         tokenizedPattern.length - 1);
+        return new TokenizedPattern(pattern.substring(0, index), tokens);
     }
 
 }

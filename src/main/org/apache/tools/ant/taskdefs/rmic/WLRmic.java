@@ -40,8 +40,7 @@ public class WLRmic extends DefaultRmicAdapter {
 
     /** The error string to use if not able to find the weblogic rmic */
     public static final String ERROR_NO_WLRMIC_ON_CLASSPATH =
-        "Cannot use WebLogic rmic, as it is not "
-        + "available. Add it to Ant's classpath with the -lib option";
+        "Cannot use WebLogic rmic, as it is not available. Add it to Ant's classpath with the -lib option";
 
     /** The error string to use if not able to start the weblogic rmic */
     public static final String ERROR_WLRMIC_FAILED = "Error starting WebLogic rmic: ";
@@ -57,6 +56,7 @@ public class WLRmic extends DefaultRmicAdapter {
      * @return true if the compilation succeeded
      * @throws  BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand(new String[] {"-noexit"});
@@ -64,7 +64,7 @@ public class WLRmic extends DefaultRmicAdapter {
         AntClassLoader loader = null;
         try {
             // Create an instance of the rmic
-            Class c = null;
+            Class<?> c;
             if (getRmic().getClasspath() == null) {
                 c = Class.forName(WLRMIC_CLASSNAME);
             } else {
@@ -72,9 +72,8 @@ public class WLRmic extends DefaultRmicAdapter {
                     = getRmic().getProject().createClassLoader(getRmic().getClasspath());
                 c = Class.forName(WLRMIC_CLASSNAME, true, loader);
             }
-            Method doRmic = c.getMethod("main",
-                                        new Class [] {String[].class});
-            doRmic.invoke(null, new Object[] {cmd.getArguments()});
+            Method doRmic = c.getMethod("main", String[].class);
+            doRmic.invoke(null, (Object) cmd.getArguments());
             return true;
         } catch (ClassNotFoundException ex) {
             throw new BuildException(ERROR_NO_WLRMIC_ON_CLASSPATH, getRmic().getLocation());
@@ -96,6 +95,7 @@ public class WLRmic extends DefaultRmicAdapter {
      * Get the suffix for the rmic stub classes
      * @return the stub suffix
      */
+    @Override
     public String getStubClassSuffix() {
         return WL_RMI_STUB_SUFFIX;
     }
@@ -104,6 +104,7 @@ public class WLRmic extends DefaultRmicAdapter {
      * Get the suffix for the rmic skeleton classes
      * @return the skeleton suffix
      */
+    @Override
     public String getSkelClassSuffix() {
         return WL_RMI_SKEL_SUFFIX;
     }
@@ -114,6 +115,7 @@ public class WLRmic extends DefaultRmicAdapter {
      * @param compilerArgs the original compiler arguments
      * @return the filtered set.
      */
+    @Override
     protected String[] preprocessCompilerArgs(String[] compilerArgs) {
         return filterJvmCompilerArgs(compilerArgs);
     }
@@ -123,6 +125,7 @@ public class WLRmic extends DefaultRmicAdapter {
      * stub option is set, a warning is printed.
      * @return null, for no stub version
      */
+    @Override
     protected String addStubVersionOptions() {
         //handle the many different stub options.
         String stubVersion = getRmic().getStubVersion();

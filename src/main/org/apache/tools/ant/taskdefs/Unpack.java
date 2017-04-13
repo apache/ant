@@ -50,6 +50,7 @@ public abstract class Unpack extends Task {
      * @ant.attribute ignore="true"
      * @param src a <code>String</code> value
      */
+    @Deprecated
     public void setSrc(String src) {
         log("DEPRECATED - The setSrc(String) method has been deprecated."
             + " Use setSrc(File) instead.");
@@ -65,6 +66,7 @@ public abstract class Unpack extends Task {
      * @ant.attribute ignore="true"
      * @param dest a <code>String</code> value
      */
+    @Deprecated
     public void setDest(String dest) {
         log("DEPRECATED - The setDest(String) method has been deprecated."
             + " Use setDest(File) instead.");
@@ -85,22 +87,20 @@ public abstract class Unpack extends Task {
      */
     public void setSrcResource(Resource src) {
         if (!src.isExists()) {
-            throw new BuildException(
-                "the archive " + src.getName() + " doesn't exist");
+            throw new BuildException("the archive %s doesn't exist",
+                src.getName());
         }
         if (src.isDirectory()) {
-            throw new BuildException(
-                "the archive " + src.getName() + " can't be a directory");
+            throw new BuildException("the archive %s can't be a directory",
+                src.getName());
         }
         FileProvider fp = src.as(FileProvider.class);
         if (fp != null) {
             source = fp.getFile();
         } else if (!supportsNonFileResources()) {
             throw new BuildException(
-                "The source " + src.getName()
-                + " is not a FileSystem "
-                + "Only FileSystem resources are"
-                + " supported.");
+                "The source %s is not a FileSystem Only FileSystem resources are supported.",
+                src.getName());
         }
         srcResource = src;
     }
@@ -111,8 +111,8 @@ public abstract class Unpack extends Task {
      */
     public void addConfigured(ResourceCollection a) {
         if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections"
-                                     + " are supported as archives");
+            throw new BuildException(
+                "only single argument resource collections are supported as archives");
         }
         setSrcResource(a.iterator().next());
     }
@@ -163,6 +163,7 @@ public abstract class Unpack extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         File savedDest = dest; // may be altered in validate
         try {
@@ -199,7 +200,7 @@ public abstract class Unpack extends Task {
 
     private String getLastNamePart(Resource r) {
         String n = r.getName();
-        int idx = n.lastIndexOf("/");
+        int idx = n.lastIndexOf('/');
         return idx < 0 ? n : n.substring(idx + 1);
     }
 }

@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
@@ -69,7 +70,7 @@ public class Replace extends MatchingTask {
     private Resource propertyResource = null;
     private Resource replaceFilterResource = null;
     private Properties properties = null;
-    private ArrayList replacefilters = new ArrayList();
+    private List<Replacefilter> replacefilters = new ArrayList<>();
 
     private File dir = null;
 
@@ -144,39 +145,34 @@ public class Replace extends MatchingTask {
         public void validate() throws BuildException {
             //Validate mandatory attributes
             if (token == null) {
-                String message = "token is a mandatory for replacefilter.";
-                throw new BuildException(message);
+                throw new BuildException(
+                    "token is a mandatory for replacefilter.");
             }
 
             if ("".equals(token.getText())) {
-                String message = "The token must not be an empty "
-                    + "string.";
-                throw new BuildException(message);
+                throw new BuildException(
+                    "The token must not be an empty string.");
             }
 
             //value and property are mutually exclusive attributes
             if ((value != null) && (property != null)) {
-                String message = "Either value or property "
-                    + "can be specified, but a replacefilter "
-                    + "element cannot have both.";
-                throw new BuildException(message);
+                throw new BuildException(
+                    "Either value or property can be specified, but a replacefilter element cannot have both.");
             }
 
             if ((property != null)) {
                 //the property attribute must have access to a property file
                 if (propertyResource == null) {
-                    String message = "The replacefilter's property attribute "
-                        + "can only be used with the replacetask's "
-                        + "propertyFile/Resource attribute.";
-                    throw new BuildException(message);
+                    throw new BuildException(
+                        "The replacefilter's property attribute can only be used with the replacetask's propertyFile/Resource attribute.");
                 }
 
                 //Make sure property exists in property file
                 if (properties == null
                     || properties.getProperty(property) == null) {
-                    String message = "property \"" + property
-                        + "\" was not found in " + propertyResource.getName();
-                    throw new BuildException(message);
+                    throw new BuildException(
+                        "property \"%s\" was not found in %s", property,
+                        propertyResource.getName());
                 }
             }
 
@@ -190,14 +186,15 @@ public class Replace extends MatchingTask {
         public String getReplaceValue() {
             if (property != null) {
                 return properties.getProperty(property);
-            } else if (value != null) {
-                return value.getText();
-            } else if (Replace.this.value != null) {
-                return Replace.this.value.getText();
-            } else {
-                //Default is empty string
-                return "";
             }
+            if (value != null) {
+                return value.getText();
+            }
+            if (Replace.this.value != null) {
+                return Replace.this.value.getText();
+            }
+            //Default is empty string
+            return "";
         }
 
         /**
@@ -354,11 +351,12 @@ public class Replace extends MatchingTask {
      * @since 1.7
      */
     private class FileInput implements AutoCloseable {
+        private static final int BUFF_SIZE = 4096;
+
         private StringBuffer outputBuffer;
         private final InputStream is;
         private Reader reader;
         private char[] buffer;
-        private static final int BUFF_SIZE = 4096;
 
         /**
          * Constructs the input component. Opens the file for reading.
@@ -370,7 +368,9 @@ public class Replace extends MatchingTask {
             buffer = new char[BUFF_SIZE];
             is = Files.newInputStream(source.toPath());
             try {
-                reader = new BufferedReader(encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is));
+                reader = new BufferedReader(
+                    encoding != null ? new InputStreamReader(is, encoding)
+                        : new InputStreamReader(is));
             } finally {
                 if (reader == null) {
                     is.close();
@@ -393,8 +393,7 @@ public class Replace extends MatchingTask {
          * @throws IOException When the file cannot be read from.
          */
         boolean readChunk() throws IOException {
-            int bufferLength = 0;
-            bufferLength = reader.read(buffer);
+            int bufferLength = reader.read(buffer);
             if (bufferLength < 0) {
                 return false;
             }
@@ -406,6 +405,7 @@ public class Replace extends MatchingTask {
          * Closes the file.
          * @throws IOException When the file cannot be closed.
          */
+        @Override
         public void close() throws IOException {
             is.close();
         }
@@ -430,7 +430,9 @@ public class Replace extends MatchingTask {
         FileOutput(File out) throws IOException {
             os = Files.newOutputStream(out.toPath());
             try {
-                writer = new BufferedWriter(encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os));
+                writer = new BufferedWriter(
+                    encoding != null ? new OutputStreamWriter(os, encoding)
+                        : new OutputStreamWriter(os));
             } finally {
                 if (writer == null) {
                     os.close();
@@ -476,6 +478,7 @@ public class Replace extends MatchingTask {
          * Closes the file.
          * @throws IOException When the file cannot be closed.
          */
+        @Override
         public void close() throws IOException {
             os.close();
         }
@@ -486,9 +489,9 @@ public class Replace extends MatchingTask {
      * Do the execution.
      * @throws BuildException if we can't build
      */
+    @Override
     public void execute() throws BuildException {
-
-        ArrayList savedFilters = (ArrayList) replacefilters.clone();
+        List<Replacefilter> savedFilters = new ArrayList<>(replacefilters);
         Properties savedProperties =
             properties == null ? null : (Properties) properties.clone();
 
@@ -496,10 +499,10 @@ public class Replace extends MatchingTask {
             // line separators in values and tokens are "\n"
             // in order to compare with the file contents, replace them
             // as needed
-            StringBuffer val = new StringBuffer(value.getText());
+            StringBuilder val = new StringBuilder(value.getText());
             stringReplace(val, "\r\n", "\n");
             stringReplace(val, "\n", StringUtils.LINE_SEP);
-            StringBuffer tok = new StringBuffer(token.getText());
+            StringBuilder tok = new StringBuilder(token.getText());
             stringReplace(tok, "\r\n", "\n");
             stringReplace(tok, "\n", StringUtils.LINE_SEP);
             Replacefilter firstFilter = createPrimaryfilter();
@@ -510,7 +513,7 @@ public class Replace extends MatchingTask {
         try {
             if (replaceFilterResource != null) {
                 Properties props = getProperties(replaceFilterResource);
-                Iterator e = getOrderedIterator(props);
+                Iterator<Object> e = getOrderedIterator(props);
                 while (e.hasNext()) {
                     String tok =  e.next().toString();
                     Replacefilter replaceFilter = createReplacefilter();
@@ -535,19 +538,15 @@ public class Replace extends MatchingTask {
 
             if (dir != null) {
                 DirectoryScanner ds = super.getDirectoryScanner(dir);
-                String[] srcs = ds.getIncludedFiles();
-
-                for (int i = 0; i < srcs.length; i++) {
-                    File file = new File(dir, srcs[i]);
+                for (String src : ds.getIncludedFiles()) {
+                    File file = new File(dir, src);
                     processFile(file);
                 }
             }
 
             if (resources != null) {
                 for (Resource r : resources) {
-                    FileProvider fp =
-                    r.as(FileProvider.class);
-                    processFile(fp.getFile());
+                    processFile(r.as(FileProvider.class).getFile());
                 }
             }
 
@@ -573,23 +572,24 @@ public class Replace extends MatchingTask {
      */
     public void validateAttributes() throws BuildException {
         if (sourceFile == null && dir == null && resources == null) {
-            String message = "Either the file or the dir attribute "
-                + "or nested resources must be specified";
-            throw new BuildException(message, getLocation());
+            throw new BuildException(
+                "Either the file or the dir attribute or nested resources must be specified",
+                getLocation());
         }
         if (propertyResource != null && !propertyResource.isExists()) {
-            String message = "Property file " + propertyResource.getName()
-                + " does not exist.";
-            throw new BuildException(message, getLocation());
+            throw new BuildException("Property file "
+                + propertyResource.getName() + " does not exist.",
+                getLocation());
         }
-        if (token == null && replacefilters.size() == 0) {
-            String message = "Either token or a nested replacefilter "
-                + "must be specified";
-            throw new BuildException(message, getLocation());
+        if (token == null && replacefilters.isEmpty()) {
+            throw new BuildException(
+                "Either token or a nested replacefilter must be specified",
+                getLocation());
         }
         if (token != null && "".equals(token.getText())) {
-            String message = "The token attribute must not be an empty string.";
-            throw new BuildException(message, getLocation());
+            throw new BuildException(
+                "The token attribute must not be an empty string.",
+                getLocation());
         }
     }
 
@@ -601,12 +601,7 @@ public class Replace extends MatchingTask {
      */
     public void validateReplacefilters()
             throws BuildException {
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter element =
-                (Replacefilter) replacefilters.get(i);
-            element.validate();
-        }
+        replacefilters.forEach(Replacefilter::validate);
     }
 
     /**
@@ -630,18 +625,14 @@ public class Replace extends MatchingTask {
         throws BuildException {
         Properties props = new Properties();
 
-        InputStream in = null;
-        try {
-            in = propertyResource.getInputStream();
+        try (
+            InputStream 
+            in = propertyResource.getInputStream()){
             props.load(in);
         } catch (IOException e) {
-            String message = "Property resource (" + propertyResource.getName()
-                + ") cannot be loaded.";
-            throw new BuildException(message);
-        } finally {
-            FileUtils.close(in);
+            throw new BuildException("Property resource (%s) cannot be loaded.",
+                propertyResource.getName());
         }
-
         return props;
     }
 
@@ -705,11 +696,7 @@ public class Replace extends MatchingTask {
      * Flushes all filters.
      */
     private void flushFilterChain() {
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.get(i);
-            filter.flush();
-        }
+        replacefilters.forEach(Replacefilter::flush);
     }
 
     /**
@@ -717,14 +704,7 @@ public class Replace extends MatchingTask {
      * @return true if the filter chain produced new output.
      */
     private boolean processFilterChain() {
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.get(i);
-            if (!filter.process()) {
-                return false;
-            }
-        }
-        return true;
+        return replacefilters.stream().allMatch(Replacefilter::process);
     }
 
     /**
@@ -737,7 +717,7 @@ public class Replace extends MatchingTask {
         StringBuffer buf = inputBuffer;
         final int size = replacefilters.size();
         for (int i = 0; i < size; i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.get(i);
+            Replacefilter filter = replacefilters.get(i);
             filter.setInputBuffer(buf);
             buf = filter.getOutputBuffer();
         }
@@ -749,13 +729,14 @@ public class Replace extends MatchingTask {
      * @param filename <code>String</code>.
      */
     private void logFilterChain(String filename) {
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.get(i);
-            log("Replacing in " + filename + ": " + filter.getToken()
-                    + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);
-        }
+        replacefilters
+            .forEach(
+                filter -> log(
+                    "Replacing in " + filename + ": " + filter.getToken()
+                        + " --> " + filter.getReplaceValue(),
+                    Project.MSG_VERBOSE));
     }
+
     /**
      * Set the source file; required unless <code>dir</code> is set.
      * @param file source <code>File</code>.
@@ -937,7 +918,7 @@ public class Replace extends MatchingTask {
     /**
      * Replace occurrences of str1 in StringBuffer str with str2.
      */
-    private void stringReplace(StringBuffer str, String str1, String str2) {
+    private void stringReplace(StringBuilder str, String str1, String str2) {
         int found = str.indexOf(str1);
         final int str1Length = str1.length();
         final int str2Length = str2.length();
@@ -952,17 +933,9 @@ public class Replace extends MatchingTask {
      * strings are tried later.
      */
     private Iterator<Object> getOrderedIterator(Properties props) {
-        List<Object> keys = new ArrayList<Object>(props.keySet());
-        Collections.sort(keys, new Comparator<Object>() {
-                //Override annotation is not supported as long as we want to support building Ant on Java 1.5
-                public int compare(Object key1, Object key2) {
-                    return compare(key1.toString(), key2.toString());
-                }
-
-                private int compare(String key1, String key2) {
-                    return key2.length() - key1.length();
-                }
-            });
+        List<Object> keys = new ArrayList<>(props.keySet());
+        Collections.sort(keys, Comparator
+            .comparingInt(o -> Objects.toString(o, "").length()).reversed());
         return keys.iterator();
     }
 }

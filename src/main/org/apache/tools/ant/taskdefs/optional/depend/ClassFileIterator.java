@@ -17,11 +17,14 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * Iterator interface for iterating over a set of class files
  *
  */
-public interface ClassFileIterator {
+public interface ClassFileIterator extends Iterable<ClassFile> {
 
     /**
      * Get the next class file in the iteration
@@ -29,5 +32,33 @@ public interface ClassFileIterator {
      * @return the next class file in the iteration
      */
     ClassFile getNextClassFile();
-}
+    
+    @Override
+    default Iterator<ClassFile> iterator() {
 
+        return new Iterator<ClassFile>() {
+            ClassFile next;
+            {
+                next = getNextClassFile();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return next != null;
+            }
+
+            @Override
+            public ClassFile next() {
+                if (next == null) {
+                    throw new NoSuchElementException();
+                }
+                try {
+                    return next;
+                } finally {
+                    next = getNextClassFile();
+                }
+            }
+            
+        };
+    }
+}

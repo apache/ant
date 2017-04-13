@@ -35,6 +35,7 @@ import org.apache.tools.ant.Project;
  * @deprecated The copydir task is deprecated since Ant 1.2.  Use copy instead.
  */
 
+@Deprecated
 public class Copydir extends MatchingTask {
 
     private File srcDir;
@@ -42,7 +43,7 @@ public class Copydir extends MatchingTask {
     private boolean filtering = false;
     private boolean flatten = false;
     private boolean forceOverwrite = false;
-    private Hashtable<String, String> filecopyList = new Hashtable<String, String>();
+    private Map<String, String> filecopyList = new Hashtable<>();
 
     /**
      * The src attribute
@@ -94,6 +95,7 @@ public class Copydir extends MatchingTask {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         log("DEPRECATED - The copydir task is deprecated.  Use copy instead.");
 

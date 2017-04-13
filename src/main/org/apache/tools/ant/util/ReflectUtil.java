@@ -21,6 +21,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 
@@ -60,12 +62,11 @@ public class ReflectUtil {
      * @param methodName the name of the method to call
      * @return the object returned by the method
      */
-    public static Object invoke(Object obj, String methodName) {
+    @SuppressWarnings("unchecked")
+    public static <T> T invoke(Object obj, String methodName) {
         try {
-            Method method;
-            method = obj.getClass().getMethod(
-                        methodName, (Class[]) null);
-            return method.invoke(obj, (Object[]) null);
+            Method method = obj.getClass().getMethod(methodName);
+            return (T) method.invoke(obj);
         } catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
@@ -80,12 +81,11 @@ public class ReflectUtil {
      * @param methodName the name of the method to call
      * @return the object returned by the method
      */
-    public static Object invokeStatic(Object obj, String methodName) {
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeStatic(Object obj, String methodName) {
         try {
-            Method method;
-            method = ((Class<?>) obj).getMethod(
-                    methodName, (Class[]) null);
-            return method.invoke(obj, (Object[]) null);
+            Method method = ((Class<?>) obj).getMethod(methodName);
+            return (T) method.invoke(obj);
         }  catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
@@ -100,13 +100,12 @@ public class ReflectUtil {
      * @param arg        the value of the argument.
      * @return the object returned by the method
      */
-    public static Object invoke(
+    @SuppressWarnings("unchecked")
+    public static <T> T invoke(
         Object obj, String methodName, Class<?> argType, Object arg) {
         try {
-            Method method;
-            method = obj.getClass().getMethod(
-                methodName, new Class[] {argType});
-            return method.invoke(obj, new Object[] {arg});
+            Method method = obj.getClass().getMethod(methodName, argType);
+            return (T) method.invoke(obj, arg);
         } catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
@@ -123,14 +122,14 @@ public class ReflectUtil {
      * @param arg2       the value of the second argument.
      * @return the object returned by the method
      */
-    public static Object invoke(
+    @SuppressWarnings("unchecked")
+    public static <T> T invoke(
         Object obj, String methodName, Class<?> argType1, Object arg1,
         Class<?> argType2, Object arg2) {
         try {
-            Method method;
-            method = obj.getClass().getMethod(
-                methodName, new Class[] {argType1, argType2});
-            return method.invoke(obj, new Object[] {arg1, arg2});
+            Method method =
+                obj.getClass().getMethod(methodName, argType1, argType2);
+            return (T) method.invoke(obj, arg1, arg2);
         } catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
@@ -144,12 +143,13 @@ public class ReflectUtil {
      * @return the value of the field.
      * @throws BuildException if there is an error.
      */
-    public static Object getField(Object obj, String fieldName)
+    @SuppressWarnings("unchecked")
+    public static <T> T getField(Object obj, String fieldName)
         throws BuildException {
         try {
             Field field = obj.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            return field.get(obj);
+            return (T) field.get(obj);
         } catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
@@ -182,9 +182,8 @@ public class ReflectUtil {
                 return (BuildException) t2;
             }
             return new BuildException(t2);
-        } else {
-            return new BuildException(t);
         }
+        return new BuildException(t);
     }
 
     /**
@@ -198,13 +197,8 @@ public class ReflectUtil {
     public static boolean respondsTo(Object o, String methodName)
         throws BuildException {
         try {
-            Method[] methods = o.getClass().getMethods();
-            for (int i = 0; i < methods.length; i++) {
-                if (methods[i].getName().equals(methodName)) {
-                    return true;
-                }
-            }
-            return false;
+            return Stream.of(o.getClass().getMethods()).map(Method::getName)
+                .anyMatch(Predicate.isEqual(methodName));
         } catch (Exception t) {
             throw toBuildException(t);
         }

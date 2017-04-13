@@ -45,29 +45,28 @@ public class DefaultExcludes extends Task {
      *
      * @exception BuildException if something goes wrong with the build
      */
+    @Override
     public void execute() throws BuildException {
-        if (!defaultrequested && add.equals("") && remove.equals("") && !echo) {
-            throw new BuildException("<defaultexcludes> task must set "
-                + "at least one attribute (echo=\"false\""
-                + " doesn't count since that is the default");
+        if (!defaultrequested && "".equals(add) && "".equals(remove) && !echo) {
+            throw new BuildException(
+                "<defaultexcludes> task must set at least one attribute (echo=\"false\" doesn't count since that is the default");
         }
         if (defaultrequested) {
             DirectoryScanner.resetDefaultExcludes();
         }
-        if (!add.equals("")) {
+        if (!"".equals(add)) {
             DirectoryScanner.addDefaultExclude(add);
         }
-        if (!remove.equals("")) {
+        if (!"".equals(remove)) {
             DirectoryScanner.removeDefaultExclude(remove);
         }
         if (echo) {
-            StringBuffer message
-                = new StringBuffer("Current Default Excludes:");
+            StringBuilder message
+                = new StringBuilder("Current Default Excludes:");
             message.append(StringUtils.LINE_SEP);
-            String[] excludes = DirectoryScanner.getDefaultExcludes();
-            for (int i = 0; i < excludes.length; i++) {
+            for (String exclude : DirectoryScanner.getDefaultExcludes()) {
                 message.append("  ");
-                message.append(excludes[i]);
+                message.append(exclude);
                 message.append(StringUtils.LINE_SEP);
             }
             log(message.toString(), logLevel);
@@ -110,6 +109,5 @@ public class DefaultExcludes extends Task {
     public void setEcho(boolean echo) {
         this.echo = echo;
     }
-
 
 }

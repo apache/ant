@@ -88,6 +88,7 @@ public class ProjectHelper2 extends ProjectHelper {
      *
      * @since Ant 1.8.0
      */
+    @Override
     public boolean canParseAntlibDescriptor(Resource resource) {
         return true;
     }
@@ -102,6 +103,7 @@ public class ProjectHelper2 extends ProjectHelper {
      *
      * @since Ant 1.8.0
      */
+    @Override
     public UnknownElement parseAntlibDescriptor(Project containingProject,
                                                 Resource resource) {
         URLProvider up = resource.as(URLProvider.class);
@@ -143,6 +145,7 @@ public class ProjectHelper2 extends ProjectHelper {
      * @param source  the xml source
      * @exception BuildException if an error occurs
      */
+    @Override
     public void parse(Project project, Object source) throws BuildException {
         getImportStack().addElement(source);
         AntXMLContext context = null;
@@ -256,7 +259,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     zf = new ZipFile(org.apache.tools.ant.launch.Locator
                                      .fromJarURI(uri), "UTF-8");
                     inputStream =
-                        zf.getInputStream(zf.getEntry(uri.substring(pling + 1)));
+                        zf.getInputStream(zf.getEntry(uri.substring(pling + 2)));
                 } else {
                     URLConnection conn = url.openConnection();
                     conn.setUseCaches(false);
@@ -521,6 +524,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *                 document. Will not be <code>null</code>.
          * @return an inputsource for this identifier
          */
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) {
 
             context.getProject().log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
@@ -566,6 +570,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception org.xml.sax.SAXParseException if the tag given is not
          *                              <code>"project"</code>
          */
+        @Override
         public void startElement(String uri, String tag, String qname, Attributes attrs)
             throws SAXParseException {
             AntHandler next = currentHandler.onStartChild(uri, tag, qname, attrs, context);
@@ -580,6 +585,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param locator The locator used by the parser.
          *                Will not be <code>null</code>.
          */
+        @Override
         public void setDocumentLocator(Locator locator) {
             context.setLocator(locator);
         }
@@ -595,9 +601,10 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          * @exception SAXException in case of error (not thrown in this implementation)
          */
+        @Override
         public void endElement(String uri, String name, String qName) throws SAXException {
             currentHandler.onEndElement(uri, name, context);
-            AntHandler prev = (AntHandler) antHandlers.pop();
+            AntHandler prev = antHandlers.pop();
             currentHandler = prev;
             if (currentHandler != null) {
                 currentHandler.onEndChild(uri, name, qName, context);
@@ -612,6 +619,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param count The number of characters to read.
          * @exception SAXParseException if an error occurs
          */
+        @Override
         public void characters(char[] buf, int start, int count) throws SAXParseException {
             currentHandler.characters(buf, start, count, context);
         }
@@ -622,6 +630,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param prefix the namespace prefix
          * @param uri the namespace uri
          */
+        @Override
         public void startPrefixMapping(String prefix, String uri) {
             context.startPrefixMapping(prefix, uri);
         }
@@ -631,6 +640,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          * @param prefix the prefix that is not mapped anymore
          */
+        @Override
         public void endPrefixMapping(String prefix) {
             context.endPrefixMapping(prefix);
         }
@@ -654,6 +664,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @return The project handler that handles subelements of project
          * @exception SAXParseException if the qualified name is not "project".
          */
+        @Override
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
             if (name.equals("project")
@@ -693,6 +704,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *            encountered or if the <code>"default"</code> attribute
          *            is missing.
          */
+        @Override
         public void onStartElement(String uri, String tag, String qname, Attributes attrs,
                                    AntXMLContext context) throws SAXParseException {
             String baseDir = null;
@@ -849,6 +861,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *            <code>"extension-point"</code>
          *            or a data type definition
          */
+        @Override
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
             return (name.equals("target") || name.equals("extension-point"))
@@ -882,6 +895,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception SAXParseException if an unexpected attribute is encountered
          *            or if the <code>"name"</code> attribute is missing.
          */
+        @Override
         public void onStartElement(String uri, String tag, String qname, Attributes attrs,
                                    AntXMLContext context) throws SAXParseException {
             String name = null;
@@ -1062,6 +1076,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
+        @Override
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
             return ProjectHelper2.elementHandler;
@@ -1075,6 +1090,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param tag The name of the element.
          * @param context The current context.
          */
+        @Override
         public void onEndElement(String uri, String tag, AntXMLContext context) {
             context.setCurrentTarget(context.getImplicitTarget());
         }
@@ -1109,6 +1125,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception SAXParseException in case of error (not thrown in
          *                              this implementation)
          */
+        @Override
         public void onStartElement(String uri, String tag, String qname, Attributes attrs,
                                    AntXMLContext context) throws SAXParseException {
             RuntimeConfigurable parentWrapper = context.currentWrapper();
@@ -1195,6 +1212,7 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          * @see ProjectHelper#addText(Project,java.lang.Object,char[],int,int)
          */
+        @Override
         public void characters(char[] buf, int start, int count,
                                AntXMLContext context) throws SAXParseException {
             RuntimeConfigurable wrapper = context.currentWrapper();
@@ -1218,6 +1236,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
+        @Override
         public AntHandler onStartChild(String uri, String tag, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
             return ProjectHelper2.elementHandler;
@@ -1231,6 +1250,7 @@ public class ProjectHelper2 extends ProjectHelper {
          * @param tag The name of the element.
          * @param context The current context.
          */
+        @Override
         public void onEndElement(String uri, String tag, AntXMLContext context) {
             context.popWrapper();
         }

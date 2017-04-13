@@ -69,6 +69,7 @@ public abstract class AbstractAccessTask
      * @ant.attribute ignore="true"
      * @param cmdl A user supplied command line that we won't accept.
      */
+    @Override
     public void setCommand(Commandline cmdl) {
         throw new BuildException(getTaskType()
                                  + " doesn\'t support the command attribute",
@@ -81,6 +82,7 @@ public abstract class AbstractAccessTask
      * @ant.attribute ignore="true"
      * @param skip A user supplied boolean we won't accept.
      */
+    @Override
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(getTaskType() + " doesn\'t support the "
                                  + "skipemptyfileset attribute",
@@ -93,6 +95,7 @@ public abstract class AbstractAccessTask
      * @ant.attribute ignore="true"
      * @param b A user supplied boolean we won't accept.
      */
+    @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the addsourcefile attribute", getLocation());
@@ -103,6 +106,7 @@ public abstract class AbstractAccessTask
      * @return true if a valid OS, for unix this is always true, otherwise
      *              use the superclasses' test (user set).
      */
+    @Override
     protected boolean isValidOs() {
         return getOs() == null && getOsFamily() == null
             ? Os.isFamily(Os.FAMILY_UNIX) : super.isValidOs();

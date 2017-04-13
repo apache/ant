@@ -44,15 +44,15 @@ public class KaffeRmic extends DefaultRmicAdapter {
     public static final String COMPILER_NAME = "kaffe";
 
     /** {@inheritDoc} */
+    @Override
     public boolean execute() throws BuildException {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
 
-        Class c = getRmicClass();
+        Class<?> c = getRmicClass();
         if (c == null) {
-            StringBuffer buf = new StringBuffer("Cannot use Kaffe rmic, as it"
-                                                + " is not available.  None"
-                                                + " of ");
+            StringBuilder buf = new StringBuilder(
+                "Cannot use Kaffe rmic, as it is not available.  None of ");
             for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
                 if (i != 0) {
                     buf.append(", ");
@@ -60,8 +60,8 @@ public class KaffeRmic extends DefaultRmicAdapter {
 
                 buf.append(RMIC_CLASSNAMES[i]);
             }
-            buf.append(" have been found. A common solution is to set the"
-                       + " environment variable JAVA_HOME or CLASSPATH.");
+            buf.append(
+                " have been found. A common solution is to set the environment variable JAVA_HOME or CLASSPATH.");
             throw new BuildException(buf.toString(),
                                      getRmic().getLocation());
         }
@@ -91,7 +91,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
      *
      * @return null if neither class can get loaded.
      */
-    private static Class getRmicClass() {
+    private static Class<?> getRmicClass() {
         for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
             try {
                 return Class.forName(RMIC_CLASSNAMES[i]);

@@ -22,13 +22,9 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Vector;
 
 
 /**
@@ -119,6 +115,7 @@ public class PropertiesfileCache implements Cache {
      * This cache is valid if the cachefile is set.
      * @return true if all is ok false otherwise
      */
+    @Override
     public boolean isValid() {
         return (cachefile != null);
     }
@@ -130,13 +127,12 @@ public class PropertiesfileCache implements Cache {
     /**
      * Load the cache from underlying properties file.
      */
+    @Override
     public void load() {
         if ((cachefile != null) && cachefile.isFile() && cachefile.canRead()) {
-            try {
-                BufferedInputStream bis = new BufferedInputStream(
-                    Files.newInputStream(cachefile.toPath()));
+            try (BufferedInputStream bis = new BufferedInputStream(
+                Files.newInputStream(cachefile.toPath()))) {
                 cache.load(bis);
-                bis.close();
             } catch (Exception e) {
                 e.printStackTrace(); //NOSONAR
             }
@@ -153,17 +149,16 @@ public class PropertiesfileCache implements Cache {
      * implementation checks the existence of entries before creating the file
      * for performance optimisation.
      */
+    @Override
     public void save() {
         if (!cacheDirty) {
             return;
         }
         if ((cachefile != null) && cache.propertyNames().hasMoreElements()) {
-            try {
-                BufferedOutputStream bos = new BufferedOutputStream(
-                      Files.newOutputStream(cachefile.toPath()));
+            try (BufferedOutputStream bos = new BufferedOutputStream(
+                Files.newOutputStream(cachefile.toPath()))) {
                 cache.store(bos, null);
                 bos.flush();
-                bos.close();
             } catch (Exception e) {
                 e.printStackTrace(); //NOSONAR
             }
@@ -172,6 +167,7 @@ public class PropertiesfileCache implements Cache {
     }
 
     /** Deletes the cache and its underlying file. */
+    @Override
     public void delete() {
         cache = new Properties();
         cachefile.delete();
@@ -184,6 +180,7 @@ public class PropertiesfileCache implements Cache {
      * @param key the key
      * @return the stored value
      */
+    @Override
     public Object get(Object key) {
         if (!cacheLoaded) {
             load();
@@ -200,6 +197,7 @@ public class PropertiesfileCache implements Cache {
      * @param key the key
      * @param value the value
      */
+    @Override
     public void put(Object key, Object value) {
         cache.put(String.valueOf(key), String.valueOf(value));
         cacheDirty = true;
@@ -209,13 +207,9 @@ public class PropertiesfileCache implements Cache {
      * Returns an iterator over the keys in the cache.
      * @return An iterator over the keys.
      */
+    @Override
     public Iterator<String> iterator() {
-        Vector<String> v = new Vector<String>();
-        Enumeration<?> en = cache.propertyNames();
-        while (en.hasMoreElements()) {
-            v.add(en.nextElement().toString());
-        }
-        return v.iterator();
+        return cache.stringPropertyNames().iterator();
     }
 
 
@@ -226,8 +220,9 @@ public class PropertiesfileCache implements Cache {
      * Override Object.toString().
      * @return information about this cache
      */
+    @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("<PropertiesfileCache:");
         buf.append("cachefile=").append(cachefile);
         buf.append(";noOfEntries=").append(cache.size());

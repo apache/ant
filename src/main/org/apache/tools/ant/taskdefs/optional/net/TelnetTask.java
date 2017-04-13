@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.net.telnet.TelnetClient;
@@ -34,7 +34,6 @@ import org.apache.tools.ant.Task;
  * Automates the telnet protocol.
  *
  */
-
 public class TelnetTask extends Task {
     private static final int WAIT_INTERVAL = 250;
     private static final int TELNET_PORT = 23;
@@ -62,7 +61,7 @@ public class TelnetTask extends Task {
     /**
      *  The list of read/write commands for this session
      */
-    private Vector telnetTasks = new Vector();
+    private List<TelnetSubTask> telnetTasks = new Vector<>();
 
     /**
      *  If true, adds a CR to beginning of login script
@@ -81,6 +80,7 @@ public class TelnetTask extends Task {
      *  Iterate through the list of Reads and writes
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
        /**  A server name is required to continue */
        if (server == null) {
@@ -111,9 +111,7 @@ public class TelnetTask extends Task {
                login(telnet);
            }
            /**  Process each sub command */
-           Enumeration tasksToRun = telnetTasks.elements();
-           while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-               TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
+           for (TelnetSubTask task : telnetTasks) {
                if (task instanceof TelnetRead && defaultTimeout != null) {
                    ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
                }
@@ -209,8 +207,8 @@ public class TelnetTask extends Task {
      */
 
     public TelnetSubTask createRead() {
-        TelnetSubTask task = (TelnetSubTask) new TelnetRead();
-        telnetTasks.addElement(task);
+        TelnetSubTask task = new TelnetRead();
+        telnetTasks.add(task);
         return task;
     }
 
@@ -221,8 +219,8 @@ public class TelnetTask extends Task {
      * @return a write telnet sub task
      */
     public TelnetSubTask createWrite() {
-        TelnetSubTask task = (TelnetSubTask) new TelnetWrite();
-        telnetTasks.addElement(task);
+        TelnetSubTask task = new TelnetWrite();
+        telnetTasks.add(task);
         return task;
     }
 
@@ -271,6 +269,7 @@ public class TelnetTask extends Task {
          * @param telnet the task to use
          * @throws BuildException on error
          */
+        @Override
         public void execute(AntTelnetClient telnet)
                throws BuildException {
            telnet.sendString(taskString, echoString);
@@ -297,6 +296,7 @@ public class TelnetTask extends Task {
          * @param telnet the task to use
          * @throws BuildException on error
          */
+        @Override
         public void execute(AntTelnetClient telnet)
                throws BuildException {
             telnet.waitForString(taskString, timeout);
@@ -346,7 +346,7 @@ public class TelnetTask extends Task {
         public void waitForString(String s, Integer timeout) {
             InputStream is = this.getInputStream();
             try {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 int windowStart = -s.length();
                 if (timeout == null || timeout.intValue() == 0) {
                     while (windowStart < 0

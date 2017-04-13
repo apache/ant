@@ -89,7 +89,6 @@ public class WaitFor extends ConditionBase {
         super("waitfor");
     }
 
-
     /**
      * Constructor that takes the name of the task in the task name.
      *
@@ -108,7 +107,6 @@ public class WaitFor extends ConditionBase {
         maxWait = time;
     }
 
-
     /**
      * Set the max wait time unit
      * @param unit an enumerated <code>Unit</code> value
@@ -116,8 +114,6 @@ public class WaitFor extends ConditionBase {
     public void setMaxWaitUnit(Unit unit) {
         maxWaitMultiplier = unit.getMultiplier();
     }
-
-
 
     /**
      * Set the time between each check
@@ -150,15 +146,15 @@ public class WaitFor extends ConditionBase {
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {
-            throw new BuildException("You must not nest more than one "
-                                     + "condition into "
-                                     + getTaskName());
+            throw new BuildException(
+                "You must not nest more than one condition into %s",
+                getTaskName());
         }
         if (countConditions() < 1) {
-            throw new BuildException("You must nest a condition into "
-                                     + getTaskName());
+            throw new BuildException("You must nest a condition into %s",
+                getTaskName());
         }
-        Condition c = (Condition) getConditions().nextElement();
+        Condition c = getConditions().nextElement();
         try {
             long maxWaitMillis = calculateMaxWaitMillis();
             long checkEveryMillis = calculateCheckEveryMillis();
@@ -244,16 +240,16 @@ public class WaitFor extends ConditionBase {
             MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
         };
 
-        private Map timeTable = new HashMap();
+        private Map<String, Long> timeTable = new HashMap<>();
 
         /** Constructor the Unit enumerated type. */
         public Unit() {
-            timeTable.put(MILLISECOND, new Long(1L));
-            timeTable.put(SECOND,      new Long(ONE_SECOND));
-            timeTable.put(MINUTE,      new Long(ONE_MINUTE));
-            timeTable.put(HOUR,        new Long(ONE_HOUR));
-            timeTable.put(DAY,         new Long(ONE_DAY));
-            timeTable.put(WEEK,        new Long(ONE_WEEK));
+            timeTable.put(MILLISECOND, Long.valueOf(1L));
+            timeTable.put(SECOND,      Long.valueOf(ONE_SECOND));
+            timeTable.put(MINUTE,      Long.valueOf(ONE_MINUTE));
+            timeTable.put(HOUR,        Long.valueOf(ONE_HOUR));
+            timeTable.put(DAY,         Long.valueOf(ONE_DAY));
+            timeTable.put(WEEK,        Long.valueOf(ONE_WEEK));
         }
 
         /**
@@ -262,14 +258,14 @@ public class WaitFor extends ConditionBase {
          */
         public long getMultiplier() {
             String key = getValue().toLowerCase(Locale.ENGLISH);
-            Long l = (Long) timeTable.get(key);
-            return l.longValue();
+            return timeTable.get(key).longValue();
         }
 
         /**
          * @see EnumeratedAttribute#getValues()
          */
         /** {@inheritDoc} */
+        @Override
         public String[] getValues() {
             return UNITS;
         }

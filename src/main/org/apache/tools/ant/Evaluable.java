@@ -17,13 +17,19 @@
  */
 package org.apache.tools.ant;
 
+import java.util.function.Supplier;
+
 /**
  * Kind of task attribute that can be evaluated before being assigned
+ * @param <T> as {@link Supplier}
  *
  * @see RuntimeConfigurable
  */
-public interface Evaluable {
+public interface Evaluable<T> extends Supplier<T> {
 
-    Object eval();
+    T eval();
 
+    default T get() {
+        return eval();
+    }
 }

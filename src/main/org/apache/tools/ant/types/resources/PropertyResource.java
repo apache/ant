@@ -39,6 +39,7 @@ public class PropertyResource extends Resource {
         = Resource.getMagicNumber("PropertyResource".getBytes());
 
     private static final InputStream UNSET = new InputStream() {
+        @Override
         public int read() {
             return -1;
         }
@@ -66,7 +67,7 @@ public class PropertyResource extends Resource {
      */
     public String getValue() {
         if (isReference()) {
-            return ((PropertyResource) getCheckedRef()).getValue();
+            return getCheckedRef().getValue();
         }
         Project p = getProject();
         return p == null ? null : p.getProperty(getName());
@@ -79,7 +80,7 @@ public class PropertyResource extends Resource {
      */
     public Object getObjectValue() {
         if (isReference()) {
-            return ((PropertyResource) getCheckedRef()).getObjectValue();
+            return getCheckedRef().getObjectValue();
         }
         Project p = getProject();
         return p == null ? null : PropertyHelper.getProperty(p, getName());
@@ -89,6 +90,7 @@ public class PropertyResource extends Resource {
      * Find out whether this Resource exists.
      * @return true if the Property is set, false otherwise.
      */
+    @Override
     public boolean isExists() {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().isExists();
@@ -101,6 +103,7 @@ public class PropertyResource extends Resource {
      * @return the size, as a long, 0 if the Resource does not exist (for
      *         compatibility with java.io.File), or UNKNOWN_SIZE if not known.
      */
+    @Override
     public long getSize() {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().getSize();
@@ -115,6 +118,7 @@ public class PropertyResource extends Resource {
      * @param o object to compare
      * @return true if equal to o
      */
+    @Override
     public boolean equals(Object o) {
         if (super.equals(o)) {
             return true;
@@ -126,6 +130,7 @@ public class PropertyResource extends Resource {
      * Get the hash code for this Resource.
      * @return hash code as int.
      */
+    @Override
     public int hashCode() {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().hashCode();
@@ -136,6 +141,7 @@ public class PropertyResource extends Resource {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().toString();
@@ -151,6 +157,7 @@ public class PropertyResource extends Resource {
      * @throws UnsupportedOperationException if InputStreams are not
      *         supported for this Resource type.
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().getInputStream();
@@ -167,6 +174,7 @@ public class PropertyResource extends Resource {
      * @throws UnsupportedOperationException if OutputStreams are not
      *         supported for this Resource type.
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         if (isReferenceOrProxy()) {
             return getReferencedOrProxied().getOutputStream();
@@ -194,7 +202,7 @@ public class PropertyResource extends Resource {
      */
     protected Resource getReferencedOrProxied() {
         if (isReference()) {
-            return (Resource) getCheckedRef(Resource.class, "resource");
+            return getCheckedRef(Resource.class, "resource");
         }
         Object o = getObjectValue();
         if (o instanceof Resource) {
@@ -202,5 +210,10 @@ public class PropertyResource extends Resource {
         }
         throw new IllegalStateException(
                 "This PropertyResource does not reference or proxy another Resource");
+    }
+
+    @Override
+    protected PropertyResource getCheckedRef() {
+        return (PropertyResource) super.getCheckedRef();
     }
 }

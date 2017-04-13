@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
@@ -42,13 +43,13 @@ import org.apache.tools.ant.UnknownElement;
 public class MacroDef extends AntlibDefinition  {
 
     private NestedSequential nestedSequential;
-    private String     name;
-    private boolean    backTrace = true;
-    private List<Attribute>       attributes = new ArrayList<Attribute>();
-    private Map<String, TemplateElement>        elements   = new HashMap<String, TemplateElement>();
-    private String     textName   = null;
-    private Text       text       = null;
-    private boolean    hasImplicitElement = false;
+    private String name;
+    private boolean backTrace = true;
+    private List<Attribute> attributes = new ArrayList<>();
+    private Map<String, TemplateElement> elements = new HashMap<>();
+    private String textName = null;
+    private Text text = null;
+    private boolean hasImplicitElement = false;
 
     /**
      * Name of the definition
@@ -76,8 +77,8 @@ public class MacroDef extends AntlibDefinition  {
         for (Attribute attribute : attributes) {
             if (text.getName().equals(attribute.getName())) {
                 throw new BuildException(
-                    "the name \"" + text.getName()
-                    + "\" is already used as an attribute");
+                    "the name \"%s\" is already used as an attribute",
+                    text.getName());
             }
         }
         this.text = text;
@@ -132,13 +133,14 @@ public class MacroDef extends AntlibDefinition  {
      * This is a simple task container.
      */
     public static class NestedSequential implements TaskContainer {
-        private List<Task> nested = new ArrayList<Task>();
+        private List<Task> nested = new ArrayList<>();
 
         /**
          * Add a task or type to the container.
          *
          * @param task an unknown element.
          */
+        @Override
         public void addTask(Task task) {
             nested.add(task);
         }
@@ -258,17 +260,16 @@ public class MacroDef extends AntlibDefinition  {
         }
         if (attribute.getName().equals(textName)) {
             throw new BuildException(
-                "the name \"" + attribute.getName()
-                + "\" has already been used by the text element");
+                "the name \"%s\" has already been used by the text element",
+                attribute.getName());
         }
         final int size = attributes.size();
         for (int i = 0; i < size; ++i) {
-            Attribute att = (Attribute) attributes.get(i);
+            Attribute att = attributes.get(i);
             if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(
-                    "the name \"" + attribute.getName()
-                        + "\" has already been used in "
-                        + "another attribute element");
+                    "the name \"%s\" has already been used in another attribute element",
+                    attribute.getName());
             }
         }
         attributes.add(attribute);
@@ -286,11 +287,10 @@ public class MacroDef extends AntlibDefinition  {
         }
         if (elements.get(element.getName()) != null) {
             throw new BuildException(
-                "the element " + element.getName()
-                + " has already been specified");
+                "the element %s has already been specified", element.getName());
         }
         if (hasImplicitElement
-            || (element.isImplicit() && elements.size() != 0)) {
+            || (element.isImplicit() && !elements.isEmpty())) {
             throw new BuildException(
                 "Only one element allowed when using implicit elements");
         }
@@ -301,6 +301,7 @@ public class MacroDef extends AntlibDefinition  {
     /**
      * Create a new ant type based on the embedded tasks and types.
      */
+    @Override
     public void execute() {
         if (nestedSequential == null) {
             throw new BuildException("Missing sequential element");
@@ -322,7 +323,6 @@ public class MacroDef extends AntlibDefinition  {
         log("creating macro  " + name, Project.MSG_VERBOSE);
     }
 
-
     /**
      * An attribute for the MacroDef task.
      *
@@ -340,8 +340,8 @@ public class MacroDef extends AntlibDefinition  {
          */
         public void setName(String name) {
             if (!isValidName(name)) {
-                throw new BuildException(
-                    "Illegal name [" + name + "] for attribute");
+                throw new BuildException("Illegal name [%s] for attribute",
+                    name);
             }
             this.name = name.toLowerCase(Locale.ENGLISH);
         }
@@ -412,6 +412,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param obj an <code>Object</code> value
          * @return a <code>boolean</code> value
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == null) {
                 return false;
@@ -440,8 +441,9 @@ public class MacroDef extends AntlibDefinition  {
         /**
          * @return a hash code value for this object.
          */
+        @Override
         public int hashCode() {
-            return objectHashCode(defaultValue) + objectHashCode(name);
+            return Objects.hashCode(defaultValue) + Objects.hashCode(name);
         }
     }
 
@@ -463,8 +465,8 @@ public class MacroDef extends AntlibDefinition  {
          */
         public void setName(String name) {
             if (!isValidName(name)) {
-                throw new BuildException(
-                    "Illegal name [" + name + "] for attribute");
+                throw new BuildException("Illegal name [%s] for element",
+                    name);
             }
             this.name = name.toLowerCase(Locale.ENGLISH);
         }
@@ -544,6 +546,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param obj an <code>Object</code> value
          * @return a <code>boolean</code> value
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == null) {
                 return false;
@@ -552,22 +555,19 @@ public class MacroDef extends AntlibDefinition  {
                 return false;
             }
             Text other = (Text) obj;
-            return safeCompare(name, other.name)
+            return Objects.equals(name, other.name)
                 && optional == other.optional
                 && trim == other.trim
-                && safeCompare(defaultString, other.defaultString);
+                && Objects.equals(defaultString, other.defaultString);
         }
 
         /**
          * @return a hash code value for this object.
          */
+        @Override
         public int hashCode() {
-            return objectHashCode(name);
+            return Objects.hashCode(name);
         }
-    }
-
-    private static boolean safeCompare(Object a, Object b) {
-        return a == null ? b == null : a.equals(b);
     }
 
     /**
@@ -587,8 +587,8 @@ public class MacroDef extends AntlibDefinition  {
          */
         public void setName(String name) {
             if (!isValidName(name)) {
-                throw new BuildException(
-                    "Illegal name [" + name + "] for macro element");
+                throw new BuildException("Illegal name [%s] for macro element",
+                    name);
             }
             this.name = name.toLowerCase(Locale.ENGLISH);
         }
@@ -668,6 +668,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param obj an <code>Object</code> value
          * @return a <code>boolean</code> value
          */
+        @Override
         public boolean equals(Object obj) {
             if (obj == this) {
               return true;
@@ -685,8 +686,9 @@ public class MacroDef extends AntlibDefinition  {
         /**
          * @return a hash code value for this object.
          */
+        @Override
         public int hashCode() {
-            return objectHashCode(name)
+            return Objects.hashCode(name)
                 + (optional ? 1 : 0) + (implicit ? 1 : 0);
         }
 
@@ -729,21 +731,17 @@ public class MacroDef extends AntlibDefinition  {
             if (other.text != null) {
                 return false;
             }
-        } else {
-            if (!text.equals(other.text)) {
-                return false;
-            }
+        } else if (!text.equals(other.text)) {
+            return false;
         }
-        if (getURI() == null || getURI().equals("")
+        if (getURI() == null || "".equals(getURI())
             || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
-            if (!(other.getURI() == null || other.getURI().equals("")
+            if (!(other.getURI() == null || "".equals(other.getURI())
                   || other.getURI().equals(ProjectHelper.ANT_CORE_URI))) {
                 return false;
             }
-        } else {
-            if (!getURI().equals(other.getURI())) {
-                return false;
-            }
+        } else if (!getURI().equals(other.getURI())) {
+            return false;
         }
 
         if (!nestedSequential.similar(other.nestedSequential)) {
@@ -801,6 +799,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param project the current project
          * @return the created object
          */
+        @Override
         public Object create(Project project) {
             Object o = super.create(project);
             if (o == null) {
@@ -817,6 +816,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param project the current project
          * @return true if the definitions are the same
          */
+        @Override
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
             if (!super.sameDefinition(other, project)) {
                 return false;
@@ -832,6 +832,7 @@ public class MacroDef extends AntlibDefinition  {
          * @param project the current project
          * @return true if the definitions are the same
          */
+        @Override
         public boolean similarDefinition(
             AntTypeDefinition other, Project project) {
             if (!super.similarDefinition(other, project)) {
@@ -839,14 +840,6 @@ public class MacroDef extends AntlibDefinition  {
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
             return macroDef.similar(otherDef.macroDef);
-        }
-    }
-
-    private static int objectHashCode(Object o) {
-        if (o == null) {
-            return 0;
-        } else {
-            return o.hashCode();
         }
     }
 

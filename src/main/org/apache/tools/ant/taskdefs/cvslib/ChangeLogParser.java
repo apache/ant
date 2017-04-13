@@ -20,24 +20,23 @@ package org.apache.tools.ant.taskdefs.cvslib;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
-import org.apache.tools.ant.util.CollectionUtils;
+import org.apache.tools.ant.taskdefs.AbstractCvsTask.Module;
 
 /**
  * A class used to parse the output of the CVS log command.
  *
  */
 class ChangeLogParser {
-    //private static final int GET_ENTRY = 0;
     private static final int GET_FILE = 1;
     private static final int GET_DATE = 2;
     private static final int GET_COMMENT = 3;
@@ -53,9 +52,6 @@ class ChangeLogParser {
     private final SimpleDateFormat cvs1129InputDate =
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
-    static {
-    }
-
     //The following is data used while processing stdout of CVS command
     private String file;
     private String date;
@@ -67,32 +63,29 @@ class ChangeLogParser {
     private int status = GET_FILE;
 
     /** rcs entries */
-    private final Hashtable entries = new Hashtable();
+    private final Map<String, CVSEntry> entries = new Hashtable<>();
 
     private final boolean remote;
     private final String[] moduleNames;
     private final int[] moduleNameLengths;
 
     public ChangeLogParser() {
-        this(false, "", CollectionUtils.EMPTY_LIST);
+        this(false, "", Collections.emptyList());
     }
 
-    public ChangeLogParser(boolean remote, String packageName, List modules) {
+    public ChangeLogParser(boolean remote, String packageName, List<AbstractCvsTask.Module> modules) {
         this.remote = remote;
 
-        ArrayList names = new ArrayList();
+        List<String> names = new ArrayList<>();
         if (packageName != null) {
             for (StringTokenizer tok = new StringTokenizer(packageName);
                  tok.hasMoreTokens();) {
                 names.add(tok.nextToken());
             }
         }
-        for (Iterator iter = modules.iterator(); iter.hasNext();) {
-            AbstractCvsTask.Module m = (AbstractCvsTask.Module) iter.next();
-            names.add(m.getName());
-        }
+        modules.stream().map(Module::getName).forEach(names::add);
 
-        moduleNames = (String[]) names.toArray(new String[names.size()]);
+        moduleNames = names.toArray(new String[names.size()]);
         moduleNameLengths = new int[moduleNames.length];
         for (int i = 0; i < moduleNames.length; i++) {
             moduleNameLengths[i] = moduleNames[i].length();
@@ -109,12 +102,7 @@ class ChangeLogParser {
      * @return a list of rcs entries as an array
      */
     public CVSEntry[] getEntrySetAsArray() {
-        final CVSEntry[] array = new CVSEntry[ entries.size() ];
-        int i = 0;
-        for (Enumeration e = entries.elements(); e.hasMoreElements();) {
-            array[i++] = (CVSEntry) e.nextElement();
-        }
-        return array;
+        return entries.values().toArray(new CVSEntry[entries.size()]);
     }
 
     /**
@@ -123,7 +111,7 @@ class ChangeLogParser {
      * @param line the line to process
      */
     public void stdout(final String line) {
-        switch(status) {
+        switch (status) {
             case GET_FILE:
                 // make sure attributes are reset when
                 // working on a 'new' file.
@@ -159,8 +147,8 @@ class ChangeLogParser {
      */
     private void processComment(final String line) {
         final String lineSeparator = System.getProperty("line.separator");
-        if (line.equals(
-                "=============================================================================")) {
+        if ("============================================================================="
+            .equals(line)) {
             //We have ended changelog for that particular file
             //so we can save it
             final int end
@@ -168,7 +156,7 @@ class ChangeLogParser {
             comment = comment.substring(0, end);
             saveEntry();
             status = GET_FILE;
-        } else if (line.equals("----------------------------")) {
+        } else if ("----------------------------".equals(line)) {
             final int end
                 = comment.length() - lineSeparator.length(); //was -1
             comment = comment.substring(0, end);
@@ -275,17 +263,9 @@ class ChangeLogParser {
      * Utility method that saves the current entry.
      */
     private void saveEntry() {
-        final String entryKey = date + author + comment;
-        CVSEntry entry;
-        if (!entries.containsKey(entryKey)) {
-            Date dateObject = parseDate(date);
-            entry = new CVSEntry(dateObject, author, comment);
-            entries.put(entryKey, entry);
-        } else {
-            entry = (CVSEntry) entries.get(entryKey);
-        }
-
-        entry.addFile(file, revision, previousRevision);
+        entries.computeIfAbsent(date + author + comment, k -> {
+            return new CVSEntry(parseDate(date), author, comment);
+        }).addFile(file, revision, previousRevision);
     }
 
     /**

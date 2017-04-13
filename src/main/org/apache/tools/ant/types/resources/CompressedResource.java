@@ -47,6 +47,7 @@ public abstract class CompressedResource extends ContentTransformingResource {
      * @return this Resource formatted as a String.
      * @since Ant 1.7
      */
+    @Override
     public String toString() {
         return getCompressionName() + " compressed " + super.toString();
     }

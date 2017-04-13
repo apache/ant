@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -52,6 +50,8 @@ import org.apache.tools.ant.util.StringUtils;
  * @ant.task category="java"
  */
 public class Java extends Task {
+    private static final String TIMEOUT_MESSAGE =
+            "Timeout: killed the sub-process";
 
     private CommandlineJava cmdl = new CommandlineJava();
     private Environment env = new Environment();
@@ -78,9 +78,6 @@ public class Java extends Task {
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
-    private static final String TIMEOUT_MESSAGE =
-        "Timeout: killed the sub-process";
-
     /**
      * Normal constructor
      */
@@ -100,6 +97,7 @@ public class Java extends Task {
      * @throws BuildException if failOnError is set to true and the application
      * returns a nonzero result code.
      */
+    @Override
     public void execute() throws BuildException {
         File savedDir = dir;
         Permissions savedPermissions = perm;
@@ -148,30 +146,32 @@ public class Java extends Task {
             throw new BuildException("Classname must not be null.");
         }
         if (!fork && getCommandLine().getJar() != null) {
-            throw new BuildException("Cannot execute a jar in non-forked mode."
-                                     + " Please set fork='true'. ");
+            throw new BuildException(
+                "Cannot execute a jar in non-forked mode. Please set fork='true'. ");
         }
         if (!fork && getCommandLine().getModule() != null) {
-            throw new BuildException("Cannot execute a module in non-forked mode."
-                                     + " Please set fork='true'. ");
+            throw new BuildException(
+                "Cannot execute a module in non-forked mode. Please set fork='true'. ");
         }
         if (spawn && !fork) {
-            throw new BuildException("Cannot spawn a java process in non-forked mode."
-                                     + " Please set fork='true'. ");
+            throw new BuildException(
+                "Cannot spawn a java process in non-forked mode. Please set fork='true'. ");
         }
         if (getCommandLine().getClasspath() != null
             && getCommandLine().getJar() != null) {
-            log("When using 'jar' attribute classpath-settings are ignored. "
-                + "See the manual for more information.", Project.MSG_VERBOSE);
+            log("When using 'jar' attribute classpath-settings are ignored. See the manual for more information.",
+                Project.MSG_VERBOSE);
         }
         if (spawn && incompatibleWithSpawn) {
-            getProject().log("spawn does not allow attributes related to input, "
-            + "output, error, result", Project.MSG_ERR);
+            getProject().log(
+                "spawn does not allow attributes related to input, output, error, result",
+                Project.MSG_ERR);
             getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
-            getProject().log("finally, spawn is not compatible "
-                + "with a nested I/O <redirector>", Project.MSG_ERR);
-            throw new BuildException("You have used an attribute "
-                + "or nested element which is not compatible with spawn");
+            getProject().log(
+                "finally, spawn is not compatible with a nested I/O <redirector>",
+                Project.MSG_ERR);
+            throw new BuildException(
+                "You have used an attribute or nested element which is not compatible with spawn");
         }
         if (getCommandLine().getAssertions() != null && !fork) {
             log("Assertion statements are currently ignored in non-forked mode");
@@ -191,8 +191,8 @@ public class Java extends Task {
                     Project.MSG_WARN);
             }
             if (newEnvironment || null != env.getVariables()) {
-                log("Changes to environment variables are ignored when same "
-                    + "JVM is used.", Project.MSG_WARN);
+                log("Changes to environment variables are ignored when same JVM is used.",
+                    Project.MSG_WARN);
             }
             if (getCommandLine().getBootclasspath() != null) {
                 log("bootclasspath ignored when same JVM is used.",
@@ -217,19 +217,17 @@ public class Java extends Task {
     protected int executeJava(CommandlineJava commandLine) {
         try {
             if (fork) {
-                if (!spawn) {
-                    return fork(commandLine.getCommandline());
-                } else {
+                if (spawn) {
                     spawn(commandLine.getCommandline());
                     return 0;
                 }
-            } else {
-                try {
-                    run(commandLine);
-                    return 0;
-                } catch (ExitException ex) {
-                    return ex.getStatus();
-                }
+                return fork(commandLine.getCommandline());
+            }
+            try {
+                run(commandLine);
+                return 0;
+            } catch (ExitException ex) {
+                return ex.getStatus();
             }
         } catch (BuildException e) {
             if (e.getLocation() == null && getLocation() != null) {
@@ -237,23 +235,21 @@ public class Java extends Task {
             }
             if (failOnError) {
                 throw e;
-            } else {
-                if (TIMEOUT_MESSAGE.equals(e.getMessage())) {
-                    log(TIMEOUT_MESSAGE);
-                } else {
-                    log(e);
-                }
-                return -1;
             }
+            if (TIMEOUT_MESSAGE.equals(e.getMessage())) {
+                log(TIMEOUT_MESSAGE);
+            } else {
+                log(e);
+            }
+            return -1;
         } catch (ThreadDeath t) {
             throw t; // cf. NB #47191
         } catch (Throwable t) {
             if (failOnError) {
                 throw new BuildException(t, getLocation());
-            } else {
-                log(t);
-                return -1;
             }
+            log(t);
+            return -1;
         }
     }
 
@@ -363,8 +359,8 @@ public class Java extends Task {
      */
     public void setJar(File jarfile) throws BuildException {
         if (getCommandLine().getClassname() != null || getCommandLine().getModule() != null) {
-            throw new BuildException("Cannot use 'jar' with 'classname' or 'module' "
-                                     + "attributes in same command.");
+            throw new BuildException(
+                "Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
         }
         getCommandLine().setJar(jarfile.getAbsolutePath());
     }
@@ -378,8 +374,8 @@ public class Java extends Task {
      */
     public void setClassname(String s) throws BuildException {
         if (getCommandLine().getJar() != null) {
-            throw new BuildException("Cannot use 'jar' and 'classname' "
-                                     + "attributes in same command");
+            throw new BuildException(
+                "Cannot use 'jar' and 'classname' attributes in same command");
         }
         getCommandLine().setClassname(s);
     }
@@ -394,8 +390,8 @@ public class Java extends Task {
      */
     public void setModule(String module) throws BuildException {
         if (getCommandLine().getJar() != null) {
-            throw new BuildException("Cannot use 'jar' and 'module' "
-                                     + "attributes in same command");
+            throw new BuildException(
+                "Cannot use 'jar' and 'module' attributes in same command");
         }
         getCommandLine().setModule(module);
     }
@@ -409,8 +405,8 @@ public class Java extends Task {
      * @ant.attribute ignore="true"
      */
     public void setArgs(String s) {
-        log("The args attribute is deprecated. "
-            + "Please use nested arg elements.", Project.MSG_WARN);
+        log("The args attribute is deprecated. Please use nested arg elements.",
+            Project.MSG_WARN);
         getCommandLine().createArgument().setLine(s);
     }
 
@@ -477,8 +473,8 @@ public class Java extends Task {
      * @param s jvmargs.
      */
     public void setJvmargs(String s) {
-        log("The jvmargs attribute is deprecated. "
-            + "Please use nested jvmarg elements.", Project.MSG_WARN);
+        log("The jvmargs attribute is deprecated. Please use nested jvmarg elements.",
+            Project.MSG_WARN);
         getCommandLine().createVmArgument().setLine(s);
     }
 
@@ -559,8 +555,8 @@ public class Java extends Task {
      */
     public void setInput(File input) {
         if (inputString != null) {
-            throw new BuildException("The \"input\" and \"inputstring\" "
-                + "attributes cannot both be specified");
+            throw new BuildException(
+                "The \"input\" and \"inputstring\" attributes cannot both be specified");
         }
         this.input = input;
         incompatibleWithSpawn = true;
@@ -573,8 +569,8 @@ public class Java extends Task {
      */
     public void setInputString(String inputString) {
         if (input != null) {
-            throw new BuildException("The \"input\" and \"inputstring\" "
-                + "attributes cannot both be specified");
+            throw new BuildException(
+                "The \"input\" and \"inputstring\" attributes cannot both be specified");
         }
         this.inputString = inputString;
         incompatibleWithSpawn = true;
@@ -728,6 +724,7 @@ public class Java extends Task {
      *
      * @since Ant 1.5
      */
+    @Override
     protected void handleOutput(String output) {
         if (redirector.getOutputStream() != null) {
             redirector.handleOutput(output);
@@ -748,6 +745,7 @@ public class Java extends Task {
      * @exception IOException if the data cannot be read.
      * @since Ant 1.6
      */
+    @Override
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         // Should work whether or not redirector.inputStream == null:
@@ -761,6 +759,7 @@ public class Java extends Task {
      *
      * @since Ant 1.5.2
      */
+    @Override
     protected void handleFlush(String output) {
         if (redirector.getOutputStream() != null) {
             redirector.handleFlush(output);
@@ -776,6 +775,7 @@ public class Java extends Task {
      *
      * @since Ant 1.5
      */
+    @Override
     protected void handleErrorOutput(String output) {
         if (redirector.getErrorStream() != null) {
             redirector.handleErrorOutput(output);
@@ -791,6 +791,7 @@ public class Java extends Task {
      *
      * @since Ant 1.5.2
      */
+    @Override
     protected void handleErrorFlush(String output) {
         if (redirector.getErrorStream() != null) {
             redirector.handleErrorFlush(output);
@@ -897,8 +898,8 @@ public class Java extends Task {
     private void setupEnvironment(Execute exe) {
         String[] environment = env.getVariables();
         if (environment != null) {
-            for (int i = 0; i < environment.length; i++) {
-                log("Setting environment variable: " + environment[i],
+            for (String element : environment) {
+                log("Setting environment variable: " + element,
                     Project.MSG_VERBOSE);
             }
         }
@@ -914,7 +915,7 @@ public class Java extends Task {
     private void setupWorkingDir(Execute exe) {
         if (dir == null) {
             dir = getProject().getBaseDir();
-        } else if (!dir.exists() || !dir.isDirectory()) {
+        } else if (!dir.isDirectory()) {
             throw new BuildException(dir.getAbsolutePath()
                                      + " is not a valid directory",
                                      getLocation());
@@ -962,10 +963,7 @@ public class Java extends Task {
     protected void run(String classname, Vector<String> args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname(classname);
-        final int size = args.size();
-        for (int i = 0; i < size; i++) {
-            cmdj.createArgument().setValue(args.elementAt(i));
-        }
+        args.forEach(arg -> cmdj.createArgument().setValue(arg));
         run(cmdj);
     }
 

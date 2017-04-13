@@ -20,10 +20,11 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -37,11 +38,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  *
  */
 public class AntAnalyzer extends AbstractAnalyzer {
-    /**
-     * Default constructor
-     */
-    public AntAnalyzer() {
-    }
 
     /**
      * Determine the dependencies of the configured root classes.
@@ -51,31 +47,27 @@ public class AntAnalyzer extends AbstractAnalyzer {
      * @param classes a vector to be populated with the names of the
      *      dependency classes.
      */
+    @Override
     protected void determineDependencies(Vector<File> files, Vector<String> classes) {
         // we get the root classes and build up a set of
         // classes upon which they depend
-        Hashtable<String, String> dependencies = new Hashtable<String, String>();
-        Hashtable<File, File> containers = new Hashtable<File, File>();
-        Hashtable<String, String> toAnalyze = new Hashtable<String, String>();
-        for (Enumeration<String> e = getRootClasses(); e.hasMoreElements();) {
-            String classname = e.nextElement();
-            toAnalyze.put(classname, classname);
-        }
+        Set<String> toAnalyze = new HashSet<>(Collections.list(getRootClasses()));
 
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 1;
-        Hashtable<String, String> analyzedDeps = null;
-        while (toAnalyze.size() != 0 && count++ < maxCount) {
-            analyzedDeps = new Hashtable<String, String>();
-            for (Enumeration<String> e = toAnalyze.keys(); e.hasMoreElements();) {
-                String classname = e.nextElement();
-                dependencies.put(classname, classname);
+        Set<String> dependencies = new HashSet<>();
+        Set<File> containers = new HashSet<>();
+        Set<String> analyzedDeps = null;
+        while (!toAnalyze.isEmpty() && count++ < maxCount) {
+            analyzedDeps = new HashSet<>();
+            for (String classname : toAnalyze) {
+                dependencies.add(classname);
                 try {
                     File container = getClassContainer(classname);
                     if (container == null) {
                         continue;
                     }
-                    containers.put(container, container);
+                    containers.add(container);
 
                     ZipFile zipFile = null;
                     InputStream inStream = null;
@@ -93,7 +85,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
                         for (String dependency : classFile.getClassRefs()) {
-                            analyzedDeps.put(dependency, dependency);
+                            analyzedDeps.add(dependency);
                         }
                     } finally {
                         FileUtils.close(inStream);
@@ -107,27 +99,20 @@ public class AntAnalyzer extends AbstractAnalyzer {
             toAnalyze.clear();
 
             // now recover all the dependencies collected and add to the list.
-            for (String className : analyzedDeps.values()) {
-                if (!dependencies.containsKey(className)) {
-                    toAnalyze.put(className, className);
+            for (String className : analyzedDeps) {
+                if (!dependencies.contains(className)) {
+                    toAnalyze.add(className);
                 }
             }
         }
 
         // pick up the last round of dependencies that were determined
-        for (String className : analyzedDeps.values()) {
-            dependencies.put(className, className);
-        }
+        dependencies.addAll(analyzedDeps);
 
         files.removeAllElements();
-        for (File f : containers.keySet()) {
-            files.add(f);
-        }
-
+        files.addAll(containers);
         classes.removeAllElements();
-        for (String dependency :dependencies.keySet()) {
-            classes.add(dependency);
-        }
+        classes.addAll(dependencies);
     }
 
     /**
@@ -135,9 +120,9 @@ public class AntAnalyzer extends AbstractAnalyzer {
      *
      * @return true if the analyzer provides dependency file information.
      */
+    @Override
     protected boolean supportsFileDependencies() {
         return true;
     }
 
 }
-

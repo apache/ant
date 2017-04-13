@@ -17,10 +17,8 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.types.Resource;
 
@@ -36,25 +34,15 @@ public class AllButFirst extends SizeLimitCollection {
      * Take all elements except for the first <code>count</code> elements.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
-        int ct = getValidCount();
-        Iterator<Resource> iter = getResourceCollection().iterator();
-        List<Resource> al = new ArrayList<Resource>();
-        for (int i = 0; i < ct && iter.hasNext(); i++) {
-            // discard
-            iter.next();
-        }
-        while (iter.hasNext()) {
-            al.add(iter.next());
-        }
-        return al;
+        return getResourceCollection().stream().skip(getValidCount())
+            .collect(Collectors.toList());
     }
 
     @Override
     public synchronized int size() {
-        int sz = getResourceCollection().size();
-        int ct = getValidCount();
-        return sz > ct ? sz - ct : 0;
+        return (int) getResourceCollection().stream().skip(getValidCount()).count();
     }
 
 }

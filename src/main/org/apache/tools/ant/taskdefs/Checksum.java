@@ -71,6 +71,7 @@ public class Checksum extends MatchingTask implements Condition {
             super.add(u);
             super.add(Type.FILE);
         }
+        @Override
         public void add(ResourceCollection rc) {
             u.add(rc);
         }
@@ -110,14 +111,14 @@ public class Checksum extends MatchingTask implements Condition {
      * Key:   java.util.File (source file)
      * Value: java.lang.String (digest)
      */
-    private Map<File, byte[]> allDigests = new HashMap<File, byte[]>();
+    private Map<File, byte[]> allDigests = new HashMap<>();
     /**
      * Holds relative file names for all files (always with a forward slash).
      * This is used to calculate the total hash.
      * Key:   java.util.File (source file)
      * Value: java.lang.String (relative file name)
      */
-    private Map<File, String> relativeFilePaths = new HashMap<File, String>();
+    private Map<File, String> relativeFilePaths = new HashMap<>();
     /**
      * Property where totalChecksum gets set.
      */
@@ -138,7 +139,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Stores SourceFile, DestFile pairs and SourceFile, Property String pairs.
      */
-    private Hashtable<File, Object> includeFileMap = new Hashtable<File, Object>();
+    private Hashtable<File, Object> includeFileMap = new Hashtable<>();
     /**
      * Message Digest instance
      */
@@ -294,13 +295,13 @@ public class Checksum extends MatchingTask implements Condition {
      * Calculate the checksum(s).
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         isCondition = false;
         boolean value = validateAndExecute();
         if (verifyProperty != null) {
-            getProject().setNewProperty(
-                verifyProperty,
-                (value ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
+            getProject().setNewProperty(verifyProperty,
+                Boolean.toString(value));
         }
     }
 
@@ -311,6 +312,7 @@ public class Checksum extends MatchingTask implements Condition {
      * false otherwise.
      * @throws BuildException on error
      */
+    @Override
     public boolean eval() throws BuildException {
         isCondition = true;
         return validateAndExecute();
@@ -386,7 +388,7 @@ public class Checksum extends MatchingTask implements Condition {
         }
         if (fileext == null) {
             fileext = "." + algorithm;
-        } else if (fileext.trim().length() == 0) {
+        } else if (fileext.trim().isEmpty()) {
             throw new BuildException("File extension when specified must not be an empty string");
         }
         try {
@@ -463,8 +465,7 @@ public class Checksum extends MatchingTask implements Condition {
             // This directory will exist
             directory = file.getParentFile();
         }
-        File checksumFile = new File(directory, file.getName() + fileext);
-        return checksumFile;
+        return new File(directory, file.getName() + fileext);
     }
 
     /**
@@ -498,7 +499,7 @@ public class Checksum extends MatchingTask implements Condition {
                 String checksum = createDigestString(fileDigest);
                 //can either be a property name string or a file
                 Object destination = e.getValue();
-                if (destination instanceof java.lang.String) {
+                if (destination instanceof String) {
                     String prop = (String) destination;
                     if (isCondition) {
                         checksumMatches
@@ -506,7 +507,7 @@ public class Checksum extends MatchingTask implements Condition {
                     } else {
                         getProject().setNewProperty(prop, checksum);
                     }
-                } else if (destination instanceof java.io.File) {
+                } else if (destination instanceof File) {
                     if (isCondition) {
                         File existingFile = (File) destination;
                         if (existingFile.exists()) {
@@ -550,14 +551,9 @@ public class Checksum extends MatchingTask implements Condition {
                 File[] keyArray = allDigests.keySet().toArray(new File[allDigests.size()]);
                 // File is Comparable, but sort-order is platform
                 // dependent (case-insensitive on Windows)
-                Arrays.sort(keyArray, new Comparator<File>() {
-                        public int compare(File f1, File f2) {
-                            return f1 == null ? (f2 == null ? 0 : -1)
-                                : (f2 == null ? 1
-                                   : getRelativeFilePath(f1)
-                                   .compareTo(getRelativeFilePath(f2)));
-                        }
-                    });
+                Arrays.sort(keyArray, Comparator.nullsFirst(
+                    Comparator.comparing(this::getRelativeFilePath)));
+
                 // Loop over the checksums and generate a total hash.
                 messageDigest.reset();
                 for (File src : keyArray) {
@@ -582,11 +578,11 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     private String createDigestString(byte[] fileDigest) {
-        StringBuffer checksumSb = new StringBuffer();
+        StringBuilder checksumSb = new StringBuilder();
         for (int i = 0; i < fileDigest.length; i++) {
             String hexStr = Integer.toHexString(BYTE_MASK & fileDigest[i]);
             if (hexStr.length() < 2) {
-                checksumSb.append("0");
+                checksumSb.append('0');
             }
             checksumSb.append(hexStr);
         }
@@ -630,20 +626,15 @@ public class Checksum extends MatchingTask implements Condition {
      * @since 1.7
      */
     private String readChecksum(File f) {
-        BufferedReader diskChecksumReader = null;
-        try {
-            diskChecksumReader = new BufferedReader(new FileReader(f));
+        try (BufferedReader diskChecksumReader =
+            new BufferedReader(new FileReader(f))) {
             Object[] result = format.parse(diskChecksumReader.readLine());
             if (result == null || result.length == 0 || result[0] == null) {
                 throw new BuildException("failed to find a checksum");
             }
             return (String) result[0];
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             throw new BuildException("Couldn't read checksum file " + f, e);
-        } catch (ParseException e) {
-            throw new BuildException("Couldn't read checksum file " + f, e);
-        } finally {
-            FileUtils.close(diskChecksumReader);
         }
     }
 
@@ -651,13 +642,12 @@ public class Checksum extends MatchingTask implements Condition {
      * @since Ant 1.8.2
      */
     private String getRelativeFilePath(File f) {
-        String path = (String) relativeFilePaths.get(f);
+        String path = relativeFilePaths.get(f);
         if (path == null) {
             //bug 37386. this should not occur, but it has, once.
-            throw new BuildException("Internal error: "
-                                     + "relativeFilePaths could not match file "
-                                     + f + "\n"
-                                     + "please file a bug report on this");
+            throw new BuildException(
+                "Internal error: relativeFilePaths could not match file %s\nplease file a bug report on this",
+                f);
         }
         return path;
     }
@@ -679,11 +669,6 @@ public class Checksum extends MatchingTask implements Condition {
             formatMap.put(SVF, new MessageFormat("MD5 ({1}) = {0}"));
         }
 
-        /** Constructor for FormatElement */
-        public FormatElement() {
-            super();
-        }
-
         /**
          * Get the default value - CHECKSUM.
          * @return the defaul value.
@@ -699,15 +684,16 @@ public class Checksum extends MatchingTask implements Condition {
          * @return a <code>MessageFormat</code> object.
          */
         public MessageFormat getFormat() {
-            return (MessageFormat) formatMap.get(getValue());
+            return formatMap.get(getValue());
         }
 
         /**
          * Get the valid values.
          * @return an array of values.
          */
+        @Override
         public String[] getValues() {
-            return new String[] {CHECKSUM, MD5SUM, SVF};
+            return new String[] { CHECKSUM, MD5SUM, SVF };
         }
     }
 }

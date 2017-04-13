@@ -25,8 +25,6 @@ import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 
@@ -40,8 +38,6 @@ import org.apache.tools.ant.BuildException;
  */
 public class ProxyDiagnostics {
 
-    private String destination;
-
     private URI destURI;
 
     /** {@value} */
@@ -53,7 +49,6 @@ public class ProxyDiagnostics {
      * @throws BuildException if the URI is malformed.
      */
     public ProxyDiagnostics(String destination) {
-        this.destination = destination;
         try {
             this.destURI = new URI(destination);
         } catch (URISyntaxException e) {
@@ -73,35 +68,33 @@ public class ProxyDiagnostics {
      * Get the diagnostics for proxy information.
      * @return the information.
      */
+    @Override
     public String toString() {
         ProxySelector selector = ProxySelector.getDefault();
-        List list = selector.select(destURI);
-        StringBuffer result = new StringBuffer();
-        Iterator proxies = list.listIterator();
-        while (proxies.hasNext()) {
-            Proxy proxy = (Proxy) proxies.next();
+        StringBuilder result = new StringBuilder();
+        for (Proxy proxy : selector.select(destURI)) {
             SocketAddress address = proxy.address();
             if (address == null) {
                 result.append("Direct connection\n");
-            } else {
-                result.append(proxy.toString());
-                if (address instanceof InetSocketAddress) {
-                    InetSocketAddress ina = (InetSocketAddress) address;
-                    result.append(' ');
-                    result.append(ina.getHostName());
-                    result.append(':');
-                    result.append(ina.getPort());
-                    if (ina.isUnresolved()) {
-                        result.append(" [unresolved]");
-                    } else {
-                        InetAddress addr = ina.getAddress();
-                        result.append(" [");
-                        result.append(addr.getHostAddress());
-                        result.append(']');
-                    }
-                }
-                result.append('\n');
+                continue;
             }
+            result.append(proxy);
+            if (address instanceof InetSocketAddress) {
+                InetSocketAddress ina = (InetSocketAddress) address;
+                result.append(' ');
+                result.append(ina.getHostName());
+                result.append(':');
+                result.append(ina.getPort());
+                if (ina.isUnresolved()) {
+                    result.append(" [unresolved]");
+                } else {
+                    InetAddress addr = ina.getAddress();
+                    result.append(" [");
+                    result.append(addr.getHostAddress());
+                    result.append(']');
+                }
+            }
+            result.append('\n');
         }
         return result.toString();
     }

@@ -60,10 +60,6 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     private int loopsFail = 0;
     private Long durationFail = null;
 
-    /** Constructor for AntSoundPlayer. */
-    public AntSoundPlayer() {
-    }
-
     /**
      * @param file the location of the audio file to be played when the
      *        build is successful
@@ -101,7 +97,6 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         Clip audioClip = null;
 
         AudioInputStream audioInputStream = null;
-
 
         try {
             audioInputStream = AudioSystem.getAudioInputStream(file);
@@ -180,6 +175,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * clip if required.
      * @param event the line event to follow
      */
+    @Override
     public void update(LineEvent event) {
         if (event.getType().equals(LineEvent.Type.STOP)) {
             Line line = event.getLine();
@@ -192,6 +188,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *  Fired before any targets are started.
      * @param event ignored
      */
+    @Override
     public void buildStarted(BuildEvent event) {
     }
 
@@ -201,6 +198,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * @param event the build finished event.
      *  @see BuildEvent#getException()
      */
+    @Override
     public void buildFinished(BuildEvent event) {
         if (event.getException() == null && fileSuccess != null) {
             // build successful!
@@ -215,6 +213,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * @param event ignored.
      *  @see BuildEvent#getTarget()
      */
+    @Override
     public void targetStarted(BuildEvent event) {
     }
 
@@ -224,6 +223,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * @param event ignored.
      *  @see BuildEvent#getException()
      */
+    @Override
     public void targetFinished(BuildEvent event) {
     }
 
@@ -232,6 +232,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * @param event ignored.
      *  @see BuildEvent#getTask()
      */
+    @Override
     public void taskStarted(BuildEvent event) {
     }
 
@@ -241,6 +242,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      * @param event ignored.
      *  @see BuildEvent#getException()
      */
+    @Override
     public void taskFinished(BuildEvent event) {
     }
 
@@ -250,6 +252,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
      *  @see BuildEvent#getMessage()
      *  @see BuildEvent#getPriority()
      */
+    @Override
     public void messageLogged(BuildEvent event) {
     }
 }

@@ -43,6 +43,7 @@ public final class KaffeNative2Ascii extends DefaultNative2Ascii {
     public static final String IMPLEMENTATION_NAME = "kaffe";
 
     /** {@inheritDoc} */
+    @Override
     protected void setup(Commandline cmd, Native2Ascii args)
         throws BuildException {
         if (args.getReverse()) {
@@ -52,13 +53,14 @@ public final class KaffeNative2Ascii extends DefaultNative2Ascii {
     }
 
     /** {@inheritDoc} */
+    @Override
     protected boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException {
         ExecuteJava ej = new ExecuteJava();
-        Class c = getN2aClass();
+        Class<?> c = getN2aClass();
         if (c == null) {
-            throw new BuildException("Couldn't load Kaffe's Native2Ascii"
-                                     + " class");
+            throw new BuildException(
+                "Couldn't load Kaffe's Native2Ascii class");
         }
 
         cmd.setExecutable(c.getName());
@@ -74,7 +76,7 @@ public final class KaffeNative2Ascii extends DefaultNative2Ascii {
      *
      * @return null if neither class can get loaded.
      */
-    private static Class getN2aClass() {
+    private static Class<?> getN2aClass() {
         for (int i = 0; i < N2A_CLASSNAMES.length; i++) {
             try {
                 return Class.forName(N2A_CLASSNAMES[i]);

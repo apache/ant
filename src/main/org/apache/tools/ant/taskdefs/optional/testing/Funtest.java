@@ -58,6 +58,19 @@ import org.apache.tools.ant.util.WorkerAnt;
  */
 
 public class Funtest extends Task {
+    /** {@value} */
+    public static final String WARN_OVERRIDING = "Overriding previous definition of ";
+    /** {@value} */
+    public static final String APPLICATION_FORCIBLY_SHUT_DOWN = "Application forcibly shut down";
+    /** {@value} */
+    public static final String SHUTDOWN_INTERRUPTED = "Shutdown interrupted";
+    /** {@value} */
+    public static final String SKIPPING_TESTS
+        = "Condition failed -skipping tests";
+    /** Application exception : {@value} */
+    public static final String APPLICATION_EXCEPTION = "Application Exception";
+    /** Teardown exception : {@value} */
+    public static final String TEARDOWN_EXCEPTION = "Teardown Exception";
 
     /**
      * A condition that must be true before the tests are run. This makes it
@@ -157,20 +170,6 @@ public class Funtest extends Task {
      * Did the task throw an exception
      */
     private BuildException taskException;
-
-    /** {@value} */
-    public static final String WARN_OVERRIDING = "Overriding previous definition of ";
-    /** {@value} */
-    public static final String APPLICATION_FORCIBLY_SHUT_DOWN = "Application forcibly shut down";
-    /** {@value} */
-    public static final String SHUTDOWN_INTERRUPTED = "Shutdown interrupted";
-    /** {@value} */
-    public static final String SKIPPING_TESTS
-        = "Condition failed -skipping tests";
-    /** Application exception : {@value} */
-    public static final String APPLICATION_EXCEPTION = "Application Exception";
-    /** Teardown exception : {@value} */
-    public static final String TEARDOWN_EXCEPTION = "Teardown Exception";
 
     /**
      * Log if the definition is overriding something
@@ -378,8 +377,9 @@ public class Funtest extends Task {
      * @param role role of the task
      */
     private void validateTask(Task task, String role) {
-        if (task!=null && task.getProject() == null) {
-            throw new BuildException(role + " task is not bound to the project" + task);
+        if (task != null && task.getProject() == null) {
+            throw new BuildException("%s task is not bound to the project %s",
+                role, task);
         }
     }
 
@@ -392,6 +392,7 @@ public class Funtest extends Task {
      * test failing that is more important.
      * @throws BuildException if something was caught during the run or teardown.
      */
+    @Override
     public void execute() throws BuildException {
 
         //validation
@@ -566,12 +567,13 @@ public class Funtest extends Task {
     }
 
     private static class NestedCondition extends ConditionBase implements Condition {
+        @Override
         public boolean eval() {
             if (countConditions() != 1) {
                 throw new BuildException(
                     "A single nested condition is required.");
             }
-            return ((Condition) (getConditions().nextElement())).eval();
+            return getConditions().nextElement().eval();
         }
     }
 }

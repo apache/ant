@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.tools.ant.taskdefs.PreSetDef;
 
@@ -234,10 +235,8 @@ public class UnknownElement extends Task {
         throws IOException {
         if (realThing instanceof Task) {
             return ((Task) realThing).handleInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
         }
-
+        return super.handleInput(buffer, offset, length);
     }
 
     /**
@@ -311,7 +310,7 @@ public class UnknownElement extends Task {
      */
     public void addChild(UnknownElement child) {
         if (children == null) {
-            children = new ArrayList<UnknownElement>();
+            children = new ArrayList<>();
         }
         children.add(child);
     }
@@ -340,7 +339,6 @@ public class UnknownElement extends Task {
         String parentUri = getNamespace();
         Class<?> parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getProject(), parentClass);
-
 
         if (children != null) {
             Iterator<UnknownElement> it = children.iterator();
@@ -400,7 +398,7 @@ public class UnknownElement extends Task {
         // Do the runtime
         getWrapper().applyPreSet(u.getWrapper());
         if (u.children != null) {
-            List<UnknownElement> newChildren = new ArrayList<UnknownElement>();
+            List<UnknownElement> newChildren = new ArrayList<>();
             newChildren.addAll(u.children);
             if (children != null) {
                 newChildren.addAll(children);
@@ -506,7 +504,6 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
-        //return elementName;
         return realThing == null
             || !(realThing instanceof Task) ? super.getTaskName()
                                             : ((Task) realThing).getTaskName();
@@ -612,7 +609,7 @@ public class UnknownElement extends Task {
         }
         UnknownElement other = (UnknownElement) obj;
         // Are the names the same ?
-        if (!equalsString(elementName, other.elementName)) {
+        if (!Objects.equals(elementName, other.elementName)) {
             return false;
         }
         if (!namespace.equals(other.namespace)) {
@@ -637,7 +634,7 @@ public class UnknownElement extends Task {
         // Are the sub elements the same ?
         final int childrenSize = children == null ? 0 : children.size();
         if (childrenSize == 0) {
-            return other.children == null || other.children.size() == 0;
+            return other.children == null || other.children.isEmpty();
         }
         if (other.children == null) {
             return false;
@@ -653,10 +650,6 @@ public class UnknownElement extends Task {
             }
         }
         return true;
-    }
-
-    private static boolean equalsString(String a, String b) {
-        return (a == null) ? (b == null) : a.equals(b);
     }
 
     /**

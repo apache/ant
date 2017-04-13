@@ -93,6 +93,7 @@ public class Attrib extends ExecuteOn {
     /**
      * Check the attributes.
      */
+    @Override
     protected void checkConfiguration() {
         if (!haveAttr()) {
             throw new BuildException("Missing attribute parameter",
@@ -107,6 +108,7 @@ public class Attrib extends ExecuteOn {
      * @param e ignored
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the executable attribute", getLocation());
@@ -129,6 +131,7 @@ public class Attrib extends ExecuteOn {
      * @param b ignored
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
             + " doesn\'t support the addsourcefile attribute", getLocation());
@@ -140,6 +143,7 @@ public class Attrib extends ExecuteOn {
      * @param skip ignored
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(getTaskType() + " doesn\'t support the "
                                  + "skipemptyfileset attribute",
@@ -152,6 +156,7 @@ public class Attrib extends ExecuteOn {
      * @param parallel ignored
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setParallel(boolean parallel) {
         throw new BuildException(getTaskType()
                                  + " doesn\'t support the parallel attribute",
@@ -164,6 +169,7 @@ public class Attrib extends ExecuteOn {
      * @param max ignored
      * @ant.attribute ignore="true"
      */
+    @Override
     public void setMaxParallel(int max) {
         throw new BuildException(getTaskType()
                                  + " doesn\'t support the maxparallel attribute",
@@ -175,13 +181,14 @@ public class Attrib extends ExecuteOn {
      * Default is to allow windows
      * @return true if the os is valid.
      */
+    @Override
     protected boolean isValidOs() {
         return getOs() == null && getOsFamily() == null ?
             Os.isFamily(Os.FAMILY_WINDOWS) : super.isValidOs();
     }
 
     private static String getSignString(boolean attr) {
-        return (attr ? SET : UNSET);
+        return attr ? SET : UNSET;
     }
 
     private void addArg(boolean sign, String attribute) {

@@ -70,8 +70,9 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
      *  For this generic implementation, the only valid action is "deploy"
      *  @return true if the "action" attribute is valid, false if not.
      */
+    @Override
     protected boolean isActionValid() {
-        return (getTask().getAction().equals(VALID_ACTIONS[0]));
+        return getTask().getAction().equals(VALID_ACTIONS[0]);
     }
 
     /**
@@ -79,6 +80,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
      *  @param task An ServerDeploy object representing the parent task.
      *  @ant.attribute ignored="true"
      */
+    @Override
     public void setTask(ServerDeploy task) {
         super.setTask(task);
         java = new Java(task);
@@ -90,6 +92,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
      *  supplied classpath, classname, JVM args, and command line arguments.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
+    @Override
     public void deploy() throws BuildException {
         java.setClassname(className);
         java.setClasspath(getClasspath());
@@ -103,6 +106,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
      *  Ensures the className and arguments attribute have been set.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
+    @Override
     public void validateAttributes() throws BuildException {
         super.validateAttributes();
 

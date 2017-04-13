@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.jar.Manifest;
 
 import org.apache.tools.ant.BuildException;
@@ -49,7 +50,7 @@ public class JarLibResolveTask extends Task {
     /**
      * The set of resolvers to use to attempt to locate library.
      */
-    private final ArrayList resolvers = new ArrayList();
+    private final List<ExtensionResolver> resolvers = new ArrayList<>();
 
     /**
      * Flag to indicate that you should check that
@@ -132,9 +133,8 @@ public class JarLibResolveTask extends Task {
      */
     public void addConfiguredExtension(final ExtensionAdapter extension) {
         if (null != requiredExtension) {
-            final String message = "Can not specify extension to "
-                + "resolve multiple times.";
-            throw new BuildException(message);
+            throw new BuildException(
+                "Can not specify extension to resolve multiple times.");
         }
         requiredExtension = extension.toExtension();
     }
@@ -144,6 +144,7 @@ public class JarLibResolveTask extends Task {
      *
      * @throws BuildException if the task fails.
      */
+    @Override
     public void execute() throws BuildException {
         validate();
 
@@ -160,28 +161,26 @@ public class JarLibResolveTask extends Task {
             return;
         }
 
-        final int size = resolvers.size();
-        for (int i = 0; i < size; i++) {
-            final ExtensionResolver resolver =
-                (ExtensionResolver) resolvers.get(i);
-
+        for (ExtensionResolver resolver : resolvers) {
             getProject().log("Searching for extension using Resolver:" + resolver,
                     Project.MSG_VERBOSE);
-
             try {
-                final File file = resolver.resolve(requiredExtension, getProject());
+                final File file =
+                    resolver.resolve(requiredExtension, getProject());
                 try {
                     checkExtension(file);
                     return;
                 } catch (final BuildException be) {
-                    final String message = "File " + file + " returned by "
-                            + "resolver failed to satisfy extension due to: " + be.getMessage();
-                    getProject().log(message, Project.MSG_WARN);
+                    getProject().log("File " + file + " returned by "
+                        + "resolver failed to satisfy extension due to: "
+                        + be.getMessage(), Project.MSG_WARN);
                 }
             } catch (final BuildException be) {
-                final String message = "Failed to resolve extension to file " + "using resolver "
-                        + resolver + " due to: " + be;
-                getProject().log(message, Project.MSG_WARN);
+                getProject()
+                    .log(
+                        "Failed to resolve extension to file "
+                            + "using resolver " + resolver + " due to: " + be,
+                        Project.MSG_WARN);
             }
         }
         missingExtension();
@@ -210,10 +209,10 @@ public class JarLibResolveTask extends Task {
      */
     private void checkExtension(final File file) {
         if (!file.exists()) {
-            throw new BuildException("File " + file + " does not exist");
+            throw new BuildException("File %s does not exist", file);
         }
         if (!file.isFile()) {
-            throw new BuildException("File " + file + " is not a file");
+            throw new BuildException("File %s is not a file", file);
         }
         if (!checkExtension) {
             getProject().log("Setting property to " + file
@@ -223,9 +222,7 @@ public class JarLibResolveTask extends Task {
             getProject().log("Checking file " + file + " to see if it satisfies extension",
                     Project.MSG_VERBOSE);
             final Manifest manifest = ExtensionUtil.getManifest(file);
-            final Extension[] extensions = Extension.getAvailable(manifest);
-            for (int i = 0; i < extensions.length; i++) {
-                final Extension extension = extensions[ i ];
+            for (final Extension extension : Extension.getAvailable(manifest)) {
                 if (extension.isCompatibleWith(requiredExtension)) {
                     setLibraryProperty(file);
                     return;
@@ -256,13 +253,10 @@ public class JarLibResolveTask extends Task {
      */
     private void validate() throws BuildException {
         if (null == propertyName) {
-            final String message = "Property attribute must be specified.";
-            throw new BuildException(message);
+            throw new BuildException("Property attribute must be specified.");
         }
-
         if (null == requiredExtension) {
-            final String message = "Extension element must be specified.";
-            throw new BuildException(message);
+            throw new BuildException("Extension element must be specified.");
         }
     }
 }

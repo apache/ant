@@ -29,11 +29,6 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 
     private static final int DECIMAL = 10;
 
-    /** Constructor for Jdk14RegexpRegexp */
-    public Jdk14RegexpRegexp() {
-        super();
-    }
-
     /**
      * Convert ant regexp substitution option to jdk1.4 options.
      *
@@ -56,10 +51,11 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
      * @return the result of the operation
      * @throws BuildException on error
      */
+    @Override
     public String substitute(String input, String argument, int options)
         throws BuildException {
         // translate \1 to $(1) so that the Matcher will work
-        StringBuffer subst = new StringBuffer();
+        StringBuilder subst = new StringBuilder();
         for (int i = 0; i < argument.length(); i++) {
             char c = argument.charAt(i);
             if (c == '$') {
@@ -70,7 +66,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
                     c = argument.charAt(i);
                     int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
-                        subst.append("$").append(value);
+                        subst.append('$').append(value);
                     } else {
                         subst.append(c);
                     }
@@ -82,7 +78,6 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
                 subst.append(c);
             }
         }
-        argument = subst.toString();
 
         int sOptions = getSubsOptions(options);
         Pattern p = getCompiledPattern(options);
@@ -90,15 +85,12 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 
         Matcher m = p.matcher(input);
         if (RegexpUtil.hasFlag(sOptions, REPLACE_ALL)) {
-            sb.append(m.replaceAll(argument));
+            sb.append(m.replaceAll(subst.toString()));
+        } else if (m.find()) {
+            m.appendReplacement(sb, subst.toString());
+            m.appendTail(sb);
         } else {
-            boolean res = m.find();
-            if (res) {
-                m.appendReplacement(sb, argument);
-                m.appendTail(sb);
-            } else {
-                sb.append(input);
-            }
+            sb.append(input);
         }
         return sb.toString();
     }

@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
+import java.util.Comparator;
+
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -34,11 +36,7 @@ public class Type extends ResourceComparator {
      *         argument is less than, equal to, or greater than the second.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        boolean f = foo.isDirectory();
-        if (f == bar.isDirectory()) {
-            return 0;
-        }
-        return f ? 1 : -1;
+        return Comparator.comparing(Resource::isDirectory).compare(foo, bar);
     }
 
 }

@@ -63,10 +63,11 @@ public class Contains implements Condition {
      * @return true if the substring is within the string
      * @exception BuildException if the attributes are not set correctly
      */
+    @Override
     public boolean eval() throws BuildException {
         if (string == null || subString == null) {
-            throw new BuildException("both string and substring are required "
-                                     + "in contains");
+            throw new BuildException(
+                "both string and substring are required in contains");
         }
 
         return caseSensitive

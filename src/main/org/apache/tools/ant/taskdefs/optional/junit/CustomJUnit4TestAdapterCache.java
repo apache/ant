@@ -34,7 +34,7 @@ import org.junit.runner.notification.RunNotifier;
  *
  */
 public class CustomJUnit4TestAdapterCache extends JUnit4TestAdapterCache {
-
+    private static final long serialVersionUID = 1L;
     private static final CustomJUnit4TestAdapterCache INSTANCE = new CustomJUnit4TestAdapterCache();
 
     public static CustomJUnit4TestAdapterCache getInstance() {
@@ -45,6 +45,7 @@ public class CustomJUnit4TestAdapterCache extends JUnit4TestAdapterCache {
         super();
     }
 
+    @Override
     public RunNotifier getNotifier(final TestResult result, final JUnit4TestAdapter adapter) {
         return getNotifier(result);
     }

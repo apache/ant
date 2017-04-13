@@ -37,7 +37,6 @@ public class HasMethod extends ProjectComponent implements Condition {
     private AntClassLoader loader;
     private boolean ignoreSystemClasses = false;
 
-
     /**
      * Set the classpath to be used when searching for classes and resources.
      *
@@ -104,7 +103,7 @@ public class HasMethod extends ProjectComponent implements Condition {
     /**
      * Check if a given class can be loaded.
      */
-    private Class loadClass(String classname) {
+    private Class<?> loadClass(String classname) {
         try {
             if (ignoreSystemClasses) {
                 loader = getProject().createClassLoader(classpath);
@@ -114,25 +113,23 @@ public class HasMethod extends ProjectComponent implements Condition {
                     return loader.findClass(classname);
                 } catch (SecurityException se) {
                     // class found but restricted name
-                    throw new BuildException("class \"" + classname
-                                             + "\" was found but a"
-                                             + " SecurityException has been"
-                                             + " raised while loading it",
-                                             se);
-                }
-            } else if (loader != null) {
-                // How do we ever get here?
-                return loader.loadClass(classname);
-            } else {
-                ClassLoader l = this.getClass().getClassLoader();
-                // Can return null to represent the bootstrap class loader.
-                // see API docs of Class.getClassLoader.
-                if (l != null) {
-                    return Class.forName(classname, true, l);
-                } else {
-                    return Class.forName(classname);
+                    throw new BuildException(
+                        "class \"" + classname
+                            + "\" was found but a SecurityException has been raised while loading it",
+                        se);
                 }
             }
+            if (loader != null) {
+                // How do we ever get here?
+                return loader.loadClass(classname);
+            }
+            ClassLoader l = this.getClass().getClassLoader();
+            // Can return null to represent the bootstrap class loader.
+            // see API docs of Class.getClassLoader.
+            if (l != null) {
+                return Class.forName(classname, true, l);
+            }
+            return Class.forName(classname);
         } catch (ClassNotFoundException e) {
             throw new BuildException("class \"" + classname
                                      + "\" was not found");
@@ -143,15 +140,15 @@ public class HasMethod extends ProjectComponent implements Condition {
         }
     }
 
-
     /** {@inheritDoc}. */
+    @Override
     public boolean eval() throws BuildException {
         if (classname == null) {
             throw new BuildException("No classname defined");
         }
         ClassLoader preLoadClass = loader;
         try {
-            Class clazz = loadClass(classname);
+            Class<?> clazz = loadClass(classname);
             if (method != null) {
                 return isMethodFound(clazz);
             }
@@ -167,7 +164,7 @@ public class HasMethod extends ProjectComponent implements Condition {
         }
     }
 
-    private boolean isFieldFound(Class clazz) {
+    private boolean isFieldFound(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             Field fieldEntry = fields[i];
@@ -178,7 +175,7 @@ public class HasMethod extends ProjectComponent implements Condition {
         return false;
     }
 
-    private boolean isMethodFound(Class clazz) {
+    private boolean isMethodFound(Class<?> clazz) {
         Method[] methods = clazz.getDeclaredMethods();
         for (int i = 0; i < methods.length; i++) {
             Method methodEntry = methods[i];

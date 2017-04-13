@@ -18,7 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -49,7 +49,7 @@ public class JarLibDisplayTask extends Task {
      * Filesets specifying all the librarys
      * to display information about.
      */
-    private final Vector libraryFileSets = new Vector();
+    private final List<FileSet> libraryFileSets = new Vector<>();
 
     /**
      * The JAR library to display information for.
@@ -66,7 +66,7 @@ public class JarLibDisplayTask extends Task {
      * @param fileSet a set of files about which library data will be displayed.
      */
     public void addFileset(final FileSet fileSet) {
-        libraryFileSets.addElement(fileSet);
+        libraryFileSets.add(fileSet);
     }
 
     /**
@@ -74,26 +74,23 @@ public class JarLibDisplayTask extends Task {
      *
      * @throws BuildException if the task fails.
      */
+    @Override
     public void execute() throws BuildException {
         validate();
 
         final LibraryDisplayer displayer = new LibraryDisplayer();
         // Check if list of files to check has been specified
-        if (!libraryFileSets.isEmpty()) {
-            final Iterator iterator = libraryFileSets.iterator();
-            while (iterator.hasNext()) {
-                final FileSet fileSet = (FileSet) iterator.next();
-                final DirectoryScanner scanner
-                    = fileSet.getDirectoryScanner(getProject());
+        if (libraryFileSets.isEmpty()) {
+            displayer.displayLibrary(libraryFile);
+        } else {
+            for (FileSet fileSet : libraryFileSets) {
+                final DirectoryScanner scanner =
+                    fileSet.getDirectoryScanner(getProject());
                 final File basedir = scanner.getBasedir();
-                final String[] files = scanner.getIncludedFiles();
-                for (int i = 0; i < files.length; i++) {
-                    final File file = new File(basedir, files[ i ]);
-                    displayer.displayLibrary(file);
+                for (String filename : scanner.getIncludedFiles()) {
+                    displayer.displayLibrary(new File(basedir, filename));
                 }
             }
-        } else {
-            displayer.displayLibrary(libraryFile);
         }
     }
 
@@ -103,17 +100,14 @@ public class JarLibDisplayTask extends Task {
      * @throws BuildException if invalid parameters found
      */
     private void validate() throws BuildException {
-        if (null == libraryFile && libraryFileSets.isEmpty()) {
-            final String message = "File attribute not specified.";
-            throw new BuildException(message);
-        }
-        if (null != libraryFile && !libraryFile.exists()) {
-            final String message = "File '" + libraryFile + "' does not exist.";
-            throw new BuildException(message);
-        }
-        if (null != libraryFile && !libraryFile.isFile()) {
-            final String message = "\'" + libraryFile + "\' is not a file.";
-            throw new BuildException(message);
+        if (null == libraryFile) {
+            if (libraryFileSets.isEmpty()) {
+                throw new BuildException("File attribute not specified.");
+            }
+        } else if (!libraryFile.exists()) {
+            throw new BuildException("File '%s' does not exist.", libraryFile);
+        } else if (!libraryFile.isFile()) {
+            throw new BuildException("'%s' is not a file.", libraryFile);
         }
     }
 }

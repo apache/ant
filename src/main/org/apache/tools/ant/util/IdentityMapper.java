@@ -31,6 +31,7 @@ public class IdentityMapper implements FileNameMapper {
      * Ignored.
      * @param from ignored.
      */
+    @Override
     public void setFrom(String from) {
     }
 
@@ -38,6 +39,7 @@ public class IdentityMapper implements FileNameMapper {
      * Ignored.
      * @param to ignored.
      */
+    @Override
     public void setTo(String to) {
     }
 
@@ -46,7 +48,8 @@ public class IdentityMapper implements FileNameMapper {
      * @param sourceFileName the name to map.
      * @return the source filename in a one-element array.
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
-        return new String[] {sourceFileName};
+        return new String[] { sourceFileName };
     }
 }

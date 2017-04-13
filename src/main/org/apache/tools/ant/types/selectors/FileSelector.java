@@ -21,13 +21,16 @@ package org.apache.tools.ant.types.selectors;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 
 /**
  * This is the interface to be used by all selectors.
  *
  * @since 1.5
  */
-public interface FileSelector {
+public interface FileSelector extends ResourceSelector {
 
     /**
      * Method that each selector will implement to create their
@@ -44,5 +47,15 @@ public interface FileSelector {
     boolean isSelected(File basedir, String filename, File file)
             throws BuildException;
 
+    /**
+     * Implement a basic {@link Resource} selection that delegates to this
+     * {@link FileSelector}.
+     * @param r
+     * @return whether the resource is selected
+     */
+    default boolean isSelected(Resource r) {
+        return r.asOptional(FileProvider.class).map(FileProvider::getFile)
+                .map(f -> isSelected(null, null, f)).orElse(false);
+    }
 }
 

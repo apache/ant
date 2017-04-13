@@ -18,8 +18,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import junit.framework.Test;
 import junit.framework.TestResult;
@@ -41,7 +41,7 @@ import org.junit.runner.manipulation.Filter;
  */
 public class JUnit4TestMethodAdapter implements Test {
 
-    private final Class testClass;
+    private final Class<?> testClass;
     private final String[] methodNames;
     private final Runner runner;
     private final CustomJUnit4TestAdapterCache cache;
@@ -55,7 +55,7 @@ public class JUnit4TestMethodAdapter implements Test {
      *             if any of the arguments is {@code null}
      *             or if any of the given method names is {@code null} or empty
      */
-    public JUnit4TestMethodAdapter(final Class testClass,
+    public JUnit4TestMethodAdapter(final Class<?> testClass,
                                    final String[] methodNames) {
         if (testClass == null) {
             throw new IllegalArgumentException("testClass is <null>");
@@ -87,6 +87,7 @@ public class JUnit4TestMethodAdapter implements Test {
         runner = request.getRunner();
     }
 
+    @Override
     public int countTestCases() {
         return runner.testCount();
     }
@@ -95,14 +96,15 @@ public class JUnit4TestMethodAdapter implements Test {
         return runner.getDescription();
     }
 
-    public List/*<Test>*/ getTests() {
+    public List<Test> getTests() {
         return cache.asTestList(getDescription());
     }
 
-    public Class getTestClass() {
+    public Class<?> getTestClass() {
         return testClass;
     }
 
+    @Override
     public void run(final TestResult result) {
         runner.run(cache.getNotifier(result));
     }
@@ -126,10 +128,10 @@ public class JUnit4TestMethodAdapter implements Test {
     private static final class MultipleMethodsFilter extends Filter {
 
         private final Description methodsListDescription;
-        private final Class testClass;
+        private final Class<?> testClass;
         private final String[] methodNames;
 
-        private MultipleMethodsFilter(Class testClass, String[] methodNames) {
+        private MultipleMethodsFilter(Class<?> testClass, String[] methodNames) {
             if (testClass == null) {
                 throw new IllegalArgumentException("testClass is <null>");
             }
@@ -151,23 +153,10 @@ public class JUnit4TestMethodAdapter implements Test {
                 return false;
             }
             if (description.isTest()) {
-                Iterator/*<Description>*/ it = methodsListDescription.getChildren().iterator();
-                while (it.hasNext()) {
-                    Description methodDescription = (Description) it.next();
-                    if (methodDescription.equals(description)) {
-                        return true;
-                    }
-                }
-            } else {
-                Iterator/*<Description>*/ it = description.getChildren().iterator();
-                while (it.hasNext()) {
-                    Description each = (Description) it.next();
-                    if (shouldRun(each)) {
-                        return true;
-                    }
-                }
+                return methodsListDescription.getChildren().stream()
+                    .anyMatch(Predicate.isEqual(description));
             }
-            return false;
+            return description.getChildren().stream().anyMatch(this::shouldRun);
         }
 
         @Override
@@ -188,6 +177,5 @@ public class JUnit4TestMethodAdapter implements Test {
         }
 
     }
-
 
 }

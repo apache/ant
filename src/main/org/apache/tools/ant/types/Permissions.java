@@ -44,8 +44,8 @@ import org.apache.tools.ant.ExitException;
  */
 public class Permissions {
 
-    private final List<Permission> grantedPermissions = new LinkedList<Permission>();
-    private final List<Permission> revokedPermissions = new LinkedList<Permission>();
+    private final List<Permission> grantedPermissions = new LinkedList<>();
+    private final List<Permission> revokedPermissions = new LinkedList<>();
     private java.security.Permissions granted = null;
     private SecurityManager origSm = null;
     private boolean active = false;
@@ -284,7 +284,7 @@ public class Permissions {
          */
         public void setActions(final String actions) {
             actionString = actions;
-            if (actions.length() > 0) {
+            if (!actions.isEmpty()) {
                 this.actions = parseActions(actions);
             }
         }
@@ -310,10 +310,8 @@ public class Permissions {
                     if (!perm.getName().startsWith(name.substring(0, name.length() - 1))) {
                         return false;
                     }
-                } else {
-                    if (!name.equals(perm.getName())) {
-                        return false;
-                    }
+                } else if (!name.equals(perm.getName())) {
+                    return false;
                 }
             }
             if (actions != null) {
@@ -333,11 +331,11 @@ public class Permissions {
          * @param actions The actions to be parsed.
          */
         private Set<String> parseActions(final String actions) {
-            final Set<String> result = new HashSet<String>();
+            final Set<String> result = new HashSet<>();
             final StringTokenizer tk = new StringTokenizer(actions, ",");
             while (tk.hasMoreTokens()) {
                 final String item = tk.nextToken().trim();
-                if (!item.equals("")) {
+                if (!"".equals(item)) {
                     result.add(item);
                 }
             }

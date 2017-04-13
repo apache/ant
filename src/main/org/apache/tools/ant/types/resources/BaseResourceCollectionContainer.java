@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -37,7 +38,7 @@ import org.apache.tools.ant.types.ResourceCollection;
  */
 public abstract class BaseResourceCollectionContainer
         extends DataType implements ResourceCollection, Cloneable {
-    private List<ResourceCollection> rc = new ArrayList<ResourceCollection>();
+    private List<ResourceCollection> rc = new ArrayList<>();
     private Collection<Resource> coll = null;
     private boolean cache = true;
 
@@ -45,7 +46,6 @@ public abstract class BaseResourceCollectionContainer
      * Create a new BaseResourceCollectionContainer.
      */
     public BaseResourceCollectionContainer() {
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -120,9 +120,7 @@ public abstract class BaseResourceCollectionContainer
             throw noChildrenAllowed();
         }
         try {
-            for (ResourceCollection resourceCollection : c) {
-                add(resourceCollection);
-            }
+            c.forEach(this::add);
         } catch (ClassCastException e) {
             throw new BuildException(e);
         }
@@ -134,9 +132,10 @@ public abstract class BaseResourceCollectionContainer
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
+    @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((BaseResourceCollectionContainer) getCheckedRef()).iterator();
+            return getCheckedRef().iterator();
         }
         dieOnCircularReference();
         return new FailFast(this, cacheCollection().iterator());
@@ -146,9 +145,11 @@ public abstract class BaseResourceCollectionContainer
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public synchronized int size() {
         if (isReference()) {
-            return getCheckedRef(BaseResourceCollectionContainer.class, getDataTypeName()).size();
+            return getCheckedRef(BaseResourceCollectionContainer.class,
+                getDataTypeName()).size();
         }
         dieOnCircularReference();
         return cacheCollection().size();
@@ -158,27 +159,20 @@ public abstract class BaseResourceCollectionContainer
      * Fulfill the ResourceCollection contract.
      * @return whether this is a filesystem-only resource collection.
      */
+    @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((BaseResourceCollectionContainer) getCheckedRef()).isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         //first the easy way, if all children are filesystem-only, return true:
-        boolean goEarly = true;
-        for (Iterator<ResourceCollection> i = rc.iterator(); goEarly && i.hasNext();) {
-            goEarly = i.next().isFilesystemOnly();
-        }
-        if (goEarly) {
+        if (rc.stream().allMatch(ResourceCollection::isFilesystemOnly)) {
             return true;
         }
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
-        for (Resource r : cacheCollection()) {
-            if (r.as(FileProvider.class) == null) {
-                return false;
-            }
-        }
-        return true;
+        return cacheCollection().stream()
+            .allMatch(r -> r.asOptional(FileProvider.class).isPresent());
     }
 
     /**
@@ -225,11 +219,12 @@ public abstract class BaseResourceCollectionContainer
      * collections is shallowly cloned.
      * @return a cloned instance.
      */
-    public Object clone() {
+    @Override
+    public BaseResourceCollectionContainer clone() {
         try {
             BaseResourceCollectionContainer c
                 = (BaseResourceCollectionContainer) super.clone();
-            c.rc = new ArrayList<ResourceCollection>(rc);
+            c.rc = new ArrayList<>(rc);
             c.coll = null;
             return c;
         } catch (CloneNotSupportedException e) {
@@ -241,21 +236,21 @@ public abstract class BaseResourceCollectionContainer
      * Format this BaseResourceCollectionContainer as a String.
      * @return a descriptive <code>String</code>.
      */
+    @Override
     public synchronized String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
         }
-        if (cacheCollection().size() == 0) {
+        if (cacheCollection().isEmpty()) {
             return "";
         }
-        StringBuilder sb = new StringBuilder();
-        for (Resource resource : coll) {
-            if (sb.length() > 0) {
-                sb.append(File.pathSeparatorChar);
-            }
-            sb.append(resource);
-        }
-        return sb.toString();
+        return coll.stream().map(Object::toString)
+            .collect(Collectors.joining(File.pathSeparator));
+    }
+    
+    @Override
+    protected BaseResourceCollectionContainer getCheckedRef() {
+        return (BaseResourceCollectionContainer) super.getCheckedRef();
     }
 
     private synchronized Collection<Resource> cacheCollection() {

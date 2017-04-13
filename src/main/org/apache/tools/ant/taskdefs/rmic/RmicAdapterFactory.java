@@ -106,13 +106,17 @@ public final class RmicAdapterFactory {
         }
         if (SunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new SunRmic();
-        } else if (KaffeRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        }
+        if (KaffeRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new KaffeRmic();
-        } else if (WLRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        }
+        if (WLRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new WLRmic();
-        } else if (ForkingSunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        }
+        if (ForkingSunRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new ForkingSunRmic();
-        } else if (XNewRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
+        }
+        if (XNewRmic.COMPILER_NAME.equalsIgnoreCase(rmicType)) {
             return new XNewRmic();
         }
         //no match?
@@ -133,7 +137,7 @@ public final class RmicAdapterFactory {
     private static RmicAdapter resolveClassName(String className,
                                                 ClassLoader loader)
             throws BuildException {
-        return (RmicAdapter) ClasspathUtils.newInstance(className,
+        return ClasspathUtils.newInstance(className,
                 loader != null ? loader :
                 RmicAdapterFactory.class.getClassLoader(), RmicAdapter.class);
     }

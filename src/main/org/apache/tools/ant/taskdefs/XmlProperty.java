@@ -19,7 +19,9 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -175,19 +177,6 @@ import org.xml.sax.SAXException;
  * @ant.task name="xmlproperty" category="xml"
  */
 public class XmlProperty extends org.apache.tools.ant.Task {
-
-    private Resource src;
-    private String prefix = "";
-    private boolean keepRoot = true;
-    private boolean validate = false;
-    private boolean collapseAttributes = false;
-    private boolean semanticAttributes = false;
-    private boolean includeSemanticAttribute = false;
-    private File rootDirectory = null;
-    private Hashtable addedAttributes = new Hashtable();
-    private XMLCatalog xmlCatalog = new XMLCatalog();
-    private String delimiter = ",";
-
     private static final String ID = "id";
     private static final String REF_ID = "refid";
     private static final String LOCATION = "location";
@@ -200,17 +189,22 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    /**
-     * Constructor.
-     */
-    public XmlProperty() {
-        super();
-    }
+    private Resource src;
+    private String prefix = "";
+    private boolean keepRoot = true;
+    private boolean validate = false;
+    private boolean collapseAttributes = false;
+    private boolean semanticAttributes = false;
+    private boolean includeSemanticAttribute = false;
+    private File rootDirectory = null;
+    private Map<String, String> addedAttributes = new Hashtable<>();
+    private XMLCatalog xmlCatalog = new XMLCatalog();
+    private String delimiter = ",";
 
     /**
      * Initializes the task.
      */
-
+    @Override
     public void init() {
         super.init();
         xmlCatalog.setProject(getProject());
@@ -229,6 +223,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * @todo validate the source file is valid before opening, print a better error message
      * @todo add a verbose level log message listing the name of the file being loaded
      */
+    @Override
     public void execute() throws BuildException {
         Resource r = getResource();
 
@@ -245,7 +240,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               factory.setNamespaceAware(false);
               DocumentBuilder builder = factory.newDocumentBuilder();
               builder.setEntityResolver(getEntityResolver());
-              Document document = null;
+              Document document;
               FileProvider fp = src.as(FileProvider.class);
               if (fp != null) {
                   document = builder.parse(fp.getFile());
@@ -258,7 +253,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               // This task is allow to override its own properties
               // but not other properties.  So we need to keep track
               // of which properties we've added.
-              addedAttributes = new Hashtable();
+              addedAttributes = new Hashtable<>();
 
               if (keepRoot) {
                   addNodeRecursively(topElement, prefix, null);
@@ -377,23 +372,23 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                      * semantic meaning) then deal with it
                      * appropriately.
                      */
-                    if (nodeName.equals(ID)) {
+                    if (ID.equals(nodeName)) {
                         // ID has already been found above.
                         continue;
                     }
-                    if (containingPath != null && nodeName.equals(PATH)) {
+                    if (containingPath != null && PATH.equals(nodeName)) {
                         // A "path" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
                     } else if (containingPath != null
-                               && container instanceof Path && nodeName.equals(REF_ID)) {
+                               && container instanceof Path && REF_ID.equals(nodeName)) {
                         // A "refid" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
                     } else if (containingPath != null && container instanceof Path
-                               && nodeName.equals(LOCATION)) {
+                               && LOCATION.equals(nodeName)) {
                         // A "location" attribute for a node within a
                         // Path object.
                         containingPath.setLocation(resolveFile(attributeValue));
-                    } else if (nodeName.equals(PATHID)) {
+                    } else if (PATHID.equals(nodeName)) {
                         // A node identifying a new path
                         if (container != null) {
                             throw new BuildException("XmlProperty does not support nested paths");
@@ -429,7 +424,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 && node.getFirstChild().getNodeType() == Node.CDATA_SECTION_NODE) {
 
             nodeText = node.getFirstChild().getNodeValue();
-            if ("".equals(nodeText) && !semanticEmptyOverride) {
+            if (nodeText.isEmpty() && !semanticEmptyOverride) {
                 emptyNode = true;
             }
         } else if (node.getNodeType() == Node.ELEMENT_NODE
@@ -440,7 +435,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         } else if (node.getNodeType() == Node.ELEMENT_NODE
                && node.getChildNodes().getLength() == 1
                && node.getFirstChild().getNodeType() == Node.TEXT_NODE
-               && "".equals(node.getFirstChild().getNodeValue())
+               && node.getFirstChild().getNodeValue().isEmpty()
                && !semanticEmptyOverride) {
             nodeText = "";
             emptyNode = true;
@@ -450,7 +445,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             if (semanticAttributes && id == null && container instanceof String) {
                 id = (String) container;
             }
-            if (nodeText.trim().length() != 0 || emptyNode) {
+            if (!nodeText.trim().isEmpty() || emptyNode) {
                 addProperty(prefix, nodeText, id);
             }
         }
@@ -458,7 +453,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         // children to reference if needed.  Path objects are
         // definitely used by child path elements, and ID may be used
         // for a child text node.
-        return (addedPath != null ? addedPath : id);
+        return addedPath != null ? addedPath : id;
     }
 
     /**
@@ -481,7 +476,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             // when we read them, though (instead of keeping them
             // outside of the project and batch adding them at the end)
             // to allow other properties to reference them.
-            value = (String) addedAttributes.get(name) + getDelimiter() + value;
+            value = addedAttributes.get(name) + getDelimiter() + value;
             getProject().setProperty(name, value);
             addedAttributes.put(name, value);
         } else if (getProject().getProperty(name) == null) {
@@ -508,7 +503,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (semanticAttributes) {
             // Never include the "refid" attribute as part of the
             // attribute name.
-            if (attributeName.equals(REF_ID)) {
+            if (REF_ID.equals(attributeName)) {
                 return "";
             }
             // Otherwise, return it appended unless property to hide it is set.
@@ -524,12 +519,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * Return whether the provided attribute name is recognized or not.
      */
     private static boolean isSemanticAttribute (String attributeName) {
-        for (int i = 0; i < ATTRIBUTES.length; i++) {
-            if (attributeName.equals(ATTRIBUTES[i])) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.asList(ATTRIBUTES).contains(attributeName);
     }
 
     /**
@@ -549,11 +539,11 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (semanticAttributes) {
             String attributeName = attributeNode.getNodeName();
             nodeValue = getProject().replaceProperties(nodeValue);
-            if (attributeName.equals(LOCATION)) {
+            if (LOCATION.equals(attributeName)) {
                 File f = resolveFile(nodeValue);
                 return f.getPath();
             }
-            if (attributeName.equals(REF_ID)) {
+            if (REF_ID.equals(attributeName)) {
                 Object ref = getProject().getReference(nodeValue);
                 if (ref != null) {
                     return ref.toString();

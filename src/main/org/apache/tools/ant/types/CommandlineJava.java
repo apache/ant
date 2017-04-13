@@ -82,7 +82,7 @@ public class CommandlineJava implements Cloneable {
         /** the system properties. */
         Properties sys = null;
         // CheckStyle:VisibilityModifier ON
-        private Vector<PropertySet> propertySets = new Vector<PropertySet>();
+        private Vector<PropertySet> propertySets = new Vector<>();
 
         /**
          * Get the properties as an array; this is an override of the
@@ -90,15 +90,15 @@ public class CommandlineJava implements Cloneable {
          * @return the array of definitions; may be null.
          * @throws BuildException on error.
          */
+        @Override
         public String[] getVariables() throws BuildException {
 
-            List<String> definitions = new LinkedList<String>();
+            List<String> definitions = new LinkedList<>();
             addDefinitionsToList(definitions.listIterator());
-            if (definitions.size() == 0) {
+            if (definitions.isEmpty()) {
                 return null;
-            } else {
-                return definitions.toArray(new String[definitions.size()]);
             }
+            return definitions.toArray(new String[definitions.size()]);
         }
 
         /**
@@ -182,6 +182,7 @@ public class CommandlineJava implements Cloneable {
          * @exception CloneNotSupportedException for signature.
          */
         @SuppressWarnings("unchecked")
+        @Override
         public Object clone() throws CloneNotSupportedException {
             try {
                 SysProperties c = (SysProperties) super.clone();
@@ -366,6 +367,7 @@ public class CommandlineJava implements Cloneable {
                     return javaCommand.getExecutable();
                 case MODULE:
                     return parseClassFromModuleClassPair(javaCommand.getExecutable());
+                default:
             }
         }
         return null;
@@ -395,6 +397,7 @@ public class CommandlineJava implements Cloneable {
                             parseClassFromModuleClassPair(javaCommand.getExecutable())),
                                               false);
                     break;
+                default:
             }
         }
         executableType = ExecutableType.MODULE;
@@ -479,7 +482,7 @@ public class CommandlineJava implements Cloneable {
      */
     public String[] getCommandline() {
         //create the list
-        List<String> commands = new LinkedList<String>();
+        List<String> commands = new LinkedList<>();
         //fill it
         addCommandsToList(commands.listIterator());
         //convert to an array
@@ -562,6 +565,7 @@ public class CommandlineJava implements Cloneable {
      * Get a string description.
      * @return the command line as a string.
      */
+    @Override
     public String toString() {
         return Commandline.toString(getCommandline());
     }
@@ -613,6 +617,7 @@ public class CommandlineJava implements Cloneable {
      *             Please dont use this, it effectively creates the
      *             entire command.
      */
+    @Deprecated
     public int size() {
         int size = getActualVMCommand().size() + javaCommand.size()
             + sysProperties.size();
@@ -721,7 +726,8 @@ public class CommandlineJava implements Cloneable {
      * @throws BuildException if anything went wrong.
      * @throws CloneNotSupportedException never.
      */
-    public Object clone() throws CloneNotSupportedException {
+    @Override
+    public CommandlineJava clone() throws CloneNotSupportedException {
         try {
             CommandlineJava c = (CommandlineJava) super.clone();
             c.vmCommand = (Commandline) vmCommand.clone();
@@ -791,7 +797,7 @@ public class CommandlineJava implements Cloneable {
         Path fullClasspath = modulepath != null
             ? modulepath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
-            && fullClasspath.toString().trim().length() > 0;
+            && !fullClasspath.toString().trim().isEmpty();
     }
 
     /**
@@ -803,7 +809,7 @@ public class CommandlineJava implements Cloneable {
         Path fullClasspath = upgrademodulepath != null
             ? upgrademodulepath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
-            && fullClasspath.toString().trim().length() > 0;
+            && !fullClasspath.toString().trim().isEmpty();
     }
 
     /**
@@ -840,7 +846,7 @@ public class CommandlineJava implements Cloneable {
      */
     private boolean isCloneVm() {
         return cloneVm
-            || "true".equals(System.getProperty("ant.build.clonevm"));
+            || Boolean.parseBoolean(System.getProperty("ant.build.clonevm"));
     }
 
     /**

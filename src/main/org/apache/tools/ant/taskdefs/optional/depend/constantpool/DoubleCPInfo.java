@@ -41,8 +41,9 @@ public class DoubleCPInfo extends ConstantCPInfo {
      * @exception IOException if there is a problem reading the entry from the
      *      stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(new Double(cpStream.readDouble()));
+        setValue(Double.valueOf(cpStream.readDouble()));
     }
 
     /**
@@ -50,9 +51,9 @@ public class DoubleCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "Double Constant Pool Entry: " + getValue();
     }
 
 }
-

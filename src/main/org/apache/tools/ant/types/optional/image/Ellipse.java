@@ -51,35 +51,33 @@ public class Ellipse extends BasicShape implements DrawOperation {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeDrawOperation() {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
+        Graphics2D graphics = bi.createGraphics();
 
-        if (!stroke.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(stroke)) {
             BasicStroke bStroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
             graphics.setStroke(bStroke);
             graphics.draw(new Ellipse2D.Double(0, 0, width, height));
         }
 
-        if (!fill.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(fill)) {
             graphics.setColor(ColorMapper.getColorByName(fill));
             graphics.fill(new Ellipse2D.Double(0, 0, width, height));
         }
 
-
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 PlanarImage img = ((DrawOperation) instr).executeDrawOperation();
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
-                graphics = (Graphics2D) bi.getGraphics();
                 PlanarImage image = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
+                graphics = bi.createGraphics();
             }
         }
         return PlanarImage.wrapRenderedImage(bi);

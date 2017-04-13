@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -114,12 +113,6 @@ public class FilterSet extends DataType implements Cloneable {
     public class FiltersFile {
 
         /**
-         * Constructor for the FiltersFile object.
-         */
-        public FiltersFile() {
-        }
-
-        /**
          * Sets the file from which filters will be read.
          *
          * @param file the file from which filters will be read.
@@ -187,7 +180,7 @@ public class FilterSet extends DataType implements Cloneable {
 
     private boolean recurse = true;
     private Hashtable<String, String> filterHash = null;
-    private Vector<File> filtersFiles = new Vector<File>();
+    private Vector<File> filtersFiles = new Vector<>();
     private OnMissing onMissingFiltersFile = OnMissing.FAIL;
     private boolean readingFiles = false;
 
@@ -196,7 +189,7 @@ public class FilterSet extends DataType implements Cloneable {
     /**
      * List of ordered filters and filter files.
      */
-    private Vector<Filter> filters = new Vector<Filter>();
+    private Vector<Filter> filters = new Vector<>();
 
     /**
      * Default constructor.
@@ -259,7 +252,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         dieOnCircularReference();
         if (filterHash == null) {
-            filterHash = new Hashtable<String, String>(getFilters().size());
+            filterHash = new Hashtable<>(getFilters().size());
             for (Enumeration<Filter> e = getFilters().elements(); e.hasMoreElements();) {
                Filter filter = e.nextElement();
                filterHash.put(filter.getToken(), filter.getValue());
@@ -358,39 +351,28 @@ public class FilterSet extends DataType implements Cloneable {
      * @param filtersFile        the file from which filters are read.
      * @exception BuildException when the file cannot be read.
      */
-    public synchronized void readFiltersFromFile(File filtersFile) throws BuildException {
+    public synchronized void readFiltersFromFile(File filtersFile)
+        throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (!filtersFile.exists()) {
-           handleMissingFile("Could not read filters from file "
-                                     + filtersFile + " as it doesn't exist.");
+            handleMissingFile("Could not read filters from file " + filtersFile
+                + " as it doesn't exist.");
         }
         if (filtersFile.isFile()) {
-           log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
-           InputStream in = null;
-           try {
-              Properties props = new Properties();
-              in = Files.newInputStream(filtersFile.toPath());
-              props.load(in);
-
-              Enumeration<?> e = props.propertyNames();
-              Vector<Filter> filts = getFilters();
-              while (e.hasMoreElements()) {
-                 String strPropName = (String) e.nextElement();
-                 String strValue = props.getProperty(strPropName);
-                 filts.addElement(new Filter(strPropName, strValue));
-              }
-           } catch (Exception ex) {
-              throw new BuildException("Could not read filters from file: "
-                  + filtersFile, ex);
-           } finally {
-              FileUtils.close(in);
-           }
+            log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
+            try (InputStream in = Files.newInputStream(filtersFile.toPath())) {
+                Properties props = new Properties();
+                props.load(in);
+                props.forEach((k,v) -> addFilter(new Filter((String) k, (String) v)));
+            } catch (Exception ex) {
+                throw new BuildException(
+                    "Could not read filters from file: " + filtersFile, ex);
+            }
         } else {
-           handleMissingFile(
-               "Must specify a file rather than a directory in "
-               + "the filtersfile attribute:" + filtersFile);
+            handleMissingFile("Must specify a file rather than a directory in "
+                + "the filtersfile attribute:" + filtersFile);
         }
         filterHash = null;
     }
@@ -471,7 +453,7 @@ public class FilterSet extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         Properties p = propertySet.getProperties();
-        Set<Map.Entry<Object,Object>> entries = p.entrySet();
+        Set<Map.Entry<Object, Object>> entries = p.entrySet();
         for (Map.Entry<Object, Object> entry : entries) {
             addFilter(new Filter(String.valueOf(entry.getKey()),
                                  String.valueOf(entry.getValue())));
@@ -484,7 +466,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @return Return true if there are filters in this set.
      */
     public synchronized boolean hasFilters() {
-        return getFilters().size() > 0;
+        return !getFilters().isEmpty();
     }
 
     /**
@@ -545,8 +527,6 @@ public class FilterSet extends DataType implements Cloneable {
             try {
                 StringBuilder b = new StringBuilder();
                 int i = 0;
-                String token = null;
-                String value = null;
 
                 while (index > -1) {
                     //can't have zero-length token
@@ -555,11 +535,11 @@ public class FilterSet extends DataType implements Cloneable {
                     if (endIndex == -1) {
                         break;
                     }
-                    token
-                        = line.substring(index + beginToken.length(), endIndex);
+                    String token =
+                        line.substring(index + beginToken.length(), endIndex);
                     b.append(line.substring(i, index));
                     if (tokens.containsKey(token)) {
-                        value = tokens.get(token);
+                        String value = tokens.get(token);
                         if (recurse && !value.equals(token)) {
                             // we have another token, let's parse it.
                             value = replaceTokens(value, token);
@@ -603,7 +583,7 @@ public class FilterSet extends DataType implements Cloneable {
         String beginToken = getBeginToken();
         String endToken = getEndToken();
         if (recurseDepth == 0) {
-            passedTokens = new VectorSet<String>();
+            passedTokens = new VectorSet<>();
         }
         recurseDepth++;
         if (passedTokens.contains(parent) && !duplicateToken) {
@@ -623,14 +603,14 @@ public class FilterSet extends DataType implements Cloneable {
             passedTokens = null;
         } else if (duplicateToken) {
             // should always be the case...
-            if (passedTokens.size() > 0) {
+            if (!passedTokens.isEmpty()) {
                 value = passedTokens.remove(passedTokens.size() - 1);
-                if (passedTokens.size() == 0) {
+                if (passedTokens.isEmpty()) {
                     value = beginToken + value + endToken;
                     duplicateToken = false;
                 }
             }
-        } else if (passedTokens.size() > 0) {
+        } else if (!passedTokens.isEmpty()) {
             // remove last seen token when crawling out of recursion
             passedTokens.remove(passedTokens.size() - 1);
         }

@@ -36,4 +36,3 @@ public class CCMCheckin extends CCMCheck {
     }
 
 }
-

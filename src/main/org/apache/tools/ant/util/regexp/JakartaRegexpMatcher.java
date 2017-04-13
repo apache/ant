@@ -35,6 +35,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * Set the regexp pattern from the String description.
      * @param pattern the pattern to match
      */
+    @Override
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
@@ -43,6 +44,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * Get a String representation of the regexp pattern
      * @return the pattern
      */
+    @Override
     public String getPattern() {
         return pattern;
     }
@@ -72,6 +74,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(String argument) throws BuildException {
         return matches(argument, MATCH_DEFAULT);
     }
@@ -83,6 +86,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(String input, int options)
         throws BuildException {
         return matches(input, getCompiledPattern(options));
@@ -103,7 +107,8 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(String argument) throws BuildException {
+    @Override
+    public Vector<String> getGroups(String argument) throws BuildException {
         return getGroups(argument, MATCH_DEFAULT);
     }
 
@@ -118,13 +123,14 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(String input, int options)
+    @Override
+    public Vector<String> getGroups(String input, int options)
         throws BuildException {
         RE reg = getCompiledPattern(options);
         if (!matches(input, reg)) {
             return null;
         }
-        Vector v = new Vector();
+        Vector<String> v = new Vector<>();
         int cnt = reg.getParenCount();
         for (int i = 0; i < cnt; i++) {
             String match = reg.getParen(i);
@@ -132,7 +138,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
             if (match == null) {
                 match = "";
             }
-            v.addElement(match);
+            v.add(match);
         }
         return v;
     }

@@ -18,10 +18,11 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -121,10 +122,10 @@ public class MappedResourceCollection
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((MappedResourceCollection) getCheckedRef())
-                .isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         checkInitialized();
         return false;
@@ -133,9 +134,10 @@ public class MappedResourceCollection
     /**
      * {@inheritDoc}
      */
+    @Override
     public int size() {
         if (isReference()) {
-            return ((MappedResourceCollection) getCheckedRef()).size();
+            return getCheckedRef().size();
         }
         checkInitialized();
         return cacheCollection().size();
@@ -144,9 +146,10 @@ public class MappedResourceCollection
     /**
      * {@inheritDoc}
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((MappedResourceCollection) getCheckedRef()).iterator();
+            return getCheckedRef().iterator();
         }
         checkInitialized();
         return cacheCollection().iterator();
@@ -156,6 +159,7 @@ public class MappedResourceCollection
      * Overrides the base version.
      * @param r the Reference to set.
      */
+    @Override
     public void setRefid(Reference r) {
         if (nested != null || mapper != null) {
             throw tooManyAttributes();
@@ -167,7 +171,8 @@ public class MappedResourceCollection
      * Implement clone.  The nested resource collection and mapper are copied.
      * @return a cloned instance.
      */
-    public Object clone() {
+    @Override
+    public MappedResourceCollection clone() {
         try {
             MappedResourceCollection c =
                 (MappedResourceCollection) super.clone();
@@ -187,6 +192,7 @@ public class MappedResourceCollection
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -208,8 +214,9 @@ public class MappedResourceCollection
 
     private void checkInitialized() {
         if (nested == null) {
-            throw new BuildException("A nested resource collection element is"
-                                     + " required", getLocation());
+            throw new BuildException(
+                "A nested resource collection element is required",
+                getLocation());
         }
         dieOnCircularReference();
     }
@@ -222,46 +229,36 @@ public class MappedResourceCollection
     }
 
     private Collection<Resource> getCollection() {
-        Collection<Resource> collected = new ArrayList<Resource>();
         FileNameMapper m =
-            mapper != null ? mapper.getImplementation() : new IdentityMapper();
-        for (Resource r : nested) {
-            if (enableMultipleMappings) {
-                String[] n = m.mapFileName(r.getName());
-                if (n != null) {
-                    for (int i = 0; i < n.length; i++) {
-                        collected.add(new MappedResource(r,
-                                                         new MergingMapper(n[i]))
-                                      );
-                    }
-                }
-            } else {
-                collected.add(new MappedResource(r, m));
-            }
+            mapper == null ? new IdentityMapper() : mapper.getImplementation();
+
+        Stream<MappedResource> stream;
+        if (enableMultipleMappings) {
+            stream = nested.stream()
+                .flatMap(r -> Stream.of(m.mapFileName(r.getName()))
+                    .map(MergingMapper::new)
+                    .map(mm -> new MappedResource(r, mm)));
+        } else {
+            stream = nested.stream().map(r -> new MappedResource(r, m));
         }
-        return collected;
+        return stream.collect(Collectors.toList());
     }
 
     /**
      * Format this resource collection as a String.
      * @return a descriptive <code>String</code>.
      */
+    @Override
     public String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
         }
-        Iterator<Resource> i = iterator();
-        if (!i.hasNext()) {
-            return "";
-        }
-        StringBuffer sb = new StringBuffer();
-        while (i.hasNext()) {
-            if (sb.length() > 0) {
-                sb.append(File.pathSeparatorChar);
-            }
-            sb.append(i.next());
-        }
-        return sb.toString();
+        return isEmpty() ? "" : stream().map(Object::toString)
+            .collect(Collectors.joining(File.pathSeparator));
     }
 
+    @Override
+    protected MappedResourceCollection getCheckedRef() {
+        return (MappedResourceCollection) super.getCheckedRef();
+    }
 }

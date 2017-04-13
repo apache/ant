@@ -18,15 +18,12 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.nio.file.Files;
-import java.nio.file.attribute.UserPrincipal;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.UserPrincipal;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.resources.FileProvider;
-import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
 
 /**
  * A selector that selects files based on their owner.
@@ -39,7 +36,7 @@ import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
  *
  * @since Ant 1.10.0
  */
-public class OwnedBySelector implements FileSelector, ResourceSelector {
+public class OwnedBySelector implements FileSelector {
 
     private String owner;
 
@@ -67,12 +64,4 @@ public class OwnedBySelector implements FileSelector, ResourceSelector {
         return false;
     }
 
-    @Override
-    public boolean isSelected(Resource r) {
-        FileProvider fp = r.as(FileProvider.class);
-        if (fp != null) {
-            return isSelected(null, null, fp.getFile());
-        }
-        return false;
-    }
 }

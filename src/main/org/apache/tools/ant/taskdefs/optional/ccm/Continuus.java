@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -39,80 +41,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public abstract class Continuus extends Task {
-
-    private String ccmDir = "";
-    private String ccmAction = "";
-
-    /**
-     * Get the value of ccmAction.
-     * @return value of ccmAction.
-     */
-    public String getCcmAction() {
-        return ccmAction;
-    }
-
-    /**
-     * Set the value of ccmAction.
-     * @param v  Value to assign to ccmAction.
-     * @ant.attribute ignore="true"
-     */
-    public void setCcmAction(String v) {
-        this.ccmAction = v;
-    }
-
-
-    /**
-     * Set the directory where the ccm executable is located.
-     *
-     * @param dir the directory containing the ccm executable
-     */
-    public final void setCcmDir(String dir) {
-        ccmDir = FileUtils.translatePath(dir);
-    }
-
-    /**
-     * Builds and returns the command string to execute ccm
-     * @return String containing path to the executable
-     */
-    protected final String getCcmCommand() {
-        String toReturn = ccmDir;
-        if (!toReturn.equals("") && !toReturn.endsWith("/")) {
-            toReturn += "/";
-        }
-
-        toReturn += CCM_EXE;
-
-        return toReturn;
-    }
-
-
-    /**
-     * Run the command.
-     * @param cmd the command line
-     * @param handler an execute stream handler
-     * @return the exit status of the command
-     */
-    protected int run(Commandline cmd, ExecuteStreamHandler handler) {
-        try {
-            Execute exe = new Execute(handler);
-            exe.setAntRun(getProject());
-            exe.setWorkingDirectory(getProject().getBaseDir());
-            exe.setCommandline(cmd.getCommandline());
-            return exe.execute();
-        } catch (java.io.IOException e) {
-            throw new BuildException(e, getLocation());
-        }
-    }
-
-    /**
-     * Run the command.
-     * @param cmd the command line
-     * @return the exit status of the command
-     */
-    protected int run(Commandline cmd) {
-        return run(cmd, new LogStreamHandler(this, Project.MSG_VERBOSE, Project.MSG_WARN));
-    }
-
     /**
      * Constant for the thing to execute
      */
@@ -140,5 +68,75 @@ public abstract class Continuus extends Task {
      */
     public static final String COMMAND_DEFAULT_TASK = "default_task";
 
+    private String ccmDir = "";
+    private String ccmAction = "";
+
+    /**
+     * Get the value of ccmAction.
+     * @return value of ccmAction.
+     */
+    public String getCcmAction() {
+        return ccmAction;
+    }
+
+    /**
+     * Set the value of ccmAction.
+     * @param v  Value to assign to ccmAction.
+     * @ant.attribute ignore="true"
+     */
+    public void setCcmAction(String v) {
+        this.ccmAction = v;
+    }
+
+    /**
+     * Set the directory where the ccm executable is located.
+     *
+     * @param dir the directory containing the ccm executable
+     */
+    public final void setCcmDir(String dir) {
+        ccmDir = FileUtils.translatePath(dir);
+    }
+
+    /**
+     * Builds and returns the command string to execute ccm
+     * @return String containing path to the executable
+     */
+    protected final String getCcmCommand() {
+        String toReturn = ccmDir;
+        if (!("".equals(toReturn) || toReturn.endsWith("/"))) {
+            toReturn += "/";
+        }
+
+        toReturn += CCM_EXE;
+
+        return toReturn;
+    }
+
+    /**
+     * Run the command.
+     * @param cmd the command line
+     * @param handler an execute stream handler
+     * @return the exit status of the command
+     */
+    protected int run(Commandline cmd, ExecuteStreamHandler handler) {
+        try {
+            Execute exe = new Execute(handler);
+            exe.setAntRun(getProject());
+            exe.setWorkingDirectory(getProject().getBaseDir());
+            exe.setCommandline(cmd.getCommandline());
+            return exe.execute();
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
+    }
+
+    /**
+     * Run the command.
+     * @param cmd the command line
+     * @return the exit status of the command
+     */
+    protected int run(Commandline cmd) {
+        return run(cmd, new LogStreamHandler(this, Project.MSG_VERBOSE, Project.MSG_WARN));
+    }
 
 }

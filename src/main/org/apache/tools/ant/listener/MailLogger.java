@@ -24,10 +24,12 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -97,21 +99,22 @@ import org.apache.tools.mail.MailMessage;
  *
  */
 public class MailLogger extends DefaultLogger {
+    private static final String DEFAULT_MIME_TYPE = "text/plain";
+
     /** Buffer in which the message is constructed prior to sending */
     private StringBuffer buffer = new StringBuffer();
-
-    private static final String DEFAULT_MIME_TYPE = "text/plain";
 
     /**
      *  Sends an e-mail with the log results.
      *
      * @param event the build finished event
      */
+    @Override
     public void buildFinished(BuildEvent event) {
         super.buildFinished(event);
 
         Project project = event.getProject();
-        Hashtable<String, Object> properties = project.getProperties();
+        Map<String, Object> properties = project.getProperties();
 
         // overlay specified properties file (if any), which overrides project
         // settings
@@ -168,8 +171,8 @@ public class MailLogger extends DefaultLogger {
                 .subject(getValue(
                              properties, prefix + ".subject",
                              (success) ? "Build Success" : "Build Failure"));
-            if (values.user().equals("")
-                && values.password().equals("")
+            if (values.user().isEmpty()
+                && values.password().isEmpty()
                 && !values.ssl() && !values.starttls()) {
                 sendMail(values, buffer.substring(0));
             } else {
@@ -310,6 +313,7 @@ public class MailLogger extends DefaultLogger {
      *
      * @param message the message being logger
      */
+    @Override
     protected void log(String message) {
         buffer.append(message).append(StringUtils.LINE_SEP);
     }
@@ -327,7 +331,7 @@ public class MailLogger extends DefaultLogger {
      * @exception  Exception  thrown if no default value is specified and the
      *      property is not present in properties.
      */
-    private String getValue(Hashtable<String, Object> properties, String name,
+    private String getValue(Map<String, Object> properties, String name,
                             String defaultValue) {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
@@ -356,7 +360,7 @@ public class MailLogger extends DefaultLogger {
         mailMessage.setHeader("Date", DateUtils.getDateForHeader());
 
         mailMessage.from(values.from());
-        if (!values.replytoList().equals("")) {
+        if (!values.replytoList().isEmpty()) {
             StringTokenizer t = new StringTokenizer(
                 values.replytoList(), ", ", false);
             while (t.hasMoreTokens()) {
@@ -391,7 +395,7 @@ public class MailLogger extends DefaultLogger {
     private void sendMimeMail(Project project, Values values, String message) {
         Mailer mailer = null;
         try {
-            mailer = (Mailer) ClasspathUtils.newInstance(
+            mailer = ClasspathUtils.newInstance(
                     "org.apache.tools.ant.taskdefs.email.MimeMailer",
                     MailLogger.class.getClassLoader(), Mailer.class);
         } catch (BuildException e) {
@@ -400,7 +404,7 @@ public class MailLogger extends DefaultLogger {
             return;
         }
         // convert the replyTo string into a vector of emailaddresses
-        Vector<EmailAddress> replyToList = vectorizeEmailAddresses(values.replytoList());
+        Vector<EmailAddress> replyToList = splitEmailAddresses(values.replytoList());
         mailer.setHost(values.mailhost());
         mailer.setPort(values.port());
         mailer.setUser(values.user());
@@ -417,25 +421,20 @@ public class MailLogger extends DefaultLogger {
         mailer.setMessage(mymessage);
         mailer.setFrom(new EmailAddress(values.from()));
         mailer.setReplyToList(replyToList);
-        Vector<EmailAddress> toList = vectorizeEmailAddresses(values.toList());
+        Vector<EmailAddress> toList = splitEmailAddresses(values.toList());
         mailer.setToList(toList);
-        Vector<EmailAddress> toCcList = vectorizeEmailAddresses(values.toCcList());
+        Vector<EmailAddress> toCcList = splitEmailAddresses(values.toCcList());
         mailer.setCcList(toCcList);
-        Vector<EmailAddress> toBccList = vectorizeEmailAddresses(values.toBccList());
+        Vector<EmailAddress> toBccList = splitEmailAddresses(values.toBccList());
         mailer.setBccList(toBccList);
         mailer.setFiles(new Vector<File>());
         mailer.setSubject(values.subject());
         mailer.setHeaders(new Vector<Header>());
         mailer.send();
     }
-    private Vector<EmailAddress> vectorizeEmailAddresses(String listString) {
-        Vector<EmailAddress> emailList = new Vector<EmailAddress>();
-        StringTokenizer tokens = new StringTokenizer(listString, ",");
-        while (tokens.hasMoreTokens()) {
-            emailList.addElement(new EmailAddress(tokens.nextToken()));
-        }
-        return emailList;
+
+    private Vector<EmailAddress> splitEmailAddresses(String listString) {
+        return Stream.of(listString.split(",")).map(EmailAddress::new)
+            .collect(Collectors.toCollection(Vector::new));
     }
 }
-
-

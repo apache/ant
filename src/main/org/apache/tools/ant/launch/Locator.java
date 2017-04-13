@@ -19,7 +19,6 @@ package org.apache.tools.ant.launch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 // CheckStyle:LineLengthCheck OFF - urls are long!
 /**
@@ -95,11 +95,6 @@ public final class Locator {
             gAfterEscaping2[ch] = gHexChs[ch & NIBBLE_MASK];
         }
     }
-    /**
-     * Not instantiable
-     */
-    private Locator() {
-    }
 
     /**
      * Find the directory or jar file the class has been loaded from.
@@ -130,7 +125,7 @@ public final class Locator {
         if (c == null) {
             c = Locator.class.getClassLoader();
         }
-        URL url = null;
+        URL url;
         if (c == null) {
             url = ClassLoader.getSystemResource(resource);
         } else {
@@ -141,20 +136,18 @@ public final class Locator {
             try {
                 if (u.startsWith("jar:file:")) {
                     return new File(fromJarURI(u));
-                } else if (u.startsWith("file:")) {
+                }
+                if (u.startsWith("file:")) {
                     int tail = u.indexOf(resource);
                     String dirName = u.substring(0, tail);
                     return new File(fromURI(dirName));
                 }
             } catch (IllegalArgumentException e) {
                 //unable to determine the URI for reasons unknown.
-                return null;
             }
         }
         return null;
     }
-
-
 
     /**
      * Constructs a file path from a <code>file:</code> URI.
@@ -234,7 +227,7 @@ public final class Locator {
         if (url == null || !("file".equals(url.getProtocol()))) {
             throw new IllegalArgumentException(ERROR_NOT_FILE_URI + uri);
         }
-        StringBuffer buf = new StringBuffer(url.getHost());
+        StringBuilder buf = new StringBuilder(url.getHost());
         if (buf.length() > 0) {
             buf.insert(0, File.separatorChar).insert(0, File.separatorChar);
         }
@@ -330,7 +323,7 @@ public final class Locator {
         int i = 0;
         int len = path.length();
         int ch = 0;
-        StringBuffer sb = null;
+        StringBuilder sb = null;
         for (; i < len; i++) {
             ch = path.charAt(i);
             // if it's not an ASCII character, break here, and use UTF-8 encoding
@@ -339,7 +332,7 @@ public final class Locator {
             }
             if (gNeedEscaping[ch]) {
                 if (sb == null) {
-                    sb = new StringBuffer(path.substring(0, i));
+                    sb = new StringBuilder(path.substring(0, i));
                 }
                 sb.append('%');
                 sb.append(gAfterEscaping1[ch]);
@@ -353,17 +346,15 @@ public final class Locator {
         // we saw some non-ascii character
         if (i < len) {
             if (sb == null) {
-                sb = new StringBuffer(path.substring(0, i));
+                sb = new StringBuilder(path.substring(0, i));
             }
             // get UTF-8 bytes for the remaining sub-string
-            byte[] bytes = null;
-            byte b;
-            bytes = path.substring(i).getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = path.substring(i).getBytes(StandardCharsets.UTF_8);
             len = bytes.length;
 
             // for each byte
             for (i = 0; i < len; i++) {
-                b = bytes[i];
+                byte b = bytes[i];
                 // for non-ascii character: make it positive, then escape
                 if (b < 0) {
                     ch = b + BYTE_SIZE;
@@ -466,7 +457,7 @@ public final class Locator {
      */
     public static URL[] getLocationURLs(File location)
          throws MalformedURLException {
-        return getLocationURLs(location, new String[]{".jar"});
+        return getLocationURLs(location, ".jar");
     }
 
     /**
@@ -484,7 +475,7 @@ public final class Locator {
      *            formed.
      */
     public static URL[] getLocationURLs(File location,
-                                        final String[] extensions)
+                                        final String... extensions)
          throws MalformedURLException {
         URL[] urls = new URL[0];
 
@@ -503,22 +494,21 @@ public final class Locator {
             }
             return urls;
         }
-        File[] matches = location.listFiles(
-            new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    String littleName = name.toLowerCase(Locale.ENGLISH);
-                    for (int i = 0; i < extensions.length; ++i) {
-                        if (littleName.endsWith(extensions[i])) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
+        File[] matches = location.listFiles((dir, name) -> {
+            String littleName = name.toLowerCase(Locale.ENGLISH);
+            return Stream.of(extensions).anyMatch(x -> littleName.endsWith(x));
+        });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
             urls[i] = fileToURL(matches[i]);
         }
         return urls;
     }
+
+    /**
+     * Not instantiable
+     */
+    private Locator() {
+    }
+
 }

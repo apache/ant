@@ -178,6 +178,7 @@ public class TarFileSet extends ArchiveFileSet {
      * Create a new scanner.
      * @return the created scanner.
      */
+    @Override
     protected ArchiveScanner newArchiveScanner() {
         TarScanner zs = new TarScanner();
         zs.setEncoding(getEncoding());
@@ -192,6 +193,7 @@ public class TarFileSet extends ArchiveFileSet {
      * @param r the <code>Reference</code> to use.
      * @throws BuildException on error
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (userNameSet || userIdSet || groupNameSet || groupIdSet) {
             throw tooManyAttributes();
@@ -205,19 +207,20 @@ public class TarFileSet extends ArchiveFileSet {
      * @param p the project to use
      * @return the abstract fileset instance
      */
+    @Override
     protected AbstractFileSet getRef(Project p) {
         dieOnCircularReference(p);
         Object o = getRefid().getReferencedObject(p);
         if (o instanceof TarFileSet) {
             return (AbstractFileSet) o;
-        } else if (o instanceof FileSet) {
+        }
+        if (o instanceof FileSet) {
             TarFileSet zfs = new TarFileSet((FileSet) o);
             configureFileSet(zfs);
             return zfs;
-        } else {
-            String msg = getRefid().getRefId() + " doesn\'t denote a tarfileset or a fileset";
-            throw new BuildException(msg);
         }
+        String msg = getRefid().getRefId() + " doesn\'t denote a tarfileset or a fileset";
+        throw new BuildException(msg);
     }
 
     /**
@@ -226,6 +229,7 @@ public class TarFileSet extends ArchiveFileSet {
      * specific attributes.
      * @param zfs the archive fileset to configure.
      */
+    @Override
     protected void configureFileSet(ArchiveFileSet zfs) {
         super.configureFileSet(zfs);
         if (zfs instanceof TarFileSet) {
@@ -242,12 +246,12 @@ public class TarFileSet extends ArchiveFileSet {
      * as this one.
      * @return the cloned tarFileSet
      */
-    public Object clone() {
+    @Override
+    public TarFileSet clone() {
         if (isReference()) {
             return ((TarFileSet) getRef(getProject())).clone();
-        } else {
-            return super.clone();
         }
+        return (TarFileSet) super.clone();
     }
 
     /**

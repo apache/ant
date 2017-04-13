@@ -146,16 +146,12 @@ public class ProjectHelper {
         }
     }
 
-    /** Default constructor */
-    public ProjectHelper() {
-    }
-
     // -------------------- Common properties  --------------------
     // The following properties are required by import ( and other tasks
     // that read build files using ProjectHelper ).
 
-    private Vector<Object> importStack = new Vector<Object>();
-    private List<String[]> extensionStack = new LinkedList<String[]>();
+    private Vector<Object> importStack = new Vector<>();
+    private List<String[]> extensionStack = new LinkedList<>();
 
     /**
      *  Import stack.
@@ -181,7 +177,7 @@ public class ProjectHelper {
         return extensionStack;
     }
 
-    private static final ThreadLocal<String> targetPrefix = new ThreadLocal<String>();
+    private static final ThreadLocal<String> targetPrefix = new ThreadLocal<>();
 
     /**
      * The prefix to prepend to imported target names.
@@ -292,7 +288,7 @@ public class ProjectHelper {
      * @see org.apache.tools.ant.ProjectHelperRepository#getHelpers()
      */
     public static ProjectHelper getProjectHelper() {
-        return (ProjectHelper) ProjectHelperRepository.getInstance().getHelpers().next();
+        return ProjectHelperRepository.getInstance().getHelpers().next();
     }
 
     /**
@@ -496,7 +492,7 @@ public class ProjectHelper {
      * @return      The stringified form of the ns name
      */
     public static String genComponentName(String uri, String name) {
-        if (uri == null || uri.equals("") || uri.equals(ANT_CORE_URI)) {
+        if (uri == null || "".equals(uri) || uri.equals(ANT_CORE_URI)) {
             return name;
         }
         return uri + ":" + name;

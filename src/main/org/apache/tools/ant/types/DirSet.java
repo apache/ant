@@ -19,6 +19,8 @@
 package org.apache.tools.ant.types;
 
 import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
@@ -51,12 +53,12 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      * as this one.
      * @return the cloned dirset.
      */
-    public Object clone() {
+    @Override
+    public DirSet clone() {
         if (isReference()) {
             return ((DirSet) getRef(getProject())).clone();
-        } else {
-            return super.clone();
         }
+        return (DirSet) super.clone();
     }
 
     /**
@@ -64,6 +66,7 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((DirSet) getRef(getProject())).iterator();
@@ -77,6 +80,7 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      * @return number of elements as int.
      * @since Ant 1.7
      */
+    @Override
     public int size() {
         if (isReference()) {
             return ((DirSet) getRef(getProject())).size();
@@ -89,6 +93,7 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      * @return true indicating that all elements will be FileResources.
      * @since Ant 1.7
      */
+    @Override
     public boolean isFilesystemOnly() {
         return true;
     }
@@ -98,18 +103,10 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      *
      * @return a <code>String</code> of included directories.
      */
+    @Override
     public String toString() {
         DirectoryScanner ds = getDirectoryScanner(getProject());
-        String[] dirs = ds.getIncludedDirectories();
-        StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < dirs.length; i++) {
-            if (i > 0) {
-                sb.append(';');
-            }
-            sb.append(dirs[i]);
-        }
-        return sb.toString();
+        return Stream.of(ds.getIncludedDirectories()).collect(Collectors.joining(";"));
     }
 
 }

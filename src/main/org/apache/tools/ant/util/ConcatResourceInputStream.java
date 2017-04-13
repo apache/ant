@@ -71,6 +71,7 @@ public class ConcatResourceInputStream extends InputStream {
      * Close the stream.
      * @throws IOException if there is an error.
      */
+    @Override
      public void close() throws IOException {
         closeCurrent();
         eof = true;
@@ -81,6 +82,7 @@ public class ConcatResourceInputStream extends InputStream {
      * @return the byte (0 - 255) or -1 if this is the end of the stream.
      * @throws IOException if there is an error.
      */
+    @Override
     public int read() throws IOException {
         if (eof) {
             return EOF;
@@ -122,7 +124,7 @@ public class ConcatResourceInputStream extends InputStream {
     private void nextResource() throws IOException {
         closeCurrent();
         while (iter.hasNext()) {
-            Resource r = (Resource) iter.next();
+            Resource r = iter.next();
             if (!r.isExists()) {
                 continue;
             }

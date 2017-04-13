@@ -33,19 +33,18 @@ import org.apache.tools.ant.util.UUEncoder;
  * @since Ant 1.5
  */
 class UUMailer extends PlainMailer {
+    @Override
     protected void attach(File file, PrintStream out)
          throws IOException {
         if (!file.exists() || !file.canRead()) {
-            throw new BuildException("File \"" + file.getName()
-                 + "\" does not exist or is not "
-                 + "readable.");
+            throw new BuildException(
+                "File \"%s" + "\" does not exist or is not " + "readable.",
+                file.getAbsolutePath());
         }
 
-        try (InputStream finstr = Files.newInputStream(file.toPath());
-             BufferedInputStream in = new BufferedInputStream(finstr)) {
-            UUEncoder encoder = new UUEncoder(file.getName());
-
-            encoder.encode(in, out);
+        try (InputStream in =
+            new BufferedInputStream(Files.newInputStream(file.toPath()))) {
+            new UUEncoder(file.getName()).encode(in, out);
         }
     }
 }

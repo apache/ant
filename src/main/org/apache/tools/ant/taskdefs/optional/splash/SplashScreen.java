@@ -37,8 +37,10 @@ import javax.swing.JWindow;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
 
 class SplashScreen extends JWindow implements ActionListener, BuildListener {
+    private static final long serialVersionUID = 1L;
     private static final int FONT_SIZE = 12;
     private JLabel text;
     private JProgressBar pb;
@@ -118,6 +120,7 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         text.setText(txt);
     }
 
+    @Override
     public void actionPerformed(ActionEvent a) {
         if (!hasProgressPattern()) {
             if (total < MAX) {
@@ -129,31 +132,38 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         }
     }
 
+    @Override
     public void buildStarted(BuildEvent event) {
         actionPerformed(null);
     }
 
+    @Override
     public void buildFinished(BuildEvent event) {
         pb.setValue(MAX);
         setVisible(false);
         dispose();
     }
+    @Override
     public void targetStarted(BuildEvent event) {
         actionPerformed(null);
     }
 
+    @Override
     public void targetFinished(BuildEvent event) {
         actionPerformed(null);
     }
 
+    @Override
     public void taskStarted(BuildEvent event) {
         actionPerformed(null);
     }
 
+    @Override
     public void taskFinished(BuildEvent event) {
         actionPerformed(null);
     }
 
+    @Override
     public void messageLogged(BuildEvent event) {
         actionPerformed(null);
         if (hasProgressPattern()) {
@@ -162,12 +172,11 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
             if (matcher != null && matcher.matches()) {
                 String gr = matcher.group(1);
                 try {
-                    int i = Math.min(new Integer(gr).intValue() * 2, MAX);
-                    pb.setValue(i);
+                    pb.setValue(Math.min(Integer.parseInt(gr) * 2, MAX));
                 } catch (NumberFormatException e) {
-                    //TODO: how to reach logger?!?
-                    //log("Number parsing error in progressRegExp", Project.MSG_VERBOSE);
-
+                    event.getProject().log(
+                        "Number parsing error in progressRegExp",
+                        Project.MSG_VERBOSE);
                 }
             }
         }

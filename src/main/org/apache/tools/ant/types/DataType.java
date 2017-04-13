@@ -340,6 +340,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * Basic DataType toString().
      * @return this DataType formatted as a String.
      */
+    @Override
     public String toString() {
         String d = getDescription();
         return d == null ? getDataTypeName() : getDataTypeName() + " " + d;
@@ -350,6 +351,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * @return a shallow copy of this DataType.
      * @throws CloneNotSupportedException if there is a problem.
      */
+    @Override
     public Object clone() throws CloneNotSupportedException {
         DataType dt = (DataType) super.clone();
         dt.setDescription(getDescription());

@@ -23,10 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -34,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -42,8 +46,6 @@ import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -114,7 +116,7 @@ public class IPlanetEjbc {
      * (relative to the destination directory).  The value for the Hashtable is
      * a File object which reference the actual class file.
      */
-    private Hashtable   ejbFiles     = new Hashtable();
+    private Hashtable<String, File>   ejbFiles     = new Hashtable<>();
 
     /* Value of the display-name element read from the standard EJB descriptor */
     private String      displayName;
@@ -150,15 +152,11 @@ public class IPlanetEjbc {
          * Parse the classpath into it's individual elements and store the
          * results in the "classpathElements" instance variable.
          */
-        List elements = new ArrayList();
         if (classpath != null) {
             StringTokenizer st = new StringTokenizer(classpath,
                                                         File.pathSeparator);
-            while (st.hasMoreTokens()) {
-                elements.add(st.nextToken());
-            }
-            classpathElements
-                    = (String[]) elements.toArray(new String[elements.size()]);
+            final int count = st.countTokens();
+            classpathElements = Collections.list(st).toArray(new String[count]);
         }
     }
 
@@ -217,7 +215,7 @@ public class IPlanetEjbc {
      *
      * @return The list of EJB files processed by the ejbc utility.
      */
-    public Hashtable getEjbFiles() {
+    public Hashtable<String, File> getEjbFiles() {
         return ejbFiles;
     }
 
@@ -236,16 +234,8 @@ public class IPlanetEjbc {
      * @return An array of CMP descriptors.
      */
     public String[] getCmpDescriptors() {
-        List returnList = new ArrayList();
-
-        EjbInfo[] ejbs = handler.getEjbs();
-
-        for (int i = 0; i < ejbs.length; i++) {
-            List descriptors = (List) ejbs[i].getCmpDescriptors();
-            returnList.addAll(descriptors);
-        }
-
-        return (String[]) returnList.toArray(new String[returnList.size()]);
+        return Stream.of(handler.getEjbs()).map(EjbInfo::getCmpDescriptors)
+            .flatMap(Collection::stream).toArray(String[]::new);
     }
 
     /**
@@ -274,13 +264,13 @@ public class IPlanetEjbc {
         iasDescriptor = new File(args[args.length - 1]);
 
         for (int i = 0; i < args.length - 2; i++) {
-            if (args[i].equals("-classpath")) {
+            if ("-classpath".equals(args[i])) {
                 classpath = args[++i];
-            } else if (args[i].equals("-d")) {
+            } else if ("-d".equals(args[i])) {
                 destDirectory = new File(args[++i]);
-            } else if (args[i].equals("-debug")) {
+            } else if ("-debug".equals(args[i])) {
                 debug = true;
-            } else if (args[i].equals("-keepsource")) {
+            } else if ("-keepsource".equals(args[i])) {
                 retainSource = true;
             } else {
                 usage();
@@ -383,22 +373,17 @@ public class IPlanetEjbc {
 
         EjbInfo[] ejbs = getEjbs(); // Returns list of EJBs for processing
 
-        for (int i = 0; i < ejbs.length; i++) {
+        for (EjbInfo ejb : ejbs) {
             log("EJBInfo...");
-            log(ejbs[i].toString());
+            log(ejb.toString());
         }
 
-        for (int i = 0; i < ejbs.length; i++) {
-            EjbInfo ejb = ejbs[i];
-
+        for (EjbInfo ejb : ejbs) {
             ejb.checkConfiguration(destDirectory);  // Throws EjbcException
 
             if (ejb.mustBeRecompiled(destDirectory)) {
                 log(ejb.getName() + " must be recompiled using ejbc.");
-
-                String[] arguments = buildArgumentList(ejb);
-                callEjbc(arguments);
-
+                callEjbc(buildArgumentList(ejb));
             } else {
                 log(ejb.getName() + " is up to date.");
             }
@@ -412,11 +397,6 @@ public class IPlanetEjbc {
      */
     private void callEjbc(String[] arguments) {
 
-        /* Concatenate all of the command line arguments into a single String */
-        StringBuffer args = new StringBuffer();
-        for (int i = 0; i < arguments.length; i++) {
-            args.append(arguments[i]).append(" ");
-        }
 
         /* If an iAS home directory is specified, prepend it to the commmand */
         String command;
@@ -427,6 +407,9 @@ public class IPlanetEjbc {
                                                         + File.separator;
         }
         command += "ejbc ";
+
+        /* Concatenate all of the command line arguments into a single String */
+        String args = Stream.of(arguments).collect(Collectors.joining(" "));
 
         log(command + args);
 
@@ -498,18 +481,14 @@ public class IPlanetEjbc {
      *                       XML descriptor (it may wrap another exception)
      */
     private EjbInfo[] getEjbs() throws IOException, SAXException {
-        EjbInfo[] ejbs = null;
 
         /*
          * The EJB information is gathered from the standard XML EJB descriptor
          * and the iAS-specific XML EJB descriptor using a SAX parser.
          */
-
         parser.parse(stdDescriptor, handler);
         parser.parse(iasDescriptor, handler);
-        ejbs = handler.getEjbs();
-
-        return ejbs;
+        return handler.getEjbs();
     }
 
     /**
@@ -522,7 +501,7 @@ public class IPlanetEjbc {
      */
     private String[] buildArgumentList(EjbInfo ejb) {
 
-        List arguments = new ArrayList();
+        List<String> arguments = new ArrayList<>();
 
         /* OPTIONAL COMMAND LINE PARAMETERS */
 
@@ -566,7 +545,7 @@ public class IPlanetEjbc {
         arguments.add(ejb.getImplementation().getQualifiedClassName());
 
         /* Convert the List into an Array and return it */
-        return (String[]) arguments.toArray(new String[arguments.size()]);
+        return arguments.toArray(new String[arguments.size()]);
     }
 
     /**
@@ -591,6 +570,7 @@ public class IPlanetEjbc {
      *
      */
     public class EjbcException extends Exception {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Constructs an exception with the given descriptive message.
@@ -631,10 +611,10 @@ public class IPlanetEjbc {
          * remote copies of these DTDs cannot be accessed.  The key for the Map
          * is the DTDs public ID and the value is the local location for the DTD
          */
-        private Map       resourceDtds = new HashMap();
-        private Map       fileDtds = new HashMap();
+        private Map<String, String>       resourceDtds = new HashMap<>();
+        private Map<String, String>       fileDtds = new HashMap<>();
 
-        private Map       ejbs = new HashMap();      // List of EJBs found in XML
+        private Map<String, EjbInfo>       ejbs = new HashMap<>();      // List of EJBs found in XML
         private EjbInfo   currentEjb;             // One item within the Map
         private boolean   iasDescriptor = false;  // Is doc iAS or EJB descriptor
 
@@ -660,7 +640,7 @@ public class IPlanetEjbc {
          *         parsing.
          */
         public EjbInfo[] getEjbs() {
-            return (EjbInfo[]) ejbs.values().toArray(new EjbInfo[ejbs.size()]);
+            return ejbs.values().toArray(new EjbInfo[ejbs.size()]);
         }
 
         /**
@@ -713,35 +693,30 @@ public class IPlanetEjbc {
          * @param publicId The DTD's public identifier.
          * @param systemId The location of the DTD, as found in the XML document.
          */
+        @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException {
             InputStream inputStream = null;
 
-
             try {
-
                 /* Search the resource Map and (if not found) file Map */
-
-                String location = (String) resourceDtds.get(publicId);
+                String location = resourceDtds.get(publicId);
                 if (location != null) {
                     inputStream
                         = ClassLoader.getSystemResource(location).openStream();
                 } else {
-                    location = (String) fileDtds.get(publicId);
+                    location = fileDtds.get(publicId);
                     if (location != null) {
                         // closed when the InputSource is closed
                         inputStream = Files.newInputStream(Paths.get(location)); //NOSONAR
                     }
                 }
             } catch (IOException e) {
-                return super.resolveEntity(publicId, systemId);
             }
-
             if (inputStream == null) {
                 return super.resolveEntity(publicId, systemId);
-            } else {
-                return new InputSource(inputStream);
             }
+            return new InputSource(inputStream);
         }
 
         /**
@@ -752,6 +727,7 @@ public class IPlanetEjbc {
          *             (if any).
          * @throws SAXException If the parser cannot process the document.
          */
+        @Override
         public void startElement(String name, AttributeList atts)
                 throws SAXException {
 
@@ -764,13 +740,13 @@ public class IPlanetEjbc {
             /* A new element has started, so reset the text being captured */
             currentText = "";
 
-            if (currentLoc.equals("\\ejb-jar")) {
+            if ("\\ejb-jar".equals(currentLoc)) {
                 iasDescriptor = false;
-            } else if (currentLoc.equals("\\ias-ejb-jar")) {
+            } else if ("\\ias-ejb-jar".equals(currentLoc)) {
                 iasDescriptor = true;
             }
 
-            if ((name.equals("session")) || (name.equals("entity"))) {
+            if (("session".equals(name)) || ("entity".equals(name))) {
                 ejbType = name;
             }
         }
@@ -784,9 +760,9 @@ public class IPlanetEjbc {
          * @param len The number of characters found in the document.
          * @throws SAXException If the parser cannot process the document.
          */
+        @Override
         public void characters(char[] ch, int start, int len)
                 throws SAXException {
-
             currentText += new String(ch).substring(start, start + len);
         }
 
@@ -796,6 +772,7 @@ public class IPlanetEjbc {
          * @param name String name of the element.
          * @throws SAXException If the parser cannot process the document.
          */
+        @Override
         public void endElement(String name) throws SAXException {
 
             /*
@@ -831,30 +808,30 @@ public class IPlanetEjbc {
          */
         private void stdCharacters(String value) {
 
-            if (currentLoc.equals("\\ejb-jar\\display-name")) {
+            if ("\\ejb-jar\\display-name".equals(currentLoc)) {
                 displayName = value;
                 return;
             }
 
             String base = "\\ejb-jar\\enterprise-beans\\" + ejbType;
 
-            if (currentLoc.equals(base + "\\ejb-name")) {
-                currentEjb = (EjbInfo) ejbs.get(value);
+            if ((base + "\\ejb-name").equals(currentLoc)) {
+                currentEjb = ejbs.get(value);
                 if (currentEjb == null) {
                     currentEjb = new EjbInfo(value);
                     ejbs.put(value, currentEjb);
                 }
-            } else if (currentLoc.equals(base + "\\home")) {
+            } else if ((base + "\\home").equals(currentLoc)) {
                 currentEjb.setHome(value);
-            } else if (currentLoc.equals(base + "\\remote")) {
+            } else if ((base + "\\remote").equals(currentLoc)) {
                 currentEjb.setRemote(value);
-            } else if (currentLoc.equals(base + "\\ejb-class")) {
+            } else if ((base + "\\ejb-class").equals(currentLoc)) {
                 currentEjb.setImplementation(value);
-            } else if (currentLoc.equals(base + "\\prim-key-class")) {
+            } else if ((base + "\\prim-key-class").equals(currentLoc)) {
                 currentEjb.setPrimaryKey(value);
-            } else if (currentLoc.equals(base + "\\session-type")) {
+            } else if ((base + "\\session-type").equals(currentLoc)) {
                 currentEjb.setBeantype(value);
-            } else if (currentLoc.equals(base + "\\persistence-type")) {
+            } else if ((base + "\\persistence-type").equals(currentLoc)) {
                 currentEjb.setCmp(value);
             }
         }
@@ -872,18 +849,19 @@ public class IPlanetEjbc {
         private void iasCharacters(String value) {
             String base = "\\ias-ejb-jar\\enterprise-beans\\" + ejbType;
 
-            if (currentLoc.equals(base + "\\ejb-name")) {
-                currentEjb = (EjbInfo) ejbs.get(value);
+            if ((base + "\\ejb-name").equals(currentLoc)) {
+                currentEjb = ejbs.get(value);
                 if (currentEjb == null) {
                     currentEjb = new EjbInfo(value);
                     ejbs.put(value, currentEjb);
                 }
-            } else if (currentLoc.equals(base + "\\iiop")) {
+            } else if ((base + "\\iiop").equals(currentLoc)) {
                 currentEjb.setIiop(value);
-            } else if (currentLoc.equals(base + "\\failover-required")) {
+            } else if ((base + "\\failover-required").equals(currentLoc)) {
                 currentEjb.setHasession(value);
-            } else if (currentLoc.equals(base + "\\persistence-manager"
-                                              + "\\properties-file-location")) {
+            } else if ((base
+                + "\\persistence-manager\\properties-file-location")
+                    .equals(currentLoc)) {
                 currentEjb.addCmpDescriptor(value);
             }
         }
@@ -904,7 +882,7 @@ public class IPlanetEjbc {
         private boolean cmp       = false;      // Does this EJB support CMP?
         private boolean iiop      = false;      // Does this EJB support IIOP?
         private boolean hasession = false;      // Does this EJB require failover?
-        private List cmpDescriptors = new ArrayList();  // CMP descriptor list
+        private List<String> cmpDescriptors = new ArrayList<>();  // CMP descriptor list
 
         /**
          * Construct a new EJBInfo object with the given name.
@@ -926,9 +904,8 @@ public class IPlanetEjbc {
             if (name == null) {
                 if (implementation == null) {
                     return "[unnamed]";
-                } else {
-                    return implementation.getClassName();
                 }
+                return implementation.getClassName();
             }
             return name;
         }
@@ -1002,7 +979,7 @@ public class IPlanetEjbc {
         }
 
         public void setCmp(String cmp) {
-            setCmp(cmp.equals("Container"));
+            setCmp("Container".equals(cmp));
         }
 
         public boolean getCmp() {
@@ -1014,7 +991,7 @@ public class IPlanetEjbc {
         }
 
         public void setIiop(String iiop) {
-            setIiop(iiop.equals("true"));
+            setIiop(Boolean.parseBoolean(iiop));
         }
 
         public boolean getIiop() {
@@ -1026,7 +1003,7 @@ public class IPlanetEjbc {
         }
 
         public void setHasession(String hasession) {
-            setHasession(hasession.equals("true"));
+            setHasession(Boolean.parseBoolean(hasession));
         }
 
         public boolean getHasession() {
@@ -1037,7 +1014,7 @@ public class IPlanetEjbc {
             cmpDescriptors.add(descriptor);
         }
 
-        public List getCmpDescriptors() {
+        public List<String> getCmpDescriptors() {
             return cmpDescriptors;
         }
 
@@ -1054,53 +1031,52 @@ public class IPlanetEjbc {
 
             /* Check that the specified instance variables are valid */
             if (home == null) {
-                throw new EjbcException("A home interface was not found "
-                            + "for the " + name + " EJB.");
+                throw new EjbcException(
+                    "A home interface was not found for the " + name + " EJB.");
             }
             if (remote == null) {
-                throw new EjbcException("A remote interface was not found "
-                            + "for the " + name + " EJB.");
+                throw new EjbcException(
+                    "A remote interface was not found for the " + name
+                        + " EJB.");
             }
             if (implementation == null) {
-                throw new EjbcException("An EJB implementation class was not "
-                            + "found for the " + name + " EJB.");
+                throw new EjbcException(
+                    "An EJB implementation class was not found for the " + name
+                        + " EJB.");
             }
 
             if ((!beantype.equals(ENTITY_BEAN))
-                        && (!beantype.equals(STATELESS_SESSION))
-                        && (!beantype.equals(STATEFUL_SESSION))) {
-                throw new EjbcException("The beantype found (" + beantype + ") "
-                            + "isn't valid in the " + name + " EJB.");
+                && (!beantype.equals(STATELESS_SESSION))
+                && (!beantype.equals(STATEFUL_SESSION))) {
+                throw new EjbcException("The beantype found (" + beantype
+                    + ") isn't valid in the " + name + " EJB.");
             }
 
             if (cmp && (!beantype.equals(ENTITY_BEAN))) {
-                System.out.println("CMP stubs and skeletons may not be generated"
-                    + " for a Session Bean -- the \"cmp\" attribute will be"
-                    + " ignoredfor the " + name + " EJB.");
+                System.out.println(
+                    "CMP stubs and skeletons may not be generated for a Session Bean -- the \"cmp\" attribute will be ignoredfor the "
+                        + name + " EJB.");
             }
 
             if (hasession && (!beantype.equals(STATEFUL_SESSION))) {
-                System.out.println("Highly available stubs and skeletons may "
-                    + "only be generated for a Stateful Session Bean -- the "
-                    + "\"hasession\" attribute will be ignored for the "
-                    + name + " EJB.");
+                System.out.println(
+                    "Highly available stubs and skeletons may only be generated for a Stateful Session Bean -- the \"hasession\" attribute will be ignored for the "
+                        + name + " EJB.");
             }
 
             /* Check that the EJB "source" classes all exist */
             if (!remote.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The remote interface "
-                            + remote.getQualifiedClassName() + " could not be "
-                            + "found.");
+                    + remote.getQualifiedClassName() + " could not be found.");
             }
             if (!home.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The home interface "
-                            + home.getQualifiedClassName() + " could not be "
-                            + "found.");
+                    + home.getQualifiedClassName() + " could not be found.");
             }
             if (!implementation.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The EJB implementation class "
-                            + implementation.getQualifiedClassName() + " could "
-                            + "not be found.");
+                    + implementation.getQualifiedClassName()
+                    + " could not be found.");
             }
         }
 
@@ -1149,9 +1125,8 @@ public class IPlanetEjbc {
             remoteFile = remote.getClassFile(buildDir);
             modified = remoteFile.lastModified();
             if (modified == -1) {
-                System.out.println("The class "
-                                + remote.getQualifiedClassName() + " couldn't "
-                                + "be found on the classpath");
+                System.out.println("The class " + remote.getQualifiedClassName()
+                    + " couldn't be found on the classpath");
                 return -1;
             }
             latestModified = modified;
@@ -1160,9 +1135,8 @@ public class IPlanetEjbc {
             homeFile = home.getClassFile(buildDir);
             modified = homeFile.lastModified();
             if (modified == -1) {
-                System.out.println("The class "
-                                + home.getQualifiedClassName() + " couldn't be "
-                                + "found on the classpath");
+                System.out.println("The class " + home.getQualifiedClassName()
+                    + " couldn't be found on the classpath");
                 return -1;
             }
             latestModified = Math.max(latestModified, modified);
@@ -1172,9 +1146,9 @@ public class IPlanetEjbc {
                 pkFile = primaryKey.getClassFile(buildDir);
                 modified = pkFile.lastModified();
                 if (modified == -1) {
-                    System.out.println("The class "
-                                    + primaryKey.getQualifiedClassName() + "couldn't be "
-                                    + "found on the classpath");
+                    System.out.println(
+                        "The class " + primaryKey.getQualifiedClassName()
+                            + "couldn't be found on the classpath");
                     return -1;
                 }
                 latestModified = Math.max(latestModified, modified);
@@ -1237,7 +1211,7 @@ public class IPlanetEjbc {
          */
         private long destClassesModified(File destDir) {
             String[] classnames = classesToGenerate(); // List of all stubs & skels
-            long destClassesModified = new Date().getTime(); // Earliest mod time
+            long destClassesModified = Instant.now().toEpochMilli(); // Earliest mod time
             boolean allClassesFound  = true;           // Has each been found?
 
             /*
@@ -1245,7 +1219,6 @@ public class IPlanetEjbc {
              * determine (if all exist) which file has the most recent timestamp
              */
             for (int i = 0; i < classnames.length; i++) {
-
                 String pathToClass =
                         classnames[i].replace('.', File.separatorChar) + ".class";
                 File classFile = new File(destDir, pathToClass);
@@ -1266,7 +1239,7 @@ public class IPlanetEjbc {
                 }
             }
 
-            return (allClassesFound) ? destClassesModified : -1;
+            return allClassesFound ? destClassesModified : -1;
         }
 
         /**
@@ -1330,6 +1303,7 @@ public class IPlanetEjbc {
          *
          * @return A String representing the EjbInfo instance.
          */
+        @Override
         public String toString() {
             String s = "EJB name: " + name
                         + "\n\r              home:      " + home
@@ -1341,7 +1315,7 @@ public class IPlanetEjbc {
                         + "\n\r              iiop:      " + iiop
                         + "\n\r              hasession: " + hasession;
 
-            Iterator i = cmpDescriptors.iterator();
+            Iterator<String> i = cmpDescriptors.iterator();
             while (i.hasNext()) {
                 s += "\n\r              CMP Descriptor: " + i.next();
             }
@@ -1446,6 +1420,7 @@ public class IPlanetEjbc {
          *
          * @return String representing the fully qualified class name.
          */
+        @Override
         public String toString() {
             return getQualifiedClassName();
         }
@@ -1477,18 +1452,16 @@ public class IPlanetEjbc {
          * Reads text from the input stream and redirects it to standard output
          * using a separate thread.
          */
+        @Override
         public void run() {
-            BufferedReader reader = new BufferedReader(
-                                            new InputStreamReader(stream));
-            String text;
-            try {
+            try (BufferedReader reader =
+                new BufferedReader(new InputStreamReader(stream))) {
+                String text;
                 while ((text = reader.readLine()) != null) {
                     System.out.println(text);
                 }
             } catch (IOException e) {
                 e.printStackTrace(); //NOSONAR
-            } finally {
-                FileUtils.close(reader);
             }
         }
     }  // End of RedirectOutput inner class

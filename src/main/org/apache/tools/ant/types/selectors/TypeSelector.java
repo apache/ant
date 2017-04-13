@@ -30,17 +30,10 @@ import org.apache.tools.ant.types.Parameter;
  */
 public class TypeSelector extends BaseExtendSelector {
 
-    private String type = null;
-
     /** Key to used for parameterized custom selector */
     public static final String TYPE_KEY = "type";
-
-    /**
-     * Creates a new <code>TypeSelector</code> instance.
-     *
-     */
-    public TypeSelector() {
-    }
+    
+    private String type = null;
 
     /**
      * @return a string describing this object
@@ -66,7 +59,8 @@ public class TypeSelector extends BaseExtendSelector {
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    @Override
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -87,6 +81,7 @@ public class TypeSelector extends BaseExtendSelector {
      * means that the pattern attribute has been set.
      *
      */
+    @Override
     public void verifySettings() {
         if (type == null) {
             setError("The type attribute is required");
@@ -102,6 +97,7 @@ public class TypeSelector extends BaseExtendSelector {
      * @param file is a java.io.File object the selector can use
      * @return whether the file should be selected or not
      */
+    @Override
     public boolean isSelected(File basedir, String filename, File file) {
 
         // throw BuildException on error
@@ -109,9 +105,8 @@ public class TypeSelector extends BaseExtendSelector {
 
         if (file.isDirectory()) {
             return type.equals(FileType.DIR);
-        } else {
-            return type.equals(FileType.FILE);
         }
+        return type.equals(FileType.FILE);
     }
 
     /**
@@ -126,10 +121,10 @@ public class TypeSelector extends BaseExtendSelector {
         /**
          * @return the values as an array of strings
          */
+        @Override
         public String[] getValues() {
             return new String[]{FILE, DIR};
         }
     }
-
 
 }

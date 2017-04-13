@@ -18,8 +18,9 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Generalization of <code>ExecuteWatchdog</code>
@@ -31,18 +32,21 @@ import java.util.Vector;
  */
 public class Watchdog implements Runnable {
 
-    private Vector observers = new Vector(1);
-    private long timeout = -1;
-    /**
-     * marked as volatile to stop the compiler caching values or (in java1.5+,
-     * reordering access)
-     */
-    private volatile boolean stopped = false;
     /**
      * Error string.
      * {@value}
      */
     public static final String ERROR_INVALID_TIMEOUT = "timeout less than 1.";
+
+    private List<TimeoutObserver> observers =
+        Collections.synchronizedList(new ArrayList<>(1));
+    private long timeout = -1;
+
+    /**
+     * marked as volatile to stop the compiler caching values or (in java1.5+,
+     * reordering access)
+     */
+    private volatile boolean stopped = false;
 
     /**
      * Constructor for Watchdog.
@@ -60,8 +64,7 @@ public class Watchdog implements Runnable {
      * @param to the timeout observer to add.
      */
     public void addTimeoutObserver(TimeoutObserver to) {
-        //no need to synchronize, as Vector is always synchronized
-        observers.addElement(to);
+        observers.add(to);
     }
 
     /**
@@ -69,8 +72,7 @@ public class Watchdog implements Runnable {
      * @param to the timeout observer to remove.
      */
     public void removeTimeoutObserver(TimeoutObserver to) {
-        //no need to synchronize, as Vector is always synchronized
-        observers.removeElement(to);
+        observers.remove(to);
     }
 
     /**
@@ -78,10 +80,7 @@ public class Watchdog implements Runnable {
      * This happens in the watchdog thread.
      */
     protected final void fireTimeoutOccured() {
-        Enumeration e = observers.elements();
-        while (e.hasMoreElements()) {
-            ((TimeoutObserver) e.nextElement()).timeoutOccured(this);
-        }
+        observers.forEach(o -> o.timeoutOccured(this));
     }
 
     /**
@@ -108,6 +107,7 @@ public class Watchdog implements Runnable {
      * if the stop flag has not been set when the wait has returned or
      * has been interrupted, the watch dog listeners are informed.
      */
+    @Override
     public synchronized void run() {
         long now = System.currentTimeMillis();
         final long until = now + timeout;

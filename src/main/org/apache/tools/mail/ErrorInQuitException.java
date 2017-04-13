@@ -31,6 +31,8 @@ import java.io.IOException;
  */
 public class ErrorInQuitException extends IOException {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Initialise from an IOException
      *

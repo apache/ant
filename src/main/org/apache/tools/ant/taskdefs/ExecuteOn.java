@@ -20,7 +20,10 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -60,8 +63,9 @@ public class ExecuteOn extends ExecTask {
     // switching type to "dir" when we encounter a DirSet that would
     // be more difficult to achieve otherwise.
 
-    protected Vector<AbstractFileSet> filesets = new Vector<AbstractFileSet>(); // contains AbstractFileSet
-                                              // (both DirSet and FileSet)
+    // (both DirSet and FileSet)
+    protected Vector<AbstractFileSet> filesets = new Vector<>();
+
     private Union resources = null;
     private boolean relative = false;
     private boolean parallel = false;
@@ -296,6 +300,7 @@ public class ExecuteOn extends ExecTask {
     /**
      * Check the configuration of this ExecuteOn instance.
      */
+    @Override
     protected void checkConfiguration() {
 //     * @TODO using taskName here is brittle, as a user could override it.
 //     *       this should probably be modified to use the classname instead.
@@ -303,7 +308,7 @@ public class ExecuteOn extends ExecTask {
             log("!! execon is deprecated. Use apply instead. !!");
         }
         super.checkConfiguration();
-        if (filesets.size() == 0 && resources == null) {
+        if (filesets.isEmpty() && resources == null) {
             throw new BuildException("no resources specified",
                                      getLocation());
         }
@@ -326,6 +331,7 @@ public class ExecuteOn extends ExecTask {
      * @return <code>ExecuteStreamHandler</code>.
      * @throws BuildException on error.
      */
+    @Override
     protected ExecuteStreamHandler createHandler() throws BuildException {
         //if we have a RedirectorElement, return a decoy
         return (redirectorElement == null)
@@ -335,6 +341,7 @@ public class ExecuteOn extends ExecTask {
     /**
      * Set up the I/O Redirector.
      */
+    @Override
     protected void setupRedirector() {
         super.setupRedirector();
         redirector.setAppendProperties(true);
@@ -345,23 +352,21 @@ public class ExecuteOn extends ExecTask {
      * @param exe the Execute instance representing the external process.
      * @throws BuildException on error
      */
+    @Override
     protected void runExec(Execute exe) throws BuildException {
         int totalFiles = 0;
         int totalDirs = 0;
         boolean haveExecuted = false;
         try {
-            Vector<String> fileNames = new Vector<String>();
-            Vector<File> baseDirs = new Vector<File>();
-            final int size = filesets.size();
-            for (int i = 0; i < size; i++) {
+            Vector<String> fileNames = new Vector<>();
+            Vector<File> baseDirs = new Vector<>();
+            for (AbstractFileSet fs : filesets) {
                 String currentType = type;
-                AbstractFileSet fs = filesets.elementAt(i);
                 if (fs instanceof DirSet) {
                     if (!FileDirBoth.DIR.equals(type)) {
                         log("Found a nested dirset but type is " + type + ". "
-                            + "Temporarily switching to type=\"dir\" on the"
-                            + " assumption that you really did mean"
-                            + " <dirset> not <fileset>.", Project.MSG_DEBUG);
+                            + "Temporarily switching to type=\"dir\" on the assumption that you really did mean <dirset> not <fileset>.",
+                            Project.MSG_DEBUG);
                         currentType = FileDirBoth.DIR;
                     }
                 }
@@ -373,34 +378,32 @@ public class ExecuteOn extends ExecTask {
                     String[] s = getFiles(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalFiles++;
-                        fileNames.addElement(s[j]);
-                        baseDirs.addElement(base);
+                        fileNames.add(s[j]);
+                        baseDirs.add(base);
                     }
                 }
                 if (!FileDirBoth.FILE.equals(currentType)) {
                     String[] s = getDirs(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalDirs++;
-                        fileNames.addElement(s[j]);
-                        baseDirs.addElement(base);
+                        fileNames.add(s[j]);
+                        baseDirs.add(base);
                     }
                 }
-                if (fileNames.size() == 0 && skipEmpty) {
+                if (fileNames.isEmpty() && skipEmpty) {
                     logSkippingFileset(currentType, ds, base);
                     continue;
                 }
                 if (!parallel) {
-                    String[] s = new String[fileNames.size()];
-                    fileNames.copyInto(s);
-                    for (int j = 0; j < s.length; j++) {
-                        String[] command = getCommandline(s[j], base);
+                    for (String srcFile : fileNames) {
+                        String[] command = getCommandline(srcFile, base);
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
 
                         if (redirectorElement != null) {
                             setupRedirector();
-                            redirectorElement.configure(redirector, s[j]);
+                            redirectorElement.configure(redirector, srcFile);
                         }
                         if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
@@ -411,8 +414,8 @@ public class ExecuteOn extends ExecTask {
                         runExecute(exe);
                         haveExecuted = true;
                     }
-                    fileNames.removeAllElements();
-                    baseDirs.removeAllElements();
+                    fileNames.clear();
+                    baseDirs.clear();
                 }
             }
 
@@ -469,12 +472,12 @@ public class ExecuteOn extends ExecTask {
                         }
                         runExecute(exe);
                         haveExecuted = true;
-                        fileNames.removeAllElements();
-                        baseDirs.removeAllElements();
+                        fileNames.clear();
+                        baseDirs.clear();
                     }
                 }
             }
-            if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
+            if (parallel && (!fileNames.isEmpty() || !skipEmpty)) {
                 runParallel(exe, fileNames, baseDirs);
                 haveExecuted = true;
             }
@@ -524,31 +527,31 @@ public class ExecuteOn extends ExecTask {
      */
     protected String[] getCommandline(String[] srcFiles, File[] baseDirs) {
         final char fileSeparator = File.separatorChar;
-        Vector<String> targets = new Vector<String>();
+        List<String> targets = new ArrayList<>();
         if (targetFilePos != null) {
-            HashSet<String> addedFiles = new HashSet<String>();
+            Set<String> addedFiles = new HashSet<>();
             for (int i = 0; i < srcFiles.length; i++) {
                 String[] subTargets = mapper.mapFileName(srcFiles[i]);
                 if (subTargets != null) {
-                    for (int j = 0; j < subTargets.length; j++) {
-                        String name = null;
-                        if (!relative) {
-                            name = new File(destDir, subTargets[j]).getAbsolutePath();
+                    for (String subTarget : subTargets) {
+                        String name;
+                        if (relative) {
+                            name = subTarget;
                         } else {
-                            name = subTargets[j];
+                            name = new File(destDir, subTarget).getAbsolutePath();
                         }
                         if (forwardSlash && fileSeparator != '/') {
                             name = name.replace(fileSeparator, '/');
                         }
                         if (!addedFiles.contains(name)) {
-                            targets.addElement(name);
+                            targets.add(name);
                             addedFiles.add(name);
                         }
                     }
                 }
             }
         }
-        String[] targetFiles = (String[]) targets.toArray(new String[targets.size()]);
+        String[] targetFiles = targets.toArray(new String[targets.size()]);
 
         if (!addSourceFile) {
             srcFiles = new String[0];
@@ -642,7 +645,7 @@ public class ExecuteOn extends ExecTask {
      * @return the command line in the form of a String[].
      */
     protected String[] getCommandline(String srcFile, File baseDir) {
-        return getCommandline(new String[] {srcFile}, new File[] {baseDir});
+        return getCommandline(new String[] { srcFile }, new File[] { baseDir });
     }
 
     /**
@@ -697,10 +700,8 @@ public class ExecuteOn extends ExecTask {
     protected void runParallel(Execute exe, Vector<String> fileNames,
                                Vector<File> baseDirs)
         throws IOException, BuildException {
-        String[] s = new String[fileNames.size()];
-        fileNames.copyInto(s);
-        File[] b = new File[baseDirs.size()];
-        baseDirs.copyInto(b);
+        String[] s = fileNames.toArray(new String[fileNames.size()]);
+        File[] b = baseDirs.toArray(new File[baseDirs.size()]);
 
         if (maxParallel <= 0
             || s.length == 0 /* this is skipEmpty == false */) {
@@ -752,7 +753,7 @@ public class ExecuteOn extends ExecTask {
                                           String[] arguments,
                                           int insertPosition,
                                           String prefix, String suffix) {
-        if (prefix.length() == 0 && suffix.length() == 0) {
+        if (prefix.isEmpty() && suffix.isEmpty()) {
             System.arraycopy(targetFiles, 0, arguments, insertPosition,
                              targetFiles.length);
         } else {
@@ -772,12 +773,14 @@ public class ExecuteOn extends ExecTask {
         public static final String FILE = "file";
         /** Dir value */
         public static final String DIR = "dir";
+
         /**
+         * {@inheritDoc}
          * @see EnumeratedAttribute#getValues
          */
-        /** {@inheritDoc}. */
-       public String[] getValues() {
-            return new String[] {FILE, DIR, "both"};
+        @Override
+        public String[] getValues() {
+            return new String[] { FILE, DIR, "both" };
         }
     }
 

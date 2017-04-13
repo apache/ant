@@ -74,6 +74,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      *             Use constructor with a long type instead.
      * (1.4.x compatibility)
      */
+    @Deprecated
     public ExecuteWatchdog(int timeout) {
         this((long) timeout);
     }
@@ -112,6 +113,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * This can be called in the watchdog thread
      * @param w the watchdog
      */
+    @Override
     public synchronized void timeoutOccured(Watchdog w) {
         try {
             try {
@@ -174,4 +176,3 @@ public class ExecuteWatchdog implements TimeoutObserver {
         return killedProcess;
     }
 }
-

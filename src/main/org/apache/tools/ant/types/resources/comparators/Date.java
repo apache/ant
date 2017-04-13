@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
+import java.util.Comparator;
+
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -32,14 +34,8 @@ public class Date extends ResourceComparator {
      *         argument is less than, equal to, or greater than the second.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        long diff = foo.getLastModified() - bar.getLastModified();
-        if (diff > 0) {
-            return +1;
-        } else if (diff < 0) {
-            return -1;
-        } else {
-            return 0;
-        }
+        return Comparator.comparingLong(Resource::getLastModified).compare(foo,
+            bar);
     }
 
 }

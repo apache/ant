@@ -23,7 +23,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Enumeration;
+import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -46,9 +47,9 @@ import org.apache.tools.ant.util.FileUtils;
 
 public class Cab extends MatchingTask {
     private static final int DEFAULT_RESULT = -99;
+
     private File cabFile;
     private File baseDir;
-    private Vector filesets = new Vector();
     private boolean doCompress = true;
     private boolean doVerbose = false;
     private String cmdOptions;
@@ -58,6 +59,10 @@ public class Cab extends MatchingTask {
     // CheckStyle:VisibilityModifier ON
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    {
+        fileset = null;
+    }
 
     /**
      * The name/location of where to create the .cab file.
@@ -101,13 +106,13 @@ public class Cab extends MatchingTask {
 
     /**
      * Adds a set of files to archive.
-     * @param set a set of files to archive.
+     * @param fileset a set of files to archive.
      */
-    public void addFileset(FileSet set) {
-        if (filesets.size() > 0) {
+    public void addFileset(FileSet fileset) {
+        if (fileset != null) {
             throw new BuildException("Only one nested fileset allowed");
         }
-        filesets.addElement(set);
+        this.fileset = fileset;
     }
 
     /*
@@ -120,15 +125,15 @@ public class Cab extends MatchingTask {
      * @throws BuildException on error.
      */
     protected void checkConfiguration() throws BuildException {
-        if (baseDir == null && filesets.size() == 0) {
-            throw new BuildException("basedir attribute or one "
-                                     + "nested fileset is required!",
-                                     getLocation());
+        if (baseDir == null && fileset == null) {
+            throw new BuildException(
+                "basedir attribute or one nested fileset is required!",
+                getLocation());
         }
         if (baseDir != null && !baseDir.exists()) {
             throw new BuildException("basedir does not exist!", getLocation());
         }
-        if (baseDir != null && filesets.size() > 0) {
+        if (baseDir != null && fileset != null) {
             throw new BuildException(
                 "Both basedir attribute and a nested fileset is not allowed");
         }
@@ -145,8 +150,7 @@ public class Cab extends MatchingTask {
      * @throws BuildException on error.
      */
     protected ExecTask createExec() throws BuildException {
-        ExecTask exec = new ExecTask(this);
-        return exec;
+        return new ExecTask(this);
     }
 
     /**
@@ -154,17 +158,10 @@ public class Cab extends MatchingTask {
      * @param files the list of files to check.
      * @return true if the cab file is newer than its dependents.
      */
-    protected boolean isUpToDate(Vector files) {
-        boolean upToDate = true;
-        final int size = files.size();
-        for (int i = 0; i < size && upToDate; i++) {
-            String file = files.elementAt(i).toString();
-            if (FILE_UTILS.resolveFile(baseDir, file).lastModified()
-                    > cabFile.lastModified()) {
-                upToDate = false;
-            }
-        }
-        return upToDate;
+    protected boolean isUpToDate(Vector<String> files) {
+        final long cabModified = cabFile.lastModified();
+        return files.stream().map(f -> FILE_UTILS.resolveFile(baseDir, f))
+            .mapToLong(File::lastModified).allMatch(t -> t < cabModified);
     }
 
     /**
@@ -177,23 +174,15 @@ public class Cab extends MatchingTask {
      * @return the list file created.
      * @throws IOException if there is an error.
      */
-    protected File createListFile(Vector files)
+    protected File createListFile(Vector<String> files)
         throws IOException {
         File listFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
 
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(listFile));
-
-            final int size = files.size();
-            for (int i = 0; i < size; i++) {
-                writer.write('\"' + files.elementAt(i).toString() + '\"');
-                writer.newLine();
-            }
-        } finally {
-            FileUtils.close(writer);
+        try (PrintWriter writer =
+            new PrintWriter(new BufferedWriter(new FileWriter(listFile)))) {
+            files.stream().map(f -> String.format("\"%s\"", f))
+                .forEach(writer::println);
         }
-
         return listFile;
     }
 
@@ -202,12 +191,8 @@ public class Cab extends MatchingTask {
      * @param files the vector to append the files to.
      * @param ds the scanner to get the files from.
      */
-    protected void appendFiles(Vector files, DirectoryScanner ds) {
-        String[] dsfiles = ds.getIncludedFiles();
-
-        for (int i = 0; i < dsfiles.length; i++) {
-            files.addElement(dsfiles[i]);
-        }
+    protected void appendFiles(Vector<String> files, DirectoryScanner ds) {
+        Collections.addAll(files, ds.getIncludedFiles());
     }
 
     /**
@@ -217,18 +202,16 @@ public class Cab extends MatchingTask {
      * @return the list of files.
      * @throws BuildException if there is an error.
      */
-    protected Vector getFileList() throws BuildException {
-        Vector files = new Vector();
+    protected Vector<String> getFileList() throws BuildException {
+        Vector<String> files = new Vector<>();
 
         if (baseDir != null) {
             // get files from old methods - includes and nested include
             appendFiles(files, super.getDirectoryScanner(baseDir));
         } else {
-            FileSet fs = (FileSet) filesets.elementAt(0);
-            baseDir = fs.getDir();
-            appendFiles(files, fs.getDirectoryScanner(getProject()));
+            baseDir = fileset.getDir();
+            appendFiles(files, fileset.getDirectoryScanner(getProject()));
         }
-
         return files;
     }
 
@@ -236,11 +219,12 @@ public class Cab extends MatchingTask {
      * execute this task.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
 
         checkConfiguration();
 
-        Vector files = getFileList();
+        Vector<String> files = getFileList();
 
         // quick exit if the target is up to date
         if (isUpToDate(files)) {
@@ -252,21 +236,17 @@ public class Cab extends MatchingTask {
         if (!Os.isFamily("windows")) {
             log("Using listcab/libcabinet", Project.MSG_VERBOSE);
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
-            Enumeration fileEnum = files.elements();
+            files.forEach(f -> sb.append(f).append("\n"));
 
-            while (fileEnum.hasMoreElements()) {
-                sb.append(fileEnum.nextElement()).append("\n");
-            }
             sb.append("\n").append(cabFile.getAbsolutePath()).append("\n");
 
             try {
                 Process p = Execute.launch(getProject(),
-                                           new String[] {"listcab"}, null,
-                                           baseDir != null ? baseDir
-                                                   : getProject().getBaseDir(),
-                                           true);
+                    new String[] { "listcab" }, null,
+                    baseDir != null ? baseDir : getProject().getBaseDir(),
+                    true);
                 OutputStream out = p.getOutputStream();
 
                 // Create the stream pumpers to forward listcab's stdout and stderr to the log
@@ -278,8 +258,8 @@ public class Cab extends MatchingTask {
                 StreamPumper    errPump = new StreamPumper(p.getErrorStream(), errLog);
 
                 // Pump streams asynchronously
-                (new Thread(outPump)).start();
-                (new Thread(errPump)).start();
+                new Thread(outPump).start();
+                new Thread(errPump).start();
 
                 out.write(sb.toString().getBytes());
                 out.flush();
@@ -306,8 +286,9 @@ public class Cab extends MatchingTask {
                     log("Error executing listcab; error code: " + result);
                 }
             } catch (IOException ex) {
-                String msg = "Problem creating " + cabFile + " " + ex.getMessage();
-                throw new BuildException(msg, getLocation());
+                throw new BuildException(
+                    "Problem creating " + cabFile + " " + ex.getMessage(),
+                    getLocation());
             }
         } else {
             try {
@@ -349,8 +330,9 @@ public class Cab extends MatchingTask {
 
                 listFile.delete();
             } catch (IOException ioe) {
-                String msg = "Problem creating " + cabFile + " " + ioe.getMessage();
-                throw new BuildException(msg, getLocation());
+                throw new BuildException(
+                    "Problem creating " + cabFile + " " + ioe.getMessage(),
+                    getLocation());
             }
         }
     }

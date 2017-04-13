@@ -58,6 +58,7 @@ public class ZipFileSet extends ArchiveFileSet {
      * Return a new archive scanner based on this one.
      * @return a new ZipScanner with the same encoding as this one.
      */
+    @Override
     protected ArchiveScanner newArchiveScanner() {
         ZipScanner zs = new ZipScanner();
         zs.setEncoding(getEncoding());
@@ -70,19 +71,20 @@ public class ZipFileSet extends ArchiveFileSet {
      * @param p the project to use
      * @return the abstract fileset instance
      */
+    @Override
     protected AbstractFileSet getRef(Project p) {
         dieOnCircularReference(p);
         Object o = getRefid().getReferencedObject(p);
         if (o instanceof ZipFileSet) {
             return (AbstractFileSet) o;
-        } else if (o instanceof FileSet) {
+        }
+        if (o instanceof FileSet) {
             ZipFileSet zfs = new ZipFileSet((FileSet) o);
             configureFileSet(zfs);
             return zfs;
-        } else {
-            String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
-            throw new BuildException(msg);
         }
+        String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
+        throw new BuildException(msg);
     }
 
     /**
@@ -90,28 +92,12 @@ public class ZipFileSet extends ArchiveFileSet {
      * as this one.
      * @return the cloned zipFileSet
      */
-    public Object clone() {
+    @Override
+    public ZipFileSet clone() {
         if (isReference()) {
             return ((ZipFileSet) getRef(getProject())).clone();
-        } else {
-            return super.clone();
         }
-    }
-
-    /**
-     * A check attributes for zipFileSet.
-     * If there is a reference, and
-     * it is a ZipFileSet, the zip fileset attributes
-     * cannot be used.
-     */
-    private void checkZipFileSetAttributesAllowed() {
-        if (getProject() == null
-            || (isReference()
-                && (getRefid().getReferencedObject(
-                        getProject())
-                    instanceof ZipFileSet))) {
-            checkAttributesAllowed();
-        }
+        return (ZipFileSet) super.clone();
     }
 
 }

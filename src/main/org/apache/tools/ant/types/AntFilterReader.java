@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.types;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -31,7 +32,7 @@ public final class AntFilterReader extends DataType {
 
     private String className;
 
-    private final Vector<Parameter> parameters = new Vector<Parameter>();
+    private final List<Parameter> parameters = new ArrayList<>();
 
     private Path classpath;
 
@@ -69,7 +70,7 @@ public final class AntFilterReader extends DataType {
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        parameters.addElement(param);
+        parameters.add(param);
     }
 
     /**
@@ -137,9 +138,7 @@ public final class AntFilterReader extends DataType {
             ((AntFilterReader) getCheckedRef()).getParams();
         }
         dieOnCircularReference();
-        Parameter[] params = new Parameter[parameters.size()];
-        parameters.copyInto(params);
-        return params;
+        return parameters.toArray(new Parameter[parameters.size()]);
     }
 
     /**

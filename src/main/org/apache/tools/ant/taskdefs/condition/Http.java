@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,6 +44,8 @@ public class Http extends ProjectComponent implements Condition {
     private String requestMethod = DEFAULT_REQUEST_METHOD;
     private boolean followRedirects = true;
 
+    private int errorsBeginAt = ERROR_BEGINS;
+    
     /**
      * Set the url attribute
      * @param url the url of the request
@@ -50,8 +53,6 @@ public class Http extends ProjectComponent implements Condition {
     public void setUrl(String url) {
         spec = url;
     }
-
-    private int errorsBeginAt = ERROR_BEGINS;
 
     /**
      * Set the errorsBeginAt attribute
@@ -92,6 +93,7 @@ public class Http extends ProjectComponent implements Condition {
      * @return true if the HTTP request succeeds
      * @exception BuildException if an error occurs
      */
+    @Override
     public boolean eval() throws BuildException {
         if (spec == null) {
             throw new BuildException("No url specified in http condition");
@@ -116,7 +118,7 @@ public class Http extends ProjectComponent implements Condition {
             } catch (java.net.ProtocolException pe) {
                 throw new BuildException("Invalid HTTP protocol: "
                                          + requestMethod, pe);
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 return false;
             }
         } catch (MalformedURLException e) {

@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -119,10 +118,8 @@ public class DigestAlgorithm implements Algorithm {
         if ((provider != null) && !"".equals(provider) && !"null".equals(provider)) {
             try {
                 messageDigest = MessageDigest.getInstance(algorithm, provider);
-            } catch (NoSuchAlgorithmException noalgo) {
-                throw new BuildException(noalgo);
-            } catch (NoSuchProviderException noprovider) {
-                throw new BuildException(noprovider);
+            } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+                throw new BuildException(e);
             }
         } else {
             try {
@@ -141,10 +138,10 @@ public class DigestAlgorithm implements Algorithm {
      * This algorithm supports only MD5 and SHA.
      * @return <i>true</i> if all is ok, otherwise <i>false</i>.
      */
+    @Override
     public boolean isValid() {
         return "SHA".equals(algorithm) || "MD5".equals(algorithm);
     }
-
 
     /**
      * Computes a value for a file content with the specified digest algorithm.
@@ -152,58 +149,44 @@ public class DigestAlgorithm implements Algorithm {
      * @return        The value for that file
      */
     // implementation adapted from ...taskdefs.Checksum, thanks to Magesh for hint
+    @Override
     public String getValue(File file) {
         initMessageDigest();
-        String checksum = null;
         try {
-            if (!file.canRead()) {
-                return null;
-            }
-            InputStream fis = null;
-
-            byte[] buf = new byte[readBufferSize];
-            try {
+            if (file.canRead()) {
+                byte[] buf = new byte[readBufferSize];
                 messageDigest.reset();
-                fis = Files.newInputStream(file.toPath());
-                DigestInputStream dis = new DigestInputStream(fis,
-                                                              messageDigest);
-                while (dis.read(buf, 0, readBufferSize) != -1) {
-                    // do nothing
-                }
-                dis.close();
-                fis.close();
-                fis = null;
-                byte[] fileDigest = messageDigest.digest();
-                StringBuffer checksumSb = new StringBuffer();
-                for (int i = 0; i < fileDigest.length; i++) {
-                    String hexStr
-                        = Integer.toHexString(BYTE_MASK & fileDigest[i]);
-                    if (hexStr.length() < 2) {
-                        checksumSb.append("0");
+                try (DigestInputStream dis = new DigestInputStream(
+                    Files.newInputStream(file.toPath()), messageDigest)) {
+                    // read the whole stream
+                    while (dis.read(buf, 0, readBufferSize) != -1)
+                        ;
+                    byte[] fileDigest = messageDigest.digest();
+                    StringBuilder checksumSb = new StringBuilder();
+                    for (int i = 0; i < fileDigest.length; i++) {
+                        String hexStr =
+                            Integer.toHexString(BYTE_MASK & fileDigest[i]);
+                        if (hexStr.length() < 2) {
+                            checksumSb.append('0');
+                        }
+                        checksumSb.append(hexStr);
                     }
-                    checksumSb.append(hexStr);
+                    return checksumSb.toString();
+                } catch (Exception e) {
                 }
-                checksum = checksumSb.toString();
-            } catch (Exception e) {
-                return null;
             }
         } catch (Exception e) {
-            return null;
         }
-        return checksum;
+        return null;
     }
-
 
     /**
      * Override Object.toString().
      * @return some information about this algorithm.
      */
+    @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append("<DigestAlgorithm:");
-        buf.append("algorithm=").append(algorithm);
-        buf.append(";provider=").append(provider);
-        buf.append(">");
-        return buf.toString();
+        return String.format("<DigestAlgorithm:algorithm=%s;provider=%s>",
+            algorithm, provider);
     }
 }

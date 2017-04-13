@@ -74,13 +74,14 @@ public class TarResource extends ArchiveResource {
      * @throws IOException if the tar file cannot be opened,
      *         or the entry cannot be read.
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+            return getCheckedRef().getInputStream();
         }
         Resource archive = getArchive();
         final TarInputStream i = new TarInputStream(archive.getInputStream());
-        TarEntry te = null;
+        TarEntry te;
         while ((te = i.getNextEntry()) != null) {
             if (te.getName().equals(getName())) {
                 return i;
@@ -100,9 +101,10 @@ public class TarResource extends ArchiveResource {
      * @throws UnsupportedOperationException if OutputStreams are not
      *         supported for this Resource type.
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+            return getCheckedRef().getOutputStream();
         }
         throw new UnsupportedOperationException(
             "Use the tar task for tar output.");
@@ -113,7 +115,7 @@ public class TarResource extends ArchiveResource {
      */
     public String getUserName() {
         if (isReference()) {
-            return ((TarResource) getCheckedRef()).getUserName();
+            return getCheckedRef().getUserName();
         }
         checkEntry();
         return userName;
@@ -124,7 +126,7 @@ public class TarResource extends ArchiveResource {
      */
     public String getGroup() {
         if (isReference()) {
-            return ((TarResource) getCheckedRef()).getGroup();
+            return getCheckedRef().getGroup();
         }
         checkEntry();
         return groupName;
@@ -135,7 +137,7 @@ public class TarResource extends ArchiveResource {
      */
     public int getUid() {
         if (isReference()) {
-            return ((TarResource) getCheckedRef()).getUid();
+            return getCheckedRef().getUid();
         }
         checkEntry();
         return uid;
@@ -146,7 +148,7 @@ public class TarResource extends ArchiveResource {
      */
     public int getGid() {
         if (isReference()) {
-            return ((TarResource) getCheckedRef()).getGid();
+            return getCheckedRef().getGid();
         }
         checkEntry();
         return gid;
@@ -155,11 +157,10 @@ public class TarResource extends ArchiveResource {
     /**
      * fetches information from the named entry inside the archive.
      */
+    @Override
     protected void fetchEntry() {
         Resource archive = getArchive();
-        TarInputStream i = null;
-        try {
-            i = new TarInputStream(archive.getInputStream());
+        try (TarInputStream i = new TarInputStream(archive.getInputStream())) {
             TarEntry te = null;
             while ((te = i.getNextEntry()) != null) {
                 if (te.getName().equals(getName())) {
@@ -170,10 +171,13 @@ public class TarResource extends ArchiveResource {
         } catch (IOException e) {
             log(e.getMessage(), Project.MSG_DEBUG);
             throw new BuildException(e);
-        } finally {
-            FileUtils.close(i);
         }
         setEntry(null);
+    }
+
+    @Override
+    protected TarResource getCheckedRef() {
+        return (TarResource) super.getCheckedRef();
     }
 
     private void setEntry(TarEntry e) {

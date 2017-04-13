@@ -107,41 +107,41 @@ public class GlobPatternMapper implements FileNameMapper {
      * Sets the &quot;from&quot; pattern. Required.
      * @param from a string
      */
+    @Override
     public void setFrom(String from) {
-        if (from != null) {
-            int index = from.lastIndexOf("*");
-            if (index == -1) {
-                fromPrefix = from;
-                fromPostfix = "";
-            } else {
-                fromPrefix = from.substring(0, index);
-                fromPostfix = from.substring(index + 1);
-                fromContainsStar = true;
-            }
-            prefixLength = fromPrefix.length();
-            postfixLength = fromPostfix.length();
-        } else {
+        if (from == null) {
             throw new BuildException("this mapper requires a 'from' attribute");
         }
+        int index = from.lastIndexOf('*');
+        if (index < 0) {
+            fromPrefix = from;
+            fromPostfix = "";
+        } else {
+            fromPrefix = from.substring(0, index);
+            fromPostfix = from.substring(index + 1);
+            fromContainsStar = true;
+        }
+        prefixLength = fromPrefix.length();
+        postfixLength = fromPostfix.length();
     }
 
     /**
      * Sets the &quot;to&quot; pattern. Required.
      * @param to a string
      */
+    @Override
     public void setTo(String to) {
-        if (to != null) {
-            int index = to.lastIndexOf("*");
-            if (index == -1) {
-                toPrefix = to;
-                toPostfix = "";
-            } else {
-                toPrefix = to.substring(0, index);
-                toPostfix = to.substring(index + 1);
-                toContainsStar = true;
-            }
-        } else {
+        if (to == null) {
             throw new BuildException("this mapper requires a 'to' attribute");
+        }
+        int index = to.lastIndexOf('*');
+        if (index < 0 ) {
+            toPrefix = to;
+            toPostfix = "";
+        } else {
+            toPrefix = to.substring(0, index);
+            toPostfix = to.substring(index + 1);
+            toContainsStar = true;
         }
     }
 
@@ -152,6 +152,7 @@ public class GlobPatternMapper implements FileNameMapper {
      * @param sourceFileName the filename to map
      * @return a list of converted filenames
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
         String modName = modifyName(sourceFileName);
         if (fromPrefix == null

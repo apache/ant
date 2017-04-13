@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Condition to wait for a TCP/IP socket to have a listener. Its attributes are:
@@ -58,25 +57,21 @@ public class Socket extends ProjectComponent implements Condition {
      * @return true if a socket can be created
      * @exception BuildException if the attributes are not set
      */
+    @Override
     public boolean eval() throws BuildException {
         if (server == null) {
-            throw new BuildException("No server specified in socket "
-                                     + "condition");
+            throw new BuildException("No server specified in socket condition");
         }
         if (port == 0) {
             throw new BuildException("No port specified in socket condition");
         }
         log("Checking for listener at " + server + ":" + port,
             Project.MSG_VERBOSE);
-        java.net.Socket s = null;
-        try {
-            s = new java.net.Socket(server, port);
+        try (java.net.Socket s = new java.net.Socket(server, port)) {
+            return true;
         } catch (IOException e) {
             return false;
-        } finally {
-            FileUtils.close(s);
         }
-        return true;
     }
 
 }

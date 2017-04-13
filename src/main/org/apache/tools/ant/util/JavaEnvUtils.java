@@ -448,7 +448,7 @@ public final class JavaEnvUtils {
      */
 
     private static void buildJrePackages() {
-        jrePackages = new Vector<String>();
+        jrePackages = new Vector<>();
         switch(javaVersionNumber) {
             case VERSION_9:
             case VERSION_1_8:
@@ -502,7 +502,7 @@ public final class JavaEnvUtils {
      * @return a list of test classes depending on the java version.
      */
     public static Vector<String> getJrePackageTestCases() {
-        Vector<String> tests = new Vector<String>();
+        Vector<String> tests = new Vector<>();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
             case VERSION_9:
@@ -577,15 +577,11 @@ public final class JavaEnvUtils {
     public static File createVmsJavaOptionFile(String[] cmd)
             throws IOException {
         File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null, false, true);
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(script));
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
             for (int i = 0; i < cmd.length; i++) {
                 out.write(cmd[i]);
                 out.newLine();
             }
-        } finally {
-            FileUtils.close(out);
         }
         return script;
     }

@@ -37,6 +37,17 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 
 public abstract class AbstractJarSignerTask extends Task {
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_NO_SOURCE =
+        "jar must be set through jar attribute or nested filesets";
+
+    /**
+     * name of JDK program we are looking for
+     */
+    protected static final String JARSIGNER_COMMAND = "jarsigner";
+
     // CheckStyle:VisibilityModifier OFF - bc
     /**
      * The name of the jar file.
@@ -78,12 +89,7 @@ public abstract class AbstractJarSignerTask extends Task {
     /**
      * the filesets of the jars to sign
      */
-    protected Vector<FileSet> filesets = new Vector<FileSet>();
-    /**
-     * name of JDK program we are looking for
-     */
-    protected static final String JARSIGNER_COMMAND = "jarsigner";
-
+    protected Vector<FileSet> filesets = new Vector<>();
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -95,12 +101,6 @@ public abstract class AbstractJarSignerTask extends Task {
      * Java declarations -J-Dname=value
      */
     private Environment sysProperties = new Environment();
-
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_NO_SOURCE = "jar must be set through jar attribute "
-            + "or nested filesets";
 
     /**
      * Path holding all non-filesets of filesystem resources we want to sign.
@@ -253,7 +253,7 @@ public abstract class AbstractJarSignerTask extends Task {
     private RedirectorElement createRedirector() {
         RedirectorElement result = new RedirectorElement();
         if (storepass != null) {
-            StringBuffer input = new StringBuffer(storepass).append('\n');
+            StringBuilder input = new StringBuilder(storepass).append('\n');
             if (keypass != null) {
                 input.append(keypass).append('\n');
             }
@@ -324,7 +324,6 @@ public abstract class AbstractJarSignerTask extends Task {
         addValue(cmd, "-J-D" + property.getContent());
     }
 
-
     /**
      * bind to a keystore if the attributes are there
      * @param cmd command to configure
@@ -373,8 +372,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @return a vector of FileSet instances
      */
     protected Vector<FileSet> createUnifiedSources() {
-        @SuppressWarnings("unchecked")
-        Vector<FileSet> sources = (Vector<FileSet>) filesets.clone();
+        Vector<FileSet> sources = new Vector<>(filesets);
         if (jar != null) {
             //we create a fileset with the source file.
             //this lets us combine our logic for handling output directories,
@@ -408,7 +406,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.7
      */
     protected boolean hasResources() {
-        return path != null || filesets.size() > 0;
+        return !(path == null && filesets.isEmpty());
     }
 
     /**

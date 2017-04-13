@@ -36,6 +36,7 @@ public class AntVersion extends Task implements Condition {
      * Run as a task.
      * @throws BuildException if an error occurs.
      */
+    @Override
     public void execute() throws BuildException {
         if (propertyname == null) {
             throw new BuildException("'property' must be set.");
@@ -56,6 +57,7 @@ public class AntVersion extends Task implements Condition {
      * @return true if the condition is true.
      * @throws BuildException if an error occurs.
      */
+    @Override
     public boolean eval() throws BuildException {
         validate();
         DeweyDecimal actual = getVersion();
@@ -82,8 +84,8 @@ public class AntVersion extends Task implements Condition {
                 new DeweyDecimal(atLeast); //NOSONAR
             } catch (NumberFormatException e) {
                 throw new BuildException(
-                    "The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : "
-                    + atLeast);
+                    "The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : %s",
+                    atLeast);
             }
         } else {
             try {
@@ -91,8 +93,8 @@ public class AntVersion extends Task implements Condition {
                 new DeweyDecimal(exactly); //NOSONAR
             } catch (NumberFormatException e) {
                 throw new BuildException(
-                    "The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : "
-                    + exactly);
+                    "The 'exactly' attribute is not a Dewey Decimal eg 1.1.0 : %s",
+                    exactly);
             }
         }
     }
@@ -101,7 +103,7 @@ public class AntVersion extends Task implements Condition {
         Project p = new Project();
         p.init();
         char[] versionString = p.getProperty("ant.version").toCharArray();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean foundFirstDigit = false;
         for (int i = 0; i < versionString.length; i++) {
             if (Character.isDigit(versionString[i])) {

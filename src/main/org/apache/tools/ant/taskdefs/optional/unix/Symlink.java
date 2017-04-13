@@ -35,14 +35,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.nio.file.Files;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -119,7 +121,7 @@ public class Symlink extends DispatchTask {
 
     private String resource;
     private String link;
-    private Vector fileSets = new Vector();
+    private List<FileSet> fileSets = new ArrayList<>();
     private String linkFileName;
     private boolean overwrite;
     private boolean failonerror;
@@ -189,8 +191,6 @@ public class Symlink extends DispatchTask {
             SYMLINK_UTILS.deleteSymbolicLink(FILE_UTILS
                                              .resolveFile(new File("."), link),
                                              this);
-        } catch (FileNotFoundException fnfe) {
-            handleError(fnfe.toString());
         } catch (IOException ioe) {
             handleError(ioe.toString());
         } finally {
@@ -206,14 +206,13 @@ public class Symlink extends DispatchTask {
     public void recreate() throws BuildException {
         try {
             if (fileSets.isEmpty()) {
-                handleError("File set identifying link file(s) "
-                            + "required for action recreate");
+                handleError(
+                    "File set identifying link file(s) required for action recreate");
                 return;
             }
             Properties links = loadLinks(fileSets);
 
-            for (Iterator kitr = links.keySet().iterator(); kitr.hasNext();) {
-                String lnk = (String) kitr.next();
+            for (String lnk : links.stringPropertyNames()) {
                 String res = links.getProperty(lnk);
                 // handle the case where lnk points to a directory (bug 25181)
                 try {
@@ -249,30 +248,20 @@ public class Symlink extends DispatchTask {
                 handleError("Name of file to record links in required");
                 return;
             }
-            // create a hashtable to group them by parent directory:
-            Hashtable byDir = new Hashtable();
+            // create a map to group them by parent directory:
+            Map<File, List<File>> byDir = new HashMap<>();
 
             // get an Iterator of file objects representing links (canonical):
-            for (Iterator litr = findLinks(fileSets).iterator();
-                litr.hasNext();) {
-                File thisLink = (File) litr.next();
-                File parent = thisLink.getParentFile();
-                Vector v = (Vector) byDir.get(parent);
-                if (v == null) {
-                    v = new Vector();
-                    byDir.put(parent, v);
-                }
-                v.addElement(thisLink);
-            }
+            findLinks(fileSets).forEach(lnk -> byDir
+                .computeIfAbsent(lnk.getParentFile(), k -> new ArrayList<>())
+                .add(lnk));
+
             // write a Properties file in each directory:
-            for (Iterator dirs = byDir.keySet().iterator(); dirs.hasNext();) {
-                File dir = (File) dirs.next();
-                Vector linksInDir = (Vector) byDir.get(dir);
+            byDir.forEach((dir, linksInDir) -> {
                 Properties linksToStore = new Properties();
 
                 // fill up a Properties object with link and resource names:
-                for (Iterator dlnk = linksInDir.iterator(); dlnk.hasNext();) {
-                    File lnk = (File) dlnk.next();
+                for (File lnk : linksInDir) {
                     try {
                         linksToStore.put(lnk.getName(), lnk.getCanonicalPath());
                     } catch (IOException ioe) {
@@ -280,7 +269,7 @@ public class Symlink extends DispatchTask {
                     }
                 }
                 writePropertyFile(linksToStore, dir);
-            }
+            });
         } finally {
             setDefaults();
         }
@@ -367,7 +356,7 @@ public class Symlink extends DispatchTask {
      * @param set      The fileset to add.
      */
     public void addFileset(FileSet set) {
-        fileSets.addElement(set);
+        fileSets.add(set);
     }
 
     /**
@@ -434,15 +423,11 @@ public class Symlink extends DispatchTask {
      */
     private void writePropertyFile(Properties properties, File dir)
         throws BuildException {
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(
-                Files.newOutputStream(new File(dir, linkFileName).toPath()));
+        try (BufferedOutputStream bos = new BufferedOutputStream(
+            Files.newOutputStream(new File(dir, linkFileName).toPath()))) {
             properties.store(bos, "Symlinks from " + dir);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
-        } finally {
-            FileUtils.close(bos);
         }
     }
 
@@ -485,16 +470,14 @@ public class Symlink extends DispatchTask {
                 }
             }
         }
-        String[] cmd = new String[] {"ln", options, res, lnk};
         try {
-            Execute.runCommand(this, cmd);
+            Execute.runCommand(this, "ln", options, res, lnk);
         } catch (BuildException failedToExecute) {
             if (failonerror) {
                 throw failedToExecute;
-            } else {
-                //log at the info level, and keep going.
-                log(failedToExecute.getMessage(), failedToExecute, Project.MSG_INFO);
             }
+            //log at the info level, and keep going.
+            log(failedToExecute.getMessage(), failedToExecute, Project.MSG_INFO);
         }
     }
 
@@ -505,33 +488,30 @@ public class Symlink extends DispatchTask {
      * &quot;record&quot;. This means that filesets are interpreted
      * as the directories in which links may be found.
      *
-     * @param v   The filesets specified by the user.
+     * @param fileSets   The filesets specified by the user.
      * @return A HashSet of <code>File</code> objects containing the
      *         links (with canonical parent directories).
      */
-    private HashSet findLinks(Vector v) {
-        HashSet result = new HashSet();
-        final int size = v.size();
-        for (int i = 0; i < size; i++) {
-            FileSet fs = (FileSet) v.get(i);
+    private Set<File> findLinks(List<FileSet> fileSets) {
+        Set<File> result = new HashSet<>();
+        for (FileSet fs : fileSets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[][] fnd = new String[][]
-                {ds.getIncludedFiles(), ds.getIncludedDirectories()};
+
             File dir = fs.getDir(getProject());
-            for (int j = 0; j < fnd.length; j++) {
-                for (int k = 0; k < fnd[j].length; k++) {
+
+            Stream.of(ds.getIncludedFiles(), ds.getIncludedDirectories())
+                .flatMap(Stream::of).forEach(path -> {
                     try {
-                        File f = new File(dir, fnd[j][k]);
+                        File f = new File(dir, path);
                         File pf = f.getParentFile();
                         String name = f.getName();
                         if (SYMLINK_UTILS.isSymbolicLink(pf, name)) {
                             result.add(new File(pf.getCanonicalFile(), name));
                         }
                     } catch (IOException e) {
-                        handleError("IOException: " + fnd[j][k] + " omitted");
+                        handleError("IOException: " + path + " omitted");
                     }
-                }
-            }
+                });
         }
         return result;
     }
@@ -544,41 +524,35 @@ public class Symlink extends DispatchTask {
      * names of the property files with the link information and the
      * subdirectories in which to look for them.
      *
-     * @param v    The <code>FileSet</code>s for this task.
+     * @param fileSets    The <code>FileSet</code>s for this task.
      * @return            The links to be made.
      */
-    private Properties loadLinks(Vector v) {
+    private Properties loadLinks(List<FileSet> fileSets) {
         Properties finalList = new Properties();
         // loop through the supplied file sets:
-        final int size = v.size();
-        for (int i = 0; i < size; i++) {
-            FileSet fs = (FileSet) v.elementAt(i);
+        for (FileSet fs : fileSets) {
             DirectoryScanner ds = new DirectoryScanner();
             fs.setupDirectoryScanner(ds, getProject());
             ds.setFollowSymlinks(false);
             ds.scan();
-            String[] incs = ds.getIncludedFiles();
             File dir = fs.getDir(getProject());
 
             // load included files as properties files:
-            for (int j = 0; j < incs.length; j++) {
-                File inc = new File(dir, incs[j]);
+            for (String name : ds.getIncludedFiles()) {
+                File inc = new File(dir, name);
                 File pf = inc.getParentFile();
                 Properties lnks = new Properties();
-                InputStream is = null;
-                try {
-                    is = new BufferedInputStream(Files.newInputStream(inc.toPath()));
+                try (InputStream is = new BufferedInputStream(
+                    Files.newInputStream(inc.toPath()))) {
                     lnks.load(is);
                     pf = pf.getCanonicalFile();
                 } catch (FileNotFoundException fnfe) {
-                    handleError("Unable to find " + incs[j] + "; skipping it.");
+                    handleError("Unable to find " + name + "; skipping it.");
                     continue;
                 } catch (IOException ioe) {
-                    handleError("Unable to open " + incs[j]
-                                + " or its parent dir; skipping it.");
+                    handleError("Unable to open " + name
+                        + " or its parent dir; skipping it.");
                     continue;
-                } finally {
-                    FileUtils.close(is);
                 }
                 lnks.list(new PrintStream(
                     new LogOutputStream(this, Project.MSG_INFO)));
@@ -586,8 +560,7 @@ public class Symlink extends DispatchTask {
                 // This method assumes that all links are defined in
                 // terms of absolute paths, or paths relative to the
                 // working directory:
-                for (Iterator kitr = lnks.keySet().iterator(); kitr.hasNext();) {
-                    String key = (String) kitr.next();
+                for (String key : lnks.stringPropertyNames()) {
                     finalList.put(new File(pf, key).getAbsolutePath(),
                         lnks.getProperty(key));
                 }

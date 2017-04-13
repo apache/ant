@@ -19,7 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -44,7 +44,7 @@ public class ServerDeploy extends Task {
     private File source;
 
     /** The vendor specific tool for deploying the component **/
-    private Vector vendorTools = new Vector();
+    private List<AbstractHotDeploymentTool> vendorTools = new Vector<>();
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -60,7 +60,7 @@ public class ServerDeploy extends Task {
      */
     public void addGeneric(GenericHotDeploymentTool tool) {
         tool.setTask(this);
-        vendorTools.addElement(tool);
+        vendorTools.add(tool);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ServerDeploy extends Task {
      */
     public void addWeblogic(WebLogicHotDeploymentTool tool) {
         tool.setTask(this);
-        vendorTools.addElement(tool);
+        vendorTools.add(tool);
     }
 
     /**
@@ -82,7 +82,7 @@ public class ServerDeploy extends Task {
      */
     public void addJonas(JonasHotDeploymentTool tool) {
         tool.setTask(this);
-        vendorTools.addElement(tool);
+        vendorTools.add(tool);
     }
 
 
@@ -100,10 +100,9 @@ public class ServerDeploy extends Task {
      *  @exception org.apache.tools.ant.BuildException if the attributes
      *  are invalid or incomplete, or a failure occurs in the deployment process.
      */
+    @Override
     public void execute() throws BuildException {
-        for (Enumeration e = vendorTools.elements();
-             e.hasMoreElements();) {
-            HotDeploymentTool tool = (HotDeploymentTool) e.nextElement();
+        for (HotDeploymentTool tool : vendorTools) {
             tool.validateAttributes();
             tool.deploy();
         }

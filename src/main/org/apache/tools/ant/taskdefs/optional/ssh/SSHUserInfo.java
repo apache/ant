@@ -35,8 +35,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
 
     /** Constructor for SSHUserInfo. */
     public SSHUserInfo() {
-        super();
-        this.trustAllCertificates = false;
+        this(null, false);
     }
 
     /**
@@ -71,6 +70,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * Gets the user's password.
      * @return the user's password
      */
+    @Override
     public String getPassword() {
         return password;
     }
@@ -135,6 +135,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * Returns the passphrase.
      * @return String
      */
+    @Override
     public String getPassphrase() {
         return passphrase;
     }
@@ -160,6 +161,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * @param message ignored
      * @return true always
      */
+    @Override
     public boolean promptPassphrase(String message) {
         return true;
     }
@@ -169,6 +171,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * @param passwordPrompt ignored
      * @return true the first time this is called, false otherwise
      */
+    @Override
     public boolean promptPassword(String passwordPrompt) {
         return true;
     }
@@ -178,6 +181,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * @param message ignored
      * @return the value of trustAllCertificates
      */
+    @Override
     public boolean promptYesNo(String message) {
         return trustAllCertificates;
     }
@@ -187,6 +191,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * Implement the UserInfo interface (noop).
      * @param message ignored
      */
+    @Override
     public void showMessage(String message) {
         //log(message, Project.MSG_DEBUG);
     }
@@ -201,6 +206,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * @return the password in an size one array if there is a password
      *         and if the prompt and echo checks pass.
      */
+    @Override
     public String[] promptKeyboardInteractive(String destination,
                                               String name,
                                               String instruction,
@@ -209,9 +215,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
         if (prompt.length != 1 || echo[0] || this.password == null) {
             return null;
         }
-        String[] response = new String[1];
-        response[0] = this.password;
-        return response;
+        return new String[] { this.password };
     }
 
 }

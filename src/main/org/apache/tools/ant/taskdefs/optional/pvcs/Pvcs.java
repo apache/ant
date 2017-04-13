@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
@@ -79,10 +78,20 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private static final int POS_2 = 2;
     private static final int POS_3 = 3;
 
+    /**
+     * Constant for the thing to execute
+     */
+    private static final String PCLI_EXE = "pcli";
+
+    /**
+     * Constant for the thing to execute
+     */
+    private static final String GET_EXE = "get";
+
     private String pvcsbin;
     private String repository;
     private String pvcsProject;
-    private Vector pvcsProjects;
+    private Vector<PvcsProject> pvcsProjects;
     private String workspace;
     private String force;
     private String promotiongroup;
@@ -94,21 +103,25 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String lineStart;
     private String userId;
     private String config;
-    /**
-     * Constant for the thing to execute
-     */
-    private static final String PCLI_EXE = "pcli";
-
-    /*
-     * Constant for the PCLI listversionedfiles recursive i a format "get" understands
-     */
-    // private static final String PCLI_LVF_ARGS = "lvf -z -aw";
 
     /**
-     * Constant for the thing to execute
+     * Creates a Pvcs object
      */
-    private static final String GET_EXE = "get";
-
+    public Pvcs() {
+        super();
+        pvcsProject = null;
+        pvcsProjects = new Vector<>();
+        workspace = null;
+        repository = null;
+        pvcsbin = null;
+        force = null;
+        promotiongroup = null;
+        label = null;
+        ignorerc = false;
+        updateOnly = false;
+        lineStart = "\"P:";
+        filenameFormat = "{0}-arc({1})";
+    }
 
     /**
      * Run the command.
@@ -124,7 +137,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             exe.setWorkingDirectory(aProj.getBaseDir());
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             String msg = "Failed executing: " + cmd.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());
@@ -132,7 +145,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     private String getExecutable(String exe) {
-        StringBuffer correctedExe = new StringBuffer();
+        StringBuilder correctedExe = new StringBuilder();
         if (getPvcsbin() != null) {
             if (pvcsbin.endsWith(File.separator)) {
                 correctedExe.append(pvcsbin);
@@ -146,10 +159,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
     /**
      * @exception org.apache.tools.ant.BuildException Something is stopping the build...
      */
-    public void execute() throws org.apache.tools.ant.BuildException {
+    @Override
+    public void execute() throws BuildException {
         int result = 0;
 
-        if (repository == null || repository.trim().equals("")) {
+        if (repository == null || repository.trim().isEmpty()) {
             throw new BuildException("Required argument repository not specified");
         }
 
@@ -183,12 +197,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.createArgument().setValue(getPvcsproject());
         }
         if (!getPvcsprojects().isEmpty()) {
-            Enumeration e = getPvcsprojects().elements();
-            while (e.hasMoreElements()) {
-                String projectName = ((PvcsProject) e.nextElement()).getName();
-                if (projectName == null || (projectName.trim()).equals("")) {
-                    throw new BuildException("name is a required attribute "
-                        + "of pvcsproject");
+            for (PvcsProject pvcsProject : getPvcsprojects()) {
+                String projectName = pvcsProject.getName();
+                if (projectName == null || projectName.trim().isEmpty()) {
+                    throw new BuildException(
+                        "name is a required attribute of pvcsproject");
                 }
                 commandLine.createArgument().setValue(projectName);
             }
@@ -298,9 +311,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * Parses the file and creates the folders specified in the output section
      */
     private void createFolders(File file) throws IOException, ParseException {
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new FileReader(file));
+        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             MessageFormat mf = new MessageFormat(getFilenameFormat());
             String line = in.readLine();
             while (line != null) {
@@ -318,7 +329,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
                     int index = f.lastIndexOf(File.separator);
                     if (index > -1) {
                         File dir = new File(f.substring(0, index));
-                        if (!dir.exists()) {
+                        if (dir.exists()) {
+                            log(dir.getAbsolutePath() + " exists. Skipping",
+                                Project.MSG_VERBOSE);
+                        } else {
                             log("Creating " + dir.getAbsolutePath(),
                                 Project.MSG_VERBOSE);
                             if (dir.mkdirs() || dir.isDirectory()) {
@@ -329,9 +343,6 @@ public class Pvcs extends org.apache.tools.ant.Task {
                                     + dir.getAbsolutePath(),
                                     Project.MSG_INFO);
                             }
-                        } else {
-                            log(dir.getAbsolutePath() + " exists. Skipping",
-                                Project.MSG_VERBOSE);
                         }
                     } else {
                         log("File separator problem with " + line,
@@ -342,8 +353,6 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 }
                 line = in.readLine();
             }
-        } finally {
-            FileUtils.close(in);
         }
     }
 
@@ -355,20 +364,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private void massagePCLI(File in, File out)
         throws IOException {
-        BufferedReader inReader = null;
-        BufferedWriter outWriter = null;
-        try {
-            inReader = new BufferedReader(new FileReader(in));
-            outWriter = new BufferedWriter(new FileWriter(out));
-            String s = null;
-            while ((s = inReader.readLine()) != null) {
-                String sNormal = s.replace('\\', '/');
-                outWriter.write(sNormal);
+        try (BufferedReader inReader = new BufferedReader(new FileReader(in));
+                BufferedWriter outWriter =
+                    new BufferedWriter(new FileWriter(out))) {
+            for (String line : (Iterable<String>) () -> inReader.lines()
+                .map(s -> s.replace('\\', '/')).iterator()) {
+                outWriter.write(line);
                 outWriter.newLine();
             }
-        } finally {
-            FileUtils.close(inReader);
-            FileUtils.close(outWriter);
         }
     }
 
@@ -458,7 +461,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * Get name of the project in the PVCS repository
      * @return Vector
      */
-    public Vector getPvcsprojects() {
+    public Vector<PvcsProject> getPvcsprojects() {
         return pvcsProjects;
     }
 
@@ -523,11 +526,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @param f String (yes/no)
      */
     public void setForce(String f) {
-        if (f != null && f.equalsIgnoreCase("yes")) {
-            force = "yes";
-        } else {
-            force = "no";
-        }
+        force = "yes".equalsIgnoreCase(f) ? "yes" : "no";
     }
 
     /**
@@ -654,23 +653,5 @@ public class Pvcs extends org.apache.tools.ant.Task {
         userId = u;
     }
 
-    /**
-     * Creates a Pvcs object
-     */
-    public Pvcs() {
-        super();
-        pvcsProject = null;
-        pvcsProjects = new Vector();
-        workspace = null;
-        repository = null;
-        pvcsbin = null;
-        force = null;
-        promotiongroup = null;
-        label = null;
-        ignorerc = false;
-        updateOnly = false;
-        lineStart = "\"P:";
-        filenameFormat = "{0}-arc({1})";
-    }
 }
 

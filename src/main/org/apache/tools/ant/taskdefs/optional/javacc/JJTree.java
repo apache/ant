@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -54,7 +54,7 @@ public class JJTree extends Task {
     private static final String VISITOR_EXCEPTION = "VISITOR_EXCEPTION";
     private static final String NODE_PREFIX       = "NODE_PREFIX";
 
-    private final Hashtable optionalAttrs = new Hashtable();
+    private final Map<String, Object> optionalAttrs = new Hashtable<>();
 
     private String outputFile = null;
 
@@ -74,7 +74,7 @@ public class JJTree extends Task {
      * @param buildNodeFiles a <code>boolean</code> value.
      */
     public void setBuildnodefiles(boolean buildNodeFiles) {
-        optionalAttrs.put(BUILD_NODE_FILES, buildNodeFiles ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(BUILD_NODE_FILES, Boolean.valueOf(buildNodeFiles));
     }
 
     /**
@@ -82,7 +82,7 @@ public class JJTree extends Task {
      * @param multi a <code>boolean</code> value.
      */
     public void setMulti(boolean multi) {
-        optionalAttrs.put(MULTI, multi ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(MULTI, Boolean.valueOf(multi));
     }
 
     /**
@@ -90,7 +90,7 @@ public class JJTree extends Task {
      * @param nodeDefaultVoid a <code>boolean</code> value.
      */
     public void setNodedefaultvoid(boolean nodeDefaultVoid) {
-        optionalAttrs.put(NODE_DEFAULT_VOID, nodeDefaultVoid ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(NODE_DEFAULT_VOID, Boolean.valueOf(nodeDefaultVoid));
     }
 
     /**
@@ -98,7 +98,7 @@ public class JJTree extends Task {
      * @param nodeFactory a <code>boolean</code> value.
      */
     public void setNodefactory(boolean nodeFactory) {
-        optionalAttrs.put(NODE_FACTORY, nodeFactory ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(NODE_FACTORY, Boolean.valueOf(nodeFactory));
     }
 
     /**
@@ -106,7 +106,7 @@ public class JJTree extends Task {
      * @param nodeScopeHook a <code>boolean</code> value.
      */
     public void setNodescopehook(boolean nodeScopeHook) {
-        optionalAttrs.put(NODE_SCOPE_HOOK, nodeScopeHook ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(NODE_SCOPE_HOOK, Boolean.valueOf(nodeScopeHook));
     }
 
     /**
@@ -114,7 +114,7 @@ public class JJTree extends Task {
      * @param nodeUsesParser a <code>boolean</code> value.
      */
     public void setNodeusesparser(boolean nodeUsesParser) {
-        optionalAttrs.put(NODE_USES_PARSER, nodeUsesParser ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(NODE_USES_PARSER, Boolean.valueOf(nodeUsesParser));
     }
 
     /**
@@ -122,7 +122,7 @@ public class JJTree extends Task {
      * @param staticParser a <code>boolean</code> value.
      */
     public void setStatic(boolean staticParser) {
-        optionalAttrs.put(STATIC, staticParser ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(STATIC, Boolean.valueOf(staticParser));
     }
 
     /**
@@ -130,7 +130,7 @@ public class JJTree extends Task {
      * @param visitor a <code>boolean</code> value.
      */
     public void setVisitor(boolean visitor) {
-        optionalAttrs.put(VISITOR, visitor ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(VISITOR, Boolean.valueOf(visitor));
     }
 
     /**
@@ -214,21 +214,18 @@ public class JJTree extends Task {
      * Run the task.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
 
         // load command line with optional attributes
-        Enumeration iter = optionalAttrs.keys();
-        while (iter.hasMoreElements()) {
-            String name  = (String) iter.nextElement();
-            Object value = optionalAttrs.get(name);
-            cmdl.createArgument().setValue("-" + name + ":" + value.toString());
-        }
+        optionalAttrs.forEach((name, value) -> cmdl.createArgument()
+            .setValue("-" + name + ":" + value.toString()));
 
         if (targetFile == null || !targetFile.isFile()) {
-            throw new BuildException("Invalid target: " + targetFile);
+            throw new BuildException("Invalid target: %s", targetFile);
         }
 
-        File javaFile = null;
+        File javaFile;
 
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
@@ -305,8 +302,8 @@ public class JJTree extends Task {
                                                 outputDir);
         String jjtreeFile = destFile.getAbsolutePath().replace('\\', '/');
 
-        if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
-            int filePos = jjtreeFile.lastIndexOf("/");
+        if ((optionalOutputFile == null) || optionalOutputFile.isEmpty()) {
+            int filePos = jjtreeFile.lastIndexOf('/');
 
             if (filePos >= 0) {
                 jjtreeFile = jjtreeFile.substring(filePos + 1);
@@ -328,7 +325,7 @@ public class JJTree extends Task {
             }
         }
 
-        if ((outputDir == null) || outputDir.equals("")) {
+        if ((outputDir == null) || outputDir.isEmpty()) {
             outputDir = getDefaultOutputDirectory();
         }
 
@@ -363,17 +360,17 @@ public class JJTree extends Task {
 
         String root = getRoot(new File(destFile)).getAbsolutePath();
 
-        if ((root.length() > 1)
+        if (root.length() > 1
             && destFile.startsWith(root.substring(0, root.length() - 1))) {
-            throw new BuildException("Drive letter in 'outputfile' not "
-                                     + "supported: " + destFile);
+            throw new BuildException(
+                "Drive letter in 'outputfile' not supported: %s", destFile);
         }
 
         return destFile;
     }
 
     private String makeOutputFileRelative(String destFile) {
-        StringBuffer relativePath = new StringBuffer();
+        StringBuilder relativePath = new StringBuilder();
         String defaultOutputDirectory = getDefaultOutputDirectory();
         int nextPos = defaultOutputDirectory.indexOf('/');
         int startPos = nextPos + 1;
@@ -388,10 +385,7 @@ public class JJTree extends Task {
                 startPos = nextPos + 1;
             }
         }
-
-        relativePath.append(destFile);
-
-        return relativePath.toString();
+        return relativePath.append(destFile).toString();
     }
 
     private String getDefaultOutputDirectory() {
@@ -410,7 +404,6 @@ public class JJTree extends Task {
         while (root.getParent() != null) {
             root = root.getParentFile();
         }
-
         return root;
     }
 }

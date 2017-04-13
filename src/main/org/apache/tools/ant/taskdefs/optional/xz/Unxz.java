@@ -19,13 +19,11 @@
 package org.apache.tools.ant.taskdefs.optional.xz;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Unpack;
-import org.apache.tools.ant.util.FileUtils;
 import org.tukaani.xz.XZInputStream;
 
 /**
@@ -46,6 +44,7 @@ public class Unxz extends Unpack {
      * Get the default extension.
      * @return the value ".xz"
      */
+    @Override
     protected String getDefaultExtension() {
         return DEFAULT_EXTENSION;
     }
@@ -53,18 +52,15 @@ public class Unxz extends Unpack {
     /**
      * Implement the gunzipping.
      */
+    @Override
     protected void extract() {
         if (srcResource.getLastModified() > dest.lastModified()) {
             log("Expanding " + srcResource.getName() + " to "
                         + dest.getAbsolutePath());
 
-            OutputStream out = null;
-            XZInputStream zIn = null;
-            InputStream fis = null;
-            try {
-                out = Files.newOutputStream(dest.toPath());
-                fis = srcResource.getInputStream();
-                zIn = new XZInputStream(fis);
+            try (XZInputStream zIn =
+                new XZInputStream(srcResource.getInputStream());
+                    OutputStream out = Files.newOutputStream(dest.toPath())) {
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
@@ -74,10 +70,6 @@ public class Unxz extends Unpack {
             } catch (IOException ioe) {
                 String msg = "Problem expanding xz " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
-            } finally {
-                FileUtils.close(fis);
-                FileUtils.close(out);
-                FileUtils.close(zIn);
             }
         }
     }
@@ -88,6 +80,7 @@ public class Unxz extends Unpack {
      * <p>This implementation returns true only.</p>
      * @return true
      */
+    @Override
     protected boolean supportsNonFileResources() {
         return true;
     }

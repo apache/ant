@@ -32,31 +32,38 @@ public class TestListenerWrapper implements TestListener, IgnoredTestListener {
         wrapped = listener;
     }
 
+    @Override
     public void addError(Test test, Throwable throwable) {
         wrapped.addError(test, throwable);
     }
 
+    @Override
     public void addFailure(Test test, AssertionFailedError assertionFailedError) {
         wrapped.addFailure(test, assertionFailedError);
     }
 
+    @Override
     public void endTest(Test test) {
         wrapped.endTest(test);
     }
 
+    @Override
     public void startTest(Test test) {
         wrapped.startTest(test);
     }
 
+    @Override
     public void testIgnored(Test test) {
         if (wrapped instanceof IgnoredTestListener) {
-            ((IgnoredTestListener)wrapped).testIgnored(test);
+            ((IgnoredTestListener) wrapped).testIgnored(test);
         }
     }
 
+    @Override
     public void testAssumptionFailure(Test test, Throwable throwable) {
         if (wrapped instanceof IgnoredTestListener) {
-            ((IgnoredTestListener)wrapped).testAssumptionFailure(test, throwable);
+            ((IgnoredTestListener) wrapped).testAssumptionFailure(test,
+                throwable);
         }
     }
 

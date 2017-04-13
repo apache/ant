@@ -19,14 +19,12 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 
 /**
@@ -79,6 +77,7 @@ public class Move extends Copy {
     }
 
     /** {@inheritDoc}. */
+    @Override
     protected void validateAttributes() throws BuildException {
         if (file != null && file.isDirectory()) {
             if ((destFile != null && destDir != null)
@@ -102,12 +101,12 @@ public class Move extends Copy {
     /**
      * Override copy's doFileOperations to move the files instead of copying them.
      */
+    @Override
     protected void doFileOperations() {
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
-            for (Iterator fromDirs = completeDirMap.keySet().iterator(); fromDirs.hasNext();) {
-                File fromDir = (File) fromDirs.next();
-                File toDir = (File) completeDirMap.get(fromDir);
+            for (File fromDir : completeDirMap.keySet()) {
+                File toDir = completeDirMap.get(fromDir);
                 boolean renamed = false;
                 try {
                     log("Attempting to rename dir: " + fromDir + " to " + toDir, verbosity);
@@ -134,14 +133,13 @@ public class Move extends Copy {
             log("Moving " + moveCount + " file" + ((moveCount == 1) ? "" : "s")
                     + " to " + destDir.getAbsolutePath());
 
-            for (Iterator fromFiles = fileCopyMap.keySet().iterator(); fromFiles.hasNext();) {
-                String fromFile = (String) fromFiles.next();
+            for (String fromFile : fileCopyMap.keySet()) {
                 File f = new File(fromFile);
                 boolean selfMove = false;
                 if (f.exists()) { //Is this file still available to be moved?
-                    String[] toFiles = (String[]) fileCopyMap.get(fromFile);
+                    String[] toFiles = fileCopyMap.get(fromFile);
                     for (int i = 0; i < toFiles.length; i++) {
-                        String toFile = (String) toFiles[i];
+                        String toFile = toFiles[i];
 
                         if (fromFile.equals(toFile)) {
                             log("Skipping self-move of " + fromFile, verbosity);
@@ -166,9 +164,8 @@ public class Move extends Copy {
 
         if (includeEmpty) {
             int createCount = 0;
-            for (Iterator fromDirNames = dirCopyMap.keySet().iterator(); fromDirNames.hasNext();) {
-                String fromDirName = (String) fromDirNames.next();
-                String[] toDirNames = (String[]) dirCopyMap.get(fromDirName);
+            for (String fromDirName : dirCopyMap.keySet()) {
+                String[] toDirNames = dirCopyMap.get(fromDirName);
                 boolean selfMove = false;
                 for (int i = 0; i < toDirNames.length; i++) {
                     if (fromDirName.equals(toDirNames[i])) {
@@ -213,16 +210,15 @@ public class Move extends Copy {
             log("Attempting to rename: " + fromFile + " to " + toFile, verbosity);
             moved = renameFile(fromFile, toFile, filtering, forceOverwrite);
         } catch (IOException ioe) {
-            String msg = "Failed to rename " + fromFile
-                + " to " + toFile + " due to " + ioe.getMessage();
-            throw new BuildException(msg, ioe, getLocation());
+            throw new BuildException("Failed to rename " + fromFile + " to "
+                + toFile + " due to " + ioe.getMessage(), ioe, getLocation());
         }
 
         if (!moved) {
             copyFile(fromFile, toFile, filtering, overwrite);
             if (!getFileUtils().tryHardToDelete(fromFile, performGc)) {
-                throw new BuildException("Unable to delete " + "file "
-                        + fromFile.getAbsolutePath());
+                throw new BuildException("Unable to delete file %s",
+                    fromFile.getAbsolutePath());
             }
         }
     }
@@ -242,9 +238,7 @@ public class Move extends Copy {
             if (filtering) {
                 executionFilters.addFilterSet(getProject().getGlobalFilterSet());
             }
-            for (Iterator filterIter = getFilterSets().iterator(); filterIter.hasNext();) {
-                executionFilters.addFilterSet((FilterSet) filterIter.next());
-            }
+            getFilterSets().forEach(executionFilters::addFilterSet);
             getFileUtils().copyFile(fromFile, toFile, executionFilters,
                                     getFilterChains(),
                                     forceOverwrite,
@@ -254,9 +248,8 @@ public class Move extends Copy {
                                     getOutputEncoding(),
                                     getProject(), getForce());
         } catch (IOException ioe) {
-            String msg = "Failed to copy " + fromFile
-                    + " to " + toFile + " due to " + ioe.getMessage();
-            throw new BuildException(msg, ioe, getLocation());
+            throw new BuildException("Failed to copy " + fromFile + " to "
+                + toFile + " due to " + ioe.getMessage(), ioe, getLocation());
         }
     }
 
@@ -271,8 +264,7 @@ public class Move extends Copy {
             return false;
         }     // maybe io error?
 
-        for (int i = 0; i < list.length; i++) {
-            String s = list[i];
+        for (String s : list) {
             File f = new File(d, s);
             if (f.isDirectory()) {
                 if (!okToDelete(f)) {
@@ -304,22 +296,24 @@ public class Move extends Copy {
             return;
         }      // on an io error list() can return null
 
-        for (int i = 0; i < list.length; i++) {
-            String s = list[i];
+        for (String s : list) {
             File f = new File(d, s);
             if (f.isDirectory()) {
                 deleteDir(f);
-            } else if (deleteFiles && !getFileUtils().tryHardToDelete(f,
-                                                                      performGc)) {
-                throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+            } else if (deleteFiles
+                && !getFileUtils().tryHardToDelete(f, performGc)) {
+                throw new BuildException("Unable to delete file %s",
+                    f.getAbsolutePath());
             } else {
-                throw new BuildException("UNEXPECTED ERROR - The file "
-                        + f.getAbsolutePath() + " should not exist!");
+                throw new BuildException(
+                    "UNEXPECTED ERROR - The file %s should not exist!",
+                    f.getAbsolutePath());
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!getFileUtils().tryHardToDelete(d, performGc)) {
-            throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
+            throw new BuildException("Unable to delete directory %s",
+                d.getAbsolutePath());
         }
     }
 
@@ -343,19 +337,21 @@ public class Move extends Copy {
      */
     protected boolean renameFile(File sourceFile, File destFile, boolean filtering,
                                  boolean overwrite) throws IOException, BuildException {
-        if (destFile.isDirectory() || filtering || getFilterSets().size() > 0
-                || getFilterChains().size() > 0) {
+        if (destFile.isDirectory() || filtering || !getFilterSets().isEmpty()
+                || !getFilterChains().isEmpty()) {
             return false;
         }
 
         // identical logic lives in ResourceUtils.copyResource():
         if (destFile.isFile() && !destFile.canWrite()) {
             if (!getForce()) {
-                throw new IOException("can't replace read-only destination "
-                                      + "file " + destFile);
-            } else if (!getFileUtils().tryHardToDelete(destFile)) {
-                throw new IOException("failed to delete read-only "
-                                      + "destination file " + destFile);
+                throw new IOException(String.format(
+                    "can't replace read-only destination file %s", destFile));
+            }
+            if (!getFileUtils().tryHardToDelete(destFile)) {
+                throw new IOException(String.format(
+                    "failed to delete read-only destination file %s",
+                    destFile));
             }
         }
 
@@ -374,7 +370,8 @@ public class Move extends Copy {
             }
             if (!(getFileUtils().areSame(sourceFile, destFile)
                   || getFileUtils().tryHardToDelete(destFile, performGc))) {
-                throw new BuildException("Unable to remove existing file " + destFile);
+                throw new BuildException("Unable to remove existing file %s",
+                    destFile);
             }
         }
         return sourceFile.renameTo(destFile);

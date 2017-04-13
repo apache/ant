@@ -32,7 +32,7 @@ import org.apache.tools.ant.types.Resource;
  * @since Ant 1.7
  */
 /*package-private*/ class FailFast implements Iterator<Resource> {
-    private static final WeakHashMap<Object, Set<FailFast>> MAP = new WeakHashMap<Object, Set<FailFast>>();
+    private static final WeakHashMap<Object, Set<FailFast>> MAP = new WeakHashMap<>();
 
     /**
      * Invalidate any in-use Iterators from the specified Object.
@@ -46,12 +46,7 @@ import org.apache.tools.ant.types.Resource;
     }
 
     private static synchronized void add(FailFast f) {
-        Set<FailFast> s = MAP.get(f.parent);
-        if (s == null) {
-            s = new HashSet<FailFast>();
-            MAP.put(f.parent, s);
-        }
-        s.add(f);
+        MAP.computeIfAbsent(f.parent, k -> new HashSet<>()).add(f);
     }
 
     private static synchronized void remove(FailFast f) {
@@ -95,6 +90,7 @@ import org.apache.tools.ant.types.Resource;
      * Fulfill the Iterator contract.
      * @return true if there are more elements.
      */
+    @Override
     public boolean hasNext() {
         if (wrapped == null) {
             return false;
@@ -108,6 +104,7 @@ import org.apache.tools.ant.types.Resource;
      * @return the next element.
      * @throws NoSuchElementException if no more elements.
      */
+    @Override
     public Resource next() {
         if (wrapped == null || !wrapped.hasNext()) {
             throw new NoSuchElementException();
@@ -127,6 +124,7 @@ import org.apache.tools.ant.types.Resource;
      * Fulfill the Iterator contract.
      * @throws UnsupportedOperationException always.
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

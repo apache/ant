@@ -27,8 +27,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -81,6 +79,7 @@ public class MimeMailer extends Mailer {
         private String charset = null;
         private ByteArrayOutputStream out;
 
+        @Override
         public InputStream getInputStream() throws IOException {
             if (data == null && out == null) {
                 throw new IOException("No data");
@@ -93,6 +92,7 @@ public class MimeMailer extends Mailer {
             return new ByteArrayInputStream(data.getBytes(charset));
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException {
             out = (out == null) ? new ByteArrayOutputStream() : out;
             return out;
@@ -102,16 +102,18 @@ public class MimeMailer extends Mailer {
             this.type = type.toLowerCase(Locale.ENGLISH);
         }
 
+        @Override
         public String getContentType() {
             if (type != null && type.indexOf("charset") > 0
                 && type.startsWith("text/")) {
                 return type;
             }
             // Must be like "text/plain; charset=windows-1251"
-            return new StringBuffer(type != null ? type : "text/plain").append(
+            return new StringBuilder(type != null ? type : "text/plain").append(
                 "; charset=").append(charset).toString();
         }
 
+        @Override
         public String getName() {
             return "StringDataSource";
         }
@@ -130,6 +132,7 @@ public class MimeMailer extends Mailer {
      *
      * @throws BuildException if the email can't be sent.
      */
+    @Override
     public void send() {
         try {
             final Properties props = new Properties();
@@ -144,13 +147,13 @@ public class MimeMailer extends Mailer {
             Authenticator auth = null;
             if (SSL) {
                 try {
-                    final Provider p = (Provider) Class.forName(
-                        "com.sun.net.ssl.internal.ssl.Provider").newInstance();
+                    final Provider p =
+                        Class.forName("com.sun.net.ssl.internal.ssl.Provider")
+                            .asSubclass(Provider.class).newInstance();
                     Security.addProvider(p);
                 } catch (final Exception e) {
-                    throw new BuildException("could not instantiate ssl "
-                        + "security provider, check that you have JSSE in "
-                        + "your classpath");
+                    throw new BuildException(
+                        "could not instantiate ssl security provider, check that you have JSSE in your classpath");
                 }
                 // SMTP provider
                 props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
@@ -217,8 +220,7 @@ public class MimeMailer extends Mailer {
             msg.addHeader("Date", getDate());
 
             if (headers != null) {
-                for (final Iterator iter = headers.iterator(); iter.hasNext();) {
-                    final Header h = (Header) iter.next();
+                for (Header h : headers) {
                     msg.addHeader(h.getName(), h.getValue());
                 }
             }
@@ -230,18 +232,12 @@ public class MimeMailer extends Mailer {
             textbody.setDataHandler(new DataHandler(sds));
             attachments.addBodyPart(textbody);
 
-            final Enumeration e = files.elements();
-
-            while (e.hasMoreElements()) {
-                final File file = (File) e.nextElement();
-
-                MimeBodyPart body;
-
-                body = new MimeBodyPart();
+            for (File file : files) {
+                MimeBodyPart body = new MimeBodyPart();
                 if (!file.exists() || !file.canRead()) {
-                    throw new BuildException("File \"" + file.getAbsolutePath()
-                         + "\" does not exist or is not "
-                         + "readable.");
+                    throw new BuildException(
+                        "File \"%s\" does not exist or is not readable.",
+                        file.getAbsolutePath());
                 }
                 final FileDataSource fileData = new FileDataSource(file);
                 final DataHandler fileDataHandler = new DataHandler(fileData);
@@ -259,41 +255,40 @@ public class MimeMailer extends Mailer {
             } catch (final SendFailedException sfe) {
                 if (!shouldIgnoreInvalidRecipients()) {
                     throw new BuildException(GENERIC_ERROR, sfe);
-                } else if (sfe.getValidSentAddresses() == null
+                }
+                if (sfe.getValidSentAddresses() == null
                            || sfe.getValidSentAddresses().length == 0) {
                     throw new BuildException("Couldn't reach any recipient",
                                              sfe);
-                } else {
-                    Address[] invalid = sfe.getInvalidAddresses();
-                    if (invalid == null) {
-                        invalid = new Address[0];
-                    }
-                    for (int i = 0; i < invalid.length; i++) {
-                        didntReach(invalid[i], "invalid", sfe);
-                    }
-                    Address[] validUnsent = sfe.getValidUnsentAddresses();
-                    if (validUnsent == null) {
-                        validUnsent = new Address[0];
-                    }
-                    for (int i = 0; i < validUnsent.length; i++) {
-                        didntReach(validUnsent[i], "valid", sfe);
-                    }
+                }
+                Address[] invalid = sfe.getInvalidAddresses();
+                if (invalid == null) {
+                    invalid = new Address[0];
+                }
+                for (int i = 0; i < invalid.length; i++) {
+                    didntReach(invalid[i], "invalid", sfe);
+                }
+                Address[] validUnsent = sfe.getValidUnsentAddresses();
+                if (validUnsent == null) {
+                    validUnsent = new Address[0];
+                }
+                for (int i = 0; i < validUnsent.length; i++) {
+                    didntReach(validUnsent[i], "valid", sfe);
                 }
             }
-        } catch (final MessagingException e) {
-            throw new BuildException(GENERIC_ERROR, e);
-        } catch (final IOException e) {
+        } catch (MessagingException | IOException e) {
             throw new BuildException(GENERIC_ERROR, e);
         }
     }
 
-    private static InternetAddress[] internetAddresses(final Vector list)
+    private static InternetAddress[] internetAddresses(final Vector<EmailAddress> list)
         throws AddressException, UnsupportedEncodingException {
+        
         final int size = list.size();
         final InternetAddress[] addrs = new InternetAddress[size];
 
         for (int i = 0; i < size; ++i) {
-            final EmailAddress addr = (EmailAddress) list.elementAt(i);
+            final EmailAddress addr = list.get(i);
 
             final String name = addr.getName();
             addrs[i] = (name == null)
@@ -309,7 +304,7 @@ public class MimeMailer extends Mailer {
         }
         final int pos = type.indexOf("charset");
         if (pos < 0) {
-          return null;
+            return null;
         }
         // Assuming mime type in form "text/XXXX; charset=XXXXXX"
         final StringTokenizer token = new StringTokenizer(type.substring(pos), "=; ");
@@ -331,10 +326,13 @@ public class MimeMailer extends Mailer {
     static class SimpleAuthenticator extends Authenticator {
         private String user = null;
         private String password = null;
+
         public SimpleAuthenticator(final String user, final String password) {
             this.user = user;
             this.password = password;
         }
+
+        @Override
         public PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(user, password);
         }

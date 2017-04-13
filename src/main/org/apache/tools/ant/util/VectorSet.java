@@ -42,9 +42,13 @@ public final class VectorSet<E> extends Vector<E> {
 
     private final HashSet<E> set = new HashSet<E>();
 
-    public VectorSet() { super(); }
+    public VectorSet() {
+        super();
+    }
 
-    public VectorSet(int initialCapacity) { super(initialCapacity); }
+    public VectorSet(int initialCapacity) {
+        super(initialCapacity);
+    }
 
     public VectorSet(int initialCapacity, int capacityIncrement) {
         super(initialCapacity, capacityIncrement);
@@ -52,12 +56,11 @@ public final class VectorSet<E> extends Vector<E> {
 
     public VectorSet(Collection<? extends E> c) {
         if (c != null) {
-            for (E e : c) {
-                add(e);
-            }
+            c.forEach(this::add);
         }
     }
 
+    @Override
     public synchronized boolean add(E o) {
         if (!set.contains(o)) {
             doAdd(size(), o);
@@ -70,6 +73,7 @@ public final class VectorSet<E> extends Vector<E> {
      * This implementation may not add the element at the given index
      * if it is already contained in the collection.
      */
+    @Override
     public void add(int index, E o) {
         doAdd(index, o);
     }
@@ -89,10 +93,12 @@ public final class VectorSet<E> extends Vector<E> {
         }
     }
 
+    @Override
     public synchronized void addElement(E o) {
         doAdd(size(), o);
     }
 
+    @Override
     public synchronized boolean addAll(Collection<? extends E> c) {
         boolean changed = false;
         for (E e : c) {
@@ -105,8 +111,9 @@ public final class VectorSet<E> extends Vector<E> {
      * This implementation may not add all elements at the given index
      * if any of them are already contained in the collection.
      */
+    @Override
     public synchronized boolean addAll(int index, Collection<? extends E> c) {
-        LinkedList toAdd = new LinkedList();
+        LinkedList<E> toAdd = new LinkedList<>();
         for (E e : c) {
             if (set.add(e)) {
                 toAdd.add(e);
@@ -128,36 +135,43 @@ public final class VectorSet<E> extends Vector<E> {
         return true;
     }
 
+    @Override
     public synchronized void clear() {
         super.clear();
         set.clear();
     }
 
-    public Object clone() {
+    @Override
+    public VectorSet<E> clone() {
         @SuppressWarnings("unchecked")
         final VectorSet<E> vs = (VectorSet<E>) super.clone();
         vs.set.addAll(set);
         return vs;
     }
 
+    @Override
     public synchronized boolean contains(Object o) {
         return set.contains(o);
     }
 
+    @Override
     public synchronized boolean containsAll(Collection<?> c) {
         return set.containsAll(c);
     }
 
+    @Override
     public void insertElementAt(E o, int index) {
         doAdd(index, o);
     }
 
+    @Override
     public synchronized E remove(int index) {
         E o = get(index);
         remove(o);
         return o;
     }
 
+    @Override
     public boolean remove(Object o) {
         return doRemove(o);
     }
@@ -177,6 +191,7 @@ public final class VectorSet<E> extends Vector<E> {
         return false;
     }
 
+    @Override
     public synchronized boolean removeAll(Collection<?> c) {
         boolean changed = false;
         for (Object o : c) {
@@ -185,30 +200,35 @@ public final class VectorSet<E> extends Vector<E> {
         return changed;
     }
 
+    @Override
     public synchronized void removeAllElements() {
         set.clear();
         super.removeAllElements();
     }
 
+    @Override
     public boolean removeElement(Object o) {
         return doRemove(o);
     }
 
+    @Override
     public synchronized void removeElementAt(int index) {
         remove(get(index));
     }
 
+    @Override
     public synchronized void removeRange(final int fromIndex, int toIndex) {
         while (toIndex > fromIndex) {
             remove(--toIndex);
         }
     }
 
+    @Override
     public synchronized boolean retainAll(Collection<?> c) {
         if (!(c instanceof Set)) {
-            c = new HashSet<Object>(c);
+            c = new HashSet<>(c);
         }
-        LinkedList<E> l = new LinkedList<E>();
+        LinkedList<E> l = new LinkedList<>();
         for (E o : this) {
             if (!c.contains(o)) {
                 l.addLast(o);
@@ -221,6 +241,7 @@ public final class VectorSet<E> extends Vector<E> {
         return false;
     }
 
+    @Override
     public synchronized E set(int index, E o) {
         E orig = get(index);
         if (set.add(o)) {
@@ -235,6 +256,7 @@ public final class VectorSet<E> extends Vector<E> {
         return orig;
     }
 
+    @Override
     public void setElementAt(E o, int index) {
         set(index, o);
     }

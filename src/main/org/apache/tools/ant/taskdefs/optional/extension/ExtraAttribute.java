@@ -73,11 +73,11 @@ public class ExtraAttribute {
      */
     public void validate() throws BuildException {
         if (null == name) {
-            final String message = "Missing name from parameter.";
-            throw new BuildException(message);
-        } else if (null == value) {
-            final String message = "Missing value from parameter " + name + ".";
-            throw new BuildException(message);
+            throw new BuildException("Missing name from parameter.");
+        }
+        if (null == value) {
+            throw new BuildException(
+                "Missing value from parameter " + name + ".");
         }
     }
 }

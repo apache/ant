@@ -113,24 +113,26 @@ public class EchoXML extends XMLFragment {
         public NamespacePolicy(String s) {
             setValue(s);
         }
+
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] {IGNORE, ELEMENTS, ALL};
+            return new String[] { IGNORE, ELEMENTS, ALL };
         }
 
         public DOMElementWriter.XmlNamespacePolicy getPolicy() {
             String s = getValue();
             if (IGNORE.equalsIgnoreCase(s)) {
                 return DOMElementWriter.XmlNamespacePolicy.IGNORE;
-            } else if (ELEMENTS.equalsIgnoreCase(s)) {
+            }
+            if (ELEMENTS.equalsIgnoreCase(s)) {
                 return
                     DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS;
-            } else if (ALL.equalsIgnoreCase(s)) {
-                return DOMElementWriter.XmlNamespacePolicy.QUALIFY_ALL;
-            } else {
-                throw new BuildException("Invalid namespace policy: " + s);
             }
+            if (ALL.equalsIgnoreCase(s)) {
+                return DOMElementWriter.XmlNamespacePolicy.QUALIFY_ALL;
+            }
+            throw new BuildException("Invalid namespace policy: " + s);
         }
     }
 }

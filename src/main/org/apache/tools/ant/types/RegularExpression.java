@@ -69,12 +69,6 @@ public class RegularExpression extends DataType {
     private String myPattern;
     private boolean setPatternPending = false;
 
-    /**
-     * default constructor
-     */
-    public RegularExpression() {
-    }
-
     private void init(Project p) {
         if (!alreadyInit) {
             this.regexp = FACTORY.newRegexp(p);

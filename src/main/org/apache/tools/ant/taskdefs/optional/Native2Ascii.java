@@ -192,8 +192,8 @@ public class Native2Ascii extends MatchingTask {
      */
     public void add(Native2AsciiAdapter adapter) {
         if (nestedAdapter != null) {
-            throw new BuildException("Can't have more than one native2ascii"
-                                     + " adapter");
+            throw new BuildException(
+                "Can't have more than one native2ascii adapter");
         }
         nestedAdapter = adapter;
     }
@@ -203,6 +203,7 @@ public class Native2Ascii extends MatchingTask {
      *
      * @throws BuildException is there is a problem in the task execution.
      */
+    @Override
     public void execute() throws BuildException {
 
         DirectoryScanner scanner = null; // Scanner to find our inputs
@@ -222,11 +223,11 @@ public class Native2Ascii extends MatchingTask {
         // to be set, so we don't stomp every file.  One could still
         // include a file with the same extension, but ....
         if (srcDir.equals(destDir) && extension == null && mapper == null) {
-            throw new BuildException("The ext attribute or a mapper must be set if"
-                                     + " src and dest dirs are the same.");
+            throw new BuildException(
+                "The ext attribute or a mapper must be set if src and dest dirs are the same.");
         }
 
-        FileNameMapper m = null;
+        FileNameMapper m;
         if (mapper == null) {
             if (extension == null) {
                 m = new IdentityMapper();
@@ -270,8 +271,7 @@ public class Native2Ascii extends MatchingTask {
 
         // Make sure we're not about to clobber something
         if (srcFile.equals(destFile)) {
-            throw new BuildException("file " + srcFile
-                                     + " would overwrite its self");
+            throw new BuildException("file %s would overwrite itself", srcFile);
         }
 
         // Make intermediate directories if needed
@@ -282,8 +282,8 @@ public class Native2Ascii extends MatchingTask {
 
             if (!parentFile.exists()
                 && !(parentFile.mkdirs() || parentFile.isDirectory())) {
-                throw new BuildException("cannot create parent directory "
-                                         + parentName);
+                throw new BuildException("cannot create parent directory %s",
+                    parentName);
             }
         }
 
@@ -310,19 +310,22 @@ public class Native2Ascii extends MatchingTask {
 
     private class ExtMapper implements FileNameMapper {
 
+        @Override
         public void setFrom(String s) {
         }
+
+        @Override
         public void setTo(String s) {
         }
 
+        @Override
         public String[] mapFileName(String fileName) {
             int lastDot = fileName.lastIndexOf('.');
             if (lastDot >= 0) {
-                return new String[] {fileName.substring(0, lastDot)
-                                         + extension};
-            } else {
-                return new String[] {fileName + extension};
+                return new String[] {
+                    fileName.substring(0, lastDot) + extension };
             }
+            return new String[] { fileName + extension };
         }
     }
 }

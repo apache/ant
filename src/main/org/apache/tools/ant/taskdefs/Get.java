@@ -96,7 +96,7 @@ public class Get extends Task {
                            + Main.getShortAntVersion());
 
     // Store headers as key/value pair without duplicate in keyz
-    private Map<String, String> headers = new LinkedHashMap<String, String>();
+    private Map<String, String> headers = new LinkedHashMap<>();
 
     /**
      * Does the work.
@@ -118,7 +118,7 @@ public class Get extends Task {
                     if (path.endsWith("/")) {
                         path = path.substring(0, path.length() - 1);
                     }
-                    final int slash = path.lastIndexOf("/");
+                    final int slash = path.lastIndexOf('/');
                     if (slash > -1) {
                         path = path.substring(slash + 1);
                     }
@@ -130,11 +130,13 @@ public class Get extends Task {
                         log("skipping " + r + " - mapper can't handle it",
                             Project.MSG_WARN);
                         continue;
-                    } else if (d.length == 0) {
+                    }
+                    if (d.length == 0) {
                         log("skipping " + r + " - mapper returns no file name",
                             Project.MSG_WARN);
                         continue;
-                    } else if (d.length > 1) {
+                    }
+                    if (d.length > 1) {
                         log("skipping " + r + " - mapper returns multiple file"
                             + " names", Project.MSG_WARN);
                         continue;
@@ -288,8 +290,8 @@ public class Get extends Task {
         for (final Resource r : sources) {
             final URLProvider up = r.as(URLProvider.class);
             if (up == null) {
-                throw new BuildException("Only URLProvider resources are"
-                                         + " supported", getLocation());
+                throw new BuildException(
+                    "Only URLProvider resources are supported", getLocation());
             }
         }
 
@@ -299,9 +301,8 @@ public class Get extends Task {
 
         if (destination.exists() && sources.size() > 1
             && !destination.isDirectory()) {
-            throw new BuildException("The specified destination is not a"
-                                     + " directory",
-                                     getLocation());
+            throw new BuildException(
+                "The specified destination is not a directory", getLocation());
         }
 
         if (destination.exists() && !destination.canWrite()) {
@@ -390,7 +391,6 @@ public class Get extends Task {
     public void setUseTimestamp(final boolean v) {
         useTimestamp = v;
     }
-
 
     /**
      * Username for basic auth.
@@ -566,6 +566,7 @@ public class Get extends Task {
         /**
          * begin a download
          */
+        @Override
         public void beginDownload() {
         }
 
@@ -573,12 +574,14 @@ public class Get extends Task {
          * tick handler
          *
          */
+        @Override
         public void onTick() {
         }
 
         /**
          * end a download
          */
+        @Override
         public void endDownload() {
         }
     }
@@ -603,6 +606,7 @@ public class Get extends Task {
         /**
          * begin a download
          */
+        @Override
         public void beginDownload() {
             dots = 0;
         }
@@ -611,6 +615,7 @@ public class Get extends Task {
          * tick handler
          *
          */
+        @Override
         public void onTick() {
             out.print(".");
             if (dots++ > DOTS_PER_LINE) {
@@ -622,6 +627,7 @@ public class Get extends Task {
         /**
          * end a download
          */
+        @Override
         public void endDownload() {
             out.println();
             out.flush();
@@ -699,9 +705,8 @@ public class Get extends Task {
                 if (ignoreErrors) {
                     log(message, logLevel);
                     return false;
-                } else {
-                    throw new BuildException(message);
                 }
+                throw new BuildException(message);
             }
 
             redirections++;
@@ -711,12 +716,9 @@ public class Get extends Task {
                 if (ignoreErrors) {
                     log(message, logLevel);
                     return false;
-                } else {
-                    throw new BuildException(message);
                 }
+                throw new BuildException(message);
             }
-
-
             return true;
         }
 
@@ -749,13 +751,11 @@ public class Get extends Task {
                 connection.setRequestProperty("Accept-Encoding", GZIP_CONTENT_ENCODING);
             }
 
-
             for (final Map.Entry<String, String> header : headers.entrySet()) {
                 //we do not log the header value as it may contain sensitive data like passwords
                 log(String.format("Adding header '%s' ", header.getKey()));
                 connection.setRequestProperty(header.getKey(), header.getValue());
             }
-
 
             if (connection instanceof HttpURLConnection) {
                 ((HttpURLConnection) connection)
@@ -804,9 +804,8 @@ public class Get extends Task {
                     if (ignoreErrors) {
                         log(message, logLevel);
                         return null;
-                    } else {
-                        throw new BuildException(message);
                     }
+                    throw new BuildException(message);
                 }
             }
 

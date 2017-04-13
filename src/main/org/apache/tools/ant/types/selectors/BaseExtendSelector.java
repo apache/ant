@@ -30,9 +30,8 @@ import org.apache.tools.ant.types.Parameter;
  *
  * @since 1.5
  */
-public abstract class BaseExtendSelector
-        extends BaseSelector
-        implements ExtendFileSelector {
+public abstract class BaseExtendSelector extends BaseSelector
+    implements ExtendFileSelector {
 
     // CheckStyle:VisibilityModifier OFF - bc
 
@@ -42,18 +41,13 @@ public abstract class BaseExtendSelector
     // CheckStyle:VisibilityModifier ON
 
     /**
-     * Default constructor.
-     */
-    public BaseExtendSelector() {
-    }
-
-    /**
      * Set all the Parameters for this custom selector, collected by
      * the ExtendSelector class.
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    @Override
+    public void setParameters(Parameter... parameters) {
         this.parameters = parameters;
     }
 

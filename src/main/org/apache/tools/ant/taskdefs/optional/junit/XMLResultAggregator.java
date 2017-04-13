@@ -24,8 +24,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,7 +61,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     // CheckStyle:VisibilityModifier OFF - bc
     /** the list of all filesets, that should contains the xml to aggregate */
-    protected Vector filesets = new Vector();
+    protected Vector<FileSet> filesets = new Vector<>();
 
     /** the name of the result file */
     protected String toFile;
@@ -69,7 +69,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /** the directory to write the file to */
     protected File toDir;
 
-    protected Vector transformers = new Vector();
+    protected Vector<AggregateTransformer> transformers = new Vector<>();
 
     /** The default directory: <tt>&#046;</tt>. It is resolved from the project directory */
     public static final String DEFAULT_DIR = ".";
@@ -103,7 +103,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      */
     public AggregateTransformer createReport() {
         AggregateTransformer transformer = new AggregateTransformer(this);
-        transformers.addElement(transformer);
+        transformers.add(transformer);
         return transformer;
     }
 
@@ -133,7 +133,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @param    fs      the new fileset of xml results.
      */
     public void addFileSet(FileSet fs) {
-        filesets.addElement(fs);
+        filesets.add(fs);
     }
 
     /**
@@ -142,6 +142,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @throws  BuildException  thrown if there is a serious error while writing
      *          the document.
      */
+    @Override
     public void execute() throws BuildException {
         Element rootElement = createDocument();
         File destFile = getDestinationFile();
@@ -152,10 +153,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             throw new BuildException("Unable to write test aggregate to '" + destFile + "'", e);
         }
         // apply transformation
-        Enumeration e = transformers.elements();
-        while (e.hasMoreElements()) {
-            AggregateTransformer transformer =
-                (AggregateTransformer) e.nextElement();
+        for (AggregateTransformer transformer : transformers) {
             transformer.setXmlDocument(rootElement.getOwnerDocument());
             transformer.transform();
         }
@@ -182,26 +180,16 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @return all files in the fileset that end with a '.xml'.
      */
     protected File[] getFiles() {
-        Vector v = new Vector();
-        final int size = filesets.size();
-        for (int i = 0; i < size; i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+        Project p = getProject();
+        return filesets.stream().flatMap(fs -> {
+            DirectoryScanner ds = fs.getDirectoryScanner(p);
             ds.scan();
-            String[] f = ds.getIncludedFiles();
-            for (int j = 0; j < f.length; j++) {
-                String pathname = f[j];
-                if (pathname.endsWith(".xml")) {
-                    File file = new File(ds.getBasedir(), pathname);
-                    file = getProject().resolveFile(file.getPath());
-                    v.addElement(file);
-                }
-            }
-        }
-
-        File[] files = new File[v.size()];
-        v.copyInto(files);
-        return files;
+            return Stream.of(ds.getIncludedFiles())
+                .filter(pathname -> pathname.endsWith(".xml")).map(pathname -> {
+                    return p.resolveFile(
+                        new File(ds.getBasedir(), pathname).getPath());
+                });
+        }).toArray(File[]::new);
     }
 
     //----- from now, the methods are all related to DOM tree manipulation
@@ -216,7 +204,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         try (OutputStream os = Files.newOutputStream(file.toPath());
              PrintWriter wri = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(os), "UTF8"))) {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-            (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
+            new DOMElementWriter().write(doc.getDocumentElement(), wri, 0,
+                "  ");
             wri.flush();
             // writers do not throw exceptions, so check for them.
             if (wri.checkError()) {
@@ -247,9 +236,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             try {
                 log("Parsing file: '" + file + "'", Project.MSG_VERBOSE);
                 if (file.length() > 0) {
-                    Document testsuiteDoc
-                            = builder.parse(
-                                FileUtils.getFileUtils().toURI(files[i].getAbsolutePath()));
+                    Document testsuiteDoc = builder.parse(FileUtils
+                        .getFileUtils().toURI(files[i].getAbsolutePath()));
                     Element elem = testsuiteDoc.getDocumentElement();
                     // make sure that this is REALLY a testsuite.
                     if (TESTSUITE.equals(elem.getNodeName())) {

@@ -17,8 +17,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -83,7 +87,7 @@ public class GenerateKey extends Task {
      * A class corresponding to the dname nested element.
      */
     public static class DistinguishedName {
-        private Vector<DnameParam> params = new Vector<DnameParam>();
+        private List<DnameParam> params = new Vector<>();
 
         /**
          * Create a param nested element.
@@ -91,8 +95,7 @@ public class GenerateKey extends Task {
          */
         public Object createParam() {
             DnameParam param = new DnameParam();
-            params.addElement(param);
-
+            params.add(param);
             return param;
         }
 
@@ -101,7 +104,7 @@ public class GenerateKey extends Task {
          * @return an enumeration of the nested parameters.
          */
         public Enumeration<DnameParam> getParams() {
-            return params.elements();
+            return Collections.enumeration(params);
         }
 
         /**
@@ -111,26 +114,10 @@ public class GenerateKey extends Task {
          * This is used on the command line.
          * @return a string rep of this name
          */
+        @Override
         public String toString() {
-            final int size = params.size();
-            final StringBuffer sb = new StringBuffer();
-            boolean firstPass = true;
-
-            for (int i = 0; i < size; i++) {
-                if (!firstPass) {
-                    sb.append(" ,");
-                }
-                firstPass = false;
-
-                final DnameParam param = (DnameParam) params.elementAt(i);
-                if (param.isComplete()) {
-                    sb.append(encode(param.getName()));
-                    sb.append('=');
-                    sb.append(encode(param.getValue()));
-                }
-            }
-
-            return sb.toString();
+            return params.stream().map(p -> p.getName() + "=" + p.getValue())
+                .collect(Collectors.joining(", "));
         }
 
         /**
@@ -141,26 +128,8 @@ public class GenerateKey extends Task {
          * @return the encoded value.
          */
         public String encode(final String string) {
-            int end = string.indexOf(',');
-
-            if (-1 == end) {
-              return string;
-            }
-
-            final StringBuffer sb = new StringBuffer();
-
-            int start = 0;
-
-            while (-1 != end) {
-                sb.append(string.substring(start, end));
-                sb.append("\\,");
-                start = end + 1;
-                end = string.indexOf(',', start);
-            }
-
-            sb.append(string.substring(start));
-
-            return sb.toString();
+            return Stream.of(string.split(","))
+                .collect(Collectors.joining("\\,"));
         }
     }
 
@@ -197,12 +166,11 @@ public class GenerateKey extends Task {
      */
     public DistinguishedName createDname() throws BuildException {
         if (null != expandedDname) {
-            throw new BuildException("DName sub-element can only be "
-                                     + "specified once.");
+            throw new BuildException("DName sub-element can only be specified once.");
         }
         if (null != dname) {
-            throw new BuildException("It is not possible to specify dname "
-                                    + " both as attribute and element.");
+            throw new BuildException(
+                "It is not possible to specify dname  both as attribute and element.");
         }
         expandedDname = new DistinguishedName();
         return expandedDname;
@@ -215,8 +183,8 @@ public class GenerateKey extends Task {
      */
     public void setDname(final String dname) {
         if (null != expandedDname) {
-            throw new BuildException("It is not possible to specify dname "
-                                    + " both as attribute and element.");
+            throw new BuildException(
+                "It is not possible to specify dname  both as attribute and element.");
         }
         this.dname = dname;
     }
@@ -324,6 +292,7 @@ public class GenerateKey extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
 
         if (null == alias) {
@@ -338,7 +307,7 @@ public class GenerateKey extends Task {
             throw new BuildException("dname must be set");
         }
 
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
 
         sb.append("-genkey ");
 
@@ -399,7 +368,6 @@ public class GenerateKey extends Task {
             sb.append(keyalg);
             sb.append("\" ");
         }
-
 
         if (0 < keysize) {
             sb.append("-keysize \"");

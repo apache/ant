@@ -89,8 +89,9 @@ public class CvsTagEntry {
      * Gets a String containing filename and difference from previous version
      * @return a string representation of this CVSTagEntry
      */
+    @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(filename);
         if (revision == null) {
             buffer.append(" was removed");

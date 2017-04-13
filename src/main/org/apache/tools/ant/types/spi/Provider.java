@@ -55,7 +55,7 @@ public class Provider extends ProjectComponent {
                 "classname attribute must be set for provider element",
                 getLocation());
         }
-        if (type.length() == 0) {
+        if (type.isEmpty()) {
             throw new BuildException(
                 "Invalid empty classname", getLocation());
         }

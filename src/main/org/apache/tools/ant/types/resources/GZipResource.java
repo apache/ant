@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.tools.ant.types.ResourceCollection;
+
 /**
  * A GZip compressed resource.
  *
@@ -41,7 +43,7 @@ public class GZipResource extends CompressedResource {
      * Constructor with another resource to wrap.
      * @param other the resource to wrap.
      */
-    public GZipResource(org.apache.tools.ant.types.ResourceCollection other) {
+    public GZipResource(ResourceCollection other) {
         super(other);
     }
 
@@ -51,6 +53,7 @@ public class GZipResource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
+    @Override
     protected InputStream wrapStream(InputStream in) throws IOException {
         return new GZIPInputStream(in);
     }
@@ -61,7 +64,8 @@ public class GZipResource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
-     protected OutputStream wrapStream(OutputStream out) throws IOException {
+    @Override
+    protected OutputStream wrapStream(OutputStream out) throws IOException {
         return new GZIPOutputStream(out);
     }
 
@@ -69,6 +73,7 @@ public class GZipResource extends CompressedResource {
      * Get the name of the compression method.
      * @return the string "GZip".
      */
+    @Override
     protected String getCompressionName() {
         return "GZip";
     }

@@ -17,12 +17,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -30,6 +30,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.filters.util.ChainReaderHelper.ChainReader;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -37,7 +38,6 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.JavaResource;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
 
 /**
@@ -56,7 +56,7 @@ public class LoadProperties extends Task {
     /**
      * Holds filterchains
      */
-    private final Vector<FilterChain> filterChains = new Vector<FilterChain>();
+    private final List<FilterChain> filterChains = new Vector<>();
 
     /**
      * Encoding to use for input; defaults to the platform's default encoding.
@@ -158,6 +158,7 @@ public class LoadProperties extends Task {
      *
      * @exception BuildException if something goes wrong with the build
      */
+    @Override
     public final void execute() throws BuildException {
         //validation
         if (src == null) {
@@ -171,30 +172,21 @@ public class LoadProperties extends Task {
             }
             throw new BuildException("Source resource does not exist: " + src);
         }
-        BufferedInputStream bis = null;
-        Reader instream = null;
-        ByteArrayInputStream tis = null;
 
-        try {
-            bis = new BufferedInputStream(src.getInputStream());
-            if (encoding == null) {
-                instream = new InputStreamReader(bis);
-            } else {
-                instream = new InputStreamReader(bis, encoding);
-            }
-            ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setPrimaryReader(instream);
-            crh.setFilterChains(filterChains);
-            crh.setProject(getProject());
-            instream = crh.getAssembledReader();
+        Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
 
-            String text = crh.readFully(instream);
+        try (ChainReader instream = new ChainReaderHelper(getProject(),
+            new InputStreamReader(src.getInputStream(), charset), filterChains)
+                .getAssembledReader()) {
 
-            if (text != null && text.length() != 0) {
+            String text = instream.readFully();
+
+            if (!(text == null || text.isEmpty())) {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }
-                tis = new ByteArrayInputStream(text.getBytes(ResourceUtils.ISO_8859_1));
+                ByteArrayInputStream tis = new ByteArrayInputStream(
+                    text.getBytes(ResourceUtils.ISO_8859_1));
                 final Properties props = new Properties();
                 props.load(tis);
 
@@ -206,9 +198,6 @@ public class LoadProperties extends Task {
             }
         } catch (final IOException ioe) {
             throw new BuildException("Unable to load file: " + ioe, ioe, getLocation());
-        } finally {
-            FileUtils.close(bis);
-            FileUtils.close(tis);
         }
     }
 
@@ -217,7 +206,7 @@ public class LoadProperties extends Task {
      * @param filter the filter to add
      */
     public final void addFilterChain(FilterChain filter) {
-        filterChains.addElement(filter);
+        filterChains.add(filter);
     }
 
     /**

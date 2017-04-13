@@ -160,4 +160,7 @@ public class DOMUtils {
         Element e = createChildElement(parent, name);
         appendCDATA(e, content);
     }
+
+    private DOMUtils() {
+    }
 }

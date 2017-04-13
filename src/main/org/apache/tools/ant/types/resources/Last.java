@@ -17,10 +17,9 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -38,33 +37,29 @@ public class Last extends SizeLimitCollection {
      * Take the last <code>count</code> elements.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
         int count = getValidCount();
         ResourceCollection rc = getResourceCollection();
-        int i = count;
-        Iterator<Resource> iter = rc.iterator();
         int size = rc.size();
-        for (; i < size; i++) {
-            iter.next();
-        }
+        int skip = Math.max(0, size - count);
 
-        List<Resource> al = new ArrayList<Resource>(count);
-        for (; iter.hasNext(); i++) {
-            al.add(iter.next());
-        }
-        int found = al.size();
+        List<Resource> result =
+            rc.stream().skip(skip).collect(Collectors.toList());
+
+        int found = result.size();
         if (found == count || (size < count && found == size)) {
-            return al;
+            return result;
         }
-
         //mismatch:
-        String msg = "Resource collection " + rc + " reports size " + size
-            + " but returns " + i + " elements.";
+        String msg = String.format(
+            "Resource collection %s reports size %d but returns %d elements.",
+            rc, size, found + skip);
 
         //size was understated -> too many results; warn and continue:
         if (found > count) {
             log(msg, Project.MSG_WARN);
-            return al.subList(found - count, found);
+            return result.subList(found - count, found);
         }
         //size was overstated; we missed some and are now in error-land:
         throw new BuildException(msg);

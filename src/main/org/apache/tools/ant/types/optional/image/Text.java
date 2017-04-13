@@ -92,6 +92,7 @@ public class Text extends ImageOperation implements DrawOperation {
      * Draw the text.
      * @return the resultant image.
      */
+    @Override
     public PlanarImage executeDrawOperation() {
         log("\tCreating Text \"" + strText + "\"");
 
@@ -100,19 +101,18 @@ public class Text extends ImageOperation implements DrawOperation {
         int height = 1;
 
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
+        Graphics2D graphics = bi.createGraphics();
         graphics.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(
             RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        Font f = new Font(font, Font.PLAIN, point);
+        Font f = createFont();
         FontMetrics fmetrics = graphics.getFontMetrics(f);
         height = fmetrics.getMaxAscent() + fmetrics.getMaxDescent();
         width = fmetrics.stringWidth(strText);
 
-
         bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
-        graphics = (Graphics2D) bi.getGraphics();
+        graphics = bi.createGraphics();
 
         graphics.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -122,7 +122,17 @@ public class Text extends ImageOperation implements DrawOperation {
         graphics.setFont(f);
         graphics.setColor(couloir);
         graphics.drawString(strText, 0, height - fmetrics.getMaxDescent());
-        PlanarImage image = PlanarImage.wrapRenderedImage(bi);
-        return image;
+        return PlanarImage.wrapRenderedImage(bi);
+    }
+
+    private Font createFont() {
+        int style = Font.PLAIN;
+        if (bold) {
+            style |= Font.BOLD;
+        }
+        if (italic) {
+            style |= Font.ITALIC;
+        }
+        return new Font(font, style, point);
     }
 }

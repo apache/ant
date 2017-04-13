@@ -18,6 +18,9 @@
 package org.apache.tools.ant.types.resources.comparators;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
@@ -36,25 +39,33 @@ public class FileSystem extends ResourceComparator {
      * @param bar the second Resource.
      * @return a negative integer, zero, or a positive integer as the first
      *         argument is less than, equal to, or greater than the second.
-     * @throws ClassCastException if either resource is not an instance of FileResource.
+     * @throws ClassCastException if either resource is not capable of
+     *         exposing a {@link FileProvider}
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        FileProvider fooFP = foo.as(FileProvider.class);
-        if (fooFP == null) {
-            throw new ClassCastException(foo.getClass()
-                                         + " doesn't provide files");
-        }
-        File foofile = fooFP.getFile();
-        FileProvider barFP = bar.as(FileProvider.class);
-        if (barFP == null) {
-            throw new ClassCastException(bar.getClass()
-                                         + " doesn't provide files");
-        }
-        File barfile = barFP.getFile();
-        return foofile.equals(barfile) ? 0
-            : FILE_UTILS.isLeadingPath(foofile, barfile) ? -1
-            : FILE_UTILS.normalize(foofile.getAbsolutePath()).compareTo(
-                FILE_UTILS.normalize(barfile.getAbsolutePath()));
+        return compare(file(foo), file(bar));
+    }
+    
+    private File file(Resource r) {
+        return r.asOptional(FileProvider.class)
+            .orElseThrow(() -> new ClassCastException(
+                r.getClass() + " doesn't provide files"))
+            .getFile();
     }
 
+    private int compare(File f1, File f2) {
+        if (Objects.equals(f1, f2)) {
+            return 0;
+        }
+        if (FILE_UTILS.isLeadingPath(f1, f2)) {
+            return -1;
+        }
+        if (FILE_UTILS.isLeadingPath(f2, f1)) {
+            return 1;
+        }
+        return Comparator
+            .comparing(((Function<File, String>) File::getAbsolutePath)
+                .andThen(FILE_UTILS::normalize))
+            .compare(f1, f2);
+    }
 }

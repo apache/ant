@@ -41,10 +41,8 @@ public abstract class AbstractSshMessage {
     private final Session session;
     private final boolean verbose;
     private final boolean compressed;
-    private LogListener listener = new LogListener() {
-        public void log(final String message) {
-            // do nothing;
-        }
+    private LogListener listener = message -> {
+        // do nothing;
     };
 
     /**
@@ -97,9 +95,7 @@ public abstract class AbstractSshMessage {
      * @throws JSchException on error
      */
     protected ChannelSftp openSftpChannel() throws JSchException {
-        final ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-
-        return channel;
+        return (ChannelSftp) session.openChannel("sftp");
     }
 
     /**
@@ -132,8 +128,9 @@ public abstract class AbstractSshMessage {
         if (b == -1) {
             // didn't receive any response
             throw new BuildException("No response from server");
-        } else if (b != 0) {
-            final StringBuffer sb = new StringBuffer();
+        }
+        if (b != 0) {
+            final StringBuilder sb = new StringBuilder();
 
             int c = in.read();
             while (c > 0 && c != '\n') {
@@ -270,12 +267,12 @@ public abstract class AbstractSshMessage {
         private long totalLength = 0;
         private int percentTransmitted = 0;
 
+        @Override
         public void init(final int op, final String src, final String dest, final long max) {
             initFileSize = max;
-            totalLength = 0;
-            percentTransmitted = 0;
         }
 
+        @Override
         public boolean count(final long len) {
             totalLength += len;
             percentTransmitted = trackProgress(initFileSize,
@@ -284,6 +281,7 @@ public abstract class AbstractSshMessage {
             return true;
         }
 
+        @Override
         public void end() {
         }
 

@@ -22,6 +22,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -79,7 +80,6 @@ public final class BatchTest extends BaseTest {
         }
     }
 
-
     /**
      * Add a new ResourceCollection instance to this
      * batchtest. Whatever the collection is, only names that are
@@ -98,7 +98,7 @@ public final class BatchTest extends BaseTest {
      * @return  an enumeration of all elements of this batchtest that are
      * a <tt>JUnitTest</tt> instance.
      */
-    public Enumeration elements() {
+    public Enumeration<JUnitTest> elements() {
         JUnitTest[] tests = createAllJUnitTest();
         return Enumerations.fromArray(tests);
     }
@@ -109,7 +109,7 @@ public final class BatchTest extends BaseTest {
      * @param v the vector to which should be added all individual tests of this
      * batch test.
      */
-    void addTestsTo(Vector v) {
+    void addTestsTo(Vector<? super JUnitTest> v) {
         JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity(v.size() + tests.length);
         for (int i = 0; i < tests.length; i++) {
@@ -123,13 +123,8 @@ public final class BatchTest extends BaseTest {
      * @return the array of all <tt>JUnitTest</tt>s that belongs to this batch.
      */
     private JUnitTest[] createAllJUnitTest() {
-        String[] filenames = getFilenames();
-        JUnitTest[] tests = new JUnitTest[filenames.length];
-        for (int i = 0; i < tests.length; i++) {
-            String classname = javaToClass(filenames[i]);
-            tests[i] = createJUnitTest(classname);
-        }
-        return tests;
+        return Stream.of(getFilenames()).map(BatchTest::javaToClass)
+            .map(this::createJUnitTest).toArray(JUnitTest[]::new);
     }
 
     /**
@@ -143,21 +138,11 @@ public final class BatchTest extends BaseTest {
      * For the class <tt>org/apache/Whatever.class</tt> it will return <tt>org/apache/Whatever</tt>.
      */
     private String[] getFilenames() {
-        Vector v = new Vector();
-        for (Resource r : resources) {
-            if (r.isExists()) {
-                String pathname = r.getName();
-                if (pathname.endsWith(".java")) {
-                    v.addElement(pathname.substring(0, pathname.length() - ".java".length()));
-                } else if (pathname.endsWith(".class")) {
-                    v.addElement(pathname.substring(0, pathname.length() - ".class".length()));
-                }
-            }
-        }
-
-        String[] files = new String[v.size()];
-        v.copyInto(files);
-        return files;
+        return resources.stream().filter(Resource::isExists)
+            .map(Resource::getName)
+            .filter(name -> name.endsWith(".java") || name.endsWith(".class"))
+            .map(name -> name.substring(0, name.lastIndexOf('.')))
+            .toArray(String[]::new);
     }
 
     /**
@@ -192,10 +177,7 @@ public final class BatchTest extends BaseTest {
         test.setFailureProperty(failureProperty);
         test.setErrorProperty(errorProperty);
         test.setSkipNonTests(isSkipNonTests());
-        Enumeration list = this.formatters.elements();
-        while (list.hasMoreElements()) {
-            test.addFormatter((FormatterElement) list.nextElement());
-        }
+        this.formatters.forEach(test::addFormatter);
         return test;
     }
 

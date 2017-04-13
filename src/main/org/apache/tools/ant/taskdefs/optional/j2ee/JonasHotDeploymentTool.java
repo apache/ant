@@ -53,8 +53,8 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
     /**
      *  All the valid actions that weblogic.deploy permits *
      */
-    private static final String[] VALID_ACTIONS
-        = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
+    private static final String[] VALID_ACTIONS = { ACTION_DELETE,
+        ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE };
 
     /**
      *  Description of the Field
@@ -76,7 +76,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
      */
     private int davidPort;
 
-
     /**
      *  Set the host for the David ORB; required if
      *  ORB==david.
@@ -86,7 +85,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
     public void setDavidhost(final String inValue) {
         davidHost = inValue;
     }
-
 
     /**
      *  Set the port for the David ORB; required if
@@ -98,7 +96,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
         davidPort = inValue;
     }
 
-
     /**
      *  set the jonas root directory (-Dinstall.root=). This
      *  element is required.
@@ -108,7 +105,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
     public void setJonasroot(final File inValue) {
         jonasroot = inValue;
     }
-
 
     /**
      *
@@ -124,14 +120,13 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
         orb = inValue;
     }
 
-
     /**
      *  gets the classpath field.
      *
      *@return    A Path representing the "classpath" attribute.
      */
+    @Override
     public Path getClasspath() {
-
         Path aClassPath = super.getClasspath();
 
         if (aClassPath == null) {
@@ -147,7 +142,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
         return aClassPath;
     }
 
-
     /**
      *  Validates the passed in attributes. <p>
      *
@@ -161,6 +155,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
      *@exception  BuildException                       Description
      *      of Exception
      */
+    @Override
     public void validateAttributes() throws BuildException {
         // super.validateAttributes(); // don't want to call this method
 
@@ -172,7 +167,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
         }
 
         if (!isActionValid()) {
-            throw new BuildException("Invalid action \"" + action + "\" passed");
+            throw new BuildException("Invalid action \"%s\" passed", action);
         }
 
         if (getClassName() == null) {
@@ -213,9 +208,9 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
             java.createArg().setLine("-n " + getServer());
         }
 
-        if (action.equals(ACTION_DEPLOY)
-            || action.equals(ACTION_UPDATE)
-            || action.equals("redeploy")) {
+        if (ACTION_DEPLOY.equals(action)
+            || ACTION_UPDATE.equals(action)
+            || "redeploy".equals(action)) {
             java.createArg().setLine("-a " + getTask().getSource());
         } else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
             java.createArg().setLine("-r " + getTask().getSource());
@@ -223,7 +218,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
             java.createArg().setValue("-l");
         }
     }
-
 
     /**
      *  Determines if the action supplied is valid. <p>
@@ -234,19 +228,17 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
      *@return    true if the action attribute is valid, false if
      *      not.
      */
+    @Override
     protected boolean isActionValid() {
-        boolean valid = false;
-
         String action = getTask().getAction();
 
-        for (int i = 0; i < VALID_ACTIONS.length; i++) {
-            if (action.equals(VALID_ACTIONS[i])) {
-                valid = true;
-                break;
+        for (String validAction : VALID_ACTIONS) {
+            if (action.equals(validAction)) {
+                return true;
             }
         }
-
-        return valid;
+        // TODO what about redeploy, mentioned in #validateAttribute
+        return false;
     }
 }
 

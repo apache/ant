@@ -63,6 +63,7 @@ public class Chgrp extends AbstractAccessTask {
      * Ensure that all the required arguments and other conditions have
      * been set.
      */
+    @Override
     protected void checkConfiguration() {
         if (!haveGroup) {
             throw new BuildException("Required attribute group not set in "
@@ -76,6 +77,7 @@ public class Chgrp extends AbstractAccessTask {
      *
      * @param e User supplied executable that we won't accept.
      */
+    @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
                                  + " doesn\'t support the executable"

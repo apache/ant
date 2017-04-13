@@ -149,8 +149,8 @@ public class StringResource extends Resource {
      */
     @Override
     public synchronized long getSize() {
-        return isReference() ? ((Resource) getCheckedRef()).getSize()
-                : getContent().length();
+        return isReference() ? getCheckedRef().getSize()
+            : getContent().length();
     }
 
     /**
@@ -188,7 +188,7 @@ public class StringResource extends Resource {
     @Override
     public synchronized InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+            return getCheckedRef().getInputStream();
         }
         String content = getContent();
         if (content == null) {
@@ -209,7 +209,7 @@ public class StringResource extends Resource {
     @Override
     public synchronized OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+            return getCheckedRef().getOutputStream();
         }
         if (getValue() != null) {
             throw new ImmutableResourceException();
@@ -237,19 +237,9 @@ public class StringResource extends Resource {
         return getValue();
     }
 
-    /**
-     * This method is only for use by our private helper output stream.
-     * It contains specific logic for expanding properties.
-     * @param output the output
-     */
-    private void setValueFromOutputStream(String output) {
-        String value;
-        if (getProject() != null) {
-            value = getProject().replaceProperties(output);
-        } else {
-            value = output;
-        }
-        setValue(value);
+    @Override
+    protected StringResource getCheckedRef() {
+        return (StringResource) super.getCheckedRef();
     }
 
     private class StringResourceFilterOutputStream extends FilterOutputStream {
@@ -266,7 +256,18 @@ public class StringResource extends Resource {
             String result = encoding == null
                     ? baos.toString() : baos.toString(encoding);
 
-            StringResource.this.setValueFromOutputStream(result);
+            setValueFromOutputStream(result);
         }
+
+        private void setValueFromOutputStream(String output) {
+            String value;
+            if (getProject() != null) {
+                value = getProject().replaceProperties(output);
+            } else {
+                value = output;
+            }
+            setValue(value);
+        }
+
     }
 }

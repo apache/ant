@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -31,7 +32,6 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.TarFileSet;
 import org.apache.tools.ant.types.ZipFileSet;
-import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * A resource collection that treats all nested resources as archives
@@ -72,16 +72,13 @@ public class Archives extends DataType
     /**
      * Sums the sizes of nested archives.
      */
+    @Override
     public int size() {
         if (isReference()) {
-            return ((Archives) getCheckedRef()).size();
+            return getCheckedRef().size();
         }
         dieOnCircularReference();
-        int total = 0;
-        for (final Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
-            total += i.next().size();
-        }
-        return total;
+        return streamArchives().mapToInt(ArchiveFileSet::size).sum();
     }
 
     /**
@@ -89,15 +86,11 @@ public class Archives extends DataType
      */
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((Archives) getCheckedRef()).iterator();
+            return getCheckedRef().iterator();
         }
         dieOnCircularReference();
-        final List<Resource> l = new LinkedList<Resource>();
-        for (final Iterator<ArchiveFileSet> i = grabArchives(); i.hasNext();) {
-            l.addAll(CollectionUtils
-                     .asCollection(i.next().iterator()));
-        }
-        return l.iterator();
+        return streamArchives().flatMap(ResourceCollection::stream)
+            .map(Resource.class::cast).iterator();
     }
 
     /**
@@ -105,9 +98,10 @@ public class Archives extends DataType
      */
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((Archives) getCheckedRef()).isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         dieOnCircularReference();
+        // TODO check each archive in turn?
         return false;
     }
 
@@ -117,8 +111,8 @@ public class Archives extends DataType
      */
     @Override
     public void setRefid(final Reference r) {
-        if (zips.getResourceCollections().size() > 0
-            || tars.getResourceCollections().size() > 0) {
+        if (!(zips.getResourceCollections().isEmpty()
+            && tars.getResourceCollections().isEmpty())) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -130,7 +124,7 @@ public class Archives extends DataType
      * @return a cloned instance.
      */
     @Override
-    public Object clone() {
+    public Archives clone() {
         try {
             final Archives a = (Archives) super.clone();
             a.zips = (Union) zips.clone();
@@ -148,14 +142,20 @@ public class Archives extends DataType
      * and returns an iterator over the collected archives.
      */
     protected Iterator<ArchiveFileSet> grabArchives() {
-        final List<ArchiveFileSet> l = new LinkedList<ArchiveFileSet>();
+        return streamArchives().iterator();
+    }
+
+    // TODO this is a pretty expensive operation and so the result
+    // should be cached.
+    private Stream<ArchiveFileSet> streamArchives() {
+        final List<ArchiveFileSet> l = new LinkedList<>();
         for (final Resource r : zips) {
             l.add(configureArchive(new ZipFileSet(), r));
         }
         for (final Resource r : tars) {
             l.add(configureArchive(new TarFileSet(), r));
         }
-        return l.iterator();
+        return l.stream();
     }
 
     /**
@@ -189,6 +189,11 @@ public class Archives extends DataType
             pushAndInvokeCircularReferenceCheck(tars, stk, p);
             setChecked(true);
         }
+    }
+    
+    @Override
+    protected Archives getCheckedRef() {
+        return (Archives) super.getCheckedRef();
     }
 
 }

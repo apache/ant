@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.DataType;
  */
 public class ResourceSelectorContainer extends DataType {
 
-    private final List<ResourceSelector> resourceSelectors = new ArrayList<ResourceSelector>();
+    private final List<ResourceSelector> resourceSelectors = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -45,9 +45,9 @@ public class ResourceSelectorContainer extends DataType {
      * Construct a new ResourceSelectorContainer with the specified array of selectors.
      * @param r the ResourceSelector[] to add.
      */
-    public ResourceSelectorContainer(ResourceSelector[] r) {
-        for (int i = 0; i < r.length; i++) {
-            add(r[i]);
+    public ResourceSelectorContainer(ResourceSelector... resourceSelectors) {
+        for (ResourceSelector rsel : resourceSelectors) {
+            add(rsel);
         }
     }
 
@@ -72,7 +72,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public boolean hasSelectors() {
         if (isReference()) {
-            return ((ResourceSelectorContainer) getCheckedRef()).hasSelectors();
+            return getCheckedRef().hasSelectors();
         }
         dieOnCircularReference();
         return !resourceSelectors.isEmpty();
@@ -84,7 +84,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public int selectorCount() {
         if (isReference()) {
-            return ((ResourceSelectorContainer) getCheckedRef()).selectorCount();
+            return getCheckedRef().selectorCount();
         }
         dieOnCircularReference();
         return resourceSelectors.size();
@@ -96,10 +96,21 @@ public class ResourceSelectorContainer extends DataType {
      */
     public Iterator<ResourceSelector> getSelectors() {
         if (isReference()) {
-            return ((ResourceSelectorContainer) getCheckedRef()).getSelectors();
+            return getCheckedRef().getSelectors();
+        }
+        return getResourceSelectors().iterator();
+    }
+
+    /**
+     * Get the configured {@link ResourceSelector}s as a {@link List}.
+     * @return {@link List} of {@link ResourceSelector}
+     */
+    public List<ResourceSelector> getResourceSelectors() {
+        if (isReference()) {
+            return getCheckedRef().getResourceSelectors();
         }
         dieOnCircularReference();
-        return Collections.unmodifiableList(resourceSelectors).iterator();
+        return Collections.unmodifiableList(resourceSelectors);
     }
 
     /**
@@ -125,4 +136,8 @@ public class ResourceSelectorContainer extends DataType {
         }
     }
 
+    @Override
+    protected ResourceSelectorContainer getCheckedRef() {
+        return (ResourceSelectorContainer) super.getCheckedRef();
+    }
 }

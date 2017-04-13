@@ -32,6 +32,7 @@ public abstract class TransformOperation extends ImageOperation {
     public abstract PlanarImage executeTransformOperation(PlanarImage img);
 
      /** {@inheritDoc}. */
+    @Override
     public void addRectangle(Rectangle instr) {
         instructions.add(instr);
     }

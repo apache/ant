@@ -25,8 +25,7 @@ import org.apache.tools.ant.types.FileSet;
  * how they are to be handled when building manifests.
  *
  */
-public class LibFileSet
-    extends FileSet {
+public class LibFileSet extends FileSet {
     /**
      * Flag indicating whether should include the
      * "Implementation-URL" attribute in manifest.

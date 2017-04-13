@@ -25,13 +25,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.function.UnaryOperator;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
 import org.apache.tools.ant.util.Native2AsciiUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Encapsulates the built-in Native2Ascii implementation.
@@ -48,8 +49,10 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         boolean reverse = args.getReverse();
         String encoding = args.getEncoding();
         try (BufferedReader input = getReader(srcFile, encoding, reverse);
-             Writer output = getWriter(destFile, encoding, reverse)) {
-            translate(input, output, reverse);
+                Writer output = getWriter(destFile, encoding, reverse)) {
+
+            translate(input, output, reverse ? Native2AsciiUtils::ascii2native
+                : Native2AsciiUtils::native2ascii);
             return true;
         } catch (IOException ex) {
             throw new BuildException("Exception trying to translate data", ex);
@@ -79,15 +82,12 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
     }
 
     private void translate(BufferedReader input, Writer output,
-                           boolean reverse) throws IOException {
-        String line = null;
-        while ((line = input.readLine()) != null) {
-            if (!reverse) {
-                output.write(Native2AsciiUtils.native2ascii(line));
-            } else {
-                output.write(Native2AsciiUtils.ascii2native(line));
-            }
-            output.write(StringUtils.LINE_SEP);
+        UnaryOperator<String> translation) throws IOException {
+        PrintWriter pw = new PrintWriter(output);
+
+        for (String line : (Iterable<String>) () -> input.lines()
+            .map(translation).iterator()) {
+            pw.println(line);
         }
     }
 }

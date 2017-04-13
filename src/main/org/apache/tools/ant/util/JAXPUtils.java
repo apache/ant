@@ -232,9 +232,8 @@ public class JAXPUtils {
         Exception nested = e.getException();
         if (nested != null) {
             return new BuildException(nested);
-        } else {
-            return new BuildException(e);
         }
+        return new BuildException(e);
     }
 
     /**

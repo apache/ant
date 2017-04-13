@@ -35,6 +35,7 @@ public class Sj extends DefaultCompilerAdapter {
      * @return true if the compilation succeeded
      * @throws BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
         attributes.log("Using symantec java compiler", Project.MSG_VERBOSE);
 
@@ -54,8 +55,8 @@ public class Sj extends DefaultCompilerAdapter {
      * @return null.
      * @since Ant 1.6.3
      */
+    @Override
     protected String getNoDebugArgument() {
         return null;
     }
 }
-

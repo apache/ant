@@ -20,7 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.List;
 import org.apache.tools.ant.util.FileUtils;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -103,6 +103,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
      * @throws IOException on i/o errors
      * @throws JSchException on errors detected by scp
      */
+    @Override
     public void execute() throws IOException, JSchException {
         final ChannelSftp channel = openSftpChannel();
         try {
@@ -117,9 +118,9 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             }
             getDir(channel, remoteFile, localFile);
         } catch (final SftpException e) {
-            final JSchException schException = new JSchException("Could not get '"+ remoteFile
-                    +"' to '"+localFile+"' - "
-                    +e.toString());
+            final JSchException schException =
+                new JSchException("Could not get '" + remoteFile + "' to '"
+                    + localFile + "' - " + e.toString());
             schException.initCause(e);
             throw schException;
         } finally {
@@ -143,13 +144,12 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         if (!localFile.exists()) {
             localFile.mkdirs();
         }
-        final java.util.Vector files = channel.ls(remoteFile);
-        final int size = files.size();
-        for (int i = 0; i < size; i++) {
-            final ChannelSftp.LsEntry le = (ChannelSftp.LsEntry) files.elementAt(i);
+        @SuppressWarnings("unchecked")
+        final List<ChannelSftp.LsEntry> files = channel.ls(remoteFile);
+        for (ChannelSftp.LsEntry le : files) {
             final String name = le.getFilename();
             if (le.getAttrs().isDir()) {
-                if (name.equals(".") || name.equals("..")) {
+                if (".".equals(name) || "..".equals(name)) {
                     continue;
                 }
                 getDir(channel,

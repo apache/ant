@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * The constant pool of a Java class. The constant pool is a collection of
@@ -343,16 +345,11 @@ public class ConstantPool {
      *
      * @return the constant pool entries as strings
      */
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("\n");
-        final int size = entries.size();
-
-        for (int i = 0; i < size; ++i) {
-            sb.append('[').append(i).append("] = ").append(getEntry(i)).append('\n');
-        }
-
-        return sb.toString();
+        return IntStream.range(0, entries.size())
+            .mapToObj(i -> String.format("[%d] = %s", i, getEntry(i)))
+            .collect(Collectors.joining("\n", "\n", "\n"));
     }
 
 }
-

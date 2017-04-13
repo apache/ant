@@ -19,7 +19,8 @@ package org.apache.tools.ant.taskdefs.optional.jsp;
 
 //apache/ant imports
 import java.io.File;
-import java.util.Date;
+import java.time.Instant;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -98,28 +99,28 @@ public class WLJspc extends MatchingTask {
     //private String compilerPath; //fully qualified name for the compiler executable
 
     private String pathToPackage = "";
-    private Vector filesToDo = new Vector();
+    private List<String> filesToDo = new Vector<>();
 
     /**
      * Run the task.
      * @throws BuildException if there is an error.
      */
+    @Override
     public void execute() throws BuildException {
         if (!destinationDirectory.isDirectory()) {
-            throw new BuildException("destination directory "
-                + destinationDirectory.getPath() + " is not valid");
+            throw new BuildException("destination directory %s is not valid",
+                destinationDirectory.getPath());
         }
 
         if (!sourceDirectory.isDirectory()) {
-            throw new BuildException("src directory "
-                + sourceDirectory.getPath() + " is not valid");
+            throw new BuildException("src directory %s is not valid",
+                sourceDirectory.getPath());
         }
 
         if (destinationPackage == null) {
             throw new BuildException("package attribute must be present.",
                                      getLocation());
         }
-
 
         pathToPackage
             = this.destinationPackage.replace('.', File.separatorChar);
@@ -146,8 +147,6 @@ public class WLJspc extends MatchingTask {
         String[] args = new String[12];
         // CheckStyle:MagicNumber ON
 
-        File jspFile = null;
-        String parents = "";
         int j = 0;
         //TODO  this array stuff is a remnant of prev trials.. gotta remove.
         args[j++] = "-d";
@@ -168,23 +167,20 @@ public class WLJspc extends MatchingTask {
         this.scanDir(files);
         log("Compiling " + filesToDo.size() + " JSP files");
 
-        final int size = filesToDo.size();
-        for (int i = 0; i < size; i++) {
+        for (String filename : filesToDo) {
             //TODO
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky!
-            // Careful.. similar code in scanDir , but slightly different!!
-            String filename = (String) filesToDo.elementAt(i);
-            jspFile = new File(filename);
+            // Careful.. similar code in scanDir, but slightly different!!
+            File jspFile = new File(filename);
             args[j] = "-package";
-            parents = jspFile.getParent();
-            if ((parents != null)  && (!("").equals(parents))) {
-                parents =  this.replaceString(parents, File.separator, "_.");
-                args[j + 1] = destinationPackage + "." + "_" + parents;
-            } else {
+            String parents = jspFile.getParent();
+            if (parents == null || "".equals(parents)) {
                 args[j + 1] = destinationPackage;
+            } else {
+                parents = this.replaceString(parents, File.separator, "_.");
+                args[j + 1] = destinationPackage + "." + "_" + parents;
             }
-
 
             args[j + 2] =  sourceDirectory + File.separator + filename;
             helperTask.clearArgs();
@@ -201,8 +197,6 @@ public class WLJspc extends MatchingTask {
             }
         }
     }
-
-
 
     /**
      * Set the classpath to be used for this compilation.
@@ -234,7 +228,6 @@ public class WLJspc extends MatchingTask {
      * @param dirName the directory containg the source jsp's
      */
     public void setSrc(File dirName) {
-
         sourceDirectory = dirName;
     }
 
@@ -245,7 +238,6 @@ public class WLJspc extends MatchingTask {
      * @param dirName the directory containg the source jsp's
      */
     public void setDest(File dirName) {
-
         destinationDirectory = dirName;
     }
 
@@ -255,7 +247,6 @@ public class WLJspc extends MatchingTask {
      * @param packageName the package name for the classes
      */
     public void setPackage(String packageName) {
-
         destinationPackage = packageName;
     }
 
@@ -265,51 +256,47 @@ public class WLJspc extends MatchingTask {
      * @param files the files to scan.
      */
     protected void scanDir(String[] files) {
-
-        long now = (new Date()).getTime();
-        File jspFile = null;
-        String parents = null;
-        String pack = "";
-        for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(this.sourceDirectory, files[i]);
+        long now = Instant.now().toEpochMilli();
+        for (String file : files) {
+            File srcFile = new File(this.sourceDirectory, file);
             //TODO
             // All this to convert source to destination directory according
             // to weblogic standards Can be written better... this is too hacky!
-            jspFile = new File(files[i]);
-            parents = jspFile.getParent();
+            File jspFile = new File(file);
+            String parents = jspFile.getParent();
 
-            if ((parents != null)  && (!("").equals(parents))) {
+            String pack;
+            if (parents == null || "".equals(parents)) {
+                pack = pathToPackage;
+            } else {
                 parents =  this.replaceString(parents, File.separator, "_/");
                 pack = pathToPackage + File.separator + "_" + parents;
-            } else {
-                pack = pathToPackage;
             }
 
             String filePath = pack + File.separator + "_";
-            int startingIndex = files[i].lastIndexOf(File.separator) != -1
-                    ? files[i].lastIndexOf(File.separator) + 1 : 0;
-            int endingIndex = files[i].indexOf(".jsp");
+            int startingIndex = file.lastIndexOf(File.separator) != -1
+                    ? file.lastIndexOf(File.separator) + 1 : 0;
+            int endingIndex = file.indexOf(".jsp");
             if (endingIndex == -1) {
-                log("Skipping " + files[i] + ". Not a JSP",
+                log("Skipping " + file + ". Not a JSP",
                     Project.MSG_VERBOSE);
                 continue;
             }
 
-            filePath += files[i].substring(startingIndex, endingIndex);
+            filePath += file.substring(startingIndex, endingIndex);
             filePath += ".class";
             File classFile = new File(this.destinationDirectory, filePath);
 
             if (srcFile.lastModified() > now) {
                 log("Warning: file modified in the future: "
-                    + files[i], Project.MSG_WARN);
+                    + file, Project.MSG_WARN);
             }
             if (srcFile.lastModified() > classFile.lastModified()) {
-                filesToDo.addElement(files[i]);
-                log("Recompiling File " + files[i], Project.MSG_VERBOSE);
+                filesToDo.add(file);
+                log("Recompiling File " + file, Project.MSG_VERBOSE);
             }
         }
     }
-
 
     /**
      * Replace occurrences of a string with a replacement string.
@@ -321,9 +308,8 @@ public class WLJspc extends MatchingTask {
     protected String replaceString(String inpString, String escapeChars,
                                    String replaceChars) {
         String localString = "";
-        int numTokens = 0;
         StringTokenizer st = new StringTokenizer(inpString, escapeChars, true);
-        numTokens = st.countTokens();
+        int numTokens = st.countTokens();
         for (int i = 0; i < numTokens; i++) {
             String test = st.nextToken();
             test = (test.equals(escapeChars) ? replaceChars : test);

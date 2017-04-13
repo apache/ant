@@ -58,6 +58,7 @@ public class SOSCheckout extends SOS {
      *
      * @return    Commandline the generated command to be executed
      */
+    @Override
     protected Commandline buildCmdLine() {
         commandLine = new Commandline();
 

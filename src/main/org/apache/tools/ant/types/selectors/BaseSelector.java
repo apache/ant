@@ -37,12 +37,6 @@ public abstract class BaseSelector extends DataType implements FileSelector {
     private Throwable cause;
 
     /**
-     * Do nothing constructor.
-     */
-    public BaseSelector() {
-    }
-
-    /**
      * Allows all selectors to indicate a setup error. Note that only
      * the first error message is recorded.
      *
@@ -76,7 +70,6 @@ public abstract class BaseSelector extends DataType implements FileSelector {
         return errmsg;
     }
 
-
     /**
      * <p>Subclasses can override this method to provide checking of their
      * state. So long as they call validate() from isSelected(), this will
@@ -86,10 +79,9 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      */
     public void verifySettings() {
         if (isReference()) {
-            ((BaseSelector) getCheckedRef()).verifySettings();
+            getCheckedRef().verifySettings();
         }
     }
-
 
     /**
      * Subclasses can use this to throw the requisite exception
@@ -121,6 +113,10 @@ public abstract class BaseSelector extends DataType implements FileSelector {
     public abstract boolean isSelected(File basedir, String filename,
                                        File file);
 
+    @Override
+    protected BaseSelector getCheckedRef() {
+        return (BaseSelector) super.getCheckedRef();
+    }
 }
 
 

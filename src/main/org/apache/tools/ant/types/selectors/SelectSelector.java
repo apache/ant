@@ -40,16 +40,10 @@ public class SelectSelector extends BaseSelectorContainer {
     private Object unlessCondition;
 
     /**
-     * Default constructor.
-     */
-    public SelectSelector() {
-    }
-
-    /**
      * @return a string describing this object
      */
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (hasSelectors()) {
             buf.append("{select");
             if (ifCondition != null) {
@@ -80,6 +74,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * Indicates whether there are any selectors here.
      * @return whether any selectors are in this container
      */
+    @Override
     public boolean hasSelectors() {
         if (isReference()) {
             return getRef().hasSelectors();
@@ -91,6 +86,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * Gives the count of the number of selectors in this container
      * @return the number of selectors in this container
      */
+    @Override
     public int selectorCount() {
         if (isReference()) {
             return getRef().selectorCount();
@@ -103,6 +99,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * @param p the current project
      * @return an array of selectors in this container
      */
+    @Override
     public FileSelector[] getSelectors(Project p) {
         if (isReference()) {
             return getRef().getSelectors(p);
@@ -114,6 +111,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * Returns an enumerator for accessing the set of selectors.
      * @return an enumerator that goes through each of the selectors
      */
+    @Override
     public Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
             return getRef().selectorElements();
@@ -126,6 +124,7 @@ public class SelectSelector extends BaseSelectorContainer {
      *
      * @param selector the new selector to add
      */
+    @Override
     public void appendSelector(FileSelector selector) {
         if (isReference()) {
             throw noChildrenAllowed();
@@ -138,11 +137,11 @@ public class SelectSelector extends BaseSelectorContainer {
      * Makes sure that there is only one entry, sets an error message if
      * not.
      */
+    @Override
     public void verifySettings() {
         int cnt = selectorCount();
         if (cnt < 0 || cnt > 1) {
-            setError("Only one selector is allowed within the "
-                + "<selector> tag");
+            setError("Only one selector is allowed within the <selector> tag");
         }
     }
 
@@ -212,6 +211,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * can use
      * @return whether the file should be selected or not
      */
+    @Override
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
 

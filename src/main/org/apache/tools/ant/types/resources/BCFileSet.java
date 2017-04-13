@@ -47,6 +47,7 @@ public class BCFileSet extends FileSet {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).iterator();
@@ -62,6 +63,7 @@ public class BCFileSet extends FileSet {
      * @return number of elements as int.
      * @since Ant 1.7
      */
+    @Override
     public int size() {
         if (isReference()) {
             return ((FileSet) getRef(getProject())).size();

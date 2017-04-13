@@ -33,7 +33,7 @@ public abstract class BaseTest {
     protected boolean fork = false;
     protected String ifProperty = null;
     protected String unlessProperty = null;
-    protected Vector formatters = new Vector();
+    protected Vector<FormatterElement> formatters = new Vector<>();
     /** destination directory */
     protected File destDir = null;
 

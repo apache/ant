@@ -19,6 +19,7 @@
 package org.apache.tools.ant.attribute;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -67,18 +68,19 @@ public abstract class BaseIfAttribute
      * @param el the element this attribute is in.
      * @return a map of attributes.
      */
-    protected Map getParams(UnknownElement el) {
-        Map ret = new HashMap();
+    protected Map<String, String> getParams(UnknownElement el) {
+        Map<String, String> ret = new HashMap<>();
         RuntimeConfigurable rc = el.getWrapper();
-        Map attributes = rc.getAttributeMap(); // This does a copy!
-        for (Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String key = (String) entry.getKey();
+        Hashtable<String, Object> attributes = rc.getAttributeMap(); // This does a copy!
+        for (Iterator<Map.Entry<String, Object>> i =
+            attributes.entrySet().iterator(); i.hasNext();) {
+            Map.Entry<String, Object> entry = i.next();
+            String key = entry.getKey();
             String value = (String) entry.getValue();
             if (key.startsWith("ant-attribute:param")) {
                 int pos = key.lastIndexOf(':');
                 ret.put(key.substring(pos + 1),
-                        el.getProject().replaceProperties(value));
+                    el.getProject().replaceProperties(value));
             }
         }
         return ret;

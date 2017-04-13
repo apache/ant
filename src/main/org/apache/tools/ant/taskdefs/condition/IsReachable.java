@@ -52,16 +52,13 @@ import org.apache.tools.ant.ProjectComponent;
  * @since Ant 1.7
  */
 public class IsReachable extends ProjectComponent implements Condition {
-
-    private static final int SECOND = 1000; // millis per second
-    private String host;
-    private String url;
-
     /**
      * The default timeout.
      */
     public static final int DEFAULT_TIMEOUT = 30;
-    private int timeout = DEFAULT_TIMEOUT;
+
+    private static final int SECOND = 1000; // millis per second
+
     /**
      * Error when no hostname is defined
      */
@@ -90,6 +87,11 @@ public class IsReachable extends ProjectComponent implements Condition {
     public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
     /** The method name to look for in InetAddress */
     public static final String METHOD_NAME = "isReachable";
+
+    private String host;
+    private String url;
+
+    private int timeout = DEFAULT_TIMEOUT;
 
     /**
      * Set the host to ping.
@@ -129,8 +131,6 @@ public class IsReachable extends ProjectComponent implements Condition {
         return string == null || string.length() == 0;
     }
 
-    private static Class[] parameterTypes = {Integer.TYPE};
-
     /**
      * Evaluate the condition.
      *
@@ -139,6 +139,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      * @throws org.apache.tools.ant.BuildException
      *          if an error occurs
      */
+    @Override
     public boolean eval() throws BuildException {
         if (empty(host) && empty(url)) {
             throw new BuildException(ERROR_NO_HOSTNAME);
@@ -174,15 +175,12 @@ public class IsReachable extends ProjectComponent implements Condition {
                 Project.MSG_VERBOSE);
         boolean reachable;
         //Java1.5: reachable = address.isReachable(timeout * 1000);
-        Method reachableMethod = null;
         try {
-            reachableMethod = InetAddress.class.getMethod(METHOD_NAME,
-                    parameterTypes);
-            final Object[] params = new Object[1];
-            params[0] = new Integer(timeout * SECOND);
+            Method reachableMethod =
+                InetAddress.class.getMethod(METHOD_NAME, Integer.class);
             try {
-                reachable = ((Boolean) reachableMethod.invoke(address, params))
-                        .booleanValue();
+                reachable = ((Boolean) reachableMethod.invoke(address,
+                    Integer.valueOf(timeout * SECOND))).booleanValue();
             } catch (final IllegalAccessException e) {
                 //utterly implausible, but catered for anyway
                 throw new BuildException("When calling " + reachableMethod);
@@ -198,7 +196,6 @@ public class IsReachable extends ProjectComponent implements Condition {
             log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
             log(MSG_NO_REACHABLE_TEST);
             reachable = true;
-
         }
 
         log("host is" + (reachable ? "" : " not") + " reachable", Project.MSG_VERBOSE);

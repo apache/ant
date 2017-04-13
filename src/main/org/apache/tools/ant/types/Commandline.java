@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
@@ -229,11 +230,9 @@ public class Commandline implements Cloneable {
          */
         public int getPosition() {
             if (realPos == -1) {
-                realPos = (executable == null ? 0 : 1);
-                for (int i = 0; i < position; i++) {
-                    Argument arg = (Argument) arguments.get(i);
-                    realPos += arg.getParts().length;
-                }
+                realPos = (executable == null ? 0 : 1) + (int)
+                arguments.stream().limit(position).map(Argument::getParts)
+                    .flatMap(Stream::of).count();
             }
             return realPos;
         }
@@ -385,7 +384,7 @@ public class Commandline implements Cloneable {
      * @return the arguments as an array of strings.
      */
     public String[] getArguments() {
-        List<String> result = new ArrayList<String>(arguments.size() * 2);
+        List<String> result = new ArrayList<>(arguments.size() * 2);
         addArgumentsToList(result.listIterator());
         return result.toArray(new String[result.size()]);
     }
@@ -412,6 +411,7 @@ public class Commandline implements Cloneable {
      * Return the command line as a string.
      * @return the command line.
      */
+    @Override
     public String toString() {
         return toString(getCommandline());
     }
@@ -432,17 +432,16 @@ public class Commandline implements Cloneable {
             if (argument.indexOf("\'") > -1) {
                 throw new BuildException("Can\'t handle single and double"
                         + " quotes in same argument");
-            } else {
-                return '\'' + argument + '\'';
             }
-        } else if (argument.indexOf("\'") > -1
-                   || argument.indexOf(" ") > -1
-                   // WIN9x uses a bat file for executing commands
-                   || (IS_WIN_9X && argument.indexOf(';') != -1)) {
-            return '\"' + argument + '\"';
-        } else {
-            return argument;
+            return '\'' + argument + '\'';
         }
+        if (argument.indexOf("\'") > -1
+               || argument.indexOf(" ") > -1
+               // WIN9x uses a bat file for executing commands
+               || (IS_WIN_9X && argument.indexOf(';') != -1)) {
+            return '\"' + argument + '\"';
+        }
+        return argument;
     }
 
     /**
@@ -486,7 +485,7 @@ public class Commandline implements Cloneable {
         final int inDoubleQuote = 2;
         int state = normal;
         final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
-        final ArrayList<String> result = new ArrayList<String>();
+        final ArrayList<String> result = new ArrayList<>();
         final StringBuilder current = new StringBuilder();
         boolean lastTokenHasBeenQuoted = false;
 
@@ -548,10 +547,11 @@ public class Commandline implements Cloneable {
      * Generate a deep clone of the contained object.
      * @return a clone of the contained object
      */
-    public Object clone() {
+    @Override
+    public Commandline clone() {
         try {
             Commandline c = (Commandline) super.clone();
-            c.arguments = new ArrayList<Argument>(arguments);
+            c.arguments = new ArrayList<>(arguments);
             return c;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
@@ -642,9 +642,8 @@ public class Commandline implements Cloneable {
         if (args == null || args.length == 0) {
             return "";
         }
-        StringBuffer buf = new StringBuffer("Executing \'");
-        buf.append(args[0]);
-        buf.append("\'");
+        StringBuilder buf = new StringBuilder("Executing \'")
+            .append(args[0]).append("\'");
         if (args.length > 1) {
             buf.append(" with ");
             buf.append(describeArguments(args, 1));
@@ -679,7 +678,7 @@ public class Commandline implements Cloneable {
         if (args == null || args.length <= offset) {
             return "";
         }
-        StringBuffer buf = new StringBuffer("argument");
+        StringBuilder buf = new StringBuilder("argument");
         if (args.length > offset) {
             buf.append("s");
         }

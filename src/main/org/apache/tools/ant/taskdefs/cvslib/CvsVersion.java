@@ -43,6 +43,7 @@ import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 public class CvsVersion extends AbstractCvsTask {
     static final long VERSION_1_11_2 = 11102;
     static final long MULTIPLY = 100;
+
     private String clientVersion;
     private String serverVersion;
     private String clientVersionProperty;
@@ -55,6 +56,7 @@ public class CvsVersion extends AbstractCvsTask {
     public String getClientVersion() {
         return clientVersion;
     }
+
     /**
      * Get the CVS server version
      * @return CVS server version
@@ -62,6 +64,7 @@ public class CvsVersion extends AbstractCvsTask {
     public String getServerVersion() {
         return serverVersion;
     }
+
     /**
      * Set a property where to store the CVS client version
      * @param clientVersionProperty  property for CVS client version
@@ -77,6 +80,7 @@ public class CvsVersion extends AbstractCvsTask {
     public void setServerVersionProperty(String serverVersionProperty) {
         this.serverVersionProperty = serverVersionProperty;
     }
+
     /**
      * Find out if the server version supports log with S option
      * @return  boolean indicating if the server version supports log with S option
@@ -90,7 +94,7 @@ public class CvsVersion extends AbstractCvsTask {
         long version = 0;
         while (tokenizer.hasMoreTokens()) {
             String s = tokenizer.nextToken();
-            int i = 0;
+            int i;
             for (i = 0; i < s.length(); i++) {
                 if (!Character.isDigit(s.charAt(i))) {
                     break;
@@ -103,11 +107,13 @@ public class CvsVersion extends AbstractCvsTask {
             }
             counter = counter / MULTIPLY;
         }
-        return (version >= VERSION_1_11_2);
+        return version >= VERSION_1_11_2;
     }
+
     /**
      * the execute method running CvsVersion
      */
+    @Override
     public void execute() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         this.setOutputStream(bos);
@@ -127,9 +133,9 @@ public class CvsVersion extends AbstractCvsTask {
         while (haveReadAhead || st.hasMoreTokens()) {
             String currentToken = haveReadAhead ? cachedVersion : st.nextToken();
             haveReadAhead = false;
-            if (currentToken.equals("Client:")) {
+            if ("Client:".equals(currentToken)) {
                 client = true;
-            } else if (currentToken.equals("Server:")) {
+            } else if ("Server:".equals(currentToken)) {
                 server = true;
             } else if (currentToken.startsWith("(CVS")
                        && currentToken.endsWith(")")) {
@@ -151,7 +157,7 @@ public class CvsVersion extends AbstractCvsTask {
                 }
                 server = false;
                 cvs = null;
-            } else if (currentToken.equals("(client/server)")
+            } else if ("(client/server)".equals(currentToken)
                        && cvs != null && cachedVersion != null
                        && !client && !server) {
                 client = server = true;

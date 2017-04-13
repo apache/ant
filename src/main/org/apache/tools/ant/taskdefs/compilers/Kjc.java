@@ -38,6 +38,7 @@ public class Kjc extends DefaultCompilerAdapter {
      * @return true if the compilation succeeded
      * @exception BuildException if the compilation has problems.
      */
+    @Override
     public boolean execute() throws BuildException {
         attributes.log("Using kjc compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupKjcCommand();
@@ -73,7 +74,7 @@ public class Kjc extends DefaultCompilerAdapter {
 
         // kjc don't have bootclasspath option.
         Path p = getBootClassPath();
-        if (p.size() > 0) {
+        if (!p.isEmpty()) {
             cp.append(p);
         }
 
@@ -115,5 +116,3 @@ public class Kjc extends DefaultCompilerAdapter {
         return cmd;
     }
 }
-
-

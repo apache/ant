@@ -53,6 +53,38 @@ public class SignJar extends AbstractJarSignerTask {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_TODIR_AND_SIGNEDJAR
+            = "'destdir' and 'signedjar' cannot both be set";
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_TOO_MANY_MAPPERS = "Too many mappers";
+    /**
+     * error string for unit test verification {@value}
+     */
+    public static final String ERROR_SIGNEDJAR_AND_PATHS
+        = "You cannot specify the signed JAR when using paths or filesets";
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_BAD_MAP = "Cannot map source file to anything sensible: ";
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_MAPPER_WITHOUT_DEST
+        = "The destDir attribute is required if a mapper is set";
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_NO_ALIAS = "alias attribute must be set";
+    /**
+     * error string for unit test verification: {@value}
+     */
+    public static final String ERROR_NO_STOREPASS = "storepass attribute must be set";
+
+    /**
      * name to a signature file
      */
     protected String sigfile;
@@ -133,37 +165,6 @@ public class SignJar extends AbstractJarSignerTask {
      */
     private String tsaDigestAlg;
 
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_TODIR_AND_SIGNEDJAR
-            = "'destdir' and 'signedjar' cannot both be set";
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_TOO_MANY_MAPPERS = "Too many mappers";
-    /**
-     * error string for unit test verification {@value}
-     */
-    public static final String ERROR_SIGNEDJAR_AND_PATHS
-        = "You cannot specify the signed JAR when using paths or filesets";
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_BAD_MAP = "Cannot map source file to anything sensible: ";
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_MAPPER_WITHOUT_DEST
-        = "The destDir attribute is required if a mapper is set";
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_NO_ALIAS = "alias attribute must be set";
-    /**
-     * error string for unit test verification: {@value}
-     */
-    public static final String ERROR_NO_STOREPASS = "storepass attribute must be set";
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -441,14 +442,7 @@ public class SignJar extends AbstractJarSignerTask {
 
             Path sources = createUnifiedSourcePath();
             //set up our mapping policy
-            FileNameMapper destMapper;
-            if (hasMapper) {
-                destMapper = mapper;
-            } else {
-                //no mapper? use the identity policy
-                destMapper = new IdentityMapper();
-            }
-
+            FileNameMapper destMapper = hasMapper ? mapper : new IdentityMapper();
 
             //at this point the paths are set up with lists of files,
             //and the mapper is ready to map from source dirs to dest files

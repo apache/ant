@@ -83,7 +83,7 @@ public interface RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    Vector getGroups(String argument) throws BuildException;
+    Vector<String> getGroups(String argument) throws BuildException;
 
     /***
      * Does this regular expression match the input, given
@@ -105,6 +105,6 @@ public interface RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    Vector getGroups(String input, int options) throws BuildException;
+    Vector<String> getGroups(String input, int options) throws BuildException;
 
 }

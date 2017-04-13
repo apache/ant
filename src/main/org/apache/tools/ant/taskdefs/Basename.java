@@ -85,6 +85,7 @@ public class Basename extends Task {
      * @throws BuildException if required attributes are not supplied
      * property and attribute are required attributes
      */
+    @Override
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute required", getLocation());
@@ -92,19 +93,21 @@ public class Basename extends Task {
         if (file == null) {
             throw new BuildException("file attribute required", getLocation());
         }
-        String value = file.getName();
-        if (suffix != null && value.endsWith(suffix)) {
-            // if the suffix does not starts with a '.' and the
-            // char preceding the suffix is a '.', we assume the user
-            // wants to remove the '.' as well (see docs)
-            int pos = value.length() - suffix.length();
-            if (pos > 0 && suffix.charAt(0) != '.'
-                && value.charAt(pos - 1) == '.') {
-                pos--;
-            }
-            value = value.substring(0, pos);
+        getProject().setNewProperty(property,
+            removeExtension(file.getName(), suffix));
+    }
+
+    private String removeExtension(String s, String ext) {
+        if (ext == null || !s.endsWith(ext)) {
+            return s;
         }
-        getProject().setNewProperty(property, value);
+        int clipFrom = s.length() - ext.length();
+        // if the suffix does not starts with a '.' and the
+        // char preceding the suffix is a '.', we assume the user
+        // wants to remove the '.' as well (see docs)
+        if (ext.charAt(0) != '.' && clipFrom > 0 && s.charAt(clipFrom - 1) == '.') {
+            clipFrom -= 1;
+        }
+        return s.substring(0, clipFrom);
     }
 }
-

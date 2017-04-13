@@ -44,7 +44,6 @@ public class FilesMatch implements Condition {
 
     private boolean textfile = false;
 
-
     /**
      * Sets the File1 attribute
      *
@@ -53,7 +52,6 @@ public class FilesMatch implements Condition {
     public void setFile1(File file1) {
         this.file1 = file1;
     }
-
 
     /**
      * Sets the File2 attribute
@@ -78,13 +76,14 @@ public class FilesMatch implements Condition {
      * @return true if the files are equal
      * @exception BuildException if it all went pear-shaped
      */
+    @Override
     public boolean eval()
         throws BuildException {
 
         //validate
         if (file1 == null || file2 == null) {
-            throw new BuildException("both file1 and file2 are required in "
-                                     + "filesmatch");
+            throw new BuildException(
+                "both file1 and file2 are required in filesmatch");
         }
 
         //#now match the files
@@ -98,4 +97,3 @@ public class FilesMatch implements Condition {
         return matches;
     }
 }
-

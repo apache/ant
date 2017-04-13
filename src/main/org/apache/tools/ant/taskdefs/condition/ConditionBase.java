@@ -18,7 +18,9 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.ProjectComponent;
@@ -43,7 +45,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      *
      */
-    private Vector conditions = new Vector();
+    private List<Condition> conditions = new Vector<>();
 
     /**
      * Simple constructor.
@@ -77,8 +79,8 @@ public abstract class ConditionBase extends ProjectComponent {
      * @return an enumeration to use for iteration
      * @since 1.1
      */
-    protected final Enumeration getConditions() {
-        return conditions.elements();
+    protected final Enumeration<Condition> getConditions() {
+        return Collections.enumeration(conditions);
     }
 
     /**
@@ -108,7 +110,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addAvailable(Available a) {
-        conditions.addElement(a);
+        conditions.add(a);
     }
 
     /**
@@ -118,7 +120,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.4, Ant 1.5
      */
     public void addChecksum(Checksum c) {
-        conditions.addElement(c);
+        conditions.add(c);
     }
 
     /**
@@ -128,7 +130,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addUptodate(UpToDate u) {
-        conditions.addElement(u);
+        conditions.add(u);
     }
 
     /**
@@ -138,7 +140,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addNot(Not n) {
-        conditions.addElement(n);
+        conditions.add(n);
     }
 
     /**
@@ -148,7 +150,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addAnd(And a) {
-        conditions.addElement(a);
+        conditions.add(a);
     }
 
     /**
@@ -158,7 +160,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addOr(Or o) {
-        conditions.addElement(o);
+        conditions.add(o);
     }
 
     /**
@@ -168,7 +170,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addEquals(Equals e) {
-        conditions.addElement(e);
+        conditions.add(e);
     }
 
     /**
@@ -178,7 +180,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addOs(Os o) {
-        conditions.addElement(o);
+        conditions.add(o);
     }
 
     /**
@@ -188,7 +190,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addIsSet(IsSet i) {
-        conditions.addElement(i);
+        conditions.add(i);
     }
 
     /**
@@ -198,7 +200,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addHttp(Http h) {
-        conditions.addElement(h);
+        conditions.add(h);
     }
 
     /**
@@ -208,7 +210,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addSocket(Socket s) {
-        conditions.addElement(s);
+        conditions.add(s);
     }
 
     /**
@@ -218,7 +220,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addFilesMatch(FilesMatch test) {
-        conditions.addElement(test);
+        conditions.add(test);
     }
 
     /**
@@ -228,7 +230,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addContains(Contains test) {
-        conditions.addElement(test);
+        conditions.add(test);
     }
 
     /**
@@ -238,7 +240,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addIsTrue(IsTrue test) {
-        conditions.addElement(test);
+        conditions.add(test);
     }
 
     /**
@@ -248,7 +250,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.5
      */
     public void addIsFalse(IsFalse test) {
-        conditions.addElement(test);
+        conditions.add(test);
     }
 
     /**
@@ -258,7 +260,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.6
      */
     public void addIsReference(IsReference i) {
-        conditions.addElement(i);
+        conditions.add(i);
     }
 
     /**
@@ -266,7 +268,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @param test the condition
      */
     public void addIsFileSelected(IsFileSelected test) {
-        conditions.addElement(test);
+        conditions.add(test);
     }
 
     /**
@@ -275,7 +277,7 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since Ant 1.6
      */
     public void add(Condition c) {
-        conditions.addElement(c);
+        conditions.add(c);
     }
 
 }

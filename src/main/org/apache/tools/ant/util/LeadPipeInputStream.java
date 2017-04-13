@@ -81,6 +81,7 @@ public class LeadPipeInputStream extends PipedInputStream {
      * @return the byte (0 to 255) or -1 if there are no more.
      * @throws IOException if there is an error.
      */
+    @Override
     public synchronized int read() throws IOException {
         int result = -1;
         try {

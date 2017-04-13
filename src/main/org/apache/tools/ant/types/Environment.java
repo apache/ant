@@ -115,9 +115,8 @@ public class Environment {
          */
         public String getContent() throws BuildException {
             validate();
-            StringBuffer sb = new StringBuffer(key.trim());
-            sb.append("=").append(value.trim());
-            return sb.toString();
+            return new StringBuilder(key.trim()).append("=")
+                .append(value.trim()).toString();
         }
 
         /**
@@ -126,8 +125,8 @@ public class Environment {
          */
         public void validate() {
             if (key == null || value == null) {
-                throw new BuildException("key and value must be specified "
-                    + "for environment variables.");
+                throw new BuildException(
+                    "key and value must be specified for environment variables.");
             }
         }
     }
@@ -136,7 +135,7 @@ public class Environment {
      * constructor
      */
     public Environment() {
-        variables = new Vector<Variable>();
+        variables = new Vector<>();
     }
 
     /**
@@ -155,14 +154,10 @@ public class Environment {
      * @throws BuildException if any variable is misconfigured
      */
     public String[] getVariables() throws BuildException {
-        if (variables.size() == 0) {
+        if (variables.isEmpty()) {
             return null;
         }
-        String[] result = new String[variables.size()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = ((Variable) variables.elementAt(i)).getContent();
-        }
-        return result;
+        return variables.stream().map(Variable::getContent).toArray(String[]::new);
     }
 
     /**

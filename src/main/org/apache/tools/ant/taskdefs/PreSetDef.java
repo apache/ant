@@ -56,6 +56,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
      * Add a nested task to predefine attributes and elements on.
      * @param nestedTask  Nested task/type to extend.
      */
+    @Override
     public void addTask(Task nestedTask) {
         if (this.nestedTask != null) {
             throw new BuildException("Only one nested element allowed");
@@ -71,6 +72,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
     /**
      * Make a new definition.
      */
+    @Override
     public void execute() {
         if (nestedTask == null) {
             throw new BuildException("Missing nested element");
@@ -89,7 +91,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
         AntTypeDefinition def = helper.getDefinition(componentName);
         if (def == null) {
             throw new BuildException(
-                "Unable to find typedef " + componentName);
+                "Unable to find typedef %s", componentName);
         }
         PreSetDefinition newDef = new PreSetDefinition(def, nestedTask);
 
@@ -129,7 +131,8 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          *
          * @param clazz a <code>Class</code> value.
          */
-        public void setClass(Class clazz) {
+        @Override
+        public void setClass(Class<?> clazz) {
             throw new BuildException("Not supported");
         }
 
@@ -138,6 +141,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          *
          * @param className a <code>String</code> value.
          */
+        @Override
         public void setClassName(String className) {
             throw new BuildException("Not supported");
         }
@@ -146,6 +150,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * Get the classname of the definition.
          * @return the name of the class of this definition.
          */
+        @Override
         public String getClassName() {
             return parent.getClassName();
         }
@@ -155,7 +160,8 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * NOT Supported
          * @param adapterClass the adapterClass.
          */
-        public void setAdapterClass(Class adapterClass) {
+        @Override
+        public void setAdapterClass(Class<?> adapterClass) {
             throw new BuildException("Not supported");
         }
 
@@ -164,7 +170,8 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * NOT SUPPORTED
          * @param adaptToClass the assignable class.
          */
-        public void setAdaptToClass(Class adaptToClass) {
+        @Override
+        public void setAdaptToClass(Class<?> adaptToClass) {
             throw new BuildException("Not supported");
         }
 
@@ -174,6 +181,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * NOT SUPPORTED
          * @param classLoader the classLoader.
          */
+        @Override
         public void setClassLoader(ClassLoader classLoader) {
             throw new BuildException("Not supported");
         }
@@ -182,6 +190,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * Get the classloader for this definition.
          * @return the classloader for this definition.
          */
+        @Override
         public ClassLoader getClassLoader() {
             return parent.getClassLoader();
         }
@@ -191,7 +200,8 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @param project the current project.
          * @return the exposed class.
          */
-        public Class getExposedClass(Project project) {
+        @Override
+        public Class<?> getExposedClass(Project project) {
             return parent.getExposedClass(project);
         }
 
@@ -200,7 +210,8 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @param project the current project.
          * @return the type of the definition.
          */
-        public Class getTypeClass(Project project) {
+        @Override
+        public Class<?> getTypeClass(Project project) {
             return parent.getTypeClass(project);
         }
 
@@ -209,6 +220,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * Check if the attributes are correct.
          * @param project the current project.
          */
+        @Override
         public void checkClass(Project project) {
             parent.checkClass(project);
         }
@@ -240,6 +252,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @param project the current project.
          * @return this object.
          */
+        @Override
         public Object create(Project project) {
             return this;
         }
@@ -251,6 +264,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @param project the current project.
          * @return true if the definitions are the same.
          */
+        @Override
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
             return (other != null && other.getClass() == getClass() && parent != null
                 && parent.sameDefinition(((PreSetDefinition) other).parent, project)
@@ -264,6 +278,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @param project the current project.
          * @return true if the definitions are similar.
          */
+        @Override
         public boolean similarDefinition(
             AntTypeDefinition other, Project project) {
             return (other != null && other.getClass().getName().equals(

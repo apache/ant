@@ -47,6 +47,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * (delegated to {@link #addFiles addFiles}) and running the tool
      * (delegated to {@link #run run}).
      */
+    @Override
     public final boolean convert(Native2Ascii args, File srcFile,
                                  File destFile) throws BuildException {
         Commandline cmd = new Commandline();

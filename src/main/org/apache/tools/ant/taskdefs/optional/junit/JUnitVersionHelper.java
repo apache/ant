@@ -82,9 +82,8 @@ public class JUnitVersionHelper {
             if (name.endsWith(")")) {
                 int paren = name.lastIndexOf('(');
                 return name.substring(0, paren);
-            } else {
-                return name;
             }
+            return name;
         }
         if (t instanceof TestCase && testCaseName != null) {
             try {
@@ -94,17 +93,16 @@ public class JUnitVersionHelper {
             }
         } else {
             try {
-                Method getNameMethod = null;
+                Method getNameMethod;
                 try {
                     getNameMethod =
-                        t.getClass().getMethod("getName", new Class [0]);
+                        t.getClass().getMethod("getName");
                 } catch (NoSuchMethodException e) {
-                    getNameMethod = t.getClass().getMethod("name",
-                                                           new Class [0]);
+                    getNameMethod = t.getClass().getMethod("name");
                 }
                 if (getNameMethod != null
                     && getNameMethod.getReturnType() == String.class) {
-                    return (String) getNameMethod.invoke(t, new Object[0]);
+                    return (String) getNameMethod.invoke(t);
                 }
             } catch (Throwable ignored) {
                 // ignore
@@ -125,8 +123,7 @@ public class JUnitVersionHelper {
         String className = test.getClass().getName();
         if (test instanceof JUnitTaskMirrorImpl.VmExitErrorTest) {
             className = ((JUnitTaskMirrorImpl.VmExitErrorTest) test).getClassName();
-        } else
-        if (className.equals(JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE)) {
+        } else if (className.equals(JUNIT_FRAMEWORK_JUNIT4_TEST_CASE_FACADE)) {
             // JUnit 4 wraps solo tests this way. We can extract
             // the original test name with a little hack.
             String name = test.toString();
@@ -152,28 +149,22 @@ public class JUnitVersionHelper {
                 Class<?> testClass = Class.forName(JUnitVersionHelper.getTestCaseClassName(test));
 
                 Method testMethod = testClass.getMethod(JUnitVersionHelper.getTestCaseName(test));
-                Class ignoreAnnotation = Class.forName("org.junit.Ignore");
+                Class<? extends Annotation> ignoreAnnotation = Class
+                    .forName("org.junit.Ignore").asSubclass(Annotation.class);
                 Annotation annotation = testMethod.getAnnotation(ignoreAnnotation);
                 if (annotation != null) {
-                    Method valueMethod = annotation.getClass().getMethod("value");
+                    Method valueMethod = annotation.annotationType().getMethod("value");
                     String value = (String) valueMethod.invoke(annotation);
                     if (value != null && value.length() > 0) {
                         message = value;
                     }
                 }
-
             }
-        } catch (NoSuchMethodException e) {
-            // silently ignore - we'll report a skip with no message
-        } catch (ClassNotFoundException e) {
-            // silently ignore - we'll report a skip with no message
-        } catch (InvocationTargetException e) {
-            // silently ignore - we'll report a skip with no message
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | ClassNotFoundException
+                | InvocationTargetException | IllegalAccessException e) {
             // silently ignore - we'll report a skip with no message
         }
         return message;
-
     }
 
 }

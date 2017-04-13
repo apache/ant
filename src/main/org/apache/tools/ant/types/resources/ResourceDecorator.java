@@ -59,12 +59,12 @@ public abstract class ResourceDecorator extends Resource {
     public final void addConfigured(ResourceCollection a) {
         checkChildrenAllowed();
         if (resource != null) {
-            throw new BuildException("you must not specify more than one"
-                                     + " resource");
+            throw new BuildException(
+                "you must not specify more than one resource");
         }
         if (a.size() != 1) {
-            throw new BuildException("only single argument resource collections"
-                                     + " are supported");
+            throw new BuildException(
+                "only single argument resource collections are supported");
         }
         setChecked(false);
         resource = a.iterator().next();
@@ -237,6 +237,7 @@ public abstract class ResourceDecorator extends Resource {
      * @param name not used.
      * @throws BuildException always.
      */
+    @Override
     public void setName(String name) throws BuildException {
         throw new BuildException("you can't change the name of a "
                                  + getDataTypeName());
@@ -246,6 +247,7 @@ public abstract class ResourceDecorator extends Resource {
      * Set the exists attribute.
      * @param exists if true, this resource exists.
      */
+    @Override
     public void setExists(boolean exists) {
         throw new BuildException("you can't change the exists state of a "
                                  + getDataTypeName());
@@ -256,6 +258,7 @@ public abstract class ResourceDecorator extends Resource {
      * @param lastmodified not used.
      * @throws BuildException always.
      */
+    @Override
     public void setLastModified(long lastmodified) throws BuildException {
         throw new BuildException("you can't change the timestamp of a "
                                  + getDataTypeName());
@@ -266,6 +269,7 @@ public abstract class ResourceDecorator extends Resource {
      * @param directory not used.
      * @throws BuildException always.
      */
+    @Override
     public void setDirectory(boolean directory) throws BuildException {
         throw new BuildException("you can't change the directory state of a "
                                  + getDataTypeName());
@@ -276,6 +280,7 @@ public abstract class ResourceDecorator extends Resource {
      * @param size not used.
      * @throws BuildException always.
      */
+    @Override
     public void setSize(long size) throws BuildException {
         throw new BuildException("you can't change the size of a "
                                  + getDataTypeName());

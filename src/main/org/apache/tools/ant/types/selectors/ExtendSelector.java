@@ -19,7 +19,9 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -37,14 +39,9 @@ public class ExtendSelector extends BaseSelector {
 
     private String classname = null;
     private FileSelector dynselector = null;
-    private Vector<Parameter> paramVec = new Vector<Parameter>();
+    private List<Parameter> parameters =
+        Collections.synchronizedList(new ArrayList<>());
     private Path classpath = null;
-
-    /**
-     * Default constructor.
-     */
-    public ExtendSelector() {
-    }
 
     /**
      * Sets the classname of the custom selector.
@@ -61,7 +58,7 @@ public class ExtendSelector extends BaseSelector {
     public void selectorCreate() {
         if (classname != null && classname.length() > 0) {
             try {
-                Class<?> c = null;
+                Class<?> c;
                 if (classpath == null) {
                     c = Class.forName(classname);
                 } else {
@@ -96,9 +93,8 @@ public class ExtendSelector extends BaseSelector {
      * @param p The new Parameter object
      */
     public void addParam(Parameter p) {
-        paramVec.addElement(p);
+        parameters.add(p);
     }
-
 
     /**
      * Set the classpath to load the classname specified using an attribute.
@@ -166,12 +162,11 @@ public class ExtendSelector extends BaseSelector {
         } else if (dynselector == null) {
             setError("Internal Error: The custom selector was not created");
         } else if (!(dynselector instanceof ExtendFileSelector)
-                    && (paramVec.size() > 0)) {
-            setError("Cannot set parameters on custom selector that does not "
-                    + "implement ExtendFileSelector");
+                    && !parameters.isEmpty()) {
+            setError(
+                "Cannot set parameters on custom selector that does not implement ExtendFileSelector");
         }
     }
-
 
     /**
      * Allows the custom selector to choose whether to select a file. This
@@ -188,14 +183,12 @@ public class ExtendSelector extends BaseSelector {
     public boolean isSelected(File basedir, String filename, File file)
             throws BuildException {
         validate();
-        if (paramVec.size() > 0 && dynselector instanceof ExtendFileSelector) {
-            Parameter[] paramArray = new Parameter[paramVec.size()];
-            paramVec.copyInto(paramArray);
+        if (!parameters.isEmpty() && dynselector instanceof ExtendFileSelector) {
             // We know that dynselector must be non-null if no error message
-            ((ExtendFileSelector) dynselector).setParameters(paramArray);
+            ((ExtendFileSelector) dynselector).setParameters(
+                parameters.toArray(new Parameter[parameters.size()]));
         }
         return dynselector.isSelected(basedir, filename, file);
     }
 
 }
-

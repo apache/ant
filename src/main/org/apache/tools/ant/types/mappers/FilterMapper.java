@@ -41,6 +41,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      * @param from a string
      * @throws BuildException always
      */
+    @Override
     public void setFrom(String from) {
         throw new UnsupportedAttributeException(
             "filtermapper doesn't support the \"from\" attribute.", "from");
@@ -51,6 +52,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      * @param to a string
      * @throws BuildException always
      */
+    @Override
     public void setTo(String to) {
         throw new UnsupportedAttributeException(
             "filtermapper doesn't support the \"to\" attribute.", "to");
@@ -62,6 +64,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      * @return  a one-element array of converted filenames, or null if
      *          the filterchain returns an empty string.
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
         try {
             Reader stringReader = new StringReader(sourceFileName);
@@ -69,15 +72,14 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
             helper.setBufferSize(BUFFER_SIZE);
             helper.setPrimaryReader(stringReader);
             helper.setProject(getProject());
-            Vector<FilterChain> filterChains = new Vector<FilterChain>();
+            Vector<FilterChain> filterChains = new Vector<>();
             filterChains.add(this);
             helper.setFilterChains(filterChains);
             String result = FileUtils.safeReadFully(helper.getAssembledReader());
-            if (result.length() == 0) {
+            if (result.isEmpty()) {
                 return null;
-            } else {
-                return new String[] {result};
             }
+            return new String[] { result };
         } catch (BuildException ex) {
             throw ex;
         } catch (Exception ex) {

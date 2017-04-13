@@ -23,7 +23,6 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A resource that transforms the content of another resource.
@@ -58,9 +57,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
     @Override
     public long getSize() {
         if (isExists()) {
-            InputStream in = null;
-            try {
-                in = getInputStream();
+            try (InputStream in = getInputStream()) {
                 final byte[] buf = new byte[BUFFER_SIZE];
                 int size = 0;
                 int readNow;
@@ -69,14 +66,11 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
                 }
                 return size;
             } catch (final IOException ex) {
-                throw new BuildException("caught exception while reading "
-                                         + getName(), ex);
-            } finally {
-                FileUtils.close(in);
+                throw new BuildException(
+                    "caught exception while reading " + getName(), ex);
             }
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -120,24 +114,16 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
     public <T> T as(final Class<T> clazz) {
         if (Appendable.class.isAssignableFrom(clazz)) {
             if (isAppendSupported()) {
-                final Appendable a =
-                    getResource().as(Appendable.class);
+                final Appendable a = getResource().as(Appendable.class);
                 if (a != null) {
-                    return clazz.cast(new Appendable() {
-                        public OutputStream getAppendOutputStream()
-                                throws IOException {
-                            OutputStream out = a.getAppendOutputStream();
-                            if (out != null) {
-                                out = wrapStream(out);
-                            }
-                            return out;
-                        }
+                    return clazz.cast((Appendable) () -> {
+                        OutputStream out = a.getAppendOutputStream();
+                        return out == null ? null : wrapStream(out);
                     });
                 }
             }
             return null;
         }
-
         return FileProvider.class.isAssignableFrom(clazz)
             ? null : getResource().as(clazz);
     }

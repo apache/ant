@@ -18,12 +18,21 @@
 
 package org.apache.tools.ant.util.optional;
 
-import java.util.Iterator;
+import java.util.function.BiConsumer;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.script.Bindings;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.SimpleBindings;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.ReflectWrapper;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 
 /**
@@ -31,20 +40,22 @@ import org.apache.tools.ant.util.ScriptRunnerBase;
  * @since Ant 1.7.0
  */
 public class JavaxScriptRunner extends ScriptRunnerBase {
-    private ReflectWrapper engine;
-    private ReflectWrapper compiledScript;
+    private ScriptEngine keptEngine;
+    private CompiledScript compiledScript;
 
     /**
      * Get the name of the manager prefix.
      * @return "javax"
      */
+    @Override
     public String getManagerName() {
         return "javax";
     }
 
     /** {@inheritDoc}. */
+    @Override
     public boolean supportsLanguage() {
-        if (engine != null) {
+        if (keptEngine != null) {
             return true;
         }
         checkLanguage();
@@ -66,6 +77,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
      *
      * @exception BuildException if something goes wrong executing the script.
      */
+    @Override
     public void executeScript(String execName) throws BuildException {
         evaluateScript(execName);
     }
@@ -82,70 +94,60 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();
         try {
-
             if (getCompiled()) {
-
-                final String compiledScriptRefName = MagicNames.SCRIPT_CACHE + "." + getLanguage() +
-                    "." + getScript().hashCode() + "." +
-                    (null == getClass().getClassLoader() ? 0 : getClass().getClassLoader().hashCode());
+                final String compiledScriptRefName =
+                    String.format("%s.%s.%d.%d", MagicNames.SCRIPT_CACHE,
+                        getLanguage(), Objects.hashCode(getScript()),
+                        Objects.hashCode(getClass().getClassLoader()));
 
                 if (null == compiledScript) {
                     compiledScript = getProject().getReference(compiledScriptRefName);
                 }
-
                 if (null == compiledScript) {
-
-                    final ReflectWrapper engine = createEngine();
+                    final ScriptEngine engine = createEngine();
                     if (engine == null) {
                         throw new BuildException(
-                            "Unable to create javax script engine for "
-                            + getLanguage());
+                            "Unable to create javax script engine for %s",
+                            getLanguage());
                     }
+                    if (Compilable.class.isInstance(engine)) {
+                        getProject().log("compile script " + execName,
+                            Project.MSG_VERBOSE);
 
-                    final Class engineClass = Class.forName("javax.script.ScriptEngine", true, getClass().getClassLoader());
-                    final Class compilableClass = Class.forName("javax.script.Compilable", true, getClass().getClassLoader());
-                    final Object wrappedObject = engine.getObject();
-
-                    if (engineClass.isAssignableFrom(wrappedObject.getClass()) &&
-                        compilableClass.isAssignableFrom(wrappedObject.getClass())) {
-
-                        getProject().log("compile script " + execName, Project.MSG_VERBOSE);
-
-                        final Object compiled = engine.invoke("compile", String.class, getScript());
-                        compiledScript = new ReflectWrapper(compiled);
-
+                        compiledScript =
+                            ((Compilable) engine).compile(getScript());
                     } else {
-                        getProject().log("script compilation not available for " + execName, Project.MSG_VERBOSE);
-                        compiledScript = new ReflectWrapper(null);
+                        getProject().log(
+                            "script compilation not available for " + execName,
+                            Project.MSG_VERBOSE);
+                        compiledScript = null;
                     }
-                    getProject().addReference(compiledScriptRefName, compiledScript);
+                    getProject().addReference(compiledScriptRefName,
+                        compiledScript);
                 }
+                if (null != compiledScript) {
+                    final Bindings bindings = new SimpleBindings();
 
-                if (null != compiledScript.getObject()) {
+                    applyBindings(bindings::put);
 
-                    final ReflectWrapper simpleBindings = new ReflectWrapper(getClass().getClassLoader(), "javax.script.SimpleBindings");
+                    getProject().log(
+                        "run compiled script " + compiledScriptRefName,
+                        Project.MSG_DEBUG);
 
-                    applyBindings(simpleBindings);
-
-                    getProject().log("run compiled script " + compiledScriptRefName, Project.MSG_DEBUG);
-
-                    final Class bindingsClass  = Class.forName("javax.script.Bindings", true, getClass().getClassLoader());
-
-                    return compiledScript.invoke("eval", bindingsClass, simpleBindings.getObject());
+                    return compiledScript.eval(bindings);
                 }
             }
 
-            ReflectWrapper engine = createEngine();
+            ScriptEngine engine = createEngine();
             if (engine == null) {
                 throw new BuildException(
                     "Unable to create javax script engine for "
-                    + getLanguage());
+                        + getLanguage());
             }
 
-            applyBindings(engine);
+            applyBindings(engine::put);
 
-            // execute the script
-            return engine.invoke("eval", String.class, getScript());
+            return engine.eval(getScript());
 
         } catch (BuildException be) {
             //catch and rethrow build exceptions
@@ -160,7 +162,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             Throwable t = be;
             Throwable te = be.getCause();
             if (te != null) {
-                if  (te instanceof BuildException) {
+                if (te instanceof BuildException) {
                     throw (BuildException) te;
                 } else {
                     t = te;
@@ -172,33 +174,29 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         }
     }
 
-    private void applyBindings(ReflectWrapper engine) {
-        for (Iterator i = getBeans().keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
-            Object value = getBeans().get(key);
-            if ("FX".equalsIgnoreCase(getLanguage())) {
-                key += ":" + value.getClass().getName(); 
-            }
-            engine.invoke("put", String.class, key, Object.class, value);
+    private void applyBindings(BiConsumer<String, Object> target) {
+        Map<String, Object> source = getBeans();
+
+        if ("FX".equalsIgnoreCase(getLanguage())) {
+            source = source.entrySet().stream()
+                .collect(Collectors.toMap(
+                    e -> String.format("%s:%s", e.getKey(),
+                        e.getValue().getClass().getName()),
+                    Map.Entry::getValue));
         }
+        source.forEach(target::accept);
     }
 
-    private ReflectWrapper createEngine() {
-        if (engine != null) {
-            return engine;
+    private ScriptEngine createEngine() {
+        if (keptEngine != null) {
+            return keptEngine;
         }
-        ReflectWrapper manager = new ReflectWrapper(
-            getClass().getClassLoader(), "javax.script.ScriptEngineManager");
-        Object e = manager.invoke(
-            "getEngineByName", String.class, getLanguage());
-        if (e == null) {
-            return null;
+        ScriptEngine result =
+            new ScriptEngineManager().getEngineByName(getLanguage());
+        if (result != null && getKeepEngine()) {
+            this.keptEngine = result;
         }
-        ReflectWrapper ret = new ReflectWrapper(e);
-        if (getKeepEngine()) {
-            this.engine = ret;
-        }
-        return ret;
+        return result;
     }
 
     /**

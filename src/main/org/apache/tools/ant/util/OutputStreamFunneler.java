@@ -44,6 +44,7 @@ public class OutputStreamFunneler {
             }
         }
 
+        @Override
         public void flush() throws IOException {
             synchronized (OutputStreamFunneler.this) {
                 dieIfClosed();
@@ -51,6 +52,7 @@ public class OutputStreamFunneler {
             }
         }
 
+        @Override
         public void write(int b) throws IOException {
             synchronized (OutputStreamFunneler.this) {
                 dieIfClosed();
@@ -58,6 +60,7 @@ public class OutputStreamFunneler {
             }
         }
 
+        @Override
         public void write(byte[] b) throws IOException {
             synchronized (OutputStreamFunneler.this) {
                 dieIfClosed();
@@ -65,6 +68,7 @@ public class OutputStreamFunneler {
             }
         }
 
+        @Override
         public void write(byte[] b, int off, int len) throws IOException {
             synchronized (OutputStreamFunneler.this) {
                 dieIfClosed();
@@ -72,6 +76,7 @@ public class OutputStreamFunneler {
             }
         }
 
+        @Override
         public void close() throws IOException {
             release(this);
         }

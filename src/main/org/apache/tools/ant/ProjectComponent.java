@@ -160,6 +160,7 @@ public abstract class ProjectComponent implements Cloneable {
      * @throws CloneNotSupportedException does not happen,
      *                                    but is declared to allow subclasses to do so.
      */
+    @Override
     public Object clone() throws CloneNotSupportedException {
         ProjectComponent pc = (ProjectComponent) super.clone();
         pc.setLocation(getLocation());

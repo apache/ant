@@ -107,8 +107,9 @@ public class ClasspathUtils {
         String pathId = ref.getRefId();
         Object path = p.getReference(pathId);
         if (!(path instanceof Path)) {
-            throw new BuildException("The specified classpathref " + pathId
-                    + " does not reference a Path.");
+            throw new BuildException(
+                "The specified classpathref %s does not reference a Path.",
+                pathId);
         }
         String loaderId = MagicNames.REFID_CLASSPATH_LOADER_PREFIX + pathId;
         return getClassLoaderForPath(p, (Path) path, loaderId, reverseLoader);
@@ -174,8 +175,9 @@ public class ClasspathUtils {
         if (loaderId != null && reuseLoader) {
             Object reusedLoader = p.getReference(loaderId);
             if (reusedLoader != null && !(reusedLoader instanceof ClassLoader)) {
-                throw new BuildException("The specified loader id " + loaderId
-                        + " does not reference a class loader");
+                throw new BuildException(
+                    "The specified loader id %s does not reference a class loader",
+                    loaderId);
             }
             cl = (ClassLoader) reusedLoader;
         }
@@ -243,14 +245,16 @@ public class ClasspathUtils {
      * @throws BuildException when loading or instantiation failed.
      * @since Ant 1.7
      */
-    public static Object newInstance(String className, ClassLoader userDefinedLoader,
-            Class expectedType) {
+    public static <T> T newInstance(String className, ClassLoader userDefinedLoader,
+            Class<T> expectedType) {
         try {
-            Class clazz = Class.forName(className, true, userDefinedLoader);
-            Object o = clazz.newInstance();
+            @SuppressWarnings("unchecked")
+            Class<T> clazz = (Class<T>) Class.forName(className, true, userDefinedLoader);
+            T o = clazz.newInstance();
             if (!expectedType.isInstance(o)) {
-                throw new BuildException("Class of unexpected Type: " + className + " expected :"
-                        + expectedType);
+                throw new BuildException(
+                    "Class of unexpected Type: %s expected : %s", className,
+                    expectedType);
             }
             return o;
         } catch (ClassNotFoundException e) {
@@ -284,6 +288,9 @@ public class ClasspathUtils {
      */
     private static boolean isMagicPropertySet(Project p) {
         return p.getProperty(REUSE_LOADER_REF) != null;
+    }
+
+    private ClasspathUtils() {
     }
 
     /**
@@ -457,7 +464,5 @@ public class ClasspathUtils {
             return reverseLoader;
         }
 
-        //TODO no methods yet for getClassname
-        //TODO no method for newInstance using a reverse-classloader
     }
 }

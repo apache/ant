@@ -295,18 +295,16 @@ public class SSHExec extends SSHBase {
             + (inputProperty != null ? 1 : 0)
             + (inputString != null ? 1 : 0);
         if (numberOfInputs > 1) {
-            throw new BuildException("You can't specify more than one of"
-                                     + " inputFile, inputProperty and"
-                                     + " inputString.");
+            throw new BuildException(
+                "You can't specify more than one of inputFile, inputProperty and inputString.");
         }
         if (inputFile != null && !inputFile.exists()) {
-            throw new BuildException("The input file "
-                                     + inputFile.getAbsolutePath()
-                                     + " does not exist.");
+            throw new BuildException("The input file %s does not exist.",
+                inputFile.getAbsolutePath());
         }
 
         Session session = null;
-        final StringBuffer output = new StringBuffer();
+        final StringBuilder output = new StringBuilder();
         try {
             session = openSession();
             /* called once */
@@ -314,32 +312,27 @@ public class SSHExec extends SSHBase {
                 log("cmd : " + command, Project.MSG_INFO);
                 executeCommand(session, command, output);
             } else { // read command resource and execute for each command
-                try {
-                    final BufferedReader br = new BufferedReader(
-                            new InputStreamReader(commandResource.getInputStream()));
-                    String cmd;
-                    while ((cmd = br.readLine()) != null) {
+                try (final BufferedReader br = new BufferedReader(
+                    new InputStreamReader(commandResource.getInputStream()))) {
+                    final Session s = session;
+                    br.lines().forEach(cmd -> {
                         log("cmd : " + cmd, Project.MSG_INFO);
                         output.append(cmd).append(" : ");
-                        executeCommand(session, cmd, output);
+                        executeCommand(s, cmd, output);
                         output.append("\n");
-                    }
-                    FileUtils.close(br);
+                    });
                 } catch (final IOException e) {
                     if (getFailonerror()) {
                         throw new BuildException(e);
-                    } else {
-                        log("Caught exception: " + e.getMessage(),
-                            Project.MSG_ERR);
                     }
+                    log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
                 }
             }
         } catch (final JSchException e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
-            } else {
-                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
+            log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
         } finally {
             if (outputProperty != null) {
                 getProject().setNewProperty(outputProperty, output.toString());
@@ -350,7 +343,7 @@ public class SSHExec extends SSHBase {
         }
     }
 
-    private void executeCommand(final Session session, final String cmd, final StringBuffer sb)
+    private void executeCommand(final Session session, final String cmd, final StringBuilder sb)
         throws BuildException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final ByteArrayOutputStream errout = new ByteArrayOutputStream();
@@ -423,9 +416,8 @@ public class SSHExec extends SSHBase {
                 thread = null;
                 if (getFailonerror()) {
                     throw new BuildException(TIMEOUT_MESSAGE);
-                } else {
-                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
                 }
+                log(TIMEOUT_MESSAGE, Project.MSG_ERR);
             } else {
                 // stdout to outputFile
                 if (outputFile != null) {
@@ -450,9 +442,8 @@ public class SSHExec extends SSHBase {
                     final String msg = "Remote command failed with exit status " + ec;
                     if (getFailonerror()) {
                         throw new BuildException(msg);
-                    } else {
-                        log(msg, Project.MSG_ERR);
                     }
+                    log(msg, Project.MSG_ERR);
                 }
             }
         } catch (final BuildException e) {
@@ -461,23 +452,19 @@ public class SSHExec extends SSHBase {
             if (e.getMessage().indexOf("session is down") >= 0) {
                 if (getFailonerror()) {
                     throw new BuildException(TIMEOUT_MESSAGE, e);
-                } else {
-                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
                 }
+                log(TIMEOUT_MESSAGE, Project.MSG_ERR);
             } else {
                 if (getFailonerror()) {
                     throw new BuildException(e);
-                } else {
-                    log("Caught exception: " + e.getMessage(),
-                        Project.MSG_ERR);
                 }
+                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
         } catch (final Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
-            } else {
-                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
+            log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
         } finally {
             sb.append(out.toString());
             FileUtils.close(istream);
@@ -498,9 +485,8 @@ public class SSHExec extends SSHBase {
         try (FileWriter out = new FileWriter(to.getAbsolutePath(), append)) {
             final StringReader in = new StringReader(from);
             final char[] buffer = new char[BUFFER_SIZE];
-            int bytesRead;
             while (true) {
-                bytesRead = in.read(buffer);
+                int bytesRead = in.read(buffer);
                 if (bytesRead == -1) {
                     break;
                 }

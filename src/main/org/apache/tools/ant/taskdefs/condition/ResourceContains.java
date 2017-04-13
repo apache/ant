@@ -88,8 +88,8 @@ public class ResourceContains implements Condition {
                         o = rc.iterator().next();
                     }
                 } else {
-                    throw new BuildException(
-                        "Illegal value at '" + refid + "': " + String.valueOf(o));
+                    throw new BuildException("Illegal value at '%s': %s", refid,
+                        o);
                 }
             }
             this.resource = (Resource) o;
@@ -122,8 +122,8 @@ public class ResourceContains implements Condition {
             resolveRefid();
         }
         if (resource == null || substring == null) {
-            throw new BuildException("both resource and substring are required "
-                                     + "in <resourcecontains>");
+            throw new BuildException(
+                "both resource and substring are required in <resourcecontains>");
         }
     }
 
@@ -132,6 +132,7 @@ public class ResourceContains implements Condition {
      * @return true if the substring is contained in the resource
      * @throws BuildException if there is a problem.
      */
+    @Override
     public synchronized boolean eval() throws BuildException {
         validate();
 
@@ -146,9 +147,8 @@ public class ResourceContains implements Condition {
             return false;
         }
 
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(resource.getInputStream()))) {
             String contents = FileUtils.safeReadFully(reader);
             String sub = substring;
             if (!casesensitive) {
@@ -158,8 +158,6 @@ public class ResourceContains implements Condition {
             return contents.indexOf(sub) >= 0;
         } catch (IOException e) {
             throw new BuildException("There was a problem accessing resource : " + resource);
-        } finally {
-            FileUtils.close(reader);
         }
     }
 }

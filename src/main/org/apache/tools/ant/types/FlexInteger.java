@@ -48,6 +48,7 @@ public class FlexInteger {
      * Overridden method to return the decimal value for display
      * @return a string version of the integer
      */
+    @Override
     public String toString() {
         return value.toString();
     }

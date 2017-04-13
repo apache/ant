@@ -24,7 +24,6 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -98,7 +97,7 @@ public abstract class JDBCTask extends Task {
      * getting an OutOfMemoryError when calling this task
      * multiple times in a row.
      */
-    private static Hashtable<String, AntClassLoader> LOADER_MAP = new Hashtable<String, AntClassLoader>(HASH_TABLE_SIZE);
+    private static Hashtable<String, AntClassLoader> LOADER_MAP = new Hashtable<>(HASH_TABLE_SIZE);
 
     private boolean caching = true;
 
@@ -152,7 +151,7 @@ public abstract class JDBCTask extends Task {
      *
      * @since Ant 1.8.0
      */
-    private List<Property> connectionProperties = new ArrayList<Property>();
+    private List<Property> connectionProperties = new ArrayList<>();
 
     /**
      * Sets the classpath for loading the driver.
@@ -342,20 +341,17 @@ public abstract class JDBCTask extends Task {
             throw new BuildException("Url attribute must be set!", getLocation());
         }
         try {
-
             log("connecting to " + getUrl(), Project.MSG_VERBOSE);
             Properties info = new Properties();
             info.put("user", getUserId());
             info.put("password", getPassword());
 
-            for (Iterator<Property> props = connectionProperties.iterator();
-                 props.hasNext();) {
-                Property p = props.next();
-                String name = p.getName();
-                String value = p.getValue();
+            for (Property p : connectionProperties) {
+            String name = p.getName();
+            String value = p.getValue();
                 if (name == null || value == null) {
-                    log("Only name/value pairs are supported as connection"
-                        + " properties.", Project.MSG_WARN);
+                    log("Only name/value pairs are supported as connection properties.",
+                        Project.MSG_WARN);
                 } else {
                     log("Setting connection property " + name + " to " + value,
                         Project.MSG_VERBOSE);
@@ -374,14 +370,12 @@ public abstract class JDBCTask extends Task {
             return conn;
         } catch (SQLException e) {
             // failed to connect
-            if (!failOnConnectionError) {
-                log("Failed to connect: " + e.getMessage(), Project.MSG_WARN);
-                return null;
-            } else {
+            if (failOnConnectionError) {
                 throw new BuildException(e, getLocation());
             }
+            log("Failed to connect: " + e.getMessage(), Project.MSG_WARN);
+            return null;
         }
-
     }
 
     /**
@@ -395,9 +389,9 @@ public abstract class JDBCTask extends Task {
             throw new BuildException("Driver attribute must be set!", getLocation());
         }
 
-        Driver driverInstance = null;
+        Driver driverInstance;
         try {
-            Class<?> dc;
+            Class<? extends Driver> dc;
             if (classpath != null) {
                 // check first that it is not already loaded otherwise
                 // consecutive runs seems to end into an OutOfMemoryError
@@ -423,13 +417,13 @@ public abstract class JDBCTask extends Task {
                                 Project.MSG_VERBOSE);
                     }
                 }
-                dc = loader.loadClass(driver);
+                dc = loader.loadClass(driver).asSubclass(Driver.class);
             } else {
                 log("Loading " + driver + " using system loader.",
                     Project.MSG_VERBOSE);
-                dc = Class.forName(driver);
+                dc = Class.forName(driver).asSubclass(Driver.class);
             }
-            driverInstance = (Driver) dc.newInstance();
+            driverInstance = dc.newInstance();
         } catch (ClassNotFoundException e) {
             throw new BuildException(
                     "Class Not Found: JDBC driver " + driver + " could not be loaded",
@@ -448,7 +442,6 @@ public abstract class JDBCTask extends Task {
         }
         return driverInstance;
     }
-
 
     /**
      * Set the caching attribute.

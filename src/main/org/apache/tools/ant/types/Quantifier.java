@@ -17,6 +17,12 @@
  */
 package org.apache.tools.ant.types;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -36,59 +42,82 @@ import org.apache.tools.ant.BuildException;
  * @since Ant 1.7
  */
 public class Quantifier extends EnumeratedAttribute {
-    private static final String[] VALUES
-        = new String[] {"all", "each", "every", "any", "some", "one",
-                        "majority", "most", "none"};
+    private static final String[] VALUES =
+            Stream.of(Predicate.values()).map(Predicate::getNames)
+                .flatMap(Collection::stream).toArray(String[]::new);
 
     /** ALL instance */
-    public static final Quantifier ALL = new Quantifier("all");
+    public static final Quantifier ALL = new Quantifier(Predicate.ALL);
+
     /** ANY instance */
-    public static final Quantifier ANY = new Quantifier("any");
+    public static final Quantifier ANY = new Quantifier(Predicate.ANY);
+
     /** ONE instance */
-    public static final Quantifier ONE = new Quantifier("one");
+    public static final Quantifier ONE = new Quantifier(Predicate.ONE);
+
     /** MAJORITY instance */
-    public static final Quantifier MAJORITY = new Quantifier("majority");
+    public static final Quantifier MAJORITY =
+        new Quantifier(Predicate.MAJORITY);
+
     /** NONE instance */
-    public static final Quantifier NONE = new Quantifier("none");
+    public static final Quantifier NONE = new Quantifier(Predicate.NONE);
 
-    private abstract static class Predicate {
+    private enum Predicate {
+        ALL("all", "each", "every") {
+            @Override
+            boolean eval(int t, int f) {
+                return f == 0;
+            }
+        },
+
+        ANY("any", "some") {
+            @Override
+            boolean eval(int t, int f) {
+                return t > 0;
+            }
+        },
+
+        ONE("one") {
+            @Override
+            boolean eval(int t, int f) {
+                return t == 1;
+            }
+        },
+
+        MAJORITY("majority", "most") {
+            @Override
+            boolean eval(int t, int f) {
+                return t > f;
+            }
+        },
+
+        NONE("none") {
+            @Override
+            boolean eval(int t, int f) {
+                return t == 0;
+            }
+        };
+
+        static Predicate get(String name) {
+            return Stream.of(values()).filter(p -> p.names.contains(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(name));
+        }
+
+        final Set<String> names;
+
+        Predicate(String primaryName, String... additionalNames) {
+            Set<String> names = new LinkedHashSet<>();
+            names.add(primaryName);
+            Collections.addAll(names, additionalNames);
+            this.names = Collections.unmodifiableSet(names);
+        }
+
+        Set<String> getNames() {
+            return names;
+        }
+
         abstract boolean eval(int t, int f);
-    }
-
-    private static final Predicate ALL_PRED = new Predicate() {
-        boolean eval(int t, int f) { return f == 0; }
-    };
-
-    private static final Predicate ANY_PRED = new Predicate() {
-        boolean eval(int t, int f) { return t > 0; }
-    };
-
-    private static final Predicate ONE_PRED = new Predicate() {
-        boolean eval(int t, int f) { return t == 1; }
-    };
-
-    private static final Predicate MAJORITY_PRED = new Predicate() {
-        boolean eval(int t, int f) { return t > f; }
-    };
-
-    private static final Predicate NONE_PRED = new Predicate() {
-        boolean eval(int t, int f) { return t == 0; }
-    };
-
-    private static final Predicate[] PREDS = new Predicate[VALUES.length];
-
-    static {
-        // CheckStyle:MagicNumber OFF
-        PREDS[0] = ALL_PRED;
-        PREDS[1] = ALL_PRED;
-        PREDS[2] = ALL_PRED;
-        PREDS[3] = ANY_PRED;
-        PREDS[4] = ANY_PRED;
-        PREDS[5] = ONE_PRED;
-        PREDS[6] = MAJORITY_PRED;
-        PREDS[7] = MAJORITY_PRED;
-        PREDS[8] = NONE_PRED;
-        // CheckStyle:MagicNumber ON
     }
 
     /**
@@ -105,10 +134,15 @@ public class Quantifier extends EnumeratedAttribute {
         setValue(value);
     }
 
+    private Quantifier(Predicate impl) {
+        setValue(impl.getNames().iterator().next());
+    }
+
     /**
      * Return the possible values.
      * @return String[] of EnumeratedAttribute values.
      */
+    @Override
     public String[] getValues() {
         return VALUES;
     }
@@ -139,7 +173,7 @@ public class Quantifier extends EnumeratedAttribute {
         if (index == -1) {
             throw new BuildException("Quantifier value not set.");
         }
-        return PREDS[index].eval(t, f);
+        return Predicate.get(VALUES[index]).eval(t, f);
     }
 
 }

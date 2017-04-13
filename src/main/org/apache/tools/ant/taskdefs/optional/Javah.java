@@ -19,10 +19,11 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -70,7 +71,7 @@ import org.apache.tools.ant.util.facade.ImplementationSpecificArgument;
 
 public class Javah extends Task {
 
-    private Vector classes = new Vector(2);
+    private List<ClassArgument> classes = new Vector<>(2);
     private String cls;
     private File destDir;
     private Path classpath = null;
@@ -80,9 +81,8 @@ public class Javah extends Task {
     private boolean old     = false;
     private boolean stubs   = false;
     private Path bootclasspath;
-    //private Path extdirs;
     private FacadeTaskHelper facade = null;
-    private Vector files = new Vector();
+    private Vector<FileSet> files = new Vector<>();
     private JavahAdapter nestedAdapter = null;
 
     /**
@@ -106,7 +106,7 @@ public class Javah extends Task {
      */
     public ClassArgument createClass() {
         ClassArgument ga = new ClassArgument();
-        classes.addElement(ga);
+        classes.add(ga);
         return ga;
     }
 
@@ -116,10 +116,6 @@ public class Javah extends Task {
      */
     public class ClassArgument {
         private String name;
-
-        /** Constructor for ClassArgument. */
-        public ClassArgument() {
-        }
 
         /**
          * Set the name attribute.
@@ -152,33 +148,21 @@ public class Javah extends Task {
      * @since Ant 1.6.3
      */
     public String[] getClasses() {
-        ArrayList al = new ArrayList();
+        Stream<String> stream = Stream.concat(
+            files.stream()
+                .map(fs -> fs.getDirectoryScanner(getProject())
+                    .getIncludedFiles())
+                .flatMap(Stream::of)
+                .map(s -> s.replace('\\', '.').replace('/', '.')
+                    .replaceFirst("\\.class$", "")),
+            classes.stream().map(ClassArgument::getName));
+
         if (cls != null) {
-            StringTokenizer tok = new StringTokenizer(cls, ",", false);
-            while (tok.hasMoreTokens()) {
-                al.add(tok.nextToken().trim());
-            }
+            stream = Stream.concat(Stream.of(cls.split(",")).map(String::trim),
+                stream);
         }
 
-        if (files.size() > 0) {
-            for (Enumeration e = files.elements(); e.hasMoreElements();) {
-                FileSet fs = (FileSet) e.nextElement();
-                String[] includedClasses = fs.getDirectoryScanner(
-                    getProject()).getIncludedFiles();
-                for (int i = 0; i < includedClasses.length; i++) {
-                    String className =
-                        includedClasses[i].replace('\\', '.').replace('/', '.')
-                        .substring(0, includedClasses[i].length() - 6);
-                    al.add(className);
-                }
-            }
-        }
-        Enumeration e = classes.elements();
-        while (e.hasMoreElements()) {
-            ClassArgument arg = (ClassArgument) e.nextElement();
-            al.add(arg.getName());
-        }
-        return (String[]) al.toArray(new String[al.size()]);
+        return stream.toArray(String[]::new);
     }
 
     /**
@@ -423,8 +407,7 @@ public class Javah extends Task {
      */
     public void add(JavahAdapter adapter) {
         if (nestedAdapter != null) {
-            throw new BuildException("Can't have more than one javah"
-                                     + " adapter");
+            throw new BuildException("Can't have more than one javah adapter");
         }
         nestedAdapter = adapter;
     }
@@ -434,17 +417,22 @@ public class Javah extends Task {
      *
      * @throws BuildException is there is a problem in the task execution.
      */
+    @Override
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir
+        final Set<Settings> settings = EnumSet.noneOf(Settings.class);
 
-        if ((cls == null) && (classes.size() == 0) && (files.size() == 0)) {
-            throw new BuildException("class attribute must be set!",
-                getLocation());
+        if (cls != null) {
+            settings.add(Settings.cls);
         }
-
-        if ((cls != null) && (classes.size() > 0) && (files.size() > 0)) {
-            throw new BuildException("set class attribute OR class element OR fileset, "
-                + "not 2 or more of them.", getLocation());
+        if (!classes.isEmpty()) {
+            settings.add(Settings.classes);
+        }
+        if (!files.isEmpty()) {
+            settings.add(Settings.files);
+        }
+        if (settings.size() > 1) {
+            throw new BuildException("Exactly one of " + Settings.values() + " attributes is required", getLocation());
         }
 
         if (destDir != null) {
@@ -459,7 +447,7 @@ public class Javah extends Task {
         }
 
         if (classpath == null) {
-            classpath = (new Path(getProject())).concatSystemClasspath("last");
+            classpath = new Path(getProject()).concatSystemClasspath("last");
         } else {
             classpath = classpath.concatSystemClasspath("ignore");
         }
@@ -492,22 +480,21 @@ public class Javah extends Task {
         log("Compilation " + cmd.describeArguments(),
             Project.MSG_VERBOSE);
 
-        StringBuffer niceClassList = new StringBuffer();
         String[] c = getClasses();
-        for (int i = 0; i < c.length; i++) {
-            cmd.createArgument().setValue(c[i]);
-            niceClassList.append("    ");
-            niceClassList.append(c[i]);
-            niceClassList.append(StringUtils.LINE_SEP);
-        }
-
-        StringBuffer prefix = new StringBuffer("Class");
+        StringBuilder message = new StringBuilder("Class");
         if (c.length > 1) {
-            prefix.append("es");
+            message.append("es");
         }
-        prefix.append(" to be compiled:");
-        prefix.append(StringUtils.LINE_SEP);
+        message.append(" to be compiled:");
+        message.append(StringUtils.LINE_SEP);
+        for (String element : c) {
+            cmd.createArgument().setValue(element);
+            message.append("    ").append(element).append(StringUtils.LINE_SEP);
+        }
+        log(message.toString(), Project.MSG_VERBOSE);
+    }
 
-        log(prefix.toString() + niceClassList.toString(), Project.MSG_VERBOSE);
+    private enum Settings {
+        cls, files, classes;
     }
 }

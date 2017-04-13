@@ -20,6 +20,8 @@ package org.apache.tools.ant.util.facade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
@@ -37,7 +39,7 @@ public class FacadeTaskHelper {
     /**
      * Command line arguments.
      */
-    private List<ImplementationSpecificArgument> args = new ArrayList<ImplementationSpecificArgument>();
+    private List<ImplementationSpecificArgument> args = new ArrayList<>();
 
     /**
      * The explicitly chosen implementation.
@@ -126,17 +128,10 @@ public class FacadeTaskHelper {
      * @return an array of command line arguments.
      */
     public String[] getArgs() {
-        List<String> tmp = new ArrayList<String>(args.size());
-        for (ImplementationSpecificArgument arg : args) {
-            String[] curr = arg.getParts(getImplementation());
-            if (curr != null) {
-                for (int i = 0; i < curr.length; i++) {
-                    tmp.add(curr[i]);
-                }
-            }
-        }
-        String[] res = new String[tmp.size()];
-        return (String[]) tmp.toArray(res);
+        String implementation = getImplementation();
+        return args.stream().map(arg -> arg.getParts(implementation))
+            .filter(Objects::nonNull).flatMap(Stream::of)
+            .toArray(String[]::new);
     }
 
     /**

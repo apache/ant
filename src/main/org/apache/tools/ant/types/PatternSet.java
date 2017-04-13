@@ -23,12 +23,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
+import java.util.function.Predicate;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Named collection of include/exclude tags.
@@ -38,10 +39,10 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class PatternSet extends DataType implements Cloneable {
-    private List<NameEntry> includeList = new ArrayList<NameEntry>();
-    private List<NameEntry> excludeList = new ArrayList<NameEntry>();
-    private List<NameEntry> includesFileList = new ArrayList<NameEntry>();
-    private List<NameEntry> excludesFileList = new ArrayList<NameEntry>();
+    private List<NameEntry> includeList = new ArrayList<>();
+    private List<NameEntry> excludeList = new ArrayList<>();
+    private List<NameEntry> includesFileList = new ArrayList<>();
+    private List<NameEntry> excludesFileList = new ArrayList<>();
 
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
@@ -150,8 +151,9 @@ public class PatternSet extends DataType implements Cloneable {
         /**
          * @return a printable form of this object.
          */
+        @Override
         public String toString() {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             if (name == null) {
                 buf.append("noname");
             } else {
@@ -181,9 +183,11 @@ public class PatternSet extends DataType implements Cloneable {
             setProject(p.getProject());
             addConfiguredPatternset(p);
         }
+        @Override
         public String[] getIncludePatterns(Project p) {
             return super.getExcludePatterns(p);
         }
+        @Override
         public String[] getExcludePatterns(Project p) {
             return super.getIncludePatterns(p);
         }
@@ -205,6 +209,7 @@ public class PatternSet extends DataType implements Cloneable {
      * @param r the reference to another patternset.
      * @throws BuildException on error.
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (!includeList.isEmpty() || !excludeList.isEmpty()) {
             throw tooManyAttributes();
@@ -290,7 +295,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (includes != null && includes.length() > 0) {
+        if (includes != null && !includes.isEmpty()) {
             StringTokenizer tok = new StringTokenizer(includes, ", ", false);
             while (tok.hasMoreTokens()) {
                 createInclude().setName(tok.nextToken());
@@ -308,7 +313,7 @@ public class PatternSet extends DataType implements Cloneable {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (excludes != null && excludes.length() > 0) {
+        if (excludes != null && !excludes.isEmpty()) {
             StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
             while (tok.hasMoreTokens()) {
                 createExclude().setName(tok.nextToken());
@@ -358,26 +363,19 @@ public class PatternSet extends DataType implements Cloneable {
     private void readPatterns(File patternfile, List<NameEntry> patternlist, Project p)
             throws BuildException {
 
-        BufferedReader patternReader = null;
-        try {
-            // Get a FileReader
-            patternReader = new BufferedReader(new FileReader(patternfile));
+        try (BufferedReader patternReader =
+            new BufferedReader(new FileReader(patternfile))) {
 
             // Create one NameEntry in the appropriate pattern list for each
             // line in the file.
-            String line = patternReader.readLine();
-            while (line != null) {
-                if (line.length() > 0) {
-                    line = p.replaceProperties(line);
-                    addPatternToList(patternlist).setName(line);
-                }
-                line = patternReader.readLine();
-            }
+            patternReader.lines()
+                .filter(((Predicate<String>) String::isEmpty).negate())
+                .map(p::replaceProperties)
+                .forEach(line -> addPatternToList(patternlist).setName(line));
+
         } catch (IOException ioe)  {
             throw new BuildException("An error occurred while reading from pattern file: "
                     + patternfile, ioe);
-        } finally {
-            FileUtils.close(patternReader);
         }
     }
 
@@ -444,8 +442,8 @@ public class PatternSet extends DataType implements Cloneable {
             return getRef(p).hasPatterns(p);
         }
         dieOnCircularReference(p);
-        return includesFileList.size() > 0 || excludesFileList.size() > 0
-                || includeList.size() > 0 || excludeList.size() > 0;
+        return !(includesFileList.isEmpty() && excludesFileList.isEmpty()
+            && includeList.isEmpty() && excludeList.isEmpty());
     }
 
     /**
@@ -460,24 +458,18 @@ public class PatternSet extends DataType implements Cloneable {
      * Convert a vector of NameEntry elements into an array of Strings.
      */
     private String[] makeArray(List<NameEntry> list, Project p) {
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return null;
         }
-        ArrayList<String> tmpNames = new ArrayList<String>();
-        for (NameEntry ne : list) {
-            String pattern = ne.evalName(p);
-            if (pattern != null && pattern.length() > 0) {
-                tmpNames.add(pattern);
-            }
-        }
-        return tmpNames.toArray(new String[tmpNames.size()]);
+        return list.stream().map(ne -> ne.evalName(p)).filter(Objects::nonNull)
+            .filter(pattern -> !pattern.isEmpty()).toArray(String[]::new);
     }
 
     /**
      * Read includesfile ot excludesfile if not already done so.
      */
     private void readFiles(Project p) {
-        if (includesFileList.size() > 0) {
+        if (!includesFileList.isEmpty()) {
             for (NameEntry ne : includesFileList) {
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
@@ -491,7 +483,7 @@ public class PatternSet extends DataType implements Cloneable {
             }
             includesFileList.clear();
         }
-        if (excludesFileList.size() > 0) {
+        if (!excludesFileList.isEmpty()) {
             for (NameEntry ne : excludesFileList) {
                 String fileName = ne.evalName(p);
                 if (fileName != null) {
@@ -510,21 +502,24 @@ public class PatternSet extends DataType implements Cloneable {
     /**
      * @return a printable form of this object.
      */
+    @Override
     public String toString() {
-        return "patternSet{ includes: " + includeList + " excludes: " + excludeList + " }";
+        return String.format("patternSet{ includes: %s excludes: %s }",
+            includeList, excludeList);
     }
 
     /**
      * @since Ant 1.6
      * @return a clone of this patternset.
      */
-    public Object clone() {
+    @Override
+    public PatternSet clone() {
         try {
             PatternSet ps = (PatternSet) super.clone();
-            ps.includeList = new ArrayList<NameEntry>(includeList);
-            ps.excludeList = new ArrayList<NameEntry>(excludeList);
-            ps.includesFileList = new ArrayList<NameEntry>(includesFileList);
-            ps.excludesFileList = new ArrayList<NameEntry>(excludesFileList);
+            ps.includeList = new ArrayList<>(includeList);
+            ps.excludeList = new ArrayList<>(excludeList);
+            ps.includesFileList = new ArrayList<>(includesFileList);
+            ps.excludesFileList = new ArrayList<>(excludesFileList);
             return ps;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);

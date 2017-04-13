@@ -31,6 +31,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTaskMirror.JUnitResultFormatterMirror;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
 
@@ -58,6 +59,18 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
  * @see JUnitResultFormatter
  */
 public class FormatterElement {
+    /** xml formatter class */
+    public static final String XML_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter";
+    /** brief formatter class */
+    public static final String BRIEF_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter";
+    /** plain formatter class */
+    public static final String PLAIN_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter";
+    /** failure recorder class */
+    public static final String FAILURE_RECORDER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.FailureRecorder";
 
     private String classname;
     private String extension;
@@ -72,19 +85,6 @@ public class FormatterElement {
      * @since Ant 1.8
      */
     private Project project;
-
-    /** xml formatter class */
-    public static final String XML_FORMATTER_CLASS_NAME =
-        "org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter";
-    /** brief formatter class */
-    public static final String BRIEF_FORMATTER_CLASS_NAME =
-        "org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter";
-    /** plain formatter class */
-    public static final String PLAIN_FORMATTER_CLASS_NAME =
-        "org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter";
-    /** failure recorder class */
-    public static final String FAILURE_RECORDER_CLASS_NAME =
-        "org.apache.tools.ant.taskdefs.optional.junit.FailureRecorder";
 
     /**
      * <p> Quick way to use a standard formatter.
@@ -102,18 +102,19 @@ public class FormatterElement {
      * @param type the enumerated value to use.
      */
     public void setType(TypeAttribute type) {
-        if ("xml".equals(type.getValue())) {
+        switch (type.getValue()) {
+        case "xml":
             setClassname(XML_FORMATTER_CLASS_NAME);
-        } else {
-            if ("brief".equals(type.getValue())) {
-                setClassname(BRIEF_FORMATTER_CLASS_NAME);
-            } else {
-                if ("failure".equals(type.getValue())) {
-                    setClassname(FAILURE_RECORDER_CLASS_NAME);
-                } else { // must be plain, ensured by TypeAttribute
-                    setClassname(PLAIN_FORMATTER_CLASS_NAME);
-                }
-            }
+            break;
+        case "brief":
+            setClassname(BRIEF_FORMATTER_CLASS_NAME);
+            break;
+        case "failure":
+            setClassname(FAILURE_RECORDER_CLASS_NAME);
+            break;
+        default:
+            setClassname(PLAIN_FORMATTER_CLASS_NAME);
+            break;
         }
     }
 
@@ -125,12 +126,18 @@ public class FormatterElement {
      */
     public void setClassname(String classname) {
         this.classname = classname;
-        if (XML_FORMATTER_CLASS_NAME.equals(classname)) {
-           setExtension(".xml");
-        } else if (PLAIN_FORMATTER_CLASS_NAME.equals(classname)) {
-           setExtension(".txt");
-        } else if (BRIEF_FORMATTER_CLASS_NAME.equals(classname)) {
-           setExtension(".txt");
+        if (classname != null) {
+            switch (classname) {
+            case XML_FORMATTER_CLASS_NAME:
+                setExtension(".xml");
+                break;
+            case PLAIN_FORMATTER_CLASS_NAME:
+                setExtension(".txt");
+                break;
+            case BRIEF_FORMATTER_CLASS_NAME:
+                setExtension(".txt");
+                break;
+            }
         }
     }
 
@@ -266,7 +273,6 @@ public class FormatterElement {
         this.project = project;
     }
 
-
     /**
      * @since Ant 1.6
      */
@@ -279,7 +285,7 @@ public class FormatterElement {
         //although this code appears to duplicate that of ClasspathUtils.newInstance,
         //we cannot use that because this formatter may run in a forked process,
         //without that class.
-        Class f = null;
+        Class<?> f;
         try {
             if (loader == null) {
                 f = Class.forName(classname);
@@ -296,25 +302,20 @@ public class FormatterElement {
                 + ": " + e, e);
         }
 
-        Object o = null;
+        JUnitResultFormatterMirror r;
         try {
-            o = f.newInstance();
-        } catch (InstantiationException e) {
-            throw new BuildException(e);
-        } catch (IllegalAccessException e) {
+            r = f.asSubclass(JUnitResultFormatterMirror.class).newInstance();
+        } catch (ClassCastException e) {
+            throw new BuildException("%s is not a JUnitResultFormatter",
+                classname);
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new BuildException(e);
         }
 
-        if (!(o instanceof JUnitTaskMirror.JUnitResultFormatterMirror)) {
-            throw new BuildException(classname + " is not a JUnitResultFormatter");
-        }
-        JUnitTaskMirror.JUnitResultFormatterMirror r =
-            (JUnitTaskMirror.JUnitResultFormatterMirror) o;
         if (useFile && outFile != null) {
             out = new DelayedFileOutputStream(outFile);
         }
         r.setOutput(out);
-
 
         boolean needToSetProjectReference = true;
         try {
@@ -333,8 +334,8 @@ public class FormatterElement {
         if (needToSetProjectReference) {
             Method setter;
             try {
-                setter = r.getClass().getMethod("setProject", new Class[] {Project.class});
-                setter.invoke(r, new Object[] {project});
+                setter = r.getClass().getMethod("setProject", Project.class);
+                setter.invoke(r, project);
             } catch (NoSuchMethodException e) {
                 // no setProject to invoke; just ignore
             } catch (IllegalAccessException e) {
@@ -354,8 +355,9 @@ public class FormatterElement {
      */
     public static class TypeAttribute extends EnumeratedAttribute {
         /** {@inheritDoc}. */
+        @Override
         public String[] getValues() {
-            return new String[] {"plain", "xml", "brief", "failure"};
+            return new String[] { "plain", "xml", "brief", "failure" };
         }
     }
 

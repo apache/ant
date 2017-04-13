@@ -55,6 +55,7 @@ public class LogLevel extends EnumeratedAttribute {
      * @see EnumeratedAttribute#getValues
      * @return the strings allowed for the level attribute
      */
+    @Override
     public String[] getValues() {
         return new String[] {
             "error",

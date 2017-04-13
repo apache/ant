@@ -18,9 +18,13 @@
 
 package org.apache.tools.ant.types.selectors;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -36,18 +40,20 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 public abstract class AbstractSelectorContainer extends DataType
     implements Cloneable, SelectorContainer {
 
-    private Vector<FileSelector> selectorsList = new Vector<FileSelector>();
+    private List<FileSelector> selectorsList =
+        Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Indicates whether there are any selectors here.
      * @return true if there are selectors
      */
+    @Override
     public boolean hasSelectors() {
         if (isReference()) {
-            return ((AbstractSelectorContainer) getCheckedRef()).hasSelectors();
+            return getCheckedRef().hasSelectors();
         }
         dieOnCircularReference();
-        return !(selectorsList.isEmpty());
+        return !selectorsList.isEmpty();
     }
 
     /**
@@ -56,7 +62,7 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public int selectorCount() {
         if (isReference()) {
-            return ((AbstractSelectorContainer) getCheckedRef()).selectorCount();
+            return getCheckedRef().selectorCount();
         }
         dieOnCircularReference();
         return selectorsList.size();
@@ -69,13 +75,11 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public FileSelector[] getSelectors(Project p) {
         if (isReference()) {
-            return ((AbstractSelectorContainer) getCheckedRef(p))
-                .getSelectors(p);
+            return getCheckedRef(AbstractSelectorContainer.class,
+                getDataTypeName(), p).getSelectors(p);
         }
         dieOnCircularReference(p);
-        FileSelector[] result = new FileSelector[selectorsList.size()];
-        selectorsList.copyInto(result);
-        return result;
+        return selectorsList.toArray(new FileSelector[selectorsList.size()]);
     }
 
     /**
@@ -84,11 +88,10 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
-            return ((AbstractSelectorContainer) getCheckedRef())
-                .selectorElements();
+            return getCheckedRef().selectorElements();
         }
         dieOnCircularReference();
-        return selectorsList.elements();
+        return Collections.enumeration(selectorsList);
     }
 
     /**
@@ -99,18 +102,8 @@ public abstract class AbstractSelectorContainer extends DataType
      * @return comma separated list of Selectors contained in this one
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        Enumeration<FileSelector> e = selectorElements();
-        if (e.hasMoreElements()) {
-            while (e.hasMoreElements()) {
-                buf.append(e.nextElement().toString());
-                if (e.hasMoreElements()) {
-                    buf.append(", ");
-                }
-            }
-        }
-
-        return buf.toString();
+        return selectorsList.stream().map(Object::toString)
+            .collect(Collectors.joining(", "));
     }
 
     /**
@@ -122,7 +115,7 @@ public abstract class AbstractSelectorContainer extends DataType
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        selectorsList.addElement(selector);
+        selectorsList.add(selector);
         setChecked(false);
     }
 
@@ -144,16 +137,11 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public void validate() {
         if (isReference()) {
-            ((AbstractSelectorContainer) getCheckedRef()).validate();
+            getCheckedRef().validate();
         }
         dieOnCircularReference();
-        Enumeration<FileSelector> e = selectorElements();
-        while (e.hasMoreElements()) {
-            Object o = e.nextElement();
-            if (o instanceof BaseSelector) {
-                ((BaseSelector) o).validate();
-            }
-        }
+        selectorsList.stream().filter(BaseSelector.class::isInstance)
+            .map(BaseSelector.class::cast).forEach(BaseSelector::validate);
     }
 
 
@@ -358,17 +346,23 @@ public abstract class AbstractSelectorContainer extends DataType
         }
     }
 
-    public synchronized Object clone() {
+    public synchronized AbstractSelectorContainer clone() {
         if (isReference()) {
-            return ((AbstractSelectorContainer) getCheckedRef()).clone();
+            return getCheckedRef().clone();
         }
         try {
             AbstractSelectorContainer sc =
                 (AbstractSelectorContainer) super.clone();
-            sc.selectorsList = new Vector<FileSelector>(selectorsList);
+            sc.selectorsList = new Vector<>(selectorsList);
             return sc;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
         }
     }
+    
+    @Override
+    protected AbstractSelectorContainer getCheckedRef() {
+        return (AbstractSelectorContainer) super.getCheckedRef();
+    }
+    
 }

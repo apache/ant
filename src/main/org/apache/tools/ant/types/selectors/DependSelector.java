@@ -31,14 +31,6 @@ import java.io.File;
 public class DependSelector extends MappingSelector {
 
     /**
-     * Creates a new <code>DependSelector</code> instance.
-     *
-     */
-    public DependSelector() {
-
-    }
-
-    /**
      * @return a string describing this object
      */
     public String toString() {
@@ -48,8 +40,7 @@ public class DependSelector extends MappingSelector {
         } else {
             buf.append(targetdir.getName());
         }
-        buf.append(" granularity: ");
-        buf.append(granularity);
+        buf.append(" granularity: ").append(granularity);
         if (map != null) {
             buf.append(" mapper: ");
             buf.append(map.toString());
@@ -61,7 +52,6 @@ public class DependSelector extends MappingSelector {
         return buf.toString();
     }
 
-
     /**
      * this test is our selection test that compared the file with the destfile
      * @param srcfile the source file
@@ -69,9 +59,7 @@ public class DependSelector extends MappingSelector {
      * @return true if destination is out of date
      */
     public boolean selectionTest(File srcfile, File destfile) {
-        boolean selected = SelectorUtils.isOutOfDate(srcfile, destfile,
-                granularity);
-        return selected;
+        return SelectorUtils.isOutOfDate(srcfile, destfile, granularity);
     }
 
 }

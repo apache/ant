@@ -54,7 +54,6 @@ public class DifferentSelector extends MappingSelector {
     private boolean ignoreFileTimes = true;
     private boolean ignoreContents = false;
 
-
     /**
      * This flag tells the selector to ignore file times in the comparison
      * @param ignoreFileTimes if true ignore file times
@@ -62,6 +61,7 @@ public class DifferentSelector extends MappingSelector {
     public void setIgnoreFileTimes(boolean ignoreFileTimes) {
         this.ignoreFileTimes = ignoreFileTimes;
     }
+
     /**
      * This flag tells the selector to ignore contents
      * @param ignoreContents if true ignore contents
@@ -70,6 +70,7 @@ public class DifferentSelector extends MappingSelector {
     public void setIgnoreContents(boolean ignoreContents) {
         this.ignoreContents = ignoreContents;
     }
+
     /**
      * this test is our selection test that compared the file with the destfile
      * @param srcfile the source file
@@ -99,16 +100,15 @@ public class DifferentSelector extends MappingSelector {
                 return true;
             }
         }
-        if (!ignoreContents) {
-            //here do a bulk comparison
-            try {
-                return !FILE_UTILS.contentEquals(srcfile, destfile);
-            } catch (IOException e) {
-                throw new BuildException("while comparing " + srcfile + " and "
-                        + destfile, e);
-            }
-        } else {
+        if (ignoreContents) {
             return false;
+        }
+        //here do a bulk comparison
+        try {
+            return !FILE_UTILS.contentEquals(srcfile, destfile);
+        } catch (IOException e) {
+            throw new BuildException(
+                "while comparing " + srcfile + " and " + destfile, e);
         }
     }
 }

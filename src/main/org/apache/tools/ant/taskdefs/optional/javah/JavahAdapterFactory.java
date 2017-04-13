@@ -42,7 +42,8 @@ public class JavahAdapterFactory {
     public static String getDefault() {
         if (JavaEnvUtils.isKaffe()) {
             return Kaffeh.IMPLEMENTATION_NAME;
-        } else if (JavaEnvUtils.isGij()) {
+        }
+        if (JavaEnvUtils.isGij()) {
             return Gcjh.IMPLEMENTATION_NAME;
         }
         return ForkingJavah.IMPLEMENTATION_NAME;
@@ -84,20 +85,23 @@ public class JavahAdapterFactory {
         if ((JavaEnvUtils.isKaffe() && choice == null)
             || Kaffeh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Kaffeh();
-        } else if ((JavaEnvUtils.isGij() && choice == null)
+        }
+        if ((JavaEnvUtils.isGij() && choice == null)
             || Gcjh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Gcjh();
-        } else if (ForkingJavah.IMPLEMENTATION_NAME.equals(choice)) {
+        }
+        if (ForkingJavah.IMPLEMENTATION_NAME.equals(choice)) {
             return new ForkingJavah();
-        } else if (SunJavah.IMPLEMENTATION_NAME.equals(choice)) {
+        }
+        if (SunJavah.IMPLEMENTATION_NAME.equals(choice)) {
             return new SunJavah();
-        } else if (choice != null) {
+        }
+        if (choice != null) {
             return resolveClassName(choice,
                                     // Memory leak in line below
                                     log.getProject()
                                     .createClassLoader(classpath));
         }
-
         return new ForkingJavah();
     }
 
@@ -113,7 +117,7 @@ public class JavahAdapterFactory {
     private static JavahAdapter resolveClassName(String className,
                                                  ClassLoader loader)
             throws BuildException {
-        return (JavahAdapter) ClasspathUtils.newInstance(className,
+        return ClasspathUtils.newInstance(className,
                 loader != null ? loader :
                 JavahAdapterFactory.class.getClassLoader(), JavahAdapter.class);
     }

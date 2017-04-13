@@ -18,8 +18,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectHelper;
@@ -54,13 +54,8 @@ public class BindTargets extends Task {
     }
 
     public void setTargets(final String target) {
-        final String[] inputs = target.split(",");
-        for (int i = 0; i < inputs.length; i++) {
-            final String input = inputs[i].trim();
-            if (input.length() > 0) {
-                targets.add(input);
-            }
-        }
+        Stream.of(target.split(",")).map(String::trim).filter(s -> !s.isEmpty())
+            .forEach(targets::add);
     }
 
     @Override
@@ -81,11 +76,9 @@ public class BindTargets extends Task {
         final ProjectHelper helper = (ProjectHelper) getProject().getReference(
                 ProjectHelper.PROJECTHELPER_REFERENCE);
 
-        for (final Iterator<String> itTarget = targets.iterator(); itTarget.hasNext();) {
-            helper.getExtensionStack().add(
-                    new String[] {extensionPoint, itTarget.next(),
-                                            onMissingExtensionPoint.name()});
+        for (String target : targets) {
+            helper.getExtensionStack().add(new String[] { extensionPoint,
+                target, onMissingExtensionPoint.name() });
         }
-
     }
 }

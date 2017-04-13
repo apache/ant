@@ -19,9 +19,12 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -36,13 +39,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 public abstract class BaseSelectorContainer extends BaseSelector
         implements SelectorContainer {
 
-    private Vector<FileSelector> selectorsList = new Vector<FileSelector>();
-
-    /**
-     * Default constructor.
-     */
-    public BaseSelectorContainer() {
-    }
+    private List<FileSelector> selectorsList = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Indicates whether there are any selectors here.
@@ -50,7 +47,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public boolean hasSelectors() {
         dieOnCircularReference();
-        return !(selectorsList.isEmpty());
+        return !selectorsList.isEmpty();
     }
 
     /**
@@ -69,9 +66,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public FileSelector[] getSelectors(Project p) {
         dieOnCircularReference();
-        FileSelector[] result = new FileSelector[selectorsList.size()];
-        selectorsList.copyInto(result);
-        return result;
+        return selectorsList.toArray(new FileSelector[selectorsList.size()]);
     }
 
     /**
@@ -80,7 +75,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public Enumeration<FileSelector> selectorElements() {
         dieOnCircularReference();
-        return selectorsList.elements();
+        return Collections.enumeration(selectorsList);
     }
 
     /**
@@ -92,15 +87,8 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public String toString() {
         dieOnCircularReference();
-        StringBuilder buf = new StringBuilder();
-        Enumeration<FileSelector> e = selectorElements();
-        while (e.hasMoreElements()) {
-            buf.append(e.nextElement().toString());
-            if (e.hasMoreElements()) {
-                buf.append(", ");
-            }
-        }
-        return buf.toString();
+        return selectorsList.stream().map(Object::toString)
+            .collect(Collectors.joining(", "));
     }
 
     /**
@@ -109,7 +97,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @param selector the new selector to add
      */
     public void appendSelector(FileSelector selector) {
-        selectorsList.addElement(selector);
+        selectorsList.add(selector);
         setChecked(false);
     }
 
@@ -136,15 +124,9 @@ public abstract class BaseSelectorContainer extends BaseSelector
         if (errmsg != null) {
             throw new BuildException(errmsg);
         }
-        Enumeration<FileSelector> e = selectorElements();
-        while (e.hasMoreElements()) {
-            Object o = e.nextElement();
-            if (o instanceof BaseSelector) {
-                ((BaseSelector) o).validate();
-            }
-        }
+        selectorsList.stream().filter(BaseSelector.class::isInstance)
+            .map(BaseSelector.class::cast).forEach(BaseSelector::validate);
     }
-
 
     /**
      * Method that each selector will implement to create their selection
@@ -157,8 +139,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      * @return whether the file should be selected or not
      */
     public abstract boolean isSelected(File basedir, String filename,
-                                       File file);
-
+        File file);
 
     /* Methods below all add specific selectors */
 

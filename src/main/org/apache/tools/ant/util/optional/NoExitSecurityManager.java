@@ -36,6 +36,7 @@ public class NoExitSecurityManager extends SecurityManager {
      * This throws an ExitException(status) exception.
      * @param status the exit status
      */
+    @Override
     public void checkExit(int status) {
         throw new ExitException(status);
     }
@@ -45,6 +46,7 @@ public class NoExitSecurityManager extends SecurityManager {
      * This does nothing.
      * @param perm the requested permission.
      */
+    @Override
     public void checkPermission(Permission perm) {
         // no permission here
     }

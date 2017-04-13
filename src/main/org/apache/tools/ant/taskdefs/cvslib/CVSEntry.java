@@ -28,7 +28,7 @@ public class CVSEntry {
     private Date date;
     private String author;
     private final String comment;
-    private final Vector files = new Vector();
+    private final Vector<RCSFile> files = new Vector<>();
 
     /**
      * Creates a new instance of a CVSEntry
@@ -48,7 +48,7 @@ public class CVSEntry {
      * @param revision the revision
      */
     public void addFile(final String file, final String revision) {
-        files.addElement(new RCSFile(file, revision));
+        files.add(new RCSFile(file, revision));
     }
 
     /**
@@ -58,7 +58,7 @@ public class CVSEntry {
      * @param previousRevision the previous revision
      */
     public void addFile(final String file, final String revision, final String previousRevision) {
-        files.addElement(new RCSFile(file, revision, previousRevision));
+        files.add(new RCSFile(file, revision, previousRevision));
     }
 
     /**
@@ -97,7 +97,7 @@ public class CVSEntry {
      * Gets the files in this CVSEntry
      * @return the files
      */
-    public Vector getFiles() {
+    public Vector<RCSFile> getFiles() {
         return files;
     }
 
@@ -105,6 +105,7 @@ public class CVSEntry {
      * Gets a String containing author, date, files and comment
      * @return a string representation of this CVSEntry
      */
+    @Override
     public String toString() {
         return getAuthor() + "\n" + getDate() + "\n" + getFiles() + "\n"
             + getComment();

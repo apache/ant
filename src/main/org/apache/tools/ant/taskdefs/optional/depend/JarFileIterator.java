@@ -41,7 +41,6 @@ public class JarFileIterator implements ClassFileIterator {
      */
     public JarFileIterator(InputStream stream) throws IOException {
         super();
-
         jarStream = new ZipInputStream(stream);
     }
 
@@ -50,6 +49,7 @@ public class JarFileIterator implements ClassFileIterator {
      *
      * @return a ClassFile object describing the class from the jar
      */
+    @Override
     public ClassFile getNextClassFile() {
         ZipEntry jarEntry;
         ClassFile nextElement = null;
@@ -69,7 +69,6 @@ public class JarFileIterator implements ClassFileIterator {
 
                     nextElement = javaClass;
                 } else {
-
                     jarEntry = jarStream.getNextEntry();
                 }
             }
@@ -83,9 +82,7 @@ public class JarFileIterator implements ClassFileIterator {
 
             throw new BuildException("Problem reading JAR file: " + text);
         }
-
         return nextElement;
     }
 
 }
-

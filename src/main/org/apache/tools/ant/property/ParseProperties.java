@@ -19,6 +19,7 @@ package org.apache.tools.ant.property;
 
 import java.text.ParsePosition;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.apache.tools.ant.Project;
 
@@ -49,6 +50,7 @@ public class ParseProperties implements ParseNextProperty {
      * Get the project.
      * @return the current Ant project.
      */
+    @Override
     public Project getProject() {
         return project;
     }
@@ -90,7 +92,7 @@ public class ParseProperties implements ParseNextProperty {
      *         <code>null</code> if the original string is <code>null</code>.
      */
     public Object parseProperties(String value) {
-        if (value == null || "".equals(value)) {
+        if (value == null || value.isEmpty()) {
             return value;
         }
         final int len = value.length();
@@ -99,7 +101,7 @@ public class ParseProperties implements ParseNextProperty {
         if (o != null && pos.getIndex() >= len) {
             return o;
         }
-        StringBuffer sb = new StringBuffer(len * 2);
+        StringBuilder sb = new StringBuilder(len * 2);
         if (o == null) {
             sb.append(value.charAt(pos.getIndex()));
             pos.setIndex(pos.getIndex() + 1);
@@ -157,6 +159,7 @@ public class ParseProperties implements ParseNextProperty {
      * property doesn't expand to a value, the property's name is
      * returned.
      */
+    @Override
     public Object parseNextProperty(String value, ParsePosition pos) {
         final int start = pos.getIndex();
 
@@ -183,14 +186,9 @@ public class ParseProperties implements ParseNextProperty {
     }
 
     private String parsePropertyName(String value, ParsePosition pos) {
-        for (PropertyExpander propertyExpander : expanders) {
-            String propertyName = propertyExpander.parsePropertyName(value, pos, this);
-            if (propertyName == null) {
-                continue;
-            }
-            return propertyName;
-        }
-        return null;
+        return expanders.stream()
+            .map(xp -> xp.parsePropertyName(value, pos, this))
+            .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     private Object getProperty(String propertyName) {

@@ -17,7 +17,7 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
@@ -47,7 +47,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
         if (c == null) {
             return;
         }
-        resourceComparators = (resourceComparators == null) ? new Vector<ResourceComparator>() : resourceComparators;
+        resourceComparators = (resourceComparators == null) ? new Vector<>() : resourceComparators;
         resourceComparators.add(c);
         setChecked(false);
     }
@@ -58,6 +58,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
      * @param o the object to check against.
      * @return true if there is equality.
      */
+    @Override
     public synchronized boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -76,6 +77,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
      * Hashcode based on the rules for equality.
      * @return a hashcode.
      */
+    @Override
     public synchronized int hashCode() {
         if (isReference()) {
             return getCheckedRef().hashCode();
@@ -84,16 +86,9 @@ public class DelegatedResourceComparator extends ResourceComparator {
     }
 
     /** {@inheritDoc} */
+    @Override
     protected synchronized int resourceCompare(Resource foo, Resource bar) {
-        //if no nested, natural order:
-        if (resourceComparators == null || resourceComparators.isEmpty()) {
-            return foo.compareTo(bar);
-        }
-        int result = 0;
-        for (Iterator<ResourceComparator> i = resourceComparators.iterator(); result == 0 && i.hasNext();) {
-            result = i.next().resourceCompare(foo, bar);
-        }
-        return result;
+        return composite(resourceComparators).compare(foo, bar);
     }
 
     /**
@@ -103,6 +98,7 @@ s.
      * @param p   the Project to resolve against.
      * @throws BuildException on error.
      */
+    @Override
     protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -121,5 +117,19 @@ s.
             }
             setChecked(true);
         }
+    }
+    
+    private static Comparator<Resource> composite(List<? extends Comparator<Resource>> foo) {
+        Comparator<Resource> result = null;
+        if (foo != null) {
+            for (Comparator<Resource> comparator : foo) {
+                if (result == null) {
+                    result = comparator;
+                    continue;
+                }
+                result = result.thenComparing(comparator);
+            }
+        }
+        return result == null ? Comparator.naturalOrder() : result;
     }
 }

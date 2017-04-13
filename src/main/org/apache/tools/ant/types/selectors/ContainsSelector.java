@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -29,7 +30,6 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Selector that filters files/resources based on whether they contain a
@@ -39,10 +39,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ContainsSelector extends BaseExtendSelector implements ResourceSelector {
 
-    private String contains = null;
-    private boolean casesensitive = true;
-    private boolean ignorewhitespace = false;
-    private String encoding = null;
     /** Key to used for parameterized custom selector */
     public static final String EXPRESSION_KEY = "expression";
     /** Used for parameterized custom selector */
@@ -52,13 +48,10 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
     /** Used for parameterized custom selector */
     public static final String WHITESPACE_KEY = "ignorewhitespace";
 
-
-    /**
-     * Creates a new <code>ContainsSelector</code> instance.
-     *
-     */
-    public ContainsSelector() {
-    }
+    private String contains = null;
+    private boolean casesensitive = true;
+    private boolean ignorewhitespace = false;
+    private String encoding = null;
 
     /**
      * @return a string describing this object
@@ -66,10 +59,8 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
     public String toString() {
         StringBuilder buf = new StringBuilder("{containsselector text: ");
         buf.append('"').append(contains).append('"');
-        buf.append(" casesensitive: ");
-        buf.append(casesensitive ? "true" : "false");
-        buf.append(" ignorewhitespace: ");
-        buf.append(ignorewhitespace ? "true" : "false");
+        buf.append(" casesensitive: ").append(casesensitive);
+        buf.append(" ignorewhitespace: ").append(ignorewhitespace);
         buf.append("}");
         return buf.toString();
     }
@@ -117,7 +108,7 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -169,11 +160,10 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
      * @return whether the Resource is selected.
      */
     public boolean isSelected(Resource r) {
-
         // throw BuildException on error
         validate();
 
-        if (r.isDirectory() || contains.length() == 0) {
+        if (r.isDirectory() || contains.isEmpty()) {
             return true;
         }
 
@@ -184,38 +174,30 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         if (ignorewhitespace) {
             userstr = SelectorUtils.removeWhitespace(userstr);
         }
-        BufferedReader in = null;
-        try {
-            if (encoding != null) {
-                in = new BufferedReader(new InputStreamReader(r.getInputStream(), encoding)); //NOSONAR
-            }   else {
-                in = new BufferedReader(new InputStreamReader(r.getInputStream())); //NOSONAR
+        try (BufferedReader in = new BufferedReader(
+            new InputStreamReader(r.getInputStream(), encoding == null
+                ? Charset.defaultCharset() : Charset.forName(encoding)))) {
+            try {
+                String teststr = in.readLine();
+                while (teststr != null) {
+                    if (!casesensitive) {
+                        teststr = teststr.toLowerCase();
+                    }
+                    if (ignorewhitespace) {
+                        teststr = SelectorUtils.removeWhitespace(teststr);
+                    }
+                    if (teststr.indexOf(userstr) > -1) {
+                        return true;
+                    }
+                    teststr = in.readLine();
+                }
+                return false;
+            } catch (IOException ioe) {
+                throw new BuildException("Could not read " + r.toLongString());
             }
-        } catch (Exception e) {
-            throw new BuildException("Could not get InputStream from "
-                    + r.toLongString(), e);
-        }
-        try {
-            String teststr = in.readLine();
-            while (teststr != null) {
-                if (!casesensitive) {
-                    teststr = teststr.toLowerCase();
-                }
-                if (ignorewhitespace) {
-                    teststr = SelectorUtils.removeWhitespace(teststr);
-                }
-                if (teststr.indexOf(userstr) > -1) {
-                    return true;
-                }
-                teststr = in.readLine();
-            }
-            return false;
-        } catch (IOException ioe) {
-            throw new BuildException("Could not read " + r.toLongString());
-        } finally {
-            FileUtils.close(in);
+        } catch (IOException e) {
+            throw new BuildException(
+                "Could not get InputStream from " + r.toLongString(), e);
         }
     }
-
 }
-

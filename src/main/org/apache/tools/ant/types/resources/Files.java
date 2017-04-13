@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -39,11 +40,8 @@ import org.apache.tools.ant.types.selectors.FileSelector;
 public class Files extends AbstractSelectorContainer
     implements ResourceCollection {
 
-    private static final Iterator<Resource> EMPTY_ITERATOR
-        = Collections.<Resource>emptySet().iterator();
-
     private PatternSet defaultPatterns = new PatternSet();
-    private Vector<PatternSet> additionalPatterns = new Vector<PatternSet>();
+    private Vector<PatternSet> additionalPatterns = new Vector<>();
 
     private boolean useDefaultExcludes = true;
     private boolean caseSensitive = true;
@@ -82,6 +80,7 @@ public class Files extends AbstractSelectorContainer
      * @param r the <code>Reference</code> to use.
      * @throws BuildException if there is a problem.
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (hasPatterns(defaultPatterns)) {
             throw tooManyAttributes();
@@ -258,7 +257,7 @@ public class Files extends AbstractSelectorContainer
      * @return the defaultexclusions value.
      */
     public synchronized boolean getDefaultexcludes() {
-        return (isReference())
+        return isReference()
             ? getRef().getDefaultexcludes() : useDefaultExcludes;
     }
 
@@ -280,7 +279,7 @@ public class Files extends AbstractSelectorContainer
      * collection is case-sensitive.
      */
     public synchronized boolean isCaseSensitive() {
-        return (isReference())
+        return isReference()
             ? getRef().isCaseSensitive() : caseSensitive;
     }
 
@@ -302,7 +301,7 @@ public class Files extends AbstractSelectorContainer
      *         should be followed.
      */
     public synchronized boolean isFollowSymlinks() {
-        return (isReference())
+        return isReference()
             ? getRef().isFollowSymlinks() : followSymlinks;
     }
 
@@ -310,6 +309,7 @@ public class Files extends AbstractSelectorContainer
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
+    @Override
     public synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef().iterator();
@@ -319,7 +319,7 @@ public class Files extends AbstractSelectorContainer
         int fct = ds.getIncludedFilesCount();
         int dct = ds.getIncludedDirsCount();
         if (fct + dct == 0) {
-            return EMPTY_ITERATOR;
+            return Collections.emptyIterator();
         }
         FileResourceIterator result = new FileResourceIterator(getProject());
         if (fct > 0) {
@@ -335,6 +335,7 @@ public class Files extends AbstractSelectorContainer
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public synchronized int size() {
         if (isReference()) {
             return getRef().size();
@@ -354,15 +355,8 @@ public class Files extends AbstractSelectorContainer
             return getRef().hasPatterns();
         }
         dieOnCircularReference();
-        if (hasPatterns(defaultPatterns)) {
-            return true;
-        }
-        for (PatternSet patternSet : additionalPatterns) {
-            if (hasPatterns(patternSet)) {
-                return true;
-            }
-        }
-        return false;
+        return hasPatterns(defaultPatterns)
+            || additionalPatterns.stream().anyMatch(this::hasPatterns);
     }
 
     /**
@@ -370,6 +364,7 @@ public class Files extends AbstractSelectorContainer
      *
      * @param selector the new <code>FileSelector</code> to add.
      */
+    @Override
     public synchronized void appendSelector(FileSelector selector) {
         if (isReference()) {
             throw noChildrenAllowed();
@@ -382,22 +377,13 @@ public class Files extends AbstractSelectorContainer
      * Format this Files collection as a String.
      * @return a descriptive <code>String</code>.
      */
+    @Override
     public String toString() {
         if (isReference()) {
             return getRef().toString();
         }
-        Iterator<Resource> i = iterator();
-        if (!i.hasNext()) {
-            return "";
-        }
-        StringBuffer sb = new StringBuffer();
-        while (i.hasNext()) {
-            if (sb.length() > 0) {
-                sb.append(File.pathSeparatorChar);
-            }
-            sb.append(i.next());
-        }
-        return sb.toString();
+        return isEmpty() ? "" : stream().map(Object::toString)
+            .collect(Collectors.joining(File.pathSeparator));
     }
 
     /**
@@ -405,7 +391,8 @@ public class Files extends AbstractSelectorContainer
      * (the list of selectors is a shallow clone of this instance's list).
      * @return a cloned Object.
      */
-    public synchronized Object clone() {
+    @Override
+    public synchronized Files clone() {
         if (isReference()) {
             return getRef().clone();
         }
@@ -451,11 +438,7 @@ public class Files extends AbstractSelectorContainer
         dieOnCircularReference();
         PatternSet ps = new PatternSet();
         ps.append(defaultPatterns, p);
-        final int count = additionalPatterns.size();
-        for (int i = 0; i < count; i++) {
-            Object o = additionalPatterns.elementAt(i);
-            ps.append((PatternSet) o, p);
-        }
+        additionalPatterns.forEach(pat -> ps.append(pat, p));
         return ps;
     }
 
@@ -464,6 +447,7 @@ public class Files extends AbstractSelectorContainer
      * @return true indicating that all elements of a Files collection
      *              will be FileResources.
      */
+    @Override
     public boolean isFilesystemOnly() {
         return true;
     }

@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -66,8 +68,8 @@ public abstract class AbstractFileSet extends DataType
     implements Cloneable, SelectorContainer {
 
     private PatternSet defaultPatterns = new PatternSet();
-    private List<PatternSet> additionalPatterns = new ArrayList<PatternSet>();
-    private List<FileSelector> selectors = new ArrayList<FileSelector>();
+    private List<PatternSet> additionalPatterns = new ArrayList<>();
+    private List<FileSelector> selectors = new ArrayList<>();
 
     private File dir;
     private boolean fileAttributeUsed;
@@ -113,6 +115,7 @@ public abstract class AbstractFileSet extends DataType
      * @param r the <code>Reference</code> to use.
      * @throws BuildException on error
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (dir != null || defaultPatterns.hasPatterns(getProject())) {
             throw tooManyAttributes();
@@ -482,14 +485,14 @@ public abstract class AbstractFileSet extends DataType
             return getRef(p).getDirectoryScanner(p);
         }
         dieOnCircularReference();
-        DirectoryScanner ds = null;
+        final DirectoryScanner ds;
         synchronized (this) {
             if (directoryScanner != null && p == getProject()) {
                 ds = directoryScanner;
             } else {
                 if (dir == null) {
-                    throw new BuildException("No directory specified for "
-                                             + getDataTypeName() + ".");
+                    throw new BuildException("No directory specified for %s.",
+                        getDataTypeName());
                 }
                 if (!dir.exists() && errorOnMissingDir) {
                     throw new BuildException(dir.getAbsolutePath()
@@ -497,8 +500,8 @@ public abstract class AbstractFileSet extends DataType
                                              .DOES_NOT_EXIST_POSTFIX);
                 }
                 if (!dir.isDirectory() && dir.exists()) {
-                    throw new BuildException(dir.getAbsolutePath()
-                                             + " is not a directory.");
+                    throw new BuildException("%s is not a directory.",
+                        dir.getAbsolutePath());
                 }
                 ds = new DirectoryScanner();
                 setupDirectoryScanner(ds, p);
@@ -570,6 +573,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @return whether any selectors are in this container.
      */
+    @Override
     public synchronized boolean hasSelectors() {
         if (isReference()) {
             return getRef(getProject()).hasSelectors();
@@ -591,12 +595,7 @@ public abstract class AbstractFileSet extends DataType
         if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
-        for (PatternSet ps : additionalPatterns) {
-            if (ps.hasPatterns(getProject())) {
-                return true;
-            }
-        }
-        return false;
+        return additionalPatterns.stream().anyMatch(ps -> ps.hasPatterns(getProject()));
     }
 
     /**
@@ -604,6 +603,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @return the number of selectors in this container as an <code>int</code>.
      */
+    @Override
     public synchronized int selectorCount() {
         if (isReference()) {
             return getRef(getProject()).selectorCount();
@@ -617,13 +617,13 @@ public abstract class AbstractFileSet extends DataType
      * @param p the current project
      * @return a <code>FileSelector[]</code> of the selectors in this container.
      */
+    @Override
     public synchronized FileSelector[] getSelectors(Project p) {
         if (isReference()) {
             return getRef(getProject()).getSelectors(p);
         }
         dieOnCircularReference(p);
-        return (FileSelector[]) (selectors.toArray(
-            new FileSelector[selectors.size()]));
+        return selectors.toArray(new FileSelector[selectors.size()]);
     }
 
     /**
@@ -631,6 +631,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @return an <code>Enumeration</code> of selectors.
      */
+    @Override
     public synchronized Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
             return getRef(getProject()).selectorElements();
@@ -644,6 +645,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param selector the new <code>FileSelector</code> to add.
      */
+    @Override
     public synchronized void appendSelector(FileSelector selector) {
         if (isReference()) {
             throw noChildrenAllowed();
@@ -659,6 +661,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a "Select" selector entry on the selector list.
      * @param selector the <code>SelectSelector</code> to add.
      */
+    @Override
     public void addSelector(SelectSelector selector) {
         appendSelector(selector);
     }
@@ -667,6 +670,7 @@ public abstract class AbstractFileSet extends DataType
      * Add an "And" selector entry on the selector list.
      * @param selector the <code>AndSelector</code> to add.
      */
+    @Override
     public void addAnd(AndSelector selector) {
         appendSelector(selector);
     }
@@ -675,6 +679,7 @@ public abstract class AbstractFileSet extends DataType
      * Add an "Or" selector entry on the selector list.
      * @param selector the <code>OrSelector</code> to add.
      */
+    @Override
     public void addOr(OrSelector selector) {
         appendSelector(selector);
     }
@@ -683,6 +688,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a "Not" selector entry on the selector list.
      * @param selector the <code>NotSelector</code> to add.
      */
+    @Override
     public void addNot(NotSelector selector) {
         appendSelector(selector);
     }
@@ -691,6 +697,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a "None" selector entry on the selector list.
      * @param selector the <code>NoneSelector</code> to add.
      */
+    @Override
     public void addNone(NoneSelector selector) {
         appendSelector(selector);
     }
@@ -699,6 +706,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a majority selector entry on the selector list.
      * @param selector the <code>MajoritySelector</code> to add.
      */
+    @Override
     public void addMajority(MajoritySelector selector) {
         appendSelector(selector);
     }
@@ -707,6 +715,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a selector date entry on the selector list.
      * @param selector the <code>DateSelector</code> to add.
      */
+    @Override
     public void addDate(DateSelector selector) {
         appendSelector(selector);
     }
@@ -715,6 +724,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a selector size entry on the selector list.
      * @param selector the <code>SizeSelector</code> to add.
      */
+    @Override
     public void addSize(SizeSelector selector) {
         appendSelector(selector);
     }
@@ -723,6 +733,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a DifferentSelector entry on the selector list.
      * @param selector the <code>DifferentSelector</code> to add.
      */
+    @Override
     public void addDifferent(DifferentSelector selector) {
         appendSelector(selector);
     }
@@ -731,6 +742,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a selector filename entry on the selector list.
      * @param selector the <code>FilenameSelector</code> to add.
      */
+    @Override
     public void addFilename(FilenameSelector selector) {
         appendSelector(selector);
     }
@@ -739,6 +751,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a selector type entry on the selector list.
      * @param selector the <code>TypeSelector</code> to add.
      */
+    @Override
     public void addType(TypeSelector selector) {
         appendSelector(selector);
     }
@@ -747,6 +760,7 @@ public abstract class AbstractFileSet extends DataType
      * Add an extended selector entry on the selector list.
      * @param selector the <code>ExtendSelector</code> to add.
      */
+    @Override
     public void addCustom(ExtendSelector selector) {
         appendSelector(selector);
     }
@@ -755,6 +769,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a contains selector entry on the selector list.
      * @param selector the <code>ContainsSelector</code> to add.
      */
+    @Override
     public void addContains(ContainsSelector selector) {
         appendSelector(selector);
     }
@@ -763,6 +778,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a present selector entry on the selector list.
      * @param selector the <code>PresentSelector</code> to add.
      */
+    @Override
     public void addPresent(PresentSelector selector) {
         appendSelector(selector);
     }
@@ -771,6 +787,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a depth selector entry on the selector list.
      * @param selector the <code>DepthSelector</code> to add.
      */
+    @Override
     public void addDepth(DepthSelector selector) {
         appendSelector(selector);
     }
@@ -779,6 +796,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a depends selector entry on the selector list.
      * @param selector the <code>DependSelector</code> to add.
      */
+    @Override
     public void addDepend(DependSelector selector) {
         appendSelector(selector);
     }
@@ -787,6 +805,7 @@ public abstract class AbstractFileSet extends DataType
      * Add a regular expression selector entry on the selector list.
      * @param selector the <code>ContainsRegexpSelector</code> to add.
      */
+    @Override
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         appendSelector(selector);
     }
@@ -796,6 +815,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>ModifiedSelector</code> to add.
      * @since ant 1.6
      */
+    @Override
     public void addModified(ModifiedSelector selector) {
         appendSelector(selector);
     }
@@ -834,6 +854,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>FileSelector</code> to add.
      * @since Ant 1.6
      */
+    @Override
     public void add(FileSelector selector) {
         appendSelector(selector);
     }
@@ -843,22 +864,14 @@ public abstract class AbstractFileSet extends DataType
      *
      * @return a <code>String</code> of included filenames.
      */
+    @Override
     public String toString() {
         if (isReference()) {
             return getRef(getProject()).toString();
         }
         dieOnCircularReference();
         DirectoryScanner ds = getDirectoryScanner(getProject());
-        String[] files = ds.getIncludedFiles();
-        StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < files.length; i++) {
-            if (i > 0) {
-                sb.append(';');
-            }
-            sb.append(files[i]);
-        }
-        return sb.toString();
+        return Stream.of(ds.getIncludedFiles()).collect(Collectors.joining(File.pathSeparator));
     }
 
     /**
@@ -868,22 +881,20 @@ public abstract class AbstractFileSet extends DataType
      * @return the cloned object
      * @since Ant 1.6
      */
-    public synchronized Object clone() {
+    @Override
+    public synchronized AbstractFileSet clone() {
         if (isReference()) {
             return (getRef(getProject())).clone();
-        } else {
-            try {
-                AbstractFileSet fs = (AbstractFileSet) super.clone();
-                fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
-                fs.additionalPatterns = new ArrayList<PatternSet>(additionalPatterns.size());
-                for (PatternSet ps : additionalPatterns) {
-                    fs.additionalPatterns.add((PatternSet) ps.clone());
-                }
-                fs.selectors = new ArrayList<FileSelector>(selectors);
-                return fs;
-            } catch (CloneNotSupportedException e) {
-                throw new BuildException(e);
-            }
+        }
+        try {
+            AbstractFileSet fs = (AbstractFileSet) super.clone();
+            fs.defaultPatterns = defaultPatterns.clone();
+            fs.additionalPatterns = additionalPatterns.stream().map(
+                    PatternSet::clone).map(PatternSet.class::cast).collect(Collectors.toList());
+            fs.selectors = new ArrayList<>(selectors);
+            return fs;
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException(e);
         }
     }
 
@@ -924,14 +935,12 @@ public abstract class AbstractFileSet extends DataType
             return getRef(p).mergePatterns(p);
         }
         dieOnCircularReference();
-        PatternSet ps = (PatternSet) defaultPatterns.clone();
-        final int count = additionalPatterns.size();
-        for (int i = 0; i < count; i++) {
-            ps.append(additionalPatterns.get(i), p);
-        }
+        PatternSet ps = defaultPatterns.clone();
+        additionalPatterns.forEach(pat -> ps.append(pat, p));
         return ps;
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -940,11 +949,9 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (FileSelector fileSelector : selectors) {
-                if (fileSelector instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p);
-                }
-            }
+            selectors.stream().filter(DataType.class::isInstance).forEach(fileSelector -> 
+                pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p)
+            );
             for (PatternSet ps : additionalPatterns) {
                 pushAndInvokeCircularReferenceCheck(ps, stk, p);
             }

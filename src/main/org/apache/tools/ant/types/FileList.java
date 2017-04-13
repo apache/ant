@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.resources.FileResourceIterator;
  */
 public class FileList extends DataType implements ResourceCollection {
 
-    private List<String> filenames = new ArrayList<String>();
+    private List<String> filenames = new ArrayList<>();
     private File dir;
 
     /**
@@ -68,8 +68,9 @@ public class FileList extends DataType implements ResourceCollection {
      * @param r the reference to another filelist.
      * @exception BuildException if an error occurs.
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
-        if ((dir != null) || (filenames.size() != 0)) {
+        if ((dir != null) || (!filenames.isEmpty())) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -105,7 +106,7 @@ public class FileList extends DataType implements ResourceCollection {
      */
     public void setFiles(String filenames) {
         checkAttributesAllowed();
-        if (filenames != null && filenames.length() > 0) {
+        if (!(filenames == null || filenames.isEmpty())) {
             StringTokenizer tok = new StringTokenizer(
                 filenames, ", \t\n\r\f", false);
             while (tok.hasMoreTokens()) {
@@ -128,7 +129,7 @@ public class FileList extends DataType implements ResourceCollection {
             throw new BuildException("No directory specified for filelist.");
         }
 
-        if (filenames.size() == 0) {
+        if (filenames.isEmpty()) {
             throw new BuildException("No files specified for filelist.");
         }
 
@@ -187,6 +188,7 @@ public class FileList extends DataType implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef(getProject()).iterator();
@@ -200,9 +202,10 @@ public class FileList extends DataType implements ResourceCollection {
      * @return number of elements as int.
      * @since Ant 1.7
      */
+    @Override
     public int size() {
         if (isReference()) {
-            return ((FileList) getRef(getProject())).size();
+            return getRef(getProject()).size();
         }
         return filenames.size();
     }
@@ -212,6 +215,7 @@ public class FileList extends DataType implements ResourceCollection {
      * @return true indicating that all elements will be FileResources.
      * @since Ant 1.7
      */
+    @Override
     public boolean isFilesystemOnly() {
         return true;
     }

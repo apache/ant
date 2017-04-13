@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 
 public abstract class Pack extends Task {
     private static final int BUFFER_SIZE = 8 * 1024;
+
     // CheckStyle:VisibilityModifier OFF - bc
     protected File zipFile;
     protected File source;
@@ -91,13 +92,14 @@ public abstract class Pack extends Task {
      */
     public void addConfigured(ResourceCollection a) {
         if (a.size() == 0) {
-            throw new BuildException("No resource selected, " + getTaskName()
-                    + " needs exactly one resource.");
+            throw new BuildException(
+                "No resource selected, %s needs exactly one resource.",
+                getTaskName());
         }
         if (a.size() != 1) {
-            throw new BuildException(getTaskName()
-                    + " cannot handle multiple resources at once. (" + a.size()
-                    + " resources were selected.)");
+            throw new BuildException(
+                "%s cannot handle multiple resources at once. (%d resources were selected.)",
+                getTaskName(), a.size());
         }
         setSrcResource(a.iterator().next());
     }
@@ -112,13 +114,14 @@ public abstract class Pack extends Task {
         }
 
         if (zipFile.isDirectory()) {
-            throw new BuildException("zipfile attribute must not "
-                                    + "represent a directory!", getLocation());
+            throw new BuildException(
+                "zipfile attribute must not represent a directory!",
+                getLocation());
         }
 
         if (getSrcResource() == null) {
-            throw new BuildException("src attribute or nested resource is"
-                                     + " required", getLocation());
+            throw new BuildException(
+                "src attribute or nested resource is required", getLocation());
         }
     }
 
@@ -126,6 +129,7 @@ public abstract class Pack extends Task {
      * validate, then hand off to the subclass
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         validate();
 

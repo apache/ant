@@ -54,6 +54,7 @@ public class ClassCPInfo extends ConstantPoolEntry {
      * @exception IOException thrown if there is a problem reading the entry
      *      from the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         index = cpStream.readUnsignedShort();
         className = "unresolved";
@@ -64,6 +65,7 @@ public class ClassCPInfo extends ConstantPoolEntry {
      *
      * @return string representation of this constant pool entry
      */
+    @Override
     public String toString() {
         return "Class Constant Pool Entry for " + className + "[" + index + "]";
     }
@@ -74,6 +76,7 @@ public class ClassCPInfo extends ConstantPoolEntry {
      * @param constantPool the constant pool with which to resolve the
      *      class.
      */
+    @Override
     public void resolve(ConstantPool constantPool) {
         className = ((Utf8CPInfo) constantPool.getEntry(index)).getValue();
 
@@ -90,4 +93,3 @@ public class ClassCPInfo extends ConstantPoolEntry {
     }
 
 }
-

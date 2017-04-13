@@ -272,11 +272,12 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      * @return the resource
      * @since Ant 1.5.2
      */
+    @Override
     public Resource getResource(String name) {
         if (src == null) {
             return super.getResource(name);
         }
-        if (name.equals("")) {
+        if ("".equals(name)) {
             // special case in ZIPs, we do not want this thing included
             return new Resource("", true, Long.MAX_VALUE, true);
         }

@@ -39,8 +39,8 @@ class RedirectingOutputStream extends LineOrientedOutputStream {
      *
      * @param line the line to log.
      */
+    @Override
     protected void processLine(final String line) {
         parser.stdout(line);
     }
 }
-

@@ -64,8 +64,8 @@ public class NotSelector extends NoneSelector {
      */
     public void verifySettings() {
         if (selectorCount() != 1) {
-            setError("One and only one selector is allowed within the "
-                + "<not> tag");
+            setError(
+                "One and only one selector is allowed within the <not> tag");
         }
     }
 

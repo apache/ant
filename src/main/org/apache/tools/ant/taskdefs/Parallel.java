@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
@@ -56,7 +55,7 @@ public class Parallel extends Task
     /** Class which holds a list of tasks to execute */
     public static class TaskList implements TaskContainer {
         /** Collection holding the nested tasks */
-        private List tasks = new ArrayList();
+        private List<Task> tasks = new ArrayList<>();
 
         /**
          * Add a nested task to execute parallel (asynchron).
@@ -64,13 +63,14 @@ public class Parallel extends Task
          * @param nestedTask  Nested task to be executed in parallel.
          *                    must not be null.
          */
+        @Override
         public void addTask(Task nestedTask) {
             tasks.add(nestedTask);
         }
     }
 
     /** Collection holding the nested tasks */
-    private Vector nestedTasks = new Vector();
+    private Vector<Task> nestedTasks = new Vector<>();
 
     /** Semaphore to notify of completed threads */
     private final Object semaphore = new Object();
@@ -150,6 +150,7 @@ public class Parallel extends Task
      * Add a nested task to execute in parallel.
      * @param nestedTask  Nested task to be executed in parallel
      */
+    @Override
     public void addTask(Task nestedTask) {
         nestedTasks.addElement(nestedTask);
     }
@@ -195,13 +196,12 @@ public class Parallel extends Task
         this.timeout = timeout;
     }
 
-
-
     /**
      * Execute the parallel tasks
      *
      * @exception BuildException if any of the threads failed.
      */
+    @Override
     public void execute() throws BuildException {
         updateThreadCounts();
         if (numThreads == 0) {
@@ -224,8 +224,8 @@ public class Parallel extends Task
         if (runnables == null) {
             return;
         }
-        for (int i = 0; i < runnables.length; ++i) {
-            Throwable t = runnables[i].getException();
+        for (TaskRunnable runnable : runnables) {
+            Throwable t = runnable.getException();
             if (t != null) {
                 numExceptions++;
                 if (firstException == null) {
@@ -255,28 +255,21 @@ public class Parallel extends Task
      * @exception BuildException if any of the threads failed.
      */
     private void spinThreads() throws BuildException {
-        final int numTasks = nestedTasks.size();
-        TaskRunnable[] runnables = new TaskRunnable[numTasks];
         stillRunning = true;
         timedOut = false;
         boolean interrupted = false;
 
-        int threadNumber = 0;
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();
-             threadNumber++) {
-            Task nestedTask = (Task) e.nextElement();
-            runnables[threadNumber]
-                = new TaskRunnable(nestedTask);
-        }
+        TaskRunnable[] runnables = nestedTasks.stream().map(TaskRunnable::new)
+            .toArray(TaskRunnable[]::new);
 
+        final int numTasks = nestedTasks.size();
         final int maxRunning = numTasks < numThreads ? numTasks : numThreads;
-        TaskRunnable[] running = new TaskRunnable[maxRunning];
 
-        threadNumber = 0;
+        TaskRunnable[] running = new TaskRunnable[maxRunning];
         ThreadGroup group = new ThreadGroup("parallel");
 
         TaskRunnable[] daemons = null;
-        if (daemonTasks != null && daemonTasks.tasks.size() != 0) {
+        if (!(daemonTasks == null || daemonTasks.tasks.isEmpty())) {
             daemons = new TaskRunnable[daemonTasks.tasks.size()];
         }
 
@@ -292,7 +285,7 @@ public class Parallel extends Task
             // start any daemon threads
             if (daemons != null) {
                 for (int i = 0; i < daemons.length; ++i) {
-                    daemons[i] = new TaskRunnable((Task) daemonTasks.tasks.get(i));
+                    daemons[i] = new TaskRunnable(daemonTasks.tasks.get(i));
                     Thread daemonThread =  new Thread(group, daemons[i]);
                     daemonThread.setDaemon(true);
                     daemonThread.start();
@@ -301,6 +294,7 @@ public class Parallel extends Task
 
             // now run main threads in limited numbers...
             // start initial batch of threads
+            int threadNumber = 0;
             for (int i = 0; i < maxRunning; ++i) {
                 running[i] = runnables[threadNumber++];
                 Thread thread =  new Thread(group, running[i]);
@@ -310,6 +304,7 @@ public class Parallel extends Task
             if (timeout != 0) {
                 // start the timeout thread
                 Thread timeoutThread = new Thread() {
+                    @Override
                     public synchronized void run() {
                         try {
                             final long start = System.currentTimeMillis();
@@ -393,17 +388,16 @@ public class Parallel extends Task
         if (numExceptions == 1) {
             if (firstException instanceof BuildException) {
                 throw (BuildException) firstException;
-            } else {
-                throw new BuildException(firstException);
             }
-        } else if (numExceptions > 1) {
+            throw new BuildException(firstException);
+        }
+        if (numExceptions > 1) {
             if (firstExitStatus == null) {
                 throw new BuildException(exceptionMessage.toString(),
                                          firstLocation);
-            } else {
-                throw new ExitStatusException(exceptionMessage.toString(),
-                                              firstExitStatus, firstLocation);
             }
+            throw new ExitStatusException(exceptionMessage.toString(),
+                                          firstExitStatus, firstLocation);
         }
     }
 
@@ -453,6 +447,7 @@ public class Parallel extends Task
          * Executes the task within a thread and takes care about
          * Exceptions raised within the task.
          */
+        @Override
         public void run() {
             try {
                 LocalProperties.get(getProject()).copy();

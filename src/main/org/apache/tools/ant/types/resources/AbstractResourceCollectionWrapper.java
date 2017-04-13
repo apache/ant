@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -85,6 +86,7 @@ public abstract class AbstractResourceCollectionWrapper
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
+    @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
             return ((AbstractResourceCollectionWrapper) getCheckedRef()).iterator();
@@ -107,6 +109,7 @@ public abstract class AbstractResourceCollectionWrapper
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public synchronized int size() {
         if (isReference()) {
             return ((AbstractResourceCollectionWrapper) getCheckedRef()).size();
@@ -182,24 +185,19 @@ public abstract class AbstractResourceCollectionWrapper
     }
 
     /**
-     * Format this BaseResourceCollectionWrapper as a String.
+     * Format this AbstractResourceCollectionWrapper as a String.
      * @return a descriptive <code>String</code>.
      */
+    @Override
     public synchronized String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
         }
-        if (getSize() == 0) {
+        if (isEmpty()) {
             return "";
         }
-        StringBuilder sb = new StringBuilder();
-        for (Resource resource : this) {
-            if (sb.length() > 0) {
-                sb.append(File.pathSeparatorChar);
-            }
-            sb.append(resource);
-        }
-        return sb.toString();
+        return stream().map(Object::toString)
+            .collect(Collectors.joining(File.pathSeparator));
     }
 
     private BuildException oneNested() {

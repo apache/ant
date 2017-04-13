@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class ArgumentProcessorRegistry {
         try {
             try {
                 isr = new InputStreamReader(is, "UTF-8");
-            } catch (java.io.UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e) {
                 isr = new InputStreamReader(is);
             }
             BufferedReader rd = new BufferedReader(isr);

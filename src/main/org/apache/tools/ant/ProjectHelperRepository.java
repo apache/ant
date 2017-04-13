@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.types.Resource;
@@ -53,7 +54,7 @@ public class ProjectHelperRepository {
     private static ProjectHelperRepository instance =
         new ProjectHelperRepository();
 
-    private List<Constructor<? extends ProjectHelper>> helpers = new ArrayList<Constructor<? extends ProjectHelper>>();
+    private List<Constructor<? extends ProjectHelper>> helpers = new ArrayList<>();
 
     private static Constructor<ProjectHelper2> PROJECTHELPER2_CONSTRUCTOR;
 
@@ -298,40 +299,15 @@ public class ProjectHelperRepository {
      * @return an iterator of {@link ProjectHelper}
      */
     public Iterator<ProjectHelper> getHelpers() {
-        return new ConstructingIterator(helpers.iterator());
-    }
-
-    private static class ConstructingIterator implements Iterator<ProjectHelper> {
-        private final Iterator<Constructor<? extends ProjectHelper>> nested;
-        private boolean empty = false;
-
-        ConstructingIterator(Iterator<Constructor<? extends ProjectHelper>> nested) {
-            this.nested = nested;
-        }
-
-        public boolean hasNext() {
-            return nested.hasNext() || !empty;
-        }
-
-        public ProjectHelper next() {
-            Constructor<? extends ProjectHelper> c;
-            if (nested.hasNext()) {
-                c = nested.next();
-            } else {
-                // last but not least, ant default project helper
-                empty = true;
-                c = PROJECTHELPER2_CONSTRUCTOR;
-            }
+        Stream.Builder<Constructor<? extends ProjectHelper>> b = Stream.builder();
+        helpers.forEach(b::add);
+        return b.add(PROJECTHELPER2_CONSTRUCTOR).build().map(c -> {
             try {
                 return c.newInstance();
             } catch (Exception e) {
                 throw new BuildException("Failed to invoke no-arg constructor"
-                                         + " on " + c.getName());
+                        + " on " + c.getName());
             }
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("remove is not supported");
-        }
+        }).map(ProjectHelper.class::cast).iterator();
     }
 }

@@ -59,8 +59,8 @@ public class ClassFile {
         DataInputStream classStream = new DataInputStream(stream);
 
         if (classStream.readInt() != CLASS_MAGIC) {
-            throw new ClassFormatError("No Magic Code Found "
-                + "- probably not a Java class file.");
+            throw new ClassFormatError(
+                "No Magic Code Found - probably not a Java class file.");
         }
 
         // right we have a good looking class file.
@@ -81,7 +81,6 @@ public class ClassFile {
         className  = classInfo.getClassName();
     }
 
-
     /**
      * Get the classes which this class references.
      *
@@ -89,7 +88,7 @@ public class ClassFile {
      */
     public Vector<String> getClassRefs() {
 
-        Vector<String> classRefs = new Vector<String>();
+        Vector<String> classRefs = new Vector<>();
 
         final int size = constantPool.size();
         for (int i = 0; i < size; ++i) {
@@ -118,4 +117,3 @@ public class ClassFile {
         return ClassFileUtils.convertSlashName(className);
     }
 }
-

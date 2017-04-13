@@ -59,6 +59,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
      * @return true if successful
      * @throws BuildException on error
      */
+    @Override
     public boolean execute()
         throws BuildException {
         getJspc().log("Using jasper compiler", Project.MSG_VERBOSE);
@@ -80,9 +81,8 @@ public class JasperC extends DefaultJspCompilerAdapter {
             java.setDir(getProject().getBaseDir());
             java.setClassname("org.apache.jasper.JspC");
             //this is really irritating; we need a way to set stuff
-            String []args = cmd.getJavaCommand().getArguments();
-            for (int i = 0; i < args.length; i++) {
-                java.createArg().setValue(args[i]);
+            for (String arg : cmd.getJavaCommand().getArguments()) {
+                java.createArg().setValue(arg);
             }
             java.setFailonerror(getJspc().getFailonerror());
             //we are forking here to be sure that if JspC calls
@@ -94,16 +94,13 @@ public class JasperC extends DefaultJspCompilerAdapter {
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
-            } else {
-                throw new BuildException("Error running jsp compiler: ",
-                                         ex, getJspc().getLocation());
             }
+            throw new BuildException("Error running jsp compiler: ",
+                                         ex, getJspc().getLocation());
         } finally {
             getJspc().deleteEmptyJavaFiles();
         }
     }
-
-
 
     /**
      * build up a command line
@@ -144,7 +141,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
     /**
      * @return an instance of the mangler this compiler uses
      */
-
+    @Override
     public JspMangler createMangler() {
         return mangler;
     }
@@ -157,9 +154,8 @@ public class JasperC extends DefaultJspCompilerAdapter {
         if (p == null) {
             p = new Path(getProject());
             return p.concatSystemClasspath("only");
-        } else {
-            return p.concatSystemClasspath("ignore");
         }
+        return p.concatSystemClasspath("ignore");
     }
 
     /**

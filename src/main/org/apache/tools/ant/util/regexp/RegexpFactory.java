@@ -30,10 +30,6 @@ import org.apache.tools.ant.util.ClasspathUtils;
  */
 public class RegexpFactory extends RegexpMatcherFactory {
 
-    /** Constructor for RegexpFactory */
-    public RegexpFactory() {
-    }
-
     /***
      * Create a new regular expression matcher instance.
      * @return the matcher instance
@@ -51,7 +47,7 @@ public class RegexpFactory extends RegexpMatcherFactory {
      * @throws BuildException on error
      */
     public Regexp newRegexp(Project p) throws BuildException {
-        String systemDefault = null;
+        String systemDefault;
         if (p == null) {
             systemDefault = System.getProperty(MagicNames.REGEXP_IMPL);
         } else {
@@ -78,8 +74,8 @@ public class RegexpFactory extends RegexpMatcherFactory {
      * @see RegexpMatcherFactory#createInstance(String)
      */
     protected Regexp createRegexpInstance(String classname) throws BuildException {
-        return (Regexp) ClasspathUtils.newInstance(classname, RegexpFactory.class.getClassLoader(),
-                Regexp.class);
+        return ClasspathUtils.newInstance(classname,
+            RegexpFactory.class.getClassLoader(), Regexp.class);
     }
 
 }

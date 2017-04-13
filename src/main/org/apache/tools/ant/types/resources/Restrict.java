@@ -39,13 +39,9 @@ public class Restrict
         /**
          * Restrict the nested ResourceCollection based on the nested selectors.
          */
+        @Override
         protected boolean filterResource(Resource r) {
-            for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
-                if (!i.next().isSelected(r)) {
-                    return true;
-                }
-            }
-            return false;
+            return getResourceSelectors().stream().anyMatch(rsel -> !rsel.isSelected(r));
         }
     };
 
@@ -84,6 +80,7 @@ public class Restrict
      * Add a ResourceSelector.
      * @param s the ResourceSelector to add.
      */
+    @Override
     public synchronized void add(ResourceSelector s) {
         if (s == null) {
             return;
@@ -96,9 +93,10 @@ public class Restrict
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
+    @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((Restrict) getCheckedRef()).iterator();
+            return getCheckedRef().iterator();
         }
         dieOnCircularReference();
         return w.iterator();
@@ -108,9 +106,10 @@ public class Restrict
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public synchronized int size() {
         if (isReference()) {
-            return ((Restrict) getCheckedRef()).size();
+            return getCheckedRef().size();
         }
         dieOnCircularReference();
         return w.size();
@@ -120,9 +119,10 @@ public class Restrict
      * Fulfill the ResourceCollection contract.
      * @return whether this is a filesystem-only resource collection.
      */
+    @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((Restrict) getCheckedRef()).isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         return w.isFilesystemOnly();
@@ -132,6 +132,7 @@ public class Restrict
      * Format this Restrict collection as a String.
      * @return the String value of this collection.
      */
+    @Override
     public synchronized String toString() {
         if (isReference()) {
             return getCheckedRef().toString();
@@ -140,6 +141,7 @@ public class Restrict
         return w.toString();
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;
@@ -152,5 +154,10 @@ public class Restrict
             pushAndInvokeCircularReferenceCheck(w, stk, p);
             setChecked(true);
         }
+    }
+    
+    @Override
+    protected Restrict getCheckedRef() {
+        return (Restrict) super.getCheckedRef();
     }
 }

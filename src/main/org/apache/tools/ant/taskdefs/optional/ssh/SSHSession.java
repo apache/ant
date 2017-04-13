@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,7 +28,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
-
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
@@ -45,10 +43,10 @@ public class SSHSession extends SSHBase {
     /** units are milliseconds, default is 0=infinite */
     private long maxwait = 0;
 
-    private final Vector localTunnels = new Vector();
-    private final Set localPortsUsed = new TreeSet();
-    private final Vector remoteTunnels = new Vector();
-    private final Set remotePortsUsed = new TreeSet();
+    private final List<LocalTunnel> localTunnels = new Vector<>();
+    private final Set<Integer> localPortsUsed = new TreeSet<>();
+    private final List<RemoteTunnel> remoteTunnels = new Vector<>();
+    private final Set<Integer> remotePortsUsed = new TreeSet<>();
     private NestedSequential nestedSequential = null;
 
     private static final String TIMEOUT_MESSAGE =
@@ -56,7 +54,7 @@ public class SSHSession extends SSHBase {
 
 
     /** Optional Vector holding the nested tasks */
-    private final Vector nestedTasks = new Vector();
+    private final List<Task> nestedTasks = new Vector<>();
 
     /**
      * Add a nested task to Sequential.
@@ -65,7 +63,7 @@ public class SSHSession extends SSHBase {
      * <p>
      */
     public void addTask(final Task nestedTask) {
-        nestedTasks.addElement(nestedTask);
+        nestedTasks.add(nestedTask);
     }
 
     /**
@@ -148,48 +146,38 @@ public class SSHSession extends SSHBase {
             throw new BuildException("Missing sequential element.");
         }
 
-
         Session session = null;
         try {
             // establish the session
             session = openSession();
             session.setTimeout((int) maxwait);
 
-            for (final Iterator i = localTunnels.iterator(); i.hasNext();) {
-                final LocalTunnel tunnel = (LocalTunnel) i.next();
+            for (LocalTunnel tunnel : localTunnels) {
                 session.setPortForwardingL(tunnel.getLPort(),
                                            tunnel.getRHost(),
                                            tunnel.getRPort());
             }
 
-            for (final Iterator i = remoteTunnels.iterator(); i.hasNext();) {
-                final RemoteTunnel tunnel = (RemoteTunnel) i.next();
+            for (RemoteTunnel tunnel : remoteTunnels) {
                 session.setPortForwardingR(tunnel.getRPort(),
                                            tunnel.getLHost(),
                                            tunnel.getLPort());
             }
 
-            for (final Iterator i = nestedSequential.getNested().iterator();
-                 i.hasNext();) {
-                final Task nestedTask = (Task) i.next();
-                nestedTask.perform();
-            }
+            nestedSequential.getNested().forEach(Task::perform);
             // completed successfully
 
         } catch (final JSchException e) {
             if (e.getMessage().indexOf("session is down") >= 0) {
                 if (getFailonerror()) {
                     throw new BuildException(TIMEOUT_MESSAGE, e);
-                } else {
-                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
                 }
+                log(TIMEOUT_MESSAGE, Project.MSG_ERR);
             } else {
                 if (getFailonerror()) {
                     throw new BuildException(e);
-                } else {
-                    log("Caught exception: " + e.getMessage(),
-                        Project.MSG_ERR);
                 }
+                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
         } catch (final BuildException e) {
             // avoid wrapping it into yet another BuildException further down
@@ -197,9 +185,8 @@ public class SSHSession extends SSHBase {
         } catch (final Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
-            } else {
-                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
+            log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
         } finally {
             if (session != null && session.isConnected()) {
                 session.disconnect();
@@ -220,34 +207,44 @@ public class SSHSession extends SSHBase {
     }
 
     public class LocalTunnel {
-        public LocalTunnel() {}
 
         int lport = 0;
         String rhost = null;
         int rport = 0;
+
         public void setLPort(final int lport) {
-            final Integer portKey = new Integer(lport);
+            final Integer portKey = Integer.valueOf(lport);
             if (localPortsUsed.contains(portKey)) {
-                throw new BuildException("Multiple local tunnels defined to"
-                                         + " use same local port " + lport);
+                throw new BuildException(
+                    "Multiple local tunnels defined to use same local port %d",
+                    lport);
             }
             localPortsUsed.add(portKey);
             this.lport = lport;
         }
-        public void setRHost(final String rhost) { this.rhost = rhost; }
-        public void setRPort(final int rport) { this.rport = rport; }
+
+        public void setRHost(final String rhost) {
+            this.rhost = rhost;
+        }
+
+        public void setRPort(final int rport) {
+            this.rport = rport;
+        }
+
         public int getLPort() {
             if (lport == 0) {
                 throw new BuildException("lport is required for LocalTunnel.");
             }
             return lport;
         }
+
         public String getRHost() {
             if (rhost == null) {
                 throw new BuildException("rhost is required for LocalTunnel.");
             }
             return rhost;
         }
+
         public int getRPort() {
             if (rport == 0) {
                 throw new BuildException("rport is required for LocalTunnel.");
@@ -257,34 +254,44 @@ public class SSHSession extends SSHBase {
     }
 
     public class RemoteTunnel {
-        public RemoteTunnel() {}
 
         int lport = 0;
         String lhost = null;
         int rport = 0;
-        public void setLPort(final int lport) { this.lport = lport; }
-        public void setLHost(final String lhost) { this.lhost = lhost; }
+
+        public void setLPort(final int lport) {
+            this.lport = lport;
+        }
+
+        public void setLHost(final String lhost) {
+            this.lhost = lhost;
+        }
+
         public void setRPort(final int rport) {
-            final Integer portKey = new Integer(rport);
+            final Integer portKey = Integer.valueOf(rport);
             if (remotePortsUsed.contains(portKey)) {
-                throw new BuildException("Multiple remote tunnels defined to"
-                                         + " use same remote port " + rport);
+                throw new BuildException(
+                    "Multiple remote tunnels defined to use same remote port %d",
+                    rport);
             }
             remotePortsUsed.add(portKey);
             this.rport = rport;
         }
+
         public int getLPort() {
             if (lport == 0) {
                 throw new BuildException("lport is required for RemoteTunnel.");
             }
             return lport;
         }
+
         public String getLHost() {
             if (lhost == null) {
                 throw new BuildException("lhost is required for RemoteTunnel.");
             }
             return lhost;
         }
+
         public int getRPort() {
             if (rport == 0) {
                 throw new BuildException("rport is required for RemoteTunnel.");
@@ -311,13 +318,14 @@ public class SSHSession extends SSHBase {
      * This is a simple task container.
      */
     public static class NestedSequential implements TaskContainer {
-        private final List<Task> nested = new ArrayList<Task>();
+        private final List<Task> nested = new ArrayList<>();
 
         /**
          * Add a task or type to the container.
          *
          * @param task an unknown element.
          */
+        @Override
         public void addTask(final Task task) {
             nested.add(task);
         }

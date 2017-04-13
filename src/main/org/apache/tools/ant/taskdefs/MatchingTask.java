@@ -62,6 +62,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     // CheckStyle:VisibilityModifier ON
 
     /** {@inheritDoc}. */
+    @Override
     public void setProject(Project project) {
         super.setProject(project);
         fileset.setProject(project);
@@ -128,8 +129,8 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public void XsetItems(String itemString) {
         log("The items attribute is deprecated. "
             + "Please use the includes attribute.", Project.MSG_WARN);
-        if (itemString == null || itemString.equals("*")
-            || itemString.equals(".")) {
+        if (itemString == null || "*".equals(itemString)
+            || ".".equals(itemString)) {
             createInclude().setName("**");
         } else {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
@@ -161,7 +162,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public void XsetIgnore(String ignoreString) {
         log("The ignore attribute is deprecated."
             + "Please use the excludes attribute.", Project.MSG_WARN);
-        if (ignoreString != null && ignoreString.length() > 0) {
+        if (!(ignoreString == null || ignoreString.isEmpty())) {
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ",
                                                       false);
             while (tok.hasMoreTokens()) {
@@ -237,6 +238,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *
      * @return whether any selectors are in this container
      */
+    @Override
     public boolean hasSelectors() {
         return fileset.hasSelectors();
     }
@@ -246,6 +248,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *
      * @return the number of selectors in this container
      */
+    @Override
     public int selectorCount() {
         return fileset.selectorCount();
     }
@@ -255,6 +258,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param p the current project
      * @return an array of selectors in this container
      */
+    @Override
     public FileSelector[] getSelectors(Project p) {
         return fileset.getSelectors(p);
     }
@@ -264,6 +268,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *
      * @return an enumerator that goes through each of the selectors
      */
+    @Override
     public Enumeration<FileSelector> selectorElements() {
         return fileset.selectorElements();
     }
@@ -273,6 +278,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *
      * @param selector the new selector to add
      */
+    @Override
     public void appendSelector(FileSelector selector) {
         fileset.appendSelector(selector);
     }
@@ -283,6 +289,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a "Select" selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addSelector(SelectSelector selector) {
         fileset.addSelector(selector);
     }
@@ -291,6 +298,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add an "And" selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addAnd(AndSelector selector) {
         fileset.addAnd(selector);
     }
@@ -299,6 +307,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add an "Or" selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addOr(OrSelector selector) {
         fileset.addOr(selector);
     }
@@ -307,6 +316,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a "Not" selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addNot(NotSelector selector) {
         fileset.addNot(selector);
     }
@@ -315,6 +325,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a "None" selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addNone(NoneSelector selector) {
         fileset.addNone(selector);
     }
@@ -323,6 +334,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a majority selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addMajority(MajoritySelector selector) {
         fileset.addMajority(selector);
     }
@@ -331,6 +343,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a selector date entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addDate(DateSelector selector) {
         fileset.addDate(selector);
     }
@@ -339,6 +352,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a selector size entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addSize(SizeSelector selector) {
         fileset.addSize(selector);
     }
@@ -347,6 +361,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a selector filename entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addFilename(FilenameSelector selector) {
         fileset.addFilename(selector);
     }
@@ -355,6 +370,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add an extended selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addCustom(ExtendSelector selector) {
         fileset.addCustom(selector);
     }
@@ -363,6 +379,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a contains selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addContains(ContainsSelector selector) {
         fileset.addContains(selector);
     }
@@ -371,6 +388,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a present selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addPresent(PresentSelector selector) {
         fileset.addPresent(selector);
     }
@@ -379,6 +397,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a depth selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addDepth(DepthSelector selector) {
         fileset.addDepth(selector);
     }
@@ -387,6 +406,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a depends selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
     }
@@ -395,6 +415,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * add a regular expression selector entry on the selector list
      * @param selector the selector to add
      */
+    @Override
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         fileset.addContainsRegexp(selector);
     }
@@ -404,6 +425,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param selector the selector to add
      * @since ant 1.6
      */
+    @Override
     public void addDifferent(DifferentSelector selector) {
         fileset.addDifferent(selector);
     }
@@ -413,6 +435,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param selector the selector to add
      * @since ant 1.6
      */
+    @Override
     public void addType(TypeSelector selector) {
         fileset.addType(selector);
     }
@@ -422,6 +445,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param selector the selector to add
      * @since ant 1.6
      */
+    @Override
     public void addModified(ModifiedSelector selector) {
         fileset.addModified(selector);
     }
@@ -431,6 +455,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      * @param selector the selector to add
      * @since Ant 1.6
      */
+    @Override
     public void add(FileSelector selector) {
         fileset.add(selector);
     }

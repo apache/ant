@@ -39,8 +39,9 @@ public class IntegerCPInfo extends ConstantCPInfo {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(new Integer(cpStream.readInt()));
+        setValue(Integer.valueOf(cpStream.readInt()));
     }
 
     /**
@@ -48,9 +49,9 @@ public class IntegerCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "Integer Constant Pool Entry: " + getValue();
     }
 
 }
-

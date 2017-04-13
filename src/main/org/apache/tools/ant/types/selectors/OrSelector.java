@@ -19,7 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.stream.Stream;
 
 /**
  * This selector has a collection of other selectors, any of which have to
@@ -28,12 +28,6 @@ import java.util.Enumeration;
  * @since 1.5
  */
 public class OrSelector extends BaseSelectorContainer {
-
-    /**
-     * Default constructor.
-     */
-    public OrSelector() {
-    }
 
     /**
      * @return a string representation of the selector
@@ -60,15 +54,8 @@ public class OrSelector extends BaseSelectorContainer {
      */
     public boolean isSelected(File basedir, String filename, File file) {
         validate();
-        Enumeration<FileSelector> e = selectorElements();
-
-        // First, check that all elements are correctly configured
-        while (e.hasMoreElements()) {
-            if (e.nextElement().isSelected(basedir, filename, file)) {
-                return true;
-            }
-        }
-        return false;
+        return Stream.of(getSelectors(getProject()))
+            .anyMatch(s -> s.isSelected(basedir, filename, file));
     }
 
 }

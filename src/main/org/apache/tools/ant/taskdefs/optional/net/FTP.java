@@ -29,16 +29,16 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
@@ -119,8 +119,8 @@ public class FTP extends Task implements FTPTaskConfig {
     private long granularityMillis = 0L;
     private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
-    private Vector filesets = new Vector();
-    private Set dirCache = new HashSet();
+    private Vector<FileSet> filesets = new Vector<>();
+    private Set<File> dirCache = new HashSet<>();
     private int transferred = 0;
     private String remoteFileSep = "/";
     private int port = DEFAULT_FTP_PORT;
@@ -182,6 +182,7 @@ public class FTP extends Task implements FTPTaskConfig {
      *
      */
     protected static class FTPFileProxy extends File {
+        private static final long serialVersionUID = 1L;
 
         private final FTPFile file;
         private final String[] parts;
@@ -213,6 +214,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#exists()
          */
+        @Override
         public boolean exists() {
             return true;
         }
@@ -221,6 +223,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#getAbsolutePath()
          */
+        @Override
         public String getAbsolutePath() {
             return name;
         }
@@ -229,6 +232,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#getName()
          */
+        @Override
         public String getName() {
             return parts.length > 0 ? parts[parts.length - 1] : name;
         }
@@ -237,6 +241,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#getParent()
          */
+        @Override
         public String getParent() {
             String result = "";
             for(int i = 0; i < parts.length - 1; i++){
@@ -249,6 +254,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#getPath()
          */
+        @Override
         public String getPath() {
             return name;
         }
@@ -258,6 +264,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * FTP files are stored as absolute paths
          * @return true
          */
+        @Override
         public boolean isAbsolute() {
             return true;
         }
@@ -266,6 +273,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#isDirectory()
          */
+        @Override
         public boolean isDirectory() {
             return file == null;
         }
@@ -274,6 +282,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#isFile()
          */
+        @Override
         public boolean isFile() {
             return file != null;
         }
@@ -284,6 +293,7 @@ public class FTP extends Task implements FTPTaskConfig {
          *
          * @return  false
          */
+        @Override
         public boolean isHidden() {
             return false;
         }
@@ -292,6 +302,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#lastModified()
          */
+        @Override
         public long lastModified() {
             if (file != null) {
                 return file.getTimestamp().getTimeInMillis();
@@ -303,6 +314,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /* (non-Javadoc)
          * @see java.io.File#length()
          */
+        @Override
         public long length() {
             if (file != null) {
                 return file.getSize();
@@ -348,6 +360,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * scans the remote directory,
          * storing internally the included files, directories, ...
          */
+        @Override
         public void scan() {
             if (includes == null) {
                 // No includes supplied, so set it to 'matches all'
@@ -358,12 +371,12 @@ public class FTP extends Task implements FTPTaskConfig {
                 excludes = new String[0];
             }
 
-            filesIncluded = new VectorSet();
-            filesNotIncluded = new Vector();
-            filesExcluded = new VectorSet();
-            dirsIncluded = new VectorSet();
-            dirsNotIncluded = new Vector();
-            dirsExcluded = new VectorSet();
+            filesIncluded = new VectorSet<>();
+            filesNotIncluded = new Vector<>();
+            filesExcluded = new VectorSet<>();
+            dirsIncluded = new VectorSet<>();
+            dirsNotIncluded = new Vector<>();
+            dirsExcluded = new VectorSet<>();
 
             try {
                 String cwd = ftp.printWorkingDirectory();
@@ -386,7 +399,7 @@ public class FTP extends Task implements FTPTaskConfig {
          */
         private void checkIncludePatterns() {
 
-            Hashtable newroots = new Hashtable();
+            Map<String, String> newroots = new HashMap<>();
             // put in the newroots vector the include patterns without
             // wildcard tokens
             for (int icounter = 0; icounter < includes.length; icounter++) {
@@ -411,75 +424,70 @@ public class FTP extends Task implements FTPTaskConfig {
             } else {
                 // only scan directories that can include matched files or
                 // directories
-                Enumeration enum2 = newroots.keys();
+                newroots.forEach((k,v) -> scanRoots(baseFTPFile, k, v));
+            }
+        }
 
-                while (enum2.hasMoreElements()) {
-                    String currentelement = (String) enum2.nextElement();
-                    String originalpattern = (String) newroots.get(currentelement);
-                    AntFTPFile myfile = new AntFTPFile(baseFTPFile, currentelement);
-                    boolean isOK = true;
-                    boolean traversesSymlinks = false;
-                    String path = null;
+        private void scanRoots(AntFTPFile baseFTPFile, String currentelement, String originalpattern) {
+            AntFTPFile myfile = new AntFTPFile(baseFTPFile, currentelement);
+            boolean isOK = true;
+            boolean traversesSymlinks = false;
+            String path = null;
 
-                    if (myfile.exists()) {
-                        forceRemoteSensitivityCheck();
-                        if (remoteSensitivityChecked
-                            && remoteSystemCaseSensitive && isFollowSymlinks()) {
-                            // cool case,
-                            //we do not need to scan all the subdirs in the relative path
-                            path = myfile.getFastRelativePath();
-                        } else {
-                            // may be on a case insensitive file system.  We want
-                            // the results to show what's really on the disk, so
-                            // we need to double check.
-                            try {
-                                path = myfile.getRelativePath();
-                                traversesSymlinks = myfile.isTraverseSymlinks();
-                            }  catch (IOException be) {
-                                throw new BuildException(be, getLocation());
-                            } catch (BuildException be) {
-                                isOK = false;
-                            }
-                        }
-                    } else {
+            if (myfile.exists()) {
+                forceRemoteSensitivityCheck();
+                if (remoteSensitivityChecked
+                    && remoteSystemCaseSensitive && isFollowSymlinks()) {
+                    // cool case,
+                    //we do not need to scan all the subdirs in the relative path
+                    path = myfile.getFastRelativePath();
+                } else {
+                    // may be on a case insensitive file system.  We want
+                    // the results to show what's really on the disk, so
+                    // we need to double check.
+                    try {
+                        path = myfile.getRelativePath();
+                        traversesSymlinks = myfile.isTraverseSymlinks();
+                    }  catch (IOException be) {
+                        throw new BuildException(be, getLocation());
+                    } catch (BuildException be) {
                         isOK = false;
                     }
-                    if (isOK) {
-                        currentelement = path.replace(remoteFileSep.charAt(0), File.separatorChar);
-                        if (!isFollowSymlinks()
-                            && traversesSymlinks) {
-                            continue;
-                        }
+                }
+            } else {
+                isOK = false;
+            }
+            if (isOK) {
+                currentelement = path.replace(remoteFileSep.charAt(0), File.separatorChar);
+                if (!isFollowSymlinks() && traversesSymlinks) {
+                    return;
+                }
 
-                        if (myfile.isDirectory()) {
-                            if (isIncluded(currentelement)
-                                && currentelement.length() > 0) {
-                                accountForIncludedDir(currentelement, myfile, true);
-                            }  else {
-                                if (currentelement.length() > 0) {
-                                    if (currentelement.charAt(currentelement
-                                                              .length() - 1)
-                                        != File.separatorChar) {
-                                        currentelement =
-                                            currentelement + File.separatorChar;
-                                    }
-                                }
-                                scandir(myfile.getAbsolutePath(), currentelement, true);
-                            }
-                        } else {
-                            if (isCaseSensitive
-                                && originalpattern.equals(currentelement)) {
-                                accountForIncludedFile(currentelement);
-                            } else if (!isCaseSensitive
-                                       && originalpattern
-                                       .equalsIgnoreCase(currentelement)) {
-                                accountForIncludedFile(currentelement);
+                if (myfile.isDirectory()) {
+                    if (isIncluded(currentelement)
+                        && currentelement.length() > 0) {
+                        accountForIncludedDir(currentelement, myfile, true);
+                    }  else {
+                        if (currentelement.length() > 0) {
+                            if (currentelement.charAt(currentelement
+                                                      .length() - 1)
+                                != File.separatorChar) {
+                                currentelement =
+                                    currentelement + File.separatorChar;
                             }
                         }
+                        scandir(myfile.getAbsolutePath(), currentelement, true);
                     }
+                } else if (isCaseSensitive
+                    && originalpattern.equals(currentelement)) {
+                    accountForIncludedFile(currentelement);
+                } else if (!isCaseSensitive && originalpattern
+                    .equalsIgnoreCase(currentelement)) {
+                    accountForIncludedFile(currentelement);
                 }
             }
         }
+
         /**
          * scans a particular directory. populates the scannedDirs cache.
          *
@@ -561,7 +569,7 @@ public class FTP extends Task implements FTPTaskConfig {
 
                 if (isIncluded(name)) {
                     if (!isExcluded(name)
-                        && isSelected(name, (File) scannedDirs.get(name))) {
+                        && isSelected(name, scannedDirs.get(name))) {
                         filesIncluded.addElement(name);
                     } else {
                         filesExcluded.addElement(name);
@@ -623,14 +631,14 @@ public class FTP extends Task implements FTPTaskConfig {
          *
          * @since Ant 1.6
          */
-        private Map fileListMap = new HashMap();
+        private Map<String, FTPFile[]> fileListMap = new HashMap<>();
         /**
          * List of all scanned directories.
          *
          * @since Ant 1.6
          */
 
-        private Map scannedDirs = new HashMap();
+        private Map<String, FTPFileProxy> scannedDirs = new HashMap<>();
 
         /**
          * Has the directory with the given path relative to the base
@@ -658,12 +666,10 @@ public class FTP extends Task implements FTPTaskConfig {
          * @return array of FTPFile
          */
         public FTPFile[] listFiles(String directory, boolean changedir) {
-            //getProject().log("listing files in directory " + directory, Project.MSG_DEBUG);
             String currentPath = directory;
             if (changedir) {
                 try {
-                    boolean result = ftp.changeWorkingDirectory(directory);
-                    if (!result) {
+                    if (!ftp.changeWorkingDirectory(directory)) {
                         return null;
                     }
                     currentPath = ftp.printWorkingDirectory();
@@ -673,9 +679,9 @@ public class FTP extends Task implements FTPTaskConfig {
             }
             if (fileListMap.containsKey(currentPath)) {
                 getProject().log("filelist map used in listing files", Project.MSG_DEBUG);
-                return ((FTPFile[]) fileListMap.get(currentPath));
+                return fileListMap.get(currentPath);
             }
-            FTPFile[] result = null;
+            FTPFile[] result;
             try {
                 result = ftp.listFiles();
             } catch (IOException ioe) {
@@ -706,6 +712,7 @@ public class FTP extends Task implements FTPTaskConfig {
         public FTPFile[] listFiles(String directory) {
             return listFiles(directory, true);
         }
+
         private void checkRemoteSensitivity(FTPFile[] array, String directory) {
             if (array == null) {
                 return;
@@ -714,8 +721,8 @@ public class FTP extends Task implements FTPTaskConfig {
             String target = null;
             for (int icounter = 0; icounter < array.length; icounter++) {
                 if (array[icounter] != null && array[icounter].isDirectory()) {
-                    if (!array[icounter].getName().equals(".")
-                        && !array[icounter].getName().equals("..")) {
+                    if (!".".equals(array[icounter].getName())
+                        && !"..".equals(array[icounter].getName())) {
                         candidateFound = true;
                         target = fiddleName(array[icounter].getName());
                         getProject().log("will try to cd to "
@@ -754,8 +761,9 @@ public class FTP extends Task implements FTPTaskConfig {
                 remoteSensitivityChecked = true;
             }
         }
+
         private String fiddleName(String origin) {
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             for (int icounter = 0; icounter < origin.length(); icounter++) {
                 if (Character.isLowerCase(origin.charAt(icounter))) {
                     result.append(Character.toUpperCase(origin.charAt(icounter)));
@@ -767,6 +775,7 @@ public class FTP extends Task implements FTPTaskConfig {
             }
             return result.toString();
         }
+
         /**
          * an AntFTPFile is a representation of a remote file
          * @since Ant 1.6
@@ -810,46 +819,47 @@ public class FTP extends Task implements FTPTaskConfig {
             public AntFTPFile(AntFTPFile parent, String path) {
                 this.parent = parent;
                 this.client = parent.client;
-                Vector pathElements = SelectorUtils.tokenizePath(path);
+                List<String> pathElements = SelectorUtils.tokenizePath(path);
                 try {
-                    boolean result = this.client.changeWorkingDirectory(parent.getAbsolutePath());
                     //this should not happen, except if parent has been deleted by another process
-                    if (!result) {
+                    if (!this.client.changeWorkingDirectory(parent.getAbsolutePath())) {
                         return;
                     }
                     this.curpwd = parent.getAbsolutePath();
                 } catch (IOException ioe) {
-                    throw new BuildException("could not change working dir to "
-                                             + parent.curpwd);
+                    throw new BuildException(
+                        "could not change working dir to %s", parent.curpwd);
                 }
                 final int size = pathElements.size();
                 for (int fcount = 0; fcount < size - 1; fcount++) {
-                    String currentPathElement = (String) pathElements.elementAt(fcount);
+                    String currentPathElement = pathElements.get(fcount);
                     try {
-                        boolean result = this.client.changeWorkingDirectory(currentPathElement);
-                        if (!result && !isCaseSensitive()
-                            && (remoteSystemCaseSensitive || !remoteSensitivityChecked)) {
-                            currentPathElement = findPathElementCaseUnsensitive(this.curpwd,
-                                                                                currentPathElement);
-                            if (currentPathElement == null) {
-                                return;
+                        if (!this.client
+                            .changeWorkingDirectory(currentPathElement)) {
+                            if (!isCaseSensitive() && (remoteSystemCaseSensitive
+                                || !remoteSensitivityChecked)) {
+                                currentPathElement =
+                                    findPathElementCaseUnsensitive(this.curpwd,
+                                        currentPathElement);
+                                if (currentPathElement == null) {
+                                    return;
+                                }
                             }
-                        } else if (!result) {
                             return;
                         }
-                        this.curpwd = getCurpwdPlusFileSep()
-                            + currentPathElement;
+                        this.curpwd =
+                            getCurpwdPlusFileSep() + currentPathElement;
                     } catch (IOException ioe) {
-                        throw new BuildException("could not change working dir to "
-                                                 + (String) pathElements.elementAt(fcount)
-                                                 + " from " + this.curpwd);
+                        throw new BuildException(
+                            "could not change working dir to %s from %s",
+                            currentPathElement, curpwd);
                     }
-
                 }
-                String lastpathelement = (String) pathElements.elementAt(size - 1);
-                FTPFile [] theFiles = listFiles(this.curpwd);
+                String lastpathelement = pathElements.get(pathElements.size() - 1);
+                FTPFile[] theFiles = listFiles(this.curpwd);
                 this.ftpFile = getFile(theFiles, lastpathelement);
             }
+
             /**
              * find a file in a directory in case unsensitive way
              * @param parentPath        where we are
@@ -864,14 +874,15 @@ public class FTP extends Task implements FTPTaskConfig {
                 if (theFiles == null) {
                     return null;
                 }
-                for (int icounter = 0; icounter < theFiles.length; icounter++) {
-                    if (theFiles[icounter] != null
-                        && theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
-                        return theFiles[icounter].getName();
+                for (FTPFile f : theFiles) {
+                    if (f != null
+                        && f.getName().equalsIgnoreCase(soughtPathElement)) {
+                        return f.getName();
                     }
                 }
                 return null;
             }
+
             /**
              * find out if the file exists
              * @return  true if the file exists
@@ -879,6 +890,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public boolean exists() {
                 return (ftpFile != null);
             }
+
             /**
              * if the file is a symbolic link, find out to what it is pointing
              * @return the target of the symbolic link
@@ -886,6 +898,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public String getLink() {
                 return ftpFile.getLink();
             }
+
             /**
              * get the name of the file
              * @return the name of the file
@@ -893,6 +906,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public String getName() {
                 return ftpFile.getName();
             }
+
             /**
              * find out the absolute path of the file
              * @return absolute path as string
@@ -900,6 +914,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public String getAbsolutePath() {
                 return getCurpwdPlusFileSep() + ftpFile.getName();
             }
+
             /**
              * find out the relative path assuming that the path used to construct
              * this AntFTPFile was spelled properly with regards to case.
@@ -913,6 +928,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
                 return null;
             }
+
             /**
              * find out the relative path to the rootPath of the enclosing scanner.
              * this relative path is spelled exactly like on disk,
@@ -939,6 +955,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
                 return relativePath;
             }
+
             /**
              * get the relative path of this file
              * @param currentPath          base path
@@ -946,18 +963,18 @@ public class FTP extends Task implements FTPTaskConfig {
              * @return relative path
              */
             private String getRelativePath(String currentPath, String currentRelativePath) {
-                Vector pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
-                Vector pathElements2 = SelectorUtils.tokenizePath(currentPath, remoteFileSep);
+                List<String> pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
+                List<String> pathElements2 = SelectorUtils.tokenizePath(currentPath, remoteFileSep);
                 String relPath = currentRelativePath;
                 final int size = pathElements.size();
                 for (int pcount = pathElements2.size(); pcount < size; pcount++) {
-                    String currentElement = (String) pathElements.elementAt(pcount);
+                    String currentElement = pathElements.get(pcount);
                     FTPFile[] theFiles = listFiles(currentPath);
                     FTPFile theFile = null;
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
-                    if (!relPath.equals("")) {
+                    if (!"".equals(relPath)) {
                         relPath = relPath + remoteFileSep;
                     }
                     if (theFile == null) {
@@ -975,6 +992,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
                 return relPath;
             }
+
             /**
              * find a file matching a string in an array of FTPFile.
              * This method will find "alpha" when requested for "ALPHA"
@@ -988,19 +1006,13 @@ public class FTP extends Task implements FTPTaskConfig {
                 if (theFiles == null) {
                     return null;
                 }
-                for (int fcount = 0; fcount < theFiles.length; fcount++) {
-                    if (theFiles[fcount] != null) {
-                        if (theFiles[fcount].getName().equals(lastpathelement)) {
-                            return theFiles[fcount];
-                        } else if (!isCaseSensitive()
-                                   && theFiles[fcount].getName().equalsIgnoreCase(
-                                                                                  lastpathelement)) {
-                            return theFiles[fcount];
-                        }
-                    }
-                }
-                return null;
+                Predicate<String> test =
+                    isCaseSensitive() ? lastpathelement::equals
+                        : lastpathelement::equalsIgnoreCase;
+                return Stream.of(theFiles).filter(f -> test.test(f.getName()))
+                    .findFirst().orElse(null);
             }
+
             /**
              * tell if a file is a directory.
              * note that it will return false for symbolic links pointing to directories.
@@ -1009,6 +1021,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public boolean isDirectory() {
                 return ftpFile.isDirectory();
             }
+
             /**
              * tell if a file is a symbolic link
              * @return <code>true</code> for symbolic links
@@ -1016,6 +1029,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public boolean isSymbolicLink() {
                 return ftpFile.isSymbolicLink();
             }
+
             /**
              * return the attached FTP client object.
              * Warning : this instance is really shared with the enclosing class.
@@ -1032,6 +1046,7 @@ public class FTP extends Task implements FTPTaskConfig {
             protected void setCurpwd(String curpwd) {
                 this.curpwd = curpwd;
             }
+
             /**
              * returns the path of the directory containing the AntFTPFile.
              * of the full path of the file itself in case of AntFTPRootFile
@@ -1040,6 +1055,7 @@ public class FTP extends Task implements FTPTaskConfig {
             public String getCurpwd() {
                 return curpwd;
             }
+
             /**
              * returns the path of the directory containing the AntFTPFile.
              * of the full path of the file itself in case of AntFTPRootFile
@@ -1051,6 +1067,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 return curpwd.endsWith(remoteFileSep) ? curpwd
                     : curpwd + remoteFileSep;
             }
+
             /**
              * find out if a symbolic link is encountered in the relative path of this file
              * from rootPath.
@@ -1071,16 +1088,19 @@ public class FTP extends Task implements FTPTaskConfig {
              * Get a string rep of this object.
              * @return a string containing the pwd and the file.
              */
+            @Override
             public String toString() {
                 return "AntFtpFile: " + curpwd + "%" + ftpFile;
             }
         }
+
         /**
          * special class to represent the remote directory itself
          * @since Ant 1.6
          */
         protected class AntFTPRootFile extends AntFTPFile {
             private String remotedir;
+
             /**
              * constructor
              * @param aclient FTP client
@@ -1096,24 +1116,29 @@ public class FTP extends Task implements FTPTaskConfig {
                     throw new BuildException(ioe, getLocation());
                 }
             }
+
             /**
              * find the absolute path
              * @return absolute path
              */
+            @Override
             public String getAbsolutePath() {
                 return this.getCurpwd();
             }
+
             /**
              * find out the relative path to root
              * @return empty string
              * @throws BuildException actually never
              * @throws IOException  actually never
              */
+            @Override
             public String getRelativePath() throws BuildException, IOException {
                 return "";
             }
         }
     }
+
     /**
      * check FTPFiles to check whether they function as directories too
      * the FTPFile API seem to make directory and symbolic links incompatible
@@ -1124,13 +1149,13 @@ public class FTP extends Task implements FTPTaskConfig {
      * @since ant 1.6
      */
     private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) {
-        boolean result = false;
-        String currentWorkingDir = null;
         if (file.isDirectory()) {
             return true;
-        } else if (file.isFile()) {
+        }
+        if (file.isFile()) {
             return false;
         }
+        String currentWorkingDir = null;
         try {
             currentWorkingDir = ftp.printWorkingDirectory();
         } catch (IOException ioe) {
@@ -1138,6 +1163,7 @@ public class FTP extends Task implements FTPTaskConfig {
                              + " while checking a symlink",
                              Project.MSG_DEBUG);
         }
+        boolean result = false;
         if (currentWorkingDir != null) {
             try {
                 result = ftp.changeWorkingDirectory(file.getLink());
@@ -1154,14 +1180,16 @@ public class FTP extends Task implements FTPTaskConfig {
                                      Project.MSG_ERR);
                 } finally {
                     if (!comeback) {
-                        throw new BuildException("could not cd back to " + dir //NOSONAR
-                                                 + " while checking a symlink");
+                        throw new BuildException(
+                            "could not cd back to %s while checking a symlink",
+                            dir);
                     }
                 }
             }
         }
         return result;
     }
+
     /**
      * check FTPFiles to check whether they function as directories too
      * the FTPFile API seem to make directory and symbolic links incompatible
@@ -1174,11 +1202,13 @@ public class FTP extends Task implements FTPTaskConfig {
     private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
         if (file.isDirectory()) {
             return false;
-        } else if (file.isFile()) {
+        }
+        if (file.isFile()) {
             return true;
         }
         return !isFunctioningAsDirectory(ftp, dir, file);
     }
+
     /**
      * Sets the remote directory where files will be placed. This may be a
      * relative or absolute path, and must be in the path syntax expected by
@@ -1189,7 +1219,6 @@ public class FTP extends Task implements FTPTaskConfig {
     public void setRemotedir(String dir) {
         this.remotedir = dir;
     }
-
 
     /**
      * Sets the FTP server to send files to.
@@ -1397,9 +1426,9 @@ public class FTP extends Task implements FTPTaskConfig {
      *
      * @throws BuildException if the action is not a valid action.
      */
+    @Deprecated
     public void setAction(String action) throws BuildException {
-        log("DEPRECATED - The setAction(String) method has been deprecated."
-            + " Use setAction(FTP.Action) instead.");
+        log("DEPRECATED - The setAction(String) method has been deprecated. Use setAction(FTP.Action) instead.");
 
         Action a = new Action();
 
@@ -1468,7 +1497,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(FTPSystemType systemKey) {
-        if (systemKey != null && !systemKey.getValue().equals("")) {
+        if (systemKey != null && !"".equals(systemKey.getValue())) {
             this.systemTypeKey = systemKey;
             configurationHasBeenSet();
         }
@@ -1481,7 +1510,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setDefaultDateFormatConfig(String defaultDateFormat) {
-        if (defaultDateFormat != null && !defaultDateFormat.equals("")) {
+        if (defaultDateFormat != null && !"".equals(defaultDateFormat)) {
             this.defaultDateFormatConfig = defaultDateFormat;
             configurationHasBeenSet();
         }
@@ -1494,7 +1523,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        if (recentDateFormat != null && !recentDateFormat.equals("")) {
+        if (recentDateFormat != null && !"".equals(recentDateFormat)) {
             this.recentDateFormatConfig = recentDateFormat;
             configurationHasBeenSet();
         }
@@ -1507,7 +1536,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(LanguageCode serverLanguageCode) {
-        if (serverLanguageCode != null && !"".equals(serverLanguageCode.getValue())) {
+        if (serverLanguageCode != null && !serverLanguageCode.getValue().equals("")) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }
@@ -1520,7 +1549,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        if (serverTimeZoneId != null && !serverTimeZoneId.equals("")) {
+        if (serverTimeZoneId != null && !"".equals(serverTimeZoneId)) {
             this.serverTimeZoneConfig = serverTimeZoneId;
             configurationHasBeenSet();
         }
@@ -1534,7 +1563,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setShortMonthNamesConfig(String shortMonthNames) {
-        if (shortMonthNames != null && !shortMonthNames.equals("")) {
+        if (shortMonthNames != null && !"".equals(shortMonthNames)) {
             this.shortMonthNamesConfig = shortMonthNames;
             configurationHasBeenSet();
         }
@@ -1558,62 +1587,73 @@ public class FTP extends Task implements FTPTaskConfig {
                 int retries = Integer.parseInt(retriesAllowed);
                 if (retries < Retryable.RETRY_FOREVER) {
                     throw new BuildException(
-                                             "Invalid value for retriesAllowed attribute: "
-                                             + retriesAllowed);
-
+                        "Invalid value for retriesAllowed attribute: %s",
+                        retriesAllowed);
                 }
                 this.retriesAllowed = retries;
             } catch (NumberFormatException px) {
                 throw new BuildException(
-                                         "Invalid value for retriesAllowed attribute: "
-                                         + retriesAllowed);
-
+                    "Invalid value for retriesAllowed attribute: %s",
+                    retriesAllowed);
             }
-
         }
     }
+
     /**
      * @return Returns the systemTypeKey.
      */
+    @Override
     public String getSystemTypeKey() {
         return systemTypeKey.getValue();
     }
+
     /**
      * @return Returns the defaultDateFormatConfig.
      */
+    @Override
     public String getDefaultDateFormatConfig() {
         return defaultDateFormatConfig;
     }
+
     /**
      * @return Returns the recentDateFormatConfig.
      */
+    @Override
     public String getRecentDateFormatConfig() {
         return recentDateFormatConfig;
     }
+
     /**
      * @return Returns the serverLanguageCodeConfig.
      */
+    @Override
     public String getServerLanguageCodeConfig() {
         return serverLanguageCodeConfig.getValue();
     }
+
     /**
      * @return Returns the serverTimeZoneConfig.
      */
+    @Override
     public String getServerTimeZoneConfig() {
         return serverTimeZoneConfig;
     }
+
     /**
      * @return Returns the shortMonthNamesConfig.
      */
+    @Override
     public String getShortMonthNamesConfig() {
         return shortMonthNamesConfig;
     }
+
     /**
      * @return Returns the timestampGranularity.
      */
     Granularity getTimestampGranularity() {
         return timestampGranularity;
     }
+
     /**
      * Sets the timestampGranularity attribute
      * @param timestampGranularity The timestampGranularity to set.
@@ -1624,6 +1664,7 @@ public class FTP extends Task implements FTPTaskConfig {
         }
         this.timestampGranularity = timestampGranularity;
     }
+
     /**
      * Sets the siteCommand attribute.  This attribute
      * names the command that will be executed if the action
@@ -1633,6 +1674,7 @@ public class FTP extends Task implements FTPTaskConfig {
     public void setSiteCommand(String siteCommand) {
         this.siteCommand = siteCommand;
     }
+
     /**
      * Sets the initialSiteCommand attribute.  This attribute
      * names a site command that will be executed immediately
@@ -1670,32 +1712,30 @@ public class FTP extends Task implements FTPTaskConfig {
         }
 
         if ((action == LIST_FILES) && (listing == null)) {
-            throw new BuildException("listing attribute must be set for list "
-                                     + "action!");
+            throw new BuildException(
+                "listing attribute must be set for list action!");
         }
 
         if (action == MK_DIR && remotedir == null) {
-            throw new BuildException("remotedir attribute must be set for "
-                                     + "mkdir action!");
+            throw new BuildException(
+                "remotedir attribute must be set for mkdir action!");
         }
 
         if (action == CHMOD && chmod == null) {
-            throw new BuildException("chmod attribute must be set for chmod "
-                                     + "action!");
+            throw new BuildException(
+                "chmod attribute must be set for chmod action!");
         }
         if (action == SITE_CMD && siteCommand == null) {
-            throw new BuildException("sitecommand attribute must be set for site "
-                                     + "action!");
+            throw new BuildException(
+                "sitecommand attribute must be set for site action!");
         }
-
 
         if (this.isConfigurationSet) {
             try {
                 Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
             } catch (ClassNotFoundException e) {
                 throw new BuildException(
-                                         "commons-net.jar >= 1.4.0 is required for at least one"
-                                         + " of the attributes specified.");
+                    "commons-net.jar >= 1.4.0 is required for at least one of the attributes specified.");
             }
         }
     }
@@ -1738,7 +1778,7 @@ public class FTP extends Task implements FTPTaskConfig {
             ds.scan();
         }
 
-        String[] dsfiles = null;
+        String[] dsfiles;
         if (action == RM_DIR) {
             dsfiles = ds.getIncludedDirectories();
         } else {
@@ -1748,12 +1788,11 @@ public class FTP extends Task implements FTPTaskConfig {
 
         if ((ds.getBasedir() == null)
             && ((action == SEND_FILES) || (action == GET_FILES))) {
-            throw new BuildException("the dir attribute must be set for send "
-                                     + "and get actions");
-        } else {
-            if ((action == SEND_FILES) || (action == GET_FILES)) {
-                dir = ds.getBasedir().getAbsolutePath();
-            }
+            throw new BuildException(
+                "the dir attribute must be set for send and get actions");
+        }
+        if ((action == SEND_FILES) || (action == GET_FILES)) {
+            dir = ds.getBasedir().getAbsolutePath();
         }
 
         // If we are doing a listing, we need the output stream created now.
@@ -1774,11 +1813,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 // the trunk does not let itself be removed before the leaves
                 for (int i = dsfiles.length - 1; i >= 0; i--) {
                     final String dsfile = dsfiles[i];
-                    executeRetryable(h, new Retryable() {
-                            public void execute() throws IOException {
-                                rmDir(ftp, dsfile);
-                            }
-                        }, dsfile);
+                    executeRetryable(h, () -> rmDir(ftp, dsfile), dsfile);
                 }
             } else {
                 final BufferedWriter fbw = bw;
@@ -1789,31 +1824,29 @@ public class FTP extends Task implements FTPTaskConfig {
                 }
                 for (int i = 0; i < dsfiles.length; i++) {
                     final String dsfile = dsfiles[i];
-                    executeRetryable(h, new Retryable() {
-                            public void execute() throws IOException {
-                                switch (action) {
-                                case SEND_FILES:
-                                    sendFile(ftp, fdir, dsfile);
-                                    break;
-                                case GET_FILES:
-                                    getFile(ftp, fdir, dsfile);
-                                    break;
-                                case DEL_FILES:
-                                    delFile(ftp, dsfile);
-                                    break;
-                                case LIST_FILES:
-                                    listFile(ftp, fbw, dsfile);
-                                    break;
-                                case CHMOD:
-                                    doSiteCommand(ftp, "chmod " + chmod
-                                                  + " " + resolveFile(dsfile));
-                                    transferred++;
-                                    break;
-                                default:
-                                    throw new BuildException("unknown ftp action " + action);
-                                }
-                            }
-                        }, dsfile);
+                    executeRetryable(h, () -> {
+                        switch (action) {
+                        case SEND_FILES:
+                            sendFile(ftp, fdir, dsfile);
+                            break;
+                        case GET_FILES:
+                            getFile(ftp, fdir, dsfile);
+                            break;
+                        case DEL_FILES:
+                            delFile(ftp, dsfile);
+                            break;
+                        case LIST_FILES:
+                            listFile(ftp, fbw, dsfile);
+                            break;
+                        case CHMOD:
+                            doSiteCommand(ftp, "chmod " + chmod
+                                          + " " + resolveFile(dsfile));
+                            transferred++;
+                            break;
+                        default:
+                            throw new BuildException("unknown ftp action " + action);
+                        }
+                    }, dsfile);
                 }
             }
         } finally {
@@ -1822,7 +1855,6 @@ public class FTP extends Task implements FTPTaskConfig {
 
         return dsfiles.length;
     }
-
 
     /**
      * Sends all files specified by the configured filesets to the remote
@@ -1838,17 +1870,12 @@ public class FTP extends Task implements FTPTaskConfig {
         transferred = 0;
         skipped = 0;
 
-        if (filesets.size() == 0) {
+        if (filesets.isEmpty()) {
             throw new BuildException("at least one fileset must be specified.");
-        } else {
-            // get files from filesets
-            final int size = filesets.size();
-            for (int i = 0; i < size; i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
-
-                if (fs != null) {
-                    transferFiles(ftp, fs);
-                }
+        }
+        for (FileSet fs : filesets) {
+            if (fs != null) {
+                transferFiles(ftp, fs);
             }
         }
 
@@ -1859,7 +1886,6 @@ public class FTP extends Task implements FTPTaskConfig {
                 + " were not successfully " + COMPLETED_ACTION_STRS[action]);
         }
     }
-
 
     /**
      * Correct a file path to correspond to the remote host requirements. This
@@ -1876,7 +1902,6 @@ public class FTP extends Task implements FTPTaskConfig {
         return file.replace(System.getProperty("file.separator").charAt(0),
                             remoteFileSep.charAt(0));
     }
-
 
     /**
      * Creates all parent directories specified in a complete relative
@@ -1898,7 +1923,7 @@ public class FTP extends Task implements FTPTaskConfig {
             return;
         }
 
-        Vector parents = new Vector();
+        List<File> parents = new Vector<>();
         String dirname;
 
         while ((dirname = dir.getParent()) != null) {
@@ -1907,7 +1932,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 break;
             }
             dir = checkDir;
-            parents.addElement(dir);
+            parents.add(dir);
         }
 
         // find first non cached dir
@@ -1916,15 +1941,14 @@ public class FTP extends Task implements FTPTaskConfig {
         if (i >= 0) {
             String cwd = ftp.printWorkingDirectory();
             String parent = dir.getParent();
-            if (parent != null) {
-                if (!ftp.changeWorkingDirectory(resolveFile(parent))) {
-                    throw new BuildException("could not change to "
-                                             + "directory: " + ftp.getReplyString());
-                }
+            if (parent != null
+                && !ftp.changeWorkingDirectory(resolveFile(parent))) {
+                throw new BuildException("could not change to directory: %s",
+                    ftp.getReplyString());
             }
 
             while (i >= 0) {
-                dir = (File) parents.elementAt(i--);
+                dir = parents.get(i--);
                 // check if dir exists by trying to change into it.
                 if (!ftp.changeWorkingDirectory(dir.getName())) {
                     // could not change to it - try to create it
@@ -1934,8 +1958,9 @@ public class FTP extends Task implements FTPTaskConfig {
                         handleMkDirFailure(ftp);
                     }
                     if (!ftp.changeWorkingDirectory(dir.getName())) {
-                        throw new BuildException("could not change to "
-                                                 + "directory: " + ftp.getReplyString());
+                        throw new BuildException(
+                            "could not change to directory: %s",
+                            ftp.getReplyString());
                     }
                 }
                 dirCache.add(dir);
@@ -1979,11 +2004,12 @@ public class FTP extends Task implements FTPTaskConfig {
         }
         return returnValue;
     }
+
     /**
      *  find a suitable name for local and remote temporary file
      */
     private File findFileName(FTPClient ftp) {
-        FTPFile [] theFiles = null;
+        FTPFile[] theFiles = null;
         final int maxIterations = 1000;
         for (int counter = 1; counter < maxIterations; counter++) {
             File localFile = FILE_UTILS.createTempFile(
@@ -2041,10 +2067,9 @@ public class FTP extends Task implements FTPTaskConfig {
                 log("Could not date test remote file: " + remoteFile
                     + "assuming out of date.", Project.MSG_VERBOSE);
                 return false;
-            } else {
-                throw new BuildException("could not date test remote file: "
-                                         + ftp.getReplyString());
             }
+            throw new BuildException("could not date test remote file: %s",
+                ftp.getReplyString());
         }
 
         long remoteTimestamp = files[0].getTimestamp().getTime().getTime();
@@ -2052,37 +2077,35 @@ public class FTP extends Task implements FTPTaskConfig {
         long adjustedRemoteTimestamp =
             remoteTimestamp + this.timeDiffMillis + this.granularityMillis;
 
-        StringBuffer msg;
-        synchronized(TIMESTAMP_LOGGING_SDF) {
-            msg = new StringBuffer("   [")
+        StringBuilder msg;
+        synchronized (TIMESTAMP_LOGGING_SDF) {
+            msg = new StringBuilder("   [")
                 .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
                 .append("] local");
         }
         log(msg.toString(), Project.MSG_VERBOSE);
 
-        synchronized(TIMESTAMP_LOGGING_SDF) {
-            msg = new StringBuffer("   [")
-                .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
+        synchronized (TIMESTAMP_LOGGING_SDF) {
+            msg = new StringBuilder("   [")
+                .append(TIMESTAMP_LOGGING_SDF
+                    .format(new Date(adjustedRemoteTimestamp)))
                 .append("] remote");
         }
         if (remoteTimestamp != adjustedRemoteTimestamp) {
-            synchronized(TIMESTAMP_LOGGING_SDF) {
+            synchronized (TIMESTAMP_LOGGING_SDF) {
                 msg.append(" - (raw: ")
-                    .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
+                    .append(
+                        TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
                     .append(")");
             }
         }
         log(msg.toString(), Project.MSG_VERBOSE);
 
-
-
         if (this.action == SEND_FILES) {
             return adjustedRemoteTimestamp >= localTimestamp;
-        } else {
-            return localTimestamp >= adjustedRemoteTimestamp;
         }
+        return localTimestamp >= adjustedRemoteTimestamp;
     }
-
 
     /**
      * Sends a site command to the ftp server
@@ -2093,27 +2116,19 @@ public class FTP extends Task implements FTPTaskConfig {
      */
     protected void doSiteCommand(FTPClient ftp, String theCMD)
         throws IOException, BuildException {
-        boolean rc;
-        String[] myReply = null;
 
         log("Doing Site Command: " + theCMD, Project.MSG_VERBOSE);
 
-        rc = ftp.sendSiteCommand(theCMD);
-
-        if (!rc) {
+        if (!ftp.sendSiteCommand(theCMD)) {
             log("Failed to issue Site Command: " + theCMD, Project.MSG_WARN);
         } else {
-
-            myReply = ftp.getReplyStrings();
-
-            for (int x = 0; x < myReply.length; x++) {
-                if (myReply[x] != null && myReply[x].indexOf("200") == -1) {
-                    log(myReply[x], Project.MSG_WARN);
+            for (String reply : ftp.getReplyStrings()) {
+                if (reply != null && reply.indexOf("200") == -1) {
+                    log(reply, Project.MSG_WARN);
                 }
             }
         }
     }
-
 
     /**
      * Sends a single file to the remote host. <code>filename</code> may
@@ -2178,7 +2193,6 @@ public class FTP extends Task implements FTPTaskConfig {
             FileUtils.close(instream);
         }
     }
-
 
     /**
      * Delete a file from the remote host.
@@ -2259,10 +2273,9 @@ public class FTP extends Task implements FTPTaskConfig {
      */
     protected void getFile(FTPClient ftp, String dir, String filename)
         throws IOException, BuildException {
+        File file = getProject().resolveFile(new File(dir, filename).getPath());
         OutputStream outstream = null;
         try {
-            File file = getProject().resolveFile(new File(dir, filename).getPath());
-
             if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
                 return;
             }
@@ -2310,7 +2323,6 @@ public class FTP extends Task implements FTPTaskConfig {
         }
     }
 
-
     /**
      * List information about a single file from the remote host. <code>filename</code>
      * may contain a relative path specification. <p>
@@ -2355,41 +2367,41 @@ public class FTP extends Task implements FTPTaskConfig {
     protected void makeRemoteDir(FTPClient ftp, String dir)
         throws IOException, BuildException {
         String workingDirectory = ftp.printWorkingDirectory();
+        boolean absolute = dir.startsWith("/");
         if (verbose) {
-            if (dir.startsWith("/") || workingDirectory == null) {
+            if (absolute || workingDirectory == null) {
                 log("Creating directory: " + dir + " in /");
             } else {
                 log("Creating directory: " + dir + " in " + workingDirectory);
             }
         }
-        if (dir.startsWith("/")) {
+        if (absolute) {
             ftp.changeWorkingDirectory("/");
         }
-        String subdir = "";
         StringTokenizer st = new StringTokenizer(dir, "/");
         while (st.hasMoreTokens()) {
-            subdir = st.nextToken();
+            String subdir = st.nextToken();
             log("Checking " + subdir, Project.MSG_DEBUG);
             if (!ftp.changeWorkingDirectory(subdir)) {
-                if (!ftp.makeDirectory(subdir)) {
-                    // codes 521, 550 and 553 can be produced by FTP Servers
-                    //  to indicate that an attempt to create a directory has
-                    //  failed because the directory already exists.
-                    int rc = ftp.getReplyCode();
-                    if (!(ignoreNoncriticalErrors
-                          && (rc == CODE_550 || rc == CODE_553
-                              || rc == CODE_521))) {
-                        throw new BuildException("could not create directory: "
-                                                 + ftp.getReplyString());
-                    }
-                    if (verbose) {
-                        log("Directory already exists");
-                    }
-                } else {
+                if (ftp.makeDirectory(subdir)) {
                     if (verbose) {
                         log("Directory created OK");
                     }
                     ftp.changeWorkingDirectory(subdir);
+                } else {
+                    // codes 521, 550 and 553 can be produced by FTP Servers
+                    //  to indicate that an attempt to create a directory has
+                    //  failed because the directory already exists.
+                    int rc = ftp.getReplyCode();
+                    if (!(ignoreNoncriticalErrors && (rc == CODE_550
+                        || rc == CODE_553 || rc == CODE_521))) {
+                        throw new BuildException(
+                            "could not create directory: %s",
+                            ftp.getReplyString());
+                    }
+                    if (verbose) {
+                        log("Directory already exists");
+                    }
                 }
             }
         }
@@ -2409,8 +2421,8 @@ public class FTP extends Task implements FTPTaskConfig {
         int rc = ftp.getReplyCode();
         if (!(ignoreNoncriticalErrors
               && (rc == CODE_550 || rc == CODE_553 || rc == CODE_521))) {
-            throw new BuildException("could not create directory: "
-                                     + ftp.getReplyString());
+            throw new BuildException("could not create directory: %s",
+                ftp.getReplyString());
         }
     }
 
@@ -2420,6 +2432,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @throws BuildException if the task fails or is not configured
      *         correctly.
      */
+    @Override
     public void execute() throws BuildException {
         checkAttributes();
 
@@ -2436,8 +2449,8 @@ public class FTP extends Task implements FTPTaskConfig {
             ftp.setRemoteVerificationEnabled(enableRemoteVerification);
             ftp.connect(server, port);
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                throw new BuildException("FTP connection failed: "
-                                         + ftp.getReplyString());
+                throw new BuildException("FTP connection failed: %s",
+                    ftp.getReplyString());
             }
 
             log("connected", Project.MSG_VERBOSE);
@@ -2453,14 +2466,14 @@ public class FTP extends Task implements FTPTaskConfig {
             if (binary) {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: "
-                                             + ftp.getReplyString());
+                    throw new BuildException("could not set transfer type: %s",
+                        ftp.getReplyString());
                 }
             } else {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: "
-                                             + ftp.getReplyString());
+                    throw new BuildException("could not set transfer type: %s",
+                        ftp.getReplyString());
                 }
             }
 
@@ -2468,8 +2481,9 @@ public class FTP extends Task implements FTPTaskConfig {
                 log("entering passive mode", Project.MSG_VERBOSE);
                 ftp.enterLocalPassiveMode();
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not enter into passive "
-                                             + "mode: " + ftp.getReplyString());
+                    throw new BuildException(
+                        "could not enter into passive mode: %s",
+                        ftp.getReplyString());
                 }
             }
 
@@ -2478,56 +2492,43 @@ public class FTP extends Task implements FTPTaskConfig {
             // E.G. switching between a UNIX file system mode and
             // a legacy file system.
             if (this.initialSiteCommand != null) {
-                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
                 final FTPClient lftp = ftp;
-                executeRetryable(h, new Retryable() {
-                        public void execute() throws IOException {
-                            doSiteCommand(lftp, FTP.this.initialSiteCommand);
-                        }
-                    }, "initial site command: " + this.initialSiteCommand);
+                executeRetryable(new RetryHandler(this.retriesAllowed, this),
+                    () -> doSiteCommand(lftp, FTP.this.initialSiteCommand),
+                    "initial site command: " + this.initialSiteCommand);
             }
-
 
             // For a unix ftp server you can set the default mask for all files
             // created.
 
             if (umask != null) {
-                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
                 final FTPClient lftp = ftp;
-                executeRetryable(h, new Retryable() {
-                        public void execute() throws IOException {
-                            doSiteCommand(lftp, "umask " + umask);
-                        }
-                    }, "umask " + umask);
+                executeRetryable(new RetryHandler(this.retriesAllowed, this),
+                    () -> doSiteCommand(lftp, "umask " + umask),
+                    "umask " + umask);
             }
 
             // If the action is MK_DIR, then the specified remote
             // directory is the directory to create.
 
             if (action == MK_DIR) {
-                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
                 final FTPClient lftp = ftp;
-                executeRetryable(h, new Retryable() {
-                        public void execute() throws IOException {
-                            makeRemoteDir(lftp, remotedir);
-                        }
-                    }, remotedir);
+                executeRetryable(new RetryHandler(this.retriesAllowed, this),
+                    () -> makeRemoteDir(lftp, remotedir), remotedir);
             } else if (action == SITE_CMD) {
-                RetryHandler h = new RetryHandler(this.retriesAllowed, this);
                 final FTPClient lftp = ftp;
-                executeRetryable(h, new Retryable() {
-                        public void execute() throws IOException {
-                            doSiteCommand(lftp, FTP.this.siteCommand);
-                        }
-                    }, "Site Command: " + this.siteCommand);
+                executeRetryable(new RetryHandler(this.retriesAllowed, this),
+                    () -> doSiteCommand(lftp, FTP.this.siteCommand),
+                    "Site Command: " + this.siteCommand);
             } else {
                 if (remotedir != null) {
                     log("changing the remote directory to " + remotedir,
                         Project.MSG_VERBOSE);
                     ftp.changeWorkingDirectory(remotedir);
                     if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                        throw new BuildException("could not change remote "
-                                                 + "directory: " + ftp.getReplyString());
+                        throw new BuildException(
+                            "could not change remote directory: %s",
+                            ftp.getReplyString());
                     }
                 }
                 if (newerOnly && timeDiffAuto) {
@@ -2554,7 +2555,6 @@ public class FTP extends Task implements FTPTaskConfig {
         }
     }
 
-
     /**
      * an action to perform, one of
      * "send", "put", "recv", "get", "del", "delete", "list", "mkdir", "chmod",
@@ -2567,16 +2567,15 @@ public class FTP extends Task implements FTPTaskConfig {
             "chmod", "rmdir", "site"
         };
 
-
         /**
          * Get the valid values
          *
          * @return an array of the valid FTP actions.
          */
+        @Override
         public String[] getValues() {
             return VALID_ACTIONS;
         }
-
 
         /**
          * Get the symbolic equivalent of the action value.
@@ -2584,27 +2583,31 @@ public class FTP extends Task implements FTPTaskConfig {
          * @return the SYMBOL representing the given action.
          */
         public int getAction() {
-            String actionL = getValue().toLowerCase(Locale.ENGLISH);
-            if (actionL.equals("send") || actionL.equals("put")) {
+            switch (getValue().toLowerCase(Locale.ENGLISH)) {
+            case "send":
+            case "put":
                 return SEND_FILES;
-            } else if (actionL.equals("recv") || actionL.equals("get")) {
+            case "recv":
+            case "get":
                 return GET_FILES;
-            } else if (actionL.equals("del") || actionL.equals("delete")) {
+            case "del":
+            case "delete":
                 return DEL_FILES;
-            } else if (actionL.equals("list")) {
+            case "list":
                 return LIST_FILES;
-            } else if (actionL.equals("chmod")) {
+            case "chmod":
                 return CHMOD;
-            } else if (actionL.equals("mkdir")) {
+            case "mkdir":
                 return MK_DIR;
-            } else if (actionL.equals("rmdir")) {
+            case "rmdir":
                 return RM_DIR;
-            } else if (actionL.equals("site")) {
+            case "site":
                 return SITE_CMD;
             }
             return SEND_FILES;
         }
     }
+
     /**
      * represents one of the valid timestamp adjustment values
      * recognized by the <code>timestampGranularity</code> attribute.<p>
@@ -2630,9 +2633,11 @@ public class FTP extends Task implements FTPTaskConfig {
          * Get the valid values.
          * @return the list of valid Granularity values
          */
+        @Override
         public String[] getValues() {
             return VALID_GRANULARITIES;
         }
+
         /**
          * returns the number of milliseconds associated with
          * the attribute, which can vary in some cases depending
@@ -2652,13 +2657,14 @@ public class FTP extends Task implements FTPTaskConfig {
             }
             return 0L;
         }
+
         static final Granularity getDefault() {
             Granularity g = new Granularity();
             g.setValue("");
             return g;
         }
-
     }
+
     /**
      * one of the valid system type keys recognized by the systemTypeKey
      * attribute.
@@ -2675,6 +2681,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * Get the valid values.
          * @return the list of valid system types.
          */
+        @Override
         public String[] getValues() {
             return VALID_SYSTEM_TYPES;
         }
@@ -2685,31 +2692,32 @@ public class FTP extends Task implements FTPTaskConfig {
             return ftpst;
         }
     }
+
     /**
      * Enumerated class for languages.
      */
     public static class LanguageCode extends EnumeratedAttribute {
 
-
         private static final String[] VALID_LANGUAGE_CODES =
             getValidLanguageCodes();
 
         private static String[] getValidLanguageCodes() {
-            Collection c = FTPClientConfig.getSupportedLanguageCodes();
+            @SuppressWarnings("unchecked")
+            Collection<String> c = FTPClientConfig.getSupportedLanguageCodes();
             String[] ret = new String[c.size() + 1];
             int i = 0;
             ret[i++] = "";
-            for (Iterator it = c.iterator(); it.hasNext(); i++) {
-                ret[i] = (String) it.next();
+            for (String element : c) {
+                ret[i++] = element;
             }
             return ret;
         }
-
 
         /**
          * Return the value values.
          * @return the list of valid language types.
          */
+        @Override
         public String[] getValues() {
             return VALID_LANGUAGE_CODES;
         }

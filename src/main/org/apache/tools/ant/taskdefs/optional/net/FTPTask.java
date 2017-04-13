@@ -83,7 +83,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
     private long granularityMillis = 0L;
     private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
-    private Vector filesets = new Vector();
+    private Vector<FileSet> filesets = new Vector<>();
     private String remoteFileSep = "/";
     private int port = DEFAULT_FTP_PORT;
     private boolean skipFailedTransfers = false;
@@ -396,7 +396,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         filesets.addElement(set);
     }
 
-    public Vector getFilesets() {
+    public Vector<FileSet> getFilesets() {
         return filesets;
     }
 
@@ -415,6 +415,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      *
      * @throws BuildException if the action is not a valid action.
      */
+    @Deprecated
     public void setAction(String action) throws BuildException {
         log("DEPRECATED - The setAction(String) method has been deprecated."
             + " Use setAction(FTP.Action) instead.");
@@ -503,7 +504,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(FTPSystemType systemKey) {
-        if (systemKey != null && !systemKey.getValue().equals("")) {
+        if (systemKey != null && !"".equals(systemKey.getValue())) {
             this.systemTypeKey = systemKey;
             configurationHasBeenSet();
         }
@@ -516,7 +517,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setDefaultDateFormatConfig(String defaultDateFormat) {
-        if (defaultDateFormat != null && !defaultDateFormat.equals("")) {
+        if (defaultDateFormat != null && !"".equals(defaultDateFormat)) {
             this.defaultDateFormatConfig = defaultDateFormat;
             configurationHasBeenSet();
         }
@@ -529,7 +530,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        if (recentDateFormat != null && !recentDateFormat.equals("")) {
+        if (recentDateFormat != null && !"".equals(recentDateFormat)) {
             this.recentDateFormatConfig = recentDateFormat;
             configurationHasBeenSet();
         }
@@ -542,7 +543,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(String serverLanguageCode) {
-        if (serverLanguageCode != null && !"".equals(serverLanguageCode)) {
+        if (serverLanguageCode != null && !serverLanguageCode.equals("")) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }
@@ -555,7 +556,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        if (serverTimeZoneId != null && !serverTimeZoneId.equals("")) {
+        if (serverTimeZoneId != null && !"".equals(serverTimeZoneId)) {
             this.serverTimeZoneConfig = serverTimeZoneId;
             configurationHasBeenSet();
         }
@@ -569,7 +570,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setShortMonthNamesConfig(String shortMonthNames) {
-        if (shortMonthNames != null && !shortMonthNames.equals("")) {
+        if (shortMonthNames != null && !"".equals(shortMonthNames)) {
             this.shortMonthNamesConfig = shortMonthNames;
             configurationHasBeenSet();
         }
@@ -593,16 +594,14 @@ public class FTPTask extends Task implements FTPTaskConfig {
                 int retries = Integer.parseInt(retriesAllowed);
                 if (retries < Retryable.RETRY_FOREVER) {
                     throw new BuildException(
-                                             "Invalid value for retriesAllowed attribute: "
-                                             + retriesAllowed);
-
+                        "Invalid value for retriesAllowed attribute: %s",
+                        retriesAllowed);
                 }
                 this.retriesAllowed = retries;
             } catch (NumberFormatException px) {
                 throw new BuildException(
-                                         "Invalid value for retriesAllowed attribute: "
-                                         + retriesAllowed);
-
+                    "Invalid value for retriesAllowed attribute: %s",
+                    retriesAllowed);
             }
 
         }
@@ -615,45 +614,58 @@ public class FTPTask extends Task implements FTPTaskConfig {
     /**
      * @return Returns the systemTypeKey.
      */
+    @Override
     public String getSystemTypeKey() {
         return systemTypeKey.getValue();
     }
+
     /**
      * @return Returns the defaultDateFormatConfig.
      */
+    @Override
     public String getDefaultDateFormatConfig() {
         return defaultDateFormatConfig;
     }
+
     /**
      * @return Returns the recentDateFormatConfig.
      */
+    @Override
     public String getRecentDateFormatConfig() {
         return recentDateFormatConfig;
     }
+
     /**
      * @return Returns the serverLanguageCodeConfig.
      */
+    @Override
     public String getServerLanguageCodeConfig() {
         return serverLanguageCodeConfig;
     }
+
     /**
      * @return Returns the serverTimeZoneConfig.
      */
+    @Override
     public String getServerTimeZoneConfig() {
         return serverTimeZoneConfig;
     }
+
     /**
      * @return Returns the shortMonthNamesConfig.
      */
+    @Override
     public String getShortMonthNamesConfig() {
         return shortMonthNamesConfig;
     }
+
     /**
      * @return Returns the timestampGranularity.
      */
     public Granularity getTimestampGranularity() {
         return timestampGranularity;
     }
+
     /**
      * Sets the timestampGranularity attribute
      * @param timestampGranularity The timestampGranularity to set.
@@ -664,6 +676,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
         }
         this.timestampGranularity = timestampGranularity;
     }
+
     /**
      * Sets the siteCommand attribute.  This attribute
      * names the command that will be executed if the action
@@ -731,32 +744,30 @@ public class FTPTask extends Task implements FTPTaskConfig {
         }
 
         if ((action == LIST_FILES) && (listing == null)) {
-            throw new BuildException("listing attribute must be set for list "
-                                     + "action!");
+            throw new BuildException(
+                "listing attribute must be set for list action!");
         }
 
         if (action == MK_DIR && remotedir == null) {
-            throw new BuildException("remotedir attribute must be set for "
-                                     + "mkdir action!");
+            throw new BuildException(
+                "remotedir attribute must be set for mkdir action!");
         }
 
         if (action == CHMOD && chmod == null) {
-            throw new BuildException("chmod attribute must be set for chmod "
-                                     + "action!");
+            throw new BuildException(
+                "chmod attribute must be set for chmod action!");
         }
         if (action == SITE_CMD && siteCommand == null) {
-            throw new BuildException("sitecommand attribute must be set for site "
-                                     + "action!");
+            throw new BuildException(
+                "sitecommand attribute must be set for site action!");
         }
-
 
         if (this.isConfigurationSet) {
             try {
                 Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
             } catch (ClassNotFoundException e) {
                 throw new BuildException(
-                                         "commons-net.jar >= 1.4.0 is required for at least one"
-                                         + " of the attributes specified.");
+                    "commons-net.jar >= 1.4.0 is required for at least one of the attributes specified.");
             }
         }
     }
@@ -767,6 +778,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @throws BuildException if the task fails or is not configured
      *         correctly.
      */
+    @Override
     public void execute() throws BuildException {
         checkAttributes();
         try {
@@ -814,18 +826,21 @@ public class FTPTask extends Task implements FTPTaskConfig {
         try {
             loader.loadClass("org.apache.commons.net.ftp.FTP"); // sanity check
         } catch (ClassNotFoundException e) {
-            throw new BuildException("The <classpath> for <ftp> must include"
-                                     + " commons-net.jar if not in Ant's own "
-                                     + " classpath", e, task.getLocation());
+            throw new BuildException(
+                "The <classpath> for <ftp> must include commons-net.jar if not in Ant's own classpath",
+                e, task.getLocation());
         }
         try {
-            Class c = loader.loadClass(FTPTaskMirror.class.getName() + "Impl");
+            Class<? extends FTPTaskMirror> c =
+                loader.loadClass(FTPTaskMirror.class.getName() + "Impl")
+                    .asSubclass(FTPTaskMirror.class);
             if (c.getClassLoader() != loader) {
                 throw new BuildException("Overdelegating loader",
-                                         task.getLocation());
+                    task.getLocation());
             }
-            Constructor cons = c.getConstructor(new Class[] {FTPTask.class});
-            return (FTPTaskMirror) cons.newInstance(new Object[] {task});
+            Constructor<? extends FTPTaskMirror> cons =
+                c.getConstructor(FTPTask.class);
+            return cons.newInstance(task);
         } catch (Exception e) {
             throw new BuildException(e, task.getLocation());
         }
@@ -843,16 +858,15 @@ public class FTPTask extends Task implements FTPTaskConfig {
             "chmod", "rmdir", "site"
         };
 
-
         /**
          * Get the valid values
          *
          * @return an array of the valid FTP actions.
          */
+        @Override
         public String[] getValues() {
             return VALID_ACTIONS;
         }
-
 
         /**
          * Get the symbolic equivalent of the action value.
@@ -861,26 +875,31 @@ public class FTPTask extends Task implements FTPTaskConfig {
          */
         public int getAction() {
             String actionL = getValue().toLowerCase(Locale.ENGLISH);
-            if (actionL.equals("send") || actionL.equals("put")) {
+            switch (actionL) {
+            case "send":
+            case "put":
                 return SEND_FILES;
-            } else if (actionL.equals("recv") || actionL.equals("get")) {
+            case "recv":
+            case "get":
                 return GET_FILES;
-            } else if (actionL.equals("del") || actionL.equals("delete")) {
+            case "del":
+            case "delete":
                 return DEL_FILES;
-            } else if (actionL.equals("list")) {
+            case "list":
                 return LIST_FILES;
-            } else if (actionL.equals("chmod")) {
+            case "chmod":
                 return CHMOD;
-            } else if (actionL.equals("mkdir")) {
+            case "mkdir":
                 return MK_DIR;
-            } else if (actionL.equals("rmdir")) {
+            case "rmdir":
                 return RM_DIR;
-            } else if (actionL.equals("site")) {
+            case "site":
                 return SITE_CMD;
             }
             return SEND_FILES;
         }
     }
+
     /**
      * represents one of the valid timestamp adjustment values
      * recognized by the <code>timestampGranularity</code> attribute.<p>
@@ -906,9 +925,11 @@ public class FTPTask extends Task implements FTPTaskConfig {
          * Get the valid values.
          * @return the list of valid Granularity values
          */
+        @Override
         public String[] getValues() {
             return VALID_GRANULARITIES;
         }
+
         /**
          * returns the number of milliseconds associated with
          * the attribute, which can vary in some cases depending
@@ -928,13 +949,14 @@ public class FTPTask extends Task implements FTPTaskConfig {
             }
             return 0L;
         }
+
         static final Granularity getDefault() {
             Granularity g = new Granularity();
             g.setValue("");
             return g;
         }
-
     }
+
     /**
      * one of the valid system type keys recognized by the systemTypeKey
      * attribute.
@@ -946,11 +968,11 @@ public class FTPTask extends Task implements FTPTaskConfig {
             "MVS"
         };
 
-
         /**
          * Get the valid values.
          * @return the list of valid system types.
          */
+        @Override
         public String[] getValues() {
             return VALID_SYSTEM_TYPES;
         }

@@ -63,7 +63,7 @@ public final class IntrospectionHelper {
     /**
      * Helper instances we've already created (Class.getName() to IntrospectionHelper).
      */
-    private static final Map<String, IntrospectionHelper> HELPERS = new Hashtable<String, IntrospectionHelper>();
+    private static final Map<String, IntrospectionHelper> HELPERS = new Hashtable<>();
 
     /**
      * Map from primitive types to wrapper classes for use in
@@ -71,7 +71,7 @@ public final class IntrospectionHelper {
      * and boolean are in here even though they get special treatment
      * - this way we only need to test for the wrapper class.
      */
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_MAP = new HashMap<Class<?>, Class<?>>(8);
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_MAP = new HashMap<>(8);
 
     // Set up PRIMITIVE_TYPE_MAP
     static {
@@ -91,30 +91,30 @@ public final class IntrospectionHelper {
      * Map from attribute names to attribute types
      * (String to Class).
      */
-    private final Hashtable<String, Class<?>> attributeTypes = new Hashtable<String, Class<?>>();
+    private final Map<String, Class<?>> attributeTypes = new Hashtable<>();
 
     /**
      * Map from attribute names to attribute setter methods
      * (String to AttributeSetter).
      */
-    private final Hashtable<String, AttributeSetter> attributeSetters = new Hashtable<String, AttributeSetter>();
+    private final Map<String, AttributeSetter> attributeSetters = new Hashtable<>();
 
     /**
      * Map from attribute names to nested types
      * (String to Class).
      */
-    private final Hashtable<String, Class<?>> nestedTypes = new Hashtable<String, Class<?>>();
+    private final Map<String, Class<?>> nestedTypes = new Hashtable<>();
 
     /**
      * Map from attribute names to methods to create nested types
      * (String to NestedCreator).
      */
-    private final Hashtable<String, NestedCreator> nestedCreators = new Hashtable<String, NestedCreator>();
+    private final Map<String, NestedCreator> nestedCreators = new Hashtable<>();
 
     /**
      * Vector of methods matching add[Configured](Class) pattern.
      */
-    private final List<Method> addTypeMethods = new ArrayList<Method>();
+    private final List<Method> addTypeMethods = new ArrayList<>();
 
     /**
      * The method to invoke to add PCDATA.
@@ -706,7 +706,7 @@ public final class IntrospectionHelper {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(final String parentUri, final String elementName) {
-        if (isDynamic() || addTypeMethods.size() > 0) {
+        if (isDynamic() || !addTypeMethods.isEmpty()) {
             return true;
         }
         return supportsReflectElement(parentUri, elementName);
@@ -731,7 +731,7 @@ public final class IntrospectionHelper {
      */
     public boolean supportsNestedElement(final String parentUri, final String elementName,
                                          final Project project, final Object parent) {
-        if (addTypeMethods.size() > 0
+        if (!addTypeMethods.isEmpty()
             && createAddTypeCreator(project, parent, elementName) != null) {
             return true;
         }
@@ -944,7 +944,7 @@ public final class IntrospectionHelper {
      * @see #getAttributeMap
      */
     public Enumeration<String> getAttributes() {
-        return attributeSetters.keys();
+        return Collections.enumeration(attributeSetters.keySet());
     }
 
     /**
@@ -968,7 +968,7 @@ public final class IntrospectionHelper {
      * @see #getNestedElementMap
      */
     public Enumeration<String> getNestedElements() {
-        return nestedTypes.keys();
+        return Collections.enumeration(nestedTypes.keySet());
     }
 
     /**
@@ -1533,7 +1533,7 @@ public final class IntrospectionHelper {
      */
     private NestedCreator createAddTypeCreator(
             final Project project, final Object parent, final String elementName) throws BuildException {
-        if (addTypeMethods.size() == 0) {
+        if (addTypeMethods.isEmpty()) {
             return null;
         }
         final ComponentHelper helper = ComponentHelper.getComponentHelper(project);
@@ -1602,7 +1602,7 @@ public final class IntrospectionHelper {
         for (int c = 0; c < size; ++c) {
             final Method current = addTypeMethods.get(c);
             if (current.getParameterTypes()[0].equals(argClass)) {
-                if (method.getName().equals("addConfigured")) {
+                if ("addConfigured".equals(method.getName())) {
                     // add configured replaces the add method
                     addTypeMethods.set(c, method);
                 }

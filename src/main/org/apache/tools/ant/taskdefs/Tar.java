@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,10 +110,10 @@ public class Tar extends MatchingTask {
     private TarLongFileMode longFileMode = new TarLongFileMode();
 
     // need to keep the package private version for backwards compatibility
-    Vector<TarFileSet> filesets = new Vector<TarFileSet>();
+    Vector<TarFileSet> filesets = new Vector<>();
     // we must keep two lists since other classes may modify the
     // filesets Vector (it is package private) without us noticing
-    private final Vector<ResourceCollection> resourceCollections = new Vector<ResourceCollection>();
+    private final List<ResourceCollection> resourceCollections = new Vector<>();
 
     // CheckStyle:VisibilityModifier ON
 
@@ -200,8 +199,7 @@ public class Tar extends MatchingTask {
      */
     @Deprecated
     public void setLongfile(final String mode) {
-        log("DEPRECATED - The setLongfile(String) method has been deprecated."
-            + " Use setLongfile(Tar.TarLongFileMode) instead.");
+        log("DEPRECATED - The setLongfile(String) method has been deprecated. Use setLongfile(Tar.TarLongFileMode) instead.");
         this.longFileMode = new TarLongFileMode();
         longFileMode.setValue(mode);
     }
@@ -275,8 +273,7 @@ public class Tar extends MatchingTask {
                                      getLocation());
         }
 
-        @SuppressWarnings("unchecked")
-        final Vector<TarFileSet> savedFileSets = (Vector<TarFileSet>) filesets.clone();
+        final Vector<TarFileSet> savedFileSets = new Vector<>(filesets);
         try {
             if (baseDir != null) {
                 if (!baseDir.exists()) {
@@ -290,20 +287,19 @@ public class Tar extends MatchingTask {
                 filesets.addElement(mainFileSet);
             }
 
-            if (filesets.size() == 0 && resourceCollections.size() == 0) {
-                throw new BuildException("You must supply either a basedir "
-                                         + "attribute or some nested resource"
-                                         + " collections.",
-                                         getLocation());
+            if (filesets.isEmpty() && resourceCollections.isEmpty()) {
+                throw new BuildException(
+                    "You must supply either a basedir attribute or some nested resource collections.",
+                    getLocation());
             }
 
             // check if tar is out of date with respect to each
             // fileset
             boolean upToDate = true;
-            for(final TarFileSet tfs : filesets) {
+            for (final TarFileSet tfs : filesets) {
                 upToDate &= check(tfs);
             }
-            for(final ResourceCollection rcol : resourceCollections) {
+            for (final ResourceCollection rcol : resourceCollections) {
                 upToDate &= check(rcol);
             }
 
@@ -316,19 +312,17 @@ public class Tar extends MatchingTask {
             final File parent = tarFile.getParentFile();
             if (parent != null && !parent.isDirectory()
                 && !(parent.mkdirs() || parent.isDirectory())) {
-                throw new BuildException("Failed to create missing parent"
-                                         + " directory for " + tarFile);
+                throw new BuildException(
+                    "Failed to create missing parent directory for %s",
+                    tarFile);
             }
 
             log("Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO);
 
-            TarOutputStream tOut = null;
-            try {
-                tOut = new TarOutputStream(
-                    compression.compress(
-                        new BufferedOutputStream(
-                            Files.newOutputStream(tarFile.toPath()))),
-                    encoding);
+            try (TarOutputStream tOut = new TarOutputStream(
+                compression.compress(new BufferedOutputStream(
+                    Files.newOutputStream(tarFile.toPath()))),
+                encoding)) {
                 tOut.setDebug(true);
                 if (longFileMode.isTruncateMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
@@ -352,8 +346,6 @@ public class Tar extends MatchingTask {
             } catch (final IOException ioe) {
                 final String msg = "Problem creating TAR: " + ioe.getMessage();
                 throw new BuildException(msg, ioe, getLocation());
-            } finally {
-                FileUtils.close(tOut);
             }
         } finally {
             filesets = savedFileSets;
@@ -603,8 +595,8 @@ public class Tar extends MatchingTask {
         } else if (!rc.isFilesystemOnly() && !supportsNonFileResources()) {
             throw new BuildException("only filesystem resources are supported");
         } else if (rc.isFilesystemOnly()) {
-            final Set<File> basedirs = new HashSet<File>();
-            final Map<File, List<String>> basedirToFilesMap = new HashMap<File, List<String>>();
+            final Set<File> basedirs = new HashSet<>();
+            final Map<File, List<String>> basedirToFilesMap = new HashMap<>();
             for (final Resource res : rc) {
                 final FileResource r = ResourceUtils
                     .asFileResource(res.as(FileProvider.class));
@@ -615,7 +607,7 @@ public class Tar extends MatchingTask {
                 basedirs.add(base);
                 List<String> files = basedirToFilesMap.get(base);
                 if (files == null) {
-                    files = new Vector<String>();
+                    files = new Vector<>();
                     basedirToFilesMap.put(base, files);
                 }
                 if (base == Copy.NULL_FILE_PLACEHOLDER) {
@@ -630,9 +622,7 @@ public class Tar extends MatchingTask {
                 upToDate &= check(tmpBase, files);
             }
         } else { // non-file resources
-            final Iterator<Resource> iter = rc.iterator();
-            while (upToDate && iter.hasNext()) {
-                final Resource r = iter.next();
+            for (Resource r : rc) {
                 upToDate = archiveIsUpToDate(r);
             }
         }
@@ -654,10 +644,10 @@ public class Tar extends MatchingTask {
             upToDate = false;
         }
 
-        for (int i = 0; i < files.length; ++i) {
-            if (tarFile.equals(new File(basedir, files[i]))) {
-                throw new BuildException("A tar file cannot include "
-                                         + "itself", getLocation());
+        for (String file : files) {
+            if (tarFile.equals(new File(basedir, file))) {
+                throw new BuildException("A tar file cannot include itself",
+                    getLocation());
             }
         }
         return upToDate;
@@ -695,20 +685,17 @@ public class Tar extends MatchingTask {
             afs = (ArchiveFileSet) rc;
         }
         if (afs != null && afs.size() > 1
-            && afs.getFullpath(this.getProject()).length() > 0) {
-            throw new BuildException("fullpath attribute may only "
-                                     + "be specified for "
-                                     + "filesets that specify a "
-                                     + "single file.");
+            && !afs.getFullpath(this.getProject()).isEmpty()) {
+            throw new BuildException(
+                "fullpath attribute may only be specified for filesets that specify a single file.");
         }
         final TarFileSet tfs = asTarFileSet(afs);
 
         if (isFileFileSet(rc)) {
             final FileSet fs = (FileSet) rc;
-            final String[] files = getFileNames(fs);
-            for (int i = 0; i < files.length; i++) {
-                final File f = new File(fs.getDir(getProject()), files[i]);
-                final String name = files[i].replace(File.separatorChar, '/');
+            for (String file : getFileNames(fs)) {
+                final File f = new File(fs.getDir(getProject()), file);
+                final String name = file.replace(File.separatorChar, '/');
                 tarFile(f, tOut, name, tfs);
             }
         } else if (rc.isFilesystemOnly()) {
@@ -745,7 +732,7 @@ public class Tar extends MatchingTask {
         final DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
         final String[] directories = ds.getIncludedDirectories();
         final String[] filesPerSe = ds.getIncludedFiles();
-        final String[] files = new String [directories.length + filesPerSe.length];
+        final String[] files = new String[directories.length + filesPerSe.length];
         System.arraycopy(directories, 0, files, 0, directories.length);
         System.arraycopy(filesPerSe, 0, files, directories.length,
                          filesPerSe.length);
@@ -762,7 +749,7 @@ public class Tar extends MatchingTask {
      * @since Ant 1.7
      */
     protected TarFileSet asTarFileSet(final ArchiveFileSet archiveFileSet) {
-        TarFileSet tfs = null;
+        TarFileSet tfs;
         if (archiveFileSet != null && archiveFileSet instanceof TarFileSet) {
             tfs = (TarFileSet) archiveFileSet;
         } else {
@@ -840,7 +827,6 @@ public class Tar extends MatchingTask {
             if (files == null) {
                 files = getFileNames(this);
             }
-
             return files;
         }
 
@@ -894,7 +880,7 @@ public class Tar extends MatchingTask {
             POSIX = "posix",
             OMIT = "omit";
 
-        private final String[] validModes = {
+        private static final String[] VALID_MODES = {
             WARN, FAIL, TRUNCATE, GNU, POSIX, OMIT
         };
 
@@ -909,7 +895,7 @@ public class Tar extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return validModes;
+            return VALID_MODES;
         }
 
         /**
@@ -994,7 +980,7 @@ public class Tar extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] {NONE, GZIP, BZIP2, XZ };
+            return new String[] { NONE, GZIP, BZIP2, XZ };
         }
 
         /**
@@ -1010,14 +996,14 @@ public class Tar extends MatchingTask {
             final String v = getValue();
             if (GZIP.equals(v)) {
                 return new GZIPOutputStream(ostream);
-            } else if (XZ.equals(v)) {
+            }
+            if (XZ.equals(v)) {
                 return newXZOutputStream(ostream);
-            } else {
-                if (BZIP2.equals(v)) {
-                    ostream.write('B');
-                    ostream.write('Z');
-                    return new CBZip2OutputStream(ostream);
-                }
+            }
+            if (BZIP2.equals(v)) {
+                ostream.write('B');
+                ostream.write('Z');
+                return new CBZip2OutputStream(ostream);
             }
             return ostream;
         }

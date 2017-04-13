@@ -55,7 +55,7 @@ import java.util.List;
 public class TaskConfigurationChecker {
 
     /** List of all collected error messages. */
-    private List<String> errors = new ArrayList<String>();
+    private List<String> errors = new ArrayList<>();
 
     /** Task for which the configuration should be checked. */
     private final Task task;
@@ -94,8 +94,7 @@ public class TaskConfigurationChecker {
      */
     public void checkErrors() throws BuildException {
         if (!errors.isEmpty()) {
-            StringBuffer sb = new StringBuffer();
-            sb.append("Configurationerror on <");
+            StringBuilder sb = new StringBuilder("Configurationerror on <");
             sb.append(task.getTaskName());
             sb.append(">:");
             sb.append(System.getProperty("line.separator"));

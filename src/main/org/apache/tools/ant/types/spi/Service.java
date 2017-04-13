@@ -18,13 +18,11 @@
 package org.apache.tools.ant.types.spi;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
@@ -36,7 +34,7 @@ import org.apache.tools.ant.ProjectComponent;
  * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
 public class Service extends ProjectComponent {
-    private List<Provider> providerList = new ArrayList<Provider>();
+    private List<Provider> providerList = new ArrayList<>();
     private String type;
 
     /**
@@ -83,14 +81,9 @@ public class Service extends ProjectComponent {
      * @throws IOException if there is an error.
      */
     public InputStream getAsStream() throws IOException {
-        ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
-        Writer writer = new OutputStreamWriter(arrayOut, "UTF-8");
-        for (Provider provider : providerList) {
-            writer.write(provider.getClassName());
-            writer.write("\n");
-        }
-        writer.close();
-        return new ByteArrayInputStream(arrayOut.toByteArray());
+        return new ByteArrayInputStream(
+            providerList.stream().map(Provider::getClassName)
+                .collect(Collectors.joining("\n")).getBytes("UTF-8"));
     }
 
     /**
@@ -107,7 +100,7 @@ public class Service extends ProjectComponent {
             throw new BuildException(
                 "Invalid empty type classname", getLocation());
         }
-        if (providerList.size() == 0) {
+        if (providerList.isEmpty()) {
             throw new BuildException(
                 "provider attribute or nested provider element must be set!",
                 getLocation());

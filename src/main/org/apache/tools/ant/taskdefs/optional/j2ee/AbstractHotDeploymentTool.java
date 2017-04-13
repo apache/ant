@@ -87,13 +87,14 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  base class.  Subclasses should check attributes accordingly.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
+    @Override
     public void validateAttributes() throws BuildException {
         if (task.getAction() == null) {
             throw new BuildException("The \"action\" attribute must be set");
         }
 
         if (!isActionValid()) {
-            throw new BuildException("Invalid action \"" + task.getAction() + "\" passed");
+            throw new BuildException("Invalid action \"%s\" passed", task.getAction());
         }
 
         if (classpath == null) {
@@ -102,17 +103,11 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Perform the actual deployment.
-     *  It's up to the subclasses to implement the actual behavior.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
-     */
-    public abstract void deploy() throws BuildException;
-
-    /**
      *  Sets the parent task.
      *  @param task a ServerDeploy object representing the parent task.
      *  @ant.attribute ignore="true"
      */
+    @Override
     public void setTask(ServerDeploy task) {
         this.task = task;
     }

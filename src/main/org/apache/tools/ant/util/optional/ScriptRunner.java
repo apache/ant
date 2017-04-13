@@ -17,8 +17,7 @@
  */
 package org.apache.tools.ant.util.optional;
 
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.bsf.BSFEngine;
 import org.apache.bsf.BSFException;
@@ -49,6 +48,7 @@ public class ScriptRunner extends ScriptRunnerBase {
      * Get the name of the manager prefix.
      * @return "bsf"
      */
+    @Override
     public String getManagerName() {
         return "bsf";
     }
@@ -57,10 +57,11 @@ public class ScriptRunner extends ScriptRunnerBase {
      * Check if bsf supports the language.
      * @return true if bsf can create an engine for this language.
      */
+    @Override
     public boolean supportsLanguage() {
-        Hashtable table = (Hashtable) ReflectUtil.getField(
-            new BSFManager(), "registeredEngines");
-        String engineClassName = (String) table.get(getLanguage());
+        Map<String, String> table =
+            ReflectUtil.getField(new BSFManager(), "registeredEngines");
+        String engineClassName = table.get(getLanguage());
         if (engineClassName == null) {
             getProject().log(
                 "This is no BSF engine class for language '"
@@ -87,6 +88,7 @@ public class ScriptRunner extends ScriptRunnerBase {
      * @param execName the name that will be passed to BSF for this script execution.
      * @exception BuildException if something goes wrong executing the script.
      */
+    @Override
     public void executeScript(String execName) throws BuildException {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();
@@ -113,6 +115,7 @@ public class ScriptRunner extends ScriptRunnerBase {
      * @return the result of the evaluation
      * @exception BuildException if something goes wrong executing the script.
      */
+    @Override
     public Object evaluateScript(String execName) throws BuildException {
         checkLanguage();
         ClassLoader origLoader = replaceContextLoader();
@@ -146,8 +149,7 @@ public class ScriptRunner extends ScriptRunnerBase {
     }
 
     private void declareBeans(BSFManager m) throws BSFException {
-        for (Iterator i = getBeans().keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
+        for (String key : getBeans().keySet()) {
             Object value = getBeans().get(key);
             if (value != null) {
                 m.declareBean(key, value, value.getClass());

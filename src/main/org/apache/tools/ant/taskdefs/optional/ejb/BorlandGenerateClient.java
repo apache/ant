@@ -133,7 +133,6 @@ public class BorlandGenerateClient extends Task {
         createClasspath().setRefid(r);
     }
 
-
     /**
      * Do the work.
      *
@@ -141,6 +140,7 @@ public class BorlandGenerateClient extends Task {
      *
      * @exception BuildException if something goes wrong with the build
      */
+    @Override
     public void execute() throws BuildException {
         if (ejbjarfile == null || ejbjarfile.isDirectory()) {
             throw new BuildException("invalid ejb jar file.");
@@ -162,13 +162,12 @@ public class BorlandGenerateClient extends Task {
 
         if (!(version == BorlandDeploymentTool.BES
             || version == BorlandDeploymentTool.BAS)) {
-            throw new BuildException("version " + version
-                                      + " is not supported");
+            throw new BuildException("version %d is not supported", version);
         }
 
         log("client jar file is " + clientjarfile);
 
-        if (mode.equalsIgnoreCase(FORK_MODE)) {
+        if (FORK_MODE.equalsIgnoreCase(mode)) {
             executeFork();
         } else {
             executeJava();
@@ -182,15 +181,14 @@ public class BorlandGenerateClient extends Task {
     protected void executeJava() throws BuildException {
         try {
             if (version == BorlandDeploymentTool.BES)  {
-                throw new BuildException("java mode is supported only for "
-                    + "previous version <=" + BorlandDeploymentTool.BAS);
+                throw new BuildException(
+                    "java mode is supported only for previous version <= %d",
+                    BorlandDeploymentTool.BAS);
             }
 
             log("mode : java");
 
-            Java execTask = null;
-            execTask = new Java(this);
-
+            Java execTask = new Java(this);
             execTask.setDir(new File("."));
             execTask.setClassname("com.inprise.server.commandline.EJBUtilities");
             //classpath
@@ -218,8 +216,7 @@ public class BorlandGenerateClient extends Task {
 
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: " + e.toString();
-            throw new BuildException(msg, e);
+            throw new BuildException("Exception while calling generateclient", e);
         }
     }
 
@@ -227,7 +224,7 @@ public class BorlandGenerateClient extends Task {
      * launch the generate client using system api.
      * @throws BuildException if there is an error.
      */
-    protected  void executeFork() throws BuildException {
+    protected void executeFork() throws BuildException {
         if (version == BorlandDeploymentTool.BAS) {
             executeForkV4();
         }
@@ -240,13 +237,11 @@ public class BorlandGenerateClient extends Task {
      * launch the generate client using system api.
      * @throws BuildException if there is an error.
      */
-    protected  void executeForkV4() throws BuildException {
+    protected void executeForkV4() throws BuildException {
         try {
-
             log("mode : fork " + BorlandDeploymentTool.BAS, Project.MSG_DEBUG);
 
             ExecTask execTask = new ExecTask(this);
-
             execTask.setDir(new File("."));
             execTask.setExecutable("iastool");
             execTask.createArg().setValue("generateclient");
@@ -267,24 +262,19 @@ public class BorlandGenerateClient extends Task {
             execTask.execute();
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: "
-                + e.toString();
-            throw new BuildException(msg, e);
+            throw new BuildException("Exception while calling generateclient", e);
         }
-
     }
 
     /**
      * launch the generate client using system api.
      * @throws BuildException if there is an error.
      */
-    protected  void executeForkV5() throws BuildException {
+    protected void executeForkV5() throws BuildException {
         try {
             log("mode : fork " + BorlandDeploymentTool.BES, Project.MSG_DEBUG);
             ExecTask execTask = new ExecTask(this);
-
             execTask.setDir(new File("."));
-
             execTask.setExecutable("iastool");
             if (debug) {
                 execTask.createArg().setValue("-debug");
@@ -303,11 +293,8 @@ public class BorlandGenerateClient extends Task {
             execTask.execute();
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: "
-                + e.toString();
-            throw new BuildException(msg, e);
+            throw new BuildException("Exception while calling generateclient", e);
         }
-
     }
 
 }

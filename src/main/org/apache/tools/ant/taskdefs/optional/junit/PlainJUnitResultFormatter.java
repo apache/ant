@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.Hashtable;
+import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -37,7 +38,6 @@ import org.apache.tools.ant.util.StringUtils;
  * Prints plain text output of the test to a specified Writer.
  *
  */
-
 public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredTestListener {
 
     private static final double ONE_SECOND = 1000.0;
@@ -49,7 +49,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     /**
      * Timing helper.
      */
-    private Hashtable testStarts = new Hashtable();
+    private Map<Test, Long> testStarts = new Hashtable<>();
     /**
      * Where to write the log to.
      */
@@ -65,7 +65,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     /**
      * Suppress endTest if testcase failed.
      */
-    private Hashtable failed = new Hashtable();
+    private Map<Test, Boolean> failed = new Hashtable<>();
 
     private String systemOutput = null;
     private String systemError = null;
@@ -77,16 +77,19 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setOutput(OutputStream out) {
         this.out = out;
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void setSystemError(String err) {
         systemError = err;
     }
@@ -96,15 +99,14 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param suite the test suite
      * @throws BuildException if unable to write the output
      */
+    @Override
     public void startTestSuite(JUnitTest suite) throws BuildException {
         if (out == null) {
             return; // Quick return - no output do nothing.
         }
-        StringBuffer sb = new StringBuffer("Testsuite: ");
-        sb.append(suite.getName());
-        sb.append(StringUtils.LINE_SEP);
         try {
-            out.write(sb.toString().getBytes());
+            out.write(new StringBuilder("Testsuite: ").append(suite.getName())
+                .append(StringUtils.LINE_SEP).toString().getBytes());
             out.flush();
         } catch (IOException ex) {
             throw new BuildException("Unable to write output", ex);
@@ -116,10 +118,11 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param suite the test suite
      * @throws BuildException if unable to write the output
      */
+    @Override
     public void endTestSuite(JUnitTest suite) throws BuildException {
         boolean success = false;
         try {
-            StringBuffer sb = new StringBuffer("Tests run: ");
+            StringBuilder sb = new StringBuilder("Tests run: ");
             sb.append(suite.runCount());
             sb.append(", Failures: ");
             sb.append(suite.failureCount());
@@ -185,6 +188,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * <p>A new Test is started.
      * @param t the test.
      */
+    @Override
     public void startTest(Test t) {
         testStarts.put(t, new Long(System.currentTimeMillis()));
         failed.put(t, Boolean.FALSE);
@@ -196,6 +200,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * <p>A Test is finished.
      * @param test the test.
      */
+    @Override
     public void endTest(Test test) {
         if (Boolean.TRUE.equals(failed.get(test))) {
             return;
@@ -204,7 +209,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             try {
                 wri.write("Testcase: "
                           + JUnitVersionHelper.getTestCaseName(test));
-                Long l = (Long) testStarts.get(test);
+                Long l = testStarts.get(test);
                 double seconds = 0;
                 // can be null if an error occurred in setUp
                 if (l != null) {
@@ -238,6 +243,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param test the test.
      * @param t  the assertion that failed.
      */
+    @Override
     public void addFailure(Test test, AssertionFailedError t) {
         addFailure(test, (Throwable) t);
     }
@@ -249,6 +255,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      * @param test the test.
      * @param t    the exception.
      */
+    @Override
     public void addError(Test test, Throwable t) {
         formatError("\tCaused an ERROR", test, t);
     }
@@ -274,6 +281,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
         }
     }
 
+    @Override
     public void testIgnored(Test test) {
         formatSkip(test, JUnitVersionHelper.getIgnoreMessage(test));
     }
@@ -297,6 +305,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     }
 
+    @Override
     public void testAssumptionFailure(Test test, Throwable throwable) {
         formatSkip(test, throwable.getMessage());
     }

@@ -44,6 +44,7 @@ import org.apache.tools.ant.Task;
  *             delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
  *             instead.
  */
+@Deprecated
 public class Exec extends Task {
     private String os;
     private String out;
@@ -70,6 +71,7 @@ public class Exec extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         run(command);
     }
@@ -160,9 +162,8 @@ public class Exec extends Task {
             if (err != 0) {
                 if (failOnError) {
                     throw new BuildException("Exec returned: " + err, getLocation());
-                } else {
-                    log("Result: " + err, Project.MSG_ERR);
                 }
+                log("Result: " + err, Project.MSG_ERR);
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command, ioe, getLocation());
@@ -262,6 +263,7 @@ public class Exec extends Task {
             }
         }
 
+        @Override
         public void run() {
             try {
                 try {

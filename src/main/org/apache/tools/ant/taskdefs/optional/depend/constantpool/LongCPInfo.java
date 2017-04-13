@@ -39,8 +39,9 @@ public class LongCPInfo extends ConstantCPInfo {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(new Long(cpStream.readLong()));
+        setValue(Long.valueOf(cpStream.readLong()));
     }
 
     /**
@@ -48,9 +49,9 @@ public class LongCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "Long Constant Pool Entry: " + getValue();
     }
 
 }
-

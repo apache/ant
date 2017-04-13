@@ -25,10 +25,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.IntrospectionHelper;
@@ -122,8 +127,8 @@ public class AntStructure extends Task {
             printer.printTail(out);
 
             if (out.checkError()) {
-                throw new IOException("Encountered an error writing Ant"
-                                      + " structure");
+                throw new IOException(
+                    "Encountered an error writing Ant structure");
             }
         } catch (final IOException ioe) {
             throw new BuildException("Error writing "
@@ -187,13 +192,15 @@ public class AntStructure extends Task {
 
         private final Hashtable<String, String> visited = new Hashtable<String, String>();
 
+        @Override
         public void printTail(final PrintWriter out) {
             visited.clear();
         }
 
+        @Override
         public void printHead(final PrintWriter out, final Project p, final Hashtable<String, Class<?>> tasks,
                               final Hashtable<String, Class<?>> types) {
-            printHead(out, tasks.keys(), types.keys());
+            printHead(out, tasks.keySet(), types.keySet());
         }
 
 
@@ -203,36 +210,18 @@ public class AntStructure extends Task {
          * <p>Basically this prints the XML declaration, defines some
          * entities and the project element.</p>
          */
-        private void printHead(final PrintWriter out, final Enumeration<String> tasks,
-                               final Enumeration<String> types) {
+        private void printHead(final PrintWriter out, final Set<String> tasks,
+                               final Set<String> types) {
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
             out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
-            out.print("<!ENTITY % tasks \"");
-            boolean first = true;
-            while (tasks.hasMoreElements()) {
-                final String tName = tasks.nextElement();
-                if (!first) {
-                    out.print(" | ");
-                } else {
-                    first = false;
-                }
-                out.print(tName);
-            }
-            out.println("\">");
-            out.print("<!ENTITY % types \"");
-            first = true;
-            while (types.hasMoreElements()) {
-                final String typeName = types.nextElement();
-                if (!first) {
-                    out.print(" | ");
-                } else {
-                    first = false;
-                }
-                out.print(typeName);
-            }
-            out.println("\">");
+            
+            out.println(tasks.stream().collect(
+                Collectors.joining(" | ", "<!ENTITY % tasks \"", "\">")));
 
-            out.println("");
+            out.println(types.stream().collect(
+                Collectors.joining(" | ", "<!ENTITY % types \"", "\">")));
+
+            out.println();
 
             out.print("<!ELEMENT project (target | extension-point | ");
             out.print(TASKS);
@@ -249,6 +238,7 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
+        @Override
         public void printTargetDecl(final PrintWriter out) {
             out.print("<!ELEMENT target (");
             out.print(TASKS);
@@ -282,6 +272,7 @@ public class AntStructure extends Task {
         /**
          * Print the definition for a given element.
          */
+        @Override
         public void printElementDecl(final PrintWriter out, final Project p,
                                      final String name, final Class<?> element) {
 
@@ -290,7 +281,7 @@ public class AntStructure extends Task {
             }
             visited.put(name, "");
 
-            IntrospectionHelper ih = null;
+            IntrospectionHelper ih;
             try {
                 ih = IntrospectionHelper.getHelper(p, element);
             } catch (final Throwable t) {
@@ -302,10 +293,10 @@ public class AntStructure extends Task {
                 return;
             }
 
-            StringBuffer sb = new StringBuffer("<!ELEMENT ");
-            sb.append(name).append(" ");
+            StringBuilder sb =
+                new StringBuilder("<!ELEMENT ").append(name).append(" ");
 
-            if (org.apache.tools.ant.types.Reference.class.equals(element)) {
+            if (Reference.class.equals(element)) {
                 sb.append("EMPTY>").append(LINE_SEP);
                 sb.append("<!ATTLIST ").append(name);
                 sb.append(LINE_SEP).append("          id ID #IMPLIED");
@@ -315,40 +306,35 @@ public class AntStructure extends Task {
                 return;
             }
 
-            final Vector<String> v = new Vector<String>();
+            final List<String> v = new ArrayList<>();
             if (ih.supportsCharacters()) {
-                v.addElement("#PCDATA");
+                v.add("#PCDATA");
             }
 
             if (TaskContainer.class.isAssignableFrom(element)) {
-                v.addElement(TASKS);
+                v.add(TASKS);
             }
 
             Enumeration<String> e = ih.getNestedElements();
             while (e.hasMoreElements()) {
-                v.addElement(e.nextElement());
+                v.add(e.nextElement());
             }
+
+            final Collector<CharSequence, ?, String> joinAlts =
+                Collectors.joining(" | ", "(", ")");
 
             if (v.isEmpty()) {
                 sb.append("EMPTY");
             } else {
-                sb.append("(");
-                final int count = v.size();
-                for (int i = 0; i < count; i++) {
-                    if (i != 0) {
-                        sb.append(" | ");
-                    }
-                    sb.append(v.elementAt(i));
-                }
-                sb.append(")");
-                if (count > 1 || !v.elementAt(0).equals("#PCDATA")) {
+                sb.append(v.stream().collect(joinAlts));
+                if (v.size() > 1 || !"#PCDATA".equals(v.get(0))) {
                     sb.append("*");
                 }
             }
             sb.append(">");
             out.println(sb);
 
-            sb = new StringBuffer("<!ATTLIST ");
+            sb = new StringBuilder("<!ATTLIST ");
             sb.append(name);
             sb.append(LINE_SEP).append("          id ID #IMPLIED");
 
@@ -362,29 +348,23 @@ public class AntStructure extends Task {
                 sb.append(LINE_SEP).append("          ")
                     .append(attrName).append(" ");
                 final Class<?> type = ih.getAttributeType(attrName);
-                if (type.equals(java.lang.Boolean.class)
-                    || type.equals(java.lang.Boolean.TYPE)) {
+                if (type.equals(Boolean.class)
+                    || type.equals(Boolean.TYPE)) {
                     sb.append(BOOLEAN).append(" ");
                 } else if (Reference.class.isAssignableFrom(type)) {
                     sb.append("IDREF ");
                 } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
                     try {
                         final EnumeratedAttribute ea =
-                            (EnumeratedAttribute) type.newInstance();
+                            type.asSubclass(EnumeratedAttribute.class)
+                                .newInstance();
                         final String[] values = ea.getValues();
                         if (values == null
                             || values.length == 0
                             || !areNmtokens(values)) {
                             sb.append("CDATA ");
                         } else {
-                            sb.append("(");
-                            for (int i = 0; i < values.length; i++) {
-                                if (i != 0) {
-                                    sb.append(" | ");
-                                }
-                                sb.append(values[i]);
-                            }
-                            sb.append(") ");
+                            sb.append(Stream.of(values).collect(joinAlts));
                         }
                     } catch (final InstantiationException ie) {
                         sb.append("CDATA ");
@@ -393,20 +373,13 @@ public class AntStructure extends Task {
                     }
                 } else if (Enum.class.isAssignableFrom(type)) {
                     try {
-                        final Object[] values = (Object[]) type.getMethod("values", (Class[])  null)
-                            .invoke(null, (Object[]) null);
+                        final Enum<?>[] values =
+                            (Enum<?>[]) type.getMethod("values").invoke(null);
                         if (values.length == 0) {
                             sb.append("CDATA ");
                         } else {
-                            sb.append('(');
-                            for (int i = 0; i < values.length; i++) {
-                                if (i != 0) {
-                                    sb.append(" | ");
-                                }
-                                sb.append(type.getMethod("name", (Class[]) null)
-                                          .invoke(values[i], (Object[]) null));
-                            }
-                            sb.append(") ");
+                            sb.append(Stream.of(values).map(Enum::name)
+                                .collect(joinAlts));
                         }
                     } catch (final Exception x) {
                         sb.append("CDATA ");
@@ -419,9 +392,7 @@ public class AntStructure extends Task {
             sb.append(">").append(LINE_SEP);
             out.println(sb);
 
-            final int count = v.size();
-            for (int i = 0; i < count; i++) {
-                final String nestedName = v.elementAt(i);
+            for (String nestedName : v) {
                 if (!"#PCDATA".equals(nestedName)
                     && !TASKS.equals(nestedName)
                     && !TYPES.equals(nestedName)) {

@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class FilterSetCollection {
 
-    private List<FilterSet> filterSets = new ArrayList<FilterSet>();
+    private List<FilterSet> filterSets = new ArrayList<>();
 
     /**
      * Constructor for a FilterSetCollection.
@@ -75,12 +75,7 @@ public class FilterSetCollection {
     * @return   Return true if there are filter in this set otherwise false.
     */
     public boolean hasFilters() {
-        for (FilterSet filterSet : filterSets) {
-            if (filterSet.hasFilters()) {
-                return true;
-            }
-        }
-        return false;
+        return filterSets.stream().anyMatch(FilterSet::hasFilters);
     }
 }
 

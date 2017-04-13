@@ -55,6 +55,7 @@ public class LogOutputResource extends Resource implements Appendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public OutputStream getAppendOutputStream() throws IOException {
         return outputStream;
     }
@@ -62,6 +63,7 @@ public class LogOutputResource extends Resource implements Appendable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         return outputStream;
     }

@@ -96,69 +96,59 @@ public final class CompilerAdapterFactory {
      * @since Ant 1.8.0
      */
     public static CompilerAdapter getCompiler(String compilerType, Task task,
-                                              Path classpath)
-        throws BuildException {
-            if (compilerType.equalsIgnoreCase("jikes")) {
-                return new Jikes();
-            }
-            if (compilerType.equalsIgnoreCase("extjavac")) {
-                return new JavacExternal();
-            }
-            if (compilerType.equalsIgnoreCase("classic")
-                || compilerType.equalsIgnoreCase("javac1.1")
-                || compilerType.equalsIgnoreCase("javac1.2")) {
-                task.log("This version of java does "
-                                         + "not support the classic "
-                                         + "compiler; upgrading to modern",
-                                         Project.MSG_WARN);
-                compilerType = "modern";
-            }
-            //on java<=1.3 the modern falls back to classic if it is not found
-            //but on java>=1.4 we just bail out early
-            if (compilerType.equalsIgnoreCase("modern")
-                || compilerType.equalsIgnoreCase("javac1.3")
-                || compilerType.equalsIgnoreCase("javac1.4")
-                || compilerType.equalsIgnoreCase("javac1.5")
-                || compilerType.equalsIgnoreCase("javac1.6")
-                || compilerType.equalsIgnoreCase("javac1.7")
-                || compilerType.equalsIgnoreCase("javac1.8")
-                || compilerType.equalsIgnoreCase("javac1.9")
-                || compilerType.equalsIgnoreCase("javac9")) {
-                // does the modern compiler exist?
-                if (doesModernCompilerExist()) {
-                    return new Javac13();
-                } else {
-                    throw new BuildException("Unable to find a javac "
-                                             + "compiler;\n"
-                                             + MODERN_COMPILER
-                                             + " is not on the "
-                                             + "classpath.\n"
-                                             + "Perhaps JAVA_HOME does not"
-                                             + " point to the JDK.\n"
-                            + "It is currently set to \""
-                            + JavaEnvUtils.getJavaHome()
-                            + "\"");
-                }
-            }
-
-            if (compilerType.equalsIgnoreCase("jvc")
-                || compilerType.equalsIgnoreCase("microsoft")) {
-                return new Jvc();
-            }
-            if (compilerType.equalsIgnoreCase("kjc")) {
-                return new Kjc();
-            }
-            if (compilerType.equalsIgnoreCase("gcj")) {
-                return new Gcj();
-            }
-            if (compilerType.equalsIgnoreCase("sj")
-                || compilerType.equalsIgnoreCase("symantec")) {
-                return new Sj();
-            }
-            return resolveClassName(compilerType,
-                                    // Memory-Leak in line below
-                                task.getProject().createClassLoader(classpath));
+        Path classpath) throws BuildException {
+        if ("jikes".equalsIgnoreCase(compilerType)) {
+            return new Jikes();
         }
+        if ("extjavac".equalsIgnoreCase(compilerType)) {
+            return new JavacExternal();
+        }
+        if ("classic".equalsIgnoreCase(compilerType)
+            || "javac1.1".equalsIgnoreCase(compilerType)
+            || "javac1.2".equalsIgnoreCase(compilerType)) {
+            task.log(
+                "This version of java does not support the classic compiler; upgrading to modern",
+                Project.MSG_WARN);
+            compilerType = "modern";
+        }
+        //on java<=1.3 the modern falls back to classic if it is not found
+        //but on java>=1.4 we just bail out early
+        if ("modern".equalsIgnoreCase(compilerType)
+            || "javac1.3".equalsIgnoreCase(compilerType)
+            || "javac1.4".equalsIgnoreCase(compilerType)
+            || "javac1.5".equalsIgnoreCase(compilerType)
+            || "javac1.6".equalsIgnoreCase(compilerType)
+            || "javac1.7".equalsIgnoreCase(compilerType)
+            || "javac1.8".equalsIgnoreCase(compilerType)
+            || "javac1.9".equalsIgnoreCase(compilerType)
+            || "javac9".equalsIgnoreCase(compilerType)) {
+            // does the modern compiler exist?
+            if (doesModernCompilerExist()) {
+                return new Javac13();
+            }
+            throw new BuildException(
+                "Unable to find a javac compiler;\n%s is not on the classpath.\nPerhaps JAVA_HOME does not point to the JDK.\nIt is currently set to \"%s\"",
+                MODERN_COMPILER, JavaEnvUtils.getJavaHome());
+        }
+
+        if ("jvc".equalsIgnoreCase(compilerType)
+            || "microsoft".equalsIgnoreCase(compilerType)) {
+            return new Jvc();
+        }
+        if ("kjc".equalsIgnoreCase(compilerType)) {
+            return new Kjc();
+        }
+        if ("gcj".equalsIgnoreCase(compilerType)) {
+            return new Gcj();
+        }
+        if ("sj".equalsIgnoreCase(compilerType)
+            || "symantec".equalsIgnoreCase(compilerType)) {
+            return new Sj();
+        }
+        return resolveClassName(compilerType,
+            // Memory-Leak in line below
+            task.getProject().createClassLoader(classpath));
+    }
 
     /**
      * query for the Modern compiler existing
@@ -194,7 +184,7 @@ public final class CompilerAdapterFactory {
     private static CompilerAdapter resolveClassName(String className,
                                                     ClassLoader loader)
         throws BuildException {
-        return (CompilerAdapter) ClasspathUtils.newInstance(className,
+        return ClasspathUtils.newInstance(className,
                 loader != null ? loader :
                 CompilerAdapterFactory.class.getClassLoader(),
                 CompilerAdapter.class);

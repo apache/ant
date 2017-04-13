@@ -32,6 +32,11 @@ import org.apache.tools.ant.types.Parameter;
  */
 public class DepthSelector extends BaseExtendSelector {
 
+    /** Used for parameterized custom selector */
+    public static final String MIN_KEY = "min";
+    /** Used for parameterized custom selector */
+    public static final String MAX_KEY = "max";
+
     // CheckStyle:VisibilityModifier OFF - bc
 
     /** min attribute */
@@ -41,26 +46,13 @@ public class DepthSelector extends BaseExtendSelector {
 
     // CheckStyle:VisibilityModifier ON
 
-    /** Used for parameterized custom selector */
-    public static final String MIN_KEY = "min";
-    /** Used for parameterized custom selector */
-    public static final String MAX_KEY = "max";
-
-    /**
-     * Creates a new <code>DepthSelector</code> instance.
-     *
-     */
-    public DepthSelector() {
-    }
-
     /**
      * @return a string describing this object
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder("{depthselector min: ");
-        buf.append(min);
-        buf.append(" max: ");
-        buf.append(max);
+        StringBuilder buf = new StringBuilder("{depthselector");
+        buf.append(" min: ").append(min);
+        buf.append(" max: ").append(max);
         buf.append("}");
         return buf.toString();
     }
@@ -89,7 +81,7 @@ public class DepthSelector extends BaseExtendSelector {
      *
      * @param parameters the complete set of parameters for this selector
      */
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -121,8 +113,7 @@ public class DepthSelector extends BaseExtendSelector {
      */
     public void verifySettings() {
         if (min < 0 && max < 0) {
-            setError("You must set at least one of the min or the "
-                    + "max levels.");
+            setError("You must set at least one of the min or the max levels.");
         }
         if (max < min && max > -1) {
             setError("The maximum depth is lower than the minimum.");
@@ -150,19 +141,17 @@ public class DepthSelector extends BaseExtendSelector {
         // If you felt daring, you could cache the basedir absolute path
         String absBase = basedir.getAbsolutePath();
         String absFile = file.getAbsolutePath();
-        StringTokenizer tokBase = new StringTokenizer(absBase,
-                File.separator);
-        StringTokenizer tokFile = new StringTokenizer(absFile,
-                File.separator);
+        StringTokenizer tokBase = new StringTokenizer(absBase, File.separator);
+        StringTokenizer tokFile = new StringTokenizer(absFile, File.separator);
         while (tokFile.hasMoreTokens()) {
             String filetoken = tokFile.nextToken();
             if (tokBase.hasMoreTokens()) {
                 String basetoken = tokBase.nextToken();
                 // Sanity check. Ditch it if you want faster performance
                 if (!basetoken.equals(filetoken)) {
-                    throw new BuildException("File " + filename
-                            + " does not appear within " + absBase
-                            + "directory");
+                    throw new BuildException(
+                        "File %s does not appear within %s directory", filename,
+                        absBase);
                 }
             } else {
                 depth += 1;
@@ -172,14 +161,12 @@ public class DepthSelector extends BaseExtendSelector {
             }
         }
         if (tokBase.hasMoreTokens()) {
-            throw new BuildException("File " + filename
-                + " is outside of " + absBase + "directory tree");
+            throw new BuildException("File %s is outside of %s directory tree",
+                filename, absBase);
         }
         if (min > -1 && depth < min) {
             return false;
         }
         return true;
     }
-
 }
-

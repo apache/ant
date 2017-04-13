@@ -132,18 +132,17 @@ public class Name implements ResourceSelector {
     private boolean matches(String name) {
         if (pattern != null) {
             return SelectorUtils.match(modify(pattern), modify(name), cs);
-        } else {
-            if (reg == null) {
-                reg = new RegularExpression();
-                reg.setPattern(regex);
-                expression = reg.getRegexp(project);
-            }
-            return expression.matches(modify(name), RegexpUtil.asOptions(cs));
+        } 
+        if (reg == null) {
+            reg = new RegularExpression();
+            reg.setPattern(regex);
+            expression = reg.getRegexp(project);
         }
+        return expression.matches(modify(name), RegexpUtil.asOptions(cs));
     }
 
     private String modify(String s) {
-        if (s == null || !handleDirSep || s.indexOf("\\") == -1) {
+        if (s == null || !handleDirSep || s.indexOf('\\') < 0) {
             return s;
         }
         return s.replace('\\', '/');

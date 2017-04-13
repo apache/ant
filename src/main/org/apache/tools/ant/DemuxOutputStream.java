@@ -64,7 +64,7 @@ public class DemuxOutputStream extends OutputStream {
     private static final int LF = 0x0a;
 
     /** Mapping from thread to buffer (Thread to BufferInfo). */
-    private WeakHashMap<Thread, BufferInfo> buffers = new WeakHashMap<Thread, BufferInfo>();
+    private WeakHashMap<Thread, BufferInfo> buffers = new WeakHashMap<>();
 
     /**
      * The project to send output to.
@@ -98,14 +98,12 @@ public class DemuxOutputStream extends OutputStream {
      */
     private BufferInfo getBufferInfo() {
         Thread current = Thread.currentThread();
-        BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
-        if (bufferInfo == null) {
-            bufferInfo = new BufferInfo();
+        return buffers.computeIfAbsent(current, x -> {
+            BufferInfo bufferInfo = new BufferInfo();
             bufferInfo.buffer = new ByteArrayOutputStream(INITIAL_SIZE);
             bufferInfo.crSeen = false;
-            buffers.put(current, bufferInfo);
-        }
-        return bufferInfo;
+            return bufferInfo;
+        });
     }
 
     /**
@@ -113,7 +111,7 @@ public class DemuxOutputStream extends OutputStream {
      */
     private void resetBufferInfo() {
         Thread current = Thread.currentThread();
-        BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
+        BufferInfo bufferInfo = buffers.get(current);
         FileUtils.close(bufferInfo.buffer);
         bufferInfo.buffer = new ByteArrayOutputStream();
         bufferInfo.crSeen = false;
@@ -134,6 +132,7 @@ public class DemuxOutputStream extends OutputStream {
      * @param cc data to log (byte).
      * @exception IOException if the data cannot be written to the stream
      */
+    @Override
     public void write(int cc) throws IOException {
         final byte c = (byte) cc;
 
@@ -192,6 +191,7 @@ public class DemuxOutputStream extends OutputStream {
      *
      * @see #flush
      */
+    @Override
     public void close() throws IOException {
         flush();
         removeBuffer();
@@ -203,6 +203,7 @@ public class DemuxOutputStream extends OutputStream {
      *
      * @exception IOException if there is a problem flushing the stream.
      */
+    @Override
     public void flush() throws IOException {
         BufferInfo bufferInfo = getBufferInfo();
         if (bufferInfo.buffer.size() > 0) {
@@ -219,6 +220,7 @@ public class DemuxOutputStream extends OutputStream {
      *
      * @throws IOException if the data cannot be written into the stream.
      */
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         // find the line breaks and pass other chars through in blocks
         int offset = off;

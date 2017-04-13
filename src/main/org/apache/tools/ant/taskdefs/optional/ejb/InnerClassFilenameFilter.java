@@ -44,11 +44,9 @@ public class InnerClassFilenameFilter implements FilenameFilter {
      * @param filename the filename to filter on.
      * @return true if the filename is an inner class of the base class.
      */
+    @Override
     public boolean accept(File dir, String filename) {
-        if ((filename.lastIndexOf(".") != filename.lastIndexOf(".class"))
-            || (filename.indexOf(baseClassName + "$") != 0)) {
-            return false;
-        }
-        return true;
+        return filename.lastIndexOf('.') == filename.lastIndexOf(".class")
+            && filename.indexOf(baseClassName + "$") == 0;
     }
 }

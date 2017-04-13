@@ -86,13 +86,14 @@ public final class DOMUtil {
     }
 
     /** custom implementation of a nodelist */
-    public static class NodeListImpl extends Vector implements NodeList {
+    public static class NodeListImpl extends Vector<Node> implements NodeList {
         private static final long serialVersionUID = 3175749150080946423L;
 
         /**
          * Get the number of nodes in the list.
          * @return the length of the list.
          */
+        @Override
         public int getLength() {
             return size();
         }
@@ -101,9 +102,10 @@ public final class DOMUtil {
          * @param i the index of the node to get.
          * @return the node if the index is in bounds, null otherwise.
          */
+        @Override
         public Node item(int i) {
             try {
-                return (Node) elementAt(i);
+                return elementAt(i);
             } catch (ArrayIndexOutOfBoundsException e) {
                 return null; // conforming to NodeList interface
             }
@@ -164,9 +166,9 @@ public final class DOMUtil {
      * @return  the cloned node that is appended to <tt>parent</tt>
      */
     public static Node importNode(Node parent, Node child) {
-        Node copy = null;
         final Document doc = parent.getOwnerDocument();
 
+        Node copy;
         switch (child.getNodeType()) {
         case Node.CDATA_SECTION_NODE:
             copy = doc.createCDATASection(((CDATASection) child).getData());

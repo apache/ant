@@ -53,6 +53,7 @@ public class BZip2Resource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
+    @Override
     protected InputStream wrapStream(InputStream in) throws IOException {
         for (int i = 0; i < MAGIC.length; i++) {
             if (in.read() != MAGIC[i]) {
@@ -68,6 +69,7 @@ public class BZip2Resource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
+    @Override
     protected OutputStream wrapStream(OutputStream out) throws IOException {
         for (int i = 0; i < MAGIC.length; i++) {
             out.write(MAGIC[i]);
@@ -79,6 +81,7 @@ public class BZip2Resource extends CompressedResource {
      * Get the name of the compression method.
      * @return the string "Bzip2".
      */
+    @Override
     protected String getCompressionName() {
         return "Bzip2";
     }

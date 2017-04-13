@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -228,7 +227,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
             } else if (methods.length == 1) {
                 methodsList = methods[0];
             } else {
-                StringBuffer buf = new StringBuffer(methods.length * 16);
+                StringBuilder buf = new StringBuilder(methods.length * 16);
                 buf.append(methods[0]);
                 for (int i = 1; i < methods.length; i++) {
                     buf.append(',').append(methods[i]);
@@ -482,12 +481,9 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param p the properties.
      *          This is a copy of the projects ant properties.
      */
-    public void setProperties(Hashtable p) {
+    public void setProperties(Hashtable<?,?> p) {
         props = new Properties();
-        for (Enumeration e = p.keys(); e.hasMoreElements();) {
-            Object key = e.nextElement();
-            props.put(key, p.get(key));
-        }
+        p.forEach(props::put);
     }
 
     /**
@@ -516,7 +512,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
     /**
      * Convenient method to add formatters to a vector
      */
-    void addFormattersTo(Vector v) {
+    void addFormattersTo(Vector<? super FormatterElement> v) {
         final int count = formatters.size();
         for (int i = 0; i < count; i++) {
             v.addElement(formatters.elementAt(i));
@@ -527,12 +523,13 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @since Ant 1.5
      * @return a clone of this test.
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public Object clone() {
+    public JUnitTest clone() {
         try {
             JUnitTest t = (JUnitTest) super.clone();
             t.props = props == null ? null : (Properties) props.clone();
-            t.formatters = (Vector) formatters.clone();
+            t.formatters = (Vector<FormatterElement>) formatters.clone();
             return t;
         } catch (CloneNotSupportedException e) {
             // plain impossible

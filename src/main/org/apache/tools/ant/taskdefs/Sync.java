@@ -19,12 +19,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -105,7 +105,7 @@ public class Sync extends Task {
         File toDir = myCopy.getToDir();
 
         // The complete list of files to copy
-        Set allFiles = myCopy.nonOrphans;
+        Set<String> allFiles = myCopy.nonOrphans;
 
         // If the destination directory didn't already exist,
         // or was empty, then no previous file removal is necessary!
@@ -124,7 +124,7 @@ public class Sync extends Task {
         // will hold the directories matched by SyncTarget in reversed
         // lexicographic order (order is important, that's why we use
         // a LinkedHashSet
-        Set preservedDirectories = new LinkedHashSet();
+        Set<File> preservedDirectories = new LinkedHashSet<>();
 
         // Get rid of all files not listed in the source filesets.
         log("PASS#2: Removing orphan files from " + toDir, Project.MSG_DEBUG);
@@ -186,15 +186,15 @@ public class Sync extends Task {
      * Position 0 of the array is the number of orphaned directories.
      * Position 1 of the array is the number or orphaned files.
      */
-    private int[] removeOrphanFiles(Set nonOrphans, File toDir,
-                                    Set preservedDirectories) {
-        int[] removedCount = new int[] {0, 0};
+    private int[] removeOrphanFiles(Set<String> nonOrphans, File toDir,
+                                    Set<File> preservedDirectories) {
+        int[] removedCount = new int[] { 0, 0 };
         String[] excls =
-            (String[]) nonOrphans.toArray(new String[nonOrphans.size() + 1]);
+            nonOrphans.toArray(new String[nonOrphans.size() + 1]);
         // want to keep toDir itself
         excls[nonOrphans.size()] = "";
 
-        DirectoryScanner ds = null;
+        DirectoryScanner ds;
         if (syncTarget != null) {
             FileSet fs = syncTarget.toFileSet(false);
             fs.setDir(toDir);
@@ -213,8 +213,8 @@ public class Sync extends Task {
             FileSelector[] s = syncTarget.getSelectors(getProject());
             if (s.length > 0) {
                 NoneSelector ns = new NoneSelector();
-                for (int i = 0; i < s.length; i++) {
-                    ns.appendSelector(s[i]);
+                for (FileSelector element : s) {
+                    ns.appendSelector(element);
                 }
                 fs.appendSelector(ns);
             }
@@ -227,8 +227,8 @@ public class Sync extends Task {
 
         ds.scan();
         String[] files = ds.getIncludedFiles();
-        for (int i = 0; i < files.length; i++) {
-            File f = new File(toDir, files[i]);
+        for (String file : files) {
+            File f = new File(toDir, file);
             log("Removing orphan file: " + f, Project.MSG_DEBUG);
             f.delete();
             ++removedCount[1];
@@ -282,7 +282,7 @@ public class Sync extends Task {
      * @return the number of empty directories actually removed.
      */
     private int removeEmptyDirectories(File dir, boolean removeIfEmpty,
-                                       Set preservedEmptyDirectories) {
+                                       Set<File> preservedEmptyDirectories) {
         int removedCount = 0;
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
@@ -323,11 +323,9 @@ public class Sync extends Task {
      *
      * @since Ant 1.8.0
      */
-    private int removeEmptyDirectories(Set preservedEmptyDirectories) {
+    private int removeEmptyDirectories(Set<File> preservedEmptyDirectories) {
         int removedCount = 0;
-        for (Iterator iter = preservedEmptyDirectories.iterator();
-             iter.hasNext();) {
-            File f = (File) iter.next();
+        for (File f : preservedEmptyDirectories) {
             String[] s = f.list();
             if (s == null || s.length == 0) {
                 log("Removing empty directory: " + f, Project.MSG_DEBUG);
@@ -434,8 +432,8 @@ public class Sync extends Task {
      */
     public void addPreserveInTarget(SyncTarget s) {
         if (syncTarget != null) {
-            throw new BuildException("you must not specify multiple "
-                                     + "preserveintarget elements.");
+            throw new BuildException(
+                "you must not specify multiple preserveintarget elements.");
         }
         syncTarget = s;
     }
@@ -457,11 +455,7 @@ public class Sync extends Task {
 
         // List of files that must be copied, irrelevant from the
         // fact that they are newer or not than the destination.
-        private Set nonOrphans = new HashSet();
-
-        /** Constructor for MyCopy. */
-        public MyCopy() {
-        }
+        private Set<String> nonOrphans = new HashSet<>();
 
         /**
          * @see Copy#scan(File, File, String[], String[])
@@ -474,12 +468,8 @@ public class Sync extends Task {
 
             super.scan(fromDir, toDir, files, dirs);
 
-            for (int i = 0; i < files.length; ++i) {
-                nonOrphans.add(files[i]);
-            }
-            for (int i = 0; i < dirs.length; ++i) {
-                nonOrphans.add(dirs[i]);
-            }
+            Collections.addAll(nonOrphans, files);
+            Collections.addAll(nonOrphans, dirs);
         }
 
         /**
@@ -487,12 +477,11 @@ public class Sync extends Task {
          */
         /** {@inheritDoc} */
         @Override
-        protected Map scan(Resource[] resources, File toDir) {
+        protected Map<Resource, String[]> scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
 
-            for (int i = 0; i < resources.length; i++) {
-                nonOrphans.add(resources[i].getName());
-            }
+            Stream.of(resources).map(Resource::getName).forEach(nonOrphans::add);
+
             return super.scan(resources, toDir);
         }
 
@@ -539,6 +528,7 @@ public class Sync extends Task {
          * This just changes the default value of "defaultexcludes" from
          * true to false.
          */
+        // TODO does it? ^
         public SyncTarget() {
             super();
         }
@@ -551,8 +541,8 @@ public class Sync extends Task {
          */
         @Override
         public void setDir(File dir) throws BuildException {
-            throw new BuildException("preserveintarget doesn't support the dir "
-                                     + "attribute");
+            throw new BuildException(
+                "preserveintarget doesn't support the dir attribute");
         }
 
         /**
@@ -586,8 +576,8 @@ public class Sync extends Task {
                 PatternSet ps = mergePatterns(getProject());
                 fs.appendIncludes(ps.getIncludePatterns(getProject()));
                 fs.appendExcludes(ps.getExcludePatterns(getProject()));
-                for (Enumeration e = selectorElements(); e.hasMoreElements();) {
-                    fs.appendSelector((FileSelector) e.nextElement());
+                for (FileSelector sel : getSelectors(getProject())) {
+                    fs.appendSelector(sel);
                 }
                 fs.setDefaultexcludes(getDefaultexcludes());
             }

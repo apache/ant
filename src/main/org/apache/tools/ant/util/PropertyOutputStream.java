@@ -19,13 +19,15 @@
 package org.apache.tools.ant.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.resources.PropertyResource;
 
 /**
- * Exception thrown when an attempt is made to get an OutputStream
- * from an immutable Resource.
+ * {@link OutputStream} that writes an Ant property.
  * @since Ant 1.7
+ * @see PropertyResource#getOutputStream()
  */
 public class PropertyOutputStream extends ByteArrayOutputStream {
     private Project project;
@@ -58,6 +60,7 @@ public class PropertyOutputStream extends ByteArrayOutputStream {
     /**
      * Close the PropertyOutputStream, storing the property.
      */
+    @Override
     public void close() {
         if (project != null && property != null) {
             String s = new String(toByteArray());

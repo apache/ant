@@ -18,6 +18,8 @@
 package org.apache.tools.ant.util;
 
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Utility class to contain version numbers in "Dewey Decimal"
@@ -195,16 +197,8 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
      * @return the string representation of DeweyDecimal.
      */
     @Override public String toString() {
-        final StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < components.length; i++) {
-            if (i != 0) {
-                sb.append('.');
-            }
-            sb.append(components[ i ]);
-        }
-
-        return sb.toString();
+        return IntStream.of(components).mapToObj(Integer::toString)
+            .collect(Collectors.joining("."));
     }
 
     /**
@@ -214,6 +208,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
      * @return result
      * @see java.lang.Comparable#compareTo(Object)
      */
+    @Override
     public int compareTo(DeweyDecimal other) {
         final int max = Math.max(other.components.length, components.length);
         for (int i = 0; i < max; i++) {

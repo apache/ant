@@ -22,15 +22,16 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -50,8 +51,8 @@ public class PropertySet extends DataType implements ResourceCollection {
     private boolean dynamic = true;
     private boolean negate = false;
     private Set<String> cachedNames;
-    private List<PropertyRef> ptyRefs = new ArrayList<PropertyRef>();
-    private List<PropertySet> setRefs = new ArrayList<PropertySet>();
+    private List<PropertyRef> ptyRefs = new ArrayList<>();
+    private List<PropertySet> setRefs = new ArrayList<>();
     private Mapper mapper;
 
     /**
@@ -118,6 +119,7 @@ public class PropertySet extends DataType implements ResourceCollection {
          * A debug toString().
          * @return a string version of this object.
          */
+        @Override
         public String toString() {
             return "name=" + name + ", regex=" + regex + ", prefix=" + prefix
                 + ", builtin=" + builtin;
@@ -273,12 +275,12 @@ public class PropertySet extends DataType implements ResourceCollection {
     }
 
     /**
-     * Convert the system properties to a hashtable.
+     * Convert the system properties to a Map.
      * Use propertynames to get the list of properties (including
      * default ones).
      */
-    private Hashtable<String, Object> getAllSystemProperties() {
-        Hashtable<String, Object>  ret = new Hashtable<String, Object>();
+    private Map<String, Object> getAllSystemProperties() {
+        Map<String, Object>  ret = new HashMap<>();
         for (Enumeration<?> e = System.getProperties().propertyNames();
              e.hasMoreElements();) {
             String name = (String) e.nextElement();
@@ -312,7 +314,7 @@ public class PropertySet extends DataType implements ResourceCollection {
 
         final Map<String, Object> effectiveProperties = getEffectiveProperties();
         final Set<String> propertyNames = getPropertyNames(effectiveProperties);
-        final Map<String, Object> result = new HashMap<String, Object>();
+        final Map<String, Object> result = new HashMap<>();
 
         //iterate through the names, get the matching values
         for (String name : propertyNames) {
@@ -349,7 +351,7 @@ public class PropertySet extends DataType implements ResourceCollection {
     private Set<String> getPropertyNames(Map<String, Object> props) {
         Set<String> names;
         if (getDynamic() || cachedNames == null) {
-            names = new HashSet<String>();
+            names = new HashSet<>();
             addPropertyNames(names, props);
             // Add this PropertySet's nested PropertySets' property names.
             for (PropertySet set : setRefs) {
@@ -357,7 +359,7 @@ public class PropertySet extends DataType implements ResourceCollection {
             }
             if (negate) {
                 //make a copy...
-                HashSet<String> complement = new HashSet<String>(props.keySet());
+                HashSet<String> complement = new HashSet<>(props.keySet());
                 complement.removeAll(names);
                 names = complement;
             }
@@ -427,7 +429,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return the referenced PropertySet.
      */
     protected PropertySet getRef() {
-        return (PropertySet) getCheckedRef(PropertySet.class, "propertyset");
+        return getCheckedRef(PropertySet.class, "propertyset");
     }
 
     /**
@@ -437,6 +439,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @throws BuildException if another attribute was set, since
      *         refid and all other attributes are mutually exclusive.
      */
+    @Override
     public final void setRefid(Reference r) {
         if (!noAttributeSet) {
             throw tooManyAttributes();
@@ -475,6 +478,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         static final String SYSTEM = "system";
         static final String COMMANDLINE = "commandline";
         /** {@inheritDoc}. */
+        @Override
         public String[] getValues() {
             return new String[] {ALL, SYSTEM, COMMANDLINE};
         }
@@ -487,13 +491,14 @@ public class PropertySet extends DataType implements ResourceCollection {
      * The output order is sorted according to the keys' <i>natural order</i>.
      * @return a string rep of this object.
      */
+    @Override
     public String toString() {
         if (isReference()) {
             return getRef().toString();
         }
         dieOnCircularReference();
         StringBuilder b = new StringBuilder();
-        TreeMap<String, Object> sorted = new TreeMap<String, Object>(getPropertyMap());
+        TreeMap<String, Object> sorted = new TreeMap<>(getPropertyMap());
         for (Entry<String, Object> e : sorted.entrySet()) {
             if (b.length() != 0) {
                 b.append(", ");
@@ -510,35 +515,27 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return an Iterator of Resources.
      * @since Ant 1.7
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return getRef().iterator();
         }
         dieOnCircularReference();
-        final Set<String> names = getPropertyNames(getEffectiveProperties());
-
-        Mapper myMapper = getMapper();
-        final FileNameMapper m = myMapper == null ? null : myMapper.getImplementation();
-        final Iterator<String> iter = names.iterator();
-
-        return new Iterator<Resource>() {
-            public boolean hasNext() {
-                return iter.hasNext();
-            }
-            public Resource next() {
-                PropertyResource p = new PropertyResource(getProject(), iter.next());
-                return m == null ? (Resource) p : new MappedResource(p, m);
-            }
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        Stream<Resource> result = getPropertyNames(getEffectiveProperties())
+            .stream().map(name -> new PropertyResource(getProject(), name));
+        Optional<FileNameMapper> m =
+            Optional.ofNullable(getMapper()).map(Mapper::getImplementation);
+        if (m.isPresent()) {
+            result = result.map(p -> new MappedResource(p, m.get()));
+        }
+        return result.iterator();
     }
 
     /**
      * Fulfill the ResourceCollection contract.
      * @return the size of this ResourceCollection.
      */
+    @Override
     public int size() {
         return isReference() ? getRef().size() : getProperties().size();
     }
@@ -547,6 +544,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * Fulfill the ResourceCollection contract.
      * @return whether this is a filesystem-only resource collection.
      */
+    @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
             return getRef().isFilesystemOnly();
@@ -555,6 +553,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         return false;
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {

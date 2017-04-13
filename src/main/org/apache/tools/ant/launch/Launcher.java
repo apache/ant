@@ -25,18 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-
-
-
 /**
  * This is a launcher for Ant.
  *
  * @since Ant 1.6
  */
 public class Launcher {
-
-    private Launcher() {
-    }
 
     /**
      * The Ant Home (installation) Directory property.
@@ -61,11 +55,6 @@ public class Launcher {
      * {@value}
      */
     public static final String ANT_PRIVATELIB = "lib";
-
-    /**
-     * launch diagnostics flag; for debugging trouble at launch time.
-     */
-    public boolean launchDiag = false;
 
     /**
      * The location of a per-user library directory.
@@ -127,6 +116,13 @@ public class Launcher {
         }
     }
 
+    /**
+     * launch diagnostics flag; for debugging trouble at launch time.
+     */
+    public boolean launchDiag = false;
+
+    private Launcher() {
+    }
 
     /**
      * Add a CLASSPATH or -lib to lib path urls.
@@ -156,7 +152,7 @@ public class Launcher {
                 }
             }
 
-            final URL url = Locator.fileToURL(element);
+            final URL url = new URL(element.toURI().toASCIIString());
             if (launchDiag) {
                 System.out.println("adding library URL: " + url);
             }
@@ -193,44 +189,45 @@ public class Launcher {
         }
 
         if (!antHome.exists()) {
-            throw new LaunchException("Ant home is set incorrectly or "
-                + "ant could not be located (estimated value="+antHome.getAbsolutePath()+")");
+            throw new LaunchException(
+                "Ant home is set incorrectly or ant could not be located (estimated value="
+                    + antHome.getAbsolutePath() + ")");
         }
 
-        final List<String> libPaths = new ArrayList<String>();
+        final List<String> libPaths = new ArrayList<>();
         String cpString = null;
-        final List<String> argList = new ArrayList<String>();
+        final List<String> argList = new ArrayList<>();
         String[] newArgs;
         boolean  noUserLib = false;
         boolean  noClassPath = false;
 
         for (int i = 0; i < args.length; ++i) {
-            if (args[i].equals("-lib")) {
+            if ("-lib".equals(args[i])) {
                 if (i == args.length - 1) {
-                    throw new LaunchException("The -lib argument must "
-                        + "be followed by a library location");
+                    throw new LaunchException(
+                        "The -lib argument must be followed by a library location");
                 }
                 libPaths.add(args[++i]);
-            } else if (args[i].equals("-cp")) {
+            } else if ("-cp".equals(args[i])) {
                 if (i == args.length - 1) {
-                    throw new LaunchException("The -cp argument must "
-                        + "be followed by a classpath expression");
+                    throw new LaunchException(
+                        "The -cp argument must be followed by a classpath expression");
                 }
                 if (cpString != null) {
-                    throw new LaunchException("The -cp argument must "
-                        + "not be repeated");
+                    throw new LaunchException(
+                        "The -cp argument must not be repeated");
                 }
                 cpString = args[++i];
-            } else if (args[i].equals("--nouserlib") || args[i].equals("-nouserlib")) {
+            } else if ("--nouserlib".equals(args[i]) || "-nouserlib".equals(args[i])) {
                 noUserLib = true;
-            } else if (args[i].equals("--launchdiag")) {
+            } else if ("--launchdiag".equals(args[i])) {
                 launchDiag = true;
-            } else if (args[i].equals("--noclasspath") || args[i].equals("-noclasspath")) {
+            } else if ("--noclasspath".equals(args[i]) || "-noclasspath".equals(args[i])) {
                 noClassPath = true;
-            } else if (args[i].equals("-main")) {
+            } else if ("-main".equals(args[i])) {
                 if (i == args.length - 1) {
-                    throw new LaunchException("The -main argument must "
-                            + "be followed by a library location");
+                    throw new LaunchException(
+                        "The -main argument must be followed by a library location");
                 }
                 mainClassname = args[++i];
             } else {
@@ -262,8 +259,8 @@ public class Launcher {
             libURLs, userURLs, systemURLs, toolsJAR);
 
         // now update the class.path property
-        final StringBuffer baseClassPath
-            = new StringBuffer(System.getProperty(JAVA_CLASS_PATH));
+        final StringBuilder baseClassPath
+            = new StringBuilder(System.getProperty(JAVA_CLASS_PATH));
         if (baseClassPath.charAt(baseClassPath.length() - 1)
                 == File.pathSeparatorChar) {
             baseClassPath.setLength(baseClassPath.length() - 1);
@@ -278,12 +275,12 @@ public class Launcher {
 
         final URLClassLoader loader = new URLClassLoader(jars, Launcher.class.getClassLoader());
         Thread.currentThread().setContextClassLoader(loader);
-        Class<?> mainClass = null;
+        Class<? extends AntMain> mainClass = null;
         int exitCode = 0;
         Throwable thrown=null;
         try {
-            mainClass = loader.loadClass(mainClassname);
-            final AntMain main = (AntMain) mainClass.newInstance();
+            mainClass = loader.loadClass(mainClassname).asSubclass(AntMain.class);
+            final AntMain main = mainClass.newInstance();
             main.startAnt(newArgs, null, null);
         } catch (final InstantiationException ex) {
             System.err.println(
@@ -320,7 +317,7 @@ public class Launcher {
      */
     private URL[] getLibPathURLs(final String cpString, final List<String> libPaths)
         throws MalformedURLException {
-        final List<URL> libPathURLs = new ArrayList<URL>();
+        final List<URL> libPathURLs = new ArrayList<>();
 
         if (cpString != null) {
             addPath(cpString, false, libPathURLs);
@@ -389,7 +386,7 @@ public class Launcher {
             systemJars.length);
 
         if (toolsJar != null) {
-            jars[jars.length - 1] = Locator.fileToURL(toolsJar);
+            jars[jars.length - 1] = new URL(toolsJar.toURI().toASCIIString());
         }
         return jars;
     }
@@ -407,8 +404,8 @@ public class Launcher {
     }
 
     private void logPath(final String name,final File path) {
-        if(launchDiag) {
-            System.out.println(name+"= \""+path+"\"");
+        if (launchDiag) {
+            System.out.println(name + "= \"" + path + "\"");
         }
     }
 }

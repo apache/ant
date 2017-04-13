@@ -31,9 +31,6 @@ import org.xml.sax.XMLReader;
  */
 public class ParserSupports extends ProjectComponent implements Condition {
 
-    private String feature;
-    private String property;
-    private String value;
     // Error messages
     /** error - combined attributes not allowed */
     public static final String ERROR_BOTH_ATTRIBUTES =
@@ -55,6 +52,10 @@ public class ParserSupports extends ProjectComponent implements Condition {
     /** error - no value */
     public static final String ERROR_NO_VALUE =
         "A value is needed when testing for property support";
+
+    private String feature;
+    private String property;
+    private String value;
 
     /**
      * Feature to probe for.
@@ -82,6 +83,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public boolean eval() throws BuildException {
         if (feature != null && property != null) {
             throw new BuildException(ERROR_BOTH_ATTRIBUTES);

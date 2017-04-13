@@ -144,13 +144,13 @@ public class Project implements ResourceFactory {
     private final Hashtable<String, Object> references = new AntRefTable();
 
     /** Map of id references - used for indicating broken build files */
-    private final HashMap<String, Object> idReferences = new HashMap<String, Object>();
+    private final HashMap<String, Object> idReferences = new HashMap<>();
 
     /** Name of the project's default target. */
     private String defaultTarget;
 
     /** Map from target names to targets (String to Target). */
-    private final Hashtable<String, Target> targets = new Hashtable<String, Target>();
+    private final Hashtable<String, Target> targets = new Hashtable<>();
 
     /** Set of global filters. */
     private final FilterSet globalFilterSet = new FilterSet();
@@ -193,11 +193,11 @@ public class Project implements ResourceFactory {
 
     /** Records the latest task to be executed on a thread. */
     private final Map<Thread,Task> threadTasks =
-        Collections.synchronizedMap(new WeakHashMap<Thread, Task>());
+        Collections.synchronizedMap(new WeakHashMap<>());
 
     /** Records the latest task to be executed on a thread group. */
     private final Map<ThreadGroup,Task> threadGroupTasks
-        = Collections.synchronizedMap(new WeakHashMap<ThreadGroup,Task>());
+        = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * Called to handle any input requests.
@@ -437,7 +437,7 @@ public class Project implements ResourceFactory {
      */
     public Vector<BuildListener> getBuildListeners() {
         synchronized (listenersLock) {
-            final Vector<BuildListener> r = new Vector<BuildListener>(listeners.length);
+            final Vector<BuildListener> r = new Vector<>(listeners.length);
             for (int i = 0; i < listeners.length; i++) {
                 r.add(listeners[i]);
             }
@@ -1046,7 +1046,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.1
      */
     public Map<String, Class<?>> getCopyOfTaskDefinitions() {
-        return new HashMap<String, Class<?>>(getTaskDefinitions());
+        return new HashMap<>(getTaskDefinitions());
     }
 
     /**
@@ -1088,7 +1088,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.1
      */
     public Map<String, Class<?>> getCopyOfDataTypeDefinitions() {
-        return new HashMap<String, Class<?>>(getDataTypeDefinitions());
+        return new HashMap<>(getDataTypeDefinitions());
     }
 
     /**
@@ -1168,7 +1168,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.1
      */
     public Map<String, Target> getCopyOfTargets() {
-        return new HashMap<String, Target>(targets);
+        return new HashMap<>(targets);
     }
 
     /**
@@ -1273,12 +1273,10 @@ public class Project implements ResourceFactory {
         final Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             log(output, isWarning ? MSG_WARN : MSG_INFO);
+        } else if (isWarning) {
+            task.handleErrorOutput(output);
         } else {
-            if (isWarning) {
-                task.handleErrorOutput(output);
-            } else {
-                task.handleOutput(output);
-            }
+            task.handleOutput(output);
         }
     }
 
@@ -1297,12 +1295,11 @@ public class Project implements ResourceFactory {
      */
     public int defaultInput(final byte[] buffer, final int offset, final int length)
         throws IOException {
-        if (defaultInputStream != null) {
-            System.out.flush();
-            return defaultInputStream.read(buffer, offset, length);
-        } else {
+        if (defaultInputStream == null) {
             throw new EOFException("No input provided for project");
         }
+        System.out.flush();
+        return defaultInputStream.read(buffer, offset, length);
     }
 
     /**
@@ -1322,9 +1319,8 @@ public class Project implements ResourceFactory {
         final Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             return defaultInput(buffer, offset, length);
-        } else {
-            return task.handleInput(buffer, offset, length);
         }
+        return task.handleInput(buffer, offset, length);
     }
 
     /**
@@ -1342,12 +1338,10 @@ public class Project implements ResourceFactory {
         final Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
             fireMessageLogged(this, output, isError ? MSG_ERR : MSG_INFO);
+        } else if (isError) {
+            task.handleErrorFlush(output);
         } else {
-            if (isError) {
-                task.handleErrorFlush(output);
-            } else {
-                task.handleFlush(output);
-            }
+            task.handleFlush(output);
         }
     }
 
@@ -1383,7 +1377,7 @@ public class Project implements ResourceFactory {
      */
     public void executeSortedTargets(final Vector<Target> sortedTargets)
         throws BuildException {
-        final Set<String> succeededTargets = new HashSet<String>();
+        final Set<String> succeededTargets = new HashSet<>();
         BuildException buildException = null; // first build exception
         for (final Target curtarget : sortedTargets) {
             boolean canExecute = true;
@@ -1749,9 +1743,9 @@ public class Project implements ResourceFactory {
             return ((ProjectComponent) o).getProject();
         }
         try {
-            final Method m = o.getClass().getMethod("getProject", (Class[]) null);
-            if (Project.class == m.getReturnType()) {
-                return (Project) m.invoke(o, (Object[]) null);
+            final Method m = o.getClass().getMethod("getProject");
+            if (Project.class.equals(m.getReturnType())) {
+                return (Project) m.invoke(o);
             }
         } catch (final Exception e) {
             //too bad
@@ -1819,9 +1813,9 @@ public class Project implements ResourceFactory {
      */
     public final Vector<Target> topoSort(final String[] root, final Hashtable<String, Target> targetTable,
                                  final boolean returnAll) throws BuildException {
-        final Vector<Target> ret = new VectorSet<Target>();
-        final Hashtable<String, String> state = new Hashtable<String, String>();
-        final Stack<String> visiting = new Stack<String>();
+        final Vector<Target> ret = new VectorSet<>();
+        final Hashtable<String, String> state = new Hashtable<>();
+        final Stack<String> visiting = new Stack<>();
 
         // We first run a DFS based sort using each root as a starting node.
         // This creates the minimum sequence of Targets to the root node(s).
@@ -1832,7 +1826,7 @@ public class Project implements ResourceFactory {
         // build Target.
 
         for (int i = 0; i < root.length; i++) {
-            final String st = (state.get(root[i]));
+            final String st = state.get(root[i]);
             if (st == null) {
                 tsort(root[i], targetTable, state, visiting, ret);
             } else if (st == VISITING) {
@@ -1840,7 +1834,7 @@ public class Project implements ResourceFactory {
                     + root[i]);
             }
         }
-        final StringBuffer buf = new StringBuffer("Build sequence for target(s)");
+        final StringBuilder buf = new StringBuilder("Build sequence for target(s)");
 
         for (int j = 0; j < root.length; j++) {
             buf.append((j == 0) ? " `" : ", `").append(root[j]).append('\'');
@@ -1848,7 +1842,7 @@ public class Project implements ResourceFactory {
         buf.append(" is ").append(ret);
         log(buf.toString(), MSG_VERBOSE);
 
-        final Vector<Target> complete = (returnAll) ? ret : new Vector<Target>(ret);
+        final Vector<Target> complete = (returnAll) ? ret : new Vector<>(ret);
         for (final Enumeration<String> en = targetTable.keys(); en.hasMoreElements();) {
             final String curTarget = en.nextElement();
             final String st = state.get(curTarget);
@@ -2035,7 +2029,7 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.1
      */
     public Map<String, Object> getCopyOfReferences() {
-        return new HashMap<String, Object>(references);
+        return new HashMap<>(references);
     }
 
     /**
@@ -2488,6 +2482,7 @@ public class Project implements ResourceFactory {
      * @return the file resource.
      * @since Ant 1.7
      */
+    @Override
     public Resource getResource(final String name) {
         return new FileResource(getBaseDir(), name);
     }

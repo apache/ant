@@ -165,12 +165,13 @@ public class Patch extends Task {
      * execute patch
      * @throws BuildException when it all goes a bit pear shaped
      */
+    @Override
     public void execute() throws BuildException {
         if (!havePatchfile) {
             throw new BuildException("patchfile argument is required",
                                      getLocation());
         }
-        Commandline toExecute = (Commandline) cmd.clone();
+        Commandline toExecute =  cmd.clone();
         toExecute.setExecutable(PATCH);
 
         if (originalFile != null) {
@@ -182,18 +183,14 @@ public class Patch extends Task {
                                   null);
         exe.setCommandline(toExecute.getCommandline());
 
-        if (directory != null) {
-            if (directory.exists() && directory.isDirectory()) {
-                exe.setWorkingDirectory(directory);
-            } else if (!directory.isDirectory()) {
+        if (directory == null) {
+            exe.setWorkingDirectory(getProject().getBaseDir());
+        } else {
+            if (!directory.isDirectory()) {
                 throw new BuildException(directory + " is not a directory.",
                                          getLocation());
-            } else {
-                throw new BuildException("directory " + directory
-                                         + " doesn\'t exist", getLocation());
             }
-        } else {
-            exe.setWorkingDirectory(getProject().getBaseDir());
+            exe.setWorkingDirectory(directory);
         }
 
         log(toExecute.describeCommand(), Project.MSG_VERBOSE);
@@ -204,9 +201,8 @@ public class Patch extends Task {
                     + returncode;
                 if (failOnError) {
                     throw new BuildException(msg);
-                } else {
-                    log(msg, Project.MSG_ERR);
                 }
+                log(msg, Project.MSG_ERR);
             }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());

@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.types.resources.selectors;
 
-import java.util.Iterator;
-
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -38,7 +36,7 @@ public class None
      * Convenience constructor.
      * @param r the ResourceSelector[] to add.
      */
-    public None(ResourceSelector[] r) {
+    public None(ResourceSelector... r) {
         super(r);
     }
 
@@ -48,12 +46,7 @@ public class None
      * @return whether the Resource was selected.
      */
     public boolean isSelected(Resource r) {
-        for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
-            if (i.next().isSelected(r)) {
-                return false;
-            }
-        }
-        return true;
+        return getResourceSelectors().stream().noneMatch(s -> s.isSelected(r));
     }
 
 }

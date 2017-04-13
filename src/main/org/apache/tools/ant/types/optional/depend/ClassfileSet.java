@@ -41,12 +41,12 @@ public class ClassfileSet extends FileSet {
      * classes which must be included in the fileset and which are the
      * starting point for the dependency search.
      */
-    private List<String> rootClasses = new ArrayList<String>();
+    private List<String> rootClasses = new ArrayList<>();
 
     /**
      * The list of filesets which contain root classes.
      */
-    private List<FileSet> rootFileSets = new ArrayList<FileSet>();
+    private List<FileSet> rootFileSets = new ArrayList<>();
 
     /**
      * Inner class used to contain info about root classes.
@@ -81,6 +81,16 @@ public class ClassfileSet extends FileSet {
     }
 
     /**
+     * Create a ClassfileSet from another ClassfileSet.
+     *
+     * @param s the other classfileset.
+     */
+    protected ClassfileSet(ClassfileSet s) {
+        super(s);
+        rootClasses.addAll(s.rootClasses);
+    }
+    
+    /**
      * Add a fileset to which contains a collection of root classes used to
      * drive the search from classes.
      *
@@ -90,16 +100,6 @@ public class ClassfileSet extends FileSet {
     public void addRootFileset(FileSet rootFileSet) {
         rootFileSets.add(rootFileSet);
         setChecked(false);
-    }
-
-    /**
-     * Create a ClassfileSet from another ClassfileSet.
-     *
-     * @param s the other classfileset.
-     */
-    protected ClassfileSet(ClassfileSet s) {
-        super(s);
-        rootClasses.addAll(s.rootClasses);
     }
 
     /**
@@ -118,6 +118,7 @@ public class ClassfileSet extends FileSet {
      *
      * @return a dependency scanner.
      */
+    @Override
     public DirectoryScanner getDirectoryScanner(Project p) {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
@@ -125,7 +126,7 @@ public class ClassfileSet extends FileSet {
         dieOnCircularReference(p);
         DirectoryScanner parentScanner = super.getDirectoryScanner(p);
         DependScanner scanner = new DependScanner(parentScanner);
-        final Vector<String> allRootClasses = new Vector<String>(rootClasses);
+        final Vector<String> allRootClasses = new Vector<>(rootClasses);
         for (FileSet additionalRootSet : rootFileSets) {
             DirectoryScanner additionalScanner
                 = additionalRootSet.getDirectoryScanner(p);
@@ -160,11 +161,13 @@ public class ClassfileSet extends FileSet {
      *
      * @return a clone of the class file set.
      */
-    public Object clone() {
+    @Override
+    public ClassfileSet clone() {
         return new ClassfileSet(isReference()
             ? (ClassfileSet) (getRef(getProject())) : this);
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
         if (isChecked()) {
             return;

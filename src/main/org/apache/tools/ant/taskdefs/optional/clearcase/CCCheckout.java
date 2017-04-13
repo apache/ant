@@ -94,6 +94,56 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCCheckout extends ClearCase {
+    /**
+     *  -reserved flag -- check out the file as reserved
+     */
+    public static final String FLAG_RESERVED = "-reserved";
+
+    /**
+     *  -reserved flag -- check out the file as unreserved
+     */
+    public static final String FLAG_UNRESERVED = "-unreserved";
+
+    /**
+     * -out flag -- create a writable file under a different filename
+     */
+    public static final String FLAG_OUT = "-out";
+
+    /**
+     * -ndata flag -- checks out the file but does not create an editable file containing its data
+     */
+    public static final String FLAG_NODATA = "-ndata";
+
+    /**
+     * -branch flag -- checks out the file on a specified branch
+     */
+    public static final String FLAG_BRANCH = "-branch";
+
+    /**
+     * -version flag -- allows checkout of a version that is not main latest
+     */
+    public static final String FLAG_VERSION = "-version";
+
+    /**
+     * -nwarn flag -- suppresses warning messages
+     */
+    public static final String FLAG_NOWARN = "-nwarn";
+
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+
     private boolean mReserved = true;
     private String mOut = null;
     private boolean mNdata = false;
@@ -111,10 +161,10 @@ public class CCCheckout extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -142,10 +192,10 @@ public class CCCheckout extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
 
@@ -154,7 +204,6 @@ public class CCCheckout extends ClearCase {
      */
     private boolean lsCheckout() {
         Commandline cmdl = new Commandline();
-        String result;
 
         // build the command line from what we got the format is
         // cleartool lsco [options...] [viewpath ...]
@@ -167,12 +216,11 @@ public class CCCheckout extends ClearCase {
         // viewpath
         cmdl.createArgument().setValue(getViewPath());
 
-        result = runS(cmdl);
+        String result = runS(cmdl);
 
-        // System.out.println( "lsCheckout: " + result );
-
-        return (result != null && result.length() > 0) ? true : false;
+        return (result != null && result.length() > 0);
     }
+
     /**
      * Check the command line options.
      */
@@ -189,23 +237,17 @@ public class CCCheckout extends ClearCase {
         if (getOut() != null) {
             // -out
             getOutCommand(cmd);
-        } else {
-            if (getNoData()) {
-                // -ndata
-                cmd.createArgument().setValue(FLAG_NODATA);
-            }
-
+        } else if (getNoData()) {
+            // -ndata
+            cmd.createArgument().setValue(FLAG_NODATA);
         }
 
         if (getBranch() != null) {
             // -branch
             getBranchCommand(cmd);
-        } else {
-            if (getVersion()) {
-                // -version
-                cmd.createArgument().setValue(FLAG_VERSION);
-            }
-
+        } else if (getVersion()) {
+            // -version
+            cmd.createArgument().setValue(FLAG_VERSION);
         }
 
         if (getNoWarn()) {
@@ -216,20 +258,15 @@ public class CCCheckout extends ClearCase {
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
+        } else if (getCommentFile() != null) {
+            // -cfile
+            getCommentFileCommand(cmd);
         } else {
-            if (getCommentFile() != null) {
-                // -cfile
-                getCommentFileCommand(cmd);
-            } else {
-                cmd.createArgument().setValue(FLAG_NOCOMMENT);
-            }
+            cmd.createArgument().setValue(FLAG_NOCOMMENT);
         }
 
         // viewpath
         cmd.createArgument().setValue(getViewPath());
-
-        // Print out info about the notco option
-        // System.out.println( "Notco: " + (getNotco() ? "yes" : "no") );
     }
 
     /**
@@ -269,7 +306,6 @@ public class CCCheckout extends ClearCase {
     public boolean getNotco() {
         return mNotco;
     }
-
 
     /**
      * Creates a writable file under a different filename.
@@ -434,7 +470,6 @@ public class CCCheckout extends ClearCase {
         }
     }
 
-
     /**
      * Get the 'comment' command
      *
@@ -470,47 +505,6 @@ public class CCCheckout extends ClearCase {
             cmd.createArgument().setValue(getCommentFile());
         }
     }
-
-        /**
-     *  -reserved flag -- check out the file as reserved
-     */
-    public static final String FLAG_RESERVED = "-reserved";
-        /**
-     *  -reserved flag -- check out the file as unreserved
-     */
-    public static final String FLAG_UNRESERVED = "-unreserved";
-        /**
-     * -out flag -- create a writable file under a different filename
-     */
-    public static final String FLAG_OUT = "-out";
-        /**
-     * -ndata flag -- checks out the file but does not create an editable file containing its data
-     */
-    public static final String FLAG_NODATA = "-ndata";
-        /**
-     * -branch flag -- checks out the file on a specified branch
-     */
-    public static final String FLAG_BRANCH = "-branch";
-        /**
-     * -version flag -- allows checkout of a version that is not main latest
-     */
-    public static final String FLAG_VERSION = "-version";
-        /**
-     * -nwarn flag -- suppresses warning messages
-     */
-    public static final String FLAG_NOWARN = "-nwarn";
-        /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-        /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-        /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
 
 }
 

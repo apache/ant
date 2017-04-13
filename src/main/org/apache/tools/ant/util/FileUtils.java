@@ -37,19 +37,20 @@ import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 
@@ -112,6 +113,7 @@ public class FileUtils {
      *             Use getFileUtils instead,
      * FileUtils do not have state.
      */
+    @Deprecated
     public static FileUtils newFileUtils() {
         return new FileUtils();
     }
@@ -275,7 +277,7 @@ public class FileUtils {
      * @since Ant 1.5
      */
     public void copyFile(String sourceFile, String destFile,
-                         FilterSetCollection filters, Vector filterChains,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
                          boolean overwrite, boolean preserveLastModified,
                          String encoding, Project project) throws IOException {
         copyFile(new File(sourceFile), new File(destFile), filters, filterChains, overwrite,
@@ -305,7 +307,7 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public void copyFile(String sourceFile, String destFile,
-                         FilterSetCollection filters, Vector filterChains,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
                          boolean overwrite, boolean preserveLastModified,
                          String inputEncoding, String outputEncoding,
                          Project project) throws IOException {
@@ -440,7 +442,7 @@ public class FileUtils {
      * @since Ant 1.5
      */
     public void copyFile(File sourceFile, File destFile,
-                         FilterSetCollection filters, Vector filterChains,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
                          boolean overwrite, boolean preserveLastModified,
                          String encoding, Project project) throws IOException {
         copyFile(sourceFile, destFile, filters, filterChains,
@@ -476,7 +478,7 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public void copyFile(File sourceFile, File destFile,
-            FilterSetCollection filters, Vector filterChains,
+            FilterSetCollection filters, Vector<FilterChain> filterChains,
             boolean overwrite, boolean preserveLastModified,
             String inputEncoding, String outputEncoding,
             Project project) throws IOException {
@@ -514,7 +516,7 @@ public class FileUtils {
      * @since Ant 1.8
      */
     public void copyFile(File sourceFile, File destFile,
-                         FilterSetCollection filters, Vector filterChains,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
                          boolean overwrite, boolean preserveLastModified,
                          boolean append,
                          String inputEncoding, String outputEncoding,
@@ -554,7 +556,7 @@ public class FileUtils {
      * @since Ant 1.8.2
      */
     public void copyFile(File sourceFile, File destFile,
-                         FilterSetCollection filters, Vector filterChains,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
                          boolean overwrite, boolean preserveLastModified,
                          boolean append,
                          String inputEncoding, String outputEncoding,
@@ -698,10 +700,10 @@ public class FileUtils {
      * @see PathTokenizer
      */
     public static String translatePath(String toProcess) {
-        if (toProcess == null || toProcess.length() == 0) {
+        if (toProcess == null || toProcess.isEmpty()) {
             return "";
         }
-        StringBuffer path = new StringBuffer(toProcess.length() + EXPAND_SPACE);
+        StringBuilder path = new StringBuilder(toProcess.length() + EXPAND_SPACE);
         PathTokenizer tokenizer = new PathTokenizer(toProcess);
         while (tokenizer.hasMoreTokens()) {
             String pathComponent = tokenizer.nextToken();
@@ -735,7 +737,7 @@ public class FileUtils {
      * @throws java.lang.NullPointerException if path is null.
      */
     public File normalize(final String path) {
-        Stack s = new Stack();
+        Stack<String> s = new Stack<>();
         String[] dissect = dissect(path);
         s.push(dissect[0]);
 
@@ -755,7 +757,7 @@ public class FileUtils {
                 s.push(thisToken);
             }
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         final int size = s.size();
         for (int i = 0; i < size; i++) {
             if (i > 1) {
@@ -783,7 +785,7 @@ public class FileUtils {
         if (!isAbsolutePath(path)) {
             throw new BuildException(path + " is not an absolute path");
         }
-        String root = null;
+        String root;
         int colon = path.indexOf(':');
         if (colon > 0 && (ON_DOS || ON_NETWARE)) {
 
@@ -836,7 +838,7 @@ public class FileUtils {
                 && !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
         // CheckStyle:MagicNumber ON
         String device = null;
-        StringBuffer directory = null;
+        StringBuilder directory = null;
         String file = null;
 
         int index = 0;
@@ -849,13 +851,13 @@ public class FileUtils {
             device = path.substring(1, index++);
         }
         if (isDirectory) {
-            directory = new StringBuffer(path.substring(index).replace(File.separatorChar, '.'));
+            directory = new StringBuilder(path.substring(index).replace(File.separatorChar, '.'));
         } else {
             int dirEnd = path.lastIndexOf(File.separatorChar, path.length());
             if (dirEnd == -1 || dirEnd < index) {
                 file = path.substring(index);
             } else {
-                directory = new StringBuffer(path.substring(index, dirEnd).
+                directory = new StringBuilder(path.substring(index, dirEnd).
                                              replace(File.separatorChar, '.'));
                 index = dirEnd + 1;
                 if (path.length() > index) {
@@ -897,6 +899,7 @@ public class FileUtils {
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */
+    @Deprecated
     public File createTempFile(String prefix, String suffix, File parentDir) {
         return createTempFile(prefix, suffix, parentDir, false, false);
     }
@@ -926,7 +929,7 @@ public class FileUtils {
      */
     public File createTempFile(String prefix, String suffix, File parentDir,
             boolean deleteOnExit, boolean createFile) {
-        File result = null;
+        File result;
         String parent = (parentDir == null)
                 ? System.getProperty("java.io.tmpdir")
                 : parentDir.getPath();
@@ -987,6 +990,7 @@ public class FileUtils {
      * boolean, boolean) instead.
      * @return a File reference to the new, nonexistent temporary file.
      */
+    @Deprecated
     public File createTempFile(String prefix, String suffix,
             File parentDir, boolean deleteOnExit) {
         return createTempFile(prefix, suffix, parentDir, deleteOnExit, false);
@@ -1032,8 +1036,9 @@ public class FileUtils {
      * @since 1.10
      * @deprecated since 1.7. Just use {@link File#getParentFile} directly.
      */
+    @Deprecated
     public File getParentFile(File f) {
-        return (f == null) ? null : f.getParentFile();
+        return f == null ? null : f.getParentFile();
     }
 
     /**
@@ -1062,17 +1067,17 @@ public class FileUtils {
     public static String readFully(Reader rdr, int bufferSize)
         throws IOException {
         if (bufferSize <= 0) {
-            throw new IllegalArgumentException("Buffer size must be greater "
-                                               + "than 0");
+            throw new IllegalArgumentException(
+                "Buffer size must be greater than 0");
         }
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
-        StringBuffer textBuffer = null;
+        StringBuilder textBuffer = null;
         while (bufferLength != -1) {
             bufferLength = rdr.read(buffer);
             if (bufferLength > 0) {
-                textBuffer = (textBuffer == null) ? new StringBuffer() : textBuffer;
-                textBuffer.append(new String(buffer, 0, bufferLength));
+                textBuffer = (textBuffer == null) ? new StringBuilder() : textBuffer;
+                textBuffer.append(buffer, 0, bufferLength);
             }
         }
         return (textBuffer == null) ? null : textBuffer.toString();
@@ -1138,6 +1143,7 @@ public class FileUtils {
      * @since Ant 1.5
      * @deprecated use SymbolicLinkUtils instead
      */
+    @Deprecated
     public boolean isSymbolicLink(File parent, String name)
         throws IOException {
         SymbolicLinkUtils u = SymbolicLinkUtils.getSymbolicLinkUtils();
@@ -1375,11 +1381,8 @@ public class FileUtils {
             return false;
         }
         final String localFileName = localFile.getName();
-        FilenameFilter ff = new FilenameFilter () {
-            public boolean accept(File dir, String name) {
-                return name.equalsIgnoreCase(localFileName) && (!name.equals(localFileName));
-            }
-        };
+        FilenameFilter ff = (dir, name) -> name.equalsIgnoreCase(localFileName)
+            && (!name.equals(localFileName));
         String[] names = localFile.getParentFile().list(ff);
         return names != null && names.length == 1;
     }
@@ -1506,7 +1509,6 @@ public class FileUtils {
                     JarURLConnection juc = (JarURLConnection) conn;
                     JarFile jf = juc.getJarFile();
                     jf.close();
-                    jf = null;
                 } else if (conn instanceof HttpURLConnection) {
                     ((HttpURLConnection) conn).disconnect();
                 }
@@ -1623,7 +1625,7 @@ public class FileUtils {
             // Do nothing
         }
 
-        List relativePathStack = new ArrayList();
+        List<String> relativePathStack = new ArrayList<>();
 
         // if "from" part is longer, fill it up with ".."
         // to reach path which is equal to both paths
@@ -1661,7 +1663,7 @@ public class FileUtils {
      *
      * @since Ant 1.7
      */
-    public static String getPath(List pathStack) {
+    public static String getPath(List<String> pathStack) {
         // can safely use '/' because Windows understands '/' as separator
         return getPath(pathStack, '/');
     }
@@ -1675,18 +1677,8 @@ public class FileUtils {
      *
      * @since Ant 1.7
      */
-    public static String getPath(final List pathStack, final char separatorChar) {
-        final StringBuffer buffer = new StringBuffer();
-
-        final Iterator iter = pathStack.iterator();
-        if (iter.hasNext()) {
-            buffer.append(iter.next());
-        }
-        while (iter.hasNext()) {
-            buffer.append(separatorChar);
-            buffer.append(iter.next());
-        }
-        return buffer.toString();
+    public static String getPath(final List<String> pathStack, final char separatorChar) {
+        return pathStack.stream().collect(Collectors.joining(Character.toString(separatorChar)));
     }
 
     /**
@@ -1700,6 +1692,7 @@ public class FileUtils {
     public String getDefaultEncoding() {
         InputStreamReader is = new InputStreamReader(
             new InputStream() { //NOSONAR
+                @Override
                 public int read() {
                     return -1;
                 }

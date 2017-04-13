@@ -25,12 +25,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import org.apache.tools.ant.attribute.EnableAttribute;
 import org.apache.tools.ant.taskdefs.MacroDef.Attribute;
 import org.apache.tools.ant.taskdefs.MacroInstance;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
 
@@ -46,14 +45,14 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Empty Hashtable. */
     private static final Hashtable<String, Object> EMPTY_HASHTABLE =
-            new Hashtable<String, Object>(0);
+            new Hashtable<>(0);
 
     /** Name of the element to configure. */
     private String elementTag = null;
 
     /** List of child element wrappers. */
     // picking ArrayList rather than List as arrayList is Serializable
-    private ArrayList<RuntimeConfigurable> children = null;
+    private List<RuntimeConfigurable> children = null;
 
     /** The element to configure. It is only used during
      * maybeConfigure.
@@ -303,17 +302,17 @@ public class RuntimeConfigurable implements Serializable {
             this.polyType = value == null ? null : value.toString();
         } else {
             if (attributeMap == null) {
-                attributeMap = new LinkedHashMap<String, Object>();
+                attributeMap = new LinkedHashMap<>();
             }
-            if (name.equalsIgnoreCase("refid") && !attributeMap.isEmpty()) {
-                LinkedHashMap<String, Object> newAttributeMap = new LinkedHashMap<String, Object>();
+            if ("refid".equalsIgnoreCase(name) && !attributeMap.isEmpty()) {
+                LinkedHashMap<String, Object> newAttributeMap = new LinkedHashMap<>();
                 newAttributeMap.put(name, value);
                 newAttributeMap.putAll(attributeMap);
                 attributeMap = newAttributeMap;
             } else {
                 attributeMap.put(name, value);
             }
-            if (name.equals("id")) {
+            if ("id".equals(name)) {
                 this.id = value == null ? null : value.toString();
             }
         }
@@ -335,7 +334,7 @@ public class RuntimeConfigurable implements Serializable {
      */
     public synchronized Hashtable<String, Object> getAttributeMap() {
         return (attributeMap == null)
-            ? EMPTY_HASHTABLE : new Hashtable<String, Object>(attributeMap);
+            ? EMPTY_HASHTABLE : new Hashtable<>(attributeMap);
     }
 
     /**
@@ -356,7 +355,7 @@ public class RuntimeConfigurable implements Serializable {
      *              Must not be <code>null</code>.
      */
     public synchronized void addChild(RuntimeConfigurable child) {
-        children = (children == null) ? new ArrayList<RuntimeConfigurable>() : children;
+        children = (children == null) ? new ArrayList<>() : children;
         children.add(child);
     }
 
@@ -378,7 +377,7 @@ public class RuntimeConfigurable implements Serializable {
      * @since Ant 1.6
      */
     public synchronized Enumeration<RuntimeConfigurable> getChildren() {
-        return (children == null) ? new CollectionUtils.EmptyEnumeration<RuntimeConfigurable>()
+        return (children == null) ? Collections.emptyEnumeration()
             : Collections.enumeration(children);
     }
 
@@ -497,7 +496,7 @@ public class RuntimeConfigurable implements Serializable {
             IntrospectionHelper.getHelper(p, target.getClass());
          ComponentHelper componentHelper = ComponentHelper.getComponentHelper(p);
         if (attributeMap != null) {
-            for (Entry<String, Object> entry : attributeMap.entrySet()) {
+            for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
                 String name = entry.getKey();
                 // skip restricted attributes such as if:set
                 AttributeComponentInformation attributeComponentInformation = isRestrictedAttribute(name, componentHelper);
@@ -509,8 +508,8 @@ public class RuntimeConfigurable implements Serializable {
                 // MacroInstance where properties are expanded for the
                 // nested sequential
                 Object attrValue;
-                if (value instanceof Evaluable) {
-                    attrValue = ((Evaluable) value).eval();
+                if (value instanceof Evaluable<?>) {
+                    attrValue = ((Evaluable<?>) value).eval();
                 } else {
                     attrValue = PropertyHelper.getPropertyHelper(p).parseProperties(value.toString());
                 }
@@ -528,7 +527,7 @@ public class RuntimeConfigurable implements Serializable {
                     ih.setAttribute(p, target, name, attrValue);
                 } catch (UnsupportedAttributeException be) {
                     // id attribute must be set externally
-                    if (name.equals("id")) {
+                    if ("id".equals(name)) {
                         // Do nothing
                     } else if (getElementTag() == null) {
                         throw be;
@@ -538,7 +537,7 @@ public class RuntimeConfigurable implements Serializable {
                             + be.getAttribute() + "\" attribute", be);
                     }
                 } catch (BuildException be) {
-                    if (name.equals("id")) {
+                    if ("id".equals(name)) {
                         // Assume that this is an not supported attribute type
                         // thrown for example by a dymanic attribute task
                         // Do nothing
@@ -590,7 +589,7 @@ public class RuntimeConfigurable implements Serializable {
 
         // Children (this is a shadow of UnknownElement#children)
         if (r.children != null) {
-            ArrayList<RuntimeConfigurable> newChildren = new ArrayList<RuntimeConfigurable>();
+            List<RuntimeConfigurable> newChildren = new ArrayList<>();
             newChildren.addAll(r.children);
             if (children != null) {
                 newChildren.addAll(children);
@@ -601,7 +600,7 @@ public class RuntimeConfigurable implements Serializable {
         // Text
         if (r.characters != null) {
             if (characters == null
-                || characters.toString().trim().length() == 0) {
+                || characters.toString().trim().isEmpty()) {
                 characters = new StringBuffer(r.characters.toString());
             }
         }

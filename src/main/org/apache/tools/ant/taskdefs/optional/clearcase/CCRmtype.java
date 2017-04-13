@@ -86,6 +86,31 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCRmtype extends ClearCase {
+    /**
+     * -ignore flag -- ignore pre-trigger operations when removing a trigger type
+     */
+    public static final String FLAG_IGNORE = "-ignore";
+    /**
+     * -rmall flag -- removes all instances of a type and the type object itself
+     */
+    public static final String FLAG_RMALL = "-rmall";
+    /**
+     * -force flag -- suppresses confirmation prompts
+     */
+    public static final String FLAG_FORCE = "-force";
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+
     private String mTypeKind = null;
     private String mTypeName = null;
     private String mVOB = null;
@@ -101,9 +126,9 @@ public class CCRmtype extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // Check for required attributes
         if (getTypeKind() == null) {
@@ -125,13 +150,12 @@ public class CCRmtype extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getTypeSpecifier(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -149,13 +173,11 @@ public class CCRmtype extends ClearCase {
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
+        } else if (getCommentFile() != null) {
+            // -cfile
+            getCommentFileCommand(cmd);
         } else {
-            if (getCommentFile() != null) {
-                // -cfile
-                getCommentFileCommand(cmd);
-            } else {
-                cmd.createArgument().setValue(FLAG_NOCOMMENT);
-            }
+            cmd.createArgument().setValue(FLAG_NOCOMMENT);
         }
 
         // type-kind:type-name
@@ -297,10 +319,9 @@ public class CCRmtype extends ClearCase {
     private String getTypeSpecifier() {
         String tkind = getTypeKind();
         String tname = getTypeName();
-        String typeSpec = null;
 
         // Return the type-selector
-        typeSpec = tkind + ":" + tname;
+        String typeSpec = tkind + ":" + tname;
         if (getVOB() != null) {
             typeSpec += "@" + getVOB();
         }
@@ -343,31 +364,4 @@ public class CCRmtype extends ClearCase {
         }
     }
 
-
-    /**
-     * -ignore flag -- ignore pre-trigger operations when removing a trigger type
-     */
-    public static final String FLAG_IGNORE = "-ignore";
-    /**
-     * -rmall flag -- removes all instances of a type and the type object itself
-     */
-    public static final String FLAG_RMALL = "-rmall";
-    /**
-     * -force flag -- suppresses confirmation prompts
-     */
-    public static final String FLAG_FORCE = "-force";
-    /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-    /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-    /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
-
 }
-

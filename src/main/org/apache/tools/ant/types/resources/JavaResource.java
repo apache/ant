@@ -79,20 +79,20 @@ public class JavaResource extends AbstractClasspathResource
      * Get the URL represented by this Resource.
      * @since Ant 1.8.0
      */
+    @Override
     public URL getURL() {
         if (isReference()) {
-            return ((JavaResource) getCheckedRef()).getURL();
+            return getCheckedRef().getURL();
         }
         AbstractClasspathResource.ClassLoaderWithFlag classLoader =
             getClassLoader();
         if (classLoader.getLoader() == null) {
             return ClassLoader.getSystemResource(getName());
-        } else {
-            try {
-                return classLoader.getLoader().getResource(getName());
-            } finally {
-                classLoader.cleanup();
-            }
+        }
+        try {
+            return classLoader.getLoader().getResource(getName());
+        } finally {
+            classLoader.cleanup();
         }
     }
 
@@ -103,9 +103,10 @@ public class JavaResource extends AbstractClasspathResource
      * JavaResource is less than, equal to, or greater than the
      * specified Resource.
      */
+    @Override
     public int compareTo(Resource another) {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).compareTo(another);
+            return getCheckedRef().compareTo(another);
         }
         if (another.getClass().equals(getClass())) {
             JavaResource otherjr = (JavaResource) another;
@@ -138,4 +139,8 @@ public class JavaResource extends AbstractClasspathResource
         return super.compareTo(another);
     }
 
+    @Override
+    protected JavaResource getCheckedRef() {
+        return (JavaResource) super.getCheckedRef();
+    }
 }

@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.property;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,7 @@ import org.apache.tools.ant.PropertyHelper;
  * @since Ant 1.8.0
  */
 public class LocalPropertyStack {
-    private final LinkedList<Map<String, Object>> stack = new LinkedList<Map<String, Object>>();
+    private final Deque<Map<String, Object>> stack = new LinkedList<>();
     private final Object LOCK = new Object();
 
     // --------------------------------------------------

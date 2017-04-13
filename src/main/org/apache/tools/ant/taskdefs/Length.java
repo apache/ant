@@ -108,7 +108,7 @@ public class Length extends Task implements Condition {
      * @param ell the long length to compare with.
      */
     public synchronized void setLength(long ell) {
-        length = new Long(ell);
+        length = Long.valueOf(ell);
     }
 
     /**
@@ -152,7 +152,7 @@ public class Length extends Task implements Condition {
      * @param trim <code>boolean</code>.
      */
     public synchronized void setTrim(boolean trim) {
-        this.trim = trim ? Boolean.TRUE : Boolean.FALSE;
+        this.trim = Boolean.valueOf(trim);
     }
 
     /**
@@ -160,25 +160,31 @@ public class Length extends Task implements Condition {
      * @return boolean trim setting.
      */
     public boolean getTrim() {
-        return trim != null && trim.booleanValue();
+        return Boolean.TRUE.equals(trim);
     }
 
     /**
      * Execute the length task.
      */
+    @Override
     public void execute() {
         validate();
-        PrintStream ps = new PrintStream((property != null)
-            ? (OutputStream) new PropertyOutputStream(getProject(), property)
-            : (OutputStream) new LogOutputStream(this, Project.MSG_INFO));
+        OutputStream out =
+            property == null ? new LogOutputStream(this, Project.MSG_INFO)
+                : new PropertyOutputStream(getProject(), property);
+        PrintStream ps = new PrintStream(out);
 
-        if (STRING.equals(mode)) {
+        switch (mode) {
+        case STRING:
             ps.print(getLength(string, getTrim()));
             ps.close();
-        } else if (EACH.equals(mode)) {
+            break;
+        case EACH:
             handleResources(new EachHandler(ps));
-        } else if (ALL.equals(mode)) {
+            break;
+        case ALL:
             handleResources(new AllHandler(ps));
+            break;
         }
     }
 
@@ -187,6 +193,7 @@ public class Length extends Task implements Condition {
      * @return true if the condition is true.
      * @throws BuildException if an error occurs.
      */
+    @Override
     public boolean eval() {
         validate();
         if (length == null) {
@@ -194,11 +201,11 @@ public class Length extends Task implements Condition {
         }
         Long ell;
         if (STRING.equals(mode)) {
-            ell = new Long(getLength(string, getTrim()));
+            ell = Long.valueOf(getLength(string, getTrim()));
         } else {
             AccumHandler h = new AccumHandler();
             handleResources(h);
-            ell = new Long(h.getAccum());
+            ell = Long.valueOf(h.getAccum());
         }
         return when.evaluate(ell.compareTo(length));
     }
@@ -206,25 +213,26 @@ public class Length extends Task implements Condition {
     private void validate() {
         if (string != null) {
             if (resources != null) {
-                throw new BuildException("the string length function"
-                    + " is incompatible with the file/resource length function");
+                throw new BuildException(
+                    "the string length function is incompatible with the file/resource length function");
             }
             if (!(STRING.equals(mode))) {
-                throw new BuildException("the mode attribute is for use"
-                    + " with the file/resource length function");
+                throw new BuildException(
+                    "the mode attribute is for use with the file/resource length function");
             }
         } else if (resources != null) {
             if (!(EACH.equals(mode) || ALL.equals(mode))) {
-                throw new BuildException("invalid mode setting for"
-                    + " file/resource length function: \"" + mode + "\"");
-            } else if (trim != null) {
-                throw new BuildException("the trim attribute is"
-                    + " for use with the string length function only");
+                throw new BuildException(
+                    "invalid mode setting for file/resource length function: \""
+                        + mode + "\"");
+            }
+            if (trim != null) {
+                throw new BuildException(
+                    "the trim attribute is for use with the string length function only");
             }
         } else {
-            throw new BuildException("you must set either the string attribute"
-                + " or specify one or more files using the file attribute or"
-                + " nested resource collections");
+            throw new BuildException(
+                "you must set either the string attribute or specify one or more files using the file attribute or nested resource collections");
         }
     }
 
@@ -247,12 +255,13 @@ public class Length extends Task implements Condition {
 
     /** EnumeratedAttribute operation mode */
     public static class FileMode extends EnumeratedAttribute {
-        static final String[] MODES = new String[] {EACH, ALL}; //NOSONAR
+        static final String[] MODES = new String[] { EACH, ALL }; //NOSONAR
 
         /**
          * Return the possible values for FileMode.
          * @return <code>String[]</code>.
          */
+        @Override
         public String[] getValues() {
             return MODES;
         }
@@ -268,6 +277,7 @@ public class Length extends Task implements Condition {
 
     private abstract class Handler {
         private PrintStream ps;
+
         Handler(PrintStream ps) {
             this.ps = ps;
         }
@@ -287,6 +297,8 @@ public class Length extends Task implements Condition {
         EachHandler(PrintStream ps) {
             super(ps);
         }
+
+        @Override
         protected void handle(Resource r) {
             getPs().print(r.toString());
             getPs().print(" : ");
@@ -306,12 +318,16 @@ public class Length extends Task implements Condition {
         AccumHandler() {
             super(null);
         }
+
         protected AccumHandler(PrintStream ps) {
             super(ps);
         }
+
         protected long getAccum() {
             return accum;
         }
+
+        @Override
         protected synchronized void handle(Resource r) {
             long size = r.getSize();
             if (size == Resource.UNKNOWN_SIZE) {
@@ -326,6 +342,8 @@ public class Length extends Task implements Condition {
         AllHandler(PrintStream ps) {
             super(ps);
         }
+
+        @Override
         void complete() {
             getPs().print(getAccum());
             super.complete();

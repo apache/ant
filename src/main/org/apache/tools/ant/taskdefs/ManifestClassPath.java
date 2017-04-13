@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -52,6 +51,7 @@ public class ManifestClassPath extends Task {
      * separated list of files and directories relative to the jar
      * file's parent directory.
      */
+    @Override
     public void execute() {
         if (name == null) {
             throw new BuildException("Missing 'property' attribute!");
@@ -60,13 +60,13 @@ public class ManifestClassPath extends Task {
             throw new BuildException("Missing 'jarfile' attribute!");
         }
         if (getProject().getProperty(name) != null) {
-            throw new BuildException("Property '" + name + "' already set!");
+            throw new BuildException("Property '%s' already set!", name);
         }
         if (path == null) {
             throw new BuildException("Missing nested <classpath>!");
         }
 
-        StringBuffer tooLongSb = new StringBuffer();
+        StringBuilder tooLongSb = new StringBuilder();
         for (int i = 0; i < maxParentLevels + 1; i++) {
             tooLongSb.append("../");
         }
@@ -77,10 +77,10 @@ public class ManifestClassPath extends Task {
         dir = fileUtils.normalize(dir.getAbsolutePath());
 
         String[] elements = path.list();
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < elements.length; ++i) {
+        StringBuilder buffer = new StringBuilder();
+        for (String element : elements) {
             // Normalize the current file
-            File pathEntry = new File(elements[i]);
+            File pathEntry = new File(element);
             String fullPath = pathEntry.getAbsolutePath();
             pathEntry = fileUtils.normalize(fullPath);
 
@@ -108,8 +108,8 @@ public class ManifestClassPath extends Task {
             // No match, so bail out!
             if (relPath.equals(canonicalPath)
                 || relPath.startsWith(tooLongPrefix)) {
-                throw new BuildException("No suitable relative path from "
-                                         + dir + " to " + fullPath);
+                throw new BuildException(
+                    "No suitable relative path from %s to %s", dir, fullPath);
             }
 
             if (pathEntry.isDirectory() && !relPath.endsWith("/")) {
@@ -146,7 +146,7 @@ public class ManifestClassPath extends Task {
     public void setJarFile(File jarfile) {
         File parent = jarfile.getParentFile();
         if (!parent.isDirectory()) {
-            throw new BuildException("Jar's directory not found: " + parent);
+            throw new BuildException("Jar's directory not found: %s", parent);
         }
         this.dir = parent;
     }
@@ -159,8 +159,8 @@ public class ManifestClassPath extends Task {
      */
     public void setMaxParentLevels(int levels) {
         if (levels < 0) {
-            throw new BuildException("maxParentLevels must not be a negative"
-                                     + " number");
+            throw new BuildException(
+                "maxParentLevels must not be a negative number");
         }
         this.maxParentLevels = levels;
     }

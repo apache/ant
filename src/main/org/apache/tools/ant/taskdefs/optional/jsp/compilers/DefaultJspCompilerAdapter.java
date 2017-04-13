@@ -19,8 +19,8 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
@@ -35,7 +35,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 public abstract class DefaultJspCompilerAdapter
     implements JspCompilerAdapter {
 
-    private static String lSep = System.getProperty("line.separator");
+    private static String lSep = System.lineSeparator();
 
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
@@ -45,27 +45,18 @@ public abstract class DefaultJspCompilerAdapter
      * @param cmd the command line used
      */
     protected void logAndAddFilesToCompile(JspC jspc,
-                                           Vector compileList,
+                                           Vector<String> compileList,
                                            CommandlineJava cmd) {
         jspc.log("Compilation " + cmd.describeJavaCommand(),
                  Project.MSG_VERBOSE);
 
-        StringBuffer niceSourceList = new StringBuffer("File");
-        if (compileList.size() != 1) {
-            niceSourceList.append("s");
-        }
-        niceSourceList.append(" to be compiled:");
-
-        niceSourceList.append(lSep);
-
-        Enumeration e = compileList.elements();
-        while (e.hasMoreElements()) {
-            String arg = (String) e.nextElement();
-            cmd.createArgument().setValue(arg);
-            niceSourceList.append("    ");
-            niceSourceList.append(arg);
-            niceSourceList.append(lSep);
-        }
+        StringBuilder niceSourceList =
+            new StringBuilder(compileList.size() == 1 ? "File" : "Files")
+                .append(" to be compiled:").append(lSep)
+                .append(compileList.stream()
+                    .peek(arg -> cmd.createArgument().setValue(arg))
+                    .map(arg -> "    " + arg)
+                    .collect(Collectors.joining(lSep)));
 
         jspc.log(niceSourceList.toString(), Project.MSG_VERBOSE);
     }
@@ -83,6 +74,7 @@ public abstract class DefaultJspCompilerAdapter
      * set the owner
      * @param owner the owner JspC compiler
      */
+    @Override
     public void setJspc(JspC owner) {
         this.owner = owner;
     }
@@ -93,7 +85,6 @@ public abstract class DefaultJspCompilerAdapter
     public JspC getJspc() {
         return owner;
     }
-
 
     /**
      *  add an argument oneple to the argument list, if the value aint null
@@ -138,6 +129,7 @@ public abstract class DefaultJspCompilerAdapter
      * @return true if the compiler wants to do its own
      * depends
      */
+    @Override
     public boolean implementsOwnDependencyChecking() {
         return false;
     }
@@ -150,4 +142,3 @@ public abstract class DefaultJspCompilerAdapter
         return getJspc().getProject();
     }
 }
-

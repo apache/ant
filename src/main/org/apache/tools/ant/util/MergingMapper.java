@@ -44,6 +44,7 @@ public class MergingMapper implements FileNameMapper {
      * Ignored.
      * @param from ignored.
      */
+    @Override
     public void setFrom(String from) {
     }
 
@@ -51,6 +52,7 @@ public class MergingMapper implements FileNameMapper {
      * Sets the name of the merged file.
      * @param to the name of the merged file.
      */
+    @Override
     public void setTo(String to) {
         mergedFile = new String[] {to};
     }
@@ -60,6 +62,7 @@ public class MergingMapper implements FileNameMapper {
      * @param sourceFileName ignored.
      * @return a one-element array containing the merged filename.
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
         return mergedFile;
     }

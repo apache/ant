@@ -54,11 +54,19 @@ import org.apache.tools.ant.types.Path;
  */
 public class JlinkTask extends MatchingTask {
 
+    private File outfile = null;
+
+    private Path mergefiles = null;
+
+    private Path addfiles = null;
+
+    private boolean compress = false;
+
     /**
      * The output file for this run of jlink. Usually a jar or zip file.
      * @param outfile the output file
      */
-    public  void setOutfile(File outfile) {
+    public void setOutfile(File outfile) {
         this.outfile = outfile;
     }
 
@@ -67,7 +75,7 @@ public class JlinkTask extends MatchingTask {
      * be merged into the output.
      * @return a path to be configured
      */
-    public  Path createMergefiles() {
+    public Path createMergefiles() {
         if (this.mergefiles == null) {
             this.mergefiles = new Path(getProject());
         }
@@ -78,7 +86,7 @@ public class JlinkTask extends MatchingTask {
      * Sets the files to be merged into the output.
      * @param mergefiles a path
      */
-    public  void setMergefiles(Path mergefiles) {
+    public void setMergefiles(Path mergefiles) {
         if (this.mergefiles == null) {
             this.mergefiles = mergefiles;
         } else {
@@ -91,7 +99,7 @@ public class JlinkTask extends MatchingTask {
      * be added to the output.
      * @return a path to be configured
      */
-    public  Path createAddfiles() {
+    public Path createAddfiles() {
         if (this.addfiles == null) {
             this.addfiles = new Path(getProject());
         }
@@ -102,7 +110,7 @@ public class JlinkTask extends MatchingTask {
      * Sets the files to be added into the output.
      * @param addfiles a path
      */
-    public  void setAddfiles(Path addfiles) {
+    public void setAddfiles(Path addfiles) {
         if (this.addfiles == null) {
             this.addfiles = addfiles;
         } else {
@@ -114,7 +122,7 @@ public class JlinkTask extends MatchingTask {
      * Defines whether or not the output should be compacted.
      * @param compress a <code>boolean</code> value
      */
-    public  void setCompress(boolean compress) {
+    public void setCompress(boolean compress) {
         this.compress = compress;
     }
 
@@ -122,15 +130,16 @@ public class JlinkTask extends MatchingTask {
      * Does the adding and merging.
      * @throws BuildException on error
      */
-    public  void execute() throws BuildException {
+    @Override
+    public void execute() throws BuildException {
         //Be sure everything has been set.
         if (outfile == null) {
-            throw new BuildException("outfile attribute is required! "
-                + "Please set.");
+            throw new BuildException(
+                "outfile attribute is required! Please set.");
         }
         if (!haveAddFiles() && !haveMergeFiles()) {
-            throw new BuildException("addfiles or mergefiles required! "
-                + "Please set.");
+            throw new BuildException(
+                "addfiles or mergefiles required! Please set.");
         }
         log("linking:     " + outfile.getPath());
         log("compression: " + compress, Project.MSG_VERBOSE);
@@ -161,23 +170,6 @@ public class JlinkTask extends MatchingTask {
     }
 
     private boolean haveEntries(Path p) {
-        if (p == null) {
-            return false;
-        }
-        if (p.size() > 0) {
-            return true;
-        }
-        return false;
+        return !(p == null || p.isEmpty());
     }
-
-    private  File outfile = null;
-
-    private  Path mergefiles = null;
-
-    private  Path addfiles = null;
-
-    private  boolean compress = false;
-
 }
-
-

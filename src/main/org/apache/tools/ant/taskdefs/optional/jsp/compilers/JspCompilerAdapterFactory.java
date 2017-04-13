@@ -80,11 +80,11 @@ public final class JspCompilerAdapterFactory {
                                                  AntClassLoader loader)
         throws BuildException {
 
-        if (compilerType.equalsIgnoreCase("jasper")) {
+        if ("jasper".equalsIgnoreCase(compilerType)) {
             //tomcat4.0 gets the old mangler
             return new JasperC(new JspNameMangler());
         }
-        if (compilerType.equalsIgnoreCase("jasper41")) {
+        if ("jasper41".equalsIgnoreCase(compilerType)) {
             //tomcat4.1 gets the new one
             return new JasperC(new Jasper41Mangler());
         }
@@ -104,9 +104,8 @@ public final class JspCompilerAdapterFactory {
                                                        AntClassLoader classloader)
         throws BuildException {
         try {
-            Class c = classloader.findClass(className);
-            Object o = c.newInstance();
-            return (JspCompilerAdapter) o;
+            Class<? extends JspCompilerAdapter> c = classloader.findClass(className).asSubclass(JspCompilerAdapter.class);
+            return c.newInstance();
         } catch (ClassNotFoundException cnfe) {
             throw new BuildException(className + " can\'t be found.", cnfe);
         } catch (ClassCastException cce) {

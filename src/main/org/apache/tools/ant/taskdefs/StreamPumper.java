@@ -55,7 +55,6 @@ public class StreamPumper implements Runnable {
         this(is, os, closeWhenExhausted, false);
     }
 
-
     /**
      * Create a new StreamPumper.
      *
@@ -112,6 +111,7 @@ public class StreamPumper implements Runnable {
      *
      * Terminates as soon as the input stream is closed or an error occurs.
      */
+    @Override
     public void run() {
         synchronized (this) {
             started = true;
@@ -120,8 +120,8 @@ public class StreamPumper implements Runnable {
 
         final byte[] buf = new byte[bufferSize];
 
-        int length;
         try {
+            int length;
             while (true) {
                 waitForInput(is);
 

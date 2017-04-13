@@ -98,12 +98,12 @@ public class DispatchUtils {
                 }
             } else {
                 Method executeM = null;
-                executeM = task.getClass().getMethod(methodName, new Class[0]);
+                executeM = task.getClass().getMethod(methodName);
                 if (executeM == null) {
                     throw new BuildException("No public " + methodName + "() in "
                         + task.getClass());
                 }
-                executeM.invoke(task, (Object[]) null);
+                executeM.invoke(task);
                 if (task instanceof UnknownElement) {
                     ((UnknownElement) task).setRealThing(null);
                 }

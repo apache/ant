@@ -112,21 +112,21 @@ public class MultiRootFileSet extends AbstractFileSet
      * @return the cloned MultiRootFileSet.
      */
     @Override
-    public Object clone() {
+    public MultiRootFileSet clone() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).clone();
-        } else {
-            final MultiRootFileSet fs = (MultiRootFileSet) super.clone();
-            fs.baseDirs = new ArrayList<File>(baseDirs);
-            fs.union = null;
-            return fs;
         }
+        final MultiRootFileSet fs = (MultiRootFileSet) super.clone();
+        fs.baseDirs = new ArrayList<>(baseDirs);
+        fs.union = null;
+        return fs;
     }
 
     /**
      * Fulfill the ResourceCollection contract.
      * @return an Iterator of Resources.
      */
+    @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).iterator();
@@ -138,6 +138,7 @@ public class MultiRootFileSet extends AbstractFileSet
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public int size() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).size();
@@ -149,6 +150,7 @@ public class MultiRootFileSet extends AbstractFileSet
      * Always returns true.
      * @return true indicating that all elements will be FileResources.
      */
+    @Override
     public boolean isFilesystemOnly() {
         return true;
     }
@@ -202,10 +204,12 @@ public class MultiRootFileSet extends AbstractFileSet
             setDir(dir);
         }
 
+        @Override
         public boolean isFilesystemOnly() {
             return true;
         }
 
+        @Override
         public Iterator<Resource> iterator() {
             final DirectoryScanner ds = getDirectoryScanner(getProject());
             String[] names = type == SetType.file
@@ -222,6 +226,7 @@ public class MultiRootFileSet extends AbstractFileSet
                                             names);
         }
 
+        @Override
         public int size() {
             final DirectoryScanner ds = getDirectoryScanner(getProject());
             int count = type == SetType.file

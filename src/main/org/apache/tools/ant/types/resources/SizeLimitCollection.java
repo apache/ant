@@ -50,10 +50,9 @@ public abstract class SizeLimitCollection extends BaseResourceCollectionWrapper 
      * Efficient size implementation.
      * @return int size
      */
+    @Override
     public synchronized int size() {
-        int sz = getResourceCollection().size();
-        int ct = getValidCount();
-        return sz < ct ? sz : ct;
+        return Math.min(getResourceCollection().size(), getValidCount());
     }
 
     /**

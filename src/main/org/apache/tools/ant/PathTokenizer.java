@@ -127,7 +127,7 @@ public class PathTokenizer {
         } else {
             // we are on NetWare, tokenizing is handled a little differently,
             // due to the fact that NetWare has multiple-character volume names.
-            if (token.equals(File.pathSeparator) || token.equals(":")) {
+            if (token.equals(File.pathSeparator) || ":".equals(token)) {
                 // ignore ";" and get the next token
                 token = tokenizer.nextToken().trim();
             }
@@ -138,7 +138,7 @@ public class PathTokenizer {
 
                 // make sure we aren't going to get the path separator next
                 if (!nextToken.equals(File.pathSeparator)) {
-                    if (nextToken.equals(":")) {
+                    if (":".equals(nextToken)) {
                         if (!token.startsWith("/") && !token.startsWith("\\")
                             && !token.startsWith(".")
                             && !token.startsWith("..")) {
@@ -163,4 +163,3 @@ public class PathTokenizer {
         return token;
     }
 }
-

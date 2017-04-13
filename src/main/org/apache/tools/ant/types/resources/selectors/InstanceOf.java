@@ -110,13 +110,12 @@ public class InstanceOf implements ResourceSelector {
         if (type != null) {
             if (project == null) {
                 throw new BuildException(
-                    "No project set for InstanceOf ResourceSelector; "
-                    + "the type attribute is invalid.");
+                    "No project set for InstanceOf ResourceSelector; the type attribute is invalid.");
             }
             AntTypeDefinition d = ComponentHelper.getComponentHelper(
                 project).getDefinition(ProjectHelper.genComponentName(uri, type));
             if (d == null) {
-                throw new BuildException("type " + type + " not found.");
+                throw new BuildException("type %s not found.",type);
             }
             try {
                 c = d.innerGetTypeClass();

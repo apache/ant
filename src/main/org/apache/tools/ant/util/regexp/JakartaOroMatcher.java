@@ -40,15 +40,10 @@ public class JakartaOroMatcher implements RegexpMatcher {
     // CheckStyle:VisibilityModifier ON
 
     /**
-     * Constructor for JakartaOroMatcher.
-     */
-    public JakartaOroMatcher() {
-    }
-
-    /**
      * Set the regexp pattern from the String description.
      * @param pattern the pattern to match
      */
+    @Override
     public void setPattern(final String pattern) {
         this.pattern = pattern;
     }
@@ -57,6 +52,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * Get a String representation of the regexp pattern
      * @return the pattern
      */
+    @Override
     public String getPattern() {
         return this.pattern;
     }
@@ -71,8 +67,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
         throws BuildException {
         try {
             // compute the compiler options based on the input options first
-            final Pattern p = compiler.compile(pattern, getCompilerOptions(options));
-            return p;
+            return compiler.compile(pattern, getCompilerOptions(options));
         } catch (final Exception e) {
             throw new BuildException(e);
         }
@@ -84,6 +79,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(final String argument) throws BuildException {
         return matches(argument, MATCH_DEFAULT);
     }
@@ -95,10 +91,10 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(final String input, final int options)
         throws BuildException {
-        final Pattern p = getCompiledPattern(options);
-        return matcher.contains(input, p);
+        return matcher.contains(input, getCompiledPattern(options));
     }
 
     /**
@@ -112,7 +108,8 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(final String argument) throws BuildException {
+    @Override
+    public Vector<String> getGroups(final String argument) throws BuildException {
         return getGroups(argument, MATCH_DEFAULT);
     }
 
@@ -127,12 +124,13 @@ public class JakartaOroMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(final String input, final int options)
+    @Override
+    public Vector<String> getGroups(final String input, final int options)
         throws BuildException {
         if (!matches(input, options)) {
             return null;
         }
-        final Vector v = new Vector();
+        final Vector<String> v = new Vector<>();
         final MatchResult mr = matcher.getMatch();
         final int cnt = mr.groups();
         for (int i = 0; i < cnt; i++) {
@@ -141,7 +139,7 @@ public class JakartaOroMatcher implements RegexpMatcher {
             if (match == null) {
                 match = "";
             }
-            v.addElement(match);
+            v.add(match);
         }
         return v;
     }

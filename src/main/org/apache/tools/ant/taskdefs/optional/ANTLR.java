@@ -118,8 +118,9 @@ public class ANTLR extends Task {
      * @param superGrammar the super grammar filename
      * @deprecated  since ant 1.6
      */
+    @Deprecated
     public void setGlib(String superGrammar) {
-        String sg = null;
+        String sg;
         if (Os.isFamily("dos")) {
             sg = superGrammar.replace('\\', '/');
         } else {
@@ -127,6 +128,7 @@ public class ANTLR extends Task {
         }
         setGlib(FILE_UTILS.resolveFile(getProject().getBaseDir(), sg));
     }
+
     /**
      * Sets an optional super grammar file
      * @param superGrammar the super grammar file
@@ -135,6 +137,7 @@ public class ANTLR extends Task {
     public void setGlib(File superGrammar) {
         this.superGrammar = superGrammar;
     }
+
     /**
      * Sets a flag to enable ParseView debugging
      * @param enable a <code>boolean</code> value
@@ -200,7 +203,6 @@ public class ANTLR extends Task {
      * @param s a <code>boolean</code> value
      */
     public void setFork(boolean s) {
-        //this.fork = s;
     }
 
     /**
@@ -235,6 +237,7 @@ public class ANTLR extends Task {
      * specify it directly.
      * @throws BuildException on error
      */
+    @Override
     public void init() throws BuildException {
         addClasspathEntry("/antlr/ANTLRGrammarParseBehavior.class");
     }
@@ -278,6 +281,7 @@ public class ANTLR extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         validateAttributes();
 
@@ -302,12 +306,11 @@ public class ANTLR extends Task {
             int err = run(commandline.getCommandline());
             if (err != 0) {
                 throw new BuildException("ANTLR returned: " + err, getLocation());
-            } else {
-                String output = bos.toString();
-                if (output.indexOf("error:") > -1) {
-                    throw new BuildException("ANTLR signaled an error: "
-                                             + output, getLocation());
-                }
+            } 
+            String output = bos.toString();
+            if (output.indexOf("error:") > -1) {
+                throw new BuildException("ANTLR signaled an error: "
+                                         + output, getLocation());
             }
         } else {
             log("Skipped grammar file. Generated file " + generatedFile
@@ -357,7 +360,6 @@ public class ANTLR extends Task {
         if (targetFile == null || !targetFile.isFile()) {
             throw new BuildException("Invalid target: " + targetFile);
         }
-
         // if no output directory is specified, used the target's directory
         if (outputDirectory == null) {
             setOutputdirectory(new File(targetFile.getParent()));
@@ -369,8 +371,8 @@ public class ANTLR extends Task {
 
     private File getGeneratedFile() throws BuildException {
         String generatedFileName = null;
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(targetFile));
+        try (BufferedReader in =
+            new BufferedReader(new FileReader(targetFile))) {
             String line;
             while ((line = in.readLine()) != null) {
                 int extendsIndex = line.indexOf(" extends ");
@@ -380,7 +382,6 @@ public class ANTLR extends Task {
                     break;
                 }
             }
-            in.close();
         } catch (Exception e) {
             throw new BuildException("Unable to determine generated class", e);
         }

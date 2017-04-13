@@ -33,13 +33,13 @@ import org.apache.tools.ant.Task;
  */
 public class Log4jListener implements BuildListener {
 
-    /** Indicates if the listener was initialized. */
-    private final boolean initialized;
-
     /**
      * log category we log into
      */
     public static final String LOG_ANT = "org.apache.tools.ant";
+
+    /** Indicates if the listener was initialized. */
+    private final boolean initialized;
 
     /**
      * Construct the listener and make sure there is a valid appender.
@@ -57,6 +57,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#buildStarted
      */
     /** {@inheritDoc}. */
+    @Override
     public void buildStarted(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Project.class.getName());
@@ -68,6 +69,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#buildFinished
      */
     /** {@inheritDoc}. */
+    @Override
     public void buildFinished(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Project.class.getName());
@@ -83,6 +85,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#targetStarted
      */
     /** {@inheritDoc}. */
+    @Override
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Target.class.getName());
@@ -94,6 +97,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#targetFinished
      */
     /** {@inheritDoc}. */
+    @Override
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
             final String targetName = event.getTarget().getName();
@@ -111,6 +115,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#taskStarted
      */
     /** {@inheritDoc}. */
+    @Override
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -123,6 +128,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#taskFinished
      */
     /** {@inheritDoc}. */
+    @Override
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -140,6 +146,7 @@ public class Log4jListener implements BuildListener {
      * @see BuildListener#messageLogged
      */
     /** {@inheritDoc}. */
+    @Override
     public void messageLogged(final BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();

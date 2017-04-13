@@ -97,6 +97,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * @deprecated since 1.4.x.
      *             manage output at the task level.
      */
+    @Deprecated
     public void setOutput(PrintStream out) {
     }
 
@@ -122,7 +123,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (sysProperties != null) {
                 sysProperties.setSystem();
             }
-            Class<?> target = null;
+            Class<?> target;
             try {
                 if (classpath == null) {
                     target = Class.forName(classname);
@@ -137,18 +138,18 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     target = Class.forName(classname, true, loader);
                 }
             } catch (ClassNotFoundException e) {
-                throw new BuildException("Could not find " + classname + "."
-                                         + " Make sure you have it in your"
-                                         + " classpath");
+                throw new BuildException(
+                    "Could not find %s. Make sure you have it in your classpath",
+                    classname);
             }
             main = target.getMethod("main", new Class[] {String[].class});
             if (main == null) {
-                throw new BuildException("Could not find main() method in "
-                                         + classname);
+                throw new BuildException("Could not find main() method in %s",
+                    classname);
             }
             if ((main.getModifiers() & Modifier.STATIC) == 0) {
-                throw new BuildException("main() method in " + classname
-                    + " is not declared static");
+                throw new BuildException(
+                    "main() method in %s is not declared static", classname);
             }
             if (timeout == null) {
                 run(); //NOSONAR
@@ -212,6 +213,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * Run this ExecuteJava in a Thread.
      * @since Ant 1.5
      */
+    @Override
     public void run() {
         final Object[] argument = {javaCommand.getArguments()};
         try {
@@ -242,6 +244,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
      * @param w the responsible Watchdog.
      * @since Ant 1.5
      */
+    @Override
     public synchronized void timeoutOccured(Watchdog w) {
         if (thread != null) {
             timedOut = true;
@@ -318,7 +321,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         exe.setVMLauncher(true);
         File vmsJavaOptionFile = null;
         try {
-            String [] args = new String[command.length - 1];
+            String[] args = new String[command.length - 1];
             System.arraycopy(command, 1, args, 0, command.length - 1);
             vmsJavaOptionFile = JavaEnvUtils.createVmsJavaOptionFile(args);
             //we mark the file to be deleted on exit.
@@ -326,7 +329,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             //after execution finished, which is much better for long-lived runtimes
             //though spawning complicates things...
             vmsJavaOptionFile.deleteOnExit();
-            String [] vmsCmd = {command[0], "-V", vmsJavaOptionFile.getPath()};
+            String[] vmsCmd = { command[0], "-V", vmsJavaOptionFile.getPath() };
             exe.setCommandline(vmsCmd);
         } catch (IOException e) {
             throw new BuildException("Failed to create a temporary file for \"-V\" switch");

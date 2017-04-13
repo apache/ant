@@ -38,10 +38,23 @@ public class BuildException extends RuntimeException {
      * Constructs an exception with the given descriptive message.
      *
      * @param message A description of or information about the exception.
-     *            Should not be <code>null</code>.
+     *            Should not be {@code null}.
      */
     public BuildException(String message) {
         super(message);
+    }
+
+    /**
+     * Constructs an exception with the given format pattern and arguments.
+     *
+     * @param pattern A description of or information about the exception.
+     *            Should not be {@code null}.
+     * @param formatArguments
+     * @see String#format(String, Object...)
+     * @since Ant 1.11
+     */
+    public BuildException(String pattern, Object... formatArguments) {
+        super(String.format(pattern, formatArguments));
     }
 
     /**

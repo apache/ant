@@ -94,7 +94,7 @@ public class LoaderUtils {
      *
      * @since Ant 1.6
      */
-    public static File getClassSource(Class c) {
+    public static File getClassSource(Class<?> c) {
         return normalizeSource(Locator.getClassSource(c));
     }
 

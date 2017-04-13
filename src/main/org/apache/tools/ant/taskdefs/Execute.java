@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,18 +54,6 @@ public class Execute {
      */
     public static final int INVALID = Integer.MAX_VALUE;
 
-    private String[] cmdl = null;
-    private String[] env = null;
-    private int exitValue = INVALID;
-    private ExecuteStreamHandler streamHandler;
-    private final ExecuteWatchdog watchdog;
-    private File workingDirectory = null;
-    private Project project = null;
-    private boolean newEnvironment = false;
-
-    /** Controls whether the VM is used to launch commands, where possible. */
-    private boolean useVMLauncher = true;
-
     private static String antWorkingDirectory = System.getProperty("user.dir");
     private static Map<String, String> procEnvironment = null;
 
@@ -80,6 +68,18 @@ public class Execute {
             environmentCaseInSensitive = true;
         }
     }
+
+    private String[] cmdl = null;
+    private String[] env = null;
+    private int exitValue = INVALID;
+    private ExecuteStreamHandler streamHandler;
+    private final ExecuteWatchdog watchdog;
+    private File workingDirectory = null;
+    private Project project = null;
+    private boolean newEnvironment = false;
+
+    /** Controls whether the VM is used to launch commands, where possible. */
+    private boolean useVMLauncher = true;
 
     /**
      * Set whether or not you want the process to be spawned.
@@ -104,7 +104,7 @@ public class Execute {
      * @return a map containing the environment variables.
      * @since Ant 1.8.2
      */
-    public static synchronized Map<String,String> getEnvironmentVariables() {
+    public static synchronized Map<String, String> getEnvironmentVariables() {
         if (procEnvironment != null) {
             return procEnvironment;
         }
@@ -117,7 +117,7 @@ public class Execute {
             }
         }
 
-        procEnvironment = new LinkedHashMap<String, String>();
+        procEnvironment = new LinkedHashMap<>();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Execute exe = new Execute(new PumpStreamHandler(out));
@@ -149,7 +149,7 @@ public class Execute {
                 } else {
                     // New env var...append the previous one if we have it.
                     if (var != null) {
-                        int eq = var.indexOf("=");
+                        int eq = var.indexOf('=');
                         procEnvironment.put(var.substring(0, eq),
                                             var.substring(eq + 1));
                     }
@@ -158,10 +158,10 @@ public class Execute {
             }
             // Since we "look ahead" before adding, there's one last env var.
             if (var != null) {
-                int eq = var.indexOf("=");
+                int eq = var.indexOf('=');
                 procEnvironment.put(var.substring(0, eq), var.substring(eq + 1));
             }
-        } catch (java.io.IOException exc) {
+        } catch (IOException exc) {
             exc.printStackTrace(); //NOSONAR
             // Just try to see how much we got
         }
@@ -177,7 +177,7 @@ public class Execute {
      */
     @Deprecated
     public static synchronized Vector<String> getProcEnvironment() {
-        Vector<String> v = new Vector<String>();
+        Vector<String> v = new Vector<>();
         for (Entry<String, String> entry : getEnvironmentVariables().entrySet()) {
             v.add(entry.getKey() + "=" + entry.getValue());
         }
@@ -194,17 +194,18 @@ public class Execute {
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
             // OS/2 - use same mechanism as Windows 2000
-            return new String[] {"cmd", "/c", "set"};
-        } else if (Os.isFamily("windows")) {
+            return new String[] { "cmd", "/c", "set" };
+        }
+        if (Os.isFamily("windows")) {
             // Determine if we're running under XP/2000/NT or 98/95
             if (Os.isFamily("win9x")) {
                 // Windows 98/95
-                return new String[] {"command.com", "/c", "set"};
-            } else {
-                // Windows XP/2000/NT/2003
-                return new String[] {"cmd", "/c", "set"};
+                return new String[] { "command.com", "/c", "set" };
             }
-        } else if (Os.isFamily("z/os") || Os.isFamily("unix")) {
+            // Windows XP/2000/NT/2003
+            return new String[] { "cmd", "/c", "set" };
+        }
+        if (Os.isFamily("z/os") || Os.isFamily("unix")) {
             // On most systems one could use: /bin/sh -c env
 
             // Some systems have /bin/env, others /usr/bin/env, just try
@@ -218,16 +219,17 @@ public class Execute {
                 cmd[0] = "env";
             }
             return cmd;
-        } else if (Os.isFamily("netware") || Os.isFamily("os/400")) {
-            // rely on PATH
-            return new String[] {"env"};
-        } else if (Os.isFamily("openvms")) {
-            return new String[] {"show", "logical"};
-        } else {
-            // MAC OS 9 and previous
-            // TODO: I have no idea how to get it, someone must fix it
-            return null;
         }
+        if (Os.isFamily("netware") || Os.isFamily("os/400")) {
+            // rely on PATH
+            return new String[] { "env" };
+        }
+        if (Os.isFamily("openvms")) {
+            return new String[] { "show", "logical" };
+        }
+        // MAC OS 9 and previous
+        // TODO: I have no idea how to get it, someone must fix it
+        return null;
     }
 
     /**
@@ -244,13 +246,13 @@ public class Execute {
         if (Os.isFamily("z/os")) {
             try {
                 return bos.toString("Cp1047");
-            } catch (java.io.UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e) {
                 // noop default encoding used
             }
         } else if (Os.isFamily("os/400")) {
             try {
                 return bos.toString("Cp500");
-            } catch (java.io.UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e) {
                 // noop default encoding used
             }
         }
@@ -417,7 +419,7 @@ public class Execute {
                                  String[] env, File dir, boolean useVM)
         throws IOException {
         if (dir != null && !dir.exists()) {
-            throw new BuildException(dir + " doesn't exist.");
+            throw new BuildException("%s doesn't exist.", dir);
         }
 
         CommandLauncher vmLauncher = CommandLauncher.getVMLauncher(project);
@@ -435,7 +437,7 @@ public class Execute {
      */
     public int execute() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exist.");
+            throw new BuildException("%s doesn't exist.", workingDirectory);
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
@@ -492,7 +494,7 @@ public class Execute {
      */
     public void spawn() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
-            throw new BuildException(workingDirectory + " doesn't exist.");
+            throw new BuildException("%s doesn't exist.", workingDirectory);
         }
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
@@ -611,7 +613,7 @@ public class Execute {
             return env;
         }
         Map<String, String> osEnv =
-            new LinkedHashMap<String, String>(getEnvironmentVariables());
+            new LinkedHashMap<>(getEnvironmentVariables());
         for (int i = 0; i < env.length; i++) {
             String keyValue = env[i];
             String key = keyValue.substring(0, keyValue.indexOf('='));
@@ -624,7 +626,7 @@ public class Execute {
 
                 for (String osEnvItem : osEnv.keySet()) {
                     // Nb: using default locale as key is a env name
-                    if (osEnvItem.toLowerCase().equals(key.toLowerCase())) {
+                    if (osEnvItem.equalsIgnoreCase(key)) {
                         // Use the original casiness of the key
                         key = osEnvItem;
                         break;
@@ -636,11 +638,8 @@ public class Execute {
             osEnv.put(key, keyValue.substring(key.length() + 1));
         }
 
-        ArrayList<String> l = new ArrayList<String>();
-        for (Entry<String, String> entry : osEnv.entrySet()) {
-            l.add(entry.getKey() + "=" + entry.getValue());
-        }
-        return l.toArray(new String[osEnv.size()]);
+        return osEnv.entrySet().stream()
+            .map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
     }
 
     /**
@@ -651,7 +650,7 @@ public class Execute {
      * @param cmdline The command to execute.
      * @throws BuildException if the command does not exit successfully.
      */
-    public static void runCommand(Task task, String[] cmdline)
+    public static void runCommand(Task task, String... cmdline)
         throws BuildException {
         try {
             task.log(Commandline.describeCommand(cmdline),
@@ -665,7 +664,7 @@ public class Execute {
                 throw new BuildException(cmdline[0]
                     + " failed with return code " + retval, task.getLocation());
             }
-        } catch (java.io.IOException exc) {
+        } catch (IOException exc) {
             throw new BuildException("Could not launch " + cmdline[0] + ": "
                 + exc, task.getLocation());
         }
@@ -695,9 +694,9 @@ public class Execute {
      */
     private static Map<String, String> getVMSLogicals(BufferedReader in)
         throws IOException {
-        HashMap<String, String> logicals = new HashMap<String, String>();
+        Map<String, String> logicals = new HashMap<>();
         String logName = null, logValue = null, newLogName;
-        String line = null;
+        String line;
         // CheckStyle:MagicNumber OFF
         while ((line = in.readLine()) != null) {
             // parse the VMS logicals into required format ("VAR=VAL[,VAL2]")

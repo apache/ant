@@ -39,8 +39,9 @@ public class FloatCPInfo extends ConstantCPInfo {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(new Float(cpStream.readFloat()));
+        setValue(Float.valueOf(cpStream.readFloat()));
     }
 
     /**
@@ -48,9 +49,9 @@ public class FloatCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "Float Constant Pool Entry: " + getValue();
     }
 
 }
-

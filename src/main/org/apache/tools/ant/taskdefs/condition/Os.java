@@ -38,22 +38,6 @@ public class Os implements Condition {
         System.getProperty("path.separator");
 
     /**
-     * OS family to look for
-     */
-    private String family;
-    /**
-     * Name of OS
-     */
-    private String name;
-    /**
-     * version of OS
-     */
-    private String version;
-    /**
-     * OS architecture
-     */
-    private String arch;
-    /**
      * OS family that can be tested for. {@value}
      */
     public static final String FAMILY_WINDOWS = "windows";
@@ -106,6 +90,23 @@ public class Os implements Condition {
      * @see https://issues.apache.org/jira/browse/HADOOP-3318
      */
     private static final String DARWIN = "darwin";
+
+    /**
+     * OS family to look for
+     */
+    private String family;
+    /**
+     * Name of OS
+     */
+    private String name;
+    /**
+     * version of OS
+     */
+    private String version;
+    /**
+     * OS architecture
+     */
+    private String arch;
 
     /**
      * Default constructor
@@ -179,6 +180,7 @@ public class Os implements Condition {
      * @throws BuildException if there is an error.
      * @see Os#setFamily(String)
      */
+    @Override
     public boolean eval() throws BuildException {
         return isOs(family, name, arch, version);
     }

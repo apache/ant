@@ -110,6 +110,7 @@ public class Rpm extends Task {
      *
      * @throws BuildException is there is a problem in the task execution.
      */
+    @Override
     public void execute() throws BuildException {
 
         Commandline toExecute = new Commandline();
@@ -227,7 +228,7 @@ public class Rpm extends Task {
      * @param sf the spec file name to use.
      */
     public void setSpecFile(String sf) {
-        if ((sf == null) || (sf.trim().length() == 0)) {
+        if (sf == null || sf.trim().isEmpty()) {
             throw new BuildException("You must specify a spec file", getLocation());
         }
         this.specFile = sf;
@@ -320,20 +321,20 @@ public class Rpm extends Task {
      * @since 1.6
      */
     protected String guessRpmBuildCommand() {
-        Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
-        String path = (String) env.get(PATH1);
+        Map<String, String> env = Execute.getEnvironmentVariables();
+        String path = env.get(PATH1);
         if (path == null) {
-            path = (String) env.get(PATH2);
+            path = env.get(PATH2);
             if (path == null) {
-                path = (String) env.get(PATH3);
+                path = env.get(PATH3);
             }
         }
 
         if (path != null) {
             Path p = new Path(getProject(), path);
             String[] pElements = p.list();
-            for (int i = 0; i < pElements.length; i++) {
-                File f = new File(pElements[i],
+            for (String pElement : pElements) {
+                File f = new File(pElement,
                                   "rpmbuild"
                                   + (Os.isFamily("dos") ? ".exe" : ""));
                 if (f.canRead()) {

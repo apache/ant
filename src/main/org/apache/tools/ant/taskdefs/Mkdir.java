@@ -46,29 +46,30 @@ public class Mkdir extends Task {
      * create the directory and all parents
      * @throws BuildException if dir is somehow invalid, or creation failed.
      */
+    @Override
     public void execute() throws BuildException {
         if (dir == null) {
             throw new BuildException("dir attribute is required", getLocation());
         }
 
         if (dir.isFile()) {
-            throw new BuildException("Unable to create directory as a file "
-                                     + "already exists with that name: "
-                                     + dir.getAbsolutePath());
+            throw new BuildException(
+                "Unable to create directory as a file already exists with that name: %s",
+                dir.getAbsolutePath());
         }
 
         if (!dir.exists()) {
             boolean result = mkdirs(dir);
             if (!result) {
                 if (dir.exists()) {
-                    log("A different process or task has already created "
-                        + "dir " + dir.getAbsolutePath(),
-                        Project.MSG_VERBOSE);
+                    log("A different process or task has already created dir "
+                        + dir.getAbsolutePath(), Project.MSG_VERBOSE);
                     return;
                 }
-                String msg = "Directory " + dir.getAbsolutePath()
-                    + " creation was not successful for an unknown reason";
-                throw new BuildException(msg, getLocation());
+                throw new BuildException(
+                    "Directory " + dir.getAbsolutePath()
+                        + " creation was not successful for an unknown reason",
+                    getLocation());
             }
             log("Created dir: " + dir.getAbsolutePath());
         } else {
@@ -111,4 +112,3 @@ public class Mkdir extends Task {
         return true;
     }
 }
-

@@ -66,6 +66,7 @@ public class URLResolver implements ExtensionResolver {
      * @return file the file resolved
      * @throws BuildException if the URL is invalid
      */
+    @Override
     public File resolve(final Extension extension,
                          final Project project) throws BuildException {
         validate();
@@ -110,16 +111,15 @@ public class URLResolver implements ExtensionResolver {
      */
     private void validate() {
         if (null == url) {
-            final String message = "Must specify URL";
-            throw new BuildException(message);
+            throw new BuildException("Must specify URL");
         }
-
         if (null == destdir && null == destfile) {
-            final String message = "Must specify destination file or directory";
-            throw new BuildException(message);
-        } else if (null != destdir && null != destfile) {
-            final String message = "Must not specify both destination file or directory";
-            throw new BuildException(message);
+            throw new BuildException(
+                "Must specify destination file or directory");
+        }
+        if (null != destdir && null != destfile) {
+            throw new BuildException(
+                "Must not specify both destination file or directory");
         }
     }
 
@@ -127,6 +127,7 @@ public class URLResolver implements ExtensionResolver {
      * Returns a string representation of the URL
      * @return the string representation
      */
+    @Override
     public String toString() {
         return "URL[" + url + "]";
     }

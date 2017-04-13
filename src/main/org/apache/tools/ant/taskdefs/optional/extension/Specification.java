@@ -19,11 +19,14 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.DeweyDecimal;
 import org.apache.tools.ant.util.StringUtils;
@@ -167,25 +170,17 @@ public final class Specification {
     public static Specification[] getSpecifications(final Manifest manifest)
         throws ParseException {
         if (null == manifest) {
-            return new Specification[ 0 ];
+            return new Specification[0];
         }
+        final List<Specification> results = new ArrayList<>();
 
-        final ArrayList results = new ArrayList();
-
-        final Map entries = manifest.getEntries();
-        final Iterator keys = entries.keySet().iterator();
-        while (keys.hasNext()) {
-            final String key = (String) keys.next();
-            final Attributes attributes = (Attributes) entries.get(key);
-            final Specification specification
-                = getSpecification(key, attributes);
-            if (null != specification) {
-                results.add(specification);
-            }
+        for (Map.Entry<String, Attributes> e : manifest.getEntries()
+            .entrySet()) {
+            Optional.ofNullable(getSpecification(e.getKey(), e.getValue()))
+                .ifPresent(results::add);
         }
-
-        final ArrayList trimmedResults = removeDuplicates(results);
-        return (Specification[]) trimmedResults.toArray(new Specification[trimmedResults.size()]);
+        return removeDuplicates(results)
+            .toArray(new Specification[removeDuplicates(results).size()]);
     }
 
     /**
@@ -239,10 +234,10 @@ public final class Specification {
                 this.specificationVersion
                     = new DeweyDecimal(specificationVersion);
             } catch (final NumberFormatException nfe) {
-                final String error = "Bad specification version format '"
-                    + specificationVersion + "' in '" + specificationTitle
-                    + "'. (Reason: " + nfe + ")";
-                throw new IllegalArgumentException(error);
+                throw new IllegalArgumentException(
+                    "Bad specification version format '" + specificationVersion
+                        + "' in '" + specificationTitle + "'. (Reason: " + nfe
+                        + ")");
             }
         }
 
@@ -253,13 +248,7 @@ public final class Specification {
         if (null == this.specificationTitle) {
             throw new NullPointerException("specificationTitle");
         }
-
-        String[] copy = null;
-        if (null != sections) {
-            copy = new String[ sections.length ];
-            System.arraycopy(sections, 0, copy, 0, sections.length);
-        }
-        this.sections = copy;
+        this.sections = sections == null ? null : sections.clone();
     }
 
     /**
@@ -324,12 +313,7 @@ public final class Specification {
      *         or null if relevant to no sections.
      */
     public String[] getSections() {
-        if (null == sections) {
-            return null;
-        }
-        final String[] newSections = new String[ sections.length ];
-        System.arraycopy(sections, 0, newSections, 0, sections.length);
-        return newSections;
+        return sections == null ? null : sections.clone();
     }
 
     /**
@@ -390,7 +374,7 @@ public final class Specification {
      * @return true if the specification is compatible with this specification
      */
     public boolean isCompatibleWith(final Specification other) {
-        return (COMPATIBLE == getCompatibilityWith(other));
+        return COMPATIBLE == getCompatibilityWith(other);
     }
 
     /**
@@ -398,11 +382,12 @@ public final class Specification {
      *
      * @return string representation of object.
      */
+    @Override
     public String toString() {
         final String brace = ": ";
 
-        final StringBuffer sb
-            = new StringBuffer(SPECIFICATION_TITLE.toString());
+        final StringBuilder sb
+            = new StringBuilder(SPECIFICATION_TITLE.toString());
         sb.append(brace);
         sb.append(specificationTitle);
         sb.append(StringUtils.LINE_SEP);
@@ -441,7 +426,6 @@ public final class Specification {
             sb.append(implementationVendor);
             sb.append(StringUtils.LINE_SEP);
         }
-
         return sb.toString();
     }
 
@@ -467,30 +451,24 @@ public final class Specification {
      * @param list the array of results to trim
      * @return an array list with all duplicates removed
      */
-    private static ArrayList removeDuplicates(final ArrayList list) {
-        final ArrayList results = new ArrayList();
-        final ArrayList sections = new ArrayList();
-        while (list.size() > 0) {
-            final Specification specification = (Specification) list.remove(0);
-            final Iterator iterator = list.iterator();
-            while (iterator.hasNext()) {
-                final Specification other = (Specification) iterator.next();
+    private static List<Specification> removeDuplicates(final List<Specification> list) {
+        final List<Specification> results = new ArrayList<>();
+        final List<String> sections = new ArrayList<>();
+        while (!list.isEmpty()) {
+            final Specification specification = list.remove(0);
+            for (final Iterator<Specification> iterator =
+                list.iterator(); iterator.hasNext();) {
+                final Specification other = iterator.next();
                 if (isEqual(specification, other)) {
-                    final String[] otherSections = other.getSections();
-                    if (null != otherSections) {
-                        sections.addAll(Arrays.asList(otherSections));
-                    }
+                    Optional.ofNullable(other.getSections())
+                        .ifPresent(s -> Collections.addAll(sections, s));
                     iterator.remove();
                 }
             }
-
-            final Specification merged =
-                mergeInSections(specification, sections);
-            results.add(merged);
+            results.add(mergeInSections(specification, sections));
             //Reset list of sections
             sections.clear();
         }
-
         return results;
     }
 
@@ -522,22 +500,23 @@ public final class Specification {
      * @return the merged specification
      */
     private static Specification mergeInSections(final Specification specification,
-                                              final ArrayList sectionsToAdd) {
-        if (0 == sectionsToAdd.size()) {
+                                              final List<String> sectionsToAdd) {
+        if (sectionsToAdd.isEmpty()) {
             return specification;
         }
-        sectionsToAdd.addAll(Arrays.asList(specification.getSections()));
-
-        final String[] sections =
-            (String[]) sectionsToAdd.toArray(new String[sectionsToAdd.size()]);
+        Stream<String> sections =
+            Stream
+                .concat(
+                    Optional.ofNullable(specification.getSections())
+                        .map(Stream::of).orElse(Stream.empty()),
+                    sectionsToAdd.stream());
 
         return new Specification(specification.getSpecificationTitle(),
                 specification.getSpecificationVersion().toString(),
                 specification.getSpecificationVendor(),
                 specification.getImplementationTitle(),
                 specification.getImplementationVersion(),
-                specification.getImplementationVendor(),
-                sections);
+                specification.getImplementationVendor(), sections.toArray(String[]::new));
     }
 
     /**

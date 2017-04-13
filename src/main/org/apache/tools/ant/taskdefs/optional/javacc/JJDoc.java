@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -44,7 +44,7 @@ public class JJDoc extends Task {
     private static final String TEXT              = "TEXT";
     private static final String ONE_TABLE         = "ONE_TABLE";
 
-    private final Hashtable optionalAttrs = new Hashtable();
+    private final Map<String, Object> optionalAttrs = new Hashtable<>();
 
     private String outputFile = null;
     private boolean plainText = false;
@@ -65,7 +65,7 @@ public class JJDoc extends Task {
      * @param plainText a <code>boolean</code> value.
      */
     public void setText(boolean plainText) {
-        optionalAttrs.put(TEXT, plainText ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(TEXT, Boolean.valueOf(plainText));
         this.plainText = plainText;
     }
 
@@ -74,7 +74,7 @@ public class JJDoc extends Task {
      * @param oneTable a <code>boolean</code> value.
      */
     public void setOnetable(boolean oneTable) {
-        optionalAttrs.put(ONE_TABLE, oneTable ? Boolean.TRUE : Boolean.FALSE);
+        optionalAttrs.put(ONE_TABLE, Boolean.valueOf(oneTable));
     }
 
     /**
@@ -124,19 +124,15 @@ public class JJDoc extends Task {
      * Do the task.
      * @throws BuildException if there is an error.
      */
+    @Override
     public void execute() throws BuildException {
 
         // load command line with optional attributes
-        Enumeration iter = optionalAttrs.keys();
-        while (iter.hasMoreElements()) {
-            String name  = (String) iter.nextElement();
-            Object value = optionalAttrs.get(name);
-            cmdl.createArgument()
-                .setValue("-" + name + ":" + value.toString());
-        }
+        optionalAttrs.forEach((name, value) -> cmdl.createArgument()
+            .setValue("-" + name + ":" + value.toString()));
 
         if (targetFile == null || !targetFile.isFile()) {
-            throw new BuildException("Invalid target: " + targetFile);
+            throw new BuildException("Invalid target: %s", targetFile);
         }
 
         if (outputFile != null) {
@@ -195,8 +191,8 @@ public class JJDoc extends Task {
             suffix = DEFAULT_SUFFIX_TEXT;
         }
 
-        if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
-            int filePos = javaccFile.lastIndexOf("/");
+        if ((optionalOutputFile == null) || optionalOutputFile.isEmpty()) {
+            int filePos = javaccFile.lastIndexOf('/');
 
             if (filePos >= 0) {
                 javaccFile = javaccFile.substring(filePos + 1);

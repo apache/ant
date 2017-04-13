@@ -19,7 +19,6 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
@@ -176,11 +175,7 @@ public class SymbolicLinkUtils {
         final File f = new File(parent, name);
         if (!f.exists()) {
             final String localName = f.getName();
-            final String[] c = parent.list(new FilenameFilter() {
-                    public boolean accept(final File d, final String n) {
-                        return localName.equals(n);
-                    }
-                });
+            final String[] c = parent.list((d, n) -> localName.equals(n));
             return c != null && c.length > 0;
         }
         return false;

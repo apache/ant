@@ -20,6 +20,8 @@ package org.apache.tools.ant.types.optional.xz;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.CompressedResource;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZInputStream;
@@ -43,7 +45,7 @@ public class XzResource extends CompressedResource {
      * Constructor with another resource to wrap.
      * @param other the resource to wrap.
      */
-    public XzResource(org.apache.tools.ant.types.ResourceCollection other) {
+    public XzResource(ResourceCollection other) {
         super(other);
     }
 
@@ -53,6 +55,7 @@ public class XzResource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
+    @Override
     protected InputStream wrapStream(InputStream in) throws IOException {
         return new XZInputStream(in);
     }
@@ -63,7 +66,8 @@ public class XzResource extends CompressedResource {
      * @return the wrapped stream.
      * @throws IOException if there is a problem.
      */
-     protected OutputStream wrapStream(OutputStream out) throws IOException {
+     @Override
+    protected OutputStream wrapStream(OutputStream out) throws IOException {
         return new XZOutputStream(out, new LZMA2Options());
     }
 
@@ -71,6 +75,7 @@ public class XzResource extends CompressedResource {
      * Get the name of the compression method.
      * @return the string "XZ".
      */
+    @Override
     protected String getCompressionName() {
         return "XZ";
     }

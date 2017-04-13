@@ -53,6 +53,15 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCUnCheckout extends ClearCase {
+    /**
+     *  -keep flag -- keep a copy of the file with .keep extension
+     */
+    public static final String FLAG_KEEPCOPY = "-keep";
+    /**
+     *  -rm flag -- remove the copy of the file
+     */
+    public static final String FLAG_RM = "-rm";
+
     private boolean mKeep = false;
 
     /**
@@ -62,10 +71,10 @@ public class CCUnCheckout extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -84,13 +93,12 @@ public class CCUnCheckout extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -127,15 +135,4 @@ public class CCUnCheckout extends ClearCase {
         return mKeep;
     }
 
-
-    /**
-     *  -keep flag -- keep a copy of the file with .keep extension
-     */
-    public static final String FLAG_KEEPCOPY = "-keep";
-    /**
-     *  -rm flag -- remove the copy of the file
-     */
-    public static final String FLAG_RM = "-rm";
-
 }
-

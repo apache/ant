@@ -84,13 +84,13 @@ public class RedirectorElement extends DataType {
     private Mapper errorMapper;
 
     /** input filter chains. */
-    private Vector<FilterChain> inputFilterChains = new Vector<FilterChain>();
+    private Vector<FilterChain> inputFilterChains = new Vector<>();
 
     /** output filter chains. */
-    private Vector<FilterChain> outputFilterChains = new Vector<FilterChain>();
+    private Vector<FilterChain> outputFilterChains = new Vector<>();
 
     /** error filter chains. */
-    private Vector<FilterChain> errorFilterChains = new Vector<FilterChain>();
+    private Vector<FilterChain> errorFilterChains = new Vector<>();
 
     /** The output encoding */
     private String outputEncoding;
@@ -527,13 +527,13 @@ public class RedirectorElement extends DataType {
                 redirector.setError(toFileArray(errorTargets));
             }
         }
-        if (inputFilterChains.size() > 0) {
+        if (!inputFilterChains.isEmpty()) {
             redirector.setInputFilterChains(inputFilterChains);
         }
-        if (outputFilterChains.size() > 0) {
+        if (!outputFilterChains.isEmpty()) {
             redirector.setOutputFilterChains(outputFilterChains);
         }
-        if (errorFilterChains.size() > 0) {
+        if (!errorFilterChains.isEmpty()) {
             redirector.setErrorFilterChains(errorFilterChains);
         }
         if (inputEncoding != null) {
@@ -571,7 +571,7 @@ public class RedirectorElement extends DataType {
             return null;
         }
         //remove any null elements
-        ArrayList<File> list = new ArrayList<File>(name.length);
+        ArrayList<File> list = new ArrayList<>(name.length);
         for (int i = 0; i < name.length; i++) {
             if (name[i] != null) {
                 list.add(getProject().resolveFile(name[i]));
@@ -587,6 +587,7 @@ public class RedirectorElement extends DataType {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
+    @Override
     protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -603,7 +604,6 @@ public class RedirectorElement extends DataType {
                     stk.pop();
                 }
             }
-            @SuppressWarnings("unchecked")
             final List<? extends List<FilterChain>> filterChainLists = Arrays
                     .<List<FilterChain>> asList(inputFilterChains, outputFilterChains,
                             errorFilterChains);

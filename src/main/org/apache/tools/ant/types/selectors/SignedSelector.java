@@ -48,6 +48,7 @@ public class SignedSelector extends DataType implements FileSelector {
      * @param file     path to file to be selected
      * @return whether the file should be selected or not
      */
+    @Override
     public boolean isSelected(File basedir, String filename, File file) {
         if (file.isDirectory()) {
             return false; // Quick return: directories cannot be signed

@@ -65,6 +65,7 @@ public class ResourcesMatch implements Condition {
      * @return true if all resources are equal.
      * @exception BuildException if there is an error.
      */
+    @Override
     public boolean eval() throws BuildException {
         if (resources == null) {
             throw new BuildException(
@@ -72,11 +73,11 @@ public class ResourcesMatch implements Condition {
         }
         if (resources.size() > 1) {
             Iterator<Resource> i = resources.iterator();
-            Resource r1 = (Resource) i.next();
-            Resource r2 = null;
+            Resource r1 = i.next();
+            Resource r2;
 
             while (i.hasNext()) {
-                r2 = (Resource) i.next();
+                r2 = i.next();
                 try {
                     if (!ResourceUtils.contentEquals(r1, r2, asText)) {
                         return false;

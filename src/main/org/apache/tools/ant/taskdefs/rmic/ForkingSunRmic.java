@@ -50,6 +50,7 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
      * @return true if the command ran successfully
      * @throws BuildException on error
      */
+    @Override
     public boolean execute() throws BuildException {
         Rmic owner = getRmic();
         Commandline cmd = setupRmicCommand();

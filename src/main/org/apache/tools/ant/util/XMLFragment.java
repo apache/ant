@@ -74,9 +74,10 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
      * @param qName the qualified name of the nested element
      * @return an object that the element is applied to
      */
+    @Override
     public Object createDynamicElement(String uri, String name, String qName) {
-        Element e = null;
-        if (uri.equals("")) {
+        Element e;
+        if ("".equals(uri)) {
             e = doc.createElement(name);
         } else {
             e = doc.createElementNS(uri, qName);
@@ -93,7 +94,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
     private void addText(Node n, String s) {
         s = getProject().replaceProperties(s);
         //only text nodes that are non null after property expansion are added
-        if (s != null && !s.trim().equals("")) {
+        if (s != null && !s.trim().isEmpty()) {
             Text t = doc.createTextNode(s.trim());
             n.appendChild(t);
         }
@@ -124,9 +125,10 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
          * @param qName the qualified name of the attribute
          * @param value the value of the attribute
          */
+        @Override
         public void setDynamicAttribute(
             String uri, String name, String qName, String value) {
-            if (uri.equals("")) {
+            if ("".equals(uri)) {
                 e.setAttribute(name, value);
             } else {
                 e.setAttributeNS(uri, qName, value);
@@ -140,9 +142,10 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
          * @param qName the qualified name of the nested element
          * @return an object that the element is applied to
          */
+        @Override
         public Object createDynamicElement(String uri, String name, String qName) {
             Element e2 = null;
-            if (uri.equals("")) {
+            if ("".equals(uri)) {
                 e2 = doc.createElement(name);
             } else {
                 e2 = doc.createElementNS(uri, qName);

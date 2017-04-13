@@ -130,7 +130,7 @@ public class Concat extends Task implements ResourceCollection {
         public void setFile(File file) throws BuildException {
             // non-existing files are not allowed
             if (!file.exists()) {
-                throw new BuildException("File " + file + " does not exist.");
+                throw new BuildException("File %s does not exist.", file);
             }
 
             BufferedReader reader = null;
@@ -181,12 +181,12 @@ public class Concat extends Task implements ResourceCollection {
             if (value == null) {
                 value = "";
             }
-            if (value.trim().length() == 0) {
+            if (value.trim().isEmpty()) {
                 value = "";
             }
             if (trimLeading) {
                 char[] current = value.toCharArray();
-                StringBuffer b = new StringBuffer(current.length);
+                StringBuilder b = new StringBuilder(current.length);
                 boolean startOfLine = true;
                 int pos = 0;
                 while (pos < current.length) {
@@ -253,6 +253,7 @@ public class Concat extends Task implements ResourceCollection {
          * @exception IOException - possibly thrown by the read for a reader
          *            object.
          */
+        @Override
         public int read() throws IOException {
             if (needAddSeparator) {
                 if (lastPos >= eolString.length()) {
@@ -287,6 +288,7 @@ public class Concat extends Task implements ResourceCollection {
          * @exception IOException - possibly thrown by the reads to the
          *            reader objects.
          */
+        @Override
         public int read(char[] cbuf, int off, int len)
             throws IOException {
 
@@ -334,14 +336,14 @@ public class Concat extends Task implements ResourceCollection {
             }
             if (amountRead == 0) {
                 return -1;
-            } else {
-                return amountRead;
             }
+            return amountRead;
         }
 
         /**
          * Close the current reader
          */
+        @Override
         public void close() throws IOException {
             if (reader != null) {
                 reader.close();
@@ -383,6 +385,7 @@ public class Concat extends Task implements ResourceCollection {
         private ConcatResource(ResourceCollection c) {
             this.c = c;
         }
+        @Override
         public InputStream getInputStream() {
             if (binary) {
                 ConcatResourceInputStream result = new ConcatResourceInputStream(c);
@@ -424,6 +427,7 @@ public class Concat extends Task implements ResourceCollection {
             return outputEncoding == null ? new ReaderInputStream(rdr)
                     : new ReaderInputStream(rdr, outputEncoding);
         }
+        @Override
         public String getName() {
             return resourceName == null
                     ? "concat (" + String.valueOf(c) + ")" : resourceName;
@@ -492,6 +496,7 @@ public class Concat extends Task implements ResourceCollection {
     private String resourceName;
 
     private ReaderFactory<Resource> resourceReaderFactory = new ReaderFactory<Resource>() {
+        @Override
         public Reader getReader(Resource o) throws IOException {
             InputStream is = o.getInputStream();
             return new BufferedReader(encoding == null
@@ -501,6 +506,7 @@ public class Concat extends Task implements ResourceCollection {
     };
 
     private ReaderFactory<Reader> identityReaderFactory = new ReaderFactory<Reader>() {
+        @Override
         public Reader getReader(Reader o) {
             return o;
         }
@@ -594,6 +600,7 @@ public class Concat extends Task implements ResourceCollection {
      * @since Ant 1.6
      * @deprecated use #setOverwrite instead
      */
+    @Deprecated
     public void setForce(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;
     }
@@ -752,11 +759,11 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void setEol(FixCRLF.CrLf crlf) {
         String s = crlf.getValue();
-        if (s.equals("cr") || s.equals("mac")) {
+        if ("cr".equals(s) || "mac".equals(s)) {
             eolString = "\r";
-        } else if (s.equals("lf") || s.equals("unix")) {
+        } else if ("lf".equals(s) || "unix".equals(s)) {
             eolString = "\n";
-        } else if (s.equals("crlf") || s.equals("dos")) {
+        } else if ("crlf".equals(s) || "dos".equals(s)) {
             eolString = "\r\n";
         }
     }
@@ -785,6 +792,7 @@ public class Concat extends Task implements ResourceCollection {
     /**
      * Execute the concat task.
      */
+    @Override
     public void execute() {
         validate();
         if (binary && dest == null) {
@@ -796,7 +804,7 @@ public class Concat extends Task implements ResourceCollection {
             log(dest + " is up-to-date.", Project.MSG_VERBOSE);
             return;
         }
-        if (c.size() == 0 && ignoreEmpty) {
+        if (c.isEmpty() && ignoreEmpty) {
             return;
         }
         try {
@@ -815,15 +823,19 @@ public class Concat extends Task implements ResourceCollection {
      * Implement ResourceCollection.
      * @return Iterator&lt;Resource&gt;.
      */
+    @Override
     public Iterator<Resource> iterator() {
         validate();
-        return Collections.<Resource>singletonList(new ConcatResource(getResources())).iterator();
+        return Collections
+            .<Resource> singletonList(new ConcatResource(getResources()))
+            .iterator();
     }
 
     /**
      * Implement ResourceCollection.
      * @return 1.
      */
+    @Override
     public int size() {
         return 1;
     }
@@ -832,6 +844,7 @@ public class Concat extends Task implements ResourceCollection {
      * Implement ResourceCollection.
      * @return false.
      */
+    @Override
     public boolean isFilesystemOnly() {
         return false;
     }
@@ -852,8 +865,7 @@ public class Concat extends Task implements ResourceCollection {
             }
             if (encoding != null || outputEncoding != null) {
                 throw new BuildException(
-                    "Setting input or output encoding is incompatible with binary"
-                    + " concatenation");
+                    "Setting input or output encoding is incompatible with binary concatenation");
             }
             if (filterChains != null) {
                 throw new BuildException(
@@ -899,8 +911,9 @@ public class Concat extends Task implements ResourceCollection {
             checkDestNotInSources.add(rc);
             checkDestNotInSources.add(dest);
             if (checkDestNotInSources.size() > 0) {
-                throw new BuildException("Destination resource " + dest
-                        + " was specified as an input resource.");
+                throw new BuildException(
+                    "Destination resource %s was specified as an input resource.",
+                    dest);
             }
         }
         Restrict noexistRc = new Restrict();
@@ -919,12 +932,8 @@ public class Concat extends Task implements ResourceCollection {
         if (dest == null || forceOverwrite) {
             return false;
         }
-        for (Resource r : c) {
-            if (SelectorUtils.isOutOfDate(r, dest, FILE_UTILS.getFileTimestampGranularity())) {
-                return false;
-            }
-        }
-        return true;
+        return c.stream().noneMatch(r -> SelectorUtils.isOutOfDate(r, dest,
+            FILE_UTILS.getFileTimestampGranularity()));
     }
 
     /**
@@ -934,7 +943,7 @@ public class Concat extends Task implements ResourceCollection {
      * for &quot;ignorable whitespace&quot; as well.</p>
      */
     private void sanitizeText() {
-        if (textBuffer != null && "".equals(textBuffer.toString().trim())) {
+        if (textBuffer != null && textBuffer.toString().trim().isEmpty()) {
             textBuffer = null;
         }
     }

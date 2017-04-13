@@ -57,7 +57,7 @@ public class Content extends ResourceComparator {
      * @return a negative integer, zero, or a positive integer as the first
      *         argument is less than, equal to, or greater than the second.
      * @throws BuildException if I/O errors occur.
-     * @see org.apache.tools.ant.util.ResourceUtils#compareContent(Resource, Resource, boolean).
+     * @see org.apache.tools.ant.util.ResourceUtils#compareContent(Resource, Resource, boolean)
      */
     protected int resourceCompare(Resource foo, Resource bar) {
         try {

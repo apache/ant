@@ -150,6 +150,7 @@ public class ExtensionAdapter extends DataType {
      * @param reference the reference to which this instance is associated
      * @exception BuildException if this instance already has been configured.
      */
+    @Override
     public void setRefid(final Reference reference)
         throws BuildException {
         if (null != extensionName
@@ -183,8 +184,7 @@ public class ExtensionAdapter extends DataType {
         }
         dieOnCircularReference();
         if (null == extensionName) {
-            final String message = "Extension is missing name.";
-            throw new BuildException(message);
+            throw new BuildException("Extension is missing name.");
         }
 
         String specificationVersionString = null;
@@ -209,7 +209,8 @@ public class ExtensionAdapter extends DataType {
      * @return the extension in a string.
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
-        return "{" + toExtension().toString() + "}";
+        return "{" + toExtension() + "}";
     }
 }

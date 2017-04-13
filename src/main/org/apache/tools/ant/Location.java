@@ -19,6 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.Locator;
@@ -131,8 +132,9 @@ public class Location implements Serializable {
      *         <code>"fileName: "</code> if only the file name is known,
      *         and the empty string for unknown locations.
      */
+    @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         if (fileName != null) {
             buf.append(fileName);
@@ -155,6 +157,7 @@ public class Location implements Serializable {
      *              as this object.
      * @since Ant 1.6.3
      */
+    @Override
     public boolean equals(Object other) {
         if (this == other) {
             return true;
@@ -173,7 +176,8 @@ public class Location implements Serializable {
      * @return a hash code value for this location.
      * @since Ant 1.6.3
      */
+    @Override
     public int hashCode() {
-        return toString().hashCode();
+        return Objects.hash(fileName, lineNumber);
     }
 }

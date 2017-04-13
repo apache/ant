@@ -26,6 +26,8 @@ import java.io.IOException;
  *
  */
 public class StringCPInfo extends ConstantCPInfo {
+    /** the index into the constant pool containing the string's content */
+    private int index;
 
     /** Constructor.  */
     public StringCPInfo() {
@@ -40,9 +42,9 @@ public class StringCPInfo extends ConstantCPInfo {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         index = cpStream.readUnsignedShort();
-
         setValue("unresolved");
     }
 
@@ -51,6 +53,7 @@ public class StringCPInfo extends ConstantCPInfo {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "String Constant Pool Entry for "
             + getValue() + "[" + index + "]";
@@ -63,12 +66,11 @@ public class StringCPInfo extends ConstantCPInfo {
      * @param constantPool the constant pool of which this entry is a member
      *      and against which this entry is to be resolved.
      */
+    @Override
     public void resolve(ConstantPool constantPool) {
         setValue(((Utf8CPInfo) constantPool.getEntry(index)).getValue());
         super.resolve(constantPool);
     }
 
-    /** the index into the constant pool containing the string's content */
-    private int index;
 }
 

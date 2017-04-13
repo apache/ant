@@ -88,6 +88,43 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCMkelem extends ClearCase {
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+    /**
+     * -nwarn flag -- suppresses warning messages
+     */
+    public static final String FLAG_NOWARN = "-nwarn";
+    /**
+     * -ptime flag -- preserves the modification time on checkin
+     */
+    public static final String FLAG_PRESERVETIME = "-ptime";
+    /**
+     * -nco flag -- do not checkout element after creation
+     */
+    public static final String FLAG_NOCHECKOUT = "-nco";
+    /**
+     * -ci flag -- checkin element after creation
+     */
+    public static final String FLAG_CHECKIN = "-ci";
+    /**
+     * -master flag -- change mastership of main branch to current site
+     */
+    public static final String FLAG_MASTER = "-master";
+    /**
+     * -eltype flag -- element type to use during creation
+     */
+    public static final String FLAG_ELTYPE = "-eltype";
+
     private String  mComment = null;
     private String  mCfile   = null;
     private boolean mNwarn   = false;
@@ -104,10 +141,10 @@ public class CCMkelem extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -126,13 +163,12 @@ public class CCMkelem extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -141,13 +177,11 @@ public class CCMkelem extends ClearCase {
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
+        } else if (getCommentFile() != null) {
+            // -cfile
+            getCommentFileCommand(cmd);
         } else {
-            if (getCommentFile() != null) {
-                // -cfile
-                getCommentFileCommand(cmd);
-            } else {
-                cmd.createArgument().setValue(FLAG_NOCOMMENT);
-            }
+            cmd.createArgument().setValue(FLAG_NOCOMMENT);
         }
 
         if (getNoWarn()) {
@@ -329,7 +363,6 @@ public class CCMkelem extends ClearCase {
         return mEltype;
     }
 
-
     /**
      * Get the 'comment' command
      *
@@ -384,41 +417,4 @@ public class CCMkelem extends ClearCase {
         }
     }
 
-    /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-    /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-    /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
-    /**
-     * -nwarn flag -- suppresses warning messages
-     */
-    public static final String FLAG_NOWARN = "-nwarn";
-    /**
-     * -ptime flag -- preserves the modification time on checkin
-     */
-    public static final String FLAG_PRESERVETIME = "-ptime";
-    /**
-     * -nco flag -- do not checkout element after creation
-     */
-    public static final String FLAG_NOCHECKOUT = "-nco";
-    /**
-     * -ci flag -- checkin element after creation
-     */
-    public static final String FLAG_CHECKIN = "-ci";
-    /**
-     * -master flag -- change mastership of main branch to current site
-     */
-    public static final String FLAG_MASTER = "-master";
-    /**
-     * -eltype flag -- element type to use during creation
-     */
-    public static final String FLAG_ELTYPE = "-eltype";
 }
-

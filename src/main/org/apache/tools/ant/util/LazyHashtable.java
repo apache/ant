@@ -28,6 +28,7 @@ import java.util.Hashtable;
  *
  * @since Ant 1.6
  */
+@Deprecated
 public class LazyHashtable extends Hashtable {
     // CheckStyle:VisibilityModifier OFF - bc
     protected boolean initAllDone = false;

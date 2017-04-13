@@ -23,10 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerFactory;
@@ -75,12 +71,27 @@ public class AggregateTransformer {
          * list authorized values.
          * @return authorized values.
          */
+        @Override
         public String[] getValues() {
             return new String[]{FRAMES, NOFRAMES};
         }
     }
 
+    private static final String JDK_INTERNAL_FACTORY =
+            "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
+
     // CheckStyle:VisibilityModifier OFF - bc
+    /** XML Parser factory */
+    private static DocumentBuilderFactory privateDBFactory;
+
+    /** XML Parser factory accessible to subclasses */
+    protected static DocumentBuilderFactory dbfactory;
+
+    static {
+       privateDBFactory = DocumentBuilderFactory.newInstance();
+       dbfactory = privateDBFactory;
+    }
+
     /** Task */
     protected Task task;
 
@@ -120,16 +131,6 @@ public class AggregateTransformer {
     /** the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt> */
     protected String format = FRAMES;
 
-    /** XML Parser factory */
-    private static DocumentBuilderFactory privateDBFactory;
-
-    /** XML Parser factory accessible to subclasses */
-    protected static DocumentBuilderFactory dbfactory;
-
-    static {
-       privateDBFactory = DocumentBuilderFactory.newInstance();
-       dbfactory = privateDBFactory;
-    }
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -257,8 +258,8 @@ public class AggregateTransformer {
 
         // acrobatic cast.
         xsltTask.setIn(((XMLResultAggregator) task).getDestinationFile());
-        File outputFile = null;
-        if (format.equals(FRAMES)) {
+        File outputFile;
+        if (FRAMES.equals(format)) {
             String tempFileProperty = getClass().getName() + String.valueOf(counter++); //NOSONAR
             File tmp = FILE_UTILS.resolveFile(project.getBaseDir(), project
                     .getProperty("java.io.tmpdir"));
@@ -352,8 +353,6 @@ public class AggregateTransformer {
         return JAXPUtils.getSystemId(file);
     }
 
-    private static final String JDK_INTERNAL_FACTORY = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
-
     /**
      * If we end up using the JDK's own TraX factory on Java 9+, then
      * set the features and attributes necessary to allow redirect
@@ -372,8 +371,9 @@ public class AggregateTransformer {
         }
         if (JDK_INTERNAL_FACTORY.equals(factoryName)
             && JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
-            factory.addFeature(new XSLTProcess.Factory.Feature("http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions",
-                                                               true));
+            factory.addFeature(new XSLTProcess.Factory.Feature(
+                "http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions",
+                true));
         }
     }
 }

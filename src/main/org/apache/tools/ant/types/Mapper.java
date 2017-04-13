@@ -187,6 +187,7 @@ public class Mapper extends DataType {
      * @param r the reference to another mapper
      * @throws BuildException if other attributes are set
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (type != null || from != null || to != null) {
             throw tooManyAttributes();
@@ -306,6 +307,7 @@ public class Mapper extends DataType {
         /**
          * @return the filenamemapper names
          */
+        @Override
         public String[] getValues() {
             return new String[] {"identity", "flatten", "glob",
                                  "merge", "regexp", "package", "unpackage"};

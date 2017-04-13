@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,25 +30,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
-
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.PropertySet;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -127,7 +126,7 @@ public class EchoProperties extends Task {
      */
     private boolean failonerror = true;
 
-    private Vector propertySets = new Vector();
+    private List<PropertySet> propertySets = new Vector<>();
 
     private String format = "text";
 
@@ -157,7 +156,6 @@ public class EchoProperties extends Task {
         this.destfile = destfile;
     }
 
-
     /**
      * If true, the task will fail if an error occurs writing the properties
      * file, otherwise errors are just logged.
@@ -168,7 +166,6 @@ public class EchoProperties extends Task {
     public void setFailOnError(boolean failonerror) {
         this.failonerror = failonerror;
     }
-
 
     /**
      *  If the prefix is set, then only properties which start with this
@@ -209,7 +206,7 @@ public class EchoProperties extends Task {
      * @since Ant 1.7
      */
     public void setRegex(String regex) {
-        if (regex != null && regex.length() != 0) {
+        if (!(regex == null || regex.isEmpty())) {
             this.regex = regex;
             PropertySet ps = new PropertySet();
             ps.setProject(getProject());
@@ -224,7 +221,7 @@ public class EchoProperties extends Task {
      * @since Ant 1.6
      */
     public void addPropertyset(PropertySet ps) {
-        propertySets.addElement(ps);
+        propertySets.add(ps);
     }
 
     /**
@@ -240,12 +237,13 @@ public class EchoProperties extends Task {
      * The values are "xml" and "text".
      */
     public static class FormatAttribute extends EnumeratedAttribute {
-        private String [] formats = new String[]{"xml", "text"};
+        private String[] formats = new String[] { "xml", "text" };
 
         /**
          * @see EnumeratedAttribute#getValues()
          * @return accepted values
          */
+        @Override
         public String[] getValues() {
             return formats;
         }
@@ -256,27 +254,28 @@ public class EchoProperties extends Task {
      *
      *@exception  BuildException  trouble, probably file IO
      */
+    @Override
     public void execute() throws BuildException {
         if (prefix != null && regex != null) {
-            throw new BuildException("Please specify either prefix"
-                    + " or regex, but not both", getLocation());
+            throw new BuildException(
+                "Please specify either prefix or regex, but not both",
+                getLocation());
         }
         //copy the properties file
-        Hashtable allProps = new Hashtable();
+        Hashtable<Object, Object> allProps = new Hashtable<>();
 
         /* load properties from file if specified, otherwise
         use Ant's properties */
-        if (inFile == null && propertySets.size() == 0) {
+        if (inFile == null && propertySets.isEmpty()) {
             // add ant properties
             allProps.putAll(getProject().getProperties());
         } else if (inFile != null) {
-            if (inFile.exists() && inFile.isDirectory()) {
+            if (inFile.isDirectory()) {
                 String message = "srcfile is a directory!";
                 if (failonerror) {
                     throw new BuildException(message, getLocation());
-                } else {
-                    log(message, Project.MSG_ERR);
                 }
+                log(message, Project.MSG_ERR);
                 return;
             }
 
@@ -290,9 +289,7 @@ public class EchoProperties extends Task {
                 return;
             }
 
-            InputStream in = null;
-            try {
-                in = Files.newInputStream(inFile.toPath());
+            try (InputStream in = Files.newInputStream(inFile.toPath())) {
                 Properties props = new Properties();
                 props.load(in);
                 allProps.putAll(props);
@@ -301,71 +298,34 @@ public class EchoProperties extends Task {
                     "Could not find file " + inFile.getAbsolutePath();
                 if (failonerror) {
                     throw new BuildException(message, fnfe, getLocation());
-                } else {
-                    log(message, Project.MSG_WARN);
                 }
+                log(message, Project.MSG_WARN);
                 return;
             } catch (IOException ioe) {
                 String message =
                     "Could not read file " + inFile.getAbsolutePath();
                 if (failonerror) {
                     throw new BuildException(message, ioe, getLocation());
-                } else {
-                    log(message, Project.MSG_WARN);
                 }
+                log(message, Project.MSG_WARN);
                 return;
-            } finally {
-                FileUtils.close(in);
             }
         }
 
-        Enumeration e = propertySets.elements();
-        while (e.hasMoreElements()) {
-            PropertySet ps = (PropertySet) e.nextElement();
-            allProps.putAll(ps.getProperties());
-        }
+        propertySets.stream().map(PropertySet::getProperties)
+            .forEach(allProps::putAll);
 
-        OutputStream os = null;
-        try {
-            if (destfile == null) {
-                os = new ByteArrayOutputStream();
-                saveProperties(allProps, os);
-                log(os.toString(), Project.MSG_INFO);
-            } else {
-                if (destfile.exists() && destfile.isDirectory()) {
-                    String message = "destfile is a directory!";
-                    if (failonerror) {
-                        throw new BuildException(message, getLocation());
-                    } else {
-                        log(message, Project.MSG_ERR);
-                    }
-                    return;
-                }
-
-                if (destfile.exists() && !destfile.canWrite()) {
-                    String message =
-                        "Can not write to the specified destfile!";
-                    if (failonerror) {
-                        throw new BuildException(message, getLocation());
-                    } else {
-                        log(message, Project.MSG_ERR);
-                    }
-                    return;
-                }
-                os = Files.newOutputStream(this.destfile.toPath());
+        try (OutputStream os = createOutputStream()) {
+            if (os != null) {
                 saveProperties(allProps, os);
             }
         } catch (IOException ioe) {
             if (failonerror) {
                 throw new BuildException(ioe, getLocation());
-            } else {
-                log(ioe.getMessage(), Project.MSG_INFO);
             }
-        } finally {
-            FileUtils.close(os);
+            log(ioe.getMessage(), Project.MSG_INFO);
         }
     }
-
 
     /**
      *  Send the key/value pairs in the hashtable to the given output stream.
@@ -378,37 +338,37 @@ public class EchoProperties extends Task {
      * @throws IOException      on output errors
      * @throws BuildException   on other errors
      */
-    protected void saveProperties(Hashtable allProps, OutputStream os)
+    protected void saveProperties(Hashtable<Object, Object> allProps, OutputStream os)
         throws IOException, BuildException {
-        final List keyList = new ArrayList(allProps.keySet());
-        Collections.sort(keyList);
+        final List<Object> keyList = new ArrayList<>(allProps.keySet());
+
         Properties props = new Properties() {
             private static final long serialVersionUID = 5090936442309201654L;
-            public Enumeration keys() {
-                return CollectionUtils.asEnumeration(keyList.iterator());
+
+            @Override
+            public Enumeration<Object> keys() {
+                return keyList.stream()
+                    .sorted(Comparator.comparing(Object::toString))
+                    .collect(Collectors.collectingAndThen(Collectors.toList(),
+                        Collections::enumeration));
             }
-            public Set entrySet() {
-                Set result = super.entrySet();
+
+            @Override
+            public Set<Map.Entry<Object,Object>> entrySet() {
+                Set<Map.Entry<Object, Object>> result = super.entrySet();
                 if (JavaEnvUtils.isKaffe()) {
-                    TreeSet t = new TreeSet(new Comparator() {
-                        public int compare(Object o1, Object o2) {
-                            String key1 = (String) ((Map.Entry) o1).getKey();
-                            String key2 = (String) ((Map.Entry) o2).getKey();
-                            return key1.compareTo(key2);
-                        }
-                    });
+                    Set<Map.Entry<Object, Object>> t =
+                        new TreeSet<>(Comparator.comparing(
+                            ((Function<Map.Entry<Object, Object>, Object>) Map.Entry::getKey)
+                                .andThen(Object::toString)));
                     t.addAll(result);
-                    result = t;
+                    return t;
                 }
                 return result;
             }
         };
-        final int size = keyList.size();
-        for (int i = 0; i < size; i++) {
-            String name = keyList.get(i).toString();
-            String value = allProps.get(name).toString();
-            props.setProperty(name, value);
-        }
+        allProps.forEach((k, v) -> props.put(String.valueOf(k), String.valueOf(v)));
+
         if ("text".equals(format)) {
             jdkSaveProperties(props, os, "Ant properties");
         } else if ("xml".equals(format)) {
@@ -419,7 +379,7 @@ public class EchoProperties extends Task {
     /**
      * a tuple for the sort list.
      */
-    private static final class Tuple implements Comparable {
+    private static final class Tuple implements Comparable<Tuple> {
         private String key;
         private String value;
 
@@ -436,9 +396,9 @@ public class EchoProperties extends Task {
          * @throws ClassCastException if the specified object's type prevents it
          *                            from being compared to this Object.
          */
-        public int compareTo(Object o) {
-            Tuple that = (Tuple) o;
-            return key.compareTo(that.key);
+        @Override
+        public int compareTo(Tuple o) {
+            return Comparator.<String> naturalOrder().compare(key, o.key);
         }
 
         @Override
@@ -450,26 +410,21 @@ public class EchoProperties extends Task {
                 return false;
             }
             Tuple that = (Tuple) o;
-            return (key == null ? that.key == null : key.equals(that.key))
-                && (value == null ? that.value == null : value.equals(that.value));
+            return Objects.equals(key, that.key)
+                && Objects.equals(value, that.value);
         }
 
         @Override
         public int hashCode() {
-            return key != null ? key.hashCode() : 0;
+            return Objects.hash(key);
         }
     }
 
-    private List sortProperties(Properties props) {
+    private List<Tuple> sortProperties(Properties props) {
         //sort the list. Makes SCM and manual diffs easier.
-        List sorted = new ArrayList(props.size());
-        Enumeration e = props.propertyNames();
-        while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            sorted.add(new Tuple(name, props.getProperty(name)));
-        }
-        Collections.sort(sorted);
-        return sorted;
+        return props.stringPropertyNames().stream()
+            .map(k -> new Tuple(k, props.getProperty(k))).sorted()
+            .collect(Collectors.toList());
     }
 
     /**
@@ -484,29 +439,22 @@ public class EchoProperties extends Task {
         Document doc = getDocumentBuilder().newDocument();
         Element rootElement = doc.createElement(PROPERTIES);
 
-        List sorted = sortProperties(props);
-
+        List<Tuple> sorted = sortProperties(props);
 
         // output properties
-        Iterator iten = sorted.iterator();
-        while (iten.hasNext()) {
-            Tuple tuple = (Tuple) iten.next();
+        for (Tuple tuple : sorted) {
             Element propElement = doc.createElement(PROPERTY);
             propElement.setAttribute(ATTR_NAME, tuple.key);
             propElement.setAttribute(ATTR_VALUE, tuple.value);
             rootElement.appendChild(propElement);
         }
 
-        Writer wri = null;
-        try {
-            wri = new OutputStreamWriter(os, "UTF8");
+        try (Writer wri = new OutputStreamWriter(os, "UTF8")) {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            (new DOMElementWriter()).write(rootElement, wri, 0, "\t");
+            new DOMElementWriter().write(rootElement, wri, 0, "\t");
             wri.flush();
         } catch (IOException ioe) {
             throw new BuildException("Unable to write XML file", ioe);
-        } finally {
-            FileUtils.close(wri);
         }
     }
 
@@ -524,7 +472,6 @@ public class EchoProperties extends Task {
                                      String header) throws IOException {
        try {
            props.store(os, header);
-
        } catch (IOException ioe) {
            throw new BuildException(ioe, getLocation());
        } finally {
@@ -538,6 +485,29 @@ public class EchoProperties extends Task {
        }
     }
 
+    private OutputStream createOutputStream() throws IOException {
+        if (destfile == null) {
+            return new LogOutputStream(this);
+        }
+        if (destfile.exists() && destfile.isDirectory()) {
+            String message = "destfile is a directory!";
+            if (failonerror) {
+                throw new BuildException(message, getLocation());
+            }
+            log(message, Project.MSG_ERR);
+            return null;
+        }
+        if (destfile.exists() && !destfile.canWrite()) {
+            String message =
+                "Can not write to the specified destfile!";
+            if (failonerror) {
+                throw new BuildException(message, getLocation());
+            }
+            log(message, Project.MSG_ERR);
+            return null;
+        }
+        return Files.newOutputStream(this.destfile.toPath());
+    }
 
     /**
      * Uses the DocumentBuilderFactory to get a DocumentBuilder instance.
@@ -552,4 +522,3 @@ public class EchoProperties extends Task {
         }
     }
 }
-

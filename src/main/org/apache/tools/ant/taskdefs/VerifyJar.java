@@ -45,6 +45,9 @@ public class VerifyJar extends AbstractJarSignerTask {
      */
     public static final String ERROR_NO_FILE = "Not found :";
 
+    /** Error output if there is a failure to verify the jar. */
+    public static final String ERROR_NO_VERIFY = "Failed to verify ";
+
     /**
      * The string we look for in the text to indicate direct verification
      */
@@ -55,8 +58,6 @@ public class VerifyJar extends AbstractJarSignerTask {
      */
     private boolean certificates = false;
     private BufferingOutputFilter outputCache = new BufferingOutputFilter();
-    /** Error output if there is a failure to verify the jar. */
-    public static final String ERROR_NO_VERIFY = "Failed to verify ";
 
     /**
      * Ask for certificate information to be printed
@@ -70,6 +71,7 @@ public class VerifyJar extends AbstractJarSignerTask {
      * verify our jar files
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
         //validation logic
         final boolean hasJar = jar != null;
@@ -92,11 +94,9 @@ public class VerifyJar extends AbstractJarSignerTask {
                 FileProvider fr = r.as(FileProvider.class);
                 verifyOneJar(fr.getFile());
             }
-
         } finally {
             endExecution();
         }
-
     }
 
     /**
@@ -135,8 +135,8 @@ public class VerifyJar extends AbstractJarSignerTask {
         //deal with jdk1.4.2 bug:
         if (ex != null) {
             if (results.indexOf("zip file closed") >= 0) {
-                log("You are running " + JARSIGNER_COMMAND + " against a JVM with"
-                    + " a known bug that manifests as an IllegalStateException.",
+                log("You are running " + JARSIGNER_COMMAND
+                    + " against a JVM with a known bug that manifests as an IllegalStateException.",
                     Project.MSG_WARN);
             } else {
                 throw ex;
@@ -154,11 +154,13 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         private BufferingOutputFilterReader buffer;
 
+        @Override
         public Reader chain(Reader rdr) {
             buffer = new BufferingOutputFilterReader(rdr);
             return buffer;
         }
 
+        @Override
         public String toString() {
             return buffer.toString();
         }
@@ -183,6 +185,7 @@ public class VerifyJar extends AbstractJarSignerTask {
             this.next = next;
         }
 
+        @Override
         public int read(char[] cbuf, int off, int len) throws IOException {
             //hand down
             int result = next.read(cbuf, off, len);
@@ -192,10 +195,12 @@ public class VerifyJar extends AbstractJarSignerTask {
             return result;
         }
 
+        @Override
         public void close() throws IOException {
             next.close();
         }
 
+        @Override
         public String toString() {
             return buffer.toString();
         }

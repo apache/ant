@@ -78,6 +78,41 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCCheckin extends ClearCase {
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+
+    /**
+     * -nwarn flag -- suppresses warning messages
+     */
+    public static final String FLAG_NOWARN = "-nwarn";
+
+    /**
+     * -ptime flag -- preserves the modification time
+     */
+    public static final String FLAG_PRESERVETIME = "-ptime";
+
+    /**
+     * -keep flag -- keeps a copy of the file with a .keep extension
+     */
+    public static final String FLAG_KEEPCOPY = "-keep";
+
+    /**
+     * -identical flag -- allows the file to be checked in even if it is identical to the original
+     */
+    public static final String FLAG_IDENTICAL = "-identical";
+
     private String mComment = null;
     private String mCfile = null;
     private boolean mNwarn = false;
@@ -92,10 +127,10 @@ public class CCCheckin extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -114,13 +149,11 @@ public class CCCheckin extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine, getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -272,7 +305,6 @@ public class CCCheckin extends ClearCase {
         return mIdentical;
     }
 
-
     /**
      * Get the 'comment' command
      *
@@ -308,36 +340,6 @@ public class CCCheckin extends ClearCase {
             cmd.createArgument().setValue(getCommentFile());
         }
     }
-
-
-        /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-        /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-        /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
-        /**
-     * -nwarn flag -- suppresses warning messages
-     */
-    public static final String FLAG_NOWARN = "-nwarn";
-        /**
-     * -ptime flag -- preserves the modification time
-     */
-    public static final String FLAG_PRESERVETIME = "-ptime";
-        /**
-     * -keep flag -- keeps a copy of the file with a .keep extension
-     */
-    public static final String FLAG_KEEPCOPY = "-keep";
-        /**
-     * -identical flag -- allows the file to be checked in even if it is identical to the original
-     */
-    public static final String FLAG_IDENTICAL = "-identical";
 
 }
 

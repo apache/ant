@@ -388,6 +388,7 @@ public abstract class SOS extends Task implements SOSCmd {
      *
      * @throws BuildException on error.
      */
+    @Override
     public void execute()
         throws BuildException {
         int result = 0;

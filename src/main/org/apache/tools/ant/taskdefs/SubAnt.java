@@ -19,7 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -72,12 +72,12 @@ public class SubAnt extends Task {
     private boolean failOnError = true;
     private String output  = null;
 
-    private Vector properties = new Vector();
-    private Vector references = new Vector();
-    private Vector propertySets = new Vector();
+    private List<Property> properties = new Vector<>();
+    private List<Ant.Reference> references = new Vector<>();
+    private List<PropertySet> propertySets = new Vector<>();
 
     /** the targets to call on the new project */
-    private Vector/*<TargetElement>*/ targets = new Vector();
+    private List<TargetElement> targets = new Vector<>();
 
     /**
      * Get the default build file name to use when launching the task.
@@ -296,11 +296,7 @@ public class SubAnt extends Task {
         ant = createAntTask(directory);
         String antfilename = file.getAbsolutePath();
         ant.setAntfile(antfilename);
-        final int size = targets.size();
-        for (int i = 0; i < size; i++) {
-            TargetElement targetElement = (TargetElement) targets.get(i);
-            ant.addConfiguredTarget(targetElement);
-        }
+        targets.forEach(ant::addConfiguredTarget);
 
         try {
             if (verbose) {
@@ -331,13 +327,15 @@ public class SubAnt extends Task {
     private boolean isHardError(Throwable t) {
         if (t instanceof BuildException) {
             return isHardError(t.getCause());
-        } else if (t instanceof OutOfMemoryError) {
-            return true;
-        } else if (t instanceof ThreadDeath) {
-            return true;
-        } else { // incl. t == null
-            return false;
         }
+        if (t instanceof OutOfMemoryError) {
+            return true;
+        }
+        if (t instanceof ThreadDeath) {
+            return true;
+        }
+        // incl. t == null
+        return false;
     }
 
     /**
@@ -392,8 +390,7 @@ public class SubAnt extends Task {
      * @since Ant 1.7
      */
     public void addConfiguredTarget(TargetElement t) {
-        String name = t.getName();
-        if ("".equals(name)) {
+        if (t.getName().isEmpty()) {
             throw new BuildException("target name must not be empty");
         }
         targets.add(t);
@@ -445,7 +442,7 @@ public class SubAnt extends Task {
      * @param  p the property to pass on explicitly to the sub-build.
      */
     public void addProperty(Property p) {
-        properties.addElement(p);
+        properties.add(p);
     }
 
     /**
@@ -455,7 +452,7 @@ public class SubAnt extends Task {
      * @param  r the reference to pass on explicitly to the sub-build.
      */
     public void addReference(Ant.Reference r) {
-        references.addElement(r);
+        references.add(r);
     }
 
     /**
@@ -464,7 +461,7 @@ public class SubAnt extends Task {
      * @param ps the propertyset
      */
     public void addPropertyset(PropertySet ps) {
-        propertySets.addElement(ps);
+        propertySets.add(ps);
     }
 
     /**
@@ -591,18 +588,14 @@ public class SubAnt extends Task {
         }
 
         antTask.setInheritAll(inheritAll);
-        for (Enumeration i = properties.elements(); i.hasMoreElements();) {
-            copyProperty(antTask.createProperty(), (Property) i.nextElement());
-        }
 
-        for (Enumeration i = propertySets.elements(); i.hasMoreElements();) {
-            antTask.addPropertyset((PropertySet) i.nextElement());
-        }
+        properties.forEach(p -> copyProperty(antTask.createProperty(), p));
+
+        propertySets.forEach(antTask::addPropertyset);
 
         antTask.setInheritRefs(inheritRefs);
-        for (Enumeration i = references.elements(); i.hasMoreElements();) {
-            antTask.addReference((Ant.Reference) i.nextElement());
-        }
+
+        references.forEach(antTask::addReference);
 
         return antTask;
     }

@@ -18,8 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-
-
 /**
  *
  * Adds a data type definition to the current project.

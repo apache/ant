@@ -22,15 +22,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Generates a manifest that declares all the dependencies.
@@ -72,19 +74,19 @@ public final class JarLibManifestTask extends Task {
      * ExtensionAdapter objects representing
      * dependencies required by library.
      */
-    private final ArrayList dependencies = new ArrayList();
+    private final List<ExtensionSet> dependencies = new ArrayList<>();
 
     /**
      * ExtensionAdapter objects representing optional
      * dependencies required by library.
      */
-    private final ArrayList optionals = new ArrayList();
+    private final List<ExtensionSet> optionals = new ArrayList<>();
 
     /**
      * Extra attributes the user specifies for main section
      * in manifest.
      */
-    private final ArrayList extraAttributes = new ArrayList();
+    private final List<ExtraAttribute> extraAttributes = new ArrayList<>();
 
     /**
      * The location where generated manifest is placed.
@@ -106,7 +108,8 @@ public final class JarLibManifestTask extends Task {
     public void addConfiguredExtension(final ExtensionAdapter extensionAdapter)
             throws BuildException {
         if (null != extension) {
-            throw new BuildException("Can not have multiple extensions defined in one library.");
+            throw new BuildException(
+                "Can not have multiple extensions defined in one library.");
         }
         extension = extensionAdapter.toExtension();
     }
@@ -143,6 +146,7 @@ public final class JarLibManifestTask extends Task {
      *
      * @throws BuildException if the task fails.
      */
+    @Override
     public void execute() throws BuildException {
         validate();
 
@@ -160,13 +164,13 @@ public final class JarLibManifestTask extends Task {
         }
 
         //Add all the dependency data to manifest for dependencies
-        final ArrayList depends = toExtensions(dependencies);
+        final List<Extension> depends = toExtensions(dependencies);
         appendExtensionList(attributes, Extension.EXTENSION_LIST, "lib", depends.size());
         appendLibraryList(attributes, "lib", depends);
 
         // Add all the dependency data to manifest for "optional"
         //dependencies
-        final ArrayList option = toExtensions(optionals);
+        final List<Extension> option = toExtensions(optionals);
         appendExtensionList(attributes, Extension.OPTIONAL_EXTENSION_LIST, "opt", option.size());
         appendLibraryList(attributes, "opt", option);
 
@@ -188,7 +192,7 @@ public final class JarLibManifestTask extends Task {
             throw new BuildException("Destfile attribute not specified.");
         }
         if (destFile.exists() && !destFile.isFile()) {
-            throw new BuildException(destFile + " is not a file.");
+            throw new BuildException("%s is not a file.", destFile);
         }
     }
 
@@ -199,12 +203,8 @@ public final class JarLibManifestTask extends Task {
      *        attributes to
      */
     private void appendExtraAttributes(final Attributes attributes) {
-        final Iterator iterator = extraAttributes.iterator();
-        while (iterator.hasNext()) {
-            final ExtraAttribute attribute =
-                (ExtraAttribute) iterator.next();
-            attributes.putValue(attribute.getName(),
-                                 attribute.getValue());
+        for (ExtraAttribute attribute : extraAttributes) {
+            attributes.putValue(attribute.getName(), attribute.getValue());
         }
     }
 
@@ -215,13 +215,9 @@ public final class JarLibManifestTask extends Task {
      * @throws IOException if error writing file
      */
     private void writeManifest(final Manifest manifest) throws IOException {
-        OutputStream output = null;
-        try {
-            output = Files.newOutputStream(destFile.toPath());
+        try (OutputStream output = Files.newOutputStream(destFile.toPath())) {
             manifest.write(output);
             output.flush();
-        } finally {
-            FileUtils.close(output);
         }
     }
 
@@ -237,12 +233,11 @@ public final class JarLibManifestTask extends Task {
      * @throws BuildException if an error occurs
      */
     private void appendLibraryList(final Attributes attributes, final String listPrefix,
-            final ArrayList extensions) throws BuildException {
+            final List<Extension> extensions) throws BuildException {
         final int size = extensions.size();
         for (int i = 0; i < size; i++) {
-            final Extension ext = (Extension) extensions.get(i);
-            final String prefix = listPrefix + i + "-";
-            Extension.addExtension(ext, prefix, attributes);
+            Extension.addExtension(extensions.get(i), listPrefix + i + "-",
+                attributes);
         }
     }
 
@@ -259,15 +254,10 @@ public final class JarLibManifestTask extends Task {
      */
     private void appendExtensionList(final Attributes attributes,
             final Attributes.Name extensionKey, final String listPrefix, final int size) {
-        final StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < size; i++) {
-            sb.append(listPrefix);
-            sb.append(i);
-            sb.append(' ');
-        }
         //add in something like
         //"Extension-List: javahelp java3d"
-        attributes.put(extensionKey, sb.toString());
+        attributes.put(extensionKey, IntStream.range(0, size)
+            .mapToObj(i -> listPrefix + i).collect(Collectors.joining(" ")));
     }
 
     /**
@@ -276,17 +266,10 @@ public final class JarLibManifestTask extends Task {
      * @param extensionSets the list of ExtensionSets to add to list
      * @throws BuildException if an error occurs
      */
-    private ArrayList toExtensions(final ArrayList extensionSets) throws BuildException {
-        final ArrayList results = new ArrayList();
-
-        final int size = extensionSets.size();
-        for (int i = 0; i < size; i++) {
-            final ExtensionSet set = (ExtensionSet) extensionSets.get(i);
-            final Extension[] extensions = set.toExtensions(getProject());
-            for (int j = 0; j < extensions.length; j++) {
-                results.add(extensions[ j ]);
-            }
-        }
-        return results;
+    private List<Extension> toExtensions(final List<ExtensionSet> extensionSets)
+        throws BuildException {
+        final Project prj = getProject();
+        return extensionSets.stream().map(xset -> xset.toExtensions(prj))
+            .flatMap(Stream::of).collect(Collectors.toList());
     }
 }

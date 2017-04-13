@@ -49,8 +49,8 @@ class ConstantPool {
         super();
 
         int count = data.readUnsignedShort();
-        types = new byte [ count ];
-        values = new Object [ count ];
+        types = new byte[count];
+        values = new Object[count];
         // read in all constant pool entries.
         for (int i = 1; i < count; i++) {
             byte type = data.readByte();
@@ -64,33 +64,33 @@ class ConstantPool {
                 break;
 
             case INTEGER :
-                values[i] = new Integer(data.readInt());
+                values[i] = Integer.valueOf(data.readInt());
                 break;
 
             case FLOAT :
-                values[i] = new Float(data.readFloat());
+                values[i] = Float.valueOf(data.readFloat());
                 break;
 
             case LONG :
-                values[i] = new Long(data.readLong());
+                values[i] = Long.valueOf(data.readLong());
                 ++i;
                 break;
 
             case DOUBLE :
-                values[i] = new Double(data.readDouble());
+                values[i] = Double.valueOf(data.readDouble());
                 ++i;
                 break;
 
             case CLASS :
             case STRING :
-                values[i] = new Integer(data.readUnsignedShort());
+                values[i] = Integer.valueOf(data.readUnsignedShort());
                 break;
 
             case FIELDREF :
             case METHODREF :
             case INTERFACEMETHODREF :
             case NAMEANDTYPE :
-                values[i] = new Integer(data.readInt());
+                values[i] = Integer.valueOf(data.readInt());
                 break;
             default:
                 // Do nothing
@@ -132,7 +132,6 @@ public class ClassNameReader extends Object {
         String className = (String) values[stringIndex.intValue()];
         return className;
     }
-
 
 }
 

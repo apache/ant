@@ -38,7 +38,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
 
     private File localFile;
     private final String remotePath;
-    private List directoryList;
+    private List<Directory> directoryList;
 
     /**
      * Constructor for a local file to remote.
@@ -67,7 +67,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      */
     public ScpToMessageBySftp(final boolean verbose,
                               final Session session,
-                              final List aDirectoryList,
+                              final List<Directory> aDirectoryList,
                               final String aRemotePath) {
         this(verbose, session, aRemotePath);
 
@@ -107,7 +107,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * @param aRemotePath the remote path
      */
     public ScpToMessageBySftp(final Session session,
-                              final List aDirectoryList,
+                              final List<Directory> aDirectoryList,
                               final String aRemotePath) {
         this(false, session, aDirectoryList, aRemotePath);
     }
@@ -171,21 +171,19 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                 throw new JSchException("Could not CD to '" + remotePath
                                         + "' - " + e.toString(), e);
             }
-            Directory current = null;
-            try {
-                for (final Iterator i = directoryList.iterator(); i.hasNext();) {
-                    current = (Directory) i.next();
+            for (Directory current : directoryList) {
+                try {
                     if (getVerbose()) {
                         log("Sending directory " + current);
                     }
                     sendDirectory(channel, current);
+                } catch (final SftpException e) {
+                    String msg = "Error sending directory";
+                    if (current != null && current.getDirectory() != null) {
+                        msg += " '" + current.getDirectory().getName() + "'";
+                    }
+                    throw new JSchException(msg, e);
                 }
-            } catch (final SftpException e) {
-                String msg = "Error sending directory";
-                if (current != null && current.getDirectory() != null) {
-                    msg += " '" + current.getDirectory().getName() + "'";
-                }
-                throw new JSchException(msg, e);
             }
         } finally {
             if (channel != null) {
@@ -197,12 +195,11 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     private void sendDirectory(final ChannelSftp channel,
                                final Directory current)
         throws IOException, SftpException {
-        for (final Iterator fileIt = current.filesIterator(); fileIt.hasNext();) {
-            sendFileToRemote(channel, (File) fileIt.next(), null);
+        for (final Iterator<File> fileIt = current.filesIterator(); fileIt.hasNext();) {
+            sendFileToRemote(channel, fileIt.next(), null);
         }
-        for (final Iterator dirIt = current.directoryIterator(); dirIt.hasNext();) {
-            final Directory dir = (Directory) dirIt.next();
-            sendDirectoryToRemote(channel, dir);
+        for (final Iterator<Directory> dirIt = current.directoryIterator(); dirIt.hasNext();) {
+            sendDirectoryToRemote(channel, dirIt.next());
         }
     }
 
@@ -263,6 +260,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * Get the local file.
      * @return the local file.
      */
+    @Override
     public File getLocalFile() {
         return localFile;
     }
@@ -271,6 +269,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * Get the remote path.
      * @return the remote path.
      */
+    @Override
     public String getRemotePath() {
         return remotePath;
     }

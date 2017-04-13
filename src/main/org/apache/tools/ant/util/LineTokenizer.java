@@ -54,19 +54,19 @@ public class LineTokenizer extends ProjectComponent
      * @exception IOException if an error occurs reading
      */
     public String getToken(Reader in) throws IOException {
-        int ch = -1;
-        if (pushed != NOT_A_CHAR) {
+        int ch;
+        if (pushed == NOT_A_CHAR) {
+            ch = in.read();
+        } else {
             ch = pushed;
             pushed = NOT_A_CHAR;
-        } else {
-            ch = in.read();
         }
         if (ch == -1) {
             return null;
         }
 
         lineEnd = "";
-        StringBuffer line = new StringBuffer();
+        StringBuilder line = new StringBuilder();
 
         int state = 0;
         while (ch != -1) {
@@ -104,11 +104,9 @@ public class LineTokenizer extends ProjectComponent
     /**
      * @return the line ending character(s) for the current line
      */
+    @Override
     public String getPostToken() {
-        if (includeDelims) {
-            return "";
-        }
-        return lineEnd;
+        return includeDelims ? "" : lineEnd;
     }
 
 }

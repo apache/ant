@@ -59,6 +59,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      *  tools is executed.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
+    @Override
     public void deploy() {
         Java java = new Java(getTask());
         java.setFork(true);
@@ -79,6 +80,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      *  be supplied.
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete
      */
+    @Override
     public void validateAttributes() throws BuildException {
         super.validateAttributes();
 
@@ -92,22 +94,22 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
         // check for missing application on deploy & update
         if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
             && application == null) {
-            throw new BuildException("The application attribute must be set "
-                + "if action = " + action);
+            throw new BuildException(
+                "The application attribute must be set if action = %s", action);
         }
 
         // check for missing source on deploy & update
         if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
             && getTask().getSource() == null) {
-            throw new BuildException("The source attribute must be set if "
-                + "action = " + action);
+            throw new BuildException(
+                "The source attribute must be set if action = %s", action);
         }
 
         // check for missing application on delete & undeploy
         if ((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY))
             && application == null) {
-            throw new BuildException("The application attribute must be set if "
-                + "action = " + action);
+            throw new BuildException(
+                "The application attribute must be set if action = %s", action);
         }
     }
 
@@ -119,17 +121,17 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      */
     public String getArguments() throws BuildException {
         String action = getTask().getAction();
-        String args = null;
 
         if (action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) {
-            args = buildDeployArgs();
-        } else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
-            args = buildUndeployArgs();
-        } else if (action.equals(ACTION_LIST)) {
-            args = buildListArgs();
+            return buildDeployArgs();
         }
-
-        return args;
+        if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
+            return buildUndeployArgs();
+        }
+        if (action.equals(ACTION_LIST)) {
+            return buildListArgs();
+        }
+        return null;
     }
 
     /**
@@ -137,19 +139,16 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      *  <p>Valid actions are contained in the static array VALID_ACTIONS
      *  @return true if the action attribute is valid, false if not.
      */
+    @Override
     protected boolean isActionValid() {
-        boolean valid = false;
-
         String action = getTask().getAction();
 
-        for (int i = 0; i < VALID_ACTIONS.length; i++) {
-            if (action.equals(VALID_ACTIONS[i])) {
-                valid = true;
-                break;
+        for (String validAction : VALID_ACTIONS) {
+            if (action.equals(validAction)) {
+                return true;
             }
         }
-
-        return valid;
+        return false;
     }
 
     /**

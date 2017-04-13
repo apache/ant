@@ -46,19 +46,19 @@ public class LocationResolver implements ExtensionResolver {
      * @return the file resolved
      * @throws BuildException if no location is set
      */
+    @Override
     public File resolve(final Extension extension,
                         final Project project) throws BuildException {
         if (null == location) {
-            final String message = "No location specified for resolver";
-            throw new BuildException(message);
+            throw new BuildException("No location specified for resolver");
         }
-
         return project.resolveFile(location);
     }
     /**
      * Returns a string representation of the Location
      * @return the string representation
      */
+    @Override
     public String toString() {
         return "Location[" + location + "]";
     }

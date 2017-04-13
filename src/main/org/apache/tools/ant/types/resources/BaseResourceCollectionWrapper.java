@@ -32,10 +32,12 @@ public abstract class BaseResourceCollectionWrapper
 
     private Collection<Resource> coll = null;
 
+    @Override
     protected Iterator<Resource> createIterator() {
         return cacheCollection().iterator();
     }
 
+    @Override
 	protected int getSize() {
         return cacheCollection().size();
     }

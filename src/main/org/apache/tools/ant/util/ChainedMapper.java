@@ -18,10 +18,7 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A <code>ContainerMapper</code> that chains the results of the first
@@ -32,29 +29,13 @@ import java.util.List;
 public class ChainedMapper extends ContainerMapper {
 
     /** {@inheritDoc}. */
+    @Override
     public String[] mapFileName(String sourceFileName) {
-        List inputs = new ArrayList();
-        List results = new ArrayList();
-        results.add(sourceFileName);
-        FileNameMapper mapper = null;
-
-        for (Iterator mIter = getMappers().iterator(); mIter.hasNext();) {
-            mapper = (FileNameMapper) (mIter.next());
-            if (mapper != null) {
-                inputs.clear();
-                inputs.addAll(results);
-                results.clear();
-
-                for (Iterator it = inputs.iterator(); it.hasNext();) {
-                    String[] mapped = mapper.mapFileName((String) (it.next()));
-                    if (mapped != null) {
-                        results.addAll(Arrays.asList(mapped));
-                    }
-                }
-            }
-        }
-        return (results.size() == 0) ? null
-            : (String[]) results.toArray(new String[results.size()]);
+        String[] result = getMappers().stream()
+            .reduce(new String[] { sourceFileName }, (i, m) -> Stream.of(i)
+                .map(m::mapFileName).flatMap(Stream::of).toArray(String[]::new),
+                (i, o) -> o);
+        return result == null || result.length == 0 ? null : result;
     }
 }
 

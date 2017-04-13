@@ -32,4 +32,3 @@ public interface Condition {
      */
     boolean eval() throws BuildException;
 }
-

@@ -22,6 +22,7 @@ import static org.apache.tools.ant.MagicNames.ANT_VM_LAUNCHER_REF_ID;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -41,7 +42,7 @@ public class CommandLauncher {
     private static CommandLauncher shellLauncher = null;
 
     static {
-        if(!Os.isFamily("os/2")) {
+        if (!Os.isFamily("os/2")) {
             vmLauncher = new Java13CommandLauncher();
         }
 
@@ -94,7 +95,7 @@ public class CommandLauncher {
      */
     public Process exec(Project project, String[] cmd, String[] env)
         throws IOException {
-        if(project != null) {
+        if (project != null) {
             project.log("Execute:CommandLauncher: "
                 + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
         }
@@ -124,8 +125,8 @@ public class CommandLauncher {
         if (workingDir == null) {
             return exec(project, cmd, env);
         }
-        throw new IOException("Cannot execute a process in different "
-            + "directory under this JVM");
+        throw new IOException(
+            "Cannot execute a process in different directory under this JVM");
     }
 
     /**
@@ -157,37 +158,24 @@ public class CommandLauncher {
 
     private static CommandLauncher extractLauncher(String referenceName,
                                                    Project project) {
-        CommandLauncher launcher = null;
-        if (project != null) {
-            launcher = (CommandLauncher) project.getReference(referenceName);
-        }
-
-        if (launcher == null) {
-            launcher = getSystemLauncher(referenceName);
-        }
-        return launcher;
+        return Optional.ofNullable(project)
+            .map(p -> p.<CommandLauncher> getReference(referenceName))
+            .orElseGet(() -> getSystemLauncher(referenceName));
     }
 
     private static CommandLauncher getSystemLauncher(String launcherRefId) {
-        CommandLauncher launcher = null;
         String launcherClass = System.getProperty(launcherRefId);
         if (launcherClass != null) {
             try {
-                launcher = (CommandLauncher) Class.forName(launcherClass)
-                    .newInstance();
-            } catch(InstantiationException e) {
+                return Class.forName(launcherClass)
+                    .asSubclass(CommandLauncher.class).newInstance();
+            } catch (InstantiationException | IllegalAccessException
+                    | ClassNotFoundException e) {
                 System.err.println("Could not instantiate launcher class "
-                                   + launcherClass + ": " + e.getMessage());
-            } catch(IllegalAccessException e) {
-                System.err.println("Could not instantiate launcher class "
-                                   + launcherClass + ": " + e.getMessage());
-            } catch(ClassNotFoundException e) {
-                System.err.println("Could not instantiate launcher class "
-                                   + launcherClass + ": " + e.getMessage());
+                    + launcherClass + ": " + e.getMessage());
             }
         }
-
-        return launcher;
+        return null;
     }
 
     /**

@@ -80,6 +80,36 @@ previous baseline.</td>
  *
  */
 public class CCMkbl extends ClearCase {
+
+    /**
+     * -c flag -- comment to attach to the file
+     */
+    public static final String FLAG_COMMENT = "-c";
+    /**
+     * -cfile flag -- file containing a comment to attach to the file
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+    /**
+     * -identical flag -- allows the file to be checked in even if it is identical to the original
+     */
+    public static final String FLAG_IDENTICAL = "-identical";
+    /**
+     * -incremental flag -- baseline to be created is incremental
+     */
+    public static final String FLAG_INCREMENTAL = "-incremental";
+    /**
+     * -full flag -- baseline to be created is full
+     */
+    public static final String FLAG_FULL = "-full";
+    /**
+     * -nlabel -- baseline to be created without a label
+     */
+    public static final String FLAG_NLABEL = "-nlabel";
+
     private String mComment = null;
     private String mCfile = null;
     private String mBaselineRootName = null;
@@ -88,7 +118,6 @@ public class CCMkbl extends ClearCase {
     private boolean mFull = false;
     private boolean mNlabel = false;
 
-
     /**
      * Executes the task.
      * <p>
@@ -96,10 +125,10 @@ public class CCMkbl extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -118,13 +147,12 @@ public class CCMkbl extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getBaselineRootName(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -133,13 +161,11 @@ public class CCMkbl extends ClearCase {
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
+        } else if (getCommentFile() != null) {
+            // -cfile
+            getCommentFileCommand(cmd);
         } else {
-            if (getCommentFile() != null) {
-                // -cfile
-                getCommentFileCommand(cmd);
-            } else {
-                cmd.createArgument().setValue(FLAG_NOCOMMENT);
-            }
+            cmd.createArgument().setValue(FLAG_NOCOMMENT);
         }
 
         if (getIdentical()) {
@@ -162,9 +188,7 @@ public class CCMkbl extends ClearCase {
 
        // baseline_root_name
         cmd.createArgument().setValue(getBaselineRootName());
-
     }
-
 
     /**
      * Set comment string
@@ -219,8 +243,6 @@ public class CCMkbl extends ClearCase {
     public String getBaselineRootName() {
         return mBaselineRootName;
     }
-
-    /**
 
     /**
      * Set the nowarn flag
@@ -294,7 +316,6 @@ public class CCMkbl extends ClearCase {
         return mNlabel;
     }
 
-
     /**
      * Get the 'comment' command
      *
@@ -330,36 +351,5 @@ public class CCMkbl extends ClearCase {
             cmd.createArgument().setValue(getCommentFile());
         }
     }
-
-
-        /**
-     * -c flag -- comment to attach to the file
-     */
-    public static final String FLAG_COMMENT = "-c";
-        /**
-     * -cfile flag -- file containing a comment to attach to the file
-     */
-    public static final String FLAG_COMMENTFILE = "-cfile";
-        /**
-     * -nc flag -- no comment is specified
-     */
-    public static final String FLAG_NOCOMMENT = "-nc";
-        /**
-     * -identical flag -- allows the file to be checked in even if it is identical to the original
-     */
-    public static final String FLAG_IDENTICAL = "-identical";
-       /**
-     * -incremental flag -- baseline to be created is incremental
-     */
-    public static final String FLAG_INCREMENTAL = "-incremental";
-       /**
-     * -full flag -- baseline to be created is full
-     */
-    public static final String FLAG_FULL = "-full";
-       /**
-     * -nlabel -- baseline to be created without a label
-     */
-    public static final String FLAG_NLABEL = "-nlabel";
-
 
 }

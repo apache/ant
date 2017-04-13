@@ -20,16 +20,15 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * A set of useful methods relating to extensions.
@@ -49,19 +48,10 @@ public final class ExtensionUtil {
      * @param adapters the list of ExtensionAdapterss to add to convert
      * @throws BuildException if an error occurs
      */
-    static ArrayList toExtensions(final List adapters)
+    static ArrayList<Extension> toExtensions(final List<? extends ExtensionAdapter> adapters)
         throws BuildException {
-        final ArrayList results = new ArrayList();
-
-        final int size = adapters.size();
-        for (int i = 0; i < size; i++) {
-            final ExtensionAdapter adapter =
-                (ExtensionAdapter) adapters.get(i);
-            final Extension extension = adapter.toExtension();
-            results.add(extension);
-        }
-
-        return results;
+        return adapters.stream().map(ExtensionAdapter::toExtension)
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -72,14 +62,12 @@ public final class ExtensionUtil {
      * @throws BuildException if an error occurs
      */
     static void extractExtensions(final Project project,
-                                   final List libraries,
-                                   final List fileset)
+                                   final List<Extension> libraries,
+                                   final List<FileSet> fileset)
         throws BuildException {
         if (!fileset.isEmpty()) {
-            final Extension[] extensions = getExtensions(project,
-                                                          fileset);
-            for (int i = 0; i < extensions.length; i++) {
-                libraries.add(extensions[ i ]);
+            for (Extension extension : getExtensions(project, fileset)) {
+                libraries.add(extension);
             }
         }
     }
@@ -92,13 +80,11 @@ public final class ExtensionUtil {
      * @throws BuildException if failing to scan libraries
      */
     private static Extension[] getExtensions(final Project project,
-                                              final List libraries)
+                                              final List<FileSet> libraries)
         throws BuildException {
-        final ArrayList extensions = new ArrayList();
-        final Iterator iterator = libraries.iterator();
-        while (iterator.hasNext()) {
-            final FileSet fileSet = (FileSet) iterator.next();
-
+        final List<Extension> extensions = new ArrayList<>();
+        
+        for (FileSet fileSet : libraries) {
             boolean includeImpl = true;
             boolean includeURL = true;
 
@@ -116,7 +102,7 @@ public final class ExtensionUtil {
                 loadExtensions(file, extensions, includeImpl, includeURL);
             }
         }
-        return (Extension[]) extensions.toArray(new Extension[extensions.size()]);
+        return extensions.toArray(new Extension[extensions.size()]);
     }
 
     /**
@@ -127,23 +113,17 @@ public final class ExtensionUtil {
      * @throws BuildException if there is an error
      */
     private static void loadExtensions(final File file,
-                                        final List extensionList,
+                                        final List<Extension> extensionList,
                                         final boolean includeImpl,
                                         final boolean includeURL)
         throws BuildException {
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(file);
-            final Extension[] extensions =
-                Extension.getAvailable(jarFile.getManifest());
-            for (int i = 0; i < extensions.length; i++) {
-                final Extension extension = extensions[ i ];
+        try (JarFile jarFile = new JarFile(file)) {
+            for (Extension extension : Extension
+                .getAvailable(jarFile.getManifest())) {
                 addExtension(extensionList, extension, includeImpl, includeURL);
             }
         } catch (final Exception e) {
             throw new BuildException(e.getMessage(), e);
-        } finally {
-            FileUtils.close(jarFile);
         }
     }
 
@@ -158,7 +138,7 @@ public final class ExtensionUtil {
      * @param includeImpl false to exclude implementation details
      * @param includeURL false to exclude implementation URL
      */
-    private static void addExtension(final List extensionList,
+    private static void addExtension(final List<Extension> extensionList,
                                       final Extension originalExtension,
                                       final boolean includeImpl,
                                       final boolean includeURL) {
@@ -205,18 +185,14 @@ public final class ExtensionUtil {
      */
     static Manifest getManifest(final File file)
         throws BuildException {
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(file);
+        try (JarFile jarFile = new JarFile(file)) {
             Manifest m = jarFile.getManifest();
             if (m == null) {
-                throw new BuildException(file + " doesn't have a MANIFEST");
+                throw new BuildException("%s doesn't have a MANIFEST", file);
             }
             return m;
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
-        } finally {
-            FileUtils.close(jarFile);
         }
     }
 

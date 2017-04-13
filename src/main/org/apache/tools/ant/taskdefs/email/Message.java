@@ -48,7 +48,6 @@ public class Message extends ProjectComponent {
     public Message() {
     }
 
-
     /**
      * Creates a new message based on the given string
      *
@@ -57,7 +56,6 @@ public class Message extends ProjectComponent {
     public Message(String text) {
         addText(text);
     }
-
 
     /**
      * Creates a new message using the contents of the given file.
@@ -68,7 +66,6 @@ public class Message extends ProjectComponent {
         messageSource = file;
     }
 
-
     /**
      * Adds a textual part of the message
      *
@@ -78,7 +75,6 @@ public class Message extends ProjectComponent {
         buffer.append(text);
     }
 
-
     /**
      * Sets the source file of the message
      *
@@ -87,7 +83,6 @@ public class Message extends ProjectComponent {
     public void setSrc(File src) {
         this.messageSource = src;
     }
-
 
     /**
      * Sets the content type for the message
@@ -99,7 +94,6 @@ public class Message extends ProjectComponent {
         specified = true;
     }
 
-
     /**
      * Returns the content type
      *
@@ -108,7 +102,6 @@ public class Message extends ProjectComponent {
     public String getMimeType() {
         return mimeType;
     }
-
 
     /**
      * Prints the message onto an output stream
@@ -129,7 +122,7 @@ public class Message extends ProjectComponent {
                 // Read message from a file
                 try (Reader freader = getReader(messageSource);
                      BufferedReader in = new BufferedReader(freader)) {
-                    String line = null;
+                    String line;
                     while ((line = in.readLine()) != null) {
                         out.write(getProject().replaceProperties(line));
                         out.newLine();
@@ -144,7 +137,6 @@ public class Message extends ProjectComponent {
             //do not close the out writer as it is reused afterwards by the mail task
         }
     }
-
 
     /**
      * Returns true if the mimeType has been set.
@@ -164,6 +156,7 @@ public class Message extends ProjectComponent {
     public void setCharset(String charset) {
       this.charset = charset;
     }
+
     /**
      * Returns the charset of mail message.
      *
@@ -197,4 +190,3 @@ public class Message extends ProjectComponent {
         return new FileReader(f);
     }
 }
-

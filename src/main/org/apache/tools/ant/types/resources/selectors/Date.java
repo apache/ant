@@ -144,15 +144,15 @@ public class Date implements ResourceSelector {
             try {
                 long m = df.parse(dateTime).getTime();
                 if (m < 0) {
-                    throw new BuildException("Date of " + dateTime
-                        + " results in negative milliseconds value"
-                        + " relative to epoch (January 1, 1970, 00:00:00 GMT).");
+                    throw new BuildException(
+                        "Date of %s results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT).",
+                        dateTime);
                 }
                 setMillis(m);
             } catch (ParseException pe) {
-                throw new BuildException("Date of " + dateTime
-                        + " Cannot be parsed correctly. It should be in '"
-                        + p + "' format.");
+                throw new BuildException(
+                    "Date of %s Cannot be parsed correctly. It should be in '%s' format.",
+                    dateTime, p);
             }
         }
         return when.evaluate(r.getLastModified(), millis.longValue(), granularity);

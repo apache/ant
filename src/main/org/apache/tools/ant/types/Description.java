@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
@@ -90,7 +91,7 @@ public class Description extends DataType {
         if (t == null) {
             return;
         }
-        for (Task task : findElementInTarget(project, t, "description")) {
+        for (Task task : findElementInTarget(t, "description")) {
             if (!(task instanceof UnknownElement)) {
                 continue;
             }
@@ -102,15 +103,10 @@ public class Description extends DataType {
         }
     }
 
-    private static List<Task> findElementInTarget(Project project,
-                                              Target t, String name) {
-        final List<Task> elems = new ArrayList<Task>();
-        for (Task task : t.getTasks()) {
-            if (name.equals(task.getTaskName())) {
-                elems.add(task);
-            }
-        }
-        return elems;
+    private static List<Task> findElementInTarget(Target t, String name) {
+        return Stream.of(t.getTasks())
+            .filter(task -> name.equals(task.getTaskName()))
+            .collect(Collectors.toList());
     }
 
 }

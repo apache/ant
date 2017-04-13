@@ -42,13 +42,6 @@ public class PresentSelector extends BaseSelector {
     private boolean destmustexist = true;
 
     /**
-     * Creates a new <code>PresentSelector</code> instance.
-     *
-     */
-    public PresentSelector() {
-    }
-
-    /**
      * @return a string describing this object
      */
     @Override

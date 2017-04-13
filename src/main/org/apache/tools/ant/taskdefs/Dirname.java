@@ -68,15 +68,14 @@ public class Dirname extends Task {
      * Execute this task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute required", getLocation());
         }
         if (file == null) {
             throw new BuildException("file attribute required", getLocation());
-        } else {
-            String value = file.getParent();
-            getProject().setNewProperty(property, value);
         }
+        getProject().setNewProperty(property, file.getParent());
     }
 }

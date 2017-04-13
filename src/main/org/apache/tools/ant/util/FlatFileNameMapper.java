@@ -32,6 +32,7 @@ public class FlatFileNameMapper implements FileNameMapper {
      * Ignored.
      * @param from ignored.
      */
+    @Override
     public void setFrom(String from) {
     }
 
@@ -39,6 +40,7 @@ public class FlatFileNameMapper implements FileNameMapper {
      * Ignored.
      * @param to ignored.
      */
+    @Override
     public void setTo(String to) {
     }
 
@@ -48,7 +50,8 @@ public class FlatFileNameMapper implements FileNameMapper {
      * @param sourceFileName the name to map.
      * @return the file name in a one-element array.
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
-        return new String[] {new java.io.File(sourceFileName).getName()};
+        return new String[] { new java.io.File(sourceFileName).getName() };
     }
 }

@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -28,8 +29,6 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-
-
 
 /**
  * A base class for creating tasks for executing commands on ClearCase.
@@ -46,137 +45,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public abstract class ClearCase extends Task {
-    private String mClearToolDir = "";
-    private String mviewPath = null;
-    private String mobjSelect = null;
-    private int pcnt = 0;
-    private boolean mFailonerr = true;
-    /**
-     * Set the directory where the cleartool executable is located.
-     *
-     * @param dir the directory containing the cleartool executable
-     */
-    public final void setClearToolDir(String dir) {
-        mClearToolDir = FileUtils.translatePath(dir);
-    }
-
-    /**
-     * Builds and returns the command string to execute cleartool
-     *
-     * @return String containing path to the executable
-     */
-    protected final String getClearToolCommand() {
-        String toReturn = mClearToolDir;
-        if (!toReturn.equals("") && !toReturn.endsWith("/")) {
-            toReturn += "/";
-        }
-
-        toReturn += CLEARTOOL_EXE;
-
-        return toReturn;
-    }
-
-    /**
-     * Set the path to the item in a ClearCase view to operate on.
-     *
-     * @param viewPath Path to the view directory or file
-     */
-    public final void setViewPath(String viewPath) {
-        mviewPath = viewPath;
-    }
-
-    /**
-     * Get the path to the item in a clearcase view
-     *
-     * @return mviewPath
-     */
-    public String getViewPath() {
-        return mviewPath;
-    }
-
-    /**
-     * Get the basename path of the item in a clearcase view
-     *
-     * @return basename
-     */
-    public String getViewPathBasename() {
-        return (new File(mviewPath)).getName();
-    }
-
-    /**
-     * Set the object to operate on.
-     *
-     * @param objSelect object to operate on
-     */
-    public final void setObjSelect(String objSelect) {
-        mobjSelect = objSelect;
-    }
-
-    /**
-     * Get the object to operate on
-     *
-     * @return mobjSelect
-     */
-    public String getObjSelect() {
-        return mobjSelect;
-    }
-
-    /**
-     * Execute the given command are return success or failure
-     * @param cmd command line to execute
-     * @return the exit status of the subprocess or <code>INVALID</code>
-     */
-    protected int run(Commandline cmd) {
-        try {
-            Project aProj = getProject();
-            Execute exe
-                = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
-            exe.setAntRun(aProj);
-            exe.setWorkingDirectory(aProj.getBaseDir());
-            exe.setCommandline(cmd.getCommandline());
-            return exe.execute();
-        } catch (java.io.IOException e) {
-            throw new BuildException(e, getLocation());
-        }
-    }
-
-    /**
-     * Execute the given command, and return it's output
-     * @param cmdline command line to execute
-     * @return output of the command line
-     */
-    protected String runS(Commandline cmdline) {
-        String   outV  = "opts.cc.runS.output" + pcnt++;
-        ExecTask exe   = new ExecTask(this);
-        Commandline.Argument arg = exe.createArg();
-
-        exe.setExecutable(cmdline.getExecutable());
-        arg.setLine(Commandline.toString(cmdline.getArguments()));
-        exe.setOutputproperty(outV);
-        exe.execute();
-
-        return getProject().getProperty(outV);
-    }
-    /**
-     * If true, command will throw an exception on failure.
-     *
-     * @param failonerr the status to set the flag to
-     * @since ant 1.6.1
-     */
-    public void setFailOnErr(boolean failonerr) {
-        mFailonerr = failonerr;
-    }
-
-    /**
-     * Get failonerr flag status
-     *
-     * @return boolean containing status of failonerr flag
-     * @since ant 1.6.1
-     */
-    public boolean getFailOnErr() {
-        return mFailonerr;
-    }
-
     /**
      * Constant for the thing to execute
      */
@@ -238,5 +106,137 @@ public abstract class ClearCase extends Task {
      */
     public static final String COMMAND_MKDIR = "mkdir";
 
-}
+    private String mClearToolDir = "";
+    private String mviewPath = null;
+    private String mobjSelect = null;
+    private int pcnt = 0;
+    private boolean mFailonerr = true;
 
+    /**
+     * Set the directory where the cleartool executable is located.
+     *
+     * @param dir the directory containing the cleartool executable
+     */
+    public final void setClearToolDir(String dir) {
+        mClearToolDir = FileUtils.translatePath(dir);
+    }
+
+    /**
+     * Builds and returns the command string to execute cleartool
+     *
+     * @return String containing path to the executable
+     */
+    protected final String getClearToolCommand() {
+        String toReturn = mClearToolDir;
+        if (!("".equals(toReturn) || toReturn.endsWith("/"))) {
+            toReturn += "/";
+        }
+
+        toReturn += CLEARTOOL_EXE;
+
+        return toReturn;
+    }
+
+    /**
+     * Set the path to the item in a ClearCase view to operate on.
+     *
+     * @param viewPath Path to the view directory or file
+     */
+    public final void setViewPath(String viewPath) {
+        mviewPath = viewPath;
+    }
+
+    /**
+     * Get the path to the item in a clearcase view
+     *
+     * @return mviewPath
+     */
+    public String getViewPath() {
+        return mviewPath;
+    }
+
+    /**
+     * Get the basename path of the item in a clearcase view
+     *
+     * @return basename
+     */
+    public String getViewPathBasename() {
+        return (new File(mviewPath)).getName();
+    }
+
+    /**
+     * Set the object to operate on.
+     *
+     * @param objSelect object to operate on
+     */
+    public final void setObjSelect(String objSelect) {
+        mobjSelect = objSelect;
+    }
+
+    /**
+     * Get the object to operate on
+     *
+     * @return mobjSelect
+     */
+    public String getObjSelect() {
+        return mobjSelect;
+    }
+
+    /**
+     * Execute the given command are return success or failure
+     * @param cmd command line to execute
+     * @return the exit status of the subprocess or <code>INVALID</code>
+     */
+    protected int run(Commandline cmd) {
+        try {
+            Project aProj = getProject();
+            Execute exe = new Execute(
+                new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
+            exe.setAntRun(aProj);
+            exe.setWorkingDirectory(aProj.getBaseDir());
+            exe.setCommandline(cmd.getCommandline());
+            return exe.execute();
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
+    }
+
+    /**
+     * Execute the given command, and return it's output
+     * @param cmdline command line to execute
+     * @return output of the command line
+     */
+    protected String runS(Commandline cmdline) {
+        String   outV  = "opts.cc.runS.output" + pcnt++;
+        ExecTask exe   = new ExecTask(this);
+        Commandline.Argument arg = exe.createArg();
+
+        exe.setExecutable(cmdline.getExecutable());
+        arg.setLine(Commandline.toString(cmdline.getArguments()));
+        exe.setOutputproperty(outV);
+        exe.execute();
+
+        return getProject().getProperty(outV);
+    }
+
+    /**
+     * If true, command will throw an exception on failure.
+     *
+     * @param failonerr the status to set the flag to
+     * @since ant 1.6.1
+     */
+    public void setFailOnErr(boolean failonerr) {
+        mFailonerr = failonerr;
+    }
+
+    /**
+     * Get failonerr flag status
+     *
+     * @return boolean containing status of failonerr flag
+     * @since ant 1.6.1
+     */
+    public boolean getFailOnErr() {
+        return mFailonerr;
+    }
+
+}

@@ -18,9 +18,12 @@
 package org.apache.tools.ant.util.depend.bcel;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
+
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.DescendingVisitor;
 import org.apache.bcel.classfile.JavaClass;
@@ -60,31 +63,28 @@ public class FullAnalyzer extends AbstractAnalyzer {
      * @param classes a vector to be populated with the names of the
      *      dependency classes.
      */
+    @Override
     protected void determineDependencies(Vector<File> files, Vector<String> classes) {
         // we get the root classes and build up a set of
         // classes upon which they depend
-        Hashtable<String, String> dependencies = new Hashtable<String, String>();
-        Hashtable<File, File> containers = new Hashtable<File, File>();
-        Hashtable<String, String> toAnalyze = new Hashtable<String, String>();
-        for (Enumeration<String> e = getRootClasses(); e.hasMoreElements();) {
-            String classname = e.nextElement();
-            toAnalyze.put(classname, classname);
-        }
+        Set<String> dependencies = new HashSet<>();
+        Set<File> containers = new HashSet<>();
+        Set<String> toAnalyze = new HashSet<>(Collections.list(getRootClasses()));
 
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 2;
-        while (toAnalyze.size() != 0 && count++ < maxCount) {
+        while (!toAnalyze.isEmpty() && count++ < maxCount) {
             DependencyVisitor dependencyVisitor = new DependencyVisitor();
-            for (String classname : toAnalyze.keySet()) {
-                dependencies.put(classname, classname);
+            for (String classname : toAnalyze) {
+                dependencies.add(classname);
                 try {
                     File container = getClassContainer(classname);
                     if (container == null) {
                         continue;
                     }
-                    containers.put(container, container);
+                    containers.add(container);
 
-                    ClassParser parser = null;
+                    ClassParser parser;
                     if (container.getName().endsWith(".class")) {
                         parser = new ClassParser(container.getPath());
                     } else {
@@ -107,21 +107,17 @@ public class FullAnalyzer extends AbstractAnalyzer {
             Enumeration<String> depsEnum = dependencyVisitor.getDependencies();
             while (depsEnum.hasMoreElements()) {
                 String className = depsEnum.nextElement();
-                if (!dependencies.containsKey(className)) {
-                    toAnalyze.put(className, className);
+                if (!dependencies.contains(className)) {
+                    toAnalyze.add(className);
                 }
             }
         }
 
-        files.removeAllElements();
-        for (File f : containers.keySet()) {
-            files.add(f);
-        }
+        files.clear();
+        files.addAll(containers);
 
-        classes.removeAllElements();
-        for (String dependency : dependencies.keySet()) {
-            classes.add(dependency);
-        }
+        classes.clear();
+        classes.addAll(dependencies);
     }
 
     /**
@@ -129,6 +125,7 @@ public class FullAnalyzer extends AbstractAnalyzer {
      *
      * @return true if the analyzer provides dependency file information.
      */
+    @Override
     protected boolean supportsFileDependencies() {
         return true;
     }

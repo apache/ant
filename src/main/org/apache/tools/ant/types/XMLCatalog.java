@@ -356,6 +356,7 @@ public class XMLCatalog extends DataType
      * @param r the reference to which this catalog instance is associated
      * @exception BuildException if this instance already has been configured.
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (!elements.isEmpty()) {
             throw tooManyAttributes();
@@ -372,6 +373,7 @@ public class XMLCatalog extends DataType
      * @return the resolved entity.
      * @see org.xml.sax.EntityResolver#resolveEntity
      */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
 
@@ -403,6 +405,7 @@ public class XMLCatalog extends DataType
      * @throws TransformerException if an error occurs.
      * @see javax.xml.transform.URIResolver#resolve
      */
+    @Override
     public Source resolve(String href, String base)
         throws TransformerException {
 
@@ -428,7 +431,7 @@ public class XMLCatalog extends DataType
             // setEntityResolver (see setEntityResolver javadoc comment)
             //
             source = new SAXSource();
-            URL baseURL = null;
+            URL baseURL;
             try {
                 if (base == null) {
                     baseURL = FILE_UTILS.getFileURL(getProject().getBaseDir());
@@ -448,6 +451,7 @@ public class XMLCatalog extends DataType
         return source;
     }
 
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -495,7 +499,7 @@ public class XMLCatalog extends DataType
 
         if (catalogResolver == null) {
 
-            AntClassLoader loader = null;
+            AntClassLoader loader;
             // Memory-Leak in line below
             loader = getProject().createClassLoader(Path.systemClasspath);
 
@@ -590,12 +594,9 @@ public class XMLCatalog extends DataType
      *         of the Resource or null if no such information is available.
      */
     private ResourceLocation findMatchingEntry(String publicId) {
-        for (ResourceLocation element : getElements()) {
-            if (element.getPublicId().equals(publicId)) {
-                return element;
-            }
-        }
-        return null;
+        return getElements().stream()
+            .filter(e -> e.getPublicId().equals(publicId)).findFirst()
+            .orElse(null);
     }
 
     /**
@@ -628,7 +629,7 @@ public class XMLCatalog extends DataType
         String uri = matchingEntry.getLocation();
         // the following line seems to be necessary on Windows under JDK 1.2
         uri = uri.replace(File.separatorChar, '/');
-        URL baseURL = null;
+        URL baseURL;
 
         //
         // The ResourceLocation may specify a relative path for its
@@ -645,7 +646,6 @@ public class XMLCatalog extends DataType
             }
         }
 
-        InputSource source = null;
         URL url = null;
         try {
             url = new URL(baseURL, uri);
@@ -670,7 +670,8 @@ public class XMLCatalog extends DataType
             }
         }
 
-        if (url != null && url.getProtocol().equals("file")) {
+        InputSource source = null;
+        if (url != null && "file".equals(url.getProtocol())) {
             String fileName = FILE_UTILS.fromURI(url.toString());
             if (fileName != null) {
                 log("fileName " + fileName, Project.MSG_DEBUG);
@@ -701,14 +702,13 @@ public class XMLCatalog extends DataType
 
         InputSource source = null;
 
-        AntClassLoader loader = null;
         Path cp = classpath;
         if (cp != null) {
             cp = classpath.concatSystemClasspath("ignore");
         } else {
             cp = (new Path(getProject())).concatSystemClasspath("last");
         }
-        loader = getProject().createClassLoader(cp);
+        AntClassLoader loader = getProject().createClassLoader(cp);
 
         //
         // for classpath lookup we ignore the base directory
@@ -737,7 +737,7 @@ public class XMLCatalog extends DataType
     private InputSource urlLookup(ResourceLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
-        URL baseURL = null;
+        URL baseURL;
 
         //
         // The ResourceLocation may specify a relative url for its
@@ -754,15 +754,15 @@ public class XMLCatalog extends DataType
             }
         }
 
-        InputSource source = null;
-        URL url = null;
+        URL url;
 
         try {
             url = new URL(baseURL, uri);
         } catch (MalformedURLException ex) {
-            // ignore
+            url = null;
         }
 
+        InputSource source = null;
         if (url != null) {
             try {
                 InputStream is = null;
@@ -792,10 +792,6 @@ public class XMLCatalog extends DataType
      * the ExternalResolver strategy.
      */
     private interface CatalogResolver extends URIResolver, EntityResolver {
-
-        InputSource resolveEntity(String publicId, String systemId);
-
-        Source resolve(String href, String base) throws TransformerException;
     }
 
     /**
@@ -812,6 +808,7 @@ public class XMLCatalog extends DataType
                 Project.MSG_VERBOSE);
         }
 
+        @Override
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
             InputSource result = null;
@@ -837,6 +834,7 @@ public class XMLCatalog extends DataType
             return result;
         }
 
+        @Override
         public Source resolve(String href, String base)
             throws TransformerException {
 
@@ -948,14 +946,15 @@ public class XMLCatalog extends DataType
                 Project.MSG_VERBOSE);
         }
 
+        @Override
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
-            InputSource result = null;
 
             processExternalCatalogs();
 
             ResourceLocation matchingEntry = findMatchingEntry(publicId);
 
+            InputSource result;
             if (matchingEntry != null) {
 
                 log("Matching catalog entry found for publicId: '"
@@ -999,11 +998,12 @@ public class XMLCatalog extends DataType
             return result;
         }
 
+        @Override
         public Source resolve(String href, String base)
             throws TransformerException {
 
-            SAXSource result = null;
-            InputSource source = null;
+            SAXSource result;
+            InputSource source;
 
             processExternalCatalogs();
 

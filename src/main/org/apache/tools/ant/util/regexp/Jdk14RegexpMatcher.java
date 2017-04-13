@@ -34,14 +34,11 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
 
     private String pattern;
 
-    /** Constructor for JakartaOroRegexp */
-    public Jdk14RegexpMatcher() {
-    }
-
     /**
      * Set the regexp pattern from the String description.
      * @param pattern the pattern to match
      */
+    @Override
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
@@ -51,6 +48,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * @return the pattern
      * @throws BuildException on error
      */
+    @Override
     public String getPattern() {
         return pattern;
     }
@@ -65,8 +63,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
         throws BuildException {
         int cOptions = getCompilerOptions(options);
         try {
-            Pattern p = Pattern.compile(this.pattern, cOptions);
-            return p;
+            return Pattern.compile(this.pattern, cOptions);
         } catch (PatternSyntaxException e) {
             throw new BuildException(e);
         }
@@ -78,6 +75,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(String argument) throws BuildException {
         return matches(argument, MATCH_DEFAULT);
     }
@@ -89,11 +87,11 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * @return true if the pattern matches
      * @throws BuildException on error
      */
+    @Override
     public boolean matches(String input, int options)
         throws BuildException {
         try {
-            Pattern p = getCompiledPattern(options);
-            return p.matcher(input).find();
+            return getCompiledPattern(options).matcher(input).find();
         } catch (Exception e) {
             throw new BuildException(e);
         }
@@ -110,7 +108,8 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(String argument) throws BuildException {
+    @Override
+    public Vector<String> getGroups(String argument) throws BuildException {
         return getGroups(argument, MATCH_DEFAULT);
     }
 
@@ -125,14 +124,15 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      * @return the vector of groups
      * @throws BuildException on error
      */
-    public Vector getGroups(String input, int options)
+    @Override
+    public Vector<String> getGroups(String input, int options)
         throws BuildException {
         Pattern p = getCompiledPattern(options);
         Matcher matcher = p.matcher(input);
         if (!matcher.find()) {
             return null;
         }
-        Vector v = new Vector();
+        Vector<String> v = new Vector<>();
         int cnt = matcher.groupCount();
         for (int i = 0; i <= cnt; i++) {
             String match = matcher.group(i);
@@ -140,7 +140,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
             if (match == null) {
                 match = "";
             }
-            v.addElement(match);
+            v.add(match);
         }
         return v;
     }

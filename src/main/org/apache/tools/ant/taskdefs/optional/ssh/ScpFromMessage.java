@@ -149,6 +149,7 @@ public class ScpFromMessage extends AbstractSshMessage {
      * @throws IOException on i/o errors
      * @throws JSchException on errors detected by scp
      */
+    @Override
     public void execute() throws IOException, JSchException {
         String command = "scp -f ";
         if (isRecursive) {
@@ -220,9 +221,9 @@ public class ScpFromMessage extends AbstractSshMessage {
 
     private File parseAndCreateDirectory(final String serverResponse,
                                          final File localFile) {
-        int start = serverResponse.indexOf(" ");
+        int start = serverResponse.indexOf(' ');
         // appears that the next token is not used and it's zero.
-        start = serverResponse.indexOf(" ", start + 1);
+        start = serverResponse.indexOf(' ', start + 1);
         final String directoryName = serverResponse.substring(start + 1);
         if (localFile.isDirectory()) {
             final File dir = new File(localFile, directoryName);
@@ -239,13 +240,13 @@ public class ScpFromMessage extends AbstractSshMessage {
                                    final InputStream in)
         throws IOException, JSchException  {
         int start = 0;
-        int end = serverResponse.indexOf(" ", start + 1);
+        int end = serverResponse.indexOf(' ', start + 1);
         start = end + 1;
-        end = serverResponse.indexOf(" ", start + 1);
+        end = serverResponse.indexOf(' ', start + 1);
         final long filesize = Long.parseLong(serverResponse.substring(start, end));
         final String filename = serverResponse.substring(end + 1);
         log("Receiving: " + filename + " : " + filesize);
-        final File transferFile = (localFile.isDirectory())
+        final File transferFile = localFile.isDirectory()
                 ? new File(localFile, filename)
                 : localFile;
         fetchFile(transferFile, filesize, out, in);
@@ -277,7 +278,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         try {
             while (true) {
                 length = in.read(buf, 0,
-                                 (BUFFER_SIZE < filesize) ? BUFFER_SIZE
+                                 BUFFER_SIZE < filesize ? BUFFER_SIZE
                                                           : (int) filesize);
                 if (length < 0) {
                     throw new EOFException("Unexpected end of stream.");
@@ -327,10 +328,10 @@ public class ScpFromMessage extends AbstractSshMessage {
      * returns the directory part of the remote file, if any.
      */
     private static String remoteDir(final String remoteFile) {
-        int index = remoteFile.lastIndexOf("/");
+        int index = remoteFile.lastIndexOf('/');
         if (index < 0) {
-            index = remoteFile.lastIndexOf("\\");
+            index = remoteFile.lastIndexOf('\\');
         }
-        return index > -1 ? remoteFile.substring(0, index + 1) : "";
+        return index < 0 ? "" : remoteFile.substring(0, index + 1);
     }
 }

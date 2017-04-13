@@ -36,10 +36,11 @@ public class Or extends ConditionBase implements Condition {
      * @return true if any of the contained conditions evaluate to true
      * @exception BuildException if an error occurs
      */
+    @Override
     public boolean eval() throws BuildException {
-        Enumeration e = getConditions();
+        Enumeration<Condition> e = getConditions();
         while (e.hasMoreElements()) {
-            Condition c = (Condition) e.nextElement();
+            Condition c = e.nextElement();
             if (c.eval()) {
                 return true;
             }

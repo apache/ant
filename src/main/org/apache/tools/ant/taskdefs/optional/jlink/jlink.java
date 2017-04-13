@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
@@ -36,8 +37,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import org.apache.tools.ant.util.FileUtils;
 
 // CheckStyle:TypeNameCheck OFF - bc
 /**
@@ -49,9 +48,9 @@ public class jlink {
 
     private String outfile = null;
 
-    private Vector mergefiles = new Vector(VECTOR_INIT_SIZE);
+    private List<String> mergefiles = new Vector<>(VECTOR_INIT_SIZE);
 
-    private Vector addfiles = new Vector(VECTOR_INIT_SIZE);
+    private List<String> addfiles = new Vector<>(VECTOR_INIT_SIZE);
 
     private boolean compression = false;
 
@@ -71,7 +70,6 @@ public class jlink {
         this.outfile = outfile;
     }
 
-
     /**
      * Adds a file to be merged into the output.
      * @param fileToMerge the file to merge into the output.
@@ -80,9 +78,8 @@ public class jlink {
         if (fileToMerge == null) {
             return;
         }
-        mergefiles.addElement(fileToMerge);
+        mergefiles.add(fileToMerge);
     }
-
 
     /** Adds a file to be added into the output.
      * @param fileToAdd the file to add to the output.
@@ -91,37 +88,34 @@ public class jlink {
         if (fileToAdd == null) {
             return;
         }
-        addfiles.addElement(fileToAdd);
+        addfiles.add(fileToAdd);
     }
-
 
     /**
      * Adds several files to be merged into the output.
      * @param filesToMerge an array of files to merge into the output.
      */
-    public void addMergeFiles(String[] filesToMerge) {
+    public void addMergeFiles(String... filesToMerge) {
         if (filesToMerge == null) {
             return;
         }
-        for (int i = 0; i < filesToMerge.length; i++) {
-            addMergeFile(filesToMerge[i]);
+        for (String element : filesToMerge) {
+            addMergeFile(element);
         }
     }
 
-
     /**
-     * Adds several file to be added into the output.
+     * Adds several files to be added into the output.
      * @param filesToAdd an array of files to add to the output.
      */
-    public void addAddFiles(String[] filesToAdd) {
+    public void addAddFiles(String... filesToAdd) {
         if (filesToAdd == null) {
             return;
         }
-        for (int i = 0; i < filesToAdd.length; i++) {
-            addAddFile(filesToAdd[i]);
+        for (String element : filesToAdd) {
+            addAddFile(element);
         }
     }
-
 
     /**
      * Determines whether output will be compressed.
@@ -130,7 +124,6 @@ public class jlink {
     public void setCompression(boolean compress) {
         this.compression = compress;
     }
-
 
     /**
      * Performs the linking of files. Addfiles are added to the output as-is.
@@ -145,47 +138,39 @@ public class jlink {
      * @throws Exception on error.
      */
     public void link() throws Exception { //NOSONAR
-        ZipOutputStream output = new ZipOutputStream(Files.newOutputStream(Paths.get(outfile)));
+        try (ZipOutputStream output =
+            new ZipOutputStream(Files.newOutputStream(Paths.get(outfile)))) {
 
-        if (compression) {
-            output.setMethod(ZipOutputStream.DEFLATED);
-            output.setLevel(Deflater.DEFAULT_COMPRESSION);
-        } else {
-            output.setMethod(ZipOutputStream.STORED);
-        }
-
-        Enumeration merges = mergefiles.elements();
-
-        while (merges.hasMoreElements()) {
-            String path = (String) merges.nextElement();
-            File f = new File(path);
-
-            if (f.getName().endsWith(".jar") || f.getName().endsWith(".zip")) {
-                //Do the merge
-                mergeZipJarContents(output, f);
+            if (compression) {
+                output.setMethod(ZipOutputStream.DEFLATED);
+                output.setLevel(Deflater.DEFAULT_COMPRESSION);
             } else {
-                //Add this file to the addfiles Vector and add it
-                //later at the top level of the output file.
-                addAddFile(path);
+                output.setMethod(ZipOutputStream.STORED);
+            }
+            for (String path : mergefiles) {
+                File f = new File(path);
+
+                if (f.getName().endsWith(".jar")
+                    || f.getName().endsWith(".zip")) {
+                    //Do the merge
+                    mergeZipJarContents(output, f);
+                } else {
+                    //Add this file to the addfiles Vector and add it
+                    //later at the top level of the output file.
+                    addAddFile(path);
+                }
+            }
+            for (String name : addfiles) {
+                File f = new File(name);
+
+                if (f.isDirectory()) {
+                    addDirContents(output, f, f.getName() + '/', compression);
+                } else {
+                    addFile(output, f, "", compression);
+                }
             }
         }
-
-        Enumeration adds = addfiles.elements();
-
-        while (adds.hasMoreElements()) {
-            String name = (String) adds.nextElement();
-            File f = new File(name);
-
-            if (f.isDirectory()) {
-                //System.out.println("in jlink: adding directory contents of " + f.getPath());
-                addDirContents(output, f, f.getName() + '/', compression);
-            } else {
-                addFile(output, f, "", compression);
-            }
-        }
-        FileUtils.close(output);
     }
-
 
     /**
      * The command line entry point for jlink.
@@ -212,7 +197,6 @@ public class jlink {
         }
     }
 
-
     /*
      * Actually performs the merging of f into the output.
      * f should be a zip or jar file.
@@ -223,10 +207,10 @@ public class jlink {
             return;
         }
         try (ZipFile zipf = new ZipFile(f)) {
-            Enumeration entries = zipf.entries();
+            Enumeration<? extends ZipEntry> entries = zipf.entries();
 
             while (entries.hasMoreElements()) {
-                ZipEntry inputEntry = (ZipEntry) entries.nextElement();
+                ZipEntry inputEntry = entries.nextElement();
                 //Ignore manifest entries.  They're bound to cause conflicts between
                 //files that are being merged.  User should supply their own
                 //manifest file when doing the merge.
@@ -244,32 +228,28 @@ public class jlink {
                         //entry from another mergefile was called "com".
                         //In that case, just ignore the error and go on to the
                         //next entry.
-                        String mess = ex.getMessage();
-
-                        if (mess.indexOf("duplicate") >= 0) {
+                        if (ex.getMessage().indexOf("duplicate") >= 0) {
                             //It was the duplicate entry.
                             continue;
-                        } else {
-                            // I hate to admit it, but we don't know what happened
-                            // here.  Throw the Exception.
-                            throw ex;
                         }
+                        // I hate to admit it, but we don't know what happened
+                        // here.  Throw the Exception.
+                        throw ex;
                     }
 
-                    InputStream in = zipf.getInputStream(inputEntry);
-                    int len = buffer.length;
-                    int count = -1;
+                    try (InputStream in = zipf.getInputStream(inputEntry)) {
+                        int len = buffer.length;
+                        int count = -1;
 
-                    while ((count = in.read(buffer, 0, len)) > 0) {
-                        output.write(buffer, 0, count);
+                        while ((count = in.read(buffer, 0, len)) > 0) {
+                            output.write(buffer, 0, count);
+                        }
+                        output.closeEntry();
                     }
-                    in.close();
-                    output.closeEntry();
                 }
             }
         }
     }
-
 
     /*
      * Adds contents of a directory to the output.
@@ -290,7 +270,6 @@ public class jlink {
         }
     }
 
-
     /*
      * Gets the name of an entry in the file.  This is the real name
      * which for a class is the name of the package with the class
@@ -301,9 +280,7 @@ public class jlink {
 
         if (!name.endsWith(".class")) {
             // see if the file is in fact a .class file, and determine its actual name.
-            InputStream input = null;
-            try {
-                input = Files.newInputStream(file.toPath());
+            try (InputStream input = Files.newInputStream(file.toPath())) {
                 String className = ClassNameReader.getClassName(input);
 
                 if (className != null) {
@@ -311,13 +288,12 @@ public class jlink {
                 }
             } catch (IOException ioe) {
                 //do nothing
-            } finally {
-                FileUtils.close(input);
             }
         }
-        System.out.println("From " + file.getPath() + " and prefix " + prefix
-                           + ", creating entry " + prefix + name);
-        return (prefix + name);
+        System.out.printf(
+            "From %1$s and prefix %2$s, creating entry %2$s%3$s%n",
+            file.getPath(), prefix, name);
+        return prefix + name;
     }
 
 
@@ -337,11 +313,8 @@ public class jlink {
         if (!compress) {
             entry.setCrc(calcChecksum(file));
         }
-        InputStream input = Files.newInputStream(file.toPath());
-
-        addToOutputStream(output, input, entry);
+        addToOutputStream(output, Files.newInputStream(file.toPath()), entry);
     }
-
 
     /*
      * A convenience method that several other methods might call.
@@ -356,7 +329,7 @@ public class jlink {
             return;
         }
 
-        int numBytes = -1;
+        int numBytes;
 
         while ((numBytes = input.read(buffer)) > 0) {
             output.write(buffer, 0, numBytes);
@@ -364,7 +337,6 @@ public class jlink {
         output.closeEntry();
         input.close();
     }
-
 
     /*
      * A method that does the work on a given entry in a mergefile.
@@ -387,11 +359,9 @@ public class jlink {
         String name = inputEntry.getName();
 
         if (!(inputEntry.isDirectory() || name.endsWith(".class"))) {
-            try {
-                InputStream input = zip.getInputStream(zip.getEntry(name));
+            try (InputStream input = zip.getInputStream(zip.getEntry(name))) {
                 String className = ClassNameReader.getClassName(input);
 
-                input.close();
                 if (className != null) {
                     name = className.replace('.', '/') + ".class";
                 }
@@ -416,17 +386,14 @@ public class jlink {
         return outputEntry;
     }
 
-
     /*
      * Necessary in the case where you add a entry that
      * is not compressed.
      */
     private long calcChecksum(File f) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(Files.newInputStream(f.toPath()));
-
-        return calcChecksum(in);
+        return calcChecksum(
+            new BufferedInputStream(Files.newInputStream(f.toPath())));
     }
-
 
     /*
      * Necessary in the case where you add a entry that
@@ -435,17 +402,14 @@ public class jlink {
     private long calcChecksum(InputStream in) throws IOException {
         CRC32 crc = new CRC32();
         int len = buffer.length;
-        int count = -1;
-        int haveRead = 0;
+        int count;
 
         while ((count = in.read(buffer, 0, len)) > 0) {
-            haveRead += count;
             crc.update(buffer, 0, count);
         }
         in.close();
         return crc.getValue();
     }
-
 
 }
 

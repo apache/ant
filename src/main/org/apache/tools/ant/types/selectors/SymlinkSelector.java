@@ -18,12 +18,8 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.nio.file.Files;
 import java.io.File;
-
-import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.resources.FileProvider;
-import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import java.nio.file.Files;
 
 /**
  * A selector that selects symbolic links.
@@ -34,17 +30,10 @@ import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
  *
  * @since Ant 1.10.0
  */
-public class SymlinkSelector implements FileSelector, ResourceSelector {
+public class SymlinkSelector implements FileSelector {
 
     public boolean isSelected(File basedir, String filename, File file) {
         return file != null && Files.isSymbolicLink(file.toPath());
     }
 
-    public boolean isSelected(Resource r) {
-        FileProvider fp = r.as(FileProvider.class);
-        if (fp != null) {
-            return isSelected(null, null, fp.getFile());
-        }
-        return false;
-    }
 }

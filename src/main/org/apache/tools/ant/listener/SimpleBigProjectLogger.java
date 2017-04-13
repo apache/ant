@@ -33,14 +33,14 @@ public class SimpleBigProjectLogger extends NoBannerLogger {
      * @param event the event to work on
      * @return the target name -including the owning project name (if non-null)
      */
+    @Override
     protected String extractTargetName(BuildEvent event) {
         String targetName = super.extractTargetName(event);
         String projectName = extractProjectName(event);
-        if (projectName != null && targetName != null) {
-            return projectName + '.' + targetName;
-        } else {
+        if (projectName == null || targetName == null) {
             return targetName;
         }
+        return projectName + '.' + targetName;
     }
 
 }

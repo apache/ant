@@ -50,12 +50,13 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 public class Exit extends Task {
 
     private static class NestedCondition extends ConditionBase implements Condition {
+        @Override
         public boolean eval() {
             if (countConditions() != 1) {
                 throw new BuildException(
                     "A single nested condition is required.");
             }
-            return ((Condition) (getConditions().nextElement())).eval();
+            return getConditions().nextElement().eval();
         }
     }
 
@@ -131,12 +132,13 @@ public class Exit extends Task {
      * the if and unless parameters (if present).
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         boolean fail = (nestedConditionPresent()) ? testNestedCondition()
                      : (testIfCondition() && testUnlessCondition());
         if (fail) {
             String text = null;
-            if (message != null && message.trim().length() > 0) {
+            if (!(message == null || message.trim().isEmpty())) {
                 text = message.trim();
             } else {
                 if (ifCondition != null && !"".equals(ifCondition)
@@ -154,15 +156,13 @@ public class Exit extends Task {
                 }
                 if (nestedConditionPresent()) {
                     text = "condition satisfied";
-                } else {
-                    if (text == null) {
-                        text = "No message";
-                    }
+                } else if (text == null) {
+                    text = "No message";
                 }
             }
             log("failing due to " + text, Project.MSG_DEBUG);
-            throw ((status == null) ? new BuildException(text)
-             : new ExitStatusException(text, status.intValue()));
+            throw status == null ? new BuildException(text)
+                : new ExitStatusException(text, status.intValue());
         }
     }
 
@@ -217,8 +217,8 @@ public class Exit extends Task {
         boolean result = nestedConditionPresent();
 
         if (result && ifCondition != null || unlessCondition != null) {
-            throw new BuildException("Nested conditions "
-                + "not permitted in conjunction with if/unless attributes");
+            throw new BuildException(
+                "Nested conditions not permitted in conjunction with if/unless attributes");
         }
 
         return result && nestedCondition.eval();

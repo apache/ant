@@ -55,6 +55,7 @@ public class Ear extends Jar {
      * @deprecated since 1.5.x.
      *             Use setDestFile(destfile) instead.
      */
+    @Deprecated
     public void setEarfile(File earFile) {
         setDestFile(earFile);
     }
@@ -66,9 +67,9 @@ public class Ear extends Jar {
     public void setAppxml(File descr) {
         deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: "
-                                     + deploymentDescriptor
-                                     + " does not exist.");
+            throw new BuildException(
+                "Deployment descriptor: %s does not exist.",
+                deploymentDescriptor);
         }
 
         // Create a ZipFileSet for this file, and pass it up.
@@ -77,7 +78,6 @@ public class Ear extends Jar {
         fs.setFullpath(XML_DESCRIPTOR_PATH);
         super.addFileset(fs);
     }
-
 
     /**
      * Adds zipfileset.
@@ -91,13 +91,13 @@ public class Ear extends Jar {
         super.addFileset(fs);
     }
 
-
     /**
      * Initialize the output stream.
      * @param zOut the zip output stream.
      * @throws IOException on I/O errors
      * @throws BuildException on other errors
      */
+    @Override
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
         // If no webxml file is specified, it's an error.
@@ -116,6 +116,7 @@ public class Ear extends Jar {
      * @param mode the Unix permissions to set.
      * @throws IOException on error
      */
+    @Override
     protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
@@ -147,6 +148,7 @@ public class Ear extends Jar {
      * Make sure we don't think we already have a application.xml next
      * time this task gets executed.
      */
+    @Override
     protected void cleanUp() {
         descriptorAdded = false;
         super.cleanUp();

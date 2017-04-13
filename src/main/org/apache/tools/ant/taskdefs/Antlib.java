@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
@@ -94,7 +92,7 @@ public class Antlib extends Task implements TaskContainer {
             UnknownElement ue =
                 parser.parseAntlibDescriptor(project, antlibResource);
             // Check name is "antlib"
-            if (!(ue.getTag().equals(TAG))) {
+            if (!(TAG.equals(ue.getTag()))) {
                 throw new BuildException(
                     "Unexpected tag " + ue.getTag() + " expecting "
                     + TAG, ue.getLocation());
@@ -116,7 +114,7 @@ public class Antlib extends Task implements TaskContainer {
     //
     private ClassLoader classLoader;
     private String uri = "";
-    private List<Object> tasks = new ArrayList<Object>();
+    private List<Task> tasks = new ArrayList<>();
 
     /**
      * Set the class loader for this antlib.
@@ -149,6 +147,7 @@ public class Antlib extends Task implements TaskContainer {
      *
      * @param nestedTask Nested task to execute in antlib
      */
+    @Override
     public void addTask(Task nestedTask) {
         tasks.add(nestedTask);
     }
@@ -157,10 +156,12 @@ public class Antlib extends Task implements TaskContainer {
      * Execute the nested tasks, setting the classloader for
      * any tasks that derive from Definer.
      */
+    @Override
     public void execute() {
         //TODO handle tasks added via #addTask()
-        for (Iterator<Object> i = tasks.iterator(); i.hasNext();) {
-            UnknownElement ue = (UnknownElement) i.next();
+        
+        for (Task task : tasks) {
+            UnknownElement ue = (UnknownElement) task;
             setLocation(ue.getLocation());
             ue.maybeConfigure();
             Object configuredObject = ue.getRealThing();
@@ -169,9 +170,9 @@ public class Antlib extends Task implements TaskContainer {
             }
             if (!(configuredObject instanceof AntlibDefinition)) {
                 throw new BuildException(
-                    "Invalid task in antlib " + ue.getTag()
-                    + " " + configuredObject.getClass() + " does not "
-                    + "extend org.apache.tools.ant.taskdefs.AntlibDefinition");
+                    "Invalid task in antlib %s %s does not extend %s",
+                    ue.getTag(), configuredObject.getClass(),
+                    AntlibDefinition.class.getName());
             }
             AntlibDefinition def = (AntlibDefinition) configuredObject;
             def.setURI(uri);

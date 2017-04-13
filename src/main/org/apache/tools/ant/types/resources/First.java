@@ -17,10 +17,8 @@
  */
 package org.apache.tools.ant.types.resources;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.types.Resource;
 
@@ -35,14 +33,10 @@ public class First extends SizeLimitCollection {
      * Take the first <code>count</code> elements.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
-        int ct = getValidCount();
-        Iterator<Resource> iter = getResourceCollection().iterator();
-        List<Resource> al = new ArrayList<Resource>(ct);
-        for (int i = 0; i < ct && iter.hasNext(); i++) {
-            al.add(iter.next());
-        }
-        return al;
+        return getResourceCollection().stream().limit(getValidCount())
+            .collect(Collectors.toList());
     }
 
 }

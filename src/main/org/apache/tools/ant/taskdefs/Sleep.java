@@ -64,14 +64,11 @@ public class Sleep extends Task {
      */
     private int milliseconds = 0;
 
-
-
     /**
      * Creates new instance
      */
     public Sleep() {
     }
-
 
     /**
      * seconds to add to the sleep time
@@ -82,7 +79,6 @@ public class Sleep extends Task {
         this.seconds = seconds;
     }
 
-
     /**
      * hours to add to the sleep time.
      *
@@ -91,7 +87,6 @@ public class Sleep extends Task {
     public void setHours(int hours) {
         this.hours = hours;
     }
-
 
     /**
      * minutes to add to the sleep time
@@ -102,7 +97,6 @@ public class Sleep extends Task {
         this.minutes = minutes;
     }
 
-
     /**
      * milliseconds to add to the sleep time
      *
@@ -111,7 +105,6 @@ public class Sleep extends Task {
     public void setMilliseconds(int milliseconds) {
         this.milliseconds = milliseconds;
     }
-
 
     /**
      * sleep for a period of time
@@ -126,7 +119,6 @@ public class Sleep extends Task {
         }
     }
 
-
     /**
      * flag controlling whether to break the build on an error.
      *
@@ -135,7 +127,6 @@ public class Sleep extends Task {
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
-
 
     /**
      * return time to sleep
@@ -150,7 +141,6 @@ public class Sleep extends Task {
         // CheckStyle:MagicNumber ON
     }
 
-
     /**
      * verify parameters
      *
@@ -159,11 +149,9 @@ public class Sleep extends Task {
     public void validate()
         throws BuildException {
         if (getSleepTime() < 0) {
-            throw new BuildException("Negative sleep periods are not "
-                                     + "supported");
+            throw new BuildException("Negative sleep periods are not supported");
         }
     }
-
 
     /**
      * Executes this build task. Throws org.apache.tools.ant.BuildException
@@ -183,12 +171,9 @@ public class Sleep extends Task {
         } catch (Exception e) {
             if (failOnError) {
                 throw new BuildException(e);
-            } else {
-                String text = e.toString();
-                log(text, Project.MSG_ERR);
             }
+            log(e.toString(), Project.MSG_ERR);
         }
     }
 
 }
-

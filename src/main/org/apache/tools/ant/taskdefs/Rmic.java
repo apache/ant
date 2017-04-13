@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -90,6 +91,23 @@ public class Rmic extends MatchingTask {
     /** rmic failed message */
     public static final String ERROR_RMIC_FAILED
         = "Rmic failed; see the compiler error output for details.";
+    
+    /** unable to verify message */
+    public static final String ERROR_UNABLE_TO_VERIFY_CLASS = "Unable to verify class ";
+    /** could not be found message */
+    public static final String ERROR_NOT_FOUND = ". It could not be found.";
+    /** not defined message */
+    public static final String ERROR_NOT_DEFINED = ". It is not defined.";
+    /** loaded error message */
+    public static final String ERROR_LOADING_CAUSED_EXCEPTION = ". Loading caused Exception: ";
+    /** base not exists message */
+    public static final String ERROR_NO_BASE_EXISTS = "base or destdir does not exist: ";
+    /** base not a directory message */
+    public static final String ERROR_NOT_A_DIR = "base or destdir is not a directory:";
+    /** base attribute not set message */
+    public static final String ERROR_BASE_NOT_SET = "base or destdir attribute must be set!";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private File baseDir;
     private File destDir;
@@ -109,28 +127,11 @@ public class Rmic extends MatchingTask {
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
 
-    private Vector compileList = new Vector();
+    private Vector<String> compileList = new Vector<>();
 
     private AntClassLoader loader = null;
 
     private FacadeTaskHelper facade;
-    /** unable to verify message */
-    public static final String ERROR_UNABLE_TO_VERIFY_CLASS = "Unable to verify class ";
-    /** could not be found message */
-    public static final String ERROR_NOT_FOUND = ". It could not be found.";
-    /** not defined message */
-    public static final String ERROR_NOT_DEFINED = ". It is not defined.";
-    /** loaded error message */
-    public static final String ERROR_LOADING_CAUSED_EXCEPTION = ". Loading caused Exception: ";
-    /** base not exists message */
-    public static final String ERROR_NO_BASE_EXISTS = "base or destdir does not exist: ";
-    /** base not a directory message */
-    public static final String ERROR_NOT_A_DIR = "base or destdir is not a directory:";
-    /** base attribute not set message */
-    public static final String ERROR_BASE_NOT_SET = "base or destdir attribute must be set!";
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
     private String executable = null;
 
     private boolean listFiles = false;
@@ -405,7 +406,7 @@ public class Rmic extends MatchingTask {
      * Gets file list to compile.
      * @return the list of files to compile.
      */
-    public Vector getFileList() {
+    public Vector<String> getFileList() {
         return compileList;
     }
 
@@ -484,7 +485,7 @@ public class Rmic extends MatchingTask {
     /**
      * @return the compile list.
      */
-    public Vector getCompileList() {
+    public Vector<String> getCompileList() {
         return compileList;
     }
 
@@ -496,7 +497,7 @@ public class Rmic extends MatchingTask {
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
-        if (compiler.length() > 0) {
+        if (!compiler.isEmpty()) {
             facade.setImplementation(compiler);
         }
     }
@@ -645,9 +646,7 @@ public class Rmic extends MatchingTask {
                     + outputDir, Project.MSG_INFO);
 
                 if (listFiles) {
-                    for (int i = 0; i < fileCount; i++) {
-                        log(compileList.get(i).toString());
-                    }
+                    compileList.forEach(this::log);
                 }
 
                 // finally, lets execute the compiler!!
@@ -668,11 +667,8 @@ public class Rmic extends MatchingTask {
                     log("sourcebase attribute will be ignored.",
                         Project.MSG_WARN);
                 } else {
-                    for (int j = 0; j < fileCount; j++) {
-                        moveGeneratedFile(outputDir, sourceBase,
-                                          (String) compileList.elementAt(j),
-                                          adapter);
-                    }
+                    compileList.forEach(f -> moveGeneratedFile(outputDir,
+                        sourceBase, f, adapter));
                 }
             }
         } finally {
@@ -704,16 +700,14 @@ public class Rmic extends MatchingTask {
             + ".class";
         String[] generatedFiles = adapter.getMapper().mapFileName(classFileName);
 
-        for (int i = 0; i < generatedFiles.length; i++) {
-            final String generatedFile = generatedFiles[i];
+        for (String generatedFile : generatedFiles) {
             if (!generatedFile.endsWith(".class")) {
                 // don't know how to handle that - a IDL file doesn't
                 // have a corresponding Java source for example.
                 continue;
             }
-            String sourceFileName = StringUtils.removeSuffix(generatedFile,
-                                                             ".class")
-                + ".java";
+            String sourceFileName =
+                StringUtils.removeSuffix(generatedFile, ".class") + ".java";
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {
@@ -732,10 +726,9 @@ public class Rmic extends MatchingTask {
                 }
                 oldFile.delete();
             } catch (IOException ioe) {
-                String msg = "Failed to copy " + oldFile + " to " + newFile
-                    + " due to "
-                    + ioe.getMessage();
-                throw new BuildException(msg, ioe, getLocation());
+                throw new BuildException("Failed to copy " + oldFile + " to "
+                    + newFile + " due to " + ioe.getMessage(), ioe,
+                    getLocation());
             }
         }
     }
@@ -759,11 +752,9 @@ public class Rmic extends MatchingTask {
             SourceFileScanner sfs = new SourceFileScanner(this);
             newFiles = sfs.restrict(files, baseDir, getOutputDir(), mapper);
         }
-        for (int i = 0; i < newFiles.length; i++) {
-            String name = newFiles[i].replace(File.separatorChar, '.');
-            name = name.substring(0, name.lastIndexOf(".class"));
-            compileList.addElement(name);
-        }
+        Stream.of(newFiles).map(s -> s.replace(File.separatorChar, '.'))
+            .map(s -> s.substring(0, s.lastIndexOf(".class")))
+            .forEach(compileList::add);
     }
 
     /**
@@ -773,7 +764,7 @@ public class Rmic extends MatchingTask {
      */
     public boolean isValidRmiRemote(String classname) {
         try {
-            Class testClass = loader.loadClass(classname);
+            Class<?> testClass = loader.loadClass(classname);
             // One cannot RMIC an interface for "classic" RMI (JRMP)
             if (testClass.isInterface() && !iiop && !idl) {
                 return false;
@@ -801,26 +792,17 @@ public class Rmic extends MatchingTask {
      * @return the topmost interface that extends Remote, or null if there
      *         is none.
      */
-    public Class getRemoteInterface(Class testClass) {
-        if (Remote.class.isAssignableFrom(testClass)) {
-            Class [] interfaces = testClass.getInterfaces();
-            if (interfaces != null) {
-                for (int i = 0; i < interfaces.length; i++) {
-                    if (Remote.class.isAssignableFrom(interfaces[i])) {
-                        return interfaces[i];
-                    }
-                }
-            }
-        }
-        return null;
+    public Class<?> getRemoteInterface(Class<?> testClass) {
+        return Stream.of(testClass.getInterfaces())
+            .filter(Remote.class::isAssignableFrom).findFirst().orElse(null);
     }
 
     /**
      * Check to see if the class or (super)interfaces implement
      * java.rmi.Remote.
      */
-    private boolean isValidRmiRemote (Class testClass) {
-        return getRemoteInterface(testClass) != null;
+    private boolean isValidRmiRemote(Class<?> testClass) {
+        return Remote.class.isAssignableFrom(testClass);
     }
 
     /**
@@ -837,7 +819,7 @@ public class Rmic extends MatchingTask {
      * implementation.
      */
     public class ImplementationSpecificArgument extends
-                                                    org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
+        org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
         /**
          * Only pass the specified argument if the
          * chosen compiler implementation matches the

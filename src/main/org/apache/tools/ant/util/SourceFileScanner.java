@@ -19,7 +19,7 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import java.util.Vector;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Resource;
@@ -90,28 +90,21 @@ public class SourceFileScanner implements ResourceFactory {
                              FileNameMapper mapper, long granularity) {
         // record destdir for later use in getResource
         this.destDir = destDir;
-        Vector v = new Vector();
-        for (int i = 0; i < files.length; i++) {
-            final String name = files[i];
-            v.addElement(new FileResource(srcDir, name) {
+
+        Resource[] sourceResources =
+            Stream.of(files).map(f -> new FileResource(srcDir, f) {
+                @Override
                 public String getName() {
-                    return name;
+                    return f;
                 }
-            });
-        }
-        Resource[] sourceresources = new Resource[v.size()];
-        v.copyInto(sourceresources);
+            }).toArray(Resource[]::new);        
 
         // build the list of sources which are out of date with
         // respect to the target
-        Resource[] outofdate =
-            ResourceUtils.selectOutOfDateSources(task, sourceresources,
-                                                 mapper, this, granularity);
-        String[] result = new String[outofdate.length];
-        for (int counter = 0; counter < outofdate.length; counter++) {
-            result[counter] = outofdate[counter].getName();
-        }
-        return result;
+        return Stream
+            .of(ResourceUtils.selectOutOfDateSources(task, sourceResources,
+                mapper, this, granularity))
+            .map(Resource::getName).toArray(String[]::new);
     }
 
     /**
@@ -150,12 +143,8 @@ public class SourceFileScanner implements ResourceFactory {
      */
     public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
                                   FileNameMapper mapper, long granularity) {
-        String[] res = restrict(files, srcDir, destDir, mapper, granularity);
-        File[] result = new File[res.length];
-        for (int i = 0; i < res.length; i++) {
-            result[i] = new File(srcDir, res[i]);
-        }
-        return result;
+        return Stream.of(restrict(files, srcDir, destDir, mapper, granularity))
+            .map(name -> new File(srcDir, name)).toArray(File[]::new);
     }
 
     /**
@@ -165,6 +154,7 @@ public class SourceFileScanner implements ResourceFactory {
      *
      * @since Ant 1.5.2
      */
+    @Override
     public Resource getResource(String name) {
         return new FileResource(destDir, name);
     }

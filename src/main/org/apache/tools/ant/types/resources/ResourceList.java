@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
@@ -36,7 +37,6 @@ import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Reads a resource as text document and creates a resource for each
@@ -44,8 +44,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @since Ant 1.8.0
  */
 public class ResourceList extends DataType implements ResourceCollection {
-    private final Vector<FilterChain> filterChains = new Vector<FilterChain>();
-    private final ArrayList<ResourceCollection> textDocuments = new ArrayList<ResourceCollection>();
+    private final Vector<FilterChain> filterChains = new Vector<>();
+    private final ArrayList<ResourceCollection> textDocuments = new ArrayList<>();
     private final Union cachedResources = new Union();
     private volatile boolean cached = false;
     private String encoding = null;
@@ -96,11 +96,12 @@ public class ResourceList extends DataType implements ResourceCollection {
      * Makes this instance in effect a reference to another ResourceList
      * instance.
      */
+    @Override
     public void setRefid(Reference r) throws BuildException {
         if (encoding != null) {
             throw tooManyAttributes();
         }
-        if (filterChains.size() > 0 || textDocuments.size() > 0) {
+        if (!(filterChains.isEmpty() && textDocuments.isEmpty())) {
             throw noChildrenAllowed();
         }
         super.setRefid(r);
@@ -112,9 +113,10 @@ public class ResourceList extends DataType implements ResourceCollection {
      * are added to this container while the Iterator is in use.
      * @return a "fail-fast" Iterator.
      */
+    @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((ResourceList) getCheckedRef()).iterator();
+            return getCheckedRef().iterator();
         }
         return cache().iterator();
     }
@@ -123,9 +125,10 @@ public class ResourceList extends DataType implements ResourceCollection {
      * Fulfill the ResourceCollection contract.
      * @return number of elements as int.
      */
+    @Override
     public synchronized int size() {
         if (isReference()) {
-            return ((ResourceList) getCheckedRef()).size();
+            return getCheckedRef().size();
         }
         return cache().size();
     }
@@ -134,9 +137,10 @@ public class ResourceList extends DataType implements ResourceCollection {
      * Fulfill the ResourceCollection contract.
      * @return whether this is a filesystem-only resource collection.
      */
+    @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((ResourceList) getCheckedRef()).isFilesystemOnly();
+            return getCheckedRef().isFilesystemOnly();
         }
         return cache().isFilesystemOnly();
     }
@@ -148,6 +152,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
+    @Override
     protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
         if (isChecked()) {
@@ -168,62 +173,53 @@ public class ResourceList extends DataType implements ResourceCollection {
         }
     }
 
+    @Override
+    protected ResourceList getCheckedRef() {
+        return (ResourceList) super.getCheckedRef();
+    }
+
     private synchronized ResourceCollection cache() {
         if (!cached) {
             dieOnCircularReference();
-            for (ResourceCollection rc : textDocuments) {
-                for (Resource r : rc) {
-                    cachedResources.add(read(r));
-                }
-            }
+            textDocuments.stream().flatMap(ResourceCollection::stream)
+                .map(this::read).forEach(cachedResources::add);
             cached = true;
         }
         return cachedResources;
     }
 
     private ResourceCollection read(Resource r) {
-        BufferedInputStream bis = null;
-        try {
-            bis = new BufferedInputStream(r.getInputStream());
-            Reader input = null;
-            if (encoding == null) {
-                input = new InputStreamReader(bis);
-            } else {
-                input = new InputStreamReader(bis, encoding);
-            }
-            ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setPrimaryReader(input);
-            crh.setFilterChains(filterChains);
-            crh.setProject(getProject());
+        try (BufferedReader reader = new BufferedReader(open(r))) {
             Union streamResources = new Union();
-            try (BufferedReader reader = new BufferedReader(crh.getAssembledReader())) {
-                streamResources.setCache(true);
-
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    streamResources.add(parse(line));
-                }
-            }
-
+            streamResources.setCache(true);
+            reader.lines().map(this::parse).forEach(streamResources::add);
             return streamResources;
         } catch (final IOException ioe) {
             throw new BuildException("Unable to read resource " + r.getName()
                                      + ": " + ioe, ioe, getLocation());
-        } finally {
-            FileUtils.close(bis);
         }
     }
 
+    private Reader open(Resource r) throws IOException {
+        ChainReaderHelper crh = new ChainReaderHelper();
+        crh.setPrimaryReader(new InputStreamReader(
+            new BufferedInputStream(r.getInputStream()), encoding == null
+                ? Charset.defaultCharset() : Charset.forName(encoding)));
+        crh.setFilterChains(filterChains);
+        crh.setProject(getProject());
+        return crh.getAssembledReader();
+    }
+
     private Resource parse(final String line) {
-        PropertyHelper propertyHelper
-            = (PropertyHelper) PropertyHelper.getPropertyHelper(getProject());
+        PropertyHelper propertyHelper =
+            PropertyHelper.getPropertyHelper(getProject());
         Object expanded = propertyHelper.parseProperties(line);
         if (expanded instanceof Resource) {
             return (Resource) expanded;
         }
         String expandedLine = expanded.toString();
-        int colon = expandedLine.indexOf(":");
-        if (colon != -1) {
+        int colon = expandedLine.indexOf(':');
+        if (colon >= 0) {
             // could be an URL or an absolute file on an OS with drives
             try {
                 return new URLResource(expandedLine);
@@ -236,4 +232,5 @@ public class ResourceList extends DataType implements ResourceCollection {
         }
         return new FileResource(getProject(), expandedLine);
     }
+    
 }

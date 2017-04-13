@@ -178,7 +178,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * The components of the classpath that the classloader searches
      * for classes.
      */
-    private final Vector<File> pathComponents  = new VectorSet<File>();
+    private final Vector<File> pathComponents  = new VectorSet<>();
 
     /**
      * The project to which this class loader belongs.
@@ -196,14 +196,14 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * loader regardless of whether the parent class loader is being searched
      * first or not.
      */
-    private final Vector<String> systemPackages = new Vector<String>();
+    private final Vector<String> systemPackages = new Vector<>();
 
     /**
      * These are the package roots that are to be loaded by this class loader
      * regardless of whether the parent class loader is being searched first
      * or not.
      */
-    private final Vector<String> loaderPackages = new Vector<String>();
+    private final Vector<String> loaderPackages = new Vector<>();
 
     /**
      * Whether or not this classloader will ignore the base
@@ -221,7 +221,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     /**
      * A hashtable of zip files opened by the classloader (File to JarFile).
      */
-    private Hashtable<File, JarFile> jarFiles = new Hashtable<File, JarFile>();
+    private Hashtable<File, JarFile> jarFiles = new Hashtable<>();
 
     /** Static map of jar file/time to manifest class-path entries */
     private static Map<String, String> pathMap =
@@ -293,8 +293,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                    classloader should be consulted  before trying to
      *                    load the a class through this loader.
      */
-    public AntClassLoader(
-                          final ClassLoader parent, final Project project, final Path classpath, final boolean parentFirst) {
+    public AntClassLoader(final ClassLoader parent, final Project project,
+        final Path classpath, final boolean parentFirst) {
         this(project, classpath);
         if (parent != null) {
             setParent(parent);
@@ -315,7 +315,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                    classloader should be consulted before trying to
      *                    load the a class through this loader.
      */
-    public AntClassLoader(final Project project, final Path classpath, final boolean parentFirst) {
+    public AntClassLoader(final Project project, final Path classpath,
+        final boolean parentFirst) {
         this(null, project, classpath, parentFirst);
     }
 

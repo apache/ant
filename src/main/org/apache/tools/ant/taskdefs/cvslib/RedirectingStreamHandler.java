@@ -18,9 +18,7 @@
 package org.apache.tools.ant.taskdefs.cvslib;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -35,7 +33,6 @@ class RedirectingStreamHandler
             new ByteArrayOutputStream());
     }
 
-
     String getErrors() {
         try {
             final ByteArrayOutputStream error
@@ -47,11 +44,10 @@ class RedirectingStreamHandler
         }
     }
 
-
+    @Override
     public void stop() {
         super.stop();
         FileUtils.close(getErr());
         FileUtils.close(getOut());
     }
 }
-

@@ -38,16 +38,17 @@ public class Difference extends BaseResourceCollectionContainer {
      * Calculate the difference of the nested ResourceCollections.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
         List<ResourceCollection> rcs = getResourceCollections();
         int size = rcs.size();
         if (size < 2) {
-            throw new BuildException("The difference of " + size
-                + " resource collection" + ((size == 1) ? "" : "s")
-                + " is undefined.");
+            throw new BuildException(
+                "The difference of %d resource %s is undefined.", size,
+                size == 1 ? "collection" : "collections");
         }
-        Set<Resource> hs = new HashSet<Resource>();
-        List<Resource> al = new ArrayList<Resource>();
+        Set<Resource> hs = new HashSet<>();
+        List<Resource> al = new ArrayList<>();
         for (ResourceCollection rc : rcs) {
             for (Resource r : rc) {
                 if (hs.add(r)) {

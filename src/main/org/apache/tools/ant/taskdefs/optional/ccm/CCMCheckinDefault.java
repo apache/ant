@@ -25,14 +25,13 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
  */
 public class CCMCheckinDefault extends CCMCheck {
 
+    /** The default task */
+    public static final String DEFAULT_TASK = "default";
+
     /** Constructor for CCMCheckinDefault. */
     public CCMCheckinDefault() {
         super();
         setCcmAction(COMMAND_CHECKIN);
         setTask(DEFAULT_TASK);
     }
-
-    /** The default task */
-    public static final String DEFAULT_TASK = "default";
 }
-

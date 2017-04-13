@@ -137,6 +137,7 @@ public class SetPermissions extends Task {
         resources.add(rc);
     }
 
+    @Override
     public void execute() {
         if (resources == null) {
             throw new BuildException("At least one resource-collection is required");
@@ -169,18 +170,17 @@ public class SetPermissions extends Task {
         String msg = String.format(msgFormat, msgArgs);
         if (failonerror) {
             if (exc instanceof BuildException) {
-                throw (BuildException)exc;
-            } else {
-                throw new BuildException(msg, exc);
-            }              
-        } else {
-            log("Warning: " + msg, Project.MSG_ERR);
+                throw (BuildException) exc;
+            }
+            throw new BuildException(msg, exc);
         }
+        log("Warning: " + msg, Project.MSG_ERR);
     }
 
     private void posixPermissionsNotSupported(Path p) {
-        String msg = String.format("the associated path '%s' does"
-                                   + " not support the PosixFileAttributeView", p);
+        String msg = String.format(
+            "the associated path '%s' does not support the PosixFileAttributeView",
+            p);
         switch (nonPosixMode) {
         case fail:
             throw new BuildException(msg);
@@ -207,19 +207,18 @@ public class SetPermissions extends Task {
                 maybeThrowException(ioe, "Failed to set permissions on '%s' due to %s",
                                     p, ioe.getMessage());
             } catch (SecurityException uoe) {
-                maybeThrowException(null, "the SecurityManager denies role "
-                                    + "accessUserInformation or write access for "
-                                    + "SecurityManager.checkWrite for resource '%s'",
-                                    p);
+                maybeThrowException(null,
+                    "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'",
+                    p);
             }
         } else {
-            String msg = String.format("the associated path '%s' does"
-                                       + " not support the DosFileAttributeView", p);
+            String msg = String.format(
+                "the associated path '%s' does not support the DosFileAttributeView",
+                p);
             if (failIfDosIsNotSupported) {
                 throw new BuildException(msg);
-            } else {
-                log("Warning: " + msg, Project.MSG_ERR);
             }
+            log("Warning: " + msg, Project.MSG_ERR);
         }
     }
 

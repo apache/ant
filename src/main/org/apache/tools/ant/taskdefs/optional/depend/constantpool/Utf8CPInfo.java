@@ -41,6 +41,7 @@ public class Utf8CPInfo extends ConstantPoolEntry {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         value = cpStream.readUTF();
     }
@@ -50,6 +51,7 @@ public class Utf8CPInfo extends ConstantPoolEntry {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
         return "UTF8 Value = " + value;
     }
@@ -64,4 +66,3 @@ public class Utf8CPInfo extends ConstantPoolEntry {
     }
 
 }
-

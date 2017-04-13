@@ -36,22 +36,23 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
      * signature of the method
      */
     private int nameAndTypeIndex;
-    public enum ReferenceKind {
-        REF_getField(1),
-        REF_getStatic(2),
-        REF_putField(3),
-        REF_putStatic(4),
-        REF_invokeVirtual(5),
-        REF_invokeStatic(6),
-        REF_invokeSpecial(7),
-        REF_newInvokeSpecial(8),
-        REF_invokeInterface(9);
-        private final int referenceKind;
-        ReferenceKind(int referenceKind) {
-            this.referenceKind = referenceKind;
-        }
 
+    public enum ReferenceKind {
+        REF_getField,
+        REF_getStatic,
+        REF_putField,
+        REF_putStatic,
+        REF_invokeVirtual,
+        REF_invokeStatic,
+        REF_invokeSpecial,
+        REF_newInvokeSpecial,
+        REF_invokeInterface;
+
+        public int value() {
+            return ordinal() + 1;
+        }
     }
+
     /** Constructor. */
     public MethodHandleCPInfo() {
         super(CONSTANT_METHODHANDLE, 1);
@@ -65,9 +66,9 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
      * @exception java.io.IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         referenceKind = ReferenceKind.values()[cpStream.readUnsignedByte() - 1];
-
         referenceIndex = cpStream.readUnsignedShort();
     }
 
@@ -76,17 +77,13 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
-        String value;
-
         if (isResolved()) {
-            value = "MethodHandle : " + reference.toString();
-        } else {
-            value = "MethodHandle : Reference kind = " + referenceKind
-                 +  "Reference index = " + referenceIndex;
+            return "MethodHandle : " + reference.toString();
         }
-
-        return value;
+        return "MethodHandle : Reference kind = " + referenceKind
+            + "Reference index = " + referenceIndex;
     }
 
     /**
@@ -96,12 +93,11 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
      * @param constantPool the constant pool of which this entry is a member
      *      and against which this entry is to be resolved.
      */
+    @Override
     public void resolve(ConstantPool constantPool) {
         reference = constantPool.getEntry(referenceIndex);
         reference.resolve(constantPool);
         super.resolve(constantPool);
     }
 
-
 }
-

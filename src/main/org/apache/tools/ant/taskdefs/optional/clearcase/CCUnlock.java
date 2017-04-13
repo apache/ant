@@ -18,12 +18,14 @@
 
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
+import java.util.Optional;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
-/**
+/*
  * TODO:
  * comment field doesn't include all options yet
  */
@@ -68,6 +70,15 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCUnlock extends ClearCase {
+    /**
+     * -comment flag -- method to use for commenting events
+     */
+    public static final String FLAG_COMMENT = "-comment";
+    /**
+     * -pname flag -- pathname to lock
+     */
+    public static final String FLAG_PNAME = "-pname";
+
     private String mComment = null;
     private String mPname = null;
 
@@ -78,10 +89,10 @@ public class CCUnlock extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -104,10 +115,10 @@ public class CCUnlock extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getOpType(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
 
@@ -119,8 +130,8 @@ public class CCUnlock extends ClearCase {
         getCommentCommand(cmd);
 
         if (getObjSelect() == null && getPname() == null) {
-            throw new BuildException("Should select either an element "
-            + "(pname) or an object (objselect)");
+            throw new BuildException(
+                "Should select either an element (pname) or an object (objselect)");
         }
         getPnameCommand(cmd);
         // object selector
@@ -203,15 +214,14 @@ public class CCUnlock extends ClearCase {
     private void getCommentCommand(Commandline cmd) {
         if (getComment() == null) {
             return;
-        } else {
-            /* Had to make two separate commands here because if a space is
-               inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
-               quotes ("). This breaks clearcase.
-            */
-            cmd.createArgument().setValue(FLAG_COMMENT);
-            cmd.createArgument().setValue(getComment());
         }
+        /* Had to make two separate commands here because if a space is
+           inserted between the flag and the value, it is treated as a
+           Windows filename with a space and it is enclosed in double
+           quotes ("). This breaks clearcase.
+        */
+        cmd.createArgument().setValue(FLAG_COMMENT);
+        cmd.createArgument().setValue(getComment());
     }
 
     /**
@@ -223,15 +233,14 @@ public class CCUnlock extends ClearCase {
     private void getPnameCommand(Commandline cmd) {
         if (getPname() == null) {
             return;
-        } else {
-            /* Had to make two separate commands here because if a space is
-               inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
-               quotes ("). This breaks clearcase.
-            */
-            cmd.createArgument().setValue(FLAG_PNAME);
-            cmd.createArgument().setValue(getPname());
         }
+        /* Had to make two separate commands here because if a space is
+           inserted between the flag and the value, it is treated as a
+           Windows filename with a space and it is enclosed in double
+           quotes ("). This breaks clearcase.
+        */
+        cmd.createArgument().setValue(FLAG_PNAME);
+        cmd.createArgument().setValue(getPname());
     }
 
     /**
@@ -240,21 +249,7 @@ public class CCUnlock extends ClearCase {
      * @return String containing the object/pname being worked on
      */
     private String getOpType() {
-
-        if (getPname() != null) {
-            return getPname();
-        } else {
-            return getObjSelect();
-        }
+        return Optional.ofNullable(getPname()).orElseGet(this::getObjSelect);
     }
 
-    /**
-     * -comment flag -- method to use for commenting events
-     */
-    public static final String FLAG_COMMENT = "-comment";
-    /**
-     * -pname flag -- pathname to lock
-     */
-    public static final String FLAG_PNAME = "-pname";
 }
-

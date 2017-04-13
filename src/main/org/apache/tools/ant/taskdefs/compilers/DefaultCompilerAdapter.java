@@ -18,13 +18,13 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
-//Java5 style
-//import static org.apache.tools.ant.util.StringUtils.LINE_SEP;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
@@ -61,6 +61,10 @@ public abstract class DefaultCompilerAdapter
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    //must keep for subclass BC, though unused:
+    // CheckStyle:ConstantNameCheck OFF - bc
+    protected static final String lSep = StringUtils.LINE_SEP;
+
     protected Path src;
     protected File destDir;
     protected String encoding;
@@ -88,10 +92,6 @@ public abstract class DefaultCompilerAdapter
     protected File[] compileList;
     protected Javac attributes;
 
-    //must keep for subclass BC, though unused:
-    // CheckStyle:ConstantNameCheck OFF - bc
-    protected static final String lSep = StringUtils.LINE_SEP;
-
     // CheckStyle:ConstantNameCheck ON
     // CheckStyle:VisibilityModifier ON
 
@@ -101,6 +101,7 @@ public abstract class DefaultCompilerAdapter
      *
      * @param attributes a configured Javac task.
      */
+    @Override
     public void setJavac(final Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
@@ -147,8 +148,9 @@ public abstract class DefaultCompilerAdapter
      * but specialized compilers can recognize multiple kinds
      * of files.
      */
+    @Override
     public String[] getSupportedFileExtensions() {
-        return new String[] {"java"};
+        return new String[] { "java" };
     }
 
     /**
@@ -254,7 +256,7 @@ public abstract class DefaultCompilerAdapter
         final Path classpath = getCompileClasspath();
         // For -sourcepath, use the "sourcepath" value if present.
         // Otherwise default to the "srcdir" value.
-        Path sourcepath = null;
+        Path sourcepath;
         if (compileSourcepath != null) {
             sourcepath = compileSourcepath;
         } else {
@@ -264,9 +266,9 @@ public abstract class DefaultCompilerAdapter
         final String memoryParameterPrefix = assumeJava11() ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
-                attributes.log("Since fork is false, ignoring "
-                               + "memoryInitialSize setting.",
-                               Project.MSG_WARN);
+                attributes.log(
+                    "Since fork is false, ignoring memoryInitialSize setting.",
+                    Project.MSG_WARN);
             } else {
                 cmd.createArgument().setValue(memoryParameterPrefix
                                               + "ms" + memoryInitialSize);
@@ -275,9 +277,9 @@ public abstract class DefaultCompilerAdapter
 
         if (memoryMaximumSize != null) {
             if (!attributes.isForkedJavac()) {
-                attributes.log("Since fork is false, ignoring "
-                               + "memoryMaximumSize setting.",
-                               Project.MSG_WARN);
+                attributes.log(
+                    "Since fork is false, ignoring memoryMaximumSize setting.",
+                    Project.MSG_WARN);
             } else {
                 cmd.createArgument().setValue(memoryParameterPrefix
                                               + "mx" + memoryMaximumSize);
@@ -303,11 +305,7 @@ public abstract class DefaultCompilerAdapter
         // as well as "bootclasspath" and "extdirs"
         if (assumeJava11()) {
             final Path cp = new Path(project);
-
-            final Path bp = getBootClassPath();
-            if (bp.size() > 0) {
-                cp.append(bp);
-            }
+            Optional.ofNullable(getBootClassPath()).ifPresent(cp::append);
 
             if (extdirs != null) {
                 cp.addExtdirs(extdirs);
@@ -330,13 +328,13 @@ public abstract class DefaultCompilerAdapter
                 }
 
                 final Path bp = getBootClassPath();
-                if (bp.size() > 0) {
+                if (!bp.isEmpty()) {
                     cmd.createArgument().setValue("-bootclasspath");
                     cmd.createArgument().setPath(bp);
                 }
             }
 
-            if (extdirs != null && extdirs.size() > 0) {
+            if (!(extdirs == null || extdirs.isEmpty())) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
             }
@@ -370,8 +368,9 @@ public abstract class DefaultCompilerAdapter
             } else if (assumeJava12()) {
                 cmd.createArgument().setValue("-Xdepend");
             } else {
-                attributes.log("depend attribute is not supported by the "
-                               + "modern compiler", Project.MSG_WARN);
+                attributes.log(
+                    "depend attribute is not supported by the modern compiler",
+                    Project.MSG_WARN);
             }
         }
 
@@ -397,8 +396,8 @@ public abstract class DefaultCompilerAdapter
             final String s = attributes.getSource();
             if (release == null || !assumeJava19()) {
                 if (release != null) {
-                    attributes.log("Support for javac --release has been added"
-                                   + " in Java9 ignoring it");
+                    attributes.log(
+                        "Support for javac --release has been added in Java9 ignoring it");
                 }
                 if (s != null) {
                     cmd.createArgument().setValue("-source");
@@ -409,34 +408,34 @@ public abstract class DefaultCompilerAdapter
                 }
             } else { // Java 9+ and release has been set
                 if (t != null || s != null || getBootClassPath().size() > 0) {
-                    attributes.log("Ignoring source, target and bootclasspath"
-                                   + " as release has been set",
-                                   Project.MSG_WARN);
+                    attributes.log(
+                        "Ignoring source, target and bootclasspath as release has been set",
+                        Project.MSG_WARN);
                 }
                 cmd.createArgument().setValue("--release");
                 cmd.createArgument().setValue(release);
             }
         }
         final Path msp = getModulesourcepath();
-        if (msp.size() > 0) {
+        if (!msp.isEmpty()) {
             cmd.createArgument().setValue("--module-source-path");
             cmd.createArgument().setPath(msp);
         }
         final Path mp = getModulepath();
-        if (mp.size() > 0) {
+        if (!mp.isEmpty()) {
             cmd.createArgument().setValue("--module-path");
             cmd.createArgument().setPath(mp);
         }
         final Path ump = getUpgrademodulepath();
-        if (ump.size() > 0) {
+        if (!ump.isEmpty()) {
             cmd.createArgument().setValue("--upgrade-module-path");
             cmd.createArgument().setPath(ump);
         }
         if (attributes.getNativeHeaderDir() != null) {
             if (assumeJava13() || assumeJava14() || assumeJava15()
                 || assumeJava16() || assumeJava17()) {
-                attributes.log("Support for javac -h has been added in Java8,"
-                               + " ignoring it");
+                attributes.log(
+                    "Support for javac -h has been added in Java8, ignoring it");
             } else {
                 cmd.createArgument().setValue("-h");
                 cmd.createArgument().setFile(attributes.getNativeHeaderDir());
@@ -486,25 +485,19 @@ public abstract class DefaultCompilerAdapter
      */
     protected void logAndAddFilesToCompile(final Commandline cmd) {
         attributes.log("Compilation " + cmd.describeArguments(),
-                       Project.MSG_VERBOSE);
+            Project.MSG_VERBOSE);
 
-        final StringBuffer niceSourceList = new StringBuffer("File");
-        if (compileList.length != 1) {
-            niceSourceList.append("s");
-        }
-        niceSourceList.append(" to be compiled:");
+        attributes.log(
+            String.format("%s to be compiled:",
+                compileList.length == 1 ? "File" : "Files"),
+            Project.MSG_VERBOSE);
 
-        niceSourceList.append(StringUtils.LINE_SEP);
-
-        for (int i = 0; i < compileList.length; i++) {
-            final String arg = compileList[i].getAbsolutePath();
-            cmd.createArgument().setValue(arg);
-            niceSourceList.append("    ");
-            niceSourceList.append(arg);
-            niceSourceList.append(StringUtils.LINE_SEP);
-        }
-
-        attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
+        attributes.log(
+            Stream.of(compileList).map(File::getAbsolutePath)
+                .peek(arg -> cmd.createArgument().setValue(arg))
+                .map(arg -> "    " + arg)
+                .collect(Collectors.joining(StringUtils.LINE_SEP)),
+            Project.MSG_VERBOSE);
     }
 
     /**
@@ -554,29 +547,30 @@ public abstract class DefaultCompilerAdapter
              */
             if (Commandline.toString(args).length() > COMMAND_LINE_LIMIT
                 && firstFileName >= 0) {
-                BufferedWriter out = null;
                 try {
                     tmpFile = FILE_UTILS.createTempFile(
                         "files", "", getJavac().getTempdir(), true, true);
-                    out = new BufferedWriter(new FileWriter(tmpFile));
-                    for (int i = firstFileName; i < args.length; i++) {
-                        if (quoteFiles && args[i].indexOf(" ") > -1) {
-                            args[i] = args[i].replace(File.separatorChar, '/');
-                            out.write("\"" + args[i] + "\"");
-                        } else {
-                            out.write(args[i]);
+                    try (BufferedWriter out =
+                        new BufferedWriter(new FileWriter(tmpFile))) {
+                        for (int i = firstFileName; i < args.length; i++) {
+                            if (quoteFiles && args[i].indexOf(' ') > -1) {
+                                args[i] =
+                                    args[i].replace(File.separatorChar, '/');
+                                out.write("\"" + args[i] + "\"");
+                            } else {
+                                out.write(args[i]);
+                            }
+                            out.newLine();
                         }
-                        out.newLine();
+                        out.flush();
+                        commandArray = new String[firstFileName + 1];
+                        System.arraycopy(args, 0, commandArray, 0,
+                            firstFileName);
+                        commandArray[firstFileName] = "@" + tmpFile;
                     }
-                    out.flush();
-                    commandArray = new String[firstFileName + 1];
-                    System.arraycopy(args, 0, commandArray, 0, firstFileName);
-                    commandArray[firstFileName] = "@" + tmpFile;
                 } catch (final IOException e) {
                     throw new BuildException("Error creating temporary file",
                                              e, location);
-                } finally {
-                    FileUtils.close(out);
                 }
             } else {
                 commandArray = args;
@@ -705,6 +699,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.9.4
      * @deprecated use #assumeJava9 instead
      */
+    @Deprecated
     protected boolean assumeJava19() {
         return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
             || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
@@ -814,24 +809,22 @@ public abstract class DefaultCompilerAdapter
         if (t.startsWith("1.")) {
             t = t.substring(2);
         }
-        return t.equals("1") || t.equals("2") || t.equals("3") || t.equals("4")
-            || ((t.equals("5") || t.equals("6"))
+        return "1".equals(t) || "2".equals(t) || "3".equals(t) || "4".equals(t)
+            || (("5".equals(t) || "6".equals(t))
                 && !assumeJava15() && !assumeJava16())
-            || (t.equals("7") && !assumeJava17())
-            || (t.equals("8") && !assumeJava18())
-            || (t.equals("9") && !assumeJava9());
+            || ("7".equals(t) && !assumeJava17())
+            || ("8".equals(t) && !assumeJava18())
+            || ("9".equals(t) && !assumeJava9());
     }
 
-
     /**
-     * Turn the task's attribute for -source into soemthing that is
+     * Turn the task's attribute for -source into something that is
      * understood by all javac's after 1.4.
      *
      * <p>support for -source 1.1 and -source 1.2 has been added with
      * JDK 1.4.2 but isn't present in 1.5.0+</p>
      */
     private String adjustSourceValue(final String source) {
-        return (source.equals("1.1") || source.equals("1.2")) ? "1.3" : source;
+        return "1.1".equals(source) || "1.2".equals(source) ? "1.3" : source;
     }
 }
-

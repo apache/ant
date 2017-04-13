@@ -37,12 +37,6 @@ public class MajoritySelector extends BaseSelectorContainer {
     private boolean allowtie = true;
 
     /**
-     * Default constructor.
-     */
-    public MajoritySelector() {
-    }
-
-    /**
      * @return a string describing this object
      */
     public String toString() {
@@ -93,7 +87,8 @@ public class MajoritySelector extends BaseSelectorContainer {
         }
         if (yesvotes > novotes) {
             return true;
-        } else if (novotes > yesvotes) {
+        }
+        if (novotes > yesvotes) {
             return false;
         }
         // At this point, we know we have a tie.

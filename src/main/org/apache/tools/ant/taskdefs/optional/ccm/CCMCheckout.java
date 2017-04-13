@@ -32,4 +32,3 @@ public class CCMCheckout extends CCMCheck {
         setCcmAction(COMMAND_CHECKOUT);
     }
 }
-

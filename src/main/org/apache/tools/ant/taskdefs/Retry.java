@@ -48,11 +48,11 @@ public class Retry extends Task implements TaskContainer {
      * set the task
      * @param t the task to retry.
      */
+    @Override
     public synchronized void addTask(Task t) {
         if (nestedTask != null) {
             throw new BuildException(
-                "The retry task container accepts a single nested task"
-                + " (which may be a sequential task container)");
+                "The retry task container accepts a single nested task (which may be a sequential task container)");
         }
         nestedTask = t;
     }
@@ -81,8 +81,9 @@ public class Retry extends Task implements TaskContainer {
      * perform the work
      * @throws BuildException if there is an error.
      */
+    @Override
     public void execute() throws BuildException {
-        StringBuffer errorMessages = new StringBuffer();
+        StringBuilder errorMessages = new StringBuilder();
         for (int i = 0; i <= retryCount; i++) {
             try {
                 nestedTask.perform();
@@ -90,7 +91,7 @@ public class Retry extends Task implements TaskContainer {
             } catch (Exception e) {
                 errorMessages.append(e.getMessage());
                 if (i >= retryCount) {
-                    StringBuffer exceptionMessage = new StringBuffer();
+                    StringBuilder exceptionMessage = new StringBuilder();
                     exceptionMessage.append("Task [").append(nestedTask.getTaskName());
                     exceptionMessage.append("] failed after [").append(retryCount);
                     exceptionMessage.append("] attempts; giving up.").append(StringUtils.LINE_SEP);

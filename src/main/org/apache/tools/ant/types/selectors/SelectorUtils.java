@@ -159,14 +159,14 @@ public final class SelectorUtils {
         if (strIdxStart > strIdxEnd) {
             // String is exhausted
             return true;
-        } else if (patIdxStart > patIdxEnd) {
+        }
+        if (patIdxStart > patIdxEnd) {
             // String not exhausted, but pattern is. Failure.
             return false;
-        } else {
-            // pattern now holds ** while string is not exhausted
-            // this will generate false positives but we can live with that.
-            return true;
         }
+        // pattern now holds ** while string is not exhausted
+        // this will generate false positives but we can live with that.
+        return true;
     }
 
     /**
@@ -245,11 +245,10 @@ public final class SelectorUtils {
                 }
             }
             return true;
-        } else {
-            if (patIdxStart > patIdxEnd) {
-                // String not exhausted, but pattern is. Failure.
-                return false;
-            }
+        }
+        if (patIdxStart > patIdxEnd) {
+            // String not exhausted, but pattern is. Failure.
+            return false;
         }
 
         // up to last '**'
@@ -293,19 +292,17 @@ public final class SelectorUtils {
             int strLength = (strIdxEnd - strIdxStart + 1);
             int foundIdx = -1;
             strLoop:
-                        for (int i = 0; i <= strLength - patLength; i++) {
-                            for (int j = 0; j < patLength; j++) {
-                                String subPat = tokenizedPattern[patIdxStart + j + 1];
-                                String subStr = strDirs[strIdxStart + i + j];
-                                if (!match(subPat, subStr, isCaseSensitive)) {
-                                    continue strLoop;
-                                }
-                            }
-
-                            foundIdx = strIdxStart + i;
-                            break;
-                        }
-
+            for (int i = 0; i <= strLength - patLength; i++) {
+                for (int j = 0; j < patLength; j++) {
+                    String subPat = tokenizedPattern[patIdxStart + j + 1];
+                    String subStr = strDirs[strIdxStart + i + j];
+                    if (!match(subPat, subStr, isCaseSensitive)) {
+                        continue strLoop;
+                    }
+                }
+                foundIdx = strIdxStart + i;
+                break;
+            }
             if (foundIdx == -1) {
                 return false;
             }
@@ -315,11 +312,10 @@ public final class SelectorUtils {
         }
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (!tokenizedPattern[i].equals(DEEP_TREE_MATCH)) {
+            if (!DEEP_TREE_MATCH.equals(tokenizedPattern[i])) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -366,7 +362,6 @@ public final class SelectorUtils {
         int patIdxEnd = patArr.length - 1;
         int strIdxStart = 0;
         int strIdxEnd = strArr.length - 1;
-        char ch;
 
         boolean containsStar = false;
         for (int i = 0; i < patArr.length; i++) {
@@ -382,11 +377,9 @@ public final class SelectorUtils {
                 return false; // Pattern and string do not have the same size
             }
             for (int i = 0; i <= patIdxEnd; i++) {
-                ch = patArr[i];
-                if (ch != '?') {
-                    if (different(caseSensitive, ch, strArr[i])) {
-                        return false; // Character mismatch
-                    }
+                char ch = patArr[i];
+                if (ch != '?' && different(caseSensitive, ch, strArr[i])) {
+                    return false; // Character mismatch
                 }
             }
             return true; // String matches against pattern
@@ -398,14 +391,13 @@ public final class SelectorUtils {
 
         // Process characters before first star
         while (true) {
-            ch = patArr[patIdxStart];
+            char ch = patArr[patIdxStart];
             if (ch == '*' || strIdxStart > strIdxEnd) {
                 break;
             }
-            if (ch != '?') {
-                if (different(caseSensitive, ch, strArr[strIdxStart])) {
-                    return false; // Character mismatch
-                }
+            if (ch != '?'
+                && different(caseSensitive, ch, strArr[strIdxStart])) {
+                return false; // Character mismatch
             }
             patIdxStart++;
             strIdxStart++;
@@ -418,14 +410,12 @@ public final class SelectorUtils {
 
         // Process characters after last star
         while (true) {
-            ch = patArr[patIdxEnd];
+            char ch = patArr[patIdxEnd];
             if (ch == '*' || strIdxStart > strIdxEnd) {
                 break;
             }
-            if (ch != '?') {
-                if (different(caseSensitive, ch, strArr[strIdxEnd])) {
-                    return false; // Character mismatch
-                }
+            if (ch != '?' && different(caseSensitive, ch, strArr[strIdxEnd])) {
+                return false; // Character mismatch
             }
             patIdxEnd--;
             strIdxEnd--;
@@ -459,15 +449,12 @@ public final class SelectorUtils {
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
-                    ch = patArr[patIdxStart + j + 1];
-                    if (ch != '?') {
-                        if (different(caseSensitive, ch,
-                                      strArr[strIdxStart + i + j])) {
-                            continue strLoop;
-                        }
+                    char ch = patArr[patIdxStart + j + 1];
+                    if (ch != '?' && different(caseSensitive, ch,
+                        strArr[strIdxStart + i + j])) {
+                        continue strLoop;
                     }
                 }
-
                 foundIdx = strIdxStart + i;
                 break;
             }
@@ -475,7 +462,6 @@ public final class SelectorUtils {
             if (foundIdx == -1) {
                 return false;
             }
-
             patIdxStart = patIdxTmp;
             strIdxStart = foundIdx + patLength;
         }
@@ -523,7 +509,7 @@ public final class SelectorUtils {
      * @since Ant 1.6
      */
     public static Vector<String> tokenizePath(String path, String separator) {
-        Vector<String> ret = new Vector<String>();
+        Vector<String> ret = new Vector<>();
         if (FileUtils.isAbsolutePath(path)) {
             String[] s = FILE_UTILS.dissect(path);
             ret.add(s[0]);
@@ -664,7 +650,7 @@ public final class SelectorUtils {
      * @return a String that has had all whitespace removed.
      */
     public static String removeWhitespace(String input) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         if (input != null) {
             StringTokenizer st = new StringTokenizer(input);
             while (st.hasMoreTokens()) {
@@ -680,7 +666,7 @@ public final class SelectorUtils {
      * @return true if the string contains at least a star or a question mark
      */
     public static boolean hasWildcards(String input) {
-        return (input.indexOf('*') != -1 || input.indexOf('?') != -1);
+        return input.indexOf('*') != -1 || input.indexOf('?') != -1;
     }
 
     /**

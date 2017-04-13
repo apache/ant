@@ -102,12 +102,15 @@ public class DependSet extends MatchingTask {
         private HideMissingBasedir(FileSet fs) {
             this.fs = fs;
         }
+        @Override
         public Iterator<Resource> iterator() {
             return basedirExists() ? fs.iterator() : Resources.EMPTY_ITERATOR;
         }
+        @Override
         public int size() {
             return basedirExists() ? fs.size() : 0;
         }
+        @Override
         public boolean isFilesystemOnly() {
             return true;
         }
@@ -190,6 +193,7 @@ public class DependSet extends MatchingTask {
      * Execute the task.
      * @throws BuildException if errors occur.
      */
+    @Override
     public void execute() throws BuildException {
         if (sources == null) {
           throw new BuildException(
@@ -200,12 +204,11 @@ public class DependSet extends MatchingTask {
               "At least one set of target files must be specified");
         }
         //no sources = nothing to compare; no targets = nothing to delete:
-        if (sources.size() > 0 && targets.size() > 0 && !uptodate(sources, targets)) {
+        if (!(sources.isEmpty() || targets.isEmpty() || uptodate(sources, targets))) {
            log("Deleting all target files.", Project.MSG_VERBOSE);
            if (verbose) {
-               String[] t = targets.list();
-               for (int i = 0; i < t.length; i++) {
-                   log("Deleting " + t[i]);
+               for (String t : targets.list()) {
+                   log("Deleting " + t);
                }
            }
            Delete delete = new Delete();
@@ -244,7 +247,7 @@ public class DependSet extends MatchingTask {
             logMissing(missingSources, "source");
             return false;
         }
-        Resource newestSource = (Resource) getNewest(sources);
+        Resource newestSource = getNewest(sources);
         logWithModificationTime(newestSource, "newest source");
         return oldestTarget.getLastModified() >= newestSource.getLastModified();
     }
@@ -262,7 +265,6 @@ public class DependSet extends MatchingTask {
         Iterator<Resource> i = rc.iterator();
         if (!i.hasNext()) {
             return null;
-
         }
         Resource xest = i.next();
         while (i.hasNext()) {

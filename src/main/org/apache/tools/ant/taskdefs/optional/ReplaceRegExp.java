@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
@@ -143,7 +144,6 @@ public class ReplaceRegExp extends Task {
         this.subs = null;
     }
 
-
     /**
      * file for which the regular expression should be replaced;
      * required unless a nested fileset is supplied.
@@ -152,7 +152,6 @@ public class ReplaceRegExp extends Task {
     public void setFile(File file) {
         this.file = file;
     }
-
 
     /**
      * the regular expression pattern to match in the file(s);
@@ -168,7 +167,6 @@ public class ReplaceRegExp extends Task {
         regex.setPattern(match);
     }
 
-
     /**
      * The substitution pattern to place in the file(s) in place
      * of the regular expression.
@@ -178,8 +176,8 @@ public class ReplaceRegExp extends Task {
 
     public void setReplace(String replace) {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is "
-                                     + "allowed");
+            throw new BuildException(
+                "Only one substitution expression is allowed");
         }
 
         subs = new Substitution();
@@ -205,7 +203,6 @@ public class ReplaceRegExp extends Task {
         this.flags = flags;
     }
 
-
     /**
      * Process the file(s) one line at a time, executing the replacement
      * on one line at a time.  This is useful if you
@@ -219,12 +216,7 @@ public class ReplaceRegExp extends Task {
      */
     @Deprecated
     public void setByLine(String byline) {
-        Boolean res = Boolean.valueOf(byline);
-
-        if (res == null) {
-            res = Boolean.FALSE;
-        }
-        this.byline = res.booleanValue();
+        this.byline = Boolean.parseBoolean(byline);
     }
 
     /**
@@ -297,8 +289,8 @@ public class ReplaceRegExp extends Task {
      */
     public Substitution createSubstitution() {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is "
-                                     + "allowed");
+            throw new BuildException(
+                "Only one substitution expression is allowed");
         }
 
         subs = new Substitution();
@@ -341,7 +333,6 @@ public class ReplaceRegExp extends Task {
         return res;
     }
 
-
     /**
      *  Perform the replacement on a file
      *
@@ -355,13 +346,14 @@ public class ReplaceRegExp extends Task {
         try {
             boolean changes = false;
 
+            final Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
             try (InputStream is = Files.newInputStream(f.toPath());
                  OutputStream os = Files.newOutputStream(temp.toPath())) {
                 Reader r = null;
                 Writer w = null;
                 try {
-                    r = encoding != null ? new InputStreamReader(is, encoding) : new InputStreamReader(is);
-                    w = encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os);
+                    r = new InputStreamReader(is, charset);
+                    w = new OutputStreamWriter(os, charset);
                     log("Replacing pattern '" + regex.getPattern(getProject())
                         + "' with '" + subs.getExpression(getProject())
                         + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")
@@ -372,7 +364,7 @@ public class ReplaceRegExp extends Task {
                         r = new BufferedReader(r);
                         w = new BufferedWriter(w);
 
-                        StringBuffer linebuf = new StringBuffer();
+                        StringBuilder linebuf = new StringBuilder();
                         int c;
                         boolean hasCR = false;
 
@@ -386,7 +378,7 @@ public class ReplaceRegExp extends Task {
                                                                w, options);
                                     w.write('\r');
 
-                                    linebuf = new StringBuffer();
+                                    linebuf = new StringBuilder();
                                     // hasCR is still true (for the second one)
                                 } else {
                                     // first CR in this line
@@ -402,7 +394,7 @@ public class ReplaceRegExp extends Task {
                                 }
                                 w.write('\n');
 
-                                linebuf = new StringBuffer();
+                                linebuf = new StringBuilder();
                             } else { // any other char
                                 if ((hasCR) || (c < 0)) {
                                     // Mac-style linebreak or EOF (or both)
@@ -413,7 +405,7 @@ public class ReplaceRegExp extends Task {
                                         hasCR = false;
                                     }
 
-                                    linebuf = new StringBuffer();
+                                    linebuf = new StringBuilder();
                                 }
 
                                 if (c >= 0) {
@@ -453,7 +445,6 @@ public class ReplaceRegExp extends Task {
         }
     }
 
-
     /**
      * Execute the task
      *
@@ -469,9 +460,8 @@ public class ReplaceRegExp extends Task {
         }
 
         if (file != null && resources != null) {
-            throw new BuildException("You cannot supply the 'file' attribute "
-                                     + "and resource collections at the same "
-                                     + "time.");
+            throw new BuildException(
+                "You cannot supply the 'file' attribute and resource collections at the same time.");
         }
 
         int options = RegexpUtil.asOptions(flags);
@@ -491,9 +481,7 @@ public class ReplaceRegExp extends Task {
 
         if (resources != null) {
             for (Resource r : resources) {
-                FileProvider fp =
-                    r.as(FileProvider.class);
-                File f = fp.getFile();
+                File f = r.as(FileProvider.class).getFile();
 
                 if (f.exists()) {
                     try {
@@ -523,5 +511,3 @@ public class ReplaceRegExp extends Task {
         return !res.equals(s);
     }
 }
-
-

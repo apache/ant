@@ -107,6 +107,7 @@ public class LazyFileOutputStream extends OutputStream {
      * Close the file.
      * @throws IOException if there is an error.
      */
+    @Override
     public synchronized void close() throws IOException {
         if (alwaysCreate && !closed) {
             ensureOpened();
@@ -122,6 +123,7 @@ public class LazyFileOutputStream extends OutputStream {
      * @param b the bytearray to write.
      * @throws IOException if there is a problem.
      */
+    @Override
     public void write(byte[] b) throws IOException {
         write(b, 0, b.length);
     }
@@ -133,6 +135,7 @@ public class LazyFileOutputStream extends OutputStream {
      * @param len    the number of bytes to write.
      * @throws IOException if there is a problem.
      */
+    @Override
     public synchronized void write(byte[] b, int offset, int len)
         throws IOException {
         ensureOpened();
@@ -144,6 +147,7 @@ public class LazyFileOutputStream extends OutputStream {
      * @param b the byte to write.
      * @throws IOException if there is a problem.
      */
+    @Override
     public synchronized void write(int b) throws IOException {
         ensureOpened();
         fos.write(b);

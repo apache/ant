@@ -28,6 +28,7 @@ import java.lang.reflect.Constructor;
 
 public class ReflectWrapper {
     private Object obj;
+
     /**
      * Construct a wrapped object using the no arg constructor.
      * @param loader the classloader to use to construct the class.
@@ -35,11 +36,9 @@ public class ReflectWrapper {
      */
     public ReflectWrapper(ClassLoader loader, String name) {
         try {
-            Class clazz;
-            clazz = Class.forName(name, true, loader);
-            Constructor constructor;
-            constructor = clazz.getConstructor((Class[]) null);
-            obj = constructor.newInstance((Object[]) null);
+            Class<?> clazz = Class.forName(name, true, loader);
+            Constructor<?> constructor = clazz.getConstructor();
+            obj = constructor.newInstance();
         } catch (Exception t) {
             ReflectUtil.throwBuildException(t);
         }
@@ -56,8 +55,9 @@ public class ReflectWrapper {
     /**
      * @return the wrapped object.
      */
-    public Object getObject() {
-        return obj;
+    @SuppressWarnings("unchecked")
+    public <T> T getObject() {
+        return (T) obj;
     }
 
     /**
@@ -65,7 +65,7 @@ public class ReflectWrapper {
      * @param methodName the name of the method to call
      * @return the object returned by the method
      */
-    public Object invoke(String methodName) {
+    public <T> T invoke(String methodName) {
         return ReflectUtil.invoke(obj, methodName);
     }
 
@@ -76,8 +76,7 @@ public class ReflectWrapper {
      * @param arg        the value of the argument.
      * @return the object returned by the method
      */
-    public Object invoke(
-        String methodName, Class argType, Object arg) {
+    public <T> T invoke(String methodName, Class<?> argType, Object arg) {
         return ReflectUtil.invoke(obj, methodName, argType, arg);
     }
 
@@ -90,10 +89,9 @@ public class ReflectWrapper {
      * @param arg2       the value of the second argument.
      * @return the object returned by the method
      */
-    public Object invoke(
-        String methodName, Class argType1, Object arg1,
-        Class argType2, Object arg2) {
-        return ReflectUtil.invoke(
-            obj, methodName, argType1, arg1, argType2, arg2);
+    public <T> T invoke(String methodName, Class<?> argType1, Object arg1,
+        Class<?> argType2, Object arg2) {
+        return ReflectUtil.invoke(obj, methodName, argType1, arg1, argType2,
+            arg2);
     }
 }

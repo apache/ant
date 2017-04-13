@@ -32,6 +32,7 @@ public final class NullReturn {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return "null";
     }

@@ -58,7 +58,6 @@ public class TypeFound extends ProjectComponent implements Condition {
      * @return true if the typename exists
      */
     protected boolean doesTypeExist(String typename) {
-
         ComponentHelper helper =
             ComponentHelper.getComponentHelper(getProject());
         String componentName = ProjectHelper.genComponentName(uri, typename);
@@ -81,6 +80,7 @@ public class TypeFound extends ProjectComponent implements Condition {
      * @return true if the condition is true
      * @exception BuildException if an error occurs
      */
+    @Override
     public boolean eval() throws BuildException {
         if (name == null) {
             throw new BuildException("No type specified");

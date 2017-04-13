@@ -37,6 +37,7 @@ public class Jvc extends DefaultCompilerAdapter {
      * @return true if the compiler ran with a zero exit result (ok)
      * @exception BuildException if the compilation has problems.
      */
+    @Override
     public boolean execute() throws BuildException {
         attributes.log("Using jvc compiler", Project.MSG_VERBOSE);
 
@@ -45,7 +46,7 @@ public class Jvc extends DefaultCompilerAdapter {
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
         Path p = getBootClassPath();
-        if (p.size() > 0) {
+        if (!p.isEmpty()) {
             classpath.append(p);
         }
 

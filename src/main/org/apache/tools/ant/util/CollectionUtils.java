@@ -25,7 +25,9 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 
@@ -49,15 +51,7 @@ public class CollectionUtils {
      * @deprecated since 1.6.x.
      */
     public static boolean equals(Vector<?> v1, Vector<?> v2) {
-        if (v1 == v2) {
-            return true;
-        }
-
-        if (v1 == null || v2 == null) {
-            return false;
-        }
-
-        return v1.equals(v2);
+        return Objects.equals(v1, v2);
     }
 
     /**
@@ -109,14 +103,7 @@ public class CollectionUtils {
      * @since Ant 1.8.0
      */
     public static String flattenToString(Collection<?> c) {
-        final StringBuilder sb = new StringBuilder();
-        for (Object o : c) {
-            if (sb.length() != 0) {
-                sb.append(",");
-            }
-            sb.append(o);
-        }
-        return sb.toString();
+        return c.stream().map(String::valueOf).collect(Collectors.joining(","));
     }
 
     /**
@@ -128,7 +115,8 @@ public class CollectionUtils {
      * @since Ant 1.6
      * @deprecated since 1.6.x.
      */
-    public static <K, V> void putAll(Dictionary<? super K, ? super V> m1, Dictionary<? extends K, ? extends V> m2) {
+    public static <K, V> void putAll(Dictionary<? super K, ? super V> m1,
+        Dictionary<? extends K, ? extends V> m2) {
         for (Enumeration<? extends K> it = m2.keys(); it.hasMoreElements();) {
             K key = it.nextElement();
             m1.put(key, m2.get(key));
@@ -139,14 +127,13 @@ public class CollectionUtils {
      * An empty enumeration.
      * @since Ant 1.6
      */
+    @Deprecated
     public static final class EmptyEnumeration<E> implements Enumeration<E> {
-        /** Constructor for the EmptyEnumeration */
-        public EmptyEnumeration() {
-        }
 
         /**
          * @return false always.
          */
+        @Override
         public boolean hasMoreElements() {
             return false;
         }
@@ -155,6 +142,7 @@ public class CollectionUtils {
          * @return nothing.
          * @throws NoSuchElementException always.
          */
+        @Override
         public E nextElement() throws NoSuchElementException {
             throw new NoSuchElementException();
         }
@@ -170,7 +158,7 @@ public class CollectionUtils {
      * @since Ant 1.6.3
      */
     public static <E> Enumeration<E> append(Enumeration<E> e1, Enumeration<E> e2) {
-        return new CompoundEnumeration<E>(e1, e2);
+        return new CompoundEnumeration<>(e1, e2);
     }
 
     /**
@@ -181,9 +169,11 @@ public class CollectionUtils {
      */
     public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
         return new Enumeration<E>() {
+            @Override
             public boolean hasMoreElements() {
                 return iter.hasNext();
             }
+            @Override
             public E nextElement() {
                 return iter.next();
             }
@@ -198,12 +188,15 @@ public class CollectionUtils {
      */
     public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
         return new Iterator<E>() {
+            @Override
             public boolean hasNext() {
                 return e.hasMoreElements();
             }
+            @Override
             public E next() {
                 return e.nextElement();
             }
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
@@ -219,10 +212,8 @@ public class CollectionUtils {
      * @since Ant 1.8.0
      */
     public static <T> Collection<T> asCollection(final Iterator<? extends T> iter) {
-        List<T> l = new ArrayList<T>();
-        while (iter.hasNext()) {
-            l.add(iter.next());
-        }
+        List<T> l = new ArrayList<>();
+        iter.forEachRemaining(l::add);
         return l;
     }
 
@@ -235,16 +226,17 @@ public class CollectionUtils {
             this.e2 = e2;
         }
 
+        @Override
         public boolean hasMoreElements() {
             return e1.hasMoreElements() || e2.hasMoreElements();
         }
 
+        @Override
         public E nextElement() throws NoSuchElementException {
             if (e1.hasMoreElements()) {
                 return e1.nextElement();
-            } else {
-                return e2.nextElement();
             }
+            return e2.nextElement();
         }
 
     }
@@ -258,18 +250,11 @@ public class CollectionUtils {
      * @return frequency
      * @since Ant 1.8.0
      */
+    @Deprecated
     public static int frequency(Collection<?> c, Object o) {
-        // same as Collections.frequency introduced with JDK 1.5
-        int freq = 0;
-        if (c != null) {
-            for (Iterator<?> i = c.iterator(); i.hasNext();) {
-                Object test = i.next();
-                if (o == null ? test == null : o.equals(test)) {
-                    freq++;
-                }
-            }
-        }
-        return freq;
+        return Collections.frequency(c, o);
     }
 
+    private CollectionUtils() {
+    }
 }

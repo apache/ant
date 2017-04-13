@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -64,7 +64,7 @@ public class JavaCC extends Task {
     private static final String KEEP_LINE_COLUMN       = "KEEP_LINE_COLUMN";
     private static final String JDK_VERSION            = "JDK_VERSION";
 
-    private final Hashtable optionalAttrs = new Hashtable();
+    private final Map<String, Object> optionalAttrs = new Hashtable<>();
 
     // required attributes
     private File outputDirectory = null;
@@ -79,19 +79,19 @@ public class JavaCC extends Task {
 
     protected static final String[] ARCHIVE_LOCATIONS = //NOSONAR
         new String[] {
-        "JavaCC.zip",
-        "bin/lib/JavaCC.zip",
-        "bin/lib/javacc.jar",
-        "javacc.jar", // used by jpackage for JavaCC 3.x
-    };
+            "JavaCC.zip",
+            "bin/lib/JavaCC.zip",
+            "bin/lib/javacc.jar",
+            "javacc.jar", // used by jpackage for JavaCC 3.x
+        };
 
     protected static final int[] ARCHIVE_LOCATIONS_VS_MAJOR_VERSION = //NOSONAR
         new int[] {
-        1,
-        2,
-        3,
-        3,
-    };
+            1,
+            2,
+            3,
+            3,
+        };
 
     protected static final String COM_PACKAGE = "COM.sun.labs.";
     protected static final String COM_JAVACC_CLASS = "javacc.Main";
@@ -331,19 +331,16 @@ public class JavaCC extends Task {
      * Run the task.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
 
         // load command line with optional attributes
-        Enumeration iter = optionalAttrs.keys();
-        while (iter.hasMoreElements()) {
-            String name  = (String) iter.nextElement();
-            Object value = optionalAttrs.get(name);
-            cmdl.createArgument().setValue("-" + name + ":" + value.toString());
-        }
+        optionalAttrs.forEach((name, value) -> cmdl.createArgument()
+            .setValue("-" + name + ":" + value));
 
         // check the target is a file
         if (targetFile == null || !targetFile.isFile()) {
-            throw new BuildException("Invalid target: " + targetFile);
+            throw new BuildException("Invalid target: %s", targetFile);
         }
 
         // use the directory containing the target as the output directory
@@ -523,8 +520,9 @@ public class JavaCC extends Task {
             }
         }
 
-        throw new BuildException("Could not find a path to JavaCC.zip "
-                                 + "or javacc.jar from '" + home + "'.");
+        throw new BuildException(
+            "Could not find a path to JavaCC.zip or javacc.jar from '%s'.",
+            home);
     }
 
     /**

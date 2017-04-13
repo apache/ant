@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -218,9 +217,8 @@ public class Property extends Task {
                 msg = currentValue + msg;
             }
             internalSetValue(msg);
-        } else if (msg.trim().length() > 0) {
-            throw new BuildException("can't combine nested text with value"
-                                     + " attribute");
+        } else if (!msg.trim().isEmpty()) {
+            throw new BuildException("can't combine nested text with value attribute");
         }
     }
 
@@ -460,27 +458,31 @@ public class Property extends Task {
 
         if (name != null) {
             if (untypedValue == null && ref == null) {
-                throw new BuildException("You must specify value, location or "
-                                         + "refid with the name attribute",
-                                         getLocation());
+                throw new BuildException(
+                    "You must specify value, location or refid with the name attribute",
+                    getLocation());
             }
         } else {
-            if (url == null && file == null && resource == null && env == null) {
-                throw new BuildException("You must specify url, file, resource or "
-                                         + "environment when not using the "
-                                         + "name attribute", getLocation());
+            if (url == null && file == null && resource == null
+                && env == null) {
+                throw new BuildException(
+                    "You must specify url, file, resource or environment when not using the name attribute",
+                    getLocation());
             }
         }
 
         if (url == null && file == null && resource == null && prefix != null) {
-            throw new BuildException("Prefix is only valid when loading from "
-                                     + "a url, file or resource", getLocation());
+            throw new BuildException(
+                "Prefix is only valid when loading from a url, file or resource",
+                getLocation());
         }
 
         if (name != null && untypedValue != null) {
             if (relative) {
                 try {
-                    File from = untypedValue instanceof File ? (File)untypedValue : new File(untypedValue.toString());
+                    File from =
+                        untypedValue instanceof File ? (File) untypedValue
+                            : new File(untypedValue.toString());
                     File to = basedir != null ? basedir : getProject().getBaseDir();
                     String relPath = FileUtils.getRelativePath(to, from);
                     relPath = relPath.replace('/', File.separatorChar);
@@ -575,12 +577,8 @@ public class Property extends Task {
         log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
             if (file.exists()) {
-                InputStream  fis = null;
-                try {
-                    fis = Files.newInputStream(file.toPath());
+                try (InputStream fis = Files.newInputStream(file.toPath())) {
                     loadProperties(props, fis, file.getName().endsWith(".xml"));
-                } finally {
-                    FileUtils.close(fis);
                 }
                 addProperties(props);
             } else {
@@ -599,17 +597,16 @@ public class Property extends Task {
     protected void loadResource(String name) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
-        InputStream is = null;
         ClassLoader cL = null;
         boolean cleanup = false;
+        if (classpath != null) {
+            cleanup = true;
+            cL = getProject().createClassLoader(classpath);
+        } else {
+            cL = this.getClass().getClassLoader();
+        }
+        InputStream is = null;
         try {
-            if (classpath != null) {
-                cleanup = true;
-                cL = getProject().createClassLoader(classpath);
-            } else {
-                cL = this.getClass().getClassLoader();
-            }
-
             if (cL == null) {
                 is = ClassLoader.getSystemResourceAsStream(name);
             } else {
@@ -642,9 +639,8 @@ public class Property extends Task {
             prefix += ".";
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
-        Map osEnv = Execute.getEnvironmentVariables();
-        for (Iterator e = osEnv.entrySet().iterator(); e.hasNext();) {
-            Map.Entry entry = (Map.Entry) e.next();
+        Map<String, String> osEnv = Execute.getEnvironmentVariables();
+        for (Map.Entry<String, String> entry : osEnv.entrySet()) {
             props.put(prefix + entry.getKey(), entry.getValue());
         }
         addProperties(props);
@@ -656,18 +652,17 @@ public class Property extends Task {
      * @param props the properties to iterate over
      */
     protected void addProperties(Properties props) {
-        HashMap m = new HashMap(props);
-        resolveAllProperties(m);
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            Object k = it.next();
+        Map<String, Object> m = new HashMap<>();
+        props.forEach((k, v) -> {
             if (k instanceof String) {
-                String propertyName = (String) k;
-                if (prefix != null) {
-                    propertyName = prefix + propertyName;
-                }
-                addProperty(propertyName, m.get(k));
+                m.put((String) k, v);
             }
-        }
+        });
+        resolveAllProperties(m);
+        m.forEach((k, v) -> {
+            String propertyName = prefix == null ? k : prefix + k;
+            addProperty(propertyName, v);
+        });
     }
 
     /**
@@ -702,7 +697,7 @@ public class Property extends Task {
      * resolve properties inside a properties hashtable
      * @param props properties object to resolve
      */
-    private void resolveAllProperties(Map props) throws BuildException {
+    private void resolveAllProperties(Map<String, Object> props) throws BuildException {
         PropertyHelper propertyHelper
             = PropertyHelper.getPropertyHelper(getProject());
         new ResolvePropertyMap(

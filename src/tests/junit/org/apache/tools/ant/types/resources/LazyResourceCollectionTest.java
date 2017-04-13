@@ -18,7 +18,6 @@
 package org.apache.tools.ant.types.resources;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,33 +34,36 @@ import static org.junit.Assert.fail;
 public class LazyResourceCollectionTest {
 
     private class StringResourceCollection implements ResourceCollection {
-        List resources = Arrays.<Resource>asList();
+        List<StringResourceIterator> createdIterators = new ArrayList<>();
 
-        List createdIterators = new ArrayList();
-
+        @Override
         public int size() {
-            return resources.size();
+            return 3;
         }
 
+        @Override
         public Iterator<Resource> iterator() {
             StringResourceIterator it = new StringResourceIterator();
             createdIterators.add(it);
             return it;
         }
 
+        @Override
         public boolean isFilesystemOnly() {
             return false;
         }
     }
 
-    private class StringResourceIterator implements Iterator {
+    private class StringResourceIterator implements Iterator<Resource> {
         int cursor = 0;
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
 
-        public Object next() {
+        @Override
+        public StringResource next() {
             if (cursor < 3) {
                 cursor++;
                 return new StringResource("r" + cursor);
@@ -69,6 +71,7 @@ public class LazyResourceCollectionTest {
             return null;
         }
 
+        @Override
         public boolean hasNext() {
             return cursor < 3;
         }
@@ -82,28 +85,25 @@ public class LazyResourceCollectionTest {
 
         Iterator<Resource> it = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
-        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators
-                .get(0);
+        StringResourceIterator stringResourceIterator =
+            collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        StringResource r = (StringResource) it.next();
+        assertStringValue("r1", it.next());
         assertOneCreatedIterator(collectionTest);
-        assertEquals("r1", r.getValue());
         assertEquals("Iterating once load more than 1 resource", 2,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it.next();
+        assertStringValue("r2", it.next());
         assertOneCreatedIterator(collectionTest);
-        assertEquals("r2", r.getValue());
         assertEquals("Iterating twice load more than 2 resources", 3,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it.next();
+        assertStringValue("r3", it.next());
         assertOneCreatedIterator(collectionTest);
-        assertEquals("r3", r.getValue());
         assertEquals("Iterating 3 times load more than 3 resources", 3,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
         try {
             it.next();
@@ -131,43 +131,37 @@ public class LazyResourceCollectionTest {
         Iterator<Resource> it2 = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
 
-        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators
-                .get(0);
+        StringResourceIterator stringResourceIterator =
+            collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        StringResource r = (StringResource) it1.next();
-        assertEquals("r1", r.getValue());
+        assertStringValue("r1", it1.next());
         assertEquals("Iterating once load more than 1 resource", 2,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it2.next();
-        assertEquals("r1", r.getValue());
+        assertStringValue("r1", it2.next());
         assertEquals(
-                "The second iterator did not lookup in the cache for a resource",
-                2, stringResourceIterator.cursor);
+            "The second iterator did not lookup in the cache for a resource", 2,
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it2.next();
-        assertEquals("r2", r.getValue());
+        assertStringValue("r2", it2.next());
         assertEquals("Iterating twice load more than 2 resources", 3,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it1.next();
-        assertEquals("r2", r.getValue());
+        assertStringValue("r2", it1.next());
         assertEquals(
-                "The first iterator did not lookup in the cache for a resource",
-                3, stringResourceIterator.cursor);
+            "The first iterator did not lookup in the cache for a resource", 3,
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it2.next();
-        assertEquals("r3", r.getValue());
+        assertStringValue("r3", it2.next());
         assertEquals("Iterating 3 times load more than 3 resources", 3,
-                stringResourceIterator.cursor);
+            stringResourceIterator.cursor);
 
-        r = (StringResource) it1.next();
-        assertEquals("r3", r.getValue());
+        assertStringValue("r3", it1.next());
         assertEquals(
-                "The first iterator did not lookup in the cache for a resource",
-                3, stringResourceIterator.cursor);
+            "The first iterator did not lookup in the cache for a resource", 3,
+            stringResourceIterator.cursor);
 
         try {
             it1.next();
@@ -182,5 +176,9 @@ public class LazyResourceCollectionTest {
         } catch (NoSuchElementException e) {
             // ok
         }
+    }
+
+    private void assertStringValue(String expected, Resource r) {
+        assertEquals(expected, r.as(StringResource.class).getValue());
     }
 }

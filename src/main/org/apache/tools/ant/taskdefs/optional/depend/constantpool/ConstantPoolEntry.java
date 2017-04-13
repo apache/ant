@@ -115,72 +115,57 @@ public abstract class ConstantPoolEntry {
      */
     public static ConstantPoolEntry readEntry(DataInputStream cpStream)
          throws IOException {
-        ConstantPoolEntry cpInfo = null;
         int cpTag = cpStream.readUnsignedByte();
 
+        ConstantPoolEntry cpInfo;
         switch (cpTag) {
 
             case CONSTANT_UTF8:
                 cpInfo = new Utf8CPInfo();
-
                 break;
             case CONSTANT_INTEGER:
                 cpInfo = new IntegerCPInfo();
-
                 break;
             case CONSTANT_FLOAT:
                 cpInfo = new FloatCPInfo();
-
                 break;
             case CONSTANT_LONG:
                 cpInfo = new LongCPInfo();
-
                 break;
             case CONSTANT_DOUBLE:
                 cpInfo = new DoubleCPInfo();
-
                 break;
             case CONSTANT_CLASS:
                 cpInfo = new ClassCPInfo();
-
                 break;
             case CONSTANT_STRING:
                 cpInfo = new StringCPInfo();
-
                 break;
             case CONSTANT_FIELDREF:
                 cpInfo = new FieldRefCPInfo();
-
                 break;
             case CONSTANT_METHODREF:
                 cpInfo = new MethodRefCPInfo();
-
                 break;
             case CONSTANT_INTERFACEMETHODREF:
                 cpInfo = new InterfaceMethodRefCPInfo();
-
                 break;
             case CONSTANT_NAMEANDTYPE:
                 cpInfo = new NameAndTypeCPInfo();
-
                 break;
             case CONSTANT_METHODHANDLE:
                 cpInfo = new MethodHandleCPInfo();
-
                 break;
             case CONSTANT_METHODTYPE:
                 cpInfo = new MethodTypeCPInfo();
-
                 break;
             case CONSTANT_INVOKEDYNAMIC:
                 cpInfo = new InvokeDynamicCPInfo();
-
                 break;
             default:
                 throw new ClassFormatError("Invalid Constant Pool entry Type "
                      + cpTag);
         }
-
         cpInfo.read(cpStream);
 
         return cpInfo;
@@ -239,4 +224,3 @@ public abstract class ConstantPoolEntry {
     }
 
 }
-

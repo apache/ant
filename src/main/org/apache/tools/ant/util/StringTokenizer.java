@@ -96,8 +96,8 @@ public class StringTokenizer extends ProjectComponent implements Tokenizer {
         }
         boolean inToken = true;
         intraString = "";
-        StringBuffer word = new StringBuffer();
-        StringBuffer padding = new StringBuffer();
+        StringBuilder word = new StringBuilder();
+        StringBuilder padding = new StringBuilder();
         while (ch != -1) {
             char c = (char) ch;
             boolean isDelim = isDelim(c);
@@ -116,13 +116,11 @@ public class StringTokenizer extends ProjectComponent implements Tokenizer {
                 } else {
                     word.append(c);
                 }
+            } else if (isDelim) {
+                padding.append(c);
             } else {
-                if (isDelim) {
-                    padding.append(c);
-                } else {
-                    pushed = ch;
-                    break;
-                }
+                pushed = ch;
+                break;
             }
             ch = in.read();
         }
@@ -136,6 +134,7 @@ public class StringTokenizer extends ProjectComponent implements Tokenizer {
     /**
      * @return the intratoken string
      */
+    @Override
     public String getPostToken() {
         return suppressDelims || includeDelims ? "" : intraString;
     }

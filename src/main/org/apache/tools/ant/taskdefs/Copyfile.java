@@ -34,6 +34,7 @@ import org.apache.tools.ant.Task;
  * copy instead.
  */
 
+@Deprecated
 public class Copyfile extends Task {
 
     private File srcFile;
@@ -80,6 +81,7 @@ public class Copyfile extends Task {
      * Execute the task.
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         log("DEPRECATED - The copyfile task is deprecated.  Use copy instead.");
 
@@ -107,9 +109,9 @@ public class Copyfile extends Task {
             try {
                 getProject().copyFile(srcFile, destFile, filtering, forceOverwrite);
             } catch (IOException ioe) {
-                String msg = "Error copying file: " + srcFile.getAbsolutePath()
-                    + " due to " + ioe.getMessage();
-                throw new BuildException(msg);
+                throw new BuildException(
+                    "Error copying file: " + srcFile.getAbsolutePath()
+                        + " due to " + ioe.getMessage());
             }
         }
     }

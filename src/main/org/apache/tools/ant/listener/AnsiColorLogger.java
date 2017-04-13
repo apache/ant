@@ -213,7 +213,7 @@ public class AnsiColorLogger extends DefaultLogger {
                 colorsSet = true;
             }
 
-            final StringBuffer msg = new StringBuffer(message);
+            final StringBuilder msg = new StringBuilder(message);
             switch (priority) {
                 case Project.MSG_ERR:
                     msg.insert(0, errColor);

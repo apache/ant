@@ -18,7 +18,7 @@
 
 package org.apache.tools.ant.util;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
@@ -77,18 +77,18 @@ public class RegexpPatternMapper implements FileNameMapper {
      * @param from the from pattern.
      * @throws BuildException on error.
      */
+    @Override
     public void setFrom(String from) throws BuildException {
-        if (from != null) {
-            try {
-                reg.setPattern(from);
-            } catch (NoClassDefFoundError e) {
-                // depending on the implementation the actual RE won't
-                // get instantiated in the constructor.
-                throw new BuildException("Cannot load regular expression matcher",
-                                         e);
-            }
-        } else {
+        if (from == null) {
             throw new BuildException("this mapper requires a 'from' attribute");
+        } 
+        try {
+            reg.setPattern(from);
+        } catch (NoClassDefFoundError e) {
+            // depending on the implementation the actual RE won't
+            // get instantiated in the constructor.
+            throw new BuildException("Cannot load regular expression matcher",
+                e);
         }
     }
 
@@ -97,12 +97,12 @@ public class RegexpPatternMapper implements FileNameMapper {
      * @param to the to pattern.
      * @throws BuildException on error.
      */
+    @Override
     public void setTo(String to) {
-        if (to != null) {
-            this.to = to.toCharArray();
-        } else {
+        if (to == null) {
             throw new BuildException("this mapper requires a 'to' attribute");
         }
+        this.to = to.toCharArray();
     }
 
     /**
@@ -113,6 +113,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      * @return a one-element array containing the translated file or
      *         null if the to pattern did not match
      */
+    @Override
     public String[] mapFileName(String sourceFileName) {
         if (handleDirSep) {
             if (sourceFileName.indexOf("\\") != -1) {
@@ -123,7 +124,7 @@ public class RegexpPatternMapper implements FileNameMapper {
             || !reg.matches(sourceFileName, regexpOptions)) {
             return null;
         }
-        return new String[] {replaceReferences(sourceFileName)};
+        return new String[] { replaceReferences(sourceFileName) };
     }
 
     /**
@@ -133,7 +134,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      * @return the translated file name.
      */
     protected String replaceReferences(String source) {
-        Vector v = reg.getGroups(source, regexpOptions);
+        List<String> v = reg.getGroups(source, regexpOptions);
 
         result.setLength(0);
         for (int i = 0; i < to.length; i++) {
@@ -141,7 +142,7 @@ public class RegexpPatternMapper implements FileNameMapper {
                 if (++i < to.length) {
                     int value = Character.digit(to[i], DECIMAL);
                     if (value > -1) {
-                        result.append((String) v.elementAt(value));
+                        result.append(v.get(value));
                     } else {
                         result.append(to[i]);
                     }

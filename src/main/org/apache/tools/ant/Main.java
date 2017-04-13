@@ -87,16 +87,16 @@ public class Main implements AntMain {
     private PrintStream err = System.err;
 
     /** The build targets. */
-    private final Vector<String> targets = new Vector<String>();
+    private final Vector<String> targets = new Vector<>();
 
     /** Set of properties that can be used by tasks. */
     private final Properties definedProps = new Properties();
 
     /** Names of classes to add as listeners to project. */
-    private final Vector<String> listeners = new Vector<String>(1);
+    private final Vector<String> listeners = new Vector<>(1);
 
     /** File names of property files to load on startup. */
-    private final Vector<String> propertyFiles = new Vector<String>(1);
+    private final Vector<String> propertyFiles = new Vector<>(1);
 
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
@@ -155,17 +155,9 @@ public class Main implements AntMain {
      */
     private boolean proxy = false;
 
-    private final Map<Class<?>, List<String>> extraArguments = new HashMap<Class<?>, List<String>>();
+    private final Map<Class<?>, List<String>> extraArguments = new HashMap<>();
 
-    private static final GetProperty NOPROPERTIES = new GetProperty() {
-        public Object getProperty(final String aName) {
-            // No existing property takes precedence
-            return null;
-        }
-    };
-
-
-
+    private static final GetProperty NOPROPERTIES = aName -> null;
 
     /**
      * Prints the message of the Throwable if it (the message) is not
@@ -569,8 +561,8 @@ public class Main implements AntMain {
          */
         final String arg = args[argPos];
         String name = arg.substring(2, arg.length());
-        String value = null;
-        final int posEq = name.indexOf("=");
+        String value;
+        final int posEq = name.indexOf('=');
         if (posEq > 0) {
             value = name.substring(posEq + 1);
             name = name.substring(0, posEq);
@@ -1153,7 +1145,7 @@ public class Main implements AntMain {
      * @return the filtered targets.
      */
     private static Map<String, Target> removeDuplicateTargets(final Map<String, Target> targets) {
-        final Map<Location, Target> locationMap = new HashMap<Location, Target>();
+        final Map<Location, Target> locationMap = new HashMap<>();
         for (final Entry<String, Target> entry : targets.entrySet()) {
             final String name = entry.getKey();
             final Target target = entry.getValue();
@@ -1168,7 +1160,7 @@ public class Main implements AntMain {
                     target.getLocation(), target); // Smallest name wins
             }
         }
-        final Map<String, Target> ret = new HashMap<String, Target>();
+        final Map<String, Target> ret = new HashMap<>();
         for (final Target target : locationMap.values()) {
             ret.put(target.getName(), target);
         }
@@ -1191,15 +1183,15 @@ public class Main implements AntMain {
         final Map<String, Target> ptargets = removeDuplicateTargets(project.getTargets());
         // split the targets in top-level and sub-targets depending
         // on the presence of a description
-        final Vector<String> topNames = new Vector<String>();
-        final Vector<String> topDescriptions = new Vector<String>();
-        final Vector<Enumeration<String>> topDependencies = new Vector<Enumeration<String>>();
-        final Vector<String> subNames = new Vector<String>();
-        final Vector<Enumeration<String>> subDependencies = new Vector<Enumeration<String>>();
+        final Vector<String> topNames = new Vector<>();
+        final Vector<String> topDescriptions = new Vector<>();
+        final Vector<Enumeration<String>> topDependencies = new Vector<>();
+        final Vector<String> subNames = new Vector<>();
+        final Vector<Enumeration<String>> subDependencies = new Vector<>();
 
         for (final Target currentTarget : ptargets.values()) {
             final String targetName = currentTarget.getName();
-            if (targetName.equals("")) {
+            if ("".equals(targetName)) {
                 continue;
             }
             final String targetDescription = currentTarget.getDescription();
@@ -1227,7 +1219,7 @@ public class Main implements AntMain {
                 "Main targets:", maxLength);
         //if there were no main targets, we list all subtargets
         //as it means nothing has a description
-        if (topNames.size() == 0) {
+        if (topNames.isEmpty()) {
             printSubTargets = true;
         }
         if (printSubTargets) {

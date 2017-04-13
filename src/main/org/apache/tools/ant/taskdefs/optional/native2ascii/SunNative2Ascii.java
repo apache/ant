@@ -36,7 +36,10 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
      */
     public static final String IMPLEMENTATION_NAME = "sun";
 
+    private static final String SUN_TOOLS_NATIVE2ASCII_MAIN = "sun.tools.native2ascii.Main";
+    
     /** {@inheritDoc} */
+    @Override
     protected void setup(Commandline cmd, Native2Ascii args)
         throws BuildException {
         if (args.getReverse()) {
@@ -46,23 +49,20 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
     }
 
     /** {@inheritDoc} */
+    @Override
     protected boolean run(Commandline cmd, ProjectComponent log)
         throws BuildException {
         try {
-            Class n2aMain = Class.forName("sun.tools.native2ascii.Main");
-            Class[] param = new Class[] {String[].class};
-            Method convert = n2aMain.getMethod("convert", param);
-            if (convert == null) {
-                throw new BuildException("Could not find convert() method in "
-                                         + "sun.tools.native2ascii.Main");
-            }
-            Object o = n2aMain.newInstance();
-            return ((Boolean) convert.invoke(o,
-                                             new Object[] {cmd.getArguments()})
-                    ).booleanValue();
+            Class<?> n2aMain = Class.forName(SUN_TOOLS_NATIVE2ASCII_MAIN);
+            Method convert = n2aMain.getMethod("convert", String[].class);
+            return Boolean.TRUE.equals(convert.invoke(n2aMain.newInstance(),
+                (Object) cmd.getArguments()));
         } catch (BuildException ex) {
             //rethrow
             throw ex;
+        } catch (NoSuchMethodException ex) {
+            throw new BuildException("Could not find convert() method in %s",
+                SUN_TOOLS_NATIVE2ASCII_MAIN);
         } catch (Exception ex) {
             //wrap
            throw new BuildException("Error starting Sun's native2ascii: ", ex);

@@ -60,4 +60,3 @@ public abstract class ConstantCPInfo extends ConstantPoolEntry {
     }
 
 }
-

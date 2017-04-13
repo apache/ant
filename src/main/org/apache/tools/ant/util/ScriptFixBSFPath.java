@@ -56,7 +56,7 @@ public class ScriptFixBSFPath {
             "xslt",       "org.apache.xpath.objects.XObject"};
 
     /** A map of languages for which the engine in located in bsf */
-    private static final Map BSF_LANGUAGE_MAP = new HashMap();
+    private static final Map<String, String> BSF_LANGUAGE_MAP = new HashMap<>();
     static {
         for (int i = 0; i < BSF_LANGUAGES.length; i = i + 2) {
             BSF_LANGUAGE_MAP.put(BSF_LANGUAGES[i], BSF_LANGUAGES[i + 1]);

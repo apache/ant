@@ -26,11 +26,6 @@ package org.apache.tools.ant.taskdefs.optional.pvcs;
 public class PvcsProject {
     private String name;
 
-    /** no arg constructor */
-    public PvcsProject() {
-        super();
-    }
-
     /**
      * Set the name of the project
      * @param name the value to use.

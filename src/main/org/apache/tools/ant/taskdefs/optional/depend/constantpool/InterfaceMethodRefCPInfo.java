@@ -55,6 +55,7 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
      * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
+    @Override
     public void read(DataInputStream cpStream) throws IOException {
         classIndex = cpStream.readUnsignedShort();
         nameAndTypeIndex = cpStream.readUnsignedShort();
@@ -67,6 +68,7 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
      * @param constantPool the constant pool of which this entry is a member
      *      and against which this entry is to be resolved.
      */
+    @Override
     public void resolve(ConstantPool constantPool) {
         ClassCPInfo interfaceMethodClass
              = (ClassCPInfo) constantPool.getEntry(classIndex);
@@ -91,19 +93,16 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
      *
      * @return the string representation of this constant pool entry.
      */
+    @Override
     public String toString() {
-        String value;
-
         if (isResolved()) {
-            value = "InterfaceMethod : Class = " + interfaceMethodClassName
+            return "InterfaceMethod : Class = " + interfaceMethodClassName
                  + ", name = " + interfaceMethodName + ", type = "
                  + interfaceMethodType;
-        } else {
-            value = "InterfaceMethod : Class index = " + classIndex
-                 + ", name and type index = " + nameAndTypeIndex;
-        }
+        } 
+        return "InterfaceMethod : Class index = " + classIndex
+             + ", name and type index = " + nameAndTypeIndex;
 
-        return value;
     }
 
     /**
@@ -134,4 +133,3 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
     }
 
 }
-

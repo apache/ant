@@ -20,7 +20,8 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -48,23 +49,6 @@ import org.xml.sax.XMLReader;
  */
 
 public class SchemaValidate extends XMLValidateTask {
-
-    /** map of all declared schemas; we catch and complain about redefinitions */
-    private HashMap schemaLocations = new HashMap();
-
-    /** full checking of a schema */
-    private boolean fullChecking = true;
-
-    /**
-     * flag to disable DTD support. Best left enabled.
-     */
-    private boolean disableDTD = false;
-
-    /**
-     * default URL for nonamespace schemas
-     */
-    private SchemaLocation anonymousSchema;
-
     // Error strings
     /** SAX1 not supported */
     public static final String ERROR_SAX_1 = "SAX1 parsers are not supported";
@@ -88,12 +72,29 @@ public class SchemaValidate extends XMLValidateTask {
     public static final String ERROR_DUPLICATE_SCHEMA
         = "Duplicate declaration of schema ";
 
+    /** map of all declared schemas; we catch and complain about redefinitions */
+    private Map<String, SchemaLocation> schemaLocations = new HashMap<>();
+
+    /** full checking of a schema */
+    private boolean fullChecking = true;
+
+    /**
+     * flag to disable DTD support. Best left enabled.
+     */
+    private boolean disableDTD = false;
+
+    /**
+     * default URL for nonamespace schemas
+     */
+    private SchemaLocation anonymousSchema;
+
     /**
      * Called by the project to let the task initialize properly. The default
      * implementation is a no-op.
      *
      * @throws BuildException if something goes wrong with the build
      */
+    @Override
     public void init() throws BuildException {
         super.init();
         //validating
@@ -155,7 +156,7 @@ public class SchemaValidate extends XMLValidateTask {
     public void addConfiguredSchema(SchemaLocation location) {
         log("adding schema " + location, Project.MSG_DEBUG);
         location.validateNamespace();
-        SchemaLocation old = (SchemaLocation) schemaLocations.get(location.getNamespace());
+        SchemaLocation old = schemaLocations.get(location.getNamespace());
         if (old != null && !old.equals(location)) {
             throw new BuildException(ERROR_DUPLICATE_SCHEMA + location);
         }
@@ -213,6 +214,7 @@ public class SchemaValidate extends XMLValidateTask {
      *
      * @throws BuildException if something went wrong
      */
+    @Override
     protected void initValidator() {
         super.initValidator();
         //validate the parser type
@@ -221,7 +223,6 @@ public class SchemaValidate extends XMLValidateTask {
         }
 
         //enable schema
-        //setFeature(XmlConstants.FEATURE_VALIDATION, false);
         setFeature(XmlConstants.FEATURE_NAMESPACES, true);
         if (!enableXercesSchemaValidation() && !enableJAXP12SchemaValidation()) {
             //couldnt use the xerces or jaxp calls
@@ -244,6 +245,7 @@ public class SchemaValidate extends XMLValidateTask {
      * create our own factory with our own options.
      * @return a default XML parser
      */
+    @Override
     protected XMLReader createDefaultReader() {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating(true);
@@ -252,9 +254,7 @@ public class SchemaValidate extends XMLValidateTask {
         try {
             SAXParser saxParser = factory.newSAXParser();
             reader = saxParser.getXMLReader();
-        } catch (ParserConfigurationException e) {
-            throw new BuildException(ERROR_PARSER_CREATION_FAILURE, e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new BuildException(ERROR_PARSER_CREATION_FAILURE, e);
         }
         return reader;
@@ -265,23 +265,15 @@ public class SchemaValidate extends XMLValidateTask {
      * property.
      */
     protected void addSchemaLocations() {
-        Iterator it = schemaLocations.values().iterator();
-        StringBuffer buffer = new StringBuffer();
-        int count = 0;
-        while (it.hasNext()) {
-            if (count > 0) {
-                buffer.append(' ');
-            }
-            SchemaLocation schemaLocation = (SchemaLocation) it.next();
-            String tuple = schemaLocation.getURIandLocation();
-            buffer.append(tuple);
-            log("Adding schema " + tuple, Project.MSG_VERBOSE);
-            count++;
-        }
-        if (count > 0) {
-            setProperty(XmlConstants.PROPERTY_SCHEMA_LOCATION, buffer.toString());
-        }
+        if (!schemaLocations.isEmpty()) {
+            String joinedValue = schemaLocations.values().stream()
+                .map(SchemaLocation::getURIandLocation)
+                .peek(
+                    tuple -> log("Adding schema " + tuple, Project.MSG_VERBOSE))
+                .collect(Collectors.joining(" "));
 
+            setProperty(XmlConstants.PROPERTY_SCHEMA_LOCATION, joinedValue);
+        }
     }
 
     /**
@@ -289,11 +281,8 @@ public class SchemaValidate extends XMLValidateTask {
      * @return the schema URL
      */
     protected String getNoNamespaceSchemaURL() {
-        if (anonymousSchema == null) {
-            return null;
-        } else {
-            return anonymousSchema.getSchemaLocationURL();
-        }
+        return anonymousSchema == null ? null
+            : anonymousSchema.getSchemaLocationURL();
     }
 
     /**
@@ -317,6 +306,7 @@ public class SchemaValidate extends XMLValidateTask {
      *
      * @param fileProcessed number of files processed.
      */
+    @Override
     protected void onSuccessfulValidation(int fileProcessed) {
         log(fileProcessed + MESSAGE_FILES_VALIDATED, Project.MSG_VERBOSE);
     }
@@ -349,10 +339,6 @@ public class SchemaValidate extends XMLValidateTask {
         /** No location provided */
         public static final String ERROR_NO_LOCATION
             = "No file or URL supplied for the schema ";
-
-        /** No arg constructor */
-        public SchemaLocation() {
-        }
 
         /**
          * Get the namespace.
@@ -442,11 +428,8 @@ public class SchemaValidate extends XMLValidateTask {
          */
         public String getURIandLocation() throws BuildException {
             validateNamespace();
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(namespace);
-            buffer.append(' ');
-            buffer.append(getSchemaLocationURL());
-            return new String(buffer);
+            return new StringBuilder(namespace).append(' ')
+                .append(getSchemaLocationURL()).toString();
         }
 
         /**
@@ -465,7 +448,7 @@ public class SchemaValidate extends XMLValidateTask {
          * @return true if it is not null or empty
          */
         private boolean isSet(String property) {
-            return property != null && property.length() != 0;
+            return property != null && !property.isEmpty();
         }
 
         /**
@@ -474,6 +457,7 @@ public class SchemaValidate extends XMLValidateTask {
          * @return true iff the objects are considered equal in value
          */
 
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -502,6 +486,7 @@ public class SchemaValidate extends XMLValidateTask {
          * Generate a hashcode depending on the namespace, url and file name.
          * @return the hashcode.
          */
+        @Override
         public int hashCode() {
             int result;
             // CheckStyle:MagicNumber OFF
@@ -517,8 +502,9 @@ public class SchemaValidate extends XMLValidateTask {
          * and the like
          * @return a string representation of the object.
          */
+        @Override
         public String toString() {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append(namespace != null ? namespace : "(anonymous)");
             buffer.append(' ');
             buffer.append(url != null ? (url + " ") : "");

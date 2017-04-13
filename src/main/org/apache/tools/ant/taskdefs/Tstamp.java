@@ -21,8 +21,8 @@ package org.apache.tools.ant.taskdefs;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -45,7 +45,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  */
 public class Tstamp extends Task {
 
-    private Vector customFormats = new Vector();
+    private List<CustomFormat> customFormats = new Vector<>();
     private String prefix = "";
 
     /**
@@ -66,15 +66,12 @@ public class Tstamp extends Task {
      * the standard ones, to get their retaliation in early.
      * @throws BuildException on error.
      */
+    @Override
     public void execute() throws BuildException {
         try {
             Date d = new Date();
 
-            Enumeration i = customFormats.elements();
-            while (i.hasMoreElements()) {
-                CustomFormat cts = (CustomFormat) i.nextElement();
-                cts.execute(getProject(), d, getLocation());
-            }
+            customFormats.forEach(cts -> cts.execute(getProject(), d, getLocation()));
 
             SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");
             setProperty("DSTAMP", dstamp.format(d));
@@ -97,7 +94,7 @@ public class Tstamp extends Task {
      */
     public CustomFormat createFormat() {
         CustomFormat cts = new CustomFormat();
-        customFormats.addElement(cts);
+        customFormats.add(cts);
         return cts;
     }
 
@@ -127,12 +124,6 @@ public class Tstamp extends Task {
         private String variant;
         private int offset = 0;
         private int field = Calendar.DATE;
-
-        /**
-         * Create a format
-         */
-        public CustomFormat() {
-        }
 
         /**
          *  The property to receive the date/time string in the given pattern
@@ -211,9 +202,9 @@ public class Tstamp extends Task {
          *             encapsulate operations on the unit in its own
          *             class.
          */
+        @Deprecated
         public void setUnit(String unit) {
-            log("DEPRECATED - The setUnit(String) method has been deprecated."
-                + " Use setUnit(Tstamp.Unit) instead.");
+            log("DEPRECATED - The setUnit(String) method has been deprecated. Use setUnit(Tstamp.Unit) instead.");
             Unit u = new Unit();
             u.setValue(unit);
             field = u.getCalendarField();
@@ -305,19 +296,19 @@ public class Tstamp extends Task {
                                                 YEAR
                                               };
 
-        private Map calendarFields = new HashMap();
+        private Map<String, Integer> calendarFields = new HashMap<>();
 
         /** Constructor for Unit enumerated type. */
         public Unit() {
             calendarFields.put(MILLISECOND,
-                               new Integer(Calendar.MILLISECOND));
-            calendarFields.put(SECOND, new Integer(Calendar.SECOND));
-            calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
-            calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
-            calendarFields.put(DAY, new Integer(Calendar.DATE));
-            calendarFields.put(WEEK, new Integer(Calendar.WEEK_OF_YEAR));
-            calendarFields.put(MONTH, new Integer(Calendar.MONTH));
-            calendarFields.put(YEAR, new Integer(Calendar.YEAR));
+                               Integer.valueOf(Calendar.MILLISECOND));
+            calendarFields.put(SECOND, Integer.valueOf(Calendar.SECOND));
+            calendarFields.put(MINUTE, Integer.valueOf(Calendar.MINUTE));
+            calendarFields.put(HOUR, Integer.valueOf(Calendar.HOUR_OF_DAY));
+            calendarFields.put(DAY, Integer.valueOf(Calendar.DATE));
+            calendarFields.put(WEEK, Integer.valueOf(Calendar.WEEK_OF_YEAR));
+            calendarFields.put(MONTH, Integer.valueOf(Calendar.MONTH));
+            calendarFields.put(YEAR, Integer.valueOf(Calendar.YEAR));
         }
 
         /**
@@ -326,14 +317,14 @@ public class Tstamp extends Task {
          */
         public int getCalendarField() {
             String key = getValue().toLowerCase(Locale.ENGLISH);
-            Integer i = (Integer) calendarFields.get(key);
-            return i.intValue();
+            return calendarFields.get(key).intValue();
         }
 
         /**
          * Get the valid values.
          * @return the value values.
          */
+        @Override
         public String[] getValues() {
             return UNITS;
         }

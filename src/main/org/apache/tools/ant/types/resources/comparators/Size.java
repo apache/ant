@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.types.resources.comparators;
 
+import java.util.Comparator;
+
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -32,8 +34,7 @@ public class Size extends ResourceComparator {
      *         argument is less than, equal to, or greater than the second.
      */
     protected int resourceCompare(Resource foo, Resource bar) {
-        long diff = foo.getSize() - bar.getSize();
-        return diff > 0 ? 1 : (diff == 0 ? 0 : -1);
+        return Comparator.comparingLong(Resource::getSize).compare(foo, bar);
     }
 
 }

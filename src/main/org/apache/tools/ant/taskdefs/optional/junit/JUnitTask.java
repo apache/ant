@@ -33,6 +33,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -135,10 +136,26 @@ public class JUnitTask extends Task {
     private static final String LINE_SEP
         = System.getProperty("line.separator");
     private static final String CLASSPATH = "CLASSPATH";
+
+    private static final int STRING_BUFFER_SIZE = 128;
+    /**
+     * @since Ant 1.7
+     */
+    public static final String TESTLISTENER_PREFIX =
+        "junit.framework.TestListener: ";
+
+    /**
+     * Name of magic property that enables test listener events.
+     */
+    public static final String ENABLE_TESTLISTENER_EVENTS =
+        "ant.junit.enabletestlistenerevents";
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private CommandlineJava commandline;
-    private final Vector<JUnitTest> tests = new Vector<JUnitTest>();
-    private final Vector<BatchTest> batchTests = new Vector<BatchTest>();
-    private final Vector<FormatterElement> formatters = new Vector<FormatterElement>();
+    private final List<JUnitTest> tests = new Vector<>();
+    private final List<BatchTest> batchTests = new Vector<>();
+    private final Vector<FormatterElement> formatters = new Vector<>();
     private File dir = null;
 
     private Integer timeout = null;
@@ -185,21 +202,6 @@ public class JUnitTask extends Task {
     private int     threads     = 1;
     private String  failureProperty;
     private String  errorProperty;
-
-    private static final int STRING_BUFFER_SIZE = 128;
-    /**
-     * @since Ant 1.7
-     */
-    public static final String TESTLISTENER_PREFIX =
-        "junit.framework.TestListener: ";
-
-    /**
-     * Name of magic property that enables test listener events.
-     */
-    public static final String ENABLE_TESTLISTENER_EVENTS =
-        "ant.junit.enabletestlistenerevents";
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * If true, force ant to re-classload all classes for each JUnit TestCase
@@ -368,8 +370,8 @@ public class JUnitTask extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[] {"true", "yes", "false", "no",
-                                 "on", "off", "withOutAndErr"};
+            return new String[] { "true", "yes", "false", "no", "on", "off",
+                "withOutAndErr" };
         }
 
         /**
@@ -584,7 +586,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void addTest(final JUnitTest test) {
-        tests.addElement(test);
+        tests.add(test);
         preConfigure(test);
     }
 
@@ -598,7 +600,7 @@ public class JUnitTask extends Task {
      */
     public BatchTest createBatchTest() {
         final BatchTest test = new BatchTest(getProject());
-        batchTests.addElement(test);
+        batchTests.add(test);
         preConfigure(test);
         return test;
     }
@@ -610,7 +612,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void addFormatter(final FormatterElement fe) {
-        formatters.addElement(fe);
+        formatters.add(fe);
     }
 
     /**
@@ -714,11 +716,9 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void setTempdir(final File tmpDir) {
-        if (tmpDir != null) {
-            if (!tmpDir.exists() || !tmpDir.isDirectory()) {
-                throw new BuildException(tmpDir.toString()
-                                         + " is not a valid temp directory");
-            }
+        if (tmpDir != null && (!tmpDir.exists() || !tmpDir.isDirectory())) {
+            throw new BuildException("%s is not a valid temp directory",
+                tmpDir);
         }
         this.tmpDir = tmpDir;
     }
@@ -776,12 +776,12 @@ public class JUnitTask extends Task {
                     e, task.getLocation());
         }
         try {
-            final Class c = loader.loadClass(JUnitTaskMirror.class.getName() + "Impl");
+            final Class<? extends JUnitTaskMirror> c = loader.loadClass(JUnitTaskMirror.class.getName() + "Impl").asSubclass(JUnitTaskMirror.class);
             if (c.getClassLoader() != loader) {
                 throw new BuildException("Overdelegating loader", task.getLocation());
             }
-            final Constructor cons = c.getConstructor(new Class[] {JUnitTask.class});
-            return (JUnitTaskMirror) cons.newInstance(new Object[] {task});
+            final Constructor<? extends JUnitTaskMirror> cons = c.getConstructor(JUnitTask.class);
+            return cons.newInstance(task);
         } catch (final Exception e) {
             throw new BuildException(e, task.getLocation());
         }
@@ -807,28 +807,19 @@ public class JUnitTask extends Task {
             if (extra != null && !hasJunit(path)) {
                 path.add(expandModulePath(extra));
             }
-            mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return new SplitClassLoader(myLoader, path, getProject(),
-                                     new String[] {
-                                         "BriefJUnitResultFormatter",
-                                         "JUnit4TestMethodAdapter",
-                                         "JUnitResultFormatter",
-                                         "JUnitTaskMirrorImpl",
-                                         "JUnitTestRunner",
-                                         "JUnitVersionHelper",
-                                         "OutErrSummaryJUnitResultFormatter",
-                                         "PlainJUnitResultFormatter",
-                                         "SummaryJUnitResultFormatter",
-                                         "TearDownOnVmCrash",
-                                         "XMLJUnitResultFormatter",
-                                         "IgnoredTestListener",
-                                         "IgnoredTestResult",
-                                         "CustomJUnit4TestAdapterCache",
-                                         "TestListenerWrapper"
-                                     });
-                }
-            });
+            mirrorLoader = AccessController.doPrivileged(
+                (PrivilegedAction<ClassLoader>) () -> new SplitClassLoader(
+                    myLoader, path, getProject(),
+                    new String[] { "BriefJUnitResultFormatter",
+                        "JUnit4TestMethodAdapter", "JUnitResultFormatter",
+                        "JUnitTaskMirrorImpl", "JUnitTestRunner",
+                        "JUnitVersionHelper",
+                        "OutErrSummaryJUnitResultFormatter",
+                        "PlainJUnitResultFormatter",
+                        "SummaryJUnitResultFormatter", "TearDownOnVmCrash",
+                        "XMLJUnitResultFormatter", "IgnoredTestListener",
+                        "IgnoredTestResult", "CustomJUnit4TestAdapterCache",
+                        "TestListenerWrapper" }));
         } else {
             mirrorLoader = myLoader;
         }
@@ -847,25 +838,22 @@ public class JUnitTask extends Task {
         checkModules();
         setupJUnitDelegate();
 
-        final List<List> testLists = new ArrayList<List>();
+        final List<List<JUnitTest>> testLists = new ArrayList<>();
         /* parallel test execution is only supported for multi-process execution */
         final int threads = ((!fork) || (forkMode.getValue().equals(ForkMode.ONCE))
                        ? 1
                        : this.threads);
 
-        final boolean forkPerTest = forkMode.getValue().equals(ForkMode.PER_TEST);
-        if (forkPerTest || forkMode.getValue().equals(ForkMode.ONCE)) {
+        final boolean forkPerTest = ForkMode.PER_TEST.equals(forkMode.getValue());
+        if (forkPerTest || ForkMode.ONCE.equals(forkMode.getValue())) {
             testLists.addAll(executeOrQueue(getIndividualTests(),
                                             forkPerTest));
         } else { /* forkMode.getValue().equals(ForkMode.PER_BATCH) */
-            final int count = batchTests.size();
-            for (int i = 0; i < count; i++) {
-                final BatchTest batchtest = batchTests.elementAt(i);
-                testLists.addAll(executeOrQueue(batchtest.elements(), false));
-            }
-            testLists.addAll(executeOrQueue(tests.elements(), forkPerTest));
+            batchTests.stream().map(b -> executeOrQueue(b.elements(), false))
+                .forEach(testLists::addAll);
+            testLists.addAll(
+                executeOrQueue(Collections.enumeration(tests), forkPerTest));
         }
-
         try {
             /* prior to parallel the code in 'oneJunitThread' used to be here. */
             runTestsInThreads(testLists, threads);
@@ -890,12 +878,13 @@ public class JUnitTask extends Task {
      */
     private class JunitTestThread implements Runnable {
 
-        JunitTestThread(final JUnitTask master, final Iterator<List> iterator, final int id) {
+        JunitTestThread(final JUnitTask master, final Iterator<List<JUnitTest>> iterator, final int id) {
             this.masterTask = master;
             this.iterator = iterator;
             this.id = id;
         }
 
+        @Override
         public void run() {
             try {
                 masterTask.oneJunitThread(iterator, id);
@@ -906,7 +895,7 @@ public class JUnitTask extends Task {
         }
 
         private final JUnitTask masterTask;
-        private final Iterator<List> iterator;
+        private final Iterator<List<JUnitTest>> iterator;
         private final int id;
     }
 
@@ -917,8 +906,8 @@ public class JUnitTask extends Task {
      * threads get the same test, or two threads simultaneously pop the list so that a test
      * gets skipped!
      */
-    private List getNextTest(final Iterator<List> iter) {
-        synchronized(iter) {
+    private List<JUnitTest> getNextTest(final Iterator<List<JUnitTest>> iter) {
+        synchronized (iter) {
             if (iter.hasNext()) {
                 return iter.next();
             }
@@ -937,14 +926,14 @@ public class JUnitTask extends Task {
      * fatal reason, no new tests/batches will be started but the running threads will be
      * permitted to complete.  Additional tests may start in already-running batch-test threads.
      */
-    private void oneJunitThread(final Iterator<List> iter, final int threadId) {
+    private void oneJunitThread(final Iterator<List<JUnitTest>> iter, final int threadId) {
 
-        List l;
+        List<JUnitTest> l;
         log("Starting test thread " + threadId, Project.MSG_VERBOSE);
         while ((caughtBuildException == null) && ((l = getNextTest(iter)) != null)) {
             log("Running test " + l.get(0).toString() + "(" + l.size() + ") in thread " + threadId, Project.MSG_VERBOSE);
             if (l.size() == 1) {
-                execute((JUnitTest) l.get(0), threadId);
+                execute(l.get(0), threadId);
             } else {
                 execute(l, threadId);
             }
@@ -953,9 +942,9 @@ public class JUnitTask extends Task {
     }
 
 
-    private void runTestsInThreads(final List<List> testList, final int numThreads) {
+    private void runTestsInThreads(final List<List<JUnitTest>> testList, final int numThreads) {
 
-        Iterator<List> iter = testList.iterator();
+        Iterator<List<JUnitTest>> iter = testList.iterator();
 
         if (numThreads == 1) {
             /* with just one thread just run the test - don't create any threads */
@@ -968,24 +957,25 @@ public class JUnitTask extends Task {
             /* Need to split apart tests, which are still grouped in batches */
             /* is there a simpler Java mechanism to do this? */
             /* I assume we don't want to do this with "per batch" forking. */
-            List<List> newlist = new ArrayList<List>();
+            List<List<JUnitTest>> newlist = new ArrayList<>();
             if (forkMode.getValue().equals(ForkMode.PER_TEST)) {
-                final Iterator<List> i1 = testList.iterator();
+                final Iterator<List<JUnitTest>> i1 = testList.iterator();
                 while (i1.hasNext()) {
-                    final List l = i1.next();
+                    final List<JUnitTest> l = i1.next();
                     if (l.size() == 1) {
-                         newlist.add(l);
+                        newlist.add(l);
                     } else {
-                         final Iterator i2 = l.iterator();
-                         while (i2.hasNext()) {
-                             final List tmpSingleton = new ArrayList();
-                             tmpSingleton.add(i2.next());
-                             newlist.add(tmpSingleton);
-                         }
+                        final Iterator<JUnitTest> i2 = l.iterator();
+                        while (i2.hasNext()) {
+                            final List<JUnitTest> tmpSingleton =
+                                new ArrayList<>();
+                            tmpSingleton.add(i2.next());
+                            newlist.add(tmpSingleton);
+                        }
                     }
                 }
             } else {
-                 newlist = testList;
+                newlist = testList;
             }
             iter = newlist.iterator();
 
@@ -1028,7 +1018,7 @@ public class JUnitTask extends Task {
     protected void execute(final JUnitTest arg, final int thread) throws BuildException {
         validateTestName(arg.getName());
 
-        final JUnitTest test = (JUnitTest) arg.clone();
+        final JUnitTest test = arg.clone();
         test.setThread(thread);
 
         // set the default values if not specified
@@ -1042,13 +1032,13 @@ public class JUnitTask extends Task {
         }
 
         // execute the test and get the return code
-        TestResultHolder result = null;
-        if (!test.getFork()) {
-            result = executeInVM(test);
-        } else {
+        TestResultHolder result;
+        if (test.getFork()) {
             final ExecuteWatchdog watchdog = createWatchdog();
             result = executeAsForked(test, watchdog, null);
             // null watchdog means no timeout, you'd better not check with null
+        } else {
+            result = executeInVM(test);
         }
         actOnTestResult(result, test, "Test " + test.getName());
     }
@@ -1070,8 +1060,8 @@ public class JUnitTask extends Task {
      * @throws BuildException if <code>testName</code> is not a valid test name
      */
     private void validateTestName(final String testName) throws BuildException {
-        if (testName == null || testName.length() == 0
-            || testName.equals("null")) {
+        if (testName == null || testName.isEmpty()
+            || "null".equals(testName)) {
             throw new BuildException("test name must be specified");
         }
     }
@@ -1082,23 +1072,21 @@ public class JUnitTask extends Task {
      * @param thread Identifies which thread is test running in (0 for single-threaded runs)
      * @throws BuildException on error.
      */
-    protected void execute(final List testList, final int thread) throws BuildException {
-        JUnitTest test = null;
+    protected void execute(final List<JUnitTest> testList, final int thread) throws BuildException {
         // Create a temporary file to pass the test cases to run to
         // the runner (one test case per line)
         final File casesFile = createTempPropertiesFile("junittestcases");
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(casesFile));
+        try (BufferedWriter writer =
+            new BufferedWriter(new FileWriter(casesFile))) {
 
             log("Creating casesfile '" + casesFile.getAbsolutePath()
                 + "' with content: ", Project.MSG_VERBOSE);
             final PrintStream logWriter =
                 new PrintStream(new LogOutputStream(this, Project.MSG_VERBOSE));
 
-            final Iterator iter = testList.iterator();
-            while (iter.hasNext()) {
-                test = (JUnitTest) iter.next();
+            JUnitTest test = null;
+            for (JUnitTest t : testList) {
+                test = t;
                 test.setThread(thread);
                 printDual(writer, logWriter, test.getName());
                 if (test.getMethods() != null) {
@@ -1119,8 +1107,6 @@ public class JUnitTask extends Task {
                 }
             }
             writer.flush();
-            writer.close();
-            writer = null;
 
             // execute the test and get the return code
             final ExecuteWatchdog watchdog = createWatchdog();
@@ -1131,8 +1117,6 @@ public class JUnitTask extends Task {
             log(e.toString(), Project.MSG_ERR);
             throw new BuildException(e);
         } finally {
-            FileUtils.close(writer);
-
             try {
                 FILE_UTILS.tryHardToDelete(casesFile);
             } catch (final Exception e) {
@@ -1146,7 +1130,7 @@ public class JUnitTask extends Task {
      * @param testList the list of tests to execute.
      * @throws BuildException on error.
      */
-    protected void execute(final List testList) throws BuildException {
+    protected void execute(final List<JUnitTest> testList) throws BuildException {
         execute(testList, 0);
     }
 
@@ -1177,7 +1161,7 @@ public class JUnitTask extends Task {
 
         CommandlineJava cmd;
         try {
-            cmd = (CommandlineJava) (getCommandline().clone());
+            cmd = getCommandline().clone();
         } catch (final CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
         }
@@ -1213,7 +1197,7 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS
                                       + String.valueOf(getEnableTestListenerEvents()));
 
-        StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
+        StringBuilder formatterArg = new StringBuilder(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
             final FormatterElement fe = feArray[i];
@@ -1226,7 +1210,7 @@ public class JUnitTask extends Task {
                     formatterArg.append(outFile);
                 }
                 cmd.createArgument().setValue(formatterArg.toString());
-                formatterArg = new StringBuffer();
+                formatterArg = new StringBuilder();
             }
         }
 
@@ -1236,17 +1220,14 @@ public class JUnitTask extends Task {
         final File propsFile = createTempPropertiesFile("junit");
         cmd.createArgument().setValue(Constants.PROPSFILE
                                       + propsFile.getAbsolutePath());
-        final Hashtable p = getProject().getProperties();
+        final Hashtable<String, Object> p = getProject().getProperties();
         final Properties props = new Properties();
-        for (final Enumeration e = p.keys(); e.hasMoreElements();) {
-            final Object key = e.nextElement();
-            props.put(key, p.get(key));
-        }
+        p.forEach(props::put);
         try {
             final OutputStream outstream = Files.newOutputStream(propsFile.toPath());
             props.store(outstream, "Ant JUnitTask generated properties file");
             outstream.close();
-        } catch (final java.io.IOException e) {
+        } catch (final IOException e) {
             FILE_UTILS.tryHardToDelete(propsFile);
             throw new BuildException("Error creating temporary properties "
                                      + "file.", e, getLocation());
@@ -1328,9 +1309,9 @@ public class JUnitTask extends Task {
                     + propsFile.getAbsolutePath() + "'.";
                 if (success) {
                     throw new BuildException(msg); //NOSONAR
-                } else { // don't hide inner exception
-                    log(msg, Project.MSG_ERR);
                 }
+                // don't hide inner exception
+                log(msg, Project.MSG_ERR);
             }
         }
 
@@ -1343,8 +1324,8 @@ public class JUnitTask extends Task {
      */
     private void checkIncludeAntRuntime(final CommandlineJava cmd) {
         if (includeAntRuntime) {
-            final Map/*<String, String>*/ env = Execute.getEnvironmentVariables();
-            final String cp = (String) env.get(CLASSPATH);
+            final Map<String, String> env = Execute.getEnvironmentVariables();
+            final String cp = env.get(CLASSPATH);
             if (cp != null) {
                 cmd.createClasspath(getProject()).createPath()
                     .append(new Path(getProject(), cp));
@@ -1355,7 +1336,6 @@ public class JUnitTask extends Task {
                 .append(antRuntimeClasses);
         }
     }
-
 
     /**
      * check for the parameter being "withoutanderr" in a locale-independent way.
@@ -1400,9 +1380,9 @@ public class JUnitTask extends Task {
                 LoaderUtils.classNameToResource(Project.class.getName());
             URL previous = null;
             try {
-                for (final Enumeration e = loader.getResources(projectResourceName);
+                for (final Enumeration<URL> e = loader.getResources(projectResourceName);
                      e.hasMoreElements();) {
-                    final URL current = (URL) e.nextElement();
+                    final URL current = e.nextElement();
                     if (previous != null && !urlEquals(current, previous)) {
                         log("WARNING: multiple versions of ant detected "
                             + "in path for junit "
@@ -1501,9 +1481,8 @@ public class JUnitTask extends Task {
         throws IOException {
         if (runner != null) {
             return runner.handleInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
         }
+        return super.handleInput(buffer, offset, length);
     }
 
 
@@ -1580,7 +1559,7 @@ public class JUnitTask extends Task {
             setupJUnitDelegate();
         }
 
-        final JUnitTest test = (JUnitTest) arg.clone();
+        final JUnitTest test = arg.clone();
         test.setProperties(getProject().getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM",
@@ -1691,12 +1670,14 @@ public class JUnitTask extends Task {
      */
     protected Enumeration<JUnitTest> getIndividualTests() {
         final int count = batchTests.size();
-        final Enumeration[] enums = new Enumeration[ count + 1];
+        @SuppressWarnings("unchecked")
+        final Enumeration<JUnitTest>[] enums = new Enumeration[ count + 1];
+        
         for (int i = 0; i < count; i++) {
-            final BatchTest batchtest = batchTests.elementAt(i);
+            final BatchTest batchtest = batchTests.get(i);
             enums[i] = batchtest.elements();
         }
-        enums[enums.length - 1] = tests.elements();
+        enums[enums.length - 1] = Collections.enumeration(tests);
         return Enumerations.fromCompound(enums);
     }
 
@@ -1713,10 +1694,7 @@ public class JUnitTask extends Task {
         if (tests.isEmpty()) {
             return;
         }
-
-        final Enumeration<JUnitTest> testsEnum = tests.elements();
-        while (testsEnum.hasMoreElements()) {
-            final JUnitTest test = testsEnum.nextElement();
+        for (JUnitTest test : tests) {
             if (test.hasMethodsSpecified() && test.shouldRun(getProject())) {
                 test.resolveMethods();
             }
@@ -1730,15 +1708,10 @@ public class JUnitTask extends Task {
     private void checkModules() {
         if (hasPath(getCommandline().getModulepath()) ||
             hasPath(getCommandline().getUpgrademodulepath())) {
-            for (int i = 0, count = batchTests.size(); i < count; i++) {
-                if(!batchTests.elementAt(i).getFork()) {
-                    throw new BuildException("The module path requires fork attribute to be set to true.");
-                }
-            }
-            for (int i = 0, count = tests.size(); i < count; i++) {
-                if (!tests.elementAt(i).getFork()) {
-                    throw new BuildException("The module path requires fork attribute to be set to true.");
-                }
+            if (!(batchTests.stream().allMatch(BaseTest::getFork)
+                && tests.stream().allMatch(BaseTest::getFork))) {
+                throw new BuildException(
+                    "The module path requires fork attribute to be set to true.");
             }
         }
     }
@@ -1775,7 +1748,8 @@ public class JUnitTask extends Task {
         for (String path : modulePath.list()) {
             final File modulePathEntry = getProject().resolveFile(path);
             if (modulePathEntry.isDirectory() && !hasModuleInfo(modulePathEntry)) {
-                final File[] modules = modulePathEntry.listFiles((dir,name)->name.toLowerCase(Locale.ENGLISH).endsWith(".jar"));
+                final File[] modules = modulePathEntry.listFiles((dir,
+                    name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".jar"));
                 if (modules != null) {
                     for (File module : modules) {
                         expanded.add(new Path(getProject(), String.format(
@@ -1797,9 +1771,9 @@ public class JUnitTask extends Task {
      * @return enumeration
      * @since Ant 1.3
      */
-    protected Enumeration<JUnitTest> allTests() {
-        final Enumeration[] enums = {tests.elements(), batchTests.elements()};
-        return Enumerations.fromCompound(enums);
+    protected Enumeration<BaseTest> allTests() {
+        return Enumerations.fromCompound(Collections.enumeration(tests),
+            Collections.enumeration(batchTests));
     }
 
     /**
@@ -1808,6 +1782,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     private FormatterElement[] mergeFormatters(final JUnitTest test) {
+        @SuppressWarnings("unchecked")
         final Vector<FormatterElement> feVector = (Vector<FormatterElement>) formatters.clone();
         test.addFormattersTo(feVector);
         final FormatterElement[] feArray = new FormatterElement[feVector.size()];
@@ -2181,7 +2156,7 @@ public class JUnitTask extends Task {
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] {ONCE, PER_TEST, PER_BATCH};
+            return new String[] { ONCE, PER_TEST, PER_BATCH };
         }
     }
 
@@ -2195,9 +2170,10 @@ public class JUnitTask extends Task {
      * @return a list of tasks to be executed.
      * @since 1.6.2
      */
-    protected Collection<List> executeOrQueue(final Enumeration<JUnitTest> testList,
-                                        final boolean runIndividual) {
-        final Map<ForkedTestConfiguration, List> testConfigurations = new HashMap<ForkedTestConfiguration, List>();
+    protected Collection<List<JUnitTest>> executeOrQueue(
+        final Enumeration<JUnitTest> testList, final boolean runIndividual) {
+        final Map<ForkedTestConfiguration, List<JUnitTest>> testConfigurations =
+            new HashMap<>();
         while (testList.hasMoreElements()) {
             final JUnitTest test = testList.nextElement();
             if (test.shouldRun(getProject())) {
@@ -2206,14 +2182,10 @@ public class JUnitTask extends Task {
                 if ((runIndividual || !test.getFork()) && (threads == 1)) {
                     execute(test, 0);
                 } else {
-                    final ForkedTestConfiguration c =
-                        new ForkedTestConfiguration(test);
-                    List<JUnitTest> l = testConfigurations.get(c);
-                    if (l == null) {
-                        l = new ArrayList<JUnitTest>();
-                        testConfigurations.put(c, l);
-                    }
-                    l.add(test);
+                    testConfigurations
+                        .computeIfAbsent(new ForkedTestConfiguration(test),
+                            k -> new ArrayList<>())
+                        .add(test);
                 }
             }
         }
@@ -2361,7 +2333,7 @@ public class JUnitTask extends Task {
      * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=45227"
      */
     private static JUnitTest createDummyTestForBatchTest(final JUnitTest test) {
-        final JUnitTest t = (JUnitTest) test.clone();
+        final JUnitTest t = test.clone();
         final int index = test.getName().lastIndexOf('.');
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch

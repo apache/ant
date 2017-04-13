@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.email;
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -60,8 +59,9 @@ public class EmailTask extends Task {
          *
          * @return a list of valid entries
          */
+        @Override
         public String[] getValues() {
-            return new String[] {AUTO, MIME, UU, PLAIN};
+            return new String[] { AUTO, MIME, UU, PLAIN };
         }
     }
 
@@ -82,16 +82,16 @@ public class EmailTask extends Task {
     /** sender  */
     private EmailAddress from = null;
     /** replyto */
-    private Vector replyToList = new Vector();
+    private Vector<EmailAddress> replyToList = new Vector<>();
     /** TO recipients  */
-    private Vector toList = new Vector();
+    private Vector<EmailAddress> toList = new Vector<>();
     /** CC (Carbon Copy) recipients  */
-    private Vector ccList = new Vector();
+    private Vector<EmailAddress> ccList = new Vector<>();
     /** BCC (Blind Carbon Copy) recipients  */
-    private Vector bccList = new Vector();
+    private Vector<EmailAddress> bccList = new Vector<>();
 
     /** generic headers */
-    private Vector headers = new Vector();
+    private Vector<Header> headers = new Vector<>();
 
     /** file list  */
     private Path attachments = null;
@@ -189,8 +189,8 @@ public class EmailTask extends Task {
      */
     public void setMessage(String message) {
         if (this.message != null) {
-            throw new BuildException("Only one message can be sent in an "
-                 + "email");
+            throw new BuildException(
+                "Only one message can be sent in an email");
         }
         this.message = new Message(message);
         this.message.setProject(getProject());
@@ -203,8 +203,8 @@ public class EmailTask extends Task {
      */
     public void setMessageFile(File file) {
         if (this.message != null) {
-            throw new BuildException("Only one message can be sent in an "
-                 + "email");
+            throw new BuildException(
+                "Only one message can be sent in an email");
         }
         this.message = new Message(file);
         this.message.setProject(getProject());
@@ -284,7 +284,7 @@ public class EmailTask extends Task {
      * @param address An email address.
      */
     public void addTo(EmailAddress address) {
-        toList.addElement(address);
+        toList.add(address);
     }
 
     /**
@@ -296,7 +296,7 @@ public class EmailTask extends Task {
         StringTokenizer tokens = new StringTokenizer(list, ",");
 
         while (tokens.hasMoreTokens()) {
-            toList.addElement(new EmailAddress(tokens.nextToken()));
+            toList.add(new EmailAddress(tokens.nextToken()));
         }
     }
 
@@ -306,7 +306,7 @@ public class EmailTask extends Task {
      * @param address The email address.
      */
     public void addCc(EmailAddress address) {
-        ccList.addElement(address);
+        ccList.add(address);
     }
 
     /**
@@ -318,7 +318,7 @@ public class EmailTask extends Task {
         StringTokenizer tokens = new StringTokenizer(list, ",");
 
         while (tokens.hasMoreTokens()) {
-            ccList.addElement(new EmailAddress(tokens.nextToken()));
+            ccList.add(new EmailAddress(tokens.nextToken()));
         }
     }
 
@@ -328,7 +328,7 @@ public class EmailTask extends Task {
      * @param address The email address.
      */
     public void addBcc(EmailAddress address) {
-        bccList.addElement(address);
+        bccList.add(address);
     }
 
     /**
@@ -340,7 +340,7 @@ public class EmailTask extends Task {
         StringTokenizer tokens = new StringTokenizer(list, ",");
 
         while (tokens.hasMoreTokens()) {
-            bccList.addElement(new EmailAddress(tokens.nextToken()));
+            bccList.add(new EmailAddress(tokens.nextToken()));
         }
     }
 
@@ -434,6 +434,7 @@ public class EmailTask extends Task {
     /**
      * Send an email.
      */
+    @Override
     public void execute() {
         Message savedMessage = message;
 
@@ -443,15 +444,15 @@ public class EmailTask extends Task {
             // prepare for the auto select mechanism
             boolean autoFound = false;
             // try MIME format
-            if (encoding.equals(MIME)
-                 || (encoding.equals(AUTO) && !autoFound)) {
+            if (MIME.equals(encoding)
+                 || (AUTO.equals(encoding) && !autoFound)) {
                 try {
                     //check to make sure that activation.jar
                     //and mail.jar are available - see bug 31969
                     Class.forName("javax.activation.DataHandler");
                     Class.forName("javax.mail.internet.MimeMessage");
 
-                    mailer = (Mailer) ClasspathUtils.newInstance(
+                    mailer = ClasspathUtils.newInstance(
                             "org.apache.tools.ant.taskdefs.email.MimeMailer",
                             EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
@@ -463,20 +464,20 @@ public class EmailTask extends Task {
             }
             // SMTP auth only allowed with MIME mail
             if (!autoFound && ((user != null) || (password != null))
-                && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+                && (UU.equals(encoding) || PLAIN.equals(encoding))) {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
             // SSL only allowed with MIME mail
             if (!autoFound  && (ssl || starttls)
-                && (encoding.equals(UU) || encoding.equals(PLAIN))) {
-                throw new BuildException("SSL and STARTTLS only possible with"
-                                         + " MIME mail");
+                && (UU.equals(encoding) || PLAIN.equals(encoding))) {
+                throw new BuildException(
+                    "SSL and STARTTLS only possible with MIME mail");
             }
             // try UU format
-            if (encoding.equals(UU)
-                 || (encoding.equals(AUTO) && !autoFound)) {
+            if (UU.equals(encoding)
+                 || (AUTO.equals(encoding) && !autoFound)) {
                 try {
-                    mailer = (Mailer) ClasspathUtils.newInstance(
+                    mailer = ClasspathUtils.newInstance(
                             "org.apache.tools.ant.taskdefs.email.UUMailer",
                             EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
@@ -486,16 +487,16 @@ public class EmailTask extends Task {
                 }
             }
             // try plain format
-            if (encoding.equals(PLAIN)
-                 || (encoding.equals(AUTO) && !autoFound)) {
+            if (PLAIN.equals(encoding)
+                 || (AUTO.equals(encoding) && !autoFound)) {
                 mailer = new PlainMailer();
                 autoFound = true;
                 log("Using plain mail", Project.MSG_VERBOSE);
             }
             // a valid mailer must be present by now
             if (mailer == null) {
-                throw new BuildException("Failed to initialise encoding: "
-                     + encoding);
+                throw new BuildException("Failed to initialise encoding: %s",
+                    encoding);
             }
             // a valid message is required
             if (message == null) {
@@ -508,33 +509,34 @@ public class EmailTask extends Task {
             }
             // at least one address to send to/cc/bcc is required
             if (toList.isEmpty() && ccList.isEmpty() && bccList.isEmpty()) {
-                throw new BuildException("At least one of to, cc or bcc must "
-                     + "be supplied");
+                throw new BuildException(
+                    "At least one of to, cc or bcc must be supplied");
             }
             // set the mimetype if not done already (and required)
             if (messageMimeType != null) {
                 if (message.isMimeTypeSpecified()) {
-                    throw new BuildException("The mime type can only be "
-                         + "specified in one location");
+                    throw new BuildException(
+                        "The mime type can only be specified in one location");
                 }
                 message.setMimeType(messageMimeType);
             }
             // set the character set if not done already (and required)
             if (charset != null) {
                 if (message.getCharset() != null) {
-                    throw new BuildException("The charset can only be "
-                         + "specified in one location");
+                    throw new BuildException(
+                        "The charset can only be specified in one location");
                 }
                 message.setCharset(charset);
             }
             message.setInputEncoding(messageFileInputEncoding);
 
             // identify which files should be attached
-            Vector<File> files = new Vector<File>();
+            Vector<File> files = new Vector<>();
+            
+            
             if (attachments != null) {
                 for (Resource r : attachments) {
-                    files.addElement(r.as(FileProvider.class)
-                                     .getFile());
+                    files.add(r.as(FileProvider.class).getFile());
                 }
             }
             // let the user know what's going to happen
@@ -631,4 +633,3 @@ public class EmailTask extends Task {
     }
 
 }
-

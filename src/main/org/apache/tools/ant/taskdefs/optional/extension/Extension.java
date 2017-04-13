@@ -18,11 +18,12 @@
 package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.DeweyDecimal;
 import org.apache.tools.ant.util.StringUtils;
@@ -187,31 +188,13 @@ public final class Extension {
      */
     public static Extension[] getAvailable(final Manifest manifest) {
         if (null == manifest) {
-            return new Extension[ 0 ];
+            return new Extension[0];
         }
-
-        final ArrayList results = new ArrayList();
-
-        final Attributes mainAttributes = manifest.getMainAttributes();
-        if (null != mainAttributes) {
-            final Extension extension = getExtension("", mainAttributes);
-            if (null != extension) {
-                results.add(extension);
-            }
-        }
-
-        final Map entries = manifest.getEntries();
-        final Iterator keys = entries.keySet().iterator();
-        while (keys.hasNext()) {
-            final String key = (String) keys.next();
-            final Attributes attributes = (Attributes) entries.get(key);
-            final Extension extension = getExtension("", attributes);
-            if (null != extension) {
-                results.add(extension);
-            }
-        }
-
-        return (Extension[]) results.toArray(new Extension[results.size()]);
+        return Stream
+            .concat(Stream.of(manifest.getMainAttributes()),
+                manifest.getEntries().values().stream())
+            .map(attrs -> getExtension("", attrs)).filter(Objects::nonNull)
+            .toArray(Extension[]::new);
     }
 
     /**
@@ -491,10 +474,11 @@ public final class Extension {
      *
      * @return string representation of object.
      */
+    @Override
     public String toString() {
         final String brace = ": ";
 
-        final StringBuffer sb = new StringBuffer(EXTENSION_NAME.toString());
+        final StringBuilder sb = new StringBuilder(EXTENSION_NAME.toString());
         sb.append(brace);
         sb.append(extensionName);
         sb.append(StringUtils.LINE_SEP);
@@ -567,22 +551,17 @@ public final class Extension {
      */
     private static Extension[] getListed(final Manifest manifest,
                                           final Attributes.Name listKey) {
-        final ArrayList results = new ArrayList();
+        final List<Extension> results = new ArrayList<>();
         final Attributes mainAttributes = manifest.getMainAttributes();
 
         if (null != mainAttributes) {
             getExtension(mainAttributes, results, listKey);
         }
 
-        final Map entries = manifest.getEntries();
-        final Iterator keys = entries.keySet().iterator();
-        while (keys.hasNext()) {
-            final String key = (String) keys.next();
-            final Attributes attributes = (Attributes) entries.get(key);
-            getExtension(attributes, results, listKey);
-        }
+        manifest.getEntries().values()
+            .forEach(attributes -> getExtension(attributes, results, listKey));
 
-        return (Extension[]) results.toArray(new Extension[results.size()]);
+        return results.toArray(new Extension[results.size()]);
     }
 
     /**
@@ -595,18 +574,14 @@ public final class Extension {
      *    or OPTIONAL_EXTENSION_LIST
      */
     private static void getExtension(final Attributes attributes,
-                                     final ArrayList required,
+                                     final List<Extension> required,
                                      final Attributes.Name listKey) {
         final String names = attributes.getValue(listKey);
         if (null == names) {
             return;
         }
-
-        final String[] extensions = split(names, " ");
-        for (int i = 0; i < extensions.length; i++) {
-            final String prefix = extensions[ i ] + "-";
-            final Extension extension = getExtension(prefix, attributes);
-
+        for (final String prefix : split(names, " ")) {
+            final Extension extension = getExtension(prefix + "-", attributes);
             if (null != extension) {
                 required.add(extension);
             }
@@ -623,10 +598,10 @@ public final class Extension {
     private static String[] split(final String string,
                                         final String onToken) {
         final StringTokenizer tokenizer = new StringTokenizer(string, onToken);
-        final String[] result = new String[ tokenizer.countTokens() ];
+        final String[] result = new String[tokenizer.countTokens()];
 
         for (int i = 0; i < result.length; i++) {
-            result[ i ] = tokenizer.nextToken();
+            result[i] = tokenizer.nextToken();
         }
 
         return result;

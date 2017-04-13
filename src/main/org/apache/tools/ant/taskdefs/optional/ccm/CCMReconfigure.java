@@ -28,6 +28,21 @@ import org.apache.tools.ant.types.Commandline;
  * Task allows to reconfigure a project, recursively or not
  */
 public class CCMReconfigure extends Continuus {
+    /**
+     * /recurse --
+     */
+    public static final String FLAG_RECURSE = "/recurse";
+
+    /**
+     * /recurse --
+     */
+    public static final String FLAG_VERBOSE = "/verbose";
+
+
+    /**
+     *  /project flag -- target project
+     */
+    public static final String FLAG_PROJECT = "/project";
 
     private String ccmProject = null;
     private boolean recurse = false;
@@ -39,7 +54,6 @@ public class CCMReconfigure extends Continuus {
         setCcmAction(COMMAND_RECONFIGURE);
     }
 
-
     /**
      * Executes the task.
      * <p>
@@ -48,9 +62,9 @@ public class CCMReconfigure extends Continuus {
      * </p>
      * @throws BuildException on error
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // build the command line from what we got the format
         // as specified in the CCM.EXE help
@@ -59,13 +73,12 @@ public class CCMReconfigure extends Continuus {
 
         checkOptions(commandLine);
 
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result)) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
-
 
     /**
      * Check the command line options.
@@ -103,7 +116,6 @@ public class CCMReconfigure extends Continuus {
         this.ccmProject = v;
     }
 
-
     /**
      * Get the value of recurse.
      * @return value of recurse.
@@ -121,7 +133,6 @@ public class CCMReconfigure extends Continuus {
         this.recurse = v;
     }
 
-
     /**
      * Get the value of verbose.
      * @return value of verbose.
@@ -138,22 +149,4 @@ public class CCMReconfigure extends Continuus {
         this.verbose = v;
     }
 
-
-    /**
-     * /recurse --
-     */
-    public static final String FLAG_RECURSE = "/recurse";
-
-    /**
-     * /recurse --
-     */
-    public static final String FLAG_VERBOSE = "/verbose";
-
-
-    /**
-     *  /project flag -- target project
-     */
-    public static final String FLAG_PROJECT = "/project";
-
 }
-

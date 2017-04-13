@@ -33,15 +33,15 @@ import junit.framework.TestResult;
 public class IgnoredTestResult extends TestResult {
 
 
-    private List<IgnoredTestListener> listeners = new ArrayList<IgnoredTestListener>();
-    private List<TestIgnored> ignored = new ArrayList<TestIgnored>();
-    private List<TestIgnored> skipped = new ArrayList<TestIgnored>();
+    private List<IgnoredTestListener> listeners = new ArrayList<>();
+    private List<TestIgnored> ignored = new ArrayList<>();
+    private List<TestIgnored> skipped = new ArrayList<>();
 
     public IgnoredTestResult() {
         super();
     }
 
-
+    @Override
     public synchronized void addListener(TestListener listener) {
         if (listener instanceof IgnoredTestListener) {
             listeners.add((IgnoredTestListener)listener);
@@ -49,6 +49,7 @@ public class IgnoredTestResult extends TestResult {
         super.addListener(listener);
     }
 
+    @Override
     public synchronized  void removeListener(TestListener listener) {
         if (listener instanceof IgnoredTestListener) {
             listeners.remove(listener);

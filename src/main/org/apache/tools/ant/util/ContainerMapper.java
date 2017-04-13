@@ -20,7 +20,6 @@ package org.apache.tools.ant.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.types.Mapper;
@@ -32,7 +31,7 @@ import org.apache.tools.ant.types.Mapper;
  */
 public abstract class ContainerMapper implements FileNameMapper {
 
-    private List mappers = new ArrayList();
+    private List<FileNameMapper> mappers = new ArrayList<>();
 
     /**
      * Add a <code>Mapper</code>.
@@ -69,9 +68,8 @@ public abstract class ContainerMapper implements FileNameMapper {
             && ((ContainerMapper) fileNameMapper).contains(this))) {
             throw new IllegalArgumentException(
                 "Circular mapper containment condition detected");
-        } else {
-            mappers.add(fileNameMapper);
         }
+        mappers.add(fileNameMapper);
     }
 
     /**
@@ -81,21 +79,23 @@ public abstract class ContainerMapper implements FileNameMapper {
      * @return <code>boolean</code>.
      */
     protected synchronized boolean contains(FileNameMapper fileNameMapper) {
-        boolean foundit = false;
-        for (Iterator iter = mappers.iterator(); iter.hasNext() && !foundit;) {
-            FileNameMapper next = (FileNameMapper) (iter.next());
-            foundit = (next == fileNameMapper
-                || (next instanceof ContainerMapper
-                && ((ContainerMapper) next).contains(fileNameMapper)));
+        for (FileNameMapper m : mappers) {
+            if (m == fileNameMapper) {
+                return true;
+            }
+            if (m instanceof ContainerMapper
+                && ((ContainerMapper) m).contains(fileNameMapper)) {
+                return true;
+            }
         }
-        return foundit;
+        return false;
     }
 
     /**
      * Get the <code>List</code> of <code>FileNameMapper</code>s.
      * @return <code>List</code>.
      */
-    public synchronized List getMappers() {
+    public synchronized List<FileNameMapper> getMappers() {
         return Collections.unmodifiableList(mappers);
     }
 
@@ -103,6 +103,7 @@ public abstract class ContainerMapper implements FileNameMapper {
      * Empty implementation.
      * @param ignore ignored.
      */
+    @Override
     public void setFrom(String ignore) {
         //Empty
     }
@@ -111,6 +112,7 @@ public abstract class ContainerMapper implements FileNameMapper {
      * Empty implementation.
      * @param ignore ignored.
      */
+    @Override
     public void setTo(String ignore) {
         //Empty
     }

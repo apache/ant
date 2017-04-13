@@ -68,41 +68,39 @@ public class Rectangle extends BasicShape implements DrawOperation {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeDrawOperation() {
         log("\tCreating Rectangle w=" + width + " h=" + height + " arcw="
             + arcwidth + " arch=" + archeight);
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
-        Graphics2D graphics = (Graphics2D) bi.getGraphics();
+        Graphics2D graphics = bi.createGraphics();
 
-        if (!stroke.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(stroke)) {
             BasicStroke bStroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
             graphics.setStroke(bStroke);
 
-            if ((arcwidth != 0) || (archeight != 0)) {
-                graphics.drawRoundRect(0, 0, width, height, arcwidth, archeight);
-            } else {
+            if (arcwidth == 0 && archeight == 0) {
                 graphics.drawRect(0, 0, width, height);
+            } else {
+                graphics.drawRoundRect(0, 0, width, height, arcwidth, archeight);
             }
         }
 
-        if (!fill.equals("transparent")) {
+        if (!"transparent".equalsIgnoreCase(fill)) {
             graphics.setColor(ColorMapper.getColorByName(fill));
-            if ((arcwidth != 0) || (archeight != 0)) {
+            if (arcwidth == 0 && archeight == 0) {
+                graphics.fillRect(stroke_width, stroke_width,
+                    width - (stroke_width * 2), height - (stroke_width * 2));
+            } else {
                 graphics.fillRoundRect(stroke_width, stroke_width,
                     width - (stroke_width * 2), height - (stroke_width * 2),
                     arcwidth, archeight);
-            } else {
-                graphics.fillRect(stroke_width, stroke_width,
-                    width - (stroke_width * 2), height - (stroke_width * 2));
             }
         }
 
-
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 PlanarImage img = ((DrawOperation) instr).executeDrawOperation();
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);

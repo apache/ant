@@ -25,8 +25,8 @@ import org.apache.tools.ant.types.Resource;
  * Majority ResourceSelector.
  * @since Ant 1.7
  */
-public class Majority
-    extends ResourceSelectorContainer implements ResourceSelector {
+public class Majority extends ResourceSelectorContainer
+    implements ResourceSelector {
 
     private boolean tie = true;
 
@@ -40,7 +40,7 @@ public class Majority
      * Convenience constructor.
      * @param r the ResourceSelector[] to add.
      */
-    public Majority(ResourceSelector[] r) {
+    public Majority(ResourceSelector... r) {
         super(r);
     }
 

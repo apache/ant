@@ -95,7 +95,7 @@ public class ProxySetup {
      * is set, use that instead. Else set to "true".
      */
     public void enableProxies() {
-        if (!(getSystemProxySetting() != null)) {
+        if (getSystemProxySetting() == null) {
             String proxies = owner.getProperty(USE_SYSTEM_PROXIES);
             if (proxies == null || Project.toBoolean(proxies)) {
                 proxies = "true";

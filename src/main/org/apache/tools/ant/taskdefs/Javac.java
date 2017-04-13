@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.tools.ant.BuildException;
@@ -138,7 +136,7 @@ public class Javac extends MatchingTask {
     protected boolean failOnError = true;
     protected boolean listFiles = false;
     protected File[] compileList = new File[0];
-    private Map<String, Long> packageInfos = new HashMap<String, Long>();
+    private Map<String, Long> packageInfos = new HashMap<>();
     // CheckStyle:VisibilityModifier ON
 
     private String source;
@@ -162,19 +160,23 @@ public class Javac extends MatchingTask {
     private String assumedJavaVersion() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
             return JAVAC14;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            return JAVAC15;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
-            return JAVAC16;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
-            return JAVAC17;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
-            return JAVAC18;
-        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
-            return JAVAC9;
-        } else {
-            return CLASSIC;
         }
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            return JAVAC15;
+        }
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
+            return JAVAC16;
+        }
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
+            return JAVAC17;
+        }
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
+            return JAVAC18;
+        }
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
+            return JAVAC9;
+        }
+        return CLASSIC;
     }
 
     /**
@@ -1083,8 +1085,8 @@ public class Javac extends MatchingTask {
      */
     public void add(final CompilerAdapter adapter) {
         if (nestedAdapter != null) {
-            throw new BuildException("Can't have more than one compiler"
-                                     + " adapter");
+            throw new BuildException(
+                "Can't have more than one compiler adapter");
         }
         nestedAdapter = adapter;
     }
@@ -1131,7 +1133,7 @@ public class Javac extends MatchingTask {
      */
     protected void resetFileLists() {
         compileList = new File[0];
-        packageInfos = new HashMap<String, Long>();
+        packageInfos = new HashMap<>();
     }
 
     /**
@@ -1146,8 +1148,8 @@ public class Javac extends MatchingTask {
         final GlobPatternMapper m = new GlobPatternMapper();
         final String[] extensions = findSupportedFileExtensions();
 
-        for (int i = 0; i < extensions.length; i++) {
-            m.setFrom(extensions[i]);
+        for (String extension : extensions) {
+            m.setFrom(extension);
             m.setTo("*.class");
             final SourceFileScanner sfs = new SourceFileScanner(this);
             final File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
@@ -1186,7 +1188,8 @@ public class Javac extends MatchingTask {
         final FileUtils fu = FileUtils.getFileUtils();
         for (String pathElement : moduleSourcepath.list()) {
             boolean valid = false;
-            for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(getProject().getBaseDir(), pathElement).entrySet()) {
+            for (Map.Entry<String, Collection<File>> modules : resolveModuleSourcePathElement(
+                getProject().getBaseDir(), pathElement).entrySet()) {
                 final String moduleName = modules.getKey();
                 for (File srcDir : modules.getValue()) {
                     if (srcDir.exists()) {
@@ -1218,7 +1221,7 @@ public class Javac extends MatchingTask {
         }
 
         if (extensions == null) {
-            extensions = new String[] {"java"};
+            extensions = new String[] { "java" };
         }
 
         // now process the extensions to ensure that they are the
@@ -1297,8 +1300,8 @@ public class Javac extends MatchingTask {
             if (isJdkCompiler(compilerImpl)) {
                 compilerImpl = EXTJAVAC;
             } else {
-                log("Since compiler setting isn't classic or modern, "
-                    + "ignoring fork setting.", Project.MSG_WARN);
+                log("Since compiler setting isn't classic or modern, ignoring fork setting.",
+                    Project.MSG_WARN);
             }
         }
         return compilerImpl;
@@ -1353,13 +1356,12 @@ public class Javac extends MatchingTask {
         if (destDir != null && !destDir.isDirectory()) {
             throw new BuildException("destination directory \""
                                      + destDir
-                                     + "\" does not exist "
-                                     + "or is not a directory", getLocation());
+                                     + "\" does not exist or is not a directory", getLocation());
         }
         if (includeAntRuntime == null && getProject().getProperty("build.sysclasspath") == null) {
-            log(getLocation() + "warning: 'includeantruntime' was not set, " +
-                    "defaulting to build.sysclasspath=last; set to false for repeatable builds",
-                    Project.MSG_WARN);
+            log(getLocation()
+                + "warning: 'includeantruntime' was not set, defaulting to build.sysclasspath=last; set to false for repeatable builds",
+                Project.MSG_WARN);
         }
     }
 
@@ -1377,9 +1379,8 @@ public class Javac extends MatchingTask {
                 + (destDir != null ? " to " + destDir : ""));
 
             if (listFiles) {
-                for (int i = 0; i < compileList.length; i++) {
-                  final String filename = compileList[i].getAbsolutePath();
-                  log(filename);
+                for (File element : compileList) {
+                  log(element.getAbsolutePath());
                 }
             }
 
@@ -1414,9 +1415,8 @@ public class Javac extends MatchingTask {
                 }
                 if (failOnError) {
                     throw new BuildException(FAIL_MSG, getLocation());
-                } else {
-                    log(FAIL_MSG, Project.MSG_ERR);
                 }
+                log(FAIL_MSG, Project.MSG_ERR);
             }
         }
     }
@@ -1438,9 +1438,8 @@ public class Javac extends MatchingTask {
     }
 
     private void lookForPackageInfos(final File srcDir, final File[] newFiles) {
-        for (int i = 0; i < newFiles.length; i++) {
-            final File f = newFiles[i];
-            if (!f.getName().equals("package-info.java")) {
+        for (File f : newFiles) {
+            if (!"package-info.java".equals(f.getName())) {
                 continue;
             }
             final String path = FILE_UTILS.removeLeadingPath(srcDir, f).
@@ -1451,7 +1450,7 @@ public class Javac extends MatchingTask {
                 continue;
             }
             final String pkg = path.substring(0, path.length() - suffix.length());
-            packageInfos.put(pkg, new Long(f.lastModified()));
+            packageInfos.put(pkg, Long.valueOf(f.lastModified()));
         }
     }
 
@@ -1461,7 +1460,7 @@ public class Javac extends MatchingTask {
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
      */
     private void generateMissingPackageInfoClasses(final File dest) throws IOException {
-        for (final Entry<String, Long> entry : packageInfos.entrySet()) {
+        for (final Map.Entry<String, Long> entry : packageInfos.entrySet()) {
             final String pkg = entry.getKey();
             final Long sourceLastMod = entry.getValue();
             final File pkgBinDir = new File(dest, pkg.replace('/', File.separatorChar));
@@ -1490,7 +1489,7 @@ public class Javac extends MatchingTask {
      * @since 1.9.7
      */
     private static boolean hasPath(final Path path) {
-        return path != null && path.size() > 0;
+        return path != null && !path.isEmpty();
     }
 
     /**
@@ -1524,7 +1523,7 @@ public class Javac extends MatchingTask {
      */
     private static Collection<? extends CharSequence> expandGroups(
             final CharSequence element) {
-        List<StringBuilder> result = new ArrayList<StringBuilder>();
+        List<StringBuilder> result = new ArrayList<>();
         result.add(new StringBuilder());
         StringBuilder resolved = new StringBuilder();
         for (int i = 0; i < element.length(); i++) {
@@ -1547,7 +1546,7 @@ public class Javac extends MatchingTask {
                             break;
                         default:
                             final List<StringBuilder> oldRes = result;
-                            result = new ArrayList<StringBuilder>(oldRes.size() * parts.size());
+                            result = new ArrayList<>(oldRes.size() * parts.size());
                             for (CharSequence part : parts) {
                                 for (CharSequence prefix : oldRes) {
                                     result.add(new StringBuilder(prefix).append(resolved).append(part));
@@ -1574,7 +1573,7 @@ public class Javac extends MatchingTask {
      * @since 1.9.7
      */
     private static Collection<? extends CharSequence> resolveGroup(final CharSequence group) {
-        final Collection<CharSequence> result = new ArrayList<CharSequence>();
+        final Collection<CharSequence> result = new ArrayList<>();
         int start = 0;
         int depth = 0;
         for (int i = 0; i < group.length(); i++) {
@@ -1643,26 +1642,26 @@ public class Javac extends MatchingTask {
         final int startIndex = pattern.indexOf(MODULE_MARKER);
         if (startIndex == -1) {
             findModules(root, pattern, null, collector);
-        } else {
-            if (startIndex == 0) {
-                throw new BuildException("The modulesourcepath entry must be a folder.");
-            }
-            final int endIndex = startIndex + MODULE_MARKER.length();
-            if (pattern.charAt(startIndex - 1) != File.separatorChar) {
-                    throw new BuildException("The module mark must be preceded by separator");
-            }
-            if (endIndex < pattern.length() && pattern.charAt(endIndex) != File.separatorChar) {
-                throw new BuildException("The module mark must be followed by separator");
-            }
-            if (pattern.indexOf(MODULE_MARKER, endIndex) != -1) {
-                throw new BuildException("The modulesourcepath entry must contain at most one module mark");
-            }
-            final String pathToModule = pattern.substring(0, startIndex);
-            final String pathInModule = endIndex == pattern.length() ?
-                    null :
-                    pattern.substring(endIndex + 1);  //+1 the separator
-            findModules(root, pathToModule, pathInModule, collector);
+            return;
         }
+        if (startIndex == 0) {
+            throw new BuildException("The modulesourcepath entry must be a folder.");
+        }
+        final int endIndex = startIndex + MODULE_MARKER.length();
+        if (pattern.charAt(startIndex - 1) != File.separatorChar) {
+                throw new BuildException("The module mark must be preceded by separator");
+        }
+        if (endIndex < pattern.length() && pattern.charAt(endIndex) != File.separatorChar) {
+            throw new BuildException("The module mark must be followed by separator");
+        }
+        if (pattern.indexOf(MODULE_MARKER, endIndex) != -1) {
+            throw new BuildException("The modulesourcepath entry must contain at most one module mark");
+        }
+        final String pathToModule = pattern.substring(0, startIndex);
+        final String pathInModule = endIndex == pattern.length() ?
+                null :
+                pattern.substring(endIndex + 1);  //+1 the separator
+        findModules(root, pathToModule, pathInModule, collector);
     }
 
     /**
@@ -1683,19 +1682,14 @@ public class Javac extends MatchingTask {
         if (!f.isDirectory()) {
             return;
         }
-        final File[] modules = f.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
-        for (File module : modules) {
+        for (File module : f.listFiles(File::isDirectory)) {
             final String moduleName = module.getName();
             final File moduleSourceRoot = pathInModule == null ?
                     module :
                     new File(module, pathInModule);
             Collection<File> moduleRoots = collector.get(moduleName);
             if (moduleRoots == null) {
-                moduleRoots = new ArrayList<File>();
+                moduleRoots = new ArrayList<>();
                 collector.put(moduleName, moduleRoots);
             }
             moduleRoots.add(moduleSourceRoot);

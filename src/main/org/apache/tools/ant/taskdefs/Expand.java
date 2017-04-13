@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -59,25 +60,26 @@ import org.apache.tools.zip.ZipFile;
  *           name="unwar"
  */
 public class Expand extends Task {
+    public static final String NATIVE_ENCODING = "native-encoding";
+    
+    /** Error message when more that one mapper is defined */
+    public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
+    
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
     private static final int BUFFER_SIZE = 1024;
     private File dest; //req
     private File source; // req
     private boolean overwrite = true;
     private Mapper mapperElement = null;
-    private Vector<PatternSet> patternsets = new Vector<PatternSet>();
+    private List<PatternSet> patternsets = new Vector<>();
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
     private boolean failOnEmptyArchive = false;
     private boolean stripAbsolutePathSpec = false;
     private boolean scanForUnicodeExtraFields = true;
 
-    public static final String NATIVE_ENCODING = "native-encoding";
-
     private String encoding;
-    /** Error message when more that one mapper is defined */
-    public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * Creates an Expand instance and sets encoding to UTF-8.
@@ -118,14 +120,15 @@ public class Expand extends Task {
      *
      * @exception BuildException Thrown in unrecoverable error.
      */
+    @Override
     public void execute() throws BuildException {
         if ("expand".equals(getTaskType())) {
             log("!! expand is deprecated. Use unzip instead. !!");
         }
 
         if (source == null && !resourcesSpecified) {
-            throw new BuildException("src attribute and/or resources must be "
-                                     + "specified");
+            throw new BuildException(
+                "src attribute and/or resources must be specified");
         }
 
         if (dest == null) {
@@ -141,13 +144,14 @@ public class Expand extends Task {
             if (source.isDirectory()) {
                 throw new BuildException("Src must not be a directory."
                     + " Use nested filesets instead.", getLocation());
-            } else if (!source.exists()) {
-                throw new BuildException("src '" + source + "' doesn't exist.");
-            } else if (!source.canRead()) {
-                throw new BuildException("src '" + source + "' cannot be read.");
-            } else {
-                expandFile(FILE_UTILS, source, dest);
             }
+            if (!source.exists()) {
+                throw new BuildException("src '" + source + "' doesn't exist.");
+            }
+            if (!source.canRead()) {
+                throw new BuildException("src '" + source + "' cannot be read.");
+            }
+            expandFile(FILE_UTILS, source, dest);
         }
         for (Resource r : resources) {
             if (!r.isExists()) {
@@ -173,7 +177,6 @@ public class Expand extends Task {
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-        ZipFile zf = null;
         FileNameMapper mapper = getMapper();
         if (!srcF.exists()) {
             throw new BuildException("Unable to expand "
@@ -181,8 +184,9 @@ public class Expand extends Task {
                     + " as the file does not exist",
                     getLocation());
         }
-        try {
-            zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields);
+        try (
+            ZipFile 
+            zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)){
             boolean empty = true;
             Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {
@@ -200,7 +204,7 @@ public class Expand extends Task {
                 }
             }
             if (empty && getFailOnEmptyArchive()) {
-                throw new BuildException("archive '" + srcF + "' is empty");
+                throw new BuildException("archive '%s' is empty", srcF);
             }
             log("expand complete", Project.MSG_VERBOSE);
         } catch (IOException ioe) {
@@ -208,8 +212,6 @@ public class Expand extends Task {
                 "Error while expanding " + srcF.getPath()
                 + "\n" + ioe.toString(),
                 ioe);
-        } finally {
-            ZipFile.closeQuietly(zf);
         }
     }
 
@@ -220,8 +222,8 @@ public class Expand extends Task {
      * @param dir       the destination directory
      */
     protected void expandResource(Resource srcR, File dir) {
-        throw new BuildException("only filesystem based resources are"
-                                 + " supported by this task.");
+        throw new BuildException(
+            "only filesystem based resources are supported by this task.");
     }
 
     /**
@@ -229,13 +231,10 @@ public class Expand extends Task {
      * @return a filenamemapper for a file
      */
     protected FileNameMapper getMapper() {
-        FileNameMapper mapper = null;
         if (mapperElement != null) {
-            mapper = mapperElement.getImplementation();
-        } else {
-            mapper = new IdentityMapper();
+            return mapperElement.getImplementation();
         }
-        return mapper;
+        return new IdentityMapper();
     }
 
     // CheckStyle:ParameterNumberCheck OFF - bc
@@ -257,7 +256,7 @@ public class Expand extends Task {
                                boolean isDirectory, FileNameMapper mapper)
                                throws IOException {
 
-        if (stripAbsolutePathSpec && entryName.length() > 0
+        if (stripAbsolutePathSpec && !entryName.isEmpty()
             && (entryName.charAt(0) == File.separatorChar
                 || entryName.charAt(0) == '/'
                 || entryName.charAt(0) == '\\')) {
@@ -266,16 +265,16 @@ public class Expand extends Task {
             entryName = entryName.substring(1);
         }
 
-        if (patternsets != null && patternsets.size() > 0) {
+        if (!(patternsets == null || patternsets.isEmpty())) {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
 
             boolean included = false;
-            Set<String> includePatterns = new HashSet<String>();
-            Set<String> excludePatterns = new HashSet<String>();
+            Set<String> includePatterns = new HashSet<>();
+            Set<String> excludePatterns = new HashSet<>();
             final int size = patternsets.size();
             for (int v = 0; v < size; v++) {
-                PatternSet p = patternsets.elementAt(v);
+                PatternSet p = patternsets.get(v);
                 String[] incls = p.getIncludePatterns(getProject());
                 if (incls == null || incls.length == 0) {
                     // no include pattern implicitly means includes="**"
@@ -350,20 +349,11 @@ public class Expand extends Task {
                 f.mkdirs();
             } else {
                 byte[] buffer = new byte[BUFFER_SIZE];
-                int length = 0;
-                OutputStream fos = null;
-                try {
-                    fos = Files.newOutputStream(f.toPath());
-
-                    while ((length =
-                            compressedInputStream.read(buffer)) >= 0) {
+                try (OutputStream fos = Files.newOutputStream(f.toPath())) {
+                    int length;
+                    while ((length = compressedInputStream.read(buffer)) >= 0) {
                         fos.write(buffer, 0, length);
                     }
-
-                    fos.close();
-                    fos = null;
-                } finally {
-                    FileUtils.close(fos);
                 }
             }
 
@@ -410,7 +400,7 @@ public class Expand extends Task {
      * @param set a pattern set
      */
     public void addPatternset(PatternSet set) {
-        patternsets.addElement(set);
+        patternsets.add(set);
     }
 
     /**

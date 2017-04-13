@@ -18,10 +18,11 @@
 package org.apache.tools.ant.types.resources;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.util.CollectionUtils;
+import org.apache.tools.ant.types.ResourceCollection;
 
 /**
  * ResourceCollection that contains all resources of another
@@ -35,19 +36,20 @@ public class AllButLast extends SizeLimitCollection {
      * Take all elements except for the last <code>count</code> elements.
      * @return a Collection of Resources.
      */
+    @Override
     protected Collection<Resource> getCollection() {
         int ct = getValidCount();
-        List<Resource> result =
-            (List<Resource>) CollectionUtils.asCollection(getResourceCollection()
-                                                          .iterator());
-        return result.subList(0, result.size() - ct);
+        ResourceCollection nested = getResourceCollection();
+        if (ct > nested.size()) {
+            return Collections.emptyList();
+        }
+        return nested.stream().limit((long) nested.size() - ct)
+            .collect(Collectors.toList());
     }
 
     @Override
     public synchronized int size() {
-        int sz = getResourceCollection().size();
-        int ct = getValidCount();
-        return sz > ct ? sz - ct : 0;
+        return Math.max(getResourceCollection().size() - getValidCount(), 0);
     }
 
 }

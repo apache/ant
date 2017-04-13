@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -81,7 +80,7 @@ public class PathConvert extends Task {
     /**
      * Path prefix map
      */
-    private Vector prefixMap = new Vector();
+    private List<MapEntry> prefixMap = new Vector<>();
     /**
      * User override on path sep char
      */
@@ -95,12 +94,6 @@ public class PathConvert extends Task {
     private Mapper mapper = null;
 
     private boolean preserveDuplicates;
-
-    /**
-     * Construct a new instance of the PathConvert task.
-     */
-    public PathConvert() {
-    }
 
     /**
      * Helper class, holds the nested &lt;map&gt; values. Elements will look like
@@ -142,8 +135,8 @@ public class PathConvert extends Task {
          */
         public String apply(String elem) {
             if (from == null || to == null) {
-                throw new BuildException("Both 'from' and 'to' must be set "
-                     + "in a map entry");
+                throw new BuildException(
+                    "Both 'from' and 'to' must be set in a map entry");
             }
             // If we're on windows, then do the comparison ignoring case
             // and treat the two directory characters the same
@@ -170,7 +163,8 @@ public class PathConvert extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
+            return new String[] { "windows", "unix", "netware", "os/2",
+                "tandem" };
         }
     }
 
@@ -213,7 +207,7 @@ public class PathConvert extends Task {
      */
     public MapEntry createMap() {
         MapEntry entry = new MapEntry();
-        prefixMap.addElement(entry);
+        prefixMap.add(entry);
         return entry;
     }
 
@@ -251,7 +245,7 @@ public class PathConvert extends Task {
         // validateSetup code, the same assumptions can be made as
         // with windows - that ; is the path separator
 
-        targetWindows = !targetOS.equals("unix") && !targetOS.equals("tandem");
+        targetWindows = !"unix".equals(targetOS) && !"tandem".equals(targetOS);
     }
 
     /**
@@ -292,7 +286,6 @@ public class PathConvert extends Task {
     public void setPathSep(String sep) {
         pathSep = sep;
     }
-
 
     /**
      * Set the default directory separator string;
@@ -344,8 +337,9 @@ public class PathConvert extends Task {
             if (isReference()) {
                 Object o = refid.getReferencedObject(getProject());
                 if (!(o instanceof ResourceCollection)) {
-                    throw new BuildException("refid '" + refid.getRefId()
-                        + "' does not refer to a resource collection.");
+                    throw new BuildException(
+                        "refid '%s' does not refer to a resource collection.",
+                        refid.getRefId());
                 }
                 getPath().add((ResourceCollection) o);
             }
@@ -361,10 +355,10 @@ public class PathConvert extends Task {
             // case-insensitive.
             String fromDirSep = onWindows ? "\\" : "/";
 
-            StringBuffer rslt = new StringBuffer();
+            StringBuilder rslt = new StringBuilder();
 
             ResourceCollection resources = isPreserveDuplicates() ? (ResourceCollection) path : new Union(path);
-            List ret = new ArrayList();
+            List<String> ret = new ArrayList<>();
             FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
             for (Resource r : resources) {
                 String[] mapped = mapperImpl.mapFileName(String.valueOf(r));
@@ -373,8 +367,8 @@ public class PathConvert extends Task {
                 }
             }
             boolean first = true;
-            for (Iterator mappedIter = ret.iterator(); mappedIter.hasNext();) {
-                String elem = mapElement((String) mappedIter.next()); // Apply the path prefix map
+            for (String string : ret) {
+                String elem = mapElement(string); // Apply the path prefix map
 
                 // Now convert the path and file separator characters from the
                 // current os to the target os.
@@ -418,25 +412,17 @@ public class PathConvert extends Task {
      * @return String Updated element.
      */
     private String mapElement(String elem) {
+        // Iterate over the map entries and apply each one.
+        // Stop when one of the entries actually changes the element.
 
-        int size = prefixMap.size();
+        for (MapEntry entry : prefixMap) {
+            String newElem = entry.apply(elem);
 
-        if (size != 0) {
+            // Note I'm using "!=" to see if we got a new object back from
+            // the apply method.
 
-            // Iterate over the map entries and apply each one.
-            // Stop when one of the entries actually changes the element.
-
-            for (int i = 0; i < size; i++) {
-                MapEntry entry = (MapEntry) prefixMap.elementAt(i);
-                String newElem = entry.apply(elem);
-
-                // Note I'm using "!=" to see if we got a new object back from
-                // the apply method.
-
-                if (newElem != elem) {
-                    elem = newElem;
-                    break; // We applied one, so we're done
-                }
+            if (newElem != elem) {
+                return newElem;
             }
         }
         return elem;
@@ -503,9 +489,8 @@ public class PathConvert extends Task {
      * @return BuildException.
      */
     private BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested "
-             + "elements when using the refid attribute.");
+        return new BuildException(
+            "You must not specify nested elements when using the refid attribute.");
     }
 
 }
-

@@ -67,24 +67,21 @@ public class Rotate extends TransformOperation implements DrawOperation {
      * @param image The image to perform the transformation on.
      * @return the transformed image.
      */
+    @Override
     public PlanarImage executeTransformOperation(PlanarImage image) {
-        BufferedImage bi = null;
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
                 System.out.println("Execing Draws");
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
-                image = performRotate(op);
-                return image;
-            } else if (instr instanceof TransformOperation) {
-                bi = image.getAsBufferedImage();
+                return performRotate(op);
+            }
+            if (instr instanceof TransformOperation) {
+                BufferedImage bi = image.getAsBufferedImage();
                 System.out.println("Execing Transforms");
                 image = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
-                bi = image.getAsBufferedImage();
             }
         }
         System.out.println("Execing as TransformOperation");
@@ -100,16 +97,14 @@ public class Rotate extends TransformOperation implements DrawOperation {
      *  ONE image.
      * @return the image.
      */
+    @Override
     public PlanarImage executeDrawOperation() {
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
-                op = performRotate(op);
-                return op;
+                return performRotate(op);
             }
         }
         return null;

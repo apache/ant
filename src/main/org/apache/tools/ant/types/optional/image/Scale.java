@@ -41,8 +41,9 @@ public class Scale extends TransformOperation implements DrawOperation {
     /** Enumerated class for proportions attribute. */
     public static class ProportionsAttribute extends EnumeratedAttribute {
         /** {@inheritDoc}. */
+        @Override
         public String[] getValues() {
-            return new String[] {"ignore", "width", "height", "cover", "fit"};
+            return new String[] { "ignore", "width", "height", "cover", "fit" };
         }
     }
 
@@ -76,16 +77,14 @@ public class Scale extends TransformOperation implements DrawOperation {
      * @return the value converted from the width string.
      */
     public float getWidth() {
-        float width = 0.0F;
         int percIndex = widthStr.indexOf('%');
         if (percIndex > 0) {
-            width = Float.parseFloat(widthStr.substring(0, percIndex));
             xPercent = true;
+            float width = Float.parseFloat(widthStr.substring(0, percIndex));
             return width / HUNDRED;
-        } else {
-            xPercent = false;
-            return Float.parseFloat(widthStr);
         }
+        xPercent = false;
+        return Float.parseFloat(widthStr);
     }
 
     /**
@@ -95,13 +94,12 @@ public class Scale extends TransformOperation implements DrawOperation {
     public float getHeight() {
         int percIndex = heightStr.indexOf('%');
         if (percIndex > 0) {
-            float height = Float.parseFloat(heightStr.substring(0, percIndex));
             yPercent = true;
+            float height = Float.parseFloat(heightStr.substring(0, percIndex));
             return height / HUNDRED;
-        } else {
-            yPercent = false;
-            return Float.parseFloat(heightStr);
         }
+        yPercent = false;
+        return Float.parseFloat(heightStr);
     }
 
     /**
@@ -116,10 +114,10 @@ public class Scale extends TransformOperation implements DrawOperation {
         float yFl = getHeight();
 
         if (!xPercent) {
-            xFl = (xFl / image.getWidth());
+            xFl = xFl / image.getWidth();
         }
         if (!yPercent) {
-            yFl = (yFl / image.getHeight());
+            yFl = yFl / image.getHeight();
         }
 
         if ("width".equals(proportions)) {
@@ -134,8 +132,8 @@ public class Scale extends TransformOperation implements DrawOperation {
             xFl = yFl;
         }
 
-        pb.add(new Float(xFl));
-        pb.add(new Float(yFl));
+        pb.add(Float.valueOf(xFl));
+        pb.add(Float.valueOf(yFl));
 
         log("\tScaling to " + (xFl * HUNDRED) + "% x "
             + (yFl * HUNDRED) + "%");
@@ -145,18 +143,16 @@ public class Scale extends TransformOperation implements DrawOperation {
 
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeTransformOperation(PlanarImage image) {
-        BufferedImage bi = null;
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 return performScale(image);
-            } else if (instr instanceof TransformOperation) {
-                bi = image.getAsBufferedImage();
+            }
+            if (instr instanceof TransformOperation) {
+                BufferedImage bi = image.getAsBufferedImage();
                 image = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
-                bi = image.getAsBufferedImage();
             }
         }
         return performScale(image);
@@ -164,10 +160,9 @@ public class Scale extends TransformOperation implements DrawOperation {
 
 
     /** {@inheritDoc}. */
+    @Override
     public PlanarImage executeDrawOperation() {
-        final int size = instructions.size();
-        for (int i = 0; i < size; i++) {
-            ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
+        for (ImageOperation instr : instructions) {
             if (instr instanceof DrawOperation) {
                 PlanarImage image = null;
                 // If this TransformOperation has DrawOperation children

@@ -28,12 +28,14 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  *
  * @since Ant1.4
  */
+@Deprecated
 public class MimeMail extends EmailTask {
     /**
      * Executes this build task.
      *
      * @exception BuildException On error.
      */
+    @Override
     public void execute()
         throws BuildException {
         log("DEPRECATED - The " + getTaskName() + " task is deprecated. "

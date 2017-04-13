@@ -151,14 +151,10 @@ public abstract class AbstractClasspathResource extends Resource {
             return  ((Resource) getCheckedRef()).isExists();
         }
         dieOnCircularReference();
-        InputStream is = null;
-        try {
-            is = getInputStream();
+        try (InputStream is = getInputStream()) {
             return is != null;
         } catch (IOException ex) {
             return false;
-        } finally {
-            FileUtils.close(is);
         }
     }
 
@@ -177,18 +173,21 @@ public abstract class AbstractClasspathResource extends Resource {
         return !classLoader.needsCleanup()
             ? openInputStream(classLoader.getLoader())
             : new FilterInputStream(openInputStream(classLoader.getLoader())) {
-                    public void close() throws IOException {
-                        FileUtils.close(in);
-                        classLoader.cleanup();
+                @Override
+                public void close() throws IOException {
+                    FileUtils.close(in);
+                    classLoader.cleanup();
+                }
+
+                @Override
+                protected void finalize() throws Throwable {
+                    try {
+                        close();
+                    } finally {
+                        super.finalize();
                     }
-                    protected void finalize() throws Throwable {
-                        try {
-                            close();
-                        } finally {
-                            super.finalize();
-                        }
-                    }
-                };
+                }
+            };
     }
 
     /**
@@ -198,10 +197,10 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     protected ClassLoaderWithFlag getClassLoader() {
         ClassLoader cl = null;
-        boolean clNeedsCleanup = false;
         if (loader != null) {
             cl = (ClassLoader) loader.getReferencedObject();
         }
+        boolean clNeedsCleanup = false;
         if (cl == null) {
             if (getClasspath() != null) {
                 Path p = getClasspath().concatSystemClasspath("ignore");
@@ -254,8 +253,15 @@ public abstract class AbstractClasspathResource extends Resource {
             loader = l;
             cleanup = needsCleanup && l instanceof AntClassLoader;
         }
-        public ClassLoader getLoader() { return loader; }
-        public boolean needsCleanup() { return cleanup; }
+
+        public ClassLoader getLoader() {
+            return loader;
+        }
+
+        public boolean needsCleanup() {
+            return cleanup;
+        }
+
         public void cleanup() {
             if (cleanup) {
                 ((AntClassLoader) loader).cleanup();

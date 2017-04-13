@@ -55,6 +55,7 @@ public class ConcatFileInputStream extends InputStream {
      * Close the stream.
      * @throws IOException if there is an error.
      */
+    @Override
     public void close() throws IOException {
         closeCurrent();
         eof = true;
@@ -65,6 +66,7 @@ public class ConcatFileInputStream extends InputStream {
      * @return the byte (0 - 255) or -1 if this is the end of the stream.
      * @throws IOException if there is an error.
      */
+    @Override
     public int read() throws IOException {
         int result = readCurrent();
         if (result == EOF && !eof) {

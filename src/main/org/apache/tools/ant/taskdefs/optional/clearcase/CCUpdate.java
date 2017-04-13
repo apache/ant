@@ -80,6 +80,35 @@ import org.apache.tools.ant.types.Commandline;
  *
  */
 public class CCUpdate extends ClearCase {
+    /**
+     *  -graphical flag -- display graphical dialog during update operation
+     */
+    public static final String FLAG_GRAPHICAL = "-graphical";
+    /**
+     * -log flag -- file to log status to
+     */
+    public static final String FLAG_LOG = "-log";
+    /**
+     * -overwrite flag -- overwrite hijacked files
+     */
+    public static final String FLAG_OVERWRITE = "-overwrite";
+    /**
+     * -noverwrite flag -- do not overwrite hijacked files
+     */
+    public static final String FLAG_NOVERWRITE = "-noverwrite";
+    /**
+     * -rename flag -- rename hijacked files with .keep extension
+     */
+    public static final String FLAG_RENAME = "-rename";
+    /**
+     * -ctime flag -- modified time is written as the current time
+     */
+    public static final String FLAG_CURRENTTIME = "-ctime";
+    /**
+     * -ptime flag -- modified time is written as the VOB time
+     */
+    public static final String FLAG_PRESERVETIME = "-ptime";
+
     private boolean mGraphical = false;
     private boolean mOverwrite = false;
     private boolean mRename = false;
@@ -94,10 +123,10 @@ public class CCUpdate extends ClearCase {
      * to execute the command line.
      * @throws BuildException if the command fails and failonerr is set to true
      */
+    @Override
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
-        int result = 0;
 
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
@@ -120,10 +149,10 @@ public class CCUpdate extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+            throw new BuildException("Failed executing: " + commandLine,
+                getLocation());
         }
     }
 
@@ -139,24 +168,20 @@ public class CCUpdate extends ClearCase {
             if (getOverwrite()) {
                 // -overwrite
                 cmd.createArgument().setValue(FLAG_OVERWRITE);
+            } else if (getRename()) {
+                // -rename
+                cmd.createArgument().setValue(FLAG_RENAME);
             } else {
-                if (getRename()) {
-                    // -rename
-                    cmd.createArgument().setValue(FLAG_RENAME);
-                } else {
-                    // -noverwrite
-                    cmd.createArgument().setValue(FLAG_NOVERWRITE);
-                }
+                // -noverwrite
+                cmd.createArgument().setValue(FLAG_NOVERWRITE);
             }
 
             if (getCurrentTime()) {
                 // -ctime
                 cmd.createArgument().setValue(FLAG_CURRENTTIME);
-            } else {
-                if (getPreserveTime()) {
-                    // -ptime
-                    cmd.createArgument().setValue(FLAG_PRESERVETIME);
-                }
+            } else if (getPreserveTime()) {
+                // -ptime
+                cmd.createArgument().setValue(FLAG_PRESERVETIME);
             }
 
             // -log logname
@@ -278,7 +303,6 @@ public class CCUpdate extends ClearCase {
         return mLog;
     }
 
-
     /**
      * Get the 'log' command
      *
@@ -287,45 +311,14 @@ public class CCUpdate extends ClearCase {
     private void getLogCommand(Commandline cmd) {
         if (getLog() == null) {
             return;
-        } else {
-            /* Had to make two separate commands here because if a space is
-               inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
-               quotes ("). This breaks clearcase.
-            */
-            cmd.createArgument().setValue(FLAG_LOG);
-            cmd.createArgument().setValue(getLog());
         }
+        /* Had to make two separate commands here because if a space is
+           inserted between the flag and the value, it is treated as a
+           Windows filename with a space and it is enclosed in double
+           quotes ("). This breaks clearcase.
+        */
+        cmd.createArgument().setValue(FLAG_LOG);
+        cmd.createArgument().setValue(getLog());
     }
 
-    /**
-     *  -graphical flag -- display graphical dialog during update operation
-     */
-    public static final String FLAG_GRAPHICAL = "-graphical";
-    /**
-     * -log flag -- file to log status to
-     */
-    public static final String FLAG_LOG = "-log";
-    /**
-     * -overwrite flag -- overwrite hijacked files
-     */
-    public static final String FLAG_OVERWRITE = "-overwrite";
-    /**
-     * -noverwrite flag -- do not overwrite hijacked files
-     */
-    public static final String FLAG_NOVERWRITE = "-noverwrite";
-    /**
-     * -rename flag -- rename hijacked files with .keep extension
-     */
-    public static final String FLAG_RENAME = "-rename";
-    /**
-     * -ctime flag -- modified time is written as the current time
-     */
-    public static final String FLAG_CURRENTTIME = "-ctime";
-    /**
-     * -ptime flag -- modified time is written as the VOB time
-     */
-    public static final String FLAG_PRESERVETIME = "-ptime";
-
 }
-

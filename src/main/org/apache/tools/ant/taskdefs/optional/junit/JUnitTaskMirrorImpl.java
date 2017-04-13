@@ -35,6 +35,7 @@ import org.apache.tools.ant.AntClassLoader;
  */
 public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
 
+    @SuppressWarnings("unused")
     private final JUnitTask task;
 
     /**
@@ -46,6 +47,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public void addVmExit(JUnitTest test, JUnitTaskMirror.JUnitResultFormatterMirror aFormatter,
             OutputStream out, String message, String testCase) {
         JUnitResultFormatter formatter = (JUnitResultFormatter) aFormatter;
@@ -61,6 +63,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public JUnitTaskMirror.JUnitTestRunnerMirror newJUnitTestRunner(JUnitTest test,
             String[] methods,
             boolean haltOnError, boolean filterTrace, boolean haltOnFailure,
@@ -70,6 +73,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
     }
 
     /** {@inheritDoc}. */
+    @Override
     public JUnitTaskMirror.SummaryJUnitResultFormatterMirror newSummaryJUnitResultFormatter() {
         return new SummaryJUnitResultFormatter();
     }
@@ -86,14 +90,17 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
             testCase = aTestCase;
         }
 
+        @Override
         public int countTestCases() {
             return 1;
         }
 
+        @Override
         public void run(TestResult r) {
             throw new AssertionFailedError(message);
         }
 
+        @Override
         public String getName() {
             return testCase;
         }
@@ -102,6 +109,7 @@ public final class JUnitTaskMirrorImpl implements JUnitTaskMirror {
             return test.getName();
         }
 
+        @Override
         public String toString() {
             return test.getName() + ":" + testCase;
         }

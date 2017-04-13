@@ -48,12 +48,11 @@ public class Nice extends Task {
      */
     private String currentPriority;
 
-
-
     /**
      * Execute the task
      * @exception BuildException if something goes wrong with the build
      */
+    @Override
     public void execute() throws BuildException {
 
         Thread self = Thread.currentThread();
@@ -93,7 +92,7 @@ public class Nice extends Task {
         if (newPriority < Thread.MIN_PRIORITY || newPriority > Thread.MAX_PRIORITY) {
             throw new BuildException("The thread priority is out of the range 1-10");
         }
-        this.newPriority = new Integer(newPriority);
+        this.newPriority = Integer.valueOf(newPriority);
     }
 
 }

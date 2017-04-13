@@ -33,10 +33,6 @@ import org.apache.tools.ant.util.ClasspathUtils;
  */
 public class RegexpMatcherFactory {
 
-    /** Constructor for RegexpMatcherFactory. */
-    public RegexpMatcherFactory() {
-    }
-
     /***
      * Create a new regular expression instance.
      * @return the matcher
@@ -54,7 +50,7 @@ public class RegexpMatcherFactory {
      * @throws BuildException on error
      */
     public RegexpMatcher newRegexpMatcher(Project p) throws BuildException {
-        String systemDefault = null;
+        String systemDefault;
         if (p == null) {
             systemDefault = System.getProperty(MagicNames.REGEXP_IMPL);
         } else {
@@ -78,8 +74,8 @@ public class RegexpMatcherFactory {
      * @exception BuildException if an error occurs
      */
     protected RegexpMatcher createInstance(String className) throws BuildException {
-        return (RegexpMatcher) ClasspathUtils.newInstance(className, RegexpMatcherFactory.class
-                .getClassLoader(), RegexpMatcher.class);
+        return ClasspathUtils.newInstance(className,
+            RegexpMatcherFactory.class.getClassLoader(), RegexpMatcher.class);
     }
 
     /**

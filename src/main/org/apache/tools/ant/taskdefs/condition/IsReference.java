@@ -56,34 +56,35 @@ public class IsReference extends ProjectComponent implements Condition {
      *              the reference is the same type
      * @exception BuildException if an error occurs
      */
+    @Override
     public boolean eval() throws BuildException {
         if (ref == null) {
-            throw new BuildException("No reference specified for isreference "
-                                     + "condition");
+            throw new BuildException(
+                "No reference specified for isreference condition");
         }
 
         String key = ref.getRefId();
         if (!getProject().hasReference(key)) {
             return false;
-        } else if (type == null) {
-            return true;
-        } else {
-            Object o = getProject().getReference(key);
-            Class typeClass =
-                (Class) getProject().getDataTypeDefinitions().get(type);
-
-            if (typeClass == null) {
-                typeClass =
-                    (Class) getProject().getTaskDefinitions().get(type);
-            }
-
-            if (typeClass == null) {
-                // don't know the type, should throw exception instead?
-                return false;
-            }
-
-            return typeClass.isAssignableFrom(o.getClass());
         }
+        if (type == null) {
+            return true;
+        }
+        Object o = getProject().getReference(key);
+        Class<?> typeClass =
+            getProject().getDataTypeDefinitions().get(type);
+
+        if (typeClass == null) {
+            typeClass =
+                getProject().getTaskDefinitions().get(type);
+        }
+
+        if (typeClass == null) {
+            // don't know the type, should throw exception instead?
+            return false;
+        }
+
+        return typeClass.isAssignableFrom(o.getClass());
     }
 
 }

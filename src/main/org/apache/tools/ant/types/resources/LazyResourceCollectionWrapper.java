@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 import org.apache.tools.ant.types.Resource;
 
@@ -32,24 +33,23 @@ public class LazyResourceCollectionWrapper extends
         AbstractResourceCollectionWrapper {
 
     /** List of cached resources */
-    private final List<Resource> cachedResources = new ArrayList<Resource>();
+    private final List<Resource> cachedResources = new ArrayList<>();
 
-    private FilteringIterator filteringIterator;
+    private Iterator<Resource> filteringIterator;
+
+    private final Supplier<Iterator<Resource>> filteringIteratorSupplier =
+        () -> new FilteringIterator(getResourceCollection().iterator());
 
     @Override
     protected Iterator<Resource> createIterator() {
-        Iterator<Resource> iterator;
         if (isCache()) {
             if (filteringIterator == null) {
                 // no worry of thread safety here, see function's contract
-                filteringIterator = new FilteringIterator(
-                        getResourceCollection().iterator());
+                filteringIterator = filteringIteratorSupplier.get();
             }
-            iterator = new CachedIterator(filteringIterator);
-        } else {
-            iterator = new FilteringIterator(getResourceCollection().iterator());
+            return new CachedIterator(filteringIterator);
         }
-        return iterator;
+        return filteringIteratorSupplier.get();
     }
 
     @Override
@@ -84,10 +84,11 @@ public class LazyResourceCollectionWrapper extends
 
         protected final Iterator<Resource> it;
 
-        public FilteringIterator(final Iterator<Resource> it) {
+        FilteringIterator(final Iterator<Resource> it) {
             this.it = it;
         }
 
+        @Override
         public boolean hasNext() {
             if (ended) {
                 return false;
@@ -105,6 +106,7 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
+        @Override
         public Resource next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException();
@@ -114,9 +116,6 @@ public class LazyResourceCollectionWrapper extends
             return r;
         }
 
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
     }
 
     /**
@@ -125,7 +124,7 @@ public class LazyResourceCollectionWrapper extends
      */
     private class CachedIterator implements Iterator<Resource> {
 
-        int cusrsor = 0;
+        int cursor = 0;
 
         private final Iterator<Resource> it;
 
@@ -140,10 +139,11 @@ public class LazyResourceCollectionWrapper extends
             this.it = it;
         }
 
+        @Override
         public boolean hasNext() {
             synchronized (cachedResources) {
                 // have we already cached the next entry ?
-                if (cachedResources.size() > cusrsor) {
+                if (cachedResources.size() > cursor) {
                     return true;
                 }
                 // does the wrapped iterator any more resource ?
@@ -157,6 +157,7 @@ public class LazyResourceCollectionWrapper extends
             return true;
         }
 
+        @Override
         public Resource next() {
             // first check that we have some to deliver
             if (!hasNext()) {
@@ -165,10 +166,11 @@ public class LazyResourceCollectionWrapper extends
             synchronized (cachedResources) {
                 // return the cached entry as hasNext should have put one for
                 // this iterator
-                return cachedResources.get(cusrsor++);
+                return cachedResources.get(cursor++);
             }
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

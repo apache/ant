@@ -44,11 +44,11 @@ public class AntlibDefinition extends Task {
      * @throws BuildException if a reserved URI is used
      */
     public void setURI(String uri) throws BuildException {
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
+        if (ProjectHelper.ANT_CORE_URI.equals(uri)) {
             uri = "";
         }
         if (uri.startsWith("ant:")) {
-            throw new BuildException("Attempt to use a reserved URI " + uri);
+            throw new BuildException("Attempt to use a reserved URI %s", uri);
         }
         this.uri = uri;
     }

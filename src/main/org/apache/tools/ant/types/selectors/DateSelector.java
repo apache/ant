@@ -36,16 +36,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class DateSelector extends BaseExtendSelector {
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    private long millis = -1;
-    private String dateTime = null;
-    private boolean includeDirs = false;
-    private long granularity = 0;
-    private String pattern;
-    private TimeComparison when = TimeComparison.EQUAL;
-
     /** Key to used for parameterized custom selector */
     public static final String MILLIS_KEY = "millis";
     /** Key to used for parameterized custom selector */
@@ -59,13 +49,15 @@ public class DateSelector extends BaseExtendSelector {
     /** Key to used for parameterized custom selector */
     public static final String PATTERN_KEY = "pattern";
 
-    /**
-     * Creates a new <code>DateSelector</code> instance.
-     *
-     */
-    public DateSelector() {
-        granularity = FILE_UTILS.getFileTimestampGranularity();
-    }
+    /** Utilities used for file operations */
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
+    private long millis = -1;
+    private String dateTime = null;
+    private boolean includeDirs = false;
+    private long granularity = FILE_UTILS.getFileTimestampGranularity();
+    private String pattern;
+    private TimeComparison when = TimeComparison.EQUAL;
 
     /**
      * @return a string describing this object
@@ -74,8 +66,7 @@ public class DateSelector extends BaseExtendSelector {
         StringBuilder buf = new StringBuilder("{dateselector date: ");
         buf.append(dateTime);
         buf.append(" compare: ").append(when.getValue());
-        buf.append(" granularity: ");
-        buf.append(granularity);
+        buf.append(" granularity: ").append(granularity);
         if (pattern != null) {
             buf.append(" pattern: ").append(pattern);
         }
@@ -166,7 +157,7 @@ public class DateSelector extends BaseExtendSelector {
      *
      * @param parameters the complete set of parameters for this selector.
      */
-    public void setParameters(Parameter[] parameters) {
+    public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -239,9 +230,7 @@ public class DateSelector extends BaseExtendSelector {
      * @return whether the file is selected.
      */
     public boolean isSelected(File basedir, String filename, File file) {
-
         validate();
-
         return (file.isDirectory() && !includeDirs)
             || when.evaluate(file.lastModified(), millis, granularity);
     }

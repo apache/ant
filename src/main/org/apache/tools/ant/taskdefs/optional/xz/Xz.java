@@ -18,12 +18,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.xz;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.Pack;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZOutputStream;
@@ -41,17 +39,14 @@ public class Xz extends Pack {
     /**
      * Compress the zipFile.
      */
+    @Override
     protected void pack() {
-        XZOutputStream zOut = null;
-        try {
-            zOut = new XZOutputStream(Files.newOutputStream(zipFile.toPath()),
-                                      new LZMA2Options());
+        try (XZOutputStream zOut = new XZOutputStream(
+            Files.newOutputStream(zipFile.toPath()), new LZMA2Options())) {
             zipResource(getSrcResource(), zOut);
         } catch (IOException ioe) {
             String msg = "Problem creating xz " + ioe.getMessage();
             throw new BuildException(msg, ioe, getLocation());
-        } finally {
-            FileUtils.close(zOut);
         }
     }
 
@@ -61,6 +56,7 @@ public class Xz extends Pack {
      * <p>This implementation always returns true only.</p>
      * @return true
      */
+    @Override
     protected boolean supportsNonFileResources() {
         return true;
     }
