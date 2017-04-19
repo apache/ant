@@ -442,12 +442,12 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @param <T> desired type
      * @param clazz
      * @return {@link Optional} <T>
-     * @since Ant 1.11
+     * @since Ant 1.10.2
      */
     public <T> Optional<T> asOptional(Class<T> clazz) {
     	return Optional.ofNullable(as(clazz));
     }
-    
+
     @Override
     protected Resource getCheckedRef() {
         return (Resource) super.getCheckedRef();

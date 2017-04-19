@@ -51,7 +51,7 @@ public class BuildException extends RuntimeException {
      *            Should not be {@code null}.
      * @param formatArguments
      * @see String#format(String, Object...)
-     * @since Ant 1.11
+     * @since Ant 1.10.2
      */
     public BuildException(String pattern, Object... formatArguments) {
         super(String.format(pattern, formatArguments));

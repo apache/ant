@@ -43,7 +43,7 @@ public interface ResourceCollection extends Iterable<Resource> {
 	/**
 	 * Return a {@link Stream} over this {@link ResourceCollection}.
 	 * @return {@link Stream} of {@link Resource}
-	 * @since Ant 1.11
+	 * @since Ant 1.10.2
 	 */
 	default Stream<? extends Resource> stream() {
 		final Stream.Builder<Resource> b = Stream.builder();
