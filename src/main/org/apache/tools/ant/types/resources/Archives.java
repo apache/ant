@@ -190,7 +190,7 @@ public class Archives extends DataType
             setChecked(true);
         }
     }
-    
+
     @Override
     protected Archives getCheckedRef() {
         return (Archives) super.getCheckedRef();

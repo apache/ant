@@ -97,7 +97,7 @@ public class SourceFileScanner implements ResourceFactory {
                 public String getName() {
                     return f;
                 }
-            }).toArray(Resource[]::new);        
+            }).toArray(Resource[]::new);
 
         // build the list of sources which are out of date with
         // respect to the target

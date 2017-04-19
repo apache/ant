@@ -61,12 +61,12 @@ import org.apache.tools.zip.ZipFile;
  */
 public class Expand extends Task {
     public static final String NATIVE_ENCODING = "native-encoding";
-    
+
     /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
-    
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    
+
     private static final int BUFFER_SIZE = 1024;
     private File dest; //req
     private File source; // req
@@ -185,7 +185,7 @@ public class Expand extends Task {
                     getLocation());
         }
         try (
-            ZipFile 
+            ZipFile
             zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)){
             boolean empty = true;
             Enumeration<ZipEntry> e = zf.getEntries();

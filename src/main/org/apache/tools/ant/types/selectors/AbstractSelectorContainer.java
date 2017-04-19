@@ -359,10 +359,10 @@ public abstract class AbstractSelectorContainer extends DataType
             throw new BuildException(e);
         }
     }
-    
+
     @Override
     protected AbstractSelectorContainer getCheckedRef() {
         return (AbstractSelectorContainer) super.getCheckedRef();
     }
-    
+
 }

@@ -32,7 +32,7 @@ public interface ClassFileIterator extends Iterable<ClassFile> {
      * @return the next class file in the iteration
      */
     ClassFile getNextClassFile();
-    
+
     @Override
     default Iterator<ClassFile> iterator() {
 
@@ -58,7 +58,7 @@ public interface ClassFileIterator extends Iterable<ClassFile> {
                     next = getNextClassFile();
                 }
             }
-            
+
         };
     }
 }

@@ -584,7 +584,7 @@ public class JDependTask extends Task {
         getWorkingPath().ifPresent(path -> {
             for (String filepath : path.list()) {
                 File f = new File(filepath);
-                
+
                 // not necessary as JDepend would fail, but why loose
                 // some time?
                 if (!f.exists() || !f.isDirectory()) {

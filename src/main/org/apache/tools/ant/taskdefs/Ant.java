@@ -422,7 +422,7 @@ public class Ant extends Task {
                         "%s task calling its own parent target.",
                         getTaskName());
                 }
-                
+
                 final Map<String, Target> targetsMap = getProject().getTargets();
 
                 if (locals.stream().map(targetsMap::get)

@@ -125,9 +125,9 @@ public class DependScanner extends DirectoryScanner {
 
         Set<String> parentSet = Stream.of(parentScanner.getIncludedFiles())
             .collect(Collectors.toSet());
-        
+
         Enumeration<String> e = analyzer.getClassDependencies();
-        
+
         while (e.hasMoreElements()) {
             String classname = e.nextElement();
             String filename =

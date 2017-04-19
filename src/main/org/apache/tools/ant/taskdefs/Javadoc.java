@@ -1907,7 +1907,7 @@ public class Javadoc extends Task {
             if (doclet.getName() == null) {
                 throw new BuildException("The doclet name must be specified.",
                     getLocation());
-            } 
+            }
             toExecute.createArgument().setValue("-doclet");
             toExecute.createArgument().setValue(doclet.getName());
             if (doclet.getPath() != null) {

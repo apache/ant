@@ -45,7 +45,7 @@ public class Http extends ProjectComponent implements Condition {
     private boolean followRedirects = true;
 
     private int errorsBeginAt = ERROR_BEGINS;
-    
+
     /**
      * Set the url attribute
      * @param url the url of the request

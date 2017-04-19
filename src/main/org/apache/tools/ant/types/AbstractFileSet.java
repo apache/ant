@@ -949,7 +949,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            selectors.stream().filter(DataType.class::isInstance).forEach(fileSelector -> 
+            selectors.stream().filter(DataType.class::isInstance).forEach(fileSelector ->
                 pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p)
             );
             for (PatternSet ps : additionalPatterns) {

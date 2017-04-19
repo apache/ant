@@ -786,7 +786,7 @@ public class NetRexxC extends MatchingTask {
         String[] compileArgs =
                 Stream.concat(Stream.of(compileOptionsArray), compileList.stream())
                 .toArray(String[]::new);
-        
+
         // need to set java.class.path property and restore it later
         // since the NetRexx compiler has no option for the classpath
         String currentClassPath = System.getProperty("java.class.path");

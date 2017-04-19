@@ -1672,7 +1672,7 @@ public class JUnitTask extends Task {
         final int count = batchTests.size();
         @SuppressWarnings("unchecked")
         final Enumeration<JUnitTest>[] enums = new Enumeration[ count + 1];
-        
+
         for (int i = 0; i < count; i++) {
             final BatchTest batchtest = batchTests.get(i);
             enums[i] = batchtest.elements();

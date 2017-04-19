@@ -91,7 +91,7 @@ public class Rmic extends MatchingTask {
     /** rmic failed message */
     public static final String ERROR_RMIC_FAILED
         = "Rmic failed; see the compiler error output for details.";
-    
+
     /** unable to verify message */
     public static final String ERROR_UNABLE_TO_VERIFY_CLASS = "Unable to verify class ";
     /** could not be found message */

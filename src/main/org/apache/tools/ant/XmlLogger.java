@@ -177,7 +177,7 @@ public class XmlLogger implements BuildLogger {
         }
         String outFilename = getProperty(event, "XmlLogger.file", "log.xml");
         String xslUri = getProperty(event, "ant.XmlLogger.stylesheet.uri", "log.xsl");
-        
+
         try (OutputStream stream =
             outStream == null ? Files.newOutputStream(Paths.get(outFilename)) : outStream;
                 Writer out = new OutputStreamWriter(stream, "UTF8")) {

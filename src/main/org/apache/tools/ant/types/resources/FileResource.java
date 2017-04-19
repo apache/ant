@@ -406,7 +406,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
         }
         return fileResource;
     }
-    
+
     @Override
     protected FileResource getCheckedRef() {
         return (FileResource) super.getCheckedRef();

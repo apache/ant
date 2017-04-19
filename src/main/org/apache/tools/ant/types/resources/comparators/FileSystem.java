@@ -45,7 +45,7 @@ public class FileSystem extends ResourceComparator {
     protected int resourceCompare(Resource foo, Resource bar) {
         return compare(file(foo), file(bar));
     }
-    
+
     private File file(Resource r) {
         return r.asOptional(FileProvider.class)
             .orElseThrow(() -> new ClassCastException(

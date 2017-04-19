@@ -583,13 +583,13 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         String genicClass; // GenIC class (3 are supported for various
         // versions
         // work around a bug of GenIC 2.5
-        
+
         // class name (search in the classpath provided for the ejbjar element)
         genicClass = getGenicClassName(classpath);
         if (genicClass == null) {
             log("Cannot find GenIC class in classpath.", Project.MSG_ERR);
             throw new BuildException("GenIC class not found, please check the classpath.");
-        } 
+        }
         log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);
         genicTask.setClassname(genicClass);
 

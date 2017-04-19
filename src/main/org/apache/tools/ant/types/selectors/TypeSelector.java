@@ -32,7 +32,7 @@ public class TypeSelector extends BaseExtendSelector {
 
     /** Key to used for parameterized custom selector */
     public static final String TYPE_KEY = "type";
-    
+
     private String type = null;
 
     /**

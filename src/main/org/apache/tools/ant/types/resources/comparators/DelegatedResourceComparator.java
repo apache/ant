@@ -118,7 +118,7 @@ s.
             setChecked(true);
         }
     }
-    
+
     private static Comparator<Resource> composite(List<? extends Comparator<Resource>> foo) {
         Comparator<Resource> result = null;
         if (foo != null) {

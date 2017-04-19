@@ -132,7 +132,7 @@ public class Name implements ResourceSelector {
     private boolean matches(String name) {
         if (pattern != null) {
             return SelectorUtils.match(modify(pattern), modify(name), cs);
-        } 
+        }
         if (reg == null) {
             reg = new RegularExpression();
             reg.setPattern(regex);

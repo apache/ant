@@ -60,7 +60,7 @@ public class ZipScanner extends ArchiveScanner {
         File srcFile = src.asOptional(FileProvider.class)
             .map(FileProvider::getFile).orElseThrow(() -> new BuildException(
                 "Only file provider resources are supported"));
-        
+
         try (ZipFile zf = new ZipFile(srcFile, encoding)) {
 
             Enumeration<ZipEntry> e = zf.getEntries();

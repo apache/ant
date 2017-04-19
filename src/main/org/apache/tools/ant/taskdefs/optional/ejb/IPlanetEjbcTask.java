@@ -307,7 +307,7 @@ public class IPlanetEjbcTask extends Task {
     private Path getClasspath() {
         if (classpath == null) {
             return new Path(getProject()).concatSystemClasspath("last");
-        } 
+        }
         return classpath.concatSystemClasspath("ignore");
     }
 }

@@ -85,7 +85,7 @@ public class Delete extends MatchingTask {
         SymbolicLinkUtils.getSymbolicLinkUtils();
 
     private static class ReverseDirs implements ResourceCollection {
-        
+
         private Project project;
         private File basedir;
         private String[] dirs;

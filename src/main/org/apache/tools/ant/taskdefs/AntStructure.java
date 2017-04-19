@@ -214,7 +214,7 @@ public class AntStructure extends Task {
                                final Set<String> types) {
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
             out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
-            
+
             out.println(tasks.stream().collect(
                 Collectors.joining(" | ", "<!ENTITY % tasks \"", "\">")));
 

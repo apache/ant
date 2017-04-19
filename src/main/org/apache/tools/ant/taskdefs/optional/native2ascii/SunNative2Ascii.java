@@ -37,7 +37,7 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
     public static final String IMPLEMENTATION_NAME = "sun";
 
     private static final String SUN_TOOLS_NATIVE2ASCII_MAIN = "sun.tools.native2ascii.Main";
-    
+
     /** {@inheritDoc} */
     @Override
     protected void setup(Commandline cmd, Native2Ascii args)

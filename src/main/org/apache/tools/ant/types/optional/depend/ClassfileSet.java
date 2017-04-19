@@ -89,7 +89,7 @@ public class ClassfileSet extends FileSet {
         super(s);
         rootClasses.addAll(s.rootClasses);
     }
-    
+
     /**
      * Add a fileset to which contains a collection of root classes used to
      * drive the search from classes.

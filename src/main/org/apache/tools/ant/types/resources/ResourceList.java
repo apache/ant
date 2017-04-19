@@ -232,5 +232,5 @@ public class ResourceList extends DataType implements ResourceCollection {
         }
         return new FileResource(getProject(), expandedLine);
     }
-    
+
 }

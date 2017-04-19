@@ -245,7 +245,7 @@ public class Depend extends MatchingTask {
         Difference diff = new Difference();
         diff.add(destPath);
         diff.add(dependClasspath);
-        
+
         Path p;
         if (diff.isEmpty()) {
             p = null;
@@ -762,10 +762,10 @@ public class Depend extends MatchingTask {
             if (file.getName().endsWith(".class")) {
                 ClassFileInfo info = new ClassFileInfo();
                 info.absoluteFile = file;
-                
+
                 String relativeName = file.getPath().substring(rootLength + 1,
                     file.getPath().length() - ".class".length());
-                
+
                 info.className
                     = ClassFileUtils.convertSlashName(relativeName);
                 info.sourceFile = sourceFileKnownToExist =

@@ -532,8 +532,7 @@ public class EmailTask extends Task {
 
             // identify which files should be attached
             Vector<File> files = new Vector<>();
-            
-            
+
             if (attachments != null) {
                 for (Resource r : attachments) {
                     files.add(r.as(FileProvider.class).getFile());

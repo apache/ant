@@ -62,13 +62,13 @@ public final class ChainReaderHelper {
         public String readFully() throws IOException {
             return ChainReaderHelper.this.readFully(this);
         }
-        
+
         @Override
         public void close() throws IOException {
             cleanUpClassLoaders(cleanupLoaders);
             super.close();
         }
-        
+
         @Override
         protected void finalize() throws Throwable {
             try {
@@ -236,7 +236,7 @@ public final class ChainReaderHelper {
         final List<Object> finalFilters =
             filterChains.stream().map(FilterChain::getFilterReaders)
                 .flatMap(Collection::stream).collect(Collectors.toList());
-        
+
         if (!finalFilters.isEmpty()) {
             boolean success = false;
             try {

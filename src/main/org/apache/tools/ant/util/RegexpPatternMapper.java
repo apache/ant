@@ -81,7 +81,7 @@ public class RegexpPatternMapper implements FileNameMapper {
     public void setFrom(String from) throws BuildException {
         if (from == null) {
             throw new BuildException("this mapper requires a 'from' attribute");
-        } 
+        }
         try {
             reg.setPattern(from);
         } catch (NoClassDefFoundError e) {

@@ -626,7 +626,7 @@ public class Replace extends MatchingTask {
         Properties props = new Properties();
 
         try (
-            InputStream 
+            InputStream
             in = propertyResource.getInputStream()){
             props.load(in);
         } catch (IOException e) {

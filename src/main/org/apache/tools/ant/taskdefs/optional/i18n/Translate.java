@@ -364,14 +364,14 @@ public class Translate extends MatchingTask {
         Locale locale = new Locale(bundleLanguage,
                                    bundleCountry,
                                    bundleVariant);
-        
+
         String language = locale.getLanguage().length() > 0
             ? "_" + locale.getLanguage() : "";
         String country = locale.getCountry().length() > 0
             ? "_" + locale.getCountry() : "";
         String variant = locale.getVariant().length() > 0
             ? "_" + locale.getVariant() : "";
-        
+
         processBundle(bundle + language + country + variant, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY_VARIANT, false);
         processBundle(bundle + language + country, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY, false);
         processBundle(bundle + language, BUNDLE_SPECIFIED_LANGUAGE, false);

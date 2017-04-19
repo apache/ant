@@ -83,7 +83,7 @@ public final class ExtensionUtil {
                                               final List<FileSet> libraries)
         throws BuildException {
         final List<Extension> extensions = new ArrayList<>();
-        
+
         for (FileSet fileSet : libraries) {
             boolean includeImpl = true;
             boolean includeURL = true;

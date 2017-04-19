@@ -247,7 +247,7 @@ public abstract class BaseResourceCollectionContainer
         return coll.stream().map(Object::toString)
             .collect(Collectors.joining(File.pathSeparator));
     }
-    
+
     @Override
     protected BaseResourceCollectionContainer getCheckedRef() {
         return (BaseResourceCollectionContainer) super.getCheckedRef();

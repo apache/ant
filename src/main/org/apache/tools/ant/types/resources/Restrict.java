@@ -155,7 +155,7 @@ public class Restrict
             setChecked(true);
         }
     }
-    
+
     @Override
     protected Restrict getCheckedRef() {
         return (Restrict) super.getCheckedRef();
