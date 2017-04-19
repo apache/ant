@@ -35,10 +35,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipException;
@@ -86,13 +86,13 @@ public class ZipFile implements Closeable {
      * List of entries in the order they appear inside the central
      * directory.
      */
-    private final List<ZipEntry> entries = new LinkedList<ZipEntry>();
+    private final List<ZipEntry> entries = new LinkedList<>();
 
     /**
      * Maps String to list of ZipEntrys, name -> actual entries.
      */
     private final Map<String, LinkedList<ZipEntry>> nameMap =
-        new HashMap<String, LinkedList<ZipEntry>>(HASH_SIZE);
+        new HashMap<>(HASH_SIZE);
 
     private static final class OffsetEntry {
         private long headerOffset = -1;
@@ -241,6 +241,7 @@ public class ZipFile implements Closeable {
      * Closes the archive.
      * @throws IOException if an error occurs closing the archive.
      */
+    @Override
     public void close() throws IOException {
         // this flag is only written here and read in finalize() which
         // can never be run in parallel.
@@ -288,9 +289,8 @@ public class ZipFile implements Closeable {
      * @since Ant 1.9.0
      */
     public Enumeration<ZipEntry> getEntriesInPhysicalOrder() {
-        final ZipEntry[] allEntries = entries.toArray(new ZipEntry[0]);
-        Arrays.sort(allEntries, OFFSET_COMPARATOR);
-        return Collections.enumeration(Arrays.asList(allEntries));
+        return entries.stream().sorted(OFFSET_COMPARATOR).collect(Collectors
+            .collectingAndThen(Collectors.toList(), Collections::enumeration));
     }
 
     /**
@@ -322,7 +322,7 @@ public class ZipFile implements Closeable {
     public Iterable<ZipEntry> getEntries(final String name) {
         final List<ZipEntry> entriesOfThatName = nameMap.get(name);
         return entriesOfThatName != null ? entriesOfThatName
-            : Collections.<ZipEntry>emptyList();
+            : Collections.emptyList();
     }
 
     /**
@@ -335,12 +335,11 @@ public class ZipFile implements Closeable {
      * @since 1.9.2
      */
     public Iterable<ZipEntry> getEntriesInPhysicalOrder(final String name) {
-        ZipEntry[] entriesOfThatName = new ZipEntry[0];
         if (nameMap.containsKey(name)) {
-            entriesOfThatName = nameMap.get(name).toArray(entriesOfThatName);
-            Arrays.sort(entriesOfThatName, OFFSET_COMPARATOR);
+            return nameMap.get(name).stream().sorted(OFFSET_COMPARATOR)
+                .collect(Collectors.toList());
         }
-        return Arrays.asList(entriesOfThatName);
+        return Collections.emptyList();
     }
 
     /**
@@ -402,8 +401,8 @@ public class ZipFile implements Closeable {
     protected void finalize() throws Throwable {
         try {
             if (!closed) {
-                System.err.println("Cleaning up unclosed ZipFile for archive "
-                                   + archiveName);
+                System.err.printf("Cleaning up unclosed %s for archive %s%n",
+                    getClass().getSimpleName(), archiveName);
                 close();
             }
         } finally {
@@ -449,8 +448,7 @@ public class ZipFile implements Closeable {
      */
     private Map<ZipEntry, NameAndComment> populateFromCentralDirectory()
         throws IOException {
-        final HashMap<ZipEntry, NameAndComment> noUTF8Flag =
-            new HashMap<ZipEntry, NameAndComment>();
+        final Map<ZipEntry, NameAndComment> noUTF8Flag = new HashMap<>();
 
         positionAtCentralDirectory();
 
@@ -458,8 +456,8 @@ public class ZipFile implements Closeable {
         long sig = ZipLong.getValue(WORD_BUF);
 
         if (sig != CFH_SIG && startsWithLocalFileHeader()) {
-            throw new IOException("central directory is empty, can't expand"
-                                  + " corrupt archive.");
+            throw new IOException(
+                "central directory is empty, can't expand corrupt archive.");
         }
 
         while (sig == CFH_SIG) {
@@ -741,8 +739,8 @@ public class ZipFile implements Closeable {
         archive.seek(ZipEightByteInteger.getLongValue(DWORD_BUF));
         archive.readFully(WORD_BUF);
         if (!Arrays.equals(WORD_BUF, ZipOutputStream.ZIP64_EOCD_SIG)) {
-            throw new ZipException("archive's ZIP64 end of central "
-                                   + "directory locator is corrupt.");
+            throw new ZipException(
+                "archive's ZIP64 end of central directory locator is corrupt.");
         }
         skipBytes(ZIP64_EOCD_CFD_LOCATOR_OFFSET
                   - WORD /* signature has already been read */);
@@ -855,10 +853,10 @@ public class ZipFile implements Closeable {
     private void resolveLocalFileHeaderData(final Map<ZipEntry, NameAndComment>
                                             entriesWithoutUTF8Flag)
         throws IOException {
-        for (final Iterator<ZipEntry> it = entries.iterator(); it.hasNext();) {
+        for (ZipEntry zipEntry : entries) {
             // entries is filled in populateFromCentralDirectory and
             // never modified
-            final Entry ze = (Entry) it.next();
+            final Entry ze = (Entry) zipEntry;
             final OffsetEntry offsetEntry = ze.getOffsetEntry();
             final long offset = offsetEntry.headerOffset;
             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
@@ -870,8 +868,8 @@ public class ZipFile implements Closeable {
             while (lenToSkip > 0) {
                 final int skipped = archive.skipBytes(lenToSkip);
                 if (skipped <= 0) {
-                    throw new IOException("failed to skip file name in"
-                                          + " local file header");
+                    throw new IOException(
+                        "failed to skip file name in local file header");
                 }
                 lenToSkip -= skipped;
             }
@@ -890,7 +888,7 @@ public class ZipFile implements Closeable {
             final String name = ze.getName();
             LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
             if (entriesOfThatName == null) {
-                entriesOfThatName = new LinkedList<ZipEntry>();
+                entriesOfThatName = new LinkedList<>();
                 nameMap.put(name, entriesOfThatName);
             }
             entriesOfThatName.addLast(ze);
@@ -955,7 +953,7 @@ public class ZipFile implements Closeable {
             if (len > remaining) {
                 len = (int) remaining;
             }
-            int ret = -1;
+            int ret;
             synchronized (archive) {
                 archive.seek(loc);
                 ret = archive.read(b, off, len);
@@ -993,25 +991,22 @@ public class ZipFile implements Closeable {
      *
      * @since Ant 1.9.0
      */
-    private final Comparator<ZipEntry> OFFSET_COMPARATOR =
-        new Comparator<ZipEntry>() {
-        public int compare(final ZipEntry e1, final ZipEntry e2) {
-            if (e1 == e2) {
-                return 0;
-            }
-
-            final Entry ent1 = e1 instanceof Entry ? (Entry) e1 : null;
-            final Entry ent2 = e2 instanceof Entry ? (Entry) e2 : null;
-            if (ent1 == null) {
-                return 1;
-            }
-            if (ent2 == null) {
-                return -1;
-            }
-            final long val = (ent1.getOffsetEntry().headerOffset
-                        - ent2.getOffsetEntry().headerOffset);
-            return val == 0 ? 0 : val < 0 ? -1 : +1;
+    private final Comparator<ZipEntry> OFFSET_COMPARATOR = (e1, e2) -> {
+        if (e1 == e2) {
+            return 0;
         }
+
+        final Entry ent1 = e1 instanceof Entry ? (Entry) e1 : null;
+        final Entry ent2 = e2 instanceof Entry ? (Entry) e2 : null;
+        if (ent1 == null) {
+            return 1;
+        }
+        if (ent2 == null) {
+            return -1;
+        }
+        final long val = (ent1.getOffsetEntry().headerOffset
+                    - ent2.getOffsetEntry().headerOffset);
+        return val == 0 ? 0 : val < 0 ? -1 : +1;
     };
 
     /**
