@@ -562,22 +562,22 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (o != null) {
             order = o;
         }
-        if (order.equals("only")) {
+        if ("only".equals(order)) {
             // only: the developer knows what (s)he is doing
             result.addExisting(p, true);
 
-        } else if (order.equals("first")) {
+        } else if ("first".equals(order)) {
             // first: developer could use a little help
             result.addExisting(p, true);
             result.addExisting(this);
 
-        } else if (order.equals("ignore")) {
+        } else if ("ignore".equals(order)) {
             // ignore: don't trust anyone
             result.addExisting(this);
 
         } else {
             // last: don't trust the developer
-            if (!order.equals("last")) {
+            if (!"last".equals(order)) {
                 log("invalid value for " + MagicNames.BUILD_SYSCLASSPATH
                     + ": " + order,
                     Project.MSG_WARN);
