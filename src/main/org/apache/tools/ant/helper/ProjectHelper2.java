@@ -256,7 +256,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     zf = new ZipFile(org.apache.tools.ant.launch.Locator
                                      .fromJarURI(uri), "UTF-8");
                     inputStream =
-                        zf.getInputStream(zf.getEntry(uri.substring(pling + 1)));
+                        zf.getInputStream(zf.getEntry(uri.substring(pling + 2)));
                 } else {
                     URLConnection conn = url.openConnection();
                     conn.setUseCaches(false);
