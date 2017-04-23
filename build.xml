@@ -101,6 +101,7 @@
   -->
   <property name="debug" value="true"/>
   <property name="setpermissions.fail" value="true"/>
+  <property name="setpermissions.nonposixmode" value="tryDosOrPass"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.8"/>
@@ -924,13 +925,16 @@
       <include name="*.pl"/>
     </fixcrlf>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <dirset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
@@ -1038,13 +1042,16 @@
       </fileset>
     </copy>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <dirset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
@@ -1158,13 +1165,16 @@
       <exclude name="${tests.etc.dir}/taskdefs/fixcrlf/input/Junk?.java"/>
     </fixcrlf>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <dirset dir="${src.dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}">
+    <setpermissions mode="644" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${src.dist.dir}"/>
     </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}">
+    <setpermissions mode="755" failonerror="${setpermissions.fail}"
+                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${src.dist.dir}">
         <include name="**/*.sh"/>
         <include name="**/*.pl"/>

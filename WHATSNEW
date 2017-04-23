@@ -8,6 +8,9 @@ Fixed bugs:
    value.
    Bugzilla Report 60767
 
+ * bootstrapping Ant on Windows failed
+   Bugzilla Report 61027
+
 Other changes:
 --------------
 
