@@ -1118,6 +1118,16 @@ public final class IntrospectionHelper {
                 }
             };
         }
+        // resolve relative nio paths through Project
+        if (java.nio.file.Path.class.equals(reflectedArg)) {
+            return new AttributeSetter(m, arg) {
+                @Override
+                public void set(final Project p, final Object parent, final String value) throws InvocationTargetException, IllegalAccessException {
+                    m.invoke(parent, new Object[] { p.resolveFile(value).toPath() });
+                }
+            };
+        }
+        
         // resolve Resources/FileProviders as FileResources relative to Project:
         if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
