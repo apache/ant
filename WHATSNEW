@@ -31,6 +31,10 @@ Other changes:
  * reduced GC pressure by replacing all usage of FileInputStream and
    FileOutputStream.
 
+ * Task can now also use attribute setters that expect a
+   java.nio.file.Path argument.
+   Bugzilla Report 61042
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 

@@ -21,6 +21,8 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -466,6 +468,7 @@ public class IntrospectionHelperTest {
         attrMap.put("seventeen", Byte.TYPE);
         attrMap.put("eightteen", Short.TYPE);
         attrMap.put("nineteen", Double.TYPE);
+        attrMap.put("twenty", Path.class);
 
         /*
          * JUnit 3.7 adds a getName method to TestCase - so we now
@@ -546,6 +549,8 @@ public class IntrospectionHelperTest {
                          new Short((short)18), new Short((short)10));
         assertAttrMethod("nineteen", "setNineteen", Double.TYPE,
                          new Double(19), new Double((short)10));
+        assertAttrMethod("twenty", "setTwenty", Path.class,
+                         new File(projectBasedir + 20).toPath(), Paths.get("toto"));
 
         try {
             assertAttrMethod("onehundred", null, null, null, null);
@@ -632,6 +637,18 @@ public class IntrospectionHelperTest {
     public void setNineteen(double d) {
         double diff = d - 19;
         assertTrue("Expected 19, received " + d, diff > -1e-6 && diff < 1e-6);
+    }
+
+    public void setTwenty(Path p) {
+        String path = p.toAbsolutePath().toString();
+        if (Os.isFamily("unix") || Os.isFamily("openvms")) {
+            assertEquals(projectBasedir+"20", path);
+        } else if (Os.isFamily("netware")) {
+            assertEquals(projectBasedir+"20", path.toLowerCase(Locale.US));
+        } else {
+            assertEquals(":"+projectBasedir+"20",
+                         path.toLowerCase(Locale.US).substring(1));
+        }
     }
 
     @Test
