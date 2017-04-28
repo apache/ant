@@ -1127,7 +1127,7 @@ public final class IntrospectionHelper {
                 }
             };
         }
-        
+
         // resolve Resources/FileProviders as FileResources relative to Project:
         if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
