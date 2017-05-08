@@ -295,5 +295,18 @@ public final class MagicNames {
      * Value {@value}
      */
     public static final String HTTP_AGENT_PROPERTY = "ant.http.agent";
+
+    /**
+     * Magic property that can be set to contain a value for tstamp's
+     * "now" in order to make builds that use the task create
+     * reproducible results.
+     *
+     * <p>The value is expected to be a number representing the date
+     * as seconds since the epoch.</p>
+     *
+     * Value: {@value}
+     * @since Ant 1.10.2
+     */
+    public static final String TSTAMP_NOW = "ant.tstamp.now";
 }
 

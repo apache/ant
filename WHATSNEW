@@ -35,6 +35,10 @@ Other changes:
    java.nio.file.Path argument.
    Bugzilla Report 61042
 
+ * added a new magic property ant.tstamp.now that can be used to
+   override the current time/date used by <tstamp>.
+   Bugzilla Report 61079
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 

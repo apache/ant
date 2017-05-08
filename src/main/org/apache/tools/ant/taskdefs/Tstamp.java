@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -69,7 +70,7 @@ public class Tstamp extends Task {
     @Override
     public void execute() throws BuildException {
         try {
-            Date d = new Date();
+            Date d = getNow();
 
             customFormats.forEach(cts -> cts.execute(getProject(), d, getLocation()));
 
@@ -104,6 +105,22 @@ public class Tstamp extends Task {
      */
     private void setProperty(String name, String value) {
         getProject().setNewProperty(prefix + name, value);
+    }
+
+    /**
+     * Return the {@link Date} instance to use as base for DSTAMP, TSTAMP and TODAY.
+     */
+    protected Date getNow() {
+        String magicNow = getProject().getProperty(MagicNames.TSTAMP_NOW);
+        if (magicNow != null && magicNow.length() > 0) {
+            try {
+                return new Date(1000 * Long.parseLong(magicNow));
+            } catch (NumberFormatException ex) {
+                log("magic property " + MagicNames.TSTAMP_NOW + " ignored as "
+                    + magicNow + " is not a valid number");
+            }
+        }
+        return new Date();
     }
 
     /**
