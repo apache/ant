@@ -18,6 +18,10 @@ Other changes:
  * added "regexp" attribute to <linecontainsregexp>
    Bugzilla Report 60968
 
+ * added a new magic property ant.tstamp.now that can be used to
+   override the current time/date used by <tstamp>.
+   Bugzilla Report 61079
+
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
 
