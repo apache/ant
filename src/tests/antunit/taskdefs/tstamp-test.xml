@@ -24,4 +24,21 @@
     <tstamp/>
     <au:assertPropertyEquals name="DSTAMP" value="19700102"/>
   </target>
+
+  <target name="testMagicPropertyIso">
+    <local name="ant.tstamp.now.iso"/>
+    <property name="ant.tstamp.now.iso" value="1972-04-17T08:07:00Z"/>
+    <tstamp/>
+    <au:assertPropertyEquals name="DSTAMP" value="19720417"/>
+  </target>
+
+  <target name="testMagicPropertyBoth">
+    <local name="ant.tstamp.now"/>
+    <local name="ant.tstamp.now.iso"/>
+    <property name="ant.tstamp.now" value="100000"/>
+    <property name="ant.tstamp.now.iso" value="1972-04-17T08:07:22Z"/>
+    <tstamp/>
+    <!-- 'iso' overrides 'simple' -->
+    <au:assertPropertyEquals name="DSTAMP" value="19720417"/>
+  </target>
 </project>

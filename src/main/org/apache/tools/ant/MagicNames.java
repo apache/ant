@@ -308,5 +308,18 @@ public final class MagicNames {
      * @since Ant 1.10.2
      */
     public static final String TSTAMP_NOW = "ant.tstamp.now";
+
+    /**
+     * Magic property that can be set to contain a value for tstamp's
+     * "now" in order to make builds that use the task create
+     * reproducible results.
+     *
+     * <p>The value is expected to be in ISO time format
+     * (<i>1972-04-17T08:07</i>)</p>
+     *
+     * Value: {@value}
+     * @since Ant 1.10.2
+     */
+    public static final String TSTAMP_NOW_ISO = "ant.tstamp.now.iso";
 }
 

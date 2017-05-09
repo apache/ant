@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,9 +27,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
@@ -111,16 +115,45 @@ public class Tstamp extends Task {
      * Return the {@link Date} instance to use as base for DSTAMP, TSTAMP and TODAY.
      */
     protected Date getNow() {
-        String magicNow = getProject().getProperty(MagicNames.TSTAMP_NOW);
-        if (magicNow != null && magicNow.length() > 0) {
+        Optional<Date> now = getNow(
+            MagicNames.TSTAMP_NOW_ISO,
+            s -> Date.from(Instant.parse(s)),
+            (k, v) -> "magic property " + k + " ignored as '" + v + "' is not in valid ISO pattern"
+        );
+        if (now.isPresent()) {
+            return now.get();
+        }
+
+        now = getNow(
+            MagicNames.TSTAMP_NOW,
+            s -> new Date(1000 * Long.parseLong(s)),
+            (k, v) -> "magic property " + k + " ignored as " + v + " is not a valid number"
+        );
+        if (now.isPresent()) {
+            return now.get();
+        }
+
+        return new Date();
+    }
+
+    /**
+     * Checks and returns a Date if the specified property is set.
+     * @param propertyName name of the property to check
+     * @param map convertion of the property value as string to Date
+     * @param log supplier of the log message containg the property name and value if
+     *     the convertion fails
+     * @return Optional containing the Date or null
+     */
+    protected Optional<Date> getNow(String propertyName, Function<String, Date> map, BiFunction<String, String, String> log) {
+        String property = getProject().getProperty(propertyName);
+        if (property != null && property.length() > 0) {
             try {
-                return new Date(1000 * Long.parseLong(magicNow));
-            } catch (NumberFormatException ex) {
-                log("magic property " + MagicNames.TSTAMP_NOW + " ignored as "
-                    + magicNow + " is not a valid number");
+                return Optional.ofNullable(map.apply(property));
+            } catch (Exception e) {
+                log(log.apply(propertyName, property));
             }
         }
-        return new Date();
+        return Optional.empty();
     }
 
     /**
