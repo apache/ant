@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Copies standard output and error of subprocesses to standard output and
@@ -37,6 +38,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     private OutputStream out;
     private OutputStream err;
     private InputStream input;
+	private OutputStream stdoutput;
     private final boolean nonBlockingRead;
 
     /**
@@ -117,13 +119,21 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      */
     public void setProcessInputStream(OutputStream os) {
         if (input != null) {
-            inputThread = createPump(input, os, true, nonBlockingRead);
+			boolean closeWhenExhausted = true;
+			if (Os.isFamily("windows")) {
+				stdouput = os;
+				closeWhenExhausted = false;	
+			}
+			inputThread = createPump(input, os, closeWhenExhausted, nonBlockingRead);
+			
         } else {
-            try {
-                os.close();
-            } catch (IOException e) {
+			if (!Os.isFamily("windows")) {
+				try {
+					os.close();
+				} catch (IOException e) {
                 //ignore
-            }
+				}	
+			}
         }
     }
 
@@ -142,6 +152,16 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Stop pumping the streams.
      */
     public void stop() {
+		if (Os.isFamily("windows")) {	
+			if (stdoutput != null) {
+				try {
+					stdoutput.close();
+				} catch (IOException e) {
+				//ignore
+				}	
+			}
+		}
+		
         finish(inputThread);
 
         try {
