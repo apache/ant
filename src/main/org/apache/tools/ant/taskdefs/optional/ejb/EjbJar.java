@@ -224,6 +224,19 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Create a orion nested element used to configure a
+     * deployment tool for Orion server.
+     *
+     * @return the deployment tool instance to be configured.
+     * @since Ant 1.10.2
+     */
+    public OrionDeploymentTool createOrion() {
+        OrionDeploymentTool tool = new OrionDeploymentTool();
+        addDeploymentTool(tool);
+        return tool;
+    }
+
+    /**
      * Adds a deployment tool for Weblogic server.
      *
      * @return the deployment tool instance to be configured.
