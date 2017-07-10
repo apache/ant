@@ -226,6 +226,7 @@ public class EjbJar extends MatchingTask {
      * deployment tool for Orion server.
      *
      * @return the deployment tool instance to be configured.
+     * @since Ant 1.9.10
      */
     public OrionDeploymentTool createOrion() {
         OrionDeploymentTool tool = new OrionDeploymentTool();

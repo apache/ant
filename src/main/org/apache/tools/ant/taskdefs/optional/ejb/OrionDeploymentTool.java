@@ -23,19 +23,18 @@ import java.util.Hashtable;
 import org.apache.tools.ant.Project;
 
 /**
- * The deployment tool to add the orion specific deployment descriptor to the 
- * ejb jar file. Orion only requires one additional file orion-ejb-jar.xml 
+ * The deployment tool to add the orion specific deployment descriptor to the
+ * ejb jar file. Orion only requires one additional file orion-ejb-jar.xml
  * and does not require any additional compilation.
  *
- * @author <a href="mailto:mark.niggemann@ge.com">Mark Niggemann</a>
- * @version 1.0
+ * @since Ant 1.9.10
  * @see EjbJar#createOrion
  */
 
 public class OrionDeploymentTool extends GenericDeploymentTool {
-    
+
     protected static final String ORION_DD = "orion-ejb-jar.xml";
-    
+
 
     /** Instance variable that stores the suffix for the jboss jarfile. */
     private String jarSuffix = ".jar";
@@ -47,14 +46,14 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
         String ddPrefix = (usingBaseJarName() ? "" : baseName );
         File orionDD = new File(getConfig().descriptorDir, ddPrefix + ORION_DD);
-        
+
         if (orionDD.exists()) {
             ejbFiles.put(META_DIR + ORION_DD, orionDD);
         } else {
             log("Unable to locate Orion deployment descriptor. It was expected to be in " + orionDD.getPath(), Project.MSG_WARN);
             return;
         }
-        
+
     }
 
     /**

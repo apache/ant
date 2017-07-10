@@ -22,6 +22,9 @@ Other changes:
    override the current time/date used by <tstamp>.
    Bugzilla Report 61079
 
+ * added Orion support to ejbjar
+   Github Pull Request #33
+
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
 
