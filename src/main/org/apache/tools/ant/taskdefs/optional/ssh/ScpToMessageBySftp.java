@@ -135,11 +135,9 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             try {
                 sendFileToRemote(channel, localFile, remotePath);
             } catch (final SftpException e) {
-                final JSchException schException = new JSchException("Could not send '" + localFile
+                throw new JSchException("Could not send '" + localFile
                         + "' to '" + remotePath + "' - "
-                        + e.toString());
-                schException.initCause(e);
-                throw schException;
+                        + e.toString(), e);
             }
         } finally {
             if (channel != null) {
@@ -250,7 +248,24 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                 log("Sending: " + localFile.getName() + " : " + filesize);
             }
             channel.put(localFile.getAbsolutePath(), remotePath, monitor);
-            channel.chmod(getFileMode(), remotePath);
+            // set the fileMode on the transferred file. The "remotePath" can potentially be a directory
+            // into which the file got transferred, so we can't/shouldn't go ahead and try to change that directory's
+            // permissions. Instead we determine the path of the transferred file on remote.
+            final String transferredFileRemotePath;
+            if (channel.stat(remotePath).isDir()) {
+                // Note: It's correct to use "/" as the file separator without worrying about what the remote
+                // server's file separator is, since the SFTP spec expects "/" to be considered as file path
+                // separator. See section 6.2 "File Names" of the spec, which states:
+                // "This protocol represents file names as strings.  File names are
+                // assumed to use the slash ('/') character as a directory separator."
+                transferredFileRemotePath = remotePath + "/" + localFile.getName();
+            } else {
+                transferredFileRemotePath = remotePath;
+            }
+            if (this.getVerbose()) {
+                log("Setting file mode '" + Integer.toOctalString(getFileMode()) + "' on remote path " + transferredFileRemotePath);
+            }
+            channel.chmod(getFileMode(), transferredFileRemotePath);
         } finally {
             if (this.getVerbose()) {
                 final long endTime = System.currentTimeMillis();
