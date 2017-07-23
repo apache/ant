@@ -417,7 +417,7 @@ public class ResourceUtils {
                 final File sourceFile =
                     source.as(FileProvider.class).getFile();
                 try {
-                    copyUsingFileChannels(sourceFile, destFile);
+                    copyUsingFileChannels(sourceFile, destFile, project);
                     copied = true;
                 } catch (final IOException ex) {
                     String msg = "Attempt to copy " + sourceFile
@@ -641,11 +641,17 @@ public class ResourceUtils {
                                            final Project project)
         throws IOException {
 
+        if (areSame(source, dest)) {
+            // copying the "same" file to itself will corrupt the file, so we skip it
+            log(project, "Skipping (self) copy of " + source +  " to " + dest);
+            return;
+        }
+
         try (Reader in = filterWith(project, inputEncoding, filterChains,
-            source.getInputStream());
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-                    getOutputStream(dest, append, project),
-                    charsetFor(outputEncoding)))) {
+                source.getInputStream());
+             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+                     getOutputStream(dest, append, project),
+                     charsetFor(outputEncoding)))) {
 
             final LineTokenizer lineTokenizer = new LineTokenizer();
             lineTokenizer.setIncludeDelims(true);
@@ -691,11 +697,18 @@ public class ResourceUtils {
                                                           final String outputEncoding,
                                                           final Project project)
         throws IOException {
+
+        if (areSame(source, dest)) {
+            // copying the "same" file to itself will corrupt the file, so we skip it
+            log(project, "Skipping (self) copy of " + source +  " to " + dest);
+            return;
+        }
+
         try (Reader in = filterWith(project, inputEncoding, filterChains,
-            source.getInputStream());
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-                    getOutputStream(dest, append, project),
-                    charsetFor(outputEncoding)))) {
+                source.getInputStream());
+             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+                     getOutputStream(dest, append, project),
+                     charsetFor(outputEncoding)))) {
             final char[] buffer = new char[FileUtils.BUF_SIZE];
             while (true) {
                 final int nRead = in.read(buffer, 0, buffer.length);
@@ -705,12 +718,18 @@ public class ResourceUtils {
                 out.write(buffer, 0, nRead);
             }
         }
+
     }
 
     private static void copyUsingFileChannels(final File sourceFile,
-                                              final File destFile)
+                                              final File destFile, final Project project)
         throws IOException {
 
+        if (FileUtils.getFileUtils().areSame(sourceFile, destFile)) {
+            // copying the "same" file to itself will corrupt the file, so we skip it
+            log(project, "Skipping (self) copy of " + sourceFile +  " to " + destFile);
+            return;
+        }
         final File parent = destFile.getParentFile();
         if (parent != null && !parent.isDirectory()
             && !(parent.mkdirs() || parent.isDirectory())) {
@@ -738,8 +757,14 @@ public class ResourceUtils {
     private static void copyUsingStreams(final Resource source, final Resource dest,
                                          final boolean append, final Project project)
         throws IOException {
+
+        if (areSame(source, dest)) {
+            // copying the "same" file to itself will corrupt the file, so we skip it
+            log(project, "Skipping (self) copy of " + source +  " to " + dest);
+            return;
+        }
         try (InputStream in = source.getInputStream();
-                OutputStream out = getOutputStream(dest, append, project)) {
+             OutputStream out = getOutputStream(dest, append, project)) {
 
             final byte[] buffer = new byte[FileUtils.BUF_SIZE];
             int count = 0;
@@ -766,6 +791,33 @@ public class ResourceUtils {
             }
         }
         return resource.getOutputStream();
+    }
+
+    private static boolean areSame(final Resource resource1, final Resource resource2) throws IOException {
+        if (resource1 == null || resource2 == null) {
+            return false;
+        }
+        final FileProvider fileResource1 = resource1.as(FileProvider.class);
+        if (fileResource1 == null) {
+            return false;
+        }
+        final FileProvider fileResource2 = resource2.as(FileProvider.class);
+        if (fileResource2 == null) {
+            return false;
+        }
+        return FileUtils.getFileUtils().areSame(fileResource1.getFile(), fileResource2.getFile());
+    }
+
+    private static void log(final Project project, final String message) {
+        log(project, message, Project.MSG_VERBOSE);
+    }
+
+    private static void log(final Project project, final String message, final int level) {
+        if (project == null) {
+            System.out.println(message);
+        } else {
+            project.log(message, level);
+        }
     }
 
     public interface ResourceSelectorProvider {

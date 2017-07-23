@@ -265,4 +265,31 @@ a=b=
     </fail>
   </target>
 
+  <target name="setupSelfCopyTesting" description="Sets up the necessary files and directories for testSelfCopy task which
+                will be called by the test cases">
+    <property name="self.copy.test.root.dir" location="${output}/self-copy-test"/>
+    <mkdir dir="${self.copy.test.root.dir}"/>
+    <echo file="${self.copy.test.root.dir}/file.txt" message="hello-world"/>
+  </target>
+
+  <target name="testSelfCopy">
+    <property name="self.copy.test.root.dir" location="${output}/self-copy-test"/>
+    <!-- straightforward self-copy -->
+    <copy file="${self.copy.test.root.dir}/file.txt" tofile="${self.copy.test.root.dir}/file.txt" overwrite="true"/>
+
+    <!-- create a symlink of the source file and then attempt a copy of the original file and the symlink -->
+    <symlink link="${self.copy.test.root.dir}/sylmink-file.txt" resource="${self.copy.test.root.dir}/file.txt"/>
+    <copy file="${self.copy.test.root.dir}/file.txt" tofile="${self.copy.test.root.dir}/sylmink-file.txt" overwrite="true"/>
+    <copy file="${self.copy.test.root.dir}/sylmink-file.txt" tofile="${self.copy.test.root.dir}/file.txt" overwrite="true"/>
+
+    <!-- create a symlink of the dir containing the source file and then attempt a copy of the original file and the symlink dir -->
+    <property name="self.copy.test.symlinked.dir" location="${output}/symlink-for-output-dir"/>
+    <symlink link="${self.copy.test.symlinked.dir}" resource="${self.copy.test.root.dir}"/>
+    <copy file="${self.copy.test.symlinked.dir}/file.txt" tofile="${self.copy.test.root.dir}/sylmink-file.txt" overwrite="true"/>
+    <copy file="${self.copy.test.root.dir}/sylmink-file.txt" tofile="${self.copy.test.symlinked.dir}/file.txt" overwrite="true"/>
+
+    <copy todir="${self.copy.test.symlinked.dir}" overwrite="true">
+      <fileset dir="${self.copy.test.root.dir}"/>
+    </copy>
+  </target>
 </project>
