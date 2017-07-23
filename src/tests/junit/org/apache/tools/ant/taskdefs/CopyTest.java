@@ -21,12 +21,16 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -189,7 +193,7 @@ public class CopyTest {
             assertTrue(ex.getMessage().endsWith(" does not exist."));
         }
     }
-    
+
     @Test
     public void testFileResourcePlain() {
         buildRule.executeTarget("testFileResourcePlain");
@@ -212,7 +216,7 @@ public class CopyTest {
         assertTrue(file2.exists());
         assertTrue(file3.exists());
     }
-    
+
     @Test
     public void testFileResourceWithFilter() {
         buildRule.executeTarget("testFileResourceWithFilter");
@@ -225,7 +229,7 @@ public class CopyTest {
             // no-op: not a real business error
         }
     }
-    
+
     @Test
     public void testPathAsResource() {
         buildRule.executeTarget("testPathAsResource");
@@ -236,7 +240,7 @@ public class CopyTest {
         assertTrue(file2.exists());
         assertTrue(file3.exists());
     }
-    
+
     @Test
     public void testZipfileset() {
         buildRule.executeTarget("testZipfileset");
@@ -252,7 +256,7 @@ public class CopyTest {
     public void testDirset() {
         buildRule.executeTarget("testDirset");
     }
-    
+
     @Ignore("Previously ignored due to naming convention")
     @Test
     public void testResourcePlain() {
@@ -276,5 +280,60 @@ public class CopyTest {
     public void testOnlineResources() {
         buildRule.executeTarget("testOnlineResources");
     }
-    
+
+    /**
+     * Tests that the {@code copy} task doesn't corrupt the source file, if the target of the copy operation is a symlink
+     * to the source file being copied
+     *
+     * @throws Exception
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=60644">issue 60644</a>
+     */
+    @Test
+    public void testCopyToSymlinkedSelf() throws Exception {
+        // we are only going to test against systems that support symlinks
+        Assume.assumeTrue("Symlinks not supported on this operating system", Os.isFamily(Os.FAMILY_UNIX));
+
+        // setup the source files to run copying against
+        buildRule.executeTarget("setupSelfCopyTesting");
+        final File testDir = new File(buildRule.getProject().getProperty("self.copy.test.root.dir"));
+        Assert.assertTrue(testDir + " was expected to be a directory", testDir.isDirectory());
+        final File srcFile = new File(testDir, "file.txt");
+        Assert.assertTrue("Source file " + srcFile + " was expected to be a file", srcFile.isFile());
+        final long originalFileSize = srcFile.length();
+        final String originalContent;
+        final BufferedReader reader = new BufferedReader(new FileReader(srcFile));
+        try {
+            originalContent = FileUtils.readFully(reader);
+        } finally {
+            reader.close();
+        }
+        Assert.assertTrue("Content missing in file " + srcFile, originalContent != null && originalContent.length() > 0);
+
+        // run the copy tests
+        buildRule.executeTarget("testSelfCopy");
+        // make sure the source file hasn't been impacted by the copy
+        assertSizeAndContent(srcFile, originalFileSize, originalContent);
+        final File symlinkedFile = new File(testDir, "sylmink-file.txt");
+        Assert.assertTrue(symlinkedFile + " was expected to be a file", symlinkedFile.isFile());
+        assertSizeAndContent(symlinkedFile, originalFileSize, originalContent);
+
+        final File symlinkedTestDir = new File(buildRule.getProject().getProperty("self.copy.test.symlinked.dir"));
+        Assert.assertTrue(symlinkedTestDir + " was expected to be a directory", symlinkedTestDir.isDirectory());
+        assertSizeAndContent(new File(symlinkedTestDir, "file.txt"), originalFileSize, originalContent);
+        assertSizeAndContent(new File(symlinkedTestDir, "sylmink-file.txt"), originalFileSize, originalContent);
+
+    }
+
+    private void assertSizeAndContent(final File file, final long expectedSize, final String expectedContent) throws IOException {
+        Assert.assertTrue(file + " was expected to be a file", file.isFile());
+        Assert.assertEquals("Unexpected size of file " + file, expectedSize, file.length());
+        final BufferedReader reader = new BufferedReader(new FileReader(file));
+        final String content;
+        try {
+            content = FileUtils.readFully(reader);
+        } finally {
+            reader.close();
+        }
+        Assert.assertEquals("Unexpected content in file " + file, expectedContent, content);
+    }
 }
