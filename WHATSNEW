@@ -1,13 +1,18 @@
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * updated the dependency of BCEL to 6.0.
+   Bugzilla Report 61196
+
 Fixed bugs:
 -----------
 
  * <genkey>'s <dname> child now skips <param>s that lack a key or
    value.
    Bugzilla Report 60767
-
 
  * bootstrapping Ant on Windows failed
    Bugzilla Report 61027

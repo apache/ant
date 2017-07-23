@@ -248,7 +248,10 @@ Set -Ddest=LOCATION on the command line
   <target name="bcel"
     description="load bcel libraries"
     depends="init">
-    <f2 project="bcel" />
+    <copy todir="${dest.dir}">
+      <url url="${m2.url}/org/apache/bcel/bcel/${bcel.version}/bcel-${bcel.version}.jar"/>
+      <flattenmapper/>
+    </copy>
   </target>
 
   <target name="jdepend"
