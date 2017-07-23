@@ -8,8 +8,15 @@ Fixed bugs:
    value.
    Bugzilla Report 60767
 
+
  * bootstrapping Ant on Windows failed
    Bugzilla Report 61027
+
+ * Bugzilla Reports 59648 and 43271 - Fixed the issue where the 
+   SCP based tasks would try to change the permissions on the
+   parent directory of a transferred file, instead of changing it
+   on the transferred file itself.
+
 
 Other changes:
 --------------
