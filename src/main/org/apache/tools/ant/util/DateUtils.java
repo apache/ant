@@ -26,6 +26,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.tools.ant.taskdefs.Touch;
 
 /**
  * Helper methods to deal with date/time formatting with a specific
@@ -297,5 +301,51 @@ public final class DateUtils {
         } catch (ParseException px) {
             return parseIso8601Date(datestr);
         }
+    }
+
+    final private static ThreadLocal<DateFormat> iso8601WithTimeZone =
+        new ThreadLocal<DateFormat>() {
+            @Override protected DateFormat initialValue() {
+              // An arbitrary easy-to-read format to normalize to.
+              return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+            }
+        };
+    final private static Pattern iso8601normalizer = Pattern.compile(
+        "^(\\d{4,}-\\d{2}-\\d{2})[Tt ]" +           // yyyy-MM-dd
+        "(\\d{2}:\\d{2}(:\\d{2}(\\.\\d{3})?)?) ?" + // HH:mm:ss.SSS
+        "(?:Z|([+-]\\d{2})(?::?(\\d{2}))?)?$");     // Z
+
+    /**
+     * Parse a lenient ISO 8601, ms since epoch, or {@code <touch>}-style date.
+     * That is:
+     * <ul>
+     * <li>Milliseconds since 1970-01-01 00:00</li>
+     * <li><code>YYYY-MM-DD{T| }HH:MM[:SS[.SSS]][ ][±ZZ[[:]ZZ]]</code></li>
+     * <li><code>MM/DD/YYYY HH:MM[:SS] {AM|PM}</code></li></ul>
+     * where {a|b} indicates that you must choose one of a or b, and [c]
+     * indicates that you may use or omit c. ±ZZZZ is the timezone offset, and
+     * may be literally "Z" to mean GMT.
+     */
+    public static Date parseLenientDateTime(String dateStr) throws ParseException {
+        try {
+            return new Date(Long.parseLong(dateStr));
+        } catch (NumberFormatException nfe) {}
+
+        try {
+            return Touch.DEFAULT_DF_FACTORY.getPrimaryFormat().parse(dateStr);
+        } catch (ParseException pe) {}
+
+        try {
+           return Touch.DEFAULT_DF_FACTORY.getFallbackFormat().parse(dateStr);
+        } catch (ParseException pe) {}
+
+        Matcher m = iso8601normalizer.matcher(dateStr);
+        if (!m.find()) throw new ParseException(dateStr, 0);
+        String normISO = m.group(1) + " "
+            + (m.group(3) == null ? m.group(2) + ":00" : m.group(2))
+            + (m.group(4) == null ? ".000 " : " ")
+            + (m.group(5) == null ? "+00" : m.group(5))
+            + (m.group(6) == null ? "00" : m.group(6));
+        return iso8601WithTimeZone.get().parse(normISO);
     }
 }
