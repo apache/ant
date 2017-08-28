@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,6 +55,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
@@ -114,6 +116,9 @@ public class Zip extends MatchingTask {
     private final List<ResourceCollection> resources = new Vector<>();
     protected Hashtable<String, String> addedDirs = new Hashtable<>();
     private final List<String> addedFiles = new Vector<>();
+
+    private String fixedModTime = null; // User-provided.
+    protected long modTimeMillis = 0; // Calculated.
 
     /**
      * If this flag is true, execute() will run most operations twice,
@@ -576,6 +581,27 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Set all stored file modification times to {@code time}.
+     * @param time Milliseconds since 1970-01-01 00:00, or
+     *        <code>YYYY-MM-DD{T/ }HH:MM[:SS[.SSS]][ ][±ZZ[[:]ZZ]]</code>, or
+     *        <code>MM/DD/YYYY HH:MM[:SS] {AM/PM}</code>, where {a/b} indicates
+     *        that you must choose one of a or b, and [c] indicates that you
+     *        may use or omit c. ±ZZZZ is the timezone offset, and may be
+     *        literally "Z" to mean GMT.
+     */
+    public void setModificationtime(String time) {
+        fixedModTime = time;
+    }
+
+    /**
+     * The file modification time previously provided to
+     * {@link #setModificationtime(String)} or {@code null} if unset.
+     */
+    public String getModificationtime() {
+        return fixedModTime;
+    }
+
+    /**
      * validate and build
      * @throws BuildException on error
      */
@@ -809,6 +835,17 @@ public class Zip extends MatchingTask {
         if (zipFile == null) {
             throw new BuildException("You must specify the %s file to create!",
                 archiveType);
+        }
+
+        if (fixedModTime != null) {
+            try {
+                modTimeMillis = DateUtils.parseLenientDateTime(fixedModTime).getTime();
+            } catch (ParseException pe) {
+                throw new BuildException("Failed to parse date string %s.", fixedModTime);
+            }
+            if (roundUp) {
+                modTimeMillis += ROUNDUP_MILLIS;
+            }
         }
 
         if (zipFile.exists() && !zipFile.isFile()) {
@@ -1663,7 +1700,9 @@ public class Zip extends MatchingTask {
             // ZIPs store time with a granularity of 2 seconds, round up
             final int millisToAdd = roundUp ? ROUNDUP_MILLIS : 0;
 
-            if (dir != null && dir.isExists()) {
+            if (fixedModTime != null) {
+                ze.setTime(modTimeMillis);
+            } else if (dir != null && dir.isExists()) {
                 ze.setTime(dir.getLastModified() + millisToAdd);
             } else {
                 ze.setTime(System.currentTimeMillis() + millisToAdd);
@@ -1750,7 +1789,7 @@ public class Zip extends MatchingTask {
 
         if (!skipWriting) {
             final ZipEntry ze = new ZipEntry(vPath);
-            ze.setTime(lastModified);
+            ze.setTime(fixedModTime != null ? modTimeMillis : lastModified);
             ze.setMethod(doCompress ? ZipEntry.DEFLATED : ZipEntry.STORED);
 
             /*
