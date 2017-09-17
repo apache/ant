@@ -39,6 +39,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     private File localFile;
     private final String remotePath;
     private List directoryList;
+    private final boolean preserveLastModified;
 
     /**
      * Constructor for a local file to remote.
@@ -52,10 +53,30 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                               final Session session,
                               final File aLocalFile,
                               final String aRemotePath) {
-        this(verbose, session, aRemotePath);
+        this(verbose, session, aLocalFile, aRemotePath, false);
+
+    }
+
+    /**
+     * Constructor for a local file to remote.
+     * @param verbose if true do verbose logging
+     * @param session the scp session to use
+     * @param aLocalFile the local file
+     * @param aRemotePath the remote path
+     * @param preserveLastModified True if the last modified time needs to be preserved
+     *                             on the transferred files. False otherwise.
+     * @since Ant 1.9.10
+     */
+    public ScpToMessageBySftp(final boolean verbose,
+                              final Session session,
+                              final File aLocalFile,
+                              final String aRemotePath,
+                              final boolean preserveLastModified) {
+        this(verbose, session, aRemotePath, preserveLastModified);
 
         this.localFile = aLocalFile;
     }
+
 
     /**
      * Constructor for a local directories to remote.
@@ -69,23 +90,45 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                               final Session session,
                               final List aDirectoryList,
                               final String aRemotePath) {
-        this(verbose, session, aRemotePath);
+        this(verbose, session, aDirectoryList, aRemotePath, false);
+    }
+
+    /**
+     * Constructor for a local directories to remote.
+     * @param verbose if true do verbose logging
+     * @param session the scp session to use
+     * @param aDirectoryList a list of directories
+     * @param aRemotePath the remote path
+     * @param preserveLastModified  True if the last modified time needs to be preserved
+     *                             on the transferred files. False otherwise.
+     * @since Ant 1.9.10
+     */
+    public ScpToMessageBySftp(final boolean verbose,
+                              final Session session,
+                              final List aDirectoryList,
+                              final String aRemotePath,
+                              final boolean preserveLastModified) {
+        this(verbose, session, aRemotePath, preserveLastModified);
 
         this.directoryList = aDirectoryList;
     }
+
 
     /**
      * Constructor for ScpToMessage.
      * @param verbose if true do verbose logging
      * @param session the scp session to use
      * @param aRemotePath the remote path
-     * @since Ant 1.6.2
+     * @param preserveLastModified True if the last modified time needs to be preserved
+     *                             on the transferred files. False otherwise.
      */
     private ScpToMessageBySftp(final boolean verbose,
                                final Session session,
-                               final String aRemotePath) {
+                               final String aRemotePath,
+                               final boolean preserveLastModified) {
         super(verbose, session);
         this.remotePath = aRemotePath;
+        this.preserveLastModified = preserveLastModified;
     }
 
     /**
@@ -266,6 +309,14 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
                 log("Setting file mode '" + Integer.toOctalString(getFileMode()) + "' on remote path " + transferredFileRemotePath);
             }
             channel.chmod(getFileMode(), transferredFileRemotePath);
+            if (getPreserveLastModified()) {
+                // set the last modified time (seconds since epoch) on the transferred file
+                final int lastModifiedTime = (int) (localFile.lastModified() / 1000L);
+                if (this.getVerbose()) {
+                    log("Setting last modified time on remote path " + transferredFileRemotePath + " to " + lastModifiedTime);
+                }
+                channel.setMtime(transferredFileRemotePath, lastModifiedTime);
+            }
         } finally {
             if (this.getVerbose()) {
                 final long endTime = System.currentTimeMillis();
@@ -288,5 +339,15 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      */
     public String getRemotePath() {
         return remotePath;
+    }
+
+    /**
+     * Returns true if the last modified time needs to be preserved on the
+     * file(s) that get transferred. Returns false otherwise.
+     *
+     * @return
+     */
+    public boolean getPreserveLastModified() {
+        return this.preserveLastModified;
     }
 }
