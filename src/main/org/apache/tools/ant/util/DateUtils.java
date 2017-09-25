@@ -29,8 +29,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.tools.ant.taskdefs.Touch;
-
 /**
  * Helper methods to deal with date/time formatting with a specific
  * defined format (<a href="http://www.w3.org/TR/NOTE-datetime">ISO8601</a>)
@@ -92,6 +90,32 @@ public final class DateUtils {
 
     private static final ChoiceFormat SECONDS_FORMAT =
             new ChoiceFormat(LIMITS, SECONDS_PART);
+
+    /**
+     * Provides a thread-local US-style date format. Exactly as used by
+     * {@code <touch>}, to minute precision:
+     * {@code SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US)}
+     */
+    public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_MIN =
+        new ThreadLocal<DateFormat>() {
+            @Override
+            protected DateFormat initialValue() {
+                return new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US);
+            }
+        };
+
+    /**
+     * Provides a thread-local US-style date format. Exactly as used by
+     * {@code <touch>}, to second precision:
+     * {@code SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US)}
+     */
+    public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_SEC =
+        new ThreadLocal<DateFormat>() {
+            @Override
+            protected DateFormat initialValue() {
+                return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US);
+            }
+        };
 
     static {
         MINUTE_SECONDS.setFormat(0, MINUTES_FORMAT);
@@ -332,11 +356,11 @@ public final class DateUtils {
         } catch (NumberFormatException nfe) {}
 
         try {
-            return Touch.DEFAULT_DF_FACTORY.getPrimaryFormat().parse(dateStr);
+            return EN_US_DATE_FORMAT_MIN.get().parse(dateStr);
         } catch (ParseException pe) {}
 
         try {
-           return Touch.DEFAULT_DF_FACTORY.getFallbackFormat().parse(dateStr);
+           return EN_US_DATE_FORMAT_SEC.get().parse(dateStr);
         } catch (ParseException pe) {}
 
         Matcher m = iso8601normalizer.matcher(dateStr);
