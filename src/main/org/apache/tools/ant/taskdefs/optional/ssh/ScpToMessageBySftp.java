@@ -105,7 +105,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      */
     public ScpToMessageBySftp(final boolean verbose,
                               final Session session,
-                              final List aDirectoryList,
+                              final List<Directory> aDirectoryList,
                               final String aRemotePath,
                               final boolean preserveLastModified) {
         this(verbose, session, aRemotePath, preserveLastModified);
