@@ -54,6 +54,11 @@ Other changes:
  * added Orion support to ejbjar
    Github Pull Request #33
 
+ * Bugzilla Report 58589 - SCP task, when configured to use SFTP
+   protocol, now preserves last modified timestamp on files that
+   it uploads, if the preserveLastModified attribute is set to
+   true for that task 
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 

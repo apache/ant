@@ -349,7 +349,7 @@ public class Scp extends SSHBase {
                                                list, file, preserveLastModified);
                 } else {
                     message = new ScpToMessageBySftp(getVerbose(), session,
-                                                     list, file);
+                                                     list, file, preserveLastModified);
                 }
                 message.setLogListener(this);
                 if (fileMode != null) {
@@ -384,7 +384,7 @@ public class Scp extends SSHBase {
                 message =
                     new ScpToMessageBySftp(getVerbose(), session,
                                            getProject().resolveFile(fromPath),
-                                           file);
+                                           file, preserveLastModified);
             }
             message.setLogListener(this);
             if (fileMode != null) {
