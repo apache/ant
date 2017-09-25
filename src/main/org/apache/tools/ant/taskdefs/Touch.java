@@ -39,6 +39,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Touchable;
 import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -59,31 +60,18 @@ public class Touch extends Task {
         DateFormat getFallbackFormat();
     }
 
+    /**
+     * Provides access to DateUtils.EN_US_DATE_FORMAT_MIN (primary) and
+     * DateUtils.EN_US_DATE_FORMAT_SEC (fallback).
+     */
     public static final DateFormatFactory DEFAULT_DF_FACTORY
         = new DateFormatFactory() {
 
-        private ThreadLocal<DateFormat> primary =
-            new ThreadLocal<DateFormat>() {
-                @Override
-                protected DateFormat initialValue() {
-                    return new SimpleDateFormat("MM/dd/yyyy hh:mm a",
-                                                Locale.US);
-                }
-            };
-        private ThreadLocal<DateFormat> fallback =
-            new ThreadLocal<DateFormat>() {
-                @Override
-                protected DateFormat initialValue() {
-                    return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a",
-                                                Locale.US);
-                }
-            };
-
         public DateFormat getPrimaryFormat() {
-            return primary.get();
+            return DateUtils.EN_US_DATE_FORMAT_MIN.get();
         }
         public DateFormat getFallbackFormat() {
-            return fallback.get();
+            return DateUtils.EN_US_DATE_FORMAT_SEC.get();
         }
     };
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
