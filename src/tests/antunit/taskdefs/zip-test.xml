@@ -182,4 +182,24 @@
         <fileset dir="${basedir}" includes="zip-test.xml"/>
       </zip>
     </target>
+
+    <target name="testSetZipModTime">
+      <mkdir dir="${input}/"/>
+      <mkdir dir="${input}/subdir"/>
+      <touch file="${input}/test1.txt"/>
+      <touch file="${input}/subdir/test2.txt"/>
+      <mkdir dir="${output}"/>
+      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00" />
+      <checksum file="${output}/test.zip" property="testSetZipModTime_hash" />
+      <delete file="${output}/test.zip" />
+
+      <sleep seconds="4" /> <!-- Necessary to ensure zips would have normally differed in timestamp -->
+      <touch file="${input}/test1.txt"/>
+      <touch file="${input}/subdir/test2.txt"/>
+      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00" />
+      <checksum file="${output}/test.zip" property="${testSetZipModTime_hash}" verifyproperty="testSetZipModTime_okay" />
+      <au:assertTrue>
+        <equals arg1="${testSetZipModTime_okay}" arg2="true" />
+      </au:assertTrue>
+    </target>
 </project>
