@@ -35,6 +35,10 @@ Other changes:
    it uploads, if the preserveLastModified attribute is set to
    true for that task 
 
+ * zip and the related tasks can now set the modfication time of all
+   entries to a fixed timestamp.
+   Github Pull Request #36
+
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================
 

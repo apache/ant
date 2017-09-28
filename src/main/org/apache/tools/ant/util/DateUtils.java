@@ -95,6 +95,7 @@ public final class DateUtils {
      * Provides a thread-local US-style date format. Exactly as used by
      * {@code <touch>}, to minute precision:
      * {@code SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US)}
+     * @since Ant 1.9.10
      */
     public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_MIN =
         new ThreadLocal<DateFormat>() {
@@ -108,6 +109,7 @@ public final class DateUtils {
      * Provides a thread-local US-style date format. Exactly as used by
      * {@code <touch>}, to second precision:
      * {@code SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US)}
+     * @since Ant 1.9.10
      */
     public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_SEC =
         new ThreadLocal<DateFormat>() {
@@ -349,6 +351,7 @@ public final class DateUtils {
      * where {a|b} indicates that you must choose one of a or b, and [c]
      * indicates that you may use or omit c. ±ZZZZ is the timezone offset, and
      * may be literally "Z" to mean GMT.
+     * @since Ant 1.9.10
      */
     public static Date parseLenientDateTime(String dateStr) throws ParseException {
         try {
