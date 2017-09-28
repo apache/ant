@@ -118,7 +118,7 @@ public class Zip extends MatchingTask {
     private final List<String> addedFiles = new Vector<>();
 
     private String fixedModTime = null; // User-provided.
-    protected long modTimeMillis = 0; // Calculated.
+    private long modTimeMillis = 0; // Calculated.
 
     /**
      * If this flag is true, execute() will run most operations twice,
@@ -588,6 +588,7 @@ public class Zip extends MatchingTask {
      *        that you must choose one of a or b, and [c] indicates that you
      *        may use or omit c. ±ZZZZ is the timezone offset, and may be
      *        literally "Z" to mean GMT.
+     * @since Ant 1.10.2
      */
     public void setModificationtime(String time) {
         fixedModTime = time;
@@ -596,6 +597,7 @@ public class Zip extends MatchingTask {
     /**
      * The file modification time previously provided to
      * {@link #setModificationtime(String)} or {@code null} if unset.
+     * @since Ant 1.10.2
      */
     public String getModificationtime() {
         return fixedModTime;
