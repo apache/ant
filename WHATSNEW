@@ -13,6 +13,11 @@ Fixed bugs:
    parent directory of a transferred file, instead of changing it
    on the transferred file itself.
 
+ * Bugzilla Report 60644 - Fixed the issue where the source file
+   being copied could end up being corrupted if the target of the
+   copy happened to be the same source file (symlinked back
+   to itself).
+
 Other changes:
 --------------
 
