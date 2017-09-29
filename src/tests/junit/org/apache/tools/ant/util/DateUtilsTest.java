@@ -17,12 +17,13 @@
  */
 package org.apache.tools.ant.util;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * TestCase for DateUtils.
@@ -102,5 +103,32 @@ public class DateUtilsTest {
         // should be new moon
         cal.set(2002, 2, 12);
         assertEquals(0, DateUtils.getPhaseOfMoon(cal));
+    }
+
+    @Test
+    public void testLenientDateTime() throws ParseException {
+        // ISO 8601
+        assertEquals(1488622499999L, DateUtils.parseLenientDateTime("2017-03-04 15:14:59.999 +0500").getTime());
+        assertEquals(1488622499999L, DateUtils.parseLenientDateTime("2017-03-04T15:14:59.999+05:00").getTime());
+        assertEquals(1488622499999L, DateUtils.parseLenientDateTime("2017-03-04 10:14:59.999").getTime());
+        assertEquals(1488622499999L, DateUtils.parseLenientDateTime("2017-03-04T10:14:59.999Z").getTime());
+        assertEquals(1488622499000L, DateUtils.parseLenientDateTime("2017-03-04 00:14:59 -10").getTime());
+        assertEquals(1488622440000L, DateUtils.parseLenientDateTime("2017-03-04t00:14-10").getTime());
+
+        // US-style
+        assertEquals(1488622440000L, DateUtils.parseLenientDateTime("03/04/2017 10:14 AM").getTime());
+        assertEquals(1488622499000L, DateUtils.parseLenientDateTime("03/04/2017 10:14:59 AM").getTime());
+        assertEquals(1488665640000L, DateUtils.parseLenientDateTime("03/04/2017 10:14 PM").getTime());
+        assertEquals(1488665699000L, DateUtils.parseLenientDateTime("03/04/2017 10:14:59 PM").getTime());
+
+        // Milliseconds
+        assertEquals(1488622499999L, DateUtils.parseLenientDateTime("1488622499999").getTime());
+
+        try {
+            DateUtils.parseLenientDateTime("not a date");
+        } catch (ParseException pe) {
+            return;
+        }
+        fail("DateUtils.parseLenientDateTime is accepting malformed input!");
     }
 }
