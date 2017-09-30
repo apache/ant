@@ -27,7 +27,6 @@ Fixed bugs:
    copy happened to be the same source file (symlinked back
    to itself).
 
-
 Other changes:
 --------------
 
