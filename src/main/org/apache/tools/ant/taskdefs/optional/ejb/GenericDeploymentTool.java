@@ -760,11 +760,12 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 jarStream.setMethod(JarOutputStream.DEFLATED);
 
                 // Loop through all the class files found and add them to the jar
-                for (String entryName : files.keySet()) {
+                for (Map.Entry<String, File> entryFiles : files.entrySet()) {
+                    String entryName = entryFiles.getKey();
                     if (entryName.equals(MANIFEST)) {
                         continue;
                     }
-                    File entryFile = files.get(entryName);
+                    File entryFile = entryFiles.getValue();
                     log("adding file '" + entryName + "'", Project.MSG_VERBOSE);
                     addFileToJar(jarStream, entryFile, entryName);
 
