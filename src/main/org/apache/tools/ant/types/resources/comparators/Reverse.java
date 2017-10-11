@@ -81,7 +81,7 @@ public class Reverse extends ResourceComparator {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            if (nested instanceof DataType) {
+            if (nested != null) {
                 pushAndInvokeCircularReferenceCheck((DataType) nested, stk,
                                                     p);
             }
