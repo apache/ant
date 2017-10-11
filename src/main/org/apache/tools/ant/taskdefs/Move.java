@@ -105,8 +105,9 @@ public class Move extends Copy {
     protected void doFileOperations() {
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
-            for (File fromDir : completeDirMap.keySet()) {
-                File toDir = completeDirMap.get(fromDir);
+            for (Map.Entry<File, File> entry : completeDirMap.entrySet()) {
+                File fromDir = entry.getKey();
+                File toDir = entry.getValue();
                 boolean renamed = false;
                 try {
                     log("Attempting to rename dir: " + fromDir + " to " + toDir, verbosity);
@@ -133,11 +134,12 @@ public class Move extends Copy {
             log("Moving " + moveCount + " file" + ((moveCount == 1) ? "" : "s")
                     + " to " + destDir.getAbsolutePath());
 
-            for (String fromFile : fileCopyMap.keySet()) {
+            for (Map.Entry<String, String[]> entry : fileCopyMap.entrySet) {
+                String fromFile = entry.getKey();
                 File f = new File(fromFile);
                 boolean selfMove = false;
                 if (f.exists()) { //Is this file still available to be moved?
-                    String[] toFiles = fileCopyMap.get(fromFile);
+                    String[] toFiles = entry.getValue();
                     for (int i = 0; i < toFiles.length; i++) {
                         String toFile = toFiles[i];
 
@@ -164,8 +166,9 @@ public class Move extends Copy {
 
         if (includeEmpty) {
             int createCount = 0;
-            for (String fromDirName : dirCopyMap.keySet()) {
-                String[] toDirNames = dirCopyMap.get(fromDirName);
+            for (Map<String, String[]> entry : dirCopyMap.entrySet()) {
+                String fromDirName = entry.getKey();
+                String[] toDirNames = entry.getValue();;
                 boolean selfMove = false;
                 for (int i = 0; i < toDirNames.length; i++) {
                     if (fromDirName.equals(toDirNames[i])) {
