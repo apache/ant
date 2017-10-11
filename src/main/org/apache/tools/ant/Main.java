@@ -1284,9 +1284,9 @@ public class Main implements AntMain {
         // now, start printing the targets and their descriptions
         final String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
-        String spaces = "    ";
+        StringBuilder spaces = new StringBuilder("    ");
         while (spaces.length() <= maxlen) {
-            spaces += spaces;
+            spaces.append(spaces);
         }
         final StringBuilder msg = new StringBuilder();
         msg.append(heading).append(lSep).append(lSep);
