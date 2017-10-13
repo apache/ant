@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -134,7 +135,7 @@ public class Move extends Copy {
             log("Moving " + moveCount + " file" + ((moveCount == 1) ? "" : "s")
                     + " to " + destDir.getAbsolutePath());
 
-            for (Map.Entry<String, String[]> entry : fileCopyMap.entrySet) {
+            for (Map.Entry<String, String[]> entry : fileCopyMap.entrySet()) {
                 String fromFile = entry.getKey();
                 File f = new File(fromFile);
                 boolean selfMove = false;
@@ -166,7 +167,7 @@ public class Move extends Copy {
 
         if (includeEmpty) {
             int createCount = 0;
-            for (Map<String, String[]> entry : dirCopyMap.entrySet()) {
+            for (Map.Entry<String, String[]> entry : dirCopyMap.entrySet()) {
                 String fromDirName = entry.getKey();
                 String[] toDirNames = entry.getValue();;
                 boolean selfMove = false;
