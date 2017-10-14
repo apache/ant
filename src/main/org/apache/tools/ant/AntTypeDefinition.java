@@ -227,9 +227,9 @@ public class AntTypeDefinition {
         }
         TypeAdapter adapterObject = (TypeAdapter) createAndSet(
             project, adapterClass);
-        if (adapterObject == null) {
-            return null;
-        }
+        //if (adapterObject == null) {
+        //    return null;
+        //}
         adapterObject.setProxy(o);
         return adapterObject;
     }

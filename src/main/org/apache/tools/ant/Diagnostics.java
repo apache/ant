@@ -186,9 +186,9 @@ public final class Diagnostics {
      */
     private static SAXParser getSAXParser() {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        if (saxParserFactory == null) {
-            return null;
-        }
+        //if (saxParserFactory == null) {
+        //    return null;
+        //}
         SAXParser saxParser = null;
         try {
             saxParser = saxParserFactory.newSAXParser();
