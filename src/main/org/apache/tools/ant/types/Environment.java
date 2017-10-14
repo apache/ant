@@ -155,7 +155,7 @@ public class Environment {
      */
     public String[] getVariables() throws BuildException {
         if (variables.isEmpty()) {
-            return null;
+            return new String[0];
         }
         return variables.stream().map(Variable::getContent).toArray(String[]::new);
     }
