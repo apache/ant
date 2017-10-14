@@ -963,13 +963,13 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    protected static final byte[] LFH_SIG = ZipLong.LFH_SIG.getBytes(); //NOSONAR
+    static final byte[] LFH_SIG = ZipLong.LFH_SIG.getBytes(); //NOSONAR
     /**
      * data descriptor signature
      *
      * @since 1.1
      */
-    protected static final byte[] DD_SIG = ZipLong.DD_SIG.getBytes(); //NOSONAR
+    static final byte[] DD_SIG = ZipLong.DD_SIG.getBytes(); //NOSONAR
     /**
      * central file header signature
      *
@@ -981,7 +981,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    protected static final byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L); //NOSONAR
+    static final byte[] EOCD_SIG = ZipLong.getBytes(0X06054B50L); //NOSONAR
     /**
      * ZIP64 end of central dir signature
      */
