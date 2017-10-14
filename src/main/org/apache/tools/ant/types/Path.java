@@ -69,7 +69,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
 
     // non-final as some IDE integrations (at least Eclipse) want to override it
     /** The system classpath as a Path object */
-    public static Path systemClasspath = //NOSONAR
+    public static final Path systemClasspath = //NOSONAR
         new Path(null, System.getProperty("java.class.path"));
 
     /**
