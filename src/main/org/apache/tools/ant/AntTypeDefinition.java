@@ -217,19 +217,12 @@ public class AntTypeDefinition {
             return null;
         }
         Object o = createAndSet(project, c);
-        if (o == null || adapterClass == null) {
+        if (adapterClass == null
+            || (adaptToClass != null && adaptToClass.isAssignableFrom(o.getClass()))) {
             return o;
-        }
-        if (adaptToClass != null) {
-            if (adaptToClass.isAssignableFrom(o.getClass())) {
-                return o;
-            }
         }
         TypeAdapter adapterObject = (TypeAdapter) createAndSet(
             project, adapterClass);
-        if (adapterObject == null) {
-            return null;
-        }
         adapterObject.setProxy(o);
         return adapterObject;
     }
@@ -257,9 +250,6 @@ public class AntTypeDefinition {
             || !adaptToClass.isAssignableFrom(clazz))) {
             TypeAdapter adapter = (TypeAdapter) createAndSet(
                 project, adapterClass);
-            if (adapter == null) {
-                throw new BuildException("Unable to create adapter object");
-            }
             adapter.checkProxyClass(clazz);
         }
     }
@@ -267,12 +257,11 @@ public class AntTypeDefinition {
     /**
      * Get the constructor of the definition
      * and invoke it.
-     * @return the instantiated <code>Object</code>.
+     * @return the instantiated <code>Object</code>, will never be null.
      */
     private Object createAndSet(Project project, Class<?> c) {
         try {
-            Object o = innerCreateAndSet(c, project);
-            return o;
+            return innerCreateAndSet(c, project);
         } catch (InvocationTargetException ex) {
             Throwable t = ex.getTargetException();
             throw new BuildException(

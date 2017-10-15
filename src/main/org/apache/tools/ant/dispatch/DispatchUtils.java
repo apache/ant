@@ -64,7 +64,7 @@ public class DispatchUtils {
                             final Object o = actionM.invoke(dispatchable, (Object[]) null);
                             if (o != null) {
                                 final String s = o.toString();
-                                if (s != null && s.trim().length() > 0) {
+                                if (s.trim().length() > 0) {
                                     methodName = s.trim();
                                     Method executeM = null;
                                     executeM = dispatchable.getClass().getMethod(
