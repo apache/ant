@@ -195,8 +195,12 @@ public final class Diagnostics {
      * @return parser or null for trouble
      */
     private static SAXParser getSAXParser() {
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        if (saxParserFactory == null) {
+        SAXParserFactory saxParserFactory = null;
+        try {
+            saxParserFactory = SAXParserFactory.newInstance();
+        } catch (Exception e) {
+            // ignore
+            ignoreThrowable(e);
             return null;
         }
         SAXParser saxParser = null;
