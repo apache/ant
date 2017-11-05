@@ -67,6 +67,10 @@ Other changes:
    entries to a fixed timestamp.
    Github Pull Request #36
 
+ * Bugzilla report 61718 - Jsch library dependency has now been
+   upgraded to 0.1.54. Jsch is the library behind the sshexec 
+   and scp Ant tasks.   
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 
