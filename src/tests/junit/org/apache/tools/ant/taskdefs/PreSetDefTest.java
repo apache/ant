@@ -33,10 +33,10 @@ import static org.junit.Assert.fail;
 /**
  */
 public class PreSetDefTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/presetdef.xml");
@@ -45,55 +45,55 @@ public class PreSetDefTest {
     @Test
     public void testSimple() {
         buildRule.executeTarget("simple");
-		assertEquals("Hello world", buildRule.getLog());
+        assertEquals("Hello world", buildRule.getLog());
     }
 
     @Test
     public void testText() {
         buildRule.executeTarget("text");
-		assertEquals("Inner Text", buildRule.getLog());
+        assertEquals("Inner Text", buildRule.getLog());
     }
 
     @Test
     public void testUri() {
         buildRule.executeTarget("uri");
-		assertEquals("Hello world", buildRule.getLog());
+        assertEquals("Hello world", buildRule.getLog());
     }
 
     @Test
     public void testDefaultTest() {
         buildRule.executeTarget("defaulttest");
-		assertEquals("attribute is false", buildRule.getLog());
+        assertEquals("attribute is false", buildRule.getLog());
     }
 
     @Test
     public void testDoubleDefault() {
         buildRule.executeTarget("doubledefault");
-		assertEquals("attribute is falseattribute is true", buildRule.getLog());
+        assertEquals("attribute is falseattribute is true", buildRule.getLog());
     }
 
     @Test
     public void testTextOptional() {
         buildRule.executeTarget("text.optional");
-		assertEquals("MyTextoverride text", buildRule.getLog());
+        assertEquals("MyTextoverride text", buildRule.getLog());
     }
 
     @Test
     public void testElementOrder() {
         buildRule.executeTarget("element.order");
-		assertEquals("Line 1Line 2", buildRule.getLog());
+        assertEquals("Line 1Line 2", buildRule.getLog());
     }
 
     @Test
     public void testElementOrder2() {
         buildRule.executeTarget("element.order2");
-		assertEquals("Line 1Line 2Line 3", buildRule.getLog());
+        assertEquals("Line 1Line 2Line 3", buildRule.getLog());
     }
 
     @Test
     public void testAntTypeTest() {
         buildRule.executeTarget("antTypeTest");
-		assertEquals("", buildRule.getLog());
+        assertEquals("", buildRule.getLog());
     }
 
     @Test
@@ -115,13 +115,13 @@ public class PreSetDefTest {
             assertContains("javac doesn't support the", ex.getMessage());
         }
     }
-    
+
     @Test
     public void testPresetdefWithNestedElementTwice() { // #38056
         buildRule.executeTarget("presetdef-with-nested-element-twice");
         buildRule.executeTarget("presetdef-with-nested-element-twice");
     }
-    
+
     /**
      * A test class to check default properties
      */
@@ -151,4 +151,3 @@ public class PreSetDefTest {
         }
     }
 }
-

@@ -87,7 +87,7 @@ public class DependTest {
 
         buildRule.executeTarget("testclosure");
         Hashtable files = getResultFiles();
-        assertTrue("Depend did not leave correct number of files", 
+        assertTrue("Depend did not leave correct number of files",
             files.size() <= 2);
         assertTrue("Result did not contain D.class",
             files.containsKey("D.class"));

@@ -83,7 +83,7 @@ public class PresentSelectorTest {
         flatten.setValue("flatten");
 
         File beddir = selectorRule.getBeddir();
-        
+
         s = new PresentSelector();
         s.setTargetdir(beddir);
         results = selectorRule.selectionString(s);
@@ -122,7 +122,7 @@ public class PresentSelectorTest {
         results = selectorRule.selectionString(s);
         assertEquals("FFTFFFFFFFFF", results);
 
-            
+
         s = new PresentSelector();
         subdir = new File(selectorRule.getOutputDir(), "selectortest2");
         s.setTargetdir(subdir);

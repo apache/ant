@@ -75,26 +75,26 @@ public class EchoPropertiesTest {
 
     @Test
     public void testEchoToLog() {
-    	buildRule.executeTarget("testEchoToLog");
-    	assertContains("test.property=" + TEST_VALUE, buildRule.getLog());
+        buildRule.executeTarget("testEchoToLog");
+        assertContains("test.property=" + TEST_VALUE, buildRule.getLog());
     }
 
     @Test
     public void testEchoWithEmptyPrefixToLog() {
-    	buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
-    	assertContains("test.property="+TEST_VALUE, buildRule.getLog());
+        buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
+        assertContains("test.property="+TEST_VALUE, buildRule.getLog());
     }
 
 
     @Test
     public void testReadBadFile() {
-    	try {
-    		buildRule.executeTarget("testReadBadFile");
-    		fail("BuildException should have been thrown on bad file");
-    	}
-    	catch(BuildException ex) {
-    		assertContains("srcfile is a directory","srcfile is a directory!", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("testReadBadFile");
+            fail("BuildException should have been thrown on bad file");
+        }
+        catch(BuildException ex) {
+            assertContains("srcfile is a directory","srcfile is a directory!", ex.getMessage());
+        }
     }
 
     @Test
@@ -106,19 +106,19 @@ public class EchoPropertiesTest {
 
     @Test
     public void testEchoToBadFile() {
-    	try {
-    		buildRule.executeTarget("testEchoToBadFile");
+        try {
+            buildRule.executeTarget("testEchoToBadFile");
             fail("BuildException should have been thrown on destination file being a directory");
-    	} catch(BuildException ex) {
-    		assertContains("destfile is a directory", "destfile is a directory!", ex.getMessage());
-    	}
+        } catch(BuildException ex) {
+            assertContains("destfile is a directory", "destfile is a directory!", ex.getMessage());
+        }
     }
 
 
     @Test
     public void testEchoToBadFileNoFail() {
-    	buildRule.executeTarget("testEchoToBadFileNoFail");
-    	assertContains("destfile is a directory!", buildRule.getLog());
+        buildRule.executeTarget("testEchoToBadFileNoFail");
+        assertContains("destfile is a directory!", buildRule.getLog());
     }
 
 
@@ -192,18 +192,18 @@ public class EchoPropertiesTest {
 
     @Test
     public void testWithPrefixAndRegex() throws Exception {
-    	try {
-    		buildRule.executeTarget("testWithPrefixAndRegex");
-    		fail("BuildException should have been thrown on Prefix and RegEx beng set");
-    	} catch (BuildException ex) {
-    		assertEquals("The target must fail with prefix and regex attributes set", "Please specify either prefix or regex, but not both", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("testWithPrefixAndRegex");
+            fail("BuildException should have been thrown on Prefix and RegEx beng set");
+        } catch (BuildException ex) {
+            assertEquals("The target must fail with prefix and regex attributes set", "Please specify either prefix or regex, but not both", ex.getMessage());
+        }
     }
 
     @Test
     public void testWithEmptyPrefixAndRegex() throws Exception {
-    	buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
-    	assertContains("test.property="+TEST_VALUE, buildRule.getLog());
+        buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
+        assertContains("test.property="+TEST_VALUE, buildRule.getLog());
     }
 
     @Test
@@ -263,4 +263,3 @@ public class EchoPropertiesTest {
         return new File(buildRule.getProject().getBaseDir(), filename);
     }
 }
-

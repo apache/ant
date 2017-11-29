@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
  *
  */
 public class DepthSelectorTest {
-    
+
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 

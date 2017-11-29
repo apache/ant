@@ -41,7 +41,7 @@ import static org.junit.Assume.assumeTrue;
 /**
  */
 public class ReplaceTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -54,41 +54,41 @@ public class ReplaceTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test4() {
         try {
-			buildRule.executeTarget("test4");
-			fail("BuildException expected: empty token not allowed");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test4");
+            fail("BuildException expected: empty token not allowed");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
@@ -99,21 +99,21 @@ public class ReplaceTest {
     @Test
     public void test6() {
         try {
-			buildRule.executeTarget("test6");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test6");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test7() {
         try {
-			buildRule.executeTarget("test7");
-			fail("BuildException expected: empty token not allowed");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test7");
+            fail("BuildException expected: empty token not allowed");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test

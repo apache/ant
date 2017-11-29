@@ -40,21 +40,21 @@ public class MkdirTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument missing");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: directory already exists as a file");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: directory already exists as a file");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test

@@ -121,5 +121,3 @@ public class AssertionsTest {
         buildRule.executeTarget("test-junit");
     }
 }
-
-

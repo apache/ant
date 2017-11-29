@@ -745,7 +745,7 @@ public class NetRexxC extends MatchingTask {
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
                 } else if (compile && srcFile.lastModified() > classFile.lastModified()) {
-                	// compile case tests against .class file
+                    // compile case tests against .class file
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
                 }
@@ -1039,4 +1039,3 @@ public class NetRexxC extends MatchingTask {
         }
     }
 }
-

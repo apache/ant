@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
  *
  */
 public class SizeSelectorTest {
-    
+
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
@@ -131,7 +131,7 @@ public class SizeSelectorTest {
         more.setValue("more");
 
 
-    
+
         s = new SizeSelector();
         s.setValue(10);
         s.setWhen(less);
@@ -185,7 +185,7 @@ public class SizeSelectorTest {
         s.setParameters(params);
         results = selectorRule.selectionString(s);
         assertEquals("TFFFFFFTFFTT", results);
-    
+
 
     }
 

@@ -32,7 +32,7 @@ public class DescriptionTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Test
     public void test1() {
         buildRule.configureProject("src/etc/testcases/types/description1.xml");

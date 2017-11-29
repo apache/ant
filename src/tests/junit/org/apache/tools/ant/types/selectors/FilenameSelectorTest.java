@@ -108,7 +108,7 @@ public class FilenameSelectorTest {
             results = selectorRule.selectionString(s);
             assertEquals("FFTFFFFFFTTF", results);
 
-        
+
 
     }
 

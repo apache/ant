@@ -1,4 +1,4 @@
-/* 
+/*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -13,33 +13,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
- 
+
  import junit.framework.TestCase;
 
 /**
- * this is an assertion tester for junit 
+ * this is an assertion tester for junit
  */
 public class AssertionTest extends TestCase {
-    
-	public AssertionTest(String name) {
-		super(name);
-	}
-	
-	public void testAssertRaised() {
-		try {
-			assert true == false;
-			fail("expected an assertion");
-		} catch(AssertionError asserto) {
-			//if we got here, all was well
-		}
-	}
-	
-	
-	public void testAssertNotRaised() {
-		assert(2+2==4);
-	}
-	
-    
+
+    public AssertionTest(String name) {
+        super(name);
+    }
+
+    public void testAssertRaised() {
+        try {
+            assert true == false;
+            fail("expected an assertion");
+        } catch(AssertionError asserto) {
+            //if we got here, all was well
+        }
+    }
+
+
+    public void testAssertNotRaised() {
+        assert(2+2==4);
+    }
+
+
 }

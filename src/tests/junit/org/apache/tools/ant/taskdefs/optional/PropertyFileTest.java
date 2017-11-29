@@ -104,7 +104,7 @@ public class PropertyFileTest {
             FNAME, beforeUpdate.getProperty(FNAME_KEY));
         assertEquals("Property '" + LNAME_KEY + "' should exist before deleting",
             LNAME, beforeUpdate.getProperty(LNAME_KEY));
-        
+
         buildRule.executeTarget("delete-properties");
         Properties afterUpdate = getTestProperties();
 

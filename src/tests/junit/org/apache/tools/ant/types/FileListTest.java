@@ -37,12 +37,12 @@ public class FileListTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/filelist.xml");
     }
-    
+
     @Test
     public void testEmptyElementIfIsReference() {
         FileList f = new FileList();

@@ -131,7 +131,7 @@ public class UTF8ZipFilesTest {
             zos = new ZipOutputStream(file);
             zos.setEncoding(encoding);
             zos.setUseLanguageEncodingFlag(withEFS);
-            zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra ? 
+            zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra ?
                                             ZipOutputStream
                                             .UnicodeExtraFieldPolicy.NEVER
                                             : ZipOutputStream
@@ -257,4 +257,3 @@ public class UTF8ZipFilesTest {
     }
 
 }
-

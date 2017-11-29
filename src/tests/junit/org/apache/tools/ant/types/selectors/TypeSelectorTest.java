@@ -63,7 +63,7 @@ public class TypeSelectorTest {
         TypeSelector.FileType file = new TypeSelector.FileType();
         file.setValue("file");
 
-    
+
 
         s = new TypeSelector();
         s.setType(directory);

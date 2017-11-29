@@ -103,7 +103,7 @@ public class TStampTest {
 
     @Test
     public void testFormatPrefix() throws Exception {
-	    Tstamp.CustomFormat format = tstamp.createFormat();
+        Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("format");
         format.setPattern("HH:mm:ss z");
         format.setTimezone("GMT");

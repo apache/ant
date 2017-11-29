@@ -36,7 +36,7 @@ public abstract class BaseResourceCollectionWrapper
         return cacheCollection().iterator();
     }
 
-	protected int getSize() {
+    protected int getSize() {
         return cacheCollection().size();
     }
 

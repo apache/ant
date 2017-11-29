@@ -54,24 +54,24 @@ public class UpToDateTest {
     @Test
     public void testFilesetUpToDate() {
         buildRule.executeTarget("testFilesetUpToDate");
-		assertEquals("true", buildRule.getProject().getProperty("foo"));
+        assertEquals("true", buildRule.getProject().getProperty("foo"));
     }
 
     @Test
     public void testFilesetOutOfDate() {
         buildRule.executeTarget("testFilesetOutOfDate");
-		assertNull(buildRule.getProject().getProperty("foo"));
+        assertNull(buildRule.getProject().getProperty("foo"));
     }
 
     @Test
     public void testRCUpToDate() {
         buildRule.executeTarget("testRCUpToDate");
-		assertEquals("true", buildRule.getProject().getProperty("foo"));
+        assertEquals("true", buildRule.getProject().getProperty("foo"));
     }
 
     @Test
     public void testRCOutOfDate() {
         buildRule.executeTarget("testRCOutOfDate");
-		assertNull(buildRule.getProject().getProperty("foo"));
+        assertNull(buildRule.getProject().getProperty("foo"));
     }
 }

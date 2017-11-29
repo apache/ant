@@ -28,26 +28,26 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class TearDownOnVmCrashTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
 
-	@Before
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/junit/teardownlistener.xml");
     }
 
-	@Test
+    @Test
     public void testNoTeardown() {
         buildRule.executeTarget("testNoTeardown");
         assertEquals("true", buildRule.getProject().getProperty("error"));
         assertNotContains("tearDown called on Timeout", buildRule.getOutput());
     }
 
-	@Test
+    @Test
     public void testTeardown() {
-		buildRule.executeTarget("testTeardown");
-		assertEquals("true", buildRule.getProject().getProperty("error"));
-		assertContains("tearDown called on Timeout", buildRule.getOutput());
+        buildRule.executeTarget("testTeardown");
+        assertEquals("true", buildRule.getProject().getProperty("error"));
+        assertContains("tearDown called on Timeout", buildRule.getOutput());
     }
 }

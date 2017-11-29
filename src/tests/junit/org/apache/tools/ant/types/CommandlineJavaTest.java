@@ -171,7 +171,7 @@ public class CommandlineJavaTest {
             "junit.textui.TestRunner",
             "org.apache.tools.ant.CommandlineJavaTest",
         };
-            
+
         // only the second iteration would pass because of PR 27218
         for (int i = 0; i < 3; i++) {
             String[] s = c.getCommandline();

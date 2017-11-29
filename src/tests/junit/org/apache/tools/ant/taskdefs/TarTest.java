@@ -45,41 +45,41 @@ public class TarTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test4() {
         try {
-			buildRule.executeTarget("test4");
-			fail("BuildException expected: tar cannot include itself");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test4");
+            fail("BuildException expected: tar cannot include itself");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
@@ -96,11 +96,11 @@ public class TarTest {
     @Test
     public void test6() {
         try {
-			buildRule.executeTarget("test6");
-			fail("BuildException expected: Invalid value specified for longfile attribute.");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test6");
+            fail("BuildException expected: Invalid value specified for longfile attribute.");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
@@ -172,11 +172,11 @@ public class TarTest {
     @Test
     public void test9() {
         try {
-			buildRule.executeTarget("test9");
-			fail("BuildException expected: Invalid value specified for compression attribute.");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test9");
+            fail("BuildException expected: Invalid value specified for compression attribute.");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test

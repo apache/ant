@@ -32,10 +32,10 @@ import org.junit.Test;
 
 public class ExtendedTaskdefTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
-	
-	@Before
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/core/extended-taskdef.xml");
     }
@@ -47,22 +47,22 @@ public class ExtendedTaskdefTest {
 
     @Test
     public void testRun() throws Exception {
-    	try {
-    		buildRule.executeTarget("testRun");
-    		fail("BuildException should have been thrown");
-    	} catch(BuildException ex) {
-    		assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("testRun");
+            fail("BuildException should have been thrown");
+        } catch(BuildException ex) {
+            assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
+        }
     }
 
     @Test
     public void testRun2() throws Exception {
-    	try {
-    		buildRule.executeTarget("testRun2");
-    		fail("BuildException should have been thrown");
-    	} catch(BuildException ex) {
-    		assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("testRun2");
+            fail("BuildException should have been thrown");
+        } catch(BuildException ex) {
+            assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
+        }
     }
 
 }

@@ -147,7 +147,7 @@ public class FilterSetTest {
 
         assertEquals(result, filters.replaceTokens(line));
     }
-    
+
     @Test
     public void testNestedFilterSets() {
         buildRule.executeTarget("test-nested-filtersets");

@@ -138,7 +138,7 @@ public class JavaEnvUtilsTest {
                 "Current java version is not at least the current java version...",
                 JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.getJavaVersion()));
     }
-  
+
     @Test
     public void isJavaVersionSupportsBothVersionsOfJava9() {
         assumeTrue(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9));

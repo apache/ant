@@ -45,5 +45,3 @@ public class GlobMapperTest {
         buildRule.executeTarget("handle.dirsep");
     }
 }
-
-

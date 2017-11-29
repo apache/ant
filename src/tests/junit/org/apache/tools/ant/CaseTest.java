@@ -29,9 +29,9 @@ import static org.junit.Assert.fail;
  * Simple tests of build file processing
  */
 public class CaseTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
@@ -53,12 +53,11 @@ public class CaseTest {
      */
     @Test
     public void testTaskCase() {
-    	try {
-    		buildRule.executeTarget("taskcase");
-    		fail("Build exception should have been thrown due to case sensitivity of name");
-    	} catch(BuildException ex) {
-    		assertContains("Task names should be case sensitive", "Problem: failed to create task or type ecHO", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("taskcase");
+            fail("Build exception should have been thrown due to case sensitivity of name");
+        } catch(BuildException ex) {
+            assertContains("Task names should be case sensitive", "Problem: failed to create task or type ecHO", ex.getMessage());
+        }
     }
 }
-

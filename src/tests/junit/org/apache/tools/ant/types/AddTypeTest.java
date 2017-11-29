@@ -34,7 +34,7 @@ public class AddTypeTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/addtype.xml");
@@ -99,13 +99,13 @@ public class AddTypeTest {
         buildRule.executeTarget("condition.task");
         AntAssert.assertContains( "My Condition execution", buildRule.getLog());
     }
-    
+
     @Test
     public void testConditionConditionType() {
         buildRule.executeTarget("condition.condition.type");
         AntAssert.assertContains( "My Condition eval", buildRule.getLog());
     }
-    
+
     @Test
     public void testConditionConditionTask() {
         try {

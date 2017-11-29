@@ -29,47 +29,47 @@ import org.junit.runner.Description;
  */
 public class JUnitVersionHelperTest {
 
-	@Test
+    @Test
     public void testMyOwnName() {
         assertEquals("testMyOwnName",
-        		JUnitVersionHelper.getTestCaseName(
+                JUnitVersionHelper.getTestCaseName(
                     JUnit4TestAdapterCache.getDefault().asTest(
-                    		Description.createTestDescription(JUnitVersionHelperTest.class, "testMyOwnName")
+                            Description.createTestDescription(JUnitVersionHelperTest.class, "testMyOwnName")
                     )
                 )
         );
     }
 
-	@Test
+    @Test
     public void testNonTestCaseName() {
         assertEquals("I'm a foo",
                      JUnitVersionHelper.getTestCaseName(new Foo1()));
     }
 
-	@Test
+    @Test
     public void testNoStringReturn() {
         assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo2()));
     }
 
-	@Test
+    @Test
     public void testNoGetName() {
         assertEquals("unknown",
                      JUnitVersionHelper.getTestCaseName(new Foo3()));
     }
 
-	@Test
+    @Test
     public void testNameNotGetName() {
         assertEquals("I'm a foo, too",
                      JUnitVersionHelper.getTestCaseName(new Foo4()));
     }
 
-	@Test
+    @Test
     public void testNull() {
         assertEquals("unknown", JUnitVersionHelper.getTestCaseName(null));
     }
 
-	@Test
+    @Test
     public void testTestCaseSubClass() {
         assertEquals("overridden getName",
                      JUnitVersionHelper.getTestCaseName(new Foo5()));

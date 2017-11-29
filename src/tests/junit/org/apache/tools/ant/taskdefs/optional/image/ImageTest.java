@@ -39,7 +39,7 @@ import static org.junit.Assume.assumeTrue;
  */
 public class ImageTest {
 
-    private final static String TASKDEFS_DIR = 
+    private final static String TASKDEFS_DIR =
         "src/etc/testcases/taskdefs/optional/image/";
     private final static String LARGEIMAGE = "largeimage.jpg";
 
@@ -122,7 +122,7 @@ public class ImageTest {
         }
         catch (RuntimeException re){
             assertTrue("Run time exception should say "
-                       + "'Unable to process image stream'. :" 
+                       + "'Unable to process image stream'. :"
                        + re.toString(),
                        re.toString()
                        .indexOf("Unable to process image stream") > -1);
@@ -130,4 +130,3 @@ public class ImageTest {
     }
 
 }
-

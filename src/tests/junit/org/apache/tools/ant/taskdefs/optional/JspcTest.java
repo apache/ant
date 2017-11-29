@@ -48,7 +48,7 @@ public class JspcTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject(TASKDEFS_DIR + "jspc.xml");
@@ -197,4 +197,3 @@ public class JspcTest {
 
 
 }
-

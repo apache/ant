@@ -83,7 +83,7 @@ public class IgnoredTestResult extends TestResult {
      * @param cause the details of the test and assumption failure.
      */
     public void testAssumptionFailure(Test test, Throwable cause) {
-    	skipped.add(new TestIgnored(test));
+        skipped.add(new TestIgnored(test));
         for (IgnoredTestListener listener : listeners) {
             listener.testAssumptionFailure(test, cause);
         }

@@ -32,9 +32,9 @@ import org.junit.Test;
 /**
  */
 public class DirnameTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
@@ -43,32 +43,32 @@ public class DirnameTest {
 
     @Test
     public void test1() {
-    	try {
-        	buildRule.executeTarget("test1");
-        	fail("Build exception should have been thrown as property attribute is required");
-    	} catch(BuildException ex) {
-    		assertEquals("property attribute required", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("test1");
+            fail("Build exception should have been thrown as property attribute is required");
+        } catch(BuildException ex) {
+            assertEquals("property attribute required", ex.getMessage());
+        }
     }
 
     @Test
     public void test2() {
-    	try {
-        	buildRule.executeTarget("test2");
-        	fail("Build exception should have been thrown as file attribute is required");
-    	} catch(BuildException ex) {
-    		assertEquals("file attribute required", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("test2");
+            fail("Build exception should have been thrown as file attribute is required");
+        } catch(BuildException ex) {
+            assertEquals("file attribute required", ex.getMessage());
+        }
     }
 
     @Test
     public void test3() {
-    	try {
-        	buildRule.executeTarget("test3");
-        	fail("Build exception should have been thrown as property attribute is required");
-    	} catch(BuildException ex) {
-    		assertEquals("property attribute required", ex.getMessage());
-    	}
+        try {
+            buildRule.executeTarget("test3");
+            fail("Build exception should have been thrown as property attribute is required");
+        } catch(BuildException ex) {
+            assertEquals("property attribute required", ex.getMessage());
+        }
     }
 
     @Test

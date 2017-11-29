@@ -63,39 +63,39 @@ import org.w3c.dom.Node;
 
 public class JUnitTaskTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
-	
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
     /**
      * The JUnit setup method.
      */
-	@Before
+    @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/junit.xml");
     }
 
-	@Test
+    @Test
     public void testCrash() {
-    	buildRule.executeTarget("crash");
-    	assertEquals("true", buildRule.getProject().getProperty("crashed"));
+        buildRule.executeTarget("crash");
+        assertEquals("true", buildRule.getProject().getProperty("crashed"));
     }
 
-	@Test
+    @Test
     public void testNoCrash() {
-    	buildRule.executeTarget("nocrash");
-    	assertNull(buildRule.getProject().getProperty("crashed"));
+        buildRule.executeTarget("nocrash");
+        assertNull(buildRule.getProject().getProperty("crashed"));
     }
 
-	@Test
+    @Test
     public void testTimeout() {
-    	buildRule.executeTarget("timeout");
-    	assertEquals("true", buildRule.getProject().getProperty("timeout"));
+        buildRule.executeTarget("timeout");
+        assertEquals("true", buildRule.getProject().getProperty("timeout"));
     }
 
     @Test
     public void testNoTimeout() {
        buildRule.executeTarget("notimeout");
-   	   assertNull(buildRule.getProject().getProperty("timeout"));
+       assertNull(buildRule.getProject().getProperty("timeout"));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class JUnitTaskTest {
     public void testFailureRecorder() {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             try {
-            	Class<?> clazz =Class.forName("junit.framework.JUnit4TestAdapter");
+                Class<?> clazz =Class.forName("junit.framework.JUnit4TestAdapter");
                 Assume.assumeFalse("Skipping test since it fails with JUnit 4", clazz != null);
             } catch (ClassNotFoundException e) {
                 // OK, this is JUnit3, can run test
@@ -154,14 +154,14 @@ public class JUnitTaskTest {
 
         // ensure that there is a clean test environment
         assertFalse("Test directory '" + testDir.getAbsolutePath()
-                    + "' must not exist before the test preparation.", 
+                    + "' must not exist before the test preparation.",
                     testDir.exists());
         assertFalse("The collector file '"
                     + collectorFile.getAbsolutePath()
-                    + "'must not exist before the test preparation.", 
+                    + "'must not exist before the test preparation.",
                     collectorFile.exists());
 
-    
+
         // prepare the test environment
         buildRule.executeTarget("failureRecorder.prepare");
         assertTrue("Test directory '" + testDir.getAbsolutePath()
@@ -169,14 +169,14 @@ public class JUnitTaskTest {
         assertTrue("There should be one class.",
                    (new File(testDir, "A.class")).exists());
         assertFalse("The collector file '"
-                    + collectorFile.getAbsolutePath() 
+                    + collectorFile.getAbsolutePath()
                     + "' should not exist before the 1st run.",
                     collectorFile.exists());
-    
-    
+
+
         // 1st junit run: should do all tests - failing and not failing tests
         buildRule.executeTarget("failureRecorder.runtest");
-        assertTrue("The collector file '" + collectorFile.getAbsolutePath() 
+        assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 1st run.",
                    collectorFile.exists());
         // the passing test cases
@@ -202,10 +202,10 @@ public class JUnitTaskTest {
         buildRule.executeTarget("D.test10");
         assertContains("1st run: should run D.test10", buildRule.getOutput());
 
-    
+
         // 2nd junit run: should do only failing tests
         buildRule.executeTarget("failureRecorder.runtest");
-        assertTrue("The collector file '" + collectorFile.getAbsolutePath() 
+        assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 2nd run.",
                    collectorFile.exists());
         // the passing test cases
@@ -230,14 +230,14 @@ public class JUnitTaskTest {
         assertContains("2nd run: should run B.test04", buildRule.getOutput());
         buildRule.executeTarget("D.test10");
         assertContains("2nd run: should run D.test10", buildRule.getOutput());
-    
-    
+
+
         // "fix" errors in class A
         buildRule.executeTarget("failureRecorder.fixing");
-    
+
         // 3rd run: four running tests with two errors
         buildRule.executeTarget("failureRecorder.runtest");
-        assertTrue("The collector file '" + collectorFile.getAbsolutePath() 
+        assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 3rd run.",
                    collectorFile.exists());
         buildRule.executeTarget("A.test02");
@@ -248,11 +248,11 @@ public class JUnitTaskTest {
         assertContains("3rd run: should run B.test04", buildRule.getOutput());
         buildRule.executeTarget("D.test10");
         assertContains("3rd run: should run D.test10", buildRule.getOutput());
-    
-    
+
+
         // 4rd run: two running tests with errors
         buildRule.executeTarget("failureRecorder.runtest");
-        assertTrue("The collector file '" + collectorFile.getAbsolutePath() 
+        assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 4th run.",
                    collectorFile.exists());
         //TODO: these two statements fail

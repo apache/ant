@@ -42,7 +42,7 @@ import org.w3c.dom.Document;
 public abstract class AbstractXSLTLiaisonTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    
+
     protected XSLTLiaison liaison;
 
     @Before

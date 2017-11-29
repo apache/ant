@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
 /**
  */
 public class TypedefTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -45,41 +45,41 @@ public class TypedefTest {
     @Test
     public void testEmpty() {
         try {
-			buildRule.executeTarget("empty");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("empty");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void testNoName() {
         try {
-			buildRule.executeTarget("noName");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("noName");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void testNoClassname() {
         try {
-			buildRule.executeTarget("noClassname");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("noClassname");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void testClassNotFound() {
         try {
-			buildRule.executeTarget("classNotFound");
-			fail("BuildException expected: classname specified doesn't exist");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("classNotFound");
+            fail("BuildException expected: classname specified doesn't exist");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
@@ -109,28 +109,28 @@ public class TypedefTest {
     @Test
     public void testDoubleNotPresent() {
         buildRule.executeTarget("double-notpresent");
-		assertContains("hi", buildRule.getLog());
+        assertContains("hi", buildRule.getLog());
     }
-    
+
     @Test
     public void testNoResourceOnErrorFailAll(){
-    		try {
-			buildRule.executeTarget("noresourcefailall");
-			fail("BuildException expected: the requested resource does not exist");
-		} catch (BuildException ex) {
-			assertContains("Could not load definitions from resource ", ex.getMessage());
-		}
+            try {
+            buildRule.executeTarget("noresourcefailall");
+            fail("BuildException expected: the requested resource does not exist");
+        } catch (BuildException ex) {
+            assertContains("Could not load definitions from resource ", ex.getMessage());
+        }
     }
-    
+
     @Test
     public void testNoResourceOnErrorFail(){
-		buildRule.executeTarget("noresourcefail");
-		assertContains("Could not load definitions from resource ", buildRule.getLog());
+        buildRule.executeTarget("noresourcefail");
+        assertContains("Could not load definitions from resource ", buildRule.getLog());
     }
-    
+
     @Test
     public void testNoResourceOnErrorNotFail(){
-    		buildRule.executeTarget("noresourcenotfail");
-		assertContains("Could not load definitions from resource ", buildRule.getLog());
+            buildRule.executeTarget("noresourcenotfail");
+        assertContains("Could not load definitions from resource ", buildRule.getLog());
     }
 }

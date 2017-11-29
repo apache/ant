@@ -44,41 +44,41 @@ public class TaskdefTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test4() {
         try {
-			buildRule.executeTarget("test4");
-			fail("BuildException expected: classname specified doesn't exist");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test4");
+            fail("BuildException expected: classname specified doesn't exist");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
@@ -99,19 +99,19 @@ public class TaskdefTest {
     @Test
     public void test6() {
         buildRule.executeTarget("test6");
-		assertEquals("simpletask: worked", buildRule.getLog());
+        assertEquals("simpletask: worked", buildRule.getLog());
     }
 
     @Test
     public void test7() {
         buildRule.executeTarget("test7");
-		assertEquals("worked", buildRule.getLog());
+        assertEquals("worked", buildRule.getLog());
     }
 
     @Test
     public void testGlobal() {
         buildRule.executeTarget("testGlobal");
-		assertEquals("worked", buildRule.getLog());
+        assertEquals("worked", buildRule.getLog());
     }
 
     @Test

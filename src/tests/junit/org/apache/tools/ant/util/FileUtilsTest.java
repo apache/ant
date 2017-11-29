@@ -285,7 +285,7 @@ public class FileUtilsTest {
                              FILE_UTILS.normalize(driveSpec).getPath());
                 fail("Expected failure, C: isn't an absolute path on other os's");
             } catch (BuildException e) {
-                // Passed test 
+                // Passed test
             }
         }
 
@@ -337,7 +337,7 @@ public class FileUtilsTest {
         assertEquals(f, new File("a").getAbsoluteFile());
     }
 
-    
+
     /**
      * Test createTempFile
      */
@@ -589,7 +589,7 @@ public class FileUtilsTest {
             assertFalse(FILE_UTILS.hasErrorInCase(wrongcased));
             assertFalse(FILE_UTILS.hasErrorInCase(wellcased));
         }
-        
+
     }
     public void testGetDefaultEncoding() {
         // This just tests that the function does not blow up

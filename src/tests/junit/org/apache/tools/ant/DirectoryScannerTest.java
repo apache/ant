@@ -44,9 +44,9 @@ import org.junit.Test;
  */
 public class DirectoryScannerTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
-	
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
     // keep track of what operating systems are supported here.
     private boolean supportsSymlinks = Os.isFamily("unix");
 
@@ -121,8 +121,8 @@ public class DirectoryScannerTest {
 
     @Test
     public void testAllowSymlinks() {
-        
-    	assumeTrue("Current system does not support Symlinks", supportsSymlinks);
+
+        assumeTrue("Current system does not support Symlinks", supportsSymlinks);
 
         buildRule.getProject().executeTarget("symlink-setup");
         DirectoryScanner ds = new DirectoryScanner();
@@ -135,7 +135,7 @@ public class DirectoryScannerTest {
 
     @Test
     public void testProhibitSymlinks() {
-    	assumeTrue("Current system does not support Symlinks", supportsSymlinks);
+        assumeTrue("Current system does not support Symlinks", supportsSymlinks);
 
 
         buildRule.getProject().executeTarget("symlink-setup");
@@ -244,14 +244,14 @@ public class DirectoryScannerTest {
      * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testSetFollowLinks() throws IOException, InterruptedException {
         if (supportsSymlinks) {
             File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
             System.err.println("link exists pre-test? " + linkFile.exists());
-            
+
             try {
                 // add conditions and more commands as soon as the need arises
                 String[] command = new String[] {
