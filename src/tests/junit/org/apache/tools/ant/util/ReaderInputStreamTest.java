@@ -122,7 +122,7 @@ public class ReaderInputStreamTest {
 
     private void compareBytes(String s, String encoding) throws Exception {
         byte[] expected = s.getBytes(encoding);
-        
+
         ReaderInputStream r = new ReaderInputStream(
             new StringReader(s), encoding);
         for (int i = 0; i < expected.length; ++i) {

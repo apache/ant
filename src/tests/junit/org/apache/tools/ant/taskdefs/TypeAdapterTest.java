@@ -50,13 +50,13 @@ public class TypeAdapterTest {
     @Test
     public void testTaskAdapter() {
         buildRule.executeTarget("taskadapter");
-		assertContains("MyExec called", buildRule.getLog());
+        assertContains("MyExec called", buildRule.getLog());
     }
 
     @Test
     public void testRunAdapter() {
         buildRule.executeTarget("runadapter");
-		assertContains("MyRunnable called", buildRule.getLog());
+        assertContains("MyRunnable called", buildRule.getLog());
     }
 
     @Test
@@ -72,19 +72,19 @@ public class TypeAdapterTest {
     @Test
     public void testDelay() {
         buildRule.executeTarget("delay");
-		assertContains("MyTask called", buildRule.getLog());
+        assertContains("MyTask called", buildRule.getLog());
     }
 
     @Test
     public void testOnErrorReport() {
         buildRule.executeTarget("onerror.report");
-		assertContains("MyTaskNotPresent cannot be found", buildRule.getLog());
+        assertContains("MyTaskNotPresent cannot be found", buildRule.getLog());
     }
 
     @Test
     public void testOnErrorIgnore() {
         buildRule.executeTarget("onerror.ignore");
-		assertEquals("", buildRule.getLog());
+        assertEquals("", buildRule.getLog());
     }
 
     public static class MyTask extends Task {

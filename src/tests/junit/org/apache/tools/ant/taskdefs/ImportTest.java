@@ -39,16 +39,16 @@ import org.junit.Test;
 
 public class ImportTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
-	
-	@Test
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Test
     public void testSimpleImport() {
         buildRule.configureProject("src/etc/testcases/taskdefs/import/import.xml");
         assertContains("Before importIn imported topAfter import", buildRule.getLog());
     }
 
-	@Test
+    @Test
     public void testUnnamedNesting() {
         buildRule.configureProject("src/etc/testcases/taskdefs/import/unnamedImport.xml",
                          Project.MSG_WARN);
@@ -57,17 +57,17 @@ public class ImportTest {
                     log.length() == 0);
     }
 
-	@Test
+    @Test
     public void testSerial() {
         buildRule.configureProject("src/etc/testcases/taskdefs/import/subdir/serial.xml");
         assertContains("Unnamed2.xmlUnnamed1.xml", buildRule.getLog());
         assertContains("Expected string was not found in log",
-        		"Skipped already imported file", buildRule.getFullLog());
+                "Skipped already imported file", buildRule.getFullLog());
     }
 
     // allow this as imported in targets are only tested when a target is run
     @Test
-	public void testImportInTargetNoEffect() {
+    public void testImportInTargetNoEffect() {
         buildRule.configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
         buildRule.executeTarget("no-import");
         assertNull(buildRule.getProject().getProperty("foo"));
@@ -88,10 +88,10 @@ public class ImportTest {
         buildRule.configureProject(
             "src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
         try {
-        	buildRule.executeTarget("do-import");
-        	fail("Build exception should have been thrown as import only allowed in top level task");
+            buildRule.executeTarget("do-import");
+            fail("Build exception should have been thrown as import only allowed in top level task");
         } catch(BuildException ex) {
-        	assertContains( "not a top level task", "import only allowed as a top-level task", ex.getMessage());
+            assertContains( "not a top level task", "import only allowed as a top-level task", ex.getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ public class ImportTest {
                 "src/etc/testcases/taskdefs/import/same_target.xml");
             fail("Expected build exception");
         } catch (BuildException ex) {
-        	assertContains("Message did not contain expected contents", "Duplicate target", ex.getMessage());
+            assertContains("Message did not contain expected contents", "Duplicate target", ex.getMessage());
         }
     }
 

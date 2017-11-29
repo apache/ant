@@ -37,7 +37,7 @@ public class LoadFileTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
-    
+
 
     @Before
     public void setUp() {
@@ -57,11 +57,11 @@ public class LoadFileTest {
     @Test
     public void testNoSourcefileDefined() {
         try {
-			buildRule.executeTarget("testNoSourcefileDefined");
-			fail("BuildException expected: source file not defined");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("testNoSourcefileDefined");
+            fail("BuildException expected: source file not defined");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
 
@@ -71,11 +71,11 @@ public class LoadFileTest {
     @Test
     public void testNoPropertyDefined() {
         try {
-			buildRule.executeTarget("testNoPropertyDefined");
-			fail("BuildException expected: output property not defined");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("testNoPropertyDefined");
+            fail("BuildException expected: output property not defined");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
 
@@ -85,11 +85,11 @@ public class LoadFileTest {
     @Test
     public void testNoSourcefilefound() {
         try {
-			buildRule.executeTarget("testNoSourcefilefound");
-			fail("BuildException expected: File not found");
-		} catch (BuildException ex) {
-			assertContains(" doesn't exist", ex.getMessage());
-		}
+            buildRule.executeTarget("testNoSourcefilefound");
+            fail("BuildException expected: File not found");
+        } catch (BuildException ex) {
+            assertContains(" doesn't exist", ex.getMessage());
+        }
     }
 
     /**
@@ -99,7 +99,7 @@ public class LoadFileTest {
     public void testFailOnError()
             throws BuildException {
         buildRule.executeTarget("testFailOnError");
-		assertNull(buildRule.getProject().getProperty("testFailOnError"));
+        assertNull(buildRule.getProject().getProperty("testFailOnError"));
     }
 
 

@@ -62,19 +62,19 @@ public class BlockSortTest {
         and the original line has been 0
     */
 
-    private static final byte[] FIXTURE_BWT = { (byte) 128, 0, 3, (byte) 254, 2, 1, 
+    private static final byte[] FIXTURE_BWT = { (byte) 128, 0, 3, (byte) 254, 2, 1,
                                                 (byte) 252, (byte) 255, (byte) 253 };
 
     private static final int[] FIXTURE_SORTED = {
         0, 1, 7, 6, 8, 2, 3, 5, 4
     };
 
-    private static final byte[] FIXTURE2 = { 
-        'C', 'o', 'm', 'm', 'o', 'n', 's', ' ', 'C', 'o', 'm', 'p', 'r', 'e', 's', 's', 
+    private static final byte[] FIXTURE2 = {
+        'C', 'o', 'm', 'm', 'o', 'n', 's', ' ', 'C', 'o', 'm', 'p', 'r', 'e', 's', 's',
     };
 
     private static final byte[] FIXTURE2_BWT = {
-        's', 's', ' ', 'r', 'o', 'm', 'o', 'o', 'C', 'C', 'm', 'm', 'p', 'n', 's', 'e', 
+        's', 's', ' ', 'r', 'o', 'm', 'o', 'o', 'C', 'C', 'm', 'm', 'p', 'n', 's', 'e',
     };
 
     @Test

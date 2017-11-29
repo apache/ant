@@ -107,7 +107,7 @@ public class ContainsSelectorTest {
         results = selectorRule.selectionString(s);
         assertEquals("TFFFTFFFFFFT", results);
 
-        
+
 
     }
 

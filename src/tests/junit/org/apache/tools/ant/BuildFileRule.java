@@ -61,14 +61,14 @@ import org.junit.rules.ExternalResource;
  */
 public class BuildFileRule extends ExternalResource {
 
-	private Project project;
+    private Project project;
 
     private StringBuffer logBuffer;
     private StringBuffer fullLogBuffer;
     private StringBuffer outputBuffer;
     private StringBuffer errorBuffer;
 
-   
+
 
     /**
      * Tidies up following a test execution. If the currently configured
@@ -313,6 +313,5 @@ public class BuildFileRule extends ExternalResource {
     public File getOutputDir() {
         return new File(getProject().getProperty("output"));
     }
-    
-}
 
+}

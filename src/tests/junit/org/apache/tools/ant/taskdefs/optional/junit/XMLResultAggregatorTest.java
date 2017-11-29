@@ -34,7 +34,7 @@ import org.junit.Test;
 
 public class XMLResultAggregatorTest {
 
-	@Test
+    @Test
     public void testFrames() throws Exception {
         // For now, skip this test on JDK 6 (and below); see below for why:
         try {

@@ -29,8 +29,8 @@ import org.junit.Test;
  * @author  Marian Petras
  */
 public class BatchTestTest {
-    
-	@Test
+
+    @Test
     public void testParseTestMethodNamesList() {
         try {
             JUnitTest.parseTestMethodNamesList(null);

@@ -46,41 +46,41 @@ public class MakeUrlTest {
     @Test
     public void testEmpty() {
         try {
-			buildRule.executeTarget("testEmpty");
-			fail("BuildException expected: missing property");
-		} catch (BuildException ex) {
-			assertContains("property", ex.getMessage());
-		}
+            buildRule.executeTarget("testEmpty");
+            fail("BuildException expected: missing property");
+        } catch (BuildException ex) {
+            assertContains("property", ex.getMessage());
+        }
     }
 
     @Test
     public void testNoProperty() {
         try {
-			buildRule.executeTarget("testNoProperty");
-			fail("BuildException expected: missing property");
-		} catch (BuildException ex) {
-			assertContains("property", ex.getMessage());
-		}
+            buildRule.executeTarget("testNoProperty");
+            fail("BuildException expected: missing property");
+        } catch (BuildException ex) {
+            assertContains("property", ex.getMessage());
+        }
     }
 
     @Test
     public void testNoFile() {
         try {
-			buildRule.executeTarget("testNoFile");
-			fail("BuildException expected: missing file");
-		} catch (BuildException ex) {
-			assertContains("file", ex.getMessage());
-		}
+            buildRule.executeTarget("testNoFile");
+            fail("BuildException expected: missing file");
+        } catch (BuildException ex) {
+            assertContains("file", ex.getMessage());
+        }
     }
 
     @Test
     public void testValidation() {
         try {
-			buildRule.executeTarget("testValidation");
-			fail("BuildException expected: " + MakeUrl.ERROR_MISSING_FILE);
-		} catch (BuildException ex) {
-			assertContains("file", ex.getMessage());
-		}
+            buildRule.executeTarget("testValidation");
+            fail("BuildException expected: " + MakeUrl.ERROR_MISSING_FILE);
+        } catch (BuildException ex) {
+            assertContains("file", ex.getMessage());
+        }
     }
 
     @Test

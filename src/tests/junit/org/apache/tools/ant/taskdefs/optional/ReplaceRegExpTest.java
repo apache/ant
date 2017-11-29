@@ -40,7 +40,7 @@ import static org.junit.Assume.assumeTrue;
  */
 public class ReplaceRegExpTest {
     private static final String PROJECT_PATH = "src/etc/testcases/taskdefs/optional";
-    
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -129,4 +129,4 @@ public class ReplaceRegExpTest {
         assertEquals(ts1 , testFile.lastModified());
     }
 
-}// ReplaceRegExpTest
+}

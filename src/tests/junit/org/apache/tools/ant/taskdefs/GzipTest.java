@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 /**
  */
 public class GzipTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -44,41 +44,41 @@ public class GzipTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument missing");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: required argument missing");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: required argument missing");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: required argument missing");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test4() {
         try {
-			buildRule.executeTarget("test4");
-			fail("BuildException expected: zipfile must not point to a directory");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test4");
+            fail("BuildException expected: zipfile must not point to a directory");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test

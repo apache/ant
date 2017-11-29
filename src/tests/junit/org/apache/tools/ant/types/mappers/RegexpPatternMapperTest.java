@@ -47,5 +47,3 @@ public class RegexpPatternMapperTest {
         buildRule.executeTarget("handle.dirsep");
     }
 }
-
-

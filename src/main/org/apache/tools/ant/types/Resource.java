@@ -445,7 +445,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @since Ant 1.10.2
      */
     public <T> Optional<T> asOptional(Class<T> clazz) {
-    	return Optional.ofNullable(as(clazz));
+        return Optional.ofNullable(as(clazz));
     }
 
     @Override

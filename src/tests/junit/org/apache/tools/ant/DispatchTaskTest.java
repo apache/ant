@@ -26,8 +26,8 @@ import org.junit.Test;
 
 public class DispatchTaskTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
@@ -37,10 +37,10 @@ public class DispatchTaskTest {
     @Test
     public void testDisp() {
         try {
-        	buildRule.executeTarget("disp");
-        	fail("BuildException should have been thrown");
+            buildRule.executeTarget("disp");
+            fail("BuildException should have been thrown");
         } catch(BuildException ex) {
-        	//FIXME the previous method used here ignored the build exception - what are we trying to test
+            //FIXME the previous method used here ignored the build exception - what are we trying to test
         }
     }
 }

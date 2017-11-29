@@ -22,40 +22,40 @@ import java.util.stream.Stream;
  */
 public interface ResourceCollection extends Iterable<Resource> {
 
-	/**
-	 * Learn the number of contained Resources.
-	 *
-	 * @return number of elements as int.
-	 */
-	int size();
+    /**
+     * Learn the number of contained Resources.
+     *
+     * @return number of elements as int.
+     */
+    int size();
 
-	/**
-	 * Indicate whether this ResourceCollection is composed entirely of
-	 * Resources accessible via local filesystem conventions. If true, all
-	 * resources returned from this collection should respond with a
-	 * {@link org.apache.tools.ant.types.resources.FileProvider} when asked via
-	 * {@link Resource#as}.
-	 *
-	 * @return whether this is a filesystem-only resource collection.
-	 */
-	boolean isFilesystemOnly();
+    /**
+     * Indicate whether this ResourceCollection is composed entirely of
+     * Resources accessible via local filesystem conventions. If true, all
+     * resources returned from this collection should respond with a
+     * {@link org.apache.tools.ant.types.resources.FileProvider} when asked via
+     * {@link Resource#as}.
+     *
+     * @return whether this is a filesystem-only resource collection.
+     */
+    boolean isFilesystemOnly();
 
-	/**
-	 * Return a {@link Stream} over this {@link ResourceCollection}.
-	 * @return {@link Stream} of {@link Resource}
-	 * @since Ant 1.10.2
-	 */
-	default Stream<? extends Resource> stream() {
-		final Stream.Builder<Resource> b = Stream.builder();
-		forEach(b);
-		return b.build();
-	}
+    /**
+     * Return a {@link Stream} over this {@link ResourceCollection}.
+     * @return {@link Stream} of {@link Resource}
+     * @since Ant 1.10.2
+     */
+    default Stream<? extends Resource> stream() {
+        final Stream.Builder<Resource> b = Stream.builder();
+        forEach(b);
+        return b.build();
+    }
 
-	/**
-	 * Learn whether this {@link ResourceCollection} is empty.
-	 * @return boolean
-	 */
-	default boolean isEmpty() {
-	    return size() == 0;
-	}
+    /**
+     * Learn whether this {@link ResourceCollection} is empty.
+     * @return boolean
+     */
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 }

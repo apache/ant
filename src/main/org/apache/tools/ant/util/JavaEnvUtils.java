@@ -518,7 +518,7 @@ public final class JavaEnvUtils {
             case VERSION_1_4:
                 tests.addElement("sun.audio.AudioPlayer");
                 if (javaVersionNumber == VERSION_1_4) {
-                	// only for 1.4, not for higher versions which fall through
+                    // only for 1.4, not for higher versions which fall through
                     tests.addElement("org.apache.crimson.parser.ContentModel");
                     tests.addElement("org.apache.xalan.processor.ProcessorImport");
                     tests.addElement("org.apache.xml.utils.URI");

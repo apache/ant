@@ -65,4 +65,4 @@ public class MockCache implements Cache {
     private void log(String msg) {
         if (debug) System.out.println(this+msg);
     }
-}//class-MockCache
+}

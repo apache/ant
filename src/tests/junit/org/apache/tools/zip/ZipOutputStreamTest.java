@@ -27,11 +27,11 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 public class ZipOutputStreamTest {
-    
+
     private Date time;
     private ZipLong zl;
 
-	@Before
+    @Before
     public void setUp() throws Exception {
         time = new Date();
         Calendar cal = Calendar.getInstance();
@@ -40,7 +40,7 @@ public class ZipOutputStreamTest {
         int month = cal.get(Calendar.MONTH) + 1;
         long value =  ((year - 1980) << 25)
             |         (month << 21)
-            |	      (cal.get(Calendar.DAY_OF_MONTH) << 16)
+            |         (cal.get(Calendar.DAY_OF_MONTH) << 16)
             |         (cal.get(Calendar.HOUR_OF_DAY) << 11)
             |         (cal.get(Calendar.MINUTE) << 5)
             |         (cal.get(Calendar.SECOND) >> 1);

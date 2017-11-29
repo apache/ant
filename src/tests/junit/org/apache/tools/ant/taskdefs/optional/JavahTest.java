@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 public class JavahTest {
 
-    private final static String BUILD_XML = 
+    private final static String BUILD_XML =
         "src/etc/testcases/taskdefs/optional/javah/build.xml";
 
     @Rule

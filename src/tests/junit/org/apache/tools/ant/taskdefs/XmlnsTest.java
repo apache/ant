@@ -42,19 +42,19 @@ public class XmlnsTest {
     @Test
     public void testXmlns() {
         buildRule.executeTarget("xmlns");
-		assertEquals("MyTask called", buildRule.getLog());
+        assertEquals("MyTask called", buildRule.getLog());
     }
 
     @Test
     public void testXmlnsFile() {
         buildRule.executeTarget("xmlns.file");
-		assertEquals("MyTask called", buildRule.getLog());
+        assertEquals("MyTask called", buildRule.getLog());
     }
 
     @Test
     public void testCore() {
         buildRule.executeTarget("core");
-		assertEquals("MyTask called", buildRule.getLog());
+        assertEquals("MyTask called", buildRule.getLog());
     }
 
     @Test
@@ -70,13 +70,13 @@ public class XmlnsTest {
     @Test
     public void testOther() {
         buildRule.executeTarget("other");
-		assertEquals("a message", buildRule.getLog());
+        assertEquals("a message", buildRule.getLog());
     }
 
     @Test
     public void testNsAttributes() {
         buildRule.executeTarget("ns.attributes");
-		assertEquals("hello world", buildRule.getLog());
+        assertEquals("hello world", buildRule.getLog());
     }
 
     public static class MyTask extends Task {
@@ -86,4 +86,3 @@ public class XmlnsTest {
     }
 
 }
-

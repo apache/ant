@@ -31,9 +31,9 @@ import org.junit.Test;
  *
  */
 public class IncludeTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     @Test
     public void test1() {

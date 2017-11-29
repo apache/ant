@@ -29,10 +29,10 @@ import org.junit.Test;
  */
 public class LoaderRefTest {
 
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
-	
-	@Before
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/core/loaderref/loaderref.xml");
         buildRule.executeTarget("setUp");
@@ -40,13 +40,12 @@ public class LoaderRefTest {
 
     // override allowed on <available>
     @Test
-	public void testBadRef() {
-    	try {
-    		buildRule.executeTarget("testbadref");
-    		fail("BuildRule should have thrown an exception due to a bad classloader being specified");
-    	} catch (BuildException ex) {
-    		assertContains("Should fail due to ref not being a class loader", "does not reference a class loader", ex.getMessage());
-    	}
+    public void testBadRef() {
+        try {
+            buildRule.executeTarget("testbadref");
+            fail("BuildRule should have thrown an exception due to a bad classloader being specified");
+        } catch (BuildException ex) {
+            assertContains("Should fail due to ref not being a class loader", "does not reference a class loader", ex.getMessage());
+        }
     }
 }
-

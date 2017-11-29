@@ -45,7 +45,7 @@ public class MapperResult extends Task {
     public void setFailMessage(String failMessage) {
         this.failMessage = failMessage;
     }
-    
+
     public void setInput(String input) {
         this.input = input;
     }
@@ -64,7 +64,7 @@ public class MapperResult extends Task {
         }
         this.fileNameMapper = fileNameMapper;
     }
-        
+
     public void execute() {
         if (input == null) {
             throw new BuildException("Missing attribute 'input'");

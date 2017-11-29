@@ -48,7 +48,7 @@ import static org.junit.Assert.fail;
 /**
  */
 public class JarTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -56,7 +56,7 @@ public class JarTest {
     private static String tempDir = "jartmp/";
     private Reader r1, r2;
 
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/jar.xml");
@@ -82,31 +82,31 @@ public class JarTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: manifest file does not exist");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: manifest file does not exist");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: Unrecognized whenempty attribute: format C: /y");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: Unrecognized whenempty attribute: format C: /y");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     private File getOutputDir() {
@@ -329,17 +329,17 @@ public class JarTest {
     public void testIndexJarsPlusJarMarker() {
         buildRule.executeTarget("testIndexJarsPlusJarMarker");
     }
-    
+
     @Test
     public void testNoVersionInfoFail() {
         try {
-			buildRule.executeTarget("testNoVersionInfoFail");
-			fail("BuildException expected: Manifest Implemention information missing.");
-		} catch (BuildException ex) {
-			assertContains("No Implementation-Title set.", ex.getMessage());
-		}
+            buildRule.executeTarget("testNoVersionInfoFail");
+            fail("BuildException expected: Manifest Implemention information missing.");
+        } catch (BuildException ex) {
+            assertContains("No Implementation-Title set.", ex.getMessage());
+        }
     }
-    
+
     @Test
     public void testNoVersionInfoIgnore() {
         buildRule.executeTarget("testNoVersionInfoIgnore");
@@ -363,7 +363,7 @@ public class JarTest {
         assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1 );
         assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
-    
+
     @Test
     public void testHasVersionInfo() {
         buildRule.executeTarget("testHasVersionInfo");
@@ -371,5 +371,5 @@ public class JarTest {
         assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1 );
         assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1 );
     }
-    
+
 }

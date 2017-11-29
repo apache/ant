@@ -44,7 +44,7 @@ import org.junit.Test;
  *
  */
 public class AntClassLoaderTest {
-	
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -62,7 +62,7 @@ public class AntClassLoaderTest {
             loader.cleanup();
         }
     }
-    
+
     //test inspired by bug report 37085
     @Test
     public void testJarWithManifestInDirWithSpace() {
@@ -75,7 +75,7 @@ public class AntClassLoaderTest {
         String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
-    
+
     @Test
     public void testJarWithManifestInNonAsciiDir() {
         String mainjarstring = buildRule.getProject().getProperty("main.jar.nonascii");
@@ -87,7 +87,7 @@ public class AntClassLoaderTest {
         String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
-    
+
     @Test
     public void testCleanup() throws BuildException {
         Path path = new Path(buildRule.getProject(), ".");

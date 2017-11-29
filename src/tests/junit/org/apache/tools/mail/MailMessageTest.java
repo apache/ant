@@ -65,7 +65,7 @@ public class MailMessageTest {
      *  If this testcase takes >90s to complete, it is very likely that
      *  the two threads are blocked waiting for each other and Thread.join()
      *  timed out.
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testAPIExample() throws InterruptedException {
@@ -144,7 +144,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no cc or bcc lines
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testToOnly() throws InterruptedException {
@@ -196,7 +196,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no to or bcc lines
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testCcOnly() throws InterruptedException {
@@ -248,7 +248,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no to or cc lines
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testBccOnly() throws InterruptedException {
@@ -300,7 +300,7 @@ public class MailMessageTest {
     /**
      *  Test a MailMessage with no subject line
      *  Subject is an optional field (RFC 822 s4.1)
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testNoSubject() throws InterruptedException {
@@ -350,7 +350,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with empty body message
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testEmptyBody() throws InterruptedException {
@@ -402,7 +402,7 @@ public class MailMessageTest {
      *  Test a MailMessage with US-ASCII character set
      *  The next four testcase can be kinda hard to debug as Ant will often
      *  print the junit failure in US-ASCII.
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     @Test
     public void testAsciiCharset() throws InterruptedException {

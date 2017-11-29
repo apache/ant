@@ -1059,4 +1059,4 @@ public class ModifiedSelectorTest {
     }
 
 
-}//class-ModifiedSelectorTest
+}

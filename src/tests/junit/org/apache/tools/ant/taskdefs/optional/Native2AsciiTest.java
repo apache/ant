@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class Native2AsciiTest {
 
-    private final static String BUILD_XML = 
+    private final static String BUILD_XML =
         "src/etc/testcases/taskdefs/optional/native2ascii/build.xml";
 
     @Rule

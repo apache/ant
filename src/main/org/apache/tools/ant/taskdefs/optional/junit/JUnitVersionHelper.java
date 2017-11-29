@@ -142,10 +142,10 @@ public class JUnitVersionHelper {
             Class<?> junit4FacadeClass = Class.forName("junit.framework.JUnit4TestCaseFacade");
             if (test != null && test.getClass().isAssignableFrom(junit4FacadeClass)) {
             //try and get the message coded as part of the ignore
-        	/*
-        	 * org.junit.runner.Description contains a getAnnotation(Class) method... but this
-        	 * wasn't in older versions of JUnit4 so we have to try and do this by reflection
-        	 */
+            /*
+             * org.junit.runner.Description contains a getAnnotation(Class) method... but this
+             * wasn't in older versions of JUnit4 so we have to try and do this by reflection
+             */
                 Class<?> testClass = Class.forName(JUnitVersionHelper.getTestCaseClassName(test));
 
                 Method testMethod = testClass.getMethod(JUnitVersionHelper.getTestCaseName(test));

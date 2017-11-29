@@ -45,31 +45,31 @@ public class UnzipTest {
     @Test
     public void test1() {
         try {
-			buildRule.executeTarget("test1");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test1");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test2() {
         try {
-			buildRule.executeTarget("test2");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test2");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test
     public void test3() {
         try {
-			buildRule.executeTarget("test3");
-			fail("BuildException expected: required argument not specified");
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("test3");
+            fail("BuildException expected: required argument not specified");
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
 
@@ -227,11 +227,11 @@ public class UnzipTest {
     @Test
     public void testTwoMappers() {
         try {
-			buildRule.executeTarget("testTwoMappers");
-			fail("BuildException expected: " + Expand.ERROR_MULTIPLE_MAPPERS);
-		} catch (BuildException ex) {
-			//TODO assert value
-		}
+            buildRule.executeTarget("testTwoMappers");
+            fail("BuildException expected: " + Expand.ERROR_MULTIPLE_MAPPERS);
+        } catch (BuildException ex) {
+            //TODO assert value
+        }
     }
 
     @Test

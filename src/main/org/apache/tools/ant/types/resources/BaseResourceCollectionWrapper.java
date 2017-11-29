@@ -38,7 +38,7 @@ public abstract class BaseResourceCollectionWrapper
     }
 
     @Override
-	protected int getSize() {
+    protected int getSize() {
         return cacheCollection().size();
     }
 

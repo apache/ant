@@ -63,21 +63,21 @@ public class NiceTest {
     @Test
     public void testTooSlow() {
         try {
-			buildRule.executeTarget("too_slow");
-			fail("BuildException expected: out of range");
-		} catch (BuildException ex) {
-			assertContains("out of the range 1-10", ex.getMessage());
-		}
+            buildRule.executeTarget("too_slow");
+            fail("BuildException expected: out of range");
+        } catch (BuildException ex) {
+            assertContains("out of the range 1-10", ex.getMessage());
+        }
     }
 
     @Test
     public void testTooFast() {
         try {
-			buildRule.executeTarget("too_fast");
-			fail("BuildException expected: out of range");
-		} catch (BuildException ex) {
-			assertContains("out of the range 1-10", ex.getMessage());
-		}
+            buildRule.executeTarget("too_fast");
+            fail("BuildException expected: out of range");
+        } catch (BuildException ex) {
+            assertContains("out of the range 1-10", ex.getMessage());
+        }
     }
 
 }

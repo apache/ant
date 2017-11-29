@@ -47,4 +47,3 @@ public class SplashScreenTest {
         System.exit(0);
     }
 }
-

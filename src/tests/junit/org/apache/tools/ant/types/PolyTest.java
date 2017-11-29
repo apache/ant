@@ -30,7 +30,7 @@ public class PolyTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/poly.xml");

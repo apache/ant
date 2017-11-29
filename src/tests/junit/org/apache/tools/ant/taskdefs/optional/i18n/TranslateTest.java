@@ -84,4 +84,3 @@ public class TranslateTest {
         return true;
     }
 }
-

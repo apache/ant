@@ -34,9 +34,9 @@ import org.junit.Test;
 /**
  */
 public class PropertyTest {
-	
-	@Rule
-	public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -50,14 +50,14 @@ public class PropertyTest {
     @Test
     public void test1() {
         // should get no output at all
-    	buildRule.executeTarget("test1");
-    	assertEquals("System output should have been empty", "", buildRule.getOutput());
-    	assertEquals("System error should have been empty", "", buildRule.getError());
+        buildRule.executeTarget("test1");
+        assertEquals("System output should have been empty", "", buildRule.getOutput());
+        assertEquals("System error should have been empty", "", buildRule.getError());
     }
 
     @Test
     public void test2() {
-    	buildRule.executeTarget("test2");
+        buildRule.executeTarget("test2");
         assertContains("testprop1=aa, testprop3=xxyy, testprop4=aazz", buildRule.getLog());
     }
 
@@ -71,21 +71,21 @@ public class PropertyTest {
             assertTrue("Circular definition not detected - ",
                      e.getMessage().indexOf("was circularly defined") != -1);
         }
-        
+
     }
 
     @Test
     public void test4() {
-    	buildRule.executeTarget("test4");
-    	assertContains("http.url is http://localhost:999", buildRule.getLog());
+        buildRule.executeTarget("test4");
+        assertContains("http.url is http://localhost:999", buildRule.getLog());
     }
 
     @Test
     public void test5() {
         String baseDir = buildRule.getProject().getProperty("basedir");
-    	String uri = FILE_UTILS.toURI(baseDir + "/property3.properties");
+        String uri = FILE_UTILS.toURI(baseDir + "/property3.properties");
         buildRule.getProject().setNewProperty("test5.url", uri);
-        
+
         buildRule.executeTarget("test5");
         assertContains("http.url is http://localhost:999", buildRule.getLog());
     }
@@ -103,7 +103,7 @@ public class PropertyTest {
             fail("Did not throw exception on invalid use of prefix");
         }
         catch (BuildException e) {
-            assertContains("Prefix allowed on non-resource/file load - ", 
+            assertContains("Prefix allowed on non-resource/file load - ",
                      "Prefix is only valid", e.getMessage());
         }
     }
@@ -121,21 +121,21 @@ public class PropertyTest {
 
     @Test
     public void testThisIsNotACircularReference() {
-    	buildRule.executeTarget("thisIsNotACircularReference");
+        buildRule.executeTarget("thisIsNotACircularReference");
         assertContains("b is A/A/A", buildRule.getLog());
     }
-    
+
     @Test
     public void testXmlProperty() {
         try {
             Class.forName("java.lang.Iterable");
         } catch (ClassNotFoundException e) {
-        	Assume.assumeNoException("XML Loading only on Java 5+", e);
+            Assume.assumeNoException("XML Loading only on Java 5+", e);
         }
         buildRule.executeTarget("testXmlProperty");
         assertEquals("ONE", buildRule.getProject().getProperty("xml.one"));
         assertEquals("TWO", buildRule.getProject().getProperty("xml.two"));
-        
+
     }
 
 }
