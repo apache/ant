@@ -48,6 +48,7 @@ Other changes:
    upgraded to 0.1.54. Jsch is the library behind the sshexec 
    and scp Ant tasks.
 
+ * Added a new <javaversion> condition.
 
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================

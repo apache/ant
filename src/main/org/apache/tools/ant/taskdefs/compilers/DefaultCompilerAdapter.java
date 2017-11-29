@@ -323,7 +323,7 @@ public abstract class DefaultCompilerAdapter
                 cmd.createArgument().setValue("-sourcepath");
                 cmd.createArgument().setPath(sourcepath);
             }
-            if (release == null || !assumeJava19()) {
+            if (release == null || !assumeJava9Plus()) {
                 if (target != null) {
                     cmd.createArgument().setValue("-target");
                     cmd.createArgument().setValue(target);
@@ -395,7 +395,7 @@ public abstract class DefaultCompilerAdapter
         if (!assumeJava13()) { // -source added with JDK 1.4
             final String t = attributes.getTarget();
             final String s = attributes.getSource();
-            if (release == null || !assumeJava19()) {
+            if (release == null || !assumeJava9Plus()) {
                 if (release != null) {
                     attributes.log("Support for javac --release has been added"
                                    + " in Java9 ignoring it");
@@ -720,6 +720,21 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
+     * Shall we assume JDK 9+ command line switches?
+     * @return true if JDK 9+
+     * @since Ant 1.9.10
+     */
+    protected boolean assumeJava9Plus() {
+        return "javac1.9".equals(attributes.getCompilerVersion())
+            || "javac9".equals(attributes.getCompilerVersion())
+            || "javac10+".equals(attributes.getCompilerVersion())
+            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9) &&
+                ("classic".equals(attributes.getCompilerVersion())
+                 || "modern".equals(attributes.getCompilerVersion())
+                 || "extJavac".equals(attributes.getCompilerVersion())));
+    }
+
+    /**
      * Shall we assume command line switches for the given version of Java?
      * @since Ant 1.8.3
      */
@@ -792,7 +807,7 @@ public abstract class DefaultCompilerAdapter
         if (assumeJava18()) {
             return "1.8 in JDK 1.8";
         }
-        if (assumeJava9()) {
+        if (assumeJava9Plus()) {
             return "9 in JDK 9";
         }
         return "";
@@ -819,7 +834,7 @@ public abstract class DefaultCompilerAdapter
                 && !assumeJava15() && !assumeJava16())
             || (t.equals("7") && !assumeJava17())
             || (t.equals("8") && !assumeJava18())
-            || (t.equals("9") && !assumeJava9());
+            || (t.equals("9") && !assumeJava9Plus());
     }
 
 

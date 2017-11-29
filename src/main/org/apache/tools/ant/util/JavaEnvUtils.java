@@ -29,6 +29,10 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * A set of helper methods related to locating executables or checking
  * conditions of a given Java installation.
  *
+ * <p>Starting with Java 10 we've stopped adding <code>JAVA_</code>
+ * and <code>VERSION_</code> attributes for new major version numbers
+ * of the JVM.</p>
+ *
  * @since Ant 1.5
  */
 public final class JavaEnvUtils {
@@ -181,6 +185,10 @@ public final class JavaEnvUtils {
             Class.forName("java.lang.module.ModuleDescriptor");
             javaVersion = JAVA_9;
             javaVersionNumber = VERSION_9;
+            // at least Java9 and this should properly support the purely numeric version property
+            String v = System.getProperty("java.specification.version");
+            javaVersionNumber = Integer.parseInt(v) * 10;
+            javaVersion = v;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
             // we have
@@ -449,51 +457,45 @@ public final class JavaEnvUtils {
 
     private static void buildJrePackages() {
         jrePackages = new Vector<String>();
-        switch(javaVersionNumber) {
-            case VERSION_9:
-            case VERSION_1_8:
-            case VERSION_1_7:
-                jrePackages.addElement("jdk");
-                // fall through
-            case VERSION_1_6:
-            case VERSION_1_5:
-                //In Java1.5, the apache stuff moved.
-                jrePackages.addElement("com.sun.org.apache");
-                //fall through.
-            case VERSION_1_4:
-                if (javaVersionNumber == VERSION_1_4) {
-                    jrePackages.addElement("org.apache.crimson");
-                    jrePackages.addElement("org.apache.xalan");
-                    jrePackages.addElement("org.apache.xml");
-                    jrePackages.addElement("org.apache.xpath");
-                }
-                jrePackages.addElement("org.ietf.jgss");
-                jrePackages.addElement("org.w3c.dom");
-                jrePackages.addElement("org.xml.sax");
-                // fall through
-            case VERSION_1_3:
-                jrePackages.addElement("org.omg");
-                jrePackages.addElement("com.sun.corba");
-                jrePackages.addElement("com.sun.jndi");
-                jrePackages.addElement("com.sun.media");
-                jrePackages.addElement("com.sun.naming");
-                jrePackages.addElement("com.sun.org.omg");
-                jrePackages.addElement("com.sun.rmi");
-                jrePackages.addElement("sunw.io");
-                jrePackages.addElement("sunw.util");
-                // fall through
-            case VERSION_1_2:
-                jrePackages.addElement("com.sun.java");
-                jrePackages.addElement("com.sun.image");
-                // are there any here that we forgot?
-                // fall through
-            case VERSION_1_1:
-            default:
-                //things like sun.reflection, sun.misc, sun.net
-                jrePackages.addElement("sun");
-                jrePackages.addElement("java");
-                jrePackages.addElement("javax");
-                break;
+        if (isAtLeastJavaVersion(JAVA_1_1)) {
+            //things like sun.reflection, sun.misc, sun.net
+            jrePackages.addElement("sun");
+            jrePackages.addElement("java");
+            jrePackages.addElement("javax");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_2)) {
+            jrePackages.addElement("com.sun.java");
+            jrePackages.addElement("com.sun.image");
+            // are there any here that we forgot?
+        }
+        if (isAtLeastJavaVersion(JAVA_1_3)) {
+            jrePackages.addElement("org.omg");
+            jrePackages.addElement("com.sun.corba");
+            jrePackages.addElement("com.sun.jndi");
+            jrePackages.addElement("com.sun.media");
+            jrePackages.addElement("com.sun.naming");
+            jrePackages.addElement("com.sun.org.omg");
+            jrePackages.addElement("com.sun.rmi");
+            jrePackages.addElement("sunw.io");
+            jrePackages.addElement("sunw.util");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_4)) {
+            if (javaVersionNumber == VERSION_1_4) {
+                jrePackages.addElement("org.apache.crimson");
+                jrePackages.addElement("org.apache.xalan");
+                jrePackages.addElement("org.apache.xml");
+                jrePackages.addElement("org.apache.xpath");
+            }
+            jrePackages.addElement("org.ietf.jgss");
+            jrePackages.addElement("org.w3c.dom");
+            jrePackages.addElement("org.xml.sax");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_5)) {
+            //In Java1.5, the apache stuff moved.
+            jrePackages.addElement("com.sun.org.apache");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_7)) {
+            jrePackages.addElement("jdk");
         }
     }
 
@@ -504,52 +506,46 @@ public final class JavaEnvUtils {
     public static Vector<String> getJrePackageTestCases() {
         Vector<String> tests = new Vector<String>();
         tests.addElement("java.lang.Object");
-        switch(javaVersionNumber) {
-            case VERSION_9:
-            case VERSION_1_8:
-            case VERSION_1_7:
-                tests.addElement("jdk.net.Sockets");
-                // fall through
-            case VERSION_1_6:
-            case VERSION_1_5:
-                tests.addElement(
-                    "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl ");
-                // Fall through
-            case VERSION_1_4:
-                tests.addElement("sun.audio.AudioPlayer");
-                if (javaVersionNumber == VERSION_1_4) {
-                    // only for 1.4, not for higher versions which fall through
-                    tests.addElement("org.apache.crimson.parser.ContentModel");
-                    tests.addElement("org.apache.xalan.processor.ProcessorImport");
-                    tests.addElement("org.apache.xml.utils.URI");
-                    tests.addElement("org.apache.xpath.XPathFactory");
-                }
-                tests.addElement("org.ietf.jgss.Oid");
-                tests.addElement("org.w3c.dom.Attr");
-                tests.addElement("org.xml.sax.XMLReader");
-                // fall through
-            case VERSION_1_3:
-                tests.addElement("org.omg.CORBA.Any");
-                tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
-                tests.addElement("com.sun.jndi.ldap.LdapURL");
-                tests.addElement("com.sun.media.sound.Printer");
-                tests.addElement("com.sun.naming.internal.VersionHelper");
-                tests.addElement("com.sun.org.omg.CORBA.Initializer");
-                tests.addElement("sunw.io.Serializable");
-                tests.addElement("sunw.util.EventListener");
-                // fall through
-            case VERSION_1_2:
-                tests.addElement("javax.accessibility.Accessible");
-                tests.addElement("sun.misc.BASE64Encoder");
-                tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
-                // fall through
-            case VERSION_1_1:
-            default:
-                //things like sun.reflection, sun.misc, sun.net
-                tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
-                tests.addElement("sun.net.www.http.HttpClient");
-                tests.addElement("sun.audio.AudioPlayer");
-                break;
+        if (isAtLeastJavaVersion(JAVA_1_1)) {
+            //things like sun.reflection, sun.misc, sun.net
+            tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
+            tests.addElement("sun.net.www.http.HttpClient");
+            tests.addElement("sun.audio.AudioPlayer");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_2)) {
+            tests.addElement("javax.accessibility.Accessible");
+            tests.addElement("sun.misc.BASE64Encoder");
+            tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_3)) {
+            tests.addElement("org.omg.CORBA.Any");
+            tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
+            tests.addElement("com.sun.jndi.ldap.LdapURL");
+            tests.addElement("com.sun.media.sound.Printer");
+            tests.addElement("com.sun.naming.internal.VersionHelper");
+            tests.addElement("com.sun.org.omg.CORBA.Initializer");
+            tests.addElement("sunw.io.Serializable");
+            tests.addElement("sunw.util.EventListener");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_4)) {
+            tests.addElement("sun.audio.AudioPlayer");
+            if (javaVersionNumber == VERSION_1_4) {
+                // only for 1.4, not for higher versions
+                tests.addElement("org.apache.crimson.parser.ContentModel");
+                tests.addElement("org.apache.xalan.processor.ProcessorImport");
+                tests.addElement("org.apache.xml.utils.URI");
+                tests.addElement("org.apache.xpath.XPathFactory");
+            }
+            tests.addElement("org.ietf.jgss.Oid");
+            tests.addElement("org.w3c.dom.Attr");
+            tests.addElement("org.xml.sax.XMLReader");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_5)) {
+            tests.addElement(
+                "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl");
+        }
+        if (isAtLeastJavaVersion(JAVA_1_7)) {
+            tests.addElement("jdk.net.Sockets");
         }
         return tests;
     }
