@@ -82,7 +82,7 @@ public class GzipTest {
     }
 
     @Test
-    public void testGZip(){
+    public void testGZip() {
         buildRule.executeTarget("realTest");
         String log = buildRule.getLog();
         assertTrue("Expecting message starting with 'Building:' but got '"
@@ -92,12 +92,12 @@ public class GzipTest {
     }
 
     @Test
-    public void testResource(){
+    public void testResource() {
         buildRule.executeTarget("realTestWithResource");
     }
 
     @Test
-    public void testDateCheck(){
+    public void testDateCheck() {
         buildRule.executeTarget("testDateCheck");
         String log = buildRule.getLog();
         assertTrue(
@@ -106,7 +106,7 @@ public class GzipTest {
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         buildRule.executeTarget("cleanup");
     }
 

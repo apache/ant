@@ -68,12 +68,17 @@ public class MultiMapTest {
     }
 
     public static class TestMapper implements FileNameMapper {
-        public TestMapper() {}
-        public void setFrom(String from) {}
-        public void setTo(String to) {}
+        public TestMapper() {
+        }
+
+        public void setFrom(String from) {
+        }
+
+        public void setTo(String to) {
+        }
+
         public String[] mapFileName(final String source_file_name) {
-            return new String[] {
-                source_file_name, source_file_name+".copy2" };
+            return new String[] {source_file_name, source_file_name + ".copy2"};
         }
     }
 }

@@ -60,7 +60,7 @@ public class CopyTest {
     public void test1() {
         buildRule.executeTarget("test1");
         File f = new File(buildRule.getProject().getProperty("output"), "copytest1.tmp");
-        if ( !f.exists()) {
+        if (!f.exists()) {
             fail("Copy failed");
         }
     }
@@ -69,7 +69,7 @@ public class CopyTest {
     public void test2() {
         buildRule.executeTarget("test2");
         File f = new File(buildRule.getProject().getProperty("output"), "copytest1dir/copy.xml");
-        if ( !f.exists()) {
+        if (!f.exists()) {
             fail("Copy failed");
         }
     }
@@ -79,7 +79,7 @@ public class CopyTest {
         buildRule.executeTarget("test3");
         File file3  = new File(buildRule.getProject().getProperty("output"), "copytest3.tmp");
         //rollback file timestamp instead of delaying test
-        FileUtilities.rollbackTimetamps(file3, 3);
+        FileUtilities.rollbackTimestamps(file3, 3);
         buildRule.executeTarget("test3Part2");
         assertTrue(file3.exists());
 
@@ -91,19 +91,19 @@ public class CopyTest {
         assertTrue(file3c.exists());
 
         //file length checks rely on touch generating a zero byte file
-        if(file3.length()==0) {
+        if (file3.length()==0) {
             fail("could not overwrite an existing, older file");
         }
-        if(file3c.length()!=0) {
+        if (file3c.length()!=0) {
             fail("could not force overwrite an existing, newer file");
         }
-        if(file3b.length()==0) {
+        if (file3b.length()==0) {
             fail("unexpectedly overwrote an existing, newer file");
         }
 
         //file time checks for java1.2+
-        assertTrue(file3a.lastModified()==file3.lastModified());
-        assertTrue(file3c.lastModified()<file3a.lastModified());
+        assertTrue(file3a.lastModified() == file3.lastModified());
+        assertTrue(file3c.lastModified() < file3a.lastModified());
 
     }
 
@@ -197,9 +197,9 @@ public class CopyTest {
     @Test
     public void testFileResourcePlain() {
         buildRule.executeTarget("testFileResourcePlain");
-        File file1 = new File(buildRule.getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(buildRule.getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(buildRule.getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/file1.txt");
+        File file2 = new File(buildRule.getProject().getProperty("to.dir") + "/file2.txt");
+        File file3 = new File(buildRule.getProject().getProperty("to.dir") + "/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -209,9 +209,9 @@ public class CopyTest {
     @Test
     public void testFileResourceWithMapper() {
         buildRule.executeTarget("testFileResourceWithMapper");
-        File file1 = new File(buildRule.getProject().getProperty("to.dir")+"/file1.txt.bak");
-        File file2 = new File(buildRule.getProject().getProperty("to.dir")+"/file2.txt.bak");
-        File file3 = new File(buildRule.getProject().getProperty("to.dir")+"/file3.txt.bak");
+        File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/file1.txt.bak");
+        File file2 = new File(buildRule.getProject().getProperty("to.dir") + "/file2.txt.bak");
+        File file3 = new File(buildRule.getProject().getProperty("to.dir") + "/file3.txt.bak");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -220,7 +220,7 @@ public class CopyTest {
     @Test
     public void testFileResourceWithFilter() {
         buildRule.executeTarget("testFileResourceWithFilter");
-        File file1 = new File(buildRule.getProject().getProperty("to.dir")+"/fileNR.txt");
+        File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/fileNR.txt");
         assertTrue(file1.exists());
         try {
             String file1Content = FileUtils.readFully(new FileReader(file1));
@@ -233,9 +233,9 @@ public class CopyTest {
     @Test
     public void testPathAsResource() {
         buildRule.executeTarget("testPathAsResource");
-        File file1 = new File(buildRule.getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(buildRule.getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(buildRule.getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/file1.txt");
+        File file2 = new File(buildRule.getProject().getProperty("to.dir") + "/file2.txt");
+        File file3 = new File(buildRule.getProject().getProperty("to.dir") + "/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -244,9 +244,9 @@ public class CopyTest {
     @Test
     public void testZipfileset() {
         buildRule.executeTarget("testZipfileset");
-        File file1 = new File(buildRule.getProject().getProperty("to.dir")+"/file1.txt");
-        File file2 = new File(buildRule.getProject().getProperty("to.dir")+"/file2.txt");
-        File file3 = new File(buildRule.getProject().getProperty("to.dir")+"/file3.txt");
+        File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/file1.txt");
+        File file2 = new File(buildRule.getProject().getProperty("to.dir") + "/file2.txt");
+        File file3 = new File(buildRule.getProject().getProperty("to.dir") + "/file3.txt");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertTrue(file3.exists());
@@ -285,7 +285,7 @@ public class CopyTest {
      * Tests that the {@code copy} task doesn't corrupt the source file, if the target of the copy operation is a symlink
      * to the source file being copied
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=60644">issue 60644</a>
      */
     @Test

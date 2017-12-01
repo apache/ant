@@ -1,4 +1,4 @@
-/* 
+/*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -13,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package test;
 
@@ -22,21 +22,22 @@ import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.Echo;
-import java.util.*;
+
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class SpecialSeq extends Task implements TaskContainer {
     /** Optional Vector holding the nested tasks */
     private Vector nestedTasks = new Vector();
 
     private FileSet fileset;
-    
+
     private Echo nestedEcho;
-    
+
     /**
      * Add a nested task.
-     * <p>
+     *
      * @param nestedTask  Nested task to execute
-     * <p>
      */
     public void addTask(Task nestedTask) {
         nestedTasks.addElement(nestedTask);
@@ -60,7 +61,7 @@ public class SpecialSeq extends Task implements TaskContainer {
     public void addFileset(FileSet fileset) {
         this.fileset = fileset;
     }
-    
+
     public void addNested(Echo nestedEcho) {
         this.nestedEcho = nestedEcho;
     }

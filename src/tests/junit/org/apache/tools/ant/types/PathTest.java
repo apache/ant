@@ -325,7 +325,7 @@ public class PathTest {
     @Test
     public void testSetLocation() {
         Path p = new Path(project);
-        p.setLocation(new File(File.separatorChar+"a"));
+        p.setLocation(new File(File.separatorChar + "a"));
         String[] l = p.list();
         if (isUnixStyle) {
             assertEquals(1, l.length);
@@ -359,7 +359,7 @@ public class PathTest {
     }
 
     @Test
-    public void testEmpyPath() {
+    public void testEmptyPath() {
         Path p = new Path(project, "");
         String[] l = p.list();
         assertEquals("0 after construction", 0, l.length);

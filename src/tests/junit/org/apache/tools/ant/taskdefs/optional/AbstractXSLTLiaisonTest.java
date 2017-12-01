@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
- * Abtract testcase for XSLTLiaison.
+ * Abstract testcase for XSLTLiaison.
  * Override createLiaison for each XSLTLiaison.
  *
  * <a href="sbailliez@apache.org">Stephane Bailliez</a>
@@ -51,12 +51,12 @@ public abstract class AbstractXSLTLiaisonTest {
     }
 
     // to override
-    protected abstract XSLTLiaison createLiaison() throws Exception ;
+    protected abstract XSLTLiaison createLiaison() throws Exception;
 
     /** load the file from the caller classloader that loaded this class */
     protected File getFile(String name) throws FileNotFoundException {
         URL url = getClass().getResource(name);
-        if (url == null){
+        if (url == null) {
           throw new FileNotFoundException("Unable to load '" + name + "' from classpath");
         }
         return new File(FILE_UTILS.fromURI(url.toExternalForm()));

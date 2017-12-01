@@ -46,7 +46,7 @@ public class ParallelTest {
     /** Standard property value for the fail test */
     public final static String FAILURE_MESSAGE = "failure";
 
-    /** the build fiel associated with this test */
+    /** the build file associated with this test */
     public final static String TEST_BUILD_FILE
          = "src/etc/testcases/taskdefs/parallel.xml";
 

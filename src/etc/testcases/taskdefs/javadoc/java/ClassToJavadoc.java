@@ -31,7 +31,7 @@ public class ClassToJavadoc {
      * @see java.lang.Object#toString()
      */
     public String toString() { return this.getClass().getName(); }
-    
+
     /**
      * @return An arbitrary string.
      */

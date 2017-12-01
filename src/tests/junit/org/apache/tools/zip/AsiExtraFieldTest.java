@@ -62,8 +62,8 @@ public class AsiExtraFieldTest implements UnixStat {
                          0, 0, 0, 0,                         // link length
                          5, 0, 6, 0};                        // uid, gid
         assertEquals("no link", expect.length, b.length);
-        for (int i=0; i<expect.length; i++) {
-            assertEquals("no link, byte "+i, expect[i], b[i]);
+        for (int i = 0; i < expect.length; i++) {
+            assertEquals("no link, byte " + i, expect[i], b[i]);
         }
 
         a.setLinkedFile("test");
@@ -74,8 +74,8 @@ public class AsiExtraFieldTest implements UnixStat {
                              (byte)'t', (byte)'e', (byte)'s', (byte)'t'};
         b = a.getLocalFileDataData();
         assertEquals("no link", expect.length, b.length);
-        for (int i=0; i<expect.length; i++) {
-            assertEquals("no link, byte "+i, expect[i], b[i]);
+        for (int i = 0; i < expect.length; i++) {
+            assertEquals("no link, byte " + i, expect[i], b[i]);
         }
 
     }

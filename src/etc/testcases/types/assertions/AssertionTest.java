@@ -31,14 +31,14 @@ public class AssertionTest extends TestCase {
         try {
             assert true == false;
             fail("expected an assertion");
-        } catch(AssertionError asserto) {
+        } catch (AssertionError asserto) {
             //if we got here, all was well
         }
     }
 
 
     public void testAssertNotRaised() {
-        assert(2+2==4);
+        assert(2 + 2 == 4);
     }
 
 

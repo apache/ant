@@ -26,10 +26,11 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.Permission;
+
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
@@ -63,8 +64,8 @@ public class JUnitReportTest {
     @Test
     public void testNoFileJUnitNoFrames() {
         buildRule.executeTarget("reports1");
-        assertFalse("No file junit-noframes.html expected", (new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists()));
-
+        assertFalse("No file junit-noframes.html expected", new File(System.getProperty("root"),
+                "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists());
     }
 
     public void assertIndexCreated() {
@@ -83,11 +84,11 @@ public class JUnitReportTest {
 
     private void commonIndexFileAssertions(File reportFile) throws IOException {
         // tests one the file object
-        assertTrue("No index.html present. Not generated?", reportFile.exists() );
-        assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
+        assertTrue("No index.html present. Not generated?", reportFile.exists());
+        assertTrue("Can't read the report file.", reportFile.canRead());
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0);
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
-        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        URL reportUrl = new URL(FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()));
         InputStream reportStream = reportUrl.openStream();
         try {
             assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
@@ -194,7 +195,10 @@ public class JUnitReportTest {
             throw new RuntimeException(exc);
         }
         try {
-            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            System.setSecurityManager(new SecurityManager() {
+                public void checkPermission(Permission perm) {
+                }
+            });
             buildRule.executeTarget("testWithStyleFromClasspath");
             commonIndexFileAssertions();
         } finally {
@@ -215,7 +219,10 @@ public class JUnitReportTest {
                     return super.getResourceAsStream(name);
                 }
             });
-            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            System.setSecurityManager(new SecurityManager() {
+                public void checkPermission(Permission perm) {
+                }
+            });
             buildRule.executeTarget("testWithStyleFromClasspath");
             commonIndexFileAssertions();
         } finally {

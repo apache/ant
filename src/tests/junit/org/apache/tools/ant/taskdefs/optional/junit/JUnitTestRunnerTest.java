@@ -17,10 +17,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -36,13 +37,11 @@ import org.junit.Test;
  * They must be enhanced with time.
  *
  */
-public class JUnitTestRunnerTest{
-
-
+public class JUnitTestRunnerTest {
 
     // check that a valid method name generates no errors
     @Test
-    public void testValidMethod(){
+    public void testValidMethod() {
         TestRunner runner = createRunnerForTestMethod(ValidMethodTestCase.class,"testA");
         runner.run();
         assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
@@ -50,7 +49,7 @@ public class JUnitTestRunnerTest{
 
     // check that having an invalid method name generates an error
     @Test
-    public void testInvalidMethod(){
+    public void testInvalidMethod() {
         TestRunner runner = createRunnerForTestMethod(InvalidMethodTestCase.class,"testInvalid");
         runner.run();
         String error = runner.getFormatter().getError();
@@ -60,7 +59,7 @@ public class JUnitTestRunnerTest{
 
     // check that having no suite generates no errors
     @Test
-    public void testNoSuite(){
+    public void testNoSuite() {
         TestRunner runner = createRunner(NoSuiteTestCase.class);
         runner.run();
         assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
@@ -68,7 +67,7 @@ public class JUnitTestRunnerTest{
 
     // check that a suite generates no errors
     @Test
-    public void testSuite(){
+    public void testSuite() {
         TestRunner runner = createRunner(SuiteTestCase.class);
         runner.run();
         assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
@@ -76,7 +75,7 @@ public class JUnitTestRunnerTest{
 
     // check that an invalid suite generates an error.
     @Test
-    public void testInvalidSuite(){
+    public void testInvalidSuite() {
         TestRunner runner = createRunner(InvalidSuiteTestCase.class);
         runner.run();
         String error = runner.getFormatter().getError();
@@ -87,7 +86,7 @@ public class JUnitTestRunnerTest{
     // check that something which is not a testcase generates no errors
     // at first even though this is incorrect.
     @Test
-    public void testNoTestCase(){
+    public void testNoTestCase() {
         TestRunner runner = createRunner(NoTestCase.class);
         runner.run();
         // On junit3 this is a FAILURE, on junit4 this is an ERROR
@@ -102,7 +101,7 @@ public class JUnitTestRunnerTest{
 
     // check that an exception in the constructor is noticed
     @Test
-    public void testInvalidTestCase(){
+    public void testInvalidTestCase() {
         TestRunner runner = createRunner(InvalidTestCase.class);
         runner.run();
         // On junit3 this is a FAILURE, on junit4 this is an ERROR
@@ -118,7 +117,7 @@ public class JUnitTestRunnerTest{
 
     // check that JUnit 4 synthetic AssertionFailedError gets message and cause from AssertionError
     @Test
-    public void testJUnit4AssertionError(){
+    public void testJUnit4AssertionError() {
         TestRunner runner = createRunnerForTestMethod(AssertionErrorTest.class,"throwsAssertionError");
         runner.run();
 
@@ -130,12 +129,12 @@ public class JUnitTestRunnerTest{
         assertEquals("cause message", cause.getMessage());
     }
 
-    protected TestRunner createRunner(Class<?> clazz){
+    protected TestRunner createRunner(Class<?> clazz) {
         return new TestRunner(new JUnitTest(clazz.getName()), null,
                                             true, true, true);
     }
 
-    protected TestRunner createRunnerForTestMethod(Class<?> clazz, String method){
+    protected TestRunner createRunnerForTestMethod(Class<?> clazz, String method) {
         return new TestRunner(new JUnitTest(clazz.getName()), new String[] {method},
                                             true, true, true);
     }
@@ -144,7 +143,7 @@ public class JUnitTestRunnerTest{
     private final static class TestRunner extends JUnitTestRunner {
         private ResultFormatter formatter = new ResultFormatter();
         TestRunner(JUnitTest test, String[] methods, boolean haltonerror,
-                   boolean filtertrace, boolean haltonfailure){
+                   boolean filtertrace, boolean haltonfailure) {
             super(test, methods, haltonerror, filtertrace,  haltonfailure,
                   false, false, TestRunner.class.getClassLoader());
             // use the classloader that loaded this class otherwise
@@ -152,7 +151,7 @@ public class JUnitTestRunnerTest{
             // is ran in non-forked mode.
             addFormatter(formatter);
         }
-        ResultFormatter getFormatter(){
+        ResultFormatter getFormatter() {
             return formatter;
         }
     }
@@ -161,13 +160,20 @@ public class JUnitTestRunnerTest{
     private final static class ResultFormatter implements JUnitResultFormatter {
         private AssertionFailedError failure;
         private Throwable error;
-        public void setSystemOutput(String output){}
-        public void setSystemError(String output){}
-        public void startTestSuite(JUnitTest suite) throws BuildException{}
-        public void endTestSuite(JUnitTest suite) throws BuildException{}
-        public void setOutput(java.io.OutputStream out){}
-        public void startTest(junit.framework.Test t) {}
-        public void endTest(junit.framework.Test test) {}
+        public void setSystemOutput(String output) {
+        }
+        public void setSystemError(String output) {
+        }
+        public void startTestSuite(JUnitTest suite) throws BuildException{
+        }
+        public void endTestSuite(JUnitTest suite) throws BuildException{
+        }
+        public void setOutput(OutputStream out) {
+        }
+        public void startTest(junit.framework.Test t) {
+        }
+        public void endTest(junit.framework.Test test) {
+        }
         public void addFailure(junit.framework.Test test, AssertionFailedError t) {
             failure = t;
         }
@@ -177,8 +183,8 @@ public class JUnitTestRunnerTest{
         public void addError(junit.framework.Test test, Throwable t) {
             error = t;
         }
-        String getError(){
-            if (error == null){
+        String getError() {
+            if (error == null) {
                 return "";
             }
             StringWriter sw = new StringWriter();
@@ -191,54 +197,64 @@ public class JUnitTestRunnerTest{
     }
 
     public static class InvalidMethodTestCase extends TestCase {
-        public InvalidMethodTestCase(String name){ super(name); }
-        public void testA(){
+        public InvalidMethodTestCase(String name) {
+            super(name);
+        }
+        public void testA() {
             throw new NullPointerException("thrown on purpose");
         }
     }
 
     public static class ValidMethodTestCase extends TestCase {
-        public ValidMethodTestCase(String name){ super(name); }
-        public void testA(){
+        public ValidMethodTestCase(String name) {
+            super(name);
+        }
+        public void testA() {
             // expected to be executed
         }
-        public void testB(){
+        public void testB() {
             // should not be executed
             throw new NullPointerException("thrown on purpose");
         }
     }
 
     public static class InvalidTestCase extends TestCase {
-        public InvalidTestCase(String name){
+        public InvalidTestCase(String name) {
             super(name);
             throw new NullPointerException("thrown on purpose");
         }
     }
 
     public static class NoSuiteTestCase extends TestCase {
-        public NoSuiteTestCase(String name){ super(name); }
-        public void testA(){}
+        public NoSuiteTestCase(String name) {
+            super(name);
+        }
+        public void testA() {
+        }
     }
 
     public static class SuiteTestCase extends NoSuiteTestCase {
-        public SuiteTestCase(String name){ super(name); }
-        public static junit.framework.Test suite(){
+        public SuiteTestCase(String name) {
+            super(name);
+        }
+        public static junit.framework.Test suite() {
             return new TestSuite(SuiteTestCase.class);
         }
     }
 
     public static class InvalidSuiteTestCase extends NoSuiteTestCase {
-        public InvalidSuiteTestCase(String name){ super(name); }
-        public static junit.framework.Test suite(){
+        public InvalidSuiteTestCase(String name) {
+            super(name);
+        }
+        public static junit.framework.Test suite() {
             throw new NullPointerException("thrown on purpose");
         }
     }
 
     public static class AssertionErrorTest {
-        @Test public void throwsAssertionError() {
-            AssertionError assertionError = new AssertionError("failure message");
-            assertionError.initCause(new RuntimeException("cause message"));
-            throw assertionError;
+        @Test
+        public void throwsAssertionError() {
+            throw new AssertionError("failure message", new RuntimeException("cause message"));
         }
     }
 }

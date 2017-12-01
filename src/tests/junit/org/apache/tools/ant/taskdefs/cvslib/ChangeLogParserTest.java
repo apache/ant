@@ -20,9 +20,9 @@ package org.apache.tools.ant.taskdefs.cvslib;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 

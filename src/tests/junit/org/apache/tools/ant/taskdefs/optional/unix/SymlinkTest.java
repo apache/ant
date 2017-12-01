@@ -17,11 +17,11 @@
  */
 
 /*
- * Since the initial version of this file was deveolped on the clock on
+ * Since the initial version of this file was developed on the clock on
  * an NSF grant I should say the following boilerplate:
  *
  * This material is based upon work supported by the National Science
- * Foundaton under Grant No. EIA-0196404. Any opinions, findings, and
+ * Foundation under Grant No. EIA-0196404. Any opinions, findings, and
  * conclusions or recommendations expressed in this material are those
  * of the author and do not necessarily reflect the views of the
  * National Science Foundation.
@@ -192,7 +192,7 @@ public class SymlinkTest {
         buildRule.executeTarget("test-fileutils");
         SymbolicLinkUtils su = SymbolicLinkUtils.getSymbolicLinkUtils();
 
-        java.io.File f = new File(buildRule.getOutputDir(), "file1");
+        File f = new File(buildRule.getOutputDir(), "file1");
         assertTrue(f.exists());
         assertFalse(f.isDirectory());
         assertTrue(f.isFile());
@@ -260,7 +260,7 @@ public class SymlinkTest {
                                               f.getName()));
 
         // it is not possible to find out that symbolic links pointing
-        // to inexistent files or directories are symbolic links
+        // to nonexistent files or directories are symbolic links
         // it used to be possible to detect this on Mac
         // this is not true under Snow Leopard and JDK 1.5
         // Removing special handling of MacOS until someone shouts

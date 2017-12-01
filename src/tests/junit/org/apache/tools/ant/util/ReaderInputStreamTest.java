@@ -43,6 +43,7 @@ public class ReaderInputStreamTest {
         compareBytes("a", "utf-16");
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testSimpleAbc16() throws Exception {
         // THIS WILL FAIL.
@@ -51,7 +52,7 @@ public class ReaderInputStreamTest {
         int pos = 0;
         ReaderInputStream r = new ReaderInputStream(
             new StringReader("abc"), "utf-16");
-        for (int i = 0; true; ++i) {
+        while (true) {
             int res = r.read();
             if (res == -1) {
                 break;
@@ -63,6 +64,7 @@ public class ReaderInputStreamTest {
         new String(bytes, 0, bytes.length, "utf-16");
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testReadZero() throws Exception {
         ReaderInputStream r = new ReaderInputStream(
@@ -88,7 +90,8 @@ public class ReaderInputStreamTest {
         ReaderInputStream r = null;
         FileInputStream utf8 = null;
         try {
-            fin = new InputStreamReader(new FileInputStream(new File(System.getProperty("root"), "src/tests/antunit/taskdefs/exec/input/iso8859-1")),
+            fin = new InputStreamReader(new FileInputStream(new File(System.getProperty("root"),
+                    "src/tests/antunit/taskdefs/exec/input/iso8859-1")),
                                         "ISO8859_1");
             r = new ReaderInputStream(fin, "UTF8");
 
@@ -99,7 +102,8 @@ public class ReaderInputStreamTest {
                 b = r.read();
             }
 
-            utf8 = new FileInputStream(new File(System.getProperty("root"), "src/tests/antunit/taskdefs/exec/expected/utf-8"));
+            utf8 = new FileInputStream(new File(System.getProperty("root"),
+                    "src/tests/antunit/taskdefs/exec/expected/utf-8"));
             ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
             b = utf8.read();
             while (b > -1) {
@@ -120,11 +124,10 @@ public class ReaderInputStreamTest {
         }
     }
 
+    @SuppressWarnings("resource")
     private void compareBytes(String s, String encoding) throws Exception {
         byte[] expected = s.getBytes(encoding);
-
-        ReaderInputStream r = new ReaderInputStream(
-            new StringReader(s), encoding);
+        ReaderInputStream r = new ReaderInputStream(new StringReader(s), encoding);
         for (int i = 0; i < expected.length; ++i) {
             int expect = expected[i] & 0xFF;
             int read = r.read();

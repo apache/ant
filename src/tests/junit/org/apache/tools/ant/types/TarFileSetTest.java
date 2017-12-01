@@ -43,7 +43,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
 
     @Test
     public final void testAttributes() {
-        TarFileSet f = (TarFileSet)getInstance();
+        TarFileSet f = (TarFileSet) getInstance();
         //check that dir and src are incompatible
         f.setSrc(new File("example.tar"));
         try {
@@ -54,7 +54,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
         } catch (BuildException be) {
             assertEquals("Cannot set both dir and src attributes",be.getMessage());
         }
-        f = (TarFileSet)getInstance();
+        f = (TarFileSet) getInstance();
         //check that dir and src are incompatible
         f.setDir(new File("examples"));
         try {
@@ -66,7 +66,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
             assertEquals("Cannot set both dir and src attributes",be.getMessage());
         }
         //check that fullpath and prefix are incompatible
-        f = (TarFileSet)getInstance();
+        f = (TarFileSet) getInstance();
         f.setSrc(new File("example.tar"));
         f.setPrefix("/examples");
         try {
@@ -77,7 +77,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
         } catch (BuildException be) {
             assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
         }
-        f = (TarFileSet)getInstance();
+        f = (TarFileSet) getInstance();
         f.setSrc(new File("example.tar"));
         f.setFullpath("/doc/manual/index.html");
         try {
@@ -89,7 +89,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
             assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
         }
         // check that reference tarfilesets cannot have specific attributes
-        f = (TarFileSet)getInstance();
+        f = (TarFileSet) getInstance();
         f.setRefid(new Reference(getProject(), "test"));
         try {
             f.setSrc(new File("example.tar"));
@@ -101,18 +101,22 @@ public class TarFileSetTest extends AbstractFileSetTest {
             + "attribute when using refid", be.getMessage());
         }
         // check that a reference tarfileset gets the same attributes as the original
-        f = (TarFileSet)getInstance();
+        f = (TarFileSet) getInstance();
         f.setSrc(new File("example.tar"));
         f.setPrefix("/examples");
         f.setFileMode("600");
         f.setDirMode("530");
         getProject().addReference("test",f);
-        TarFileSet zid=(TarFileSet)getInstance();
+        TarFileSet zid = (TarFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
-        assertTrue("src attribute copied by copy constructor",zid.getSrc(getProject()).equals(f.getSrc(getProject())));
-        assertTrue("prefix attribute copied by copy constructor",f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
-        assertTrue("file mode attribute copied by copy constructor",f.getFileMode(getProject())==zid.getFileMode(getProject()));
-        assertTrue("dir mode attribute copied by copy constructor",f.getDirMode(getProject())==zid.getDirMode(getProject()));
+        assertTrue("src attribute copied by copy constructor",
+                zid.getSrc(getProject()).equals(f.getSrc(getProject())));
+        assertTrue("prefix attribute copied by copy constructor",
+                f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
+        assertTrue("file mode attribute copied by copy constructor",
+                f.getFileMode(getProject()) == zid.getFileMode(getProject()));
+        assertTrue("dir mode attribute copied by copy constructor",
+                f.getDirMode(getProject()) == zid.getDirMode(getProject()));
       }
 
 

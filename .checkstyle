@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
+  <local-check-config name="Ant Checkstyle Config" location="src/etc/checkstyle/checkstyle-config" type="project" description="">
+    <property name="config.dir" value="${basedir}/src/etc/checkstyle"/>
+    <additional-data name="protect-config-file" value="true"/>
+  </local-check-config>
+  <fileset name="Ant Checkstyle config" enabled="true" check-config-name="Ant Checkstyle Config" local="true">
+    <file-match-pattern match-pattern="^src.main.*.java$" include-pattern="true"/>
+    <file-match-pattern match-pattern="^src.etc.testcases.*.java$" include-pattern="true"/>
+    <file-match-pattern match-pattern="^src.tests.*.java$" include-pattern="true"/>
+  </fileset>
+</fileset-config>

@@ -40,7 +40,7 @@ public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
         try {
             super.testParagraphCharacter();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 
@@ -48,7 +48,7 @@ public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
         try {
             super.testLineSeparatorCharacter();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 
@@ -56,7 +56,7 @@ public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
         try {
             super.testStandaloneCR();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 
@@ -64,7 +64,7 @@ public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
         try {
             super.testWindowsLineSeparator();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 }

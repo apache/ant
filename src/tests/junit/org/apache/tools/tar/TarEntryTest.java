@@ -18,6 +18,8 @@
 
 package org.apache.tools.tar;
 
+import java.io.File;
+
 import org.junit.Test;
 
 /**
@@ -30,6 +32,6 @@ public class TarEntryTest {
      */
     @Test
     public void testFileConstructor() {
-        new TarEntry(new java.io.File("/foo"));
+        new TarEntry(new File("/foo"));
     }
 }

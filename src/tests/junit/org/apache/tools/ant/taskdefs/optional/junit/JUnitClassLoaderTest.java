@@ -29,7 +29,7 @@ import org.junit.Test;
 public class JUnitClassLoaderTest {
 
     @Test
-    public void testContextClassLoader(){
+    public void testContextClassLoader() {
         ClassLoader context = Thread.currentThread().getContextClassLoader();
         ClassLoader caller = getClass().getClassLoader();
         assertSame(context, caller);

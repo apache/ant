@@ -74,14 +74,14 @@ public class UnzipTest {
 
 
     @Test
-    public void testRealTest() throws java.io.IOException {
+    public void testRealTest() throws IOException {
         buildRule.executeTarget("realTest");
         assertLogoUncorrupted();
     }
 
     /**
      * test that the logo gif file has not been corrupted
-     * @throws IOException
+     * @throws IOException if something goes wrong
      */
     private void assertLogoUncorrupted() throws IOException {
         assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
@@ -90,13 +90,13 @@ public class UnzipTest {
     }
 
     @Test
-    public void testTestZipTask() throws java.io.IOException {
+    public void testTestZipTask() throws IOException {
         buildRule.executeTarget("testZipTask");
         assertLogoUncorrupted();
     }
 
     @Test
-    public void testTestUncompressedZipTask() throws java.io.IOException {
+    public void testTestUncompressedZipTask() throws IOException {
         buildRule.executeTarget("testUncompressedZipTask");
         assertLogoUncorrupted();
     }
@@ -204,7 +204,7 @@ public class UnzipTest {
     }
 
     /**
-     * assert that a file doesnt exist, relative to the project
+     * assert that a file doesn't exist, relative to the project
      *
      * @param message  message if there is no mpatch
      * @param filename filename to resolve against the project

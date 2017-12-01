@@ -165,7 +165,7 @@ public class TarTest {
         File f1
             = new File(buildRule.getProject().getProperty("output"), "untar/test8.xml");
         if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
         }
     }
 
@@ -185,7 +185,7 @@ public class TarTest {
         File f1
             = new File(buildRule.getProject().getProperty("output"), "untar/test10.xml");
         if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
         }
     }
 
@@ -195,7 +195,7 @@ public class TarTest {
         File f1
             = new File(buildRule.getProject().getProperty("output"), "untar/test11.xml");
         if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
         }
     }
 

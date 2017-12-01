@@ -84,7 +84,7 @@ public class FilterSetTest {
     @Test
     public void testRecursive() {
         String result = "it works line";
-        String line="@test@ line";
+        String line = "@test@ line";
         FilterSet fs = new FilterSet();
         fs.addFilter("test", "@test1@");
         fs.addFilter("test1","@test2@");
@@ -221,13 +221,14 @@ public class FilterSetTest {
         byte[] buffer1 = new byte[BUF_SIZE];
         byte[] buffer2 = new byte[BUF_SIZE];
 
+        @SuppressWarnings("resource")
         FileInputStream fis1 = new FileInputStream(file1);
+        @SuppressWarnings("resource")
         FileInputStream fis2 = new FileInputStream(file2);
-        int index = 0;
         int read = 0;
         while ((read = fis1.read(buffer1)) != -1) {
             fis2.read(buffer2);
-            for (int i = 0; i < read; ++i, ++index) {
+            for (int i = 0; i < read; ++i) {
                 if (buffer1[i] != buffer2[i]) {
                     return false;
                 }

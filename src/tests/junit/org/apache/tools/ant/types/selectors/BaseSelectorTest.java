@@ -79,7 +79,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      */
     public BaseSelector getSelector() {
         BaseSelector selector = getInstance();
-        selector.setProject( getProject() );
+        selector.setProject(getProject());
         return selector;
     }
 
@@ -135,12 +135,11 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * "T"s amd "F"s from applying the selector to each file.
      */
     public String selectionString(File basedir, File[] files, FileSelector selector) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int x = 0; x < files.length; x++) {
-            if (selector.isSelected(basedir,filenames[x],files[x])) {
+            if (selector.isSelected(basedir, filenames[x], files[x])) {
                 buf.append('T');
-            }
-            else {
+            } else {
                 buf.append('F');
             }
         }
@@ -173,13 +172,10 @@ public abstract class BaseSelectorTest extends BuildFileTest {
         int length1 = expected.length();
         int length2 = result.length();
         int min = (length1 > length2) ? length2 : length1;
-        StringBuffer sb = new StringBuffer();
-        for (int i=0; i<min; i++) {
-            sb.append(
-                  (expected.charAt(i) == result.charAt(i))
-                ? "-"
-                : "X"
-            );
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < min; i++) {
+            sb.append((expected.charAt(i) == result.charAt(i))
+                    ? "-" : "X");
         }
         return sb.toString();
     }
@@ -193,12 +189,12 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      *         separated with semicolons ';'
      */
     public String resolve(String filelist) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int min = (filenames.length > filelist.length())
                 ? filelist.length()
                 : filenames.length;
-        for (int i=0; i<min; i++) {
-            if ('X'==filelist.charAt(i)) {
+        for (int i = 0; i < min; i++) {
+            if ('X' == filelist.charAt(i)) {
                 sb.append(filenames[i]);
                 sb.append(";");
             }

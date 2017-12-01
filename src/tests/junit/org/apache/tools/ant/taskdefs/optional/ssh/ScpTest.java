@@ -60,27 +60,26 @@ import static org.junit.Assert.fail;
  */
 public class ScpTest {
 
+    private Scp scpTask;
     private File tempDir;
     private String sshHostUri = System.getProperty("scp.host");
-    private int port = Integer.parseInt( System.getProperty( "scp.port", "22" ) );
+    private int port = Integer.parseInt(System.getProperty("scp.port", "22"));
     private String knownHosts = System.getProperty("scp.known.hosts");
 
     private List cleanUpList = new ArrayList();
 
-    public ScpTest() {
+    @Before
+    public void setUp() {
+        scpTask = createTask();
         if (System.getProperty("scp.tmp") != null) {
             tempDir = new File(System.getProperty("scp.tmp"));
         }
-    }
-
-    @Before
-    public void setUp() {
         cleanUpList.clear();
     }
 
     @After
     public void tearDown() {
-        for( Iterator i = cleanUpList.iterator(); i.hasNext(); ) {
+        for (Iterator i = cleanUpList.iterator(); i.hasNext();) {
             File file = (File) i.next();
             file.delete();
         }
@@ -92,77 +91,73 @@ public class ScpTest {
         File uploadFile = createTemporaryFile();
 
         // upload
-        Scp scpTask = createTask();
-        scpTask.setFile( uploadFile.getPath() );
-        scpTask.setTodir( sshHostUri );
+        scpTask.setFile(uploadFile.getPath());
+        scpTask.setTodir(sshHostUri);
         scpTask.execute();
 
-        File testFile = new File( tempDir.getPath() + File.separator +
-                "download-testSingleFileUploadAndDownload.test" );
-        addCleanup(testFile );
+        File testFile = new File(tempDir.getPath() + File.separator +
+                "download-testSingleFileUploadAndDownload.test");
+        addCleanup(testFile);
         assertFalse("Assert that the testFile does not exist.", testFile.exists());
 
         // download
         scpTask = createTask();
-        scpTask.setFile( sshHostUri + "/" + uploadFile.getName() );
-        scpTask.setTodir( testFile.getPath() );
+        scpTask.setFile(sshHostUri + "/" + uploadFile.getName());
+        scpTask.setTodir(testFile.getPath());
         scpTask.execute();
 
-        assertTrue( "Assert that the testFile exists.", testFile.exists() );
-        compareFiles( uploadFile, testFile );
+        assertTrue("Assert that the testFile exists.", testFile.exists());
+        compareFiles(uploadFile, testFile);
     }
 
     @Test
     public void testMultiUploadAndDownload() throws IOException {
         assertNotNull("system property scp.tmp must be set", tempDir);
         List uploadList = new ArrayList();
-        for( int i = 0; i < 5; i++ ) {
-            uploadList.add( createTemporaryFile() );
+        for (int i = 0; i < 5; i++) {
+            uploadList.add(createTemporaryFile());
         }
 
-        Scp scp = createTask();
         FilenameSelector selector = new FilenameSelector();
-        selector.setName( "scp*" );
+        selector.setName("scp*");
         FileSet fileset = new FileSet();
-        fileset.setDir( tempDir );
-        fileset.addFilename( selector );
-        scp.addFileset( fileset );
-        scp.setTodir( sshHostUri );
-        scp.execute();
+        fileset.setDir(tempDir);
+        fileset.addFilename(selector);
+        scpTask.addFileset(fileset);
+        scpTask.setTodir(sshHostUri);
+        scpTask.execute();
 
-        File multi = new File( tempDir, "multi" );
+        File multi = new File(tempDir, "multi");
         multi.mkdir();
-        addCleanup( multi );
+        addCleanup(multi);
 
-        Scp scp2 = createTask();
-        scp2.setFile( sshHostUri + "/scp*" );
-        scp2.setTodir( multi.getPath() );
-        scp2.execute();
+        scpTask = createTask();
+        scpTask.setFile(sshHostUri + "/scp*");
+        scpTask.setTodir(multi.getPath());
+        scpTask.execute();
 
         FilesMatch match = new FilesMatch();
-        for( Iterator i = uploadList.iterator(); i.hasNext(); ) {
-            File f = (File)i.next();
-            match.setFile1( f );
-            File f2 = new File( multi, f.getName() );
-            match.setFile2( f2 );
-            assertTrue("Assert file '" + f.getPath() + "' and file '" +
-                    f2.getPath() + "'", match.eval() );
+        for (Iterator i = uploadList.iterator(); i.hasNext();) {
+            File f = (File) i.next();
+            match.setFile1(f);
+            File f2 = new File(multi, f.getName());
+            match.setFile2(f2);
+            assertTrue("Assert file '" + f.getPath() + "' and file '"
+                    + f2.getPath() + "'", match.eval());
         }
     }
 
     @Test
     public void testMultiResourceCollectionUpload() throws IOException {
         assertNotNull("system property scp.tmp must be set", tempDir);
-        List uploadList = new ArrayList();
+        List<File> uploadList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             uploadList.add(createTemporaryFile());
         }
 
-        Scp scp = createTask();
-
         // reverse order resource collection
         Sort sort = new Sort();
-        sort.setProject(scp.getProject());
+        sort.setProject(scpTask.getProject());
         Reverse reverse = new Reverse();
         reverse.add(new Name());
         sort.add(reverse);
@@ -170,56 +165,53 @@ public class ScpTest {
         FilenameSelector selector = new FilenameSelector();
         selector.setName("scp*");
         FileSet fileset = new FileSet();
-        fileset.setProject(scp.getProject());
+        fileset.setProject(scpTask.getProject());
         fileset.setDir(tempDir);
         fileset.addFilename(selector);
         sort.add(fileset);
-        scp.add(sort);
+        scpTask.add(sort);
 
-        scp.setTodir(sshHostUri);
-        scp.execute();
+        scpTask.setTodir(sshHostUri);
+        scpTask.execute();
     }
 
     @Test
     public void testRemoteToDir() throws IOException {
-        Scp scpTask = createTask();
 
         // first try an invalid URI
         try {
-            scpTask.setRemoteTodir( "host:/a/path/without/an/at" );
+            scpTask.setRemoteTodir("host:/a/path/without/an/at");
             fail("Expected a BuildException to be thrown due to invalid"
                     + " remoteToDir");
-        }
-        catch (BuildException e)
-        {
+        } catch (BuildException e) {
             // expected
             //TODO we should be asserting a value in here
         }
 
         // And this one should work
-        scpTask.setRemoteTodir( "user:password@host:/a/path/with/an/at" );
+        scpTask.setRemoteTodir("user:password@host:/a/path/with/an/at");
         // no exception
     }
 
-    public void addCleanup( File file ) {
-        cleanUpList.add( file );
+    private void addCleanup(File file) {
+        cleanUpList.add(file);
     }
 
     private void compareFiles(File src, File dest) {
         FilesMatch match = new FilesMatch();
-        match.setFile1( src );
-        match.setFile2( dest );
+        match.setFile1(src);
+        match.setFile2(dest);
 
-        assertTrue( "Assert files are equal.", match.eval() );
+        assertTrue("Assert files are equal.", match.eval());
     }
 
     private File createTemporaryFile() throws IOException {
         File uploadFile;
-        uploadFile = File.createTempFile( "scp", "test", tempDir );
-        FileWriter writer = new FileWriter( uploadFile );
+        uploadFile = File.createTempFile("scp", "test", tempDir);
+        FileWriter writer = new FileWriter(uploadFile);
         writer.write("Can you hear me now?\n");
         writer.close();
-        addCleanup( uploadFile );
+        addCleanup(uploadFile);
         return uploadFile;
     }
 
@@ -227,13 +219,13 @@ public class ScpTest {
         Scp scp = new Scp();
         Project p = new Project();
         p.init();
-        scp.setProject( p );
-        if( knownHosts != null ) {
-            scp.setKnownhosts( knownHosts );
+        scp.setProject(p);
+        if (knownHosts != null) {
+            scp.setKnownhosts(knownHosts);
         } else {
-            scp.setTrust( true );
+            scp.setTrust(true);
         }
-        scp.setPort( port );
+        scp.setPort(port);
         return scp;
     }
 }

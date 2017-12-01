@@ -32,12 +32,9 @@ public class JUnitVersionHelperTest {
     @Test
     public void testMyOwnName() {
         assertEquals("testMyOwnName",
-                JUnitVersionHelper.getTestCaseName(
-                    JUnit4TestAdapterCache.getDefault().asTest(
-                            Description.createTestDescription(JUnitVersionHelperTest.class, "testMyOwnName")
-                    )
-                )
-        );
+                JUnitVersionHelper.getTestCaseName(JUnit4TestAdapterCache.getDefault()
+                        .asTest(Description.createTestDescription(JUnitVersionHelperTest.class,
+                                 "testMyOwnName"))));
     }
 
     @Test
@@ -76,27 +73,38 @@ public class JUnitVersionHelperTest {
     }
 
     public static class Foo implements junit.framework.Test {
-        public int countTestCases() {return 0;}
-        public void run(TestResult result) {}
+        public int countTestCases() {
+            return 0;
+        }
+        public void run(TestResult result) {
+        }
     }
 
     public static class Foo1 extends Foo {
-        public String getName() {return "I'm a foo";}
+        public String getName() {
+            return "I'm a foo";
+        }
     }
 
     public static class Foo2 extends Foo {
-        public int getName() {return 1;}
+        public int getName() {
+            return 1;
+        }
     }
 
     public static class Foo3 extends Foo {
     }
 
     public static class Foo4 extends Foo {
-        public String name() {return "I'm a foo, too";}
+        public String name() {
+            return "I'm a foo, too";
+        }
     }
 
     public static class Foo5 extends TestCase {
-        public String getName() {return "overridden getName";}
+        public String getName() {
+            return "overridden getName";
+        }
     }
 
 }

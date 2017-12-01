@@ -113,10 +113,8 @@ public class ZipEncodingTest {
 
         assertEquals(expected.length, actual.limit());
 
-        for (int i = 0; i < expected.length; ++i) {
-
-            byte a = actual.get();
-            assertEquals(expected[i], a);
+        for (byte expectedByte : expected) {
+            assertEquals(expectedByte, actual.get());
         }
 
     }

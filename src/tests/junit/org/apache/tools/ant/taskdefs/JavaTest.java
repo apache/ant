@@ -78,14 +78,15 @@ public class JavaTest {
 
         //final String propname="tests-classpath.value";
         //String testClasspath=System.getProperty(propname);
-        //System.out.println("Test cp="+testClasspath);
-        String runFatal=System.getProperty("junit.run.fatal.tests");
-        if(runFatal!=null)
-            runFatalTests=true;
+        //System.out.println("Test cp=" + testClasspath);
+        String runFatal = System.getProperty("junit.run.fatal.tests");
+        if (runFatal != null) {
+            runFatalTests = true;
+        }
     }
 
     @Test
-    public void testNoJarNoClassname(){
+    public void testNoJarNoClassname() {
         try {
             buildRule.executeTarget("testNoJarNoClassname");
             fail("Build exception should have been thrown - parameter validation");
@@ -173,20 +174,20 @@ public class JavaTest {
         assertEquals("Command line should have 5 elements", 5, cmdLine.length);
         assertEquals("Last command line element should be java argument: " + arg,
                 arg,
-                cmdLine[cmdLine.length-1]);
+                cmdLine[cmdLine.length - 1]);
         assertEquals("The command line element at index 3 should be module name: " + moduleName,
                 moduleName,
-                cmdLine[cmdLine.length-2]);
+                cmdLine[cmdLine.length - 2]);
         assertEquals("The command line element at index 2 should be -m",
                 "-m",
-                cmdLine[cmdLine.length-3]);
+                cmdLine[cmdLine.length - 3]);
     }
 
     @Test
     public void testModuleAndClassnameCommandLine() {
         final String moduleName = "TestModule"; //NOI18N
         final String className = "org.apache.Test"; //NOI18N
-        final String moduleClassPair= String.format("%s/%s", moduleName, className);
+        final String moduleClassPair = String.format("%s/%s", moduleName, className);
         final String arg = "appArg";    //NOI18N
         final Java java = new Java();
         java.setFork(true);
@@ -199,13 +200,13 @@ public class JavaTest {
         assertEquals("Command line should have 5 elements", 5, cmdLine.length);
         assertEquals("Last command line element should be java argument: " + arg,
                 arg,
-                cmdLine[cmdLine.length-1]);
+                cmdLine[cmdLine.length - 1]);
         assertEquals("The command line element at index 3 should be module class pair: " + moduleClassPair,
                 moduleClassPair,
-                cmdLine[cmdLine.length-2]);
+                cmdLine[cmdLine.length - 2]);
         assertEquals("The command line element at index 2 should be -m",
                 "-m",
-                cmdLine[cmdLine.length-3]);
+                cmdLine[cmdLine.length - 3]);
     }
 
     @Test
@@ -395,7 +396,7 @@ public class JavaTest {
         // wait a little bit for the task to wait for input
         Thread.sleep(100);
 
-        // write some stuff in the input stream to be catched by the input task
+        // write some stuff in the input stream to be caught by the input task
         out.write("foo\n".getBytes());
         out.flush();
         try {
@@ -459,21 +460,21 @@ public class JavaTest {
      * argv[1] = string to print to System.err (optional)
      */
         public static void main(String[] argv) {
-            int exitCode=0;
-            if(argv.length>0) {
+            int exitCode = 0;
+            if (argv.length > 0) {
                 try {
-                    exitCode=Integer.parseInt(argv[0]);
-                } catch(NumberFormatException nfe) {
-                    exitCode=-1;
+                    exitCode = Integer.parseInt(argv[0]);
+                } catch (NumberFormatException nfe) {
+                    exitCode = -1;
                 }
             }
-            if(argv.length>1) {
+            if (argv.length > 1) {
                 System.out.println(argv[1]);
             }
-            if(argv.length>2) {
+            if (argv.length > 2) {
                 System.err.println(argv[2]);
             }
-            if(exitCode!=0) {
+            if (exitCode != 0) {
                 System.exit(exitCode);
             }
         }
@@ -503,8 +504,7 @@ public class JavaTest {
             if (argv.length >= 1) {
                 sleepTime = Integer.parseInt(argv[0]);
             }
-            if (argv.length >= 2)
-            {
+            if (argv.length >= 2) {
                 logFile = argv[1];
             }
             OutputStreamWriter out = null;
@@ -515,9 +515,13 @@ public class JavaTest {
                 FileOutputStream fos = new FileOutputStream(dest);
                 out = new OutputStreamWriter(fos);
                 out.write("bye bye\n");
-            } catch (Exception ex) {}
-            finally {
-                try {out.close();} catch (IOException ioe) {}}
+            } catch (Exception ex) {
+            } finally {
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                }
+            }
 
         }
     }

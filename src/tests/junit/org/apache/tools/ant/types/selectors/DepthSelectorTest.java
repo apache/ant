@@ -140,8 +140,6 @@ public class DepthSelectorTest {
         s.setMax(1);
         results = selectorRule.selectionString(s);
         assertEquals("FFFFFTTTFFFT", results);
-
-
     }
 
 }

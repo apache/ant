@@ -49,8 +49,6 @@ public class DynamicFilterTest {
         assertContains("hellO wOrld", content);
     }
 
-
-
     public static class CustomFilter implements ChainableReader {
         char replace = 'x';
         char with    = 'y';
@@ -65,14 +63,13 @@ public class DynamicFilterTest {
 
         public Reader chain(final Reader rdr) {
             return new BaseFilterReader(rdr) {
-                public int read()
-                    throws IOException
-                {
+                public int read() throws IOException {
                     int c = in.read();
-                    if (c == replace)
+                    if (c == replace) {
                         return with;
-                    else
+                    } else {
                         return c;
+                    }
                 }
             };
         }

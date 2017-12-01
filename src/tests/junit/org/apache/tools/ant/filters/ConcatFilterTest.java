@@ -43,32 +43,28 @@ public class ConcatFilterTest {
         + "Line  1" + lSep
         + "Line  2" + lSep
         + "Line  3" + lSep
-        + "Line  4" + lSep
-    ;
+        + "Line  4" + lSep;
 
     private static final String FILE_PREPEND =
           "Line  1" + lSep
         + "Line  2" + lSep
         + "Line  3" + lSep
         + "Line  4" + lSep
-        + "Line  5" + lSep
-    ;
+        + "Line  5" + lSep;
 
     private static final String FILE_APPEND_WITH =
           "Line 57" + lSep
         + "Line 58" + lSep
         + "Line 59" + lSep
         + "Line 60" + lSep
-        + "this-should-be-the-last-line" + lSep
-    ;
+        + "this-should-be-the-last-line" + lSep;
 
     private static final String FILE_APPEND =
           "Line 56" + lSep
         + "Line 57" + lSep
         + "Line 58" + lSep
         + "Line 59" + lSep
-        + "Line 60" + lSep
-    ;
+        + "Line 60" + lSep;
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

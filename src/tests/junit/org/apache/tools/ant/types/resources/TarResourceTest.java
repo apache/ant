@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.apache.tools.ant.FileUtilities.getFileContents;
 import static org.junit.Assert.assertEquals;
@@ -46,7 +47,7 @@ public class TarResourceTest {
     }
 
     @Test
-    public void testUncompressSource() throws java.io.IOException {
+    public void testUncompressSource() throws IOException {
         buildRule.executeTarget("uncompressSource");
         assertEquals(getFileContents(buildRule.getProject().resolveFile("../../asf-logo.gif")),
                 getFileContents(new File(buildRule.getProject().getProperty("output"), "asf-logo.gif")));

@@ -61,11 +61,11 @@ public class ExtraFieldUtilsTest implements UnixStat {
         System.arraycopy(a.getLocalFileDataLength().getBytes(), 0, data, 2, 2);
         System.arraycopy(aLocal, 0, data, 4, aLocal.length);
         System.arraycopy(dummy.getHeaderId().getBytes(), 0, data,
-                         4+aLocal.length, 2);
+                         4 + aLocal.length, 2);
         System.arraycopy(dummy.getLocalFileDataLength().getBytes(), 0, data,
-                         4+aLocal.length+2, 2);
+                         4 + aLocal.length + 2, 2);
         System.arraycopy(dummyLocal, 0, data,
-                         4+aLocal.length+4, dummyLocal.length);
+                         4 + aLocal.length + 4, dummyLocal.length);
 
     }
 
@@ -83,14 +83,14 @@ public class ExtraFieldUtilsTest implements UnixStat {
         assertEquals("data length field 2", 1,
                      ze[1].getLocalFileDataLength().getValue());
 
-        byte[] data2 = new byte[data.length-1];
+        byte[] data2 = new byte[data.length - 1];
         System.arraycopy(data, 0, data2, 0, data2.length);
         try {
             ExtraFieldUtils.parse(data2);
             fail("data should be invalid");
         } catch (Exception e) {
             assertEquals("message",
-                         "bad extra field starting at "+(4 + aLocal.length)
+                         "bad extra field starting at " + (4 + aLocal.length)
                          + ".  Block length of 1 bytes exceeds remaining data of 0 bytes.",
                          e.getMessage());
         }
@@ -109,7 +109,7 @@ public class ExtraFieldUtilsTest implements UnixStat {
         assertEquals("data length field 2", 1,
                      ze[1].getLocalFileDataLength().getValue());
 
-        byte[] data2 = new byte[data.length-1];
+        byte[] data2 = new byte[data.length - 1];
         System.arraycopy(data, 0, data2, 0, data2.length);
         ze = ExtraFieldUtils.parse(data2, true,
                                    ExtraFieldUtils.UnparseableExtraField.READ);
@@ -140,7 +140,7 @@ public class ExtraFieldUtilsTest implements UnixStat {
         assertEquals("data length field 2", 1,
                      ze[1].getLocalFileDataLength().getValue());
 
-        byte[] data2 = new byte[data.length-1];
+        byte[] data2 = new byte[data.length - 1];
         System.arraycopy(data, 0, data2, 0, data2.length);
         ze = ExtraFieldUtils.parse(data2, true,
                                    ExtraFieldUtils.UnparseableExtraField.SKIP);
@@ -158,24 +158,24 @@ public class ExtraFieldUtilsTest implements UnixStat {
         byte[] local =
             ExtraFieldUtils.mergeLocalFileDataData(new ZipExtraField[] {a, dummy});
         assertEquals("local length", data.length, local.length);
-        for (int i=0; i<local.length; i++) {
-            assertEquals("local byte "+i, data[i], local[i]);
+        for (int i = 0; i < local.length; i++) {
+            assertEquals("local byte " + i, data[i], local[i]);
         }
 
         byte[] dummyCentral = dummy.getCentralDirectoryData();
         byte[] data2 = new byte[4 + aLocal.length + 4 + dummyCentral.length];
         System.arraycopy(data, 0, data2, 0, 4 + aLocal.length + 2);
         System.arraycopy(dummy.getCentralDirectoryLength().getBytes(), 0,
-                         data2, 4+aLocal.length+2, 2);
+                         data2, 4 + aLocal.length + 2, 2);
         System.arraycopy(dummyCentral, 0, data2,
-                         4+aLocal.length+4, dummyCentral.length);
+                         4 + aLocal.length + 4, dummyCentral.length);
 
 
         byte[] central =
             ExtraFieldUtils.mergeCentralDirectoryData(new ZipExtraField[] {a, dummy});
         assertEquals("central length", data2.length, central.length);
-        for (int i=0; i<central.length; i++) {
-            assertEquals("central byte "+i, data2[i], central[i]);
+        for (int i = 0; i < central.length; i++) {
+            assertEquals("central byte " + i, data2[i], central[i]);
         }
 
     }

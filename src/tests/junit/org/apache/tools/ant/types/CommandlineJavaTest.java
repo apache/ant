@@ -88,7 +88,7 @@ public class CommandlineJavaTest {
 
         c.createClasspath(project).setLocation(project.resolveFile("build.xml"));
         c.createClasspath(project).setLocation(project.resolveFile(
-            System.getProperty(MagicNames.ANT_HOME)+"/lib/ant.jar"));
+            System.getProperty(MagicNames.ANT_HOME) + "/lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         //        assertEquals("with classpath", "java", s[0]);

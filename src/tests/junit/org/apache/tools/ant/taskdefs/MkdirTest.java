@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
@@ -60,7 +62,7 @@ public class MkdirTest {
     @Test
     public void test3() {
         buildRule.executeTarget("test3");
-        java.io.File f = new java.io.File(buildRule.getProject().getProperty("output"), "testdir.tmp");
+        File f = new File(buildRule.getProject().getProperty("output"), "testdir.tmp");
         if (!f.exists() || !f.isDirectory()) {
             fail("mkdir failed");
         } else {

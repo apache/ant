@@ -78,7 +78,7 @@ public class ProjectHelperRepositoryTest {
     public void testNoDefaultContructor() throws Exception {
 
         class IncrrectHelper extends ProjectHelper {
-            // the default constructor is not visible to ant here 
+            // the default constructor is not visible to ant here
         }
 
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();

@@ -43,7 +43,7 @@ public class UpToDateTest {
         File srcDir = buildRule.getProject().resolveFile("source");
         assumeTrue("Could not change modification timestamp of source directory",
                 srcDir.setLastModified(srcDir.lastModified()
-                - (3 * FileUtils.getFileUtils().getFileTimestampGranularity())));
+                - 3 * FileUtils.getFileUtils().getFileTimestampGranularity()));
     }
 
     @After

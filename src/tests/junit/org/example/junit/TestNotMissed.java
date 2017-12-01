@@ -17,7 +17,6 @@
  */
 package org.example.junit;
 
-
 import org.junit.Test;
 
 public class TestNotMissed {

@@ -130,12 +130,23 @@ public class SubAntTest {
             expectedBasedirs = dirs;
         }
 
-        public void buildStarted(BuildEvent event) {}
-        public void buildFinished(BuildEvent event) {}
-        public void targetFinished(BuildEvent event){}
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}
-        public void messageLogged(BuildEvent event) {}
+        public void buildStarted(BuildEvent event) {
+        }
+
+        public void buildFinished(BuildEvent event) {
+        }
+
+        public void targetFinished(BuildEvent event) {
+        }
+
+        public void taskStarted(BuildEvent event) {
+        }
+
+        public void taskFinished(BuildEvent event) {
+        }
+
+        public void messageLogged(BuildEvent event) {
+        }
 
         public void targetStarted(BuildEvent event) {
             if (event.getTarget().getName().equals("")) {

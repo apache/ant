@@ -240,10 +240,7 @@ public class DOMElementWriterTest {
 
         StringWriter sw = new StringWriter();
         DOMElementWriter w =
-            new DOMElementWriter(false,
-                                 new DOMElementWriter.XmlNamespacePolicy(false,
-                                                                         true)
-                                 );
+            new DOMElementWriter(false, new DOMElementWriter.XmlNamespacePolicy(false, true));
         w.write(root, sw, 0, "  ");
         assertEquals("<root ns0:bar=\"baz\" xmlns:ns0=\"urn:foo2\" />"
                      + StringUtils.LINE_SEP, sw.toString());

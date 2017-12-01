@@ -157,13 +157,13 @@ public class DefaultExcludesTest {
     private void assertArrayContentsEquals(String message, String[] expected, String[] actual) {
         // check that both arrays have the same size
         assertEquals(message + " : string array length match", expected.length, actual.length);
-        for (int counter=0; counter < expected.length; counter++) {
+        for (String element : expected) {
             boolean found = false;
             for (int i = 0; !found && i < actual.length; i++) {
-                found |= expected[counter].equals(actual[i]);
+                found |= element.equals(actual[i]);
             }
             assertTrue(message + " : didn't find element "
-                    + expected[counter] + " in array match", found);
+                    + element + " in array match", found);
         }
 
     }

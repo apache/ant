@@ -282,7 +282,7 @@ public class RmicAdvancedTest {
     public void NotestFailingAdapter() throws Exception {
         try {
             buildRule.executeTarget("testFailingAdapter");
-            fail("Expected failures to propogate");
+            fail("Expected failures to propagate");
         } catch (BuildException ex) {
             AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
         }
@@ -291,7 +291,7 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.1 stubs are good
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion11() throws Exception {
@@ -300,7 +300,7 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.1 stubs are good
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion11Dest() throws Exception {
@@ -310,7 +310,7 @@ public class RmicAdvancedTest {
     /**
      * test that version 1.2 stubs are good
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion12() throws Exception {
@@ -320,7 +320,7 @@ public class RmicAdvancedTest {
     /**
      * test that version 1.2 stubs are good
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion12Dest() throws Exception {
@@ -330,7 +330,7 @@ public class RmicAdvancedTest {
     /**
      * test that version compat stubs are good
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersionCompat() throws Exception {
@@ -340,7 +340,7 @@ public class RmicAdvancedTest {
     /**
      * test that version compat stubs are good
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersionCompatDest() throws Exception {
@@ -350,7 +350,7 @@ public class RmicAdvancedTest {
     /**
      * test that passes -Xnew to sun's rmic running in a different VM.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewForked() throws Exception {
@@ -360,7 +360,7 @@ public class RmicAdvancedTest {
     /**
      * test that passes -Xnew to sun's rmic running in a different VM.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewForkedDest() throws Exception {
@@ -370,7 +370,7 @@ public class RmicAdvancedTest {
     /**
      * test that runs the new xnew compiler adapter.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewCompiler() throws Exception {
@@ -380,7 +380,7 @@ public class RmicAdvancedTest {
     /**
      * test that runs the new xnew compiler adapter.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewCompilerDest() throws Exception {
@@ -390,7 +390,7 @@ public class RmicAdvancedTest {
     /**
      * test that verifies that IDL compiles.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testIDL() throws Exception {
@@ -400,7 +400,7 @@ public class RmicAdvancedTest {
     /**
      * test that verifies that IDL compiles.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testIDLDest() throws Exception {
@@ -410,7 +410,7 @@ public class RmicAdvancedTest {
     /**
      * test that verifies that IIOP compiles.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testIIOP() throws Exception {
@@ -420,7 +420,7 @@ public class RmicAdvancedTest {
     /**
      * test that verifies that IIOP compiles.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testIIOPDest() throws Exception {

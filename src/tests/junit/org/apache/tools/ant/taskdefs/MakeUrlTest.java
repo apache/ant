@@ -100,7 +100,7 @@ public class MakeUrlTest {
     /**
      * test that we can round trip by opening a url that exists
      *
-     * @throws IOException
+     * @throws IOException if something goes wrong
      */
     @Test
     public void testRoundTrip() throws IOException {
@@ -142,8 +142,8 @@ public class MakeUrlTest {
     /**
      * assert that a property ends with
      *
-     * @param property
-     * @param ending
+     * @param property String
+     * @param ending String
      */
     private void assertPropertyEndsWith(String property, String ending) {
         String result = getProperty(property);
@@ -167,8 +167,8 @@ public class MakeUrlTest {
     /**
      * get a property from the project
      *
-     * @param property
-     * @return
+     * @param property String
+     * @return String
      */
     protected String getProperty(String property) {
         return buildRule.getProject().getProperty(property);

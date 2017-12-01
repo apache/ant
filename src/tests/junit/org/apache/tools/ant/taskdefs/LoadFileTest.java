@@ -38,18 +38,15 @@ public class LoadFileTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/loadfile.xml");
     }
 
-
     @After
     public void tearDown() {
         buildRule.executeTarget("cleanup");
     }
-
 
     /**
      * A unit test for JUnit
@@ -64,7 +61,6 @@ public class LoadFileTest {
         }
     }
 
-
     /**
      * A unit test for JUnit
      */
@@ -77,7 +73,6 @@ public class LoadFileTest {
             //TODO assert value
         }
     }
-
 
     /**
      * A unit test for JUnit
@@ -96,32 +91,27 @@ public class LoadFileTest {
      * A unit test for JUnit
      */
     @Test
-    public void testFailOnError()
-            throws BuildException {
+    public void testFailOnError() throws BuildException {
         buildRule.executeTarget("testFailOnError");
         assertNull(buildRule.getProject().getProperty("testFailOnError"));
     }
-
 
     /**
      * A unit test for JUnit
      */
     @Test
-    public void testLoadAFile()
-            throws BuildException {
+    public void testLoadAFile() throws BuildException {
         buildRule.executeTarget("testLoadAFile");
         if(buildRule.getProject().getProperty("testLoadAFile").indexOf("eh?")<0) {
             fail("property is not all in the file");
         }
     }
 
-
     /**
      * A unit test for JUnit
      */
     @Test
-    public void testLoadAFileEnc()
-            throws BuildException {
+    public void testLoadAFileEnc() throws BuildException {
         buildRule.executeTarget("testLoadAFileEnc");
         assertNotNull("file load files", buildRule.getProject().getProperty("testLoadAFileEnc"));
     }
@@ -130,8 +120,7 @@ public class LoadFileTest {
      * A unit test for JUnit
      */
     @Test
-    public void testEvalProps()
-            throws BuildException {
+    public void testEvalProps() throws BuildException {
         buildRule.executeTarget("testEvalProps");
         if(buildRule.getProject().getProperty("testEvalProps").indexOf("rain")<0) {
             fail("property eval broken");
@@ -142,8 +131,7 @@ public class LoadFileTest {
      * Test FilterChain and FilterReaders
      */
     @Test
-    public void testFilterChain()
-            throws BuildException {
+    public void testFilterChain() throws BuildException {
         buildRule.executeTarget("testFilterChain");
         if(buildRule.getProject().getProperty("testFilterChain").indexOf("World!")<0) {
             fail("Filter Chain broken");
@@ -154,8 +142,7 @@ public class LoadFileTest {
      * Test StripJavaComments filterreader functionality.
      */
     @Test
-    public final void testStripJavaComments()
-            throws BuildException {
+    public final void testStripJavaComments() throws BuildException {
         buildRule.executeTarget("testStripJavaComments");
         final String expected = buildRule.getProject().getProperty("expected");
         final String generated = buildRule.getProject().getProperty("testStripJavaComments");

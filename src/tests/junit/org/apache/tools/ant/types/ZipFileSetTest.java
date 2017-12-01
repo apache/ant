@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.ZipFileSet.
  *
- * <p>This doesn't actually test much, mainly reference handling.
+ * <p>This doesn't actually test much, mainly reference handling.</p>
  *
  */
 
@@ -42,7 +42,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
 
     @Test
     public final void testAttributes() {
-        ZipFileSet f = (ZipFileSet)getInstance();
+        ZipFileSet f = (ZipFileSet) getInstance();
         //check that dir and src are incompatible
         f.setSrc(new File("example.zip"));
         try {
@@ -51,9 +51,9 @@ public class ZipFileSetTest extends AbstractFileSetTest {
                     + f.getDataTypeName()
                     + " when a src is already present");
         } catch (BuildException be) {
-            assertEquals("Cannot set both dir and src attributes",be.getMessage());
+            assertEquals("Cannot set both dir and src attributes", be.getMessage());
         }
-        f = (ZipFileSet)getInstance();
+        f = (ZipFileSet) getInstance();
         //check that dir and src are incompatible
         f.setDir(new File("examples"));
         try {
@@ -62,10 +62,10 @@ public class ZipFileSetTest extends AbstractFileSetTest {
                     + f.getDataTypeName()
                     + " when a dir is already present");
         } catch (BuildException be) {
-            assertEquals("Cannot set both dir and src attributes",be.getMessage());
+            assertEquals("Cannot set both dir and src attributes", be.getMessage());
         }
         //check that fullpath and prefix are incompatible
-        f = (ZipFileSet)getInstance();
+        f = (ZipFileSet) getInstance();
         f.setSrc(new File("example.zip"));
         f.setPrefix("/examples");
         try {
@@ -76,7 +76,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
         } catch (BuildException be) {
             assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
         }
-        f = (ZipFileSet)getInstance();
+        f = (ZipFileSet) getInstance();
         f.setSrc(new File("example.zip"));
         f.setFullpath("/doc/manual/index.html");
         try {
@@ -88,7 +88,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
             assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
         }
         // check that reference zipfilesets cannot have specific attributes
-        f = (ZipFileSet)getInstance();
+        f = (ZipFileSet) getInstance();
         f.setRefid(new Reference(getProject(), "test"));
         try {
             f.setSrc(new File("example.zip"));
@@ -100,18 +100,22 @@ public class ZipFileSetTest extends AbstractFileSetTest {
             + "attribute when using refid", be.getMessage());
         }
         // check that a reference zipfileset gets the same attributes as the original
-        f = (ZipFileSet)getInstance();
+        f = (ZipFileSet) getInstance();
         f.setSrc(new File("example.zip"));
         f.setPrefix("/examples");
         f.setFileMode("600");
         f.setDirMode("530");
         getProject().addReference("test",f);
-        ZipFileSet zid=(ZipFileSet)getInstance();
+        ZipFileSet zid = (ZipFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
-        assertTrue("src attribute copied by copy constructor",zid.getSrc(getProject()).equals(f.getSrc(getProject())));
-        assertTrue("prefix attribute copied by copy constructor",f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
-        assertTrue("file mode attribute copied by copy constructor",f.getFileMode(getProject())==zid.getFileMode(getProject()));
-        assertTrue("dir mode attribute copied by copy constructor",f.getDirMode(getProject())==zid.getDirMode(getProject()));
+        assertTrue("src attribute copied by copy constructor",
+                zid.getSrc(getProject()).equals(f.getSrc(getProject())));
+        assertTrue("prefix attribute copied by copy constructor",
+                f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
+        assertEquals("file mode attribute copied by copy constructor",
+                f.getFileMode(getProject()), zid.getFileMode(getProject()));
+        assertEquals("dir mode attribute copied by copy constructor",
+                f.getDirMode(getProject()), zid.getDirMode(getProject()));
       }
 
 

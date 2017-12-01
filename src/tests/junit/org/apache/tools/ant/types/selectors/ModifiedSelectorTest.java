@@ -19,8 +19,8 @@
 package org.apache.tools.ant.types.selectors;
 
 
-// Java
 import java.io.File;
+import java.io.FileWriter;
 import java.text.RuleBasedCollator;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -168,19 +168,19 @@ public class ModifiedSelectorTest {
     @Test
     public void testCustomAlgorithm() {
         String algo = getAlgoName("org.apache.tools.ant.types.selectors.modifiedselector.HashvalueAlgorithm");
-        assertTrue("Wrong algorithm used: "+algo, algo.startsWith("HashvalueAlgorithm"));
+        assertTrue("Wrong algorithm used: " + algo, algo.startsWith("HashvalueAlgorithm"));
     }
 
     @Test
     public void testCustomAlgorithm2() {
         String algo = getAlgoName("org.apache.tools.ant.types.selectors.MockAlgorithm");
-        assertTrue("Wrong algorithm used: "+algo, algo.startsWith("MockAlgorithm"));
+        assertTrue("Wrong algorithm used: " + algo, algo.startsWith("MockAlgorithm"));
     }
 
 
     @Test
     public void testCustomClasses() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home") );
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         BFT bft = new BFT();
         bft.setUp();
         try {
@@ -261,13 +261,19 @@ public class ModifiedSelectorTest {
         sel.isSelected(base, "file2", file2);
         assertFalse("Cache must not be saved after 2nd selection.", cache.saved);
         switch (kind) {
-            case 1 : project.fireTaskFinished();   break;
-            case 2 : project.fireTargetFinished(); break;
-            case 3 : project.fireBuildFinished();  break;
+            case 1 :
+                project.fireTaskFinished();
+                break;
+            case 2 :
+                project.fireTargetFinished();
+                break;
+            case 3 :
+                project.fireBuildFinished();
+                break;
         }
-        assertTrue("Cache must be saved after " + kinds[kind-1] + "Finished-Event.", cache.saved);
+        assertTrue("Cache must be saved after " + kinds[kind - 1] + "Finished-Event.", cache.saved);
 
-        // MockCache doesnt create a file - therefore no cleanup needed
+        // MockCache doesn't create a file - therefore no cleanup needed
     }
 
 
@@ -291,8 +297,12 @@ public class ModifiedSelectorTest {
         int posEnd   = s1.indexOf(" comparator=");
         String algo  = s1.substring(posStart, posEnd);
         // '<' and '>' are only used if the algorithm has properties
-        if (algo.startsWith("<")) algo = algo.substring(1);
-        if (algo.endsWith(">"))   algo = algo.substring(0, algo.length()-1);
+        if (algo.startsWith("<")) {
+            algo = algo.substring(1);
+        }
+        if (algo.endsWith(">")) {
+            algo = algo.substring(0, algo.length() - 1);
+        }
         // return the clean value
         return algo;
     }
@@ -436,10 +446,10 @@ public class ModifiedSelectorTest {
         Object   returned = it2.next();
         boolean ok = (key1.equals(returned) || key2.equals(returned));
         String msg = "Iterator returned unexpected value."
-                   + "  key1.equals(returned)="+key1.equals(returned)
-                   + "  key2.equals(returned)="+key2.equals(returned)
-                   + "  returned="+returned
-                   + "  ok="+ok;
+                   + "  key1.equals(returned)=" + key1.equals(returned)
+                   + "  key2.equals(returned)=" + key2.equals(returned)
+                   + "  returned=" + returned
+                   + "  ok=" + ok;
         assertTrue(msg, ok);
 
         // clear the cache
@@ -533,10 +543,7 @@ public class ModifiedSelectorTest {
 
     }
 
-
-
     // ==============  testcases for the comparator implementations  ==============
-
 
     @Test
     public void testEqualComparator() {
@@ -544,13 +551,11 @@ public class ModifiedSelectorTest {
         doTest(comp);
     }
 
-
     @Test
     public void testRuleComparator() {
-        RuleBasedCollator comp = (RuleBasedCollator)RuleBasedCollator.getInstance();
+        RuleBasedCollator comp = (RuleBasedCollator) RuleBasedCollator.getInstance();
         doTest(comp);
     }
-
 
     @Test
     public void testEqualComparatorViaSelector() {
@@ -564,7 +569,6 @@ public class ModifiedSelectorTest {
             s.getCache().delete();
         }
     }
-
 
     @Test
     @Ignore("not yet supported see note in selector")
@@ -580,13 +584,11 @@ public class ModifiedSelectorTest {
         }
     }
 
-
     @Test
     @Ignore("same logic as on algorithm, no testcases created")
     public void testCustomComparator() {
         // same logic as on algorithm, no testcases created
     }
-
 
     @Test
     public void testResourceSelectorSimple() {
@@ -637,9 +639,7 @@ public class ModifiedSelectorTest {
         assertTrue("Comparator gave wrong value.", comp.compare(o2, o3) == 0);
     }
 
-
     // =====================  scenario tests  =====================
-
 
     /**
      * Tests whether the seldirs attribute is used.
@@ -647,10 +647,10 @@ public class ModifiedSelectorTest {
     @Test
     public void testSeldirs() {
         ModifiedSelector s = new ModifiedSelector();
-        StringBuffer sbTrue  = new StringBuffer();
-        StringBuffer sbFalse = new StringBuffer();
-        for (int i=0; i<selectorRule.getFiles().length; i++) {
-            if (selectorRule.getFiles()[i].isDirectory()) {
+        StringBuilder sbTrue  = new StringBuilder();
+        StringBuilder sbFalse = new StringBuilder();
+        for (File file : selectorRule.getFiles()) {
+            if (file.isDirectory()) {
                 sbTrue.append("T");
                 sbFalse.append("F");
             } else {
@@ -670,16 +670,15 @@ public class ModifiedSelectorTest {
         s.getCache().delete();
     }
 
-
     /**
      * Complex test scenario using default values (DigestAlgorithm with MD5,
      * PropertiesfileCache with file=cache.properties, EqualComparator
-     * and update=true). <ol>
-     * <li> try fist time --> should select all </li>
-     * <li> try second time --> should select no files (only directories) </li>
-     * <li> modify timestamp of one file and content of a nother one </li>
-     * <li> try third time --> should select only the file with modified
-     *      content </li>
+     * and update=true).
+     * <ol><li>try fist time --&gt; should select all</li>
+     * <li>try second time --&gt; should select no files (only directories)</li>
+     * <li>modify timestamp of one file and content of another one</li>
+     * <li>try third time --&gt; should select only the file with modified
+     *      content</li></ol>
      */
     @Test
     public void testScenario1() {
@@ -718,9 +717,9 @@ public class ModifiedSelectorTest {
             // AccessObject to the test-Ant-environment
             bft = new BFT();
             // give some values (via property file) to that environment
-            bft.writeProperties("f2name="+f2name);
-            bft.writeProperties("f3name="+f3name);
-            bft.writeProperties("f4name="+f4name);
+            bft.writeProperties("f2name=" + f2name);
+            bft.writeProperties("f3name=" + f3name);
+            bft.writeProperties("f4name=" + f4name);
             // call the target for making the files dirty
             bft.doTarget("modifiedselectortest-makeDirty");
 
@@ -737,13 +736,19 @@ public class ModifiedSelectorTest {
             // Mark all files which should be selected as (T)rue and all others
             // as (F)alse. Directories are always selected so they always are
             // (T)rue.
-            StringBuffer expected = new StringBuffer();
-            for (int i=0; i<selectorRule.getFiles().length; i++) {
+            StringBuilder expected = new StringBuilder();
+            for (int i = 0; i < selectorRule.getFiles().length; i++) {
                 String ch = "F";
-                if (selectorRule.getFiles()[i].isDirectory()) ch = "T";
                 // f2name shouldn't be selected: only timestamp has changed!
-                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f3name)) ch = "T";
-                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f4name)) ch = "T";
+                if (selectorRule.getFiles()[i].isDirectory()) {
+                    ch = "T";
+                }
+                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f3name)) {
+                    ch = "T";
+                }
+                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f4name)) {
+                    ch = "T";
+                }
                 expected.append(ch);
             }
 
@@ -751,35 +756,36 @@ public class ModifiedSelectorTest {
                 "Wrong files selected. Differing files: "       // info text
                 + resolve(diff(expected.toString(), results)),  // list of files
                 expected.toString(),                            // expected result
-                results                                         // result
-            );
-
+                results);                                       // result
         } finally {
             // cleanup the environment
-            if (s!=null) s.getCache().delete();
-            if (bft!=null) bft.deletePropertiesfile();
+            if (s != null) {
+                s.getCache().delete();
+            }
+            if (bft != null) {
+                bft.deletePropertiesfile();
+            }
         }
     }
 
 
     /**
      * This scenario is based on scenario 1, but does not use any
-     * default value and its based on <custom> selector. Used values are:<ul>
-     * <li><b>Cache: </b> Propertyfile,
-     *                    cachefile={java.io.tmpdir}/mycache.txt </li>
-     * <li><b>Algorithm: </b> Digest
-     *                    algorithm=SHA, Provider=null </li>
-     * <li><b>Comparator: </b> java.text.RuleBasedCollator
-     * <li><b>Update: </b> true </li>
+     * default value and its based on &lt;custom&gt; selector. Used values are:
+     * <ul><li><b>Cache:</b> Propertyfile,
+     *                    cachefile={java.io.tmpdir}/mycache.txt</li>
+     * <li><b>Algorithm:</b> Digest
+     *                    algorithm=SHA, Provider=null</li>
+     * <li><b>Comparator:</b> java.text.RuleBasedCollator</li>
+     * <li><b>Update:</b> true</li></ul>
      */
     @Test
     @Ignore("RuleBasedCollator not yet supported - see Selector:375 note")
     public void testScenario2() {
         ExtendSelector s = new ExtendSelector();
         BFT bft = new BFT();
-        String cachefile = System.getProperty("java.io.tmpdir")+"/mycache.txt";
+        String cachefile = System.getProperty("java.io.tmpdir") + "/mycache.txt";
         try {
-
             s.setClassname("org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector");
 
             s.addParam(createParam("cache.cachefile", cachefile));
@@ -797,29 +803,34 @@ public class ModifiedSelectorTest {
             String f2name = "tar/bz2/asf-logo-huge.tar.bz2";
             String f3name = "asf-logo.gif.md5";
             String f4name = "copy.filterset.filtered";
-            bft.writeProperties("f2name="+f2name);
-            bft.writeProperties("f3name="+f3name);
-            bft.writeProperties("f4name="+f4name);
+            bft.writeProperties("f2name=" + f2name);
+            bft.writeProperties("f3name=" + f3name);
+            bft.writeProperties("f4name=" + f4name);
             bft.doTarget("modifiedselectortest-makeDirty");
             // third run
             String results = selectorRule.selectionString(s);
-            StringBuffer expected = new StringBuffer();
-            for (int i=0; i<selectorRule.getFilenames().length; i++) {
+            StringBuilder expected = new StringBuilder();
+            for (int i = 0; i < selectorRule.getFilenames().length; i++) {
                 String ch = "F";
-                if (selectorRule.getFiles()[i].isDirectory()) ch = "T";
-                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f3name)) ch = "T";
-                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f4name)) ch = "T";
+                if (selectorRule.getFiles()[i].isDirectory()) {
+                    ch = "T";
+                }
+                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f3name)) {
+                    ch = "T";
+                }
+                if (selectorRule.getFilenames()[i].equalsIgnoreCase(f4name)) {
+                    ch = "T";
+                }
                 expected.append(ch);
             }
             assertEquals(
-                "Wrong files selected. Differing files: "       // info text
+                "Wrong files selected. Differing files: " // info text
                 + resolve(diff(expected.toString(), results)),  // list of files
                 expected.toString(),                            // expected result
-                results                                         // result
-            );
+                results);                                       // result
         } finally {
             // cleanup the environment
-            (new java.io.File(cachefile)).delete();
+            (new File(cachefile)).delete();
             bft.deletePropertiesfile();
         }
     }
@@ -827,21 +838,21 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testScenarioCoreSelectorDefaults() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home") );
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-coreselector-defaults", "cache.properties");
     }
 
 
     @Test
     public void testScenarioCoreSelectorSettings() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home") );
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-coreselector-settings", "core.cache.properties");
     }
 
 
     @Test
     public void testScenarioCustomSelectorSettings() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home") );
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-customselector-settings", "core.cache.properties");
     }
 
@@ -862,9 +873,9 @@ public class ModifiedSelectorTest {
 
             // do the checks
             assertTrue("Cache file not created.", cachefile.exists());
-            assertTrue("Not enough files copied on first time.", to1.list().length>5);
-            assertTrue("Too much files copied on second time.", to2.list().length==0);
-            assertTrue("Too much files copied on third time.", to3.list().length==2);
+            assertTrue("Not enough files copied on first time.", to1.list().length > 5);
+            assertTrue("Too much files copied on second time.", to2.list().length == 0);
+            assertTrue("Too much files copied on third time.", to3.list().length == 2);
         // don't catch the JUnit exceptions
         } finally {
             bft.doTarget("modifiedselectortest-scenario-clean");
@@ -934,10 +945,9 @@ public class ModifiedSelectorTest {
             File dir = getProject().getBaseDir();
             File file = new File(dir, propfile);
             try {
-                java.io.FileWriter out =
-                    new java.io.FileWriter(file.getAbsolutePath(), true);
+                FileWriter out = new FileWriter(file.getAbsolutePath(), true);
                 out.write(line);
-                out.write(System.getProperty("line.separator"));
+                out.write(System.lineSeparator());
                 out.flush();
                 out.close();
             } catch (Exception e) {
@@ -946,7 +956,9 @@ public class ModifiedSelectorTest {
         }
 
         public void deletePropertiesfile() {
-            if (!isConfigured) setUp();
+            if (!isConfigured) {
+                setUp();
+            }
             new File(getProject().getBaseDir(), propfile).delete();
         }
 
@@ -956,8 +968,7 @@ public class ModifiedSelectorTest {
             cacheFile.delete();
         }
 
-    }//class-BFT
-
+    }
 
     /**
      * MockProject wrappes a very small ant project (one target, one task)
@@ -968,7 +979,7 @@ public class ModifiedSelectorTest {
         private Target target;
 
         public MockProject() {
-            task = new Task(){
+            task = new Task() {
                 public void execute() {
                 }
             };
@@ -983,22 +994,25 @@ public class ModifiedSelectorTest {
         public void fireBuildFinished() {
             super.fireBuildFinished(null);
         }
+        @SuppressWarnings("unused")
         public void fireSubBuildFinished() {
             super.fireSubBuildFinished(null);
         }
+        @SuppressWarnings("unused")
         public void fireTargetStarted() {
             super.fireTargetStarted(target);
         }
         public void fireTargetFinished() {
             super.fireTargetFinished(target, null);
         }
+        @SuppressWarnings("unused")
         public void fireTaskStarted() {
             super.fireTaskStarted(task);
         }
         public void fireTaskFinished() {
             super.fireTaskFinished(task, null);
         }
-    }//class-MockProject
+    }
 
 
     /**
@@ -1026,13 +1040,9 @@ public class ModifiedSelectorTest {
         int length1 = expected.length();
         int length2 = result.length();
         int min = (length1 > length2) ? length2 : length1;
-        StringBuffer sb = new StringBuffer();
-        for (int i=0; i<min; i++) {
-            sb.append(
-                    (expected.charAt(i) == result.charAt(i))
-                            ? "-"
-                            : "X"
-            );
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < min; i++) {
+            sb.append((expected.charAt(i) == result.charAt(i)) ? "-" : "X");
         }
         return sb.toString();
     }
@@ -1045,14 +1055,12 @@ public class ModifiedSelectorTest {
      *         separated with semicolons ';'
      */
     private String resolve(String filelist) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int min = (selectorRule.getFilenames().length > filelist.length())
-                ? filelist.length()
-                : selectorRule.getFilenames().length;
-        for (int i=0; i<min; i++) {
-            if ('X'==filelist.charAt(i)) {
-                sb.append(selectorRule.getFilenames()[i]);
-                sb.append(";");
+                ? filelist.length() : selectorRule.getFilenames().length;
+        for (int i = 0; i < min; i++) {
+            if ('X' == filelist.charAt(i)) {
+                sb.append(selectorRule.getFilenames()[i]).append(";");
             }
         }
         return sb.toString();

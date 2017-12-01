@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 
 public class CBZip2StreamTest {
 
+    @SuppressWarnings("resource")
     @Test
     public void testNullPointer() throws IOException {
         try {

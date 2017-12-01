@@ -62,7 +62,7 @@ public class PropertyFileTest {
     @Test
     public void testNonExistingFile() {
         PropertyFile props = new PropertyFile();
-        props.setProject( buildRule.getProject() );
+        props.setProject(buildRule.getProject());
         File file = new File("this-file-does-not-exist.properties");
         props.setFile(file);
         assertFalse("Properties file exists before test.", file.exists());
@@ -199,6 +199,7 @@ public class PropertyFileTest {
         fos.close();
     }
 
+    @SuppressWarnings("unused")
     private static final String
         projectFilePath     = "src/etc/testcases/taskdefs/optional/propertyfile.xml",
 

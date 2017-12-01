@@ -24,14 +24,14 @@ public class A {
         System.out.println(a);
     }
 
-    static A a=new A();
+    static A a = new A();
 
     static {
         System.out.println("A CLASS INITIALIZATION");
     }
 
     protected static void setA(A oa) {
-        a=oa;
+        a = oa;
     }
 
     public String toString() {

@@ -47,11 +47,11 @@ public class MockCache implements Cache {
         saved = true;
     }
     public Object get(Object key) {
-        log(".get("+key+")");
+        log(".get(" + key + ")");
         return key;
     }
     public void put(Object key, Object value) {
-        log(".put("+key+", "+value+")");
+        log(".put(" + key + ", " + value + ")");
         saved = false;
     }
     public Iterator<String> iterator() {
@@ -63,6 +63,8 @@ public class MockCache implements Cache {
     }
 
     private void log(String msg) {
-        if (debug) System.out.println(this+msg);
+        if (debug) {
+            System.out.println(this + msg);
+        }
     }
 }

@@ -38,7 +38,7 @@ public class HeadTailTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/filters/head-tail.xml");

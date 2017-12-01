@@ -81,8 +81,7 @@ public class RhinoScriptTest {
             buildRule.executeTarget("useSrcAndEncoding");
             fail("should have failed with reader's encoding [" + readerEncoding +
                 "] different from the writer's encoding [" + buildRule.getProject().getProperty("useSrcAndEncoding.encoding") + "]");
-        }
-        catch(BuildException e) {
+        } catch (BuildException e) {
             assertTrue(e.getMessage().matches("expected <eacute \\[\u00e9]> but was <eacute \\[\u00c3\u00a9]>"));
         }
     }

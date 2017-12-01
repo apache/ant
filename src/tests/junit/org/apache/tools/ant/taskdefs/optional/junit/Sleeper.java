@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-
 import org.junit.Test;
 
 public class Sleeper {

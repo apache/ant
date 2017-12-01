@@ -80,7 +80,7 @@ public class ZipLongTest {
     @Test
     public void testSign() {
         ZipLong zl = new ZipLong(new byte[] {(byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF});
-        assertEquals(0x00000000FFFFFFFFl, zl.getValue());
+        assertEquals(0x00000000FFFFFFFFL, zl.getValue());
     }
 
     @Test

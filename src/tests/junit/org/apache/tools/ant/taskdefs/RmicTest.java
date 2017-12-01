@@ -88,7 +88,7 @@ public class RmicTest {
         // check defaults
         String compiler = rmic.getCompiler();
         assertNotNull(compiler);
-        assertEquals("expected sun or kaffe, but found "+compiler,compiler,"default");
+        assertEquals("expected sun or kaffe, but found " + compiler, compiler,"default");
 
         project.setNewProperty("build.rmic", "weblogic");
         compiler = rmic.getCompiler();

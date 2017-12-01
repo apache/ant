@@ -39,7 +39,7 @@ public class AntTimestamp implements RemoteTimestamp {
      * @throws RemoteException
      */
     public long when() throws RemoteException {
-        Calendar cal=Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         return DateUtils.getPhaseOfMoon(cal);
     }
 }

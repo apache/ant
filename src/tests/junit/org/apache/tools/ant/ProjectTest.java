@@ -89,7 +89,7 @@ public class ProjectTest {
              */
             String driveSpec = "C:";
             String driveSpecLower = "c:";
-            
+
             assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
                          p.resolveFile(driveSpec + "/", null).getPath());
             assertEqualsIgnoreDriveCase(driveSpecLower + "\\",
@@ -168,8 +168,8 @@ public class ProjectTest {
     private void assertEqualsIgnoreDriveCase(String s1, String s2) {
         if ((Os.isFamily("dos") || Os.isFamily("netware"))
             && s1.length() >= 1 && s2.length() >= 1) {
-            StringBuffer sb1 = new StringBuffer(s1);
-            StringBuffer sb2 = new StringBuffer(s2);
+            StringBuilder sb1 = new StringBuilder(s1);
+            StringBuilder sb2 = new StringBuilder(s2);
             sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));
             sb2.setCharAt(0, Character.toUpperCase(s2.charAt(0)));
             assertEquals(sb1.toString(), sb2.toString());
@@ -184,9 +184,9 @@ public class ProjectTest {
         try {
             mbl.addBuildEvent(message, Project.MSG_ERR);
             p.addTaskDefinition(dummyName, taskClass);
-            fail("expected BuildException(\""+message+"\", Project.MSG_ERR) when adding task " + taskClass);
-        }
-        catch(BuildException e) {
+            fail(String.format("expected BuildException(\"%s\", Project.MSG_ERR) when adding task %s",
+                    message, taskClass));
+        } catch (BuildException e) {
             assertEquals(message, e.getMessage());
             mbl.assertEmpty();
             assertTrue(!p.getTaskDefinitions().containsKey(dummyName));
@@ -203,23 +203,27 @@ public class ProjectTest {
         assertEquals(DummyTaskOkNonTask.class, p.getTaskDefinitions().get("OkNonTask"));
         mbl.assertEmpty();
 
-        assertTaskDefFails(DummyTaskPrivate.class,   DummyTaskPrivate.class   + " is not public");
-
+        assertTaskDefFails(DummyTaskPrivate.class,
+                DummyTaskPrivate.class   + " is not public");
         assertTaskDefFails(DummyTaskProtected.class,
-                           DummyTaskProtected.class + " is not public");
+                DummyTaskProtected.class + " is not public");
+        assertTaskDefFails(DummyTaskPackage.class,
+                DummyTaskPackage.class   + " is not public");
+        assertTaskDefFails(DummyTaskAbstract.class,
+                DummyTaskAbstract.class  + " is abstract");
+        assertTaskDefFails(DummyTaskInterface.class,
+                DummyTaskInterface.class + " is abstract");
+        assertTaskDefFails(DummyTaskWithoutDefaultConstructor.class,
+                "No public no-arg constructor in " + DummyTaskWithoutDefaultConstructor.class);
+        assertTaskDefFails(DummyTaskWithoutPublicConstructor.class,
+                "No public no-arg constructor in " + DummyTaskWithoutPublicConstructor.class);
+        assertTaskDefFails(DummyTaskWithoutExecute.class,
+                "No public execute() in " + DummyTaskWithoutExecute.class);
+        assertTaskDefFails(DummyTaskWithNonPublicExecute.class,
+                "No public execute() in " + DummyTaskWithNonPublicExecute.class);
 
-        assertTaskDefFails(DummyTaskPackage.class,   DummyTaskPackage.class   + " is not public");
-
-        assertTaskDefFails(DummyTaskAbstract.class,  DummyTaskAbstract.class  + " is abstract");
-        assertTaskDefFails(DummyTaskInterface.class, DummyTaskInterface.class + " is abstract");
-
-        assertTaskDefFails(DummyTaskWithoutDefaultConstructor.class, "No public no-arg constructor in " + DummyTaskWithoutDefaultConstructor.class);
-        assertTaskDefFails(DummyTaskWithoutPublicConstructor.class,  "No public no-arg constructor in " + DummyTaskWithoutPublicConstructor.class);
-
-        assertTaskDefFails(DummyTaskWithoutExecute.class,       "No public execute() in " + DummyTaskWithoutExecute.class);
-        assertTaskDefFails(DummyTaskWithNonPublicExecute.class, "No public execute() in " + DummyTaskWithNonPublicExecute.class);
-
-        mbl.addBuildEvent("return type of execute() should be void but was \"int\" in " + DummyTaskWithNonVoidExecute.class, Project.MSG_WARN);
+        mbl.addBuildEvent("return type of execute() should be void but was \"int\" in "
+                + DummyTaskWithNonVoidExecute.class, Project.MSG_WARN);
         p.addTaskDefinition("NonVoidExecute", DummyTaskWithNonVoidExecute.class);
         mbl.assertEmpty();
         assertEquals(DummyTaskWithNonVoidExecute.class, p.getTaskDefinitions().get("NonVoidExecute"));
@@ -271,12 +275,18 @@ public class ProjectTest {
         throws InterruptedException {
         final String FOO = "foo", BAR = "bar";
         p.addBuildListener(new BuildListener() {
-                public void buildStarted(BuildEvent event) {}
-                public void buildFinished(BuildEvent event) {}
-                public void targetStarted(BuildEvent event) {}
-                public void targetFinished(BuildEvent event) {}
-                public void taskStarted(BuildEvent event) {}
-                public void taskFinished(BuildEvent event) {}
+                public void buildStarted(BuildEvent event) {
+                }
+                public void buildFinished(BuildEvent event) {
+                }
+                public void targetStarted(BuildEvent event) {
+                }
+                public void targetFinished(BuildEvent event) {
+                }
+                public void taskStarted(BuildEvent event) {
+                }
+                public void taskFinished(BuildEvent event) {
+                }
                 public void messageLogged(final BuildEvent actual) {
                     assertEquals(FOO, actual.getMessage());
                     // each of the following lines would cause an
@@ -309,19 +319,25 @@ public class ProjectTest {
     }
 
     private class DummyTaskPrivate extends Task {
-        public DummyTaskPrivate() {}
-        public void execute() {}
+        @SuppressWarnings("unused")
+        public DummyTaskPrivate() {
+        }
+        public void execute() {
+        }
     }
 
     protected class DummyTaskProtected extends Task {
-        public DummyTaskProtected() {}
-        public void execute() {}
+        public DummyTaskProtected() {
+        }
+        public void execute() {
+        }
     }
 
-
     class DummyTaskPackage extends Task {
-        public DummyTaskPackage() {}
-        public void execute() {}
+        public DummyTaskPackage() {
+        }
+        public void execute() {
+        }
     }
 
 }

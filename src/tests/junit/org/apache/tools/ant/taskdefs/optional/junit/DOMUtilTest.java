@@ -44,10 +44,7 @@ public class DOMUtilTest {
 
     public class FooNodeFilter implements DOMUtil.NodeFilter {
         public boolean accept(Node node) {
-            if (node.getNodeName().equals("foo")) {
-                return true;
-            }
-            return false;
+            return node.getNodeName().equals("foo");
         }
     }
 }

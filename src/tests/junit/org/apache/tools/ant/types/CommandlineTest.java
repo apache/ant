@@ -35,8 +35,8 @@ public class CommandlineTest {
     public void testTokenizer() {
         String[] s = Commandline.translateCommandline("1 2 3");
         assertEquals("Simple case", 3, s.length);
-        for (int i=0; i<3; i++) {
-            assertEquals(""+(i+1), s[i]);
+        for (int i = 0; i < 3; i++) {
+            assertEquals("" + (i + 1), s[i]);
         }
 
         s = Commandline.translateCommandline("");

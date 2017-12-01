@@ -50,7 +50,7 @@ public class ExtendedTaskdefTest {
         try {
             buildRule.executeTarget("testRun");
             fail("BuildException should have been thrown");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
         }
     }
@@ -60,7 +60,7 @@ public class ExtendedTaskdefTest {
         try {
             buildRule.executeTarget("testRun2");
             fail("BuildException should have been thrown");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
         }
     }

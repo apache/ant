@@ -24,10 +24,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -126,7 +126,7 @@ public class ReplaceRegExpTest {
                 - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
         long ts1 = testFile.lastModified();
         buildRule.executeTarget("testPreserve");
-        assertEquals(ts1 , testFile.lastModified());
+        assertEquals(ts1, testFile.lastModified());
     }
 
 }

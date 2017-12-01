@@ -234,7 +234,7 @@ public class FixCrLfTest {
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
         if (!result.exists()) {
-            fail("Expected file "+result+" doesn\'t exist");
+            fail("Expected file " + result + " doesn\'t exist");
         }
 
         InputStream inExpect = null;

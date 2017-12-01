@@ -34,7 +34,8 @@ public class AntAssert {
      */
     public static void assertContains(String message, String needle, String haystack) {
         String formattedMessage = (message == null ? "" : message + " ");
-        assertTrue(formattedMessage + String.format("expected message containing: <%s> but got: <%s>", needle, haystack), haystack.contains(needle));
+        assertTrue(formattedMessage + String.format("expected message containing: <%s> but got: <%s>",
+                needle, haystack), haystack.contains(needle));
     }
 
     /**
@@ -55,7 +56,8 @@ public class AntAssert {
      */
     public static void assertNotContains(String message, String needle, String haystack) {
         String formattedMessage = (message == null ? "" : message + " ");
-        assertFalse(formattedMessage + String.format("expected message not to contain: <%s> but got: <%s>", needle, haystack), haystack.contains(needle));
+        assertFalse(formattedMessage + String.format("expected message not to contain: <%s> but got: <%s>",
+                needle, haystack), haystack.contains(needle));
     }
 
     /**

@@ -63,10 +63,10 @@ abstract public class BaseTask extends Task {
             FILE_UTILS.close(outputStream);
         }
     }
-    
+
     abstract protected void doit(
         InputStream is, OutputStream os) throws Exception;
-    
+
     private void assertAttribute(File file, String attributeName) {
         if (file == null) {
             throw new BuildException("Required attribute " + attributeName
@@ -74,5 +74,3 @@ abstract public class BaseTask extends Task {
         }
     }
 }
-
-    

@@ -50,7 +50,7 @@ public class ResourceOutputTest {
     public void setUp() {
         project = new Project();
         project.init();
-        project.setUserProperty("basedir" , basedir.getAbsolutePath());
+        project.setUserProperty("basedir", basedir.getAbsolutePath());
     }
 
     @Test
