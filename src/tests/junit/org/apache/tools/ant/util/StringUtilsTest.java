@@ -54,7 +54,7 @@ public class StringUtilsTest {
     }
 
     @SuppressWarnings("deprecation")
-        @Test
+    @Test
     public void testReplace() {
         final String data = "abcabcabca";
         String res = StringUtils.replace(data, "a", "");

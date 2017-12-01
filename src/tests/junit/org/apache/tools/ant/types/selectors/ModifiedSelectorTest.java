@@ -61,7 +61,7 @@ import static org.junit.Assert.fail;
  * @since  Ant 1.6
  */
 public class ModifiedSelectorTest {
-    
+
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
@@ -345,7 +345,7 @@ public class ModifiedSelectorTest {
     @Test
     public void testCreatePropertiesCacheViaModifiedSelector() {
         File cachefile = new File(selectorRule.getProject().getBaseDir(), "cachefile.properties");
-    
+
         // Configure the selector
         ModifiedSelector s = new ModifiedSelector();
         s.setDelayUpdate(false);
@@ -362,7 +362,7 @@ public class ModifiedSelectorTest {
         // evaluate correctness
         assertTrue("Cache file is not created.", cachefile.exists());
         cachefile.delete();
-        
+
     }
 
 
