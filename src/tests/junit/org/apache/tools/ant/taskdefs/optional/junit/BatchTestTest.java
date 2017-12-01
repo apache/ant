@@ -18,9 +18,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 

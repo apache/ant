@@ -29,7 +29,7 @@ public class UnPackageNameMapperTest {
         UnPackageNameMapper mapper = new UnPackageNameMapper();
         mapper.setFrom("TEST-*.xml");
         mapper.setTo("*.java");
-        String file ="TEST-org.apache.tools.ant.util.UnPackageNameMapperTest.xml";
+        String file = "TEST-org.apache.tools.ant.util.UnPackageNameMapperTest.xml";
         String result = mapper.mapFileName(file)[0];
         String expected = fixupPath("org/apache/tools/ant/util/UnPackageNameMapperTest.java");
 

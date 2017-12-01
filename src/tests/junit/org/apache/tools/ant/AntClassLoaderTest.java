@@ -207,6 +207,7 @@ public class AntClassLoaderTest {
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=46752">
      *     https://issues.apache.org/bugzilla/show_bug.cgi?id=46752</a>
      */
+    @SuppressWarnings("resource")
     @Test
     public void testGetResources() throws IOException {
         AntClassLoader acl = new AntClassLoader(new EmptyLoader(), null,

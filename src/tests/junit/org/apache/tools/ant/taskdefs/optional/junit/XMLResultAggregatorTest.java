@@ -44,7 +44,9 @@ public class XMLResultAggregatorTest {
         }
         final File d = new File(System.getProperty("java.io.tmpdir"), "XMLResultAggregatorTest");
         if (d.exists()) {
-            new Delete() {{removeDir(d);}}; // is there no utility method for this?
+            new Delete() {
+                { removeDir(d); }
+            }; // is there no utility method for this?
         }
         assertTrue(d.getAbsolutePath(), d.mkdir());
         File xml = new File(d, "x.xml");
@@ -72,7 +74,8 @@ public class XMLResultAggregatorTest {
         FileSet fs = new FileSet();
         fs.setFile(xml);
         task.addFileSet(fs);
-        /* getResourceAsStream override unnecessary on JDK 7. Ought to work around JAXP #6723276 in JDK 6, but causes a TypeCheckError in FunctionCall for reasons TBD:
+        /* getResourceAsStream override unnecessary on JDK 7.
+         * Ought to work around JAXP #6723276 in JDK 6, but causes a TypeCheckError in FunctionCall for reasons TBD:
         Thread.currentThread().setContextClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
             public InputStream getResourceAsStream(String name) {
                 if (name.startsWith("META-INF/services/")) {
@@ -85,7 +88,10 @@ public class XMLResultAggregatorTest {
         // Use the JRE's Xerces, not lib/optional/xerces.jar:
         Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
         // Tickle #51668:
-        System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+        System.setSecurityManager(new SecurityManager() {
+            public void checkPermission(Permission perm) {
+            }
+        });
         task.execute();
         assertTrue(new File(d, "index.html").isFile());
     }

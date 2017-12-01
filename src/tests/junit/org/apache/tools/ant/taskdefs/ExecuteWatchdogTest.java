@@ -40,13 +40,13 @@ public class ExecuteWatchdogTest {
 
     private final static String TEST_CLASSPATH = getTestClassPath();
 
-    private final static int CLOCK_ERROR=200;
-    private final static long TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
+    private final static int CLOCK_ERROR = 200;
+    private final static long TIME_OUT_TEST = TIME_OUT - CLOCK_ERROR;
 
     private ExecuteWatchdog watchdog;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         watchdog = new ExecuteWatchdog(TIME_OUT);
     }
 
@@ -54,7 +54,7 @@ public class ExecuteWatchdogTest {
      * Dangerous method to obtain the classpath for the test. This is
      * severely tied to the build.xml properties.
      */
-    private static String getTestClassPath(){
+    private static String getTestClassPath() {
         String classpath = System.getProperty("build.tests");
         if (classpath == null) {
             System.err.println("WARNING: 'build.tests' property is not available !");
@@ -74,10 +74,10 @@ public class ExecuteWatchdogTest {
     }
 
     private String getErrorOutput(Process p) throws Exception {
-        BufferedReader err = new BufferedReader( new InputStreamReader(p.getErrorStream()) );
-        StringBuffer buf = new StringBuffer();
+        BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        StringBuilder buf = new StringBuilder();
         String line;
-        while ( (line = err.readLine()) != null){
+        while ((line = err.readLine()) != null) {
             buf.append(line);
         }
         return buf.toString();
@@ -85,9 +85,9 @@ public class ExecuteWatchdogTest {
 
     private int waitForEnd(Process p) throws Exception {
         int retcode = p.waitFor();
-        if (retcode != 0){
+        if (retcode != 0) {
             String err = getErrorOutput(p);
-            if (err.length() > 0){
+            if (err.length() > 0) {
                 System.err.println("ERROR:");
                 System.err.println(err);
             }
@@ -97,25 +97,28 @@ public class ExecuteWatchdogTest {
 
     @Test
     public void testNoTimeOut() throws Exception {
-        Process process = getProcess(TIME_OUT/2);
+        Process process = getProcess(TIME_OUT / 2);
         watchdog.start(process);
         int retCode = waitForEnd(process);
-        assertTrue("process should not have been killed", !watchdog.killedProcess());
+        assertFalse("process should not have been killed", watchdog.killedProcess());
         assertFalse(Execute.isFailure(retCode));
     }
 
     // test that the watchdog ends the process
     @Test
     public void testTimeOut() throws Exception {
-        Process process = getProcess(TIME_OUT*2);
+        Process process = getProcess(TIME_OUT * 2);
         long now = System.currentTimeMillis();
         watchdog.start(process);
-        int retCode = process.waitFor();
+        @SuppressWarnings("unused")
+    int retCode = process.waitFor();
         long elapsed = System.currentTimeMillis() - now;
         assertTrue("process should have been killed", watchdog.killedProcess());
-                //      assertTrue("return code is invalid: " + retCode, retCode!=0);
-        assertTrue("elapse time of "+elapsed+" ms is less than timeout value of "+TIME_OUT_TEST+" ms", elapsed >= TIME_OUT_TEST);
-        assertTrue("elapse time of "+elapsed+" ms is greater than run value of "+(TIME_OUT*2)+" ms", elapsed < TIME_OUT*2);
+        // assertNotEquals("return code is invalid: " + retCode, retCode, 0);
+        assertTrue("elapse time of " + elapsed + " ms is less than timeout value of " + TIME_OUT_TEST + " ms",
+                elapsed >= TIME_OUT_TEST);
+        assertTrue("elapse time of " + elapsed + " ms is greater than run value of " + (TIME_OUT * 2) + " ms",
+                elapsed < TIME_OUT * 2);
     }
 
     // test a process that runs and failed
@@ -130,7 +133,7 @@ public class ExecuteWatchdogTest {
 
     @Test
     public void testManualStop() throws Exception {
-        final Process process = getProcess(TIME_OUT*2);
+        final Process process = getProcess(TIME_OUT * 2);
         watchdog.start(process);
 
         // I assume that starting this takes less than TIME_OUT/2 ms...
@@ -146,8 +149,8 @@ public class ExecuteWatchdogTest {
         };
         thread.start();
 
-        // wait for TIME_OUT/2, there should be about TIME_OUT/2 ms remaining before timeout
-        thread.join(TIME_OUT/2);
+        // wait for TIME_OUT / 2, there should be about TIME_OUT / 2 ms remaining before timeout
+        thread.join(TIME_OUT / 2);
 
          // now stop the watchdog.
         watchdog.stop();

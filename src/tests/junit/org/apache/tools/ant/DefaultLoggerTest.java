@@ -34,6 +34,7 @@ public class DefaultLoggerTest {
         return m.toString();
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testThrowableMessage() throws Exception { // #43398
         BuildException be = new BuildException("oops", new Location("build.xml", 1, 0));

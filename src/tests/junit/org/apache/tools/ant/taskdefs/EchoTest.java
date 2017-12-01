@@ -50,7 +50,7 @@ public class EchoTest {
         echo.setProject(p);
         echo.setTaskName("testLogBlankEcho");
         echo.execute();
-        assertEquals("[testLogBlankEcho] ", logger.lastLoggedMessage );
+        assertEquals("[testLogBlankEcho] ", logger.lastLoggedMessage);
     }
 
     @Test
@@ -67,15 +67,14 @@ public class EchoTest {
         echo.setFile(removeThis);
         echo.setEncoding("UTF-8");
         echo.execute();
-        String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8" ));
+        String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8"));
         assertEquals(x,"\u00e4\u00a9");
     }
 
     @After
     public void tearDown() {
         if (removeThis != null && removeThis.exists()) {
-            if (!removeThis.delete())
-            {
+            if (!removeThis.delete()) {
                 removeThis.deleteOnExit();
             }
         }
@@ -83,7 +82,7 @@ public class EchoTest {
 
     private class EchoTestLogger extends DefaultLogger {
         String lastLoggedMessage;
-        
+
         /**
          * Create a new EchoTestLogger.
          */
@@ -100,6 +99,6 @@ public class EchoTest {
         protected void log(String message) {
             this.lastLoggedMessage = message;
         }
-        
+
     }
 }

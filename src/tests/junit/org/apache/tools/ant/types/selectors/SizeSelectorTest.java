@@ -130,8 +130,6 @@ public class SizeSelectorTest {
         SizeSelector.SizeComparisons more = new SizeSelector.SizeComparisons();
         more.setValue("more");
 
-
-
         s = new SizeSelector();
         s.setValue(10);
         s.setWhen(less);
@@ -185,8 +183,6 @@ public class SizeSelectorTest {
         s.setParameters(params);
         results = selectorRule.selectionString(s);
         assertEquals("TFFFFFFTFFTT", results);
-
-
     }
 
     @Test

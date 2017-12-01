@@ -93,7 +93,10 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
                 }
             });
             // Tickle #52382:
-            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            System.setSecurityManager(new SecurityManager() {
+                public void checkPermission(Permission perm) {
+                }
+            });
             liaison.transform(in, out);
         } finally {
             out.delete();
@@ -123,7 +126,10 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         File in = getFile("/taskdefs/optional/xsltliaison-in.xsl");
         try {
             liaison.addParam("xalan-version", "2");
-            System.setSecurityManager(new SecurityManager() {public void checkPermission(Permission perm) {}});
+            System.setSecurityManager(new SecurityManager() {
+                public void checkPermission(Permission perm) {
+                }
+            });
             liaison.transform(in, out);
         } finally {
             out.delete();
@@ -138,11 +144,11 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         liaison.addParam("param", "value");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
         // test for 10 consecutives transform
-        for (int i = 0; i < 50; i++){
+        for (int i = 0; i < 50; i++) {
             File out = new File("xsltliaison" + i + ".tmp");
             try {
                 liaison.transform(in, out);
-            } catch (Exception e){
+            } catch (Exception e) {
                 throw new BuildException("failed in transform " + i, e);
             } finally {
                 out.delete();
@@ -151,9 +157,9 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     }
 
     @Test
-    public void testSystemId(){
+    public void testSystemId() {
         File file = null;
-        if ( File.separatorChar == '\\' ){
+        if (File.separatorChar == '\\') {
             file = new File("d:\\jdk");
         } else {
             file = new File("/user/local/bin");
@@ -164,7 +170,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     }
 
     public void log(String message) {
-        throw new AssertionFailedError("Liaison sent message: "+message);
+        throw new AssertionFailedError("Liaison sent message: " + message);
     }
 
 }

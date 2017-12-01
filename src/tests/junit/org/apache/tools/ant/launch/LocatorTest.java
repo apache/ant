@@ -33,7 +33,8 @@ public class LocatorTest {
     private boolean windows;
     private boolean unix;
     private static final String LAUNCHER_JAR = "//morzine/slo/Java/Apache/ant/lib/ant-launcher.jar";
-    private static final String SHARED_JAR_URI = "jar:file:"+ LAUNCHER_JAR +"!/org/apache/tools/ant/launch/Launcher.class";
+    private static final String SHARED_JAR_URI = "jar:file:" + LAUNCHER_JAR +
+            "!/org/apache/tools/ant/launch/Launcher.class";
 
 
     @Before
@@ -84,8 +85,8 @@ public class LocatorTest {
 
 
     /**
-     * this isnt really a valid URI, except maybe in IE
-     * @throws Exception
+     * this isn't really a valid URI, except maybe in IE
+     * @throws Exception if something goes wrong
      */
     public void testNetworkURI() throws Exception {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar", ""
@@ -126,7 +127,7 @@ public class LocatorTest {
      */
     @Test
     public void testAntOnRemoteShare() throws Throwable {
-        String resolved=Locator.fromJarURI(SHARED_JAR_URI);
+        String resolved = Locator.fromJarURI(SHARED_JAR_URI);
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, unix);
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR.replace('/', '\\'),
                        resolved, windows);

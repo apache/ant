@@ -29,9 +29,9 @@ import static org.junit.Assert.assertTrue;
 public class JAXPUtilsTest {
 
     @Test
-    public void testGetSystemId(){
+    public void testGetSystemId() {
         File file = null;
-        if ( File.separatorChar == '\\' ){
+        if (File.separatorChar == '\\') {
             file = new File("d:\\jdk");
         } else {
             file = new File("/user/local/bin");

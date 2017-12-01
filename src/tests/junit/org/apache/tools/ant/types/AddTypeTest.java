@@ -69,13 +69,13 @@ public class AddTypeTest {
     @Test
     public void testNestedB() {
         buildRule.executeTarget("nested.b");
-         AntAssert.assertContains( "add B called", buildRule.getLog());
+         AntAssert.assertContains("add B called", buildRule.getLog());
     }
 
     @Test
     public void testNestedC() {
         buildRule.executeTarget("nested.c");
-        AntAssert.assertContains( "add C called", buildRule.getLog());
+        AntAssert.assertContains("add C called", buildRule.getLog());
     }
 
     @Test
@@ -91,19 +91,19 @@ public class AddTypeTest {
     @Test
     public void testConditionType() {
         buildRule.executeTarget("condition.type");
-        AntAssert.assertContains( "beforeafter", buildRule.getLog());
+        AntAssert.assertContains("beforeafter", buildRule.getLog());
     }
 
     @Test
     public void testConditionTask() {
         buildRule.executeTarget("condition.task");
-        AntAssert.assertContains( "My Condition execution", buildRule.getLog());
+        AntAssert.assertContains("My Condition execution", buildRule.getLog());
     }
 
     @Test
     public void testConditionConditionType() {
         buildRule.executeTarget("condition.condition.type");
-        AntAssert.assertContains( "My Condition eval", buildRule.getLog());
+        AntAssert.assertContains("My Condition eval", buildRule.getLog());
     }
 
     @Test
@@ -137,19 +137,25 @@ public class AddTypeTest {
 
     // The following will be used as types and tasks
 
-    public static interface A {}
-    public static interface B {}
-    public static interface C extends A {}
-    public static interface AB extends A, B {}
+    public interface A {
+    }
+    public interface B {
+    }
+    public interface C extends A {
+    }
+    public interface AB extends A, B {
+    }
 
-    public static class AImpl implements A{}
-    public static class BImpl implements B{}
-    public static class CImpl implements C{}
-    public static class ABImpl implements AB{}
+    public static class AImpl implements A {
+    }
+    public static class BImpl implements B {
+    }
+    public static class CImpl implements C {
+    }
+    public static class ABImpl implements AB {
+    }
 
-    public static class NestedContainer
-        extends Task
-    {
+    public static class NestedContainer extends Task {
         public void add(A el) {
             log("add A called");
         }
@@ -161,9 +167,7 @@ public class AddTypeTest {
         }
     }
 
-    public static class MyCondition
-        implements Condition
-    {
+    public static class MyCondition implements Condition {
         Project project;
         public void setProject(Project project) {
             this.project = project;
@@ -177,8 +181,7 @@ public class AddTypeTest {
         }
     }
 
-    public static class MyValue
-    {
+    public static class MyValue {
         private String text = "NOT SET YET";
         public void addText(String text) {
             this.text = text;
@@ -188,9 +191,7 @@ public class AddTypeTest {
         }
     }
 
-    public static class MyAddConfigured
-        extends Task
-    {
+    public static class MyAddConfigured extends Task {
         MyValue value;
         public void addConfigured(MyValue value) {
             log("value is " + value);
@@ -204,9 +205,7 @@ public class AddTypeTest {
         }
     }
 
-    public static class MyAddConfiguredValue
-        extends Task
-    {
+    public static class MyAddConfiguredValue extends Task {
         MyValue value;
         public void addConfiguredValue(MyValue value) {
             log("value is " + value);

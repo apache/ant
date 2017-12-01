@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TouchTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -56,7 +56,7 @@ public class TouchTest {
     public long getTargetTime() {
 
         File file = new File(System.getProperty("root"), TOUCH_FILE);
-        if(!file.exists()) {
+        if (!file.exists()) {
             throw new BuildException("failed to touch file " + file);
         }
         return file.lastModified();
@@ -94,7 +94,7 @@ public class TouchTest {
      */
     @Test
     public void testNow() {
-        long now=System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         buildRule.executeTarget("testNow");
         long time = getTargetTime();
         assertTimesNearlyMatch(time,now,5000);
@@ -179,8 +179,8 @@ public class TouchTest {
 
     /**
      * run a target to touch the test file; verify the timestamp is as expected
-     * @param targetName
-     * @param timestamp
+     * @param targetName String
+     * @param timestamp long
      */
     private void touchFile(String targetName, long timestamp) {
         buildRule.executeTarget(targetName);
@@ -190,8 +190,8 @@ public class TouchTest {
 
     /**
      * assert that two times are within the current FS granularity;
-     * @param timestamp
-     * @param time
+     * @param timestamp long
+     * @param time long
      */
     public void assertTimesNearlyMatch(long timestamp,long time) {
         long granularity= FILE_UTILS.getFileTimestampGranularity();
@@ -200,9 +200,9 @@ public class TouchTest {
 
     /**
      * assert that two times are within a specified range
-     * @param timestamp
-     * @param time
-     * @param range
+     * @param timestamp long
+     * @param time long
+     * @param range long
      */
     private void assertTimesNearlyMatch(long timestamp, long time, long range) {
         assertTrue("Time " + timestamp + " is not within " + range + " ms of "

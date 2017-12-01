@@ -19,8 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,11 +42,11 @@ public class AntlibTest {
 
     /**
      * only do the antlib tests if we are in the same JVM as ant.
-     * @return
+     * @return boolean
      */
     private boolean isSharedJVM() {
         String property = System.getProperty("tests.and.ant.share.classloader");
-        return property!=null && Project.toBoolean(property);
+        return property != null && Project.toBoolean(property);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class AntlibTest {
         Assume.assumeTrue("Test requires shared JVM", isSharedJVM());
         buildRule.executeTarget("antlib_uri_auto2");
     }
-    
+
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");
@@ -103,4 +103,3 @@ public class AntlibTest {
     }
 
 }
-

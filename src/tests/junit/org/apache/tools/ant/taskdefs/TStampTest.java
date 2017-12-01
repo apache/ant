@@ -17,13 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +59,7 @@ public class TStampTest {
         String today = project.getProperty("today");
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss z");
-        sdf.setTimeZone( TimeZone.getTimeZone("GMT") );
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         String expected = sdf.format(date);
 
         assertEquals(expected, today);
@@ -68,7 +68,7 @@ public class TStampTest {
     /**
      * verifies that custom props have priority over the
      * originals
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testWriteOrder() throws Exception {
@@ -81,7 +81,7 @@ public class TStampTest {
         String today = project.getProperty("TODAY");
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss z");
-        sdf.setTimeZone( TimeZone.getTimeZone("GMT") );
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         String expected = sdf.format(date);
 
         assertEquals(expected, today);
@@ -91,13 +91,13 @@ public class TStampTest {
     /**
      * verifies that custom props have priority over the
      * originals
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     public void testPrefix() throws Exception {
         tstamp.setPrefix("prefix");
         tstamp.execute();
-        String prop= project.getProperty("prefix.DSTAMP");
+        String prop = project.getProperty("prefix.DSTAMP");
         assertNotNull(prop);
     }
 
@@ -110,7 +110,7 @@ public class TStampTest {
 
         tstamp.setPrefix("prefix");
         tstamp.execute();
-        String prop= project.getProperty("prefix.format");
+        String prop = project.getProperty("prefix.format");
         assertNotNull(prop);
     }
 

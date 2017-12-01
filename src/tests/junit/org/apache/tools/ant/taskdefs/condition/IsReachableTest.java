@@ -68,7 +68,7 @@ public class IsReachableTest {
         try {
            buildRule.executeTarget("testBoth");
             fail("Build exception expected: error on two targets");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(IsReachable.ERROR_BOTH_TARGETS, ex.getMessage());
         }
     }
@@ -78,7 +78,7 @@ public class IsReachableTest {
         try {
             buildRule.executeTarget("testNoTargets");
             fail("Build exception expected: no params");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(IsReachable.ERROR_NO_HOSTNAME, ex.getMessage());
         }
     }
@@ -88,7 +88,7 @@ public class IsReachableTest {
         try {
             buildRule.executeTarget("testBadTimeout");
             fail("Build exception expected: error on -ve timeout");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(IsReachable.ERROR_BAD_TIMEOUT, ex.getMessage());
         }
     }
@@ -99,7 +99,7 @@ public class IsReachableTest {
         try {
             buildRule.executeTarget("testFile");
             fail("Build exception expected: error on file URL");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(IsReachable.ERROR_NO_HOST_IN_URL, ex.getMessage());
         }
     }

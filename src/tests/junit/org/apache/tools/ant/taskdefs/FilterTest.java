@@ -126,19 +126,19 @@ public class FilterTest {
         String line = null;
         File f = new File(buildRule.getProject().getBaseDir(), filteredFile);
         if (!f.exists()) {
-            fail("filter test"+testNumber+" failed");
+            fail("filter test" + testNumber + " failed");
         } else {
             BufferedReader in = null;
             try {
                 in = new BufferedReader(new FileReader(f));
             } catch (FileNotFoundException fnfe) {
-                fail("filter test"+testNumber+" failed, filtered file: " + f.toString() + " not found");
+                fail("filter test" + testNumber + " failed, filtered file: " + f.toString() + " not found");
             }
             try {
                 line = in.readLine();
                 in.close();
             } catch (IOException ioe) {
-                fail("filter test"+testNumber+" failed.  IOException while reading filtered file: " + ioe);
+                fail("filter test" + testNumber + " failed.  IOException while reading filtered file: " + ioe);
             }
         }
         f.delete();

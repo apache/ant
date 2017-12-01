@@ -20,8 +20,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.lang.reflect.Method;
 
-import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TypeAdapter;
@@ -116,8 +116,7 @@ public class TypeAdapterTest {
     }
 
     public static class RunnableAdapter
-        extends Task implements TypeAdapter
-    {
+        extends Task implements TypeAdapter {
         private String execMethodName = "run";
         private Object proxy;
 
@@ -128,14 +127,12 @@ public class TypeAdapterTest {
                     String message =
                         "return type of " + execMethodName + "() should be "
                         + "void but was \"" + execMethod.getReturnType() +
-                        "\" in "
-                        + proxyClass;
+                        "\" in " + proxyClass;
                     log(message, Project.MSG_WARN);
                 }
                 return execMethod;
             } catch (NoSuchMethodException e) {
-                String message = "No public "+ execMethodName +
-                    "() method in "
+                String message = "No public " + execMethodName + "() method in "
                     + proxyClass;
                 log(message, Project.MSG_ERR);
                 throw new BuildException(message);

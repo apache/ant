@@ -18,19 +18,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class ChecksumTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/checksum.xml");

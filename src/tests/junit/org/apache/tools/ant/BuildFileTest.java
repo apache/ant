@@ -19,6 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 
@@ -139,28 +140,28 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the output messages.
-     * @param message Print this message if the test fails. Defaults to 
-     *                a meaningful text if <tt>null</tt> is passed.  
+     * @param message Print this message if the test fails. Defaults to
+     *                a meaningful text if <tt>null</tt> is passed.
      * @since Ant1.7
      */
     public void assertOutputContaining(String message, String substring) {
         String realOutput = getOutput();
-        String realMessage = (message != null) 
-            ? message 
+        String realMessage = (message != null)
+            ? message
             : "expecting output to contain \"" + substring + "\" output was \"" + realOutput + "\"";
         assertTrue(realMessage, realOutput.indexOf(substring) >= 0);
     }
 
     /**
      * Assert that the given substring is not in the output messages.
-     * @param message Print this message if the test fails. Defaults to 
-     *                a meaningful text if <tt>null</tt> is passed.  
+     * @param message Print this message if the test fails. Defaults to
+     *                a meaningful text if <tt>null</tt> is passed.
      * @since Ant1.7
      */
     public void assertOutputNotContaining(String message, String substring) {
         String realOutput = getOutput();
-        String realMessage = (message != null) 
-            ? message 
+        String realMessage = (message != null)
+            ? message
             : "expecting output to not contain \"" + substring + "\" output was \"" + realOutput + "\"";
         assertFalse(realMessage, realOutput.indexOf(substring) >= 0);
     }
@@ -209,7 +210,7 @@ public abstract class BuildFileTest extends TestCase {
      */
     public void assertDebuglogContaining(String substring) {
         String realLog = getFullLog();
-        assertTrue("expecting debug log to contain \"" + substring 
+        assertTrue("expecting debug log to contain \"" + substring
                    + "\" log was \""
                    + realLog + "\"",
                    realLog.indexOf(substring) >= 0);
@@ -268,7 +269,7 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     private String cleanBuffer(StringBuffer buffer) {
-        StringBuffer cleanedBuffer = new StringBuffer();
+        StringBuilder cleanedBuffer = new StringBuilder();
         for (int i = 0; i < buffer.length(); i++) {
             char ch = buffer.charAt(i);
             if (ch != '\r') {
@@ -299,7 +300,7 @@ public abstract class BuildFileTest extends TestCase {
         project = new Project();
         project.init();
         File antFile = new File(System.getProperty("root"), filename);
-        project.setUserProperty("ant.file" , antFile.getAbsolutePath());
+        project.setUserProperty("ant.file", antFile.getAbsolutePath());
         // set two new properties to allow to build unique names when running multithreaded tests
         project.setProperty("ant.processid", ProcessUtil.getProcessId("<Process>"));
         project.setProperty("ant.threadname", Thread.currentThread().getName());
@@ -480,7 +481,7 @@ public abstract class BuildFileTest extends TestCase {
      * @param resource the resource to retrieve its url.
      * @throws junit.framework.AssertionFailedError if the resource is not found.
      */
-    public  URL getResource(String resource){
+    public URL getResource(String resource) {
         URL url = getClass().getResource(resource);
         assertNotNull("Could not find resource :" + resource, url);
         return url;
@@ -489,10 +490,10 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * an output stream which saves stuff to our buffer.
      */
-    protected static class AntOutputStream extends java.io.OutputStream {
+    protected static class AntOutputStream extends OutputStream {
         private StringBuffer buffer;
 
-        public AntOutputStream( StringBuffer buffer ) {
+        public AntOutputStream(StringBuffer buffer) {
             this.buffer = buffer;
         }
 
@@ -580,9 +581,9 @@ public abstract class BuildFileTest extends TestCase {
                 return;
             }
 
-            if (event.getPriority() == Project.MSG_INFO ||
-                event.getPriority() == Project.MSG_WARN ||
-                event.getPriority() == Project.MSG_ERR) {
+            if (event.getPriority() == Project.MSG_INFO
+                || event.getPriority() == Project.MSG_WARN
+                || event.getPriority() == Project.MSG_ERR) {
                 logBuffer.append(event.getMessage());
             }
             fullLogBuffer.append(event.getMessage());

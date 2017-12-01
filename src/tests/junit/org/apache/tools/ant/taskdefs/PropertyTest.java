@@ -66,8 +66,7 @@ public class PropertyTest {
         try {
             buildRule.executeTarget("test3");
             fail("Did not throw exception on circular exception");
-        }
-        catch (BuildException e) {
+        } catch (BuildException e) {
             assertTrue("Circular definition not detected - ",
                      e.getMessage().indexOf("was circularly defined") != -1);
         }
@@ -101,8 +100,7 @@ public class PropertyTest {
        try {
             buildRule.executeTarget("prefix.fail");
             fail("Did not throw exception on invalid use of prefix");
-        }
-        catch (BuildException e) {
+        } catch (BuildException e) {
             assertContains("Prefix allowed on non-resource/file load - ",
                      "Prefix is only valid", e.getMessage());
         }

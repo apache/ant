@@ -19,8 +19,8 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
 import org.junit.ComparisonFailure;
@@ -96,7 +97,8 @@ public class IntrospectionHelperTest {
         ih = IntrospectionHelper.getHelper(String.class);
         try {
             m = ih.getAddTextMethod();
-        } catch (BuildException e) {}
+        } catch (BuildException e) {
+        }
     }
 
     @Test
@@ -219,7 +221,7 @@ public class IntrospectionHelperTest {
             Class expect = (Class) elemMap.get(name);
             assertNotNull("Support for "+name+" in IntrospectioNHelperTest?",
                           expect);
-            assertEquals("Return type of "+name, expect, ih.getElementType(name));
+            assertEquals("Return type of " + name, expect, ih.getElementType(name));
             elemMap.remove(name);
         }
         assertTrue("Found all", elemMap.isEmpty());
@@ -244,7 +246,8 @@ public class IntrospectionHelperTest {
         try {
             actualMap.clear();
             //TODO we should be asserting a value somewhere in here
-        } catch (UnsupportedOperationException e) {}
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     @Test
@@ -274,7 +277,8 @@ public class IntrospectionHelperTest {
         return null;
     }
 
-    public void createThree() {}
+    public void createThree() {
+    }
 
     public Object[] createFour() {
         return null;
@@ -292,19 +296,24 @@ public class IntrospectionHelperTest {
         throw new NullPointerException();
     }
 
-    public void addSeven(String s, String s2) {}
+    public void addSeven(String s, String s2) {
+    }
 
-    public void addEight() {}
+    public void addEight() {
+    }
 
     public String addNine(String s) {
         return null;
     }
 
-    public void addTen(String[] s) {}
+    public void addTen(String[] s) {
+    }
 
-    public void addEleven(int i) {}
+    public void addEleven(int i) {
+    }
 
-    public void addTwelve(Class c) {}
+    public void addTwelve(Class c) {
+    }
 
     public void addThirteen(StringBuffer sb) {
         sb.append("test");
@@ -376,7 +385,7 @@ public class IntrospectionHelperTest {
         ih.setAttribute(p, this, "ten", "2");
         try {
             ih.setAttribute(p, this, "ten", "3");
-            fail(projectBasedir+"2 shouldn't be equals to "+projectBasedir+"3");
+            fail(projectBasedir + "2 shouldn't be equals to " + projectBasedir + "3");
         } catch (BuildException be) {
             assertTrue(be.getCause() instanceof AssertionError);
         }
@@ -515,7 +524,8 @@ public class IntrospectionHelperTest {
         try {
             actualMap.clear();
             //TODO we should be asserting a value somewhere in here
-        } catch (UnsupportedOperationException e) {}
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     @Test
@@ -565,13 +575,17 @@ public class IntrospectionHelperTest {
         return 0;
     }
 
-    public void setThree() {}
+    public void setThree() {
+    }
 
-    public void setFour(String s1, String s2) {}
+    public void setFour(String s1, String s2) {
+    }
 
-    public void setFive(String[] s) {}
+    public void setFive(String[] s) {
+    }
 
-    public void setSix(Project p) {}
+    public void setSix(Project p) {
+    }
 
     public void setSeven(String s) {
         assertEquals("2", s);
@@ -588,11 +602,11 @@ public class IntrospectionHelperTest {
     public void setTen(File f) {
         String path = f.getAbsolutePath();
         if (Os.isFamily("unix") || Os.isFamily("openvms")) {
-            assertEquals(projectBasedir+"2", path);
+            assertEquals(projectBasedir + "2", path);
         } else if (Os.isFamily("netware")) {
-            assertEquals(projectBasedir+"2", path.toLowerCase(Locale.US));
+            assertEquals(projectBasedir + "2", path.toLowerCase(Locale.US));
         } else {
-            assertEquals(":"+projectBasedir+"2",
+            assertEquals(":" + projectBasedir + "2",
                          path.toLowerCase(Locale.US).substring(1));
         }
     }

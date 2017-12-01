@@ -79,7 +79,7 @@ public class CopydirTest {
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        java.io.File f = new java.io.File(new File(buildRule.getProject().getProperty("output")), "taskdefs.tmp");
+        File f = new File(new File(buildRule.getProject().getProperty("output")), "taskdefs.tmp");
 
         if (!f.exists() || !f.isDirectory()) {
             fail("Copy failed");

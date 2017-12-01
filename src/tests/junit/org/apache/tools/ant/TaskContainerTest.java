@@ -28,7 +28,7 @@ public class TaskContainerTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/core/taskcontainer.xml");

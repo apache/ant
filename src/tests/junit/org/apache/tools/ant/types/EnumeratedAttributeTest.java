@@ -36,11 +36,11 @@ public class EnumeratedAttributeTest {
     @Test
     public void testContains() {
         EnumeratedAttribute t1 = new TestNormal();
-        for (int i=0; i<expected.length; i++) {
-            assertTrue(expected[i]+" is in TestNormal",
-                   t1.containsValue(expected[i]));
-            assertTrue(expected[i].toUpperCase()+" is in TestNormal",
-                   !t1.containsValue(expected[i].toUpperCase()));
+        for (String value : expected) {
+            assertTrue(value + " is in TestNormal",
+                    t1.containsValue(value));
+            assertTrue(value.toUpperCase() + " is in TestNormal",
+                    !t1.containsValue(value.toUpperCase()));
         }
         assertTrue("TestNormal doesn\'t have \"d\" attribute",
                !t1.containsValue("d"));
@@ -64,11 +64,11 @@ public class EnumeratedAttributeTest {
     @Test
     public void testExceptions() {
         EnumeratedAttribute t1 = new TestNormal();
-        for (int i=0; i<expected.length; i++) {
+        for (String value : expected) {
             try {
-                t1.setValue(expected[i]);
+                t1.setValue(value);
             } catch (BuildException be) {
-                fail("unexpected exception for value "+expected[i]);
+                fail("unexpected exception for value " + value);
             }
         }
         try {

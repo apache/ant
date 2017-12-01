@@ -20,13 +20,12 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.tools.ant.types.Resource;
-
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.zip.JarMarker;
@@ -82,8 +81,12 @@ public class ZipExtraFieldTest {
                     }
                 };
             testInstance.add(new ResourceCollection() {
-                    public boolean isFilesystemOnly() { return false; }
-                    public int size() { return 1; }
+                    public boolean isFilesystemOnly() {
+                        return false;
+                    }
+                    public int size() {
+                        return 1;
+                    }
                     public Iterator<Resource> iterator() {
                         return Collections.<Resource>singleton(r).iterator();
                     }

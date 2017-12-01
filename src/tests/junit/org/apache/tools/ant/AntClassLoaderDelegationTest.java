@@ -55,6 +55,7 @@ public class AntClassLoaderDelegationTest {
     private static final String TEST_RESOURCE
         = "apache/tools/ant/IncludeTest.class";
 
+    @SuppressWarnings("resource")
     @Test
     public void testFindResources() throws Exception {
         // This path should contain the class files for these testcases:
@@ -81,6 +82,7 @@ public class AntClassLoaderDelegationTest {
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testFindIsolateResources() throws Exception {
         String buildTestcases = System.getProperty("build.tests");
@@ -99,16 +101,17 @@ public class AntClassLoaderDelegationTest {
             Arrays.asList(new URL[] {urlFromPath}),
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
-    
+
     private static List enum2List(Enumeration e) {
         return Collections.list(e);
     }
-    
+
     /** Special loader that just knows how to find TEST_RESOURCE. */
     private static final class ParentLoader extends ClassLoader {
-        
-        public ParentLoader() {}
-        
+
+        public ParentLoader() {
+        }
+
         protected Enumeration findResources(String name) throws IOException {
             if (name.equals(TEST_RESOURCE)) {
                 return Collections.enumeration(
@@ -118,7 +121,7 @@ public class AntClassLoaderDelegationTest {
                 return Collections.enumeration(Collections.EMPTY_SET);
             }
         }
-        
+
     }
-    
+
 }

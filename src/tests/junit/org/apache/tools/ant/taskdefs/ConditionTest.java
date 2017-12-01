@@ -72,7 +72,7 @@ public class ConditionTest {
         try {
             buildRule.executeTarget("condition-empty");
             fail("BuildException should have been thrown - no conditions");
-        }  catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("You must nest a condition into <condition>", ex.getMessage());
         }
     }
@@ -255,7 +255,7 @@ public class ConditionTest {
         try {
             buildRule.executeTarget("contains-incomplete1");
             fail("BuildException should have been thrown - Missing contains attribute");
-        }  catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("both string and substring are required in contains", ex.getMessage());
         }
     }
@@ -265,7 +265,7 @@ public class ConditionTest {
         try {
             buildRule.executeTarget("contains-incomplete2");
             fail("BuildException should have been thrown - Missing contains attribute");
-        }  catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("both string and substring are required in contains", ex.getMessage());
         }
     }
@@ -293,7 +293,7 @@ public class ConditionTest {
         try {
             buildRule.executeTarget("istrue-incomplete");
             fail("BuildException should have been thrown - Missing attribute");
-        }  catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("Nothing to test for truth", ex.getMessage());
         }
     }
@@ -322,7 +322,7 @@ public class ConditionTest {
         try {
             buildRule.executeTarget("isfalse-incomplete");
             fail("BuildException should have been thrown - Missing attribute");
-        }  catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("Nothing to test for falsehood", ex.getMessage());
         }
     }

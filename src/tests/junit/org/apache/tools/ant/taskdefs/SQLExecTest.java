@@ -26,8 +26,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -70,13 +70,13 @@ public class SQLExecTest {
 
    // simple test to ensure that the caching does work...
     @Test
-    public void testDriverCaching(){
+    public void testDriverCaching() {
         SQLExec sql = createTask(getProperties(NULL));
         assertTrue(!SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
             fail("BuildException should have been thrown");
-        } catch (BuildException e){
+        } catch (BuildException e) {
             assertContains("No suitable Driver", e.getMessage());
         }
         assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
@@ -104,13 +104,13 @@ public class SQLExecTest {
 
     @Ignore
     @Test
-    public void testOracle(){
+    public void testOracle() {
         doMultipleCalls(1000, ORACLE, true, false);
     }
 
     @Ignore
     @Test
-    public void testMySQL(){
+    public void testMySQL() {
         doMultipleCalls(1000, MYSQL, true, false);
     }
 
@@ -122,15 +122,15 @@ public class SQLExecTest {
      * @param caching should caching be enabled ?
      * @param catchexception true to catch exception for each call, false if not.
      */
-    protected void doMultipleCalls(int calls, int database, boolean caching, boolean catchexception){
+    protected void doMultipleCalls(int calls, int database, boolean caching, boolean catchexception) {
         Properties props = getProperties(database);
-        for (int i = 0; i < calls; i++){
+        for (int i = 0; i < calls; i++) {
             SQLExec sql = createTask(props);
             sql.setCaching(caching);
             try  {
                 sql.execute();
-            } catch (BuildException e){
-                if (!catchexception){
+            } catch (BuildException e) {
+                if (!catchexception) {
                     throw e;
                 }
             }
@@ -141,15 +141,15 @@ public class SQLExecTest {
      * Create a task from a set of properties
      * @see #getProperties(int)
      */
-    protected SQLExec createTask(Properties props){
+    protected SQLExec createTask(Properties props) {
         SQLExec sql = new SQLExec();
-        sql.setProject( new Project() );
-        sql.setDriver( props.getProperty(DRIVER) );
-        sql.setUserid( props.getProperty(USER) );
-        sql.setPassword( props.getProperty(PASSWORD) );
-        sql.setUrl( props.getProperty(URL) );
-        sql.createClasspath().setLocation( new File(props.getProperty(PATH)) );
-        sql.addText( props.getProperty(SQL) );
+        sql.setProject(new Project());
+        sql.setDriver(props.getProperty(DRIVER));
+        sql.setUserid(props.getProperty(USER));
+        sql.setPassword(props.getProperty(PASSWORD));
+        sql.setUrl(props.getProperty(URL));
+        sql.createClasspath().setLocation(new File(props.getProperty(PATH)));
+        sql.addText(props.getProperty(SQL));
         return sql;
     }
 
@@ -157,7 +157,7 @@ public class SQLExecTest {
      * try to find the path from a resource (jar file or directory name)
      * so that it can be used as a classpath to load the resource.
      */
-    protected String findResourcePath(String resource){
+    protected String findResourcePath(String resource) {
         resource = resource.replace('.', '/') + ".class";
         URL url = getClass().getClassLoader().getResource(resource);
         if (url == null) {
@@ -180,9 +180,9 @@ public class SQLExecTest {
      * tweak this to make it run or add your own database.
      * The driver lib should be dropped into the system classloader.
      */
-    protected Properties getProperties(int database){
+    protected Properties getProperties(int database) {
         Properties props = null;
-        switch (database){
+        switch (database) {
             case ORACLE:
                 props = getProperties("oracle.jdbc.driver.OracleDriver", "test", "test", "jdbc:oracle:thin:@127.0.0.1:1521:orcl");
                 break;
@@ -201,7 +201,7 @@ public class SQLExecTest {
     }
 
     /** helper method to build properties */
-    protected Properties getProperties(String driver, String user, String pwd, String url){
+    protected Properties getProperties(String driver, String user, String pwd, String url) {
         Properties props = new Properties();
         props.put(DRIVER, driver);
         props.put(USER, user);

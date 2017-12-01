@@ -90,8 +90,9 @@ public class ImportTest {
         try {
             buildRule.executeTarget("do-import");
             fail("Build exception should have been thrown as import only allowed in top level task");
-        } catch(BuildException ex) {
-            assertContains( "not a top level task", "import only allowed as a top-level task", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("not a top level task", "import only allowed as a top-level task",
+                    ex.getMessage());
         }
     }
 
@@ -111,7 +112,8 @@ public class ImportTest {
                 "src/etc/testcases/taskdefs/import/same_target.xml");
             fail("Expected build exception");
         } catch (BuildException ex) {
-            assertContains("Message did not contain expected contents", "Duplicate target", ex.getMessage());
+            assertContains("Message did not contain expected contents", "Duplicate target",
+                    ex.getMessage());
         }
     }
 

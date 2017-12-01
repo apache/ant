@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 public class DefaultCompilerAdapterTest {
 
     private static class LogCapturingJavac extends Javac {
-        private StringBuffer sb = new StringBuffer();
+        private StringBuilder sb = new StringBuilder();
         public void log(String msg, int msgLevel) {
             sb.append(msg);
         }
@@ -58,7 +58,9 @@ public class DefaultCompilerAdapterTest {
             return cmd;
         }
 
-        public boolean execute() { return false; }
+        public boolean execute() {
+            return false;
+        }
 
         /**
          * public to avoid classloader issues.
@@ -70,7 +72,9 @@ public class DefaultCompilerAdapterTest {
 
     private static class SourceTargetHelperNoOverride extends DefaultCompilerAdapter {
 
-        public boolean execute() { return false; }
+        public boolean execute() {
+            return false;
+        }
 
         /**
          * public to avoid classloader issues.
@@ -355,6 +359,7 @@ public class DefaultCompilerAdapterTest {
             src.mkdir();
             final File java1 = createFile(src,"main/m1/lin/classes/org/apache/ant/tests/J1.java");
             final File java2 = createFile(src,"main/m3/sol/classes/org/apache/ant/tests/J2.java");
+            @SuppressWarnings("unused")
             final File java3 = createFile(src,"main/m3/sol/classes/org/apache/ant/invisible/J3.java");
             final File build = new File(workDir, "build");
             build.mkdirs();
@@ -498,7 +503,7 @@ public class DefaultCompilerAdapterTest {
         final File destDir = new File(tmp, String.format("%s%s%d",
                 getClass().getName(),
                 testName,
-                System.currentTimeMillis()/1000));
+                System.currentTimeMillis() / 1000));
         destDir.mkdirs();
         return destDir;
     }

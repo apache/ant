@@ -304,7 +304,7 @@ public class JavacTest {
         final File tmp = new File(System.getProperty("java.io.tmpdir"));   //NOI18N
         final File destDir = new File(tmp, String.format("%stestMP%d",
                 getClass().getName(),
-                System.currentTimeMillis()/1000));
+                System.currentTimeMillis() / 1000));
         destDir.mkdirs();
         try {
             final Path p = new Path(project);

@@ -28,8 +28,8 @@ import org.junit.rules.ExternalResource;
 /**
  * Provides access for JUnit tests to execute Ant targets and access execution details (i.e logs).
  *
- * Example usage:
- * <code>
+ * <p>Example usage:</p>
+ * <pre>
  * public class MyTest {
  *
  *     \@Rule
@@ -42,7 +42,7 @@ import org.junit.rules.ExternalResource;
  *
  *     \@Test
  *     public void testSuccess() {
- *         rule.executeTarget("passingTaget");
+ *         rule.executeTarget("passingTarget");
  *         assertEquals("Incorrect log message", "[taskName] Action Complete", rule.getLog());
  *     }
  *
@@ -57,7 +57,7 @@ import org.junit.rules.ExternalResource;
  *     }
  *
  * }
- * </code>
+ * </pre>
  */
 public class BuildFileRule extends ExternalResource {
 
@@ -102,8 +102,7 @@ public class BuildFileRule extends ExternalResource {
     /**
      * Gets any messages that have been logged during the current execution, unless
      * the logging level has been set above the log level defined in the message.
-     *
-     * Only valid if configureProject() has been called.
+     * <p>Only valid if configureProject() has been called.</p>
      * @return the content of the log.
      */
     public String getFullLog() {
@@ -159,7 +158,7 @@ public class BuildFileRule extends ExternalResource {
         File antFile = new File(System.getProperty("root"), filename);
         project.setProperty("ant.processid", ProcessUtil.getProcessId("<Process>"));
         project.setProperty("ant.threadname", Thread.currentThread().getName());
-        project.setUserProperty("ant.file" , antFile.getAbsolutePath());
+        project.setUserProperty("ant.file", antFile.getAbsolutePath());
         project.addBuildListener(new AntTestListener(logLevel));
         ProjectHelper.configureProject(project, antFile);
     }
@@ -217,7 +216,7 @@ public class BuildFileRule extends ExternalResource {
     protected static class AntOutputStream extends OutputStream {
         private StringBuffer buffer;
 
-        public AntOutputStream( StringBuffer buffer ) {
+        public AntOutputStream(StringBuffer buffer) {
             this.buffer = buffer;
         }
 
@@ -301,9 +300,9 @@ public class BuildFileRule extends ExternalResource {
                 return;
             }
 
-            if (event.getPriority() == Project.MSG_INFO ||
-                event.getPriority() == Project.MSG_WARN ||
-                event.getPriority() == Project.MSG_ERR) {
+            if (event.getPriority() == Project.MSG_INFO
+                || event.getPriority() == Project.MSG_WARN
+                || event.getPriority() == Project.MSG_ERR) {
                 logBuffer.append(event.getMessage());
             }
             fullLogBuffer.append(event.getMessage());

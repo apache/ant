@@ -251,9 +251,7 @@ public class TokenFilterTest {
     //   Helper methods
     // -----------------------------------------------------
 
-    private String getFileString(String filename)
-        throws IOException
-    {
+    private String getFileString(String filename) throws IOException {
         Reader r = null;
         try {
             r = new FileReader(FILE_UTILS.resolveFile(buildRule.getProject().getBaseDir(),filename));
@@ -265,9 +263,7 @@ public class TokenFilterTest {
     }
 
 
-    public static class Capitalize
-        implements TokenFilter.Filter
-    {
+    public static class Capitalize implements TokenFilter.Filter {
         public String filter(String token) {
             if (token.length() == 0)
                 return token;

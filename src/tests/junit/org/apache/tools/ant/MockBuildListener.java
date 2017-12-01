@@ -32,17 +32,29 @@ public class MockBuildListener implements BuildListener {
         this.project = project;
     }
 
-    public void buildStarted(BuildEvent event) {}
-    public void buildFinished(BuildEvent event) {}
-    public void targetStarted(BuildEvent event) {}
-    public void targetFinished(BuildEvent event) {}
-    public void taskStarted(BuildEvent event) {}
-    public void taskFinished(BuildEvent event) {}
+    public void buildStarted(BuildEvent event) {
+    }
+
+    public void buildFinished(BuildEvent event) {
+    }
+
+    public void targetStarted(BuildEvent event) {
+    }
+
+    public void targetFinished(BuildEvent event) {
+    }
+
+    public void taskStarted(BuildEvent event) {
+    }
+
+    public void taskFinished(BuildEvent event) {
+    }
 
     public void messageLogged(final BuildEvent actual) {
-        if(actual.getPriority()==Project.MSG_DEBUG)
+        if (actual.getPriority() == Project.MSG_DEBUG) {
             return;
-        assertTrue("unexpected messageLogged: "+actual.getMessage(), !buffer.isEmpty());
+        }
+        assertTrue("unexpected messageLogged: "+ actual.getMessage(), !buffer.isEmpty());
         assertEquals("unexpected project ", project, actual.getProject());
 
         BuildEvent expected = (BuildEvent) buffer.elementAt(0);

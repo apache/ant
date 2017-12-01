@@ -58,11 +58,11 @@ public class ManifestTest {
           "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
           "AProblemWithThatItIsNotABugInAnt";
 
-    public static final String LONG_70_NAME 
+    public static final String LONG_70_NAME
         = "ThisNameIsJustSeventyCharactersWhichIsAllowedAccordingToTheSpecsFiller";
-    public static final String LONG_68_NAME 
+    public static final String LONG_68_NAME
         = "ThisNameIsJustSixtyEightCharactersWhichIsAllowedAccordingToTheSpecsX";
-    public static final String NOT_LONG_NAME 
+    public static final String NOT_LONG_NAME
         = "NameIsJustUnderSeventyCharactersWhichIsAllowedAccordingTheSpec";
 
     public static final String VALUE = "NOT_LONG";
@@ -134,9 +134,8 @@ public class ManifestTest {
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        String output = buildRule.getLog();
-        boolean hasWarning = output.indexOf("Manifest warning: \"Name\" attributes should not occur in the main section") != -1;
-        assertTrue("Expected warning about Name in main section", hasWarning);
+        assertTrue("Expected warning about Name in main section", buildRule.getLog()
+                .contains("Manifest warning: \"Name\" attributes should not occur in the main section"));
     }
 
     /**
@@ -150,9 +149,8 @@ public class ManifestTest {
         } catch (BuildException ex) {
             assertContains("Invalid Manifest", ex.getMessage());
         }
-        String output = buildRule.getLog();
-        boolean hasWarning = output.indexOf("Manifest sections should start with a \"Name\" attribute") != -1;
-        assertTrue("Expected warning about section not starting with Name: attribute", hasWarning);
+        assertTrue("Expected warning about section not starting with Name: attribute", buildRule.getLog()
+                .contains("Manifest sections should start with a \"Name\" attribute"));
     }
 
 
@@ -162,9 +160,8 @@ public class ManifestTest {
     @Test
     public void test7() {
         buildRule.executeTarget("test7");
-
-        boolean hasWarning = buildRule.getLog().indexOf(Manifest.ERROR_FROM_FORBIDDEN) != -1;
-        assertTrue("Expected warning about From: attribute", hasWarning);
+        assertTrue("Expected warning about From: attribute", buildRule.getLog()
+                .contains(Manifest.ERROR_FROM_FORBIDDEN));
     }
 
     /**
@@ -245,7 +242,8 @@ public class ManifestTest {
             buildRule.executeTarget("test13");
             fail("BuildException expected: Duplicate Attribute");
         } catch (BuildException ex) {
-            assertContains("The attribute \"Test\" may not occur more than once in the same section", ex.getMessage());
+            assertContains("The attribute \"Test\" may not occur more than once in the same section",
+                    ex.getMessage());
         }
     }
 
@@ -269,9 +267,9 @@ public class ManifestTest {
     public void testLongLine() throws IOException, ManifestException {
         Project p = buildRule.getProject();
         p.setUserProperty("test.longline", LONG_LINE);
-        p.setUserProperty("test.long68name" , LONG_68_NAME);
-        p.setUserProperty("test.long70name" , LONG_70_NAME);
-        p.setUserProperty("test.notlongname" , NOT_LONG_NAME);
+        p.setUserProperty("test.long68name", LONG_68_NAME);
+        p.setUserProperty("test.long70name", LONG_70_NAME);
+        p.setUserProperty("test.notlongname", NOT_LONG_NAME);
         p.setUserProperty("test.value", VALUE);
         buildRule.executeTarget("testLongLine");
 

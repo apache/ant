@@ -66,8 +66,7 @@ public class ImageTest {
         AntAssert.assertContains("Processing File", buildRule.getLog());
 
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);
-        assertTrue(
-                   "Did not create "+f.getAbsolutePath(),
+        assertTrue("Did not create " + f.getAbsolutePath(),
                    f.exists());
 
     }
@@ -107,8 +106,7 @@ public class ImageTest {
         buildRule.executeTarget("testSimpleScaleWithMapper");
         AntAssert.assertContains("Processing File", buildRule.getLog());
         File f = new File(buildRule.getOutputDir(), "scaled-" + LARGEIMAGE);
-        assertTrue(
-                   "Did not create "+f.getAbsolutePath(),
+        assertTrue("Did not create " + f.getAbsolutePath(),
                    f.exists());
 
     }

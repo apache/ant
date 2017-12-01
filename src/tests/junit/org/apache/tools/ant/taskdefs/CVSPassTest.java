@@ -18,7 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.*;
+import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
@@ -44,7 +44,7 @@ public class CVSPassTest {
         ":pserver:anoncvs@xml.apache.org:/home/cvspublic Ay=0=h<Z";
     private static final String TIGRIS_URL =
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
@@ -56,20 +56,20 @@ public class CVSPassTest {
 
     @Test
     public void testNoCVSRoot() {
-        try{
+        try {
             buildRule.executeTarget("test1");
             fail("BuildException not thrown");
-        }catch(BuildException e){
+        } catch (BuildException e) {
             assertEquals("cvsroot is required", e.getMessage());
         }
     }
 
     @Test
     public void testNoPassword() {
-        try{
+        try {
             buildRule.executeTarget("test2");
             fail("BuildException not thrown");
-        }catch(BuildException e){
+        } catch (BuildException e) {
             assertEquals("password is required", e.getMessage());
         }
     }
@@ -84,10 +84,9 @@ public class CVSPassTest {
         buildRule.executeTarget("test3");
         File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
-        assertTrue( "Passfile "+f+" not created", f.exists());
+        assertTrue("Passfile " + f + " not created", f.exists());
 
-        assertEquals(JAKARTA_URL+EOL, FileUtilities.getFileContents(f));
-
+        assertEquals(JAKARTA_URL + EOL, FileUtilities.getFileContents(f));
     }
 
     @Test
@@ -95,11 +94,9 @@ public class CVSPassTest {
         buildRule.executeTarget("test4");
         File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
-        assertTrue( "Passfile "+f+" not created", f.exists());
+        assertTrue("Passfile " + f + " not created", f.exists());
 
-        assertEquals(
-            JAKARTA_URL+ EOL+
-            TIGRIS_URL+ EOL,
+        assertEquals(JAKARTA_URL + EOL+ TIGRIS_URL + EOL,
             FileUtilities.getFileContents(f));
     }
 
@@ -108,12 +105,9 @@ public class CVSPassTest {
         buildRule.executeTarget("test5");
         File f = new File(buildRule.getProject().getBaseDir(), "testpassfile.tmp");
 
-        assertTrue( "Passfile "+f+" not created", f.exists());
+        assertTrue("Passfile " + f + " not created", f.exists());
 
-        assertEquals(
-            JAKARTA_URL+ EOL+
-            XML_URL+ EOL+
-            TIGRIS_URL+ EOL,
+        assertEquals(JAKARTA_URL + EOL + XML_URL + EOL+ TIGRIS_URL + EOL,
             FileUtilities.getFileContents(f));
     }
 }

@@ -46,7 +46,7 @@ public class DirnameTest {
         try {
             buildRule.executeTarget("test1");
             fail("Build exception should have been thrown as property attribute is required");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("property attribute required", ex.getMessage());
         }
     }
@@ -56,7 +56,7 @@ public class DirnameTest {
         try {
             buildRule.executeTarget("test2");
             fail("Build exception should have been thrown as file attribute is required");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("file attribute required", ex.getMessage());
         }
     }
@@ -66,7 +66,7 @@ public class DirnameTest {
         try {
             buildRule.executeTarget("test3");
             fail("Build exception should have been thrown as property attribute is required");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("property attribute required", ex.getMessage());
         }
     }

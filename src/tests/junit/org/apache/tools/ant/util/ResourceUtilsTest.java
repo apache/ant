@@ -55,8 +55,12 @@ public class ResourceUtilsTest implements ResourceFactory, FileNameMapper {
     }
 
     /* ============ FileNameMapper interface ======================= */
-    public void setFrom(String s) {}
-    public void setTo(String s) {}
+    public void setFrom(String s) {
+    }
+
+    public void setTo(String s) {
+    }
+
     public String[] mapFileName(String s) {
         return new String[] {"fred colon", "carrot ironfoundersson"};
     }

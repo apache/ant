@@ -84,7 +84,7 @@ public class SubAntTest {
                      });
 
     }
-    
+
     @Test
     public void testMultipleTargets() {
         buildRule.executeTarget("multipleTargets");
@@ -93,13 +93,13 @@ public class SubAntTest {
         assertContains("test2-one", buildRule.getLog());
         assertContains("test2-two", buildRule.getLog());
     }
-    
+
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEfalse() {
         buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
         assertContains("Target \"three\" does not exist in the project \"subant\"", buildRule.getLog());
     }
-    
+
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEtrue() {
         try {
@@ -130,12 +130,23 @@ public class SubAntTest {
             expectedBasedirs = dirs;
         }
 
-        public void buildStarted(BuildEvent event) {}
-        public void buildFinished(BuildEvent event) {}
-        public void targetFinished(BuildEvent event){}
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}
-        public void messageLogged(BuildEvent event) {}
+        public void buildStarted(BuildEvent event) {
+        }
+
+        public void buildFinished(BuildEvent event) {
+        }
+
+        public void targetFinished(BuildEvent event) {
+        }
+
+        public void taskStarted(BuildEvent event) {
+        }
+
+        public void taskFinished(BuildEvent event) {
+        }
+
+        public void messageLogged(BuildEvent event) {
+        }
 
         public void targetStarted(BuildEvent event) {
             if (event.getTarget().getName().equals("")) {

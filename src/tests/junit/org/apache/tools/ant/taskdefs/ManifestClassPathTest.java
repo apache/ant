@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -231,8 +230,8 @@ public class ManifestClassPathTest {
             } else {
                 altDriveLetter = "C";
             }
-            new java.io.File(altDriveLetter + ":/foo.txt").getCanonicalPath();
-        } catch (java.io.IOException e) {
+            new File(altDriveLetter + ":/foo.txt").getCanonicalPath();
+        } catch (IOException e) {
             Assume.assumeNoException("Drive " + altDriveLetter + ": doesn't exist or is not ready", e);
         }
         buildRule.getProject().setProperty("altDriveLetter", altDriveLetter);

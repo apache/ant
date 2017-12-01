@@ -21,8 +21,8 @@ package org.apache.tools.ant;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class DirectoryScannerTest {
         ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setIncludes(new String[] {"alpha"});
         ds.scan();
-        compareFiles(ds, new String[] {} ,new String[] {"alpha"});
+        compareFiles(ds, new String[] {}, new String[] {"alpha"});
     }
 
     @Test
@@ -244,7 +244,7 @@ public class DirectoryScannerTest {
      * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testSetFollowLinks() throws IOException, InterruptedException {
@@ -276,13 +276,13 @@ public class DirectoryScannerTest {
                 boolean haveZipPackage = false;
                 boolean haveTaskdefsPackage = false;
 
-                String[] included = ds.getIncludedDirectories();
-                for (int i=0; i<included.length; i++) {
-                    if (included[i].equals("zip")) {
+                String[] includeds = ds.getIncludedDirectories();
+                for (String included : includeds) {
+                    if (included.equals("zip")) {
                         haveZipPackage = true;
-                    } else if (included[i].equals("ThisIsALink"
-                                                  + File.separator
-                                                  + "taskdefs")) {
+                    } else if (included.equals("ThisIsALink"
+                            + File.separator
+                            + "taskdefs")) {
                         haveTaskdefsPackage = true;
                     }
                 }
@@ -291,9 +291,7 @@ public class DirectoryScannerTest {
                 // bypass the excludes.
 
                 assertTrue("(1) zip package included", haveZipPackage);
-                assertTrue("(1) taskdefs package included",
-                           haveTaskdefsPackage);
-
+                assertTrue("(1) taskdefs package included", haveTaskdefsPackage);
 
                 ds = new DirectoryScanner();
                 ds.setFollowSymlinks(false);
@@ -304,19 +302,18 @@ public class DirectoryScannerTest {
 
                 haveZipPackage = false;
                 haveTaskdefsPackage = false;
-                included = ds.getIncludedDirectories();
-                for (int i=0; i<included.length; i++) {
-                    if (included[i].equals("zip")) {
+                includeds = ds.getIncludedDirectories();
+                for (String included : includeds) {
+                    if (included.equals("zip")) {
                         haveZipPackage = true;
-                    } else if (included[i].equals("ThisIsALink"
-                                                  + File.separator
-                                                  + "taskdefs")) {
+                    } else if (included.equals("ThisIsALink"
+                            + File.separator
+                            + "taskdefs")) {
                         haveTaskdefsPackage = true;
                     }
                 }
                 assertTrue("(2) zip package included", haveZipPackage);
-                assertTrue("(2) taskdefs package not included",
-                           !haveTaskdefsPackage);
+                assertFalse("(2) taskdefs package not included", haveTaskdefsPackage);
 
             } finally {
                 if (!linkFile.delete()) {
@@ -491,7 +488,7 @@ public class DirectoryScannerTest {
         buildRule.getProject().executeTarget("extended-setup");
         DirectoryScanner ds = new DirectoryScanner();
         String tmpdir = buildRule.getProject().getProperty("output").replace(
-                File.separatorChar, '/') ;
+                File.separatorChar, '/');
         ds.setIncludes(new String[] {tmpdir + "/alpha/beta/**/*",
                                      tmpdir + "/delta/*"});
         ds.setExcludes(new String[] {"**/beta.xml"});
@@ -516,28 +513,28 @@ public class DirectoryScannerTest {
 
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
                               String[] expectedDirectories) {
-        String includedFiles[] = ds.getIncludedFiles();
-        String includedDirectories[] = ds.getIncludedDirectories();
+        String[] includedFiles = ds.getIncludedFiles();
+        String[] includedDirectories = ds.getIncludedDirectories();
         assertEquals("file present: ", expectedFiles.length,
                      includedFiles.length);
         assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
         TreeSet<String> files = new TreeSet<String>();
-        for (int counter = 0; counter < includedFiles.length; counter++) {
-            files.add(includedFiles[counter].replace(File.separatorChar, '/'));
+        for (String includedFile : includedFiles) {
+            files.add(includedFile.replace(File.separatorChar, '/'));
         }
         TreeSet<String> directories = new TreeSet<String>();
-        for (int counter = 0; counter < includedDirectories.length; counter++) {
-            directories.add(includedDirectories[counter]
-                            .replace(File.separatorChar, '/'));
+        for (String includedDirectory : includedDirectories) {
+            directories.add(includedDirectory
+                    .replace(File.separatorChar, '/'));
         }
 
         String currentfile;
         Iterator<String> i = files.iterator();
         int counter = 0;
         while (i.hasNext()) {
-            currentfile = (String) i.next();
+            currentfile = i.next();
             assertEquals(expectedFiles[counter], currentfile);
             counter++;
         }
@@ -545,7 +542,7 @@ public class DirectoryScannerTest {
         Iterator<String> dirit = directories.iterator();
         counter = 0;
         while (dirit.hasNext()) {
-            currentdirectory = (String) dirit.next();
+            currentdirectory = dirit.next();
             assertEquals(expectedDirectories[counter], currentdirectory);
             counter++;
         }

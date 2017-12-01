@@ -19,8 +19,8 @@
 package org.apache.tools.zip;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.zip.CRC32;
@@ -131,11 +131,9 @@ public class UTF8ZipFilesTest {
             zos = new ZipOutputStream(file);
             zos.setEncoding(encoding);
             zos.setUseLanguageEncodingFlag(withEFS);
-            zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra ?
-                                            ZipOutputStream
-                                            .UnicodeExtraFieldPolicy.NEVER
-                                            : ZipOutputStream
-                                            .UnicodeExtraFieldPolicy.ALWAYS);
+            zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra
+                                            ? ZipOutputStream.UnicodeExtraFieldPolicy.NEVER
+                                            : ZipOutputStream.UnicodeExtraFieldPolicy.ALWAYS);
 
             ZipEntry ze = new ZipEntry(OIL_BARREL_TXT);
             if (withExplicitUnicodeExtra
@@ -210,7 +208,7 @@ public class UTF8ZipFilesTest {
                 } else if (ze.getName().endsWith("_for_Dollar.txt")) {
                     assertUnicodeName(ze, EURO_FOR_DOLLAR_TXT, encoding);
                 } else if (!ze.getName().equals(ASCII_TXT)) {
-                    throw new AssertionError("Urecognized ZIP entry with name ["
+                    throw new AssertionError("Unrecognized ZIP entry with name ["
                                              + ze.getName() + "] found.");
                 }
             }

@@ -99,8 +99,8 @@ public class ProtectedJarMethodsTest {
     @Test
     public void testFindJarNameLongestMatchWins() {
         assertEquals("lib/foo",
-                     Jar.findJarName("lib/foo", 
-                                     new String[] {"foo", "lib/foo", 
+                     Jar.findJarName("lib/foo",
+                                     new String[] {"foo", "lib/foo",
                                                    "lib/bar/foo"}));
     }
 }

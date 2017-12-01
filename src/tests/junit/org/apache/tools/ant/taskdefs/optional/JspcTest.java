@@ -37,14 +37,14 @@ import static org.junit.Assert.fail;
 
 /**
  * Tests the Jspc task.
- *
+ * <p>
  * created 07 March 2002
+ * </p>
  * @since Ant 1.5
  */
 public class JspcTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
-
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -54,25 +54,20 @@ public class JspcTest {
         buildRule.configureProject(TASKDEFS_DIR + "jspc.xml");
      }
 
-
-
     @Test
     public void testSimple() {
         executeJspCompile("testSimple", "simple_jsp.java");
     }
-
 
     @Test
     public void testUriroot() throws Exception {
         executeJspCompile("testUriroot", "uriroot_jsp.java");
     }
 
-
     @Test
     public void testXml() throws Exception {
         executeJspCompile("testXml", "xml_jsp.java");
     }
-
 
     /**
      * try a keyword in a file
@@ -81,7 +76,6 @@ public class JspcTest {
     public void testKeyword() throws Exception {
         executeJspCompile("testKeyword", "default_jsp.java");
     }
-
 
     /**
      * what happens to 1nvalid-classname
@@ -92,7 +86,6 @@ public class JspcTest {
                 "_1nvalid_0002dclassname_jsp.java");
     }
 
-
     @Test
     public void testNoTld() throws Exception {
         try {
@@ -102,7 +95,6 @@ public class JspcTest {
             assertEquals("Java returned: 9", ex.getMessage());
         }
     }
-
 
     @Test
     public void testNotAJspFile()  throws Exception {
@@ -130,7 +122,6 @@ public class JspcTest {
         assertJavaFileCreated(javafile);
     }
 
-
     /**
      * verify that a named file was created
      *
@@ -157,11 +148,11 @@ public class JspcTest {
      */
     @Test
     public void testJasperNameManglerSelection() {
-        JspCompilerAdapter adapter=
+        JspCompilerAdapter adapter =
                 JspCompilerAdapterFactory.getCompiler("jasper", null,null);
-        JspMangler mangler=adapter.createMangler();
+        JspMangler mangler = adapter.createMangler();
         assertTrue(mangler instanceof JspNameMangler);
-        adapter= JspCompilerAdapterFactory.getCompiler("jasper41", null, null);
+        adapter = JspCompilerAdapterFactory.getCompiler("jasper41", null, null);
         mangler = adapter.createMangler();
         assertTrue(mangler instanceof Jasper41Mangler);
     }
@@ -184,16 +175,15 @@ public class JspcTest {
 
     /**
      * assert our mapping rules
-     * @param mangler
-     * @param filename
-     * @param classname
+     * @param mangler JspMangler
+     * @param filename String
+     * @param classname String
      */
     protected void assertMapped(JspMangler mangler, String filename, String classname) {
         String mappedname = mangler.mapJspToJavaName(new File(filename));
-        assertTrue(filename+" should have mapped to "+classname
-                    +" but instead mapped to "+mappedname,
+        assertTrue(filename + " should have mapped to " + classname
+                    + " but instead mapped to " + mappedname,
                     classname.equals(mappedname));
     }
-
 
 }

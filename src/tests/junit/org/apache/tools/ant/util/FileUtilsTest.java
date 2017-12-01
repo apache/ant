@@ -44,7 +44,6 @@ public class FileUtilsTest {
     private File removeThis;
     private String root;
 
-
     @Before
     public void setUp() {
         // Windows adds the drive letter in uppercase, unless you run Cygwin
@@ -54,8 +53,7 @@ public class FileUtilsTest {
     @After
     public void tearDown() {
         if (removeThis != null && removeThis.exists()) {
-            if (!removeThis.delete())
-            {
+            if (!removeThis.delete()) {
                 removeThis.deleteOnExit();
             }
         }
@@ -69,7 +67,7 @@ public class FileUtilsTest {
      * behaviour and will help catch any regression in Java itself,
      * so is worth retaining.
      * @see FileUtils#setFileLastModified(java.io.File, long)
-     * @throws IOException
+     * @throws IOException if something goes wrong
      */
     @Test
     public void testSetLastModified() throws IOException {
@@ -87,7 +85,7 @@ public class FileUtilsTest {
         assertTrue(secondModTime > modTime);
 
         // number of milliseconds in a day
-        final int millisperday=24 * 3600 * 1000;
+        final int millisperday = 24 * 3600 * 1000;
         // in a previous version, the date of the file was set to 123456
         // milliseconds since 01.01.1970
         // it did not work on a computer running JDK 1.4.1_02 + Windows 2000
@@ -342,8 +340,7 @@ public class FileUtilsTest {
      * Test createTempFile
      */
     @Test
-    public void testCreateTempFile()
-    {
+    public void testCreateTempFile() {
         // null parent dir
         File tmp1 = FILE_UTILS.createTempFile("pre", ".suf", null, false, true);
         String tmploc = System.getProperty("java.io.tmpdir");
@@ -476,9 +473,7 @@ public class FileUtilsTest {
         if (Os.isFamily("dos") || Os.isFamily("netware")) {
             dosRoot = System.getProperty("user.dir")
                 .substring(0, 3).replace(File.separatorChar, '/');
-        }
-        else
-        {
+        } else {
             dosRoot = "";
         }
         if (Os.isFamily("dos")) {
@@ -554,13 +549,13 @@ public class FileUtilsTest {
     public void testModificationTests() {
 
         //get a time
-        long firstTime=System.currentTimeMillis();
+        long firstTime = System.currentTimeMillis();
         //add some time. We assume no OS has a granularity this bad
-        long secondTime=firstTime+60000;
-/*
+        long secondTime = firstTime + 60000;
+        /*
         assertTrue("same timestamp is up to date",
                 fu.isUpToDate(firstTime, firstTime));
-                */
+         */
 
         //check that older is up to date with a newer dest
         assertTrue("older source files are up to date",

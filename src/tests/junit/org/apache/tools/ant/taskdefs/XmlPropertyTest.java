@@ -79,7 +79,7 @@ public class XmlPropertyTest {
     }
 
     @Test
-    public void testNone () throws IOException {
+    public void testNone() throws IOException {
         doTest("testNone", false, false, false, false, false);
     }
 
@@ -89,47 +89,47 @@ public class XmlPropertyTest {
     }
 
     @Test
-    public void testCollapse () throws IOException {
+    public void testCollapse() throws IOException {
         doTest("testCollapse", false, true, false, false, false);
     }
 
     @Test
-    public void testSemantic () throws IOException {
+    public void testSemantic() throws IOException {
         doTest("testSemantic", false, false, true, false, false);
     }
 
     @Test
-    public void testKeeprootCollapse () throws IOException {
+    public void testKeeprootCollapse() throws IOException {
         doTest("testKeeprootCollapse", true, true, false, false, false);
     }
 
     @Test
-    public void testKeeprootSemantic () throws IOException {
+    public void testKeeprootSemantic() throws IOException {
         doTest("testKeeprootSemantic", true, false, true, false, false);
     }
 
     @Test
-    public void testCollapseSemantic () throws IOException {
+    public void testCollapseSemantic() throws IOException {
         doTest("testCollapseSemantic", false, true, true, false, false);
     }
 
     @Test
-    public void testKeeprootCollapseSemantic () throws IOException {
+    public void testKeeprootCollapseSemantic() throws IOException {
         doTest("testKeeprootCollapseSemantic", true, true, true, false, false);
     }
 
     @Test
-    public void testInclude () throws IOException {
+    public void testInclude() throws IOException {
         doTest("testInclude", false, false, false, true, false);
     }
 
     @Test
-    public void testSemanticInclude () throws IOException {
+    public void testSemanticInclude() throws IOException {
         doTest("testSemanticInclude", false, false, true, true, false);
     }
 
     @Test
-    public void testSemanticLocal () throws IOException {
+    public void testSemanticLocal() throws IOException {
         doTest("testSemanticInclude", false, false, true, false, true);
     }
 
@@ -152,7 +152,7 @@ public class XmlPropertyTest {
             // What's the working directory?  If local, then its the
             // folder of the input file.  Otherwise, its the "current" dir..
             File workingDir;
-            if ( localRoot ) {
+            if (localRoot) {
                 workingDir = inputFile.getParentFile();
             } else {
                 workingDir = FILE_UTILS.resolveFile(new File("."), ".");
@@ -206,13 +206,13 @@ public class XmlPropertyTest {
      * but some other properties may get set in the XmlProperty due
      * to generic Project/Task configuration.
      */
-    private static void ensureProperties (String msg, File inputFile,
+    private static void ensureProperties(String msg, File inputFile,
                                           File workingDir, Project p,
                                           Properties properties) {
         Hashtable xmlproperties = p.getProperties();
         // Every key identified by the Properties must have been loaded.
-        Enumeration propertyKeyEnum = properties.propertyNames();
-        while(propertyKeyEnum.hasMoreElements()){
+        Enumeration<?> propertyKeyEnum = properties.propertyNames();
+        while (propertyKeyEnum.hasMoreElements()) {
             String currentKey = propertyKeyEnum.nextElement().toString();
             String assertMsg = msg + "-" + inputFile.getName()
                 + " Key=" + currentKey;
@@ -227,10 +227,9 @@ public class XmlPropertyTest {
                 // that the object was created with the given id.
                 // We don't have an adequate way of testing the actual
                 // *value* of the Path object, though...
-                String id = currentKey;
-                Object obj = p.getReferences().get(id);
+                Object obj = p.getReferences().get(currentKey);
 
-                if ( obj == null ) {
+                if (obj == null) {
                     fail(assertMsg + " Object ID does not exist.");
                 }
 
@@ -286,13 +285,10 @@ public class XmlPropertyTest {
             String currentKey = referenceKeyEnum.nextElement().toString();
             Object currentValue = references.get(currentKey);
 
-            if (currentValue instanceof Path) {
-            } else if (currentValue instanceof String) {
-            } else {
-                if( ! currentKey.startsWith("ant.") ) {
-                    fail(msg + "-" + inputFile.getName() + " Key="
-                         + currentKey + " is not a recognized type.");
-                }
+            if (!(currentValue instanceof Path) && !(currentValue instanceof String)
+                    && !currentKey.startsWith("ant.")) {
+                fail(msg + "-" + inputFile.getName() + " Key="
+                        + currentKey + " is not a recognized type.");
             }
         }
     }
@@ -301,7 +297,7 @@ public class XmlPropertyTest {
      * Munge the name of the input file to find an appropriate goldfile,
      * based on hardwired naming conventions.
      */
-    private static File getGoldfile (File input, boolean keepRoot,
+    private static File getGoldfile(File input, boolean keepRoot,
                                      boolean collapse, boolean semantic,
                                      boolean include, boolean localRoot) {
         // Substitute .xml with .properties
@@ -358,14 +354,13 @@ public class XmlPropertyTest {
                     return true;
                 } else {
                     return (file.getPath().indexOf("taskdefs") > 0 &&
-                            file.getPath().toLowerCase().endsWith(".xml") );
+                            file.getPath().toLowerCase().endsWith(".xml"));
                 }
             }
         };
 
         File[] files = startingDir.listFiles(filter);
-        for (int i=0;i<files.length;i++) {
-            File f = files[i];
+        for (File f : files) {
             if (!f.isDirectory()) {
                 collect.addElement(f);
             } else {

@@ -113,7 +113,7 @@ public class TypedefTest {
     }
 
     @Test
-    public void testNoResourceOnErrorFailAll(){
+    public void testNoResourceOnErrorFailAll() {
             try {
             buildRule.executeTarget("noresourcefailall");
             fail("BuildException expected: the requested resource does not exist");
@@ -123,13 +123,13 @@ public class TypedefTest {
     }
 
     @Test
-    public void testNoResourceOnErrorFail(){
+    public void testNoResourceOnErrorFail() {
         buildRule.executeTarget("noresourcefail");
         assertContains("Could not load definitions from resource ", buildRule.getLog());
     }
 
     @Test
-    public void testNoResourceOnErrorNotFail(){
+    public void testNoResourceOnErrorNotFail() {
             buildRule.executeTarget("noresourcenotfail");
         assertContains("Could not load definitions from resource ", buildRule.getLog());
     }

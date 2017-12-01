@@ -59,5 +59,6 @@ public class JakartaRegexpMatcherTest extends RegexpMatcherTest {
     /**
      * Fails for "default" mode.
      */
-    protected void doEndTest2(String text) {}
+    protected void doEndTest2(String text) {
+    }
 }

@@ -25,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,32 +44,32 @@ public class UntarTest {
     }
 
     @Test
-    public void testRealTest() throws java.io.IOException {
+    public void testRealTest() throws IOException {
         testLogoExtraction("realTest");
     }
 
     @Test
-    public void testRealGzipTest() throws java.io.IOException {
+    public void testRealGzipTest() throws IOException {
         testLogoExtraction("realGzipTest");
     }
 
     @Test
-    public void testRealBzip2Test() throws java.io.IOException {
+    public void testRealBzip2Test() throws IOException {
         testLogoExtraction("realBzip2Test");
     }
 
     @Test
-    public void testTestTarTask() throws java.io.IOException {
+    public void testTestTarTask() throws IOException {
         testLogoExtraction("testTarTask");
     }
 
     @Test
-    public void testTestGzipTarTask() throws java.io.IOException {
+    public void testTestGzipTarTask() throws IOException {
         testLogoExtraction("testGzipTarTask");
     }
 
     @Test
-    public void testTestBzip2TarTask() throws java.io.IOException {
+    public void testTestBzip2TarTask() throws IOException {
         testLogoExtraction("testBzip2TarTask");
     }
 
@@ -91,11 +92,11 @@ public class UntarTest {
     }
 
     @Test
-    public void testResourceCollection() throws java.io.IOException {
+    public void testResourceCollection() throws IOException {
         testLogoExtraction("resourceCollection");
     }
 
-    private void testLogoExtraction(String target) throws java.io.IOException {
+    private void testLogoExtraction(String target) throws IOException {
         buildRule.executeTarget(target);
         assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
                 FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif")));

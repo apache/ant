@@ -45,7 +45,7 @@ import static org.junit.Assert.fail;
 /**
  */
 public class AntTest {
-    
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -415,12 +415,23 @@ public class AntTest {
             expectedBasedirs = dirs;
         }
 
-        public void buildStarted(BuildEvent event) {}
-        public void buildFinished(BuildEvent event) {}
-        public void targetFinished(BuildEvent event){}
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}
-        public void messageLogged(BuildEvent event) {}
+        public void buildStarted(BuildEvent event) {
+        }
+
+        public void buildFinished(BuildEvent event) {
+        }
+
+        public void targetFinished(BuildEvent event) {
+        }
+
+        public void taskStarted(BuildEvent event) {
+        }
+
+        public void taskFinished(BuildEvent event) {
+        }
+
+        public void messageLogged(BuildEvent event) {
+        }
 
         public void targetStarted(BuildEvent event) {
             if (event.getTarget().getName().equals("")) {
@@ -455,12 +466,23 @@ public class AntTest {
             this.value = value;
         }
 
-        public void buildStarted(BuildEvent event) {}
-        public void buildFinished(BuildEvent event) {}
-        public void targetFinished(BuildEvent event){}
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}
-        public void messageLogged(BuildEvent event) {}
+        public void buildStarted(BuildEvent event) {
+        }
+
+        public void buildFinished(BuildEvent event) {
+        }
+
+        public void targetFinished(BuildEvent event) {
+        }
+
+        public void taskStarted(BuildEvent event) {
+        }
+
+        public void taskFinished(BuildEvent event) {
+        }
+
+        public void messageLogged(BuildEvent event) {
+        }
 
         public void targetStarted(BuildEvent event) {
             if (event.getTarget().getName().equals("")) {
@@ -488,7 +510,7 @@ public class AntTest {
                             String[] l1 = expect.list();
                             String[] l2 = received.list();
                             if (l1.length == l2.length) {
-                                for (int i=0; i<l1.length; i++) {
+                                for (int i = 0; i < l1.length; i++) {
                                     if (!l1[i].equals(l2[i])) {
                                         assertTrue(msg, !shouldBeEqual);
                                     }
@@ -570,12 +592,23 @@ public class AntTest {
             this.expectedValues = values;
         }
 
-        public void buildStarted(BuildEvent event) {}
-        public void buildFinished(BuildEvent event) {}
-        public void targetFinished(BuildEvent event){}
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}
-        public void messageLogged(BuildEvent event) {}
+        public void buildStarted(BuildEvent event) {
+        }
+
+        public void buildFinished(BuildEvent event) {
+        }
+
+        public void targetFinished(BuildEvent event) {
+        }
+
+        public void taskStarted(BuildEvent event) {
+        }
+
+        public void taskFinished(BuildEvent event) {
+        }
+
+        public void messageLogged(BuildEvent event) {
+        }
 
         public void targetStarted(BuildEvent event) {
             if (event.getTarget().getName().equals("")) {

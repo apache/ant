@@ -65,7 +65,7 @@ public class MailMessageTest {
      *  If this testcase takes >90s to complete, it is very likely that
      *  the two threads are blocked waiting for each other and Thread.join()
      *  timed out.
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testAPIExample() throws InterruptedException {
@@ -82,8 +82,8 @@ public class MailMessageTest {
         testMailClient.cc("cc2@you.com");
         testMailClient.bcc("bcc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage( "test line 1\n" +
-            "test line 2" );
+        testMailClient.setMessage("test line 1\n" +
+            "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -144,7 +144,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no cc or bcc lines
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testToOnly() throws InterruptedException {
@@ -157,8 +157,8 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage( "test line 1\n" +
-            "test line 2" );
+        testMailClient.setMessage("test line 1\n" +
+            "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -196,7 +196,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no to or bcc lines
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testCcOnly() throws InterruptedException {
@@ -209,8 +209,8 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.cc("cc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage( "test line 1\n" +
-            "test line 2" );
+        testMailClient.setMessage("test line 1\n" +
+            "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -248,7 +248,7 @@ public class MailMessageTest {
 
     /**
      *  Test a MailMessage with no to or cc lines
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testBccOnly() throws InterruptedException {
@@ -261,8 +261,8 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.bcc("bcc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage( "test line 1\n" +
-            "test line 2" );
+        testMailClient.setMessage("test line 1\n" +
+            "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -291,8 +291,8 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals( expectedResult.length(), result.length() );
-        assertEquals( expectedResult, result );
+        assertEquals(expectedResult.length(), result.length());
+        assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
 
@@ -300,7 +300,7 @@ public class MailMessageTest {
     /**
      *  Test a MailMessage with no subject line
      *  Subject is an optional field (RFC 822 s4.1)
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testNoSubject() throws InterruptedException {
@@ -312,8 +312,8 @@ public class MailMessageTest {
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
-        testMailClient.setMessage( "test line 1\n" +
-            "test line 2" );
+        testMailClient.setMessage("test line 1\n" +
+            "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -342,15 +342,15 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals( expectedResult.length(), result.length() );
-        assertEquals( expectedResult, result );
+        assertEquals(expectedResult.length(), result.length());
+        assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
 
 
     /**
      *  Test a MailMessage with empty body message
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testEmptyBody() throws InterruptedException {
@@ -402,7 +402,7 @@ public class MailMessageTest {
      *  Test a MailMessage with US-ASCII character set
      *  The next four testcase can be kinda hard to debug as Ant will often
      *  print the junit failure in US-ASCII.
-     * @throws InterruptedException
+     * @throws InterruptedException if something goes wrong
      */
     @Test
     public void testAsciiCharset() throws InterruptedException {
@@ -453,14 +453,12 @@ public class MailMessageTest {
         bos1.print(expectedResult);
         bos2.print(result);
 
-        assertEquals( "expected message length != actual message length "
-            + "in testAsciiCharset()", expectedResult.length(), result.length() );
-        assertEquals( "baos1 and baos2 should be the same in testAsciiCharset()",
-            baos1.toString(), baos2.toString() ); // order of headers cannot be guaranteed
+        assertEquals("expected message length != actual message length "
+            + "in testAsciiCharset()", expectedResult.length(), result.length());
+        assertEquals("baos1 and baos2 should be the same in testAsciiCharset()",
+            baos1.toString(), baos2.toString()); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
-
-
 
 
     /**
@@ -468,7 +466,7 @@ public class MailMessageTest {
      */
     private class ServerThread implements Runnable {
 
-        private StringBuffer sb = null;
+        private StringBuilder sb = null;
         private boolean loop = false;
         ServerSocket ssock = null;
         Socket sock = null;
@@ -481,45 +479,45 @@ public class MailMessageTest {
             try {
                 ssock = new ServerSocket(TEST_PORT);
                 sock = ssock.accept(); // wait for connection
-                in = new BufferedReader( new InputStreamReader(
-                    sock.getInputStream()) );
-                out = new BufferedWriter( new OutputStreamWriter(
-                    sock.getOutputStream() ) );
-                sb = new StringBuffer();
-                send( "220 test SMTP EmailTaskTest\r\n" );
+                in = new BufferedReader(new InputStreamReader(
+                    sock.getInputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(
+                    sock.getOutputStream()));
+                sb = new StringBuilder();
+                send("220 test SMTP EmailTaskTest\r\n");
                 loop = true;
-                while ( loop ) {
+                while (loop) {
                     String response = in.readLine();
-                    if ( response == null ) {
+                    if (response == null) {
                         loop = false;
                         break;
                     }
-                    sb.append( response + "\r\n" );
+                    sb.append(response).append("\r\n");
 
-                    if ( !data && response.startsWith( "HELO" ) ) {
-                        send( "250 " + local + " Hello " + local + " " +
-                        "[127.0.0.1], pleased to meet you\r\n" );
-                    } else if ( !data && response.startsWith("MAIL") ) {
-                        send( "250\r\n" );
-                    } else if ( !data && response.startsWith("RCPT")) {
-                        send( "250\r\n" );
+                    if (!data && response.startsWith("HELO")) {
+                        send("250 " + local + " Hello " + local + " " +
+                        "[127.0.0.1], pleased to meet you\r\n");
+                    } else if (!data && response.startsWith("MAIL")) {
+                        send("250\r\n");
+                    } else if (!data && response.startsWith("RCPT")) {
+                        send("250\r\n");
                     } else if (!data && response.startsWith("DATA")) {
-                        send( "354\r\n" );
+                        send("354\r\n");
                         data = true;
-                    } else if (data && response.equals(".") ) {
-                        send( "250\r\n" );
+                    } else if (data && response.equals(".")) {
+                        send("250\r\n");
                         data = false;
                     } else if (!data && response.startsWith("QUIT")) {
-                        send( "221\r\n" );
+                        send("221\r\n");
                         loop = false;
                     } else if (!data) {
                         //throw new IllegalStateException("Command unrecognized: "
                         //    + response);
-                        send( "500 5.5.1 Command unrecognized: \"" +
-                            response + "\"\r\n" );
+                        send("500 5.5.1 Command unrecognized: \"" +
+                            response + "\"\r\n");
                         loop = false;
                     } else {
-                        // sb.append( response + "\r\n" );
+                        // sb.append(response + "\r\n");
                     }
 
                 } // while
@@ -531,9 +529,9 @@ public class MailMessageTest {
         }
 
         private void send(String retmsg) throws IOException {
-            out.write( retmsg );
+            out.write(retmsg);
             out.flush();
-            sb.append( retmsg );
+            sb.append(retmsg);
         }
 
         private void disconnect() {
@@ -653,9 +651,9 @@ public class MailMessageTest {
                     msg.setSubject(subject);
                 }
 
-                if (message != null ) {
+                if (message != null) {
                     PrintStream out = msg.getPrintStream();
-                    out.println( message );
+                    out.println(message);
                 }
 
                 msg.sendAndClose();
@@ -674,6 +672,7 @@ public class MailMessageTest {
             return failMessage;
         }
 
+        @SuppressWarnings("unused")
         public void replyTo(String replyTo) {
             replyToList.add(replyTo);
         }

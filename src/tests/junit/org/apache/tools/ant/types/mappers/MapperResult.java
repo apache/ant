@@ -80,7 +80,7 @@ public class MapperResult extends Task {
         if (result == null) {
             flattened = NULL_MAPPER_RESULT;
         } else {
-            StringBuffer b = new StringBuffer();
+            StringBuilder b = new StringBuilder();
             for (int i = 0; i < result.length; ++i) {
                 if (i != 0) {
                     b.append("|");

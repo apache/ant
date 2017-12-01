@@ -19,6 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.junit.Before;
@@ -43,16 +45,16 @@ public class BUnzip2Test {
     }
 
     @Test
-    public void testRealTest() throws java.io.IOException {
+    public void testRealTest() throws IOException {
         testRealTest("realTest");
     }
 
     @Test
-    public void testRealTestWithResource() throws java.io.IOException {
+    public void testRealTestWithResource() throws IOException {
         testRealTest("realTestWithResource");
     }
 
-    private void testRealTest(String target) throws java.io.IOException {
+    private void testRealTest(String target) throws IOException {
         buildRule.executeTarget(target);
         assertEquals("File content mismatch after bunzip2",
                 FileUtilities.getFileContents(new File(outputDir, "asf-logo-huge-from-gzip.tar")),
@@ -60,7 +62,7 @@ public class BUnzip2Test {
     }
 
     @Test
-    public void testDocumentationClaimsOnCopy() throws java.io.IOException {
+    public void testDocumentationClaimsOnCopy() throws IOException {
         testRealTest("testDocumentationClaimsOnCopy");
     }
 }

@@ -30,83 +30,83 @@ public class EmailAddressTest {
 
     @Test
     public void test1() {
-        expectNameAddress( new EmailAddress("address (name)") );
+        expectNameAddress(new EmailAddress("address (name)"));
     }
 
     @Test
     public void test2() {
-        expectNameAddress( new EmailAddress("(name) address") );
+        expectNameAddress(new EmailAddress("(name) address"));
     }
 
     @Test
     public void test3() {
-        expectNameAddress( new EmailAddress("name <address>") );
+        expectNameAddress(new EmailAddress("name <address>"));
     }
 
     @Test
     public void test4() {
-        expectNameAddress( new EmailAddress("<address> name") );
+        expectNameAddress(new EmailAddress("<address> name"));
     }
 
     @Test
     public void test5() {
-        expectNameAddress( new EmailAddress("<address> (name)") );
+        expectNameAddress(new EmailAddress("<address> (name)"));
     }
 
     @Test
     public void test6() {
-        expectNameAddress( new EmailAddress("(name) <address>") );
+        expectNameAddress(new EmailAddress("(name) <address>"));
     }
 
     @Test
     public void test7() {
-        expectNameAddress2( new EmailAddress("address (<name>)") );
+        expectNameAddress2(new EmailAddress("address (<name>)"));
     }
 
     @Test
     public void test8() {
-        expectNameAddress2( new EmailAddress("(<name>) address") );
+        expectNameAddress2(new EmailAddress("(<name>) address"));
     }
 
     @Test
     public void test9() {
-        expectNameAddress3( new EmailAddress("address") );
+        expectNameAddress3(new EmailAddress("address"));
     }
 
     @Test
     public void testA() {
-        expectNameAddress3( new EmailAddress("<address>") );
+        expectNameAddress3(new EmailAddress("<address>"));
     }
 
     @Test
     public void testB() {
-        expectNameAddress3( new EmailAddress(" <address> ") );
+        expectNameAddress3(new EmailAddress(" <address> "));
     }
 
     @Test
     public void testC() {
-        expectNameAddress3( new EmailAddress("< address >") );
+        expectNameAddress3(new EmailAddress("< address >"));
     }
 
     @Test
     public void testD() {
-        expectNameAddress3( new EmailAddress(" < address > ") );
+        expectNameAddress3(new EmailAddress(" < address > "));
     }
 
     private void expectNameAddress(EmailAddress e) {
-        assertEquals( "name", e.getName() );
-        assertEquals( "address", e.getAddress() );
+        assertEquals("name", e.getName());
+        assertEquals("address", e.getAddress());
     }
 
     // where the name contains <>
     private void expectNameAddress2(EmailAddress e) {
-        assertEquals( "<name>", e.getName() );
-        assertEquals( "address", e.getAddress() );
+        assertEquals("<name>", e.getName());
+        assertEquals("address", e.getAddress());
     }
 
     // where only an address is supplied
     private void expectNameAddress3(EmailAddress e) {
         assertNull("Expected null, found <" + e.getName() + ">", e.getName());
-        assertEquals( "address", e.getAddress() );
+        assertEquals("address", e.getAddress());
     }
 }

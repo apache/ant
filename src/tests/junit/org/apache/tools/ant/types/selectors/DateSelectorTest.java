@@ -45,7 +45,8 @@ public class DateSelectorTest {
     public void testValidate() {
         DateSelector s = new DateSelector();
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for required fields");
         } catch (BuildException be1) {
             assertEquals("You must provide a datetime or the number of "
@@ -55,7 +56,8 @@ public class DateSelectorTest {
         s = new DateSelector();
         s.setDatetime("01/01/1969 01:01 AM");
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for Datetime being in the "
                     + "allowable range");
         } catch (BuildException be2) {
@@ -67,7 +69,8 @@ public class DateSelectorTest {
         s = new DateSelector();
         s.setDatetime("this is not a date");
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for Datetime being in a "
                     + "valid format");
         } catch (BuildException be3) {
@@ -84,7 +87,8 @@ public class DateSelectorTest {
         params[0] = param;
         s.setParameters(params);
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for valid parameter element");
         } catch (BuildException be4) {
             assertEquals("Invalid parameter garbage in", be4.getMessage());
@@ -97,7 +101,8 @@ public class DateSelectorTest {
         params[0] = param;
         s.setParameters(params);
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for valid millis parameter");
         } catch (BuildException be5) {
             assertEquals("Invalid millisecond setting garbage out",
@@ -111,7 +116,8 @@ public class DateSelectorTest {
         params[0] = param;
         s.setParameters(params);
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("DateSelector did not check for valid granularity parameter");
         } catch (BuildException be6) {
             assertEquals("Invalid granularity setting garbage out",
@@ -204,8 +210,9 @@ public class DateSelectorTest {
 
         // setup the modified timestamp to match what the test needs, although be aware that the 3rd and 4th
         // files don't exist so can't be changed, so don't try and loop over them
-        for (int i = 1; i <=2; i++) {
-            Assume.assumeTrue("Cannot setup file times for test", selectorRule.getMirrorFiles()[i].setLastModified(testtime - (3*60*60*100)));
+        for (int i = 1; i <= 2; i++) {
+            Assume.assumeTrue("Cannot setup file times for test",
+                    selectorRule.getMirrorFiles()[i].setLastModified(testtime - (3 * 60 * 60 * 100)));
         }
 
 
@@ -218,7 +225,8 @@ public class DateSelectorTest {
         s.setWhen(before);
         s.setGranularity(2);
         for (int i = 7; i <= 10; i++) {
-            Assume.assumeTrue("Cannot setup file times for test", selectorRule.getMirrorFiles()[i].setLastModified(testtime + (3*60*60*100)));
+            Assume.assumeTrue("Cannot setup file times for test",
+                    selectorRule.getMirrorFiles()[i].setLastModified(testtime + (3 * 60 * 60 * 100)));
         }
 
         results = selectorRule.mirrorSelectionString(s);

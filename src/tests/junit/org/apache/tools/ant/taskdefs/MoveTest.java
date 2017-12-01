@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
  *
  */
 public class MoveTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 

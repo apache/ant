@@ -32,20 +32,20 @@ public class DateUtilsTest {
 
 
     @Test
-    public void testElapsedTime(){
-        String text = DateUtils.formatElapsedTime(50*1000);
+    public void testElapsedTime() {
+        String text = DateUtils.formatElapsedTime(50 * 1000);
         assertEquals("50 seconds", text);
-        text = DateUtils.formatElapsedTime(65*1000);
+        text = DateUtils.formatElapsedTime(65 * 1000);
         assertEquals("1 minute 5 seconds", text);
-        text = DateUtils.formatElapsedTime(120*1000);
+        text = DateUtils.formatElapsedTime(120 * 1000);
         assertEquals("2 minutes 0 seconds", text);
-        text = DateUtils.formatElapsedTime(121*1000);
+        text = DateUtils.formatElapsedTime(121 * 1000);
         assertEquals("2 minutes 1 second", text);
     }
 
     // https://issues.apache.org/bugzilla/show_bug.cgi?id=44659
     @Test
-    public void testLongElapsedTime(){
+    public void testLongElapsedTime() {
         assertEquals("2926 minutes 13 seconds",
                      DateUtils.formatElapsedTime(1000 * 175573));
         assertEquals("153722867280912 minutes 55 seconds",
@@ -53,7 +53,7 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDateTimeISO(){
+    public void testDateTimeISO() {
         TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
         Calendar cal = Calendar.getInstance(timeZone);
         cal.set(2002,1,23,10,11,12);
@@ -63,7 +63,7 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDateISO(){
+    public void testDateISO() {
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(timeZone);
         cal.set(2002,1,23);
@@ -73,7 +73,7 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testTimeISODate(){
+    public void testTimeISODate() {
         // make sure that elapsed time in set via date works
         TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
         Calendar cal = Calendar.getInstance(timeZone);
@@ -84,9 +84,9 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testTimeISO(){
+    public void testTimeISO() {
         // make sure that elapsed time in ms works
-        long ms = (20*3600 + 11*60 + 12)*1000;
+        long ms = (20 * 3600 + 11 * 60 + 12) * 1000;
         String text = DateUtils.format(ms,
                 DateUtils.ISO8601_TIME_PATTERN);
         assertEquals("20:11:12", text);

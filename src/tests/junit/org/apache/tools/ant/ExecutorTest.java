@@ -53,12 +53,24 @@ public class ExecutorTest implements BuildListener  {
     public void targetStarted(BuildEvent event) {
         targetCount++;
     }
-    public void buildStarted(BuildEvent event) {}
-    public void buildFinished(BuildEvent event) {}
-    public void targetFinished(BuildEvent event) {}
-    public void taskStarted(BuildEvent event) {}
-    public void taskFinished(BuildEvent event) {}
-    public void messageLogged(BuildEvent event) {}
+
+    public void buildStarted(BuildEvent event) {
+    }
+
+    public void buildFinished(BuildEvent event) {
+    }
+
+    public void targetFinished(BuildEvent event) {
+    }
+
+    public void taskStarted(BuildEvent event) {
+    }
+
+    public void taskFinished(BuildEvent event) {
+    }
+
+    public void messageLogged(BuildEvent event) {
+    }
 
     @Before
     public void setUp() {

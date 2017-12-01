@@ -320,7 +320,7 @@ public class SOSTest {
         try {
             buildRule.executeTarget(target);
             fail(errorMessage);
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(exceptionMessage, ex.getMessage());
         }
     }

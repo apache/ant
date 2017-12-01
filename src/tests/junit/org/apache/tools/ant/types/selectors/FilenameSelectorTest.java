@@ -71,45 +71,41 @@ public class FilenameSelectorTest {
         FilenameSelector s;
         String results;
 
+        s = new FilenameSelector();
+        s.setName("no match possible");
+        results = selectorRule.selectionString(s);
+        assertEquals("FFFFFFFFFFFF", results);
 
-            s = new FilenameSelector();
-            s.setName("no match possible");
-            results = selectorRule.selectionString(s);
-            assertEquals("FFFFFFFFFFFF", results);
+        s = new FilenameSelector();
+        s.setName("*.gz");
+        results = selectorRule.selectionString(s);
+        // This is turned off temporarily. There appears to be a bug
+        // in SelectorUtils.matchPattern() where it is recursive on
+        // Windows even if no ** is in pattern.
+        //assertEquals("FFFTFFFFFFFF", results); // Unix
+        // vs
+        //assertEquals("FFFTFFFFTFFF", results); // Windows
 
-            s = new FilenameSelector();
-            s.setName("*.gz");
-            results = selectorRule.selectionString(s);
-            // This is turned off temporarily. There appears to be a bug
-            // in SelectorUtils.matchPattern() where it is recursive on
-            // Windows even if no ** is in pattern.
-            //assertEquals("FFFTFFFFFFFF", results); // Unix
-            // vs
-            //assertEquals("FFFTFFFFTFFF", results); // Windows
+        s = new FilenameSelector();
+        s.setName("**/*.gz");
+        s.setNegate(true);
+        results = selectorRule.selectionString(s);
+        assertEquals("TTTFTTTFFTTT", results);
 
-            s = new FilenameSelector();
-            s.setName("**/*.gz");
-            s.setNegate(true);
-            results = selectorRule.selectionString(s);
-            assertEquals("TTTFTTTFFTTT", results);
+        s = new FilenameSelector();
+        s.setName("**/*.GZ");
+        s.setCasesensitive(false);
+        results = selectorRule.selectionString(s);
+        assertEquals("FFFTFFFTTFFF", results);
 
-            s = new FilenameSelector();
-            s.setName("**/*.GZ");
-            s.setCasesensitive(false);
-            results = selectorRule.selectionString(s);
-            assertEquals("FFFTFFFTTFFF", results);
-
-            s = new FilenameSelector();
-            Parameter param1 = new Parameter();
-            param1.setName("name");
-            param1.setValue("**/*.bz2");
-            Parameter[] params = {param1};
-            s.setParameters(params);
-            results = selectorRule.selectionString(s);
-            assertEquals("FFTFFFFFFTTF", results);
-
-
-
+        s = new FilenameSelector();
+        Parameter param1 = new Parameter();
+        param1.setName("name");
+        param1.setValue("**/*.bz2");
+        Parameter[] params = {param1};
+        s.setParameters(params);
+        results = selectorRule.selectionString(s);
+        assertEquals("FFTFFFFFFTTF", results);
     }
 
 }

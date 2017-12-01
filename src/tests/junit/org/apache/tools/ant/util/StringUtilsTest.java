@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class StringUtilsTest {
 
     @Test
-    public void testSplit(){
+    public void testSplit() {
         final String data = "a,b,,";
         Vector res = StringUtils.split(data, ',');
         assertEquals(4, res.size());
@@ -42,7 +42,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testSplitLines(){
+    public void testSplitLines() {
         final String data = "a\r\nb\nc\nd\ne";
         Vector res = StringUtils.lineSplit(data);
         assertEquals(5, res.size());
@@ -62,42 +62,42 @@ public class StringUtilsTest {
 
     @Test
     public void testEndsWithBothEmpty() {
-        assertTrue( StringUtils.endsWith( new StringBuffer(), "") );
+        assertTrue(StringUtils.endsWith(new StringBuffer(), ""));
     }
 
     @Test
     public void testEndsWithEmptyString() {
-        assertTrue( StringUtils.endsWith( new StringBuffer("12234545"), "") );
+        assertTrue(StringUtils.endsWith(new StringBuffer("12234545"), ""));
     }
 
     @Test
     public void testEndsWithShorterString() {
-        assertTrue( StringUtils.endsWith( new StringBuffer("12345678"), "78"));
+        assertTrue(StringUtils.endsWith(new StringBuffer("12345678"), "78"));
     }
 
     @Test
     public void testEndsWithSameString() {
-        assertTrue( StringUtils.endsWith( new StringBuffer("123"), "123"));
+        assertTrue(StringUtils.endsWith(new StringBuffer("123"), "123"));
     }
 
     @Test
     public void testEndsWithLongerString() {
-        assertFalse( StringUtils.endsWith( new StringBuffer("12"), "1245"));
+        assertFalse(StringUtils.endsWith(new StringBuffer("12"), "1245"));
     }
 
     @Test
     public void testEndsWithNoMatch() {
-        assertFalse( StringUtils.endsWith( new StringBuffer("12345678"), "789"));
+        assertFalse(StringUtils.endsWith(new StringBuffer("12345678"), "789"));
     }
 
     @Test
     public void testEndsWithEmptyBuffer() {
-        assertFalse( StringUtils.endsWith( new StringBuffer(""), "12345667") );
+        assertFalse(StringUtils.endsWith(new StringBuffer(""), "12345667"));
     }
 
     @Test
     public void testEndsWithJDKPerf() {
-        StringBuffer buf = getFilledBuffer(1024*300, 'a');
+        StringBuffer buf = getFilledBuffer(1024 * 300, 'a');
         for (int i = 0; i < 1000; i++) {
             assertTrue(buf.toString().endsWith("aa"));
         }
@@ -105,7 +105,7 @@ public class StringUtilsTest {
 
     @Test
     public void testEndsWithPerf() {
-        StringBuffer buf = getFilledBuffer(1024*300, 'a');
+        StringBuffer buf = getFilledBuffer(1024 * 300, 'a');
         for (int i = 0; i < 1000; i++) {
             assertTrue(StringUtils.endsWith(buf, "aa"));
         }
@@ -113,7 +113,9 @@ public class StringUtilsTest {
 
     private StringBuffer getFilledBuffer(int size, char ch) {
         StringBuffer buf = new StringBuffer(size);
-        for (int i = 0; i < size; i++) { buf.append(ch); };
+        for (int i = 0; i < size; i++) {
+            buf.append(ch);
+        }
         return buf;
     }
 

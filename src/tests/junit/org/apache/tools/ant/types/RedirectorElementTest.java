@@ -73,7 +73,7 @@ public class RedirectorElementTest {
     @Test
     public void testLogInputString() {
         buildRule.executeTarget("testLogInputString");
-        if (buildRule.getLog().indexOf("testLogInputString can-cat") >=0 ) {
+        if (buildRule.getLog().indexOf("testLogInputString can-cat") >= 0) {
             AntAssert.assertContains("Using input string", buildRule.getFullLog());
         }
     }

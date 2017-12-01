@@ -101,7 +101,7 @@ public class ZipTest {
     @After
     public void tearDown() {
         try {
-            if ( zfPrefixAddsDir != null) {
+            if (zfPrefixAddsDir != null) {
                 zfPrefixAddsDir.close();
             }
 
@@ -189,21 +189,25 @@ public class ZipTest {
     public void testEmptySkip() {
        buildRule.executeTarget("testEmptySkip");
     }
+
     // Bugzilla Report 30365
     @Test
     public void testZipEmptyDir() {
        buildRule.executeTarget("zipEmptyDir");
     }
+
     // Bugzilla Report 40258
     @Test
     public void testZipEmptyDirFilesOnly() {
        buildRule.executeTarget("zipEmptyDirFilesOnly");
     }
+
     @Test
     public void testZipEmptyCreate() {
         buildRule.executeTarget("zipEmptyCreate");
         assertContains("Note: creating empty", buildRule.getLog());
     }
+
     // Bugzilla Report 25513
     @Test
     public void testCompressionLevel() {

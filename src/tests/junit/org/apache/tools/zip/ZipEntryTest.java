@@ -62,7 +62,7 @@ public class ZipEntryTest {
         assertEquals("second pass", 2, result.length);
         assertSame(a, result[0]);
         assertSame(u2, result[1]);
-        assertEquals("length second pass", data1.length+1, data2.length);
+        assertEquals("length second pass", data1.length + 1, data2.length);
 
         UnrecognizedExtraField u3 = new UnrecognizedExtraField();
         u3.setHeaderId(new ZipShort(2));

@@ -21,41 +21,47 @@ package org.apache.tools.ant.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class DeweyDecimalTest {
 
     @Test public void parse() {
         assertEquals("1.2.3", new DeweyDecimal("1.2.3").toString());
     }
 
-    @Test(expected=NumberFormatException.class) public void misparseEmpty() {
+    @Test(expected = NumberFormatException.class)
+    public void misparseEmpty() {
         new DeweyDecimal("1..2");
     }
 
-    @Test(expected=NumberFormatException.class) public void misparseNonNumeric() {
+    @Test(expected = NumberFormatException.class)
+    public void misparseNonNumeric() {
         new DeweyDecimal("1.2.3-beta-5");
     }
 
-    @Test(expected=NumberFormatException.class) public void misparseFinalDot() {
+    @Test(expected = NumberFormatException.class)
+    public void misparseFinalDot() {
         new DeweyDecimal("1.2.");
     }
 
     // TODO initial dots, empty string, null, negative numbers, ...
 
-    @Test public void testHashCode() {
+    @Test
+    public void testHashCode() {
         assertEquals(new DeweyDecimal("1.2.3").hashCode(), new DeweyDecimal("1.2.3").hashCode());
     }
 
-    @Test public void testEquals() {
+    @Test
+    public void testEquals() {
         assertTrue(new DeweyDecimal("1.2.3").equals(new DeweyDecimal("1.2.3")));
         assertFalse(new DeweyDecimal("1.2.3").equals(new DeweyDecimal("1.2.4")));
         assertTrue(new DeweyDecimal("1.2.0").equals(new DeweyDecimal("1.2")));
         assertTrue(new DeweyDecimal("1.2").equals(new DeweyDecimal("1.2.0")));
     }
 
-    @Test public void compareTo() {
+    @Test
+    public void compareTo() {
         assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2")) > 0);
         assertTrue(new DeweyDecimal("1.2").compareTo(new DeweyDecimal("1.2.3")) < 0);
         assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2.3")) == 0);

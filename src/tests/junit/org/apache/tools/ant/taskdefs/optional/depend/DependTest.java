@@ -61,8 +61,8 @@ public class DependTest {
         buildRule.executeTarget("src1setup");
         buildRule.executeTarget("compile");
 
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testdirect");
         Hashtable files = getResultFiles();
@@ -82,8 +82,8 @@ public class DependTest {
         buildRule.executeTarget("src1setup");
         buildRule.executeTarget("compile");
 
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testclosure");
         Hashtable files = getResultFiles();
@@ -101,8 +101,8 @@ public class DependTest {
         buildRule.executeTarget("src2setup");
         buildRule.executeTarget("compile");
 
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
 
         buildRule.executeTarget("testinner");
@@ -119,8 +119,8 @@ public class DependTest {
         buildRule.executeTarget("src3setup");
         buildRule.executeTarget("compile");
 
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testinnerinner");
         assertEquals("Depend did not leave correct number of files", 0,
@@ -135,7 +135,7 @@ public class DependTest {
         try {
             buildRule.executeTarget("testnosource");
             fail("Build exception expected: No source specified");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertContains("srcdir attribute must be set", ex.getMessage());
         }
     }
@@ -148,7 +148,7 @@ public class DependTest {
         try {
             buildRule.executeTarget("testemptysource");
             fail("Build exception expected: No source specified");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertContains("srcdir attribute must be non-empty", ex.getMessage());
         }
     }
@@ -198,8 +198,8 @@ public class DependTest {
         buildRule.executeTarget("src5setup");
         buildRule.executeTarget("compile");
 
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
-        FileUtilities.rollbackTimetamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
+        FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testnonpublic");
         String log = buildRule.getLog();

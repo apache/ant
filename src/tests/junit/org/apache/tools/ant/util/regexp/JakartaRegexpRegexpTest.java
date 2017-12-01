@@ -40,7 +40,7 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         try {
             super.testWindowsLineSeparator2();
             fail("Should trigger when this bug is fixed. {@since 1.2}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 
@@ -51,12 +51,13 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         try {
             super.testUnixLineSeparator();
             fail("Should trigger once this bug is fixed. {@since 1.2}");
-        } catch (AssertionFailedError e){
+        } catch (AssertionFailedError e) {
         }
     }
 
     /**
      * Fails for "default" mode.
      */
-    protected void doEndTest2(String text) {}
+    protected void doEndTest2(String text) {
+    }
 }

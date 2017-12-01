@@ -34,7 +34,6 @@ public class TypeSelectorTest {
     @Rule
     public BaseSelectorRule selectorRule = new BaseSelectorRule();
 
-
     /**
      * Test the code that validates the selector.
      */
@@ -42,11 +41,11 @@ public class TypeSelectorTest {
     public void testValidate() {
         TypeSelector s = new TypeSelector();
         try {
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0] ,selectorRule.getFiles()[0]);
+            s.isSelected(selectorRule.getProject().getBaseDir(),
+                    selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
             fail("TypeSelector did not check for required fields");
         } catch (BuildException be1) {
-            assertEquals("The type attribute is required"
-                    , be1.getMessage());
+            assertEquals("The type attribute is required", be1.getMessage());
         }
     }
 
@@ -63,8 +62,6 @@ public class TypeSelectorTest {
         TypeSelector.FileType file = new TypeSelector.FileType();
         file.setValue("file");
 
-
-
         s = new TypeSelector();
         s.setType(directory);
         results = selectorRule.selectionString(s);
@@ -74,8 +71,6 @@ public class TypeSelectorTest {
         s.setType(file);
         results = selectorRule.selectionString(s);
         assertEquals("FTTTTTTTTTTF", results);
-
-
     }
 
 }

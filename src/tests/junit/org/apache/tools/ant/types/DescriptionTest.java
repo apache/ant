@@ -36,24 +36,28 @@ public class DescriptionTest {
     @Test
     public void test1() {
         buildRule.configureProject("src/etc/testcases/types/description1.xml");
-        assertEquals("Single description failed", "Test Project Description", buildRule.getProject().getDescription());
+        assertEquals("Single description failed", "Test Project Description",
+                buildRule.getProject().getDescription());
     }
 
     @Test
     public void test2() {
         buildRule.configureProject("src/etc/testcases/types/description2.xml");
-        assertEquals("Multi line description failed", "Multi Line\nProject Description", buildRule.getProject().getDescription());
+        assertEquals("Multi line description failed", "Multi Line\nProject Description",
+                buildRule.getProject().getDescription());
     }
 
     @Test
     public void test3() {
         buildRule.configureProject("src/etc/testcases/types/description3.xml");
-        assertEquals("Multi instance description failed", "Multi Instance Project Description", buildRule.getProject().getDescription());
+        assertEquals("Multi instance description failed", "Multi Instance Project Description",
+                buildRule.getProject().getDescription());
     }
 
     @Test
     public void test4() {
         buildRule.configureProject("src/etc/testcases/types/description4.xml");
-        assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description", buildRule.getProject().getDescription());
+        assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description",
+                buildRule.getProject().getDescription());
     }
 }

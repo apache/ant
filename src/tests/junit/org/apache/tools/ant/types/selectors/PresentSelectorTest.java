@@ -122,7 +122,6 @@ public class PresentSelectorTest {
         results = selectorRule.selectionString(s);
         assertEquals("FFTFFFFFFFFF", results);
 
-
         s = new PresentSelector();
         subdir = new File(selectorRule.getOutputDir(), "selectortest2");
         s.setTargetdir(subdir);
@@ -130,8 +129,6 @@ public class PresentSelectorTest {
         assertEquals("TTTFFTTTTTTT", results);
         results = selectorRule.selectionString(s);
         assertEquals("TTTFFTTTTTTT", results);
-
-
     }
 
 }

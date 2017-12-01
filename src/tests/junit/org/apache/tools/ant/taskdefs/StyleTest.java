@@ -64,7 +64,7 @@ public class StyleTest {
     public void testTransferParameterSet() throws Exception {
         expectFileContains("testTransferParameterSet",  // target
                            buildRule.getOutputDir().getAbsoluteFile() + "/out.xml",               // file
-                           "set='myvalue'");            // exptected string
+                           "set='myvalue'");            // expected string
     }
 
     @Test
@@ -207,8 +207,7 @@ public class StyleTest {
 
     private void expectFileContains(
         String target, String filename, String contains)
-        throws IOException
-    {
+        throws IOException {
         buildRule.executeTarget(target);
         assertFileContains(filename, contains);
     }

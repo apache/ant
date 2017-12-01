@@ -101,12 +101,12 @@ public class BZip2Test {
     }
 
     @Test
-    public void testResource(){
+    public void testResource() {
         buildRule.executeTarget("realTestWithResource");
     }
 
     @Test
-    public void testDateCheck(){
+    public void testDateCheck() {
         buildRule.executeTarget("testDateCheck");
         String log = buildRule.getLog();
         assertTrue(

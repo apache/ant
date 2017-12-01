@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 /**
  */
 public class RecorderTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 

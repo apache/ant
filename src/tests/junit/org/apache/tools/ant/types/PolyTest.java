@@ -39,7 +39,7 @@ public class PolyTest {
     @Test
     public void testFileSet() {
         buildRule.executeTarget("fileset");
-        AntAssert.assertContains( "types.FileSet", buildRule.getLog());
+        AntAssert.assertContains("types.FileSet", buildRule.getLog());
     }
 
     @Test
@@ -51,16 +51,17 @@ public class PolyTest {
     @Test
     public void testPath() {
         buildRule.executeTarget("path");
-        AntAssert.assertContains( "types.Path", buildRule.getLog());
+        AntAssert.assertContains("types.Path", buildRule.getLog());
     }
 
     @Test
     public void testPathAntType() {
         buildRule.executeTarget("path-ant-type");
-        AntAssert.assertContains( "types.PolyTest$MyPath", buildRule.getLog());
+        AntAssert.assertContains("types.PolyTest$MyPath", buildRule.getLog());
     }
 
-    public static class MyFileSet extends FileSet {}
+    public static class MyFileSet extends FileSet {
+    }
 
     public static class MyPath extends Path {
         public MyPath(Project project) {

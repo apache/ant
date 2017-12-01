@@ -96,7 +96,7 @@ public class ConcatTest {
         try {
             buildRule.executeTarget("test2");
             fail("BuildException should have been thrown - Invalid destination file");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert value
         }
     }
@@ -192,7 +192,7 @@ public class ConcatTest {
         File file2 = new File(buildRule.getProject().getBaseDir(), tempFile2);
         final long newSize = file2.length();
 
-        assertEquals(origSize*2, newSize);
+        assertEquals(origSize * 2, newSize);
 
     }
 
@@ -267,9 +267,7 @@ public class ConcatTest {
      * Check if fixlastline works
      */
     @Test
-    public void testfixlastline()
-        throws IOException
-    {
+    public void testfixlastline() throws IOException {
         buildRule.executeTarget("testfixlastline");
         assertContains("end of line" + System.getProperty("line.separator") + "This has",
                 FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"));
@@ -279,13 +277,10 @@ public class ConcatTest {
      * Check if fixlastline works with eol
      */
     @Test
-    public void testfixlastlineeol()
-        throws IOException
-    {
+    public void testfixlastlineeol() throws IOException {
         buildRule.executeTarget("testfixlastlineeol");
         assertContains("end of line\rThis has", FileUtilities.getFileContents(buildRule.getProject(), "concat.linecr"));
     }
-
 
     @Test
     public void testTranscoding() throws IOException {
@@ -299,10 +294,9 @@ public class ConcatTest {
     // ------------------------------------------------------
     //   Helper methods - should be in a utility class
     // -----------------------------------------------------
-    private void expectFileContainsx(
-        String target, String filename, String contains)
-        throws IOException
-    {
+    @SuppressWarnings("unused")
+    private void expectFileContainsx(String target, String filename, String contains)
+        throws IOException {
         buildRule.executeTarget(target);
         String content = FileUtilities.getFileContents(buildRule.getProject(), filename);
         assertTrue(
@@ -310,6 +304,5 @@ public class ConcatTest {
             contains +
             " but got " + content, content.indexOf(contains) > -1);
     }
-
 
 }

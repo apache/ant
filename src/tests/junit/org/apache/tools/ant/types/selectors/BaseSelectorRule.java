@@ -20,7 +20,6 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 
-
 import org.apache.tools.ant.BuildFileRule;
 
 
@@ -100,21 +99,20 @@ public class BaseSelectorRule extends BuildFileRule {
      * a string of "T"s amd "F"s.
      */
     public String mirrorSelectionString(FileSelector selector) {
-        return selectionString(mirrordir,mirrorfiles,selector);
+        return selectionString(mirrordir, mirrorfiles, selector);
     }
 
     /**
      * Worker method for the two convenience methods above. Applies a
      * selector on a set of files passed in and returns a string of
-     * "T"s amd "F"s from applying the selector to each file.
+     * "T"s and "F"s from applying the selector to each file.
      */
     public String selectionString(File basedir, File[] files, FileSelector selector) {
         StringBuilder buf = new StringBuilder();
         for (int x = 0; x < files.length; x++) {
-            if (selector.isSelected(basedir,filenames[x],files[x])) {
+            if (selector.isSelected(basedir, filenames[x], files[x])) {
                 buf.append('T');
-            }
-            else {
+            } else {
                 buf.append('F');
             }
         }

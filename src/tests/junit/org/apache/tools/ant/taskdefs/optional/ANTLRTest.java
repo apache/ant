@@ -188,7 +188,7 @@ public class ANTLRTest {
         buildRule.executeTarget("test9");
         assertNotContains("Skipped grammar file.", buildRule.getFullLog());
 
-        FileUtilities.rollbackTimetamps(buildRule.getOutputDir(), 5);
+        FileUtilities.rollbackTimestamps(buildRule.getOutputDir(), 5);
 
         buildRule.executeTarget("normalRecompile");
         assertNotContains("Skipped grammar file.", buildRule.getFullLog());
@@ -200,7 +200,7 @@ public class ANTLRTest {
         buildRule.executeTarget("test9");
         assertNotContains("Skipped grammar file.", buildRule.getFullLog());
 
-        FileUtilities.rollbackTimetamps(buildRule.getOutputDir(), 5);
+        FileUtilities.rollbackTimestamps(buildRule.getOutputDir(), 5);
 
         buildRule.executeTarget("supergrammarChangeRecompile");
         assertNotContains("Skipped grammar file.", buildRule.getFullLog());

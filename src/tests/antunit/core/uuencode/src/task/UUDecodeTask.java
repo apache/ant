@@ -28,4 +28,3 @@ public class UUDecodeTask extends BaseTask {
         new UUDecoder().decodeBuffer(is, os);
     }
 }
-    

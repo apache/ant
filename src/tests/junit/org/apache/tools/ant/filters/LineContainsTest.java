@@ -32,10 +32,9 @@ import static org.junit.Assert.assertEquals;
 
 public class LineContainsTest {
 
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/filters/build.xml");

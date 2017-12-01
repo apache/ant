@@ -35,7 +35,9 @@ public abstract class RegexpMatcherTest extends TestCase {
 
     public abstract RegexpMatcher getImplementation();
 
-    protected final RegexpMatcher getReg() {return reg;}
+    protected final RegexpMatcher getReg() {
+        return reg;
+    }
 
     public RegexpMatcherTest(String name) {
         super(name);
@@ -152,7 +154,7 @@ public abstract class RegexpMatcherTest extends TestCase {
 
 
     public void testMultiVersusSingleLine() throws IOException {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("Line1").append(UNIX_LINE);
         buf.append("starttest Line2").append(UNIX_LINE);
         buf.append("Line3 endtest").append(UNIX_LINE);

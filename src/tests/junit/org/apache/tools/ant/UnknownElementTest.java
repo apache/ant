@@ -57,17 +57,22 @@ public class UnknownElementTest {
     @Ignore("Previously disabled through naming convention")
     public void XtestTaskFinishedEvent() {
         buildRule.getProject().addBuildListener(new BuildListener() {
-                public void buildStarted(BuildEvent event) {}
-                public void buildFinished(BuildEvent event) {}
-                public void targetStarted(BuildEvent event) {}
-                public void targetFinished(BuildEvent event) {}
+                public void buildStarted(BuildEvent event) {
+                }
+                public void buildFinished(BuildEvent event) {
+                }
+                public void targetStarted(BuildEvent event) {
+                }
+                public void targetFinished(BuildEvent event) {
+                }
                 public void taskStarted(BuildEvent event) {
                     assertTaskProperties(event.getTask());
                 }
                 public void taskFinished(BuildEvent event) {
                     assertTaskProperties(event.getTask());
                 }
-                public void messageLogged(BuildEvent event) {}
+                public void messageLogged(BuildEvent event) {
+                }
                 private void assertTaskProperties(Task ue) {
                     assertNotNull(ue);
                     assertTrue(ue instanceof UnknownElement);
@@ -111,5 +116,3 @@ public class UnknownElementTest {
         }
     }
 }
-
-

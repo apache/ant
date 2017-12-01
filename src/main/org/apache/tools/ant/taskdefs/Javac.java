@@ -1181,7 +1181,7 @@ public class Javac extends MatchingTask {
             scanDir(srcDir, destDir != null ? destDir : srcDir, files);
         }
     }
-    
+
     private void collectFileListFromModulePath() {
         final FileUtils fu = FileUtils.getFileUtils();
         for (String pathElement : moduleSourcepath.list()) {
