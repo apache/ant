@@ -66,6 +66,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
   <typedef name="istrue"  onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
+  <typedef name="javaversion" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.JavaVersion"/>
   <typedef name="not" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Not"/>
   <typedef name="matches" onerror="ignore"

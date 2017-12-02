@@ -101,7 +101,7 @@ public class AntClassLoaderDelegationTest {
             Arrays.asList(new URL[] {urlFromPath}),
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
-    
+
     private static List enum2List(Enumeration e) {
         return Collections.list(e);
     }
@@ -111,7 +111,7 @@ public class AntClassLoaderDelegationTest {
 
         public ParentLoader() {
         }
-        
+
         protected Enumeration findResources(String name) throws IOException {
             if (name.equals(TEST_RESOURCE)) {
                 return Collections.enumeration(

@@ -89,7 +89,7 @@ public class AntlibTest {
         Assume.assumeTrue("Test requires shared JVM", isSharedJVM());
         buildRule.executeTarget("antlib_uri_auto2");
     }
-    
+
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");
@@ -103,4 +103,3 @@ public class AntlibTest {
     }
 
 }
-

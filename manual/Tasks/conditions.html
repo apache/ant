@@ -1095,5 +1095,44 @@ is redundant and will be ignored.</p>
   &lt;file file="${file}"/&gt;
 &lt;/resourceexists&gt;
 </pre></blockquote>
+
+<h4><a name="javaversion">javaversion</a></h4>
+
+<p>Tests the version of the JVM executing Ant.  <em>Since Ant
+1.10.2</em></p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">atleast</td>
+    <td valign="top">The version that this JVM is at least.
+      The format is major.minor.point. Starting with Java9 really
+      only the major number is determined.</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" rowspan="2" align="center">One of these.</td>
+  </tr>
+  <tr>
+    <td valign="top">exactly</td>
+    <td valign="top">The version that this JVM is exactly.
+      The format is <tt>major.minor.point</tt>. Starting with Java9 really
+      only the major number is determined.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+  <p>
+    An example:
+  </p>
+
+<blockquote><pre>
+&lt;javaversion atleast=&quot;9&quot;/&gt;
+</pre></blockquote>
+
+<p>will evaluate to true if the current JVM is Java9 or above.</p>
+
 </body>
 </html>

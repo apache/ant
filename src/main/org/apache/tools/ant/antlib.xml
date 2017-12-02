@@ -63,6 +63,8 @@
        classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
   <componentdef name="istrue" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
+  <componentdef name="javaversion" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.JavaVersion"/>
   <componentdef name="matches" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Matches"/>
   <componentdef name="not" onerror="ignore"

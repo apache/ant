@@ -36,7 +36,7 @@ import java.util.BitSet;
  * <pre>
  *  CompressCommons
  * Commons Compress
- * CompressCommons 
+ * CompressCommons
  * essCommons Compr
  * mmons CompressCo
  * mons CompressCom
@@ -251,7 +251,7 @@ class BlockSort {
      * bucket 'ra' with sort index 5.  The fully sorted order then becomes.
      *
      * fmap = { 5, 3, 0, 4, 1, 2 }
-     * 
+     *
      */
 
     /**
@@ -261,12 +261,12 @@ class BlockSort {
      * @param eclass points from the index of a character inside the
      *        block to the first index in fmap that contains the
      *        bucket of its suffix that is sorted in this step.
-     * @param lo lower boundary of the fmap-interval to be sorted 
-     * @param hi upper boundary of the fmap-interval to be sorted 
+     * @param lo lower boundary of the fmap-interval to be sorted
+     * @param hi upper boundary of the fmap-interval to be sorted
      */
-    private void fallbackSimpleSort(int[] fmap, 
-                                    int[] eclass, 
-                                    int lo, 
+    private void fallbackSimpleSort(int[] fmap,
+                                    int[] eclass,
+                                    int lo,
                                     int hi) {
         if (lo == hi) {
             return;
@@ -336,12 +336,12 @@ class BlockSort {
      * @param eclass points from the index of a character inside the
      *        block to the first index in fmap that contains the
      *        bucket of its suffix that is sorted in this step.
-     * @param loSt lower boundary of the fmap-interval to be sorted 
-     * @param hiSt upper boundary of the fmap-interval to be sorted 
+     * @param loSt lower boundary of the fmap-interval to be sorted
+     * @param hiSt upper boundary of the fmap-interval to be sorted
      */
-    private void fallbackQSort3(int[] fmap, 
-                                int[] eclass, 
-                                int loSt, 
+    private void fallbackQSort3(int[] fmap,
+                                int[] eclass,
+                                int loSt,
                                 int hiSt) {
         int lo, unLo, ltLo, hi, unHi, gtHi, n;
 
@@ -359,16 +359,16 @@ class BlockSort {
             }
 
             /* LBZ2: Random partitioning.  Median of 3 sometimes fails to
-               avoid bad cases.  Median of 9 seems to help but 
+               avoid bad cases.  Median of 9 seems to help but
                looks rather expensive.  This too seems to work but
-               is cheaper.  Guidance for the magic constants 
+               is cheaper.  Guidance for the magic constants
                7621 and 32768 is taken from Sedgewick's algorithms
                book, chapter 35.
             */
             r = ((r * 7621) + 1) % 32768;
             long r3 = r % 3, med;
             if (r3 == 0) {
-                med = eclass[fmap[lo]]; 
+                med = eclass[fmap[lo]];
             } else if (r3 == 1) {
                 med = eclass[fmap[(lo + hi) >>> 1]];
             } else {
@@ -386,10 +386,10 @@ class BlockSort {
                         break;
                     }
                     n = eclass[fmap[unLo]] - (int) med;
-                    if (n == 0) { 
-                        fswap(fmap, unLo, ltLo); 
-                        ltLo++; unLo++; 
-                        continue; 
+                    if (n == 0) {
+                        fswap(fmap, unLo, ltLo);
+                        ltLo++; unLo++;
+                        continue;
                     }
                     if (n > 0) {
                         break;
@@ -402,9 +402,9 @@ class BlockSort {
                     }
                     n = eclass[fmap[unHi]] - (int) med;
                     if (n == 0) {
-                        fswap(fmap, unHi, gtHi); 
-                        gtHi--; unHi--; 
-                        continue; 
+                        fswap(fmap, unHi, gtHi);
+                        gtHi--; unHi--;
+                        continue;
                     }
                     if (n < 0) {
                         break;
@@ -510,7 +510,7 @@ class BlockSort {
           --*/
 
         /*-- LBZ2: set sentinel bits for block-end detection --*/
-        for (i = 0; i < 32; i++) { 
+        for (i = 0; i < 32; i++) {
             bhtab.set(nblock + 2 * i);
             bhtab.clear(nblock + 2 * i + 1);
         }

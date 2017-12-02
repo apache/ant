@@ -265,7 +265,14 @@ public class Adapter implements CompilerAdapter {
       <delete dir="${javac-dir}/classes"/>
       <mkdir dir="${javac-dir}/classes"/>
     </sequential>
-  </target> 
+
+    <sequential if:set="jdk10+">
+      <echo>JDK 10+</echo>
+      <testJavac source="10" target="10"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+  </target>
 
   <target name="testJavacWithNativeHeaderGeneration" depends="setup">
     <mkdir dir="${javac-dir}/src/org/example" />

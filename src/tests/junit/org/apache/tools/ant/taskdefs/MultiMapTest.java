@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  */
 public class MultiMapTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 

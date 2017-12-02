@@ -45,7 +45,7 @@ import static org.junit.Assert.fail;
 /**
  */
 public class AntTest {
-    
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 

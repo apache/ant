@@ -44,7 +44,7 @@ public class CVSPassTest {
         ":pserver:anoncvs@xml.apache.org:/home/cvspublic Ay=0=h<Z";
     private static final String TIGRIS_URL =
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 

@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TouchTest {
-    
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 

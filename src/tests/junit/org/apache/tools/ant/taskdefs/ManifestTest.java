@@ -58,11 +58,11 @@ public class ManifestTest {
           "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
           "AProblemWithThatItIsNotABugInAnt";
 
-    public static final String LONG_70_NAME 
+    public static final String LONG_70_NAME
         = "ThisNameIsJustSeventyCharactersWhichIsAllowedAccordingToTheSpecsFiller";
-    public static final String LONG_68_NAME 
+    public static final String LONG_68_NAME
         = "ThisNameIsJustSixtyEightCharactersWhichIsAllowedAccordingToTheSpecsX";
-    public static final String NOT_LONG_NAME 
+    public static final String NOT_LONG_NAME
         = "NameIsJustUnderSeventyCharactersWhichIsAllowedAccordingTheSpec";
 
     public static final String VALUE = "NOT_LONG";

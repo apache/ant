@@ -34,10 +34,10 @@ import static org.junit.Assert.fail;
  */
 public class AvailableTest {
 
-    
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-    
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/available.xml");

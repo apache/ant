@@ -383,6 +383,9 @@
     </condition>
     <property name="ignoresystemclasses" value="false"/>
     <available property="jdk9+" classname="java.lang.module.ModuleDescriptor"/>
+    <condition property="jdk10+">
+      <javaversion atleast="10"/>
+    </condition>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="harmony"
                classname="org.apache.harmony.luni.util.Base64"/>

@@ -82,7 +82,7 @@ public class EchoTest {
 
     private class EchoTestLogger extends DefaultLogger {
         String lastLoggedMessage;
-        
+
         /**
          * Create a new EchoTestLogger.
          */
@@ -99,6 +99,6 @@ public class EchoTest {
         protected void log(String message) {
             this.lastLoggedMessage = message;
         }
-        
+
     }
 }

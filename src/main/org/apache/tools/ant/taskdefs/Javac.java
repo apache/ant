@@ -84,6 +84,7 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
+    private static final String JAVAC10_PLUS = "javac10+";
     private static final String JAVAC9 = "javac9";
     private static final String JAVAC19 = "javac1.9";
     private static final String JAVAC18 = "javac1.8";
@@ -173,6 +174,9 @@ public class Javac extends MatchingTask {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
             return JAVAC18;
         }
+        if (JavaEnvUtils.isAtLeastJavaVersion("10")) {
+            return JAVAC10_PLUS;
+        }
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
             return JAVAC9;
         }
@@ -221,7 +225,7 @@ public class Javac extends MatchingTask {
      * must make sure that your version of jikes supports the -source
      * switch.</p>
      *
-     * <p>Legal values are 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, and 5, 6, 7, 8 and 9
+     * <p>Legal values are 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, and any integral number bigger than 4
      * - by default, no -source argument will be used at all.</p>
      *
      * @param v  Value to assign to source.
@@ -774,7 +778,7 @@ public class Javac extends MatchingTask {
     /**
      * Sets the target VM that the classes will be compiled for. Valid
      * values depend on the compiler, for jdk 1.4 the valid values are
-     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "5", "6", "7", "8", "9".
+     * "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9" and any integral number bigger than 4
      * @param target the target VM
      */
     public void setTarget(final String target) {
@@ -964,7 +968,8 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(final String anImplementation) {
-        if (JAVAC9.equalsIgnoreCase(anImplementation)
+        if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
+                || JAVAC9.equalsIgnoreCase(anImplementation)
                 || JAVAC19.equalsIgnoreCase(anImplementation)
                 || JAVAC18.equalsIgnoreCase(anImplementation)
                 || JAVAC17.equalsIgnoreCase(anImplementation)
@@ -980,7 +985,8 @@ public class Javac extends MatchingTask {
         }
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             final String nextSelected = assumedJavaVersion();
-            if (JAVAC9.equalsIgnoreCase(nextSelected)
+            if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
+                    || JAVAC9.equalsIgnoreCase(nextSelected)
                     || JAVAC18.equalsIgnoreCase(nextSelected)
                     || JAVAC17.equalsIgnoreCase(nextSelected)
                     || JAVAC16.equalsIgnoreCase(nextSelected)
@@ -1183,7 +1189,7 @@ public class Javac extends MatchingTask {
             scanDir(srcDir, destDir != null ? destDir : srcDir, files);
         }
     }
-    
+
     private void collectFileListFromModulePath() {
         final FileUtils fu = FileUtils.getFileUtils();
         for (String pathElement : moduleSourcepath.list()) {
@@ -1248,11 +1254,12 @@ public class Javac extends MatchingTask {
      * @param compilerImpl the name of the compiler implementation
      * @return true if compilerImpl is "modern", "classic",
      * "javac1.1", "javac1.2", "javac1.3", "javac1.4", "javac1.5",
-     * "javac1.6", "javac1.7", "javac1.8", "javac1.9" or "javac9".
+     * "javac1.6", "javac1.7", "javac1.8", "javac1.9", "javac9" or "javac10+".
      */
     protected boolean isJdkCompiler(final String compilerImpl) {
         return MODERN.equals(compilerImpl)
             || CLASSIC.equals(compilerImpl)
+            || JAVAC10_PLUS.equals(compilerImpl)
             || JAVAC9.equals(compilerImpl)
             || JAVAC18.equals(compilerImpl)
             || JAVAC17.equals(compilerImpl)

@@ -84,7 +84,7 @@ public class SubAntTest {
                      });
 
     }
-    
+
     @Test
     public void testMultipleTargets() {
         buildRule.executeTarget("multipleTargets");
@@ -93,13 +93,13 @@ public class SubAntTest {
         assertContains("test2-one", buildRule.getLog());
         assertContains("test2-two", buildRule.getLog());
     }
-    
+
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEfalse() {
         buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
         assertContains("Target \"three\" does not exist in the project \"subant\"", buildRule.getLog());
     }
-    
+
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEtrue() {
         try {
