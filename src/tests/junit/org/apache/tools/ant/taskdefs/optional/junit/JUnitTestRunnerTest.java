@@ -254,7 +254,9 @@ public class JUnitTestRunnerTest {
     public static class AssertionErrorTest {
         @Test
         public void throwsAssertionError() {
-            throw new AssertionError("failure message", new RuntimeException("cause message"));
+            AssertionError assertionError = new AssertionError("failure message");
+            assertionError.initCause(new RuntimeException("cause message"));
+            throw assertionError;
         }
     }
 }
