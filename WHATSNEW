@@ -73,6 +73,8 @@ Other changes:
 
  * Added a new <javaversion> condition.
 
+ * added "javac10+" as new supported value for javac's compiler attribute.
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 
