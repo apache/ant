@@ -17,15 +17,20 @@ Fixed bugs:
  * bootstrapping Ant on Windows failed
    Bugzilla Report 61027
 
- * Bugzilla Reports 59648 and 43271 - Fixed the issue where the 
-   SCP based tasks would try to change the permissions on the
-   parent directory of a transferred file, instead of changing it
-   on the transferred file itself.
+ * Fixed the issue where the SCP based tasks would try to change 
+   the permissions on the parent directory of a transferred file,
+   instead of changing it on the transferred file itself.
+   Bugzilla Reports 59648 and 43271
 
- * Bugzilla Report 60644 - Fixed the issue where the source file
-   being copied could end up being corrupted if the target of the
-   copy happened to be the same source file (symlinked back
-   to itself).
+ * Fixed the issue where the source file being copied could end 
+   up being corrupted if the target of the copy happened to be 
+   the same source file (symlinked back to itself).
+   Bugzilla Report 60644
+
+ * Fixed the issue where symlink creation with "overwrite=false",
+   on existing symlink whose target was a directory, would end 
+   up creating a new symlink under the target directory.
+   Bugzilla Report 58683
 
 Other changes:
 --------------

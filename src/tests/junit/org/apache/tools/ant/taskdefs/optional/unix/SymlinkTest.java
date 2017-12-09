@@ -35,6 +35,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,6 +47,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Test cases for the Symlink task. Link creation, link deletion, recording
@@ -285,6 +289,26 @@ public class SymlinkTest {
         assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                              f.getName()));
 
+    }
+
+    /**
+     * Tests that when {@code symlink} task is used to create a symbolic link and {@code overwrite} option
+     * is {@code false}, then any existing symbolic link at the {@code link} location (whose target is a directory)
+     * doesn't end up create a new symbolic link within the target directory.
+     *
+     *
+     * @throws Exception
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=58683">BZ-58683</a> for more details
+     */
+    @Test
+    public void testOverwriteExistingLink() throws Exception {
+        buildRule.executeTarget("test-overwrite-link");
+        final Project p = buildRule.getProject();
+        final String linkTargetResource = p.getProperty("test.overwrite.link.target.dir");
+        Assert.assertNotNull("Property test.overwrite.link.target.dir is not set", linkTargetResource);
+        final Path targetResourcePath = Paths.get(linkTargetResource);
+        Assert.assertTrue(targetResourcePath + " is not a directory", Files.isDirectory(targetResourcePath));
+        Assert.assertEquals(targetResourcePath + " directory was expected to be empty", 0, Files.list(targetResourcePath).count());
     }
 
     @After
