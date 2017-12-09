@@ -302,7 +302,7 @@
 
     <sleep seconds="${delay}"/>  <!-- make sure OS has time to do the execs -->
 
-    <symlink action="recreate">
+    <symlink action="recreate" overwrite="true">
       <fileset dir="${output}/symtest1" includes="**/recorded.links"/>
     </symlink>
 
@@ -350,5 +350,17 @@
       <delete file="${output}/file2"/>
   </target>
 
+  <target name="test-overwrite-link" depends="setUp">
+    <mkdir dir="${output}/test-overwrite"/>
+    <mkdir dir="${output}/test-overwrite/dir1"/>
+    <property name="test.overwrite.link.target.dir" location="${output}/test-overwrite/dir1"/>
+    <!-- Create a symlink to the dir, this should work fine -->
+    <symlink link="${output}/test-overwrite/symlinked1" resource="${test.overwrite.link.target.dir}"/>
+    <!-- Create a symlink at the previously created symlink path with overwrite = false.
+      This *shouldn't* create a new link (within the target resource). See https://bz.apache.org/bugzilla/show_bug.cgi?id=58683 -->
+    <symlink link="${output}/test-overwrite/symlinked1" resource="${test.overwrite.link.target.dir}"/>
+
+
+  </target>
 
 </project>

@@ -26,10 +26,10 @@
 
 <h2><a name="symlink">Symlink</a></h2>
 <h3>Description</h3>
-<p> Manages symbolic links on Unix based platforms. Can be used to
-make an individual link, delete a link, create multiple links from properties files, 
-or create properties files describing links in the specified directories.
-Existing links are not overwritten by default.
+<p> Manages symbolic links on platforms where Java supports symbolic links.
+Can be used to make an individual link, delete a link, create multiple links 
+from properties files, or create properties files describing links in the 
+specified directories. Existing links are not overwritten by default.
 
 <p><a href="../Types/fileset.html">FileSet</a>s are used to select a
 set of links to record, or a set of property files to create links from. </p>
@@ -127,18 +127,8 @@ set of links to record, or a set of property files to create links from. </p>
   variable to an absolute path, which will remove the /some/working/directory portion
   of the above path and allow ant to find the correct commandline execution script.
  
-  <p><strong>LIMITATIONS:</strong> Because Java has no direct support for
-  handling symlinks this task divines them by comparing canonical and
-  absolute paths. On non-unix systems this may cause false positives.
-  Furthermore, any operating system on which the command
-  <code>ln -s &lt;linkname&gt; &lt;resourcename&gt;</code> is not a valid 
-  command on the command line will not be able to use action="single" or 
-  action="recreate". Action="record" and action=delete should still work. Finally, 
-  the lack of support for symlinks in Java means that all links are recorded as 
-  links to the <strong>canonical</strong> resource name. Therefore the link:
-  <code>link --> subdir/dir/../foo.bar</code> will be recorded as
-  <code>link=subdir/foo.bar</code> and restored as
-  <code>link --> subdir/foo.bar</code></p>
+  <p><strong>NOTE:</strong> Starting Ant version 1.10.2, this task relies on the symbolic
+    link support introduced in Java 7 through the java.nio.file.Files APIs</p>
 
 
 

@@ -36,9 +36,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +53,8 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.dispatch.DispatchTask;
 import org.apache.tools.ant.dispatch.DispatchUtils;
-import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Creates, Deletes, Records and Restores Symlinks.
@@ -100,24 +99,10 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
  * &lt;symlink action=&quot;delete&quot; link=&quot;${dir.top}/foo&quot;/&gt;
  * </pre>
  *
- * <p><strong>LIMITATIONS:</strong> Because Java has no direct support for
- * handling symlinks this task divines them by comparing canonical and
- * absolute paths. On non-unix systems this may cause false positives.
- * Furthermore, any operating system on which the command
- * <code>ln -s link resource</code> is not a valid command on the command line
- * will not be able to use action=&quot;delete&quot;, action=&quot;single&quot;
- * or action=&quot;recreate&quot;, but action=&quot;record&quot; should still
- * work. Finally, the lack of support for symlinks in Java means that all links
- * are recorded as links to the <strong>canonical</strong> resource name.
- * Therefore the link: <code>link --&gt; subdir/dir/../foo.bar</code> will be
- * recorded as <code>link=subdir/foo.bar</code> and restored as
- * <code>link --&gt; subdir/foo.bar</code>.</p>
- *
+ * <p><strong>Note:</strong> Starting Ant version 1.10.2, this task relies on the symbolic link support
+ * introduced in Java 7 through the {@link Files} APIs</code>.
  */
 public class Symlink extends DispatchTask {
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final SymbolicLinkUtils SYMLINK_UTILS =
-        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     private String resource;
     private String link;
@@ -187,12 +172,18 @@ public class Symlink extends DispatchTask {
                 handleError("Must define the link name for symlink!");
                 return;
             }
+            final Path linkPath = Paths.get(link);
+            if (!Files.isSymbolicLink(linkPath)) {
+                log("Skipping deletion of " + linkPath + " since it's not a symlink", Project.MSG_VERBOSE);
+                // just ignore and silently return (this is consistent
+                // with the current, 1.9.x versions, of Ant)
+                return;
+
+            }
             log("Removing symlink: " + link);
-            SYMLINK_UTILS.deleteSymbolicLink(FILE_UTILS
-                                             .resolveFile(new File("."), link),
-                                             this);
+            deleteSymLink(linkPath);
         } catch (IOException ioe) {
-            handleError(ioe.toString());
+            handleError(ioe.getMessage());
         } finally {
             setDefaults();
         }
@@ -207,26 +198,31 @@ public class Symlink extends DispatchTask {
         try {
             if (fileSets.isEmpty()) {
                 handleError(
-                    "File set identifying link file(s) required for action recreate");
+                        "File set identifying link file(s) required for action recreate");
                 return;
             }
-            Properties links = loadLinks(fileSets);
-
-            for (String lnk : links.stringPropertyNames()) {
-                String res = links.getProperty(lnk);
-                // handle the case where lnk points to a directory (bug 25181)
+            final Properties links = loadLinks(fileSets);
+            for (final String lnk : links.stringPropertyNames()) {
+                final String res = links.getProperty(lnk);
                 try {
-                    File test = new File(lnk);
-                    if (!SYMLINK_UTILS.isSymbolicLink(lnk)) {
-                        doLink(res, lnk);
-                    } else if (!test.getCanonicalPath().equals(
-                        new File(res).getCanonicalPath())) {
-                        SYMLINK_UTILS.deleteSymbolicLink(test, this);
-                        doLink(res, lnk);
-                    } // else lnk exists, do nothing
-                } catch (IOException ioe) {
-                    handleError("IO exception while creating link");
+                    if (Files.isSymbolicLink(Paths.get(lnk)) &&
+                            new File(lnk).getCanonicalPath().equals(new File(res).getCanonicalPath())) {
+                        // it's already a symlink and the symlink target is the same
+                        // as the target noted in the properties file. So there's no
+                        // need to recreate it
+                        continue;
+                    }
+                } catch (IOException e) {
+                    final String errMessage = "Failed to check if path " + lnk + " is a symbolic link, linking to " + res;
+                    if (failonerror) {
+                        throw new BuildException(errMessage, e);
+                    }
+                    // log and continue
+                    log(errMessage, Project.MSG_INFO);
+                    continue;
                 }
+                // create the link
+                this.doLink(res, lnk);
             }
         } finally {
             setDefaults();
@@ -361,56 +357,45 @@ public class Symlink extends DispatchTask {
 
     /**
      * Delete a symlink (without deleting the associated resource).
+     * <p>
+     * <p>This is a convenience method that simply invokes {@link #deleteSymlink(File)}
      *
-     * <p>This is a convenience method that simply invokes
-     * <code>deleteSymlink(java.io.File)</code>.
+     * @param path A string containing the path of the symlink to delete.
+     * @throws IOException If the deletion attempt fails
      *
-     * @param path    A string containing the path of the symlink to delete.
-     *
-     * @throws IOException             If calls to <code>File.rename</code>
-     *                                   or <code>File.delete</code> fail.
-     * @deprecated use
-     * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
-     * instead
+     * @deprecated use {@link Files#delete(Path)} instead
      */
     @Deprecated
-    public static void deleteSymlink(String path)
-        throws IOException {
-        SYMLINK_UTILS.deleteSymbolicLink(new File(path), null);
+    public static void deleteSymlink(final String path)
+            throws IOException {
+        deleteSymlink(Paths.get(path).toFile());
     }
 
     /**
      * Delete a symlink (without deleting the associated resource).
-     *
-     * <p>This is a utility method that removes a unix symlink without removing
+     * <p>
+     * <p>This is a utility method that removes a symlink without removing
      * the resource that the symlink points to. If it is accidentally invoked
-     * on a real file, the real file will not be harmed.</p>
+     * on a real file, the real file will not be harmed and instead this method
+     * returns silently.</p>
+     * <p>
      *
-     * <p>This method works by
-     * getting the canonical path of the link, using the canonical path to
-     * rename the resource (breaking the link) and then deleting the link.
-     * The resource is then returned to its original name inside a finally
-     * block to ensure that the resource is unharmed even in the event of
-     * an exception.</p>
+     * <p>Since Ant 1.10.2 this method relies on the {@link Files#isSymbolicLink(Path)}
+     * and {@link Files#delete(Path)} to check and delete the symlink
+     * </p>
      *
-     * <p>Since Ant 1.8.0 this method will try to delete the File object if
-     * it reports it wouldn't exist (as symlinks pointing nowhere usually do).
-     * Prior version would throw a FileNotFoundException in that case.</p>
+     * @param linkfil A <code>File</code> object of the symlink to delete. Cannot be null.
+     * @throws IOException If the attempt to delete runs into exception
      *
-     * @param linkfil    A <code>File</code> object of the symlink to delete.
-     *
-     * @throws IOException             If calls to <code>File.rename</code>,
-     *                                   <code>File.delete</code> or
-     *                                   <code>File.getCanonicalPath</code>
-     *                                   fail.
-     * @deprecated use
-     * org.apache.tools.ant.util.SymbolicLinkUtils#deleteSymbolicLink
-     * instead
+     * @deprecated use {@link Files#delete(Path)} instead
      */
     @Deprecated
-    public static void deleteSymlink(File linkfil)
-        throws IOException {
-        SYMLINK_UTILS.deleteSymbolicLink(linkfil, null);
+    public static void deleteSymlink(final File linkfil)
+            throws IOException {
+        if (!Files.isSymbolicLink(linkfil.toPath())) {
+            return;
+        }
+        deleteSymLink(linkfil.toPath());
     }
 
     /**
@@ -448,36 +433,59 @@ public class Symlink extends DispatchTask {
     /**
      * Conduct the actual construction of a link.
      *
-     * <p>The link is constructed by calling <code>Execute.runCommand</code>.</p>
-     *
-     * @param res   The path of the resource we are linking to.
-     * @param lnk       The name of the link we wish to make.
+     * @param res The path of the resource we are linking to.
+     * @param lnk The name of the link we wish to make.
      * @throws BuildException when things go wrong
      */
     private void doLink(String res, String lnk) throws BuildException {
-        File linkfil = new File(lnk);
-        String options = "-s";
-        if (overwrite) {
-            options += "f";
-            if (linkfil.exists()) {
-                try {
-                    SYMLINK_UTILS.deleteSymbolicLink(linkfil, this);
-                } catch (FileNotFoundException fnfe) {
-                    log("Symlink disappeared before it was deleted: " + lnk);
-                } catch (IOException ioe) {
-                    log("Unable to overwrite preexisting link or file: " + lnk,
-                        ioe, Project.MSG_INFO);
+        final Path link = Paths.get(lnk);
+        final Path target = Paths.get(res);
+        final boolean alreadyExists = Files.exists(link);
+        if (!alreadyExists) {
+            // if the path (at which the link is expected to be created) isn't already present
+            // then we just go ahead and attempt to symlink
+            try {
+                Files.createSymbolicLink(link, target);
+            } catch (IOException e) {
+                if (failonerror) {
+                    throw new BuildException("Failed to create symlink " + lnk + " to target " + res, e);
                 }
+                log("Unable to create symlink " + lnk + " to target " + res, e, Project.MSG_INFO);
             }
+            return;
+        }
+        // file already exists, see if we are allowed to overwrite
+        if (!overwrite) {
+            log("Skipping symlink creation, since file at " + lnk + " already exists and overwrite is set to false", Project.MSG_INFO);
+            return;
+        }
+        // we have been asked to overwrite, so we now do the necessary steps
+
+        // initiate a deletion *only* if the path is a symlink, else we fail with error
+        if (!Files.isSymbolicLink(link)) {
+            final String errMessage = "Cannot overwrite " + lnk + " since the path already exists and isn't a symlink";
+            if (failonerror) {
+                throw new BuildException(errMessage);
+            }
+            // log and return
+            log(errMessage, Project.MSG_INFO);
+            return;
+        }
+        // it's a symlink, so we delete the *link* first
+        try {
+            deleteSymLink(link);
+        } catch (IOException e) {
+            // our deletion attempt failed, just log it and try to create the symlink
+            // anyway, since we have been asked to overwrite
+            log("Failed to delete existing symlink at " + lnk, e, Project.MSG_DEBUG);
         }
         try {
-            Execute.runCommand(this, "ln", options, res, lnk);
-        } catch (BuildException failedToExecute) {
+            Files.createSymbolicLink(link, target);
+        } catch (IOException e) {
             if (failonerror) {
-                throw failedToExecute;
+                throw new BuildException("Failed to create symlink " + lnk + " to target " + res, e);
             }
-            //log at the info level, and keep going.
-            log(failedToExecute.getMessage(), failedToExecute, Project.MSG_INFO);
+            log("Unable to create symlink " + lnk + " to target " + res, e, Project.MSG_INFO);
         }
     }
 
@@ -488,30 +496,33 @@ public class Symlink extends DispatchTask {
      * &quot;record&quot;. This means that filesets are interpreted
      * as the directories in which links may be found.</p>
      *
-     * @param fileSets   The filesets specified by the user.
-     * @return A HashSet of <code>File</code> objects containing the
-     *         links (with canonical parent directories).
+     * @param fileSets The filesets specified by the user.
+     * @return A Set of <code>File</code> objects containing the
+     * links (with canonical parent directories).
      */
     private Set<File> findLinks(List<FileSet> fileSets) {
-        Set<File> result = new HashSet<>();
+        final Set<File> result = new HashSet<>();
         for (FileSet fs : fileSets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
             File dir = fs.getDir(getProject());
 
             Stream.of(ds.getIncludedFiles(), ds.getIncludedDirectories())
-                .flatMap(Stream::of).forEach(path -> {
-                    try {
-                        File f = new File(dir, path);
-                        File pf = f.getParentFile();
-                        String name = f.getName();
-                        if (SYMLINK_UTILS.isSymbolicLink(pf, name)) {
-                            result.add(new File(pf.getCanonicalFile(), name));
+                    .flatMap(Stream::of).forEach(path -> {
+                        try {
+                            final File f = new File(dir, path);
+                            final File pf = f.getParentFile();
+                            final String name = f.getName();
+                            // we use the canonical path of the parent dir in which the (potential)
+                            // link resides
+                            final File parentDirCanonicalizedFile = new File(pf.getCanonicalPath(), name);
+                            if (Files.isSymbolicLink(parentDirCanonicalizedFile.toPath())) {
+                                result.add(parentDirCanonicalizedFile);
+                            }
+                        } catch (IOException e) {
+                            handleError("IOException: " + path + " omitted");
                         }
-                    } catch (IOException e) {
-                        handleError("IOException: " + path + " omitted");
-                    }
-                });
+            });
         }
         return result;
     }
@@ -567,5 +578,21 @@ public class Symlink extends DispatchTask {
             }
         }
         return finalList;
+    }
+
+    private static void deleteSymLink(final Path path) throws IOException {
+        // Implementation note: We intentionally use java.io.File#delete() instead of
+        // java.nio.file.Files#delete(Path) since it turns out that the latter doesn't
+        // update/clear the "canonical file paths cache" maintained by the JRE FileSystemProvider.
+        // Not clearing/updating that cache results in this deleted (and later recreated) symlink
+        // to point to a wrong/outdated target for a few seconds (30 seconds is the time the JRE
+        // maintains the cache entries for). All this is implementation detail of the JRE and
+        // probably a bug, but given that it affects our tests (SymlinkTest#testRecreate consistently fails
+        // on MacOS/Unix) as well as the Symlink task, it makes sense to use this API instead of
+        // the Files#delete(Path) API
+        final boolean deleted = path.toFile().delete();
+        if (!deleted) {
+            throw new IOException("Could not delete symlink at " + path);
+        }
     }
 }
