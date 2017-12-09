@@ -187,8 +187,12 @@ public final class JavaEnvUtils {
             javaVersionNumber = VERSION_9;
             // at least Java9 and this should properly support the purely numeric version property
             String v = System.getProperty("java.specification.version");
-            javaVersionNumber = Integer.parseInt(v) * 10;
-            javaVersion = v;
+            DeweyDecimal pv = new DeweyDecimal(v);
+            javaVersionNumber = pv.get(0) * 10;
+            if (pv.getSize() > 1) {
+                javaVersionNumber += pv.get(1);
+            }
+            javaVersion = pv.toString();
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
             // we have
