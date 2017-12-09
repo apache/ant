@@ -75,6 +75,9 @@ Other changes:
 
  * added "javac10+" as new supported value for javac's compiler attribute.
 
+ * javah has been removed from Java 10. The task will now throw an
+   exception if you try to use it while running Java 10 or newer.
+
 Changes from Ant 1.10.0 TO Ant 1.10.1
 =====================================
 

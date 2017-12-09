@@ -143,4 +143,15 @@ public class JavaEnvUtilsTest {
         assertTrue("JAVA_1_9 is not considered equal to JAVA_9",
                 JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_9));
     }
+
+    @Test
+    public void java10IsDetectedProperly() {
+        assumeTrue("10".equals(System.getProperty("java.specification.version")));
+        assertEquals("10", JavaEnvUtils.getJavaVersion());
+        assertEquals(100, JavaEnvUtils.getJavaVersionNumber());
+        assertEquals(new DeweyDecimal("10"), JavaEnvUtils.getParsedJavaVersion());
+        assertTrue(JavaEnvUtils.isJavaVersion("10"));
+        assertTrue(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+    }
+
 }

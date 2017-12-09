@@ -18,6 +18,8 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.junit.Assume;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,6 +49,7 @@ public class JavahTest {
 
     @Test
     public void testSimpleCompile() {
+        Assume.assumeFalse(JavaEnvUtils.isAtLeastJavaVersion("10"));
         buildRule.executeTarget("simple-compile");
         assertTrue(new File(buildRule.getProject().getProperty("output"), "org_example_Foo.h")
                 .exists());
@@ -54,6 +57,7 @@ public class JavahTest {
 
     @Test
     public void testCompileFileset() {
+        Assume.assumeFalse(JavaEnvUtils.isAtLeastJavaVersion("10"));
         buildRule.executeTarget("test-fileset");
         assertTrue(new File(buildRule.getProject().getProperty("output"), "org_example_Foo.h").exists());
     }
