@@ -101,12 +101,12 @@ public class Foo {
     </presetdef>
   </target>
 
-  <target name="testSimpleCompile" depends="-setupForRealJavahTests">
+  <target name="testSimpleCompile" depends="-setupForRealJavahTests" unless="jdk10+">
     <javah-single/>
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
 
-  <target name="testCompileUsingFileset" depends="-setupForRealJavahTests">
+  <target name="testCompileUsingFileset" depends="-setupForRealJavahTests" unless="jdk10+">
     <javah-fileset/>
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
@@ -123,13 +123,21 @@ public class Foo {
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
 
-  <target name="testSimpleCompileForking" depends="-setupForRealJavahTests">
+  <target name="testSimpleCompileForking" depends="-setupForRealJavahTests" unless="jdk10+">
     <javah-single implementation="forking"/>
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
 
-  <target name="testCompileUsingFilesetForking" depends="-setupForRealJavahTests">
+  <target name="testCompileUsingFilesetForking" depends="-setupForRealJavahTests" unless="jdk10+">
     <javah-fileset implementation="forking"/>
     <au:assertFileExists file="${output}/org_example_Foo.h"/>
   </target>
+
+  <target name="testSimpleCompileFailsOnJava10+" depends="-setupForRealJavahTests"
+          if="jdk10+">
+    <au:expectfailure>
+      <javah-single/>
+    </au:expectfailure>
+  </target>
+
 </project>

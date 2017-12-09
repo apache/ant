@@ -89,6 +89,10 @@ public class JavahAdapterFactory {
         } else if ((JavaEnvUtils.isGij() && choice == null)
             || Gcjh.IMPLEMENTATION_NAME.equals(choice)) {
             return new Gcjh();
+        } else if (JavaEnvUtils.isAtLeastJavaVersion("10") &&
+                   (choice == null || ForkingJavah.IMPLEMENTATION_NAME.equals(choice))) {
+            throw new BuildException("javah does not exist under Java 10 and higher,"
+                + " use the javac task with nativeHeaderDir instead");
         } else if ((JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
                     && choice == null)
                    || ForkingJavah.IMPLEMENTATION_NAME.equals(choice)) {
