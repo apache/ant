@@ -69,12 +69,12 @@ public class MailMessageTest {
      */
     @Test
     public void testAPIExample() throws InterruptedException {
-
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 1;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
@@ -148,11 +148,12 @@ public class MailMessageTest {
      */
     @Test
     public void testToOnly() throws InterruptedException {
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 2;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
@@ -200,11 +201,12 @@ public class MailMessageTest {
      */
     @Test
     public void testCcOnly() throws InterruptedException {
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 3;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.cc("cc@you.com");
@@ -252,11 +254,12 @@ public class MailMessageTest {
      */
     @Test
     public void testBccOnly() throws InterruptedException {
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 4;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.bcc("bcc@you.com");
@@ -304,11 +307,12 @@ public class MailMessageTest {
      */
     @Test
     public void testNoSubject() throws InterruptedException {
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 5;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
@@ -354,11 +358,12 @@ public class MailMessageTest {
      */
     @Test
     public void testEmptyBody() throws InterruptedException {
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 6;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
@@ -406,12 +411,12 @@ public class MailMessageTest {
      */
     @Test
     public void testAsciiCharset() throws InterruptedException {
-
-        ServerThread testMailServer = new ServerThread();
+        final int port = TEST_PORT + 7;
+        ServerThread testMailServer = new ServerThread(port);
         Thread server = new Thread(testMailServer);
         server.start();
 
-        ClientThread testMailClient = new ClientThread();
+        ClientThread testMailClient = new ClientThread(port);
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>");
@@ -466,6 +471,7 @@ public class MailMessageTest {
      */
     private class ServerThread implements Runnable {
 
+        private final int port;
         private StringBuilder sb = null;
         private boolean loop = false;
         ServerSocket ssock = null;
@@ -474,10 +480,14 @@ public class MailMessageTest {
         BufferedReader in = null;
         private boolean data = false;  // state engine: false=envelope, true=message
 
+        ServerThread(int port) {
+            this.port = port;
+        }
+
         public void run() {
 
             try {
-                ssock = new ServerSocket(TEST_PORT);
+                ssock = new ServerSocket(port);
                 sock = ssock.accept(); // wait for connection
                 in = new BufferedReader(new InputStreamReader(
                     sock.getInputStream()));
@@ -582,6 +592,7 @@ public class MailMessageTest {
      */
     private class ClientThread implements Runnable {
 
+        private final int port;
         private MailMessage msg;
         private boolean fail = false;
         private String failMessage = null;
@@ -595,11 +606,14 @@ public class MailMessageTest {
         protected Vector ccList = new Vector();
         protected Vector bccList = new Vector();
 
+        ClientThread(int port) {
+            this.port = port;
+        }
 
         public void run() {
             for (int i = 9; i > 0; i--) {
                 try {
-                    msg = new MailMessage("localhost", TEST_PORT);
+                    msg = new MailMessage("localhost", port);
                 } catch (java.net.ConnectException ce) {
                     try {
                         Thread.sleep(10 * 1000);
