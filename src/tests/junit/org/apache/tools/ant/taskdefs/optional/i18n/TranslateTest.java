@@ -71,16 +71,24 @@ public class TranslateTest {
 
         @SuppressWarnings("resource")
         FileInputStream fis1 = new FileInputStream(file1);
-        @SuppressWarnings("resource")
-        FileInputStream fis2 = new FileInputStream(file2);
-        int read = 0;
-        while ((read = fis1.read(buffer1)) != -1) {
-            fis2.read(buffer2);
-            for (int i = 0; i < read; ++i) {
-                if (buffer1[i] != buffer2[i]) {
-                    return false;
+        try {
+            @SuppressWarnings("resource")
+            FileInputStream fis2 = new FileInputStream(file2);
+            try {
+                int read = 0;
+                while ((read = fis1.read(buffer1)) != -1) {
+                    fis2.read(buffer2);
+                    for (int i = 0; i < read; ++i) {
+                        if (buffer1[i] != buffer2[i]) {
+                            return false;
+                        }
+                    }
                 }
+            } finally {
+                fis2.close();
             }
+        } finally {
+            fis1.close();
         }
         return true;
     }
