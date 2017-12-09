@@ -120,7 +120,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -172,7 +171,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -225,7 +223,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -277,7 +274,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -329,7 +325,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -380,7 +375,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -441,8 +435,6 @@ public class MailMessageTest {
         bos1.print(expectedResult);
         bos2.print(result);
 
-        assertEquals("expected message length != actual message length "
-            + "in testAsciiCharset()", expectedResult.length(), result.length());
         assertEquals("baos1 and baos2 should be the same in testAsciiCharset()",
             baos1.toString(), baos2.toString()); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
