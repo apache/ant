@@ -30,8 +30,7 @@ import org.apache.tools.ant.types.PropertySet;
 
 /**
  * Expands Ant properties, if any, in the data.
- * <p>
- * Example:<br>
+ * <p>Example:</p>
  * <pre>&lt;expandproperties/&gt;</pre>
  * Or:
  * <pre>&lt;filterreader

@@ -32,6 +32,8 @@ public class ResourceExists extends ProjectComponent implements Condition {
 
     /**
      * The resource to test.
+     *
+     * @param r Resource
      */
     public void add(Resource r) {
         if (resource != null) {

@@ -28,12 +28,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.ZipFileSet.
+ * JUnit 4 testcases for org.apache.tools.ant.types.ZipFileSet.
  *
  * <p>This doesn't actually test much, mainly reference handling.</p>
- *
  */
-
 public class ZipFileSetTest extends AbstractFileSetTest {
 
     protected AbstractFileSet getInstance() {
@@ -117,6 +115,5 @@ public class ZipFileSetTest extends AbstractFileSetTest {
         assertEquals("dir mode attribute copied by copy constructor",
                 f.getDirMode(getProject()), zid.getDirMode(getProject()));
       }
-
 
 }

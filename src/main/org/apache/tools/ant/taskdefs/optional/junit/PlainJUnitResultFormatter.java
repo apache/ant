@@ -327,4 +327,4 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             throw new BuildException("Unable to write output " + ex, ex);
         }
     }
-} // PlainJUnitResultFormatter
+}

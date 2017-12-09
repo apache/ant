@@ -40,12 +40,13 @@ import org.apache.tools.ant.util.FileUtils;
  * output files, followup tasks can be driven off copies made with a different
  * selector, so their dependencies are driven on the absolute state of the
  * files, not a timestamp.
+ * </p>
  * <p>
  * Clearly, however, bulk file comparisons is inefficient; anything that can
  * use timestamps is to be preferred. If this selector must be used, use it
- * over as few files as possible, perhaps following it with an &lt;uptodate;&gt
+ * over as few files as possible, perhaps following it with an &lt;uptodate&gt;
  * to keep the descendant routines conditional.
- *
+ * </p>
  */
 public class DifferentSelector extends MappingSelector {
 

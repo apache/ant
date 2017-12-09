@@ -45,7 +45,6 @@ public class XsltTest {
         buildRule.configureProject(TASKDEFS_DIR + "xslt.xml");
     }
 
-
     @Test
     public void testCatchNoDtd() {
         try {

@@ -86,6 +86,8 @@ public class BaseSelectorRule extends BuildFileRule {
      * This is a helper method that takes a selector and calls its
      * isSelected() method on each file in the testbed. It returns
      * a string of "T"s amd "F"s
+     *
+     * @param selector FileSelector
      */
     public String selectionString(FileSelector selector) {
         return selectionString(beddir,files,selector);
@@ -97,6 +99,8 @@ public class BaseSelectorRule extends BuildFileRule {
      * variation is used for dependency checks and to get around the
      * limitations in the touch task when running JDK 1.1. It returns
      * a string of "T"s amd "F"s.
+     *
+     * @param selector FileSelector
      */
     public String mirrorSelectionString(FileSelector selector) {
         return selectionString(mirrordir, mirrorfiles, selector);
@@ -106,6 +110,10 @@ public class BaseSelectorRule extends BuildFileRule {
      * Worker method for the two convenience methods above. Applies a
      * selector on a set of files passed in and returns a string of
      * "T"s and "F"s from applying the selector to each file.
+     *
+     * @param basedir File
+     * @param files File[]
+     * @param selector FileSelector
      */
     public String selectionString(File basedir, File[] files, FileSelector selector) {
         StringBuilder buf = new StringBuilder();

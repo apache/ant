@@ -91,16 +91,16 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see org.apache.tools.ant.BuildListener#buildStarted(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void buildStarted(BuildEvent event) {
         log("> BUILD STARTED", Project.MSG_DEBUG);
     }
 
     /**
      * @see org.apache.tools.ant.BuildListener#buildFinished(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void buildFinished(BuildEvent event) {
         log("< BUILD FINISHED", Project.MSG_DEBUG);
 
@@ -145,8 +145,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see org.apache.tools.ant.BuildListener#targetStarted(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetStarted(BuildEvent event) {
         log(">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG);
         log(StringUtils.LINE_SEP + event.getTarget().getName() + ":",
@@ -156,8 +156,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see org.apache.tools.ant.BuildListener#targetFinished(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetFinished(BuildEvent event) {
         log("<< TARGET FINISHED -- " + event.getTarget(), Project.MSG_DEBUG);
 
@@ -169,16 +169,16 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see org.apache.tools.ant.BuildListener#taskStarted(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskStarted(BuildEvent event) {
         log(">>> TASK STARTED -- " + event.getTask(), Project.MSG_DEBUG);
     }
 
     /**
      * @see org.apache.tools.ant.BuildListener#taskFinished(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskFinished(BuildEvent event) {
         log("<<< TASK FINISHED -- " + event.getTask(), Project.MSG_DEBUG);
         flush();
@@ -186,8 +186,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see org.apache.tools.ant.BuildListener#messageLogged(BuildEvent)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void messageLogged(BuildEvent event) {
         log("--- MESSAGE LOGGED", Project.MSG_DEBUG);
 
@@ -232,8 +232,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see BuildLogger#setMessageOutputLevel(int)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setMessageOutputLevel(int level) {
         if (level >= Project.MSG_ERR && level <= Project.MSG_DEBUG) {
             loglevel = level;
@@ -242,8 +242,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see BuildLogger#setOutputPrintStream(PrintStream)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setOutputPrintStream(PrintStream output) {
         closeFile();
         out = output;
@@ -252,8 +252,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see BuildLogger#setEmacsMode(boolean)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setEmacsMode(boolean emacsMode) {
         this.emacsMode = emacsMode;
     }
@@ -261,8 +261,8 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     /**
      * @see BuildLogger#setErrorPrintStream(PrintStream)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setErrorPrintStream(PrintStream err) {
         setOutputPrintStream(err);
     }
@@ -303,6 +303,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     /**
      * Get the project associated with this recorder entry.
      *
+     * @return Project
      * @since 1.8.0
      */
     public Project getProject() {
@@ -325,7 +326,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
      * Used by Recorder.
      * @param append Indicates if output must be appended to the logfile or that
      * the logfile should be overwritten.
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      * @since 1.6.3
      */
     void openFile(boolean append) throws BuildException {
@@ -347,7 +348,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     /**
      * Re-opens the file associated with this recorder.
      * Used by Recorder.
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      * @since 1.6.3
      */
     void reopenFile() throws BuildException {

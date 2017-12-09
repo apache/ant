@@ -23,12 +23,12 @@ import org.apache.tools.ant.Task;
 
 /**
  * A worker ant executes a single task in a background thread.
- * After the run, any exception thrown is turned into a buildexception, which can be
+ * After the run, any exception thrown is turned into a BuildException, which can be
  * rethrown, the finished attribute is set, then notifyAll() is called,
  * so that anyone waiting on the same notify object gets woken up.
  * <p>
  * This class is effectively a superset of
- * {@link org.apache.tools.ant.taskdefs.Parallel.TaskRunnable}
+ * <code>org.apache.tools.ant.taskdefs.Parallel.TaskRunnable</code>
  *
  * @since Ant 1.8
  */

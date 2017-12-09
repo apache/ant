@@ -68,7 +68,7 @@ public class Http extends ProjectComponent implements Condition {
      *
      * @param method The HTTP request method to use. Valid values are
      *               the same as those accepted by the
-     *               HttpURLConnection.setRequestMetho d() method,
+     *               HttpURLConnection.setRequestMethod() method,
      *               such as "GET", "HEAD", "TRACE", etc. The default
      *               if not specified is "GET".
      *
@@ -83,6 +83,8 @@ public class Http extends ProjectComponent implements Condition {
     /**
      * Whether redirects sent by the server should be followed,
      * defaults to true.
+     *
+     * @param f boolean
      * @since Ant 1.9.7
      */
     public void setFollowRedirects(boolean f) {

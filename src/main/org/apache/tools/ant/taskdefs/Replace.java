@@ -102,6 +102,7 @@ public class Replace extends MatchingTask {
          * expanded already so you do <b>not</b> want to set this to
          * true.</p>
          *
+         * @param b boolean
          * @since Ant 1.8.0
          */
         public void setExpandProperties(boolean b) {
@@ -286,7 +287,7 @@ public class Replace extends MatchingTask {
          * The filter expects from the component providing the input that data
          * is only added by that component to the end of this StringBuffer.
          * This StringBuffer will be modified by this filter, and expects that
-         * another component will only apped to this StringBuffer.
+         * another component will only added to this StringBuffer.
          * @param input The input for this filter.
          */
         void setInputBuffer(StringBuffer input) {
@@ -873,6 +874,7 @@ public class Replace extends MatchingTask {
     /**
      * Support arbitrary file system based resource collections.
      *
+     * @param rc ResourceCollection
      * @since Ant 1.8.0
      */
     public void addConfigured(ResourceCollection rc) {
@@ -889,6 +891,7 @@ public class Replace extends MatchingTask {
      * Whether the file timestamp shall be preserved even if the file
      * is modified.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setPreserveLastModified(boolean b) {
@@ -898,6 +901,7 @@ public class Replace extends MatchingTask {
     /**
      * Whether the build should fail if nothing has been replaced.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnNoReplacements(boolean b) {
@@ -917,6 +921,10 @@ public class Replace extends MatchingTask {
 
     /**
      * Replace occurrences of str1 in StringBuffer str with str2.
+     *
+     * @param str StringBuilder
+     * @param str1 String
+     * @param str2 String
      */
     private void stringReplace(StringBuilder str, String str1, String str2) {
         int found = str.indexOf(str1);
@@ -931,6 +939,8 @@ public class Replace extends MatchingTask {
     /**
      * Sort keys by size so that tokens that are substrings of other
      * strings are tried later.
+     *
+     * @param props Properties
      */
     private Iterator<Object> getOrderedIterator(Properties props) {
         List<Object> keys = new ArrayList<>(props.keySet());

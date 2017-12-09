@@ -297,6 +297,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
     }
 
     /**
+     * @param e ExecutableSelector
      * @since 1.10.0
      */
     public void addExecutable(ExecutableSelector e) {
@@ -304,6 +305,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
     }
 
     /**
+     * @param e SymlinkSelector
      * @since 1.10.0
      */
     public void addSymlink(SymlinkSelector e) {
@@ -311,6 +313,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
     }
 
     /**
+     * @param o OwnedBySelector
      * @since 1.10.0
      */
     public void addOwnedBy(OwnedBySelector o) {

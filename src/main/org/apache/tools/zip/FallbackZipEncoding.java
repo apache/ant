@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
  * given name can be safely encoded or not.</p>
  *
  * <p>This implementation acts as a last resort implementation, when
- * neither {@link Simple8BitZipEnoding} nor {@link NioZipEncoding} is
+ * neither {@link Simple8BitZipEncoding} nor {@link NioZipEncoding} is
  * available.</p>
  *
  * <p>The methods of this class are reentrant.</p>
@@ -61,16 +61,14 @@ class FallbackZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
     public boolean canEncode(final String name) {
         return true;
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
     public ByteBuffer encode(final String name) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
@@ -81,8 +79,7 @@ class FallbackZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#decode(byte[])
+     * @see org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
     public String decode(final byte[] data) throws IOException {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor

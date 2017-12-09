@@ -50,7 +50,7 @@ public interface FileSelector extends ResourceSelector {
     /**
      * Implement a basic {@link Resource} selection that delegates to this
      * {@link FileSelector}.
-     * @param r
+     * @param r resource
      * @return whether the resource is selected
      */
     default boolean isSelected(Resource r) {

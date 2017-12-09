@@ -145,10 +145,10 @@ public class XMLValidateTask extends Task {
      * Specify the class name of the SAX parser to be used. (optional)
      * @param className should be an implementation of SAX2
      * <code>org.xml.sax.XMLReader</code> or SAX2 <code>org.xml.sax.Parser</code>.
-     * <p> if className is an implementation of
+     * <p>If className is an implementation of
      * <code>org.xml.sax.Parser</code>, {@link #setLenient(boolean)},
-     * will be ignored.
-     * <p> if not set, the default will be used.
+     * will be ignored.</p>
+     * <p>If not set, the default will be used.</p>
      * @see org.xml.sax.XMLReader
      * @see org.xml.sax.Parser
      */

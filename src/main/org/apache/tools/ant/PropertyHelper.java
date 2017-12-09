@@ -70,7 +70,7 @@ import org.apache.tools.ant.property.PropertyExpander;
  * parseProperties} inside the ParseProperties class which in turn
  * uses the {@link org.apache.tools.ant.property.PropertyExpander
  * PropertyExpander delegates} to find properties inside the string
- * and this class to expand the propertiy names found into the
+ * and this class to expand the property names found into the
  * corresponding values.</p>
  *
  * <p>When {@link #getProperty looking up a property value} this class
@@ -1098,6 +1098,7 @@ public class PropertyHelper implements GetProperty {
     /**
      * Get the Collection of delegates of the specified type.
      *
+     * @param <D> desired type.
      * @param type
      *            delegate type.
      * @return Collection.
@@ -1136,6 +1137,8 @@ public class PropertyHelper implements GetProperty {
     /**
      * If the given object can be interpreted as a true/false value,
      * turn it into a matching Boolean - otherwise return null.
+     * @param value Object
+     * @return Boolean
      * @since Ant 1.8.0
      */
     public static Boolean toBoolean(Object value) {
@@ -1159,6 +1162,8 @@ public class PropertyHelper implements GetProperty {
     /**
      * Returns true if the object is null or an empty string.
      *
+     * @param value Object
+     * @return boolean
      * @since Ant 1.8.0
      */
     private static boolean nullOrEmpty(Object value) {
@@ -1170,6 +1175,8 @@ public class PropertyHelper implements GetProperty {
      * Returns true if the value can be interpreted as a true value or
      * cannot be interpreted as a false value and a property of the
      * value's name exists.
+     * @param value Object
+     * @return boolean
      * @since Ant 1.8.0
      */
     private boolean evalAsBooleanOrPropertyName(Object value) {
@@ -1184,6 +1191,8 @@ public class PropertyHelper implements GetProperty {
      * Returns true if the value is null or an empty string, can be
      * interpreted as a true value or cannot be interpreted as a false
      * value and a property of the value's name exists.
+     * @param value Object
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean testIfCondition(Object value) {
@@ -1194,6 +1203,8 @@ public class PropertyHelper implements GetProperty {
      * Returns true if the value is null or an empty string, can be
      * interpreted as a false value or cannot be interpreted as a true
      * value and a property of the value's name doesn't exist.
+     * @param value Object
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean testUnlessCondition(Object value) {

@@ -53,7 +53,13 @@ public abstract class AbstractXSLTLiaisonTest {
     // to override
     protected abstract XSLTLiaison createLiaison() throws Exception;
 
-    /** load the file from the caller classloader that loaded this class */
+    /**
+     * Load the file from the caller classloader that loaded this class
+     *
+     * @param name String
+     * @return File
+     * @throws FileNotFoundException if file is not found
+     */
     protected File getFile(String name) throws FileNotFoundException {
         URL url = getClass().getResource(name);
         if (url == null) {
@@ -62,7 +68,11 @@ public abstract class AbstractXSLTLiaisonTest {
         return new File(FILE_UTILS.fromURI(url.toExternalForm()));
     }
 
-    /** keep it simple stupid */
+    /**
+     * Keep it simple stupid
+     *
+     * @throws Exception if something goes wrong
+     */
     @Test
     public void testTransform() throws Exception {
         File xsl = getFile("/taskdefs/optional/xsltliaison-in.xsl");

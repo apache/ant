@@ -71,6 +71,7 @@ public class Move extends Copy {
      * default) but also on other operating systems, for example when
      * deleting directories from an NFS share.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.3
      */
     public void setPerformGcOnFailedDelete(boolean b) {
@@ -229,10 +230,10 @@ public class Move extends Copy {
 
     /**
      * Copy fromFile to toFile.
-     * @param fromFile
-     * @param toFile
-     * @param filtering
-     * @param overwrite
+     * @param fromFile File
+     * @param toFile File
+     * @param filtering boolean
+     * @param overwrite boolean
      */
     private void copyFile(File fromFile, File toFile, boolean filtering, boolean overwrite) {
         try {

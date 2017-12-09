@@ -147,8 +147,8 @@ public class ProjectHelper {
     }
 
     // -------------------- Common properties  --------------------
-    // The following properties are required by import ( and other tasks
-    // that read build files using ProjectHelper ).
+    // The following properties are required by import (and other tasks
+    // that read build files using ProjectHelper).
 
     private Vector<Object> importStack = new Vector<>();
     private List<String[]> extensionStack = new LinkedList<>();
@@ -195,6 +195,7 @@ public class ProjectHelper {
     /**
      * Sets the prefix to prepend to imported target names.
      *
+     * @param prefix String
      * @since Ant 1.8.0
      */
     public static void setCurrentTargetPrefix(String prefix) {
@@ -212,6 +213,7 @@ public class ProjectHelper {
      *
      * <p>May be set by &lt;import&gt;'s prefixSeparator attribute.</p>
      *
+     * @return String
      * @since Ant 1.8.0
      */
     public static String getCurrentPrefixSeparator() {
@@ -221,6 +223,7 @@ public class ProjectHelper {
     /**
      * Sets the separator between the prefix and the target name.
      *
+     * @param sep String
      * @since Ant 1.8.0
      */
     public static void setCurrentPrefixSeparator(String sep) {
@@ -246,6 +249,7 @@ public class ProjectHelper {
      * overwritten in the importing build file.  The depends list of
      * the imported targets is not modified at all.</p>
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     public static boolean isInIncludeMode() {
@@ -256,6 +260,7 @@ public class ProjectHelper {
      * Sets whether the current file should be read in include as
      * opposed to import mode.
      *
+     * @param includeMode boolean
      * @since Ant 1.8.0
      */
     public static void setInIncludeMode(boolean includeMode) {
@@ -587,6 +592,8 @@ public class ProjectHelper {
      *
      * <p>This implementation returns false.</p>
      *
+     * @param r Resource
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean canParseAntlibDescriptor(Resource r) {
@@ -597,6 +604,9 @@ public class ProjectHelper {
      * Parse the given URL as an antlib descriptor and return the
      * content as something that can be turned into an Antlib task.
      *
+     * @param containingProject Project
+     * @param source Resource
+     * @return UnknownElement
      * @since ant 1.8.0
      */
     public UnknownElement parseAntlibDescriptor(Project containingProject,

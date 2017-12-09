@@ -35,9 +35,8 @@ import org.xml.sax.SAXException;
  * <code>ejbjar</code> task.  If only stubs and skeletons need to be generated
  * (in other words, if no JAR file needs to be created), refer to the
  * <code>iplanet-ejbc</code> task and the <code>IPlanetEjbcTask</code> class.
- * <p>
- * The following attributes may be specified by the user:
- *   <ul>
+ * <p>The following attributes may be specified by the user:</p>
+ * <ul>
  *     <li><i>destdir</i> -- The base directory into which the generated JAR
  *                           files will be written.  Each JAR file is written
  *                           in directories which correspond to their location
@@ -72,15 +71,14 @@ import org.xml.sax.SAXException;
  *     <li><i>suffix</i> -- String value appended to the JAR filename when
  *                          creating each JAR.  This attribute is not required
  *                          (if omitted, it defaults to ".jar").
- *   </ul>
- * <p>
- * For each EJB descriptor found in the "ejbjar" parent task, this deployment
+ * </ul>
+ * <p>For each EJB descriptor found in the "ejbjar" parent task, this deployment
  * tool will locate the three classes that comprise the EJB.  If these class
  * files cannot be located in the specified <code>srcdir</code> directory, the
  * task will fail.  The task will also attempt to locate the EJB stubs and
  * skeletons in this directory.  If found, the timestamps on the stubs and
  * skeletons will be checked to ensure they are up to date.  Only if these files
- * cannot be found or if they are out of date will ejbc be called.
+ * cannot be found or if they are out of date will ejbc be called.</p>
  *
  * @see    IPlanetEjbc
  */

@@ -27,12 +27,11 @@ import java.net.URL;
  * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.</p>
  *
- * <p>Possible Future Enhancements:
+ * <p>Possible Future Enhancements:</p>
  * <ul>
  * <li>Bring the Ant element names into conformance with the OASIS standard</li>
  * <li>Add support for additional OASIS catalog entry types</li>
  * </ul>
- * </p>
  *
  * @see org.apache.xml.resolver.Catalog
  * @since Ant 1.6
@@ -103,4 +102,4 @@ public class ResourceLocation {
         return base;
     }
 
-} //-- ResourceLocation
+}

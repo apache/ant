@@ -247,8 +247,8 @@ public final class JarLibManifestTask extends Task {
      * Also use specified extensionKey so that can generate list of
      * optional dependencies as well.
      *
-     * @param size the number of librarys to list
-     * @param listPrefix the prefix for all librarys
+     * @param size the number of libraries to list
+     * @param listPrefix the prefix for all libraries
      * @param attributes the attributes to add key-value to
      * @param extensionKey the key to use
      */

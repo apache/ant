@@ -29,10 +29,11 @@ import org.apache.tools.ant.types.resources.FileProvider;
 
 /**
  * Describes a "File-like" resource (File, ZipEntry, etc.).
- *
+ * <p>
  * This class is meant to be used by classes needing to record path
  * and date/time information about a file, a zip entry or some similar
  * resource (URL, archive in a version control repository, ...).
+ * </p>
  *
  * @since Ant 1.5.2
  * @see org.apache.tools.ant.types.resources.Touchable
@@ -429,8 +430,8 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * instance itself if it can be assigned to the given class.</p>
      *
      * @param <T> desired type
-     * @param clazz
-     * @return <T>
+     * @param clazz a class
+     * @return resource of a desired type
      * @since Ant 1.8.0
      */
     public <T> T as(Class<T> clazz) {
@@ -440,8 +441,8 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
     /**
      * Return {@link #as(Class)} as an {@link Optional}.
      * @param <T> desired type
-     * @param clazz
-     * @return {@link Optional} <T>
+     * @param clazz a class
+     * @return {@link Optional} resource of a desired type
      * @since Ant 1.10.2
      */
     public <T> Optional<T> asOptional(Class<T> clazz) {

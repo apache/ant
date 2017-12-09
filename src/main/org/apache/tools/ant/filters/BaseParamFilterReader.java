@@ -58,7 +58,7 @@ public abstract class BaseParamFilterReader
      * @param parameters The parameters to be used by this filter.
      *                   Should not be <code>null</code>.
      */
-    public final void setParameters(final Parameter[] parameters) {
+    public final void setParameters(final Parameter... parameters) {
         this.parameters = parameters;
         setInitialized(false);
     }

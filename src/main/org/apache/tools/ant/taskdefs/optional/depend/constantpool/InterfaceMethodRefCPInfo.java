@@ -99,7 +99,7 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
             return "InterfaceMethod : Class = " + interfaceMethodClassName
                  + ", name = " + interfaceMethodName + ", type = "
                  + interfaceMethodType;
-        } 
+        }
         return "InterfaceMethod : Class index = " + classIndex
              + ", name and type index = " + nameAndTypeIndex;
 

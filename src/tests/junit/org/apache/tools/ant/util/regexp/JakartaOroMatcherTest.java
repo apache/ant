@@ -28,8 +28,4 @@ public class JakartaOroMatcherTest extends RegexpMatcherTest {
         return new JakartaOroMatcher();
     }
 
-    public JakartaOroMatcherTest(String name) {
-        super(name);
-    }
-
 }

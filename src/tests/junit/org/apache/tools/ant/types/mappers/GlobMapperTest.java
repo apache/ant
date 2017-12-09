@@ -41,6 +41,8 @@ public class GlobMapperTest {
     public void testIgnoreCase() {
         buildRule.executeTarget("ignore.case");
     }
+
+    @Test
     public void testHandleDirSep() {
         buildRule.executeTarget("handle.dirsep");
     }

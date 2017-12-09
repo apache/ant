@@ -274,7 +274,7 @@ public class MakeUrl extends Task {
     /**
      * convert a file to a URL;
      *
-     * @param fileToConvert
+     * @param fileToConvert File
      * @return the file converted to a URL
      */
     private String toURL(File fileToConvert) {

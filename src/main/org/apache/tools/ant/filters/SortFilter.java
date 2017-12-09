@@ -82,10 +82,10 @@ import org.apache.tools.ant.types.Parameter;
  *
  * <p>
  * Sort all files <code>*.txt</code> from <i>src</i> location using as
- * sorting criterium <code>EvenFirstCmp</code> class, that sorts the file
+ * sorting criterion <code>EvenFirstCmp</code> class, that sorts the file
  * lines putting even lines first then odd lines for example. The modified files
  * are copied into <i>build</i> location. The <code>EvenFirstCmp</code>,
- * has to an instanciable class via <code>Class.newInstance()</code>,
+ * has to an instantiable class via <code>Class.newInstance()</code>,
  * therefore in case of inner class has to be <em>static</em>. It also has to
  * implement <code>java.util.Comparator</code> interface, for example:
  * </p>
@@ -102,7 +102,7 @@ import org.apache.tools.ant.types.Parameter;
  *
  * <p>The example above is equivalent to:</p>
  *
- * <blockquote><pre>
+ * <pre>
  *   &lt;componentdef name="evenfirst"
  *                 classname="org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
  *   &lt;copy todir=&quot;build&quot;&gt;
@@ -113,10 +113,10 @@ import org.apache.tools.ant.types.Parameter;
  *           &lt;/sortfilter&gt;
  *       &lt;/filterchain&gt;
  *   &lt;/copy&gt;
- * </pre></blockquote>
+ * </pre>
  *
- * <p> If parameter <code>comparator</code> is present, then
- * <code>reverse</code> parameter will not be taken into account.  </p>
+ * <p>If parameter <code>comparator</code> is present, then
+ * <code>reverse</code> parameter will not be taken into account.</p>
  *
  * @since Ant 1.8.0
  */
@@ -285,7 +285,7 @@ public final class SortFilter extends BaseParamFilterReader
     }
 
     /**
-     * Set the comparator to be used as sorting criterium.
+     * Set the comparator to be used as sorting criterion.
      *
      * @param comparator
      *            the comparator to set

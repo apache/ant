@@ -181,7 +181,7 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
-     * Enable verbose output when signing ; optional: default false
+     * Enable verbose output when signing; optional: default false
      *
      * @param verbose if true enable verbose output
      */
@@ -192,7 +192,7 @@ public abstract class AbstractJarSignerTask extends Task {
     /**
      * do strict checking
      * @since Ant 1.9.1
-     * @param strict
+     * @param strict boolean
      */
     public void setStrict(boolean strict) {
         this.strict = strict;

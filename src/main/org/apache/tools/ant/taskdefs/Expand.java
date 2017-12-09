@@ -91,6 +91,7 @@ public class Expand extends Task {
     /**
      * Creates an Expand instance and sets the given encoding.
      *
+     * @param encoding String
      * @since Ant 1.9.5
      */
     protected Expand(String encoding) {
@@ -100,6 +101,7 @@ public class Expand extends Task {
     /**
      * Whether try ing to expand an empty archive would be an error.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnEmptyArchive(boolean b) {
@@ -109,6 +111,7 @@ public class Expand extends Task {
     /**
      * Whether try ing to expand an empty archive would be an error.
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getFailOnEmptyArchive() {
@@ -463,6 +466,7 @@ public class Expand extends Task {
      * where the child-class doesn't (i.e. Unzip in the compress
      * Antlib).
      *
+     * @param encoding String
      * @since Ant 1.8.0
      */
     protected void internalSetEncoding(String encoding) {
@@ -473,6 +477,7 @@ public class Expand extends Task {
     }
 
     /**
+     * @return String
      * @since Ant 1.8.0
      */
     public String getEncoding() {
@@ -482,6 +487,7 @@ public class Expand extends Task {
     /**
      * Whether leading path separators should be stripped.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setStripAbsolutePathSpec(boolean b) {
@@ -491,6 +497,7 @@ public class Expand extends Task {
     /**
      * Whether unicode extra fields will be used if present.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setScanForUnicodeExtraFields(boolean b) {
@@ -502,6 +509,7 @@ public class Expand extends Task {
      * where the child-class doesn't (i.e. Unzip in the compress
      * Antlib).
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     protected void internalSetScanForUnicodeExtraFields(boolean b) {
@@ -509,6 +517,7 @@ public class Expand extends Task {
     }
 
     /**
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getScanForUnicodeExtraFields() {

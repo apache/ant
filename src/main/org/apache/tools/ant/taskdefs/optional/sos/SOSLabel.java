@@ -57,9 +57,11 @@ public class SOSLabel extends SOS {
     }
 
     /**
-     *  Build the command line <br>
-     *  AddLabel required parameters: -server -name -password -database -project -label<br>
-     *  AddLabel optional parameters: -verbose -comment<br>
+     * Build the command line
+     * <p>
+     * AddLabel required parameters: -server -name -password -database -project -label<br>
+     * AddLabel optional parameters: -verbose -comment
+     * </p>
      *
      * @return    Commandline the generated command to be executed
      */

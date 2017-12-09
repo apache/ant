@@ -217,6 +217,7 @@ public final class ReplaceTokens
      * A resource containing properties, each of which is interpreted
      * as a token/value pair.
      *
+     * @param r Resource
      * @since Ant 1.8.0
      */
     public void setPropertiesResource(Resource r) {

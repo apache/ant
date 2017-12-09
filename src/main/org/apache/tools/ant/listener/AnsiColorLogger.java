@@ -201,8 +201,8 @@ public class AnsiColorLogger extends DefaultLogger {
 
     /**
      * @see DefaultLogger#printMessage
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     protected void printMessage(final String message,
                                 final PrintStream stream,

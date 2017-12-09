@@ -52,7 +52,7 @@ public class DeleteTest {
     public void test2() {
         buildRule.executeTarget("test2");
     }
-//where oh where has my test case 3 gone?
+    //where oh where has my test case 3 gone?
     @Test
     public void test4() {
         buildRule.executeTarget("test4");

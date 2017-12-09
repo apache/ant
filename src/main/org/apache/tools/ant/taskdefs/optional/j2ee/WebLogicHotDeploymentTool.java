@@ -28,7 +28,7 @@ import org.apache.tools.ant.taskdefs.Java;
  *  This task assumes the archive (EAR, JAR, or WAR) file has been
  *  assembled and is supplied as the "source" attribute.
  *  <p>In the end, this task assembles the commandline parameters
- *  and runs the weblogic.deploy tool in a separate JVM.
+ *  and runs the weblogic.deploy tool in a separate JVM.</p>
  *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
@@ -57,7 +57,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
      *  Perform the actual deployment.
      *  For this implementation, a JVM is spawned and the weblogic.deploy
      *  tools is executed.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
+     *  @exception BuildException if the attributes are invalid or incomplete.
      */
     @Override
     public void deploy() {
@@ -73,12 +73,13 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
 
     /**
      *  Validates the passed in attributes.
-     *  <p>The rules are:
+     *  <p>The rules are:</p>
      *  <ol><li>If action is "deploy" or "update" the "application" and "source"
-     *  attributes must be supplied.
+     *  attributes must be supplied.</li>
      *  <li>If action is "delete" or "undeploy" the "application" attribute must
-     *  be supplied.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete
+     *  be supplied.</li></ol>
+     *
+     *  @exception BuildException if the attributes are invalid or incomplete
      */
     @Override
     public void validateAttributes() throws BuildException {
@@ -114,9 +115,9 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
     }
 
     /**
-     *  Builds the arguments to pass to weblogic.deploy according to the
-     *  supplied action.
-     *  @return A String containing the arguments for the weblogic.deploy tool.
+     * Builds the arguments to pass to weblogic.deploy according to the
+     * supplied action.
+     * @return A String containing the arguments for the weblogic.deploy tool.
      * @throws BuildException if there is an error.
      */
     public String getArguments() throws BuildException {
@@ -135,9 +136,9 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
     }
 
     /**
-     *  Determines if the action supplied is valid.
-     *  <p>Valid actions are contained in the static array VALID_ACTIONS
-     *  @return true if the action attribute is valid, false if not.
+     * Determines if the action supplied is valid.
+     * <p>Valid actions are contained in the static array VALID_ACTIONS</p>
+     * @return true if the action attribute is valid, false if not.
      */
     @Override
     protected boolean isActionValid() {
@@ -160,7 +161,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
     protected StringBuffer buildArgsPrefix() {
         ServerDeploy task = getTask();
         // constructs the "-url <url> -debug <action> <password>" portion
-        // of the commmand line
+        // of the command line
         return new StringBuffer(STRING_BUFFER_SIZE)
                 .append((getServer() != null)
                     ? "-url " + getServer()

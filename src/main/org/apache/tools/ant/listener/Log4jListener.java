@@ -55,8 +55,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#buildStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void buildStarted(final BuildEvent event) {
         if (initialized) {
@@ -67,8 +67,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#buildFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void buildFinished(final BuildEvent event) {
         if (initialized) {
@@ -83,8 +83,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#targetStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
@@ -95,8 +95,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#targetFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
@@ -113,8 +113,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#taskStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
@@ -126,8 +126,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#taskFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
@@ -144,8 +144,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#messageLogged
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void messageLogged(final BuildEvent event) {
         if (initialized) {

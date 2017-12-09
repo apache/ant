@@ -188,8 +188,8 @@ public class ProjectHelperImpl extends ProjectHelper {
         protected DocumentHandler parentHandler;
 
         /** Helper impl. With non-static internal classes, the compiler will generate
-            this automatically - but this will fail with some compilers ( reporting
-            "Expecting to find object/array on stack" ). If we pass it
+            this automatically - but this will fail with some compilers (reporting
+            "Expecting to find object/array on stack"). If we pass it
             explicitly it'll work with more compilers.
         */
         ProjectHelperImpl helperImpl;

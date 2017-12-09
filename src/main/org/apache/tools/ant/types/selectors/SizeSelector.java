@@ -63,8 +63,8 @@ public class SizeSelector extends BaseExtendSelector {
 
     /**
      * Returns a <code>String</code> object representing the specified
-     * SizeSelector. This is "{sizeselector value: " + <"compare",
-     * "less", "more", "equal"> + "}".
+     * SizeSelector. This is "{sizeselector value: " + &lt;"compare",
+     * "less", "more", "equal"&gt; + "}".
      * @return a string describing this object
      */
     public String toString() {

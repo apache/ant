@@ -132,7 +132,7 @@ public final class JavaEnvUtils {
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
 
-    /** Wheter this is a GNU Classpath based VM */
+    /** Whether this is a GNU Classpath based VM */
     private static boolean classpathDetected;
 
     /** Whether this is the GNU VM (gcj/gij) */
@@ -566,20 +566,19 @@ public final class JavaEnvUtils {
     }
 
     /**
-     *
      * Writes the command into a temporary DCL script and returns the
      * corresponding File object.
      * It is the job of the caller to delete the file on exit.
-     * @param cmd the command.
+     * @param cmds the command.
      * @return the file containing the command.
      * @throws IOException if there is an error writing to the file.
      */
-    public static File createVmsJavaOptionFile(String[] cmd)
+    public static File createVmsJavaOptionFile(String[] cmds)
             throws IOException {
         File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null, false, true);
         try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
-            for (int i = 0; i < cmd.length; i++) {
-                out.write(cmd[i]);
+            for (int i = 0; i < cmds.length; i++) {
+                out.write(cmds[i]);
                 out.newLine();
             }
         }

@@ -250,6 +250,7 @@ public class LayoutPreservingProperties extends Properties {
     /**
      * Save the properties to a file.
      * @param dest the file to write to
+     * @throws IOException if save fails
      */
     public void saveAs(final File dest) throws IOException {
         final OutputStream fos = Files.newOutputStream(dest.toPath());
@@ -273,7 +274,7 @@ public class LayoutPreservingProperties extends Properties {
             }
         }
 
-        // we may be updatiung a file written by this class, replace
+        // we may be updating a file written by this class, replace
         // the date comment instead of adding a new one and preserving
         // the one written last time
         if (totalLines > skipLines
@@ -308,7 +309,7 @@ public class LayoutPreservingProperties extends Properties {
 
     /**
      * Reads a properties file into an internally maintained
-     * collection of logical lines (possibly spanning physcial lines),
+     * collection of logical lines (possibly spanning physical lines),
      * which make up the comments, blank lines and properties of the
      * file.
      * @param is the stream from which to read the data
@@ -432,7 +433,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     /**
-     * Unescape the string according to the rules for a Properites
+     * Unescape the string according to the rules for a Properties
      * file, as laid out in the docs for <a
      * href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>.
      * @param s the string to unescape (coming from the source file)
@@ -442,7 +443,7 @@ public class LayoutPreservingProperties extends Properties {
         /*
          * The following combinations are converted:
          * \n  newline
-         * \r  carraige return
+         * \r  carriage return
          * \f  form feed
          * \t  tab
          * \\  backslash
@@ -575,7 +576,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     /**
-     * Remove the comments in the leading up the {@link logicalLines}
+     * Remove the comments in the leading up the {@link #logicalLines}
      * list leading up to line <code>pos</code>.
      * @param pos the line number to which the comments lead
      */
@@ -662,7 +663,7 @@ public class LayoutPreservingProperties extends Properties {
 
     /**
      * A key-value pair from the input stream. This may span more than
-     * one physical line, but it is constitutes as a single logical
+     * one physical line, but it is constitues as a single logical
      * line.
      */
     private static class Pair extends LogicalLine implements Cloneable {

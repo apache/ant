@@ -29,7 +29,7 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
 
     /** reference kind **/
     private ReferenceKind referenceKind;
-    /** Must be a valid index into the constant pool tabel. */
+    /** Must be a valid index into the constant pool table. */
     private int referenceIndex;
     /**
      * the index into the constant pool which defined the name and type

@@ -84,14 +84,14 @@ public class AntXMLContext {
       */
     private Target implicitTarget = new Target();
 
-    /** Current target ( no need for a stack as the processing model
-        allows only one level of target ) */
+    /** Current target (no need for a stack as the processing model
+        allows only one level of target) */
     private Target currentTarget = null;
 
     /** The stack of RuntimeConfigurable2 wrapping the
         objects.
     */
-    private Vector<RuntimeConfigurable> wStack = new Vector<RuntimeConfigurable>();
+    private Vector<RuntimeConfigurable> wStack = new Vector<>();
 
     /**
      * Indicates whether the project tag attributes are to be ignored
@@ -138,7 +138,8 @@ public class AntXMLContext {
 
     /**
      * sets the build file to which the XML context belongs
-     * @param buildFile  ant build file
+     * @param buildFile Ant build file
+     * @throws MalformedURLException if parent URL cannot be constructed
      * @since Ant 1.8.0
      */
     public void setBuildFile(URL buildFile) throws MalformedURLException {
@@ -151,7 +152,7 @@ public class AntXMLContext {
 
     /**
      * find out the build file
-     * @return  the build file to which the xml context belongs
+     * @return the build file to which the XML context belongs
      */
     public File getBuildFile() {
         return buildFile;
@@ -167,7 +168,7 @@ public class AntXMLContext {
 
     /**
      * find out the build file
-     * @return  the build file to which the xml context belongs
+     * @return the build file to which the xml context belongs
      * @since Ant 1.8.0
      */
     public URL getBuildFileURL() {

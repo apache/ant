@@ -627,14 +627,14 @@ public class Execute {
                 for (String osEnvItem : osEnv.keySet()) {
                     // Nb: using default locale as key is a env name
                     if (osEnvItem.equalsIgnoreCase(key)) {
-                        // Use the original casiness of the key
+                        // Use the original case of the key
                         key = osEnvItem;
                         break;
                     }
                 }
             }
 
-            // Add the key to the enviromnent copy
+            // Add the key to the environment copy
             osEnv.put(key, keyValue.substring(key.length() + 1));
         }
 

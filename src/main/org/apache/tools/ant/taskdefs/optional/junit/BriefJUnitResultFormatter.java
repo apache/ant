@@ -97,8 +97,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     /**
      * @see JUnitResultFormatter#setSystemOutput(String)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void setSystemOutput(String out) {
         systemOutput = out;
@@ -106,8 +106,8 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     /**
      * @see JUnitResultFormatter#setSystemError(String)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void setSystemError(String err) {
         systemError = err;

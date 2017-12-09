@@ -31,7 +31,7 @@ import org.apache.tools.ant.BuildException;
  * <p>Owner is defined in terms of {@link
  * java.nio.file.Files#getOwner}, this means the selector will accept
  * any file that exists and is owned by the given user. If the {@code
- * getOwner} method throws an {@code UnsupportedOperattionException}
+ * getOwner} method throws an {@code UnsupportedOperationException}
  * the file in question is not included.</p>
  *
  * @since Ant 1.10.0

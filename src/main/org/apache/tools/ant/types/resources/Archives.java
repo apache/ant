@@ -48,6 +48,8 @@ public class Archives extends DataType
     /**
      * Wrapper to identify nested resource collections as ZIP
      * archives.
+     *
+     * @return Union
      */
     public Union createZips() {
         if (isReference()) {
@@ -60,6 +62,8 @@ public class Archives extends DataType
     /**
      * Wrapper to identify nested resource collections as ZIP
      * archives.
+     *
+     * @return Union
      */
     public Union createTars() {
         if (isReference()) {
@@ -71,6 +75,8 @@ public class Archives extends DataType
 
     /**
      * Sums the sizes of nested archives.
+     *
+     * @return int
      */
     @Override
     public int size() {
@@ -83,6 +89,8 @@ public class Archives extends DataType
 
     /**
      * Merges the nested collections.
+     *
+     * @return Iterator&lt;Resource&gt;
      */
     public Iterator<Resource> iterator() {
         if (isReference()) {
@@ -107,6 +115,7 @@ public class Archives extends DataType
 
     /**
      * Overrides the base version.
+     *
      * @param r the Reference to set.
      */
     @Override
@@ -121,6 +130,7 @@ public class Archives extends DataType
     /**
      * Implement clone.  The nested resource collections are cloned as
      * well.
+     *
      * @return a cloned instance.
      */
     @Override
@@ -140,6 +150,8 @@ public class Archives extends DataType
     /**
      * Turns all nested resources into corresponding ArchiveFileSets
      * and returns an iterator over the collected archives.
+     *
+     * @return Iterator&lt;ArchiveFileSet&gt;
      */
     protected Iterator<ArchiveFileSet> grabArchives() {
         return streamArchives().iterator();
@@ -161,6 +173,10 @@ public class Archives extends DataType
     /**
      * Configures the archivefileset based on this type's settings,
      * set the source.
+     *
+     * @param afs ArchiveFileSet
+     * @param src Resource
+     * @return ArchiveFileSet
      */
     protected ArchiveFileSet configureArchive(final ArchiveFileSet afs,
                                               final Resource src) {
@@ -172,6 +188,7 @@ public class Archives extends DataType
     /**
      * Overrides the version of DataType to recurse on all DataType
      * child elements that may have been added.
+     *
      * @param stk the stack of data types to use (recursively).
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.

@@ -38,17 +38,19 @@ import org.apache.tools.zip.ZipEncoding;
  * they are to be used.
  * <p>
  * TarEntries that are created from the header bytes read from
- * an archive are instantiated with the TarEntry( byte[] )
+ * an archive are instantiated with the TarEntry(byte[])
  * constructor. These entries will be used when extracting from
  * or listing the contents of an archive. These entries have their
  * header filled in using the header bytes. They also set the File
  * to null, since they reference an archive entry not a file.
+ * </p>
  * <p>
  * TarEntries that are created from Files that are to be written
- * into an archive are instantiated with the TarEntry( File )
+ * into an archive are instantiated with the TarEntry(File)
  * constructor. These entries have their header filled in using
  * the File's information. They also keep a reference to the File
  * for convenience when writing entries.
+ * </p>
  * <p>
  * Finally, TarEntries can be constructed from nothing but a name.
  * This allows the programmer to construct the entry by hand, for
@@ -56,8 +58,7 @@ import org.apache.tools.zip.ZipEncoding;
  * the archive, and the header information is constructed from
  * other information. In this case the header fields are set to
  * defaults and the File is set to null.
- *
- * <p>
+ * </p>
  * The C structure for a Tar Entry's header is:
  * <pre>
  * struct header {
@@ -84,8 +85,6 @@ import org.apache.tools.zip.ZipEncoding;
  * field is the binary representation of the number.
  * See TarUtils.parseOctalOrBinary.
  * </pre>
- *
- * <p>
  * The C structure for a old GNU Tar Entry's header is:
  * <pre>
  * struct oldgnu_header {
@@ -108,7 +107,6 @@ import org.apache.tools.zip.ZipEncoding;
  * char numbytes[12]; // offset 12
  * };
  * </pre>
- *
  */
 
 public class TarEntry implements TarConstants {
@@ -1023,7 +1021,7 @@ public class TarEntry implements TarConstants {
 
     /**
      * Strips Windows' drive letter as well as any leading slashes,
-     * turns path separators into forward slahes.
+     * turns path separators into forward slashes.
      */
     private static String normalizeFileName(String fileName,
                                             boolean preserveLeadingSlashes) {
@@ -1083,10 +1081,10 @@ public class TarEntry implements TarConstants {
     /**
      * Check if buffer contents matches Ascii String.
      *
-     * @param expected
-     * @param buffer
-     * @param offset
-     * @param length
+     * @param expected String
+     * @param buffer byte[]
+     * @param offset int
+     * @param length int
      * @return {@code true} if buffer is the same as the expected string
      */
     private static boolean matchAsciiBuffer(String expected, byte[] buffer,
@@ -1105,13 +1103,13 @@ public class TarEntry implements TarConstants {
     /**
      * Compare byte buffers, optionally ignoring trailing nulls
      *
-     * @param buffer1
-     * @param offset1
-     * @param length1
-     * @param buffer2
-     * @param offset2
-     * @param length2
-     * @param ignoreTrailingNulls
+     * @param buffer1 byte[]
+     * @param offset1 int
+     * @param length1 int
+     * @param buffer2 byte[]
+     * @param offset2 int
+     * @param length2 int
+     * @param ignoreTrailingNulls boolean
      * @return {@code true} if buffer1 and buffer2 have same contents, having regard to trailing nulls
      */
     private static boolean isEqual(

@@ -395,6 +395,7 @@ public class Javah extends Task {
      * The classpath to use when loading the javah implementation
      * if it is not a built-in one.
      *
+     * @return Path
      * @since Ant 1.8.0
      */
     public Path createImplementationClasspath() {
@@ -403,6 +404,8 @@ public class Javah extends Task {
 
     /**
      * Set the adapter explicitly.
+     *
+     * @param adapter JavahAdapter
      * @since Ant 1.8.0
      */
     public void add(JavahAdapter adapter) {
@@ -495,6 +498,6 @@ public class Javah extends Task {
     }
 
     private enum Settings {
-        cls, files, classes;
+        cls, files, classes
     }
 }

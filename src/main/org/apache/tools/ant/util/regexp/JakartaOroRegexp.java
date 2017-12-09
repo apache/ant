@@ -79,7 +79,7 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
      * Convert ant regexp substitution option to oro options.
      *
      * @param options the ant regexp options
-     * @return the oro substition options
+     * @return the oro substitution options
      */
     protected int getSubsOptions(final int options) {
         return RegexpUtil.hasFlag(options, REPLACE_ALL) ? Util.SUBSTITUTE_ALL

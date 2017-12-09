@@ -34,6 +34,7 @@ public class MergingMapper implements FileNameMapper {
     public MergingMapper() {}
 
     /**
+     * @param to String
      * @since Ant 1.8.0
      */
     public MergingMapper(String to) {

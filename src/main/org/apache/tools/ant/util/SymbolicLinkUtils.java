@@ -120,7 +120,7 @@ public class SymbolicLinkUtils {
      *
      * <p>Note that #isSymbolicLink returns false if this method
      * returns true since Java won't produce a canonical name
-     * different from the abolute one if the link is broken.</p>
+     * different from the absolute one if the link is broken.</p>
      *
      * @param name the name of the file to test.
      *
@@ -141,7 +141,7 @@ public class SymbolicLinkUtils {
      *
      * <p>Note that #isSymbolicLink returns false if this method
      * returns true since Java won't produce a canonical name
-     * different from the abolute one if the link is broken.</p>
+     * different from the absolute one if the link is broken.</p>
      *
      * @param file the file to test.
      *
@@ -162,7 +162,7 @@ public class SymbolicLinkUtils {
      *
      * <p>Note that #isSymbolicLink returns false if this method
      * returns true since Java won't produce a canonical name
-     * different from the abolute one if the link is broken.</p>
+     * different from the absolute one if the link is broken.</p>
      *
      * @param parent the parent directory of the file to test
      * @param name the name of the file to test.

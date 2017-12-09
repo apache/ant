@@ -43,7 +43,7 @@ public class ResourceSelectorContainer extends DataType {
 
     /**
      * Construct a new ResourceSelectorContainer with the specified array of selectors.
-     * @param r the ResourceSelector[] to add.
+     * @param resourceSelectors the ResourceSelector[] to add.
      */
     public ResourceSelectorContainer(ResourceSelector... resourceSelectors) {
         for (ResourceSelector rsel : resourceSelectors) {

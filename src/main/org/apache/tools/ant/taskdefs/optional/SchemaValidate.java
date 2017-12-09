@@ -225,7 +225,7 @@ public class SchemaValidate extends XMLValidateTask {
         //enable schema
         setFeature(XmlConstants.FEATURE_NAMESPACES, true);
         if (!enableXercesSchemaValidation() && !enableJAXP12SchemaValidation()) {
-            //couldnt use the xerces or jaxp calls
+            //could not use xerces or jaxp calls
             throw new BuildException(ERROR_NO_XSD_SUPPORT);
         }
 
@@ -295,7 +295,7 @@ public class SchemaValidate extends XMLValidateTask {
         try {
             getXmlReader().setFeature(feature, value);
         } catch (SAXNotRecognizedException e) {
-            log("Not recognizied: " + feature, Project.MSG_VERBOSE);
+            log("Not recognized: " + feature, Project.MSG_VERBOSE);
         } catch (SAXNotSupportedException e) {
             log("Not supported: " + feature, Project.MSG_VERBOSE);
         }

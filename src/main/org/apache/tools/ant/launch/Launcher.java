@@ -58,10 +58,9 @@ public class Launcher {
 
     /**
      * The location of a per-user library directory.
-     * <p>
-     * It's value is the concatenation of {@link #ANT_PRIVATEDIR}
+     * <p>It's value is the concatenation of {@link #ANT_PRIVATEDIR}
      * with {@link #ANT_PRIVATELIB}, with an appropriate file separator
-     * in between. For example, on Unix, it's <code>.ant/lib</code>.
+     * in between. For example, on Unix, it's <code>.ant/lib</code>.</p>
      */
     public static final String USER_LIBDIR =
         ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB;

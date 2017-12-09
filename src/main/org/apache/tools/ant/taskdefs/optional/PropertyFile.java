@@ -55,16 +55,17 @@ import org.apache.tools.ant.util.LayoutPreservingProperties;
  *        &lt;entry key="product.version.major" type="int"  value="5"/&gt;
  *        &lt;entry key="product.version.minor" type="int"  value="0"/&gt;
  *        &lt;entry key="product.build.major"   type="int"  value="0" /&gt;
- *        &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;
- *        &lt;entry key="product.build.date"    type="date" value="now" /&gt;
+ *        &lt;entry key="product.build.minor"   type="int"  operation="+"/&gt;
+ *        &lt;entry key="product.build.date"    type="date" value="now"/&gt;
  *        &lt;entry key="intSet" type="int" operation="=" value="681"/&gt;
  *        &lt;entry key="intDec" type="int" operation="-"/&gt;
  *        &lt;entry key="StringEquals" type="string" value="testValue"/&gt;
  *     &lt;/propertyfile&gt;
  *   &lt;/target&gt;
  * </pre>
- *
+ * <p>
  * The &lt;propertyfile&gt; task must have:
+ * </p>
  * <ul>
  *   <li>file</li>
  * </ul>
@@ -76,8 +77,9 @@ import org.apache.tools.ant.util.LayoutPreservingProperties;
  *   <li>type</li>
  *   <li>value (the final four being eliminated shortly)</li>
  * </ul>
- *
+ * <p>
  * The &lt;entry&gt; task must have:
+ * </p>
  * <ul>
  *   <li>key</li>
  * </ul>
@@ -89,24 +91,29 @@ import org.apache.tools.ant.util.LayoutPreservingProperties;
  *   <li>default</li>
  *   <li>unit</li>
  * </ul>
- *
+ * <p>
  * If type is unspecified, it defaults to string.
- *
+ * </p>
  * Parameter values:
- * <ul>
- *   <li>operation:</li>
+ * <dl>
+ *   <dt>operation:</dt>
+ *   <dd>
  *   <ul>
  *     <li>"=" (set -- default)</li>
  *     <li>"-" (dec)</li>
  *     <li>"+" (inc)</li>
  *   </ul>
- *   <li>type:</li>
+ *   </dd>
+ *   <dt>type:</dt>
+ *   <dd>
  *   <ul>
  *     <li>"int"</li>
  *     <li>"date"</li>
  *     <li>"string"</li>
  *   </ul>
- *   <li>value:</li>
+ *   </dd>
+ *   <dt>value:</dt>
+ *   <dd>
  *   <ul>
  *     <li>holds the default value, if the property
  *              was not found in property file</li>
@@ -115,7 +122,8 @@ import org.apache.tools.ant.util.LayoutPreservingProperties;
  *              date/time and used even if a valid date was
  *              found in the property file.</li>
  *   </ul>
- * </ul>
+ *   </dd>
+ * </dl>
  *
  * <p>String property types can only use the "=" operation.
  * Int property types can only use the "=", "-" or "+" operations.<p>
@@ -231,6 +239,7 @@ public class PropertyFile extends Task {
     /**
      * optional flag to use original Java properties (as opposed to
      * layout preserving properties)
+     * @param val boolean
      */
     public void setJDKProperties(boolean val) {
         useJDKProperties = val;

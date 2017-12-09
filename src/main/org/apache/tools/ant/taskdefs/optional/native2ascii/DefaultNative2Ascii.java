@@ -25,7 +25,7 @@ import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * encapsulates the handling common to diffent Native2Asciiadapter
+ * encapsulates the handling common to different Native2AsciiAdapter
  * implementations.
  *
  * @since Ant 1.6.3

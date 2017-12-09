@@ -110,9 +110,9 @@ public final class ChainReaderHelper {
 
     /**
      * Convenience constructor.
-     * @param project
-     * @param primaryReader
-     * @param filterChains
+     * @param project ditto
+     * @param primaryReader ditto
+     * @param filterChains ditto
      */
     public ChainReaderHelper(Project project, Reader primaryReader,
         Iterable<FilterChain> filterChains) {
@@ -130,7 +130,7 @@ public final class ChainReaderHelper {
 
     /**
      * Fluent primary {@link Reader} mutator.
-     * @param rdr
+     * @param rdr Reader
      * @return {@code this}
      */
     public ChainReaderHelper withPrimaryReader(Reader rdr) {
@@ -148,7 +148,7 @@ public final class ChainReaderHelper {
 
     /**
      * Fluent {@link Project} mutator.
-     * @param project
+     * @param project ditto
      * @return {@code this}
      */
     public ChainReaderHelper withProject(Project project) {
@@ -176,7 +176,7 @@ public final class ChainReaderHelper {
 
     /**
      * Fluent buffer size mutator.
-     * @param size
+     * @param size ditto
      * @return {@code this}
      */
     public ChainReaderHelper withBufferSize(int size) {
@@ -195,7 +195,7 @@ public final class ChainReaderHelper {
 
     /**
      * Fluent {@code filterChains} mutator.
-     * @param filterChains
+     * @param filterChains ditto
      * @return {@code this}
      */
     public ChainReaderHelper withFilterChains(Iterable<FilterChain> filterChains) {
@@ -212,7 +212,7 @@ public final class ChainReaderHelper {
 
     /**
      * Fluent mechanism to apply some {@link Consumer}.
-     * @param consumer
+     * @param consumer ditto
      * @return {@code this}
      */
     public ChainReaderHelper with(Consumer<ChainReaderHelper> consumer) {

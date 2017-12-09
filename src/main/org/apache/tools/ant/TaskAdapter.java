@@ -44,7 +44,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
      * Constructor for given proxy.
      * So you could write easier code
      * <pre>
-     * myTaskContainer.addTask( new TaskAdapter(myProxy) );
+     * myTaskContainer.addTask(new TaskAdapter(myProxy));
      * </pre>
      *
      * @param proxy The object which Ant should use as task.

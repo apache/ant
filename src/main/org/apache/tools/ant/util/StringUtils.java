@@ -272,9 +272,9 @@ public final class StringUtils {
         }
         return string;
     }
-    
+
     /**
-     * Joins the string representation of the elements of a collection to 
+     * Joins the string representation of the elements of a collection to
      * a joined string with a given separator.
      * @param collection Collection of the data to be joined (may be null)
      * @param separator Separator between elements (may be null)
@@ -289,7 +289,7 @@ public final class StringUtils {
     }
 
     /**
-     * Joins the string representation of the elements of an array to 
+     * Joins the string representation of the elements of an array to
      * a joined string with a given separator.
      * @param array Array of the data to be joined (may be null)
      * @param separator Separator between elements (may be null)

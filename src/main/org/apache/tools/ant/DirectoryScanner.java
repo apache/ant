@@ -55,6 +55,7 @@ import org.apache.tools.ant.util.VectorSet;
  * With the selectors you can select which files you want to have included.
  * Files which are not selected are excluded. With patterns you can include
  * or exclude files based on their filename.
+ * </p>
  * <p>
  * The idea is simple. A given directory is recursively scanned for all files
  * and directories. Each file/directory is matched against a set of selectors,
@@ -63,11 +64,13 @@ import org.apache.tools.ant.util.VectorSet;
  * pattern of the include pattern list or other file selector, and don't match
  * any pattern of the exclude pattern list or fail to match against a required
  * selector will be placed in the list of files/directories found.
+ * </p>
  * <p>
  * When no list of include patterns is supplied, "**" will be used, which
  * means that everything will be matched. When no list of exclude patterns is
  * supplied, an empty list is used, such that nothing will be excluded. When
  * no selectors are supplied, none are applied.
+ * </p>
  * <p>
  * The filename pattern matching is done as follows:
  * The name to be matched is split up in path segments. A path segment is the
@@ -76,41 +79,54 @@ import org.apache.tools.ant.util.VectorSet;
  * For example, "abc/def/ghi/xyz.java" is split up in the segments "abc",
  * "def","ghi" and "xyz.java".
  * The same is done for the pattern against which should be matched.
+ * </p>
  * <p>
  * The segments of the name and the pattern are then matched against each
  * other. When '**' is used for a path segment in the pattern, it matches
  * zero or more path segments of the name.
+ * </p>
  * <p>
  * There is a special case regarding the use of <code>File.separator</code>s
- * at the beginning of the pattern and the string to match:<br>
- * When a pattern starts with a <code>File.separator</code>, the string
- * to match must also start with a <code>File.separator</code>.
- * When a pattern does not start with a <code>File.separator</code>, the
- * string to match may not start with a <code>File.separator</code>.
- * When one of these rules is not obeyed, the string will not
- * match.
+ * at the beginning of the pattern and the string to match:
+ * </p>
+ * <ul>
+ * <li>When a pattern starts with a <code>File.separator</code>, the string
+ * to match must also start with a <code>File.separator</code>.</li>
+ * <li>When a pattern does not start with a <code>File.separator</code>, the
+ * string to match may not start with a <code>File.separator</code>.</li>
+ * <li>When one of the above rules is not obeyed, the string will not
+ * match.</li>
+ * </ul>
  * <p>
  * When a name path segment is matched against a pattern path segment, the
  * following special characters can be used:<br>
  * '*' matches zero or more characters<br>
  * '?' matches one character.
+ * </p>
  * <p>
  * Examples:
+ * </p>
  * <p>
  * "**\*.class" matches all .class files/dirs in a directory tree.
+ * </p>
  * <p>
  * "test\a??.java" matches all files/dirs which start with an 'a', then two
  * more characters and then ".java", in a directory called test.
+ * </p>
  * <p>
  * "**" matches everything in a directory tree.
+ * </p>
  * <p>
  * "**\test\**\XYZ*" matches all files/dirs which start with "XYZ" and where
  * there is a parent directory called test (e.g. "abc\test\def\ghi\XYZ123").
+ * </p>
  * <p>
  * Case sensitivity may be turned off if necessary. By default, it is
  * turned on.
+ * </p>
  * <p>
  * Example of usage:
+ * </p>
  * <pre>
  *   String[] includes = {"**\\*.class"};
  *   String[] excludes = {"modules\\*\\**"};
@@ -702,6 +718,7 @@ public class DirectoryScanner
      * The maximum number of times a symbolic link may be followed
      * during a scan.
      *
+     * @param max int
      * @since Ant 1.8.0
      */
     public void setMaxLevelsOfSymlinks(final int max) {
@@ -785,7 +802,7 @@ public class DirectoryScanner
      * <code>File.separatorChar</code>, so the separator used need not
      * match <code>File.separatorChar</code>.
      *
-     * <p> When a pattern ends with a '/' or '\', "**" is appended.
+     * <p>When a pattern ends with a '/' or '\', "**" is appended.</p>
      *
      * @since Ant 1.6.3
      */
@@ -1371,7 +1388,7 @@ public class DirectoryScanner
      * Test whether or not a name matches against at least one include
      * pattern.
      *
-     * @param name The name to match. Must not be <code>null</code>.
+     * @param path The tokenized path to match. Must not be <code>null</code>.
      * @return <code>true</code> when the name matches against at least one
      *         include pattern, or <code>false</code> otherwise.
      */

@@ -30,7 +30,7 @@ public class ProcessUtil {
 
     /**
      * provide id of the current process
-     * @param fallback
+     * @param fallback fallback id
      * @return current process id
      */
     public static String getProcessId(final String fallback) {

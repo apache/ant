@@ -17,11 +17,11 @@
  */
 
 /*
- * Since the initial version of this file was deveolped on the clock on
+ * Since the initial version of this file was developed on the clock on
  * an NSF grant I should say the following boilerplate:
  *
  * This material is based upon work supported by the National Science
- * Foundaton under Grant No. EIA-0196404. Any opinions, findings, and
+ * Foundation under Grant No. EIA-0196404. Any opinions, findings, and
  * conclusions or recommendations expressed in this material are those
  * of the author and do not necessarily reflect the views of the
  * National Science Foundation.

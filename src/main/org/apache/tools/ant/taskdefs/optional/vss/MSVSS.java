@@ -95,15 +95,15 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     private int numDays = Integer.MIN_VALUE;
     /**  Date format for History */
     private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-    /**  Timestamp for retreived files */
+    /**  Timestamp for retrieved files */
     private CurrentModUpdated timestamp = null;
     /**  Behaviour for writable files */
     private WritableFiles writableFiles = null;
 
     /**
-     * Each sub-class must implemnt this method and return the constructed
+     * Each sub-class must implement this method and return the constructed
      * command line to be executed. It is up to the sub-task to determine the
-     * required attrubutes and their order.
+     * required attributes and their order.
      * @return    The Constructed command line.
      */
     abstract Commandline buildCmdLine();
@@ -170,9 +170,12 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Executes the task. <br>
+     * Executes the task.
+     * <p>
      * Builds a command line to execute ss.exe and then calls Exec's run method
      * to execute the command line.
+     * </p>
+     *
      * @throws BuildException if the command cannot execute.
      */
     public void execute() throws BuildException {

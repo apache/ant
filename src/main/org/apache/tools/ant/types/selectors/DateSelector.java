@@ -237,7 +237,6 @@ public class DateSelector extends BaseExtendSelector {
 
     /**
      * Enumerated attribute with the values for time comparison.
-     * <p>
      */
     public static class TimeComparisons extends TimeComparison {
     }

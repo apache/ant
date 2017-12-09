@@ -42,6 +42,11 @@ public class ReflectUtil {
     /**
      * Create an instance of a class using the constructor matching
      * the given arguments.
+     * @param <T> desired type
+     * @param ofClass Class&lt;T&gt;
+     * @param argTypes Class&lt;?&gt;[]
+     * @param args Object[]
+     * @return class instance
      * @since Ant 1.8.0
      */
     public static <T> T newInstance(Class<T> ofClass,
@@ -58,6 +63,7 @@ public class ReflectUtil {
 
     /**
      * Call a method on the object with no parameters.
+     * @param <T> desired type
      * @param obj  the object to invoke the method on.
      * @param methodName the name of the method to call
      * @return the object returned by the method
@@ -77,6 +83,7 @@ public class ReflectUtil {
      * Call a method on the object with no parameters.
      * Note: Unlike the invoke method above, this
      * calls class or static methods, not instance methods.
+     * @param <T> desired type
      * @param obj  the object to invoke the method on.
      * @param methodName the name of the method to call
      * @return the object returned by the method
@@ -94,6 +101,7 @@ public class ReflectUtil {
 
     /**
      * Call a method on the object with one argument.
+     * @param <T> desired type
      * @param obj  the object to invoke the method on.
      * @param methodName the name of the method to call
      * @param argType    the type of argument.
@@ -114,6 +122,7 @@ public class ReflectUtil {
 
     /**
      * Call a method on the object with two argument.
+     * @param <T> desired type
      * @param obj  the object to invoke the method on.
      * @param methodName the name of the method to call
      * @param argType1   the type of the first argument.
@@ -138,6 +147,7 @@ public class ReflectUtil {
 
     /**
      * Get the value of a field in an object.
+     * @param <T> desired type
      * @param obj the object to look at.
      * @param fieldName the name of the field in the object.
      * @return the value of the field.

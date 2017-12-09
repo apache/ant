@@ -1079,6 +1079,7 @@ public class Javac extends MatchingTask {
      * The classpath to use when loading the compiler implementation
      * if it is not a built-in one.
      *
+     * @return Path
      * @since Ant 1.8.0
      */
     public Path createCompilerClasspath() {
@@ -1087,6 +1088,8 @@ public class Javac extends MatchingTask {
 
     /**
      * Set the compiler adapter explicitly.
+     *
+     * @param adapter CompilerAdapter
      * @since Ant 1.8.0
      */
     public void add(final CompilerAdapter adapter) {
@@ -1102,6 +1105,7 @@ public class Javac extends MatchingTask {
      * matching package-info.java files that have been compiled but
      * didn't create class files themselves.
      *
+     * @param b boolean
      * @since Ant 1.8.3
      */
     public void setCreateMissingPackageInfoClass(final boolean b) {

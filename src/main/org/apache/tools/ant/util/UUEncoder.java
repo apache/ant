@@ -99,11 +99,10 @@ public class UUEncoder {
      * Encode a single line of data (less than or equal to 45 characters).
      *
      * @param data   The array of byte data.
-     * @param off    The starting offset within the data.
+     * @param offset The starting offset within the data.
      * @param length Length of the data to encode.
      * @param out    The output stream the encoded data is written to.
-     *
-     * @exception IOException
+     * @exception IOException if something goes wrong
      */
     private void encodeLine(
         byte[] data, int offset, int length, OutputStream out)

@@ -97,7 +97,7 @@ public class FileUtils {
 
     /**
      * A one item cache for fromUri.
-     * fromUri is called for each element when parseing ant build
+     * fromUri is called for each element when parsing ant build
      * files. It is a costly operation. This just caches the result
      * of the last call.
      */
@@ -1268,6 +1268,11 @@ public class FileUtils {
     /**
      * Are the two File instances pointing to the same object on the
      * file system?
+     *
+     * @param f1 File
+     * @param f2 File
+     * @return boolean
+     * @throws IOException if file name canonicalization fails
      * @since Ant 1.8.2
      */
     public boolean areSame(File f1, File f2) throws IOException {
@@ -1294,11 +1299,9 @@ public class FileUtils {
      *
      * @param from the file to move.
      * @param to the new file name.
-     *
      * @throws IOException if anything bad happens during this
      * process.  Note that <code>to</code> may have been deleted
      * already when this happens.
-     *
      * @since Ant 1.6
      */
     public void rename(File from, File to) throws IOException {
@@ -1355,18 +1358,20 @@ public class FileUtils {
      * test whether a file or directory exists, with an error in the
      * upper/lower case spelling of the name.
      * Using this method is only interesting on case insensitive file systems
-     * (Windows).<br>
-     * It will return true only if 3 conditions are met :
-     * <br>
+     * (Windows).
+     * <p>
+     * It will return true only if 3 conditions are met:
+     * </p>
      * <ul>
      *   <li>operating system is case insensitive</li>
      *   <li>file exists</li>
      *   <li>actual name from directory reading is different from the
      *       supplied argument</li>
      * </ul>
-     * <br>
-     * the purpose is to identify files or directories on case-insensitive
-     * filesystems whose case is not what is expected.<br>
+     * <p>
+     * The purpose is to identify files or directories on case-insensitive
+     * filesystems whose case is not what is expected.
+     * </p>
      * Possibly to rename them afterwards to the desired upper/lowercase
      * combination.
      *
@@ -1552,6 +1557,7 @@ public class FileUtils {
      * Others possible. If the delete does not work, call System.gc(),
      * wait a little and try again.
      *
+     * @param f File
      * @return whether deletion was successful
      * @since Ant 1.8.0
      */
@@ -1563,6 +1569,8 @@ public class FileUtils {
      * If delete does not work, call System.gc() if asked to, wait a
      * little and try again.
      *
+     * @param f File
+     * @param runGC boolean
      * @return whether deletion was successful
      * @since Ant 1.8.3
      */
@@ -1671,7 +1679,7 @@ public class FileUtils {
     /**
      * Gets path from a <code>List</code> of <code>String</code>s.
      *
-     * @param pathStack <code>List</code> of <code>String</code>s to be concated as a path.
+     * @param pathStack <code>List</code> of <code>String</code>s to be concatenated as a path.
      * @param separatorChar <code>char</code> to be used as separator between names in path
      * @return <code>String</code>, never <code>null</code>
      *
@@ -1707,8 +1715,9 @@ public class FileUtils {
     /**
      * Opens a new OutputStream for the given Path.
      * @param path the path of the file
-     * @param whether to append to or a replace an existing file
+     * @param append whether to append to or a replace an existing file
      * @return a stream ready to write to the file
+     * @throws IOException if stream creation fails
      * @since Ant 1.10.2
      */
     public static OutputStream newOutputStream(Path path, boolean append) throws IOException {

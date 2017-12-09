@@ -363,7 +363,7 @@ public class Concat extends Task implements ResourceCollection {
 
         /**
          * return true if the lastchars buffer does
-         * not contain the lineseparator
+         * not contain the line separator
          */
         private boolean isMissingEndOfLine() {
             for (int i = 0; i < lastChars.length; ++i) {
@@ -621,6 +621,7 @@ public class Concat extends Task implements ResourceCollection {
      *
      * <p>Defaults to false</p>
      *
+     * @param f boolean
      * @since Ant 1.8.2
      */
     public void setForceReadOnly(boolean f) {

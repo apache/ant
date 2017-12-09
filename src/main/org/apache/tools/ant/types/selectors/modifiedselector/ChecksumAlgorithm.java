@@ -34,17 +34,18 @@ import org.apache.tools.ant.BuildException;
 /**
  * Computes a 'checksum' for the content of file using
  * java.util.zip.CRC32 and java.util.zip.Adler32.
- * Use of this algorithm doesn't require any additional nested <param>s.
- * Supported <param>s are:
+ * Use of this algorithm doesn't require any additional nested &lt;param&gt;s.
+ * Supported &lt;param&gt;s are:
  * <table>
+ * <caption>Checksum algorithm parameters</caption>
  * <tr>
  *   <th>name</th><th>values</th><th>description</th><th>required</th>
  * </tr>
  * <tr>
- *   <td> algorithm.algorithm </td>
- *   <td> ADLER | CRC ( default ) </td>
- *   <td> name of the algorithm the checksum should use </td>
- *   <td> no, defaults to CRC </td>
+ *   <td>algorithm.algorithm</td>
+ *   <td>ADLER | CRC (default)</td>
+ *   <td>name of the algorithm the checksum should use</td>
+ *   <td>no, defaults to CRC</td>
  * </tr>
  * </table>
  *
@@ -124,8 +125,8 @@ public class ChecksumAlgorithm implements Algorithm {
             try (CheckedInputStream check = new CheckedInputStream(
                 new BufferedInputStream(Files.newInputStream(file.toPath())), checksum)) {
                 // Read the file
-                while (check.read() != -1)
-                    ;
+                while (check.read() != -1) {
+                }
                 return Long.toString(check.getChecksum().getValue());
             } catch (Exception e) {
             }

@@ -66,9 +66,9 @@ import org.apache.tools.ant.util.StringUtils;
  * Generates Javadoc documentation for a collection
  * of source code.
  *
- * <p>Current known limitations are:
+ * <p>Current known limitations are:</p>
  *
- * <p><ul>
+ * <ul>
  *    <li>patterns must be of the form "xxx.*", every other pattern doesn't
  *        work.
  *    <li>there is no control on arguments sanity since they are left
@@ -76,10 +76,10 @@ import org.apache.tools.ant.util.StringUtils;
  * </ul>
  *
  * <p>If no <code>doclet</code> is set, then the <code>version</code> and
- * <code>author</code> are by default <code>"yes"</code>.
+ * <code>author</code> are by default <code>"yes"</code>.</p>
  *
  * <p>Note: This task is run on another VM because the Javadoc code calls
- * <code>System.exit()</code> which would break Ant functionality.
+ * <code>System.exit()</code> which would break Ant functionality.</p>
  *
  * @since Ant 1.1
  *
@@ -1666,6 +1666,7 @@ public class Javadoc extends Task {
     /**
      * Enables deep-copying of <code>doc-files</code> directories.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setDocFilesSubDirs(final boolean b) {
@@ -1676,6 +1677,7 @@ public class Javadoc extends Task {
      * Colon-separated list of <code>doc-files</code> subdirectories
      * to skip if {@link #setDocFilesSubDirs docFilesSubDirs is true}.
      *
+     * @param s String
      * @since Ant 1.8.0
      */
     public void setExcludeDocFilesSubDir(final String s) {
@@ -1684,6 +1686,8 @@ public class Javadoc extends Task {
 
     /**
      * Whether to post-process the generated javadocs in order to mitigate CVE-2013-1571.
+     *
+     * @param b boolean
      * @since Ant 1.9.2
      */
     public void setPostProcessGeneratedJavadocs(final boolean b) {

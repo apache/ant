@@ -42,9 +42,9 @@ import org.w3c.dom.Element;
  * Examines the output of cvs rdiff between two tags.
  *
  * It produces an XML output representing the list of changes.
- * <PRE>
+ * <pre>
  * &lt;!-- Root element --&gt;
- * &lt;!ELEMENT tagdiff ( entry+ ) &gt;
+ * &lt;!ELEMENT tagdiff (entry+) &gt;
  * &lt;!-- Start tag of the report --&gt;
  * &lt;!ATTLIST tagdiff startTag NMTOKEN #IMPLIED &gt;
  * &lt;!-- End tag of the report --&gt;
@@ -55,16 +55,16 @@ import org.w3c.dom.Element;
  * &lt;!ATTLIST tagdiff endDate NMTOKEN #IMPLIED &gt;
  *
  * &lt;!-- CVS tag entry --&gt;
- * &lt;!ELEMENT entry ( file ) &gt;
+ * &lt;!ELEMENT entry (file) &gt;
  * &lt;!-- File added, changed or removed --&gt;
- * &lt;!ELEMENT file ( name, revision?, prevrevision? ) &gt;
+ * &lt;!ELEMENT file (name, revision?, prevrevision?) &gt;
  * &lt;!-- Name of the file --&gt;
- * &lt;!ELEMENT name ( #PCDATA ) &gt;
+ * &lt;!ELEMENT name (#PCDATA) &gt;
  * &lt;!-- Revision number --&gt;
- * &lt;!ELEMENT revision ( #PCDATA ) &gt;
+ * &lt;!ELEMENT revision (#PCDATA) &gt;
  * &lt;!-- Previous revision number --&gt;
- * &lt;!ELEMENT prevrevision ( #PCDATA ) &gt;
- * </PRE>
+ * &lt;!ELEMENT prevrevision (#PCDATA) &gt;
+ * </pre>
  *
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"

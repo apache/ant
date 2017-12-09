@@ -53,6 +53,7 @@ public class ReflectWrapper {
     }
 
     /**
+     * @param <T> desired type
      * @return the wrapped object.
      */
     @SuppressWarnings("unchecked")
@@ -62,6 +63,7 @@ public class ReflectWrapper {
 
     /**
      * Call a method on the object with no parameters.
+     * @param <T> desired type
      * @param methodName the name of the method to call
      * @return the object returned by the method
      */
@@ -71,6 +73,7 @@ public class ReflectWrapper {
 
     /**
      * Call a method on the object with one argument.
+     * @param <T> desired type
      * @param methodName the name of the method to call
      * @param argType    the type of argument.
      * @param arg        the value of the argument.
@@ -82,6 +85,7 @@ public class ReflectWrapper {
 
     /**
      * Call a method on the object with one argument.
+     * @param <T> desired type
      * @param methodName the name of the method to call
      * @param argType1   the type of the first argument.
      * @param arg1       the value of the first argument.

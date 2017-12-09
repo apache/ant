@@ -73,18 +73,18 @@ public class Rotate extends TransformOperation implements DrawOperation {
             if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
-                System.out.println("Execing Draws");
+                System.out.println("Exec'ing Draws");
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
                 return performRotate(op);
             }
             if (instr instanceof TransformOperation) {
                 BufferedImage bi = image.getAsBufferedImage();
-                System.out.println("Execing Transforms");
+                System.out.println("Exec'ing Transforms");
                 image = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
             }
         }
-        System.out.println("Execing as TransformOperation");
+        System.out.println("Exec'ing as TransformOperation");
         image = performRotate(image);
         System.out.println(image);
         return image;

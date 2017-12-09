@@ -344,7 +344,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
      * Returns true if the last modified time needs to be preserved on the
      * file(s) that get transferred. Returns false otherwise.
      *
-     * @return
+     * @return boolean
      */
     public boolean getPreserveLastModified() {
         return this.preserveLastModified;

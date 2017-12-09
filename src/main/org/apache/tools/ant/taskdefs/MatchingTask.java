@@ -155,7 +155,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * List of filenames and directory names to not include. They should be
-     * either , or " " (space) separated. The ignored files will be logged.
+     * either comma or space separated. The ignored files will be logged.
      *
      * @param ignoreString the string containing the files to ignore.
      */

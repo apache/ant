@@ -31,7 +31,7 @@ public abstract class SizeLimitCollection extends BaseResourceCollectionWrapper 
 
     /**
      * Set the number of resources to be included.
-     * @param i the count as <code>int</count>.
+     * @param i the count as <code>int</code>.
      */
     public synchronized void setCount(int i) {
         checkAttributesAllowed();
@@ -40,7 +40,7 @@ public abstract class SizeLimitCollection extends BaseResourceCollectionWrapper 
 
     /**
      * Get the number of resources to be included. Default is 1.
-     * @return the count as <code>int</count>.
+     * @return the count as <code>int</code>.
      */
     public synchronized int getCount() {
         return count;
@@ -56,7 +56,7 @@ public abstract class SizeLimitCollection extends BaseResourceCollectionWrapper 
     }
 
     /**
-     * Get the count, verifying it is >= 0.
+     * Get the count, verifying it is &gt;= 0.
      * @return int count
      */
     protected int getValidCount() {

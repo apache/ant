@@ -87,11 +87,11 @@ public class CCMReconfigure extends Continuus {
 
         if (isRecurse()) {
             cmd.createArgument().setValue(FLAG_RECURSE);
-        } // end of if ()
+        }
 
         if (isVerbose()) {
             cmd.createArgument().setValue(FLAG_VERBOSE);
-        } // end of if ()
+        }
 
         if (getCcmProject() != null) {
             cmd.createArgument().setValue(FLAG_PROJECT);

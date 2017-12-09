@@ -49,7 +49,7 @@ public class BuildException extends RuntimeException {
      *
      * @param pattern A description of or information about the exception.
      *            Should not be {@code null}.
-     * @param formatArguments
+     * @param formatArguments ditto
      * @see String#format(String, Object...)
      * @since Ant 1.10.2
      */

@@ -198,6 +198,7 @@ public class ManifestTask extends Task {
     /**
      * Whether to merge Class-Path attributes.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setMergeClassPathAttributes(boolean b) {
@@ -208,6 +209,7 @@ public class ManifestTask extends Task {
      * Whether to flatten multi-valued attributes (i.e. Class-Path)
      * into a single one.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFlattenAttributes(boolean b) {

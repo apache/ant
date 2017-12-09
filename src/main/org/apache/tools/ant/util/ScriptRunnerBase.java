@@ -190,7 +190,7 @@ public abstract class ScriptRunnerBase {
     }
 
     /**
-     * Whether to use script compilation if available. 
+     * Whether to use script compilation if available.
      * @since Ant 1.10.2
      * @param compiled if true, compile the script if possible.
      */
@@ -236,7 +236,7 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Read some source in from the given reader
-     * @param reader the reader; this is closed afterwards.
+     * @param in the input stream to pass into a buffered reader.
      * @param name the name to use in error messages
      * @param charset the encoding for the reader, may be null.
      */

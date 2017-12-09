@@ -156,6 +156,7 @@ public class Echo extends Task {
      *
      * <p>Defaults to false</p>
      *
+     * @param f boolean
      * @since Ant 1.8.2
      */
     public void setForce(boolean f) {

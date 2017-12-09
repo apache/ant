@@ -113,6 +113,8 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * This is a helper method that takes a selector and calls its
      * isSelected() method on each file in the testbed. It returns
      * a string of "T"s amd "F"s
+     *
+     * @param selector FileSelector
      */
     public String selectionString(FileSelector selector) {
         return selectionString(beddir,files,selector);
@@ -124,6 +126,8 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * variation is used for dependency checks and to get around the
      * limitations in the touch task when running JDK 1.1. It returns
      * a string of "T"s amd "F"s.
+     *
+     * @param selector FileSelector
      */
     public String mirrorSelectionString(FileSelector selector) {
         return selectionString(mirrordir,mirrorfiles,selector);
@@ -133,6 +137,10 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * Worker method for the two convenience methods above. Applies a
      * selector on a set of files passed in and returns a string of
      * "T"s amd "F"s from applying the selector to each file.
+     *
+     * @param basedir File
+     * @param files File[]
+     * @param selector FileSelector
      */
     public String selectionString(File basedir, File[] files, FileSelector selector) {
         StringBuilder buf = new StringBuilder();
@@ -150,6 +158,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * Does the selection test for a given selector and prints the
      * filenames of the differing files (selected but shouldn't,
      * not selected but should).
+     *
      * @param selector  The selector to test
      * @param expected  The expected result
      */
@@ -161,12 +170,13 @@ public abstract class BaseSelectorTest extends BuildFileTest {
     }
 
     /**
-     *  Checks which files are selected and shouldn't be or which
-     *  are not selected but should.
-     *  @param expected    String containing 'F's and 'T's
-     *  @param result      String containing 'F's and 'T's
-     *  @return Difference as String containing '-' (equal) and
-     *          'X' (difference).
+     * Checks which files are selected and shouldn't be or which
+     * are not selected but should.
+     *
+     * @param expected    String containing 'F's and 'T's
+     * @param result      String containing 'F's and 'T's
+     * @return Difference as String containing '-' (equal) and
+     *         'X' (difference).
      */
     public String diff(String expected, String result) {
         int length1 = expected.length();
@@ -184,6 +194,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
     /**
      * Resolves a diff-String (@see diff()) against the (inherited) filenames-
      * and files arrays.
+     *
      * @param filelist    Diff-String
      * @return String containing the filenames for all differing files,
      *         separated with semicolons ';'
@@ -204,10 +215,10 @@ public abstract class BaseSelectorTest extends BuildFileTest {
 
 
     /**
-     * <p>Creates a testbed. We avoid the dreaded "test" word so that we
+     * Creates a testbed. We avoid the dreaded "test" word so that we
      * don't falsely identify this as a test to be run. The actual
      * setting up of the testbed is done in the
-     * <code>src/etc/testcases/types/selectors.xml</code> build file.</p>
+     * <code>src/etc/testcases/types/selectors.xml</code> build file.
      *
      * <p>Note that the right way to call this is within a try block,
      * with a finally clause that calls cleanupBed(). You place tests of
@@ -232,7 +243,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
 
 
     /**
-     * <p>Creates a mirror of the testbed for use in dependency checks.</p>
+     * Creates a mirror of the testbed for use in dependency checks.
      *
      * <p>Note that the right way to call this is within a try block,
      * with a finally clause that calls cleanupMirror(). You place tests of

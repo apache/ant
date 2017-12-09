@@ -69,6 +69,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * The value of the reverse attribute.
+     *
      * @return the reverse attribute.
      * @since Ant 1.6.3
      */
@@ -89,6 +90,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * The value of the encoding attribute.
+     *
      * @return the encoding attribute.
      * @since Ant 1.6.3
      */
@@ -127,6 +129,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Choose the implementation for this particular task.
+     *
      * @param impl the name of the implementation
      * @since Ant 1.6.3
      */
@@ -142,7 +145,6 @@ public class Native2Ascii extends MatchingTask {
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return the mapper to use for file name translations.
-     *
      * @throws BuildException if more than one mapper is defined.
      */
     public Mapper createMapper() throws BuildException {
@@ -156,6 +158,7 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * A nested filenamemapper
+     *
      * @param fileNameMapper the mapper to add
      * @since Ant 1.6.3
      */
@@ -165,8 +168,8 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Adds an implementation specific command-line argument.
-     * @return a ImplementationSpecificArgument to be configured
      *
+     * @return a ImplementationSpecificArgument to be configured
      * @since Ant 1.6.3
      */
     public ImplementationSpecificArgument createArg() {
@@ -180,6 +183,7 @@ public class Native2Ascii extends MatchingTask {
      * The classpath to use when loading the native2ascii
      * implementation if it is not a built-in one.
      *
+     * @return Path
      * @since Ant 1.8.0
      */
     public Path createImplementationClasspath() {
@@ -188,6 +192,8 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Set the adapter explicitly.
+     *
+     * @param adapter Native2AsciiAdapter
      * @since Ant 1.8.0
      */
     public void add(Native2AsciiAdapter adapter) {

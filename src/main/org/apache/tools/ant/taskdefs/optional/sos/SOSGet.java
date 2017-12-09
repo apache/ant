@@ -67,14 +67,15 @@ public class SOSGet extends SOS {
     }
 
     /**
-     * Build the command line <br>
-     *
+     * Build the command line
+     * <p>
      * GetFile required parameters: -server -name -password -database -project -file<br>
      * GetFile optional parameters: -workdir -revision -verbose -nocache -nocompression -soshome<br>
      *
      * GetProject required parameters: -server -name -password -database -project<br>
      * GetProject optional parameters: -label -workdir -recursive -verbose -nocache
-     * -nocompression -soshome<br>
+     * -nocompression -soshome
+     * </p>
      *
      * @return    Commandline the generated command to be executed
      */

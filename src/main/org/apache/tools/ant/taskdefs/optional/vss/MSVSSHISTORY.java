@@ -147,7 +147,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Format of dates in <code>fromDate</code and <code>toDate</code>.
+     * Format of dates in <code>fromDate</code> and <code>toDate</code>.
      * Used when calculating dates with the numdays attribute.
      * This string uses the formatting rules of <code>SimpleDateFormat</code>.
      * Defaults to <code>DateFormat.SHORT</code>.

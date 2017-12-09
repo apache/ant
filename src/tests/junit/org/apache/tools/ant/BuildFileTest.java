@@ -103,6 +103,9 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Assert that only the given message has been logged with a
      * priority &lt;= INFO when running the given target.
+     *
+     * @param target String
+     * @param log String
      */
     public void expectLog(String target, String log) {
         executeTarget(target);
@@ -112,6 +115,8 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the log messages.
+     *
+     * @param substring String
      */
     public void assertLogContaining(String substring) {
         String realLog = getLog();
@@ -122,6 +127,8 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is not in the log messages.
+     *
+     * @param substring String
      */
     public void assertLogNotContaining(String substring) {
         String realLog = getLog();
@@ -132,6 +139,8 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the output messages.
+     *
+     * @param substring String
      * @since Ant1.7
      */
     public void assertOutputContaining(String substring) {
@@ -140,8 +149,10 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the output messages.
+     *
      * @param message Print this message if the test fails. Defaults to
      *                a meaningful text if <tt>null</tt> is passed.
+     * @param substring String
      * @since Ant1.7
      */
     public void assertOutputContaining(String message, String substring) {
@@ -154,8 +165,10 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is not in the output messages.
+     *
      * @param message Print this message if the test fails. Defaults to
      *                a meaningful text if <tt>null</tt> is passed.
+     * @param substring String
      * @since Ant1.7
      */
     public void assertOutputNotContaining(String message, String substring) {
@@ -169,6 +182,9 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Assert that the given message has been logged with a priority &lt;= INFO when running the
      * given target.
+     *
+     * @param target String
+     * @param log String
      */
     public void expectLogContaining(String target, String log) {
         executeTarget(target);
@@ -178,6 +194,9 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Assert that the given message has not been logged with a
      * priority &lt;= INFO when running the given target.
+     *
+     * @param target String
+     * @param log String
      */
     public void expectLogNotContaining(String target, String log) {
         executeTarget(target);
@@ -189,7 +208,7 @@ public abstract class BuildFileTest extends TestCase {
      * Only valid if configureProject() has been called.
      *
      * @pre logBuffer!=null
-     * @return    The log value
+     * @return The log value
      */
     public String getLog() {
         return logBuffer.toString();
@@ -198,6 +217,9 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Assert that the given message has been logged with a priority
      * &gt;= VERBOSE when running the given target.
+     *
+     * @param target String
+     * @param log String
      */
     public void expectDebuglog(String target, String log) {
         executeTarget(target);
@@ -207,6 +229,8 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * Assert that the given substring is in the log messages.
+     *
+     * @param substring String
      */
     public void assertDebuglogContaining(String substring) {
         String realLog = getFullLog();
@@ -231,8 +255,8 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * execute the target, verify output matches expectations
      *
-     * @param  target  target to execute
-     * @param  output  output to look for
+     * @param target  target to execute
+     * @param output  output to look for
      */
     public void expectOutput(String target, String output) {
         executeTarget(target);
@@ -244,9 +268,9 @@ public abstract class BuildFileTest extends TestCase {
      * Executes the target, verify output matches expectations
      * and that we got the named error at the end
      *
-     * @param  target  target to execute
-     * @param  output  output to look for
-     * @param  error   Description of Parameter
+     * @param target  target to execute
+     * @param output  output to look for
+     * @param error   Description of Parameter
      */
     public void expectOutputAndError(String target, String output, String error) {
         executeTarget(target);
@@ -282,7 +306,7 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Sets up to run the named project
      *
-     * @param  filename name of project file to run
+     * @param filename name of project file to run
      */
     public void configureProject(String filename) throws BuildException {
         configureProject(filename, Project.MSG_DEBUG);
@@ -291,7 +315,8 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Sets up to run the named project
      *
-     * @param  filename name of project file to run
+     * @param filename name of project file to run
+     * @param logLevel int
      */
     public void configureProject(String filename, int logLevel)
         throws BuildException {
@@ -312,7 +337,7 @@ public abstract class BuildFileTest extends TestCase {
      * Executes a target we have set up
      *
      * @pre configureProject has been called
-     * @param  targetName  target to run
+     * @param targetName  target to run
      */
     public void executeTarget(String targetName) {
         PrintStream sysOut = System.out;
@@ -367,10 +392,10 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * Runs a target, wait for a build exception.
      *
-     * @param  target target to run
-     * @param  cause  information string to reader of report
-     * @param  msg    the message value of the build exception we are waiting
-     *         for set to null for any build exception to be valid
+     * @param target target to run
+     * @param cause  information string to reader of report
+     * @param msg    the message value of the build exception we are waiting
+     *               for set to null for any build exception to be valid
      */
     public void expectSpecificBuildException(String target, String cause, String msg) {
         try {
@@ -391,9 +416,9 @@ public abstract class BuildFileTest extends TestCase {
      * run a target, expect an exception string
      * containing the substring we look for (case sensitive match)
      *
-     * @param  target target to run
-     * @param  cause  information string to reader of report
-     * @param  contains  substring of the build exception to look for
+     * @param target target to run
+     * @param cause  information string to reader of report
+     * @param contains  substring of the build exception to look for
      */
     public void expectBuildExceptionContaining(String target, String cause, String contains) {
         try {
@@ -479,7 +504,7 @@ public abstract class BuildFileTest extends TestCase {
      * relative to the package name or absolute from the root path.
      *
      * @param resource the resource to retrieve its url.
-     * @throws junit.framework.AssertionFailedError if the resource is not found.
+     * @return URL ditto
      */
     public URL getResource(String resource) {
         URL url = getClass().getResource(resource);

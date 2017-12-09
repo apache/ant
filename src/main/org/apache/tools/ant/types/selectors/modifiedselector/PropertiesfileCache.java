@@ -30,22 +30,23 @@ import java.util.Properties;
 /**
  * Use java.util.Properties for storing the values.
  * The use of this Cache-implementation requires the use of the parameter
- * <param name="cache.cachefile" .../> for defining, where to store the
+ * &lt;param name="cache.cachefile" .../&gt; for defining, where to store the
  * properties file.
  *
  * The ModifiedSelector sets the <i>cachefile</i> to the default value
  * <i>cache.properties</i>.
  *
- * Supported <param>s are:
+ * Supported &lt;param&gt;s are:
  * <table>
+ * <caption>Cache parameters</caption>
  * <tr>
  *   <th>name</th><th>values</th><th>description</th><th>required</th>
  * </tr>
  * <tr>
- *   <td> cache.cachefile </td>
- *   <td> <i>path to file</i> </td>
- *   <td> the name of the properties file </td>
- *   <td> yes </td>
+ *   <td>cache.cachefile</td>
+ *   <td><i>path to file</i></td>
+ *   <td>the name of the properties file</td>
+ *   <td>yes</td>
  * </tr>
  * </table>
  *

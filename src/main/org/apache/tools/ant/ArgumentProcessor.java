@@ -37,6 +37,11 @@ public interface ArgumentProcessor {
      * <p>
      * If the argument is not supported, returns -1. Else, the position of the
      * first argument not supported.
+     * </p>
+     *
+     * @param args String[]
+     * @param pos int
+     * @return int
      */
     int readArguments(String[] args, int pos);
 
@@ -45,12 +50,18 @@ public interface ArgumentProcessor {
      * this method is called after all arguments were parsed. Returns
      * <code>true</code> if Ant should stop there, ie the build file not parsed
      * and the project should not be executed.
+     *
+     * @param args List&lt;String&gt;
+     * @return boolean
      */
     boolean handleArg(List<String> args);
 
     /**
      * If some arguments matched with {@link #readArguments(String[], int)},
      * this method is called just before the project being configured
+     *
+     * @param project Project
+     * @param args List&lt;String&gt;
      */
     void prepareConfigure(Project project, List<String> args);
 
@@ -59,12 +70,17 @@ public interface ArgumentProcessor {
      * after the project being configured. Returns <code>true</code> if Ant
      * should stop there, ie the build file not parsed and the project should
      * not be executed.
+     *
+     * @param project Project
+     * @param arg List&lt;String&gt;
+     * @return boolean
      */
     boolean handleArg(Project project, List<String> arg);
 
     /**
      * Print the usage of the supported arguments
      *
+     * @param writer PrintStream
      * @see org.apache.tools.ant.Main#printUsage()
      */
     void printUsage(PrintStream writer);

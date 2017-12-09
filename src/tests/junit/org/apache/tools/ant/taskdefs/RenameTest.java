@@ -80,6 +80,7 @@ public class RenameTest {
     public void test5() {
         buildRule.executeTarget("test5");
     }
+
     @Test
     public void test6() {
         buildRule.executeTarget("test6");

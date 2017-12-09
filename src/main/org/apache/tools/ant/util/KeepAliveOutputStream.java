@@ -58,6 +58,7 @@ public class KeepAliveOutputStream extends FilterOutputStream {
      * Convenience factory method that returns a non-closing
      * PrintStream around System.out.
      *
+     * @return PrintStream
      * @since Ant 1.8.0
      */
     public static PrintStream wrapSystemOut() {
@@ -68,6 +69,7 @@ public class KeepAliveOutputStream extends FilterOutputStream {
      * Convenience factory method that returns a non-closing
      * PrintStream around System.err.
      *
+     * @return PrintStream
      * @since Ant 1.8.0
      */
     public static PrintStream wrapSystemErr() {
@@ -75,6 +77,7 @@ public class KeepAliveOutputStream extends FilterOutputStream {
     }
 
     /**
+     * @return PrintStream
      * @since Ant 1.8.0
      */
     private static PrintStream wrap(PrintStream ps) {

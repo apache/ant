@@ -367,7 +367,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Defines the compilation feature ; optional.
+     * Defines the compilation feature; optional.
      *
      * @param compiled enables the script compilation if available.
      * @since Ant 1.10.2
@@ -377,7 +377,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Loads the script from an external file ; optional.
+     * Loads the script from an external file; optional.
      *
      * @param file the file containing the script source.
      */
@@ -386,7 +386,7 @@ public class ScriptDef extends DefBase {
     }
 
     /**
-     * Sets the encoding of the script from an external file ; optional.
+     * Sets the encoding of the script from an external file; optional.
      *
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.2

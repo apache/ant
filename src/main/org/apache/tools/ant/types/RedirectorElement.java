@@ -435,6 +435,7 @@ public class RedirectorElement extends DataType {
      * <p>Binary output will not be split into lines which may make
      * error and normal output look mixed up when they get written to
      * the same stream.</p>
+     * @param b boolean
      * @since 1.9.4
      */
     public void setBinaryOutput(boolean b) {

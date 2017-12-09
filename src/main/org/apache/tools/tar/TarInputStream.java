@@ -62,7 +62,7 @@ public class TarInputStream extends FilterInputStream {
 
     /**
      * This contents of this array is not used at all in this class,
-     * it is only here to avoid repreated object creation during calls
+     * it is only here to avoid repeated object creation during calls
      * to the no-arg read method.
      */
     protected byte[] oneBuf;
@@ -541,7 +541,7 @@ public class TarInputStream extends FilterInputStream {
     /**
      * Reads a byte from the current tar archive entry.
      *
-     * This method simply calls read( byte[], int, int ).
+     * This method simply calls read(byte[], int, int).
      *
      * @return The byte read, or -1 at EOF.
      * @throws IOException on error
@@ -658,6 +658,9 @@ public class TarInputStream extends FilterInputStream {
      * Whether this class is able to read the given entry.
      *
      * <p>May return false if the current entry is a sparse file.</p>
+     *
+     * @param te TarEntry
+     * @return boolean
      */
     public boolean canReadEntryData(TarEntry te) {
         return !te.isGNUSparse();

@@ -20,7 +20,9 @@ package org.apache.tools.ant.util.regexp;
 
 import java.io.IOException;
 
-import junit.framework.AssertionFailedError;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests for the jakarta-regexp implementation of the Regexp interface.
@@ -32,26 +34,24 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         return new JakartaRegexpRegexp();
     }
 
-    public JakartaRegexpRegexpTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testWindowsLineSeparator2() throws IOException {
         try {
             super.testWindowsLineSeparator2();
             fail("Should trigger when this bug is fixed. {@since 1.2}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 
     /**
      * Fails for the same reason as "default" mode in doEndTest2.
      */
+    @Test
     public void testUnixLineSeparator() throws IOException {
         try {
             super.testUnixLineSeparator();
             fail("Should trigger once this bug is fixed. {@since 1.2}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 

@@ -66,7 +66,7 @@ public abstract class AbstractSshMessage {
     /**
      * Constructor for AbstractSshMessage
      * @param verbose if true do verbose logging
-     * @param compression if true use compression
+     * @param compressed if true use compression
      * @param session the ssh session to use
      * @since Ant 1.9.8
      */
@@ -211,7 +211,7 @@ public abstract class AbstractSshMessage {
     }
 
     /**
-     * Track progress every 10% if 100kb < filesize < 1mb. For larger
+     * Track progress every 10% if 100kb &lt; filesize &lt; 1Mb. For larger
      * files track progress for every percent transmitted.
      * @param filesize the size of the file been transmitted
      * @param totalLength the total transmission size
@@ -285,6 +285,7 @@ public abstract class AbstractSshMessage {
         public void end() {
         }
 
+        @SuppressWarnings("unused")
         public long getTotalLength() {
             return totalLength;
         }

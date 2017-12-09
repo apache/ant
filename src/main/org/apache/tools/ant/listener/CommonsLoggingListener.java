@@ -130,8 +130,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#targetStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
@@ -146,8 +146,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#targetFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
@@ -166,8 +166,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#taskStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
@@ -189,8 +189,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#taskFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
@@ -219,8 +219,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#messageLogged
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void messageLogged(final BuildEvent event) {
         if (initialized) {

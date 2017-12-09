@@ -51,8 +51,7 @@ class NioZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
     public boolean canEncode(final String name) {
         final CharsetEncoder enc = this.charset.newEncoder();
@@ -63,8 +62,7 @@ class NioZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
     public ByteBuffer encode(final String name) {
         final CharsetEncoder enc = this.charset.newEncoder();
@@ -110,8 +108,7 @@ class NioZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#decode(byte[])
+     * @see org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
     public String decode(final byte[] data) throws IOException {
         return this.charset.newDecoder()

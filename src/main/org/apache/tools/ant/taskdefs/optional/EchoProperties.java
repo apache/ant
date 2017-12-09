@@ -54,35 +54,38 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *  Displays all the current properties in the build. The output can be sent to
- *  a file if desired. <P>
- *
- *  Attribute "destfile" defines a file to send the properties to. This can be
- *  processed as a standard property file later. <P>
- *
- *  Attribute "prefix" defines a prefix which is used to filter the properties
- *  only those properties starting with this prefix will be echoed. <P>
- *
- *  By default, the "failonerror" attribute is enabled. If an error occurs while
- *  writing the properties to a file, and this attribute is enabled, then a
- *  BuildException will be thrown. If disabled, then IO errors will be reported
- *  as a log statement, but no error will be thrown. <P>
- *
- *  Examples: <pre>
+ * Displays all the current properties in the build. The output can be sent to
+ * a file if desired.
+ * <p>
+ * Attribute "destfile" defines a file to send the properties to. This can be
+ * processed as a standard property file later.
+ * </p>
+ * <p>
+ * Attribute "prefix" defines a prefix which is used to filter the properties
+ * only those properties starting with this prefix will be echoed.
+ * </p>
+ * <p>
+ * By default, the "failonerror" attribute is enabled. If an error occurs while
+ * writing the properties to a file, and this attribute is enabled, then a
+ * BuildException will be thrown. If disabled, then IO errors will be reported
+ * as a log statement, but no error will be thrown.
+ * </p>
+ * <p>Examples:</p><pre>
  *  &lt;echoproperties  /&gt;
- * </pre> Report the current properties to the log. <P>
- *
- *  <pre>
+ * </pre>
+ * Report the current properties to the log.
+ * <pre>
  *  &lt;echoproperties destfile="my.properties" /&gt;
- * </pre> Report the current properties to the file "my.properties", and will
- *  fail the build if the file could not be created or written to. <P>
- *
- *  <pre>
+ * </pre>
+ * Report the current properties to the file "my.properties", and will
+ * fail the build if the file could not be created or written to.
+ * <pre>
  *  &lt;echoproperties destfile="my.properties" failonerror="false"
  *      prefix="ant" /&gt;
- * </pre> Report all properties beginning with 'ant' to the file
- *  "my.properties", and will log a message if the file could not be created or
- *  written to, but will still allow the build to continue.
+ * </pre>
+ * Report all properties beginning with 'ant' to the file
+ * "my.properties", and will log a message if the file could not be created or
+ * written to, but will still allow the build to continue.
  *
  *@since      Ant 1.5
  */
@@ -114,15 +117,15 @@ public class EchoProperties extends Task {
     private File inFile = null;
 
     /**
-     *  File object pointing to the output file. If this is null, then
-     *  we output to the project log, not to a file.
+     * File object pointing to the output file. If this is null, then
+     * we output to the project log, not to a file.
      */
     private File destfile = null;
 
     /**
-     *  If this is true, then errors generated during file output will become
-     *  build errors, and if false, then such errors will be logged, but not
-     *  thrown.
+     * If this is true, then errors generated during file output will become
+     * build errors, and if false, then such errors will be logged, but not
+     * thrown.
      */
     private boolean failonerror = true;
 
@@ -150,7 +153,7 @@ public class EchoProperties extends Task {
      *  Set a file to store the property output.  If this is never specified,
      *  then the output will be sent to the Ant log.
      *
-     *@param destfile file to store the property output
+     * @param destfile file to store the property output
      */
     public void setDestfile(File destfile) {
         this.destfile = destfile;
@@ -160,7 +163,7 @@ public class EchoProperties extends Task {
      * If true, the task will fail if an error occurs writing the properties
      * file, otherwise errors are just logged.
      *
-     *@param  failonerror  <tt>true</tt> if IO exceptions are reported as build
+     * @param failonerror  <tt>true</tt> if IO exceptions are reported as build
      *      exceptions, or <tt>false</tt> if IO exceptions are ignored.
      */
     public void setFailOnError(boolean failonerror) {
@@ -168,15 +171,15 @@ public class EchoProperties extends Task {
     }
 
     /**
-     *  If the prefix is set, then only properties which start with this
-     *  prefix string will be recorded. If regex is not set and  if this
-     *  is never set, or it is set to an empty string or <tt>null</tt>,
-     *  then all properties will be recorded. <P>
+     * If the prefix is set, then only properties which start with this
+     * prefix string will be recorded. If regex is not set and  if this
+     * is never set, or it is set to an empty string or <tt>null</tt>,
+     * then all properties will be recorded.
      *
-     *  For example, if the attribute is set as:
-     *    <PRE>&lt;echoproperties  prefix="ant." /&gt;</PRE>
-     *  then the property "ant.home" will be recorded, but "ant-example"
-     *  will not.
+     * <p>For example, if the attribute is set as:</p>
+     * <pre>&lt;echoproperties  prefix="ant." /&gt;</pre>
+     * then the property "ant.home" will be recorded, but "ant-example"
+     * will not.
      *
      * @param  prefix  The new prefix value
      */
@@ -191,15 +194,15 @@ public class EchoProperties extends Task {
     }
 
     /**
-     *  If the regex is set, then only properties whose names match it
-     *  will be recorded.  If prefix is not set and if this is never set,
-     *  or it is set to an empty string or <tt>null</tt>, then all
-     *  properties will be recorded.<P>
+     * If the regex is set, then only properties whose names match it
+     * will be recorded.  If prefix is not set and if this is never set,
+     * or it is set to an empty string or <tt>null</tt>, then all
+     * properties will be recorded.
      *
-     *  For example, if the attribute is set as:
-     *    <PRE>&lt;echoproperties  prefix=".*ant.*" /&gt;</PRE>
-     *  then the properties "ant.home" and "user.variant" will be recorded,
-     *  but "ant-example" will not.
+     * <p>For example, if the attribute is set as:</p>
+     * <pre>&lt;echoproperties  prefix=".*ant.*" /&gt;</pre>
+     * then the properties "ant.home" and "user.variant" will be recorded,
+     * but "ant-example" will not.
      *
      * @param  regex  The new regex value
      *
@@ -250,9 +253,9 @@ public class EchoProperties extends Task {
     }
 
     /**
-     *  Run the task.
+     * Run the task.
      *
-     *@exception  BuildException  trouble, probably file IO
+     * @exception BuildException  trouble, probably file IO
      */
     @Override
     public void execute() throws BuildException {
@@ -328,10 +331,10 @@ public class EchoProperties extends Task {
     }
 
     /**
-     *  Send the key/value pairs in the hashtable to the given output stream.
-     *  Only those properties matching the <tt>prefix</tt> constraint will be
-     *  sent to the output stream.
-     *  The output stream will be closed when this method returns.
+     * Send the key/value pairs in the hashtable to the given output stream.
+     * Only those properties matching the <tt>prefix</tt> constraint will be
+     * sent to the output stream.
+     * The output stream will be closed when this method returns.
      *
      * @param  allProps         propfile to save
      * @param  os               output stream
@@ -421,7 +424,7 @@ public class EchoProperties extends Task {
     }
 
     private List<Tuple> sortProperties(Properties props) {
-        //sort the list. Makes SCM and manual diffs easier.
+        // sort the list. Makes SCM and manual diffs easier.
         return props.stringPropertyNames().stream()
             .map(k -> new Tuple(k, props.getProperty(k))).sorted()
             .collect(Collectors.toList());
@@ -459,14 +462,14 @@ public class EchoProperties extends Task {
     }
 
     /**
-     *  JDK 1.2 allows for the safer method
-     *  <tt>Properties.store(OutputStream, String)</tt>, which throws an
-     *  <tt>IOException</tt> on an output error.
+     * JDK 1.2 allows for the safer method
+     * <tt>Properties.store(OutputStream, String)</tt>, which throws an
+     * <tt>IOException</tt> on an output error.
      *
-     *@param props the properties to record
-     *@param os record the properties to this output stream
-     *@param header prepend this header to the property output
-     *@exception IOException on an I/O error during a write.
+     * @param props the properties to record
+     * @param os record the properties to this output stream
+     * @param header prepend this header to the property output
+     * @exception IOException on an I/O error during a write.
      */
     protected void jdkSaveProperties(Properties props, OutputStream os,
                                      String header) throws IOException {
@@ -512,7 +515,7 @@ public class EchoProperties extends Task {
     /**
      * Uses the DocumentBuilderFactory to get a DocumentBuilder instance.
      *
-     * @return   The DocumentBuilder instance
+     * @return The DocumentBuilder instance
      */
     private static DocumentBuilder getDocumentBuilder() {
         try {

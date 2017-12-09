@@ -35,7 +35,8 @@ public final class Enumerations {
 
     /**
      * creates an enumeration from an array of objects.
-     * @param       array   the array of object to enumerate.
+     * @param <T> object type
+     * @param array the array of object to enumerate.
      * @return the enumeration over the array of objects.
      */
     @SafeVarargs
@@ -44,11 +45,12 @@ public final class Enumerations {
     }
 
     /**
-    * creates an enumeration from an array of enumeration. The created enumeration
-    * will sequentially enumerate over all elements of each enumeration and skip
-    * <tt>null</tt> enumeration elements in the array.
-    * @param        enums   the array of enumerations.
-    * @return the enumeration over the array of enumerations.
+     * creates an enumeration from an array of enumeration. The created enumeration
+     * will sequentially enumerate over all elements of each enumeration and skip
+     * <tt>null</tt> enumeration elements in the array.
+     * @param <T> object type
+     * @param enums the array of enumerations.
+     * @return the enumeration over the array of enumerations.
      */
     @SafeVarargs
     public static <T> Enumeration<T> fromCompound(Enumeration<? extends T>... enums) {

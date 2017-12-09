@@ -71,7 +71,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     /**
      * Initialize.
      *
-     * @exception BuildException if someting goes wrong
+     * @exception BuildException if something goes wrong
      */
     private void init() throws BuildException {
         if (runner != null) {
@@ -115,7 +115,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Load the script from an external file; optional.
      *
      * @param file the file containing the script source.
      */
@@ -184,7 +184,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     }
 
     /**
-     * Set the encoding of the script from an external file ; optional.
+     * Set the encoding of the script from an external file; optional.
      *
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.2

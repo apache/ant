@@ -49,11 +49,11 @@ import org.xml.sax.SAXException;
  * It is not particularly clean but
  * should be helpful while I am thinking about another technique.
  *
- * <p> The main problem is due to the fact that a JVM can be forked for a testcase
+ * <p>The main problem is due to the fact that a JVM can be forked for a testcase
  * thus making it impossible to aggregate all testcases since the listener is
  * (obviously) in the forked JVM. A solution could be to write a
  * TestListener that will receive events from the TestRunner via sockets. This
- * is IMHO the simplest way to do it to avoid this file hacking thing.
+ * is IMHO the simplest way to do it to avoid this file hacking thing.</p>
  *
  * @ant.task name="junitreport" category="testing"
  */
@@ -108,7 +108,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * Set the name of the aggregegated results file. It must be relative
+     * Set the name of the aggregated results file. It must be relative
      * from the <tt>todir</tt> attribute. If not set it will use {@link #DEFAULT_FILENAME}
      * @param  value   the name of the file.
      * @see #setTodir(File)
@@ -215,7 +215,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * <p> Create a DOM tree.
+     * Create a DOM tree.
      * Has 'testsuites' as firstchild and aggregates all
      * testsuite results that exists in the base directory.
      * @return  the root element of DOM tree that aggregates all testsuites.
@@ -271,11 +271,12 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * <p> Add a new testsuite node to the document.
+     * <p>Add a new testsuite node to the document.
      * The main difference is that it
-     * split the previous fully qualified name into a package and a name.
-     * <p> For example: <tt>org.apache.Whatever</tt> will be split into
-     * <tt>org.apache</tt> and <tt>Whatever</tt>.
+     * split the previous fully qualified name into a package and a name.</p>
+     * <p>For example: <tt>org.apache.Whatever</tt> will be split into
+     * <tt>org.apache</tt> and <tt>Whatever</tt>.</p>
+     *
      * @param root the root element to which the <tt>testsuite</tt> node should
      *        be appended.
      * @param testsuite the element to append to the given root. It will slightly

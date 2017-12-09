@@ -93,7 +93,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
         /**
          * creates a proxy to a FTP file
-         * @param file
+         * @param file FTPFile
          */
         public FTPFileProxy(FTPFile file) {
             super(file.getName());
@@ -478,7 +478,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
          * @param name path of the directory relative to the directory of
          * the fileset
          * @param file directory as file
-         * @param fast
+         * @param fast boolean
          */
         private void accountForIncludedDir(String name, AntFTPFile file, boolean fast) {
             if (!dirsIncluded.contains(name)
@@ -761,7 +761,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 this.ftpFile = getFile(theFiles, lastpathelement);
             }
             /**
-             * find a file in a directory in case unsensitive way
+             * find a file in a directory in case insensitive way
              * @param parentPath        where we are
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
@@ -1117,7 +1117,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
      * Executable a retryable object.
      * @param h the retry handler.
      * @param r the object that should be retried until it succeeds
-     *          or the number of retrys is reached.
+     *          or the number of retries is reached.
      * @param descr a description of the command that is being run.
      * @throws IOException if there is a problem.
      */
@@ -1640,7 +1640,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
      * Retrieve a single file from the remote host. <code>filename</code> may
      * contain a relative path specification. <p>
      *
-     * The file will then be retreived using the entire relative path spec -
+     * The file will then be retrieved using the entire relative path spec -
      * no attempt is made to change directories. It is anticipated that this
      * may eventually cause problems with some FTP servers, but it simplifies
      * the coding.</p>

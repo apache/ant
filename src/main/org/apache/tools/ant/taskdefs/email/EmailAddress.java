@@ -92,15 +92,15 @@ public class EmailAddress {
             }
         }
 
-        // DEBUG: System.out.println( email );
+        // DEBUG: System.out.println(email);
         if (end == 0) {
             end = len;
         }
-        // DEBUG: System.out.println( "address: " + start + " " + end );
+        // DEBUG: System.out.println("address: " + start + " " + end);
         if (nEnd == 0) {
             nEnd = len;
         }
-        // DEBUG: System.out.println( "name: " + nStart + " " + nEnd );
+        // DEBUG: System.out.println("name: " + nStart + " " + nEnd);
 
         this.address = trim(email.substring(start, end), true);
         this.name = trim(email.substring(nStart, nEnd), false);

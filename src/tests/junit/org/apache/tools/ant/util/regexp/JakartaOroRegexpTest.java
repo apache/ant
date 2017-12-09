@@ -28,8 +28,4 @@ public class JakartaOroRegexpTest extends RegexpTest {
         return new JakartaOroRegexp();
     }
 
-    public JakartaOroRegexpTest(String name) {
-        super(name);
-    }
-
 }

@@ -153,7 +153,7 @@ public final class DateUtils {
 
 
     /**
-     * Format an elapsed time into a plurialization correct string.
+     * Format an elapsed time into a pluralization correct string.
      * It is limited only to report elapsed time in minutes and
      * seconds and has the following behavior.
      * <ul>
@@ -196,7 +196,7 @@ public final class DateUtils {
      * moon period = 29.53058 days ~= 30, year = 365.2422 days
      *
      * days moon phase advances on first day of year compared to preceding year
-     *  = 365.2422 - 12*29.53058 ~= 11
+     *  = 365.2422 - 12 * 29.53058 ~= 11
      *
      * years in Metonic cycle (time until same phases fall on the same days of
      *  the month) = 18.6 ~= 19
@@ -208,7 +208,7 @@ public final class DateUtils {
      *
      * 6 moons ~= 177 days
      * 177 ~= 8 reported phases * 22
-     * + 11/22 for rounding
+     * + 11 / 22 for rounding
      * </pre>
      *
      * @param cal the calendar.
@@ -351,23 +351,32 @@ public final class DateUtils {
      * where {a|b} indicates that you must choose one of a or b, and [c]
      * indicates that you may use or omit c. ±ZZZZ is the timezone offset, and
      * may be literally "Z" to mean GMT.
+     *
+     * @param dateStr String
+     * @return Date
+     * @throws ParseException if date string does not match ISO 8601
      * @since Ant 1.10.2
      */
     public static Date parseLenientDateTime(String dateStr) throws ParseException {
         try {
             return new Date(Long.parseLong(dateStr));
-        } catch (NumberFormatException nfe) {}
+        } catch (NumberFormatException ignored) {
+        }
 
         try {
             return EN_US_DATE_FORMAT_MIN.get().parse(dateStr);
-        } catch (ParseException pe) {}
+        } catch (ParseException ignored) {
+        }
 
         try {
            return EN_US_DATE_FORMAT_SEC.get().parse(dateStr);
-        } catch (ParseException pe) {}
+        } catch (ParseException ignored) {
+        }
 
         Matcher m = iso8601normalizer.matcher(dateStr);
-        if (!m.find()) throw new ParseException(dateStr, 0);
+        if (!m.find()) {
+            throw new ParseException(dateStr, 0);
+        }
         String normISO = m.group(1) + " "
             + (m.group(3) == null ? m.group(2) + ":00" : m.group(2))
             + (m.group(4) == null ? ".000 " : " ")

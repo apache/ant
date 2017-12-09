@@ -84,16 +84,15 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * <p>When this task executes, it will recursively scan the srcdir
  * looking for NetRexx source files to compile. This task makes its
- * compile decision based on timestamp.
+ * compile decision based on timestamp.</p>
  * <p>Before files are compiled they and any other file in the
  * srcdir will be copied to the destdir allowing support files to be
  * located properly in the classpath. The reason for copying the source files
- * before the compile is that NetRexxC has only two destinations for classfiles:
+ * before the compile is that NetRexxC has only two destinations for classfiles:</p>
  * <ol>
  * <li>The current directory, and,</li>
  * <li>The directory the source is in (see sourcedir option)
  * </ol>
- *
  */
 public class NetRexxC extends MatchingTask {
 
@@ -532,7 +531,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Tells whether the trailing .keep in nocompile-mode should be removed
      * so that the resulting java source really ends on .java.
-     * This facilitates the use of the javadoc tool lateron.
+     * This facilitates the use of the javadoc tool later on.
+     * @param removeKeepExtension boolean
      */
     public void setRemoveKeepExtension(boolean removeKeepExtension) {
         this.removeKeepExtension = removeKeepExtension;

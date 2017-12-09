@@ -47,7 +47,7 @@ public class SmtpResponseReader {
     /**
      * Read until the server indicates that the response is complete.
      *
-     * @return Responsecode (3 digits) + Blank + Text from all
+     * @return Response code (3 digits) + Blank + Text from all
      *         response line concatenated (with blanks replacing the \r\n
      *         sequences).
      * @throws IOException on error.
@@ -92,7 +92,7 @@ public class SmtpResponseReader {
     }
 
     /**
-     * Append the text from this line of the resonse.
+     * Append the text from this line of the response.
      */
     private static void appendTo(StringBuilder target, String line) {
         // CheckStyle:MagicNumber OFF

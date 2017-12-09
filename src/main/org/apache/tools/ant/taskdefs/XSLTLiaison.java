@@ -66,4 +66,4 @@ public interface XSLTLiaison {
      */
     void transform(File infile, File outfile) throws Exception; //NOSONAR
 
-} //-- XSLTLiaison
+}

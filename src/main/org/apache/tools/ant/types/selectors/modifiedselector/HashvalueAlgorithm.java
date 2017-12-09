@@ -26,7 +26,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Computes a 'hashvalue' for the content of file using String.hashValue().
- * Use of this algorithm doesn't require any additional nested <param>s and
+ * Use of this algorithm doesn't require any additional nested &lt;param&gt;s and
  * doesn't support any.
  *
  * @version 2003-09-13

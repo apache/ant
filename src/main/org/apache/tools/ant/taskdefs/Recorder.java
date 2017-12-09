@@ -180,8 +180,8 @@ public class Recorder extends Task implements SubBuildListener {
 
         /**
          * @see EnumeratedAttribute#getValues()
+         * {@inheritDoc}.
          */
-        /** {@inheritDoc}. */
         public String[] getValues() {
             return VALUES;
         }
@@ -321,4 +321,3 @@ public class Recorder extends Task implements SubBuildListener {
         getProject().removeBuildListener(this);
     }
 }
-

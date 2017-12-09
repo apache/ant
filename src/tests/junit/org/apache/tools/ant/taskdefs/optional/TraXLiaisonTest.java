@@ -27,8 +27,6 @@ import java.security.Permission;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
@@ -170,7 +168,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
     }
 
     public void log(String message) {
-        throw new AssertionFailedError("Liaison sent message: " + message);
+        throw new AssertionError("Liaison sent message: " + message);
     }
 
 }

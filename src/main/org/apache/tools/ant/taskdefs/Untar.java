@@ -94,8 +94,8 @@ public class Untar extends Expand {
 
     /**
      * @see Expand#expandFile(FileUtils, File, File)
+     * {@inheritDoc}
      */
-    /** {@inheritDoc} */
     @Override
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         if (!srcF.exists()) {
@@ -250,7 +250,7 @@ public class Untar extends Expand {
                     clazz.getConstructor(InputStream.class);
                 return c.newInstance(istream);
             } catch (ClassNotFoundException ex) {
-                throw new BuildException("xz uncompression requires the XZ for Java library",
+                throw new BuildException("xz decompression requires the XZ for Java library",
                                          ex);
             } catch (NoSuchMethodException
                      | InstantiationException

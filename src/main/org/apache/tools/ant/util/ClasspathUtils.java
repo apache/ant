@@ -216,9 +216,8 @@ public class ClasspathUtils {
     /**
      * Creates a fresh object instance of the specified classname.
      *
-     * <p> This uses the userDefinedLoader to load the specified class,
-     * and then makes an instance using the default no-argument constructor.
-     * </p>
+     * <p>This uses the userDefinedLoader to load the specified class,
+     * and then makes an instance using the default no-argument constructor.</p>
      *
      * @param className the full qualified class name to load.
      * @param userDefinedLoader the classloader to use.
@@ -232,10 +231,10 @@ public class ClasspathUtils {
     /**
      * Creates a fresh object instance of the specified classname.
      *
-     * <p> This uses the userDefinedLoader to load the specified class,
-     * and then makes an instance using the default no-argument constructor.
-     * </p>
+     * <p>This uses the userDefinedLoader to load the specified class,
+     * and then makes an instance using the default no-argument constructor.</p>
      *
+     * @param <T> desired type
      * @param className the full qualified class name to load.
      * @param userDefinedLoader the classloader to use.
      * @param expectedType the Class that the result should be assignment
@@ -274,7 +273,7 @@ public class ClasspathUtils {
     /**
      * Obtains a delegate that helps out with classic classpath configuration.
      *
-     * @param component your projectComponent that needs the assistence
+     * @param component your projectComponent that needs the assistance
      * @return the helper, delegate.
      * @see ClasspathUtils.Delegate
      */
@@ -301,13 +300,13 @@ public class ClasspathUtils {
      * Classes and instantiate them often expose the following ant syntax
      * sugar: </p>
      *
-     * <ul><li> nested &lt;classpath&gt; </li>
-     * <li> attribute @classpathref </li>
-     * <li> attribute @classname </li></ul>
+     * <ul><li>nested &lt;classpath&gt;</li>
+     * <li>attribute @classpathref</li>
+     * <li>attribute @classname</li></ul>
      *
-     * <p> This class functions as a delegate handling the configuration
+     * <p>This class functions as a delegate handling the configuration
      * issues for this recurring pattern.  Its usage pattern, as the name
-     * suggests, is delegation rather than inheritance. </p>
+     * suggests, is delegation rather than inheritance.</p>
      *
      * @since Ant 1.6
      */

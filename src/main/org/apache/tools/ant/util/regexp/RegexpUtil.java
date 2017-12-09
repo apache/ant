@@ -50,10 +50,10 @@ public class RegexpUtil {
     /**
      * convert regex option flag characters to regex options
      * <dl>
-     *   <li>g -  Regexp.REPLACE_ALL</li>
-     *   <li>i -  RegexpMatcher.MATCH_CASE_INSENSITIVE</li>
-     *   <li>m -  RegexpMatcher.MATCH_MULTILINE</li>
-     *   <li>s -  RegexpMatcher.MATCH_SINGLELINE</li>
+     *   <dt>g</dt><dd>Regexp.REPLACE_ALL</dd>
+     *   <dt>i</dt><dd>RegexpMatcher.MATCH_CASE_INSENSITIVE</dd>
+     *   <dt>m</dt><dd>RegexpMatcher.MATCH_MULTILINE</dd>
+     *   <dt>s</dt><dd>RegexpMatcher.MATCH_SINGLELINE</dd>
      * </dl>
      * @param flags the string containing the flags
      * @return the Regexp option bits

@@ -486,8 +486,8 @@ public class ProjectHelper2 extends ProjectHelper {
 
     /**
      * Handler for ant processing. Uses a stack of AntHandlers to
-     * implement each element ( the original parser used a recursive behavior,
-     * with the implicit execution stack )
+     * implement each element (the original parser used a recursive behavior,
+     * with the implicit execution stack)
      */
     public static class RootHandler extends DefaultHandler {
         private Stack<AntHandler> antHandlers = new Stack<AntHandler>();
@@ -718,11 +718,11 @@ public class ProjectHelper2 extends ProjectHelper {
              * too 'involved' in the processing. A better solution (IMO)
              * would be to create UE for Project and Target too, and
              * then process the tree and have Project/Target deal with
-             * its attributes ( similar with Description ).
+             * its attributes (similar with Description).
              *
-             * If we eventually switch to ( or add support for ) DOM,
+             * If we eventually switch to (or add support for) DOM,
              * things will work smoothly - UE can be avoided almost completely
-             * ( it could still be created on demand, for backward compatibility )
+             * (it could still be created on demand, for backward compatibility)
              */
 
             for (int i = 0; i < attrs.getLength(); i++) {
@@ -772,7 +772,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
             }
 
-            // TODO Move to Project ( so it is shared by all helpers )
+            // TODO Move to Project (so it is shared by all helpers)
             String antFileProp =
                 MagicNames.ANT_FILE + "." + context.getCurrentProjectName();
             String dup = project.getProperty(antFileProp);
@@ -1097,7 +1097,7 @@ public class ProjectHelper2 extends ProjectHelper {
     }
 
     /**
-     * Handler for all project elements ( tasks, data types )
+     * Handler for all project elements (tasks, data types)
      */
     public static class ElementHandler extends AntHandler {
 
@@ -1153,7 +1153,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 // Nested element
                 ((UnknownElement) parent).addChild(task);
             }  else {
-                // Task included in a target ( including the default one ).
+                // Task included in a target (including the default one).
                 context.getCurrentTarget().addTask(task);
             }
 

@@ -101,7 +101,7 @@ public class FileList extends DataType implements ResourceCollection {
     /**
      * Set the filenames attribute.
      *
-     * @param filenames a string contains filenames, separated by , or
+     * @param filenames a string containing filenames, separated by comma or
      *        by whitespace.
      */
     public void setFiles(String filenames) {

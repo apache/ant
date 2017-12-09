@@ -47,14 +47,15 @@ public class SOSCheckout extends SOS {
     }
 
     /**
-     * Build the command line <br>
-     *
+     * Build the command line
+     * <p>
      * CheckOutFile required parameters: -server -name -password -database -project -file<br>
      * CheckOutFile optional parameters: -workdir -verbose -nocache -nocompression -soshome<br>
      *
      * CheckOutProject required parameters: -server -name -password -database -project<br>
      * CheckOutProject optional parameters:-workdir -recursive -verbose -nocache
-     * -nocompression -soshome<br>
+     * -nocompression -soshome
+     * </p>
      *
      * @return    Commandline the generated command to be executed
      */

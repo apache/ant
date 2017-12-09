@@ -198,7 +198,7 @@ public class EjbJar extends MatchingTask {
      * Stores a handle to the directory to put the Jar files in. This is
      * only used by the generic deployment descriptor tool which is created
      * if no other deployment descriptor tools are provided. Normally each
-     * deployment tool will specify the desitination dir itself.
+     * deployment tool will specify the destination dir itself.
      */
     private File destDir;
 
@@ -482,11 +482,11 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Sets the CMP version.
+     * Must be either <code>1.0</code> or <code>2.0</code>.
+     * Default is <code>1.0</code>.
+     * Initially, only the JBoss implementation does something specific for CMP 2.0.
      *
      * @param version CMP version.
-     * Must be either <code>1.0</code> or <code>2.0</code>.<br/>
-     * Default is <code>1.0</code>.<br/>
-     * Initially, only the JBoss implementation does something specific for CMP 2.0.<br/>
      * @since ant 1.6
      */
     public void setCmpversion(CMPVersion version) {

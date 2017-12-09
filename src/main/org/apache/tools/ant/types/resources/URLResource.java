@@ -110,6 +110,7 @@ public class URLResource extends Resource implements URLProvider {
     /**
      * Base URL which combined with the relativePath attribute defines
      * the URL.
+     * @param base URL
      * @since Ant 1.8.0
      */
     public synchronized void setBaseURL(URL base) {
@@ -123,6 +124,7 @@ public class URLResource extends Resource implements URLProvider {
     /**
      * Relative path which combined with the baseURL attribute defines
      * the URL.
+     * @param r String
      * @since Ant 1.8.0
      */
     public synchronized void setRelativePath(String r) {

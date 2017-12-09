@@ -35,7 +35,7 @@ import org.apache.xml.resolver.helpers.PublicId;
  * See XMLCatalog.java for the details of the entity and URI
  * resolution algorithms.
  *
- * @see org.apache.tools.ant.types.XMLCatalog.CatalogResolver
+ * @see org.apache.tools.ant.types.XMLCatalog
  * @since Ant 1.6
  */
 public class ApacheCatalog extends Catalog {
@@ -120,4 +120,4 @@ public class ApacheCatalog extends Catalog {
         super.addEntry(entry);
     }
 
-} //- ApacheCatalog
+}

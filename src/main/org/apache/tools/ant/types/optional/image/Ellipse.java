@@ -36,7 +36,7 @@ public class Ellipse extends BasicShape implements DrawOperation {
 
     /**
      * Set the width.
-     * @param width the width of the elipse.
+     * @param width the width of the ellipse.
      */
     public void setWidth(int width) {
         this.width = width;

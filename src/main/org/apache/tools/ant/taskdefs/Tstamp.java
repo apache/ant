@@ -113,6 +113,8 @@ public class Tstamp extends Task {
 
     /**
      * Return the {@link Date} instance to use as base for DSTAMP, TSTAMP and TODAY.
+     *
+     * @return Date
      */
     protected Date getNow() {
         Optional<Date> now = getNow(
@@ -139,9 +141,9 @@ public class Tstamp extends Task {
     /**
      * Checks and returns a Date if the specified property is set.
      * @param propertyName name of the property to check
-     * @param map convertion of the property value as string to Date
-     * @param log supplier of the log message containg the property name and value if
-     *     the convertion fails
+     * @param map conversion of the property value as string to Date
+     * @param log supplier of the log message containing the property name and value if
+     *     the conversion fails
      * @return Optional containing the Date or null
      */
     protected Optional<Date> getNow(String propertyName, Function<String, Date> map, BiFunction<String, String, String> log) {

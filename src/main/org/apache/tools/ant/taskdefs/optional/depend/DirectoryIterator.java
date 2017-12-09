@@ -19,14 +19,14 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.io.InputStream;
-import java.nio.file.Files;
 
 /**
  * An iterator which iterates through the contents of a java directory. The

@@ -80,7 +80,7 @@ public class ProjectHelperRepository {
         Constructor<? extends ProjectHelper> projectHelper = getProjectHelperBySystemProperty();
         registerProjectHelper(projectHelper);
 
-        // A JDK1.3 'service' ( like in JAXP ). That will plug a helper
+        // A JDK1.3 'service' (like in JAXP). That will plug a helper
         // automatically if in CLASSPATH, with the right META-INF/services.
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
@@ -249,6 +249,7 @@ public class ProjectHelperRepository {
      * Get the helper that will be able to parse the specified build file. The helper
      * will be chosen among the ones found in the classpath
      *
+     * @param buildFile Resource
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForBuildFile(Resource buildFile) throws BuildException {
@@ -272,6 +273,7 @@ public class ProjectHelperRepository {
      * Get the helper that will be able to parse the specified antlib. The helper
      * will be chosen among the ones found in the classpath
      *
+     * @param antlib Resource
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForAntlib(Resource antlib) throws BuildException {

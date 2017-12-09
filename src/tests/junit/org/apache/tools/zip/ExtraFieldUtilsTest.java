@@ -26,8 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.zip.ExtraFieldUtils.
- *
+ * JUnit 4 testcases for org.apache.tools.zip.ExtraFieldUtils.
  */
 public class ExtraFieldUtilsTest implements UnixStat {
 

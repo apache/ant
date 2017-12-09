@@ -107,7 +107,7 @@ public class ScriptRunnerHelper {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Load the script from an external file; optional.
      *
      * @param file the file containing the script source.
      */
@@ -116,7 +116,7 @@ public class ScriptRunnerHelper {
     }
 
     /**
-     * Get the external script file ; optional.
+     * Get the external script file; optional.
      * @return the file containing the script source.
      * @since Ant 1.10.2
      */
@@ -125,7 +125,7 @@ public class ScriptRunnerHelper {
     }
 
     /**
-     * Set the encoding of the script from an external file ; optional.
+     * Set the encoding of the script from an external file; optional.
      *
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.2

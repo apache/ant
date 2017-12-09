@@ -61,7 +61,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Load the script from an external file; optional.
      *
      * @param file the file containing the script source.
      */
@@ -158,7 +158,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
     }
 
     /**
-     * Set the encoding of the script from an external file ; optional.
+     * Set the encoding of the script from an external file; optional.
      *
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.2

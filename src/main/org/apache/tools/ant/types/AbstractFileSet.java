@@ -432,6 +432,7 @@ public abstract class AbstractFileSet extends DataType
      * The maximum number of times a symbolic link may be followed
      * during a scan.
      *
+     * @param max int
      * @since Ant 1.8.0
      */
     public void setMaxLevelsOfSymlinks(int max) {
@@ -442,6 +443,7 @@ public abstract class AbstractFileSet extends DataType
      * The maximum number of times a symbolic link may be followed
      * during a scan.
      *
+     * @return int
      * @since Ant 1.8.0
      */
     public int getMaxLevelsOfSymlinks() {
@@ -461,6 +463,8 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Gets whether an error is/should be thrown if the base directory
      * does not exist.
+     *
+     * @return boolean
      * @since Ant 1.8.2
      */
      public boolean getErrorOnMissingDir() {
@@ -829,6 +833,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * @param e ExecutableSelector
      * @since 1.10.0
      */
     public void addExecutable(ExecutableSelector e) {
@@ -836,6 +841,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * @param e SymlinkSelector
      * @since 1.10.0
      */
     public void addSymlink(SymlinkSelector e) {
@@ -843,6 +849,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * @param o OwnedBySelector
      * @since 1.10.0
      */
     public void addOwnedBy(OwnedBySelector o) {

@@ -60,13 +60,13 @@ import org.apache.tools.ant.util.VectorSet;
 /**
  * Basic FTP client. Performs the following actions:
  * <ul>
- *   <li> <strong>send</strong> - send files to a remote server. This is the
+ *   <li><strong>send</strong> - send files to a remote server. This is the
  *   default action.</li>
- *   <li> <strong>get</strong> - retrieve files from a remote server.</li>
- *   <li> <strong>del</strong> - delete files from a remote server.</li>
- *   <li> <strong>list</strong> - create a file listing.</li>
- *   <li> <strong>chmod</strong> - change unix file permissions.</li>
- *   <li> <strong>rmdir</strong> - remove directories, if empty, from a
+ *   <li><strong>get</strong> - retrieve files from a remote server.</li>
+ *   <li><strong>del</strong> - delete files from a remote server.</li>
+ *   <li><strong>list</strong> - create a file listing.</li>
+ *   <li><strong>chmod</strong> - change unix file permissions.</li>
+ *   <li><strong>rmdir</strong> - remove directories, if empty, from a
  *   remote server.</li>
  * </ul>
  * <strong>Note:</strong> Some FTP servers - notably the Solaris server - seem
@@ -190,7 +190,7 @@ public class FTP extends Task implements FTPTaskConfig {
 
         /**
          * creates a proxy to a FTP file
-         * @param file
+         * @param file FTPFile
          */
         public FTPFileProxy(FTPFile file) {
             super(file.getName());
@@ -585,7 +585,7 @@ public class FTP extends Task implements FTPTaskConfig {
          * @param name path of the directory relative to the directory of
          * the fileset
          * @param file directory as file
-         * @param fast
+         * @param fast boolean
          */
         private void accountForIncludedDir(String name, AntFTPFile file, boolean fast) {
             if (!dirsIncluded.contains(name)
@@ -861,7 +861,7 @@ public class FTP extends Task implements FTPTaskConfig {
             }
 
             /**
-             * find a file in a directory in case unsensitive way
+             * find a file in a directory in case insensitive way
              * @param parentPath        where we are
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
@@ -1689,6 +1689,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * Whether to verify that data and control connections are
      * connected to the same remote host.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setEnableRemoteVerification(boolean b) {
@@ -1744,7 +1745,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * Executable a retryable object.
      * @param h the retry handler.
      * @param r the object that should be retried until it succeeds
-     *          or the number of retrys is reached.
+     *          or the number of retries is reached.
      * @param descr a description of the command that is being run.
      * @throws IOException if there is a problem.
      */

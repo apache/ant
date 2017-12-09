@@ -39,8 +39,8 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Calls a given target for all defined sub-builds. This is an extension
  * of ant for bulk project execution.
- * <p>
- * <h2> Use with directories </h2>
+ *
+ * <h2>Use with directories</h2>
  * <p>
  * subant can be used with directory sets to execute a build from different directories.
  * 2 different options are offered
@@ -82,8 +82,9 @@ public class SubAnt extends Task {
     /**
      * Get the default build file name to use when launching the task.
      * <p>
-     * This function may be overrided by providers of custom ProjectHelper so they can implement easily their sub
-     * launcher.
+     * This function may be overriden by providers of custom ProjectHelper so
+     * they can implement easily their sub launcher.
+     * </p>
      *
      * @return the name of the default file
      * @since Ant 1.8.0
@@ -376,10 +377,10 @@ public class SubAnt extends Task {
     /**
      * The target to call on the different sub-builds. Set to "" to execute
      * the default target.
+     *
      * @param target the target
-     * <p>
      */
-    //     REVISIT: Defaults to the target name that contains this task if not specified.
+    // REVISIT: Defaults to the target name that contains this task if not specified.
     public void setTarget(String target) {
         this.subTarget = target;
     }
@@ -470,6 +471,7 @@ public class SubAnt extends Task {
      * <em>Note that the directories will be added to the build path
      * in no particular order, so if order is significant, one should
      * use a file list instead!</em>
+     * </p>
      *
      * @param  set the directory set to add.
      */
@@ -483,6 +485,7 @@ public class SubAnt extends Task {
      * <em>Note that the directories will be added to the build path
      * in no particular order, so if order is significant, one should
      * use a file list instead!</em>
+     * </p>
      *
      * @param  set the file set to add.
      */
@@ -495,6 +498,7 @@ public class SubAnt extends Task {
      * <p>
      * <em>Note that contrary to file and directory sets, file lists
      * can reference non-existent files or directories!</em>
+     * </p>
      *
      * @param  list the file list to add.
      */
@@ -632,4 +636,4 @@ public class SubAnt extends Task {
         }
     }
 
-} // END class SubAnt
+}

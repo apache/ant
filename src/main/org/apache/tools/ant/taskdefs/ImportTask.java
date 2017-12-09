@@ -99,6 +99,7 @@ public class ImportTask extends Task {
     /**
      * The prefix to use when prefixing the imported target names.
      *
+     * @param prefix String
      * @since Ant 1.8.0
      */
     public void setAs(String prefix) {
@@ -109,6 +110,7 @@ public class ImportTask extends Task {
      * The separator to use between prefix and target name, default is
      * ".".
      *
+     * @param s String
      * @since Ant 1.8.0
      */
     public void setPrefixSeparator(String s) {
@@ -118,6 +120,7 @@ public class ImportTask extends Task {
     /**
      * The resource to import.
      *
+     * @param r ResourceCollection
      * @since Ant 1.8.0
      */
     public void add(ResourceCollection r) {
@@ -314,6 +317,7 @@ public class ImportTask extends Task {
      * overwritten in the importing build file.  The depends list of
      * the imported targets is not modified at all.</p>
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     protected final boolean isInIncludeMode() {
@@ -323,6 +327,9 @@ public class ImportTask extends Task {
     /**
      * Sets a bunch of Thread-local ProjectHelper properties.
      *
+     * @param prefix String
+     * @param prefixSep String
+     * @param inIncludeMode boolean
      * @since Ant 1.8.0
      */
     private static void setProjectHelperProps(String prefix,

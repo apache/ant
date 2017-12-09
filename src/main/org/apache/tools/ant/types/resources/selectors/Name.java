@@ -108,7 +108,7 @@ public class Name implements ResourceSelector {
     /**
      * Whether the difference between / and \ (the two common
      * directory characters) is ignored.
-     *
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean doesHandledirSep() {

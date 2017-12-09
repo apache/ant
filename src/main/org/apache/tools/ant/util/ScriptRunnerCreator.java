@@ -101,7 +101,7 @@ public class ScriptRunnerCreator {
      * in manager.
      * This checks if the script manager exists in the scriptLoader
      * classloader and if so it creates and returns the script runner.
-     * @param checkManager check if the manager matchs this value.
+     * @param checkManager check if the manager matches this value.
      * @param managerClass the name of the script manager class.
      * @param runnerClass   the name of ant's script runner for this manager.
      * @return the script runner class.

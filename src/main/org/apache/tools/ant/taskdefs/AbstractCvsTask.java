@@ -38,17 +38,18 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  * original Cvs.java 1.20
- *
- *  NOTE: This implementation has been moved here from Cvs.java with
- *  the addition of some accessors for extensibility.  Another task
- *  can extend this with some customized output processing.
+ * <p>
+ * NOTE: This implementation has been moved here from Cvs.java with
+ * the addition of some accessors for extensibility.  Another task
+ * can extend this with some customized output processing.
+ * </p>
  *
  * @since Ant 1.5
  */
 public abstract class AbstractCvsTask extends Task {
     /**
      * Default compression level to use, if compression is enabled via
-     * setCompression( true ).
+     * setCompression(true).
      */
     public static final int DEFAULT_COMPRESSION_LEVEL = 3;
     private static final int MAXIMUM_COMRESSION_LEVEL = 9;
@@ -74,14 +75,17 @@ public abstract class AbstractCvsTask extends Task {
      * the package/module to check out.
      */
     private String cvsPackage;
+
     /**
      * the tag
      */
     private String tag;
+
     /**
      * the default command.
      */
     private static final String DEFAULT_COMMAND = "checkout";
+
     /**
      * the CVS command to execute.
      */
@@ -122,7 +126,9 @@ public abstract class AbstractCvsTask extends Task {
      */
     private File dest;
 
-    /** whether or not to append stdout/stderr to existing files */
+    /**
+     * whether or not to append stdout/stderr to existing files
+     */
     private boolean append = false;
 
     /**
@@ -830,6 +836,7 @@ public abstract class AbstractCvsTask extends Task {
     /**
      * add a named module/package.
      *
+     * @param m Module
      * @since Ant 1.8.0
      */
     public void addModule(Module m) {

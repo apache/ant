@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -162,7 +163,7 @@ public class JDependTask extends Task {
      * If true, forks into a new JVM. Default: false.
      *
      * @param   value   <tt>true</tt> if a JVM should be forked,
-     *                  otherwise <tt>false<tt>
+     *                  otherwise <tt>false</tt>
      */
     public void setFork(boolean value) {
         fork = value;

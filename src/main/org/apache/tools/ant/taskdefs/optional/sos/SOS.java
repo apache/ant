@@ -403,9 +403,9 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Execute the created command line.
      *
-     * @param  cmd              The command line to run.
-     * @return                  int the exit code.
-     * @throws  BuildException
+     * @param  cmd            The command line to run.
+     * @return                int the exit code.
+     * @throws BuildException if something goes wrong
      */
     protected int run(Commandline cmd) {
         try {
@@ -440,7 +440,7 @@ public abstract class SOS extends Task implements SOSCmd {
         commandLine.createArgument().setValue(FLAG_USERNAME);
         commandLine.createArgument().setValue(getUsername());
         // The SOS class knows that the SOS server needs the password flag,
-        // even if there is no password ,so we send a " "
+        // even if there is no password, so we send a " "
         commandLine.createArgument().setValue(FLAG_PASSWORD);
         commandLine.createArgument().setValue(getPassword());
         // VSS Info is required

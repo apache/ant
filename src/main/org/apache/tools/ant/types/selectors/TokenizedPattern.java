@@ -75,6 +75,10 @@ public class TokenizedPattern {
     /**
      * Tests whether or not this pattern matches the start of
      * a path.
+     *
+     * @param path TokenizedPath
+     * @param caseSensitive boolean
+     * @return boolean
      */
     public boolean matchStartOf(TokenizedPath path,
                                 boolean caseSensitive) {
@@ -95,6 +99,8 @@ public class TokenizedPattern {
 
     /**
      * true if the original patterns are equal.
+     *
+     * @param o Object
      */
     public boolean equals(Object o) {
         return o instanceof TokenizedPattern
@@ -107,6 +113,8 @@ public class TokenizedPattern {
 
     /**
      * The depth (or length) of a pattern.
+     *
+     * @return int
      */
     public int depth() {
         return tokenizedPattern.length;
@@ -114,6 +122,9 @@ public class TokenizedPattern {
 
     /**
      * Does the tokenized pattern contain the given string?
+     *
+     * @param pat String
+     * @return boolean
      */
     public boolean containsPattern(String pat) {
         return Stream.of(tokenizedPattern).anyMatch(Predicate.isEqual(pat));
@@ -122,6 +133,7 @@ public class TokenizedPattern {
     /**
      * Returns a new TokenizedPath where all tokens of this pattern to
      * the right containing wildcards have been removed
+     *
      * @return the leftmost part of the pattern without wildcards
      */
     public TokenizedPath rtrimWildcardTokens() {
@@ -147,6 +159,9 @@ public class TokenizedPattern {
 
     /**
      * true if the last token equals the given string.
+     *
+     * @param s String
+     * @return boolean
      */
     public boolean endsWith(String s) {
         return tokenizedPattern.length > 0
@@ -155,6 +170,8 @@ public class TokenizedPattern {
 
     /**
      * Returns a new pattern without the last token of this pattern.
+     *
+     * @return TokenizedPattern
      */
     public TokenizedPattern withoutLastToken() {
         if (tokenizedPattern.length == 0) {

@@ -35,13 +35,15 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
 
     protected static final String ORION_DD = "orion-ejb-jar.xml";
 
-
     /** Instance variable that stores the suffix for the jboss jarfile. */
     private String jarSuffix = ".jar";
 
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
+     *
+     * @param ejbFiles Hashtable&lt;String, File&gt;
+     * @param baseName String
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
         String ddPrefix = (usingBaseJarName() ? "" : baseName );
@@ -51,7 +53,6 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
             ejbFiles.put(META_DIR + ORION_DD, orionDD);
         } else {
             log("Unable to locate Orion deployment descriptor. It was expected to be in " + orionDD.getPath(), Project.MSG_WARN);
-            return;
         }
 
     }
@@ -59,6 +60,8 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
     /**
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
+     *
+     * @param baseName String
      */
     File getVendorOutputJarFile(String baseName) {
         return new File(getDestDir(), baseName + jarSuffix);

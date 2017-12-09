@@ -882,7 +882,7 @@ public class Project implements ResourceFactory {
     /**
      * Set &quot;keep-going&quot; mode. In this mode Ant will try to execute
      * as many targets as possible. All targets that do not depend
-     * on failed target(s) will be executed.  If the keepGoing settor/getter
+     * on failed target(s) will be executed.  If the keepGoing setter/getter
      * methods are used in conjunction with the <code>ant.executor.class</code>
      * property, they will have no effect.
      * @param keepGoingMode &quot;keep-going&quot; mode
@@ -893,7 +893,7 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Return the keep-going mode.  If the keepGoing settor/getter
+     * Return the keep-going mode.  If the keepGoing setter/getter
      * methods are used in conjunction with the <code>ant.executor.class</code>
      * property, they will have no effect.
      * @return &quot;keep-going&quot; mode
@@ -1797,13 +1797,13 @@ public class Project implements ResourceFactory {
     /**
      * Topologically sort a set of targets.
      *
-     * @param root <code>String[]</code> containing the names of the root targets.
-     *             The sort is created in such a way that the ordered sequence of
-     *             Targets is the minimum possible such sequence to the specified
-     *             root targets.
-     *             Must not be <code>null</code>.
+     * @param roots <code>String[]</code> containing the names of the root targets.
+     *              The sort is created in such a way that the ordered sequence of
+     *              Targets is the minimum possible such sequence to the specified
+     *              root targets.
+     *              Must not be <code>null</code>.
      * @param targetTable A map of names to targets (String to Target).
-     *                Must not be <code>null</code>.
+     *                    Must not be <code>null</code>.
      * @param returnAll <code>boolean</code> indicating whether to return all
      *                  targets, or the execution sequence only.
      * @return a Vector of Target objects in sorted order.
@@ -1811,7 +1811,7 @@ public class Project implements ResourceFactory {
      *                           targets, or if a named target does not exist.
      * @since Ant 1.6.3
      */
-    public final Vector<Target> topoSort(final String[] root, final Hashtable<String, Target> targetTable,
+    public final Vector<Target> topoSort(final String[] roots, final Hashtable<String, Target> targetTable,
                                  final boolean returnAll) throws BuildException {
         final Vector<Target> ret = new VectorSet<>();
         final Hashtable<String, String> state = new Hashtable<>();
@@ -1825,19 +1825,19 @@ public class Project implements ResourceFactory {
         // dependency tree, not just on the Targets that depend on the
         // build Target.
 
-        for (int i = 0; i < root.length; i++) {
-            final String st = state.get(root[i]);
+        for (int i = 0; i < roots.length; i++) {
+            final String st = state.get(roots[i]);
             if (st == null) {
-                tsort(root[i], targetTable, state, visiting, ret);
+                tsort(roots[i], targetTable, state, visiting, ret);
             } else if (st == VISITING) {
                 throw new BuildException("Unexpected node in visiting state: "
-                    + root[i]);
+                    + roots[i]);
             }
         }
         final StringBuilder buf = new StringBuilder("Build sequence for target(s)");
 
-        for (int j = 0; j < root.length; j++) {
-            buf.append((j == 0) ? " `" : ", `").append(root[j]).append('\'');
+        for (int j = 0; j < roots.length; j++) {
+            buf.append((j == 0) ? " `" : ", `").append(roots[j]).append('\'');
         }
         buf.append(" is ").append(ret);
         log(buf.toString(), MSG_VERBOSE);
@@ -2013,6 +2013,8 @@ public class Project implements ResourceFactory {
     /**
      * Does the project know this reference?
      *
+     * @param key String
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean hasReference(final String key) {
@@ -2035,6 +2037,7 @@ public class Project implements ResourceFactory {
     /**
      * Look up a reference by its key (ID).
      *
+     * @param <T> desired type
      * @param key The key for the desired reference.
      *            Must not be <code>null</code>.
      *

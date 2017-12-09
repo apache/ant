@@ -21,7 +21,7 @@
  * an NSF grant I should say the following boilerplate:
  *
  * This material is based upon work supported by the National Science
- * Foundaton under Grant No. EIA-0196404. Any opinions, findings, and
+ * Foundation under Grant No. EIA-0196404. Any opinions, findings, and
  * conclusions or recommendations expressed in this material are those
  * of the author and do not necessarily reflect the views of the
  * National Science Foundation.
@@ -60,7 +60,7 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
 /**
  * Creates, Deletes, Records and Restores Symlinks.
  *
- * <p> This task performs several related operations. In the most trivial
+ * <p>This task performs several related operations. In the most trivial
  * and default usage, it creates a link specified in the link attribute to
  * a resource specified in the resource attribute. The second usage of this
  * task is to traverse a directory structure specified by a fileset,
@@ -69,33 +69,33 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
  * directory structure specified by a fileset, looking for properties files
  * (also specified as included in the fileset) and recreate the links
  * that have been previously recorded for each directory. Finally, it can be
- * used to remove a symlink without deleting the associated resource.
+ * used to remove a symlink without deleting the associated resource.</p>
  *
- * <p> Usage examples:
+ * <p>Usage examples:</p>
  *
- * <p> Make a link named &quot;foo&quot; to a resource named
- * &quot;bar.foo&quot; in subdir:
+ * <p>Make a link named &quot;foo&quot; to a resource named
+ * &quot;bar.foo&quot; in subdir:</p>
  * <pre>
  * &lt;symlink link=&quot;${dir.top}/foo&quot; resource=&quot;${dir.top}/subdir/bar.foo&quot;/&gt;
  * </pre>
  *
- * <p> Record all links in subdir and its descendants in files named
- * &quot;dir.links&quot;:
+ * <p>Record all links in subdir and its descendants in files named
+ * &quot;dir.links&quot;:</p>
  * <pre>
  * &lt;symlink action=&quot;record&quot; linkfilename=&quot;dir.links&quot;&gt;
  *    &lt;fileset dir=&quot;${dir.top}&quot; includes=&quot;subdir&#47;**&quot; /&gt;
  * &lt;/symlink&gt;
  * </pre>
  *
- * <p> Recreate the links recorded in the previous example:
+ * <p>Recreate the links recorded in the previous example:</p>
  * <pre>
  * &lt;symlink action=&quot;recreate&quot;&gt;
  *    &lt;fileset dir=&quot;${dir.top}&quot; includes=&quot;subdir&#47;**&#47;dir.links&quot; /&gt;
  * &lt;/symlink&gt;
  * </pre>
  *
- * <p> Delete a link named &quot;foo&quot; to a resource named
- * &quot;bar.foo&quot; in subdir:
+ * <p>Delete a link named &quot;foo&quot; to a resource named
+ * &quot;bar.foo&quot; in subdir:</p>
  * <pre>
  * &lt;symlink action=&quot;delete&quot; link=&quot;${dir.top}/foo&quot;/&gt;
  * </pre>
@@ -109,9 +109,9 @@ import org.apache.tools.ant.util.SymbolicLinkUtils;
  * or action=&quot;recreate&quot;, but action=&quot;record&quot; should still
  * work. Finally, the lack of support for symlinks in Java means that all links
  * are recorded as links to the <strong>canonical</strong> resource name.
- * Therefore the link: <code>link --> subdir/dir/../foo.bar</code> will be
+ * Therefore the link: <code>link --&gt; subdir/dir/../foo.bar</code> will be
  * recorded as <code>link=subdir/foo.bar</code> and restored as
- * <code>link --> subdir/foo.bar</code>.
+ * <code>link --&gt; subdir/foo.bar</code>.</p>
  *
  */
 public class Symlink extends DispatchTask {
@@ -448,7 +448,7 @@ public class Symlink extends DispatchTask {
     /**
      * Conduct the actual construction of a link.
      *
-     * <p> The link is constructed by calling <code>Execute.runCommand</code>.
+     * <p>The link is constructed by calling <code>Execute.runCommand</code>.</p>
      *
      * @param res   The path of the resource we are linking to.
      * @param lnk       The name of the link we wish to make.
@@ -484,9 +484,9 @@ public class Symlink extends DispatchTask {
     /**
      * Find all the links in all supplied filesets.
      *
-     * <p> This method is invoked when the action attribute is
+     * <p>This method is invoked when the action attribute is
      * &quot;record&quot;. This means that filesets are interpreted
-     * as the directories in which links may be found.
+     * as the directories in which links may be found.</p>
      *
      * @param fileSets   The filesets specified by the user.
      * @return A HashSet of <code>File</code> objects containing the
@@ -519,10 +519,10 @@ public class Symlink extends DispatchTask {
     /**
      * Load links from properties files included in one or more FileSets.
      *
-     * <p> This method is only invoked when the action attribute is set to
+     * <p>This method is only invoked when the action attribute is set to
      * &quot;recreate&quot;. The filesets passed in are assumed to specify the
      * names of the property files with the link information and the
-     * subdirectories in which to look for them.
+     * subdirectories in which to look for them.</p>
      *
      * @param fileSets    The <code>FileSet</code>s for this task.
      * @return            The links to be made.

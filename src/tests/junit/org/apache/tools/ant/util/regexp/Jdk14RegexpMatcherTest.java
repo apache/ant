@@ -20,7 +20,9 @@ package org.apache.tools.ant.util.regexp;
 
 import java.io.IOException;
 
-import junit.framework.AssertionFailedError;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests for the JDK 1.4 implementation of the RegexpMatcher interface.
@@ -32,39 +34,39 @@ public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
         return new Jdk14RegexpMatcher();
     }
 
-    public Jdk14RegexpMatcherTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testParagraphCharacter() throws IOException {
         try {
             super.testParagraphCharacter();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 
+    @Test
     public void testLineSeparatorCharacter() throws IOException {
         try {
             super.testLineSeparatorCharacter();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 
+    @Test
     public void testStandaloneCR() throws IOException {
         try {
             super.testStandaloneCR();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 
+    @Test
     public void testWindowsLineSeparator() throws IOException {
         try {
             super.testWindowsLineSeparator();
             fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
         }
     }
 }

@@ -134,22 +134,22 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
         if (getPlatform() != null) {
             cmd.createArgument().setValue(FLAG_PLATFORM);
             cmd.createArgument().setValue(getPlatform());
-        } // end of if ()
+        }
 
         if (getResolver() != null) {
             cmd.createArgument().setValue(FLAG_RESOLVER);
             cmd.createArgument().setValue(getResolver());
-        } // end of if ()
+        }
 
         if (getSubSystem() != null) {
             cmd.createArgument().setValue(FLAG_SUBSYSTEM);
             cmd.createArgument().setValue("\"" + getSubSystem() + "\"");
-        } // end of if ()
+        }
 
         if (getRelease() != null) {
             cmd.createArgument().setValue(FLAG_RELEASE);
             cmd.createArgument().setValue(getRelease());
-        } // end of if ()
+        }
     }
 
     /**
@@ -292,7 +292,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
             String s = reader.readLine();
             if (s != null) {
                 log("err " + s, Project.MSG_DEBUG);
-            } // end of if ()
+            }
         }
     }
 
@@ -312,15 +312,15 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
                 taskstring = taskstring.substring(0, taskstring.lastIndexOf(' ')).trim();
                 setTask(taskstring);
                 log("task is " + getTask(), Project.MSG_DEBUG);
-            } // end of if ()
+            }
         } catch (NullPointerException npe) {
-            log("error procession stream , null pointer exception", Project.MSG_ERR);
+            log("error procession stream, null pointer exception", Project.MSG_ERR);
             log(StringUtils.getStackTrace(npe), Project.MSG_ERR);
             throw new BuildException(npe);
         } catch (Exception e) {
             log("error procession stream " + e.getMessage(), Project.MSG_ERR);
             throw new BuildException(e.getMessage());
-        } // end of try-catch
+        }
 
     }
 

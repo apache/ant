@@ -44,7 +44,7 @@ public class PermissionUtils {
     private PermissionUtils() { }
 
     /**
-     * Translates a set of permissons into a Unix stat(2) {@code
+     * Translates a set of permissions into a Unix stat(2) {@code
      * st_mode} result.
      * @param permissions the permissions
      * @param type the file type
@@ -102,12 +102,13 @@ public class PermissionUtils {
      *  <li>{@link ArchiveResource}</li>
      * </ul>
      *
-     * @param resource the resource to set permissions for
+     * @param r the resource to set permissions for
      * @param permissions the permissions
      * @param posixNotSupportedCallback optional callback that is
      * invoked for a file provider resource if the file-system holding
      * the file doesn't support PosixFilePermissions. The Path
      * corresponding to the file is passed to the callback.
+     * @throws IOException if something goes wrong
      */
     public static void setPermissions(Resource r, Set<PosixFilePermission> permissions,
                                       Consumer<Path> posixNotSupportedCallback)
@@ -140,12 +141,13 @@ public class PermissionUtils {
      *  <li>{@link ArchiveResource}</li>
      * </ul>
      *
-     * @param resource the resource to read permissions from
+     * @param r the resource to read permissions from
      * @param posixNotSupportedFallback optional fallback function to provide
      * permissions for file system that don't support
      * PosixFilePermissions. The Path corresponding to the file is
      * passed to the callback.
      * @return the permissions
+     * @throws IOException if something goes wrong
      */
     public static Set<PosixFilePermission> getPermissions(Resource r,
             Function<Path, Set<PosixFilePermission>> posixNotSupportedFallback)
@@ -210,6 +212,10 @@ public class PermissionUtils {
 
         /**
          * Determines the file type of a {@link Path}.
+         *
+         * @param p Path
+         * @return FileType
+         * @throws IOException if file attributes cannot be read
          */
         public static FileType of(Path p) throws IOException {
             BasicFileAttributes attrs =
@@ -226,6 +232,9 @@ public class PermissionUtils {
 
         /**
          * Determines the file type of a {@link Resource}.
+         *
+         * @param r Resource
+         * @return FileType
          */
         public static FileType of(Resource r) {
             if (r.isDirectory()) {

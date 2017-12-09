@@ -212,8 +212,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#canEncode(java.lang.String)
      */
     public boolean canEncode(final String name) {
 
@@ -230,8 +229,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
+     * @see org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
     public ByteBuffer encode(final String name) {
         ByteBuffer out = ByteBuffer.allocate(name.length()
@@ -257,8 +255,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
     }
 
     /**
-     * @see
-     * org.apache.tools.zip.ZipEncoding#decode(byte[])
+     * @see org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
     public String decode(final byte[] data) throws IOException {
         final char [] ret = new char[data.length];

@@ -147,6 +147,7 @@ public class LoadProperties extends Task {
      * Whether to apply the prefix when expanding properties on the
      * right hand side of a properties file as well.
      *
+     * @param b boolean
      * @since Ant 1.8.2
      */
     public void setPrefixValues(boolean b) {

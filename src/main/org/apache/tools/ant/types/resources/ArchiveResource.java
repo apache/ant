@@ -242,7 +242,7 @@ public abstract class ArchiveResource extends Resource {
 
     /**
      * Format this Resource as a String.
-     * @return String representatation of this Resource.
+     * @return String representation of this Resource.
      */
     @Override
     public String toString() {

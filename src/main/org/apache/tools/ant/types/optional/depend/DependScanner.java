@@ -149,8 +149,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getExcludedDirectories
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public String[] getExcludedDirectories() {
         return null;
@@ -158,8 +158,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getExcludedFiles
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public String[] getExcludedFiles() {
         return null;
@@ -167,8 +167,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getIncludedDirectories
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public String[] getIncludedDirectories() {
         return new String[0];
@@ -176,8 +176,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getIncludedDirsCount
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public int getIncludedDirsCount() {
         return 0;
@@ -185,8 +185,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getNotIncludedDirectories
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public String[] getNotIncludedDirectories() {
         return null;
@@ -194,8 +194,8 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#getNotIncludedFiles
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public String[] getNotIncludedFiles() {
         return null;
@@ -203,24 +203,24 @@ public class DependScanner extends DirectoryScanner {
 
     /**
      * @see DirectoryScanner#setExcludes
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void setExcludes(String[] excludes) {
     }
 
     /**
      * @see DirectoryScanner#setIncludes
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void setIncludes(String[] includes) {
     }
 
     /**
      * @see DirectoryScanner#setCaseSensitive
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     @Override
     public void setCaseSensitive(boolean isCaseSensitive) {
     }

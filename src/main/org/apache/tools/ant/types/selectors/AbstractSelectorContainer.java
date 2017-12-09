@@ -301,6 +301,7 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
+     * @param e ExecutableSelector
      * @since 1.10.0
      */
     public void addExecutable(ExecutableSelector e) {
@@ -308,6 +309,7 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
+     * @param e SymlinkSelector
      * @since 1.10.0
      */
     public void addSymlink(SymlinkSelector e) {
@@ -315,6 +317,7 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
+     * @param o OwnedBySelector
      * @since 1.10.0
      */
     public void addOwnedBy(OwnedBySelector o) {

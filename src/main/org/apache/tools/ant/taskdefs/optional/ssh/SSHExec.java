@@ -235,6 +235,7 @@ public class SSHExec extends SSHBase {
 
     /**
      * Whether a pseudo-tty should be allocated.
+     * @param b boolean
      * @since Apache Ant 1.8.3
      */
     public void setUsePty(final boolean b) {
@@ -252,8 +253,9 @@ public class SSHExec extends SSHBase {
     }
 
     /**
-     * If suppressSystemOut is <code>true</code>, output will not be sent to System.out<br/>
-     * If suppressSystemOut is <code>false</code>, normal behavior
+     * If suppressSystemOut is <code>true</code>, output will not be sent to System.out,
+     * if suppressSystemOut is <code>false</code>, normal behavior
+     * @param suppressSystemOut boolean
      * @since Ant 1.9.0
      */
     public void setSuppressSystemOut(final boolean suppressSystemOut) {
@@ -261,8 +263,9 @@ public class SSHExec extends SSHBase {
     }
 
     /**
-     * If suppressSystemErr is <code>true</code>, output will not be sent to System.err<br/>
-     * If suppressSystemErr is <code>false</code>, normal behavior
+     * If suppressSystemErr is <code>true</code>, output will not be sent to System.err,
+     * if suppressSystemErr is <code>false</code>, normal behavior
+     * @param suppressSystemErr boolean
      * @since Ant 1.9.4
      */
     public void setSuppressSystemErr(final boolean suppressSystemErr) {
@@ -478,7 +481,6 @@ public class SSHExec extends SSHBase {
      * @param from           string to write
      * @param to             file to write to
      * @param append         if true, append to existing file, else overwrite
-     * @exception Exception  most likely an IOException
      */
     private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {

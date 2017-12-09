@@ -151,8 +151,8 @@ public class IsLastModified extends ProjectComponent implements Condition {
 
     /**
      * evaluate the condition
-     * @return true or false depending on the compoarison mode and the time of the resource
-     * @throws BuildException
+     * @return true or false depending on the comparison mode and the time of the resource
+     * @throws BuildException if something goes wrong
      */
     @Override
     public boolean eval() throws BuildException {

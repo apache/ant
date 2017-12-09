@@ -44,8 +44,8 @@ import org.apache.tools.ant.util.FileUtils;
  * Holds the data of a jar manifest.
  *
  * Manifests are processed according to the
- * {@link <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html">Jar
- * file specification.</a>}.
+ * <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html">Jar
+ * file specification</a>.
  * Specifically, a manifest element consists of
  * a set of attributes and sections. These sections in turn may contain
  * attributes. Note in particular that this may result in manifest lines

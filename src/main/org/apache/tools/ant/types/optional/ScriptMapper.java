@@ -66,7 +66,7 @@ public class ScriptMapper extends AbstractScriptComponent implements FileNameMap
     /**
      * Returns an array containing the target filename(s) for the given source
      * file.
-     * <p/>
+     *
      * <p>if the given rule doesn't apply to the source file, implementation
      * must return null. SourceFileScanner will then omit the source file in
      * question.</p>

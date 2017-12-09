@@ -153,7 +153,7 @@ public class Jar extends Zip {
     // CheckStyle:LineLength OFF - Link is too long.
     /**
      * Strict mode for checking rules of the JAR-Specification.
-     * @see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning
+     * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp89936"></a>
      */
     private StrictMode strict = new StrictMode("ignore");
 
@@ -441,6 +441,7 @@ public class Jar extends Zip {
     /**
      * Whether to merge Class-Path attributes.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setMergeClassPathAttributes(boolean b) {
@@ -451,6 +452,7 @@ public class Jar extends Zip {
      * Whether to flatten multi-valued attributes (i.e. Class-Path)
      * into a single one.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFlattenAttributes(boolean b) {
@@ -978,7 +980,6 @@ public class Jar extends Zip {
      * @param dirs a list of directories
      * @param files a list of files
      * @param writer the writer to write to
-     * @throws IOException on error
      * @since Ant 1.6.2
      */
     protected final void writeIndexLikeList(List<String> dirs, List<String> files,

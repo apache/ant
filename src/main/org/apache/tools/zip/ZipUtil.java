@@ -34,6 +34,7 @@ public abstract class ZipUtil {
 
     /**
      * Convert a Date object to a DOS date/time field.
+     *
      * @param time the <code>Date</code> to convert
      * @return the date as a <code>ZipLong</code>
      */
@@ -45,6 +46,7 @@ public abstract class ZipUtil {
      * Convert a Date object to a DOS date/time field.
      *
      * <p>Stolen from InfoZip's <code>fileio.c</code></p>
+     *
      * @param t number of milliseconds since the epoch
      * @return the date as a byte array
      */
@@ -58,6 +60,7 @@ public abstract class ZipUtil {
      * Convert a Date object to a DOS date/time field.
      *
      * <p>Stolen from InfoZip's <code>fileio.c</code></p>
+     *
      * @param t number of milliseconds since the epoch
      * @param buf the output buffer
      * @param offset
@@ -117,6 +120,9 @@ public abstract class ZipUtil {
     /**
      * Converts DOS time to Java time (number of milliseconds since
      * epoch).
+     *
+     * @param dosTime long
+     * @return long
      */
     public static long dosToJavaTime(long dosTime) {
         Calendar cal = Calendar.getInstance();
@@ -136,6 +142,10 @@ public abstract class ZipUtil {
      * If the entry has Unicode*ExtraFields and the CRCs of the
      * names/comments match those of the extra fields, transfer the
      * known Unicode values from the extra field.
+     *
+     * @param ze ZipEntry
+     * @param originalNameBytes byte[]
+     * @param commentBytes byte[]
      */
     static void setNameAndCommentFromExtraFields(ZipEntry ze,
                                                  byte[] originalNameBytes,
@@ -166,6 +176,9 @@ public abstract class ZipUtil {
      *
      * <p>If the field is null or the CRCs don't match, return null
      * instead.</p>
+     *
+     * @param f AbstractUnicodeExtraField
+     * @param orig byte[]
      */
     private static
         String getUnicodeStringIfOriginalMatches(AbstractUnicodeExtraField f,
@@ -194,6 +207,9 @@ public abstract class ZipUtil {
     /**
      * Create a copy of the given array - or return null if the
      * argument is null.
+     *
+     * @param from byte[]
+     * @return byte[]
      */
     static byte[] copy(byte[] from) {
         if (from != null) {
@@ -206,6 +222,8 @@ public abstract class ZipUtil {
 
     /**
      * Whether this library is able to read or write the given entry.
+     *
+     * @return boolean
      */
     static boolean canHandleEntryData(ZipEntry entry) {
         return supportsEncryptionOf(entry) && supportsMethodOf(entry);

@@ -29,8 +29,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  * Assembles the constants declared in a Java class in
  * <code>key1=value1(line separator)key2=value2</code>
  * format.
- *<p>
- * Notes:
+ *<p>Notes:</p>
  * <ol>
  * <li>This filter uses the BCEL external toolkit.
  * <li>This assembles only those constants that are not created
@@ -39,7 +38,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  * and String only.</li>
  * <li>The access modifiers of the declared constants do not matter.</li>
  *</ol>
- * Example:<br>
+ * <p>Example:</p>
  * <pre>&lt;classconstants/&gt;</pre>
  * Or:
  * <pre>&lt;filterreader

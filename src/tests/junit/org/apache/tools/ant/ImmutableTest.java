@@ -65,6 +65,7 @@ public class ImmutableTest {
         buildRule.executeTarget("test4");
         assertEquals("original", buildRule.getProject().getProperty("test"));
     }
+
     // ensure <checksum> follows the immutability rule
     @Test
     public void test5() {

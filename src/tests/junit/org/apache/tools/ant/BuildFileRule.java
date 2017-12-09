@@ -139,7 +139,7 @@ public class BuildFileRule extends ExternalResource {
     /**
      * Sets up to run the named project
      *
-     * @param  filename name of project file to run
+     * @param filename name of project file to run
      */
     public void configureProject(String filename) throws BuildException {
         configureProject(filename, Project.MSG_DEBUG);
@@ -148,7 +148,8 @@ public class BuildFileRule extends ExternalResource {
     /**
      * Sets up to run the named project
      *
-     * @param  filename name of project file to run
+     * @param filename name of project file to run
+     * @param logLevel int
      */
     public void configureProject(String filename, int logLevel) throws BuildException {
         logBuffer = new StringBuffer();
@@ -167,7 +168,7 @@ public class BuildFileRule extends ExternalResource {
      * Executes a target in the configured Ant build file. Requires #configureProject()
      * to have been invoked before this call.
      *
-     * @param  targetName the target in the currently configured build file to run.
+     * @param targetName the target in the currently configured build file to run.
      */
     public  void executeTarget(String targetName) {
         outputBuffer = new StringBuffer();

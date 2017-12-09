@@ -141,7 +141,7 @@ class BlockSort {
 
     /**
      * Array instance identical to Data's sfmap, both are used only
-     * temporarily and indepently, so we do not need to allocate
+     * temporarily and independently, so we do not need to allocate
      * additional memory.
      */
     private final char[] quadrant;
@@ -467,7 +467,6 @@ class BlockSort {
      *        partially sorted order
      * @param block the original data
      * @param nblock size of the block
-     * @param off offset of first byte to sort in block
      */
     final void fallbackSort(int[] fmap, byte[] block, int nblock) {
         final int[] ftab = new int[257];

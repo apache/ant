@@ -86,6 +86,7 @@ public class GlobPatternMapper implements FileNameMapper {
     /**
      * Attribute specifying whether to ignore the difference
      * between / and \ (the two common directory characters).
+     * @return boolean
      * @since Ant 1.8.3
      */
     public boolean getHandleDirSep() {

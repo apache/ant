@@ -378,14 +378,14 @@ public final class Locator {
      * File.toURL() does not encode characters like #.
      * File.toURI() has been introduced in java 1.4, so
      * Ant cannot use it (except by reflection) <!-- TODO no longer true -->
-     * FileUtils.toURI() cannot be used by Locator.java
+     * File.toURI() cannot be used by Locator.java
      * Implemented this way.
      * File.toURL() adds file: and changes '\' to '/' for dos OSes
      * encodeURI converts characters like ' ' and '#' to %DD
      * @param file the file to convert
      * @return URL the converted File
      * @throws MalformedURLException on error
-     * @deprecated since 1.9, use {@link FileUtils#getFileURL(File)}
+     * @deprecated since 1.9, use <code>FileUtils.getFileURL(File)</code>
      */
     @Deprecated
     public static URL fileToURL(File file)

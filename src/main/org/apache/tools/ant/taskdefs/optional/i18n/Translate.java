@@ -356,7 +356,7 @@ public class Translate extends MatchingTask {
      * basebundlename + "_" + language2 + "_" + country2
      * basebundlename + "_" + language2
      *
-     * To the generated name, a ".properties" string is appeneded and
+     * To the generated name, a ".properties" string is appended and
      * once this file is located, it is treated just like a properties file
      * but with bundle encoding also considered while loading.
      */
@@ -411,7 +411,7 @@ public class Translate extends MatchingTask {
             log(propsFile + " not found.", Project.MSG_DEBUG);
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
-            //find a single resrouce file, throw exception
+            //find a single resource file, throw exception
             if (!loaded && checkLoaded) {
                 throw new BuildException(ioe.getMessage(), getLocation());
             }
@@ -476,7 +476,7 @@ public class Translate extends MatchingTask {
      * and endToken.  The values for these keys are looked up from
      * the hashtable and substituted.  If the hashtable doesn't
      * contain the key, they key itself is used as the value.
-     * Detination files and directories are created as needed.
+     * Destination files and directories are created as needed.
      * The destination file is overwritten only if
      * the forceoverwritten attribute is set to true if
      * the source file or any associated bundle resource file is

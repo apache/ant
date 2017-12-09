@@ -61,7 +61,7 @@ import org.apache.tools.ant.util.StringUtils;
  * </pre>
  *
  * Because each running test case gets its own formatter, we collect
- * the failing test cases in a static list. Because we dont have a finalizer
+ * the failing test cases in a static list. Because we don't have a finalizer
  * method in the formatters "lifecycle", we register this formatter as
  * BuildListener and generate the new java source on taskFinished event.
  *
@@ -171,8 +171,8 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
 
     /**
      * Add the failed test to the list.
-     * @param test the test that errored.
-     * @param throwable the reason it errored.
+     * @param test the test that erred.
+     * @param throwable the reason it erred.
      * @see junit.framework.TestListener#addError(junit.framework.Test, java.lang.Throwable)
      */
     @Override
@@ -437,7 +437,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     }
 
     /**
-     * The task outside of this JUnitResultFormatter is the <junit> task. So all tests passed
+     * The task outside of this JUnitResultFormatter is the &lt;junit&gt; task. So all tests passed
      * and we could create the new java class.
      * @param event  not used
      * @see org.apache.tools.ant.BuildListener#taskFinished(org.apache.tools.ant.BuildEvent)

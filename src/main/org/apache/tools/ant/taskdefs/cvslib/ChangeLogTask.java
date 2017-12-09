@@ -41,36 +41,24 @@ import org.apache.tools.ant.types.FileSet;
  *
  * It produces an XML output representing the list of changes.
  * <pre>
- * <font color=#0000ff>&lt;!-- Root element --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> changelog <font color=#ff00ff>
- * (entry</font><font color=#ff00ff>+</font><font color=#ff00ff>)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- CVS Entry --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> entry <font color=#ff00ff>
- * (date,author,file</font><font color=#ff00ff>+</font><font color=#ff00ff>,msg)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Date of cvs entry --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> date <font color=#ff00ff>(#PCDATA)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Author of change --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> author <font color=#ff00ff>(#PCDATA)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- List of files affected --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> msg <font color=#ff00ff>(#PCDATA)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- File changed --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> file <font color=#ff00ff>
- * (name,revision,prevrevision</font><font color=#ff00ff>?</font>
- * <font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Name of the file --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> name <font color=#ff00ff>(#PCDATA)
- * </font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Revision number --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> revision <font color=#ff00ff>
- * (#PCDATA)</font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Previous revision number --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> prevrevision <font color=#ff00ff>
- * (#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * &lt;!-- Root element --&gt;
+ * &lt;!ELEMENT changelog (entry+)&gt;
+ * &lt;!-- CVS Entry --&gt;
+ * &lt;!ELEMENT entry (date,author,file+,msg)&gt;
+ * &lt;!-- Date of cvs entry --&gt;
+ * &lt;!ELEMENT date (#PCDATA)&gt;
+ * &lt;!-- Author of change --&gt;
+ * &lt;!ELEMENT author (#PCDATA)&gt;
+ * &lt;!-- List of files affected --&gt;
+ * &lt;!ELEMENT msg (#PCDATA)&gt;
+ * &lt;!-- File changed --&gt;
+ * &lt;!ELEMENT file (name,revision,prevrevision?)&gt;
+ * &lt;!-- Name of the file --&gt;
+ * &lt;!ELEMENT name (#PCDATA)&gt;
+ * &lt;!-- Revision number --&gt;
+ * &lt;!ELEMENT revision (#PCDATA)&gt;
+ * &lt;!-- Previous revision number --&gt;
+ * &lt;!ELEMENT prevrevision (#PCDATA)&gt;
  * </pre>
  *
  * @since Ant 1.5
@@ -183,6 +171,7 @@ public class ChangeLogTask extends AbstractCvsTask {
      * Whether to use rlog against a remote repository instead of log
      * in a working copy's directory.
      *
+     * @param remote boolean
      * @since Ant 1.8.0
      */
     public void setRemote(final boolean remote) {

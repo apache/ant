@@ -135,6 +135,7 @@ public class LineOrientedOutputStreamTest {
 
     private class DummyStream extends LineOrientedOutputStream {
         private boolean invoked;
+
         protected void processLine(String line) {
             assertFalse("Only one line", invoked);
             assertEquals(LINE, line);
@@ -144,6 +145,7 @@ public class LineOrientedOutputStreamTest {
         private void assertInvoked() {
             assertTrue("At least one line", invoked);
         }
+
         private void assertNotInvoked() {
             assertTrue("No output", !invoked);
         }

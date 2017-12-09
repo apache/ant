@@ -121,7 +121,7 @@ public class BuildNumber extends Task {
      * Utility method to load properties from file.
      *
      * @return the loaded properties
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      */
     private Properties loadProperties() throws BuildException {
         try (InputStream input = Files.newInputStream(myFile.toPath())) {
