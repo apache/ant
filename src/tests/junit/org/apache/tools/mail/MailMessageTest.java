@@ -120,23 +120,6 @@ public class MailMessageTest {
         "250\r\n" +
         "QUIT\r\n" +
         "221\r\n";
-        /*for (int icounter = 0; icounter<expectedResult.length(); icounter++) {
-            if (icounter < result.length()) {
-                if (expectedResult.charAt(icounter) != result.charAt(icounter)) {
-                    System.out.println("posit " + icounter + " expected "
-                        + expectedResult.charAt(icounter)
-                    + " result " + result.charAt(icounter));
-                }
-            }
-        }
-        if (expectedResult.length()>result.length()) {
-            System.out.println("excedent of expected result "
-                + expectedResult.substring(result.length()));
-        }
-        if (expectedResult.length()<result.length()) {
-            System.out.println("excedent of result "
-                + result.substring(expectedResult.length()));
-        }*/
         assertEquals(expectedResult.length(), result.length());
         assertEquals(expectedResult, result); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
