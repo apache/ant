@@ -262,7 +262,7 @@ public class Apt
      */
     public void execute()
             throws BuildException {
-        if (JavaEnvUtils.getJavaVersionNumber() >= 18) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_8)) {
            throw new BuildException("apt does not exist under Java 1.8 and higher");
         }
         super.execute();
