@@ -4,7 +4,7 @@ Changes from Ant 1.10.1 TO Ant 1.10.2
 Changes that could break older environments:
 -------------------------------------------
 
- * updated the dependency of BCEL to 6.0.
+ * updated the dependency of BCEL to 6.2.
    Bugzilla Report 61196
 
 Fixed bugs:
