@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -440,7 +441,7 @@ public class Symlink extends DispatchTask {
     private void doLink(String res, String lnk) throws BuildException {
         final Path link = Paths.get(lnk);
         final Path target = Paths.get(res);
-        final boolean alreadyExists = Files.exists(link);
+        final boolean alreadyExists = Files.exists(link, LinkOption.NOFOLLOW_LINKS);
         if (!alreadyExists) {
             // if the path (at which the link is expected to be created) isn't already present
             // then we just go ahead and attempt to symlink
