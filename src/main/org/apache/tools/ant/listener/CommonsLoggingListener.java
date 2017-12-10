@@ -128,8 +128,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#targetStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
             final Log log = getLog(TARGET_LOG,
@@ -143,8 +143,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#targetFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
             final String targetName = event.getTarget().getName();
@@ -162,8 +162,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#taskStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -184,8 +184,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#taskFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -213,8 +213,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
 
     /**
      * @see BuildListener#messageLogged
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void messageLogged(final BuildEvent event) {
         if (initialized) {
             Object categoryObject = event.getTask();

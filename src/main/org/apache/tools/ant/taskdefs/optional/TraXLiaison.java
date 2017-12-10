@@ -317,7 +317,6 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
     /**
      * Create a new transformer based on the liaison settings
-     * @throws Exception thrown if there is an error during creation.
      * @see #setStylesheet(java.io.File)
      * @see #addParam(java.lang.String, java.lang.String)
      * @see #setOutputProperty(java.lang.String, java.lang.String)

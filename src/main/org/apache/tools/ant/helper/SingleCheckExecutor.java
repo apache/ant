@@ -18,11 +18,9 @@
 
 package org.apache.tools.ant.helper;
 
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.Project;
-
 
 /**
  * "Single-check" Target executor implementation.

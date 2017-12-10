@@ -140,7 +140,7 @@ import org.xml.sax.SAXException;
  * &lt;/classpath&gt;
  * </pre>
  *
- * <p> This task <i>requires</i> the following attributes:</p>
+ * <p>This task <i>requires</i> the following attributes:</p>
  *
  * <ul>
  * <li><b>file</b>: The name of the file to load.</li>
@@ -732,10 +732,14 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         return this.rootDirectory;
     }
 
+    @Deprecated
+    protected boolean getIncludeSementicAttribute() {
+        return getIncludeSemanticAttribute();
+    }
     /**
      * @return the include semantic attribute.
      */
-    protected boolean getIncludeSementicAttribute () {
+    protected boolean getIncludeSemanticAttribute() {
         return this.includeSemanticAttribute;
     }
 

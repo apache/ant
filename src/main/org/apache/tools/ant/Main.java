@@ -1275,9 +1275,6 @@ public class Main implements AntMain {
      *                     no descriptions are displayed.
      *                     If non-<code>null</code>, this should have
      *                     as many elements as <code>names</code>.
-     * @param topDependencies The list of dependencies for each target.
-     *                        The dependencies are listed as a non null
-     *                        enumeration of String.
      * @param heading The heading to display.
      *                Should not be <code>null</code>.
      * @param maxlen The maximum length of the names of the targets.

@@ -149,17 +149,17 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Validates the passed in attributes. <p>
+     * Validates the passed in attributes.
      *
-     *  The rules are:
-     *  <ol>
+     * <p>The rules are:</p>
+     * <ol>
      *    <li> If action is "deploy" or "update" the "application"
-     *    and "source" attributes must be supplied.
+     *    and "source" attributes must be supplied.</li>
      *    <li> If action is "delete" or "undeploy" the
-     *    "application" attribute must be supplied.
+     *    "application" attribute must be supplied.</li>
+     * </ol>
      *
-     *@exception  BuildException                       Description
-     *      of Exception
+     * @exception BuildException if something goes wrong
      */
     public void validateAttributes() throws BuildException {
         // super.validateAttributes(); // don't want to call this method

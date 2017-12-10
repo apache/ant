@@ -73,7 +73,7 @@ public abstract class SSHBase extends Task implements LogListener {
     /**
      * Set the failonerror flag.
      * Default is true
-     * @param failure if true throw a build exception when a failure occuries,
+     * @param failure if true throw a build exception when a failure occurs,
      *                otherwise just log the failure and continue
      */
     public void setFailonerror(final boolean failure) {
@@ -108,6 +108,7 @@ public abstract class SSHBase extends Task implements LogListener {
 
     /**
      * Set the serverAliveCountMax value.
+     * @param countMax int
      * @since Ant 1.9.7
      */
     public void setServerAliveCountMax(final int countMax) {
@@ -128,6 +129,7 @@ public abstract class SSHBase extends Task implements LogListener {
 
     /**
      * Set the serverAliveIntervalSeconds value in seconds.
+     * @param interval int
      * @since Ant 1.9.7
      */
     public void setServerAliveIntervalSeconds(final int interval) {
@@ -223,7 +225,7 @@ public abstract class SSHBase extends Task implements LogListener {
 
     /**
      * Initialize the task.
-     * This initializizs the known hosts and sets the default port.
+     * This initializes the known hosts and sets the default port.
      * @throws BuildException on error
      */
     public void init() throws BuildException {

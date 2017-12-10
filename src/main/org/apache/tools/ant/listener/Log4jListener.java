@@ -55,8 +55,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#buildStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void buildStarted(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Project.class.getName());
@@ -66,8 +66,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#buildFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void buildFinished(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Project.class.getName());
@@ -81,8 +81,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#targetStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetStarted(final BuildEvent event) {
         if (initialized) {
             final Logger log = Logger.getLogger(Target.class.getName());
@@ -92,8 +92,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#targetFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void targetFinished(final BuildEvent event) {
         if (initialized) {
             final String targetName = event.getTarget().getName();
@@ -109,8 +109,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#taskStarted
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskStarted(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -121,8 +121,8 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#taskFinished
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void taskFinished(final BuildEvent event) {
         if (initialized) {
             final Task task = event.getTask();
@@ -138,6 +138,7 @@ public class Log4jListener implements BuildListener {
 
     /**
      * @see BuildListener#messageLogged
+     * {@inheritDoc}.
      */
     /** {@inheritDoc}. */
     public void messageLogged(final BuildEvent event) {

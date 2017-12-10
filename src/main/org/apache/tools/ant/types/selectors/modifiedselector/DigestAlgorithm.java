@@ -33,23 +33,24 @@ import org.apache.tools.ant.BuildException;
 /**
  * Computes a 'hashvalue' for the content of file using
  * java.security.MessageDigest.
- * Use of this algorithm doesn't require any additional nested <param>s.
- * Supported <param>s are:
+ * Use of this algorithm doesn't require any additional nested &lt;param&gt;s.
+ * Supported &lt;param&gt;s are:
  * <table>
+ * <caption>Digest algorithm parameters</caption>
  * <tr>
  *   <th>name</th><th>values</th><th>description</th><th>required</th>
  * </tr>
  * <tr>
- *   <td> algorithm.algorithm </td>
- *   <td> MD5 | SHA (default provider) </td>
- *   <td> name of the algorithm the provider should use </td>
- *   <td> no, defaults to MD5 </td>
+ *   <td>algorithm.algorithm</td>
+ *   <td>MD5 | SHA (default provider)</td>
+ *   <td>name of the algorithm the provider should use</td>
+ *   <td>no, defaults to MD5</td>
  * </tr>
  * <tr>
- *   <td> algorithm.provider </td>
- *   <td> </td>
- *   <td> name of the provider to use </td>
- *   <td> no, defaults to <i>null</i> </td>
+ *   <td> algorithm.provider</td>
+ *   <td></td>
+ *   <td>name of the provider to use</td>
+ *   <td>no, defaults to <i>null</i></td>
  * </tr>
  * </table>
  *

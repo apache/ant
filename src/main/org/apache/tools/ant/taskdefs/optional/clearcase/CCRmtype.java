@@ -28,6 +28,7 @@ import org.apache.tools.ant.types.Commandline;
  * <p>
  * The following attributes are interpreted:
  * <table border="1">
+ *   <caption>Task attributes</caption>
  *   <tr>
  *     <th>Attribute</th>
  *     <th>Values</th>
@@ -41,7 +42,7 @@ import org.apache.tools.ant.types.Commandline;
  *              eltype                         element type<br>
  *              hltype                         hyperlink type<br>
  *              lbtype                         label type<br>
- *              trtype                         trigger type<br>
+ *              trtype                         trigger type
  *      </td>
  *      <td>Yes</td>
  *   <tr>

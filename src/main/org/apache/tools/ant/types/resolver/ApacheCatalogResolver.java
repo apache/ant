@@ -53,7 +53,7 @@ import org.apache.xml.resolver.tools.CatalogResolver;
  * in XMLCatalog's lookup algorithm.  See XMLCatalog.java for more
  * details.</p>
  *
- * @see org.apache.tools.ant.types.XMLCatalog.CatalogResolver
+ * @see org.apache.tools.ant.types.XMLCatalog
  * @see org.apache.xml.resolver.CatalogManager
  * @since Ant 1.6
  */
@@ -171,4 +171,4 @@ public class ApacheCatalogResolver extends CatalogResolver {
         xmlCatalog.addEntity(entity);
     }
 
-} //-- ApacheCatalogResolver
+}

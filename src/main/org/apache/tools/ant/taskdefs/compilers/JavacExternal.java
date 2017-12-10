@@ -66,9 +66,9 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
     /**
      * helper method to execute our command on VMS.
-     * @param cmd
-     * @param firstFileName
-     * @return
+     * @param cmd Commandline
+     * @param firstFileName int
+     * @return boolean
      */
     private boolean execOnVMS(Commandline cmd, int firstFileName) {
         File vmsFile = null;

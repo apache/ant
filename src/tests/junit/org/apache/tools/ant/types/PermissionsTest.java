@@ -25,8 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.Permissions.
- *
+ * JUnit 4 testcases for org.apache.tools.ant.types.Permissions.
  */
 public class PermissionsTest {
 

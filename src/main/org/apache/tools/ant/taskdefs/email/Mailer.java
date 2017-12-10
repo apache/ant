@@ -74,6 +74,8 @@ public abstract class Mailer {
 
     /**
      * Whether the port has been explicitly specified by the user.
+     *
+     * @param explicit boolean
      * @since Ant 1.8.2
      */
     public void setPortExplicitlySpecified(boolean explicit) {
@@ -82,6 +84,8 @@ public abstract class Mailer {
 
     /**
      * Whether the port has been explicitly specified by the user.
+     *
+     * @return boolean
      * @since Ant 1.8.2
      */
     protected boolean isPortExplicitlySpecified() {
@@ -151,9 +155,9 @@ public abstract class Mailer {
     }
 
     /**
-     * Set the replyto addresses.
+     * Set the replyTo addresses.
      *
-     * @param list a vector of reployTo addresses.
+     * @param list a vector of replyTo addresses.
      * @since Ant 1.6
      */
     public void setReplyToList(Vector<EmailAddress> list) {
@@ -247,6 +251,7 @@ public abstract class Mailer {
      * <p>Even with this property set to true the task will still fail
      * if the mail couldn't be sent to any recipient at all.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setIgnoreInvalidRecipients(boolean b) {
@@ -256,6 +261,7 @@ public abstract class Mailer {
     /**
      * Whether invalid recipients should be ignored.
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     protected boolean shouldIgnoreInvalidRecipients() {
@@ -267,7 +273,6 @@ public abstract class Mailer {
      * header.
      *
      * @return the current date in SMTP suitable format.
-     *
      * @since Ant 1.5
      */
     protected final String getDate() {

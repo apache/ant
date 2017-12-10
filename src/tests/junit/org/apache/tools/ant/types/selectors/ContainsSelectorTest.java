@@ -72,7 +72,6 @@ public class ContainsSelectorTest {
         ContainsSelector s;
         String results;
 
-
         s = new ContainsSelector();
         s.setText("no such string in test files");
         results = selectorRule.selectionString(s);
@@ -106,9 +105,6 @@ public class ContainsSelectorTest {
         s.setIgnorewhitespace(true);
         results = selectorRule.selectionString(s);
         assertEquals("TFFFTFFFFFFT", results);
-
-
-
     }
 
 }

@@ -35,7 +35,7 @@ public class LogOutputResource extends Resource implements Appendable {
 
     /**
      * Create a new LogOutputResource.
-     * @param managingComponent
+     * @param managingComponent ditto
      */
     public LogOutputResource(ProjectComponent managingComponent) {
         super(NAME);

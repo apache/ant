@@ -75,7 +75,7 @@ public class BigProjectLogger extends SimpleBigProjectLogger
     /**
      * {@inheritDoc}
      *
-     * @param event
+     * @param event BuildEvent
      */
     public void targetStarted(BuildEvent event) {
         maybeRaiseSubBuildStarted(event);
@@ -85,7 +85,7 @@ public class BigProjectLogger extends SimpleBigProjectLogger
     /**
      * {@inheritDoc}
      *
-     * @param event
+     * @param event BuildEvent
      */
     public void taskStarted(BuildEvent event) {
         maybeRaiseSubBuildStarted(event);
@@ -95,7 +95,7 @@ public class BigProjectLogger extends SimpleBigProjectLogger
     /**
      * {@inheritDoc}
      *
-     * @param event
+     * @param event BuildEvent
      */
     public void buildFinished(BuildEvent event) {
         maybeRaiseSubBuildStarted(event);
@@ -106,7 +106,7 @@ public class BigProjectLogger extends SimpleBigProjectLogger
     /**
      * {@inheritDoc}
      *
-     * @param event
+     * @param event BuildEvent
      */
     public void messageLogged(BuildEvent event) {
         maybeRaiseSubBuildStarted(event);

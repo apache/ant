@@ -54,16 +54,14 @@ import org.apache.tools.ant.util.StringUtils;
  * and skeletons in the specified destination directory.  Only if the stubs and
  * skeletons cannot be found or if they're out of date will the iPlanet
  * Application Server ejbc utility be run.
- * <p>
- * Because this class (and it's assorted inner classes) may be bundled into the
+ * <p>Because this class (and it's assorted inner classes) may be bundled into the
  * iPlanet Application Server distribution at some point (and removed from the
  * Ant distribution), the class has been written to be independent of all
  * Ant-specific classes.  It is also for this reason (and to avoid cluttering
  * the Apache Ant source files) that this utility has been packaged into a
- * single source file.
- * <p>
- * For more information on Ant Tasks for iPlanet Application Server, see the
- * <code>IPlanetDeploymentTool</code> and <code>IPlanetEjbcTask</code> classes.
+ * single source file.</p>
+ * <p>For more information on Ant Tasks for iPlanet Application Server, see the
+ * <code>IPlanetDeploymentTool</code> and <code>IPlanetEjbcTask</code> classes.</p>
  *
  * @see    IPlanetDeploymentTool
  * @see    IPlanetEjbcTask
@@ -327,15 +325,12 @@ public class IPlanetEjbc {
         } catch (IOException e) {
             System.out.println("An IOException has occurred while reading the "
                     + "XML descriptors (" + e.getMessage() + ").");
-            return;
         } catch (SAXException e) {
             System.out.println("A SAXException has occurred while reading the "
                     + "XML descriptors (" + e.getMessage() + ").");
-            return;
         } catch (IPlanetEjbc.EjbcException e) {
             System.out.println("An error has occurred while executing the ejbc "
                     + "utility (" + e.getMessage() + ").");
-            return;
         }
     }
 
@@ -417,7 +412,7 @@ public class IPlanetEjbc {
             args.append(arguments[i]).append(" ");
         }
 
-        /* If an iAS home directory is specified, prepend it to the commmand */
+        /* If an iAS home directory is specified, prepend it to the command */
         String command;
         if (iasHomeDir == null) {
             command = "";
@@ -1129,12 +1124,9 @@ public class IPlanetEjbc {
          * implementation) and returns the modification timestamp for the
          * "oldest" class.
          *
-         * @param classpath The classpath to be used to find the source EJB
-         *                  classes.  If <code>null</code>, the system classpath
-         *                  is used.
+         * @param buildDir  The directory to be used to find the source EJB
+         *                  classes.
          * @return The modification timestamp for the "oldest" EJB source class.
-         * @throws BuildException If one of the EJB source classes cannot be
-         *                        found on the classpath.
          */
         private long sourceClassesModified(File buildDir) {
             long latestModified; // The timestamp of the "newest" class
@@ -1223,16 +1215,14 @@ public class IPlanetEjbc {
         /**
          * Examines each of the EJB stubs and skeletons in the destination
          * directory and returns the modification timestamp for the "oldest"
-         * class. If one of the stubs or skeletons cannot be found, <code>-1
-         * </code> is returned.
+         * class. If one of the stubs or skeletons cannot be found,
+         * <code>-1</code> is returned.
          *
-         * @param dest The directory in which the EJB stubs and skeletons are
+         * @param destDir The directory in which the EJB stubs and skeletons are
          *             stored.
          * @return The modification timestamp for the "oldest" EJB stub or
-         *         skeleton.  If one of the classes cannot be found, <code>-1
-         *         </code> is returned.
-         * @throws BuildException If the canonical path of the destination
-         *                        directory cannot be found.
+         *         skeleton.  If one of the classes cannot be found,
+         *         <code>-1</code> is returned.
          */
         private long destClassesModified(File destDir) {
             String[] classnames = classesToGenerate(); // List of all stubs & skels

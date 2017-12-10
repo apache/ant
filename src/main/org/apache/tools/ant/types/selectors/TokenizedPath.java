@@ -93,12 +93,14 @@ public class TokenizedPath {
 
     /**
      * The depth (or length) of a path.
+     * @return int
      */
     public int depth() {
         return tokenizedPath.length;
     }
 
-    /* package */ String[] getTokens() {
+    /* package */
+    String[] getTokens() {
         return tokenizedPath;
     }
 
@@ -135,6 +137,7 @@ public class TokenizedPath {
      * Do we have to traverse a symlink when trying to reach path from
      * basedir?
      * @param base base File (dir).
+     * @return boolean
      */
     public boolean isSymlink(File base) {
         for (int i = 0; i < tokenizedPath.length; i++) {
@@ -160,6 +163,7 @@ public class TokenizedPath {
 
     /**
      * true if the original paths are equal.
+     * @return boolean
      */
     @Override
     public boolean equals(Object o) {
@@ -214,6 +218,8 @@ public class TokenizedPath {
     /**
      * Creates a TokenizedPattern from the same tokens that make up
      * this path.
+     *
+     * @return TokenizedPattern
      */
     public TokenizedPattern toPattern() {
         return new TokenizedPattern(path, tokenizedPath);

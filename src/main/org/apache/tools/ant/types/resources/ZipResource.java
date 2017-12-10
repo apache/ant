@@ -186,6 +186,7 @@ public class ZipResource extends ArchiveResource {
 
     /**
      * The compression method that has been used.
+     * @return int
      * @since Ant 1.8.0
      */
     public int getMethod() {

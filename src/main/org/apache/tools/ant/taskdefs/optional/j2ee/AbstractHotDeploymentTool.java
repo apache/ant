@@ -27,17 +27,17 @@ import org.apache.tools.ant.types.Path;
  *
  *  Subclassing this class for a vendor specific tool involves the
  *  following.
- *  <ol><li>Implement the <code>isActionValid()<code> method to insure the
- *  action supplied as the "action" attribute of ServerDeploy is valid.
+ *  <ol><li>Implement the <code>isActionValid()</code> method to insure the
+ *  action supplied as the "action" attribute of ServerDeploy is valid.</li>
  *  <li>Implement the <code>validateAttributes()</code> method to insure
- *  all required attributes are supplied, and are in the correct format.
+ *  all required attributes are supplied, and are in the correct format.</li>
  *  <li>Add a <code>add&lt;TOOL&gt;</code> method to the ServerDeploy
  *  class.  This method will be called when Ant encounters a
  *  <code>add&lt;TOOL&gt;</code> task nested in the
- *  <code>serverdeploy</code> task.
+ *  <code>serverdeploy</code> task.</li>
  *  <li>Define the <code>deploy</code> method.  This method should perform
  *  whatever task it takes to hot-deploy the component.  IE: spawn a JVM and
- *  run class, exec a native executable, run Java code...
+ *  run class, exec a native executable, run Java code...</li></ol>
  *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy

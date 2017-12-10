@@ -501,6 +501,8 @@ public class SQLExec extends JDBCTask {
      * If false, delimiters will be searched for in a case-insensitive
      * manner (i.e. delimiter="go" matches "GO") and surrounding
      * whitespace will be ignored (delimiter="go" matches "GO ").
+     *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setStrictDelimiterMatching(boolean b) {
@@ -509,6 +511,8 @@ public class SQLExec extends JDBCTask {
 
     /**
      * whether to show SQLWarnings as WARN messages.
+     *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setShowWarnings(boolean b) {
@@ -517,6 +521,8 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Whether a warning is an error - in which case onError applies.
+     *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setTreatWarningsAsErrors(boolean b) {
@@ -528,6 +534,7 @@ public class SQLExec extends JDBCTask {
      *
      * <p>Defaults to ","</p>
      *
+     * @param s String
      * @since Ant 1.8.0
      */
     public void setCsvColumnSeparator(String s) {
@@ -550,6 +557,7 @@ public class SQLExec extends JDBCTask {
      *
      * <p>Defaults to "not set"</p>
      *
+     * @param s String
      * @since Ant 1.8.0
      */
     public void setCsvQuoteCharacter(String s) {
@@ -585,6 +593,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Sets a given property to the number of rows in the first
      * statement that returned a row count.
+     * @param rowCountProperty String
      * @since Ant 1.8.0
      */
     public void setRowCountProperty(String rowCountProperty) {
@@ -593,6 +602,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Force the csv quote character
+     * @param forceCsvQuoteChar boolean
      */
     public void setForceCsvQuoteChar(boolean forceCsvQuoteChar) {
         this.forceCsvQuoteChar = forceCsvQuoteChar;
@@ -986,6 +996,9 @@ public class SQLExec extends JDBCTask {
      * instances, should override this method but keep in mind that
      * this class expects to get the same connection instance on
      * consecutive calls.</p>
+     *
+     * @return Statement
+     * @throws SQLException if statement creation or processing fails
      */
     protected Statement getStatement() throws SQLException {
         if (statement == null) {

@@ -33,7 +33,7 @@ public final class AttributeNamespaceDef  extends AntlibDefinition {
 
     /**
      * Run the definition.
-     * This registers the XML namespace (URI) as a namepace for
+     * This registers the XML namespace (URI) as a namespace for
      * attributes.
      */
     public void execute() {

@@ -22,17 +22,17 @@ import org.apache.tools.ant.BuildException;
 /**
  * EnumeratedAttribute for quantifier comparisons. Evaluates a
  * <code>boolean[]</code> or raw <code>true</code> and <code>false</code>
- * counts. Accepts the following values:<ul>
- * <li>"all"</li> - none <code>false</code>
- * <li>"each"</li> - none <code>false</code>
- * <li>"every"</li> - none <code>false</code>
- * <li>"any"</li> - at least one <code>true</code>
- * <li>"some"</li> - at least one <code>true</code>
- * <li>"one"</li> - exactly one <code>true</code>
- * <li>"majority"</li> - more <code>true</code> than <code>false</code>
- * <li>"most"</li> - more <code>true</code> than <code>false</code>
- * <li>"none"</li> - none <code>true</code>
- * </ul>
+ * counts. Accepts the following values:<dl>
+ * <dt>"all"</dt><dd>none <code>false</code></dd>
+ * <dt>"each"</dt><dd>none <code>false</code></dd>
+ * <dt>"every"</dt><dd>none <code>false</code></dd>
+ * <dt>"any"</dt><dd>at least one <code>true</code></dd>
+ * <dt>"some"</dt><dd>at least one <code>true</code></dd>
+ * <dt>"one"</dt><dd>exactly one <code>true</code></dd>
+ * <dt>"majority"</dt><dd>more <code>true</code> than <code>false</code></dd>
+ * <dt>"most"</dt><dd>more <code>true</code> than <code>false</code></dd>
+ * <dt>"none"</dt><dd>none <code>true</code></dd>
+ * </dl>
  * @since Ant 1.7
  */
 public class Quantifier extends EnumeratedAttribute {
@@ -114,7 +114,7 @@ public class Quantifier extends EnumeratedAttribute {
     }
 
     /**
-     * Evaluate a <code>boolean<code> array.
+     * Evaluate a <code>boolean</code> array.
      * @param b the <code>boolean[]</code> to evaluate.
      * @return true if the argument fell within the parameters of this Quantifier.
      */

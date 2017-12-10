@@ -30,8 +30,7 @@ import java.util.zip.ZipException;
  * access to the internal and external file attributes.
  *
  * <p>The extra data is expected to follow the recommendation of
- * {@link <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">
- * APPNOTE.txt</a>}:</p>
+ * <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">APPNOTE.txt</a>:</p>
  * <ul>
  *   <li>the extra byte array consists of a sequence of extra fields</li>
  *   <li>each extra fields starts by a two byte header id followed by
@@ -59,8 +58,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * The {@link java.util.zip.ZipEntry} base class only supports
      * the compression methods STORED and DEFLATED. We override the
      * field so that any compression methods can be used.
-     * <p>
-     * The default value -1 means that the method has not been specified.
+     * <p>The default value -1 means that the method has not been specified.</p>
      */
     private int method = -1;
 
@@ -158,6 +156,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * the file is a directory.  If the file is not a directory a
      * potential trailing forward slash will be stripped from the
      * entry name.</p>
+     *
+     * @param inputFile File
+     * @param entryName String
      */
     public ZipEntry(final File inputFile, final String entryName) {
         this(inputFile.isDirectory() && !entryName.endsWith("/") ?
@@ -171,6 +172,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Overwrite clone.
+     *
      * @return a cloned copy of this ZipEntry
      * @since 1.1
      */
@@ -221,6 +223,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the internal file attributes.
+     *
      * @param value an <code>int</code> value
      * @since 1.1
      */
@@ -230,6 +233,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the external file attributes.
+     *
      * @return the external file attributes
      * @since 1.1
      */
@@ -239,6 +243,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the external file attributes.
+     *
      * @param value an <code>long</code> value
      * @since 1.1
      */
@@ -249,6 +254,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Sets Unix permissions in a way that is understood by Info-Zip's
      * unzip command.
+     *
      * @param mode an <code>int</code> value
      * @since Ant 1.5.2
      */
@@ -265,6 +271,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Unix permission.
+     *
      * @return the unix permissions
      * @since Ant 1.6
      */
@@ -288,6 +295,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Set the platform (UNIX or FAT).
+     *
      * @param platform an <code>int</code> value - 0 is FAT, 3 is UNIX
      * @since 1.9
      */
@@ -297,6 +305,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Replaces all currently attached extra fields with the new array.
+     *
      * @param fields an array of extra fields
      * @since 1.1
      */
@@ -315,6 +324,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves all extra fields that have been parsed successfully.
+     *
      * @return an array of the extra fields
      */
     public ZipExtraField[] getExtraFields() {
@@ -323,6 +333,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves extra fields.
+     *
      * @param includeUnparseable whether to also return unparseable
      * extra fields as {@link UnparseableExtraFieldData} if such data
      * exists.
@@ -378,6 +389,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Get all extra fields, including unparseable ones.
+     *
      * @return An array of all extra fields. Not necessarily a copy of internal data structures, hence private method
      */
     private ZipExtraField[] getAllExtraFieldsNoCopy() {
@@ -393,6 +405,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      *
      * <p>If no extra field of the same type exists, the field will be
      * added as last field.</p>
+     *
      * @param ze an extra field
      * @since 1.1
      */
@@ -420,6 +433,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * of the same type.
      *
      * <p>The new extra field will be the first one.</p>
+     *
      * @param ze an extra field
      * @since 1.1
      */
@@ -443,6 +457,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Remove an extra field.
+     *
      * @param type the type of extra field to remove
      * @since 1.1
      */
@@ -477,6 +492,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Looks up an extra field by its header id.
      *
+     * @param type ZipShort
      * @return null if no such field exists.
      */
     public ZipExtraField getExtraField(final ZipShort type) {
@@ -503,10 +519,11 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * Parses the given bytes as extra field data and consumes any
      * unparseable data as an {@link UnparseableExtraFieldData}
      * instance.
+     *
      * @param extra an array of bytes to be parsed into extra fields
      * @throws RuntimeException if the bytes cannot be parsed
-     * @since 1.1
      * @throws RuntimeException on error
+     * @since 1.1
      */
     @Override
     public void setExtra(final byte[] extra) throws RuntimeException {
@@ -536,6 +553,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the central directory part of extra fields.
+     *
+     * @param b boolean
      */
     public void setCentralDirectoryExtra(final byte[] b) {
         try {
@@ -550,6 +569,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the extra data for the local file data.
+     *
      * @return the extra data for local file
      * @since 1.1
      */
@@ -560,6 +580,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the extra data for the central directory.
+     *
      * @return the central directory extra data
      * @since 1.1
      */
@@ -572,6 +593,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      *
      * <p>This either stores the size for later usage or invokes
      * setCompressedSize via reflection.</p>
+     *
      * @param size the size to use
      * @deprecated since 1.7.
      *             Use setCompressedSize directly.
@@ -584,6 +606,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Get the name of the entry.
+     *
      * @return the entry name
      * @since 1.9
      */
@@ -594,6 +617,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Is this entry a directory?
+     *
      * @return true if the entry is a directory
      * @since 1.10
      */
@@ -604,6 +628,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Set the name of the entry.
+     *
      * @param name the name to use
      */
     protected void setName(String name) {
@@ -616,6 +641,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Gets the uncompressed size of the entry data.
+     *
      * @return the entry size
      */
     @Override
@@ -625,6 +651,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the uncompressed size of the entry data.
+     *
      * @param size the uncompressed size in bytes
      * @exception IllegalArgumentException if the specified size is less
      *            than 0
@@ -640,6 +667,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Sets the name using the raw bytes and the string created from
      * it by guessing or using the configured encoding.
+     *
      * @param name the name to use created from the raw bytes using
      * the guessed or configured encoding
      * @param rawName the bytes originally read as name from the
@@ -656,6 +684,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      *
      * <p>This method will return null if this instance has not been
      * read from an archive.</p>
+     *
+     * @return byte[]
      */
     public byte[] getRawName() {
         if (rawName != null) {
@@ -669,6 +699,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Get the hashCode of the entry.
      * This uses the name as the hashcode.
+     *
      * @return a hashcode.
      * @since Ant 1.7
      */
@@ -676,13 +707,15 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     public int hashCode() {
         // this method has severe consequences on performance. We cannot rely
         // on the super.hashCode() method since super.getName() always return
-        // the empty string in the current implemention (there's no setter)
+        // the empty string in the current implementation (there's no setter)
         // so it is basically draining the performance of a hashmap lookup
         return getName().hashCode();
     }
 
     /**
      * The "general purpose bit" field.
+     *
+     * @return GeneralPurposeBit
      */
     public GeneralPurposeBit getGeneralPurposeBit() {
         return gpb;
@@ -690,6 +723,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * The "general purpose bit" field.
+     *
+     * @param b GeneralPurposeBit
      */
     public void setGeneralPurposeBit(final GeneralPurposeBit b) {
         gpb = b;
@@ -700,6 +735,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * data - otherwise merge the fields assuming the existing fields
      * and the new fields stem from different locations inside the
      * archive.
+     *
      * @param f the extra fields to merge
      * @param local whether the new fields originate from local data
      */

@@ -704,6 +704,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * Whether to verify that data and control connections are
      * connected to the same remote host.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setEnableRemoteVerification(boolean b) {

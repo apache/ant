@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Utility class to output the information in a jar relating
- * to "Optional Packages" (formely known as "Extensions")
+ * to "Optional Packages" (formerly known as "Extensions")
  * and Package Specifications.
  *
  */

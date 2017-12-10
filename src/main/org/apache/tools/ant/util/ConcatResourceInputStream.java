@@ -126,7 +126,7 @@ public class ConcatResourceInputStream extends InputStream {
             if (!r.isExists()) {
                 continue;
             }
-            log("Concating " + r.toLongString(), Project.MSG_VERBOSE);
+            log("Concatenating " + r.toLongString(), Project.MSG_VERBOSE);
             try {
                 currentStream = new BufferedInputStream(r.getInputStream());
                 return;

@@ -341,10 +341,10 @@ public class JJTree extends Task {
      * handled as if relative of this -OUTPUT_DIRECTORY. Thus when the
      * -OUTPUT_FILE is absolute or contains a drive letter we have a problem.
      *
-     * @param destFile
-     * @param outputDir
+     * @param destFile String
+     * @param outputDir String
      * @return validation file, relative if possible; <tt>null</tt> if not set
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      */
     private String validateOutputFile(String destFile,
                                       String outputDir)
@@ -401,7 +401,7 @@ public class JJTree extends Task {
     /**
      * Determine root directory for a given file.
      *
-     * @param file
+     * @param file File
      * @return file's root directory
      */
     private File getRoot(File file) {

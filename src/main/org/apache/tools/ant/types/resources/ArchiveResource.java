@@ -235,7 +235,7 @@ public abstract class ArchiveResource extends Resource {
 
     /**
      * Format this Resource as a String.
-     * @return String representatation of this Resource.
+     * @return String representation of this Resource.
      */
     public String toString() {
         return isReference() ? getCheckedRef().toString()

@@ -40,6 +40,11 @@ public class ReflectUtil {
     /**
      * Create an instance of a class using the constructor matching
      * the given arguments.
+     * @param <T> desired type
+     * @param ofClass Class&lt;T&gt;
+     * @param argTypes Class&lt;?&gt;[]
+     * @param args Object[]
+     * @return class instance
      * @since Ant 1.8.0
      */
     public static <T> T newInstance(Class<T> ofClass,

@@ -25,8 +25,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 /**
- * JUnit 3 testcases for org.apache.tools.zip.ZipShort.
- *
+ * JUnit 4 testcases for org.apache.tools.zip.ZipShort.
  */
 public class ZipShortTest {
 

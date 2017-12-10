@@ -36,7 +36,6 @@ import static org.junit.Assert.fail;
  */
 public class MultiRootFileSetTest extends AbstractFileSetTest {
 
-
     protected AbstractFileSet getInstance() {
         return new MultiRootFileSet() {
             // overriding so set/getDir works as expected by the base test class

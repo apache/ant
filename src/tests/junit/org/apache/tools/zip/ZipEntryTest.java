@@ -26,8 +26,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.zip.ZipEntry.
- *
+ * JUnit 4 testcases for org.apache.tools.zip.ZipEntry.
  */
 public class ZipEntryTest {
 

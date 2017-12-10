@@ -78,19 +78,18 @@ import org.xml.sax.XMLReader;
  * <code>URI</code> respectively.</p>
  *
  * <p>The following is a usage example:</p>
- *
- * <code>
- * &lt;xmlcatalog&gt;<br>
- * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file2.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file3.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file4.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;catalogpath&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/etc/sgml/catalog"/&gt;<br>
- * &nbsp;&nbsp;&lt;/catalogpath&gt;<br>
- * &nbsp;&nbsp;&lt;catalogfiles dir="/opt/catalogs/" includes="**\catalog.xml" /&gt;<br>
- * &lt;/xmlcatalog&gt;<br>
- * </code>
+ * <pre>
+ * &lt;xmlcatalog&gt;
+ *   &lt;dtd publicId="" location="/path/to/file.jar"/&gt;
+ *   &lt;dtd publicId="" location="/path/to/file2.jar"/&gt;
+ *   &lt;entity publicId="" location="/path/to/file3.jar"/&gt;
+ *   &lt;entity publicId="" location="/path/to/file4.jar"/&gt;
+ *   &lt;catalogpath&gt;
+ *     &lt;pathelement location="/etc/sgml/catalog"/&gt;
+ *   &lt;/catalogpath&gt;
+ *   &lt;catalogfiles dir="/opt/catalogs/" includes="**\catalog.xml"/&gt;
+ * &lt;/xmlcatalog&gt;
+ * </pre>
  * <p>
  * Tasks wishing to use <code>&lt;xmlcatalog&gt;</code> must provide a method called
  * <code>createXMLCatalog</code> which returns an instance of
@@ -100,14 +99,13 @@ import org.xml.sax.XMLReader;
  *
  * <p>The following is a description of the resolution algorithm:
  * entities/URIs/dtds are looked up in each of the following contexts,
- * stopping when a valid and readable resource is found:
+ * stopping when a valid and readable resource is found:</p>
  * <ol>
  * <li>In the local filesystem</li>
  * <li>In the classpath</li>
  * <li>Using the Apache xml-commons resolver (if it is available)</li>
  * <li>In URL-space</li>
  * </ol>
- * </p>
  *
  * <p>See {@link
  * org.apache.tools.ant.taskdefs.optional.XMLValidateTask
@@ -484,7 +482,7 @@ public class XMLCatalog extends DataType
     /**
      * Factory method for creating the appropriate CatalogResolver
      * strategy implementation.
-     * <p> Until we query the classpath, we don't know whether the Apache
+     * <p>Until we query the classpath, we don't know whether the Apache
      * resolver (Norm Walsh's library from xml-commons) is available or not.
      * This method determines whether the library is available and creates the
      * appropriate implementation of CatalogResolver based on the answer.</p>
@@ -1125,4 +1123,4 @@ public class XMLCatalog extends DataType
             externalCatalogsProcessed = true;
         }
     }
-} //-- XMLCatalog
+}

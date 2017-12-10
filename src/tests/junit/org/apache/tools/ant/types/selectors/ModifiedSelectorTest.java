@@ -71,12 +71,8 @@ public class ModifiedSelectorTest {
 
     //  =====================  attributes  =====================
 
-
     /** Path where the testclasses are. */
     private Path testclasses = null;
-
-
-
 
     //  =====================  JUnit stuff  =====================
 
@@ -88,11 +84,9 @@ public class ModifiedSelectorTest {
         testclasses = new Path(prj, prj.getProperty("build.tests.value"));
     }
 
-
     // =======  testcases for the attributes and nested elements of the selector  =====
 
-
-    /** Test right use of cache names. */
+    /** Test correct use of cache names. */
     @Test
     public void testValidateWrongCache() {
         String name = "this-is-not-a-valid-cache-name";
@@ -106,8 +100,7 @@ public class ModifiedSelectorTest {
         }
     }
 
-
-    /** Test right use of cache names. */
+    /** Test correct use of cache names. */
     @Test
     public void testValidateWrongAlgorithm() {
         String name = "this-is-not-a-valid-algorithm-name";
@@ -122,8 +115,7 @@ public class ModifiedSelectorTest {
         }
     }
 
-
-    /** Test right use of comparator names. */
+    /** Test correct use of comparator names. */
     @Test
     public void testValidateWrongComparator() {
         String name = "this-is-not-a-valid-comparator-name";
@@ -138,7 +130,7 @@ public class ModifiedSelectorTest {
         }
     }
 
-
+    /** Test correct use of algorithm names. */
     @Test
     public void testIllegalCustomAlgorithm() {
         try {
@@ -152,7 +144,7 @@ public class ModifiedSelectorTest {
         }
     }
 
-
+    /** Test correct use of algorithm names. */
     @Test
     public void testNonExistentCustomAlgorithm() {
          try {
@@ -178,12 +170,12 @@ public class ModifiedSelectorTest {
         assertTrue("Wrong algorithm used: " + algo, algo.startsWith("MockAlgorithm"));
     }
 
-
     @Test
     public void testCustomClasses() {
         Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         BFT bft = new BFT();
         bft.setUp();
+        // don't catch the JUnit exceptions
         try {
             // do the actions
             bft.doTarget("modifiedselectortest-customClasses");
@@ -198,7 +190,6 @@ public class ModifiedSelectorTest {
             assertNotNull("'fs.mod.value' must be set.", fsModValue);
             // must be empty according to the Mock* implementations
             assertTrue("'fs.mod.value' must be empty.", "".equals(fsModValue));
-        // don't catch the JUnit exceptions
         } finally {
             bft.doTarget("modifiedselectortest-scenario-clean");
             bft.deletePropertiesfile();
@@ -206,24 +197,20 @@ public class ModifiedSelectorTest {
         }
     }
 
-
     @Test
     public void testDelayUpdateTaskFinished() {
         doDelayUpdateTest(1);
     }
-
 
     @Test
     public void testDelayUpdateTargetFinished() {
         doDelayUpdateTest(2);
     }
 
-
     @Test
     public void testDelayUpdateBuildFinished() {
         doDelayUpdateTest(3);
     }
-
 
     public void doDelayUpdateTest(int kind) {
         // no check for 1<=kind<=3 - only internal use therefore check it
@@ -273,10 +260,8 @@ public class ModifiedSelectorTest {
                 break;
         }
         assertTrue("Cache must be saved after " + kinds[kind - 1] + "Finished-Event.", cache.saved);
-
         // MockCache doesn't create a file - therefore no cleanup needed
     }
-
 
     /**
      * Extracts the real used algorithm name from the ModifiedSelector using
@@ -308,9 +293,7 @@ public class ModifiedSelectorTest {
         return algo;
     }
 
-
     // ================  testcases for the cache implementations  ================
-
 
     /**
      * Propertycache must have a set 'cachefile' attribute.
@@ -323,7 +306,6 @@ public class ModifiedSelectorTest {
             fail("PropertyfilesCache does not check its configuration.");
     }
 
-
     @Test
     public void testPropertyfileCache() {
         PropertiesfileCache cache = new PropertiesfileCache();
@@ -332,7 +314,6 @@ public class ModifiedSelectorTest {
         doTest(cache);
         assertFalse("Cache file not deleted.", cachefile.exists());
     }
-
 
     /** Checks whether a cache file is created. */
     @Test
@@ -350,7 +331,6 @@ public class ModifiedSelectorTest {
         cache.delete();
         assertFalse("Cachefile not deleted.", cachefile.exists());
     }
-
 
     /** Checks whether a cache file is created. */
     @Test
@@ -373,9 +353,7 @@ public class ModifiedSelectorTest {
         // evaluate correctness
         assertTrue("Cache file is not created.", cachefile.exists());
         cachefile.delete();
-
     }
-
 
     /**
      * In earlier implementations there were problems with the <i>order</i>
@@ -405,16 +383,13 @@ public class ModifiedSelectorTest {
         // evaluate correctness
         assertTrue("Cache file is not created.", cachefile.exists());
         cachefile.delete();
-
     }
-
 
     @Test
     @Ignore("same logic as on algorithm, no testcases created")
     public void testCustomCache() {
         // same logic as on algorithm, no testcases created
     }
-
 
     /**
      * Test the interface semantic of Caches.
@@ -459,16 +434,13 @@ public class ModifiedSelectorTest {
         assertFalse("Cache is not empty", it3.hasNext());
     }
 
-
     // ==============  testcases for the algorithm implementations  ==============
-
 
     @Test
     public void testHashvalueAlgorithm() {
         HashvalueAlgorithm algo = new HashvalueAlgorithm();
         doTest(algo);
     }
-
 
     @Test
     public void testDigestAlgorithmMD5() {
@@ -477,7 +449,6 @@ public class ModifiedSelectorTest {
         doTest(algo);
     }
 
-
     @Test
     public void testDigestAlgorithmSHA() {
         DigestAlgorithm algo = new DigestAlgorithm();
@@ -485,13 +456,11 @@ public class ModifiedSelectorTest {
         doTest(algo);
     }
 
-
     @Test
     public void testChecksumAlgorithm() {
         ChecksumAlgorithm algo = new ChecksumAlgorithm();
         doTest(algo);
     }
-
 
     @Test
     public void testChecksumAlgorithmCRC() {
@@ -500,14 +469,12 @@ public class ModifiedSelectorTest {
         doTest(algo);
     }
 
-
     @Test
     public void testChecksumAlgorithmAdler() {
         ChecksumAlgorithm algo = new ChecksumAlgorithm();
         algo.setAlgorithm("Adler");
         doTest(algo);
     }
-
 
     /**
      * Test the interface semantic of Algorithms.
@@ -769,7 +736,6 @@ public class ModifiedSelectorTest {
         }
     }
 
-
     /**
      * This scenario is based on scenario 1, but does not use any
      * default value and its based on &lt;custom&gt; selector. Used values are:
@@ -836,13 +802,11 @@ public class ModifiedSelectorTest {
         }
     }
 
-
     @Test
     public void testScenarioCoreSelectorDefaults() {
         Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-coreselector-defaults", "cache.properties");
     }
-
 
     @Test
     public void testScenarioCoreSelectorSettings() {
@@ -850,13 +814,11 @@ public class ModifiedSelectorTest {
         doScenarioTest("modifiedselectortest-scenario-coreselector-settings", "core.cache.properties");
     }
 
-
     @Test
     public void testScenarioCustomSelectorSettings() {
         Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-customselector-settings", "core.cache.properties");
     }
-
 
     public void doScenarioTest(String target, String cachefilename) {
         BFT bft = new BFT();
@@ -886,9 +848,7 @@ public class ModifiedSelectorTest {
         }
     }
 
-
     //  =====================  helper methods and classes  ====================
-
 
     /**
      * Creates a configured parameter object.
@@ -903,7 +863,6 @@ public class ModifiedSelectorTest {
         return p;
     }
 
-
     /**
      * The BFT class wrapps the selector test-builfile inside an
      * ant project. It supports target execution
@@ -916,12 +875,10 @@ public class ModifiedSelectorTest {
 
         boolean isConfigured = false;
 
-
         public void setUp() {
             super.configureProject(buildfile);
             isConfigured = true;
         }
-
 
         /**
          * This stub teardown is here because the outer class needs to call the
@@ -929,7 +886,6 @@ public class ModifiedSelectorTest {
          */
         public void tearDown() {
             super.after();
-
         }
 
         public void doTarget(String target) {
@@ -1066,6 +1022,5 @@ public class ModifiedSelectorTest {
         }
         return sb.toString();
     }
-
 
 }

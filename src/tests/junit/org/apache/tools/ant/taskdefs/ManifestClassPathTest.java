@@ -191,7 +191,6 @@ public class ManifestClassPathTest {
         buildRule.executeTarget("international-german");
         buildRule.executeTarget("run-two-jars");
         assertContains("beta alpha", buildRule.getLog());
-
     }
 
     @Test

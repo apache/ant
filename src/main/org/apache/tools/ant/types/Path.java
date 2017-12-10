@@ -39,28 +39,27 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * This object represents a path as used by CLASSPATH or PATH
  * environment variable. A path might also be described as a collection
  * of unique filesystem resources.
- * <p>
- * <code>
- * &lt;sometask&gt;<br>
- * &nbsp;&nbsp;&lt;somepath&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement
- *  path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
- * <br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;<br>
- * &nbsp;&nbsp;&lt;/somepath&gt;<br>
- * &lt;/sometask&gt;<br>
- * </code>
+ * <pre>
+ * &lt;sometask&gt;
+ *   &lt;somepath&gt;
+ *     &lt;pathelement location="/path/to/file.jar"/&gt;
+ *     &lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3"/&gt;
+ *     &lt;pathelement location="/path/to/file3.jar"/&gt;
+ *     &lt;pathelement location="/path/to/file4.jar"/&gt;
+ *   &lt;/somepath&gt;
+ * &lt;/sometask&gt;
+ * </pre>
  * <p>
  * The object implementation <code>sometask</code> must provide a method called
  * <code>createSomepath</code> which returns an instance of <code>Path</code>.
  * Nested path definitions are handled by the Path object and must be labeled
- * <code>pathelement</code>.<p>
- *
+ * <code>pathelement</code>.
+ * </p>
+ * <p>
  * The path element takes a parameter <code>path</code> which will be parsed
  * and split into single elements. It will usually be used
  * to define a path from an environment variable.
+ * </p>
  */
 
 public class Path extends DataType implements Cloneable, ResourceCollection {
@@ -356,6 +355,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
 
     /**
      * Whether to cache the current path.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setCache(boolean b) {
@@ -663,7 +663,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     }
 
     /**
-     * Emulation of extdirs feature in java >= 1.2.
+     * Emulation of extdirs feature in Java &gt;= 1.2.
      * This method adds all files in the given
      * directories (but not in sub-directories!) to the classpath,
      * so that you don't have to specify them all one by one.

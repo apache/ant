@@ -137,6 +137,7 @@ public class Ant extends Task {
      * as it would be when running the build file directly -
      * independent of dir and/or inheritAll settings.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setUseNativeBasedir(boolean b) {
@@ -466,7 +467,7 @@ public class Ant extends Task {
     /**
      * Get the default build file name to use when launching the task.
      * <p>
-     * This function may be overrided by providers of custom ProjectHelper so they can implement easily their sub
+     * This function may be overriden by providers of custom ProjectHelper so they can implement easily their sub
      * launcher.
      *
      * @return the name of the default file
@@ -613,7 +614,7 @@ public class Ant extends Task {
      * well as properties named basedir or ant.file.
      * @param props properties <code>Hashtable</code> to copy to the
      * new project.
-     * @param the type of property to set (a plain Ant property, a
+     * @param type the type of property to set (a plain Ant property, a
      * user property or an inherited property).
      * @since Ant 1.8.0
      */

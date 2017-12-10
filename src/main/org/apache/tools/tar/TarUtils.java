@@ -280,6 +280,7 @@ public class TarUtils {
      * @param length The maximum number of bytes to parse.
      * @param encoding name of the encoding to use for file names
      * @return The entry name.
+     * @throws IOException if decode fails
      */
     public static String parseName(final byte[] buffer, final int offset,
                                    final int length,
@@ -344,6 +345,7 @@ public class TarUtils {
      * @param length The maximum number of header bytes to copy.
      * @param encoding name of the encoding to use for file names
      * @return The updated offset, i.e. offset + length
+     * @throws IOException if encode fails
      */
     public static int formatNameBytes(final String name, final byte[] buf, final int offset,
                                       final int length,

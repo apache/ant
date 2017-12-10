@@ -39,7 +39,6 @@ public abstract class AbstractFileSetTest {
 
     private Project project;
 
-
     @Before
     public void setUp() {
         project = new Project();

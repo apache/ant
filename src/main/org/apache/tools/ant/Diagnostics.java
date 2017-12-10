@@ -284,7 +284,7 @@ public final class Diagnostics {
     /**
      * ignore exceptions. This is to allow future
      * implementations to log at a verbose level
-     * @param thrown
+     * @param thrown a Throwable to ignore
      */
     private static void ignoreThrowable(Throwable thrown) {
     }
@@ -380,7 +380,7 @@ public final class Diagnostics {
     /**
      * Get the value of a system property. If a security manager
      * blocks access to a property it fills the result in with an error
-     * @param key
+     * @param key a property key
      * @return the system property's value or error text
      * @see #ERROR_PROPERTY_ACCESS_BLOCKED
      */
@@ -526,7 +526,7 @@ public final class Diagnostics {
 
     /**
      * tell the user about the XML parser
-     * @param out
+     * @param out a PrintStream
      */
     private static void doReportParserInfo(PrintStream out) {
         String parserName = getXMLParserName();
@@ -538,7 +538,7 @@ public final class Diagnostics {
 
     /**
      * tell the user about the XSLT processor
-     * @param out
+     * @param out a PrintStream
      */
     private static void doReportXSLTProcessorInfo(PrintStream out) {
         String processorName = getXSLTProcessorName();
@@ -562,7 +562,7 @@ public final class Diagnostics {
      * try and create a temp file in our temp dir; this
      * checks that it has space and access.
      * We also do some clock reporting.
-     * @param out
+     * @param out a PrintStream
      */
     private static void doReportTempDir(PrintStream out) {
         String tempdir = System.getProperty("java.io.tmpdir");

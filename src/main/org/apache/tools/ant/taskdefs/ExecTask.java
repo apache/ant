@@ -155,6 +155,7 @@ public class ExecTask extends Task {
 
     /**
      * List of operating systems on which the command may be executed.
+     * @return String
      * @since Ant 1.8.0
      */
     public final String getOs() {
@@ -405,6 +406,7 @@ public class ExecTask extends Task {
 
     /**
      * Restrict this execution to a single OS Family
+     * @return the family to restrict to.
      * @since Ant 1.8.0
      */
     public final String getOsFamily() {

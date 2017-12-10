@@ -308,6 +308,8 @@ public class ExtraFieldUtils {
 
         /**
          * Key of the action to take.
+         *
+         * @return int
          */
         public int getKey() { return key; }
     }

@@ -24,7 +24,7 @@ import javax.media.jai.PlanarImage;
  * Interface which represents an Operation which is "drawable", such
  * as a Rectangle, Circle or Text.  The Operation is responsible for
  * creating its own image buffer and drawing itself into it, then
- * wrapping and returning it as a PlanarImage.  This allows multible
+ * wrapping and returning it as a PlanarImage.  This allows multiple
  * "drawable" objects to be nested.
  *
  * @see org.apache.tools.ant.taskdefs.optional.image.Image

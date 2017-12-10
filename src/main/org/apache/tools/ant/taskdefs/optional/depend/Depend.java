@@ -553,7 +553,7 @@ public class Depend extends MatchingTask {
      * warn when a class is out of date, but not deleted as its source is unknown.
      * MSG_WARN is the normal level, but we downgrade to MSG_VERBOSE for RMI files
      * if {@link #warnOnRmiStubs is false}
-     * @param affectedClassInfo info about the affectd class
+     * @param affectedClassInfo info about the affected class
      * @param affectedClass the name of the affected .class file
      * @param className the file that is triggering the out of dateness
      */

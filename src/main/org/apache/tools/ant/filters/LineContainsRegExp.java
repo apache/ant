@@ -204,7 +204,8 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Whether to match casesensitevly.
+     * Whether to match casesensitively.
+     * @param b boolean
      * @since Ant 1.8.2
      */
     public void setCaseSensitive(boolean b) {
@@ -221,6 +222,7 @@ public final class LineContainsRegExp
 
     /**
      * Set the regular expression as an attribute.
+     * @param pattern String
      * @since Ant 1.9.10
      */
     public void setRegexp(String pattern) {

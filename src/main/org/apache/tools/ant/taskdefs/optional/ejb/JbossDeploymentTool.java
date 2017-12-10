@@ -76,7 +76,6 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
             log("Unable to locate jboss cmp descriptor. "
                 + "It was expected to be in "
                 + jbossCMPD.getPath(), Project.MSG_VERBOSE);
-            return;
         }
     }
 

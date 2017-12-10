@@ -20,14 +20,12 @@ package org.apache.tools.ant.types;
 
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.FileSet.
+ * JUnit 4 testcases for org.apache.tools.ant.types.FileSet.
  *
- * <p>This doesn't actually test much, mainly reference handling.
- *
+ * <p>This doesn't actually test much, mainly reference handling.</p>
  */
 
 public class FileSetTest extends AbstractFileSetTest {
-
 
     protected AbstractFileSet getInstance() {
         return new FileSet();

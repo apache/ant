@@ -105,7 +105,7 @@ public class TempFile extends Task {
     /**
      * Sets the optional suffix string for the temp file.
      *
-     * @param  suffix  suffix including any "." , e.g ".xml"
+     * @param  suffix  suffix including any ".", e.g ".xml"
      */
     public void setSuffix(String suffix) {
         this.suffix = suffix;

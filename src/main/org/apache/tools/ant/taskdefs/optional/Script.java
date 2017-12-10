@@ -72,7 +72,7 @@ public class Script extends Task {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Load the script from an external file; optional.
      *
      * @param fileName the name of the file containing the script source.
      */

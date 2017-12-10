@@ -315,6 +315,7 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      * Whether to force signing of a jar even it is already signed.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setForce(boolean b) {
@@ -324,6 +325,7 @@ public class SignJar extends AbstractJarSignerTask {
     /**
      * Should the task force signing of a jar even it is already
      * signed?
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean isForce() {
@@ -341,6 +343,8 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      * Signature Algorithm; optional
+     *
+     * @return String
      */
     public String getSigAlg() {
         return sigAlg;
@@ -357,6 +361,8 @@ public class SignJar extends AbstractJarSignerTask {
 
     /**
      * Digest Algorithm; optional
+     *
+     * @return String
      */
     public String getDigestAlg() {
         return digestAlg;
@@ -461,7 +467,7 @@ public class SignJar extends AbstractJarSignerTask {
      *
      * @param jarSource source to sign
      * @param jarTarget target; may be null
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      */
     private void signOneJar(File jarSource, File jarTarget)
         throws BuildException {

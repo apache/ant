@@ -31,7 +31,10 @@ public final class SplitClassLoader extends AntClassLoader {
     private final String[] splitClasses;
 
     /**
-     * @param splitClasses classes contained herin will not be loaded
+     * @param parent ClassLoader
+     * @param path Path
+     * @param project Project
+     * @param splitClasses classes contained herein will not be loaded
      * via Ant's classloader
      */
     public SplitClassLoader(ClassLoader parent, Path path, Project project,

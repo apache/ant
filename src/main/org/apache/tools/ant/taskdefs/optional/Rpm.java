@@ -203,7 +203,7 @@ public class Rpm extends Task {
 
     /**
      * The directory which will have the expected
-     * subdirectories, SPECS, SOURCES, BUILD, SRPMS ; optional.
+     * subdirectories, SPECS, SOURCES, BUILD, SRPMS; optional.
      * If this isn't specified,
      * the <tt>baseDir</tt> value is used
      *

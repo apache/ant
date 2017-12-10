@@ -26,7 +26,8 @@ import org.junit.Test;
 
 public class DeweyDecimalTest {
 
-    @Test public void parse() {
+    @Test
+    public void parse() {
         assertEquals("1.2.3", new DeweyDecimal("1.2.3").toString());
     }
 

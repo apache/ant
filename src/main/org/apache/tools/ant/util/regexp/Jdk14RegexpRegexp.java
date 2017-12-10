@@ -38,7 +38,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
      * Convert ant regexp substitution option to jdk1.4 options.
      *
      * @param options the ant regexp options
-     * @return the jdk14 substition options
+     * @return the jdk14 substitution options
      */
     protected int getSubsOptions(int options) {
         int subsOptions = REPLACE_FIRST;

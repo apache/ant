@@ -295,6 +295,7 @@ public class Property extends Task {
      * Whether to apply the prefix when expanding properties on the
      * right hand side of a properties file as well.
      *
+     * @param b boolean
      * @since Ant 1.8.2
      */
     public void setPrefixValues(boolean b) {
@@ -305,6 +306,7 @@ public class Property extends Task {
      * Whether to apply the prefix when expanding properties on the
      * right hand side of a properties file as well.
      *
+     * @return boolean
      * @since Ant 1.8.2
      */
     public boolean getPrefixValues() {
@@ -362,10 +364,12 @@ public class Property extends Task {
      * allow access of environment variables through &quot;myenv.PATH&quot; and
      * &quot;myenv.TERM&quot;. This functionality is currently only implemented
      * on select platforms. Feel free to send patches to increase the number of platforms
-     * this functionality is supported on ;).<br>
+     * this functionality is supported on ;).
+     * </p>
      * Note also that properties are case sensitive, even if the
      * environment variables on your operating system are not, e.g. it
      * will be ${env.Path} not ${env.PATH} on Windows 2000.
+     *
      * @param env prefix
      *
      * @ant.attribute group="noname"

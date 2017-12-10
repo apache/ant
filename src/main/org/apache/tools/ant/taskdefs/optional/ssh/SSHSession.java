@@ -60,9 +60,8 @@ public class SSHSession extends SSHBase {
 
     /**
      * Add a nested task to Sequential.
-     * <p>
-     * @param nestedTask        Nested task to execute Sequential
-     * <p>
+     *
+     * @param nestedTask Nested task to execute sequentially
      */
     public void addTask(final Task nestedTask) {
         nestedTasks.addElement(nestedTask);

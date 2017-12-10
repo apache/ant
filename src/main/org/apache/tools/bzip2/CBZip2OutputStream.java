@@ -37,36 +37,32 @@ import java.io.OutputStream;
  * <tt>CBZip2OutputStream</tt> to release the allocated memory.
  * </p>
  *
- * <p> You can shrink the amount of allocated memory and maybe raise
+ * <p>You can shrink the amount of allocated memory and maybe raise
  * the compression speed by choosing a lower blocksize, which in turn
  * may cause a lower compression ratio. You can avoid unnecessary
  * memory allocation by avoiding using a blocksize which is bigger
- * than the size of the input.  </p>
+ * than the size of the input.</p>
  *
- * <p> You can compute the memory usage for compressing by the
- * following formula: </p>
+ * <p>You can compute the memory usage for compressing by the
+ * following formula:</p>
  *
  * <pre>
  * &lt;code&gt;400k + (9 * blocksize)&lt;/code&gt;.
  * </pre>
  *
- * <p> To get the memory required for decompression by {@link
- * CBZip2InputStream CBZip2InputStream} use </p>
+ * <p>To get the memory required for decompression by {@link
+ * CBZip2InputStream CBZip2InputStream} use</p>
  *
  * <pre>
  * &lt;code&gt;65k + (5 * blocksize)&lt;/code&gt;.
  * </pre>
  *
- * <table width="100%" border="1">
- * <colgroup> <col width="33%" /> <col width="33%" /> <col width="33%" />
- * </colgroup>
+ * <table border="1">
+ * <caption>Memory usage by blocksize</caption>
  * <tr>
- * <th colspan="3">Memory usage by blocksize</th>
- * </tr>
- * <tr>
- * <th align="right">Blocksize</th> <th align="right">Compression<br>
- * memory usage</th> <th align="right">Decompression<br>
- * memory usage</th>
+ * <th align="right">Blocksize</th>
+ * <th align="right">Compression<br>memory usage</th>
+ * <th align="right">Decompression<br>memory usage</th>
  * </tr>
  * <tr>
  * <td align="right">100k</td>
@@ -195,10 +191,10 @@ public class CBZip2OutputStream extends OutputStream
      * This constant is accessible by subclasses for historical
      * purposes. If you don't know what it means then you don't need
      * it.
-     * <p> If you are ever unlucky/improbable enough to get a stack
+     * <p>If you are ever unlucky/improbable enough to get a stack
      * overflow whilst sorting, increase the following constant and
      * try again. In practice I have never seen the stack go above 27
-     * elems, so the following limit seems very generous.  </p>
+     * elems, so the following limit seems very generous.</p>
      */
     protected static final int QSORT_STACK_SIZE = 1000;
 
@@ -215,6 +211,11 @@ public class CBZip2OutputStream extends OutputStream
      * This method is accessible by subclasses for historical
      * purposes. If you don't know what it does then you don't need
      * it.
+     *
+     * @param len char[]
+     * @param freq char[]
+     * @param alphaSize int
+     * @param maxLen int
      */
     protected static void hbMakeCodeLengths(char[] len, int[] freq,
                                             int alphaSize, int maxLen) {
@@ -560,14 +561,13 @@ public class CBZip2OutputStream extends OutputStream
     /**
      * Chooses a blocksize based on the given length of the data to compress.
      *
+     * @param inputLength
+     *            The length of the data which will be compressed by
+     *            <tt>CBZip2OutputStream</tt>.
      * @return The blocksize, between {@link #MIN_BLOCKSIZE} and
      *         {@link #MAX_BLOCKSIZE} both inclusive. For a negative
      *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCKSIZE</tt>
      *         always.
-     *
-     * @param inputLength
-     *            The length of the data which will be compressed by
-     *            <tt>CBZip2OutputStream</tt>.
      */
     public static int chooseBlockSize(long inputLength) {
         return (inputLength > 0) ? (int) Math
@@ -814,7 +814,7 @@ public class CBZip2OutputStream extends OutputStream
          * is about 2.0e-3 for 32 bits, 1.0e-5 for 40 bits and 4.0e-8 for 48
          * bits. For a compressed file of size 100Gb -- about 100000 blocks --
          * only a 48-bit marker will do. NB: normal compression/ decompression
-         * donot rely on these statistical properties. They are only important
+         * do not rely on these statistical properties. They are only important
          * when trying to recover blocks from damaged files.
          */
         bsPutUByte(0x31);
@@ -854,6 +854,8 @@ public class CBZip2OutputStream extends OutputStream
 
     /**
      * Returns the blocksize parameter specified at construction time.
+     *
+     * @return int
      */
     public final int getBlockSize() {
         return this.blockSize100k;

@@ -28,10 +28,10 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 
 /**
- * <p> Run a single JUnit test.
+ * Run a single JUnit test.
  *
- * <p> The JUnit test is actually run by {@link JUnitTestRunner}.
- * So read the doc comments for that class :)
+ * <p>The JUnit test is actually run by {@link JUnitTestRunner}.
+ * So read the doc comments for that class :)</p>
  *
  * @since Ant 1.2
  *

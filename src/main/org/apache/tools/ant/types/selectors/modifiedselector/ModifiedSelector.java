@@ -51,16 +51,16 @@ import org.apache.tools.ant.util.ResourceUtils;
  * in a persistent manner.</p>
  *
  * <p>The ModifiedSelector is implemented as a <b>CoreSelector</b> and uses default
- * values for all its attributes therefore the simplest example is <pre>
+ * values for all its attributes therefore the simplest example is</p><pre>
  *   &lt;copy todir="dest"&gt;
  *       &lt;filelist dir="src"&gt;
  *           &lt;modified/&gt;
  *       &lt;/filelist&gt;
  *   &lt;/copy&gt;
- * </pre></p>
+ * </pre>
  *
  * <p>The same example rewritten as CoreSelector with setting the all values
- * (same as defaults are) would be <pre>
+ * (same as defaults are) would be</p><pre>
  *   &lt;copy todir="dest"&gt;
  *       &lt;filelist dir="src"&gt;
  *           &lt;modified update="true"
@@ -72,9 +72,9 @@ import org.apache.tools.ant.util.ResourceUtils;
  *           &lt;/modified&gt;
  *       &lt;/filelist&gt;
  *   &lt;/copy&gt;
- * </pre></p>
+ * </pre>
  *
- * <p>And the same rewritten as CustomSelector would be<pre>
+ * <p>And the same rewritten as CustomSelector would be</p><pre>
  *   &lt;copy todir="dest"&gt;
  *       &lt;filelist dir="src"&gt;
  *           &lt;custom class="org.apache.tools.ant.type.selectors.ModifiedSelector"&gt;
@@ -87,18 +87,18 @@ import org.apache.tools.ant.util.ResourceUtils;
  *           &lt;/custom&gt;
  *       &lt;/filelist&gt;
  *   &lt;/copy&gt;
- * </pre></p>
+ * </pre>
  *
  * <p>If you want to provide your own interface implementation you can do
  * that via the *classname attributes. If the classes are not on Ant's core
  * classpath, you will have to provide the path via nested &lt;classpath&gt;
- * element, so that the selector can find the classes. <pre>
+ * element, so that the selector can find the classes.</p><pre>
  *   &lt;modified cacheclassname="com.mycompany.MyCache"&gt;
  *       &lt;classpath&gt;
  *           &lt;pathelement location="lib/mycompany-antutil.jar"/&gt;
  *       &lt;/classpath&gt;
  *   &lt;/modified&gt;
- * </pre></p>
+ * </pre>
  *
  * <p>All these three examples copy the files from <i>src</i> to <i>dest</i>
  * using the ModifiedSelector. The ModifiedSelector uses the <i>PropertyfileCache
@@ -115,7 +115,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  *
  * <p>A useful scenario for this selector is inside a build environment
  * for homepage generation (e.g. with <a href="http://forrest.apache.org/">
- * Apache Forrest</a>). <pre>
+ * Apache Forrest</a>).</p><pre>
  * &lt;target name="generate-and-upload-site"&gt;
  *     &lt;echo&gt; generate the site using forrest &lt;/echo&gt;
  *     &lt;antcall target="site"/&gt;
@@ -127,7 +127,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  *         &lt;/fileset&gt;
  *     &lt;/ftp&gt;
  * &lt;/target&gt;
- * </pre> Here all <b>changed</b> files are uploaded to the server. The
+ * </pre><p>Here all <b>changed</b> files are uploaded to the server. The
  * ModifiedSelector saves therefore much upload time.</p>
  *
  *
@@ -178,7 +178,7 @@ public class ModifiedSelector extends BaseExtendSelector
     private boolean selectDirectories = true;
 
     /**
-     * Should Resources whithout an InputStream, and
+     * Should Resources without an InputStream, and
      * therefore without checking, be selected?
      */
     private boolean selectResourcesWithoutInputStream = true;
@@ -255,14 +255,14 @@ public class ModifiedSelector extends BaseExtendSelector
     /**
      * Configures this Selector.
      * Does this work only once per Selector object.
-     * <p>Because some problems while configuring from <custom>Selector
-     * the configuration is done in the following order:<ol>
-     * <li> collect the configuration data </li>
-     * <li> wait for the first isSelected() call </li>
-     * <li> set the default values </li>
-     * <li> set values for name pattern '*': update, cache, algorithm, comparator </li>
-     * <li> set values for name pattern '*.*: cache.cachefile, ... </li>
-     * </ol></p>
+     * <p>Because some problems while configuring from &lt;custom&gt;Selector
+     * the configuration is done in the following order:</p><ol>
+     * <li>collect the configuration data</li>
+     * <li>wait for the first isSelected() call</li>
+     * <li>set the default values</li>
+     * <li>set values for name pattern '*': update, cache, algorithm, comparator</li>
+     * <li>set values for name pattern '*.*: cache.cachefile, ...</li>
+     * </ol>
      * <p>This configuration algorithm is needed because you don't know
      * the order of arriving config-data. E.g. if you first set the
      * <i>cache.cachefilename</i> and after that the <i>cache</i> itself,
@@ -391,6 +391,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * Loads the specified class and initializes an object of that class.
      * Throws a BuildException using the given message if an error occurs during
      * loading/instantiation or if the object is not from the given type.
+     * @param <T> desired type
      * @param classname the classname
      * @param msg the message-part for the BuildException
      * @param type the type to check against
@@ -457,7 +458,7 @@ public class ModifiedSelector extends BaseExtendSelector
                 log("The resource '"
                   + resource.getName()
                   + "' does not provide an InputStream, so it is not checked. "
-                  + "Akkording to 'selres' attribute value it is "
+                  + "According to 'selres' attribute value it is "
                   + ((selectResourcesWithoutInputStream) ? "" : " not")
                   + "selected.", Project.MSG_INFO);
                 return selectResourcesWithoutInputStream;
@@ -690,7 +691,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * Defined in org.apache.tools.ant.types.Parameterizable.
      * Overwrite implementation in superclass because only special
      * parameters are valid.
-     * @see #addParam(String,Object).
+     * @see #addParam(String,Object)
      * @param parameters the parameters to set.
      */
     public void setParameters(Parameter[] parameters) {
@@ -703,7 +704,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
 
     /**
-     * Support for nested <param name="" value=""/> tags.
+     * Support for nested <code>&lt;param name="" value=""/&gt;</code> tags.
      * Parameter named <i>cache</i>, <i>algorithm</i>,
      * <i>comparator</i> or <i>update</i> are mapped to
      * the respective set-Method.

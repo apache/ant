@@ -227,7 +227,6 @@ public class RmicAdvancedTest {
         }
     }
 
-
     /**
      * A unit test for JUnit
      */
@@ -242,7 +241,6 @@ public class RmicAdvancedTest {
         //dont look for much text here as it is vendor and version dependent
         AntAssert.assertContains("unimplemented.class", buildRule.getLog());
     }
-
 
     /**
      * A unit test for JUnit
@@ -270,12 +268,10 @@ public class RmicAdvancedTest {
         }
     }
 
-
     @Test
     public void testMagicPropertyIsEmptyString() throws Exception {
         buildRule.executeTarget("testMagicPropertyIsEmptyString");
     }
-
 
     @Test
     @Ignore("Previously named to prevent execution")
@@ -287,7 +283,6 @@ public class RmicAdvancedTest {
             AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
         }
     }
-
 
     /**
      * test that version 1.1 stubs are good

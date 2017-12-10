@@ -146,7 +146,7 @@ public abstract class Pack extends Task {
      * zip a stream to an output stream
      * @param in   the stream to zip
      * @param zOut the output stream
-     * @throws IOException
+     * @throws IOException if something goes wrong
      */
     private void zipFile(InputStream in, OutputStream zOut)
         throws IOException {

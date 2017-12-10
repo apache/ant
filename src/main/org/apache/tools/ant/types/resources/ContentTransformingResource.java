@@ -149,6 +149,8 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * are appended to, for example.</p>
      *
      * <p>This implementations returns false.</p>
+     *
+     * @return boolean false
      */
     protected boolean isAppendSupported() {
         return false;
@@ -158,7 +160,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * Get a content-filtering/transforming InputStream.
      *
      * @param in InputStream to wrap, will never be null.
-     * @return a compressed inputstream.
+     * @return a compressed InputStream.
      * @throws IOException if there is a problem.
      */
     protected abstract InputStream wrapStream(InputStream in)
@@ -168,7 +170,7 @@ public abstract class ContentTransformingResource extends ResourceDecorator {
      * Get a content-filtering/transforming OutputStream.
      *
      * @param out OutputStream to wrap, will never be null.
-     * @return a compressed outputstream.
+     * @return a compressed OutputStream.
      * @throws IOException if there is a problem.
      */
     protected abstract OutputStream wrapStream(OutputStream out)

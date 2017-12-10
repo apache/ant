@@ -53,7 +53,7 @@ public class JarLibResolveTask extends Task {
 
     /**
      * Flag to indicate that you should check that
-     * the librarys resolved actually contain
+     * the libraries resolved actually contain
      * extension and if they don't then raise
      * an exception.
      */

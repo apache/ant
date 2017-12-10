@@ -111,6 +111,7 @@ public class EmailTask extends Task {
 
     /**
      * Set the user for SMTP auth; this requires JavaMail.
+     *
      * @param user the String username.
      * @since Ant 1.6
      */
@@ -120,6 +121,7 @@ public class EmailTask extends Task {
 
     /**
      * Set the password for SMTP auth; this requires JavaMail.
+     *
      * @param password the String password.
      * @since Ant 1.6
      */
@@ -129,6 +131,7 @@ public class EmailTask extends Task {
 
     /**
      * Set whether to send data over SSL.
+     *
      * @param ssl boolean; if true SSL will be used.
      * @since Ant 1.6
      */
@@ -139,6 +142,7 @@ public class EmailTask extends Task {
     /**
      * Set whether to allow authentication to switch to a TLS
      * connection via STARTTLS.
+     *
      * @param b boolean; if true STARTTLS will be supported.
      * @since Ant 1.8.0
      */
@@ -425,6 +429,7 @@ public class EmailTask extends Task {
      * <p>Even with this property set to true the task will still fail
      * if the mail couldn't be sent to any recipient at all.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setIgnoreInvalidRecipients(boolean b) {

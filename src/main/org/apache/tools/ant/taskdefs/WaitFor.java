@@ -268,8 +268,8 @@ public class WaitFor extends ConditionBase {
 
         /**
          * @see EnumeratedAttribute#getValues()
+         * {@inheritDoc}
          */
-        /** {@inheritDoc} */
         public String[] getValues() {
             return UNITS;
         }

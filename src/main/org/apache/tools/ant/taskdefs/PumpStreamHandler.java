@@ -164,6 +164,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * ThreadWithPumper ThreadWithPumper} instance) or interrupting
      * the thread.
      *
+     * @param t Thread
      * @since Ant 1.8.0
      */
     protected final void finish(Thread t) {

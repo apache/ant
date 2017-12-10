@@ -22,7 +22,7 @@ import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
 
 /**
- * The interface that all jsp compiler adapters must adher to.
+ * The interface that all jsp compiler adapters must adhere to.
  *
  * <p>A compiler adapter is an adapter that interprets the jspc's
  * parameters in preparation to be passed off to the compiler this

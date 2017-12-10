@@ -95,7 +95,7 @@ public class TaskConfigurationChecker {
     public void checkErrors() throws BuildException {
         if (!errors.isEmpty()) {
             StringBuffer sb = new StringBuffer();
-            sb.append("Configurationerror on <");
+            sb.append("Configuration error on <");
             sb.append(task.getTaskName());
             sb.append(">:");
             sb.append(System.getProperty("line.separator"));

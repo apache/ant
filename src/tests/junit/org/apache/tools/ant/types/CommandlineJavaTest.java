@@ -39,7 +39,6 @@ public class CommandlineJavaTest {
 
     private String cloneVm;
 
-
     private Project project;
 
     @Before

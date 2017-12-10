@@ -96,7 +96,7 @@ public class ANTLR extends Task {
 
     /**
      * The grammar file to process.
-     * @param target the gramer file
+     * @param target the grammar file
      */
     public void setTarget(File target) {
         log("Setting target to: " + target.toString(), Project.MSG_VERBOSE);

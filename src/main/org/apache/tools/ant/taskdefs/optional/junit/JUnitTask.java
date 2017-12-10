@@ -68,13 +68,13 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Runs JUnit tests.
  *
- * <p> JUnit is a framework to create unit tests. It has been initially
+ * <p>JUnit is a framework to create unit tests. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
  * href="http://www.junit.org">http://www.junit.org</a>.
  *
- * <p> <code>JUnitTask</code> can run a single specific
+ * <p><code>JUnitTask</code> can run a single specific
  * <code>JUnitTest</code> using the <code>test</code> element.</p>
- * For example, the following target <code><pre>
+ * For example, the following target <pre>
  *   &lt;target name="test-int-chars" depends="jar-test"&gt;
  *       &lt;echo message="testing international characters"/&gt;
  *       &lt;junit printsummary="no" haltonfailure="yes" fork="false"&gt;
@@ -83,19 +83,19 @@ import org.apache.tools.ant.util.StringUtils;
  *           &lt;test name="org.apache.ecs.InternationalCharTest" /&gt;
  *       &lt;/junit&gt;
  *   &lt;/target&gt;
- * </pre></code>
+ * </pre>
  * <p>runs a single junit test
  * (<code>org.apache.ecs.InternationalCharTest</code>) in the current
  * VM using the path with id <code>classpath</code> as classpath and
  * presents the results formatted using the standard
  * <code>plain</code> formatter on the command line.</p>
  *
- * <p> This task can also run batches of tests.  The
+ * <p>This task can also run batches of tests.  The
  * <code>batchtest</code> element creates a <code>BatchTest</code>
  * based on a fileset.  This allows, for example, all classes found in
  * directory to be run as testcases.</p>
  *
- * <p>For example,</p><code><pre>
+ * <p>For example,</p><pre>
  * &lt;target name="run-tests" depends="dump-info,compile-tests" if="junit.present"&gt;
  *   &lt;junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"&gt;
  *     &lt;jvmarg value="-classic"/&gt;
@@ -109,18 +109,18 @@ import org.apache.tools.ant.util.StringUtils;
  *     &lt;/batchtest&gt;
  *   &lt;/junit&gt;
  * &lt;/target&gt;
- * </pre></code>
+ * </pre>
  * <p>this target finds any classes with a <code>test</code> directory
  * anywhere in their path (under the top <code>${tests.dir}</code>, of
  * course) and creates <code>JUnitTest</code>'s for each one.</p>
  *
- * <p> Of course, <code>&lt;junit&gt;</code> and
+ * <p>Of course, <code>&lt;junit&gt;</code> and
  * <code>&lt;batch&gt;</code> elements can be combined for more
  * complex tests. For an example, see the ant <code>build.xml</code>
  * target <code>run-tests</code> (the second example is an edited
  * version).</p>
  *
- * <p> To spawn a new Java VM to prevent interferences between
+ * <p>To spawn a new Java VM to prevent interferences between
  * different testcases, you need to enable <code>fork</code>.  A
  * number of attributes and elements allow you to set up how this JVM
  * runs.
@@ -219,7 +219,7 @@ public class JUnitTask extends Task {
      * JUnitTest (test) however it can possibly be overridden by their
      * own properties.</p>
      * @param value <tt>false</tt> if it should not filter, otherwise
-     * <tt>true<tt>
+     * <tt>true</tt>
      *
      * @since Ant 1.5
      */
@@ -334,6 +334,7 @@ public class JUnitTask extends Task {
      * <p>This attribute will be ignored if tests run in the same VM
      * as Ant.</p>
      *
+     * @param threads int
      * @since Ant 1.9.4
      */
     public void setThreads(final int threads) {
@@ -347,11 +348,11 @@ public class JUnitTask extends Task {
      * to also show standard output and error.
      *
      * Can take the values on, off, and withOutAndErr.
+     *
      * @param value <tt>true</tt> to print a summary,
-     * <tt>withOutAndErr</tt> to include the test&apos;s output as
+     * <tt>withOutAndErr</tt> to include the test's output as
      * well, <tt>false</tt> otherwise.
      * @see SummaryJUnitResultFormatter
-     *
      * @since Ant 1.2
      */
     public void setPrintsummary(final SummaryAttribute value) {
@@ -365,7 +366,7 @@ public class JUnitTask extends Task {
     public static class SummaryAttribute extends EnumeratedAttribute {
         /**
          * list the possible values
-         * @return  array of allowed values
+         * @return array of allowed values
          */
         @Override
         public String[] getValues() {
@@ -391,10 +392,10 @@ public class JUnitTask extends Task {
      *
      * <p>If the test is running for more than this value, the test
      * will be canceled. (works only when in 'fork' mode).</p>
+     *
      * @param value the maximum time (in milliseconds) allowed before
      * declaring the test as 'timed-out'
      * @see #setFork(boolean)
-     *
      * @since Ant 1.2
      */
     public void setTimeout(final Integer value) {
@@ -403,9 +404,9 @@ public class JUnitTask extends Task {
 
     /**
      * Set the maximum memory to be used by all forked JVMs.
+     *
      * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
      *                  in the java command line options.
-     *
      * @since Ant 1.2
      */
     public void setMaxmemory(final String max) {
@@ -432,7 +433,6 @@ public class JUnitTask extends Task {
      * @return create a new JVM argument so that any argument can be
      * passed to the JVM.
      * @see #setFork(boolean)
-     *
      * @since Ant 1.2
      */
     public Commandline.Argument createJvmarg() {
@@ -441,9 +441,9 @@ public class JUnitTask extends Task {
 
     /**
      * The directory to invoke the VM in. Ignored if no JVM is forked.
+     *
      * @param   dir     the directory to invoke the JVM from.
      * @see #setFork(boolean)
-     *
      * @since Ant 1.2
      */
     public void setDir(final File dir) {
@@ -456,7 +456,7 @@ public class JUnitTask extends Task {
      * testcases when JVM forking is not enabled.
      *
      * @since Ant 1.3
-     * @deprecated since ant 1.6
+     * @deprecated since Ant 1.6
      * @param sysp environment variable to add
      */
     @Deprecated
@@ -469,6 +469,7 @@ public class JUnitTask extends Task {
      * Adds a system property that tests can access.
      * This might be useful to transfer Ant properties to the
      * testcases when JVM forking is not enabled.
+     *
      * @param sysp new environment variable to add
      * @since Ant 1.6
      */
@@ -484,8 +485,8 @@ public class JUnitTask extends Task {
      * Adds a set of properties that will be used as system properties
      * that tests can access.
      *
-     * This might be useful to transfer Ant properties to the
-     * testcases when JVM forking is not enabled.
+     * <p>This might be useful to transfer Ant properties to the
+     * testcases when JVM forking is not enabled.</p>
      *
      * @param sysp set of properties to be added
      * @since Ant 1.6
@@ -506,6 +507,7 @@ public class JUnitTask extends Task {
 
     /**
      * Adds a path to the bootclasspath.
+     *
      * @return reference to the bootclasspath in the embedded java command line
      * @since Ant 1.6
      */
@@ -537,6 +539,7 @@ public class JUnitTask extends Task {
      * Adds an environment variable; used when forking.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
+     *
      * @param var environment variable to be added
      * @since Ant 1.5
      */
@@ -560,9 +563,11 @@ public class JUnitTask extends Task {
      * Preset the attributes of the test
      * before configuration in the build
      * script.
-     * This allows attributes in the <junit> task
+     * This allows attributes in the &lt;junit&gt; task
      * be be defaults for the tests, but allows
      * individual tests to override the defaults.
+     *
+     * @param test BaseTest
      */
     private void preConfigure(final BaseTest test) {
         test.setFiltertrace(filterTrace);
@@ -581,7 +586,6 @@ public class JUnitTask extends Task {
      * Add a new single testcase.
      * @param   test    a new single testcase
      * @see JUnitTest
-     *
      * @since Ant 1.2
      */
     public void addTest(final JUnitTest test) {
@@ -594,7 +598,6 @@ public class JUnitTask extends Task {
      *
      * @return  a new instance of a batch test.
      * @see BatchTest
-     *
      * @since Ant 1.2
      */
     public BatchTest createBatchTest() {
@@ -656,6 +659,7 @@ public class JUnitTask extends Task {
      * If true, write a single "FAILED" line for failed tests to Ant's
      * log system.
      *
+     * @param logFailedTests boolean
      * @since Ant 1.8.0
      */
     public void setLogFailedTests(final boolean logFailedTests) {
@@ -664,6 +668,7 @@ public class JUnitTask extends Task {
 
     /**
      * Assertions to enable in this program (if fork=true)
+     *
      * @since Ant 1.6
      * @param asserts assertion set
      */
@@ -676,8 +681,9 @@ public class JUnitTask extends Task {
 
     /**
      * Sets the permissions for the application run inside the same JVM.
+     *
      * @since Ant 1.6
-     * @return .
+     * @return Permissions
      */
     public Permissions createPermissions() {
         if (perm == null) {
@@ -692,6 +698,7 @@ public class JUnitTask extends Task {
      * a bootclasspath.
      *
      * <p>Doesn't have any effect unless fork is true.</p>
+     *
      * @param cloneVm a <code>boolean</code> value.
      * @since Ant 1.7
      */
@@ -732,6 +739,7 @@ public class JUnitTask extends Task {
      * <p>This value will be overridden by the magic property
      * ant.junit.enabletestlistenerevents if it has been set.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.2
      */
     public void setEnableTestListenerEvents(final boolean b) {
@@ -740,6 +748,8 @@ public class JUnitTask extends Task {
 
     /**
      * Whether test listener events shall be generated.
+     *
+     * @return boolean
      * @since Ant 1.8.2
      */
     public boolean getEnableTestListenerEvents() {
@@ -1455,7 +1465,7 @@ public class JUnitTask extends Task {
      * Will auto-delete on (graceful) exit.
      * The file will be in the project basedir unless tmpDir declares
      * something else.
-     * @param prefix
+     * @param prefix String
      * @return created file
      */
     private File createTempPropertiesFile(final String prefix) {
@@ -2094,11 +2104,11 @@ public class JUnitTask extends Task {
 
         /**
          * constructor for forked test configuration
-         * @param filterTrace
-         * @param haltOnError
-         * @param haltOnFailure
-         * @param errorProperty
-         * @param failureProperty
+         * @param filterTrace boolean
+         * @param haltOnError boolean
+         * @param haltOnFailure boolean
+         * @param errorProperty String
+         * @param failureProperty String
          */
         ForkedTestConfiguration(final boolean filterTrace, final boolean haltOnError,
                                 final boolean haltOnFailure, final String errorProperty,
@@ -2112,7 +2122,7 @@ public class JUnitTask extends Task {
 
         /**
          * configure from a test; sets member variables to attributes of the test
-         * @param test
+         * @param test JUnitTest
          */
         ForkedTestConfiguration(final JUnitTest test) {
             this(test.getFiltertrace(),
@@ -2124,7 +2134,7 @@ public class JUnitTask extends Task {
 
         /**
          * equality test checks all the member variables
-         * @param other
+         * @param other object to compare
          * @return true if everything is equal
          */
         @Override

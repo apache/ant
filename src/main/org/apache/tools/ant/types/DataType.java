@@ -128,7 +128,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      * cannot hold other DataTypes as children.</p>
      *
      * <p>The general contract of this method is that it shouldn't do
-     * anything if {@link #checked <code>checked</code>} is true and
+     * anything if {@link #checked} is true and
      * set it to true on exit.</p>
      * @param stack the stack of references to check.
      * @param project the project to use to dereference the references.
@@ -217,6 +217,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     /**
      * Performs the check for circular references and returns the
      * referenced object.
+     * @param <T> required reference type
      * @param requiredClass the class that this reference should be a subclass of.
      * @param dataTypeName  the name of the datatype that the reference should be
      *                      (error message use only).
@@ -231,6 +232,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     /**
      * Performs the check for circular references and returns the
      * referenced object.  This version allows the fallback Project instance to be specified.
+     * @param <T> required reference type
      * @param requiredClass the class that this reference should be a subclass of.
      * @param dataTypeName  the name of the datatype that the reference should be
      *                      (error message use only).

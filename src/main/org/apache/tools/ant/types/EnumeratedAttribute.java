@@ -71,7 +71,7 @@ public abstract class EnumeratedAttribute {
         String value) throws BuildException {
         if (!EnumeratedAttribute.class.isAssignableFrom(clazz)) {
             throw new BuildException(
-                "You have to provide a subclass from EnumeratedAttribut as clazz-parameter.");
+                "You have to provide a subclass from EnumeratedAttribute as clazz-parameter.");
         }
         EnumeratedAttribute ea = null;
         try {

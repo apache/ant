@@ -175,7 +175,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
     /**
      * Resolve the entity.
-     * @see org.xml.sax.EntityResolver#resolveEntity(String, String).
+     * @see org.xml.sax.EntityResolver#resolveEntity(String, String)
      * @param publicId The public identifier, or <code>null</code>
      *                 if none is available.
      * @param systemId The system identifier provided in the XML

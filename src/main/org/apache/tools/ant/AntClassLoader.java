@@ -928,8 +928,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *
      * @param name name of the resource
      * @return possible URLs as enumeration
-     * @throws IOException
-     * @see {@link #findResources(String, boolean)}
+     * @throws IOException if something goes wrong
+     * @see #findResources(String, boolean)
      * @since Ant 1.8.0
      */
     public Enumeration<URL> getNamedResources(final String name)
@@ -1561,6 +1561,12 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /**
      * Factory method
+     *
+     * @param parent ClassLoader
+     * @param project Project
+     * @param path Path
+     * @param parentFirst boolean
+     * @return AntClassLoader
      */
     public static AntClassLoader newAntClassLoader(final ClassLoader parent,
                                                    final Project project,

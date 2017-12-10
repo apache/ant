@@ -112,6 +112,7 @@ public class MappedResourceCollection
 
     /**
      * Set whether to cache collections.
+     * @param cache boolean
      * @since Ant 1.8.1
      */
     public void setCache(boolean cache) {

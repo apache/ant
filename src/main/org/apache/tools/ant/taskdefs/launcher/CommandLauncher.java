@@ -131,6 +131,9 @@ public class CommandLauncher {
     /**
      * Obtains the shell launcher configured for the given project or
      * the default shell launcher.
+     *
+     * @param project Project
+     * @return CommandLauncher
      */
     public static CommandLauncher getShellLauncher(Project project) {
         CommandLauncher launcher = extractLauncher(ANT_SHELL_LAUNCHER_REF_ID,
@@ -145,6 +148,9 @@ public class CommandLauncher {
     /**
      * Obtains the VM launcher configured for the given project or
      * the default VM launcher.
+     *
+     * @param project Project
+     * @return CommandLauncher
      */
     public static CommandLauncher getVMLauncher(Project project) {
         CommandLauncher launcher = extractLauncher(ANT_VM_LAUNCHER_REF_ID,
@@ -192,6 +198,9 @@ public class CommandLauncher {
 
     /**
      * Sets the VM launcher to use for the given project.
+     *
+     * @param project Project
+     * @param launcher CommandLauncher
      */
     public static void setVMLauncher(Project project,
                                      CommandLauncher launcher) {
@@ -202,6 +211,9 @@ public class CommandLauncher {
 
     /**
      * Sets the shell launcher to use for the given project.
+     *
+     * @param project Project
+     * @param launcher CommandLauncher
      */
     public static void setShellLauncher(Project project,
                                         CommandLauncher launcher) {

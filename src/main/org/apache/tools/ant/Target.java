@@ -301,6 +301,7 @@ public class Target implements TaskContainer {
     /**
      * Same as {@link #setIf(String)} but requires a {@link Condition} instance
      *
+     * @param condition Condition
      * @since 1.9
      */
     public void setIf(Condition condition) {
@@ -348,6 +349,7 @@ public class Target implements TaskContainer {
     /**
      * Same as {@link #setUnless(String)} but requires a {@link Condition} instance
      *
+     * @param condition Condition
      * @since 1.9
      */
     public void setUnless(Condition condition) {

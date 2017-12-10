@@ -58,6 +58,7 @@ public class KeepAliveInputStream extends FilterInputStream {
      * Convenience factory method that returns a non-closing
      * InputStream around System.in.
      *
+     * @return InputStream
      * @since Ant 1.8.0
      */
     public static InputStream wrapSystemIn() {

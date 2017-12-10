@@ -43,7 +43,7 @@ public class WeakishReference  {
      * create a new soft reference, which is bound to a
      * Weak reference inside
      *
-     * @param reference
+     * @param reference ditto
      * @see java.lang.ref.WeakReference
      */
     WeakishReference(Object reference) {

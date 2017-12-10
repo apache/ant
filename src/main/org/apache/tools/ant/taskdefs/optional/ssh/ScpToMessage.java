@@ -423,6 +423,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     /**
      * Set the file mode, defaults to 0644.
+     * @param fileMode int
      * @since Ant 1.9.5
      */
     public void setFileMode(int fileMode) {
@@ -431,6 +432,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     /**
      * Get the file mode.
+     * @return int
      * @since Ant 1.9.5
      */
     public int getFileMode() {
@@ -439,6 +441,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     /**
      * Set the dir mode, defaults to 0755.
+     * @param dirMode int
      * @since Ant 1.9.5
      */
     public void setDirMode(int dirMode) {
@@ -447,6 +450,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     /**
      * Get the dir mode.
+     * @return int
      * @since Ant 1.9.5
      */
     public int getDirMode() {
@@ -455,6 +459,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     /**
      * Whether to preserve the last modified time.
+     * @return boolean
      * @since Ant 1.9.7
      */
     public boolean getPreserveLastModified() {

@@ -1435,16 +1435,15 @@
     description="--> creates the API documentation" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
-      maxmemory="1000M" 
       destdir="${build.javadocs}"
+      failonerror="true"
       author="true"
       version="true"
       locale="en"
       windowtitle="${Name} API"
       doctitle="${Name}"
-      failonerror="true"
-      verbose="${javadoc.verbose}"
-      additionalparam="${javadoc.doclint.none}">
+      maxmemory="1000M"
+      verbose="${javadoc.verbose}">
 
       <packageset dir="${java.dir}"/>
 
@@ -1476,8 +1475,7 @@
       version="true"
       locale="en"
       windowtitle="${Name} Test Utilities"
-      doctitle="${Name}"
-      additionalparam="${javadoc.doclint.none}">
+      doctitle="${Name}">
 
       <!-- hide some meta information for javadoc -->
       <tag name="pre" description="Precondition:" scope="all"/>
@@ -1634,6 +1632,7 @@ ${antunit.reports}
                fork="${junit.fork}"
                forkmode="${junit.forkmode}"
                threads="${junit.threads}"
+               tempdir="${build.dir}"
                failureproperty="junit.failed"
                errorproperty="junit.failed"
                filtertrace="${junit.filtertrace}">

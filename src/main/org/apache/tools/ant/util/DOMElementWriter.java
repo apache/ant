@@ -414,7 +414,7 @@ public class DOMElementWriter {
     }
 
     /**
-     * Escape &lt;, &gt; &amp; &apos;, &quot; as their entities and
+     * Escape &lt;, &gt;, &amp;, ', &quot; as their entities and
      * drop characters that are illegal in XML documents.
      * @param value the string to encode.
      * @return the encoded string.
@@ -424,7 +424,7 @@ public class DOMElementWriter {
     }
 
     /**
-     * Escape &lt;, &gt; &amp; &apos;, &quot; as their entities, \n,
+     * Escape &lt;, &gt;, &amp;, ', &quot; as their entities, \n,
      * \r and \t as numeric entities and drop characters that are
      * illegal in XML documents.
      * @param value the string to encode.
@@ -514,6 +514,7 @@ public class DOMElementWriter {
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
      * @param value the value to be encoded.
      * @param out where to write the encoded data to.
+     * @throws IOException if data cannot be written
      */
     public void encodedata(final Writer out, final String value) throws IOException {
         final int len = value.length();

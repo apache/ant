@@ -29,7 +29,7 @@ public class UnicodeUtil {
 
     /**
      * returns the unicode representation of a char without the leading backslash
-     * @param ch
+     * @param ch a character
      * @return unicode representation of a char for property files
      */
     public static StringBuffer EscapeUnicode(char ch) {

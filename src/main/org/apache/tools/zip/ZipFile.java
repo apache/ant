@@ -315,7 +315,7 @@ public class ZipFile implements Closeable {
      * the archive's central directory.
      *
      * @param name name of the entry.
-     * @return the Iterable<ZipEntry> corresponding to the
+     * @return the Iterable&lt;ZipEntry&gt; corresponding to the
      * given name
      * @since 1.9.2
      */
@@ -330,7 +330,7 @@ public class ZipFile implements Closeable {
      * appear within the archive.
      *
      * @param name name of the entry.
-     * @return the Iterable<ZipEntry> corresponding to the
+     * @return the Iterable&lt;ZipEntry&gt; corresponding to the
      * given name
      * @since 1.9.2
      */
@@ -348,6 +348,9 @@ public class ZipFile implements Closeable {
      *
      * <p>May return false if it is set up to use encryption or a
      * compression method that hasn't been implemented yet.</p>
+     *
+     * @param ze ZipEntry
+     * @return boolean
      */
     public boolean canReadEntryData(final ZipEntry ze) {
         return ZipUtil.canHandleEntryData(ze);
@@ -366,7 +369,7 @@ public class ZipFile implements Closeable {
         if (!(ze instanceof Entry)) {
             return null;
         }
-        // cast valididty is checked just above
+        // cast validity is checked just above
         final OffsetEntry offsetEntry = ((Entry) ze).getOffsetEntry();
         ZipUtil.checkRequestedFeatures(ze);
         final long start = offsetEntry.dataOffset;

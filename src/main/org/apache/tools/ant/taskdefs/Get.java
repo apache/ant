@@ -318,6 +318,7 @@ public class Get extends Task {
 
     /**
      * Adds URLs to get.
+     * @param rc ResourceCollection
      * @since Ant 1.8.0
      */
     public void add(final ResourceCollection rc) {
@@ -406,6 +407,7 @@ public class Get extends Task {
      * The time in seconds the download is allowed to take before
      * being terminated.
      *
+     * @param maxTime long
      * @since Ant 1.8.0
      */
     public void setMaxTime(final long maxTime) {
@@ -420,7 +422,6 @@ public class Get extends Task {
      * reach the URI at all.</p>
      *
      * @param r number of attempts to make
-     *
      * @since Ant 1.8.0
      */
     public void setRetries(final int r) {
@@ -436,7 +437,6 @@ public class Get extends Task {
      * Skip files that already exist locally.
      *
      * @param s "true" to skip existing destination files
-     *
      * @since Ant 1.8.0
      */
     public void setSkipExisting(final boolean s) {
@@ -449,6 +449,7 @@ public class Get extends Task {
      * the value is considered unset and the behaviour falls
      * back to the default of the http API.
      *
+     * @param userAgent String
      * @since Ant 1.9.3
      */
     public void setUserAgent(final String userAgent) {
@@ -463,6 +464,7 @@ public class Get extends Task {
      * <p>Defaults to true (allow caching, which is also the
      * HttpUrlConnection default value.</p>
      *
+     * @param httpUseCache boolean
      * @since Ant 1.8.0
      */
     public void setHttpUseCaches(final boolean httpUseCache) {
@@ -476,6 +478,7 @@ public class Get extends Task {
      * <p>Setting this to true also means Ant will uncompress
      * <code>.tar.gz</code> and similar files automatically.</p>
      *
+     * @param b boolean
      * @since Ant 1.9.5
      */
     public void setTryGzipEncoding(boolean b) {
@@ -864,7 +867,7 @@ public class Get extends Task {
         /**
          * Has the download completed successfully?
          *
-         * <p>Re-throws any exception caught during executaion.</p>
+         * <p>Re-throws any exception caught during execution.</p>
          */
         boolean wasSuccessful() throws IOException, BuildException {
             if (ioexception != null) {

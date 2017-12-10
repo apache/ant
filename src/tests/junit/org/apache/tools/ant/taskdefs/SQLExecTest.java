@@ -179,6 +179,8 @@ public class SQLExecTest {
      * If you want to test on your specific base, you'd better
      * tweak this to make it run or add your own database.
      * The driver lib should be dropped into the system classloader.
+     *
+     * @param database int
      */
     protected Properties getProperties(int database) {
         Properties props = null;
@@ -200,7 +202,14 @@ public class SQLExecTest {
         return props;
     }
 
-    /** helper method to build properties */
+    /**
+     * helper method to build properties
+     *
+     * @param driver String
+     * @param user String
+     * @param pwd String
+     * @param url String
+     */
     protected Properties getProperties(String driver, String user, String pwd, String url) {
         Properties props = new Properties();
         props.put(DRIVER, driver);

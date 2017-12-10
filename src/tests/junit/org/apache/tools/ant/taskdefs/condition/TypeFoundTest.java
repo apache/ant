@@ -87,5 +87,4 @@ public class TypeFoundTest {
         assertEquals("true", buildRule.getProject().getProperty("testMacro"));
     }
 
-
 }

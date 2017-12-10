@@ -58,14 +58,14 @@ import org.apache.tools.ant.util.TeeOutputStream;
  * <p>This TestRunner expects a name of a TestCase class as its
  * argument. If this class provides a static suite() method it will be
  * called and the resulting Test will be run. So, the signature should be
- * <pre><code>
+ * <pre>
  *     public static junit.framework.Test suite()
- * </code></pre>
+ * </pre>
  *
- * <p> If no such method exists, all public methods starting with
- * "test" and taking no argument will be run.
+ * <p>If no such method exists, all public methods starting with
+ * "test" and taking no argument will be run.</p>
  *
- * <p> Summary output is generated at the end.
+ * <p>Summary output is generated at the end.</p>
  *
  * @since Ant 1.2
  */
@@ -287,6 +287,14 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Constructor to use when the user has specified a classpath.
+     * @param test JUnitTest
+     * @param methods String[]
+     * @param haltOnError boolean
+     * @param filtertrace boolean
+     * @param haltOnFailure boolean
+     * @param showOutput boolean
+     * @param logTestListenerEvents boolean
+     * @param loader ClassLoader
      * @since 1.8.2
      */
     public JUnitTestRunner(final JUnitTest test, final String[] methods, final boolean haltOnError,
@@ -860,33 +868,38 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     /**
      * Entry point for standalone (forked) mode.
-     *
+     * <p>
      * Parameters: testcaseclassname plus parameters in the format
      * key=value, none of which is required.
-     *
-     * <table cols="4" border="1">
-     * <tr><th>key</th><th>description</th><th>default value</th></tr>
-     *
-     * <tr><td>haltOnError</td><td>halt test on
-     * errors?</td><td>false</td></tr>
-     *
-     * <tr><td>haltOnFailure</td><td>halt test on
-     * failures?</td><td>false</td></tr>
-     *
-     * <tr><td>formatter</td><td>A JUnitResultFormatter given as
+     * </p>
+     * <table border="1">
+     * <caption>Test runner attributes</caption>
+     * <tr>
+     * <th>key</th><th>description</th><th>default value</th>
+     * </tr>
+     * <tr>
+     * <td>haltOnError</td><td>halt test on errors?</td><td>false</td>
+     * </tr>
+     * <tr>
+     * <td>haltOnFailure</td><td>halt test on failures?</td><td>false</td>
+     * </tr>
+     * <tr>
+     * <td>formatter</td><td>A JUnitResultFormatter given as
      * classname,filename. If filename is omitted, System.out is
-     * assumed.</td><td>none</td></tr>
-     *
-     * <tr><td>showoutput</td><td>send output to System.err/.out as
-     * well as to the formatters?</td><td>false</td></tr>
-     *
-     * <tr><td>logtestlistenerevents</td><td>log TestListener events to
-     * System.out.</td><td>false</td></tr>
-     *
-     * <tr><td>methods</td><td>Comma-separated list of names of individual
-     * test methods to execute.
-     * </td><td>null</td></tr>
-     *
+     * assumed.</td><td>none</td>
+     * </tr>
+     * <tr>
+     * <td>showoutput</td><td>send output to System.err/.out as
+     * well as to the formatters?</td><td>false</td>
+     * </tr>
+     * <tr>
+     * <td>logtestlistenerevents</td><td>log TestListener events to
+     * System.out.</td><td>false</td>
+     * </tr>
+     * <tr>
+     * <td>methods</td><td>Comma-separated list of names of individual
+     * test methods to execute.</td><td>null</td>
+     * </tr>
      * </table>
      * @param args the command line arguments.
      * @throws IOException on error.
@@ -1087,7 +1100,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     /**
-     * Line format is: formatter=<classname>(,<pathname>)?
+     * Line format is: formatter=&lt;classname&gt;(,&lt;pathname&gt;)?
+     *
+     * @param line String
      */
     private static void createAndStoreFormatter(final String line)
         throws BuildException {
@@ -1295,4 +1310,4 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         return new int[] {failures, errors};
     }
 
-} // JUnitTestRunner
+}

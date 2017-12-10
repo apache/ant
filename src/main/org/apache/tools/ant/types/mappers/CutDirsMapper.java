@@ -37,6 +37,7 @@ public class CutDirsMapper implements FileNameMapper {
 
     /**
      * The number of leading directories to cut.
+     * @param dirs int
      */
     public void setDirs(final int dirs) {
         this.dirs =  dirs;

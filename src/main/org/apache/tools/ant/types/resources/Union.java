@@ -110,6 +110,7 @@ public class Union extends BaseResourceCollectionContainer {
 
     /**
      * Unify the contained Resources.
+     * @param <T> resource type
      * @param asString indicates whether the resulting Collection
      *        should contain Strings instead of Resources.
      * @return a Collection of Resources.
@@ -122,7 +123,7 @@ public class Union extends BaseResourceCollectionContainer {
 
     /**
      * Get a collection of strings representing the unified resource set (strings may duplicate).
-     * @return Collection<String>
+     * @return Collection&lt;String&gt;
      */
     protected Collection<String> getAllToStrings() {
         final Set<Resource> allResources = getAllResources();
@@ -135,7 +136,7 @@ public class Union extends BaseResourceCollectionContainer {
 
     /**
      * Get the unified set of contained Resources.
-     * @return Set<Resource>
+     * @return Set&lt;Resource&gt;
      */
     protected Set<Resource> getAllResources() {
         final List<ResourceCollection> resourceCollections = getResourceCollections();

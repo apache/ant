@@ -180,6 +180,7 @@ public class DependSet extends MatchingTask {
      *
      * <p>All deleted files will be logged as well.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setVerbose(boolean b) {

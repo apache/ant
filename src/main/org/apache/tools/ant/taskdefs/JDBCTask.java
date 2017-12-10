@@ -246,6 +246,7 @@ public abstract class JDBCTask extends Task {
     /**
      * whether the task should cause the build to fail if it cannot
      * connect to the database.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnConnectionError(boolean b) {
@@ -314,6 +315,7 @@ public abstract class JDBCTask extends Task {
     /**
      * Additional properties to put into the JDBC connection string.
      *
+     * @param var Property
      * @since Ant 1.8.0
      */
     public void addConnectionProperty(Property var) {
@@ -388,7 +390,7 @@ public abstract class JDBCTask extends Task {
      * Gets an instance of the required driver.
      * Uses the ant class loader and the optionally the provided classpath.
      * @return Driver
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      */
     private Driver getDriver() throws BuildException {
         if (driver == null) {

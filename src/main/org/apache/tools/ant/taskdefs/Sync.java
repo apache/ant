@@ -177,7 +177,7 @@ public class Sync extends Task {
      * <p>If the directory is an orphan, it will also be removed.</p>
      *
      * @param  nonOrphans the table of all non-orphan <code>File</code>s.
-     * @param  file the initial file or directory to scan or test.
+     * @param  toDir the initial file or directory to scan or test.
      * @param  preservedDirectories will be filled with the directories
      *         matched by preserveInTarget - if any.  Will not be
      *         filled unless preserveEmptyDirs and includeEmptyDirs
@@ -465,8 +465,8 @@ public class Sync extends Task {
 
         /**
          * @see Copy#scan(File, File, String[], String[])
+         * {@inheritDoc}
          */
-        /** {@inheritDoc} */
         @Override
         protected void scan(File fromDir, File toDir, String[] files,
                             String[] dirs) {
@@ -484,8 +484,8 @@ public class Sync extends Task {
 
         /**
          * @see Copy#scan(Resource[], File)
+         * {@inheritDoc}
          */
-        /** {@inheritDoc} */
         @Override
         protected Map scan(Resource[] resources, File toDir) {
             assertTrue("No mapper", mapperElement == null);
@@ -559,6 +559,7 @@ public class Sync extends Task {
          * Whether empty directories matched by this fileset should be
          * preserved.
          *
+         * @param b boolean
          * @since Ant 1.8.0
          */
         public void setPreserveEmptyDirs(boolean b) {
@@ -569,6 +570,7 @@ public class Sync extends Task {
          * Whether empty directories matched by this fileset should be
          * preserved.
          *
+         * @return Boolean
          * @since Ant 1.8.0
          */
         public Boolean getPreserveEmptyDirs() {

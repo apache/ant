@@ -29,10 +29,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.PatternSet.
+ * JUnit 4 testcases for org.apache.tools.ant.types.PatternSet.
  *
  * <p>This doesn't actually test much, mainly reference handling.</p>
- *
  */
 
 public class PatternSetTest {

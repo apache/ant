@@ -395,7 +395,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         try {
             handler = getDescriptorHandler(config.srcDir);
 
-            // Retrive the files to be added to JAR from EJB descriptor
+            // Retreive the files to be added to JAR from EJB descriptor
             Hashtable ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
             // Add any support classes specified in the build file
@@ -649,7 +649,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
-     * @param ejbFiles a hashtable entryname -> file.
+     * @param ejbFiles a hashtable entryname -&gt; file.
      * @param ddPrefix a prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
@@ -660,7 +660,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
+     *
      * @param baseName the basename to use.
+     * @return File
      */
     File getVendorOutputJarFile(String baseName) {
         return new File(destDir, baseName + genericJarSuffix);

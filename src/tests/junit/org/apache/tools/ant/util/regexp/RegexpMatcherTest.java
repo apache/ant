@@ -18,16 +18,21 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.util.Vector;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for all implementations of the RegexpMatcher interface.
  *
  */
-public abstract class RegexpMatcherTest extends TestCase {
+public abstract class RegexpMatcherTest {
 
     public final static String UNIX_LINE = "\n";
 
@@ -39,14 +44,12 @@ public abstract class RegexpMatcherTest extends TestCase {
         return reg;
     }
 
-    public RegexpMatcherTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() {
         reg = getImplementation();
     }
 
+    @Test
     public void testMatches() {
         reg.setPattern("aaaa");
         assertTrue("aaaa should match itself", reg.matches("aaaa"));
@@ -73,6 +76,7 @@ public abstract class RegexpMatcherTest extends TestCase {
         assertTrue("([0-9]+)=\\1 shouldn\'t match 1=2", !reg.matches("1=2"));
     }
 
+    @Test
     public void testGroups() {
         reg.setPattern("aaaa");
         Vector v = reg.getGroups("xaaaa");
@@ -96,6 +100,7 @@ public abstract class RegexpMatcherTest extends TestCase {
         assertEquals("b", (String) v.elementAt(2));
     }
 
+    @Test
     public void testBugzillaReport14619() {
         reg.setPattern("^(.*)/src/((.*/)*)([a-zA-Z0-9_\\.]+)\\.java$");
         Vector v = reg.getGroups("de/tom/src/Google.java");
@@ -106,6 +111,7 @@ public abstract class RegexpMatcherTest extends TestCase {
         assertEquals("Google", v.elementAt(4));
     }
 
+    @Test
     public void testCaseInsensitiveMatch() {
         reg.setPattern("aaaa");
         assertTrue("aaaa doesn't match AAaa", !reg.matches("AAaa"));
@@ -113,46 +119,52 @@ public abstract class RegexpMatcherTest extends TestCase {
                    reg.matches("AAaa", RegexpMatcher.MATCH_CASE_INSENSITIVE));
     }
 
+    // make sure there are no issues concerning line separator interpretation
+    // a line separator for regex (perl) is always a unix line (ie \n)
 
-// make sure there are no issues concerning line separator interpretation
-// a line separator for regex (perl) is always a unix line (ie \n)
-
+    @Test
     public void testParagraphCharacter() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("paragraph character", !reg.matches("end of text\u2029"));
     }
 
+    @Test
     public void testLineSeparatorCharacter() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("line-separator character", !reg.matches("end of text\u2028"));
     }
 
+    @Test
     public void testNextLineCharacter() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("next-line character", !reg.matches("end of text\u0085"));
     }
 
+    @Test
     public void testStandaloneCR() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("standalone CR", !reg.matches("end of text\r"));
     }
 
+    @Test
     public void testWindowsLineSeparator() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("Windows line separator", !reg.matches("end of text\r\n"));
     }
 
+    @Test
     public void testWindowsLineSeparator2() throws IOException {
         reg.setPattern("end of text\r$");
         assertTrue("Windows line separator", reg.matches("end of text\r\n"));
     }
 
+    @Test
     public void testUnixLineSeparator() throws IOException {
         reg.setPattern("end of text$");
         assertTrue("Unix line separator", reg.matches("end of text\n"));
     }
 
-
+    @Test
     public void testMultiVersusSingleLine() throws IOException {
         StringBuilder buf = new StringBuilder();
         buf.append("Line1").append(UNIX_LINE);

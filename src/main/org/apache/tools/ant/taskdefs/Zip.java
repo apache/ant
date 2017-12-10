@@ -505,6 +505,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Assume 0 Unix mode is intentional.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setPreserve0Permissions(final boolean b) {
@@ -513,6 +514,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Assume 0 Unix mode is intentional.
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getPreserve0Permissions() {
@@ -521,6 +523,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether to set the language encoding flag.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setUseLanguageEncodingFlag(final boolean b) {
@@ -529,6 +532,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether the language encoding flag will be used.
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getUseLanguageEnodingFlag() {
@@ -537,6 +541,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether Unicode extra fields will be created.
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setCreateUnicodeExtraFields(final UnicodeExtraField b) {
@@ -545,6 +550,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether Unicode extra fields will be created.
+     * @return boolean
      * @since Ant 1.8.0
      */
     public UnicodeExtraField getCreateUnicodeExtraFields() {
@@ -557,6 +563,7 @@ public class Zip extends MatchingTask {
      *
      * <p>Defaults to false.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFallBackToUTF8(final boolean b) {
@@ -567,6 +574,7 @@ public class Zip extends MatchingTask {
      * Whether to fall back to UTF-8 if a name cannot be encoded using
      * the specified encoding.
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getFallBackToUTF8() {
@@ -575,6 +583,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether Zip64 extensions should be used.
+     * @param b boolean
      * @since Ant 1.9.1
      */
     public void setZip64Mode(final Zip64ModeAttribute b) {
@@ -583,6 +592,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Whether Zip64 extensions will be used.
+     * @return boolean
      * @since Ant 1.9.1
      */
     public Zip64ModeAttribute getZip64Mode() {
@@ -606,6 +616,7 @@ public class Zip extends MatchingTask {
     /**
      * The file modification time previously provided to
      * {@link #setModificationtime(String)} or {@code null} if unset.
+     * @return String
      * @since Ant 1.9.10
      */
     public String getModificationtime() {
@@ -1691,7 +1702,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Add a directory to the zip stream.
-     * @param dir  the directort to add to the archive
+     * @param dir  the directory to add to the archive
      * @param zOut the stream to write to
      * @param vPath the name this entry shall have in the archive
      * @param mode the Unix permissions to set.
@@ -1786,6 +1797,7 @@ public class Zip extends MatchingTask {
     /**
      * Provides the extra fields for the zip entry currently being
      * added to the archive - if any.
+     * @return ZipExtraField[]
      * @since Ant 1.8.0
      */
     protected final ZipExtraField[] getCurrentExtraFields() {
@@ -1795,6 +1807,7 @@ public class Zip extends MatchingTask {
     /**
      * Sets the extra fields for the zip entry currently being
      * added to the archive - if any.
+     * @param extra ZipExtraField[]
      * @since Ant 1.8.0
      */
     protected final void setCurrentExtraFields(final ZipExtraField[] extra) {
@@ -2115,6 +2128,7 @@ public class Zip extends MatchingTask {
     /**
      * Drops all resources from the given array that are not selected
      * @param orig the resources to filter
+     * @param selector ResourceSelector
      * @return the filters resources
      * @since Ant 1.8.0
      */
@@ -2141,6 +2155,8 @@ public class Zip extends MatchingTask {
      * Logs a message at the given output level, but only if this is
      * the pass that will actually create the archive.
      *
+     * @param msg String
+     * @param level int
      * @since Ant 1.8.0
      */
     protected void logWhenWriting(final String msg, final int level) {
@@ -2156,8 +2172,8 @@ public class Zip extends MatchingTask {
     public static class Duplicate extends EnumeratedAttribute {
         /**
          * @see EnumeratedAttribute#getValues()
+         * {@inheritDoc}
          */
-        /** {@inheritDoc} */
         @Override
         public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
@@ -2215,7 +2231,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Policiy for creation of Unicode extra fields: never, always or
+     * Policy for creation of Unicode extra fields: never, always or
      * not-encodeable.
      *
      * @since Ant 1.8.0

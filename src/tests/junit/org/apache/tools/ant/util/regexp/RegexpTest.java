@@ -18,6 +18,11 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Tests for all implementations of the Regexp interface.
  *
@@ -27,16 +32,13 @@ public abstract class RegexpTest extends RegexpMatcherTest {
     private static final String test = "abcdefg-abcdefg";
     private static final String pattern = "ab([^d]*)d([^f]*)f";
 
-    public RegexpTest(String name) {
-        super(name);
-    }
-
     public final RegexpMatcher getImplementation() {
         return getRegexpImplementation();
     }
 
     public abstract Regexp getRegexpImplementation();
 
+    @Test
     public void testSubstitution() {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);
@@ -45,6 +47,7 @@ public abstract class RegexpTest extends RegexpMatcherTest {
                                                        Regexp.MATCH_DEFAULT));
     }
 
+    @Test
     public void testReplaceFirstSubstitution() {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);
@@ -53,6 +56,7 @@ public abstract class RegexpTest extends RegexpMatcherTest {
                                                        Regexp.REPLACE_FIRST));
     }
 
+    @Test
     public void testReplaceAllSubstitution() {
         Regexp reg = (Regexp) getReg();
         reg.setPattern(pattern);

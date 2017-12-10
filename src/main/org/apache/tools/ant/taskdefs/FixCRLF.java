@@ -684,8 +684,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     public static class CrLf extends EnumeratedAttribute {
         /**
          * @see EnumeratedAttribute#getValues
+         * {@inheritDoc}.
          */
-        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"asis", "cr", "lf", "crlf",
                                  "mac", "unix", "dos"};

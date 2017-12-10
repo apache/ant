@@ -461,7 +461,7 @@ public final class Specification {
      * Combine all specifications objects that are identical except
      * for the sections.
      *
-     * <p>Note this is very inefficent and should probably be fixed
+     * <p>Note this is very inefficient and should probably be fixed
      * in the future.</p>
      *
      * @param list the array of results to trim
@@ -497,8 +497,8 @@ public final class Specification {
     /**
      * Test if two specifications are equal except for their sections.
      *
-     * @param specification one specificaiton
-     * @param other the ohter specification
+     * @param specification one specification
+     * @param other the other specification
      * @return true if two specifications are equal except for their
      *         sections, else false
      */

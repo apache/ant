@@ -53,7 +53,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * A very simple hook mechanism is provided that allows users to plug
  * in custom code. It is also possible to replace the default behavior
- * ( for example in an app embedding ant )
+ * (for example in an app embedding Ant)
  *
  * @since Ant1.6
  */
@@ -202,7 +202,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * @return A deep copy of the restrictredDefinition
+     * @return A deep copy of the restrictedDefinition
      */
     private Map<String, List<AntTypeDefinition>> getRestrictedDefinition() {
         final Map<String, List<AntTypeDefinition>> result = new HashMap<String, List<AntTypeDefinition>>();

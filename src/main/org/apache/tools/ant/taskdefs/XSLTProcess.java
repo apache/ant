@@ -607,6 +607,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether to suppress warning messages of the processor.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setSuppressWarnings(final boolean b) {
@@ -616,6 +617,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether to suppress warning messages of the processor.
      *
+     * @return boolean
      * @since Ant 1.8.0
      */
     public boolean getSuppressWarnings() {
@@ -625,6 +627,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether transformation errors should make the build fail.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnTransformationError(final boolean b) {
@@ -634,6 +637,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether any errors should make the build fail.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnError(final boolean b) {
@@ -643,6 +647,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether the build should fail if the nested resource collection is empty.
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setFailOnNoResources(final boolean b) {
@@ -652,6 +657,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * A system property to set during transformation.
      *
+     * @param sysp Environment.Variable
      * @since Ant 1.8.0
      */
     public void addSysproperty(final Environment.Variable sysp) {
@@ -661,6 +667,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * A set of system properties to set during transformation.
      *
+     * @param sysp PropertySet
      * @since Ant 1.8.0
      */
     public void addSyspropertyset(final PropertySet sysp) {
@@ -674,6 +681,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * processor other than trax or if the Transformer is not Xalan2's
      * transformer implementation.</p>
      *
+     * @return TraceConfiguration
      * @since Ant 1.8.0
      */
     public TraceConfiguration createTrace() {
@@ -688,6 +696,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Configuration for Xalan2 traces.
      *
+     * @return TraceConfiguration
      * @since Ant 1.8.0
      */
     public TraceConfiguration getTraceConfiguration() {
@@ -719,7 +728,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * As a side effect, the loader is set as the thread context classloader
      * @param classname the name of the class to load.
      * @return the requested class.
-     * @exception Exception if the class could not be loaded.
      */
     private Class loadClass(final String classname) throws ClassNotFoundException {
         setupLoader();
@@ -753,7 +761,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * specifies a single XML document to be styled. Should be used
-     * with the <tt>out</tt> attribute; ; required if <tt>out</tt> is set
+     * with the <tt>out</tt> attribute; required if <tt>out</tt> is set
      *
      * @param inFile the input file
      */
@@ -1021,6 +1029,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         /**
+         * @param type String
          * @see ParamType
          * @since Ant 1.9.3
          */
@@ -1056,6 +1065,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         /**
+         * @return String
          * @see ParamType
          * @since Ant 1.9.3
          */
@@ -1412,6 +1422,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Throws an exception with the given message if failOnError is
      * true, otherwise logs the message using the WARN level.
      *
+     * @param msg String
      * @since Ant 1.8.0
      */
     protected void handleError(final String msg) {
@@ -1427,6 +1438,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * failOnError is true, otherwise logs the message using the WARN
      * level.
      *
+     * @param ex Throwable
      * @since Ant 1.8.0
      */
     protected void handleError(final Throwable ex) {
@@ -1442,6 +1454,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * failOnError and failOnTransformationError are true, otherwise
      * logs the message using the WARN level.
      *
+     * @param ex Exception
      * @since Ant 1.8.0
      */
     protected void handleTransformationError(final Exception ex) {
@@ -1515,6 +1528,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * The configured features.
          * @since Ant 1.9.8
+         *
+         * @return Iterable&lt;Feature&gt;
          */
         public Iterable<Feature> getFeatures() {
             return features;
@@ -1678,6 +1693,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Set to true if the listener is to print events that occur
          * as each node is 'executed' in the stylesheet.
+         *
+         * @param b boolean
          */
         public void setElements(final boolean b) {
             elements = b;
@@ -1686,6 +1703,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * True if the listener is to print events that occur as each
          * node is 'executed' in the stylesheet.
+         *
+         * @return boolean
          */
         public boolean getElements() {
             return elements;
@@ -1694,6 +1713,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Set to true if the listener is to print information after
          * each extension event.
+         *
+         * @param b boolean
          */
         public void setExtension(final boolean b) {
             extension = b;
@@ -1702,6 +1723,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * True if the listener is to print information after each
          * extension event.
+         *
+         * @return boolean
          */
         public boolean getExtension() {
             return extension;
@@ -1710,6 +1733,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Set to true if the listener is to print information after
          * each result-tree generation event.
+         *
+         * @param b boolean
          */
         public void setGeneration(final boolean b) {
             generation = b;
@@ -1718,6 +1743,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * True if the listener is to print information after each
          * result-tree generation event.
+         *
+         * @return boolean
          */
         public boolean getGeneration() {
             return generation;
@@ -1726,6 +1753,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Set to true if the listener is to print information after
          * each selection event.
+         *
+         * @param b boolean
          */
         public void setSelection(final boolean b) {
             selection = b;
@@ -1734,6 +1763,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * True if the listener is to print information after each
          * selection event.
+         *
+         * @return boolean
          */
         public boolean getSelection() {
             return selection;
@@ -1742,6 +1773,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Set to true if the listener is to print an event whenever a
          * template is invoked.
+         *
+         * @param b boolean
          */
         public void setTemplates(final boolean b) {
             templates = b;
@@ -1750,6 +1783,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * True if the listener is to print an event whenever a
          * template is invoked.
+         *
+         * @return boolean
          */
         public boolean getTemplates() {
             return templates;
@@ -1757,6 +1792,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * The stream to write traces to.
+         *
+         * @return OutputStream
          */
         public java.io.OutputStream getOutputStream() {
             return new LogOutputStream(XSLTProcess.this);

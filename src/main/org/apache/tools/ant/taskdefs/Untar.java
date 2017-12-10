@@ -91,8 +91,8 @@ public class Untar extends Expand {
 
     /**
      * @see Expand#expandFile(FileUtils, File, File)
+     * {@inheritDoc}
      */
-    /** {@inheritDoc} */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         FileInputStream fis = null;
         if (!srcF.exists()) {
@@ -231,8 +231,7 @@ public class Untar extends Expand {
                     final char[] magic = new char[] {'B', 'Z'};
                     for (int i = 0; i < magic.length; i++) {
                         if (istream.read() != magic[i]) {
-                            throw new BuildException(
-                                                     "Invalid bz2 file." + name);
+                            throw new BuildException("Invalid bz2 file." + name);
                         }
                     }
                     return new CBZip2InputStream(istream);

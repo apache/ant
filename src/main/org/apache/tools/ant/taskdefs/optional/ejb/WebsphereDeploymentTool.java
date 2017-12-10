@@ -158,7 +158,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    /** Sets the DB Vendor for the Entity Bean mapping ; optional.
+    /** Sets the DB Vendor for the Entity Bean mapping; optional.
      * <p>
      * Valid options can be obtained by running the following command:
      * <code>
@@ -268,7 +268,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Flag to use the WebSphere 3.5 compatible mapping rules ; optional, default false.
+     * Flag to use the WebSphere 3.5 compatible mapping rules; optional, default false.
      *
      * @param attr a <code>boolean</code> value.
      */
@@ -404,7 +404,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Add any vendor specific files which should be included in the EJB Jar.
-     * @param ejbFiles a hashtable entryname -> file.
+     * @param ejbFiles a hashtable entryname -&gt; file.
      * @param baseName a prefix to use.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
@@ -466,7 +466,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     log("Unable to locate the websphere Schema: "
                         + websphereSchema.getPath(), Project.MSG_VERBOSE);
                 }
-                // Theres nothing else to see here...keep moving sonny
+                // There is nothing else to see here...keep moving sonny
             } catch (Exception e) {
                 String msg = "Exception while adding Vendor specific files: "
                     + e.toString();

@@ -44,14 +44,15 @@ import java.util.Vector;
  * easier to install, and has an Open Source license.
  * <p>
  * It can be used like this:
- * <blockquote><pre>
+ * </p>
+ * <pre>
  * String mailhost = "localhost";  // or another mail host
  * String from = "Mail Message Servlet &lt;MailMessage@server.com&gt;";
  * String to = "to@you.com";
  * String cc1 = "cc1@you.com";
  * String cc2 = "cc2@you.com";
  * String bcc = "bcc@you.com";
- * &nbsp;
+ *
  * MailMessage msg = new MailMessage(mailhost);
  * msg.setPort(25);
  * msg.from(from);
@@ -61,16 +62,16 @@ import java.util.Vector;
  * msg.bcc(bcc);
  * msg.setSubject("Test subject");
  * PrintStream out = msg.getPrintStream();
- * &nbsp;
+ *
  * Enumeration enum = req.getParameterNames();
  * while (enum.hasMoreElements()) {
  *   String name = (String)enum.nextElement();
  *   String value = req.getParameter(name);
  *   out.println(name + " = " + value);
  * }
- * &nbsp;
+ *
  * msg.sendAndClose();
- * </pre></blockquote>
+ * </pre>
  * <p>
  * Be sure to set the from address, then set the recipient
  * addresses, then set the subject and other headers, then get the
@@ -78,14 +79,17 @@ import java.util.Vector;
  * The class does minimal error checking internally; it counts on the mail
  * host to complain if there's any malformatted input or out of order
  * execution.
+ * </p>
  * <p>
  * An attachment mechanism based on RFC 1521 could be implemented on top of
  * this class.  In the meanwhile, JavaMail is the best solution for sending
  * email with attachments.
+ * </p>
  * <p>
  * Still to do:
+ * </p>
  * <ul>
- * <li>Figure out how to close the connection in case of error
+ * <li>Figure out how to close the connection in case of error</li>
  * </ul>
  *
  * @version 1.1, 2000/03/19, added angle brackets to address, helps some servers

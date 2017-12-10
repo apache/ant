@@ -56,8 +56,8 @@ public class SOSCheckin extends SOS {
     }
 
     /**
-     * Build the command line. <p>
-     *
+     * Build the command line.
+     * <p>
      * CheckInFile required parameters: -server -name -password -database -project
      *  -file<br>
      * CheckInFile optional parameters: -workdir -log -verbose -nocache -nocompression
@@ -65,7 +65,8 @@ public class SOSCheckin extends SOS {
      * CheckInProject required parameters: -server -name -password -database
      *  -project<br>
      * CheckInProject optional parameters: workdir -recursive -log -verbose
-     *  -nocache -nocompression -soshome<br>
+     *  -nocache -nocompression -soshome
+     * </p>
      *
      * @return    Commandline the generated command to be executed
      */

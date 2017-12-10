@@ -62,11 +62,16 @@ public class Scp extends SSHBase {
 
     /**
      * Sets the file to be transferred.  This can either be a remote
-     * file or a local file.  Remote files take the form:<br>
-     * <i>user:password@host:/directory/path/file.example</i><br>
+     * file or a local file.  Remote files take the form:
+     * <p>
+     * <i>user:password@host:/directory/path/file.example</i>
+     * </p>
      * Files to transfer can also include a wildcard to include all
-     * files in a remote directory.  For example:<br>
-     * <i>user:password@host:/directory/path/*</i><br>
+     * files in a remote directory.  For example:
+     * <p>
+     * <i>user:password@host:/directory/path/*</i>
+     * </p>
+     *
      * @param aFromUri a string representing the file to transfer.
      */
     public void setFile(final String aFromUri) {
@@ -77,8 +82,10 @@ public class Scp extends SSHBase {
     /**
      * Sets the location where files will be transferred to.
      * This can either be a remote directory or a local directory.
-     * Remote directories take the form of:<br>
-     * <i>user:password@host:/directory/path/</i><br>
+     * Remote directories take the form of:
+     * <p>
+     * <i>user:password@host:/directory/path/</i>
+     * </p>
      * This parameter is required.
 
      * @param aToUri a string representing the target of the copy.
@@ -112,9 +119,10 @@ public class Scp extends SSHBase {
         this.isFromRemote = true;
      }
 
-     /**
+    /**
      * Sets flag to determine if compression should
      * be used for the copy.
+     * @param compressed boolean
      * @since Ant 1.9.8
      */
     public void setCompressed(boolean compressed) {
@@ -136,6 +144,7 @@ public class Scp extends SSHBase {
     /**
      * Sets flag to determine if file timestamp
      * is to be preserved during copy.
+     * @param yesOrNo boolean
      * @since Ant 1.8.0
      */
     public void setPreservelastmodified(final boolean yesOrNo) {
@@ -198,6 +207,7 @@ public class Scp extends SSHBase {
 
     /**
      * Set the file mode, defaults to "644".
+     * @param fileMode String
      * @since Ant 1.9.5
      */
     public void setFileMode(String fileMode) {
@@ -206,6 +216,7 @@ public class Scp extends SSHBase {
 
     /**
      * Set the dir mode, defaults to "755".
+     * @param dirMode String
      * @since Ant 1.9.5
      */
     public void setDirMode(String dirMode) {
@@ -224,7 +235,7 @@ public class Scp extends SSHBase {
 
     /**
      * Adds a ResourceCollection of local files to transfer to remote host.
-     * @param set ResourceCollection to send to remote host.
+     * @param res ResourceCollection to send to remote host.
      * @since Ant 1.9.7
      */
     public void add(ResourceCollection res) {

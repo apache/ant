@@ -812,7 +812,7 @@ public final class IntrospectionHelper {
      * Helper method to extract the inner fault from an {@link InvocationTargetException}, and turn
      * it into a BuildException. If it is already a BuildException, it is type cast and returned; if
      * not a new BuildException is created containing the child as nested text.
-     * @param ite
+     * @param ite the exception
      * @return the nested exception
      */
     private static BuildException extractBuildException(final InvocationTargetException ite) {
@@ -1529,7 +1529,7 @@ public final class IntrospectionHelper {
      * @param elementName name of the element
      * @return a nested creator, or null if there is no component of the given name, or it
      *        has no matching add type methods
-     * @throws BuildException
+     * @throws BuildException if something goes wrong
      */
     private NestedCreator createAddTypeCreator(
             final Project project, final Object parent, final String elementName) throws BuildException {

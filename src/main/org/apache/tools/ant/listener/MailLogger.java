@@ -323,8 +323,6 @@ public class MailLogger extends DefaultLogger {
      * @param  defaultValue   value returned if not present in the properties.
      *      Set to null to make required.
      * @return                The value of the property, or default value.
-     * @exception  Exception  thrown if no default value is specified and the
-     *      property is not present in properties.
      */
     private String getValue(Hashtable<String, Object> properties, String name,
                             String defaultValue) {

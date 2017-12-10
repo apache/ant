@@ -299,7 +299,7 @@ public abstract class DefaultCompilerAdapter
 
         cmd.createArgument().setValue("-classpath");
 
-        // Just add "sourcepath" to classpath ( for JDK1.1 )
+        // Just add "sourcepath" to classpath (for JDK1.1)
         // as well as "bootclasspath" and "extdirs"
         if (assumeJava11()) {
             final Path cp = new Path(project);

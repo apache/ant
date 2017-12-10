@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.Commandline;
  * <p>
  * The following attributes are interpreted:
  * <table border="1">
+ *   <caption>Task attributes</caption>
  *   <tr>
  *     <th>Attribute</th>
  *     <th>Values</th>

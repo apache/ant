@@ -96,16 +96,16 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
     /**
      * @see JUnitResultFormatter#setSystemOutput(String)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setSystemOutput(String out) {
         systemOutput = out;
     }
 
     /**
      * @see JUnitResultFormatter#setSystemError(String)
+     * {@inheritDoc}.
      */
-    /** {@inheritDoc}. */
     public void setSystemError(String err) {
         systemError = err;
     }

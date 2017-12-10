@@ -492,8 +492,8 @@ public class Available extends Task implements Condition {
 
         /**
          * @see EnumeratedAttribute#getValues
+         * {@inheritDoc}.
          */
-        /** {@inheritDoc}. */
         public String[] getValues() {
             return VALUES;
         }

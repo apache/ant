@@ -187,7 +187,7 @@ public class IsReachable extends ProjectComponent implements Condition {
                 //utterly implausible, but catered for anyway
                 throw new BuildException("When calling " + reachableMethod);
             } catch (final InvocationTargetException e) {
-                //assume this is an IOexception about un readability
+                //assume this is an IOException about un readability
                 final Throwable nested = e.getTargetException();
                 log(ERROR_ON_NETWORK + target + ": " + nested.toString());
                 //any kind of fault: not reachable.

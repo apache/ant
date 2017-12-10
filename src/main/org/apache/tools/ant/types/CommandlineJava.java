@@ -568,7 +568,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Return a String that describes the command and arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @return the description string.
      * @since Ant 1.5
      */

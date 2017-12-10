@@ -99,7 +99,7 @@ public class ScriptRunnerHelper {
     }
 
     /**
-     * Load the script from an external file ; optional.
+     * Load the script from an external file; optional.
      *
      * @param file the file containing the script source.
      */

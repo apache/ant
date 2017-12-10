@@ -28,12 +28,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.TarFileSet.
+ * JUnit 4 testcases for org.apache.tools.ant.types.TarFileSet.
  *
- * <p>This doesn't actually test much, mainly reference handling.
- *
+ * <p>This doesn't actually test much, mainly reference handling.</p>
  */
-
 public class TarFileSetTest extends AbstractFileSetTest {
 
 
@@ -118,6 +116,5 @@ public class TarFileSetTest extends AbstractFileSetTest {
         assertTrue("dir mode attribute copied by copy constructor",
                 f.getDirMode(getProject()) == zid.getDirMode(getProject()));
       }
-
 
 }

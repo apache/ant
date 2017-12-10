@@ -204,6 +204,7 @@ public class XMLCatalogTest {
                     be.getMessage());
         }
     }
+
     // inspired by Bugzilla Report 23913
     // a problem used to happen under Windows when the location of the DTD was given as an absolute path
     // possibly with a mixture of file separators
@@ -225,7 +226,6 @@ public class XMLCatalogTest {
 
     @Test
     public void testSimpleEntry() throws IOException, SAXException {
-
         ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("-//stevo//DTD doc 1.0//EN");
         String sysid = "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
@@ -311,7 +311,6 @@ public class XMLCatalogTest {
         Source result = catalog.resolve(uri, null);
         assertNotNull(result);
         assertEquals(toURLString(xmlFile), result.getSystemId());
-
     }
 
     @Test
@@ -329,7 +328,6 @@ public class XMLCatalogTest {
         Source result = catalog.resolve(uri, base);
         assertNotNull(result);
         assertEquals(toURLString(xmlFile), result.getSystemId());
-
     }
 
     @Test
@@ -367,6 +365,5 @@ public class XMLCatalogTest {
         assertNotNull(result);
         String resultStr = new URL(result.getSystemId()).getFile();
         assertTrue(toURLString(xmlFile).endsWith(resultStr));
-
     }
 }

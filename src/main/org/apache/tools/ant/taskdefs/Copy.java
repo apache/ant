@@ -240,6 +240,7 @@ public class Copy extends Task {
      *
      * <p>Defaults to false</p>
      *
+     * @param f boolean
      * @since Ant 1.8.2
      */
     public void setForce(final boolean f) {
@@ -249,6 +250,7 @@ public class Copy extends Task {
     /**
      * Whether read-only destinations will be overwritten.
      *
+     * @return boolean
      * @since Ant 1.8.2
      */
     public boolean getForce() {
@@ -465,7 +467,7 @@ public class Copy extends Task {
                (1) Move is optimized to move directories if a fileset
                has been included completely, therefore FileSets need a
                special treatment.  This is also required to support
-               the failOnError semantice (skip filesets with broken
+               the failOnError semantic (skip filesets with broken
                basedir but handle the remaining collections).
 
                (2) We carry around a few protected methods that work
@@ -1044,7 +1046,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Either returns its argument or a plaeholder if the argument is null.
+     * Either returns its argument or a placeholder if the argument is null.
      */
     private static File getKeyFile(final File f) {
         return f == null ? NULL_FILE_PLACEHOLDER : f;

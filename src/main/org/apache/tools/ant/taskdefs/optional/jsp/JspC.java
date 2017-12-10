@@ -36,22 +36,22 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Runs a JSP compiler.
  *
- * <p> This task takes the given jsp files and compiles them into java
- * files. It is then up to the user to compile the java files into classes.
+ * <p>This task takes the given jsp files and compiles them into java
+ * files. It is then up to the user to compile the java files into classes.</p>
  *
- * <p> The task requires the srcdir and destdir attributes to be
+ * <p>The task requires the srcdir and destdir attributes to be
  * set. This Task is a MatchingTask, so the files to be compiled can be
  * specified using includes/excludes attributes or nested include/exclude
  * elements. Optional attributes are verbose (set the verbosity level passed
  * to jasper), package (name of the destination package for generated java
  * classes and classpath (the classpath to use when running the jsp
- * compiler).
- * <p> This task supports the nested elements classpath (A Path) and
- * classpathref (A Reference) which can be used in preference to the
+ * compiler).</p>
+ * <p>This task supports the nested elements classpath (a Path) and
+ * classpathref (a Reference) which can be used in preference to the
  * attribute classpath, if the jsp compiler is not already in the ant
- * classpath.
+ * classpath.</p>
  *
- * <p><h4>Usage</h4>
+ * <h2>Usage</h2>
  * <pre>
  * &lt;jspc srcdir="${basedir}/src/war"
  *       destdir="${basedir}/gensrc"
@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Reference;
  * &lt;/jspc&gt;
  * </pre>
  *
- * <p> Large Amount of cutting and pasting from the Javac task...
+ * <p>Large amount of cutting and pasting from the Javac task...</p>
  * @since 1.5
  */
 public class JspC extends MatchingTask {

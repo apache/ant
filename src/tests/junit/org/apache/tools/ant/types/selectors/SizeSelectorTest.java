@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Locale;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
 import org.junit.Rule;

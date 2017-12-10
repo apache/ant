@@ -55,7 +55,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
     private static final double ONE_SECOND = 1000.0;
 
-    /** constant for unnnamed testsuites/cases */
+    /** constant for unnamed testsuites/cases */
     private static final String UNKNOWN = "unknown";
 
     private static DocumentBuilder getDocumentBuilder() {
@@ -363,4 +363,4 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         skippedTests.put(createDescription(test), test);
 
     }
-} // XMLJUnitResultFormatter
+}

@@ -206,6 +206,7 @@ public class Delete extends MatchingTask {
      * default) but also on other operating systems, for example when
      * deleting directories from an NFS share.</p>
      *
+     * @param b boolean
      * @since Ant 1.8.3
      */
     public void setPerformGcOnFailedDelete(boolean b) {
@@ -246,7 +247,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
-     * @return an NameEntry object to be configured
+     * @return a NameEntry object to be configured
      */
     public PatternSet.NameEntry createIncludesFile() {
         usedMatchingTask = true;
@@ -255,7 +256,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the exclude list
-     * @return an NameEntry object to be configured
+     * @return a NameEntry object to be configured
      */
     public PatternSet.NameEntry createExclude() {
         usedMatchingTask = true;
@@ -264,7 +265,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
-     * @return an NameEntry object to be configured
+     * @return a NameEntry object to be configured
      */
     public PatternSet.NameEntry createExcludesFile() {
         usedMatchingTask = true;
@@ -361,6 +362,7 @@ public class Delete extends MatchingTask {
      * Sets whether the symbolic links that have not been followed
      * shall be removed (the links, not the locations they point at).
      *
+     * @param b boolean
      * @since Ant 1.8.0
      */
     public void setRemoveNotFollowedSymlinks(boolean b) {
@@ -369,6 +371,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "Select" selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addSelector(SelectSelector selector) {
@@ -378,6 +381,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an "And" selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addAnd(AndSelector selector) {
@@ -387,6 +391,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an "Or" selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addOr(OrSelector selector) {
@@ -396,6 +401,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "Not" selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addNot(NotSelector selector) {
@@ -405,6 +411,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "None" selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addNone(NoneSelector selector) {
@@ -414,6 +421,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a majority selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addMajority(MajoritySelector selector) {
@@ -423,6 +431,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector date entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addDate(DateSelector selector) {
@@ -432,6 +441,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector size entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addSize(SizeSelector selector) {
@@ -441,6 +451,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector filename entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addFilename(FilenameSelector selector) {
@@ -450,6 +461,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an extended selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addCustom(ExtendSelector selector) {
@@ -459,6 +471,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a contains selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addContains(ContainsSelector selector) {
@@ -468,6 +481,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a present selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addPresent(PresentSelector selector) {
@@ -477,6 +491,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a depth selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addDepth(DepthSelector selector) {
@@ -486,6 +501,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a depends selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addDepend(DependSelector selector) {
@@ -495,6 +511,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a regular expression selector entry on the selector list
+     *
      * @param selector the selector to be added
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
@@ -504,6 +521,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add the modified selector
+     *
      * @param selector the selector to add
      * @since ant 1.6
      */
@@ -514,6 +532,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an arbitrary selector
+     *
      * @param selector the selector to be added
      * @since Ant 1.6
      */
@@ -524,6 +543,7 @@ public class Delete extends MatchingTask {
 
     /**
      * Delete the file(s).
+     *
      * @exception BuildException if an error occurs
      */
     public void execute() throws BuildException {

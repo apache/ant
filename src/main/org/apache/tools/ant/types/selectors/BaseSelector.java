@@ -59,6 +59,7 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      * the first error message is recorded.
      *
      * @param msg The error message any BuildException should throw.
+     * @param cause Throwable
      */
     public void setError(String msg, Throwable cause) {
         if (errmsg == null) {

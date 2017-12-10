@@ -159,7 +159,7 @@ public class JDependTask extends Task {
      * If true, forks into a new JVM. Default: false.
      *
      * @param   value   <tt>true</tt> if a JVM should be forked,
-     *                  otherwise <tt>false<tt>
+     *                  otherwise <tt>false</tt>
      */
     public void setFork(boolean value) {
         fork = value;

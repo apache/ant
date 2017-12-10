@@ -201,6 +201,7 @@ public abstract class ResourceDecorator extends Resource {
     /**
      * De-references refids if any, ensures a wrapped resource has
      * been specified.
+     * @return Resource
      */
     protected final Resource getResource() {
         if (isReference()) {

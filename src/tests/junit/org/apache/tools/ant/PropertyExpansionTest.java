@@ -76,7 +76,7 @@ public class PropertyExpansionTest {
 
 
     /**
-     * old things we dont want; not a test no more
+     * old things we don't want; not a test anymore
      */
     @Test
     @Ignore("Previously disabled through naming convention")
@@ -95,5 +95,4 @@ public class PropertyExpansionTest {
         assertEquals(source,expected,actual);
     }
 
-//end class
 }

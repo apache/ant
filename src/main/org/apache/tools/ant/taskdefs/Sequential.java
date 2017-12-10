@@ -45,9 +45,8 @@ public class Sequential extends Task implements TaskContainer {
 
     /**
      * Add a nested task to Sequential.
-     * <p>
+     *
      * @param nestedTask  Nested task to execute Sequential
-     * <p>
      */
     public void addTask(Task nestedTask) {
         nestedTasks.addElement(nestedTask);

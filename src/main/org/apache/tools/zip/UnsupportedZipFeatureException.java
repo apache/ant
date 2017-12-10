@@ -46,6 +46,8 @@ public class UnsupportedZipFeatureException extends ZipException {
 
     /**
      * The unsupported feature that has been used.
+     *
+     * @return Feature
      */
     public Feature getFeature() {
         return reason;
@@ -53,6 +55,8 @@ public class UnsupportedZipFeatureException extends ZipException {
 
     /**
      * The entry using the unsupported feature.
+     *
+     * @return ZipEntry
      */
     public ZipEntry getEntry() {
         return entry;

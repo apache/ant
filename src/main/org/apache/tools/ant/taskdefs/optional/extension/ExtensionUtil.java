@@ -45,7 +45,7 @@ public final class ExtensionUtil {
     /**
      * Convert a list of extensionAdapter objects to extensions.
      *
-     * @param adapters the list of ExtensionAdapterss to add to convert
+     * @param adapters the list of ExtensionAdapters to add to convert
      * @throws BuildException if an error occurs
      */
     static ArrayList toExtensions(final List adapters)
@@ -67,7 +67,7 @@ public final class ExtensionUtil {
      * Generate a list of extensions from a specified fileset.
      *
      * @param libraries the list to add extensions to
-     * @param fileset the filesets containing librarys
+     * @param fileset the filesets containing libraries
      * @throws BuildException if an error occurs
      */
     static void extractExtensions(final Project project,
@@ -199,7 +199,7 @@ public final class ExtensionUtil {
      *
      * @param file the file
      * @return the manifest
-     * @throws BuildException if errror occurs (file doesn't exist,
+     * @throws BuildException if error occurs (file doesn't exist,
      *         file not a jar, manifest doesn't exist in file)
      */
     static Manifest getManifest(final File file)

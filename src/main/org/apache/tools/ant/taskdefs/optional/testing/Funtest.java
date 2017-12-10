@@ -500,20 +500,15 @@ public class Funtest extends Task {
 
     /**
      * Now faults are analysed.
-     * <p> The priority is
+     * <p>The priority is</p>
      * <ol>
      * <li>testexceptions, except those indicating a build timeout when the application itself
-     failed.<br>
-     (because often it is the application fault that is more interesting than the probe
-     failure, which is usually triggered by the application not starting
-     </li><li>
-     Application exceptions (above test timeout exceptions)
-     </li><li>
-     Teardown exceptions -except when they are being ignored
-     </li><li>
-     Test failures as indicated by the failure property
-     </li></ol>
-
+     * failed. (Because often it is the application fault that is more interesting than the probe
+     * failure, which is usually triggered by the application not starting.)</li>
+     * <li>Application exceptions (above test timeout exceptions)</li>
+     * <li>Teardown exceptions -except when they are being ignored</li>
+     * <li>Test failures as indicated by the failure property</li>
+     * </ol>
      */
     protected void processExceptions() {
         taskException = testException;

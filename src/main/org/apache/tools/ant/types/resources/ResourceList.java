@@ -56,6 +56,8 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     /**
      * Adds a source.
+     *
+     * @param rc ResourceCollection
      */
     public void add(ResourceCollection rc) {
         if (isReference()) {
@@ -67,6 +69,8 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     /**
      * Adds a FilterChain.
+     *
+     * @param filter FilterChain
      */
     public final void addFilterChain(FilterChain filter) {
         if (isReference()) {
@@ -78,12 +82,15 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     /**
      * Encoding to use for input, defaults to the platform's default
-     * encoding. <p>
+     * encoding.
      *
+     * <p>
      * For a list of possible values see
      * <a href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">
-     * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html
-     * </a>.</p>
+     * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.
+     * </p>
+     *
+     * @param encoding String
      */
     public final void setEncoding(String encoding) {
         if (isReference()) {
@@ -95,6 +102,8 @@ public class ResourceList extends DataType implements ResourceCollection {
     /**
      * Makes this instance in effect a reference to another ResourceList
      * instance.
+     *
+     * @param r Reference
      */
     public void setRefid(Reference r) throws BuildException {
         if (encoding != null) {
@@ -110,6 +119,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      * Fulfill the ResourceCollection contract. The Iterator returned
      * will throw ConcurrentModificationExceptions if ResourceCollections
      * are added to this container while the Iterator is in use.
+     *
      * @return a "fail-fast" Iterator.
      */
     public final synchronized Iterator<Resource> iterator() {
@@ -121,6 +131,7 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     /**
      * Fulfill the ResourceCollection contract.
+     *
      * @return number of elements as int.
      */
     public synchronized int size() {
@@ -132,6 +143,7 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     /**
      * Fulfill the ResourceCollection contract.
+     *
      * @return whether this is a filesystem-only resource collection.
      */
     public synchronized boolean isFilesystemOnly() {
@@ -144,6 +156,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     /**
      * Overrides the version of DataType to recurse on all DataType
      * child elements that may have been added.
+     *
      * @param stk the stack of data types to use (recursively).
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.

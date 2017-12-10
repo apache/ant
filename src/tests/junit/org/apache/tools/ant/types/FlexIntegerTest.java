@@ -18,9 +18,9 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

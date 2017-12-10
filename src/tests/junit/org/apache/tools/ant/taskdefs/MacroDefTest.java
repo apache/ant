@@ -132,26 +132,31 @@ public class MacroDefTest {
             //TODO assert value
         }
     }
+
     @Test
     public void testEscape() {
         buildRule.executeTarget("escape");
         assertEquals("a@b or a@b is avalue@bvalue", buildRule.getLog());
     }
+
     @Test
     public void testAttributeDescription() {
         buildRule.executeTarget("attribute.description");
         assertEquals("description is hello world", buildRule.getLog());
     }
+
     @Test
     public void testOverrideDefault() {
         buildRule.executeTarget("override.default");
         assertEquals("value is new", buildRule.getLog());
     }
+
     @Test
     public void testImplicit() {
         buildRule.executeTarget("implicit");
         assertEquals("Before implicitIn implicitAfter implicit", buildRule.getLog());
     }
+
     @Test
     public void testImplicitNotOptional() {
         try {
@@ -161,11 +166,13 @@ public class MacroDefTest {
             assertEquals("Missing nested elements for implicit element implicit", ex.getMessage());
         }
     }
+
     @Test
     public void testImplicitOptional() {
         buildRule.executeTarget("implicit.optional");
         assertEquals("Before implicitAfter implicit", buildRule.getLog());
     }
+
     @Test
     public void testImplicitExplicit() {
         try {

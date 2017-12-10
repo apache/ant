@@ -175,7 +175,6 @@ public class MailMessageTest {
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
 
-
     /**
      *  Test a MailMessage with no to or bcc lines
      * @throws InterruptedException if something goes wrong
@@ -227,7 +226,6 @@ public class MailMessageTest {
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
 
-
     /**
      *  Test a MailMessage with no to or cc lines
      * @throws InterruptedException if something goes wrong
@@ -277,7 +275,6 @@ public class MailMessageTest {
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
-
 
     /**
      *  Test a MailMessage with no subject line
@@ -329,7 +326,6 @@ public class MailMessageTest {
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
 
-
     /**
      *  Test a MailMessage with empty body message
      * @throws InterruptedException if something goes wrong
@@ -378,7 +374,6 @@ public class MailMessageTest {
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
-
 
     /**
      *  Test a MailMessage with US-ASCII character set
@@ -504,7 +499,6 @@ public class MailMessageTest {
                     } else {
                         // sb.append(response + "\r\n");
                     }
-
                 } // while
             } catch (IOException ioe) {
                 throw new BuildException(ioe);

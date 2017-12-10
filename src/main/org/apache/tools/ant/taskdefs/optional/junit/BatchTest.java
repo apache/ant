@@ -30,13 +30,13 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 
 /**
- * <p> Create then run <code>JUnitTest</code>'s based on the list of files
- *     given by the fileset attribute.
+ * <p>Create then run <code>JUnitTest</code>'s based on the list of files
+ * given by the fileset attribute.</p>
  *
- * <p> Every <code>.java</code> or <code>.class</code> file in the fileset is
+ * <p>Every <code>.java</code> or <code>.class</code> file in the fileset is
  * assumed to be a testcase.
  * A <code>JUnitTest</code> is created for each of these named classes with
- * basic setup inherited from the parent <code>BatchTest</code>.
+ * basic setup inherited from the parent <code>BatchTest</code>.</p>
  *
  * @see JUnitTest
  */

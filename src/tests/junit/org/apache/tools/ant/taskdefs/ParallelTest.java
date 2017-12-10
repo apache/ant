@@ -92,10 +92,10 @@ public class ParallelTest {
 
     /**
      * the test result string should match the regex
-     * <code>^(\|\d+\/(+-)*)+\|$</code> for someting like
+     * <code>^(\|\d+\/(+-)*)+\|$</code> for something like
      * <code>|3/++--+-|5/+++++-----|</code>
      *
-     *@return -1 no more tests
+     * @return -1 no more tests
      *          # start pos of next test
      */
     static int countThreads(String s, int start) {

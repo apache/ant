@@ -38,7 +38,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher
      * Convert ant regexp substitution option to apache regex options.
      *
      * @param options the ant regexp options
-     * @return the apache regex substition options
+     * @return the apache regex substitution options
      */
     protected int getSubsOptions(int options) {
         int subsOptions = RE.REPLACE_FIRSTONLY;

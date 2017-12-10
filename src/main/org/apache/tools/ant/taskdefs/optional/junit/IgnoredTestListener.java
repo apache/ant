@@ -41,10 +41,10 @@ public interface IgnoredTestListener extends TestListener {
     /**
      * Receive a report that a test has failed an assumption. Within JUnit4
      * this is normally treated as a test being skipped, although how any
-     * listener handles this is up to that specific listener.<br />
-     * <b>Note:</b> Tests that throw assumption failures will still report
+     * listener handles this is up to that specific listener.
+     * <p><b>Note:</b> Tests that throw assumption failures will still report
      * the endTest method, which may differ from how the addError and addFailure
-     * methods work, it's up for any implementing classes to handle this.
+     * methods work, it's up for any implementing classes to handle this.</p>
      * @param test the details of the test and failure that have triggered this report.
      * @param exception the AssumptionViolatedException thrown from the current assumption failure.
      */

@@ -26,8 +26,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.CommandLine
- *
+ * JUnit 4 testcases for org.apache.tools.ant.CommandLine
  */
 public class CommandlineTest {
 

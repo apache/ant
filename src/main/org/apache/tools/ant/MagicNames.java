@@ -252,7 +252,7 @@ public final class MagicNames {
     /**
      * Name of the project reference holding an instance of {@link
      * org.apache.tools.ant.taskdefs.launcher.CommandLauncher} to use
-     * when executing commands with the help of an external skript.
+     * when executing commands with the help of an external script.
      *
      * <p>Alternatively this is the name of a system property holding
      * the fully qualified class name of a {@link
@@ -266,7 +266,7 @@ public final class MagicNames {
     /**
      * Name of the project reference holding an instance of {@link
      * org.apache.tools.ant.taskdefs.launcher.CommandLauncher} to use
-     * when executing commands without the help of an external skript.
+     * when executing commands without the help of an external script.
      *
      * <p>Alternatively this is the name of a system property holding
      * the fully qualified class name of a {@link

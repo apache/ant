@@ -131,7 +131,6 @@ public class XmlValidateTest {
         try {
             buildRule.executeTarget("testSchemaBad");
             fail("Should throw BuildException because 'Bad Schema Validation'");
-
         } catch (BuildException e) {
             if (e
                 .getMessage()

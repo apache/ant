@@ -124,6 +124,7 @@ public class Resources extends DataType implements ResourceCollection {
 
     /**
      * Create a new Resources.
+     * @param project Project
      * @since Ant 1.8
      */
     public Resources(Project project) {

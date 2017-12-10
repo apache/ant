@@ -33,6 +33,7 @@ public class IdentityStack<E> extends Stack<E> {
 
     /**
      * Get an IdentityStack containing the contents of the specified Stack.
+     * @param <E> desired type
      * @param s the Stack to copy; ignored if null.
      * @return an IdentityStack instance.
      */

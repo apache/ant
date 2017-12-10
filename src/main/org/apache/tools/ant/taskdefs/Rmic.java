@@ -72,11 +72,11 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>
  *   <li>kaffe (the standard compiler of
- *       {@link <a href="http://www.kaffe.org">Kaffe</a>})</li>
+ *       <a href="http://www.kaffe.org">Kaffe</a>)</li>
  *   <li>weblogic</li>
  * </ul>
  *
- * <p> The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
+ * <p>The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
  * project contains a compiler implementation for this task as well,
  * please consult miniRMI's documentation to learn how to use it.</p>
  *
@@ -535,6 +535,7 @@ public class Rmic extends MatchingTask {
     /**
      * Name of the executable to use when forking.
      *
+     * @param ex String
      * @since Ant 1.8.0
      */
     public void setExecutable(String ex) {
@@ -545,6 +546,7 @@ public class Rmic extends MatchingTask {
      * Explicitly specified name of the executable to use when forking
      * - if any.
      *
+     * @return String
      * @since Ant 1.8.0
      */
     public String getExecutable() {
@@ -555,6 +557,7 @@ public class Rmic extends MatchingTask {
      * The classpath to use when loading the compiler implementation
      * if it is not a built-in one.
      *
+     * @return Path
      * @since Ant 1.8.0
      */
     public Path createCompilerClasspath() {
@@ -563,6 +566,7 @@ public class Rmic extends MatchingTask {
 
     /**
      * If true, list the source files being handed off to the compiler.
+     *
      * @param list if true list the source files
      * @since Ant 1.8.0
      */
@@ -572,6 +576,8 @@ public class Rmic extends MatchingTask {
 
     /**
      * Set the compiler adapter explicitly.
+     *
+     * @param adapter RmicAdapter
      * @since Ant 1.8.0
      */
     public void add(RmicAdapter adapter) {

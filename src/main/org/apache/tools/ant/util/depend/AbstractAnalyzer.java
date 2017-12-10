@@ -38,7 +38,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     /** The source path for the source files */
     private Path sourcePath = new Path(null);
 
-    /** The classpath containg dirs and jars of class files */
+    /** The classpath containing dirs and jars of class files */
     private Path classPath = new Path(null);
 
     /** The list of root classes */

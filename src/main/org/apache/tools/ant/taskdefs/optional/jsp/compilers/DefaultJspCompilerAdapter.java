@@ -96,7 +96,7 @@ public abstract class DefaultJspCompilerAdapter
 
 
     /**
-     *  add an argument oneple to the argument list, if the value aint null
+     * add a single argument to the argument list, if the value aint null
      * @param cmd the command line
      * @param  argument  The argument
      */

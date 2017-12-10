@@ -112,6 +112,8 @@ public class Tstamp extends Task {
 
     /**
      * Return the {@link Date} instance to use as base for DSTAMP, TSTAMP and TODAY.
+     *
+     * @return Date
      */
     protected Date getNow() {
         String magicNow = getProject().getProperty(MagicNames.TSTAMP_NOW);

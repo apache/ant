@@ -34,8 +34,7 @@ import org.apache.tools.ant.types.Path;
  * org.apache.tools.ant.taskdefs.optional.jlink.ClassNameReader
  * support this class.</p>
  *
- * <p>For example:
- * <code>
+ * <p>For example:</p>
  * <pre>
  * &lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;/&gt;
  *   &lt;mergefiles&gt;
@@ -48,7 +47,6 @@ import org.apache.tools.ant.types.Path;
  *   &lt;/addfiles&gt;
  * &lt;/jlink&gt;
  * </pre>
- * </code>
  *
  * @ant.task ignore="true"
  */

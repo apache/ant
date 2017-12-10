@@ -212,6 +212,11 @@ public class Image extends MatchingTask {
     /**
      * Executes all the chained ImageOperations on the files inside
      * the directory.
+     * @param srcDir File
+     * @param srcNames String[]
+     * @param dstDir File
+     * @param mapper FileNameMapper
+     * @return int
      * @since Ant 1.8.0
      */
     public int processDir(final File srcDir, final String[] srcNames,

@@ -42,7 +42,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
      * file.
      * @param off The offset of the encoded filename or comment in
      * <code>bytes</code>.
-     * @param len The length of the encoded filename or commentin
+     * @param len The length of the encoded filename or comment in
      * <code>bytes</code>.
      */
     protected AbstractUnicodeExtraField(final String text, final byte[] bytes, final int off,

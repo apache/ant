@@ -132,6 +132,7 @@ public abstract class BaseTest {
 
     /**
      * The if expression
+     * @return Object
      * @since Ant 1.8.0
      */
     public Object getIfCondition() {
@@ -163,6 +164,7 @@ public abstract class BaseTest {
 
     /**
      * The unless expression
+     * @return Object
      * @since Ant 1.8.0
      */
     public Object getUnlessCondition() {

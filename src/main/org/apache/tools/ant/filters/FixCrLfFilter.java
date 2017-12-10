@@ -29,13 +29,14 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * damaged by misconfigured or misguided editors or file transfer programs.
  * <p>
  * This filter can take the following arguments:
+ * </p>
  * <ul>
- * <li>eof
- * <li>eol
- * <li>fixlast
- * <li>javafiles
- * <li>tab
- * <li>tablength
+ * <li>eof</li>
+ * <li>eol</li>
+ * <li>fixlast</li>
+ * <li>javafiles</li>
+ * <li>tab</li>
+ * <li>tablength</li>
  * </ul>
  * None of which are required.
  * <p>
@@ -44,6 +45,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * handling has also been generalised to accommodate any tabwidth from 2 to 80,
  * inclusive. Importantly, it can leave untouched any literal TAB characters
  * embedded within Java string or character constants.
+ * </p>
  * <p>
  * <em>Caution:</em> run with care on carefully formatted files. This may
  * sound obvious, but if you don't specify asis, presume that your files are
@@ -53,22 +55,19 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * cr="add" can result in CR characters being removed in one special case
  * accommodated, i.e., CRCRLF is regarded as a single EOL to handle cases where
  * other programs have converted CRLF into CRCRLF.
- *
- * <P>
+ *</p>
+ * <p>
  * Example:
- *
+ * </p>
  * <pre>
  * &lt;&lt;fixcrlf tab=&quot;add&quot; eol=&quot;crlf&quot; eof=&quot;asis&quot;/&gt;
  * </pre>
- *
  * Or:
- *
  * <pre>
  * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.FixCrLfFilter&quot;&gt;
  *   &lt;param eol=&quot;crlf&quot; tab=&quot;asis&quot;/&gt;
  *  &lt;/filterreader&gt;
  * </pre>
- *
  */
 public final class FixCrLfFilter extends BaseParamFilterReader implements ChainableReader {
     private static final int DEFAULT_TAB_LENGTH = 8;
@@ -946,8 +945,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
 
         /**
          * @see EnumeratedAttribute#getValues
+         * {@inheritDoc}.
          */
-        /** {@inheritDoc}. */
         public String[] getValues() {
             return new String[] {"asis", "cr", "lf", "crlf", "mac", "unix", "dos"};
         }
