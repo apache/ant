@@ -18,6 +18,11 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../antunit-base.xml" />
 
+  <target name="tearDown" depends="antunit-base.tearDown"
+          if="n2a.tmp">
+    <delete dir="${n2a.tmp}" failonerror="false" deleteonexit="true"/>
+  </target>
+
   <target name="-create-native2ascii-adapter">
     <mkdir dir="${input}/org/example"/>
     <echo file="${input}/org/example/Adapter.java"><![CDATA[
@@ -88,9 +93,10 @@ public class Adapter implements Native2AsciiAdapter {
   </target>
 
   <target name="-setup-UTF8-To-ASCII" depends="-real-test-macros">
-    <mkdir dir="${input}"/>
+    <property name="n2a.tmp" location="${input}/../ant-native2ascii-test"/>
+    <mkdir dir="${n2a.tmp}"/>
     <mkdir dir="${output}"/>
-    <echo file="${input}/umlauts.properties" encoding="UTF-8">äöü=ÄÖÜ</echo>
+    <echo file="${n2a.tmp}/umlauts.properties" encoding="UTF-8">äöü=ÄÖÜ</echo>
     <property name="umlauts.expected"
               value="\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc"/>
   </target>
@@ -98,14 +104,14 @@ public class Adapter implements Native2AsciiAdapter {
   <target name="testUTF8-To-ASCII-sun" depends="-setup-UTF8-To-ASCII"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
           unless="jdk9+">
-    <native2ascii-def implementation="sun"/>
+    <native2ascii-def implementation="sun" src="${n2a.tmp}"/>
     <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
                             expected="${umlauts.expected}"/>
   </target>
 
   <target name="testUTF8-To-ASCII-builtin" depends="-setup-UTF8-To-ASCII"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
-    <native2ascii-def implementation="builtin"/>
+    <native2ascii-def implementation="builtin" src="${n2a.tmp}"/>
     <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
                             expected="${umlauts.expected}"/>
   </target>
