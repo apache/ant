@@ -63,18 +63,18 @@ Other changes:
  * added Orion support to ejbjar
    Github Pull Request #33
 
- * Bugzilla Report 58589 - SCP task, when configured to use SFTP
-   protocol, now preserves last modified timestamp on files that
-   it uploads, if the preserveLastModified attribute is set to
-   true for that task
+ * SCP task, when configured to use SFTP protocol, now preserves last
+   modified timestamp on files that it uploads, if the
+   preserveLastModified attribute is set to true for that task
+   Bugzilla Report 58589
 
  * zip and the related tasks can now set the modfication time of all
    entries to a fixed timestamp.
    Github Pull Request #36
 
- * Bugzilla report 61718 - Jsch library dependency has now been
-   upgraded to 0.1.54. Jsch is the library behind the sshexec
-   and scp Ant tasks.
+ * Jsch library dependency has now been upgraded to 0.1.54. Jsch is
+   the library behind the sshexec and scp Ant tasks.
+   Bugzilla Report 61718
 
  * Added a new <javaversion> condition.
 
