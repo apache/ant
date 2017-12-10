@@ -8,15 +8,15 @@ Fixed bugs:
    value.
    Bugzilla Report 60767
 
- * Bugzilla Reports 59648 and 43271 - Fixed the issue where the 
-   SCP based tasks would try to change the permissions on the
-   parent directory of a transferred file, instead of changing it
-   on the transferred file itself.
+ * Fixed the issue where the SCP based tasks would try to change
+   the permissions on the parent directory of a transferred file,
+   instead of changing it on the transferred file itself.
+   Bugzilla Reports 59648 and 43271
 
- * Bugzilla Report 60644 - Fixed the issue where the source file
-   being copied could end up being corrupted if the target of the
-   copy happened to be the same source file (symlinked back
-   to itself).
+ * Fixed the issue where the source file being copied could end
+   up being corrupted if the target of the copy happened to be
+   the same source file (symlinked back to itself).
+   Bugzilla Report 60644
 
 Other changes:
 --------------
@@ -38,14 +38,14 @@ Other changes:
  * Bugzilla Report 58589 - SCP task, when configured to use SFTP
    protocol, now preserves last modified timestamp on files that
    it uploads, if the preserveLastModified attribute is set to
-   true for that task 
+   true for that task
 
  * zip and the related tasks can now set the modfication time of all
    entries to a fixed timestamp.
    Github Pull Request #36
 
  * Bugzilla report 61718 - Jsch library dependency has now been
-   upgraded to 0.1.54. Jsch is the library behind the sshexec 
+   upgraded to 0.1.54. Jsch is the library behind the sshexec
    and scp Ant tasks.
 
  * Added a new <javaversion> condition.
@@ -762,11 +762,11 @@ Fixed bugs:
 
  * Updated documentation to fix spelling errors / broken links.
    Bugzilla Reports 53215, 53291, 53202
-   
+
  * Unable to override system properties. It was not possible not to override
    system properties from the command line (or from a property file).
    Bugzilla Report 51792
-   
+
  * <javac> by default fails when run on JDK 8.
    Bugzilla Report 53347.
 
@@ -943,7 +943,7 @@ Fixed bugs:
  * Exec task may mix the stderr and stdout output while logging it
    Bugzilla Report 50507.
 
- * Missing space between "finished" and timestamp in task/target 
+ * Missing space between "finished" and timestamp in task/target
    finish message from ProfileLogger.
    Bugzilla Report 51109.
 
@@ -957,10 +957,10 @@ Fixed bugs:
    Bugzilla Report 42696.
 
  * quiet attribute added to the copy and move tasks, to be used together
-   with failonerror=false, so warnings won't get logged 
+   with failonerror=false, so warnings won't get logged
    Bugzilla Report 48789.
 
- * System.in was closed and not readable anymore by the DefaultInputHandler 
+ * System.in was closed and not readable anymore by the DefaultInputHandler
    when Ant is used via its Java API.
    Bugzilla Report 51161
 
@@ -1124,10 +1124,10 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
- * hostinfo now prefers addresses with a hostname over addresses without 
+ * hostinfo now prefers addresses with a hostname over addresses without
    a hostname, provided the addresses have the same scope.
    For local lookup, no IP address will be put in NAME / DOMAIN anymore.
-   For remote lookup, if a host name was provided and only an IP address is 
+   For remote lookup, if a host name was provided and only an IP address is
    found, the IP address will no longer overwrite the host name provided to the
    task.
    Bugzilla Report 49513
@@ -1135,8 +1135,8 @@ Fixed bugs:
  * mmap-based file copy problems under JDK 1.4 on Linux.
    Bugzilla Report 49430.
 
- * The Sun JVM tries to mmap the entire file during a copy. 
-   For large files this is not feasible. 
+ * The Sun JVM tries to mmap the entire file during a copy.
+   For large files this is not feasible.
    We now explicitly request to copy at most 16 MiB per request.
    Bugzilla Report 49326.
 
@@ -1289,7 +1289,7 @@ Other changes:
    The wildcards are not expanded or even evaluated by Ant and will be
    used literally.  The resulting path may be unusable as a CLASSPATH
    for Java versions prior to Java6 and likely doesn't mean anything
-   when used in any other way than a CLASSPATH for a forked Java VM. 
+   when used in any other way than a CLASSPATH for a forked Java VM.
    Bugzilla Report 46842.
 
  * A new attribute allows targets to deal with nonexistent extension
@@ -1359,7 +1359,7 @@ Other changes:
    should also benefit any operation that scans directories in Ant.
    Bugzilla Report 50200.
 
-Changes from Ant 1.8.0 TO Ant 1.8.1 
+Changes from Ant 1.8.0 TO Ant 1.8.1
 ===================================
 
 Changes that could break older environments:
@@ -1419,7 +1419,7 @@ Fixed bugs:
    1.7.1
    Bugzilla Report 48853
 
- * ANT_CMD_LINE_ARGS are rippling through lower level Ant usage 
+ * ANT_CMD_LINE_ARGS are rippling through lower level Ant usage
    Bugzilla Report 48876
 
  * email : IO error sending mail with plain mimetype
@@ -1483,7 +1483,7 @@ Other changes:
    equals condition allowed Object args, but Ant 1.8.x+ property
    evaluation may yield values of any type.
 
- * BuildFileTest.assertPropertyUnset() fails with a slightly more 
+ * BuildFileTest.assertPropertyUnset() fails with a slightly more
    meaningful error message
    Bugzilla Report 48834
 
@@ -1523,7 +1523,7 @@ Fixed bugs:
  * stack traces were not reported at all by <junit/>
    when filtertrace="on", which is the default.
 
- * ant.bat can now also process the -noclasspath switch when it is 
+ * ant.bat can now also process the -noclasspath switch when it is
    the first switch on a command line.
    Bugzilla Report 48186.
 
@@ -1719,7 +1719,7 @@ Changes that could break older environments:
  * A new property syntax can be used to set attributes from
    references: ${ant.ref:some-reference}
 
-   In most cases this will yield the exact same result as 
+   In most cases this will yield the exact same result as
    ${toString:some-reference} - only when an attribute setter method
    accepts an object type other than string and the project's
    reference is an Object of matching type the new syntax will pass in
@@ -1756,12 +1756,12 @@ Fixed bugs:
  * RPM task needed an inserted space between the define and the value.
    Bugzilla Report 46659.
 
- * Got rid of deadlock between in, out and err in the Redirector. 
+ * Got rid of deadlock between in, out and err in the Redirector.
    Bugzilla Report 44544.
 
  * Caused by AssertionError no longer filtered.
    Bugzilla Report 45631.
- 
+
  * <zip> would sometimes recreate JARs unnecessarily.
    Bugzilla Report 45902.
 
@@ -1811,7 +1811,7 @@ Fixed bugs:
  * <sql> would fail if the executed statement didn't return a result
    set with some JDBC driver that dissalow Statement.getResultSet to
    be called in such a situation.
-   Bugzilla Report 36265 
+   Bugzilla Report 36265
 
  * if the executed statement in <sql> returned a result set and an
    update count, the count would be lost.
@@ -2018,7 +2018,7 @@ Fixed bugs:
    Bugzilla Report 29731.
 
  * <record> didn't work properly with nested builds.
-   Bugzilla Report 41368. 
+   Bugzilla Report 41368.
 
  * <jar> with filesetmanifest different from skip didn't work if the
    update attribute has been set to true.
@@ -2072,7 +2072,7 @@ Fixed bugs:
  * The tar task failed to recognize that the archive had to be
    (re-)created in some cases where the sources are filesystem based
    resources but not filesets.
-   Bugzilla Report 48035. 
+   Bugzilla Report 48035.
 
  * <sshexec>'s outputproperty was prefixed by the executed command
    when the command attribute has been used, breaking backwards
@@ -2093,8 +2093,8 @@ Other changes:
  * The get task now also follows redirects from http to https
    Bugzilla Report 47433
 
- * A HostInfo task was added performing information on hosts, including info on 
-   the host ant is running on. 
+ * A HostInfo task was added performing information on hosts, including info on
+   the host ant is running on.
    Bugzilla Reports 45861 and 31164.
 
  * There is now a FileProvider interface for resources that act as a source
@@ -2213,7 +2213,7 @@ Other changes:
    expression.
    Bugzilla Report 45284
 
- * Enhanced performance of Project.fireMessageLoggedEvent and DirectoryScanner 
+ * Enhanced performance of Project.fireMessageLoggedEvent and DirectoryScanner
    Bugzilla Reports 45651 and 45665
 
  * The package list location for offline links can now be specified as
@@ -2366,7 +2366,7 @@ Other changes:
    process proceed if an error occurs.
    Bugzilla Report 36260.
 
- * <xslt> has a new attribute failOnNoResources that can be used to 
+ * <xslt> has a new attribute failOnNoResources that can be used to
    make the build fail/continue if the collection of resources to
    transform is empty.
    Bugzilla Report 46274.
@@ -2613,7 +2613,7 @@ Changes that could break older environments:
   incoming (OutputStream) content.
 
 * <java> with fork now returns gives -1 instead of 0 as result when failonerror
-  is false and some exception (including timeout) occurs. Br 42377. 
+  is false and some exception (including timeout) occurs. Br 42377.
 
 * ant-type attribute has been marked as deprecated and a warning has been
   issued if it is encountered in the build file.
@@ -2689,7 +2689,7 @@ Fixed bugs:
 * Synchonization issues in PropertyHelper.  Bugzilla 41353.
 
 * <concat binary="true" append="true"> did not append.  Bugzilla 41399.
- 
+
 * -autoproxy turns Java1.5+ automatic proxy support on. Bugzilla 41904
 
 * Handle null result of system getProperty(). Bugzilla 42334.
@@ -2915,10 +2915,10 @@ Changes that could break older environments:
 * IContract optional task removed as the required library is no
   longer available.
 
-* Metamata (maudit, mmetrics, and mparse tasks) removed as the required 
+* Metamata (maudit, mmetrics, and mparse tasks) removed as the required
   library is no longer available.
 
-* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed as the 
+* Sitraka (jpcoverage, jpcovmerge, jpcovreport) tasks suppressed as the
   required library is no longer available.
 
 * <fixcrlf> used \r (Mac) line endings on OS X, whose proper line separator
