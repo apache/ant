@@ -222,11 +222,15 @@ public class CopyTest {
         buildRule.executeTarget("testFileResourceWithFilter");
         File file1 = new File(buildRule.getProject().getProperty("to.dir") + "/fileNR.txt");
         assertTrue(file1.exists());
+        FileReader f = null;
         try {
-            String file1Content = FileUtils.readFully(new FileReader(file1));
+            f = new FileReader(file1);
+            String file1Content = FileUtils.readFully(f);
             assertEquals("This is file 42", file1Content);
         } catch (IOException e) {
             // no-op: not a real business error
+        } finally {
+            FileUtils.close(f);
         }
     }
 
