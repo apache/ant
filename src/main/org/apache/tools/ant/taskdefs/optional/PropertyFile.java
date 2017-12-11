@@ -298,14 +298,14 @@ public class PropertyFile extends Task {
         private static final String DEFAULT_DATE_VALUE = "now";
         private static final String DEFAULT_STRING_VALUE = "";
 
-        private String              key = null;
-        private int                 type = Type.STRING_TYPE;
-        private int                 operation = Operation.EQUALS_OPER;
-        private String              value = null;
-        private String              defaultValue = null;
-        private String              newValue = null;
-        private String              pattern = null;
-        private int                 field = Calendar.DATE;
+        private String key = null;
+        private int    type = Type.STRING_TYPE;
+        private int    operation = Operation.EQUALS_OPER;
+        private String value = null;
+        private String defaultValue = null;
+        private String newValue = null;
+        private String pattern = null;
+        private int    field = Calendar.DATE;
 
         /**
          * Name of the property name/value pair
@@ -404,8 +404,7 @@ public class PropertyFile extends Task {
                 } else if (type == Type.STRING_TYPE) {
                     executeString(oldValue);
                 } else {
-                    throw new BuildException("Unknown operation type: "
-                                             + type);
+                    throw new BuildException("Unknown operation type: " + type);
                 }
             } catch (NullPointerException npe) {
                 // Default to string type
@@ -615,13 +614,13 @@ public class PropertyFile extends Task {
 
             // Property type operations
             /** + */
-            public static final int INCREMENT_OPER =   0;
+            public static final int INCREMENT_OPER = 0;
             /** - */
-            public static final int DECREMENT_OPER =   1;
+            public static final int DECREMENT_OPER = 1;
             /** = */
-            public static final int EQUALS_OPER =      2;
+            public static final int EQUALS_OPER =    2;
             /** del */
-            public static final int DELETE_OPER =      3;
+            public static final int DELETE_OPER =    3;
 
             /** {@inheritDoc}. */
             @Override
@@ -653,11 +652,11 @@ public class PropertyFile extends Task {
 
             // Property types
             /** int */
-            public static final int INTEGER_TYPE =     0;
+            public static final int INTEGER_TYPE = 0;
             /** date */
-            public static final int DATE_TYPE =        1;
+            public static final int DATE_TYPE =    1;
             /** string */
-            public static final int STRING_TYPE =      2;
+            public static final int STRING_TYPE =  2;
 
             /** {@inheritDoc} */
             @Override
@@ -697,9 +696,8 @@ public class PropertyFile extends Task {
         private static final String MONTH = "month";
         private static final String YEAR = "year";
 
-        private static final String[] UNITS
-            = {MILLISECOND, SECOND, MINUTE, HOUR,
-               DAY, WEEK, MONTH, YEAR };
+        private static final String[] UNITS = {MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH,
+                YEAR};
 
         private Map calendarFields = new HashMap();
 

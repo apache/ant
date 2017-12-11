@@ -27,7 +27,7 @@ public final class GeneralPurposeBit implements Cloneable {
     /**
      * Indicates that the file is encrypted.
      */
-    private static final int ENCRYPTION_FLAG = 1 << 0;
+    private static final int ENCRYPTION_FLAG = 1;
 
     /**
      * Indicates that a data descriptor stored after the file contents
@@ -155,13 +155,10 @@ public final class GeneralPurposeBit implements Cloneable {
      */
     public void encode(byte[] buf, int offset) {
         ZipShort.putShort((dataDescriptorFlag ? DATA_DESCRIPTOR_FLAG : 0)
-                          |
-                          (languageEncodingFlag ? UFT8_NAMES_FLAG : 0)
-                          |
-                          (encryptionFlag ? ENCRYPTION_FLAG : 0)
-                          |
-                          (strongEncryptionFlag ? STRONG_ENCRYPTION_FLAG : 0)
-                          , buf, offset);
+                          | (languageEncodingFlag ? UFT8_NAMES_FLAG : 0)
+                          | (encryptionFlag ? ENCRYPTION_FLAG : 0)
+                          | (strongEncryptionFlag ? STRONG_ENCRYPTION_FLAG : 0),
+                buf, offset);
     }
 
     /**

@@ -114,7 +114,7 @@ public class CVSPass extends Task {
             String pwdfile = buf.toString() + cvsRoot + " A"
                 + mangle(password);
 
-            log("Writing -> " + pwdfile , Project.MSG_DEBUG);
+            log("Writing -> " + pwdfile, Project.MSG_DEBUG);
 
             writer = new BufferedWriter(new FileWriter(passFile));
 

@@ -239,7 +239,7 @@ public class Image extends MatchingTask {
                 final String dstName = dstNames[j];
                 final File dstFile = new File(dstDir, dstName).getAbsoluteFile();
 
-                if (dstFile.exists()){
+                if (dstFile.exists()) {
                     // avoid overwriting unless necessary
                     if(!overwrite
                        && srcFile.lastModified() <= dstFile.lastModified()) {
@@ -252,7 +252,7 @@ public class Image extends MatchingTask {
                     }
 
                     // avoid extra work while overwriting
-                    if (!srcFile.equals(dstFile)){
+                    if (!srcFile.equals(dstFile)) {
                         dstFile.delete();
                     }
                 }
@@ -317,7 +317,7 @@ public class Image extends MatchingTask {
                                          + dstParent);
             }
 
-            if ((overwrite && newFile.exists()) && (!newFile.equals(file))) {
+            if (overwrite && newFile.exists() && !newFile.equals(file)) {
                 newFile.delete();
             }
 
@@ -333,7 +333,7 @@ public class Image extends MatchingTask {
                 FileUtils.close(stream);
             }
         } catch (IOException err) {
-            if (!file.equals(newFile)){
+            if (!file.equals(newFile)) {
                 newFile.delete();
             }
             if (!failonerror) {
@@ -362,7 +362,7 @@ public class Image extends MatchingTask {
         validateAttributes();
 
         try {
-            File dest = destDir != null ? destDir : srcDir;
+            File dest = (destDir != null) ? destDir : srcDir;
 
             int writeCount = 0;
 
@@ -392,9 +392,8 @@ public class Image extends MatchingTask {
                 writeCount += processDir(fromDir, files, dest, mapper);
             }
 
-            if (writeCount>0){
-                log("Processed " + writeCount +
-                    (writeCount == 1 ? " image." : " images."));
+            if (writeCount > 0) {
+                log("Processed " + writeCount + (writeCount == 1 ? " image." : " images."));
             }
 
         } catch (Exception err) {

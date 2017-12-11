@@ -31,8 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class JavahTest {
 
-    private final static String BUILD_XML =
-        "src/etc/testcases/taskdefs/optional/javah/build.xml";
+    private static final String BUILD_XML = "src/etc/testcases/taskdefs/optional/javah/build.xml";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

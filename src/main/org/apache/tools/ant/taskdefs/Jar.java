@@ -1180,9 +1180,7 @@ public class Jar extends Zip {
             if (rcs[i] instanceof FileSet) {
                 resources = grabResources(new FileSet[] {(FileSet) rcs[i]});
             } else {
-                resources = grabNonFileSetResources(new ResourceCollection[] {
-                        rcs[i]
-                    });
+                resources = grabNonFileSetResources(new ResourceCollection[] {rcs[i]});
             }
             for (int j = 0; j < resources[0].length; j++) {
                 String name = resources[0][j].getName().replace('\\', '/');
@@ -1227,7 +1225,7 @@ public class Jar extends Zip {
          * @return the list of values.
          */
         public String[] getValues() {
-            return new String[]{"fail", "warn", "ignore"};
+            return new String[] {"fail", "warn", "ignore"};
         }
         /**
          * @return The log level according to the strict mode.

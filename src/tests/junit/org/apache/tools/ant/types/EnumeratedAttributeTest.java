@@ -49,7 +49,7 @@ public class EnumeratedAttributeTest {
 
     @Test
     public void testFactory() {
-        Factory ea = (Factory)EnumeratedAttribute.getInstance(Factory.class, "one");
+        Factory ea = (Factory) EnumeratedAttribute.getInstance(Factory.class, "one");
         assertEquals("Factory did not set the right value.", ea.getValue(), "one");
         try {
             EnumeratedAttribute.getInstance(Factory.class, "illegal");
@@ -98,7 +98,7 @@ public class EnumeratedAttributeTest {
 
     public static class Factory extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] { "one", "two", "three" };
+            return new String[] {"one", "two", "three"};
         }
     }
 

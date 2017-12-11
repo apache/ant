@@ -19,7 +19,7 @@
 package org.apache.tools.ant.taskdefs.dir2;
 
 public class A {
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         System.out.println("MAIN");
         System.out.println(a);
     }

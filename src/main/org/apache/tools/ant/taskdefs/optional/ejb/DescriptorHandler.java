@@ -29,6 +29,7 @@ import java.util.Hashtable;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.xml.sax.AttributeList;
+import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -40,7 +41,7 @@ import org.xml.sax.SAXException;
  * inserted into an EJB jar as to a File representing the file on disk. This
  * list can then be accessed through the getFiles() method.
  */
-public class DescriptorHandler extends org.xml.sax.HandlerBase {
+public class DescriptorHandler extends HandlerBase {
     private static final int DEFAULT_HASH_TABLE_SIZE = 10;
     private static final int STATE_LOOKING_EJBJAR = 1;
     private static final int STATE_IN_EJBJAR = 2;
@@ -220,7 +221,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             }
         }
 
-        owningTask.log("Could not resolve ( publicId: " + publicId
+        owningTask.log("Could not resolve (publicId: " + publicId
             + ", systemId: " + systemId + ") to a local entity", Project.MSG_INFO);
 
         return null;

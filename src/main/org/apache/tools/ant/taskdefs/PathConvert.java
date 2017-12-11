@@ -170,7 +170,7 @@ public class PathConvert extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
+            return new String[] {"windows", "unix", "netware", "os/2", "tandem"};
         }
     }
 

@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.bzip2.CBZip2InputStream;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

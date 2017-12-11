@@ -243,7 +243,7 @@ public class EchoProperties extends Task {
      * The values are "xml" and "text".
      */
     public static class FormatAttribute extends EnumeratedAttribute {
-        private String [] formats = new String[]{"xml", "text"};
+        private String[] formats = new String[] {"xml", "text"};
 
         /**
          * @see EnumeratedAttribute#getValues()

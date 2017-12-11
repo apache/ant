@@ -135,7 +135,7 @@ public final class DOMUtil {
      *                  the parent is <tt>null</tt> or if a child does not match the
      *                  given name.
      */
-    public static Element getChildByTagName (Node parent, String tagname) {
+    public static Element getChildByTagName(Node parent, String tagname) {
         if (parent == null) {
             return null;
         }

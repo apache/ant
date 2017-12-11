@@ -87,7 +87,8 @@ public final class ReplaceTokens
      *
      * @see BaseFilterReader#BaseFilterReader()
      */
-    public ReplaceTokens() {}
+    public ReplaceTokens() {
+    }
 
     /**
      * Creates a new filtered reader.
@@ -138,12 +139,12 @@ public final class ReplaceTokens
             if (next == -1) {
                 return next; // end of stream. all buffers empty.
             }
-            readBuffer += (char)next;
+            readBuffer += (char) next;
         }
 
         for (;;) {
             // get the closest tokens
-            SortedMap<String,String> possibleTokens = resolvedTokens.tailMap(readBuffer);
+            SortedMap<String, String> possibleTokens = resolvedTokens.tailMap(readBuffer);
             if (possibleTokens.isEmpty() || !possibleTokens.firstKey().startsWith(readBuffer)) { // if there is none, then deliver the first char from the buffer.
                 return getFirstCharacterFromReadBuffer();
             } else if (readBuffer.equals(possibleTokens.firstKey())) { // there exists a nearest token - is it an exact match?
@@ -156,7 +157,7 @@ public final class ReplaceTokens
             } else { // nearest token is not matching exactly - read one character more.
                 int next = in.read();
                 if (next != -1) {
-                    readBuffer += (char)next;
+                    readBuffer += (char) next;
                 } else {
                     return getFirstCharacterFromReadBuffer(); // end of stream. deliver remaining characters from buffer.
                 }

@@ -81,8 +81,7 @@ public class LazyResourceCollectionTest {
 
         Iterator<Resource> it = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
-        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators
-                .get(0);
+        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
                 stringResourceIterator.cursor);
 
@@ -130,8 +129,7 @@ public class LazyResourceCollectionTest {
         Iterator<Resource> it2 = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
 
-        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators
-                .get(0);
+        StringResourceIterator stringResourceIterator = (StringResourceIterator) collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
                 stringResourceIterator.cursor);
 
@@ -142,8 +140,7 @@ public class LazyResourceCollectionTest {
 
         r = (StringResource) it2.next();
         assertEquals("r1", r.getValue());
-        assertEquals(
-                "The second iterator did not lookup in the cache for a resource",
+        assertEquals("The second iterator did not lookup in the cache for a resource",
                 2, stringResourceIterator.cursor);
 
         r = (StringResource) it2.next();
@@ -153,8 +150,7 @@ public class LazyResourceCollectionTest {
 
         r = (StringResource) it1.next();
         assertEquals("r2", r.getValue());
-        assertEquals(
-                "The first iterator did not lookup in the cache for a resource",
+        assertEquals("The first iterator did not lookup in the cache for a resource",
                 3, stringResourceIterator.cursor);
 
         r = (StringResource) it2.next();
@@ -164,8 +160,7 @@ public class LazyResourceCollectionTest {
 
         r = (StringResource) it1.next();
         assertEquals("r3", r.getValue());
-        assertEquals(
-                "The first iterator did not lookup in the cache for a resource",
+        assertEquals("The first iterator did not lookup in the cache for a resource",
                 3, stringResourceIterator.cursor);
 
         try {

@@ -188,7 +188,7 @@ public class Commandline implements Cloneable {
          */
         public String[] getParts() {
             if (parts == null || parts.length == 0
-                || (prefix.length() == 0 && suffix.length() == 0)) {
+                    || (prefix.length() == 0 && suffix.length() == 0)) {
                 return parts;
             }
             String[] fullParts = new String[parts.length];

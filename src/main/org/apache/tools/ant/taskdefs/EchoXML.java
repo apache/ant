@@ -108,7 +108,8 @@ public class EchoXML extends XMLFragment {
         public static final NamespacePolicy DEFAULT
             = new NamespacePolicy(IGNORE);
 
-        public NamespacePolicy() {}
+        public NamespacePolicy() {
+        }
 
         public NamespacePolicy(String s) {
             setValue(s);

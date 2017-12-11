@@ -36,7 +36,7 @@ public final class ZipShort implements Cloneable {
      * @param value the int to store as a ZipShort
      * @since 1.1
      */
-    public ZipShort (int value) {
+    public ZipShort(int value) {
         this.value = value;
     }
 
@@ -45,7 +45,7 @@ public final class ZipShort implements Cloneable {
      * @param bytes the bytes to store as a ZipShort
      * @since 1.1
      */
-    public ZipShort (byte[] bytes) {
+    public ZipShort(byte[] bytes) {
         this(bytes, 0);
     }
 
@@ -55,7 +55,7 @@ public final class ZipShort implements Cloneable {
      * @param offset the offset to start
      * @since 1.1
      */
-    public ZipShort (byte[] bytes, int offset) {
+    public ZipShort(byte[] bytes, int offset) {
         value = ZipShort.getValue(bytes, offset);
     }
 
@@ -80,7 +80,7 @@ public final class ZipShort implements Cloneable {
      */
     public static void putShort(int value, byte[] buf, int offset) {
         buf[offset] = (byte) (value & BYTE_MASK);
-        buf[offset+1] = (byte) ((value & BYTE_1_MASK) >> BYTE_1_SHIFT);
+        buf[offset + 1] = (byte) ((value & BYTE_1_MASK) >> BYTE_1_SHIFT);
     }
 
     /**

@@ -114,9 +114,8 @@ public class Rpm extends Task {
 
         Commandline toExecute = new Commandline();
 
-        toExecute.setExecutable(rpmBuildCommand == null
-                                ? guessRpmBuildCommand()
-                                : rpmBuildCommand);
+        toExecute.setExecutable(rpmBuildCommand == null ? guessRpmBuildCommand()
+                : rpmBuildCommand);
         if (topDir != null) {
             toExecute.createArgument().setValue("--define");
             toExecute.createArgument().setValue("_topdir " + topDir);
@@ -169,7 +168,7 @@ public class Rpm extends Task {
                     fos = new FileOutputStream(error);
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     errorstream = new PrintStream(bos);
-                }  catch (IOException e) {
+                } catch (IOException e) {
                     FileUtils.close(fos);
                     throw new BuildException(e, getLocation());
                 }

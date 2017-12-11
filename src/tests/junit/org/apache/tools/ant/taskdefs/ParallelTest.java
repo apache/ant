@@ -40,16 +40,14 @@ public class ParallelTest {
     public final BuildFileRule buildRule = new BuildFileRule();
 
     /** Standard property value for the basic test */
-    public final static String DIRECT_MESSAGE = "direct";
+    public static final String DIRECT_MESSAGE = "direct";
     /** Standard property value for the basic and fail test */
-    public final static String DELAYED_MESSAGE = "delayed";
+    public static final String DELAYED_MESSAGE = "delayed";
     /** Standard property value for the fail test */
-    public final static String FAILURE_MESSAGE = "failure";
+    public static final String FAILURE_MESSAGE = "failure";
 
     /** the build file associated with this test */
-    public final static String TEST_BUILD_FILE
-         = "src/etc/testcases/taskdefs/parallel.xml";
-
+    public static final String TEST_BUILD_FILE = "src/etc/testcases/taskdefs/parallel.xml";
 
     /** The JUnit setup method */
     @Before

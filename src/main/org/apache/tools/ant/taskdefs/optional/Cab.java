@@ -264,8 +264,7 @@ public class Cab extends MatchingTask {
             try {
                 Process p = Execute.launch(getProject(),
                                            new String[] {"listcab"}, null,
-                                           baseDir != null ? baseDir
-                                                   : getProject().getBaseDir(),
+                                           baseDir != null ? baseDir : getProject().getBaseDir(),
                                            true);
                 OutputStream out = p.getOutputStream();
 

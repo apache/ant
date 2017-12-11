@@ -1109,9 +1109,9 @@ public class SQLExec extends JDBCTask {
     public int lastDelimiterPosition(StringBuffer buf, String currentLine) {
         if (strictDelimiterMatching) {
             if ((delimiterType.equals(DelimiterType.NORMAL)
-                 && StringUtils.endsWith(buf, delimiter)) ||
-                (delimiterType.equals(DelimiterType.ROW)
-                 && currentLine.equals(delimiter))) {
+                    && StringUtils.endsWith(buf, delimiter))
+                    || (delimiterType.equals(DelimiterType.ROW)
+                    && currentLine.equals(delimiter))) {
                 return buf.length() - delimiter.length();
             }
             // no match
@@ -1123,17 +1123,15 @@ public class SQLExec extends JDBCTask {
                 // StringUtils.endsWith
                 int endIndex = delimiter.length() - 1;
                 int bufferIndex = buf.length() - 1;
-                while (bufferIndex >= 0
-                       && Character.isWhitespace(buf.charAt(bufferIndex))) {
+                while (bufferIndex >= 0 && Character.isWhitespace(buf.charAt(bufferIndex))) {
                     --bufferIndex;
                 }
                 if (bufferIndex < endIndex) {
                     return -1;
                 }
                 while (endIndex >= 0) {
-                    if (buf.substring(bufferIndex, bufferIndex + 1)
-                        .toLowerCase(Locale.ENGLISH).charAt(0)
-                        != d.charAt(endIndex)) {
+                    if (buf.substring(bufferIndex, bufferIndex + 1).toLowerCase(Locale.ENGLISH)
+                            .charAt(0) != d.charAt(endIndex)) {
                         return -1;
                     }
                     bufferIndex--;

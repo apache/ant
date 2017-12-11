@@ -57,7 +57,7 @@ public class ExecTaskTest {
 
     private File logFile;
     private MonitoredBuild myBuild = null;
-    volatile private boolean buildFinished = false;
+    private volatile boolean buildFinished = false;
 
 
     @Before

@@ -375,7 +375,7 @@ public class JUnitTaskTest {
         assertEquals("Incorrect ignore message on explicit ignored test", "Please don't ignore me!",
                 xpath.compile("//testsuite/testcase[@name='explicitIgnoreTest']/skipped/@message").evaluate(doc));
         assertEquals("No message should be set on Ignored tests with no Ignore annotation text", 0,
-                ((Node)xpath.compile("//testsuite/testcase[@name='explicitlyIgnoreTestNoMessage']/skipped")
+                ((Node) xpath.compile("//testsuite/testcase[@name='explicitlyIgnoreTestNoMessage']/skipped")
                         .evaluate(doc, XPathConstants.NODE)).getAttributes().getLength());
         assertEquals("Incorrect ignore message on implicit ignored test", "This test will be ignored",
                 xpath.compile("//testsuite/testcase[@name='implicitlyIgnoreTest']/skipped/@message").evaluate(doc));
@@ -469,7 +469,7 @@ public class JUnitTaskTest {
                 System.currentTimeMillis() / 1000));
         workDir.mkdirs();
         try {
-            final File modulesDir = new File(workDir,"modules");    //NOI18N
+            final File modulesDir = new File(workDir, "modules");    //NOI18N
             modulesDir.mkdirs();
 
             final Project project = new Project();

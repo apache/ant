@@ -370,8 +370,7 @@ public class JUnitTask extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[] {"true", "yes", "false", "no",
-                                 "on", "off", "withOutAndErr"};
+            return new String[] {"true", "yes", "false", "no", "on", "off", "withOutAndErr"};
         }
 
         /**
@@ -821,23 +820,13 @@ public class JUnitTask extends Task {
             mirrorLoader = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     return new SplitClassLoader(myLoader, path, getProject(),
-                                     new String[] {
-                                         "BriefJUnitResultFormatter",
-                                         "JUnit4TestMethodAdapter",
-                                         "JUnitResultFormatter",
-                                         "JUnitTaskMirrorImpl",
-                                         "JUnitTestRunner",
-                                         "JUnitVersionHelper",
-                                         "OutErrSummaryJUnitResultFormatter",
-                                         "PlainJUnitResultFormatter",
-                                         "SummaryJUnitResultFormatter",
-                                         "TearDownOnVmCrash",
-                                         "XMLJUnitResultFormatter",
-                                         "IgnoredTestListener",
-                                         "IgnoredTestResult",
-                                         "CustomJUnit4TestAdapterCache",
-                                         "TestListenerWrapper"
-                                     });
+                            new String[] {"BriefJUnitResultFormatter", "JUnit4TestMethodAdapter",
+                                    "JUnitResultFormatter", "JUnitTaskMirrorImpl", "JUnitTestRunner",
+                                    "JUnitVersionHelper", "OutErrSummaryJUnitResultFormatter",
+                                    "PlainJUnitResultFormatter", "SummaryJUnitResultFormatter",
+                                    "TearDownOnVmCrash", "XMLJUnitResultFormatter", "IgnoredTestListener",
+                                    "IgnoredTestResult", "CustomJUnit4TestAdapterCache",
+                                    "TestListenerWrapper"});
                 }
             });
         } else {
@@ -860,9 +849,7 @@ public class JUnitTask extends Task {
 
         final List<List> testLists = new ArrayList<List>();
         /* parallel test execution is only supported for multi-process execution */
-        final int threads = ((!fork) || (forkMode.getValue().equals(ForkMode.ONCE))
-                       ? 1
-                       : this.threads);
+        final int threads = !fork || forkMode.getValue().equals(ForkMode.ONCE) ? 1 : this.threads;
 
         final boolean forkPerTest = forkMode.getValue().equals(ForkMode.PER_TEST);
         if (forkPerTest || forkMode.getValue().equals(ForkMode.ONCE)) {
@@ -1002,7 +989,7 @@ public class JUnitTask extends Task {
 
             /* create 1 thread using the passthrough class, and let each thread start */
             for (i = 0; i < numThreads; i++) {
-                threads[i] = new Thread(new JunitTestThread(this, iter, i+1));
+                threads[i] = new Thread(new JunitTestThread(this, iter, i + 1));
                 threads[i].start();
             }
 

@@ -87,8 +87,8 @@ public class EchoPropertiesTest {
         try {
             buildRule.executeTarget("testReadBadFile");
             fail("BuildException should have been thrown on bad file");
-        } catch(BuildException ex) {
-            assertContains("srcfile is a directory","srcfile is a directory!", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("srcfile is a directory", "srcfile is a directory!", ex.getMessage());
         }
     }
 

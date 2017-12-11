@@ -291,7 +291,7 @@ class BlockSort {
             for (j = i + 1; j <= hi && ec_tmp > eclass[fmap[j]]; j++) {
                 fmap[j - 1] = fmap[j];
             }
-            fmap[j-1] = tmp;
+            fmap[j - 1] = tmp;
         }
     }
 
@@ -312,7 +312,9 @@ class BlockSort {
     private void fvswap(int[] fmap, int yyp1, int yyp2, int yyn) {
         while (yyn > 0) {
             fswap(fmap, yyp1, yyp2);
-            yyp1++; yyp2++; yyn--;
+            yyp1++;
+            yyp2++;
+            yyn--;
         }
     }
 
@@ -326,7 +328,7 @@ class BlockSort {
     }
 
     private int[] fpop(int sp) {
-        return new int[] { stack_ll[sp], stack_hh[sp] };
+        return new int[] {stack_ll[sp], stack_hh[sp]};
     }
 
     /**
@@ -351,7 +353,8 @@ class BlockSort {
 
         while (sp > 0) {
             int[] s = fpop(--sp);
-            lo = s[0]; hi = s[1];
+            lo = s[0];
+            hi = s[1];
 
             if (hi - lo < FALLBACK_QSORT_SMALL_THRESH) {
                 fallbackSimpleSort(fmap, eclass, lo, hi);
@@ -388,7 +391,8 @@ class BlockSort {
                     n = eclass[fmap[unLo]] - (int) med;
                     if (n == 0) {
                         fswap(fmap, unLo, ltLo);
-                        ltLo++; unLo++;
+                        ltLo++;
+                        unLo++;
                         continue;
                     }
                     if (n > 0) {
@@ -403,7 +407,8 @@ class BlockSort {
                     n = eclass[fmap[unHi]] - (int) med;
                     if (n == 0) {
                         fswap(fmap, unHi, gtHi);
-                        gtHi--; unHi--;
+                        gtHi--;
+                        unHi--;
                         continue;
                     }
                     if (n < 0) {
@@ -414,7 +419,9 @@ class BlockSort {
                 if (unLo > unHi) {
                     break;
                 }
-                fswap(fmap, unLo, unHi); unLo++; unHi--;
+                fswap(fmap, unLo, unHi);
+                unLo++;
+                unHi--;
             }
 
             if (gtHi < ltLo) {
@@ -578,9 +585,9 @@ class BlockSort {
      * Possibly because the number of elems to sort is usually small, typically
      * &lt;= 20.
      */
-    private static final int[] INCS = { 1, 4, 13, 40, 121, 364, 1093, 3280,
-                                        9841, 29524, 88573, 265720, 797161,
-                                        2391484 };
+    private static final int[] INCS = {1, 4, 13, 40, 121, 364, 1093, 3280,
+                                       9841, 29524, 88573, 265720, 797161,
+                                       2391484};
 
     /**
      * This is the most hammered method of this class.
@@ -637,17 +644,17 @@ class BlockSort {
                     // unrolled version:
 
                     // start inline mainGTU
-                    boolean onceRunned = false;
+                    boolean onceRun = false;
                     int a = 0;
 
                     HAMMER: while (true) {
-                        if (onceRunned) {
+                        if (onceRun) {
                             fmap[j] = a;
                             if ((j -= h) <= mj) { //NOSONAR
                                 break HAMMER;
                             }
                         } else {
-                            onceRunned = true;
+                            onceRun = true;
                         }
 
                         a = fmap[j - h];
@@ -938,7 +945,7 @@ class BlockSort {
         for (int i = 0; i < BZip2Constants.NUM_OVERSHOOT_BYTES; i++) {
             block[lastShadow + i + 2] = block[(i % (lastShadow + 1)) + 1];
         }
-        for (int i = lastShadow + BZip2Constants.NUM_OVERSHOOT_BYTES +1; --i >= 0;) {
+        for (int i = lastShadow + BZip2Constants.NUM_OVERSHOOT_BYTES + 1; --i >= 0;) {
             quadrant[i] = 0;
         }
         block[0] = block[lastShadow + 1];

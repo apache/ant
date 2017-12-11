@@ -136,7 +136,8 @@ public class ZipTest {
     public void testZipgroupfileset() throws IOException {
        buildRule.executeTarget("testZipgroupfileset");
 
-        ZipFile zipFile = new ZipFile(new File(buildRule.getProject().getProperty("output"), "zipgroupfileset.zip"));
+        ZipFile zipFile = new ZipFile(new File(buildRule.getProject().getProperty("output"),
+                "zipgroupfileset.zip"));
 
         assertTrue(zipFile.getEntry("ant.xml") != null);
         assertTrue(zipFile.getEntry("optional/jspc.xml") != null);

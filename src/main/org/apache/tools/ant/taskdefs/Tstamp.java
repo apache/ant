@@ -77,14 +77,14 @@ public class Tstamp extends Task {
                 cts.execute(getProject(), d, getLocation());
             }
 
-            SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");
+            SimpleDateFormat dstamp = new SimpleDateFormat("yyyyMMdd");
             setProperty("DSTAMP", dstamp.format(d));
 
-            SimpleDateFormat tstamp = new SimpleDateFormat ("HHmm");
+            SimpleDateFormat tstamp = new SimpleDateFormat("HHmm");
             setProperty("TSTAMP", tstamp.format(d));
 
             SimpleDateFormat today
-                = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
+                = new SimpleDateFormat("MMMM d yyyy", Locale.US);
             setProperty("TODAY", today.format(d));
 
         } catch (Exception e) {
@@ -189,16 +189,14 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         variant = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException("bad locale format",
-                                                      getLocation());
+                            throw new BuildException("bad locale format", getLocation());
                         }
                     }
                 } else {
                     country = "";
                 }
             } catch (NoSuchElementException e) {
-                throw new BuildException("bad locale format", e,
-                                         getLocation());
+                throw new BuildException("bad locale format", e, getLocation());
             }
         }
 
@@ -266,25 +264,20 @@ public class Tstamp extends Task {
          */
         public void execute(Project project, Date date, Location location) {
             if (propertyName == null) {
-                throw new BuildException("property attribute must be provided",
-                                         location);
+                throw new BuildException("property attribute must be provided", location);
             }
 
             if (pattern == null) {
-                throw new BuildException("pattern attribute must be provided",
-                                         location);
+                throw new BuildException("pattern attribute must be provided", location);
             }
 
             SimpleDateFormat sdf;
             if (language == null) {
                 sdf = new SimpleDateFormat(pattern);
             } else if (variant == null) {
-                sdf = new SimpleDateFormat(pattern,
-                                           new Locale(language, country));
+                sdf = new SimpleDateFormat(pattern, new Locale(language, country));
             } else {
-                sdf = new SimpleDateFormat(pattern,
-                                           new Locale(language, country,
-                                                      variant));
+                sdf = new SimpleDateFormat(pattern, new Locale(language, country, variant));
             }
             if (offset != 0) {
                 Calendar calendar = Calendar.getInstance();

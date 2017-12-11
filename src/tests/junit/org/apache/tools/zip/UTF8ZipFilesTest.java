@@ -187,7 +187,9 @@ public class UTF8ZipFilesTest {
             if (zos != null) {
                 try {
                     zos.close();
-                } catch (IOException e) { /* swallow */ }
+                } catch (IOException e) {
+                    /* swallow */
+                }
             }
         }
     }
@@ -234,7 +236,7 @@ public class UTF8ZipFilesTest {
             ByteBuffer ne = enc.encode(ze.getName());
 
             CRC32 crc = new CRC32();
-            crc.update(ne.array(),ne.arrayOffset(),ne.limit());
+            crc.update(ne.array(), ne.arrayOffset(), ne.limit());
 
             assertEquals(crc.getValue(), ucpf.getNameCRC32());
             assertEquals(expectedName, new String(ucpf.getUnicodeName(),

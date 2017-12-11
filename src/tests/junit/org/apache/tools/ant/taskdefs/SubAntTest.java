@@ -48,7 +48,7 @@ public class SubAntTest {
     @Test
     public void testnodirs() {
         buildRule.executeTarget("testnodirs");
-        assertEquals("No sub-builds to iterate on",buildRule.getLog());
+        assertEquals("No sub-builds to iterate on", buildRule.getLog());
     }
 
     // target must be specified
@@ -59,11 +59,9 @@ public class SubAntTest {
         File dir3 = buildRule.getProject().resolveFile("subant/subant-test2");
 
         testBaseDirs("testgenericantfile",
-                     new String[] { dir1.getAbsolutePath(),
-                         dir2.getAbsolutePath(),
-                         dir3.getAbsolutePath()
-
-                     });
+                new String[] {dir1.getAbsolutePath(),
+                        dir2.getAbsolutePath(),
+                        dir3.getAbsolutePath()});
     }
 
     @Test
@@ -77,11 +75,9 @@ public class SubAntTest {
         File dir3 = buildRule.getProject().resolveFile("subant");
 
         testBaseDirs("testantfile",
-                     new String[] { dir1.getAbsolutePath(),
-                         dir2.getAbsolutePath(),
-                         dir3.getAbsolutePath()
-
-                     });
+                new String[] {dir1.getAbsolutePath(),
+                        dir2.getAbsolutePath(),
+                        dir3.getAbsolutePath()});
 
     }
 

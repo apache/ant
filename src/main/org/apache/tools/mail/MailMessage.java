@@ -65,7 +65,7 @@ import java.util.Vector;
  *
  * Enumeration enum = req.getParameterNames();
  * while (enum.hasMoreElements()) {
- *   String name = (String)enum.nextElement();
+ *   String name = (String) enum.nextElement();
  *   String value = req.getParameter(name);
  *   out.println(name + " = " + value);
  * }

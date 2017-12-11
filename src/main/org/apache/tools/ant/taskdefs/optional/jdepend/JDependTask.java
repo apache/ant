@@ -320,7 +320,7 @@ public class JDependTask extends Task {
      * @see EnumeratedAttribute
      */
     public static class FormatAttribute extends EnumeratedAttribute {
-        private String [] formats = new String[]{"xml", "text"};
+        private String[] formats = new String[] {"xml", "text"};
 
         /**
          * @return the enumerated values

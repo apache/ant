@@ -33,11 +33,11 @@ public class BaseSelectorRule extends BuildFileRule {
 
     private File beddir;
     private File mirrordir;
-    private final String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
-            "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
-            "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",
-            "tar/gz/asf-logo.gif.tar.gz","tar/bz2/asf-logo.gif.tar.bz2",
-            "tar/bz2/asf-logo-huge.tar.bz2","tar/bz2"};
+    private final String[] filenames = {".", "asf-logo.gif.md5", "asf-logo.gif.bz2",
+            "asf-logo.gif.gz", "copy.filterset.filtered", "zip/asf-logo.gif.zip",
+            "tar/asf-logo.gif.tar", "tar/asf-logo-huge.tar.gz",
+            "tar/gz/asf-logo.gif.tar.gz", "tar/bz2/asf-logo.gif.tar.bz2",
+            "tar/bz2/asf-logo-huge.tar.bz2", "tar/bz2"};
     private File[] files = new File[filenames.length];
     private File[] mirrorfiles = new File[filenames.length];
 
@@ -54,8 +54,8 @@ public class BaseSelectorRule extends BuildFileRule {
         mirrordir = new File(super.getProject().getProperty("mirror.dir"));
 
         for (int x = 0; x < files.length; x++) {
-            files[x] = new File(beddir,filenames[x]);
-            mirrorfiles[x] = new File(mirrordir,filenames[x]);
+            files[x] = new File(beddir, filenames[x]);
+            mirrorfiles[x] = new File(mirrordir, filenames[x]);
         }
     }
 
@@ -90,7 +90,7 @@ public class BaseSelectorRule extends BuildFileRule {
      * @param selector FileSelector
      */
     public String selectionString(FileSelector selector) {
-        return selectionString(beddir,files,selector);
+        return selectionString(beddir, files, selector);
     }
 
     /**

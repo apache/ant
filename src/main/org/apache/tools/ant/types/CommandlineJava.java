@@ -385,15 +385,12 @@ public class CommandlineJava implements Cloneable {
                     javaCommand.setExecutable(module, false);
                     break;
                 case CLASS:
-                    javaCommand.setExecutable(createModuleClassPair(
-                            module,
+                    javaCommand.setExecutable(createModuleClassPair(module,
                             javaCommand.getExecutable()), false);
                     break;
                 case MODULE:
-                    javaCommand.setExecutable(createModuleClassPair(
-                            module,
-                            parseClassFromModuleClassPair(javaCommand.getExecutable())),
-                                              false);
+                    javaCommand.setExecutable(createModuleClassPair(module,
+                            parseClassFromModuleClassPair(javaCommand.getExecutable())), false);
                     break;
             }
         }
@@ -500,8 +497,7 @@ public class CommandlineJava implements Cloneable {
         if (isCloneVm()) {
             SysProperties clonedSysProperties = new SysProperties();
             PropertySet ps = new PropertySet();
-            PropertySet.BuiltinPropertySetName sys =
-                new PropertySet.BuiltinPropertySetName();
+            PropertySet.BuiltinPropertySetName sys = new PropertySet.BuiltinPropertySetName();
             sys.setValue("system");
             ps.appendBuiltin(sys);
             clonedSysProperties.addSyspropertyset(ps);
@@ -515,20 +511,17 @@ public class CommandlineJava implements Cloneable {
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
-            listIterator.add(
-                    classpath.concatSystemClasspath("ignore").toString());
+            listIterator.add(classpath.concatSystemClasspath("ignore").toString());
         }
         //module path
         if (haveModulepath()) {
             listIterator.add("--module-path");
-            listIterator.add(
-                    modulepath.concatSystemClasspath("ignore").toString());
+            listIterator.add(modulepath.concatSystemClasspath("ignore").toString());
         }
         //upgrade module path
         if (haveUpgrademodulepath()) {
             listIterator.add("--upgrade-module-path");
-            listIterator.add(
-                    upgrademodulepath.concatSystemClasspath("ignore").toString());
+            listIterator.add(upgrademodulepath.concatSystemClasspath("ignore").toString());
         }
         //now any assertions are added
         if (getAssertions() != null) {
@@ -762,10 +755,8 @@ public class CommandlineJava implements Cloneable {
      * @since Ant 1.6
      */
     public boolean haveClasspath() {
-        Path fullClasspath = classpath != null
-            ? classpath.concatSystemClasspath("ignore") : null;
-        return fullClasspath != null
-            && fullClasspath.toString().trim().length() > 0;
+        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
+        return fullClasspath != null && fullClasspath.toString().trim().length() > 0;
     }
 
     /**
@@ -789,7 +780,7 @@ public class CommandlineJava implements Cloneable {
      */
     public boolean haveModulepath() {
         Path fullClasspath = modulepath != null
-            ? modulepath.concatSystemClasspath("ignore") : null;
+                ? modulepath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
             && fullClasspath.toString().trim().length() > 0;
     }
@@ -802,8 +793,7 @@ public class CommandlineJava implements Cloneable {
     public boolean haveUpgrademodulepath() {
         Path fullClasspath = upgrademodulepath != null
             ? upgrademodulepath.concatSystemClasspath("ignore") : null;
-        return fullClasspath != null
-            && fullClasspath.toString().trim().length() > 0;
+        return fullClasspath != null && fullClasspath.toString().trim().length() > 0;
     }
 
     /**
@@ -816,8 +806,7 @@ public class CommandlineJava implements Cloneable {
     private Path calculateBootclasspath(boolean log) {
         if (vmVersion.startsWith("1.1")) {
             if (bootclasspath != null && log) {
-                bootclasspath.log("Ignoring bootclasspath as "
-                                  + "the target VM doesn't support it.");
+                bootclasspath.log("Ignoring bootclasspath as the target VM doesn't support it.");
             }
         } else {
             Path b = bootclasspath;
@@ -839,8 +828,7 @@ public class CommandlineJava implements Cloneable {
      * @since 1.7
      */
     private boolean isCloneVm() {
-        return cloneVm
-            || "true".equals(System.getProperty("ant.build.clonevm"));
+        return cloneVm || "true".equals(System.getProperty("ant.build.clonevm"));
     }
 
     /**
@@ -851,9 +839,7 @@ public class CommandlineJava implements Cloneable {
      * @since 1.9.7
      */
     private static String createModuleClassPair(final String module, final String classname) {
-        return classname == null ?
-                module :
-                String.format("%s/%s", module, classname);   //NOI18N
+        return classname == null ? module : String.format("%s/%s", module, classname);   //NOI18N
     }
 
     /**
@@ -881,9 +867,7 @@ public class CommandlineJava implements Cloneable {
             return null;
         }
         final String[] moduleAndClass = moduleClassPair.split("/");  //NOI18N
-        return moduleAndClass.length == 2 ?
-                moduleAndClass[1] :
-                null;
+        return moduleAndClass.length == 2 ? moduleAndClass[1] : null;
     }
 
     /**

@@ -447,33 +447,27 @@ public class FTP extends Task implements FTPTaskConfig {
                     }
                     if (isOK) {
                         currentelement = path.replace(remoteFileSep.charAt(0), File.separatorChar);
-                        if (!isFollowSymlinks()
-                            && traversesSymlinks) {
+                        if (!isFollowSymlinks() && traversesSymlinks) {
                             continue;
                         }
 
                         if (myfile.isDirectory()) {
-                            if (isIncluded(currentelement)
-                                && currentelement.length() > 0) {
+                            if (isIncluded(currentelement) && currentelement.length() > 0) {
                                 accountForIncludedDir(currentelement, myfile, true);
                             }  else {
                                 if (currentelement.length() > 0) {
-                                    if (currentelement.charAt(currentelement
-                                                              .length() - 1)
+                                    if (currentelement.charAt(currentelement.length() - 1)
                                         != File.separatorChar) {
-                                        currentelement =
-                                            currentelement + File.separatorChar;
+                                        currentelement = currentelement + File.separatorChar;
                                     }
                                 }
                                 scandir(myfile.getAbsolutePath(), currentelement, true);
                             }
                         } else {
-                            if (isCaseSensitive
-                                && originalpattern.equals(currentelement)) {
+                            if (isCaseSensitive && originalpattern.equals(currentelement)) {
                                 accountForIncludedFile(currentelement);
                             } else if (!isCaseSensitive
-                                       && originalpattern
-                                       .equalsIgnoreCase(currentelement)) {
+                                       && originalpattern.equalsIgnoreCase(currentelement)) {
                                 accountForIncludedFile(currentelement);
                             }
                         }

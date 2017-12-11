@@ -75,7 +75,7 @@ class NioZipEncoding implements ZipEncoding {
                                              + (name.length() + 1) / 2);
 
         while (cb.remaining() > 0) {
-            final CoderResult res = enc.encode(cb, out,true);
+            final CoderResult res = enc.encode(cb, out, true);
 
             if (res.isUnmappable() || res.isMalformed()) {
 
@@ -86,8 +86,8 @@ class NioZipEncoding implements ZipEncoding {
                                                        + res.length() * 6);
                 }
 
-                for (int i=0; i<res.length(); ++i) {
-                    ZipEncodingHelper.appendSurrogate(out,cb.get());
+                for (int i = 0; i < res.length(); ++i) {
+                    ZipEncodingHelper.appendSurrogate(out, cb.get());
                 }
 
             } else if (res.isOverflow()) {

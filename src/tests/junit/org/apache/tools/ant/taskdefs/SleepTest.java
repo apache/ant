@@ -32,8 +32,8 @@ public class SleepTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
-    private final static int ERROR_RANGE = 1000;
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
+    private static final int ERROR_RANGE = 1000;
 
     @Before
     public void setUp() {

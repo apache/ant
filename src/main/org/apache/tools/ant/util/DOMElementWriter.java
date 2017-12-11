@@ -518,7 +518,8 @@ public class DOMElementWriter {
      */
     public void encodedata(final Writer out, final String value) throws IOException {
         final int len = value.length();
-        int prevEnd = 0, cdataEndPos = value.indexOf("]]>");
+        int prevEnd = 0;
+        int cdataEndPos = value.indexOf("]]>");
         while (prevEnd < len) {
             final int end = (cdataEndPos < 0 ? len : cdataEndPos);
             // Write out stretches of legal characters in the range [prevEnd, end).

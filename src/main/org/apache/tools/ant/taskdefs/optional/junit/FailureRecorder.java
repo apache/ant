@@ -54,8 +54,8 @@ import org.apache.tools.ant.util.StringUtils;
  *     }
  *     public static Test suite() {
  *         TestSuite suite = new TestSuite();
- *         suite.addTest( new B("test04") );
- *         suite.addTest( new org.D("test10") );
+ *         suite.addTest(new B("test04"));
+ *         suite.addTest(new org.D("test10"));
  *         return suite;
  *     }
  * }

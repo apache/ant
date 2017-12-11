@@ -551,11 +551,11 @@ public class IntrospectionHelperTest {
         assertAttrMethod("sixteen", "setSixteen", Character.class,
                          new Character('a'), new Character('b'));
         assertAttrMethod("seventeen", "setSeventeen", Byte.TYPE,
-                         new Byte((byte)17), new Byte((byte)10));
+                         new Byte((byte) 17), new Byte((byte) 10));
         assertAttrMethod("eightteen", "setEightteen", Short.TYPE,
-                         new Short((short)18), new Short((short)10));
+                         new Short((short) 18), new Short((short) 10));
         assertAttrMethod("nineteen", "setNineteen", Double.TYPE,
-                         new Double(19), new Double((short)10));
+                         new Double(19), new Double((short) 10));
 
         try {
             assertAttrMethod("onehundred", null, null, null, null);

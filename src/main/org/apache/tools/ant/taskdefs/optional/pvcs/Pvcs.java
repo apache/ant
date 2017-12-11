@@ -202,10 +202,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log(commandLine.describeCommand(), Project.MSG_VERBOSE);
             try {
-                result = runCmd(commandLine,
-                                new PumpStreamHandler(fos,
-                                    new LogOutputStream(this,
-                                                        Project.MSG_WARN)));
+                result = runCmd(commandLine, new PumpStreamHandler(fos,
+                        new LogOutputStream(this, Project.MSG_WARN)));
             } finally {
                 FileUtils.close(fos);
             }
@@ -250,8 +248,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                     commandLine.createArgument().setValue("-v" + getLabel());
                 } else {
                     if (getRevision() != null) {
-                        commandLine.createArgument().setValue("-r"
-                            + getRevision());
+                        commandLine.createArgument().setValue("-r" + getRevision());
                     }
                 }
             }
@@ -304,10 +301,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
             String line = in.readLine();
             while (line != null) {
                 log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
-                if (line.startsWith("\"\\")    // Checking for "\
-                    || line.startsWith("\"/")  // or           "/
-                                               // or           "X:\...
-                   || (line.length() > POS_3 && line.startsWith("\"")
+                if (line.startsWith("\"\\")       // Checking for "\
+                        || line.startsWith("\"/") // or           "/
+                                                  // or           "X:\...
+                        || (line.length() > POS_3 && line.startsWith("\"")
                         && Character.isLetter(line.charAt(POS_1))
                         && String.valueOf(line.charAt(POS_2)).equals(":")
                         && String.valueOf(line.charAt(POS_3)).equals("\\"))) {

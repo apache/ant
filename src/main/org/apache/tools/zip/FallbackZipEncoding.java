@@ -85,7 +85,7 @@ class FallbackZipEncoding implements ZipEncoding {
         if (this.charset == null) { // i.e. use default charset, see no-args constructor
             return new String(data);
         } else {
-            return new String(data,this.charset);
+            return new String(data, this.charset);
         }
     }
 }

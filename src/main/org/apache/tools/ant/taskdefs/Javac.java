@@ -1671,9 +1671,8 @@ public class Javac extends MatchingTask {
                 throw new BuildException("The modulesourcepath entry must contain at most one module mark");
             }
             final String pathToModule = pattern.substring(0, startIndex);
-            final String pathInModule = endIndex == pattern.length() ?
-                    null :
-                    pattern.substring(endIndex + 1);  //+1 the separator
+            final String pathInModule = endIndex == pattern.length()
+                    ? null : pattern.substring(endIndex + 1);  //+1 the separator
             findModules(root, pathToModule, pathInModule, collector);
         }
     }

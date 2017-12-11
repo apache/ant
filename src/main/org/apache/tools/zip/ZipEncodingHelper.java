@@ -37,7 +37,7 @@ public abstract class ZipEncodingHelper {
      */
     private static class SimpleEncodingHolder {
 
-        private final char [] highChars;
+        private final char[] highChars;
         private Simple8BitZipEncoding encoding;
 
         /**
@@ -47,7 +47,7 @@ public abstract class ZipEncodingHelper {
          *
          * @see Simple8BitZipEncoding#Simple8BitZipEncoding(char[])
          */
-        SimpleEncodingHolder(final char [] highChars) {
+        SimpleEncodingHolder(final char[] highChars) {
             this.highChars = highChars;
         }
 
@@ -142,7 +142,7 @@ public abstract class ZipEncodingHelper {
      * @param b The original buffer.
      * @param newCapacity The minimal requested new capacity.
      * @return A byte buffer <code>r</code> with
-     *         <code>r.capacity() = max(b.capacity()*2,newCapacity)</code> and
+     *         <code>r.capacity() = max(b.capacity() * 2,newCapacity)</code> and
      *         all the data contained in <code>b</code> copied to the beginning
      *         of <code>r</code>.
      *
@@ -163,8 +163,7 @@ public abstract class ZipEncodingHelper {
      * The hexadecimal digits <code>0,...,9,A,...,F</code> encoded as
      * ASCII bytes.
      */
-    private static final byte[] HEX_DIGITS =
-        new byte [] {
+    private static final byte[] HEX_DIGITS = new byte[] {
         0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41,
         0x42, 0x43, 0x44, 0x45, 0x46
     };
@@ -181,9 +180,9 @@ public abstract class ZipEncodingHelper {
         bb.put((byte) '%');
         bb.put((byte) 'U');
 
-        bb.put(HEX_DIGITS[(c >> 12)&0x0f]);
-        bb.put(HEX_DIGITS[(c >> 8)&0x0f]);
-        bb.put(HEX_DIGITS[(c >> 4)&0x0f]);
+        bb.put(HEX_DIGITS[(c >> 12) & 0x0f]);
+        bb.put(HEX_DIGITS[(c >> 8) & 0x0f]);
+        bb.put(HEX_DIGITS[(c >> 4) & 0x0f]);
         bb.put(HEX_DIGITS[c & 0x0f]);
     }
 
@@ -223,7 +222,7 @@ public abstract class ZipEncodingHelper {
 
         final SimpleEncodingHolder h = simpleEncodings.get(name);
 
-        if (h!=null) {
+        if (h != null) {
             return h.getEncoding();
         }
 

@@ -97,7 +97,7 @@ public class TouchTest {
         long now = System.currentTimeMillis();
         buildRule.executeTarget("testNow");
         long time = getTargetTime();
-        assertTimesNearlyMatch(time,now,5000);
+        assertTimesNearlyMatch(time, now, 5000);
     }
     /**
      * verify that the millis test sets things up

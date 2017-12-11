@@ -80,9 +80,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     public Process exec(Project project, String[] cmd, String[] env,
                         File workingDir) throws IOException {
         File cmdFile = createCommandFile(cmd, env);
-        Process p = super.exec(project, new String[] {
-                cmdFile.getPath()
-            }, env, workingDir);
+        Process p = super.exec(project, new String[] {cmdFile.getPath()}, env, workingDir);
         deleteAfter(cmdFile, p);
         return p;
     }

@@ -106,30 +106,30 @@ public class ManifestClassPathTest {
     public void testParentLevel1() {
         buildRule.executeTarget("test-parent-level1");
 
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "dsp-core/ " +
-                                              "dsp-pres/ " +
-                                              "dsp-void/ " +
-                                              "../generated/dsp-core/ " +
-                                              "../generated/dsp-pres/ " +
-                                              "../generated/dsp-void/ " +
-                                              "../resources/dsp-core/ " +
-                                              "../resources/dsp-pres/ " +
-                                              "../resources/dsp-void/");
+        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "dsp-core/ "
+                + "dsp-pres/ "
+                + "dsp-void/ "
+                + "../generated/dsp-core/ "
+                + "../generated/dsp-pres/ "
+                + "../generated/dsp-void/ "
+                + "../resources/dsp-core/ "
+                + "../resources/dsp-pres/ "
+                + "../resources/dsp-void/");
     }
 
     @Test
     public void testParentLevel2() {
         buildRule.executeTarget("test-parent-level2");
 
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "../dsp-core/ " +
-                                              "../dsp-pres/ " +
-                                              "../dsp-void/ " +
-                                              "../../generated/dsp-core/ " +
-                                              "../../generated/dsp-pres/ " +
-                                              "../../generated/dsp-void/ " +
-                                              "../../resources/dsp-core/ " +
-                                              "../../resources/dsp-pres/ " +
-                                              "../../resources/dsp-void/");
+        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "../dsp-core/ "
+                + "../dsp-pres/ "
+                + "../dsp-void/ "
+                + "../../generated/dsp-core/ "
+                + "../../generated/dsp-pres/ "
+                + "../../generated/dsp-void/ "
+                + "../../resources/dsp-core/ "
+                + "../../resources/dsp-pres/ "
+                + "../../resources/dsp-void/");
     }
 
     @Test
@@ -148,12 +148,12 @@ public class ManifestClassPathTest {
         Assume.assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-refid");
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ " +
-                                              "classes/dsp-pres/ " +
-                                              "classes/dsp-void/ " +
-                                              "generated/dsp-core/ " +
-                                              "resources/dsp-core/ " +
-                                              "resources/dsp-pres/");
+        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
+                + "classes/dsp-pres/ "
+                + "classes/dsp-void/ "
+                + "generated/dsp-core/ "
+                + "resources/dsp-core/ "
+                + "resources/dsp-pres/");
     }
 
     @Test
@@ -161,29 +161,29 @@ public class ManifestClassPathTest {
         Assume.assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-nested");
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ " +
-                                              "classes/dsp-pres/ " +
-                                              "classes/dsp-void/ " +
-                                              "generated/dsp-core/ " +
-                                              "resources/dsp-core/ " +
-                                              "resources/dsp-pres/");
+        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
+                + "classes/dsp-pres/ "
+                + "classes/dsp-void/ "
+                + "generated/dsp-core/ "
+                + "resources/dsp-core/ "
+                + "resources/dsp-pres/");
     }
 
     @Test
     public void testParentLevel2WithJars() {
         buildRule.executeTarget("test-parent-level2-with-jars");
 
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "../../lib/acme-core.jar " +
-                                              "../../lib/acme-pres.jar " +
-                                              "../dsp-core/ " +
-                                              "../dsp-pres/ " +
-                                              "../dsp-void/ " +
-                                              "../../generated/dsp-core/ " +
-                                              "../../generated/dsp-pres/ " +
-                                              "../../generated/dsp-void/ " +
-                                              "../../resources/dsp-core/ " +
-                                              "../../resources/dsp-pres/ " +
-                                              "../../resources/dsp-void/");
+        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "../../lib/acme-core.jar "
+                + "../../lib/acme-pres.jar "
+                + "../dsp-core/ "
+                + "../dsp-pres/ "
+                + "../dsp-void/ "
+                + "../../generated/dsp-core/ "
+                + "../../generated/dsp-pres/ "
+                + "../../generated/dsp-void/ "
+                + "../../resources/dsp-core/ "
+                + "../../resources/dsp-pres/ "
+                + "../../resources/dsp-void/");
     }
 
     @Test

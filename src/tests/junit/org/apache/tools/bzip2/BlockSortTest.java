@@ -25,8 +25,8 @@ import static org.junit.Assert.assertEquals;
 
 public class BlockSortTest {
 
-    private static final byte[] FIXTURE = { 0, 1, (byte) 252, (byte) 253, (byte) 255,
-                                            (byte) 254, 3, 2, (byte) 128 };
+    private static final byte[] FIXTURE = {0, 1, (byte) 252, (byte) 253, (byte) 255,
+                                           (byte) 254, 3, 2, (byte) 128};
 
     /*
       Burrows-Wheeler transform of fixture the manual way:
@@ -62,8 +62,8 @@ public class BlockSortTest {
         and the original line has been 0
     */
 
-    private static final byte[] FIXTURE_BWT = { (byte) 128, 0, 3, (byte) 254, 2, 1,
-                                                (byte) 252, (byte) 255, (byte) 253 };
+    private static final byte[] FIXTURE_BWT = {(byte) 128, 0, 3, (byte) 254, 2, 1,
+                                               (byte) 252, (byte) 255, (byte) 253};
 
     private static final int[] FIXTURE_SORTED = {
         0, 1, 7, 6, 8, 2, 3, 5, 4

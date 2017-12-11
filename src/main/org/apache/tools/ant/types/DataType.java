@@ -363,7 +363,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     }
 
     private String displayName(Class<?> clazz) {
-        return clazz.getName() + " (loaded via " + clazz.getClassLoader() +")";
+        return clazz.getName() + " (loaded via " + clazz.getClassLoader() + ")";
     }
 }
 

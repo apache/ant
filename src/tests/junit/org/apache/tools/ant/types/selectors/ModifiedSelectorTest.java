@@ -240,7 +240,7 @@ public class ModifiedSelectorTest {
         sel.configure();
 
         // get the cache, so we can check our things
-        MockCache cache = (MockCache)sel.getCache();
+        MockCache cache = (MockCache) sel.getCache();
 
         // the test
         assertFalse("Cache must not be saved before 1st selection.", cache.saved);
@@ -757,11 +757,11 @@ public class ModifiedSelectorTest {
 
             s.addParam(createParam("cache.cachefile", cachefile));
             //s.addParam(createParam("algorithm.provider","---")); // i don't know any valid
-            s.addParam(createParam("cache","propertyfile"));
-            s.addParam(createParam("update","true"));
-            s.addParam(createParam("comparator","rule"));
-            s.addParam(createParam("algorithm.name","sha"));
-            s.addParam(createParam("algorithm","digest"));
+            s.addParam(createParam("cache", "propertyfile"));
+            s.addParam(createParam("update", "true"));
+            s.addParam(createParam("comparator", "rule"));
+            s.addParam(createParam("algorithm.name", "sha"));
+            s.addParam(createParam("algorithm", "digest"));
 
             // first and second run
             performTests(s, "TTTTTTTTTTTT");
@@ -889,7 +889,9 @@ public class ModifiedSelectorTest {
         }
 
         public void doTarget(String target) {
-            if (!isConfigured) setUp();
+            if (!isConfigured) {
+                setUp();
+            }
             executeTarget(target);
         }
 
@@ -898,7 +900,9 @@ public class ModifiedSelectorTest {
         }
 
         public void writeProperties(String line) {
-            if (!isConfigured) setUp();
+            if (!isConfigured) {
+                setUp();
+            }
             File dir = getProject().getBaseDir();
             File file = new File(dir, propfile);
             try {

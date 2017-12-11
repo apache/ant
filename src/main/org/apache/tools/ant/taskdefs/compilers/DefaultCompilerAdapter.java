@@ -433,8 +433,8 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setPath(ump);
         }
         if (attributes.getNativeHeaderDir() != null) {
-            if (assumeJava13() || assumeJava14() || assumeJava15()
-                || assumeJava16() || assumeJava17()) {
+            if (assumeJava13() || assumeJava14() || assumeJava15() || assumeJava16()
+                    || assumeJava17()) {
                 attributes.log("Support for javac -h has been added in Java8,"
                                + " ignoring it");
             } else {
@@ -485,8 +485,7 @@ public abstract class DefaultCompilerAdapter
      * @param cmd the command line
      */
     protected void logAndAddFilesToCompile(final Commandline cmd) {
-        attributes.log("Compilation " + cmd.describeArguments(),
-                       Project.MSG_VERBOSE);
+        attributes.log("Compilation " + cmd.describeArguments(), Project.MSG_VERBOSE);
 
         final StringBuffer niceSourceList = new StringBuffer("File");
         if (compileList.length != 1) {
@@ -728,10 +727,10 @@ public abstract class DefaultCompilerAdapter
         return "javac1.9".equals(attributes.getCompilerVersion())
             || "javac9".equals(attributes.getCompilerVersion())
             || "javac10+".equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9) &&
-                ("classic".equals(attributes.getCompilerVersion())
-                 || "modern".equals(attributes.getCompilerVersion())
-                 || "extJavac".equals(attributes.getCompilerVersion())));
+            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
+                && ("classic".equals(attributes.getCompilerVersion())
+                || "modern".equals(attributes.getCompilerVersion())
+                || "extJavac".equals(attributes.getCompilerVersion())));
     }
 
     /**
@@ -740,8 +739,8 @@ public abstract class DefaultCompilerAdapter
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
         return javacXY.equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY) &&
-                ("classic".equals(attributes.getCompilerVersion())
+            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY)
+                && ("classic".equals(attributes.getCompilerVersion())
                  || "modern".equals(attributes.getCompilerVersion())
                  || "extJavac".equals(attributes.getCompilerVersion())));
     }
@@ -830,8 +829,7 @@ public abstract class DefaultCompilerAdapter
             t = t.substring(2);
         }
         return t.equals("1") || t.equals("2") || t.equals("3") || t.equals("4")
-            || ((t.equals("5") || t.equals("6"))
-                && !assumeJava15() && !assumeJava16())
+            || ((t.equals("5") || t.equals("6")) && !assumeJava15() && !assumeJava16())
             || (t.equals("7") && !assumeJava17())
             || (t.equals("8") && !assumeJava18())
             || (t.equals("9") && !assumeJava9Plus());

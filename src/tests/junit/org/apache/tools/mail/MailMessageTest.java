@@ -82,8 +82,8 @@ public class MailMessageTest {
         testMailClient.cc("cc2@you.com");
         testMailClient.bcc("bcc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" +
-            "test line 2");
+        testMailClient.setMessage("test line 1\n"
+            + "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -92,34 +92,33 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <to@you.com>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <cc1@you.com>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <cc2@you.com>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <bcc@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-        "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-        "To: to@you.com\r\n" +
-        "Cc: cc1@you.com, cc2@you.com\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "test line 1\r\n" +
-        "test line 2\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <to@you.com>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <cc1@you.com>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <cc2@you.com>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <bcc@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n" + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "To: to@you.com\r\n"
+                + "Cc: cc1@you.com, cc2@you.com\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "test line 1\r\n"
+                + "test line 2\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -140,8 +139,7 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" +
-            "test line 2");
+        testMailClient.setMessage("test line 1\n" + "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -150,27 +148,27 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <to@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-            "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-            "To: to@you.com\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "test line 1\r\n" +
-        "test line 2\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <to@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "To: to@you.com\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "test line 1\r\n"
+                + "test line 2\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -191,8 +189,7 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.cc("cc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" +
-            "test line 2");
+        testMailClient.setMessage("test line 1\n" + "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -201,27 +198,27 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <cc@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-            "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-            "Cc: cc@you.com\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "test line 1\r\n" +
-        "test line 2\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <cc@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "Cc: cc@you.com\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "test line 1\r\n"
+                + "test line 2\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -242,8 +239,7 @@ public class MailMessageTest {
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.bcc("bcc@you.com");
         testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" +
-            "test line 2");
+        testMailClient.setMessage("test line 1\n" + "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -252,26 +248,26 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <bcc@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-        "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "test line 1\r\n" +
-        "test line 2\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <bcc@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "test line 1\r\n"
+                + "test line 2\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -292,8 +288,7 @@ public class MailMessageTest {
 
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
-        testMailClient.setMessage("test line 1\n" +
-            "test line 2");
+        testMailClient.setMessage("test line 1\n" + "test line 2");
 
         Thread client = new Thread(testMailClient);
         client.start();
@@ -302,26 +297,26 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <to@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-            "To: to@you.com\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "test line 1\r\n" +
-        "test line 2\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <to@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "To: to@you.com\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "test line 1\r\n"
+                + "test line 2\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -351,26 +346,26 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <to@you.com>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-            "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-            "To: to@you.com\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <to@you.com>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "To: to@you.com\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         assertEquals(expectedResult, result);
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
     }
@@ -402,26 +397,26 @@ public class MailMessageTest {
         client.join(30 * 1000); // a further 30s
 
         String result = testMailServer.getResult();
-        String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
-        "HELO " + local + "\r\n" +
-        "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n" +
-        "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n" +
-        "250\r\n" +
-        "RCPT TO: <abuse@mail-abuse.org>\r\n" +
-        "250\r\n" +
-        "DATA\r\n" +
-        "354\r\n" +
-        "Subject: Test subject\r\n" +
-            "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n" +
-            "To: Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>\r\n" +
-        "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n" +
-        "\r\n" +
-        "\r\n" +
-        "\r\n" +
-        ".\r\n" +
-        "250\r\n" +
-        "QUIT\r\n" +
-        "221\r\n";
+        String expectedResult = "220 test SMTP EmailTaskTest\r\n"
+                + "HELO " + local + "\r\n"
+                + "250 " + local + " Hello " + local + " [127.0.0.1], pleased to meet you\r\n"
+                + "MAIL FROM: <EmailTaskTest@ant.apache.org>\r\n"
+                + "250\r\n"
+                + "RCPT TO: <abuse@mail-abuse.org>\r\n"
+                + "250\r\n"
+                + "DATA\r\n"
+                + "354\r\n"
+                + "Subject: Test subject\r\n"
+                + "From: Mail Message <EmailTaskTest@ant.apache.org>\r\n"
+                + "To: Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>\r\n"
+                + "X-Mailer: org.apache.tools.mail.MailMessage (ant.apache.org)\r\n"
+                + "\r\n"
+                + "\r\n"
+                + "\r\n"
+                + ".\r\n"
+                + "250\r\n"
+                + "QUIT\r\n"
+                + "221\r\n";
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
         PrintStream bos1 = new PrintStream(baos1, true);
@@ -475,8 +470,8 @@ public class MailMessageTest {
                     sb.append(response).append("\r\n");
 
                     if (!data && response.startsWith("HELO")) {
-                        send("250 " + local + " Hello " + local + " " +
-                        "[127.0.0.1], pleased to meet you\r\n");
+                        send("250 " + local + " Hello " + local + " "
+                        + "[127.0.0.1], pleased to meet you\r\n");
                     } else if (!data && response.startsWith("MAIL")) {
                         send("250\r\n");
                     } else if (!data && response.startsWith("RCPT")) {
@@ -493,8 +488,8 @@ public class MailMessageTest {
                     } else if (!data) {
                         //throw new IllegalStateException("Command unrecognized: "
                         //    + response);
-                        send("500 5.5.1 Command unrecognized: \"" +
-                            response + "\"\r\n");
+                        send("500 5.5.1 Command unrecognized: \""
+                            + response + "\"\r\n");
                         loop = false;
                     } else {
                         // sb.append(response + "\r\n");
@@ -643,7 +638,6 @@ public class MailMessageTest {
             } catch (IOException ioe) {
                 fail = true;
                 failMessage = "IOException: " + ioe;
-                return;
             }
         }
 

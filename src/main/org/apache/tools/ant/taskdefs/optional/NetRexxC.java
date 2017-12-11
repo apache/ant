@@ -1023,7 +1023,7 @@ public class NetRexxC extends MatchingTask {
     public static class TraceAttr extends EnumeratedAttribute {
         /** {@inheritDoc}. */
         public String[] getValues() {
-            return new String[]{"trace", "trace1", "trace2", "notrace"};
+            return new String[] {"trace", "trace1", "trace2", "notrace"};
         }
     }
 
@@ -1033,9 +1033,8 @@ public class NetRexxC extends MatchingTask {
     public static class VerboseAttr extends EnumeratedAttribute {
         /** {@inheritDoc}. */
         public String[] getValues() {
-            return new String[]{"verbose", "verbose0", "verbose1",
-                "verbose2", "verbose3", "verbose4",
-                "verbose5", "noverbose"};
+            return new String[] {"verbose", "verbose0", "verbose1", "verbose2",
+                    "verbose3", "verbose4", "verbose5", "noverbose"};
         }
     }
 }

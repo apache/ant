@@ -41,7 +41,6 @@ import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
-import org.apache.tools.ant.types.Path;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -498,7 +497,7 @@ public class JavaTest {
      * test class for spawn
      */
     public static class SpawnEntryPoint {
-        public static void main(String [] argv) throws InterruptedException {
+        public static void main(String[] argv) throws InterruptedException {
             int sleepTime = 10;
             String logFile = "spawn.log";
             if (argv.length >= 1) {

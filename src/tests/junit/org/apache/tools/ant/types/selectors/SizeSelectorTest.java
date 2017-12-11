@@ -180,7 +180,7 @@ public class SizeSelectorTest {
         param2.setValue("Ki");
         param3.setName("when");
         param3.setValue("more");
-        Parameter[] params = {param1,param2,param3};
+        Parameter[] params = {param1, param2, param3};
         s.setParameters(params);
         results = selectorRule.selectionString(s);
         assertEquals("TFFFFFFTFFTT", results);

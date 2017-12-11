@@ -559,8 +559,7 @@ public class Delete extends MatchingTask {
         }
 
         if (quiet && failonerror) {
-            throw new BuildException("quiet and failonerror cannot both be "
-                                     + "set to true", getLocation());
+            throw new BuildException("quiet and failonerror cannot both be set to true", getLocation());
         }
 
         // delete the single file
@@ -609,8 +608,7 @@ public class Delete extends MatchingTask {
                     + " which looks like a broken symlink.",
                     quiet ? Project.MSG_VERBOSE : verbosity);
                 if (!delete(dir)) {
-                    handle("Unable to delete directory "
-                           + dir.getAbsolutePath());
+                    handle("Unable to delete directory " + dir.getAbsolutePath());
                 }
             }
         }
@@ -638,13 +636,11 @@ public class Delete extends MatchingTask {
                 fs.setProject(getProject());
             }
             final File fsDir = fs.getDir();
-            if (!fs.getErrorOnMissingDir() &&
-                (fsDir == null || !fsDir.exists())) {
+            if (!fs.getErrorOnMissingDir() && (fsDir == null || !fsDir.exists())) {
                 continue;
             }
             if (fsDir == null) {
-                throw new BuildException(
-                        "File or Resource without directory or file specified");
+                throw new BuildException("File or Resource without directory or file specified");
             } else if (!fsDir.isDirectory()) {
                 handle("Directory does not exist: " + fsDir);
             } else {
@@ -657,9 +653,11 @@ public class Delete extends MatchingTask {
                         public boolean isFilesystemOnly() {
                             return true;
                         }
+
                         public int size() {
                             return files.length;
                         }
+
                         public Iterator<Resource> iterator() {
                             return new FileResourceIterator(getProject(),
                                                             fsDir, files);
@@ -667,8 +665,7 @@ public class Delete extends MatchingTask {
                     });
                 if (includeEmpty) {
                     filesetDirs.add(new ReverseDirs(getProject(), fsDir,
-                                                    ds
-                                                    .getIncludedDirectories()));
+                            ds.getIncludedDirectories()));
                 }
 
                 if (removeNotFollowedSymlinks) {
@@ -706,8 +703,7 @@ public class Delete extends MatchingTask {
                 for (Resource r : resourcesToDelete) {
                     // nonexistent resources could only occur if we already
                     // deleted something from a fileset:
-                    File f = r.as(FileProvider.class)
-                              .getFile();
+                    File f = r.as(FileProvider.class).getFile();
                     if (!f.exists()) {
                         continue;
                     }
@@ -741,8 +737,7 @@ public class Delete extends MatchingTask {
 
     private void handle(Exception e) {
         if (failonerror) {
-            throw (e instanceof BuildException)
-                ? (BuildException) e : new BuildException(e);
+            throw (e instanceof BuildException) ? (BuildException) e : new BuildException(e);
         }
         log(e, quiet ? Project.MSG_VERBOSE : verbosity);
     }
@@ -825,8 +820,7 @@ public class Delete extends MatchingTask {
                     log("Deleting " + currDir.getAbsolutePath(),
                             quiet ? Project.MSG_VERBOSE : verbosity);
                     if (!delete(currDir)) {
-                        handle("Unable to delete directory "
-                                + currDir.getAbsolutePath());
+                        handle("Unable to delete directory " + currDir.getAbsolutePath());
                     } else {
                         dirCount++;
                     }
@@ -834,8 +828,7 @@ public class Delete extends MatchingTask {
             }
 
             if (dirCount > 0) {
-                log("Deleted "
-                     + dirCount
+                log("Deleted " + dirCount
                      + " director" + (dirCount == 1 ? "y" : "ies")
                      + " form " + d.getAbsolutePath(),
                      quiet ? Project.MSG_VERBOSE : verbosity);

@@ -76,7 +76,7 @@ public class ZipShortTest {
      */
     @Test
     public void testSign() {
-        ZipShort zs = new ZipShort(new byte[] {(byte)0xFF, (byte)0xFF});
+        ZipShort zs = new ZipShort(new byte[] {(byte) 0xFF, (byte) 0xFF});
         assertEquals(0x0000FFFF, zs.getValue());
     }
 

@@ -103,7 +103,7 @@ public class Zip extends MatchingTask {
     protected String archiveType = "zip";
 
     // For directories:
-    private static final long EMPTY_CRC = new CRC32 ().getValue ();
+    private static final long EMPTY_CRC = new CRC32().getValue();
     protected String emptyBehavior = "skip";
     private final Vector<ResourceCollection> resources = new Vector<ResourceCollection>();
     protected Hashtable<String, String> addedDirs = new Hashtable<String, String>();
@@ -783,7 +783,7 @@ public class Zip extends MatchingTask {
                 // temporary file
                 if (doUpdate) {
                     if (!renamedFile.delete()) {
-                        log ("Warning: unable to delete temporary file "
+                        log("Warning: unable to delete temporary file "
                             + renamedFile.getName(), Project.MSG_WARN);
                     }
                 }
@@ -1761,7 +1761,7 @@ public class Zip extends MatchingTask {
         addedDirs.put(vPath, vPath);
 
         if (!skipWriting) {
-            final ZipEntry ze = new ZipEntry (vPath);
+            final ZipEntry ze = new ZipEntry(vPath);
 
             // ZIPs store time with a granularity of 2 seconds, round up
             final int millisToAdd = roundUp ? ROUNDUP_MILLIS : 0;
@@ -1773,10 +1773,10 @@ public class Zip extends MatchingTask {
             } else {
                 ze.setTime(System.currentTimeMillis() + millisToAdd);
             }
-            ze.setSize (0);
-            ze.setMethod (ZipEntry.STORED);
+            ze.setSize(0);
+            ze.setMethod(ZipEntry.STORED);
             // This is faintly ridiculous:
-            ze.setCrc (EMPTY_CRC);
+            ze.setCrc(EMPTY_CRC);
             ze.setUnixMode(mode);
 
             if (extra != null) {

@@ -187,7 +187,7 @@ public class MultiRootFileSet extends AbstractFileSet
     /**
      * What to return from the set: files, directories or both.
      */
-    public static enum SetType {
+    public enum SetType {
         file, dir, both
     }
 

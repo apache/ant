@@ -46,7 +46,9 @@ public class TarUtils {
      * Encapsulates the algorithms used up to Ant 1.8 as ZipEncoding.
      */
     static final ZipEncoding FALLBACK_ENCODING = new ZipEncoding() {
-            public boolean canEncode(final String name) { return true; }
+            public boolean canEncode(final String name) {
+                return true;
+            }
 
             public ByteBuffer encode(final String name) {
                 final int length = name.length();
@@ -76,7 +78,7 @@ public class TarUtils {
         };
 
     /** Private constructor to prevent instantiation of this utility class. */
-    private TarUtils(){
+    private TarUtils() {
     }
 
     /**
@@ -105,8 +107,8 @@ public class TarUtils {
         int     end = offset + length;
         int     start = offset;
 
-        if (length < 2){
-            throw new IllegalArgumentException("Length "+length+" must be at least 2");
+        if (length < 2) {
+            throw new IllegalArgumentException("Length " + length + " must be at least 2");
         }
 
         if (buffer[start] == 0) {
@@ -114,8 +116,8 @@ public class TarUtils {
         }
 
         // Skip leading spaces
-        while (start < end){
-            if (buffer[start] == ' '){
+        while (start < end) {
+            if (buffer[start] == ' ') {
                 start++;
             } else {
                 break;
@@ -132,15 +134,16 @@ public class TarUtils {
             trailer = buffer[end - 1];
         }
 
-        for ( ;start < end; start++) {
+        while (start < end) {
             final byte currentByte = buffer[start];
             // CheckStyle:MagicNumber OFF
-            if (currentByte < '0' || currentByte > '7'){
+            if (currentByte < '0' || currentByte > '7') {
                 throw new IllegalArgumentException(
                         exceptionMessage(buffer, offset, length, start, currentByte));
             }
             result = (result << 3) + (currentByte - '0'); // convert from ASCII
             // CheckStyle:MagicNumber ON
+            start++;
         }
 
         return result;
@@ -179,10 +182,9 @@ public class TarUtils {
                                         final int length,
                                         final boolean negative) {
         if (length >= 9) {
-            throw new IllegalArgumentException("At offset " + offset + ", "
-                                               + length + " byte binary number"
-                                               + " exceeds maximum signed long"
-                                               + " value");
+            throw new IllegalArgumentException(String.format(
+                    "At offset %d, %d byte binary number exceeds maximum signed long value",
+                    offset, length));
         }
         long val = 0;
         for (int i = 1; i < length; i++) {
@@ -208,10 +210,9 @@ public class TarUtils {
             val = val.add(BigInteger.valueOf(-1)).not();
         }
         if (val.bitLength() > 63) {
-            throw new IllegalArgumentException("At offset " + offset + ", "
-                                               + length + " byte binary number"
-                                               + " exceeds maximum signed long"
-                                               + " value");
+            throw new IllegalArgumentException(String.format(
+                    "At offset %d, %d byte binary number exceeds maximum signed long value",
+                    offset, length));
         }
         return negative ? -val.longValue() : val.longValue();
     }
@@ -242,9 +243,9 @@ public class TarUtils {
         // can throw an IOException which parseOctal* doesn't declare
         String string = new String(buffer, offset, length);
 
-        string=string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
-        final String s = "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
-        return s;
+        string = string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
+        return String.format("Invalid byte %s at offset %d in '%s' len=%d",
+                currentByte, current - offset, string, length);
     }
 
     /**
@@ -390,9 +391,10 @@ public class TarUtils {
                 val = val >>> 3;
                 // CheckStyle:MagicNumber ON
             }
-            if (val != 0){
-                throw new IllegalArgumentException
-                (value+"="+Long.toOctalString(value)+ " will not fit in octal number buffer of length "+length);
+            if (val != 0) {
+                throw new IllegalArgumentException(String.format(
+                        "%d=%s will not fit in octal number buffer of length %d",
+                        value, Long.toOctalString(value), length));
             }
         }
 
@@ -417,7 +419,7 @@ public class TarUtils {
      */
     public static int formatOctalBytes(final long value, final byte[] buf, final int offset, final int length) {
 
-        int idx=length-2; // For space and trailing null
+        int idx = length - 2; // For space and trailing null
         formatUnsignedOctalString(value, buf, offset, idx);
 
         buf[offset + idx++] = (byte) ' '; // Trailing space
@@ -442,7 +444,7 @@ public class TarUtils {
      */
     public static int formatLongOctalBytes(final long value, final byte[] buf, final int offset, final int length) {
 
-        final int idx=length-1; // For space
+        final int idx = length - 1; // For space
 
         formatUnsignedOctalString(value, buf, offset, idx);
         buf[offset + idx] = (byte) ' '; // Trailing space
@@ -538,11 +540,11 @@ public class TarUtils {
      */
     public static int formatCheckSumOctalBytes(final long value, final byte[] buf, final int offset, final int length) {
 
-        int idx=length-2; // for NUL and space
+        int idx = length - 2; // for NUL and space
         formatUnsignedOctalString(value, buf, offset, idx);
 
-        buf[offset + idx++]   = 0; // Trailing null
-        buf[offset + idx]     = (byte) ' '; // Trailing space
+        buf[offset + idx++] = 0; // Trailing null
+        buf[offset + idx]   = (byte) ' '; // Trailing space
 
         return offset + length;
     }

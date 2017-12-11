@@ -466,7 +466,7 @@ public class XmlLogger implements BuildLogger {
     }
 
     private void synchronizedAppend(Node parent, Node child) {
-        synchronized(parent) {
+        synchronized (parent) {
             parent.appendChild(child);
         }
     }

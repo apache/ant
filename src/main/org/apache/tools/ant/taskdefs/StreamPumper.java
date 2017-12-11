@@ -143,7 +143,7 @@ public class StreamPumper implements Runnable {
             }
             // On completion, drain any available data (which might be the first data available for quick executions)
             if (finish) {
-                while((length = is.available()) > 0) {
+                while ((length = is.available()) > 0) {
                     if (Thread.interrupted()) {
                         break;
                     }

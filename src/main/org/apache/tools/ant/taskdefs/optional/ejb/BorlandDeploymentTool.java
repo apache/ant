@@ -253,12 +253,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         File borlandDD = new File(getConfig().descriptorDir, ddPrefix + dd);
         if (borlandDD.exists()) {
             log("Borland specific file found " + borlandDD,  Project.MSG_VERBOSE);
-            ejbFiles.put(META_DIR + dd ,  borlandDD);
+            ejbFiles.put(META_DIR + dd, borlandDD);
         } else {
             log("Unable to locate borland deployment descriptor. "
                 + "It was expected to be in "
                 + borlandDD.getPath(), Project.MSG_WARN);
-            return;
         }
     }
 

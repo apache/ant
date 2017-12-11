@@ -490,7 +490,7 @@ public class Checksum extends MatchingTask implements Condition {
                 dis.close();
                 fis.close();
                 fis = null;
-                byte[] fileDigest = messageDigest.digest ();
+                byte[] fileDigest = messageDigest.digest();
                 if (totalproperty != null) {
                     allDigests.put(src, fileDigest);
                 }

@@ -545,8 +545,7 @@ public final class JavaEnvUtils {
             tests.addElement("org.xml.sax.XMLReader");
         }
         if (isAtLeastJavaVersion(JAVA_1_5)) {
-            tests.addElement(
-                "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl");
+            tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl");
         }
         if (isAtLeastJavaVersion(JAVA_1_7)) {
             tests.addElement("jdk.net.Sockets");

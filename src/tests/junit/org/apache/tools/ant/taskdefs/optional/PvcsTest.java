@@ -41,7 +41,7 @@ public class PvcsTest {
         try {
             buildRule.executeTarget("test1");
             fail("Required argument repository not specified");
-        }  catch (BuildException ex) {
+        } catch (BuildException ex) {
             //TODO check exception message
         }
     }

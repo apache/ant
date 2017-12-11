@@ -294,11 +294,9 @@ public class Native2Ascii extends MatchingTask {
         }
 
         log("converting " + srcName, Project.MSG_VERBOSE);
-        Native2AsciiAdapter ad =
-            nestedAdapter != null ? nestedAdapter :
-            Native2AsciiAdapterFactory.getAdapter(facade.getImplementation(),
-                                                  this,
-                                                  createImplementationClasspath());
+        Native2AsciiAdapter ad = nestedAdapter != null ? nestedAdapter
+                : Native2AsciiAdapterFactory.getAdapter(facade.getImplementation(), this,
+                        createImplementationClasspath());
         if (!ad.convert(this, srcFile, destFile)) {
             throw new BuildException("conversion failed");
         }
@@ -324,8 +322,7 @@ public class Native2Ascii extends MatchingTask {
         public String[] mapFileName(String fileName) {
             int lastDot = fileName.lastIndexOf('.');
             if (lastDot >= 0) {
-                return new String[] {fileName.substring(0, lastDot)
-                                         + extension};
+                return new String[] {fileName.substring(0, lastDot) + extension};
             } else {
                 return new String[] {fileName + extension};
             }

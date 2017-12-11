@@ -246,7 +246,7 @@ public class TarOutputStream extends FilterOutputStream {
      */
     @Override
     public void close() throws IOException {
-        if(!finished) {
+        if (!finished) {
             finish();
         }
 
@@ -279,7 +279,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @throws IOException on error
      */
     public void putNextEntry(TarEntry entry) throws IOException {
-        if(finished) {
+        if (finished) {
             throw new IOException("Stream has already been finished");
         }
         Map<String, String> paxHeaders = new HashMap<String, String>();
@@ -342,7 +342,7 @@ public class TarOutputStream extends FilterOutputStream {
         if (finished) {
             throw new IOException("Stream has already been finished");
         }
-        if (!haveUnclosedEntry){
+        if (!haveUnclosedEntry) {
             throw new IOException("No current entry to close");
         }
         if (assemLen > 0) {
@@ -624,7 +624,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @param fieldName the name of the field
      * @return whether a pax header has been written.
      */
-    private boolean handleLongName(TarEntry entry , String name,
+    private boolean handleLongName(TarEntry entry, String name,
                                    Map<String, String> paxHeaders,
                                    String paxHeaderName, byte linkType, String fieldName)
         throws IOException {

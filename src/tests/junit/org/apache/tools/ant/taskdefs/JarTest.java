@@ -54,7 +54,8 @@ public class JarTest {
 
     private static String tempJar = "tmp.jar";
     private static String tempDir = "jartmp/";
-    private Reader r1, r2;
+    private Reader r1;
+    private Reader r2;
 
 
     @Before

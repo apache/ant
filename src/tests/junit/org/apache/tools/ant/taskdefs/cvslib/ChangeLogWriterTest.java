@@ -45,7 +45,7 @@ public class ChangeLogWriterTest {
         CVSEntry entry = new CVSEntry(new Date(), "Se\u00f1orita", "2003 < 2004 && 3 > 5");
         entry.addFile("Medicare & review.doc", "1.1");
         entry.addFile("El\u00e8ments de style", "1.2");
-        CVSEntry[] entries = { entry };
+        CVSEntry[] entries = {entry};
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintWriter pwriter = new PrintWriter(new OutputStreamWriter(output, "UTF-8"));

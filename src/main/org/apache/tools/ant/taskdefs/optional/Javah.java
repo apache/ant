@@ -467,11 +467,9 @@ public class Javah extends Task {
             classpath = classpath.concatSystemClasspath("ignore");
         }
 
-        JavahAdapter ad =
-            nestedAdapter != null ? nestedAdapter :
-            JavahAdapterFactory.getAdapter(facade.getImplementation(),
-                                           this,
-                                           createImplementationClasspath());
+        JavahAdapter ad = nestedAdapter != null ? nestedAdapter
+                : JavahAdapterFactory.getAdapter(facade.getImplementation(), this,
+                        createImplementationClasspath());
         if (!ad.compile(this)) {
             throw new BuildException("compilation failed");
         }

@@ -56,9 +56,9 @@ public class Java13CommandLauncher extends CommandLauncher {
                             Project.MSG_DEBUG);
             }
             return Runtime.getRuntime().exec(cmd, env, workingDir);
-        } catch(IOException ioex) {
+        } catch (IOException ioex) {
             throw ioex;
-        } catch(Exception exc) {
+        } catch (Exception exc) {
             // IllegalAccess, IllegalArgument, ClassCast
             throw new BuildException("Unable to execute command", exc);
         }

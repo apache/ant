@@ -1310,10 +1310,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 if (p.shouldUse()) {
                     final Object evaluatedParam = evaluateParam(p);
                     if (liaison instanceof XSLTLiaison4) {
-                        ((XSLTLiaison4)liaison).addParam(p.getName(), evaluatedParam);
+                        ((XSLTLiaison4) liaison).addParam(p.getName(), evaluatedParam);
                     } else {
                         if (evaluatedParam == null || evaluatedParam instanceof String) {
-                            liaison.addParam(p.getName(), (String)evaluatedParam);
+                            liaison.addParam(p.getName(), (String) evaluatedParam);
                         } else {
                             log("XSLTLiaison '" + liaison.getClass().getName()
                                     + "' supports only String parameters. Converting parameter '" + p.getName()
@@ -1398,7 +1398,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             final String fileName = FileUtils.getRelativePath(baseDir, inFile);
             final File file = new File(fileName);
             // Give always a slash as file separator, so the stylesheet could be sure about that
-            // Use '.' so a dir+"/"+name would not result in an absolute path
+            // Use '.' so a dir + "/" + name would not result in an absolute path
             liaison.addParam(fileDirParameter, file.getParent() != null ? file.getParent().replace(
                     '\\', '/') : ".");
         }

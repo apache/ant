@@ -59,7 +59,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ComponentHelper  {
     /** Map of component name to lists of restricted definitions */
-    private Map<String, List<AntTypeDefinition>>          restrictedDefinitions = new HashMap<String, List<AntTypeDefinition>>();
+    private Map<String, List<AntTypeDefinition>> restrictedDefinitions = new HashMap<String, List<AntTypeDefinition>>();
 
     /** Map from component name to anttypedefinition */
     private final Hashtable<String, AntTypeDefinition> antTypeTable = new Hashtable<String, AntTypeDefinition>();
@@ -146,8 +146,8 @@ public class ComponentHelper  {
         if (project == null) {
             return null;
         }
-        // Singleton for now, it may change ( per/classloader )
-        ComponentHelper ph = (ComponentHelper) project.getReference(COMPONENT_HELPER_REFERENCE);
+        // Singleton for now, it may change (per/classloader)
+        ComponentHelper ph = project.getReference(COMPONENT_HELPER_REFERENCE);
         if (ph != null) {
             return ph;
         }
@@ -972,7 +972,7 @@ public class ComponentHelper  {
                     out.println("Cause: The constructor threw the exception");
                     out.println(t.toString());
                     t.printStackTrace(out); //NOSONAR
-                }  catch (NoClassDefFoundError ncdfe) {
+                } catch (NoClassDefFoundError ncdfe) {
                     jars = true;
                     out.println("Cause:  A class needed by class " + classname
                             + " cannot be found: ");

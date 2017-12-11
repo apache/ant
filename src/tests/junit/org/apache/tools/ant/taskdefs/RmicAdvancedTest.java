@@ -39,7 +39,7 @@ import static org.junit.Assert.fail;
  */
 public class RmicAdvancedTest {
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/rmic/";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/rmic/";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

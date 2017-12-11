@@ -165,7 +165,7 @@ public class Message extends ProjectComponent {
      * @since Ant 1.6
      */
     public void setCharset(String charset) {
-      this.charset = charset;
+        this.charset = charset;
     }
     /**
      * Returns the charset of mail message.
@@ -174,7 +174,7 @@ public class Message extends ProjectComponent {
      * @since Ant 1.6
      */
     public String getCharset() {
-      return charset;
+        return charset;
     }
 
     /**

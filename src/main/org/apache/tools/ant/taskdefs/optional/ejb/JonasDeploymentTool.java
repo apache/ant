@@ -587,7 +587,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             log("Cannot find GenIC class in classpath.", Project.MSG_ERR);
             throw new BuildException("GenIC class not found, please check the classpath.");
         } else {
-            log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);
+            log("Using '" + genicClass + "' GenIC class.", Project.MSG_VERBOSE);
             genicTask.setClassname(genicClass);
         }
 

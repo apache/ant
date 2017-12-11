@@ -514,7 +514,7 @@ public class Replace extends MatchingTask {
                 Properties props = getProperties(replaceFilterResource);
                 Iterator e = getOrderedIterator(props);
                 while (e.hasNext()) {
-                    String tok =  e.next().toString();
+                    String tok = e.next().toString();
                     Replacefilter replaceFilter = createReplacefilter();
                     replaceFilter.setToken(tok);
                     replaceFilter.setValue(props.getProperty(tok));

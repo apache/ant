@@ -55,7 +55,7 @@ public class ClassFileSetTest {
     public void testBasicSet() {
         Project p = buildRule.getProject();
         buildRule.executeTarget("testbasicset");
-        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
@@ -81,7 +81,7 @@ public class ClassFileSetTest {
     public void testSmallSet() {
         Project p = buildRule.getProject();
         buildRule.executeTarget("testsmallset");
-        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
@@ -103,7 +103,7 @@ public class ClassFileSetTest {
     public void testComboSet() {
         Project p = buildRule.getProject();
         buildRule.executeTarget("testcomboset");
-        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
@@ -131,7 +131,7 @@ public class ClassFileSetTest {
     public void testMethodParam() {
         Project p = buildRule.getProject();
         buildRule.executeTarget("testmethodparam");
-        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();
@@ -159,7 +159,7 @@ public class ClassFileSetTest {
     public void testMethodParamInner() {
         Project p = buildRule.getProject();
         buildRule.executeTarget("testmethodparaminner");
-        FileSet resultFileSet = (FileSet)p.getReference(RESULT_FILESET);
+        FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
         Hashtable files = new Hashtable();

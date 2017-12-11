@@ -400,7 +400,7 @@ public abstract class BuildFileTest extends TestCase {
     public void expectSpecificBuildException(String target, String cause, String msg) {
         try {
             executeTarget(target);
-        } catch (org.apache.tools.ant.BuildException ex) {
+        } catch (BuildException ex) {
             buildException = ex;
             if ((null != msg) && (!ex.getMessage().equals(msg))) {
                 fail("Should throw BuildException because '" + cause
@@ -453,7 +453,7 @@ public abstract class BuildFileTest extends TestCase {
      */
     public void assertPropertyEquals(String property, String value) {
         String result = project.getProperty(property);
-        assertEquals("property " + property,value,result);
+        assertEquals("property " + property, value, result);
     }
 
     /**
@@ -461,7 +461,7 @@ public abstract class BuildFileTest extends TestCase {
      *
      * @param property property name
      */
-    public  void assertPropertySet(String property) {
+    public void assertPropertySet(String property) {
         assertPropertyEquals(property, "true");
     }
 
@@ -484,7 +484,7 @@ public abstract class BuildFileTest extends TestCase {
      * @param target build file target
      * @param property property name
      */
-    public  void expectPropertySet(String target, String property) {
+    public void expectPropertySet(String target, String property) {
         expectPropertySet(target, property, "true");
     }
 
@@ -494,7 +494,7 @@ public abstract class BuildFileTest extends TestCase {
      * @param target build file target
      * @param property property name
      */
-    public  void expectPropertyUnset(String target, String property) {
+    public void expectPropertyUnset(String target, String property) {
         expectPropertySet(target, property, null);
     }
 
@@ -523,7 +523,7 @@ public abstract class BuildFileTest extends TestCase {
         }
 
         public void write(int b) {
-            buffer.append((char)b);
+            buffer.append((char) b);
         }
     }
 

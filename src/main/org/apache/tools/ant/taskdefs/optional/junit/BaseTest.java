@@ -41,7 +41,8 @@ public abstract class BaseTest {
     protected String errorProperty;
     // CheckStyle:VisibilityModifier ON
 
-    private Object ifCond, unlessCond;
+    private Object ifCond;
+    private Object unlessCond;
     private boolean skipNonTests;
 
     /**

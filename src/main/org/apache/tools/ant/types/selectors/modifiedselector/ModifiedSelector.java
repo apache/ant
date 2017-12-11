@@ -905,7 +905,7 @@ public class ModifiedSelector extends BaseExtendSelector
          * @see EnumeratedAttribute#getValues()
          */
         public String[] getValues() {
-            return new String[] {"propertyfile" };
+            return new String[] {"propertyfile"};
         }
     }
 
@@ -935,7 +935,7 @@ public class ModifiedSelector extends BaseExtendSelector
          * @see EnumeratedAttribute#getValues()
          */
         public String[] getValues() {
-            return new String[] {"hashvalue", "digest", "checksum" };
+            return new String[] {"hashvalue", "digest", "checksum"};
         }
     }
 
@@ -965,7 +965,7 @@ public class ModifiedSelector extends BaseExtendSelector
          * @see EnumeratedAttribute#getValues()
          */
         public String[] getValues() {
-            return new String[] {"equal", "rule" };
+            return new String[] {"equal", "rule"};
         }
     }
 

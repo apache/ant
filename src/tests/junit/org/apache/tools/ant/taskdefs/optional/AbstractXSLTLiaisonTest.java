@@ -30,7 +30,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
 
 /**
@@ -44,6 +46,9 @@ public abstract class AbstractXSLTLiaisonTest {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     protected XSLTLiaison liaison;
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before
     public void setUp() throws Exception {
@@ -79,13 +84,8 @@ public abstract class AbstractXSLTLiaisonTest {
         liaison.setStylesheet(xsl);
         liaison.addParam("param", "value");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
-        File out = new File("xsltliaison.tmp");
-        out.deleteOnExit(); // just to be sure
-        try {
-            liaison.transform(in, out);
-        } finally {
-            out.delete();
-        }
+        File out = testFolder.newFile("xsltliaison.tmp");
+        liaison.transform(in, out);
     }
 
     @Test
@@ -93,17 +93,13 @@ public abstract class AbstractXSLTLiaisonTest {
         File xsl = getFile("/taskdefs/optional/xsltliaison-encoding-in.xsl");
         liaison.setStylesheet(xsl);
         File in = getFile("/taskdefs/optional/xsltliaison-encoding-in.xml");
-        File out = new File("xsltliaison-encoding.tmp");
-        out.deleteOnExit(); // just to be sure
-        try {
-            liaison.transform(in, out);
-            Document doc = parseXML(out);
-            assertEquals("root",doc.getDocumentElement().getNodeName());
-            assertEquals("message",doc.getDocumentElement().getFirstChild().getNodeName());
-            assertEquals("\u00E9\u00E0\u00E8\u00EF\u00F9",doc.getDocumentElement().getFirstChild().getFirstChild().getNodeValue());
-        } finally {
-            out.delete();
-        }
+        File out = testFolder.newFile("xsltliaison-encoding.tmp");
+        liaison.transform(in, out);
+        Document doc = parseXML(out);
+        assertEquals("root", doc.getDocumentElement().getNodeName());
+        assertEquals("message", doc.getDocumentElement().getFirstChild().getNodeName());
+        assertEquals("\u00E9\u00E0\u00E8\u00EF\u00F9",
+                doc.getDocumentElement().getFirstChild().getFirstChild().getNodeValue());
     }
 
     public Document parseXML(File file) throws Exception {

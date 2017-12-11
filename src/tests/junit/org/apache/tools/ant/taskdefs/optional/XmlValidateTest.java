@@ -40,8 +40,7 @@ public class XmlValidateTest {
     /**
      * where tasks run
      */
-    private final static String TASKDEFS_DIR =
-        "src/etc/testcases/taskdefs/optional/";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -112,11 +111,10 @@ public class XmlValidateTest {
         try {
             buildRule.executeTarget("testSchemaGood");
         } catch (BuildException e) {
-            if (e
-                .getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema")
-                || e.getMessage().endsWith(
-                    " doesn't support feature http://apache.org/xml/features/validation/schema")) {
+            if (e.getMessage().endsWith(
+                    " doesn't recognize feature http://apache.org/xml/features/validation/schema")
+                    || e.getMessage().endsWith(
+                            " doesn't support feature http://apache.org/xml/features/validation/schema")) {
                 throw new AssumptionViolatedException("parser doesn't support schema");
             } else {
                 throw e;
@@ -132,11 +130,10 @@ public class XmlValidateTest {
             buildRule.executeTarget("testSchemaBad");
             fail("Should throw BuildException because 'Bad Schema Validation'");
         } catch (BuildException e) {
-            if (e
-                .getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema")
-                || e.getMessage().endsWith(
-                    " doesn't support feature http://apache.org/xml/features/validation/schema")) {
+            if (e.getMessage().endsWith(
+                    " doesn't recognize feature http://apache.org/xml/features/validation/schema")
+                    || e.getMessage().endsWith(
+                            " doesn't support feature http://apache.org/xml/features/validation/schema")) {
                 throw new AssumptionViolatedException("parser doesn't support schema");
             } else {
                 assertTrue(

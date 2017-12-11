@@ -401,8 +401,7 @@ public final class Locator {
      * @deprecated since 1.9, use <code>FileUtils.getFileURL(File)</code>
      */
     @Deprecated
-    public static URL fileToURL(File file)
-        throws MalformedURLException {
+    public static URL fileToURL(File file) throws MalformedURLException {
         return new URL(file.toURI().toASCIIString());
     }
 

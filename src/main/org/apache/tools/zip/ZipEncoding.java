@@ -80,5 +80,5 @@ public interface ZipEncoding {
      * @return The decoded string.
      * @throws IOException if something goes wrong
      */
-    String decode(byte [] data) throws IOException;
+    String decode(byte[] data) throws IOException;
 }

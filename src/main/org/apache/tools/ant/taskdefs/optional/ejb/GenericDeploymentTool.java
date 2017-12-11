@@ -790,7 +790,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
                 manifest = new Manifest(in);
             } catch (IOException e) {
-                throw new BuildException ("Unable to read manifest", e, getLocation());
+                throw new BuildException("Unable to read manifest", e, getLocation());
             } finally {
                 if (in != null) {
                     in.close();

@@ -82,7 +82,7 @@ public final class ZipEightByteInteger {
      * Create instance from bytes.
      * @param bytes the bytes to store as a ZipEightByteInteger
      */
-    public ZipEightByteInteger (byte[] bytes) {
+    public ZipEightByteInteger(byte[] bytes) {
         this(bytes, 0);
     }
 
@@ -91,7 +91,7 @@ public final class ZipEightByteInteger {
      * @param bytes the bytes to store as a ZipEightByteInteger
      * @param offset the offset to start
      */
-    public ZipEightByteInteger (byte[] bytes, int offset) {
+    public ZipEightByteInteger(byte[] bytes, int offset) {
         value = ZipEightByteInteger.getValue(bytes, offset);
     }
 

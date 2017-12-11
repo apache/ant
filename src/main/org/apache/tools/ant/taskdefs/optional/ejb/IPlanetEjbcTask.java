@@ -114,7 +114,7 @@ public class IPlanetEjbcTask extends Task {
      * @param iasdescriptor The name and location of the iAS-specific EJB
      *                      descriptor.
      */
-    public void setIasdescriptor (File iasdescriptor) {
+    public void setIasdescriptor(File iasdescriptor) {
         this.iasdescriptor = iasdescriptor;
     }
 

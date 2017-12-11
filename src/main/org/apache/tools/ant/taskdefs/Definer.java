@@ -121,7 +121,8 @@ public abstract class Definer extends DefBase {
          * @return an array of the allowed values for this attribute.
          */
         public String[] getValues() {
-            return new String[] {POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE, POLICY_FAILALL};
+            return new String[] {POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE,
+                    POLICY_FAILALL};
         }
     }
 

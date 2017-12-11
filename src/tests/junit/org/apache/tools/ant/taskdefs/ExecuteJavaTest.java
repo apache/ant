@@ -35,10 +35,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class ExecuteJavaTest {
 
-    private final static int TIME_OUT = 5000;
-
-    private final static int CLOCK_ERROR = 200;
-    private final static int TIME_OUT_TEST = TIME_OUT - CLOCK_ERROR;
+    private static final int TIME_OUT = 5000;
+    private static final int CLOCK_ERROR = 200;
+    private static final int TIME_OUT_TEST = TIME_OUT - CLOCK_ERROR;
 
     private ExecuteJava ej;
     private Project project;
@@ -47,7 +46,7 @@ public class ExecuteJavaTest {
     @Before
     public void setUp() {
         ej = new ExecuteJava();
-        ej.setTimeout((long)TIME_OUT);
+        ej.setTimeout((long) TIME_OUT);
         project = new Project();
         project.setBasedir(".");
         project.setProperty(MagicNames.ANT_HOME, System.getProperty(MagicNames.ANT_HOME));
@@ -121,7 +120,7 @@ public class ExecuteJavaTest {
     private static String getTestClassPath() {
         String classpath = System.getProperty("build.tests");
         if (classpath == null) {
-            System.err.println("WARNING: 'build.tests' property is not available !");
+            System.err.println("WARNING: 'build.tests' property is not available!");
             classpath = System.getProperty("java.class.path");
         }
 

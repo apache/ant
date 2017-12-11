@@ -58,8 +58,7 @@ public class CommandlineTest {
 
         s = Commandline.translateCommandline("1 \"2\'3\" 4");
         assertEquals("Case with double quotes around single quote", 3, s.length);
-        assertEquals("Double quotes stripped, single quote included", "2\'3",
-                     s[1]);
+        assertEquals("Double quotes stripped, single quote included", "2\'3", s[1]);
 
         s = Commandline.translateCommandline("1 \'2 3\' 4");
         assertEquals("Case with single quotes and whitespace", 3, s.length);
@@ -67,8 +66,7 @@ public class CommandlineTest {
 
         s = Commandline.translateCommandline("1 \'2\"3\' 4");
         assertEquals("Case with single quotes around double quote", 3, s.length);
-        assertEquals("Single quotes stripped, double quote included", "2\"3",
-                     s[1]);
+        assertEquals("Single quotes stripped, double quote included", "2\"3", s[1]);
 
         // \ doesn't have a special meaning anymore - this is different from
         // what the Unix sh does but causes a lot of problems on DOS

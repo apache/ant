@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class RegexpMatcherTest {
 
-    public final static String UNIX_LINE = "\n";
+    public static final String UNIX_LINE = "\n";
 
     private RegexpMatcher reg;
 

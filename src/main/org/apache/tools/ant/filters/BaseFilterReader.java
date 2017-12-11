@@ -176,7 +176,7 @@ public abstract class BaseFilterReader extends FilterReader {
         StringBuffer line = new StringBuffer();
 
         while (ch != -1) {
-            line.append ((char) ch);
+            line.append((char) ch);
             if (ch == '\n') {
                 break;
             }

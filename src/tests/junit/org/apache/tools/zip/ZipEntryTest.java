@@ -20,6 +20,8 @@ package org.apache.tools.zip;
 
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -81,7 +83,7 @@ public class ZipEntryTest {
         try {
             ze.removeExtraField(ExtraFieldUtilsTest.UNRECOGNIZED_HEADER);
             fail("should be no such element");
-        } catch (java.util.NoSuchElementException nse) {
+        } catch (NoSuchElementException nse) {
             //TODO assert exception values
         }
     }
@@ -178,29 +180,25 @@ public class ZipEntryTest {
         assertEquals(0, ze.getPlatform());
         ze.setUnixMode(0755);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0755,
-                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
-        assertEquals(0, ze.getExternalAttributes()  & 0xFFFF);
+        assertEquals(0755, (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0, ze.getExternalAttributes() & 0xFFFF);
 
         ze.setUnixMode(0444);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0444,
-                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
-        assertEquals(1, ze.getExternalAttributes()  & 0xFFFF);
+        assertEquals(0444, (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(1, ze.getExternalAttributes() & 0xFFFF);
 
         ze = new ZipEntry("foo/");
         assertEquals(0, ze.getPlatform());
         ze.setUnixMode(0777);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0777,
-                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
-        assertEquals(0x10, ze.getExternalAttributes()  & 0xFFFF);
+        assertEquals(0777, (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0x10, ze.getExternalAttributes() & 0xFFFF);
 
         ze.setUnixMode(0577);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0577,
-                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
-        assertEquals(0x11, ze.getExternalAttributes()  & 0xFFFF);
+        assertEquals(0577, (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0x11, ze.getExternalAttributes() & 0xFFFF);
     }
 
     /**

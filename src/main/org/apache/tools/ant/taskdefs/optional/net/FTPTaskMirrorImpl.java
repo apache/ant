@@ -337,7 +337,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                             try {
                                 path = myfile.getRelativePath();
                                 traversesSymlinks = myfile.isTraverseSymlinks();
-                            }  catch (IOException be) {
+                            } catch (IOException be) {
                                 throw new BuildException(be, task.getLocation());
                             } catch (BuildException be) {
                                 isOK = false;
@@ -1177,8 +1177,8 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 for (int i = 0; i < dsfiles.length; i++) {
                     final String dsfile = dsfiles[i];
                     executeRetryable(h, new Retryable() {
-                            public void execute() throws IOException {
-                                switch (task.getAction()) {
+                        public void execute() throws IOException {
+                            switch (task.getAction()) {
                                 case FTPTask.SEND_FILES:
                                     sendFile(ftp, fdir, dsfile);
                                     break;
@@ -1199,9 +1199,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                                 default:
                                     throw new BuildException("unknown ftp action "
                                                              + task.getAction());
-                                }
                             }
-                        }, dsfile);
+                        }
+                    }, dsfile);
                 }
             }
         } finally {
@@ -1443,20 +1443,20 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             + task.getGranularityMillis();
 
         StringBuffer msg;
-        synchronized(TIMESTAMP_LOGGING_SDF) {
+        synchronized (TIMESTAMP_LOGGING_SDF) {
             msg = new StringBuffer("   [")
                 .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
                 .append("] local");
         }
         task.log(msg.toString(), Project.MSG_VERBOSE);
 
-        synchronized(TIMESTAMP_LOGGING_SDF) {
+        synchronized (TIMESTAMP_LOGGING_SDF) {
             msg = new StringBuffer("   [")
                 .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
                 .append("] remote");
         }
         if (remoteTimestamp != adjustedRemoteTimestamp) {
-            synchronized(TIMESTAMP_LOGGING_SDF) {
+            synchronized (TIMESTAMP_LOGGING_SDF) {
                 msg.append(" - (raw: ")
                     .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
                     .append(")");
@@ -1936,4 +1936,3 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         }
     }
 }
-

@@ -42,7 +42,7 @@ public class TypeSelectorTest {
         TypeSelector s = new TypeSelector();
         try {
             s.isSelected(selectorRule.getProject().getBaseDir(),
-                    selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
+                    selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
             fail("TypeSelector did not check for required fields");
         } catch (BuildException be1) {
             assertEquals("The type attribute is required", be1.getMessage());

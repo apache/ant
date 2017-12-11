@@ -333,7 +333,7 @@ public class TarBuffer {
         }
 
         if (outStream == null) {
-            if (inStream == null){
+            if (inStream == null) {
                 throw new IOException("Output buffer is closed");
             }
             throw new IOException("writing to an input buffer");
@@ -373,7 +373,7 @@ public class TarBuffer {
         }
 
         if (outStream == null) {
-            if (inStream == null){
+            if (inStream == null) {
                 throw new IOException("Output buffer is closed");
             }
             throw new IOException("writing to an input buffer");

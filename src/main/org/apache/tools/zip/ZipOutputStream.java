@@ -519,7 +519,7 @@ public class ZipOutputStream extends FilterOutputStream {
         int count = 0;
         for (ZipEntry ze : entries) {
             byteArrayOutputStream.write(createCentralFileHeader(ze));
-            if (++count > NUM_PER_WRITE){
+            if (++count > NUM_PER_WRITE) {
                 writeCounted(byteArrayOutputStream.toByteArray());
                 byteArrayOutputStream.reset();
                 count = 0;
@@ -663,7 +663,7 @@ public class ZipOutputStream extends FilterOutputStream {
         return requestedMode == Zip64Mode.Always || isTooLageForZip32(entry1);
     }
 
-    private boolean isTooLageForZip32(ZipEntry zipArchiveEntry){
+    private boolean isTooLageForZip32(ZipEntry zipArchiveEntry) {
         return zipArchiveEntry.getSize() >= ZIP64_MAGIC
             || zipArchiveEntry.getCompressedSize() >= ZIP64_MAGIC;
     }
@@ -941,7 +941,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @param offset int
      * @param length int
      */
-    private void writeDeflated(byte[]b, int offset, int length)
+    private void writeDeflated(byte[] b, int offset, int length)
         throws IOException {
         if (length > 0 && !def.finished()) {
             entry.bytesRead += length;
@@ -1070,7 +1070,7 @@ public class ZipOutputStream extends FilterOutputStream {
     private byte[] createLocalFileHeader(ZipEntry ze, ByteBuffer name, boolean encodable)  {
         byte[] extra = ze.getLocalFileDataExtra();
         final int nameLen = name.limit() - name.position();
-        int len= LFH_FILENAME_OFFSET + nameLen + extra.length;
+        int len = LFH_FILENAME_OFFSET + nameLen + extra.length;
         byte[] buf = new byte[len];
 
         System.arraycopy(LFH_SIG,  0, buf, LFH_SIG_OFFSET, WORD);
@@ -1099,7 +1099,7 @@ public class ZipOutputStream extends FilterOutputStream {
 
         // compressed length
         // uncompressed length
-        if (hasZip64Extra(entry.entry)){
+        if (hasZip64Extra(entry.entry)) {
             // point to ZIP64 extended information extra field for
             // sizes, may get rewritten once sizes are known if
             // stream is seekable
@@ -1243,7 +1243,7 @@ public class ZipOutputStream extends FilterOutputStream {
         ByteBuffer commentB = getEntryEncoding(ze).encode(comm);
         final int nameLen = name.limit() - name.position();
         final int commentLen = commentB.limit() - commentB.position();
-        int len= CFH_FILENAME_OFFSET + nameLen + extra.length + commentLen;
+        int len = CFH_FILENAME_OFFSET + nameLen + extra.length + commentLen;
         byte[] buf = new byte[len];
 
         System.arraycopy(CFH_SIG,  0, buf, CFH_SIG_OFFSET, WORD);
@@ -1566,9 +1566,8 @@ public class ZipOutputStream extends FilterOutputStream {
         }
         // requires version 2 as we are going to store length info
         // in the data descriptor
-        return (isDeflatedToOutputStream(zipMethod)) ?
-                DATA_DESCRIPTOR_MIN_VERSION :
-                INITIAL_VERSION;
+        return (isDeflatedToOutputStream(zipMethod))
+            ? DATA_DESCRIPTOR_MIN_VERSION : INITIAL_VERSION;
     }
 
     private boolean isDeflatedToOutputStream(int zipMethod) {
