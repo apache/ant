@@ -75,6 +75,6 @@ public class CutDirsMapper implements FileNameMapper {
         if (nthMatch == -1) {
             return null;
         }
-        return new String[] { sourceFileName.substring(nthMatch + 1) };
+        return new String[] {sourceFileName.substring(nthMatch + 1)};
     }
 }

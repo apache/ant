@@ -64,7 +64,7 @@ public abstract class ScriptRunnerBase {
     private ClassLoader scriptLoader;
 
     /** Beans to be provided to the script */
-    private final Map<String,Object> beans = new HashMap<>();
+    private final Map<String, Object> beans = new HashMap<>();
 
     /**
      * Add a list of named objects to the list to be exported to the script
@@ -72,7 +72,7 @@ public abstract class ScriptRunnerBase {
      * @param dictionary a map of objects to be placed into the script context
      *        indexed by String names.
      */
-    public void addBeans(Map<String,?> dictionary) {
+    public void addBeans(Map<String, ?> dictionary) {
         dictionary.forEach((k, v) -> {
             try {
                 addBean(k, v);

@@ -378,7 +378,7 @@ public class Ant extends Task {
             log("calling target(s) "
                 + (!locals.isEmpty() ? locals.toString() : "[default]")
                 + " in build file " + antFile, Project.MSG_VERBOSE);
-            newProject.setUserProperty(MagicNames.ANT_FILE , antFile);
+            newProject.setUserProperty(MagicNames.ANT_FILE, antFile);
 
             String thisAntFile = getProject().getProperty(MagicNames.ANT_FILE);
             // Are we trying to call the target in which we are defined (or

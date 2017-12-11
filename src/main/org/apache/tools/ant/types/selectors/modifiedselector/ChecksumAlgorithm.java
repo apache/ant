@@ -128,7 +128,7 @@ public class ChecksumAlgorithm implements Algorithm {
                 while (check.read() != -1) {
                 }
                 return Long.toString(check.getChecksum().getValue());
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return null;

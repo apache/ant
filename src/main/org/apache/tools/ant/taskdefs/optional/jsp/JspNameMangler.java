@@ -68,7 +68,7 @@ public class JspNameMangler implements JspMangler {
      * map from a jsp file to a base name; does not deal with extensions
      *
      * @param jspFile jspFile file
-     * @return exensionless potentially remapped name
+     * @return extensionless potentially remapped name
      */
     private String mapJspToBaseName(File jspFile) {
         String className = stripExtension(jspFile);

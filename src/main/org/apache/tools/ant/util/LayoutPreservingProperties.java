@@ -357,7 +357,7 @@ public class LayoutPreservingProperties extends Properties {
                     line = new Blank();
                 } else {
                     line = new Pair(logicalLineBuffer.toString());
-                    final String key = unescape(((Pair)line).getName());
+                    final String key = unescape(((Pair) line).getName());
                     if (keyedPairLines.containsKey(key)) {
                         // this key is already present, so we remove it and add
                         // the new one
@@ -475,7 +475,7 @@ public class LayoutPreservingProperties extends Properties {
                     buffy.append('\t');
                 } else if (c == 'u') {
                     // handle unicode escapes
-                    c = unescapeUnicode(ch, i+1);
+                    c = unescapeUnicode(ch, i + 1);
                     i += 4;
                     buffy.append(c);
                 } else {
@@ -555,7 +555,7 @@ public class LayoutPreservingProperties extends Properties {
             }
             final int p = forEscaping.indexOf(c);
             if (p != -1) {
-                buffy.append("\\").append(escaped.substring(p,p+1));
+                buffy.append("\\").append(escaped.substring(p, p + 1));
             } else if (c < 0x0020 || c > 0x007e) {
                 buffy.append(escapeUnicode(c));
             } else {
@@ -725,7 +725,7 @@ public class LayoutPreservingProperties extends Properties {
                 setValue(null);
             } else {
                 name = text.substring(0, pos);
-                setValue(text.substring(pos+1, text.length()));
+                setValue(text.substring(pos + 1, text.length()));
             }
             // trim leading whitespace only
             name = stripStart(name, " \t\f");
@@ -737,7 +737,7 @@ public class LayoutPreservingProperties extends Properties {
             }
 
             int i = 0;
-            for (;i < s.length(); i++) {
+            for (; i < s.length(); i++) {
                 if (chars.indexOf(s.charAt(i)) == -1) {
                     break;
                 }

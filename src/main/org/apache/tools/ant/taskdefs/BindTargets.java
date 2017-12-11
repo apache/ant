@@ -77,8 +77,8 @@ public class BindTargets extends Task {
                 ProjectHelper.PROJECTHELPER_REFERENCE);
 
         for (String target : targets) {
-            helper.getExtensionStack().add(new String[] { extensionPoint,
-                target, onMissingExtensionPoint.name() });
+            helper.getExtensionStack().add(new String[] {extensionPoint,
+                target, onMissingExtensionPoint.name()});
         }
     }
 }

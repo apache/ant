@@ -103,7 +103,7 @@ public class ZipFileSetTest extends AbstractFileSetTest {
         f.setPrefix("/examples");
         f.setFileMode("600");
         f.setDirMode("530");
-        getProject().addReference("test",f);
+        getProject().addReference("test", f);
         ZipFileSet zid = (ZipFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
         assertTrue("src attribute copied by copy constructor",

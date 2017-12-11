@@ -989,33 +989,32 @@ public class TarEntry implements TarConstants {
 
         int type = evaluateType(header);
         switch (type) {
-        case FORMAT_OLDGNU: {
-            offset += ATIMELEN_GNU;
-            offset += CTIMELEN_GNU;
-            offset += OFFSETLEN_GNU;
-            offset += LONGNAMESLEN_GNU;
-            offset += PAD2LEN_GNU;
-            offset += SPARSELEN_GNU;
-            isExtended = TarUtils.parseBoolean(header, offset);
-            offset += ISEXTENDEDLEN_GNU;
-            realSize = TarUtils.parseOctal(header, offset, REALSIZELEN_GNU);
-            offset += REALSIZELEN_GNU;
-            break;
-        }
-        case FORMAT_POSIX:
-        default: {
-            String prefix = oldStyle
-                ? TarUtils.parseName(header, offset, PREFIXLEN)
-                : TarUtils.parseName(header, offset, PREFIXLEN, encoding);
-            // SunOS tar -E does not add / to directory names, so fix
-            // up to be consistent
-            if (isDirectory() && !name.endsWith("/")) {
-                name = name + "/";
+            case FORMAT_OLDGNU: {
+                offset += ATIMELEN_GNU;
+                offset += CTIMELEN_GNU;
+                offset += OFFSETLEN_GNU;
+                offset += LONGNAMESLEN_GNU;
+                offset += PAD2LEN_GNU;
+                offset += SPARSELEN_GNU;
+                isExtended = TarUtils.parseBoolean(header, offset);
+                offset += ISEXTENDEDLEN_GNU;
+                realSize = TarUtils.parseOctal(header, offset, REALSIZELEN_GNU);
+                offset += REALSIZELEN_GNU;
+                break;
             }
-            if (prefix.length() > 0) {
-                name = prefix + "/" + name;
+            case FORMAT_POSIX:
+            default: {
+                String prefix = oldStyle ? TarUtils.parseName(header, offset, PREFIXLEN)
+                        : TarUtils.parseName(header, offset, PREFIXLEN, encoding);
+                // SunOS tar -E does not add / to directory names, so fix
+                // up to be consistent
+                if (isDirectory() && !name.endsWith("/")) {
+                    name = name + "/";
+                }
+                if (prefix.length() > 0) {
+                    name = prefix + "/" + name;
+                }
             }
-        }
         }
     }
 
@@ -1116,9 +1115,9 @@ public class TarEntry implements TarConstants {
             final byte[] buffer1, final int offset1, final int length1,
             final byte[] buffer2, final int offset2, final int length2,
             boolean ignoreTrailingNulls) {
-        int minLen=length1 < length2 ? length1 : length2;
-        for (int i=0; i < minLen; i++) {
-            if (buffer1[offset1+i] != buffer2[offset2+i]) {
+        int minLen = (length1 < length2) ? length1 : length2;
+        for (int i = 0; i < minLen; i++) {
+            if (buffer1[offset1 + i] != buffer2[offset2 + i]) {
                 return false;
             }
         }
@@ -1126,15 +1125,15 @@ public class TarEntry implements TarConstants {
             return true;
         }
         if (ignoreTrailingNulls) {
-            if (length1 > length2){
-                for(int i = length2; i < length1; i++){
-                    if (buffer1[offset1+i] != 0) {
+            if (length1 > length2) {
+                for (int i = length2; i < length1; i++) {
+                    if (buffer1[offset1 + i] != 0) {
                         return false;
                     }
                 }
             } else {
-                for (int i = length1; i < length2; i++){
-                    if (buffer2[offset2+i] != 0) {
+                for (int i = length1; i < length2; i++) {
+                    if (buffer2[offset2 + i] != 0) {
                         return false;
                     }
                 }

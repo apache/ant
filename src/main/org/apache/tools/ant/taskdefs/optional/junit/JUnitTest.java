@@ -481,7 +481,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @param p the properties.
      *          This is a copy of the projects ant properties.
      */
-    public void setProperties(Hashtable<?,?> p) {
+    public void setProperties(Hashtable<?, ?> p) {
         props = new Properties();
         p.forEach(props::put);
     }

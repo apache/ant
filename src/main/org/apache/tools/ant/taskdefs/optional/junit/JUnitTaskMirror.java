@@ -77,7 +77,7 @@ public interface JUnitTaskMirror {
 
 
     /** The interface that JUnitResultFormatter extends. */
-    public interface JUnitResultFormatterMirror {
+    interface JUnitResultFormatterMirror {
         /**
          * Set the output stream.
          * @param outputStream the stream to use.
@@ -86,7 +86,7 @@ public interface JUnitTaskMirror {
     }
 
     /** The interface that SummaryJUnitResultFormatter extends. */
-    public interface SummaryJUnitResultFormatterMirror
+    interface SummaryJUnitResultFormatterMirror
         extends JUnitResultFormatterMirror {
 
         /**
@@ -97,7 +97,7 @@ public interface JUnitTaskMirror {
     }
 
     /** Interface that test runners implement. */
-    public interface JUnitTestRunnerMirror {
+    interface JUnitTestRunnerMirror {
 
         /**
          * Used in formatter arguments as a placeholder for the basename

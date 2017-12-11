@@ -41,7 +41,7 @@ public class ImmutableTest {
     @Test
     public void test1() {
         buildRule.executeTarget("test1");
-        assertEquals("override",buildRule.getProject().getProperty("test"));
+        assertEquals("override", buildRule.getProject().getProperty("test"));
     }
 
     // ensure <tstamp>'s new prefix attribute is working

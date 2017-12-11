@@ -302,7 +302,7 @@ public final class StringUtils {
         return join(Arrays.asList(array), separator);
     }
 
-    private static Collector<CharSequence,?,String> joining(CharSequence separator) {
+    private static Collector<CharSequence, ?, String> joining(CharSequence separator) {
         return separator == null ? Collectors.joining() : Collectors.joining(separator);
     }
 

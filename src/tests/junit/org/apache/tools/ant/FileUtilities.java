@@ -70,7 +70,7 @@ public class FileUtilities {
             return;
         }
 
-        assumeTrue(file.setLastModified(file.lastModified() - (seconds * 1000)));
+        assumeTrue(file.setLastModified(file.lastModified() - seconds * 1000));
 
         if (file.isDirectory()) {
             File[] children = file.listFiles();

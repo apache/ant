@@ -89,7 +89,7 @@ public class Zip extends MatchingTask {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     // For directories:
-    private static final long EMPTY_CRC = new CRC32 ().getValue ();
+    private static final long EMPTY_CRC = new CRC32().getValue();
 
     private static final ResourceSelector MISSING_SELECTOR =
             target -> !target.isExists();
@@ -387,7 +387,7 @@ public class Zip extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "fail", "skip", "create" };
+            return new String[] {"fail", "skip", "create"};
         }
     }
 
@@ -765,7 +765,7 @@ public class Zip extends MatchingTask {
                 // temporary file
                 if (doUpdate) {
                     if (!renamedFile.delete()) {
-                        log ("Warning: unable to delete temporary file "
+                        log("Warning: unable to delete temporary file "
                             + renamedFile.getName(), Project.MSG_WARN);
                     }
                 }
@@ -1708,7 +1708,7 @@ public class Zip extends MatchingTask {
         addedDirs.put(vPath, vPath);
 
         if (!skipWriting) {
-            final ZipEntry ze = new ZipEntry (vPath);
+            final ZipEntry ze = new ZipEntry(vPath);
 
             // ZIPs store time with a granularity of 2 seconds, round up
             final int millisToAdd = roundUp ? ROUNDUP_MILLIS : 0;
@@ -1720,10 +1720,10 @@ public class Zip extends MatchingTask {
             } else {
                 ze.setTime(System.currentTimeMillis() + millisToAdd);
             }
-            ze.setSize (0);
-            ze.setMethod (ZipEntry.STORED);
+            ze.setSize(0);
+            ze.setMethod(ZipEntry.STORED);
             // This is faintly ridiculous:
-            ze.setCrc (EMPTY_CRC);
+            ze.setCrc(EMPTY_CRC);
             ze.setUnixMode(mode);
 
             if (extra != null) {
@@ -1983,7 +1983,7 @@ public class Zip extends MatchingTask {
         entries.clear();
         addingNewFiles = false;
         doUpdate = savedDoUpdate;
-        filesetsFromGroupfilesets.forEach(resources::remove);
+        resources.removeAll(filesetsFromGroupfilesets);
         filesetsFromGroupfilesets.clear();
         HAVE_NON_FILE_SET_RESOURCES_TO_ADD.set(Boolean.FALSE);
     }
@@ -2101,7 +2101,7 @@ public class Zip extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "add", "preserve", "fail" };
+            return new String[] {"add", "preserve", "fail"};
         }
     }
 
@@ -2234,7 +2234,7 @@ public class Zip extends MatchingTask {
 
         @Override
         public String[] getValues() {
-            return new String[] { NEVER_KEY, ALWAYS_KEY, A_N_KEY };
+            return new String[] {NEVER_KEY, ALWAYS_KEY, A_N_KEY};
         }
 
         public static final Zip64ModeAttribute NEVER =

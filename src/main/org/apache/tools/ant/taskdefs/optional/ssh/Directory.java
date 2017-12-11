@@ -49,7 +49,7 @@ public class Directory {
      * @param directory a directory
      * @param parent    a parent Directory
      */
-    public Directory(File directory , Directory parent) {
+    public Directory(File directory, Directory parent) {
         this.parent = parent;
         this.childDirectories = new LinkedHashSet<>();
         this.files = new ArrayList<>();

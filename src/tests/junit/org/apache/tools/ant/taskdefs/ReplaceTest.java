@@ -134,7 +134,7 @@ public class ReplaceTest {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue("Could not change file modification time",
-                testFile.setLastModified(testFile.lastModified() - (FileUtils.getFileUtils().getFileTimestampGranularity() * 5)));
+                testFile.setLastModified(testFile.lastModified() - FileUtils.getFileUtils().getFileTimestampGranularity() * 5));
         long ts1 = testFile.lastModified();
         buildRule.executeTarget("testNoPreserve");
         assertTrue(ts1 < new File(buildRule.getOutputDir(), "test.txt").lastModified());
@@ -145,8 +145,9 @@ public class ReplaceTest {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue("Could not change file modification time",
-                testFile.setLastModified(testFile.lastModified() - (FileUtils.getFileUtils().getFileTimestampGranularity() * 5)));
-        long ts1 = testFile.lastModified();buildRule.executeTarget("testPreserve");
+                testFile.setLastModified(testFile.lastModified() - FileUtils.getFileUtils().getFileTimestampGranularity() * 5));
+        long ts1 = testFile.lastModified();
+        buildRule.executeTarget("testPreserve");
         assertTrue(ts1 == new File(buildRule.getOutputDir(), "test.txt").lastModified());
     }
 

@@ -203,9 +203,10 @@ public class CBZip2OutputStream extends OutputStream
      * Possibly because the number of elems to sort is usually small, typically
      * &lt;= 20.
      */
-    private static final int[] INCS = { 1, 4, 13, 40, 121, 364, 1093, 3280,
-                                        9841, 29524, 88573, 265720, 797161,
-                                        2391484 };
+    @SuppressWarnings("unused")
+    private static final int[] INCS = {1, 4, 13, 40, 121, 364, 1093, 3280,
+                                       9841, 29524, 88573, 265720, 797161,
+                                       2391484};
 
     /**
      * This method is accessible by subclasses for historical
@@ -675,41 +676,34 @@ public class CBZip2OutputStream extends OutputStream
 
             int runLengthShadow = this.runLength;
             this.crc.updateCRC(currentCharShadow, runLengthShadow);
+            final byte[] block = dataShadow.block;
 
             switch (runLengthShadow) {
-            case 1:
-                dataShadow.block[lastShadow + 2] = ch;
-                this.last = lastShadow + 1;
-                break;
-
-            case 2:
-                dataShadow.block[lastShadow + 2] = ch;
-                dataShadow.block[lastShadow + 3] = ch;
-                this.last = lastShadow + 2;
-                break;
-
-            case 3: {
-                final byte[] block = dataShadow.block;
-                block[lastShadow + 2] = ch;
-                block[lastShadow + 3] = ch;
-                block[lastShadow + 4] = ch;
-                this.last = lastShadow + 3;
-            }
-                break;
-
-            default: {
-                runLengthShadow -= 4;
-                dataShadow.inUse[runLengthShadow] = true;
-                final byte[] block = dataShadow.block;
-                block[lastShadow + 2] = ch;
-                block[lastShadow + 3] = ch;
-                block[lastShadow + 4] = ch;
-                block[lastShadow + 5] = ch;
-                block[lastShadow + 6] = (byte) runLengthShadow;
-                this.last = lastShadow + 5;
-            }
-                break;
-
+                case 1:
+                    block[lastShadow + 2] = ch;
+                    this.last = lastShadow + 1;
+                    break;
+                case 2:
+                    block[lastShadow + 2] = ch;
+                    block[lastShadow + 3] = ch;
+                    this.last = lastShadow + 2;
+                    break;
+                case 3:
+                    block[lastShadow + 2] = ch;
+                    block[lastShadow + 3] = ch;
+                    block[lastShadow + 4] = ch;
+                    this.last = lastShadow + 3;
+                    break;
+                default:
+                    runLengthShadow -= 4;
+                    dataShadow.inUse[runLengthShadow] = true;
+                    block[lastShadow + 2] = ch;
+                    block[lastShadow + 3] = ch;
+                    block[lastShadow + 4] = ch;
+                    block[lastShadow + 5] = ch;
+                    block[lastShadow + 6] = (byte) runLengthShadow;
+                    this.last = lastShadow + 5;
+                    break;
             }
         } else {
             endBlock();

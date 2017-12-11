@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;

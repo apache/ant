@@ -192,12 +192,12 @@ public class Project implements ResourceFactory {
     private ClassLoader coreLoader = null;
 
     /** Records the latest task to be executed on a thread. */
-    private final Map<Thread,Task> threadTasks =
-        Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<Thread, Task> threadTasks
+            = Collections.synchronizedMap(new WeakHashMap<>());
 
     /** Records the latest task to be executed on a thread group. */
-    private final Map<ThreadGroup,Task> threadGroupTasks
-        = Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<ThreadGroup, Task> threadGroupTasks
+            = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * Called to handle any input requests.

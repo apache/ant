@@ -241,7 +241,7 @@ public class HostInfo extends Task {
         int idx = fqdn.indexOf('.');
         if (idx > 0) {
             setProperty(NAME, fqdn.substring(0, idx));
-            setProperty(DOMAIN, fqdn.substring(idx+1));
+            setProperty(DOMAIN, fqdn.substring(idx + 1));
         } else {
             setProperty(NAME, fqdn);
             setProperty(DOMAIN, DEF_DOMAIN);

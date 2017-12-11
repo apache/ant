@@ -136,7 +136,7 @@ public class GlobPatternMapper implements FileNameMapper {
             throw new BuildException("this mapper requires a 'to' attribute");
         }
         int index = to.lastIndexOf('*');
-        if (index < 0 ) {
+        if (index < 0) {
             toPrefix = to;
             toPostfix = "";
         } else {

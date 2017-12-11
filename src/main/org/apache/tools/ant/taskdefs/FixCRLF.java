@@ -680,7 +680,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] { "add", "asis", "remove" };
+            return new String[] {"add", "asis", "remove"};
         }
     }
 
@@ -694,8 +694,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "asis", "cr", "lf", "crlf", "mac", "unix",
-                "dos" };
+            return new String[] {"asis", "cr", "lf", "crlf", "mac", "unix",
+                "dos"};
         }
     }
 

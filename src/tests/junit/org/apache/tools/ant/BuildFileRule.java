@@ -222,7 +222,7 @@ public class BuildFileRule extends ExternalResource {
         }
 
         public void write(int b) {
-            buffer.append((char)b);
+            buffer.append((char) b);
         }
     }
 

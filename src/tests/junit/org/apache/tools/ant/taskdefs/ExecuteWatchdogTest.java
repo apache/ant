@@ -36,12 +36,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class ExecuteWatchdogTest {
 
-    private final static long TIME_OUT = 5000;
+    private static final String TEST_CLASSPATH = getTestClassPath();
 
-    private final static String TEST_CLASSPATH = getTestClassPath();
-
-    private final static int CLOCK_ERROR = 200;
-    private final static long TIME_OUT_TEST = TIME_OUT - CLOCK_ERROR;
+    private static final long TIME_OUT = 5000;
+    private static final int CLOCK_ERROR = 200;
+    private static final long TIME_OUT_TEST = TIME_OUT - CLOCK_ERROR;
 
     private ExecuteWatchdog watchdog;
 
@@ -57,7 +56,7 @@ public class ExecuteWatchdogTest {
     private static String getTestClassPath() {
         String classpath = System.getProperty("build.tests");
         if (classpath == null) {
-            System.err.println("WARNING: 'build.tests' property is not available !");
+            System.err.println("WARNING: 'build.tests' property is not available!");
             classpath = System.getProperty("java.class.path");
         }
 

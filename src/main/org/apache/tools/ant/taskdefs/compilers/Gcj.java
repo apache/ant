@@ -31,9 +31,7 @@ import org.apache.tools.ant.types.Path;
  * @since Ant 1.4
  */
 public class Gcj extends DefaultCompilerAdapter {
-    private static final String [] CONFLICT_WITH_DASH_C = {
-        "-o" , "--main=", "-D", "-fjni", "-L"
-    };
+    private static final String[] CONFLICT_WITH_DASH_C = {"-o", "--main=", "-D", "-fjni", "-L"};
 
     /**
      * Performs a compile using the gcj compiler.
@@ -145,10 +143,9 @@ public class Gcj extends DefaultCompilerAdapter {
         int argsLength = 0;
         while (!nativeBuild && argsLength < additionalArguments.length) {
             int conflictLength = 0;
-            while (!nativeBuild
-                   && conflictLength < CONFLICT_WITH_DASH_C.length) {
-                nativeBuild = (additionalArguments[argsLength].startsWith
-                               (CONFLICT_WITH_DASH_C[conflictLength]));
+            while (!nativeBuild && conflictLength < CONFLICT_WITH_DASH_C.length) {
+                nativeBuild = additionalArguments[argsLength]
+                        .startsWith(CONFLICT_WITH_DASH_C[conflictLength]);
                 conflictLength++;
             }
             argsLength++;

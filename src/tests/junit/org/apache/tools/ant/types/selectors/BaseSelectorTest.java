@@ -39,11 +39,11 @@ public abstract class BaseSelectorTest extends BuildFileTest {
     protected File basedir;
     protected File beddir;
     protected File mirrordir;
-    protected String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
-            "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
-            "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",
-            "tar/gz/asf-logo.gif.tar.gz","tar/bz2/asf-logo.gif.tar.bz2",
-            "tar/bz2/asf-logo-huge.tar.bz2","tar/bz2"};
+    protected String[] filenames = {".", "asf-logo.gif.md5", "asf-logo.gif.bz2",
+            "asf-logo.gif.gz", "copy.filterset.filtered", "zip/asf-logo.gif.zip",
+            "tar/asf-logo.gif.tar", "tar/asf-logo-huge.tar.gz",
+            "tar/gz/asf-logo.gif.tar.gz", "tar/bz2/asf-logo.gif.tar.bz2",
+            "tar/bz2/asf-logo-huge.tar.bz2", "tar/bz2"};
     protected File[] files = new File[filenames.length];
     protected File[] mirrorfiles = new File[filenames.length];
 
@@ -61,8 +61,8 @@ public abstract class BaseSelectorTest extends BuildFileTest {
         project.init();
         project.setBaseDir(basedir);
         for (int x = 0; x < files.length; x++) {
-            files[x] = new File(beddir,filenames[x]);
-            mirrorfiles[x] = new File(mirrordir,filenames[x]);
+            files[x] = new File(beddir, filenames[x]);
+            mirrorfiles[x] = new File(mirrordir, filenames[x]);
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
         }
         s.setError("test error");
         try {
-            s.isSelected(beddir,filenames[0],files[0]);
+            s.isSelected(beddir, filenames[0], files[0]);
             fail("Cannot cause BuildException when setError() is called");
         } catch (BuildException be) {
             assertEquals("test error",
@@ -117,7 +117,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * @param selector FileSelector
      */
     public String selectionString(FileSelector selector) {
-        return selectionString(beddir,files,selector);
+        return selectionString(beddir, files, selector);
     }
 
     /**
@@ -130,7 +130,7 @@ public abstract class BaseSelectorTest extends BuildFileTest {
      * @param selector FileSelector
      */
     public String mirrorSelectionString(FileSelector selector) {
-        return selectionString(mirrordir,mirrorfiles,selector);
+        return selectionString(mirrordir, mirrorfiles, selector);
     }
 
     /**

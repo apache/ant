@@ -61,7 +61,7 @@ public class EmailTask extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[] { AUTO, MIME, UU, PLAIN };
+            return new String[] {AUTO, MIME, UU, PLAIN};
         }
     }
 

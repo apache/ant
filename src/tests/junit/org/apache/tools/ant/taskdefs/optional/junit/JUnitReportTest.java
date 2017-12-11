@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

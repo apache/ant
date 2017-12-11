@@ -126,7 +126,7 @@ public class AggregateTransformer {
     /**
      * Used to ensure the uniqueness of a property
      */
-    private volatile static int counter = 0;
+    private static volatile int counter = 0;
 
     /** the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt> */
     protected String format = FRAMES;

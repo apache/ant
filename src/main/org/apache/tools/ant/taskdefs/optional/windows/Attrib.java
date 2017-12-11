@@ -183,8 +183,8 @@ public class Attrib extends ExecuteOn {
      */
     @Override
     protected boolean isValidOs() {
-        return getOs() == null && getOsFamily() == null ?
-            Os.isFamily(Os.FAMILY_WINDOWS) : super.isValidOs();
+        return getOs() == null && getOsFamily() == null
+            ? Os.isFamily(Os.FAMILY_WINDOWS) : super.isValidOs();
     }
 
     private static String getSignString(boolean attr) {

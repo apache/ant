@@ -107,7 +107,8 @@ public class EchoXML extends XMLFragment {
         public static final NamespacePolicy DEFAULT
             = new NamespacePolicy(IGNORE);
 
-        public NamespacePolicy() {}
+        public NamespacePolicy() {
+        }
 
         public NamespacePolicy(String s) {
             setValue(s);
@@ -116,7 +117,7 @@ public class EchoXML extends XMLFragment {
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] { IGNORE, ELEMENTS, ALL };
+            return new String[] {IGNORE, ELEMENTS, ALL};
         }
 
         public DOMElementWriter.XmlNamespacePolicy getPolicy() {

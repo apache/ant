@@ -104,7 +104,7 @@ public class TarFileSetTest extends AbstractFileSetTest {
         f.setPrefix("/examples");
         f.setFileMode("600");
         f.setDirMode("530");
-        getProject().addReference("test",f);
+        getProject().addReference("test", f);
         TarFileSet zid = (TarFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
         assertTrue("src attribute copied by copy constructor",

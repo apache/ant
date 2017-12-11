@@ -216,8 +216,8 @@ public class FTPTest {
         FileSet fsDestination = (FileSet) buildRule.getProject().getReference("fileset-destination-without-selector");
         DirectoryScanner dsDestination = fsDestination.getDirectoryScanner(buildRule.getProject());
         dsDestination.scan();
-        String [] sortedDestinationDirectories = dsDestination.getIncludedDirectories();
-        String [] sortedDestinationFiles = dsDestination.getIncludedFiles();
+        String[] sortedDestinationDirectories = dsDestination.getIncludedDirectories();
+        String[] sortedDestinationFiles = dsDestination.getIncludedFiles();
         for (int counter = 0; counter < sortedDestinationDirectories.length; counter++) {
             sortedDestinationDirectories[counter] =
                 sortedDestinationDirectories[counter].replace(File.separatorChar, '/');
@@ -306,8 +306,8 @@ public class FTPTest {
     public void testOrderOfIncludePatternsIrrelevant() {
         Assume.assumeTrue(loginFailureMessage, loginSucceeded);
         Assume.assumeTrue("Could not change remote directory", changeRemoteDir(remoteTmpDir));
-        String [] expectedFiles = {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"};
-        String [] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
+        String[] expectedFiles = {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"};
+        String[] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
         FTP.FTPDirectoryScanner ds = myFTPTask.newScanner(ftp);
         ds.setBasedir(new File(buildRule.getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/be?a/**", "alpha/beta/gamma/"});
@@ -797,12 +797,12 @@ public class FTPTest {
 
     @Test
     public void testInitialCommand() {
-        performCommandTest("test-initial-command", new int[] { 1,0 });
+        performCommandTest("test-initial-command", new int[] {1, 0});
     }
 
     @Test
     public void testSiteAction() {
-        performCommandTest("test-site-action", new int[] { 1,0 });
+        performCommandTest("test-site-action", new int[] {1, 0});
     }
 
     private void performCommandTest(String target, int[] expectedCounts) {

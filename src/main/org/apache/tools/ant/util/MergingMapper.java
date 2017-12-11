@@ -31,7 +31,8 @@ public class MergingMapper implements FileNameMapper {
     protected String[] mergedFile = null;
     // CheckStyle:VisibilityModifier ON
 
-    public MergingMapper() {}
+    public MergingMapper() {
+    }
 
     /**
      * @param to String

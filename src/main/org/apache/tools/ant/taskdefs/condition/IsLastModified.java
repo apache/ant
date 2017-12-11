@@ -160,7 +160,7 @@ public class IsLastModified extends ProjectComponent implements Condition {
         long expected = getMillis();
         long actual = resource.getLastModified();
         log("expected timestamp: " + expected + " (" + new Date(expected) + ")"
-            + ", actual timestamp: " + actual + " (" + new Date(actual) + ")" ,
+            + ", actual timestamp: " + actual + " (" + new Date(actual) + ")",
             Project.MSG_VERBOSE);
         if (CompareMode.EQUALS_TEXT.equals(mode.getValue())) {
             return expected == actual;

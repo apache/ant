@@ -126,9 +126,7 @@ public class AntTest {
         File dir1 = buildRule.getProject().getBaseDir();
         File dir2 = buildRule.getProject().resolveFile("..");
         testBaseDirs("explicitBasedir1",
-                     new String[] {dir1.getAbsolutePath(),
-                                   dir2.getAbsolutePath()
-                     });
+                new String[] {dir1.getAbsolutePath(), dir2.getAbsolutePath()});
     }
 
     @Test
@@ -136,9 +134,7 @@ public class AntTest {
         File dir1 = buildRule.getProject().getBaseDir();
         File dir2 = buildRule.getProject().resolveFile("..");
         testBaseDirs("explicitBasedir2",
-                     new String[] {dir1.getAbsolutePath(),
-                                   dir2.getAbsolutePath()
-                     });
+                new String[] {dir1.getAbsolutePath(), dir2.getAbsolutePath()});
     }
 
     @Test
@@ -152,9 +148,7 @@ public class AntTest {
         File dir1 = buildRule.getProject().getBaseDir();
         File dir2 = buildRule.getProject().resolveFile("ant");
         testBaseDirs("doNotInheritBasedir",
-                     new String[] {dir1.getAbsolutePath(),
-                                   dir2.getAbsolutePath()
-                     });
+                new String[] {dir1.getAbsolutePath(), dir2.getAbsolutePath()});
     }
 
     @Test
@@ -162,10 +156,7 @@ public class AntTest {
         File dir1 = buildRule.getProject().getBaseDir();
         File dir2 = buildRule.getProject().resolveFile("ant");
         testBaseDirs("tripleCall",
-                     new String[] {dir1.getAbsolutePath(),
-                                   dir2.getAbsolutePath(),
-                                   dir1.getAbsolutePath()
-                     });
+                new String[] {dir1.getAbsolutePath(), dir2.getAbsolutePath(), dir1.getAbsolutePath()});
     }
 
     protected void testBaseDirs(String target, String[] dirs) {

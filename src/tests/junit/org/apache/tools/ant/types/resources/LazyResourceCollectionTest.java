@@ -84,8 +84,7 @@ public class LazyResourceCollectionTest {
 
         Iterator<Resource> it = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
-        StringResourceIterator stringResourceIterator =
-            collectionTest.createdIterators.get(0);
+        StringResourceIterator stringResourceIterator = collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
             stringResourceIterator.cursor);
 
@@ -130,8 +129,7 @@ public class LazyResourceCollectionTest {
         Iterator<Resource> it2 = lazyCollection.iterator();
         assertOneCreatedIterator(collectionTest);
 
-        StringResourceIterator stringResourceIterator =
-            collectionTest.createdIterators.get(0);
+        StringResourceIterator stringResourceIterator = collectionTest.createdIterators.get(0);
         assertEquals("A resource was loaded without iterating", 1,
             stringResourceIterator.cursor);
 

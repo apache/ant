@@ -109,7 +109,7 @@ public class Launcher {
         }
         if (exitCode != 0) {
             if (launchDiag) {
-                System.out.println("Exit code: "+exitCode);
+                System.out.println("Exit code: " + exitCode);
             }
             System.exit(exitCode);
         }
@@ -234,7 +234,7 @@ public class Launcher {
             }
         }
 
-        logPath("Launcher JAR",sourceJar);
+        logPath("Launcher JAR", sourceJar);
         logPath("Launcher JAR directory", sourceJar.getParentFile());
         logPath("java.home", new File(System.getProperty("java.home")));
 
@@ -253,7 +253,7 @@ public class Launcher {
         final URL[] userURLs   = noUserLib ? new URL[0] : getUserURLs();
 
         final File toolsJAR = Locator.getToolsJar();
-        logPath("tools.jar",toolsJAR);
+        logPath("tools.jar", toolsJAR);
         final URL[] jars = getJarArray(
             libURLs, userURLs, systemURLs, toolsJAR);
 
@@ -276,7 +276,7 @@ public class Launcher {
         Thread.currentThread().setContextClassLoader(loader);
         Class<? extends AntMain> mainClass = null;
         int exitCode = 0;
-        Throwable thrown=null;
+        Throwable thrown = null;
         try {
             mainClass = loader.loadClass(mainClassname).asSubclass(AntMain.class);
             final AntMain main = mainClass.newInstance();
@@ -294,10 +294,10 @@ public class Launcher {
             thrown = cnfe;
         } catch (final Throwable t) {
             t.printStackTrace(System.err); //NOSONAR
-            thrown=t;
+            thrown = t;
         }
-        if(thrown!=null) {
-            System.err.println(ANTHOME_PROPERTY+": "+antHome.getAbsolutePath());
+        if (thrown != null) {
+            System.err.println(ANTHOME_PROPERTY + ": " + antHome.getAbsolutePath());
             System.err.println("Classpath: " + baseClassPath.toString());
             System.err.println("Launcher JAR: " + sourceJar.getAbsolutePath());
             System.err.println("Launcher Directory: " + jarDir.getAbsolutePath());
@@ -371,8 +371,8 @@ public class Launcher {
      * @return a combined array
      * @throws MalformedURLException if there is a problem.
      */
-    private URL[] getJarArray (
-        final URL[] libJars, final URL[] userJars, final URL[] systemJars, final File toolsJar)
+    private URL[] getJarArray(final URL[] libJars, final URL[] userJars,
+        final URL[] systemJars, final File toolsJar)
         throws MalformedURLException {
         int numJars = libJars.length + userJars.length + systemJars.length;
         if (toolsJar != null) {
@@ -402,7 +402,7 @@ public class Launcher {
         System.setProperty(name, value);
     }
 
-    private void logPath(final String name,final File path) {
+    private void logPath(final String name, final File path) {
         if (launchDiag) {
             System.out.println(name + "= \"" + path + "\"");
         }

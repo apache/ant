@@ -368,7 +368,7 @@ public class Javadoc extends Task {
         public String[] getValues() {
             // Protected first so if any GUI tool offers a default
             // based on enum #0, it will be right.
-            return new String[] { "protected", "public", "package", "private" };
+            return new String[] {"protected", "public", "package", "private"};
         }
     }
 
@@ -1339,7 +1339,7 @@ public class Javadoc extends Task {
         private String scope = "a";
 
         /** Sole constructor. */
-        public TagArgument () {
+        public TagArgument() {
             //empty
         }
 
@@ -1349,7 +1349,7 @@ public class Javadoc extends Task {
          * @param name The name of the tag.
          *             Must not be <code>null</code> or empty.
          */
-        public void setName (final String name) {
+        public void setName(final String name) {
             this.name = name;
         }
 
@@ -1369,7 +1369,7 @@ public class Javadoc extends Task {
          * elements are specified, or if any unrecognised elements are
          * specified.
          */
-        public void setScope (String verboseScope) throws BuildException {
+        public void setScope(String verboseScope) throws BuildException {
             verboseScope = verboseScope.toLowerCase(Locale.ENGLISH);
 
             final boolean[] elements = new boolean[SCOPE_ELEMENTS.length];
@@ -1379,7 +1379,7 @@ public class Javadoc extends Task {
 
             // Go through the tokens one at a time, updating the
             // elements array and issuing warnings where appropriate.
-            final StringTokenizer tok = new StringTokenizer (verboseScope, ",");
+            final StringTokenizer tok = new StringTokenizer(verboseScope, ",");
             while (tok.hasMoreTokens()) {
                 final String next = tok.nextToken().trim();
                 if ("all".equals(next)) {
@@ -1434,7 +1434,7 @@ public class Javadoc extends Task {
          *
          * @param enabled Whether or not this tag is enabled.
          */
-        public void setEnabled (final boolean enabled) {
+        public void setEnabled(final boolean enabled) {
             this.enabled = enabled;
         }
 

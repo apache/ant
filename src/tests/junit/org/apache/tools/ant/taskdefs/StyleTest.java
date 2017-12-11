@@ -156,40 +156,55 @@ public class StyleTest {
 
     @Test
     public void testWithFileResource() throws Exception {
-        expectFileContains("testWithFileResource", buildRule.getOutputDir().getAbsoluteFile() + "/out.xml", "set='value'");
+        expectFileContains("testWithFileResource", buildRule.getOutputDir().getAbsoluteFile()
+                + "/out.xml", "set='value'");
     }
 
     @Test
     public void testWithUrlResource() throws Exception {
-        expectFileContains("testWithUrlResource", buildRule.getOutputDir().getAbsoluteFile() + "/out.xml", "set='value'");
+        expectFileContains("testWithUrlResource", buildRule.getOutputDir().getAbsoluteFile()
+                + "/out.xml", "set='value'");
     }
 
     @Test
     public void testFilenameAsParam() throws Exception {
         buildRule.executeTarget("testFilenameAsParam");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='one.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/two.txt",      "filename='two.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/three.txt",    "filename='three.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='four.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filedir ='-not-set-'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",
+                "filename='one.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/two.txt",
+                "filename='two.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/three.txt",
+                "filename='three.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt",
+                "filename='four.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt",
+                "filedir ='-not-set-'");
     }
 
     @Test
     public void testFilenameAsParamNoSetting() throws Exception {
         buildRule.executeTarget("testFilenameAsParamNoSetting");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='-not-set-'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/two.txt",      "filename='-not-set-'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/three.txt",    "filename='-not-set-'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='-not-set-'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",
+                "filename='-not-set-'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/two.txt",
+                "filename='-not-set-'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/three.txt",
+                "filename='-not-set-'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt",
+                "filename='-not-set-'");
     }
 
     @Test
     public void testFilenameAndFiledirAsParam() throws Exception {
         buildRule.executeTarget("testFilenameAndFiledirAsParam");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",      "filename='one.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",      "filedir ='.'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filename='four.xml'");
-        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt", "filedir ='dir'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",
+                "filename='one.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/one.txt",
+                "filedir ='.'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt",
+                "filename='four.xml'");
+        assertFileContains(buildRule.getOutputDir().getAbsoluteFile() + "/dir/four.txt",
+                "filedir ='dir'");
     }
 
 
@@ -205,8 +220,7 @@ public class StyleTest {
         return FileUtilities.getFileContents(new File(filename));
     }
 
-    private void expectFileContains(
-        String target, String filename, String contains)
+    private void expectFileContains(String target, String filename, String contains)
         throws IOException {
         buildRule.executeTarget(target);
         assertFileContains(filename, contains);

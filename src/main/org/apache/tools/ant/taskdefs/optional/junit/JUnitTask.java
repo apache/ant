@@ -371,8 +371,7 @@ public class JUnitTask extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "true", "yes", "false", "no", "on", "off",
-                "withOutAndErr" };
+            return new String[] {"true", "yes", "false", "no", "on", "off", "withOutAndErr"};
         }
 
         /**
@@ -820,16 +819,13 @@ public class JUnitTask extends Task {
             mirrorLoader = AccessController.doPrivileged(
                 (PrivilegedAction<ClassLoader>) () -> new SplitClassLoader(
                     myLoader, path, getProject(),
-                    new String[] { "BriefJUnitResultFormatter",
-                        "JUnit4TestMethodAdapter", "JUnitResultFormatter",
-                        "JUnitTaskMirrorImpl", "JUnitTestRunner",
-                        "JUnitVersionHelper",
-                        "OutErrSummaryJUnitResultFormatter",
-                        "PlainJUnitResultFormatter",
-                        "SummaryJUnitResultFormatter", "TearDownOnVmCrash",
-                        "XMLJUnitResultFormatter", "IgnoredTestListener",
-                        "IgnoredTestResult", "CustomJUnit4TestAdapterCache",
-                        "TestListenerWrapper" }));
+                    new String[] {"BriefJUnitResultFormatter", "JUnit4TestMethodAdapter",
+                            "JUnitResultFormatter", "JUnitTaskMirrorImpl", "JUnitTestRunner",
+                            "JUnitVersionHelper", "OutErrSummaryJUnitResultFormatter",
+                            "PlainJUnitResultFormatter", "SummaryJUnitResultFormatter",
+                            "TearDownOnVmCrash", "XMLJUnitResultFormatter", "IgnoredTestListener",
+                            "IgnoredTestResult", "CustomJUnit4TestAdapterCache",
+                            "TestListenerWrapper"}));
         } else {
             mirrorLoader = myLoader;
         }
@@ -850,9 +846,7 @@ public class JUnitTask extends Task {
 
         final List<List<JUnitTest>> testLists = new ArrayList<>();
         /* parallel test execution is only supported for multi-process execution */
-        final int threads = ((!fork) || (forkMode.getValue().equals(ForkMode.ONCE))
-                       ? 1
-                       : this.threads);
+        final int threads = !fork || forkMode.getValue().equals(ForkMode.ONCE) ? 1 : this.threads;
 
         final boolean forkPerTest = ForkMode.PER_TEST.equals(forkMode.getValue());
         if (forkPerTest || ForkMode.ONCE.equals(forkMode.getValue())) {
@@ -991,7 +985,7 @@ public class JUnitTask extends Task {
 
             /* create 1 thread using the passthrough class, and let each thread start */
             for (i = 0; i < numThreads; i++) {
-                threads[i] = new Thread(new JunitTestThread(this, iter, i+1));
+                threads[i] = new Thread(new JunitTestThread(this, iter, i + 1));
                 threads[i].start();
             }
 
@@ -2166,7 +2160,7 @@ public class JUnitTask extends Task {
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] { ONCE, PER_TEST, PER_BATCH };
+            return new String[] {ONCE, PER_TEST, PER_BATCH};
         }
     }
 

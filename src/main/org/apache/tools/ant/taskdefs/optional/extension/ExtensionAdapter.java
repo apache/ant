@@ -173,7 +173,7 @@ public class ExtensionAdapter extends DataType {
     }
 
     /**
-     * Convert this adpater object into an extension object.
+     * Convert this adapter object into an extension object.
      *
      * @return the extension object
      */

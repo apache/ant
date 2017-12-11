@@ -29,9 +29,9 @@ public class Base64ConverterTest {
 
     @Test
     public void testOneValue() {
-        byte[] mybytes = {0, 0, (byte)0xFF};
+        byte[] mybytes = {0, 0, (byte) 0xFF};
         Base64Converter base64Converter = new Base64Converter();
-        assertEquals("AAD/",base64Converter.encode(mybytes));
+        assertEquals("AAD/", base64Converter.encode(mybytes));
     }
 
     @Test

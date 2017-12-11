@@ -117,15 +117,15 @@ public class PropertyFileTest {
     @Test
     public void testExerciseDefaultAndIncrement() throws Exception {
         buildRule.executeTarget("exercise");
-        assertEquals("3",buildRule.getProject().getProperty("int.with.default"));
-        assertEquals("1",buildRule.getProject().getProperty("int.without.default"));
-        assertEquals("-->",buildRule.getProject().getProperty("string.with.default"));
-        assertEquals(".",buildRule.getProject().getProperty("string.without.default"));
+        assertEquals("3", buildRule.getProject().getProperty("int.with.default"));
+        assertEquals("1", buildRule.getProject().getProperty("int.without.default"));
+        assertEquals("-->", buildRule.getProject().getProperty("string.with.default"));
+        assertEquals(".", buildRule.getProject().getProperty("string.without.default"));
         assertEquals("2002/01/21 12:18", buildRule.getProject().getProperty("ethans.birth"));
         assertEquals("2003/01/21", buildRule.getProject().getProperty("first.birthday"));
         assertEquals("0124", buildRule.getProject().getProperty("olderThanAWeek"));
         assertEquals("37", buildRule.getProject().getProperty("existing.prop"));
-        assertEquals("6",buildRule.getProject().getProperty("int.without.value"));
+        assertEquals("6", buildRule.getProject().getProperty("int.without.value"));
     }
 
     @Test

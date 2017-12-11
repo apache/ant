@@ -188,7 +188,7 @@ public class Sync extends Task {
      */
     private int[] removeOrphanFiles(Set<String> nonOrphans, File toDir,
                                     Set<File> preservedDirectories) {
-        int[] removedCount = new int[] { 0, 0 };
+        int[] removedCount = new int[] {0, 0};
         String[] excls =
             nonOrphans.toArray(new String[nonOrphans.size() + 1]);
         // want to keep toDir itself

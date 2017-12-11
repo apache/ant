@@ -36,7 +36,7 @@ import com.jcraft.jsch.Session;
 public class ScpToMessage extends AbstractSshMessage {
 
     private static final int HUNDRED_KILOBYTES = 102400;
-    private static final int BUFFER_SIZE = 100*1024;
+    private static final int BUFFER_SIZE = 100 * 1024;
     private static final int DEFAULT_DIR_MODE = 0755;
     private static final int DEFAULT_FILE_MODE = 0644;
 

@@ -456,7 +456,7 @@ public class JspC extends MatchingTask {
                 throw new BuildException("srcdir attribute must be set!",
                                          getLocation());
             }
-            String [] list = src.list();
+            String[] list = src.list();
             if (list.length == 0) {
                 throw new BuildException("srcdir attribute must be set!",
                                          getLocation());

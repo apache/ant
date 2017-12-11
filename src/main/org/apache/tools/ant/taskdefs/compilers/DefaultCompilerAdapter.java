@@ -150,7 +150,7 @@ public abstract class DefaultCompilerAdapter
      */
     @Override
     public String[] getSupportedFileExtensions() {
-        return new String[] { "java" };
+        return new String[] {"java"};
     }
 
     /**
@@ -432,8 +432,8 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setPath(ump);
         }
         if (attributes.getNativeHeaderDir() != null) {
-            if (assumeJava13() || assumeJava14() || assumeJava15()
-                || assumeJava16() || assumeJava17()) {
+            if (assumeJava13() || assumeJava14() || assumeJava15() || assumeJava16()
+                    || assumeJava17()) {
                 attributes.log(
                     "Support for javac -h has been added in Java8, ignoring it");
             } else {
@@ -484,20 +484,15 @@ public abstract class DefaultCompilerAdapter
      * @param cmd the command line
      */
     protected void logAndAddFilesToCompile(final Commandline cmd) {
-        attributes.log("Compilation " + cmd.describeArguments(),
-            Project.MSG_VERBOSE);
+        attributes.log("Compilation " + cmd.describeArguments(), Project.MSG_VERBOSE);
 
-        attributes.log(
-            String.format("%s to be compiled:",
-                compileList.length == 1 ? "File" : "Files"),
-            Project.MSG_VERBOSE);
+        attributes.log(String.format("%s to be compiled:",
+                compileList.length == 1 ? "File" : "Files"), Project.MSG_VERBOSE);
 
-        attributes.log(
-            Stream.of(compileList).map(File::getAbsolutePath)
-                .peek(arg -> cmd.createArgument().setValue(arg))
-                .map(arg -> "    " + arg)
-                .collect(Collectors.joining(StringUtils.LINE_SEP)),
-            Project.MSG_VERBOSE);
+        attributes.log(Stream.of(compileList).map(File::getAbsolutePath)
+                        .peek(arg -> cmd.createArgument().setValue(arg))
+                        .map(arg -> "    " + arg)
+                        .collect(Collectors.joining(StringUtils.LINE_SEP)), Project.MSG_VERBOSE);
     }
 
     /**
@@ -723,10 +718,10 @@ public abstract class DefaultCompilerAdapter
         return "javac1.9".equals(attributes.getCompilerVersion())
             || "javac9".equals(attributes.getCompilerVersion())
             || "javac10+".equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9) &&
-                ("classic".equals(attributes.getCompilerVersion())
-                 || "modern".equals(attributes.getCompilerVersion())
-                 || "extJavac".equals(attributes.getCompilerVersion())));
+            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
+                && ("classic".equals(attributes.getCompilerVersion())
+                || "modern".equals(attributes.getCompilerVersion())
+                || "extJavac".equals(attributes.getCompilerVersion())));
     }
 
     /**
@@ -735,8 +730,8 @@ public abstract class DefaultCompilerAdapter
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
         return javacXY.equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY) &&
-                ("classic".equals(attributes.getCompilerVersion())
+            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY)
+                && ("classic".equals(attributes.getCompilerVersion())
                  || "modern".equals(attributes.getCompilerVersion())
                  || "extJavac".equals(attributes.getCompilerVersion())));
     }
@@ -825,11 +820,10 @@ public abstract class DefaultCompilerAdapter
             t = t.substring(2);
         }
         return "1".equals(t) || "2".equals(t) || "3".equals(t) || "4".equals(t)
-            || (("5".equals(t) || "6".equals(t))
-                && !assumeJava15() && !assumeJava16())
-            || ("7".equals(t) && !assumeJava17())
-            || ("8".equals(t) && !assumeJava18())
-            || ("9".equals(t) && !assumeJava9Plus());
+                || (("5".equals(t) || "6".equals(t)) && !assumeJava15() && !assumeJava16())
+                || ("7".equals(t) && !assumeJava17())
+                || ("8".equals(t) && !assumeJava18())
+                || ("9".equals(t) && !assumeJava9Plus());
     }
 
     /**

@@ -197,7 +197,7 @@ public class DateSelectorTest {
         param1.setValue("11/21/2001 4:56 AM");
         param2.setName("when");
         param2.setValue("after");
-        Parameter[] params = {param1,param2};
+        Parameter[] params = {param1, param2};
         s.setParameters(params);
         results = selectorRule.selectionString(s);
         assertEquals("TFFTFTTTFFFT", results);

@@ -122,7 +122,7 @@ public class DemuxOutputStream extends OutputStream {
      */
     private void removeBuffer() {
         Thread current = Thread.currentThread();
-        buffers.remove (current);
+        buffers.remove(current);
     }
 
     /**

@@ -104,8 +104,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /** {@inheritDoc}. */
     @Override
     public void buildStarted(final BuildEvent event) {
-        final String categoryString = PROJECT_LOG;
-        final Log log = getLog(categoryString, null);
+        final Log log = getLog(PROJECT_LOG, null);
 
         if (initialized) {
             realLog(log, "Build started.", Project.MSG_INFO, null);
@@ -116,8 +115,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     @Override
     public void buildFinished(final BuildEvent event) {
         if (initialized) {
-            final String categoryString = PROJECT_LOG;
-            final Log log = getLog(categoryString, event.getProject().getName());
+            final Log log = getLog(PROJECT_LOG, event.getProject().getName());
 
             if (event.getException() == null) {
                 realLog(log, "Build finished.", Project.MSG_INFO, null);
@@ -251,7 +249,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
             final Log log = getLog(categoryString, categoryDetail);
             final int priority = event.getPriority();
             final String message = event.getMessage();
-            realLog(log, message, priority , null);
+            realLog(log, message, priority, null);
         }
     }
 

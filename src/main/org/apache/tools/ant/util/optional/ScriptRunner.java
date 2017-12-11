@@ -140,12 +140,11 @@ public class ScriptRunner extends ScriptRunnerBase {
      * @return BuildException the converted exception.
      */
     private BuildException getBuildException(BSFException be) {
-        Throwable t = be;
         Throwable te = be.getTargetException();
         if (te instanceof BuildException) {
             return (BuildException) te;
         }
-        return new BuildException(te == null ? t : te);
+        return new BuildException(te == null ? be : te);
     }
 
     private void declareBeans(BSFManager m) throws BSFException {

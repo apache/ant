@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.condition;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
@@ -117,7 +118,7 @@ public class Http extends ProjectComponent implements Condition {
                     }
                     return false;
                 }
-            } catch (java.net.ProtocolException pe) {
+            } catch (ProtocolException pe) {
                 throw new BuildException("Invalid HTTP protocol: "
                                          + requestMethod, pe);
             } catch (IOException e) {

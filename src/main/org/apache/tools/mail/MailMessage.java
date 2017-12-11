@@ -67,7 +67,7 @@ import java.util.stream.Collectors;
  *
  * Enumeration enum = req.getParameterNames();
  * while (enum.hasMoreElements()) {
- *   String name = (String)enum.nextElement();
+ *   String name = (String) enum.nextElement();
  *   String value = req.getParameter(name);
  *   out.println(name + " = " + value);
  * }
@@ -124,7 +124,7 @@ public class MailMessage {
     private final Vector<String> cc = new Vector<>();
 
     /** headers to send in the mail */
-    private final Map<String,String> headers = new LinkedHashMap<>();
+    private final Map<String, String> headers = new LinkedHashMap<>();
 
     private MailPrintStream out;
 
@@ -320,7 +320,7 @@ public class MailMessage {
         //   "Header fields are NOT required to occur in any particular order,
         //    except that the message body MUST occur AFTER the headers"
         // (the same section specifies a recommended order, which we ignore)
-        headers.forEach((k, v)->out.printf("%s: %s%n", k, v));
+        headers.forEach((k, v) -> out.printf("%s: %s%n", k, v));
         out.println();
         out.flush();
     }
@@ -386,7 +386,7 @@ public class MailMessage {
 
     void getReady() throws IOException {
         String response = in.getResponse();
-        int[] ok = { OK_READY };
+        int[] ok = {OK_READY};
         if (!isResponseOK(response, ok)) {
             throw new IOException(
                 "Didn't get introduction from server: " + response);
@@ -395,32 +395,32 @@ public class MailMessage {
 
     void sendHelo() throws IOException {
         String local = InetAddress.getLocalHost().getHostName();
-        int[] ok = { OK_HELO };
+        int[] ok = {OK_HELO};
         send("HELO " + local, ok);
     }
 
     void sendFrom(String from) throws IOException {
-        int[] ok = { OK_FROM };
+        int[] ok = {OK_FROM};
         send("MAIL FROM: " + "<" + sanitizeAddress(from) + ">", ok);
     }
 
     void sendRcpt(String rcpt) throws IOException {
-        int[] ok = { OK_RCPT_1, OK_RCPT_2 };
+        int[] ok = {OK_RCPT_1, OK_RCPT_2};
         send("RCPT TO: " + "<" + sanitizeAddress(rcpt) + ">", ok);
     }
 
     void sendData() throws IOException {
-        int[] ok = { OK_DATA };
+        int[] ok = {OK_DATA};
         send("DATA", ok);
     }
 
     void sendDot() throws IOException {
-        int[] ok = { OK_DOT };
+        int[] ok = {OK_DOT};
         send("\r\n.", ok); // make sure dot is on new line
     }
 
     void sendQuit() throws IOException {
-        int[] ok = { OK_QUIT };
+        int[] ok = {OK_QUIT};
         try {
             send("QUIT", ok);
         } catch (IOException e) {

@@ -170,7 +170,7 @@ public class Move extends Copy {
             int createCount = 0;
             for (Map.Entry<String, String[]> entry : dirCopyMap.entrySet()) {
                 String fromDirName = entry.getKey();
-                String[] toDirNames = entry.getValue();;
+                String[] toDirNames = entry.getValue();
                 boolean selfMove = false;
                 for (int i = 0; i < toDirNames.length; i++) {
                     if (fromDirName.equals(toDirNames[i])) {

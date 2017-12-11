@@ -79,7 +79,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
             if (result.isEmpty()) {
                 return null;
             }
-            return new String[] { result };
+            return new String[] {result};
         } catch (BuildException ex) {
             throw ex;
         } catch (Exception ex) {

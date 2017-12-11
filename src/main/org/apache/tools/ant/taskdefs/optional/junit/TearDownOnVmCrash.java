@@ -45,8 +45,7 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
     @Override
     public void startTestSuite(final JUnitTest suite) {
         suiteName = suite.getName();
-        if (suiteName != null &&
-            suiteName.endsWith(JUnitTask.NAME_OF_DUMMY_TEST)) {
+        if (suiteName != null && suiteName.endsWith(JUnitTask.NAME_OF_DUMMY_TEST)) {
             // no way to know which class caused the timeout
             suiteName = null;
         }
@@ -59,35 +58,42 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
      */
     @Override
     public void addError(final Test fakeTest, final Throwable t) {
-        if (suiteName != null
-            && fakeTest instanceof JUnitTaskMirrorImpl.VmExitErrorTest) {
+        if (suiteName != null && fakeTest instanceof JUnitTaskMirrorImpl.VmExitErrorTest) {
             tearDown();
         }
     }
 
     // no need to implement the rest
-    public void addFailure(Test test, Throwable t) {}
+    public void addFailure(Test test, Throwable t) {
+    }
 
     @Override
-    public void addFailure(Test test, AssertionFailedError t) {}
+    public void addFailure(Test test, AssertionFailedError t) {
+    }
 
     @Override
-    public void startTest(Test test) {}
+    public void startTest(Test test) {
+    }
 
     @Override
-    public void endTest(Test test) {}
+    public void endTest(Test test) {
+    }
 
     @Override
-    public void endTestSuite(JUnitTest suite) {}
+    public void endTestSuite(JUnitTest suite) {
+    }
 
     @Override
-    public void setOutput(OutputStream out) {}
+    public void setOutput(OutputStream out) {
+    }
 
     @Override
-    public void setSystemOutput(String out) {}
+    public void setSystemOutput(String out) {
+    }
 
     @Override
-    public void setSystemError(String err) {}
+    public void setSystemError(String err) {
+    }
 
     private void tearDown() {
         try {
@@ -104,8 +110,7 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
             }
             if (testClass == null && getClass().getClassLoader() != null) {
                 try {
-                    testClass =
-                        getClass().getClassLoader().loadClass(suiteName);
+                    testClass = getClass().getClassLoader().loadClass(suiteName);
                 } catch (ClassNotFoundException cnfe) {
                     // ignore
                 }

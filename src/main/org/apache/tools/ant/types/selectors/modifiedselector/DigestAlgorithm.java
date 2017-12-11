@@ -173,10 +173,10 @@ public class DigestAlgorithm implements Algorithm {
                         checksumSb.append(hexStr);
                     }
                     return checksumSb.toString();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
     }

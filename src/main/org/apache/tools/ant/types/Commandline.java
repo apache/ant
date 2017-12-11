@@ -189,7 +189,7 @@ public class Commandline implements Cloneable {
          */
         public String[] getParts() {
             if (parts == null || parts.length == 0
-                || (prefix.length() == 0 && suffix.length() == 0)) {
+                    || (prefix.length() == 0 && suffix.length() == 0)) {
                 return parts;
             }
             String[] fullParts = new String[parts.length];
@@ -232,7 +232,7 @@ public class Commandline implements Cloneable {
             if (realPos == -1) {
                 realPos = (executable == null ? 0 : 1) + (int)
                 arguments.stream().limit(position).map(Argument::getParts)
-                    .flatMap(Stream::of).count();
+                        .flatMap(Stream::of).count();
             }
             return realPos;
         }
@@ -644,8 +644,7 @@ public class Commandline implements Cloneable {
         if (args == null || args.length == 0) {
             return "";
         }
-        StringBuilder buf = new StringBuilder("Executing \'")
-            .append(args[0]).append("\'");
+        StringBuilder buf = new StringBuilder("Executing \'").append(args[0]).append("\'");
         if (args.length > 1) {
             buf.append(" with ");
             buf.append(describeArguments(args, 1));

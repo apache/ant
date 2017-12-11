@@ -494,7 +494,7 @@ public class Available extends Task implements Condition {
      */
     public static class FileDir extends EnumeratedAttribute {
 
-        private static final String[] VALUES = { "file", "dir" };
+        private static final String[] VALUES = {"file", "dir"};
 
         /**
          * @see EnumeratedAttribute#getValues

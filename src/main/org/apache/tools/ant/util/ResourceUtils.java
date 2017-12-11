@@ -73,7 +73,7 @@ public class ResourceUtils {
      */
     public static final String ISO_8859_1 = "ISO-8859-1";
 
-    private static final long MAX_IO_CHUNK_SIZE = 16*1024*1024l; // 16 MB
+    private static final long MAX_IO_CHUNK_SIZE = 16 * 1024 * 1024L; // 16 MB
 
     /**
      * Tells which source files should be reprocessed based on the

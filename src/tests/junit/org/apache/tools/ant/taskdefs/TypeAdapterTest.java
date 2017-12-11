@@ -124,16 +124,14 @@ public class TypeAdapterTest {
             try {
                 Method execMethod = proxyClass.getMethod(execMethodName);
                 if (!Void.TYPE.equals(execMethod.getReturnType())) {
-                    String message =
-                        "return type of " + execMethodName + "() should be "
-                        + "void but was \"" + execMethod.getReturnType() +
-                        "\" in " + proxyClass;
+                    String message = "return type of " + execMethodName + "() should be "
+                            + "void but was \"" + execMethod.getReturnType()
+                            + "\" in " + proxyClass;
                     log(message, Project.MSG_WARN);
                 }
                 return execMethod;
             } catch (NoSuchMethodException e) {
-                String message = "No public " + execMethodName + "() method in "
-                    + proxyClass;
+                String message = "No public " + execMethodName + "() method in " + proxyClass;
                 log(message, Project.MSG_ERR);
                 throw new BuildException(message);
             }

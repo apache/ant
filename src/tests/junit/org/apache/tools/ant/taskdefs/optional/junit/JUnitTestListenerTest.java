@@ -64,24 +64,24 @@ public class JUnitTestListenerTest {
     public void testTestCountFired() {
         buildRule.getProject().setProperty("enableEvents", "true");
         buildRule.executeTarget(PASS_TEST_TARGET);
-        assertContains("expecting test count message", JUnitTask.TESTLISTENER_PREFIX +
-                   "tests to run: ", buildRule.getFullLog());
+        assertContains("expecting test count message", JUnitTask.TESTLISTENER_PREFIX
+                + "tests to run: ", buildRule.getFullLog());
     }
 
     @Test
     public void testStartTestFired() {
         buildRule.getProject().setProperty("enableEvents", "true");
         buildRule.executeTarget(PASS_TEST_TARGET);
-        assertContains("expecting test started message", JUnitTask.TESTLISTENER_PREFIX +
-                   "startTest(" + PASS_TEST + ")", buildRule.getFullLog());
+        assertContains("expecting test started message", JUnitTask.TESTLISTENER_PREFIX
+                + "startTest(" + PASS_TEST + ")", buildRule.getFullLog());
     }
 
     @Test
     public void testEndTestFired() {
         buildRule.getProject().setProperty("enableEvents", "true");
         buildRule.executeTarget(PASS_TEST_TARGET);
-        assertContains("expecting test ended message", JUnitTask.TESTLISTENER_PREFIX +
-                   "endTest(" + PASS_TEST + ")", buildRule.getFullLog());
+        assertContains("expecting test ended message", JUnitTask.TESTLISTENER_PREFIX
+                + "endTest(" + PASS_TEST + ")", buildRule.getFullLog());
     }
 
     @Test

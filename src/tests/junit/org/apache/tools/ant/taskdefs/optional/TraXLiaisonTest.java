@@ -38,9 +38,7 @@ import org.junit.Test;
 /**
  * TraX XSLTLiaison testcase
  */
-public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
-    implements XSLTLogger {
-
+public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogger {
 
     @After
     public void tearDown() {

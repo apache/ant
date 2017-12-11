@@ -1135,7 +1135,7 @@ public final class IntrospectionHelper {
                 void set(final Project p, final Object parent, final String value) throws InvocationTargetException,
                         IllegalAccessException, BuildException {
                     m.invoke(parent, new Object[] {new FileResource(p, p.resolveFile(value))});
-                };
+                }
             };
         }
         // EnumeratedAttributes have their own helper class

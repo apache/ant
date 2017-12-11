@@ -200,8 +200,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             for (PvcsProject pvcsProject : getPvcsprojects()) {
                 String projectName = pvcsProject.getName();
                 if (projectName == null || projectName.trim().isEmpty()) {
-                    throw new BuildException(
-                        "name is a required attribute of pvcsproject");
+                    throw new BuildException("name is a required attribute of pvcsproject");
                 }
                 commandLine.createArgument().setValue(projectName);
             }
@@ -216,10 +215,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log(commandLine.describeCommand(), Project.MSG_VERBOSE);
             try {
-                result = runCmd(commandLine,
-                                new PumpStreamHandler(fos,
-                                    new LogOutputStream(this,
-                                                        Project.MSG_WARN)));
+                result = runCmd(commandLine, new PumpStreamHandler(fos,
+                        new LogOutputStream(this, Project.MSG_WARN)));
             } finally {
                 FileUtils.close(fos);
             }
@@ -264,8 +261,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                     commandLine.createArgument().setValue("-v" + getLabel());
                 } else {
                     if (getRevision() != null) {
-                        commandLine.createArgument().setValue("-r"
-                            + getRevision());
+                        commandLine.createArgument().setValue("-r" + getRevision());
                     }
                 }
             }
@@ -316,10 +312,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
             String line = in.readLine();
             while (line != null) {
                 log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
-                if (line.startsWith("\"\\")    // Checking for "\
-                    || line.startsWith("\"/")  // or           "/
-                                               // or           "X:\...
-                   || (line.length() > POS_3 && line.startsWith("\"")
+                if (line.startsWith("\"\\")       // Checking for "\
+                        || line.startsWith("\"/") // or           "/
+                                                  // or           "X:\...
+                        || (line.length() > POS_3 && line.startsWith("\"")
                         && Character.isLetter(line.charAt(POS_1))
                         && String.valueOf(line.charAt(POS_2)).equals(":")
                         && String.valueOf(line.charAt(POS_3)).equals("\\"))) {
@@ -365,10 +361,9 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private void massagePCLI(File in, File out)
         throws IOException {
         try (BufferedReader inReader = new BufferedReader(new FileReader(in));
-                BufferedWriter outWriter =
-                    new BufferedWriter(new FileWriter(out))) {
+                BufferedWriter outWriter = new BufferedWriter(new FileWriter(out))) {
             for (String line : (Iterable<String>) () -> inReader.lines()
-                .map(s -> s.replace('\\', '/')).iterator()) {
+                    .map(s -> s.replace('\\', '/')).iterator()) {
                 outWriter.write(line);
                 outWriter.newLine();
             }

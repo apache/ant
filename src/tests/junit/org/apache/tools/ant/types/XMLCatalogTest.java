@@ -91,8 +91,7 @@ public class XMLCatalogTest {
             Source result = catalog.resolve("i/dont/exist.dtd", null);
             String expected = toURLString(new File(project.getBaseDir() +
                                                    "/i/dont/exist.dtd"));
-            String resultStr =
-                fileURLPartWithoutLeadingSlashes((SAXSource)result);
+            String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
             assertTrue("Empty catalog should return input with a system ID like "
                        + expected + " but was " + resultStr,
                        expected.endsWith(resultStr));
@@ -131,8 +130,7 @@ public class XMLCatalogTest {
         Source result = catalog.resolve("i/dont/exist.dtd", null);
         String expected = toURLString(new File(project.getBaseDir().toURL() +
                                                "/i/dont/exist.dtd"));
-        String resultStr =
-            fileURLPartWithoutLeadingSlashes((SAXSource)result);
+        String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
         assertTrue("Nonexistent Catalog entry return input with a system ID like "
                    + expected + " but was " + resultStr,
                    expected.endsWith(resultStr));

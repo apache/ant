@@ -377,8 +377,8 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testCpCommandLine() {
         String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_CP,
-                DS_VSS_PROJECT_PATH, MSVSS.FLAG_AUTORESPONSE_DEF, MSVSS.FLAG_LOGIN +
-                VSS_USERNAME};
+                DS_VSS_PROJECT_PATH, MSVSS.FLAG_AUTORESPONSE_DEF,
+                MSVSS.FLAG_LOGIN + VSS_USERNAME};
 
         // Set up a VSSCp task
         MSVSSCP vssCp = new MSVSSCP();
@@ -403,7 +403,7 @@ public class MSVSSTest implements MSVSSConstants {
     /**  Tests Create commandline generation.  */
     @Test
     public void testCreateCommandLine() {
-        String[] sTestCmdLine = { MSVSS.SS_EXE, MSVSS.COMMAND_CREATE,
+        String[] sTestCmdLine = {MSVSS.SS_EXE, MSVSS.COMMAND_CREATE,
                 DS_VSS_PROJECT_PATH, MSVSS.FLAG_COMMENT + SRC_COMMENT, MSVSS.FLAG_AUTORESPONSE_NO,
                 MSVSS.FLAG_QUIET, MSVSS.FLAG_LOGIN + VSS_USERNAME};
 

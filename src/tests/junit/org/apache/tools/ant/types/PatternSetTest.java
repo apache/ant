@@ -199,7 +199,7 @@ public class PatternSetTest {
         String[] excludes = p.getExcludePatterns(project);
         String[] includes = p.getIncludePatterns(project);
 
-        assertEquals("Includes","**/*.java", includes[0]);
-        assertEquals("Excludes","**/*.class", excludes[0]);
+        assertEquals("Includes", "**/*.java", includes[0]);
+        assertEquals("Excludes", "**/*.class", excludes[0]);
     }
 }

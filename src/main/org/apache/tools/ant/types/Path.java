@@ -93,7 +93,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
          * @param loc a <code>File</code> value
          */
         public void setLocation(File loc) {
-            parts = new String[] { translateFile(loc.getAbsolutePath()) };
+            parts = new String[] {translateFile(loc.getAbsolutePath())};
         }
 
         /**

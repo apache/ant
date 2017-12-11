@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -96,7 +95,6 @@ public class Text extends ImageOperation implements DrawOperation {
     public PlanarImage executeDrawOperation() {
         log("\tCreating Text \"" + strText + "\"");
 
-        Color couloir = ColorMapper.getColorByName(color);
         int width = 1;
         int height = 1;
 
@@ -120,7 +118,7 @@ public class Text extends ImageOperation implements DrawOperation {
             RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
         graphics.setFont(f);
-        graphics.setColor(couloir);
+        graphics.setColor(ColorMapper.getColorByName(color));
         graphics.drawString(strText, 0, height - fmetrics.getMaxDescent());
         return PlanarImage.wrapRenderedImage(bi);
     }

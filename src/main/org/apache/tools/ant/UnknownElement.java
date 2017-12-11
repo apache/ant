@@ -398,8 +398,7 @@ public class UnknownElement extends Task {
         // Do the runtime
         getWrapper().applyPreSet(u.getWrapper());
         if (u.children != null) {
-            List<UnknownElement> newChildren = new ArrayList<>();
-            newChildren.addAll(u.children);
+            List<UnknownElement> newChildren = new ArrayList<>(u.children);
             if (children != null) {
                 newChildren.addAll(children);
             }

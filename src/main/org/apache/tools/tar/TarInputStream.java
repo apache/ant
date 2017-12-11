@@ -331,11 +331,11 @@ public class TarInputStream extends FilterInputStream {
             currEntry.setName(encoding.decode(longNameData));
         }
 
-        if (currEntry.isPaxHeader()){ // Process Pax headers
+        if (currEntry.isPaxHeader()) { // Process Pax headers
             paxHeaders();
         }
 
-        if (currEntry.isGNUSparse()){ // Process sparse files
+        if (currEntry.isGNUSparse()) { // Process sparse files
             readGNUSparse();
         }
 
@@ -414,7 +414,7 @@ public class TarInputStream extends FilterInputStream {
         return hasHitEOF ? null : headerBuf;
     }
 
-    private void paxHeaders() throws IOException{
+    private void paxHeaders() throws IOException {
         Map<String, String> headers = parsePaxHeaders(this);
         getNextEntry(); // Get the actual file entry
         applyPaxHeadersToCurrentEntry(headers);
@@ -423,18 +423,18 @@ public class TarInputStream extends FilterInputStream {
     Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
         Map<String, String> headers = new HashMap<String, String>();
         // Format is "length keyword=value\n";
-        while(true){ // get length
+        while (true) { // get length
             int ch;
             int len = 0;
             int read = 0;
-            while((ch = i.read()) != -1) {
+            while ((ch = i.read()) != -1) {
                 read++;
-                if (ch == ' '){ // End of length string
+                if (ch == ' ') { // End of length string
                     // Get keyword
                     ByteArrayOutputStream coll = new ByteArrayOutputStream();
-                    while((ch = i.read()) != -1) {
+                    while ((ch = i.read()) != -1) {
                         read++;
-                        if (ch == '='){ // end of keyword
+                        if (ch == '=') { // end of keyword
                             String keyword = coll.toString("UTF-8");
                             // Get rest of entry
                             final int restLen = len - read;
@@ -463,7 +463,7 @@ public class TarInputStream extends FilterInputStream {
                 len *= 10;
                 len += ch - '0';
             }
-            if (ch == -1){ // EOF
+            if (ch == -1) { // EOF
                 break;
             }
         }
@@ -482,28 +482,28 @@ public class TarInputStream extends FilterInputStream {
          * uid,uname
          * SCHILY.devminor, SCHILY.devmajor: don't have setters/getters for those
          */
-        for (Entry<String, String> ent : headers.entrySet()){
+        for (Entry<String, String> ent : headers.entrySet()) {
             String key = ent.getKey();
             String val = ent.getValue();
-            if ("path".equals(key)){
+            if ("path".equals(key)) {
                 currEntry.setName(val);
-            } else if ("linkpath".equals(key)){
+            } else if ("linkpath".equals(key)) {
                 currEntry.setLinkName(val);
-            } else if ("gid".equals(key)){
+            } else if ("gid".equals(key)) {
                 currEntry.setGroupId(Long.parseLong(val));
-            } else if ("gname".equals(key)){
+            } else if ("gname".equals(key)) {
                 currEntry.setGroupName(val);
-            } else if ("uid".equals(key)){
+            } else if ("uid".equals(key)) {
                 currEntry.setUserId(Long.parseLong(val));
-            } else if ("uname".equals(key)){
+            } else if ("uname".equals(key)) {
                 currEntry.setUserName(val);
-            } else if ("size".equals(key)){
+            } else if ("size".equals(key)) {
                 currEntry.setSize(Long.parseLong(val));
-            } else if ("mtime".equals(key)){
+            } else if ("mtime".equals(key)) {
                 currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
-            } else if ("SCHILY.devminor".equals(key)){
+            } else if ("SCHILY.devminor".equals(key)) {
                 currEntry.setDevMinor(Integer.parseInt(val));
-            } else if ("SCHILY.devmajor".equals(key)){
+            } else if ("SCHILY.devmajor".equals(key)) {
                 currEntry.setDevMajor(Integer.parseInt(val));
             }
         }

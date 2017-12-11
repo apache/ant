@@ -72,7 +72,6 @@ public class Zip64ExtendedInformationExtraField
      *
      * @param size the entry's original size
      * @param compressedSize the entry's compressed size
-     *
      * @throws IllegalArgumentException if size or compressedSize is null
      */
     public Zip64ExtendedInformationExtraField(ZipEightByteInteger size,

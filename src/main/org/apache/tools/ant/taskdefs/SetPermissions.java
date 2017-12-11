@@ -76,7 +76,7 @@ public class SetPermissions extends Task {
          * Try DosFilePermissions - setting the read-only flag - and
          * log an error and go on if that fails as well.
          */
-        tryDosOrPass;
+        tryDosOrPass
     }
 
     /**
@@ -153,11 +153,11 @@ public class SetPermissions extends Task {
                 }
             }
         } catch (ClassCastException cce) {
-            maybeThrowException(null, 
-                "some specified permissions are not of type PosixFilePermission: %s", 
+            maybeThrowException(null,
+                "some specified permissions are not of type PosixFilePermission: %s",
                 StringUtils.join(permissions, ", "));
         } catch (SecurityException se) {
-            maybeThrowException(null, 
+            maybeThrowException(null,
                 "the SecurityManager denies role accessUserInformation or write access for SecurityManager.checkWrite for resource '%s'",
                 currentResource);
         } catch (BuildException be) {

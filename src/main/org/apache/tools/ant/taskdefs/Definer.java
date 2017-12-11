@@ -123,8 +123,8 @@ public abstract class Definer extends DefBase {
          */
         @Override
         public String[] getValues() {
-            return new String[] { POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE,
-                POLICY_FAILALL };
+            return new String[] {POLICY_FAIL, POLICY_REPORT, POLICY_IGNORE,
+                POLICY_FAILALL};
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class Definer extends DefBase {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "properties", "xml" };
+            return new String[] {"properties", "xml"};
         }
     }
 

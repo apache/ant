@@ -204,7 +204,7 @@ public class Untar extends Expand {
          */
         @Override
         public String[] getValues() {
-            return new String[] { NONE, GZIP, BZIP2, XZ };
+            return new String[] {NONE, GZIP, BZIP2, XZ};
         }
 
         /**

@@ -51,7 +51,7 @@ public class Javac13 extends DefaultCompilerAdapter {
 
         // Use reflection to be able to build on all JDKs >= 1.1:
         try {
-            Class<?> c = Class.forName ("com.sun.tools.javac.Main");
+            Class<?> c = Class.forName("com.sun.tools.javac.Main");
             Object compiler = c.newInstance();
             Method compile = c.getMethod("compile", String[].class);
             int result = ((Integer) compile.invoke(compiler,

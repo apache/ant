@@ -44,7 +44,7 @@ public class IgnoredTestResult extends TestResult {
     @Override
     public synchronized void addListener(TestListener listener) {
         if (listener instanceof IgnoredTestListener) {
-            listeners.add((IgnoredTestListener)listener);
+            listeners.add((IgnoredTestListener) listener);
         }
         super.addListener(listener);
     }

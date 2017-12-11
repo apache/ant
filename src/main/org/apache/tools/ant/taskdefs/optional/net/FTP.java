@@ -424,7 +424,7 @@ public class FTP extends Task implements FTPTaskConfig {
             } else {
                 // only scan directories that can include matched files or
                 // directories
-                newroots.forEach((k,v) -> scanRoots(baseFTPFile, k, v));
+                newroots.forEach((k, v) -> scanRoots(baseFTPFile, k, v));
             }
         }
 
@@ -448,7 +448,7 @@ public class FTP extends Task implements FTPTaskConfig {
                     try {
                         path = myfile.getRelativePath();
                         traversesSymlinks = myfile.isTraverseSymlinks();
-                    }  catch (IOException be) {
+                    } catch (IOException be) {
                         throw new BuildException(be, getLocation());
                     } catch (BuildException be) {
                         isOK = false;
@@ -1827,25 +1827,25 @@ public class FTP extends Task implements FTPTaskConfig {
                     final String dsfile = dsfiles[i];
                     executeRetryable(h, () -> {
                         switch (action) {
-                        case SEND_FILES:
-                            sendFile(ftp, fdir, dsfile);
-                            break;
-                        case GET_FILES:
-                            getFile(ftp, fdir, dsfile);
-                            break;
-                        case DEL_FILES:
-                            delFile(ftp, dsfile);
-                            break;
-                        case LIST_FILES:
-                            listFile(ftp, fbw, dsfile);
-                            break;
-                        case CHMOD:
-                            doSiteCommand(ftp, "chmod " + chmod
-                                          + " " + resolveFile(dsfile));
-                            transferred++;
-                            break;
-                        default:
-                            throw new BuildException("unknown ftp action " + action);
+                            case SEND_FILES:
+                                sendFile(ftp, fdir, dsfile);
+                                break;
+                            case GET_FILES:
+                                getFile(ftp, fdir, dsfile);
+                                break;
+                            case DEL_FILES:
+                                delFile(ftp, dsfile);
+                                break;
+                            case LIST_FILES:
+                                listFile(ftp, fbw, dsfile);
+                                break;
+                            case CHMOD:
+                                doSiteCommand(ftp, "chmod " + chmod
+                                        + " " + resolveFile(dsfile));
+                                transferred++;
+                                break;
+                            default:
+                                throw new BuildException("unknown ftp action " + action);
                         }
                     }, dsfile);
                 }

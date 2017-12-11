@@ -47,17 +47,17 @@ public class PropertyExpansionTest {
      */
     @Test
     public void testPropertyExpansion() {
-        assertExpandsTo("","");
-        assertExpandsTo("$","$");
-        assertExpandsTo("$$-","$-");
-        assertExpandsTo("$$","$");
-        buildRule.getProject().setProperty("expanded","EXPANDED");
-        assertExpandsTo("a${expanded}b","aEXPANDEDb");
-        assertExpandsTo("${expanded}${expanded}","EXPANDEDEXPANDED");
-        assertExpandsTo("$$$","$$");
-        assertExpandsTo("$$$$-","$$-");
-        assertExpandsTo("","");
-        assertExpandsTo("Class$$subclass","Class$subclass");
+        assertExpandsTo("", "");
+        assertExpandsTo("$", "$");
+        assertExpandsTo("$$-", "$-");
+        assertExpandsTo("$$", "$");
+        buildRule.getProject().setProperty("expanded", "EXPANDED");
+        assertExpandsTo("a${expanded}b", "aEXPANDEDb");
+        assertExpandsTo("${expanded}${expanded}", "EXPANDEDEXPANDED");
+        assertExpandsTo("$$$", "$$");
+        assertExpandsTo("$$$$-", "$$-");
+        assertExpandsTo("", "");
+        assertExpandsTo("Class$$subclass", "Class$subclass");
     }
 
     /**
@@ -65,13 +65,13 @@ public class PropertyExpansionTest {
      */
     @Test
     public void testDollarPassthru() {
-        assertExpandsTo("$-","$-");
-        assertExpandsTo("Class$subclass","Class$subclass");
-        assertExpandsTo("$$$-","$$-");
-        assertExpandsTo("$$$$$","$$$");
-        assertExpandsTo("${unassigned.property}","${unassigned.property}");
-        assertExpandsTo("a$b","a$b");
-        assertExpandsTo("$}}","$}}");
+        assertExpandsTo("$-", "$-");
+        assertExpandsTo("Class$subclass", "Class$subclass");
+        assertExpandsTo("$$$-", "$$-");
+        assertExpandsTo("$$$$$", "$$$");
+        assertExpandsTo("${unassigned.property}", "${unassigned.property}");
+        assertExpandsTo("a$b", "a$b");
+        assertExpandsTo("$}}", "$}}");
     }
 
 
@@ -81,10 +81,10 @@ public class PropertyExpansionTest {
     @Test
     @Ignore("Previously disabled through naming convention")
     public void oldtestQuirkyLegacyBehavior() {
-        assertExpandsTo("Class$subclass","Classsubclass");
-        assertExpandsTo("$$$-","$-");
-        assertExpandsTo("a$b","ab");
-        assertExpandsTo("$}}","}}");
+        assertExpandsTo("Class$subclass", "Classsubclass");
+        assertExpandsTo("$$$-", "$-");
+        assertExpandsTo("a$b", "ab");
+        assertExpandsTo("$}}", "}}");
     }
 
     /**

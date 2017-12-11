@@ -180,7 +180,7 @@ public class SOSTest {
                 "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
                 "-password", "", "-database", VSS_SERVER_PATH, "-project",
                 DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
-                project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT,};
+                project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT};
 
         // Set up a SOSCheckin task
         SOSCheckin sosCheckin = new SOSCheckin();

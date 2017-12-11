@@ -44,7 +44,7 @@ import static org.junit.Assert.fail;
  */
 public class JspcTest {
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -149,7 +149,7 @@ public class JspcTest {
     @Test
     public void testJasperNameManglerSelection() {
         JspCompilerAdapter adapter =
-                JspCompilerAdapterFactory.getCompiler("jasper", null,null);
+                JspCompilerAdapterFactory.getCompiler("jasper", null, null);
         JspMangler mangler = adapter.createMangler();
         assertTrue(mangler instanceof JspNameMangler);
         adapter = JspCompilerAdapterFactory.getCompiler("jasper41", null, null);

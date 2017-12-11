@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,11 +74,9 @@ import org.apache.tools.ant.util.TeeOutputStream;
  */
 
 public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestRunnerMirror {
-    private static final String JUNIT_4_TEST_ADAPTER
-        = "junit.framework.JUnit4TestAdapter";
+    private static final String JUNIT_4_TEST_ADAPTER = "junit.framework.JUnit4TestAdapter";
 
-    private static final String[] DEFAULT_TRACE_FILTERS = new String[] {
-            "junit.framework.TestCase",
+    private static final String[] DEFAULT_TRACE_FILTERS = new String[] {"junit.framework.TestCase",
             "junit.framework.TestResult",
             "junit.framework.TestSuite",
             "junit.framework.Assert.", // don't filter AssertionFailure
@@ -90,8 +89,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             // JUnit 4 support:
             "org.junit.",
             "junit.framework.JUnit4TestAdapter",
-            " more",
-    };
+            " more"};
 
     /**
      * Do we filter junit.*.* stack frames out of failure and error exceptions.
@@ -446,8 +444,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             junit4TestAdapterCacheClass = Class.forName(
                                 "org.apache.tools.ant.taskdefs.optional.junit.CustomJUnit4TestAdapterCache");
                             if (loader == null) {
-                                junit4TestAdapterClass =
-                                    Class.forName(JUNIT_4_TEST_ADAPTER);
+                                junit4TestAdapterClass = Class.forName(JUNIT_4_TEST_ADAPTER);
                                 if (testMethodsSpecified) {
                                     /*
                                      * We cannot try to load the JUnit4TestAdapter
@@ -465,8 +462,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                     Class.forName(JUNIT_4_TEST_ADAPTER,
                                                   true, loader);
                                 if (testMethodsSpecified) {
-                                    junit4TestAdapterClass =
-                                        Class.forName(
+                                    junit4TestAdapterClass = Class.forName(
                                             "org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter",
                                             true, loader);
                                     useSingleMethodAdapter = true;
@@ -488,22 +484,16 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                         Class<?>[] formalParams;
                         Object[] actualParams;
                         if (useSingleMethodAdapter) {
-                            formalParams =
-                                new Class[] { Class.class, String[].class };
-                            actualParams = new Object[] { testClass, methods };
+                            formalParams = new Class[] {Class.class, String[].class};
+                            actualParams = new Object[] {testClass, methods};
                         } else {
-                            formalParams =
-                                new Class[] { Class.class, Class.forName(
-                                    "junit.framework.JUnit4TestAdapterCache") };
-                            actualParams =
-                                new Object[] { testClass,
-                                    junit4TestAdapterCacheClass
-                                        .getMethod("getInstance")
-                                        .invoke(null) };
+                            formalParams = new Class[] {Class.class, Class.forName(
+                                    "junit.framework.JUnit4TestAdapterCache")};
+                            actualParams = new Object[] {testClass, junit4TestAdapterCacheClass
+                                    .getMethod("getInstance").invoke(null)};
                         }
                         suite = junit4TestAdapterClass.asSubclass(Test.class)
-                            .getConstructor(formalParams)
-                            .newInstance(actualParams);
+                                .getConstructor(formalParams).newInstance(actualParams);
                     } else {
                         // Use JUnit 3.
 
@@ -536,8 +526,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             if (exception != null) { // had an exception constructing suite
                 final int formatterSize = formatters.size();
                 for (int i = 0; i < formatterSize; i++) {
-                    ((TestListener) formatters.elementAt(i))
-                        .addError(null, exception);
+                    ((TestListener) formatters.elementAt(i)).addError(null, exception);
                 }
                 junitTest.setCounts(1, 0, 1, 0);
                 junitTest.setRunTime(0);
@@ -546,10 +535,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     logTestListenerEvent("tests to run: " + suite.countTestCases());
                     suite.run(res);
                 } finally {
-                    if (junit4 ||
-                        suite.getClass().getName().equals(JUNIT_4_TEST_ADAPTER)) {
+                    if (junit4 || suite.getClass().getName().equals(JUNIT_4_TEST_ADAPTER)) {
                         final int[] cnts = findJUnit4FailureErrorCount(res);
-                        junitTest.setCounts(res.runCount() + res.ignoredCount(), cnts[0], cnts[1], res.ignoredCount() + res.skippedCount());
+                        junitTest.setCounts(res.runCount() + res.ignoredCount(), cnts[0], cnts[1],
+                                res.ignoredCount() + res.skippedCount());
                     } else {
                         junitTest.setCounts(res.runCount() + res.ignoredCount(), res.failureCount(),
                                 res.errorCount(), res.ignoredCount() + res.skippedCount());
@@ -616,13 +605,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         try {
             suiteAnnotation = Class.forName("org.junit.Suite.SuiteClasses")
                 .asSubclass(Annotation.class);
-        } catch(final ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             // ignore - we don't have this annotation so make sure we don't check for it
         }
         try {
             runWithAnnotation = Class.forName("org.junit.runner.RunWith")
                 .asSubclass(Annotation.class);
-        } catch(final ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             // also ignore as this annotation doesn't exist so tests can't use it
         }
 
@@ -633,32 +622,30 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
         // check if we have any inner classes that contain suitable test methods
         for (final Class<?> innerClass : testClass.getDeclaredClasses()) {
-            if (containsTests(innerClass, isJUnit4)
-                || containsTests(innerClass, !isJUnit4)) {
+            if (containsTests(innerClass, isJUnit4) || containsTests(innerClass, !isJUnit4)) {
                 return true;
             }
         }
 
         if (Modifier.isAbstract(testClass.getModifiers())
-            || Modifier.isInterface(testClass.getModifiers())) {
+                || Modifier.isInterface(testClass.getModifiers())) {
             // can't instantiate class and no inner classes are tests either
             return false;
         }
 
         if (isJUnit4) {
-            if (suiteAnnotation != null
-                && testClass.getAnnotation(suiteAnnotation) != null) {
+            if (suiteAnnotation != null && testClass.getAnnotation(suiteAnnotation) != null) {
                 // class is marked as a suite. Let JUnit try and work its magic on it.
                 return true;
             }
-            if (runWithAnnotation != null
-                && testClass.getAnnotation(runWithAnnotation) != null) {
-                /* Class is marked with @RunWith. If this class is badly written (no test methods, multiple
-                 * constructors, private constructor etc) then the class is automatically run and fails in the
-                 * IDEs I've tried... so I'm happy handing the class to JUnit to try and run, and let JUnit
-                 * report a failure if a bad test case is provided. Trying to do anything else is likely to
-                 * result in us filtering out cases that could be valid for future versions of JUnit so would
-                 * just increase future maintenance work.
+            if (runWithAnnotation != null && testClass.getAnnotation(runWithAnnotation) != null) {
+                /* Class is marked with @RunWith. If this class is badly written (no test methods,
+                 * multiple constructors, private constructor etc) then the class is automatically
+                 * run and fails in the IDEs I've tried... so I'm happy handing the class to JUnit
+                 * to try and run, and let JUnit report a failure if a bad test case is provided.
+                 * Trying to do anything else is likely to result in us filtering out cases that
+                 * could be valid for future versions of JUnit so would just increase future
+                 * maintenance work.
                  */
                 return true;
             }
@@ -671,7 +658,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     return true;
                 }
             } else {
-                // check if JUnit3 class have public or protected no-args methods starting with names starting with test
+                // check if JUnit3 class have public or protected no-args methods starting with
+                // names starting with test
                 if (m.getName().startsWith("test")
                     && m.getParameterTypes().length == 0
                     && (Modifier.isProtected(m.getModifiers())
@@ -729,13 +717,13 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
     private void logTestListenerEvent(String msg) {
         if (logTestListenerEvents) {
+            @SuppressWarnings("resource")
             final PrintStream out = savedOut != null ? savedOut : System.out;
             out.flush();
             final StringTokenizer msgLines =
                 new StringTokenizer(String.valueOf(msg), "\r\n", false);
             while (msgLines.hasMoreTokens()) {
-                out.println(JUnitTask.TESTLISTENER_PREFIX
-                            + msgLines.nextToken());
+                out.println(JUnitTask.TESTLISTENER_PREFIX + msgLines.nextToken());
             }
             out.flush();
         }
@@ -862,16 +850,14 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private void fireStartTestSuite() {
         final int size = formatters.size();
         for (int i = 0; i < size; i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i))
-                .startTestSuite(junitTest);
+            ((JUnitResultFormatter) formatters.elementAt(i)).startTestSuite(junitTest);
         }
     }
 
     private void fireEndTestSuite() {
         final int size = formatters.size();
         for (int i = 0; i < size; i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i))
-                .endTestSuite(junitTest);
+            ((JUnitResultFormatter) formatters.elementAt(i)).endTestSuite(junitTest);
         }
     }
 
@@ -938,7 +924,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         boolean logFailedTests = true;
         boolean logTestListenerEvents = false;
         boolean skipNonTests = false;
-        int antThreadID = 0; /* Ant id of thread running this unit test, 0 in single-threaded mode */
+        /* Ant id of thread running this unit test, 0 in single-threaded mode */
+        int antThreadID = 0;
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -977,7 +964,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 }
             } else if (args[i].startsWith(Constants.PROPSFILE)) {
                 final InputStream in = Files.newInputStream(Paths.get(args[i]
-                                                     .substring(Constants.PROPSFILE.length())));
+                        .substring(Constants.PROPSFILE.length())));
                 props.load(in);
                 in.close();
             } else if (args[i].startsWith(Constants.SHOWOUTPUT)) {
@@ -1004,9 +991,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
 
         int returnCode = SUCCESS;
         if (multipleTests) {
-            try (
-                final BufferedReader reader =
-                    new BufferedReader(new java.io.FileReader(args[0]))){
+            try (final BufferedReader reader = new BufferedReader(new FileReader(args[0]))) {
                 int code = 0;
                 boolean errorOccurred = false;
                 boolean failureOccurred = false;
@@ -1039,8 +1024,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     errorOccurred = (code == ERRORS);
                     failureOccurred = (code != SUCCESS);
                     if (errorOccurred || failureOccurred) {
-                        if ((errorOccurred && haltError)
-                            || (failureOccurred && haltFail)) {
+                        if ((errorOccurred && haltError) || (failureOccurred && haltFail)) {
                             registerNonCrash();
                             System.exit(code);
                         } else {
@@ -1048,8 +1032,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                                 returnCode = code;
                             }
                             if (logFailedTests) {
-                                System.out.println("TEST " + t.getName()
-                                                   + " FAILED");
+                                System.out.println("TEST " + t.getName() + " FAILED");
                             }
                         }
                     }
@@ -1062,9 +1045,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             t.setThread(antThreadID);
             t.setProperties(props);
             t.setSkipNonTests(skipNonTests);
-            returnCode = launch(
-                t, methods, haltError, stackfilter, haltFail,
-                showOut, outputToFormat, logTestListenerEvents);
+            returnCode = launch(t, methods, haltError, stackfilter, haltFail, showOut,
+                    outputToFormat, logTestListenerEvents);
         }
 
         registerNonCrash();
@@ -1118,9 +1100,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         for (int i = 0; i < size; i++) {
             final FormatterElement fe = fromCmdLine.elementAt(i);
             if (multipleTests && fe.getUseFile()) {
-                final File destFile =
-                    new File(test.getTodir(),
-                             test.getOutfile() + fe.getExtension());
+                final File destFile = new File(test.getTodir(),
+                        test.getOutfile() + fe.getExtension());
                 fe.setOutfile(destFile);
             }
             runner.addFormatter((JUnitResultFormatter) fe.createFormatter());
@@ -1147,9 +1128,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             } else {
                 final int fName = line.indexOf(IGNORED_FILE_NAME);
                 if (fName > -1) {
-                    fe.setExtension(line
-                                    .substring(fName
-                                               + IGNORED_FILE_NAME.length()));
+                    fe.setExtension(line.substring(fName
+                            + IGNORED_FILE_NAME.length()));
                 }
             }
         }
@@ -1340,7 +1320,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 errors++;
             }
         }
-        return new int[] { failures, errors };
+        return new int[] {failures, errors};
     }
 
 }

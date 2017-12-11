@@ -365,7 +365,7 @@ public class FilterSet extends DataType implements Cloneable {
             try (InputStream in = Files.newInputStream(filtersFile.toPath())) {
                 Properties props = new Properties();
                 props.load(in);
-                props.forEach((k,v) -> addFilter(new Filter((String) k, (String) v)));
+                props.forEach((k, v) -> addFilter(new Filter((String) k, (String) v)));
             } catch (Exception ex) {
                 throw new BuildException(
                     "Could not read filters from file: " + filtersFile, ex);

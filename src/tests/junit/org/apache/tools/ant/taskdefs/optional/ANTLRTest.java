@@ -46,7 +46,7 @@ import static org.junit.Assert.fail;
  */
 public class ANTLRTest {
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/antlr/";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/antlr/";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -207,10 +207,10 @@ public class ANTLRTest {
 
     }
 
-}
-
-class HTMLFilter implements FilenameFilter {
-    public boolean accept(File dir, String name) {
-        return name.endsWith("html");
+    class HTMLFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return name.endsWith("html");
+        }
     }
+
 }

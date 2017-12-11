@@ -56,7 +56,7 @@ public final class VectorSet<E> extends Vector<E> {
 
     public VectorSet(Collection<? extends E> c) {
         if (c != null) {
-            c.forEach(this::add);
+            this.addAll(c);
         }
     }
 

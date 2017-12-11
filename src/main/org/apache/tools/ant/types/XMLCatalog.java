@@ -47,7 +47,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 
-
 /**
  * <p>This data type provides a catalog of resource locations (such as
  * DTDs and XML entities), based on the <a

@@ -225,7 +225,7 @@ public class WLJspc extends MatchingTask {
      * Set the directory containing the source jsp's
      *
      *
-     * @param dirName the directory containg the source jsp's
+     * @param dirName the directory containing the source jsp's
      */
     public void setSrc(File dirName) {
         sourceDirectory = dirName;
@@ -235,7 +235,7 @@ public class WLJspc extends MatchingTask {
      * Set the directory containing the source jsp's
      *
      *
-     * @param dirName the directory containg the source jsp's
+     * @param dirName the directory containing the source jsp's
      */
     public void setDest(File dirName) {
         destinationDirectory = dirName;

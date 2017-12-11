@@ -706,7 +706,7 @@ public class IPlanetEjbc {
                         inputStream = Files.newInputStream(Paths.get(location)); //NOSONAR
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
             if (inputStream == null) {
                 return super.resolveEntity(publicId, systemId);

@@ -413,7 +413,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
              * This is supposed to make Ant always recompile the
              * class, as a file of that name should not exist.
              */
-            String[] target = new String[] { name + ".tmp." + RAND.nextLong() };
+            String[] target = new String[] {name + ".tmp." + RAND.nextLong()};
 
             if (!attributes.getIiop() && !attributes.getIdl()) {
                 // JRMP with simple naming convention

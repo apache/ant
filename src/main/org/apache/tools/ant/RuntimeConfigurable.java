@@ -592,8 +592,7 @@ public class RuntimeConfigurable implements Serializable {
 
         // Children (this is a shadow of UnknownElement#children)
         if (r.children != null) {
-            List<RuntimeConfigurable> newChildren = new ArrayList<>();
-            newChildren.addAll(r.children);
+            List<RuntimeConfigurable> newChildren = new ArrayList<>(r.children);
             if (children != null) {
                 newChildren.addAll(children);
             }

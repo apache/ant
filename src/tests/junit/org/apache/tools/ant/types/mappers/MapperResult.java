@@ -90,14 +90,7 @@ public class MapperResult extends Task {
             flattened = b.toString();
         }
         if (!flattened.equals(output)) {
-            throw new BuildException(
-                failMessage
-                + " "
-                + "got "
-                + flattened
-                + " "
-                + "expected "
-                + output);
+            throw new BuildException(failMessage + " got " + flattened + " expected " + output);
         }
     }
 }

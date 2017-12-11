@@ -326,7 +326,7 @@ public class JDependTask extends Task {
      * @see EnumeratedAttribute
      */
     public static class FormatAttribute extends EnumeratedAttribute {
-        private String[] formats = new String[] { "xml", "text" };
+        private String[] formats = new String[] {"xml", "text"};
 
         /**
          * @return the enumerated values
@@ -633,9 +633,7 @@ public class JDependTask extends Task {
             return result;
         }
         result = Optional.ofNullable(getSourcespath());
-        if (result.isPresent()) {
-            log("nested sourcespath is deprecated; please use classespath");
-        }
+        result.ifPresent(resources -> log("nested sourcespath is deprecated; please use classespath"));
         return result;
     }
 

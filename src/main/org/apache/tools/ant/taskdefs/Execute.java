@@ -194,16 +194,16 @@ public class Execute {
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
             // OS/2 - use same mechanism as Windows 2000
-            return new String[] { "cmd", "/c", "set" };
+            return new String[] {"cmd", "/c", "set"};
         }
         if (Os.isFamily("windows")) {
             // Determine if we're running under XP/2000/NT or 98/95
             if (Os.isFamily("win9x")) {
                 // Windows 98/95
-                return new String[] { "command.com", "/c", "set" };
+                return new String[] {"command.com", "/c", "set"};
             }
             // Windows XP/2000/NT/2003
-            return new String[] { "cmd", "/c", "set" };
+            return new String[] {"cmd", "/c", "set"};
         }
         if (Os.isFamily("z/os") || Os.isFamily("unix")) {
             // On most systems one could use: /bin/sh -c env
@@ -222,10 +222,10 @@ public class Execute {
         }
         if (Os.isFamily("netware") || Os.isFamily("os/400")) {
             // rely on PATH
-            return new String[] { "env" };
+            return new String[] {"env"};
         }
         if (Os.isFamily("openvms")) {
-            return new String[] { "show", "logical" };
+            return new String[] {"show", "logical"};
         }
         // MAC OS 9 and previous
         // TODO: I have no idea how to get it, someone must fix it

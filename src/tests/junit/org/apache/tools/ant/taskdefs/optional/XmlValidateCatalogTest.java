@@ -33,7 +33,7 @@ public class XmlValidateCatalogTest {
     /**
      * where tasks run
      */
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

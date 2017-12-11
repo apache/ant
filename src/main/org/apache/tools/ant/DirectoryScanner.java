@@ -765,8 +765,8 @@ public class DirectoryScanner
         if (excludes == null) {
             this.excludes = null;
         } else {
-            this.excludes = Stream.of(excludes)
-                .map(DirectoryScanner::normalizePattern).toArray(String[]::new);
+            this.excludes = Stream.of(excludes).map(DirectoryScanner::normalizePattern)
+                    .toArray(String[]::new);
         }
     }
 
@@ -788,11 +788,9 @@ public class DirectoryScanner
             if (this.excludes == null || this.excludes.length == 0) {
                 setExcludes(excludes);
             } else {
-                this.excludes = Stream
-                    .concat(Stream.of(this.excludes),
-                        Stream.of(excludes)
-                            .map(DirectoryScanner::normalizePattern))
-                    .toArray(String[]::new);
+                this.excludes = Stream.concat(Stream.of(this.excludes),
+                        Stream.of(excludes).map(DirectoryScanner::normalizePattern))
+                        .toArray(String[]::new);
             }
         }
     }
@@ -853,8 +851,7 @@ public class DirectoryScanner
                 while (scanning) {
                     try {
                         scanLock.wait();
-                    } catch (final InterruptedException e) {
-                        continue;
+                    } catch (final InterruptedException ignored) {
                     }
                 }
                 if (illegal != null) {
@@ -872,8 +869,7 @@ public class DirectoryScanner
 
                 // set in/excludes to reasonable defaults if needed:
                 final boolean nullIncludes = includes == null;
-                includes = nullIncludes
-                    ? new String[] { SelectorUtils.DEEP_TREE_MATCH } : includes;
+                includes = nullIncludes ? new String[] {SelectorUtils.DEEP_TREE_MATCH} : includes;
                 final boolean nullExcludes = excludes == null;
                 excludes = nullExcludes ? new String[0] : excludes;
 
@@ -948,8 +944,7 @@ public class DirectoryScanner
         for (TokenizedPattern includePattern : includePatterns) {
             final String pattern = includePattern.toString();
             if (!shouldSkipPattern(pattern)) {
-                newroots.put(includePattern.rtrimWildcardTokens(),
-                             pattern);
+                newroots.put(includePattern.rtrimWildcardTokens(), pattern);
             }
         }
         for (final Map.Entry<String, TokenizedPath> entry : includeNonPatterns
@@ -978,8 +973,7 @@ public class DirectoryScanner
             for (final Map.Entry<TokenizedPath, String> entry : newroots.entrySet()) {
                 TokenizedPath currentPath = entry.getKey();
                 String currentelement = currentPath.toString();
-                if (basedir == null
-                    && !FileUtils.isAbsolutePath(currentelement)) {
+                if (basedir == null && !FileUtils.isAbsolutePath(currentelement)) {
                     continue;
                 }
                 File myfile = new File(basedir, currentelement);
@@ -998,10 +992,8 @@ public class DirectoryScanner
                             if (myfile != null && basedir != null) {
                                 currentelement = FILE_UTILS.removeLeadingPath(
                                     basedir, myfile);
-                                if (!currentPath.toString()
-                                    .equals(currentelement)) {
-                                    currentPath =
-                                        new TokenizedPath(currentelement);
+                                if (!currentPath.toString().equals(currentelement)) {
+                                    currentPath = new TokenizedPath(currentelement);
                                 }
                             }
                         }
@@ -1117,8 +1109,7 @@ public class DirectoryScanner
 
                 // set in/excludes to reasonable defaults if needed:
                 final boolean nullIncludes = (includes == null);
-                includes = nullIncludes
-                    ? new String[] {SelectorUtils.DEEP_TREE_MATCH} : includes;
+                includes = nullIncludes ? new String[] {SelectorUtils.DEEP_TREE_MATCH} : includes;
                 final boolean nullExcludes = (excludes == null);
                 excludes = nullExcludes ? new String[0] : excludes;
 
@@ -1288,10 +1279,8 @@ public class DirectoryScanner
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(newPath)
-                        && !contentsExcluded(newPath)) {
-                        scandir(file, newPath, fast, children,
-                                directoryNamesFollowed);
+                    if (fast && couldHoldIncluded(newPath) && !contentsExcluded(newPath)) {
+                        scandir(file, newPath, fast, children, directoryNamesFollowed);
                     }
                 }
                 if (!fast) {
@@ -1345,10 +1334,8 @@ public class DirectoryScanner
     }
 
     private void accountForNotFollowedSymlink(final TokenizedPath name, final File file) {
-        if (!isExcluded(name) &&
-            (isIncluded(name)
-             || (file.isDirectory() && couldHoldIncluded(name)
-                 && !contentsExcluded(name)))) {
+        if (!isExcluded(name) && (isIncluded(name)
+                || (file.isDirectory() && couldHoldIncluded(name) && !contentsExcluded(name)))) {
             notFollowedSymlinks.add(file.getAbsolutePath());
         }
     }
@@ -1376,7 +1363,7 @@ public class DirectoryScanner
      * Test whether or not a name matches against at least one include
      * pattern.
      *
-     * @param name The name to match. Must not be <code>null</code>.
+     * @param name The path to match. Must not be <code>null</code>.
      * @return <code>true</code> when the name matches against at least one
      *         include pattern, or <code>false</code> otherwise.
      */
@@ -1400,8 +1387,7 @@ public class DirectoryScanner
             toMatch = toMatch.toUpperCase();
         }
         return includeNonPatterns.containsKey(toMatch)
-            || Stream.of(includePatterns)
-                .anyMatch(p -> p.matchPath(path, isCaseSensitive()));
+            || Stream.of(includePatterns).anyMatch(p -> p.matchPath(path, isCaseSensitive()));
     }
 
     /**
@@ -1425,11 +1411,9 @@ public class DirectoryScanner
      *         least one include pattern, or <code>false</code> otherwise.
      */
     private boolean couldHoldIncluded(final TokenizedPath tokenizedName) {
-        return Stream
-            .concat(Stream.of(includePatterns),
-                includeNonPatterns.values().stream()
-                    .map(TokenizedPath::toPattern))
-            .anyMatch(pat -> couldHoldIncluded(tokenizedName, pat));
+        return Stream.concat(Stream.of(includePatterns),
+                includeNonPatterns.values().stream().map(TokenizedPath::toPattern))
+                .anyMatch(pat -> couldHoldIncluded(tokenizedName, pat));
     }
 
     /**
@@ -1477,8 +1461,7 @@ public class DirectoryScanner
      *  @since Ant 1.6
      */
     private boolean isMorePowerfulThanExcludes(final String name) {
-        final String soughtexclude =
-            name + File.separatorChar + SelectorUtils.DEEP_TREE_MATCH;
+        final String soughtexclude = name + File.separatorChar + SelectorUtils.DEEP_TREE_MATCH;
         return Stream.of(excludePatterns).map(Object::toString)
             .noneMatch(Predicate.isEqual(soughtexclude));
     }
@@ -1523,8 +1506,7 @@ public class DirectoryScanner
             toMatch = toMatch.toUpperCase();
         }
         return excludeNonPatterns.containsKey(toMatch)
-            || Stream.of(excludePatterns)
-                .anyMatch(p -> p.matchPath(name, isCaseSensitive()));
+            || Stream.of(excludePatterns).anyMatch(p -> p.matchPath(name, isCaseSensitive()));
     }
 
     /**
@@ -1536,8 +1518,8 @@ public class DirectoryScanner
      *         should not be selected, <code>true</code> otherwise.
      */
     protected boolean isSelected(final String name, final File file) {
-        return selectors == null || Stream.of(selectors)
-            .allMatch(sel -> sel.isSelected(basedir, name, file));
+        return selectors == null
+                || Stream.of(selectors).allMatch(sel -> sel.isSelected(basedir, name, file));
     }
 
     /**
@@ -1718,8 +1700,7 @@ public class DirectoryScanner
     public synchronized String[] getNotFollowedSymlinks() {
         String[] links;
         synchronized (this) {
-            links = notFollowedSymlinks
-                .toArray(new String[notFollowedSymlinks.size()]);
+            links = notFollowedSymlinks.toArray(new String[notFollowedSymlinks.size()]);
         }
         Arrays.sort(links);
         return links;
@@ -1730,9 +1711,8 @@ public class DirectoryScanner
      */
     @Override
     public synchronized void addDefaultExcludes() {
-        Stream<String> s = Stream.of(getDefaultExcludes())
-            .map(p -> p.replace('/', File.separatorChar).replace('\\',
-                File.separatorChar));
+        Stream<String> s = Stream.of(getDefaultExcludes()).map(p -> p.replace('/',
+                File.separatorChar).replace('\\', File.separatorChar));
         if (excludes != null) {
             s = Stream.concat(Stream.of(excludes), s);
         }
@@ -1807,14 +1787,14 @@ public class DirectoryScanner
      * @param patterns String[] of patterns.
      * @since Ant 1.8.0
      */
-    private TokenizedPattern[] fillNonPatternSet(final Map<String, TokenizedPath> map, final String[] patterns) {
+    private TokenizedPattern[] fillNonPatternSet(final Map<String, TokenizedPath> map,
+                                                 final String[] patterns) {
         final List<TokenizedPattern> al = new ArrayList<>(patterns.length);
         for (String pattern : patterns) {
             if (SelectorUtils.hasWildcards(pattern)) {
                 al.add(new TokenizedPattern(pattern));
             } else {
-                final String s = isCaseSensitive()
-                    ? pattern : pattern.toUpperCase();
+                final String s = isCaseSensitive() ? pattern : pattern.toUpperCase();
                 map.put(s, new TokenizedPath(s));
             }
         }
@@ -1836,8 +1816,7 @@ public class DirectoryScanner
                                              final Deque<String> directoryNamesFollowed) {
         try {
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
-                && Collections.frequency(directoryNamesFollowed, dirName)
-                   >= maxLevelsOfSymlinks
+                && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
                 && SYMLINK_UTILS.isSymbolicLink(parent, dirName)) {
 
                 final List<String> files = new ArrayList<>();
@@ -1852,8 +1831,7 @@ public class DirectoryScanner
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
                         files.add(f.getCanonicalPath());
                         if (files.size() > maxLevelsOfSymlinks
-                            && Collections.frequency(files, target)
-                                 > maxLevelsOfSymlinks) {
+                            && Collections.frequency(files, target) > maxLevelsOfSymlinks) {
                             return true;
                         }
                     }

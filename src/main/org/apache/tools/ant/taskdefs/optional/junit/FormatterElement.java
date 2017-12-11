@@ -359,7 +359,7 @@ public class FormatterElement {
         /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
-            return new String[] { "plain", "xml", "brief", "failure" };
+            return new String[] {"plain", "xml", "brief", "failure"};
         }
     }
 

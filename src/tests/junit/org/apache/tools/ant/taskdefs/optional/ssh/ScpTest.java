@@ -95,8 +95,8 @@ public class ScpTest {
         scpTask.setTodir(sshHostUri);
         scpTask.execute();
 
-        File testFile = new File(tempDir.getPath() + File.separator +
-                "download-testSingleFileUploadAndDownload.test");
+        File testFile = new File(tempDir.getPath() + File.separator
+                + "download-testSingleFileUploadAndDownload.test");
         addCleanup(testFile);
         assertFalse("Assert that the testFile does not exist.", testFile.exists());
 

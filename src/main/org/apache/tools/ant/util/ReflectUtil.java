@@ -93,7 +93,7 @@ public class ReflectUtil {
         try {
             Method method = ((Class<?>) obj).getMethod(methodName);
             return (T) method.invoke(obj);
-        }  catch (Exception t) {
+        } catch (Exception t) {
             throwBuildException(t);
             return null; // NotReached
         }

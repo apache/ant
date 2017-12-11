@@ -124,7 +124,7 @@ public class RegexpPatternMapper implements FileNameMapper {
             || !reg.matches(sourceFileName, regexpOptions)) {
             return null;
         }
-        return new String[] { replaceReferences(sourceFileName) };
+        return new String[] {replaceReferences(sourceFileName)};
     }
 
     /**

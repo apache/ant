@@ -37,20 +37,20 @@ the following code:
             makeBed();
 
 
-            s = (DepthSelector)getInstance();
+            s = (DepthSelector) getInstance();
             s.setMin(20);
             s.setMax(25);
             results = selectionString(s);
             assertEquals("FFFFFFFFFFFF", results);
 
 
-            s = (DepthSelector)getInstance();
+            s = (DepthSelector) getInstance();
             s.setMin(0);
             results = selectionString(s);
             assertEquals("TTTTTTTTTTTT", results);
 
 
-            s = (DepthSelector)getInstance();
+            s = (DepthSelector) getInstance();
             s.setMin(1);
             results = selectionString(s);
             assertEquals("FFFFFTTTTTTT", results);

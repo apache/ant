@@ -238,8 +238,8 @@ public class DefaultCompilerAdapterTest {
         try {
             final File src = new File(workDir, "src");
             src.mkdir();
-            final File java1 = createFile(src,"org/apache/ant/tests/J1.java");
-            final File java2 = createFile(src,"org/apache/ant/tests/J2.java");
+            final File java1 = createFile(src, "org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src, "org/apache/ant/tests/J2.java");
             final File modules = new File(workDir, "modules");
             modules.mkdir();
             final Project prj = new Project();
@@ -278,8 +278,7 @@ public class DefaultCompilerAdapterTest {
             //J1.java & J2.java has to be in files list
             final Set<String> expected = new TreeSet<String>();
             Collections.addAll(expected, java1.getAbsolutePath(), java2.getAbsolutePath());
-            final Set<String> actual = new TreeSet<String>();
-            actual.addAll(cmdLine.subList(cmdLine.size() - 2, cmdLine.size()));
+            final Set<String> actual = new TreeSet<String>(cmdLine.subList(cmdLine.size() - 2, cmdLine.size()));
             assertEquals(expected, actual);
         } finally {
             delete(workDir);
@@ -292,9 +291,9 @@ public class DefaultCompilerAdapterTest {
         try {
             final File src = new File(workDir, "src");
             src.mkdir();
-            final File java1 = createFile(src,"main/m1/lin64/classes/org/apache/ant/tests/J1.java");
-            final File java2 = createFile(src,"main/m2/lin32/classes/org/apache/ant/tests/J2.java");
-            final File java3 = createFile(src,"main/m3/sol/classes/org/apache/ant/tests/J3.java");
+            final File java1 = createFile(src, "main/m1/lin64/classes/org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src, "main/m2/lin32/classes/org/apache/ant/tests/J2.java");
+            final File java3 = createFile(src, "main/m3/sol/classes/org/apache/ant/tests/J3.java");
             final File modules = new File(workDir, "modules");
             modules.mkdir();
             final File build = new File(workDir, "build");
@@ -345,8 +344,7 @@ public class DefaultCompilerAdapterTest {
                     java1.getAbsolutePath(),
                     java2.getAbsolutePath(),
                     java3.getAbsolutePath());
-            final Set<String> actualFiles = new TreeSet<String>();
-            actualFiles.addAll(cmdLine.subList(cmdLine.size() - 3, cmdLine.size()));
+            final Set<String> actualFiles = new TreeSet<String>(cmdLine.subList(cmdLine.size() - 3, cmdLine.size()));
             assertEquals(expectedFiles, actualFiles);
         } finally {
             delete(workDir);
@@ -359,10 +357,10 @@ public class DefaultCompilerAdapterTest {
         try {
             final File src = new File(workDir, "src");
             src.mkdir();
-            final File java1 = createFile(src,"main/m1/lin/classes/org/apache/ant/tests/J1.java");
-            final File java2 = createFile(src,"main/m3/sol/classes/org/apache/ant/tests/J2.java");
+            final File java1 = createFile(src, "main/m1/lin/classes/org/apache/ant/tests/J1.java");
+            final File java2 = createFile(src, "main/m3/sol/classes/org/apache/ant/tests/J2.java");
             @SuppressWarnings("unused")
-            final File java3 = createFile(src,"main/m3/sol/classes/org/apache/ant/invisible/J3.java");
+            final File java3 = createFile(src, "main/m3/sol/classes/org/apache/ant/invisible/J3.java");
             final File build = new File(workDir, "build");
             build.mkdirs();
             final Project prj = new Project();

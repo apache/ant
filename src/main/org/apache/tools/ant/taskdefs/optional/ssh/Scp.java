@@ -423,8 +423,7 @@ public class Scp extends SSHBase {
             // password. (so if the path contains an @ and a : it will not work)
             int indexOfCurrentAt = indexOfAt;
             final int indexOfLastColon = uri.lastIndexOf(':');
-            while (indexOfCurrentAt > -1 && indexOfCurrentAt < indexOfLastColon)
-            {
+            while (indexOfCurrentAt > -1 && indexOfCurrentAt < indexOfLastColon) {
                 indexOfAt = indexOfCurrentAt;
                 indexOfCurrentAt = uri.indexOf('@', indexOfCurrentAt + 1);
             }

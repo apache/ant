@@ -225,7 +225,7 @@ public class Classloader extends Task {
                 for (int i = 0; i < list.length; i++) {
                     File f = new File(list[i]);
                     if (f.exists()) {
-                        log("Adding to class loader " +  acl + " " + f.getAbsolutePath(),
+                        log("Adding to class loader " + acl + " " + f.getAbsolutePath(),
                                 Project.MSG_DEBUG);
                         acl.addPathElement(f.getAbsolutePath());
                     }

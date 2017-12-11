@@ -50,17 +50,17 @@ import static org.junit.Assert.fail;
 public class SQLExecTest {
 
     // some database keys, see #getProperties(int)
-    public final static int NULL = 0;
-    public final static int ORACLE = 1;
-    public final static int MYSQL = 2;
+    public static final int NULL = 0;
+    public static final int ORACLE = 1;
+    public static final int MYSQL = 2;
 
     // keys used in properties.
-    public final static String DRIVER = "driver";
-    public final static String USER = "user";
-    public final static String PASSWORD = "password";
-    public final static String URL = "url";
-    public final static String PATH = "path";
-    public final static String SQL = "sql";
+    public static final String DRIVER = "driver";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+    public static final String URL = "url";
+    public static final String PATH = "path";
+    public static final String SQL = "sql";
 
     @Before
     public void setUp() throws Exception {
@@ -223,7 +223,7 @@ public class SQLExecTest {
 //--- NULL JDBC driver just for simple test since there are no db driver
 // available as a default in Ant :)
 
-    public final static String NULL_DRIVER = NullDriver.class.getName();
+    public static final String NULL_DRIVER = NullDriver.class.getName();
 
     public static class NullDriver implements Driver {
         public Connection connect(String url, Properties info)
@@ -326,8 +326,7 @@ public class SQLExecTest {
         assertEquals(0, s.lastDelimiterPosition(new StringBuffer("; "), "; "));
         assertEquals(1, s.lastDelimiterPosition(new StringBuffer("ab"), ";"));
         s.setDelimiter("GO");
-        assertEquals(1,
-                     s.lastDelimiterPosition(new StringBuffer("abcd"), "GO "));
+        assertEquals(1, s.lastDelimiterPosition(new StringBuffer("abcd"), "GO "));
         assertEquals(0, s.lastDelimiterPosition(new StringBuffer("go"), "go"));
         assertEquals(0, s.lastDelimiterPosition(new StringBuffer("ab"), "GO"));
     }

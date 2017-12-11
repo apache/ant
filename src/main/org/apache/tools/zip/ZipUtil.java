@@ -76,7 +76,7 @@ public abstract class ZipUtil {
 
         int year = c.get(Calendar.YEAR);
         if (year < 1980) {
-            System.arraycopy(DOS_TIME_MIN, 0, buf, offset, DOS_TIME_MIN.length);// stop callers from changing the array
+            System.arraycopy(DOS_TIME_MIN, 0, buf, offset, DOS_TIME_MIN.length); // stop callers from changing the array
             return;
         }
         int month = c.get(Calendar.MONTH) + 1;

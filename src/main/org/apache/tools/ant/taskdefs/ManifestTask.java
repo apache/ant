@@ -92,7 +92,7 @@ public class ManifestTask extends Task {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "update", "replace" };
+            return new String[] {"update", "replace"};
         }
     }
 

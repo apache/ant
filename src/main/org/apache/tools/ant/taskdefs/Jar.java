@@ -969,7 +969,7 @@ public class Jar extends Zip {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "skip", "merge", "mergewithoutmain" };
+            return new String[] {"skip", "merge", "mergewithoutmain"};
         }
     }
 
@@ -1104,10 +1104,10 @@ public class Jar extends Zip {
         for (int i = 0; i < rcs.length; i++) {
             Resource[][] resources;
             if (rcs[i] instanceof FileSet) {
-                resources = grabResources(new FileSet[] { (FileSet) rcs[i] });
+                resources = grabResources(new FileSet[] {(FileSet) rcs[i]});
             } else {
                 resources = grabNonFileSetResources(
-                    new ResourceCollection[] { rcs[i] });
+                    new ResourceCollection[] {rcs[i]});
             }
             for (int j = 0; j < resources[0].length; j++) {
                 String name = resources[0][j].getName().replace('\\', '/');
@@ -1169,7 +1169,7 @@ public class Jar extends Zip {
          */
         @Override
         public String[] getValues() {
-            return new String[] { "fail", "warn", "ignore" };
+            return new String[] {"fail", "warn", "ignore"};
         }
 
         /**

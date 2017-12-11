@@ -339,7 +339,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     try {
                         path = myfile.getRelativePath();
                         traversesSymlinks = myfile.isTraverseSymlinks();
-                    }  catch (IOException be) {
+                    } catch (IOException be) {
                         throw new BuildException(be, task.getLocation());
                     } catch (BuildException be) {
                         isOK = false;
@@ -1200,26 +1200,26 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     final String dsfile = dsfiles[i];
                     executeRetryable(h, () -> {
                         switch (task.getAction()) {
-                        case FTPTask.SEND_FILES:
-                            sendFile(ftp, fdir, dsfile);
-                            break;
-                        case FTPTask.GET_FILES:
-                            getFile(ftp, fdir, dsfile);
-                            break;
-                        case FTPTask.DEL_FILES:
-                            delFile(ftp, dsfile);
-                            break;
-                        case FTPTask.LIST_FILES:
-                            listFile(ftp, fbw, dsfile);
-                            break;
-                        case FTPTask.CHMOD:
-                            doSiteCommand(ftp, "chmod " + task.getChmod() + " "
-                                          + resolveFile(dsfile));
-                            transferred++;
-                            break;
-                        default:
-                            throw new BuildException("unknown ftp action %s",
-                                task.getAction());
+                            case FTPTask.SEND_FILES:
+                                sendFile(ftp, fdir, dsfile);
+                                break;
+                            case FTPTask.GET_FILES:
+                                getFile(ftp, fdir, dsfile);
+                                break;
+                            case FTPTask.DEL_FILES:
+                                delFile(ftp, dsfile);
+                                break;
+                            case FTPTask.LIST_FILES:
+                                listFile(ftp, fbw, dsfile);
+                                break;
+                            case FTPTask.CHMOD:
+                                doSiteCommand(ftp, "chmod " + task.getChmod() + " "
+                                        + resolveFile(dsfile));
+                                transferred++;
+                                break;
+                            default:
+                                throw new BuildException("unknown ftp action %s",
+                                        task.getAction());
                         }
                     }, dsfile);
                 }
@@ -1461,20 +1461,20 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             + task.getGranularityMillis();
 
         StringBuilder msg;
-        synchronized(TIMESTAMP_LOGGING_SDF) {
+        synchronized (TIMESTAMP_LOGGING_SDF) {
             msg = new StringBuilder("   [")
                 .append(TIMESTAMP_LOGGING_SDF.format(new Date(localTimestamp)))
                 .append("] local");
         }
         task.log(msg.toString(), Project.MSG_VERBOSE);
 
-        synchronized(TIMESTAMP_LOGGING_SDF) {
+        synchronized (TIMESTAMP_LOGGING_SDF) {
             msg = new StringBuilder("   [")
                 .append(TIMESTAMP_LOGGING_SDF.format(new Date(adjustedRemoteTimestamp)))
                 .append("] remote");
         }
         if (remoteTimestamp != adjustedRemoteTimestamp) {
-            synchronized(TIMESTAMP_LOGGING_SDF) {
+            synchronized (TIMESTAMP_LOGGING_SDF) {
                 msg.append(" - (raw: ")
                     .append(TIMESTAMP_LOGGING_SDF.format(new Date(remoteTimestamp)))
                     .append(")");

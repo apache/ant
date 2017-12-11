@@ -34,21 +34,21 @@ public class XMLFormatterWithCDATAOnSystemOut {
     private static final String REPORT =
         "TEST-" + XMLFormatterWithCDATAOnSystemOut.class.getName() + ".xml";
 
-    private static final String TESTDATA =
-        "<ERROR>" +
-        "<![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-        "  <RESPONSE>" +
-        "    <GDS/>" +
-        "    <ERROR>" +
-        "      <ID/>" +
-        "      <MESSAGE/>" +
-        "      <REQUEST_TYPE/>" +
-        "      <RESEND/>" +
-        "      <RAW_RESPONSE/>" +
-        "    </ERROR>" +
-        "  </RESPONSE>" +
-        "]]>" +
-        "</ERROR>";
+    private static final String TESTDATA
+        = "<ERROR>"
+        + "<![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "  <RESPONSE>"
+        + "    <GDS/>"
+        + "    <ERROR>"
+        + "      <ID/>"
+        + "      <MESSAGE/>"
+        + "      <REQUEST_TYPE/>"
+        + "      <RESEND/>"
+        + "      <RAW_RESPONSE/>"
+        + "    </ERROR>"
+        + "  </RESPONSE>"
+        + "]]>"
+        + "</ERROR>";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

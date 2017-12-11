@@ -329,7 +329,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             //after execution finished, which is much better for long-lived runtimes
             //though spawning complicates things...
             vmsJavaOptionFile.deleteOnExit();
-            String[] vmsCmd = { command[0], "-V", vmsJavaOptionFile.getPath() };
+            String[] vmsCmd = {command[0], "-V", vmsJavaOptionFile.getPath()};
             exe.setCommandline(vmsCmd);
         } catch (IOException e) {
             throw new BuildException("Failed to create a temporary file for \"-V\" switch");

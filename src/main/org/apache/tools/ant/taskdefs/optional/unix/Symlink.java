@@ -101,7 +101,7 @@ import org.apache.tools.ant.types.FileSet;
  * </pre>
  *
  * <p><strong>Note:</strong> Starting Ant version 1.10.2, this task relies on the symbolic link support
- * introduced in Java 7 through the {@link Files} APIs</code>.
+ * introduced in Java 7 through the {@link Files} APIs.
  */
 public class Symlink extends DispatchTask {
 
@@ -358,8 +358,8 @@ public class Symlink extends DispatchTask {
 
     /**
      * Delete a symlink (without deleting the associated resource).
-     * <p>
-     * <p>This is a convenience method that simply invokes {@link #deleteSymlink(File)}
+     *
+     * <p>This is a convenience method that simply invokes {@link #deleteSymlink(File)}</p>
      *
      * @param path A string containing the path of the symlink to delete.
      * @throws IOException If the deletion attempt fails
@@ -374,12 +374,11 @@ public class Symlink extends DispatchTask {
 
     /**
      * Delete a symlink (without deleting the associated resource).
-     * <p>
+     *
      * <p>This is a utility method that removes a symlink without removing
      * the resource that the symlink points to. If it is accidentally invoked
      * on a real file, the real file will not be harmed and instead this method
      * returns silently.</p>
-     * <p>
      *
      * <p>Since Ant 1.10.2 this method relies on the {@link Files#isSymbolicLink(Path)}
      * and {@link Files#delete(Path)} to check and delete the symlink

@@ -54,7 +54,7 @@ public class ProcessUtil {
         return fallback;
     }
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         System.out.println(getProcessId("<PID>"));
         try {
             Thread.sleep(120000);

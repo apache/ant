@@ -219,7 +219,7 @@ public class XmlPropertyTest {
 
             String propertyValue = properties.getProperty(currentKey);
 
-            String xmlValue = (String)xmlproperties.get(currentKey);
+            String xmlValue = (String) xmlproperties.get(currentKey);
 
             if (propertyValue.startsWith("ID.")) {
                 // The property is an id's thing -- either a property

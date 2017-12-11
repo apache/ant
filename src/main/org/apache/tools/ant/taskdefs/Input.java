@@ -125,14 +125,12 @@ public class Input extends Task {
      * "default", "propertyfile", "greedy", "secure" (since Ant 1.8).
      */
     public static class HandlerType extends EnumeratedAttribute {
-        private static final String[] VALUES =
-            { "default", "propertyfile", "greedy", "secure" };
+        private static final String[] VALUES = {"default", "propertyfile", "greedy", "secure"};
 
-        private static final InputHandler[] HANDLERS
-            = { new DefaultInputHandler(),
+        private static final InputHandler[] HANDLERS = {new DefaultInputHandler(),
                 new PropertyFileInputHandler(),
                 new GreedyInputHandler(),
-                new SecureInputHandler() };
+                new SecureInputHandler()};
 
         /** {@inheritDoc} */
         @Override
@@ -160,7 +158,7 @@ public class Input extends Task {
      *
      * @param validargs A comma separated String defining valid input args.
      */
-    public void setValidargs (final String validargs) {
+    public void setValidargs(final String validargs) {
         this.validargs = validargs;
     }
 
@@ -171,7 +169,7 @@ public class Input extends Task {
      *
      * @param addproperty Name for the property to be created from input
      */
-    public void setAddproperty (final String addproperty) {
+    public void setAddproperty(final String addproperty) {
         this.addproperty = addproperty;
     }
 
@@ -179,7 +177,7 @@ public class Input extends Task {
      * Sets the Message which gets displayed to the user during the build run.
      * @param message The message to be displayed.
      */
-    public void setMessage (final String message) {
+    public void setMessage(final String message) {
         this.message = message;
         messageAttribute = true;
     }
@@ -191,7 +189,7 @@ public class Input extends Task {
      * @param defaultvalue Default value for the property if no input
      * is received
      */
-    public void setDefaultvalue (final String defaultvalue) {
+    public void setDefaultvalue(final String defaultvalue) {
         this.defaultvalue = defaultvalue;
     }
 
@@ -211,7 +209,7 @@ public class Input extends Task {
      * @throws BuildException on error
      */
     @Override
-    public void execute () throws BuildException {
+    public void execute() throws BuildException {
         if (addproperty != null
             && getProject().getProperty(addproperty) != null) {
             log("skipping " + getTaskName() + " as property " + addproperty

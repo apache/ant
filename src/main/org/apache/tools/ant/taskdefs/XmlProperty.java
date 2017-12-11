@@ -330,7 +330,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * either a String if this node resulted in setting an attribute,
      * or a Path.
      */
-    public Object processNode (Node node, String prefix, Object container) {
+    public Object processNode(Node node, String prefix, Object container) {
 
         // Parse the attribute(s) and text of this node, adding
         // properties for each.
@@ -460,7 +460,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * Actually add the given property/value to the project
      * after writing a log message.
      */
-    private void addProperty (String name, String value, String id) {
+    private void addProperty(String name, String value, String id) {
         String msg = name + ":" + value;
         if (id != null) {
             msg += ("(id=" + id + ")");
@@ -497,7 +497,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * Otherwise, we return "(nodename)".  This is long-standing
      * (and default) &lt;xmlproperty&gt; behavior.
      */
-    private String getAttributeName (Node attributeNode) {
+    private String getAttributeName(Node attributeNode) {
         String attributeName = attributeNode.getNodeName();
 
         if (semanticAttributes) {
@@ -518,7 +518,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     /**
      * Return whether the provided attribute name is recognized or not.
      */
-    private static boolean isSemanticAttribute (String attributeName) {
+    private static boolean isSemanticAttribute(String attributeName) {
         return Arrays.asList(ATTRIBUTES).contains(attributeName);
     }
 
@@ -534,7 +534,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
      * resolved to absolute file names.  Also for refid values, look
      * up the referenced object from the project.</p>
      */
-    private String getAttributeValue (Node attributeNode) {
+    private String getAttributeValue(Node attributeNode) {
         String nodeValue = attributeNode.getNodeValue().trim();
         if (semanticAttributes) {
             String attributeName = attributeNode.getNodeName();
@@ -663,7 +663,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     /**
      * @return the file attribute.
      */
-    protected File getFile () {
+    protected File getFile() {
         FileProvider fp = src.as(FileProvider.class);
         return fp != null ? fp.getFile() : null;
     }
@@ -683,42 +683,42 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     /**
      * @return the prefix attribute.
      */
-    protected String getPrefix () {
+    protected String getPrefix() {
         return this.prefix;
     }
 
     /**
      * @return the keeproot attribute.
      */
-    protected boolean getKeeproot () {
+    protected boolean getKeeproot() {
         return this.keepRoot;
     }
 
     /**
      * @return the validate attribute.
      */
-    protected boolean getValidate () {
+    protected boolean getValidate() {
         return this.validate;
     }
 
     /**
      * @return the collapse attributes attribute.
      */
-    protected boolean getCollapseAttributes () {
+    protected boolean getCollapseAttributes() {
         return this.collapseAttributes;
     }
 
     /**
      * @return the semantic attributes attribute.
      */
-    protected boolean getSemanticAttributes () {
+    protected boolean getSemanticAttributes() {
         return this.semanticAttributes;
     }
 
     /**
      * @return the root directory attribute.
      */
-    protected File getRootDirectory () {
+    protected File getRootDirectory() {
         return this.rootDirectory;
     }
 

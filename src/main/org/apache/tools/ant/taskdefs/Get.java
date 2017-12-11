@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -358,7 +357,7 @@ public class Get extends Task {
      * @param v if "true" then be quiet
      * @since Ant 1.9.4
      */
-    public void setQuiet(final boolean v){
+    public void setQuiet(final boolean v) {
         this.quiet = v;
     }
 
@@ -655,8 +654,8 @@ public class Get extends Task {
         private int redirections = 0;
         private String userAgent = null;
 
-        GetThread(final URL source, final File dest,
-                  final boolean h, final long t, final DownloadProgress p, final int l, final String userAgent) {
+        GetThread(final URL source, final File dest, final boolean h,
+                  final long t, final DownloadProgress p, final int l, final String userAgent) {
             this.source = source;
             this.dest = dest;
             hasTimestamp = h;
@@ -699,30 +698,29 @@ public class Get extends Task {
 
 
         private boolean redirectionAllowed(final URL aSource, final URL aDest) {
-            if (!(aSource.getProtocol().equals(aDest.getProtocol()) || (HTTP
-                    .equals(aSource.getProtocol()) && HTTPS.equals(aDest
-                    .getProtocol())))) {
-                final String message = "Redirection detected from "
-                        + aSource.getProtocol() + " to " + aDest.getProtocol()
-                        + ". Protocol switch unsafe, not allowed.";
-                if (ignoreErrors) {
-                    log(message, logLevel);
-                    return false;
+            if (aSource.getProtocol().equals(aDest.getProtocol())
+                    && (HTTP.equals(aSource.getProtocol()) || HTTPS.equals(aDest.getProtocol()))) {
+                redirections++;
+                if (redirections > REDIRECT_LIMIT) {
+                    final String message = "More than " + REDIRECT_LIMIT
+                            + " times redirected, giving up";
+                    if (ignoreErrors) {
+                        log(message, logLevel);
+                        return false;
+                    }
+                    throw new BuildException(message);
                 }
-                throw new BuildException(message);
+                return true;
             }
 
-            redirections++;
-            if (redirections > REDIRECT_LIMIT) {
-                final String message = "More than " + REDIRECT_LIMIT
-                        + " times redirected, giving up";
-                if (ignoreErrors) {
-                    log(message, logLevel);
-                    return false;
-                }
-                throw new BuildException(message);
+            final String message = "Redirection detected from "
+                    + aSource.getProtocol() + " to " + aDest.getProtocol()
+                    + ". Protocol switch unsafe, not allowed.";
+            if (ignoreErrors) {
+                log(message, logLevel);
+                return false;
             }
-            return true;
+            throw new BuildException(message);
         }
 
         private URLConnection openConnection(final URL aSource) throws IOException {
@@ -746,8 +744,7 @@ public class Get extends Task {
                 // testing
                 final Base64Converter encoder = new Base64Converter();
                 encoding = encoder.encode(up.getBytes());
-                connection.setRequestProperty("Authorization", "Basic "
-                        + encoding);
+                connection.setRequestProperty("Authorization", "Basic " + encoding);
             }
 
             if (tryGzipEncoding) {
@@ -761,10 +758,8 @@ public class Get extends Task {
             }
 
             if (connection instanceof HttpURLConnection) {
-                ((HttpURLConnection) connection)
-                        .setInstanceFollowRedirects(false);
-                ((HttpURLConnection) connection)
-                        .setUseCaches(httpUseCaches);
+                ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
+                connection.setUseCaches(httpUseCaches);
             }
             // connect to the remote site (may take some time)
             try {
@@ -821,14 +816,13 @@ public class Get extends Task {
         }
 
         private boolean isMoved(final int responseCode) {
-            return responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
-                responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
-                responseCode == HttpURLConnection.HTTP_SEE_OTHER ||
-                responseCode == HTTP_MOVED_TEMP;
+            return responseCode == HttpURLConnection.HTTP_MOVED_PERM
+                    || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+                    || responseCode == HttpURLConnection.HTTP_SEE_OTHER
+                    || responseCode == HTTP_MOVED_TEMP;
         }
 
-        private boolean downloadFile()
-                throws FileNotFoundException, IOException {
+        private boolean downloadFile() throws IOException {
             for (int i = 0; i < numberRetries; i++) {
                 // this three attempt trick is to get round quirks in different
                 // Java implementations. Some of them take a few goes to bind
@@ -885,9 +879,7 @@ public class Get extends Task {
             if (verbose)  {
                 final Date t = new Date(remoteTimestamp);
                 log("last modified = " + t.toString()
-                    + ((remoteTimestamp == 0)
-                       ? " - using current time instead"
-                       : ""), logLevel);
+                    + ((remoteTimestamp == 0) ? " - using current time instead" : ""), logLevel);
             }
             if (remoteTimestamp != 0) {
                 FILE_UTILS.setFileLastModified(dest, remoteTimestamp);

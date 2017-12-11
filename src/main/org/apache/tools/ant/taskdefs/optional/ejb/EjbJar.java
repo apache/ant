@@ -163,8 +163,7 @@ public class EjbJar extends MatchingTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] { EJB_NAME, DIRECTORY, DESCRIPTOR,
-                BASEJARNAME };
+            return new String[] {EJB_NAME, DIRECTORY, DESCRIPTOR, BASEJARNAME};
         }
     }
 

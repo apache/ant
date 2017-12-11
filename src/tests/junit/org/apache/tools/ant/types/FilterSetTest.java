@@ -40,7 +40,7 @@ import static org.junit.Assert.fail;
  */
 public class FilterSetTest {
 
-    static private final int BUF_SIZE = 32768;
+    private static final int BUF_SIZE = 32768;
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -87,7 +87,7 @@ public class FilterSetTest {
         String line = "@test@ line";
         FilterSet fs = new FilterSet();
         fs.addFilter("test", "@test1@");
-        fs.addFilter("test1","@test2@");
+        fs.addFilter("test1", "@test2@");
         fs.addFilter("test2", "it works");
         fs.setBeginToken("@");
         fs.setEndToken("@");
@@ -104,7 +104,7 @@ public class FilterSetTest {
         String line = "@test@ line @test3@";
         FilterSet fs = new FilterSet();
         fs.addFilter("test", "@test1@");
-        fs.addFilter("test1","@test2@");
+        fs.addFilter("test1", "@test2@");
         fs.addFilter("test2", "@test@");
         fs.addFilter("test3", "testvalue");
         fs.setBeginToken("@");
@@ -122,7 +122,7 @@ public class FilterSetTest {
         String line = "@test@ line @test2@";
         FilterSet fs = new FilterSet();
         fs.addFilter("test", "@test1@");
-        fs.addFilter("test1","@test@");
+        fs.addFilter("test1", "@test@");
         fs.addFilter("test2", "testvalue");
         fs.setBeginToken("@");
         fs.setEndToken("@");

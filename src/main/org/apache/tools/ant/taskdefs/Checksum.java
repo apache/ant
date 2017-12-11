@@ -492,7 +492,7 @@ public class Checksum extends MatchingTask implements Condition {
                 dis.close();
                 fis.close();
                 fis = null;
-                byte[] fileDigest = messageDigest.digest ();
+                byte[] fileDigest = messageDigest.digest();
                 if (totalproperty != null) {
                     allDigests.put(src, fileDigest);
                 }
@@ -693,7 +693,7 @@ public class Checksum extends MatchingTask implements Condition {
          */
         @Override
         public String[] getValues() {
-            return new String[] { CHECKSUM, MD5SUM, SVF };
+            return new String[] {CHECKSUM, MD5SUM, SVF};
         }
     }
 }

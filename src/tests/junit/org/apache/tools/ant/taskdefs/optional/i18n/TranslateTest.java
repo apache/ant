@@ -39,9 +39,9 @@ public class TranslateTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-    static private final int BUF_SIZE = 32768;
+    private static final int BUF_SIZE = 32768;
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/i18n/translate";
+    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/i18n/translate";
 
     @Before
     public void setUp() {

@@ -42,7 +42,7 @@ public class JUnitTestRunnerTest {
     // check that a valid method name generates no errors
     @Test
     public void testValidMethod() {
-        TestRunner runner = createRunnerForTestMethod(ValidMethodTestCase.class,"testA");
+        TestRunner runner = createRunnerForTestMethod(ValidMethodTestCase.class, "testA");
         runner.run();
         assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
     }
@@ -50,7 +50,7 @@ public class JUnitTestRunnerTest {
     // check that having an invalid method name generates an error
     @Test
     public void testInvalidMethod() {
-        TestRunner runner = createRunnerForTestMethod(InvalidMethodTestCase.class,"testInvalid");
+        TestRunner runner = createRunnerForTestMethod(InvalidMethodTestCase.class, "testInvalid");
         runner.run();
         String error = runner.getFormatter().getError();
         // might be FAILURES or ERRORS depending on JUnit version?
@@ -118,7 +118,7 @@ public class JUnitTestRunnerTest {
     // check that JUnit 4 synthetic AssertionFailedError gets message and cause from AssertionError
     @Test
     public void testJUnit4AssertionError() {
-        TestRunner runner = createRunnerForTestMethod(AssertionErrorTest.class,"throwsAssertionError");
+        TestRunner runner = createRunnerForTestMethod(AssertionErrorTest.class, "throwsAssertionError");
         runner.run();
 
         AssertionFailedError failure = runner.getFormatter().getFailure();
@@ -140,7 +140,7 @@ public class JUnitTestRunnerTest {
     }
 
     // the test runner that wrap the dummy formatter that interests us
-    private final static class TestRunner extends JUnitTestRunner {
+    private static final class TestRunner extends JUnitTestRunner {
         private ResultFormatter formatter = new ResultFormatter();
         TestRunner(JUnitTest test, String[] methods, boolean haltonerror,
                    boolean filtertrace, boolean haltonfailure) {
@@ -157,16 +157,16 @@ public class JUnitTestRunnerTest {
     }
 
     // dummy formatter just to catch the error
-    private final static class ResultFormatter implements JUnitResultFormatter {
+    private static final class ResultFormatter implements JUnitResultFormatter {
         private AssertionFailedError failure;
         private Throwable error;
         public void setSystemOutput(String output) {
         }
         public void setSystemError(String output) {
         }
-        public void startTestSuite(JUnitTest suite) throws BuildException{
+        public void startTestSuite(JUnitTest suite) throws BuildException {
         }
-        public void endTestSuite(JUnitTest suite) throws BuildException{
+        public void endTestSuite(JUnitTest suite) throws BuildException {
         }
         public void setOutput(OutputStream out) {
         }

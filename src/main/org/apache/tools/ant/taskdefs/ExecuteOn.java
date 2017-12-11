@@ -334,8 +334,7 @@ public class ExecuteOn extends ExecTask {
     @Override
     protected ExecuteStreamHandler createHandler() throws BuildException {
         //if we have a RedirectorElement, return a decoy
-        return (redirectorElement == null)
-            ? super.createHandler() : new PumpStreamHandler();
+        return (redirectorElement == null) ? super.createHandler() : new PumpStreamHandler();
     }
 
     /**
@@ -397,8 +396,7 @@ public class ExecuteOn extends ExecTask {
                 if (!parallel) {
                     for (String srcFile : fileNames) {
                         String[] command = getCommandline(srcFile, base);
-                        log(Commandline.describeCommand(command),
-                            Project.MSG_VERBOSE);
+                        log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                         exe.setCommandline(command);
 
                         if (redirectorElement != null) {
@@ -441,11 +439,9 @@ public class ExecuteOn extends ExecTask {
                         continue;
                     }
 
-                    if ((!res.isDirectory() || !res.isExists())
-                        && !FileDirBoth.DIR.equals(type)) {
+                    if ((!res.isDirectory() || !res.isExists()) && !FileDirBoth.DIR.equals(type)) {
                         totalFiles++;
-                    } else if (res.isDirectory()
-                               && !FileDirBoth.FILE.equals(type)) {
+                    } else if (res.isDirectory() && !FileDirBoth.FILE.equals(type)) {
                         totalDirs++;
                     } else {
                         continue;
@@ -456,8 +452,7 @@ public class ExecuteOn extends ExecTask {
 
                     if (!parallel) {
                         String[] command = getCommandline(name, base);
-                        log(Commandline.describeCommand(command),
-                            Project.MSG_VERBOSE);
+                        log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                         exe.setCommandline(command);
 
                         if (redirectorElement != null) {
@@ -482,10 +477,8 @@ public class ExecuteOn extends ExecTask {
                 haveExecuted = true;
             }
             if (haveExecuted) {
-                log("Applied " + cmdl.getExecutable() + " to "
-                    + totalFiles + " file"
-                    + (totalFiles != 1 ? "s" : "") + " and "
-                    + totalDirs + " director"
+                log("Applied " + cmdl.getExecutable() + " to " + totalFiles + " file"
+                    + (totalFiles != 1 ? "s" : "") + " and " + totalDirs + " director"
                     + (totalDirs != 1 ? "ies" : "y") + ".",
                     verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
             }
@@ -507,11 +500,8 @@ public class ExecuteOn extends ExecTask {
      */
     private void logSkippingFileset(
         String currentType, DirectoryScanner ds, File base) {
-        int includedCount
-            = ((!FileDirBoth.DIR.equals(currentType))
-               ? ds.getIncludedFilesCount() : 0)
-            + ((!FileDirBoth.FILE.equals(currentType))
-               ? ds.getIncludedDirsCount() : 0);
+        int includedCount = (!FileDirBoth.DIR.equals(currentType) ? ds.getIncludedFilesCount() : 0)
+                + (!FileDirBoth.FILE.equals(currentType) ? ds.getIncludedDirsCount() : 0);
 
         log("Skipping fileset for directory " + base + ". It is "
             + ((includedCount > 0) ? "up to date." : "empty."),
@@ -627,9 +617,8 @@ public class ExecuteOn extends ExecTask {
             if (forwardSlash && fileSeparator != '/') {
                 src = src.replace(fileSeparator, '/');
             }
-            if (srcFilePos != null &&
-                (srcFilePos.getPrefix().length() > 0
-                 || srcFilePos.getSuffix().length() > 0)) {
+            if (srcFilePos != null && (srcFilePos.getPrefix().length() > 0
+                    || srcFilePos.getSuffix().length() > 0)) {
                 src = srcFilePos.getPrefix() + src + srcFilePos.getSuffix();
             }
             result[srcIndex + i] = src;
@@ -645,7 +634,7 @@ public class ExecuteOn extends ExecTask {
      * @return the command line in the form of a String[].
      */
     protected String[] getCommandline(String srcFile, File baseDir) {
-        return getCommandline(new String[] { srcFile }, new File[] { baseDir });
+        return getCommandline(new String[] {srcFile}, new File[] {baseDir});
     }
 
     /**
@@ -703,8 +692,7 @@ public class ExecuteOn extends ExecTask {
         String[] s = fileNames.toArray(new String[fileNames.size()]);
         File[] b = baseDirs.toArray(new File[baseDirs.size()]);
 
-        if (maxParallel <= 0
-            || s.length == 0 /* this is skipEmpty == false */) {
+        if (maxParallel <= 0 || s.length == 0 /* this is skipEmpty == false */) {
             String[] command = getCommandline(s, b);
             log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
             exe.setCommandline(command);
@@ -780,7 +768,7 @@ public class ExecuteOn extends ExecTask {
          */
         @Override
         public String[] getValues() {
-            return new String[] { FILE, DIR, "both" };
+            return new String[] {FILE, DIR, "both"};
         }
     }
 
