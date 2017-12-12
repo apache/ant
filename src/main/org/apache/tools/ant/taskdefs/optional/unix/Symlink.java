@@ -461,23 +461,11 @@ public class Symlink extends DispatchTask {
         }
         // we have been asked to overwrite, so we now do the necessary steps
 
-        // initiate a deletion *only* if the path is a symlink, else we fail with error
-        if (!Files.isSymbolicLink(link)) {
-            final String errMessage = "Cannot overwrite " + lnk + " since the path already exists and isn't a symlink";
-            if (failonerror) {
-                throw new BuildException(errMessage);
-            }
-            // log and return
-            log(errMessage, Project.MSG_INFO);
+        // initiate a deletion of the existing file
+        final boolean existingFileDeleted = link.toFile().delete();
+        if (!existingFileDeleted) {
+            handleError("Deletion of file at " + lnk + " failed, while trying to overwrite it with a symlink");
             return;
-        }
-        // it's a symlink, so we delete the *link* first
-        try {
-            deleteSymLink(link);
-        } catch (IOException e) {
-            // our deletion attempt failed, just log it and try to create the symlink
-            // anyway, since we have been asked to overwrite
-            log("Failed to delete existing symlink at " + lnk, e, Project.MSG_DEBUG);
         }
         try {
             Files.createSymbolicLink(link, target);
@@ -587,7 +575,8 @@ public class Symlink extends DispatchTask {
         // Not clearing/updating that cache results in this deleted (and later recreated) symlink
         // to point to a wrong/outdated target for a few seconds (30 seconds is the time the JRE
         // maintains the cache entries for). All this is implementation detail of the JRE and
-        // probably a bug, but given that it affects our tests (SymlinkTest#testRecreate consistently fails
+        // is a JRE bug http://mail.openjdk.java.net/pipermail/core-libs-dev/2017-December/050540.html,
+        // but given that it affects our tests (SymlinkTest#testRecreate consistently fails
         // on MacOS/Unix) as well as the Symlink task, it makes sense to use this API instead of
         // the Files#delete(Path) API
         final boolean deleted = path.toFile().delete();
