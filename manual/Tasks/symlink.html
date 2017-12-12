@@ -29,7 +29,7 @@
 <p> Manages symbolic links on platforms where Java supports symbolic links.
 Can be used to make an individual link, delete a link, create multiple links
 from properties files, or create properties files describing links in the
-specified directories. Existing links are not overwritten by default.
+specified directories. Existing files are not overwritten by default.
 
 <p><a href="../Types/fileset.html">FileSet</a>s are used to select a
 set of links to record, or a set of property files to create links from. </p>
@@ -72,7 +72,9 @@ set of links to record, or a set of property files to create links from. </p>
   </tr>
   <tr>
     <td valign="top">overwrite</td>
-    <td valign="top">Overwrite existing links or not.</td>
+    <td valign="top">Overwrite existing files or not. If overwrite is set to true, then 
+    any existing file, specified by the link attribute, will be overwritten irrespective
+     of whether or not the existing file is a symbolic link.</td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
   <tr>
