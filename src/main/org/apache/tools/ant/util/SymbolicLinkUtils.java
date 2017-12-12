@@ -30,6 +30,9 @@ import org.apache.tools.ant.taskdefs.Execute;
  * a symbolic link based on the absent support for them in Java.
  *
  * @since Ant 1.8.0
+ * @deprecated Starting Ant 1.10.2, this class is now deprecated in favour
+ *              of the Java {@link java.nio.file.Files} APIs introduced in
+ *              Java 7, for dealing with symbolic links
  */
 public class SymbolicLinkUtils {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

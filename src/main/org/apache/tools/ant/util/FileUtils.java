@@ -33,6 +33,7 @@ import java.net.URLConnection;
 import java.nio.channels.Channel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -1141,16 +1142,15 @@ public class FileUtils {
      * @return true if the file is a symbolic link.
      * @throws IOException on error.
      * @since Ant 1.5
-     * @deprecated use SymbolicLinkUtils instead
+     * @deprecated use {@link Files#isSymbolicLink(Path)} instead
      */
     @Deprecated
-    public boolean isSymbolicLink(File parent, String name)
+    public boolean isSymbolicLink(final File parent, final String name)
         throws IOException {
-        SymbolicLinkUtils u = SymbolicLinkUtils.getSymbolicLinkUtils();
         if (parent == null) {
-            return u.isSymbolicLink(name);
+            return Files.isSymbolicLink(Paths.get(name));
         }
-        return u.isSymbolicLink(parent, name);
+        return Files.isSymbolicLink(Paths.get(parent.toPath().toString(), name));
     }
 
     /**

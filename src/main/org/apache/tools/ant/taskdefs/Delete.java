@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -61,7 +63,6 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -81,8 +82,6 @@ public class Delete extends MatchingTask {
     private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
     private static final ResourceSelector EXISTS = new Exists();
     private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static SymbolicLinkUtils SYMLINK_UTILS =
-        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     private static class ReverseDirs implements ResourceCollection {
 
@@ -715,12 +714,15 @@ public class Delete extends MatchingTask {
                         System.arraycopy(n, 0, links, 0, n.length);
                         Arrays.sort(links, Comparator.reverseOrder());
                         for (int l = 0; l < links.length; l++) {
-                            try {
-                                SYMLINK_UTILS
-                                    .deleteSymbolicLink(new File(links[l]),
-                                                        this);
-                            } catch (java.io.IOException ex) {
-                                handle(ex);
+                            final Path filePath = Paths.get(links[l]);
+                            if (!Files.isSymbolicLink(filePath)) {
+                                // it's not a symbolic link, so move on
+                                continue;
+                            }
+                            // it's a symbolic link, so delete it
+                            final boolean deleted = filePath.toFile().delete();
+                            if (!deleted) {
+                                handle("Could not delete symbolic link at " + filePath);
                             }
                         }
                     }
@@ -876,14 +878,13 @@ public class Delete extends MatchingTask {
         }
     }
 
-    private boolean isDanglingSymlink(File f) {
-        try {
-            return SYMLINK_UTILS.isDanglingSymbolicLink(f);
-        } catch (IOException e) {
-            log("Error while trying to detect " + f.getAbsolutePath()
-                + " as broken symbolic link. " + e.getMessage(),
-                quiet ? Project.MSG_VERBOSE : verbosity);
+    private boolean isDanglingSymlink(final File f) {
+        if (!Files.isSymbolicLink(f.toPath())) {
+            // it's not a symlink, so clearly it's not a dangling one
             return false;
         }
+        // it's a symbolic link, now  check the existence of the (target) file (by "following links")
+        final boolean targetFileExists = Files.exists(f.toPath());
+        return !targetFileExists;
     }
 }

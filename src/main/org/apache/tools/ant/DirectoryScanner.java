@@ -20,6 +20,9 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +47,6 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.SymbolicLinkUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -226,10 +228,6 @@ public class DirectoryScanner
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    /** Helper. */
-    private static final SymbolicLinkUtils SYMLINK_UTILS =
-        SymbolicLinkUtils.getSymbolicLinkUtils();
 
     /**
      * Patterns which should be excluded by default.
@@ -874,7 +872,7 @@ public class DirectoryScanner
                 excludes = nullExcludes ? new String[0] : excludes;
 
                 if (basedir != null && !followSymlinks
-                    && SYMLINK_UTILS.isSymbolicLink(basedir)) {
+                    && Files.isSymbolicLink(basedir.toPath())) {
                     notFollowedSymlinks.add(basedir.getAbsolutePath());
                     basedir = null;
                 }
@@ -919,8 +917,6 @@ public class DirectoryScanner
                 includes = nullIncludes ? null : includes;
                 excludes = nullExcludes ? null : excludes;
             }
-        } catch (final IOException ex) {
-            throw new BuildException(ex);
         } finally {
             basedir = savedBase;
             synchronized (scanLock) {
@@ -1220,25 +1216,23 @@ public class DirectoryScanner
         }
         if (!followSymlinks) {
             final ArrayList<String> noLinks = new ArrayList<>();
-            for (String newfile : newfiles) {
-                try {
-                    if (SYMLINK_UTILS.isSymbolicLink(dir, newfile)) {
-                        final String name = vpath + newfile;
-                        final File file = new File(dir, newfile);
-                        if (file.isDirectory()) {
-                            dirsExcluded.addElement(name);
-                        } else if (file.isFile()) {
-                            filesExcluded.addElement(name);
-                        }
-                        accountForNotFollowedSymlink(name, file);
-                    } else {
-                        noLinks.add(newfile);
+            for (final String newfile : newfiles) {
+                final Path filePath;
+                if (dir == null) {
+                    filePath = Paths.get(newfile);
+                } else {
+                    filePath = Paths.get(dir.toPath().toString(), newfile);
+                }
+                if (Files.isSymbolicLink(filePath)) {
+                    final String name = vpath + newfile;
+                    final File file = new File(dir, newfile);
+                    if (file.isDirectory()) {
+                        dirsExcluded.addElement(name);
+                    } else if (file.isFile()) {
+                        filesExcluded.addElement(name);
                     }
-                } catch (final IOException ioe) {
-                    final String msg = "IOException caught while checking "
-                        + "for links, couldn't get canonical path!";
-                    // will be caught and redirected to Ant's logging system
-                    System.err.println(msg);
+                    accountForNotFollowedSymlink(name, file);
+                } else {
                     noLinks.add(newfile);
                 }
             }
@@ -1815,9 +1809,15 @@ public class DirectoryScanner
     private boolean causesIllegalSymlinkLoop(final String dirName, final File parent,
                                              final Deque<String> directoryNamesFollowed) {
         try {
+            final Path dirPath;
+            if (parent == null) {
+                dirPath = Paths.get(dirName);
+            } else {
+                dirPath = Paths.get(parent.toPath().toString(), dirName);
+            }
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
-                && SYMLINK_UTILS.isSymbolicLink(parent, dirName)) {
+                && Files.isSymbolicLink(dirPath)) {
 
                 final List<String> files = new ArrayList<>();
                 File f = FILE_UTILS.resolveFile(parent, dirName);

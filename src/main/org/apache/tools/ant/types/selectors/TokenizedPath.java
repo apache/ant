@@ -19,11 +19,12 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.SymbolicLinkUtils;
 
 /**
  * Container for a path that has been split into its components.
@@ -39,9 +40,6 @@ public class TokenizedPath {
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    /** Helper. */
-    private static final SymbolicLinkUtils SYMLINK_UTILS =
-        SymbolicLinkUtils.getSymbolicLinkUtils();
     /** iterations for case-sensitive scanning. */
     private static final boolean[] CS_SCAN_ONLY = new boolean[] {true};
     /** iterations for non-case-sensitive scanning. */
@@ -142,22 +140,16 @@ public class TokenizedPath {
      */
     public boolean isSymlink(File base) {
         for (int i = 0; i < tokenizedPath.length; i++) {
-            try {
-                if ((base != null
-                     && SYMLINK_UTILS.isSymbolicLink(base, tokenizedPath[i]))
-                    ||
-                    (base == null
-                     && SYMLINK_UTILS.isSymbolicLink(tokenizedPath[i]))
-                    ) {
-                    return true;
-                }
-                base = new File(base, tokenizedPath[i]);
-            } catch (IOException ioe) {
-                String msg = "IOException caught while checking "
-                    + "for links, couldn't get canonical path!";
-                // will be caught and redirected to Ant's logging system
-                System.err.println(msg);
+            final Path pathToTraverse;
+            if (base == null) {
+                pathToTraverse = Paths.get(tokenizedPath[i]);
+            } else {
+                pathToTraverse = Paths.get(base.toPath().toString(), tokenizedPath[i]);
             }
+            if (Files.isSymbolicLink(pathToTraverse)) {
+                return true;
+            }
+            base = new File(base, tokenizedPath[i]);
         }
         return false;
     }
