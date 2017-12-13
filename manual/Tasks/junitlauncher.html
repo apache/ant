@@ -1,0 +1,481 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+    <title>JUnitLauncher Task</title>
+</head>
+<body>
+
+<h2 id="junitlauncher">JUnitLauncher</h2>
+<h3>Description</h3>
+
+<p>
+    This task allows tests to be launched and run using the JUnit 5 framework.
+</p>
+<p>
+    JUnit 5 introduced a newer set of APIs to write and launch tests. It also introduced
+    the concept of test engines. Test engines decide which classes are considered as testcases
+    and how they are executed. JUnit 5 supports running tests that have been written using
+    JUnit 4 constructs as well as tests that have been written using JUnit 5 constructs.
+    For more details about JUnit 5 itself, please refer to the JUnit 5 project's documentation at
+    <a href="https://junit.org/junit5/">https://junit.org/junit5/</a>.
+</p>
+<p>
+    The goal of this <code>junitlauncher</code> task is to allow launching the JUnit 5
+    test launcher and building the test requests so that the selected tests can then be parsed
+    and executed by the test engine(s) supported by JUnit 5. This task in itself does <i>not</i>
+    understand what a test case is nor does it execute the tests itself.
+</p>
+<p>
+    <strong>Note</strong>: This task depends on external libraries not included
+    in the Apache Ant distribution. See <a href="../install.html#librarydependencies">
+    Library Dependencies</a> for more information.
+</p>
+<p>
+    <strong>Note</strong>:
+    You must have the necessary JUnit 5 libraries in the classpath of the tests. At the time of
+    writing this documentation, the list of JUnit 5 platform libraries that are necessary to run the tests
+    are:
+<ul>
+    <li>
+        junit-platform-commons.jar
+    </li>
+    <li>
+        junit-platform-engine.jar
+    </li>
+    <li>
+        junit-platform-launcher.jar
+    </li>
+</ul>
+</p>
+<p>
+    Depending on the test engine(s) that you want to use in your tests, you will further need the following
+    libraries in the classpath
+</p>
+
+<p>
+    For <code>junit-vintage</code> engine:
+<ul>
+    <li>
+        junit-vintage-engine.jar
+    </li>
+    <li>
+        junit.jar (JUnit 4.x version)
+    </li>
+</ul>
+</p>
+<p>
+    For <code>junit-jupiter</code> engine:
+<ul>
+    <li>
+        junit-jupiter-api.jar
+    </li>
+    <li>
+        junit-jupiter-engine.jar
+    </li>
+    <li>
+        opentest4j.jar
+    </li>
+</ul>
+
+</p>
+<p>
+    To have these in the test classpath, you can follow <i>either</i> of the following approaches:
+<ul>
+    <li>Put all these relevant jars along with the <code>ant-junitlauncher.jar</code> in <code>ANT_HOME/lib</code>
+        directory
+    </li>
+    <li>OR Leave <code>ant-junitlauncher.jar</code> in the <code>ANT_HOME/lib</code> directory and include all
+        other relevant jars in the classpath by passing them as a <code>-lib</code> option, while invoking Ant
+    </li>
+</ul>
+</p>
+
+<p>
+    Tests are defined by nested elements like <code>test</code>,
+    <code>testclasses</code> tags (see <a href="#nested">nested
+    elements</a>).</p>
+
+<h3>Parameters</h3>
+<table>
+    <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">haltOnFailure</td>
+        <td valign="top">A value of <code>true</code> implies that build has to stop
+            if any failure occurs in any of the tests. JUnit 5 classifies failures
+            as both assertion failures as well as exceptions that get thrown during
+            test execution. As such, this task too considers both these cases as
+            failures and doesn't distinguish one from another.
+        </td>
+        <td align="center" valign="top">No; default is <code>false</code>.</td>
+    </tr>
+    <tr>
+        <td valign="top">failureProperty</td>
+        <td valign="top">The name of a property to set in the event of a failure
+            (exceptions in tests are considered failures as well).
+        </td>
+        <td align="center" valign="top">No.</td>
+    </tr>
+</table>
+
+<h3 id="nested">Nested Elements</h3>
+
+<h4>classpath</h4>
+<p>
+    The nested <code>&lt;classpath&gt;</code> element that represents a
+    <a href="../using.html#path">PATH like structure</a> can be used to configure
+    the task to use this classpath for finding and running the tests. This classpath
+    will be used for:
+<ul>
+    <li>Finding the test classes to execute</li>
+    <li>Finding the JUnit 5 framework libraries (which include the API jars and test engine jars). The complete
+        set of jars that are relevant in JUnit 5 framework are listed in the <a href="#junit5deps">dependecies</a>
+        section
+    </li>
+</ul>
+If the <code>classpath</code> element isn't configured for the task, then the classpath of
+Ant itself will be used for finding the test classes and JUnit 5 libraries.
+
+</p>
+
+<h4>listener</h4>
+
+<p>
+    The <code>junitlauncher</code> task can be configured with <code>listener</code>(s) to listen
+    to test execution events (such as a test execution starting, completing etc...). The listener
+    is expected to be a class which implements the <code>org.junit.platform.launcher.TestExecutionListener</code>.
+    This <code>TestExecutionListener</code> interface is an API exposed by the JUnit 5 platform APIs and isn't
+    specific to Ant. As such, you can use any existing implementation of <code>TestExecutionListener</code> in
+    this task.
+</p>
+
+<h5>Test result formatter</h5>
+<p>
+    <code>junitlauncher</code> provides a way where the test execution results can be formatted and presented
+    in a way that's customizable. The task allows for configuring test result formatters, through the use of
+    <code>listener</code> element. As noted previously, the <code>listener</code> element expects the listener
+    to implement the <code>org.junit.platform.launcher.TestExecutionListener</code> interface. Typically, result
+    formatters need a bit more configuration details to be fed to them, during the test execution - details
+    like where to write out the formatted result. Any such listener can optionally implement
+    the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code> interface. This interface
+    is specific to Ant <code>junitlauncher</code> task and it extends the <code>org.junit.platform.launcher.TestExecutionListener</code>
+    interface
+</p>
+<p>
+    The <code>junitlauncher</code> task comes with the following pre-defined test result formatter types:
+<ul>
+    <li>
+        <code>legacy-plain</code> : This formatter prints a short statistics line for all test cases.
+    </li>
+    <li>
+        <code>legacy-brief</code> : This formatter prints information for tests that failed or were skipped.
+    </li>
+    <li>
+        <code>legacy-xml</code> : This formatter prints statistics for the tests in xml format.
+    </li>
+</ul>
+<em>NOTE:</em> Each of these formatters, that are named "legacy" try, and format the results to be almost similar to
+what the <code>junit</code> task's formatters used to do. Furthermore, the <code>legacy-xml</code> formatters
+generates the XML to comply with the same schema that the <code>junit</code> task's XML formatter used to follow.
+As a result, the XML generated by this formatter, can be used as-is by the <code>junitreport</code> task.
+
+</p>
+
+The <code>listener</code> element supports the following attributes:
+
+<table>
+    <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">type</td>
+        <td valign="top">Use a predefined formatter (either
+            <code>legacy-xml</code>, <code>legacy-plain</code> or <code>legacy-brief</code>).
+        </td>
+        <td align="center" rowspan="2">Exactly one of these</td>
+    </tr>
+    <tr>
+        <td valign="top">classname</td>
+        <td valign="top">Name of a listener class which implements <code>org.junit.platform.launcher.TestExecutionListener</code>
+            or the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code> interface
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">resultFile</td>
+        <td valign="top">The file name to which the formatted result needs to be written to. This attribute is only
+            relevant
+            when the listener class implements the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code>
+            interface.
+            <p> If no value is specified for this attribute and the listener implements the
+                <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code> then the file name
+                will be defaulted
+                to and will be of the form <code>TEST-&lt;testname&gt;.&lt;formatter-specific-extension&gt;</code>
+                (ex: TEST-org.myapp.SomeTest.xml for the <code>legacy-xml</code> type formatter)
+            </p>
+        </td>
+        <td align="center">No</td>
+    </tr>
+    <tr>
+        <td valign="top">sendSysOut</td>
+        <td valign="top">If set to <code>true</code> then the listener will be passed the <code>stdout</code> content
+            generated by the test(s). This attribute is relevant only if the listener
+            class implements the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code>
+            interface.
+        </td>
+        <td align="center">No; defaults to <code>false</code></td>
+    </tr>
+    <tr>
+        <td valign="top">sendSysErr</td>
+        <td valign="top">If set to <code>true</code> then the listener will be passed the <code>stderr</code> content
+            generated by the test(s). This attribute is relevant only if the listener
+            class implements the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code>
+            interface.
+        </td>
+        <td align="center">No; defaults to <code>false</code></td>
+    </tr>
+    <tr>
+        <td valign="top">if</td>
+        <td valign="top">Only use this listener <a href="../properties.html#if+unless">if the named property is set</a>.
+        </td>
+        <td align="center">No</td>
+    </tr>
+    <tr>
+        <td valign="top">unless</td>
+        <td valign="top">Only use this listener <a href="../properties.html#if+unless">if the named property is
+            <b>not</b>
+            set</a>.
+        </td>
+        <td align="center">No</td>
+    </tr>
+</table>
+
+<h4>test</h4>
+
+<p>Defines a single test class.</p>
+
+<table>
+    <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">name</td>
+        <td valign="top">Fully qualified name of the test class.</td>
+        <td align="center">Yes</td>
+    </tr>
+    <tr>
+        <td valign="top">methods</td>
+        <td valign="top">Comma-separated list of names of test case methods to execute.
+            If this is specified, then only these test methods from the test class will be
+            executed.
+        </td>
+        <td align="center">No</td>
+    </tr>
+    <tr>
+        <td valign="top">haltOnFailure</td>
+        <td valign="top">Stop the build process if a failure occurs during the test
+            run (exceptions are considered as failures too).
+            Overrides value set on <code>junitlauncher</code> element.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">failureProperty</td>
+        <td valign="top">The name of a property to set in the event of a failure
+            (exceptions are considered failures as well). Overrides value set on
+            <code>junitlauncher</code> element.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">outputDir</td>
+        <td valign="top">Directory to write the reports to.</td>
+        <td align="center" valign="top">No; default is the base directory of the project.</td>
+    </tr>
+    <tr>
+        <td valign="top">if</td>
+        <td valign="top">Only run this test <a href="../properties.html#if+unless">if the named property is set</a>.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">unless</td>
+        <td valign="top">Only run this test <a href="../properties.html#if+unless">if the named property is <b>not</b>
+            set</a>.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+</table>
+
+<p>
+    Tests can define their own listeners via nested <code>listener</code> elements.
+</p>
+
+<h4>testclasses</h4>
+
+<p>Define a number of tests based on pattern matching.</p>
+
+<p>
+    <code>testclasses</code> collects the included <a href="../Types/resources.html">resources</a> from any number
+    of nested <a
+        href="../Types/resources.html#collection">Resource Collection</a>s. It then
+    selects each resource whose name ends in <code>.class</code>. These classes are then passed on to the
+    JUnit 5 platform for it to decide and run them as tests.
+</p>
+
+<table>
+    <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">haltOnFailure</td>
+        <td valign="top">Stop the build process if a failure occurs during the test
+            run (exceptions are considered as failures too).
+            Overrides value set on <code>junitlauncher</code> element.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">failureProperty</td>
+        <td valign="top">The name of a property to set in the event of a failure
+            (exceptions are considered failures as well). Overrides value set on
+            <code>junitlauncher</code> element.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">outputDir</td>
+        <td valign="top">Directory to write the reports to.</td>
+        <td align="center" valign="top">No; default is the base directory of the project.</td>
+    </tr>
+    <tr>
+        <td valign="top">if</td>
+        <td valign="top">Only run the tests <a href="../properties.html#if+unless">if the named property is set</a>.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">unless</td>
+        <td valign="top">Only run the tests <a href="../properties.html#if+unless">if the named property is <b>not</b>
+            set</a>.
+        </td>
+        <td align="center" valign="top">No</td>
+    </tr>
+</table>
+
+<p>
+    <code>testclasses</code> can define their own listeners via nested <code>listener</code> elements.
+</p>
+
+<h3>Examples</h3>
+
+<pre>
+&lt;path id="test.classpath"&gt;
+    ...
+&lt;/path&gt;
+
+&lt;junitlauncher&gt;
+    &lt;classpath refid="test.classpath"/&gt;
+    &lt;test name="org.myapp.SimpleTest"/&gt;
+&lt;/junitlauncher&gt;
+
+</pre>
+
+<p>
+    Launches the JUnit 5 platform to run the <code>org.myapp.SimpleTest</code> test
+</p>
+
+<pre>
+&lt;junitlauncher&gt;
+    &lt;classpath refid="test.classpath"/&gt;
+    &lt;test name="org.myapp.SimpleTest" haltOnFailure="true"/&gt;
+    &lt;test name="org.myapp.AnotherTest"/&gt;
+&lt;/junitlauncher&gt;
+</pre>
+
+<p>
+    Launches the JUnit 5 platform to run the <code>org.myapp.SimpleTest</code> and the
+    <code>org.myapp.AnotherTest</code> tests. The build process will be stopped if any
+    test, in the <code>org.myapp.SimpleTest</code>, fails.
+</p>
+
+<pre>
+&lt;junitlauncher&gt;
+    &lt;classpath refid="test.classpath"/&gt;
+    &lt;test name="org.myapp.SimpleTest" methods="testFoo, testBar"/&gt;
+&lt;/junitlauncher&gt;
+</pre>
+<p>
+    Launches the JUnit 5 platform to run only the <code>testFoo</code> and <code>testBar</code> methods of the
+    <code>org.myapp.SimpleTest</code> test class.
+</p>
+
+<pre>
+&lt;junitlauncher&gt;
+    &lt;classpath refid="test.classpath"/&gt;
+
+    &lt;testclasses outputdir="${output.dir}"&gt;
+        &lt;fileset dir="${build.classes.dir}"&gt;
+            &lt;include name="org/example/**/tests/**/"/&gt;
+        &lt;/fileset&gt;
+    &lt;/testclasses&gt;
+&lt;/junitlauncher&gt;
+</pre>
+
+<p>
+    Selects any <code>.class</code> files that match the <code>org/example/**/tests/**/</code> <code>fileset</code>
+    filter, under the <code>${build.classes.dir}</code> and passes those classes to the JUnit 5 platform for
+    execution as tests.
+</p>
+
+<pre>
+&lt;junitlauncher&gt;
+    &lt;classpath refid="test.classpath"/&gt;
+
+    &lt;testclasses outputdir="${output.dir}"&gt;
+        &lt;fileset dir="${build.classes.dir}"&gt;
+            &lt;include name="org/example/**/tests/**/"/&gt;
+        &lt;/fileset&gt;
+        &lt;listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/&gt;
+        &lt;listener type="legacy-plain" sendSysOut="true" /&gt;
+    &lt;/testclasses&gt;
+&lt;/junitlauncher&gt;
+</pre>
+<p>
+    Selects any <code>.class</code> files that match the <code>org/example/**/tests/**/</code> <code>fileset</code>
+    filter, under the <code>${build.classes.dir}</code> and passes those classes to the JUnit 5 platform for
+    execution as tests. Test results will be written out to the <code>${output.dir}</code> by the
+    <code>legacy-xml</code> and <code>legacy-plain</code> formatters, in separate files.
+    Furthermore, both the <code>legacy-xml</code> and the <code>legacy-plain</code>
+    listeners, above, are configured to receive the standard output content generated by the tests.
+    The <code>legacy-xml</code> listener is configured to receive standard error content as well.
+
+</p>
+
+
+</body>
+</html>

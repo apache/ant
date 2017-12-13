@@ -37,6 +37,9 @@ Other changes:
    requested. Java11 removes support for CORBA and the switches have
    been removed from the rmic tool.
 
+ * A new junitlauncher task which support JUnit 5 test framework.
+   Bugzilla Report 61796
+
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
 
