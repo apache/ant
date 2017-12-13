@@ -18,6 +18,11 @@ Fixed bugs:
    the same source file (symlinked back to itself).
    Bugzilla Report 60644
 
+ * Improvement to the Zip task for reduced memory usage in certain
+   cases. Thanks to Glen Lewis for reporting the issue and 
+   suggesting the fix.
+   Bugzilla Report 19516
+
 Other changes:
 --------------
 

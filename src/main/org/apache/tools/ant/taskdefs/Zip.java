@@ -17,8 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1110,7 +1109,7 @@ public class Zip extends MatchingTask {
                 }
                 InputStream is = null;
                 try {
-                    is = zf.getInputStream(ze);
+                    is = new BufferedInputStream(zf.getInputStream(ze));
                     zipFile(is, zOut, prefix + name, ze.getTime(),
                             fromArchive, mode, ze.getExtraFields(true));
                 } finally {
@@ -1121,7 +1120,7 @@ public class Zip extends MatchingTask {
         } else {
             InputStream is = null;
             try {
-                is = r.getInputStream();
+                is = new BufferedInputStream(r.getInputStream());
                 zipFile(is, zOut, prefix + name, r.getLastModified(),
                         fromArchive, mode, r instanceof ZipResource
                         ? ((ZipResource) r).getExtraFields() : null);
@@ -1829,7 +1828,7 @@ public class Zip extends MatchingTask {
      * @since Ant 1.5.2
      * @throws IOException on error
      */
-    protected void zipFile(InputStream in, final ZipOutputStream zOut, final String vPath,
+    protected void zipFile(final InputStream in, final ZipOutputStream zOut, final String vPath,
                            final long lastModified, final File fromArchive, final int mode)
         throws IOException {
         // fromArchive is used in subclasses overriding this method
@@ -1859,7 +1858,12 @@ public class Zip extends MatchingTask {
             final ZipEntry ze = new ZipEntry(vPath);
             ze.setTime(fixedModTime != null ? modTimeMillis : lastModified);
             ze.setMethod(doCompress ? ZipEntry.DEFLATED : ZipEntry.STORED);
-
+            // if the input stream doesn't support mark/reset ability, we wrap it in a
+            // stream that adds that support.
+            // Note: We do *not* close this newly created wrapping input stream, since
+            // we don't "own" the underlying input stream that's passed to us and closing
+            // that is the responsibility of the caller.
+            final InputStream markableInputStream = in.markSupported() ? in : new BufferedInputStream(in);
             /*
              * ZipOutputStream.putNextEntry expects the ZipEntry to
              * know its size and the CRC sum before you start writing
@@ -1870,31 +1874,15 @@ public class Zip extends MatchingTask {
             if (!zOut.isSeekable() && !doCompress) {
                 long size = 0;
                 final CRC32 cal = new CRC32();
-                if (!in.markSupported()) {
-                    // Store data into a byte[]
-                    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-                    final byte[] buffer = new byte[BUFFER_SIZE];
-                    int count = 0;
-                    do {
-                        size += count;
-                        cal.update(buffer, 0, count);
-                        bos.write(buffer, 0, count);
-                        count = in.read(buffer, 0, buffer.length);
-                    } while (count != -1);
-                    in = new ByteArrayInputStream(bos.toByteArray());
-
-                } else {
-                    in.mark(Integer.MAX_VALUE);
-                    final byte[] buffer = new byte[BUFFER_SIZE];
-                    int count = 0;
-                    do {
-                        size += count;
-                        cal.update(buffer, 0, count);
-                        count = in.read(buffer, 0, buffer.length);
-                    } while (count != -1);
-                    in.reset();
-                }
+                markableInputStream.mark(Integer.MAX_VALUE);
+                final byte[] buffer = new byte[BUFFER_SIZE];
+                int count = 0;
+                do {
+                    size += count;
+                    cal.update(buffer, 0, count);
+                    count = markableInputStream.read(buffer, 0, buffer.length);
+                } while (count != -1);
+                markableInputStream.reset();
                 ze.setSize(size);
                 ze.setCrc(cal.getValue());
             }
@@ -1913,7 +1901,7 @@ public class Zip extends MatchingTask {
                 if (count != 0) {
                     zOut.write(buffer, 0, count);
                 }
-                count = in.read(buffer, 0, buffer.length);
+                count = markableInputStream.read(buffer, 0, buffer.length);
             } while (count != -1);
         }
         addedFiles.addElement(vPath);
@@ -1969,14 +1957,14 @@ public class Zip extends MatchingTask {
                                      getLocation());
         }
 
-        final FileInputStream fIn = new FileInputStream(file);
+        final BufferedInputStream bIn = new BufferedInputStream(new FileInputStream(file));
         try {
             // ZIPs store time with a granularity of 2 seconds, round up
-            zipFile(fIn, zOut, vPath,
+            zipFile(bIn, zOut, vPath,
                     file.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0),
                     null, mode);
         } finally {
-            fIn.close();
+            bIn.close();
         }
     }
 
