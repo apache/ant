@@ -232,6 +232,24 @@ Set -Ddest=LOCATION on the command line
     <f2 project="org.hamcrest" archive="hamcrest-library"/>
   </target>
 
+  <target name="junitlauncher"
+    description="load junitlauncher libraries"
+    depends="init">
+    <f2 project="org.junit.platform" archive="junit-platform-launcher" />
+  </target>
+
+  <target name="junit-engine-jupiter"
+          description="load junit jupiter engine libraries (necessary only for internal Ant project tests)"
+          depends="init">
+    <f2 project="org.junit.jupiter" archive="junit-jupiter-engine" />
+  </target>
+
+  <target name="junit-engine-vintage"
+          description="load junit vintage engine libraries (necessary only for internal Ant project tests)"
+          depends="init">
+    <f2 project="org.junit.vintage" archive="junit-vintage-engine" />
+  </target>
+
   <target name="xml"
           description="load full XML libraries (Xalan and xml-resolver)"
           depends="init">
@@ -367,5 +385,6 @@ Set -Ddest=LOCATION on the command line
 
   <target name="all"
     description="load all the libraries (except jython)"
-    depends="antunit,ivy,logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,javamail,jspc,jai,xz,netrexx"/>
+    depends="antunit,ivy,logging,junit,junitlauncher,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,
+      javamail,jspc,jai,xz,netrexx,junit-engine-vintage,junit-engine-jupiter"/>
 </project>
