@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.tools.ant.util.FileUtils;
 
@@ -183,12 +184,21 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
             if (!t.isAlive()) {
                 return;
             }
-
+            StreamPumper.PostStopHandle postStopHandle = null;
             if (s != null && !s.isFinished()) {
-                s.stop();
+                postStopHandle = s.stop();
             }
-            t.join(JOIN_TIMEOUT);
+            if (postStopHandle != null && postStopHandle.isInPostStopTasks()) {
+                // the stream pumper is in post stop tasks (like flushing output), which
+                // indicates that the stream pumper has respected the stop request and
+                // is cleaning up before finishing. Give it some time to finish this
+                // post stop activity, before trying to force interrupt the underlying thread
+                // of the stream pumper
+                postStopHandle.awaitPostStopCompletion(2, TimeUnit.SECONDS);
+            }
             while ((s == null || !s.isFinished()) && t.isAlive()) {
+                // we waited for the thread/stream pumper to finish, but it hasn't yet.
+                // so we interrupt it
                 t.interrupt();
                 t.join(JOIN_TIMEOUT);
             }
