@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="exec-redirector-test" basedir=".">
+
+    <target name="setUp">
+        <!-- This "output" property is set on the project in the Java test case (ExecStreamRedirectorTest) -->
+        <mkdir dir="${output}"/>
+        <condition property="dir.listing.command" value="ls" else="cmd.exe">
+            <os family="unix"/>
+        </condition>
+        <condition property="dir.to.ls" value="/usr/bin" else="${user.dir}">
+            <os family="unix"/>
+        </condition>
+        <condition property="dir.listing.command.arg" value="-l" else="dir">
+            <os family="unix"/>
+        </condition>
+        <property name="dir.to.ls" value="/usr/bin"/>
+    </target>
+
+    <target name="list-dir">
+        <!-- Just do listing of the same directory and redirect the output to different files -->
+        <parallel>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls1.txt" error="${output}/ls1.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls2.txt" error="${output}/ls2.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls3.txt" error="${output}/ls3.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls4.txt" error="${output}/ls4.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls5.txt" error="${output}/ls5.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls6.txt" error="${output}/ls6.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls7.txt" error="${output}/ls7.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls8.txt" error="${output}/ls8.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls9.txt" error="${output}/ls9.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls10.txt" error="${output}/ls10.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls11.txt" error="${output}/ls11.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls12.txt" error="${output}/ls12.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls13.txt" error="${output}/ls13.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls14.txt" error="${output}/ls14.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls15.txt" error="${output}/ls15.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+            <exec executable="${dir.listing.command}" dir="${basedir}" failonerror="true" logerror="true">
+                <redirector output="${output}/ls16.txt" error="${output}/ls16.err" alwayslog="true"/>
+                <arg value="${dir.listing.command.arg}"/>
+                <arg value="${dir.to.ls}"/>
+            </exec>
+        </parallel>
+    </target>
+
+</project>

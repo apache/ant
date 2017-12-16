@@ -17,11 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.util.FileUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.tools.ant.util.FileUtils;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Copies all data from an input stream to an output stream.
@@ -34,7 +36,7 @@ public class StreamPumper implements Runnable {
 
     private final InputStream is;
     private final OutputStream os;
-    private volatile boolean finish;
+    private volatile boolean askedToStop;
     private volatile boolean finished;
     private final boolean closeWhenExhausted;
     private boolean autoflush = false;
@@ -42,6 +44,7 @@ public class StreamPumper implements Runnable {
     private int bufferSize = SMALL_BUFFER_SIZE;
     private boolean started = false;
     private final boolean useAvailable;
+    private PostStopHandle postStopHandle;
 
     /**
      * Create a new StreamPumper.
@@ -58,7 +61,6 @@ public class StreamPumper implements Runnable {
 
     /**
      * Create a new StreamPumper.
-     *
      * <p><b>Note:</b> If you set useAvailable to true, you must
      * explicitly invoke {@link #stop stop} or interrupt the
      * corresponding Thread when you are done or the run method will
@@ -120,41 +122,29 @@ public class StreamPumper implements Runnable {
 
         final byte[] buf = new byte[bufferSize];
 
-        int length;
         try {
-            while (true) {
+            int length;
+            while (!this.askedToStop && !Thread.interrupted()) {
                 waitForInput(is);
 
-                if (finish || Thread.interrupted()) {
+                if (askedToStop || Thread.interrupted()) {
                     break;
                 }
 
                 length = is.read(buf);
-                if (length <= 0 || Thread.interrupted()) {
+                if (length < 0) {
+                    // EOF
                     break;
                 }
-                os.write(buf, 0, length);
-                if (autoflush) {
-                    os.flush();
-                }
-                if (finish) { //NOSONAR
-                    break;
-                }
-            }
-            // On completion, drain any available data (which might be the first data available for quick executions)
-            if (finish) {
-                while ((length = is.available()) > 0) {
-                    if (Thread.interrupted()) {
-                        break;
-                    }
-                    length = is.read(buf, 0, Math.min(length, buf.length));
-                    if (length <= 0) {
-                        break;
-                    }
+                if (length > 0) {
+                    // we did read something, so write it out
                     os.write(buf, 0, length);
+                    if (autoflush) {
+                        os.flush();
+                    }
                 }
             }
-            os.flush();
+            this.doPostStop();
         } catch (InterruptedException ie) {
             // likely PumpStreamHandler trying to stop us
         } catch (Exception e) {
@@ -166,7 +156,7 @@ public class StreamPumper implements Runnable {
                 FileUtils.close(os);
             }
             finished = true;
-            finish = false;
+            askedToStop = false;
             synchronized (this) {
                 notifyAll();
             }
@@ -206,6 +196,7 @@ public class StreamPumper implements Runnable {
 
     /**
      * Get the size in bytes of the read buffer.
+     *
      * @return the int size of the read buffer.
      */
     public synchronized int getBufferSize() {
@@ -225,19 +216,26 @@ public class StreamPumper implements Runnable {
      * Note that it may continue to block on the input stream
      * but it will really stop the thread as soon as it gets EOF
      * or any byte, and it will be marked as finished.
+     * @return Returns a {@link PostStopHandle} for the callers to
+     * know if the status of post-stop activities, that happen, before this
+     * {@link StreamPumper} is actually finished
      * @since Ant 1.6.3
+     * @since Ant 10.2.0 this method returns a {@link PostStopHandle}
      */
-    /*package*/ synchronized void stop() {
-        finish = true;
+    /*package*/
+    synchronized PostStopHandle stop() {
+        askedToStop = true;
+        postStopHandle = new PostStopHandle();
         notifyAll();
+        return postStopHandle;
     }
 
     private static final long POLL_INTERVAL = 100;
 
     private void waitForInput(InputStream is)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         if (useAvailable) {
-            while (!finish && is.available() == 0) {
+            while (!askedToStop && is.available() == 0) {
                 if (Thread.interrupted()) {
                     throw new InterruptedException();
                 }
@@ -246,6 +244,68 @@ public class StreamPumper implements Runnable {
                     this.wait(POLL_INTERVAL);
                 }
             }
+        }
+    }
+
+    private void doPostStop() throws IOException {
+        try {
+            final byte[] buf = new byte[bufferSize];
+            int length;
+            // We were asked to stop, the contract allows us to do any non-blocking
+            // final bits of reads, before actually finishing. So we try and drain any (non-blocking) available
+            // data. We *don't* check the thread interrupt status, anymore, once we start draining this non-blocking
+            // available data, to allow us to cleanly write out any available data.
+            if (askedToStop) {
+                int bytesReadableWithoutBlocking;
+                while ((bytesReadableWithoutBlocking = is.available()) > 0) {
+                    length = is.read(buf, 0, Math.min(bytesReadableWithoutBlocking, buf.length));
+                    if (length <= 0) {
+                        break;
+                    }
+                    os.write(buf, 0, length);
+                }
+            }
+            // this can potentially be blocking, but that's OK since our post stop activity is allowed to
+            // cleanup/flush any data and the PostStopHandle let's the caller control over how long they want
+            // this to go, before actually interrupting the thread
+            os.flush();
+        } finally {
+            if (this.postStopHandle != null) {
+                this.postStopHandle.latch.countDown();
+                this.postStopHandle.inPostStopTasks = false;
+            }
+        }
+    }
+
+    /**
+     * A handle that can be used after {@link #stop()} has been invoked to check if the
+     * {@link StreamPumper} is in the process of do some post-stop tasks (like flushing
+     * of streams), before finishing.
+     */
+    final class PostStopHandle {
+        private boolean inPostStopTasks = true;
+        private final CountDownLatch latch = new CountDownLatch(1);
+
+        /**
+         * Returns true if the {@link StreamPumper} is doing post-stop tasks (like flushing of streams).
+         * Else returns false.
+         * @return
+         */
+        boolean isInPostStopTasks() {
+            return inPostStopTasks;
+        }
+
+        /**
+         * Waits for a maximum of {@code timeout} time for the post-stop activities to complete.
+         *
+         * @param timeout  The maximum amount of time to wait for the post-stop activities to complete
+         * @param timeUnit The unit of {@code timeout}
+         * @return Returns true if the post-stop activities completed within the specified {@code timeout}.
+         * Else returns false
+         * @throws InterruptedException If the current thread was interrupted while waiting
+         */
+        boolean awaitPostStopCompletion(final long timeout, final TimeUnit timeUnit) throws InterruptedException {
+            return this.latch.await(timeout, timeUnit);
         }
     }
 
