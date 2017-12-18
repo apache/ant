@@ -1909,8 +1909,6 @@ public class Zip extends MatchingTask {
             zipFile(bIn, zOut, vPath,
                     file.lastModified() + (roundUp ? ROUNDUP_MILLIS : 0),
                     null, mode);
-        } finally {
-            bIn.close();
         }
     }
 
