@@ -346,10 +346,10 @@ public final class DateUtils {
      * That is:
      * <ul>
      * <li>Milliseconds since 1970-01-01 00:00</li>
-     * <li><code>YYYY-MM-DD{T| }HH:MM[:SS[.SSS]][ ][±ZZ[[:]ZZ]]</code></li>
+     * <li><code>YYYY-MM-DD{T| }HH:MM[:SS[.SSS]][ ][\u00b1ZZ[[:]ZZ]]</code></li>
      * <li><code>MM/DD/YYYY HH:MM[:SS] {AM|PM}</code></li></ul>
      * where {a|b} indicates that you must choose one of a or b, and [c]
-     * indicates that you may use or omit c. ±ZZZZ is the timezone offset, and
+     * indicates that you may use or omit c. \u00b1ZZZZ is the timezone offset, and
      * may be literally "Z" to mean GMT.
      *
      * @param dateStr String
