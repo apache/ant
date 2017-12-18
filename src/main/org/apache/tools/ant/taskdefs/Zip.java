@@ -601,10 +601,10 @@ public class Zip extends MatchingTask {
     /**
      * Set all stored file modification times to {@code time}.
      * @param time Milliseconds since 1970-01-01 00:00, or
-     *        <code>YYYY-MM-DD{T/ }HH:MM[:SS[.SSS]][ ][\u00b1ZZ[[:]ZZ]]</code>, or
+     *        <code>YYYY-MM-DD{T/ }HH:MM[:SS[.SSS]][ ][&plusmn;ZZ[[:]ZZ]]</code>, or
      *        <code>MM/DD/YYYY HH:MM[:SS] {AM/PM}</code>, where {a/b} indicates
      *        that you must choose one of a or b, and [c] indicates that you
-     *        may use or omit c. \u00b1ZZZZ is the timezone offset, and may be
+     *        may use or omit c. &plusmn;ZZZZ is the timezone offset, and may be
      *        literally "Z" to mean GMT.
      * @since Ant 1.9.10
      */
