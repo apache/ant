@@ -16,8 +16,8 @@
 # limitations under the License.
 
 # OS specific support.  $var _must_ be set to either true or false.
-cygwin=false;
-darwin=false;
+cygwin=false
+darwin=false
 case "`uname`" in
   CYGWIN*)
     cygwin=true
