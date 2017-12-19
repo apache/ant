@@ -171,6 +171,7 @@ public class SymlinkTest {
         if (dirlinkRem != null) {
             fail(dirlinkRem);
         }
+        System.err.println(buildRule.getFullLog());
         assertNotNull("Failed to recreate link1",
                       p.getProperty("test.recreate.link1.recreated"));
         assertNotNull("Failed to recreate link2",
