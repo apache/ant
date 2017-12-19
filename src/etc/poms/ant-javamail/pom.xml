@@ -46,8 +46,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
+      <artifactId>javax.mail-api</artifactId>
+      <version>1.5.6</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
