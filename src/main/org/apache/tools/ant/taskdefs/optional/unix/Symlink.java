@@ -559,8 +559,8 @@ public class Symlink extends DispatchTask {
                         "listing properties");
                 } catch (IOException ex) {
                     log("failed to log unshortened properties");
-                lnks.list(new PrintStream(
-                    new LogOutputStream(this, Project.MSG_INFO)));
+                    lnks.list(new PrintStream(
+                        new LogOutputStream(this, Project.MSG_INFO)));
                 }
                 // Write the contents to our master list of links
                 // This method assumes that all links are defined in
