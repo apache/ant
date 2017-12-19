@@ -211,6 +211,8 @@ public class Symlink extends DispatchTask {
                         // it's already a symlink and the symlink target is the same
                         // as the target noted in the properties file. So there's no
                         // need to recreate it
+                        log("not recreating " + lnk + " as it points to the correct target already" ,
+                            Project.MSG_DEBUG);
                         continue;
                     }
                 } catch (IOException e) {
@@ -445,6 +447,7 @@ public class Symlink extends DispatchTask {
             // if the path (at which the link is expected to be created) isn't already present
             // then we just go ahead and attempt to symlink
             try {
+                log("creating symlink " + link + " -> " + target, Project.MSG_DEBUG);
                 Files.createSymbolicLink(link, target);
             } catch (IOException e) {
                 if (failonerror) {
@@ -468,6 +471,8 @@ public class Symlink extends DispatchTask {
             return;
         }
         try {
+            log("creating symlink " + link + " -> " + target + " after removing original",
+                Project.MSG_DEBUG);
             Files.createSymbolicLink(link, target);
         } catch (IOException e) {
             if (failonerror) {
