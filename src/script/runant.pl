@@ -105,12 +105,12 @@ if ($oncygwin) {
 }
 push @ARGS, "-classpath", "$localpath";
 push @ARGS, "-Dant.home=$HOME";
-if (!$CYGHOME) {
+if ($CYGHOME) {
     push @ARGS, "-Dcygwin.user.home=\"$CYGHOME\""
 }
 push @ARGS, "org.apache.tools.ant.launch.Launcher", @ANT_ARGS;
 push @ARGS, @ARGV;
-if (!$classpath) {
+if ($classpath) {
     if ($onnetware) {
         # make classpath literally $CLASSPATH
         # this is to avoid pushing us over the 512 character limit
