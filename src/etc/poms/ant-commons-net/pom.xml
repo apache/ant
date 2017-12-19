@@ -45,7 +45,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
-      <version>1.4.0</version>
+      <version>1.4.1</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
