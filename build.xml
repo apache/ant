@@ -1620,6 +1620,11 @@ ${antunit.reports}
 
   <target name="test-init" depends="probe-offline,check_for_optional_packages">
     <mkdir dir="${build.junit.tmpdir}"/>
+    <condition property="sun.io.useCanonCaches" value="false">
+      <not>
+        <javaversion atleast="9"/>
+      </not>
+    </condition>
     <macrodef name="test-junit">
       <element name="junit-nested" implicit="true" />
       <sequential>
@@ -1665,8 +1670,11 @@ ${antunit.reports}
           <sysproperty key="tests.and.ant.share.classloader"
                        value="${tests.and.ant.share.classloader}"/>
           <sysproperty key="java.io.tmpdir" file="${build.junit.tmpdir}"/>
-          <sysproperty key="sun.io.useCanonCaches" value="false"/>
-          <sysproperty key="sun.io.useCanonPrefixCache" value="false"/>
+          <!-- in Java8 the canonical cache seems to interfere with
+               our symlink tests -->
+          <syspropertyset>
+            <propertyref name="sun.io.useCanonCaches"/>
+          </syspropertyset>
           <classpath>
             <path refid="tests-runtime-classpath"/>
             <pathelement location="${junit.collector.dir}"/>
