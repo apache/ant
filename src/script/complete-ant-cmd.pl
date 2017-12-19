@@ -15,10 +15,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# A script to allow Bash or Z-Shell to complete an Ant command-line.  
+# A script to allow Bash or Z-Shell to complete an Ant command-line.
 #
 # To install for Bash 2.0 or better, add the following to ~/.bashrc:
-# 
+#
 #     complete -C complete-ant-cmd.pl ant build.sh
 #
 # To install for Z-Shell 2.5 or better, add the following to ~/.zshrc:
@@ -37,11 +37,11 @@ my $word = $ARGV[1];
 
 my @completions;
 if ($word =~ /^-/) {
-    list( restrict( $word, getArguments() ));
+    list(restrict($word, getArguments()));
 } elsif ($cmdLine =~ /-(f|file|buildfile)\s+\S*$/) {
-    list( getBuildFiles($word) );
+    list(getBuildFiles($word));
 } else {
-    list( restrict( $word, getTargets() ));
+    list(restrict($word, getTargets()));
 }
 
 exit(0);
@@ -54,18 +54,18 @@ sub list {
 
 sub restrict {
     my ($word, @completions) = @_;
-    grep( /^\Q$word\E/, @completions );
+    grep(/^\Q$word\E/, @completions);
 }
 
 sub getArguments {
-    qw(-buildfile -debug -emacs -f -file -find -help -listener -logfile 
-       -logger -projecthelp -quiet -verbose -version); 
+    qw(-buildfile -debug -emacs -f -file -find -help -listener -logfile
+       -logger -projecthelp -quiet -verbose -version);
 }
 
 
 sub getBuildFiles {
     my ($word) = @_;
-    grep( /\.xml$/, glob( "$word*" ));
+    grep(/\.xml$/, glob("$word*"));
 }
 
 sub getTargets {
@@ -83,10 +83,10 @@ sub getTargets {
     my $cacheFile = $buildFile;
     $cacheFile =~ s|(.*/)?(.*)|${1}.ant-targets-${2}|;
     if ((!-e $cacheFile) || (-z $cacheFile) || (-M $buildFile) < (-M $cacheFile)) {
-        open( CACHE, '>'.$cacheFile ) || die "can\'t write $cacheFile: $!\n";
-        open( HELP, "$antCmd -projecthelp -debug -buildfile '$buildFile'|" ) || return(); 
+        open(CACHE, '>'.$cacheFile) || die "can\'t write $cacheFile: $!\n";
+        open(HELP, "$antCmd -projecthelp -debug -buildfile '$buildFile'|") || return();
         my %targets;
-        while( <HELP> ) {
+        while (<HELP>) {
             # Exclude target names starting with dash, because they cannot be
             # specified on the command line.
             if (/^\s+\+Target:\s+(?!-)(\S+)/) {
@@ -94,22 +94,21 @@ sub getTargets {
             }
         }
         my @targets = sort keys %targets;
-        for (@targets) { print CACHE "$_\n"; }
+        for (@targets) {
+            print CACHE "$_\n";
+        }
         return @targets;
     }
-    
+
     # Read the target-cache
-    open( CACHE, $cacheFile ) || die "can\'t read $cacheFile: $!\n";
+    open(CACHE, $cacheFile) || die "can\'t read $cacheFile: $!\n";
     my @targets;
     while (<CACHE>) {
         chop;
         s/\r$//;  # for Cygwin
-        push( @targets, $_ );
+        push(@targets, $_);
     }
-    close( CACHE );
+    close(CACHE);
     @targets;
 
 }
-
-
-

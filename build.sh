@@ -19,34 +19,41 @@
 cygwin=false;
 darwin=false;
 case "`uname`" in
-  CYGWIN*) cygwin=true ;;
-  Darwin*) darwin=true
-           if [ -z "$JAVA_HOME" ] ; then
-             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
-           fi
-           ;;
+  CYGWIN*)
+    cygwin=true
+    ;;
+  Darwin*)
+    darwin=true
+    if [ -z "$JAVA_HOME" ]; then
+      if [ -x '/usr/libexec/java_home' ]; then
+        JAVA_HOME=`/usr/libexec/java_home`
+      elif [ -d "/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home" ]; then
+        JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
+      fi
+    fi
+    ;;
 esac
 
 REALANTHOME=$ANT_HOME
 if [ -z "$PWD" ]; then
-    ANT_HOME=./bootstrap
+  ANT_HOME=./bootstrap
 else
-    ANT_HOME="$PWD"/bootstrap
+  ANT_HOME="$PWD"/bootstrap
 fi
 export ANT_HOME
 
-if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
+if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun; then
   /bin/sh ./bootstrap.sh
 fi
 
-if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
+if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun; then
   echo Bootstrap FAILED
   exit 1
 fi
 
-if [ "$REALANTHOME" != "" ] ; then
+if [ "$REALANTHOME" != "" ]; then
   if $cygwin; then
-     REALANTHOME=`cygpath --windows "$REALANTHOME"`
+    REALANTHOME=`cygpath --windows "$REALANTHOME"`
   fi
   ANT_INSTALL="-Dant.install=$REALANTHOME"
 else
@@ -54,4 +61,3 @@ else
 fi
 
 bootstrap/bin/ant -nouserlib -lib lib/optional "$ANT_INSTALL" $*
-
