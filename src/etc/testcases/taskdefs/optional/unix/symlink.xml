@@ -44,7 +44,7 @@
        before they have finnished (hopefully). Tweak if needed.
   -->
 
-  <property name="delay" value="0"/>
+  <property name="delay" value="2"/>
  
   <import file="../../../buildfiletest-base.xml"/>
 
