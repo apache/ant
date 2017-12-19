@@ -22,35 +22,33 @@ use_jikes_default=false
 ant_exec_debug=false
 show_help=false
 
-if [ -z "$PROTECT_NL" ]
-then
+if [ -z "$PROTECT_NL" ]; then
   PROTECT_NL=true
   os=`uname -s`
   rel=`uname -r`
   # heirloom bourne-shell used by Solaris 10 is not POSIX
   #  it lacks features necessary to protect trailing NL from subshell trimming
-  if [ "$os" = SunOS -a "$rel" = "5.10" ]
-  then
+  if [ "$os" = SunOS -a "$rel" = "5.10" ]; then
     PROTECT_NL=false
   fi
 fi
 
-for arg in "$@" ; do
-  if [ "$arg" = "--noconfig" ] ; then
+for arg in "$@"; do
+  if [ "$arg" = "--noconfig" ]; then
     no_config=true
-  elif [ "$arg" = "--usejikes" ] ; then
+  elif [ "$arg" = "--usejikes" ]; then
     use_jikes_default=true
-  elif [ "$arg" = "--execdebug" ] ; then
+  elif [ "$arg" = "--execdebug" ]; then
     ant_exec_debug=true
-  elif [ my"$arg" = my"--h"  -o my"$arg" = my"--help"  ] ; then
+  elif [ my"$arg" = my"--h"  -o my"$arg" = my"--help"  ]; then
     show_help=true
     ant_exec_args="$ant_exec_args -h"
   else
-    if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ] ; then
+    if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ]; then
       show_help=true
     fi
 
-    if [ "$PROTECT_NL" = "true" ] ; then
+    if [ "$PROTECT_NL" = "true" ]; then
       # pad the value with X to protect trailing NLs from subshell output trimming
       esc_arg="${arg}X"
     else
@@ -64,14 +62,13 @@ for arg in "$@" ; do
     # subshell (heirloom and posix) will trim the added trailing newline
     esc_arg="`printf '%s\n' "$esc_arg" | sed -e 's@\([$\"\`\\]\)@\\\\\\1@g' `"
 
-    if [ "$PROTECT_NL" = "true" ] ; then
+    if [ "$PROTECT_NL" = "true" ]; then
       # remove the padding X added above, this syntax is POSIX compatible but not heirloom-sh
       esc_arg="${esc_arg%X}"
     fi
     quoted_arg="\"$esc_arg\""
 
-    if $ant_exec_debug
-    then
+    if $ant_exec_debug; then
         # using printf to avoid echo line continuation and escape interpretation
         printf "arg       : %s\n" "$arg"
         printf "quoted_arg: %s\n" "$quoted_arg"
@@ -81,37 +78,37 @@ for arg in "$@" ; do
 done
 
 # Source/default ant configuration
-if $no_config ; then
+if $no_config; then
   rpm_mode=false
   usejikes=$use_jikes_default
 else
   # load system-wide ant configuration (ONLY if ANT_HOME has NOT been set)
   if [ -z "$ANT_HOME" -o "$ANT_HOME" = "/usr/share/ant" ]; then
-      if [ -f "/etc/ant.conf" ] ; then
+      if [ -f "/etc/ant.conf" ]; then
           . /etc/ant.conf
       fi
   fi
 
   # load user ant configuration
-  if [ -f "$HOME/.ant/ant.conf" ] ; then
+  if [ -f "$HOME/.ant/ant.conf" ]; then
     . $HOME/.ant/ant.conf
   fi
-  if [ -f "$HOME/.antrc" ] ; then
+  if [ -f "$HOME/.antrc" ]; then
     . "$HOME/.antrc"
   fi
 
   # provide default configuration values
-  if [ -z "$rpm_mode" ] ; then
+  if [ -z "$rpm_mode" ]; then
     rpm_mode=false
   fi
-  if [ -z "$usejikes" ] ; then
+  if [ -z "$usejikes" ]; then
     usejikes=$use_jikes_default
   fi
 fi
 
 # Setup Java environment in rpm mode
-if $rpm_mode ; then
-  if [ -f /usr/share/java-utils/java-functions ] ; then
+if $rpm_mode; then
+  if [ -f /usr/share/java-utils/java-functions ]; then
     . /usr/share/java-utils/java-functions
     set_jvm
     set_javacmd
@@ -123,32 +120,37 @@ cygwin=false;
 darwin=false;
 mingw=false;
 case "`uname`" in
-  CYGWIN*) cygwin=true ;;
-  Darwin*) darwin=true
-           if [ -z "$JAVA_HOME" ] ; then
-               if [ -x '/usr/libexec/java_home' ] ; then
-                   JAVA_HOME=`/usr/libexec/java_home`
-               elif [ -d "/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home" ]; then
-                   JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
-               fi
-           fi
-           ;;
-  MINGW*) mingw=true ;;
+  CYGWIN*)
+    cygwin=true
+    ;;
+  Darwin*)
+    darwin=true
+    if [ -z "$JAVA_HOME" ]; then
+      if [ -x '/usr/libexec/java_home' ]; then
+        JAVA_HOME=`/usr/libexec/java_home`
+      elif [ -d "/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home" ]; then
+        JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
+      fi
+    fi
+    ;;
+    MINGW*)
+      mingw=true
+      ;;
 esac
 
-if [ -z "$ANT_HOME" -o ! -d "$ANT_HOME" ] ; then
+if [ -z "$ANT_HOME" -o ! -d "$ANT_HOME" ]; then
   ## resolve links - $0 may be a link to ant's home
   PRG="$0"
   progname=`basename "$0"`
 
   # need this for relative symlinks
-  while [ -h "$PRG" ] ; do
+  while [ -h "$PRG" ]; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '/.*' > /dev/null; then
-    PRG="$link"
+      PRG="$link"
     else
-    PRG=`dirname "$PRG"`"/$link"
+      PRG=`dirname "$PRG"`"/$link"
     fi
   done
 
@@ -160,41 +162,37 @@ fi
 
 # For Cygwin and Mingw, ensure paths are in UNIX format before
 # anything is touched
-if $cygwin ; then
-  [ -n "$ANT_HOME" ] &&
-    ANT_HOME=`cygpath --unix "$ANT_HOME"`
-  [ -n "$JAVA_HOME" ] &&
-    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+if $cygwin; then
+  [ -n "$ANT_HOME" ] && ANT_HOME=`cygpath --unix "$ANT_HOME"`
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
 fi
-if $mingw ; then
-  [ -n "$ANT_HOME" ] &&
-    ANT_HOME="`(cd "$ANT_HOME"; pwd)`"
-  [ -n "$JAVA_HOME" ] &&
-    JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
+if $mingw; then
+  [ -n "$ANT_HOME" ] && ANT_HOME="`(cd "$ANT_HOME"; pwd)`"
+  [ -n "$JAVA_HOME" ] && JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
 fi
 
 # set ANT_LIB location
 ANT_LIB="${ANT_HOME}/lib"
 
-if [ -z "$JAVACMD" ] ; then
-  if [ -n "$JAVA_HOME"  ] ; then
+if [ -z "$JAVACMD" ]; then
+  if [ -n "$JAVA_HOME" ]; then
     # IBM's JDK on AIX uses strange locations for the executables
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ]; then
       JAVACMD="$JAVA_HOME/jre/sh/java"
-    elif [ -x "$JAVA_HOME/jre/bin/java" ] ; then
+    elif [ -x "$JAVA_HOME/jre/bin/java" ]; then
       JAVACMD="$JAVA_HOME/jre/bin/java"
     else
       JAVACMD="$JAVA_HOME/bin/java"
     fi
   else
     JAVACMD=`which java 2> /dev/null `
-    if [ -z "$JAVACMD" ] ; then
+    if [ -z "$JAVACMD" ]; then
         JAVACMD=java
     fi
   fi
 fi
 
-if [ ! -x "$JAVACMD" ] ; then
+if [ ! -x "$JAVACMD" ]; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute $JAVACMD"
   exit 1
@@ -207,41 +205,40 @@ fi
 # is discouraged as it is not java-version safe. A user should
 # request optional jars and their dependencies via the OPT_JAR_LIST
 # variable
-if $rpm_mode && [ -x /usr/bin/build-classpath ] ; then
+if $rpm_mode && [ -x /usr/bin/build-classpath ]; then
   LOCALCLASSPATH="$(/usr/bin/build-classpath ant ant-launcher jaxp_parser_impl xml-commons-apis)"
 
   # If no optional jars have been specified then build the default list
-  if [ -z "$OPT_JAR_LIST" ] ; then
+  if [ -z "$OPT_JAR_LIST" ]; then
     for file in /etc/ant.d/*; do
       if [ -f "$file" ]; then
         case "$file" in
-        *~) ;;
-        *#*) ;;
-        *.rpmsave) ;;
-        *.rpmnew) ;;
-        *)
-          for dep in `cat "$file"`; do
-            OPT_JAR_LIST="$OPT_JAR_LIST${OPT_JAR_LIST:+ }$dep"
-          done
+          *~|*#*|*.rpmsave|*.rpmnew)
+          ;;
+          *)
+            for dep in `cat "$file"`; do
+              OPT_JAR_LIST="$OPT_JAR_LIST${OPT_JAR_LIST:+ }$dep"
+            done
+          ;;
         esac
       fi
     done
   fi
 
   # If the user requested to try to add some other jars to the classpath
-  if [ -n "$OPT_JAR_LIST" ] ; then
+  if [ -n "$OPT_JAR_LIST" ]; then
     _OPTCLASSPATH="$(/usr/bin/build-classpath $OPT_JAR_LIST 2> /dev/null)"
-    if [ -n "$_OPTCLASSPATH" ] ; then 
+    if [ -n "$_OPTCLASSPATH" ]; then
       LOCALCLASSPATH="$LOCALCLASSPATH:$_OPTCLASSPATH"
     fi
   fi
 
   # Explicitly add javac path to classpath, assume JAVA_HOME set
   # properly in rpm mode
-  if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
+  if [ -f "$JAVA_HOME/lib/tools.jar" ]; then
     LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar"
   fi
-  if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
+  if [ -f "$JAVA_HOME/lib/classes.zip" ]; then
     LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip"
   fi
 
@@ -251,11 +248,11 @@ if $rpm_mode && [ -x /usr/bin/build-classpath ] ; then
   #
   # if CLASSPATH_OVERRIDE is not set, we'll have the normal behaviour
   # with ant-found jars first and user CLASSPATH after
-  if [ -n "$CLASSPATH" ] ; then
-    # merge local and specified classpath 
-    if [ -z "$LOCALCLASSPATH" ] ; then 
+  if [ -n "$CLASSPATH" ]; then
+    # merge local and specified classpath
+    if [ -z "$LOCALCLASSPATH" ]; then
       LOCALCLASSPATH="$CLASSPATH"
-    elif [ -n "$CLASSPATH_OVERRIDE" ] ; then
+    elif [ -n "$CLASSPATH_OVERRIDE" ]; then
       LOCALCLASSPATH="$CLASSPATH:$LOCALCLASSPATH"
     else
       LOCALCLASSPATH="$LOCALCLASSPATH:$CLASSPATH"
@@ -266,20 +263,19 @@ if $rpm_mode && [ -x /usr/bin/build-classpath ] ; then
   fi
 else
   # not using rpm_mode; use launcher to determine classpaths
-  if [ -z "$LOCALCLASSPATH" ] ; then
+  if [ -z "$LOCALCLASSPATH" ]; then
       LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar
   else
       LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar:$LOCALCLASSPATH
   fi
 fi
 
-if [ -n "$JAVA_HOME" ] ; then
+if [ -n "$JAVA_HOME" ]; then
   # OSX hack to make Ant work with jikes
-  if $darwin ; then
+  if $darwin; then
     OSXHACK="${JAVA_HOME}/../Classes"
-    if [ -d "${OSXHACK}" ] ; then
-      for i in "${OSXHACK}"/*.jar
-      do
+    if [ -d "${OSXHACK}" ]; then
+      for i in "${OSXHACK}"/*.jar; do
         JIKESPATH="$JIKESPATH:$i"
       done
     fi
@@ -297,7 +293,7 @@ fi
 # in the name in the path. Let's assume that paths containing ; are more
 # rare than windows style paths on cygwin.
 if $cygwin; then
-  if [ "$OS" = "Windows_NT" ] && cygpath -m .>/dev/null 2>/dev/null ; then
+  if [ "$OS" = "Windows_NT" ] && cygpath -m .>/dev/null 2>/dev/null; then
     format=mixed
   else
     format=windows
@@ -307,7 +303,7 @@ if $cygwin; then
   [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --$format "$JAVA_HOME"`
   LCP_TEMP=`cygpath --path --unix "$LOCALCLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --$format "$LCP_TEMP"`
-  if [ -n "$CLASSPATH" ] ; then
+  if [ -n "$CLASSPATH" ]; then
     CP_TEMP=`cygpath --path --unix "$CLASSPATH"`
     CLASSPATH=`cygpath --path --$format "$CP_TEMP"`
   fi
@@ -315,7 +311,7 @@ if $cygwin; then
 fi
 
 # Show script help if requested
-if $show_help ; then
+if $show_help; then
   echo $0 '[script options] [options] [target [target2 [target3] ..]]'
   echo 'Script Options:'
   echo '  --help, --h            print this message and ant help'
@@ -326,33 +322,33 @@ if $show_help ; then
   echo '                         set explicitly in configuration files'
   echo '  --execdebug            print ant exec line generated by this'
   echo '                         launch script'
-  echo '  '
+  echo ''
 fi
 # add a second backslash to variables terminated by a backslash under cygwin
 if $cygwin; then
   case "$ANT_HOME" in
     *\\ )
-    ANT_HOME="$ANT_HOME\\"
+      ANT_HOME="$ANT_HOME\\"
     ;;
   esac
   case "$CYGHOME" in
     *\\ )
-    CYGHOME="$CYGHOME\\"
+      CYGHOME="$CYGHOME\\"
     ;;
   esac
   case "$JIKESPATH" in
     *\\ )
-    JIKESPATH="$JIKESPATH\\"
+      JIKESPATH="$JIKESPATH\\"
     ;;
   esac
   case "$LOCALCLASSPATH" in
     *\\ )
-    LOCALCLASSPATH="$LOCALCLASSPATH\\"
+      LOCALCLASSPATH="$LOCALCLASSPATH\\"
     ;;
   esac
   case "$CLASSPATH" in
     *\\ )
-    CLASSPATH="$CLASSPATH\\"
+      CLASSPATH="$CLASSPATH\\"
     ;;
   esac
 fi
@@ -371,7 +367,7 @@ else
   fi
 fi
 ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -Dant.home=\"\$ANT_HOME\" -Dant.library.dir=\"\$ANT_LIB\" $ant_sys_opts org.apache.tools.ant.launch.Launcher $ANT_ARGS -cp \"\$CLASSPATH\""
-if $ant_exec_debug ; then
+if $ant_exec_debug; then
     # using printf to avoid echo line continuation and escape interpretation confusion
     printf "%s\n" "$ant_exec_command $ant_exec_args"
 fi

@@ -1,4 +1,4 @@
-/* 
+/*
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
@@ -15,7 +15,7 @@
    limitations under the License.
 
    Run RC file, name is in the first arg, second arg is either PATH
-   ENV  or -r or nothing 
+   ENV or -r or nothing
 */
 
 parse arg name path rest
