@@ -16,11 +16,12 @@
 # limitations under the License.
 
 # OS specific support.  $var _must_ be set to either true or false.
-cygwin=false;
-darwin=false;
+cygwin=false
+darwin=false
 case "`uname`" in
   CYGWIN*)
-    cygwin=true ;;
+    cygwin=true
+    ;;
   Darwin*)
     darwin=true
     if [ -z "$JAVA_HOME" ]; then
@@ -60,7 +61,7 @@ fi
 # JAVA_HOME/jre/sh for java and rmid
 # JAVA_HOME/sh for javac and rmic
 if [ -z "$JAVAC" ]; then
-  if [ -n "$JAVA_HOME"  ]; then
+  if [ -n "$JAVA_HOME" ]; then
     if [ -x "$JAVA_HOME/sh/javac" ]; then
       JAVAC=${JAVA_HOME}/sh/javac;
     else
@@ -71,7 +72,7 @@ if [ -z "$JAVAC" ]; then
   fi
 fi
 if [ -z "$JAVACMD" ]; then
-  if [ -n "$JAVA_HOME"  ]; then
+  if [ -n "$JAVA_HOME" ]; then
     if [ -x "$JAVA_HOME/jre/sh/java" ]; then
       JAVACMD=$JAVA_HOME/jre/sh/java
     else

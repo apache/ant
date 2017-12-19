@@ -70,7 +70,7 @@ my $oncygwin = ($^O eq "cygwin");
 #here I assume ":" 'cept on win32, dos, and netware. Add extra tests here as needed.
 my $s = ":";
 if (($^O eq "MSWin32") || ($^O eq "dos") || $oncygwin || $onnetware) {
-    $s=";";
+    $s = ";";
 }
 
 #build up standard classpath

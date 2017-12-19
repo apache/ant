@@ -76,7 +76,7 @@ function (value) { return value; },function (value) { return value; },function (
 ];
 
 var v = 'a';
-for(var i in functions) {
+for (var i in functions) {
   v = functions[i](v);
 }
 

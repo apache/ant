@@ -27,7 +27,7 @@ if [ -z "$PROTECT_NL" ]; then
   os=`uname -s`
   rel=`uname -r`
   # heirloom bourne-shell used by Solaris 10 is not POSIX
-  #  it lacks features necessary to protect trailing NL from subshell trimming
+  # it lacks features necessary to protect trailing NL from subshell trimming
   if [ "$os" = SunOS -a "$rel" = "5.10" ]; then
     PROTECT_NL=false
   fi
@@ -40,11 +40,11 @@ for arg in "$@"; do
     use_jikes_default=true
   elif [ "$arg" = "--execdebug" ]; then
     ant_exec_debug=true
-  elif [ my"$arg" = my"--h"  -o my"$arg" = my"--help"  ]; then
+  elif [ my"$arg" = my"--h" -o my"$arg" = my"--help"  ]; then
     show_help=true
     ant_exec_args="$ant_exec_args -h"
   else
-    if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ]; then
+    if [  my"$arg" = my"-h" -o  my"$arg" = my"-help" ]; then
       show_help=true
     fi
 
@@ -69,9 +69,9 @@ for arg in "$@"; do
     quoted_arg="\"$esc_arg\""
 
     if $ant_exec_debug; then
-        # using printf to avoid echo line continuation and escape interpretation
-        printf "arg       : %s\n" "$arg"
-        printf "quoted_arg: %s\n" "$quoted_arg"
+      # using printf to avoid echo line continuation and escape interpretation
+      printf "arg       : %s\n" "$arg"
+      printf "quoted_arg: %s\n" "$quoted_arg"
     fi
     ant_exec_args="$ant_exec_args $quoted_arg"
   fi
@@ -84,9 +84,9 @@ if $no_config; then
 else
   # load system-wide ant configuration (ONLY if ANT_HOME has NOT been set)
   if [ -z "$ANT_HOME" -o "$ANT_HOME" = "/usr/share/ant" ]; then
-      if [ -f "/etc/ant.conf" ]; then
-          . /etc/ant.conf
-      fi
+    if [ -f "/etc/ant.conf" ]; then
+      . /etc/ant.conf
+    fi
   fi
 
   # load user ant configuration
@@ -133,9 +133,9 @@ case "`uname`" in
       fi
     fi
     ;;
-    MINGW*)
-      mingw=true
-      ;;
+  MINGW*)
+    mingw=true
+    ;;
 esac
 
 if [ -z "$ANT_HOME" -o ! -d "$ANT_HOME" ]; then
@@ -187,7 +187,7 @@ if [ -z "$JAVACMD" ]; then
   else
     JAVACMD=`which java 2> /dev/null `
     if [ -z "$JAVACMD" ]; then
-        JAVACMD=java
+      JAVACMD=java
     fi
   fi
 fi
@@ -264,9 +264,9 @@ if $rpm_mode && [ -x /usr/bin/build-classpath ]; then
 else
   # not using rpm_mode; use launcher to determine classpaths
   if [ -z "$LOCALCLASSPATH" ]; then
-      LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar
+    LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar
   else
-      LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar:$LOCALCLASSPATH
+    LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar:$LOCALCLASSPATH
   fi
 fi
 
@@ -368,8 +368,8 @@ else
 fi
 ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -Dant.home=\"\$ANT_HOME\" -Dant.library.dir=\"\$ANT_LIB\" $ant_sys_opts org.apache.tools.ant.launch.Launcher $ANT_ARGS -cp \"\$CLASSPATH\""
 if $ant_exec_debug; then
-    # using printf to avoid echo line continuation and escape interpretation confusion
-    printf "%s\n" "$ant_exec_command $ant_exec_args"
+  # using printf to avoid echo line continuation and escape interpretation confusion
+  printf "%s\n" "$ant_exec_command $ant_exec_args"
 fi
 
 eval "$ant_exec_command $ant_exec_args"
