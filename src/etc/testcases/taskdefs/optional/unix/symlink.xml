@@ -308,12 +308,6 @@
 
     <sleep seconds="${delay}"/>  <!-- make sure OS has time to catch up -->
 
-    <pathconvert property="symtest1.content">
-      <fileset dir="${output}/symtest1"/>
-      <map from="${output}/symtest1" to=""/>
-    </pathconvert>
-    <echo>Content of ${output}/symtest1 is ${symtest1.content}</echo>
-
     <available file="${output}/symtest1/link1"
                property="test.recreate.link1.recreated"/>
 
