@@ -1408,8 +1408,10 @@
     description="--> cleans up everything">
     <delete file="${bootstrap.dir}/bin/antRun"/>
     <delete file="${bootstrap.dir}/bin/antRun.bat"/>
-    <delete file="${bootstrap.dir}/bin/*.pl"/>
-    <delete file="${bootstrap.dir}/bin/*.py"/>
+    <delete>
+      <fileset dir="${bootstrap.dir}/bin" includes="*.pl"/>
+      <fileset dir="${bootstrap.dir}/bin" includes="*.py"/>
+    </delete>
   </target>
 
   <!--
