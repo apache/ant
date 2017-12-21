@@ -34,6 +34,7 @@ import org.apache.tools.ant.taskdefs.Execute;
  *              of the Java {@link java.nio.file.Files} APIs introduced in
  *              Java 7, for dealing with symbolic links
  */
+@Deprecated
 public class SymbolicLinkUtils {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
