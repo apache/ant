@@ -7,6 +7,21 @@ Changes that could break older environments:
  * updated the dependency of BCEL to 6.2.
    Bugzilla Report 61196
 
+ * delete task previously would silently accept wildcard (*)
+   value for the "file" attribute. That's no longer the case
+   and an exception could get thrown by the underlying filesystem
+   for such use. Usage like:
+
+   <delete file="/foo/bar/*.something"/>
+
+   should instead be changed to use resource collections like:
+
+   <delete>
+   	 <fileset dir="/foo/bar/" includes="*.something"/> 
+   </delete>
+
+
+
 Fixed bugs:
 -----------
 
