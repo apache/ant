@@ -20,34 +20,30 @@ mvn install:install-file -DgroupId=foo.org -DartifactId=xx -Dversion=x.y -Dpacka
 
 HOW TO BUILD :
 
-from this directory, type 
+from this directory, type
 
 mvn install (or mvn package)
 
-If you do not have all the dependencies, you can remove the modules that you will not be able to build 
+If you do not have all the dependencies, you can remove the modules that you will not be able to build
 from the pom.xml in this directory.
 
-You also might want to disable the tests. 
+You also might want to disable the tests.
 
-mvn install -Dmaven.test.skip=true 
-
-
+mvn install -Dmaven.test.skip=true
 
 TODO :
 
  * see if the dependency to weblogicclasses.jar can be replaced by a dependency to some j2ee.jar from Sun,
 as it supplies some javax.ejb classes which are required at compile time.
 
-
 PROBLEMS :
 
- * the unit tests cannot run properly, the maven-surefire-plugin sets a system property basedir 
+ * the unit tests cannot run properly, the maven-surefire-plugin sets a system property basedir
 which make a large part of our tests fail
 
- * JIRA issue http://jira.codehaus.org/browse/MSUREFIRE-177 asking the Maven colleagues to fix this. :-)
+ * JIRA issue https://issues.apache.org/jira/browse/SUREFIRE-184 asking the Maven colleagues to fix this. :-)
 
 REFERENCES :
 
 about skipping tests :
 http://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html
-
