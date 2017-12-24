@@ -20,24 +20,24 @@
 rm -rf bootstrap build dist distribution java-repository
 unset ANT_HOME
 # OS specific support.  $var _must_ be set to either true or false.
-cygwin=false;
-darwin=false;
-mingw=false;
-linux=false;
+cygwin=false
+darwin=false
+mingw=false
+linux=false
 case "`uname`" in
-  CYGWIN*) cygwin=true ;;
+  CYGWIN*) cygwin=true;;
   Darwin*) darwin=true;;
-  MINGW*) mingw=true ;;
-  Linux) linux=true ;;
+  MINGW*) mingw=true;;
+  Linux) linux=true;;
 esac
-if $cygwin ; then
+if $cygwin; then
   export JAVA_HOME="/cygdrive/c/Program Files/Java/jdk1.5.0_22"
   JDK_VERSION=1.5
 fi
 if $darwin; then
    export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
    JDK_VERSION=1.6
-fi  
+fi
 if $linux; then
    export JAVA_HOME=/usr/lib/jvm/java-6-openjdk
    JDK_VERSION=1.6
@@ -50,8 +50,6 @@ echo ANT_HOME=$ANT_HOME
 echo JAVA_HOME=$JAVA_HOME
 which java
 echo running build under JDK $JDK_VERSION
-./build.sh dist-lite 
+./build.sh dist-lite
 echo running the tests and doing the distribution
 dist/bin/ant -nouserlib -lib lib/optional  run-tests distribution
-
-

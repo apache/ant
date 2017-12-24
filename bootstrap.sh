@@ -63,9 +63,9 @@ fi
 if [ -z "$JAVAC" ]; then
   if [ -n "$JAVA_HOME" ]; then
     if [ -x "$JAVA_HOME/sh/javac" ]; then
-      JAVAC=${JAVA_HOME}/sh/javac;
+      JAVAC=${JAVA_HOME}/sh/javac
     else
-      JAVAC=${JAVA_HOME}/bin/javac;
+      JAVAC=${JAVA_HOME}/bin/javac
     fi
   else
     JAVAC=javac
