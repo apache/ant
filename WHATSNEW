@@ -19,7 +19,7 @@ Fixed bugs:
    Bugzilla Report 60644
 
  * Improvement to the Zip task for reduced memory usage in certain
-   cases. Thanks to Glen Lewis for reporting the issue and 
+   cases. Thanks to Glen Lewis for reporting the issue and
    suggesting the fix.
    Bugzilla Report 19516
 
@@ -66,6 +66,8 @@ Other changes:
    version (1.5.6, 1.6.8 and 2.5.3, respectively); added resolve targets
    for Ivy and AntUnit to facilitate releases and updates, respectively.
    Github Pull Request #50
+
+* Updated Commons Net to the latest Java 5 compatible version (2.2).
 
 Changes from Ant 1.9.8 TO Ant 1.9.9
 ===================================

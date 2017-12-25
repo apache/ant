@@ -315,6 +315,7 @@ Set -Ddest=LOCATION on the command line
           description="load Java Mail"
           depends="init">
     <f2 project="javax.mail" archive="javax.mail-api"/>
+    <f2 project="javax.activation" archive="activation"/>
   </target>
 
   <target name="jspc"
