@@ -449,15 +449,9 @@
     <available property="bcel.present"
                classname="org.apache.bcel.Constants"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-
-    <condition property="javamail.complete">
-      <and>
-        <available classname="javax.activation.DataHandler"
-          classpathref="classpath"/>
-        <available classname="javax.mail.Transport"
-          classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-      </and>
-    </condition>
+    <available property="javamail.present"
+               classname="javax.mail.Transport"
+               classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <condition property="tests.and.ant.share.classloader">
       <or>
@@ -582,7 +576,7 @@
             <selector refid="needs.apache-log4j" unless="log4j.present"/>
             <selector refid="needs.commons-logging" unless="commons.logging.present"/>
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
-            <selector refid="needs.javamail" unless="javamail.complete"/>
+            <selector refid="needs.javamail" unless="javamail.present"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>

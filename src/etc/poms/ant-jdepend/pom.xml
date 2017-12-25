@@ -47,7 +47,7 @@
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
-      <version>2.7</version>
+      <version>2.9.1</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

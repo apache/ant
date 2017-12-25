@@ -44,7 +44,6 @@
           <includes>
             <include>org/apache/tools/ant/launch/*.java</include>
           </includes>
-
         </configuration>
       </plugin>
     </plugins>
