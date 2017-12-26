@@ -43,16 +43,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/m
       <version>1.10.12-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-    <!-- Processed too early, before maven-antrun-plugin gets a chance to work:
     <dependency>
       <groupId>com.ibm.netrexx</groupId>
-      <artifactId>netrexx</artifactId>
+      <artifactId>com.springsource.com.ibm.netrexx</artifactId>
       <version>2.0.5</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/../../../../lib/optional/NetRexxC.jar</systemPath>
+      <scope>compile</scope>
     </dependency>
-    -->
   </dependencies>
+  <repositories>
+    <repository>
+      <id>bintray</id>
+      <name>Bintray</name>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>

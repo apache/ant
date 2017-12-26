@@ -3,14 +3,11 @@ Building Ant with Maven
 
 The Ant jars can be built using Maven and the POMS present in this directory.
 
-Libs not available in the maven repository
+Libs not available in the Maven repository
 
 groupId          artifactId       version   comment
 com.bea          weblogic         8.1.3.0   download it
-com.bea          weblogicclasses  5.1       a newer version can do.
-jai              jai-core         1.1.2_01  fetch.xml
-jai              jai-codec        1.1.2.1   fetch.xml
-com.ibm.netrexx  netrexx          2.0.5     fetch.xml
+com.bea          weblogicclasses  5.1       a newer version can do
 com.starteam     starteam-sdk     5.2       the original file is called starteam-sdk.jar
 stylebook        stylebook        1.0-b2    the original file is called stylebook-1.0-b2.jar
 
@@ -34,14 +31,10 @@ mvn install -Dmaven.test.skip=true
 TODO :
 
  * see if the dependency to weblogicclasses.jar can be replaced by a dependency to some j2ee.jar from Sun,
-as it supplies some javax.ejb classes which are required at compile time.
+   as it supplies some javax.ejb classes which are required at compile time.
 
-PROBLEMS :
-
- * the unit tests cannot run properly, the maven-surefire-plugin sets a system property basedir
-which make a large part of our tests fail
-
- * JIRA issue https://issues.apache.org/jira/browse/SUREFIRE-184 asking the Maven colleagues to fix this. :-)
+ * surefire now allows setting a custom basedir, and Ant can ignore it, so tests should no longer require
+   system property "root" to be set; it's use is made explicit by making it a magic test name.
 
 REFERENCES :
 

@@ -126,7 +126,7 @@ Note: This document was adapted from the one created in the context of
 
 10. Sign the distribution files
 
-    There are two aproaches, one uses Ant and a few libraries, the
+    There are two approaches, one uses Ant and a few libraries, the
     other requires you to run gnupg manually. The first version didn't
     work for Stefan when he built the first release candidate for
     1.9.7.

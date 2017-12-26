@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -17,10 +18,24 @@
 <project name="upload" xmlns:ivy="antlib:org.apache.ivy.ant">
   <fail unless="upload.user" message="supply upload.user on the command line"/>
   <fail unless="upload.password" message="supply upload.password on the command line"/>
+  <fail unless="gpg.keyid" message="supply gpg.keyid on the command line"/>
+  <fail unless="gpg.password" message="supply gpg.password on the command line"/>
   <property name="upload.url" value="https://repository.apache.org/service/local/staging/deploy/maven2"/>
+  <condition property="gpg.dir" value="${user.home}/AppData/Roaming/gnupg">
+    <os family="windows"/>
+  </condition>
+  <property name="gpg.dir" location="${user.home}/.gnupg"/>
+  <property name="project.revision" value="1.10.2alpha"/>
+  <path id="ivy.and.gpg">
+    <fileset dir="../lib/optional">
+      <include name="ivy*.jar"/>
+      <include name="bcp*.jar"/>
+    </fileset>
+  </path>
+  <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.and.gpg"/>
   <ivy:configure file="ivysettings.xml"/>
-  <ivy:resolve file="ivy.xml"/>  
+  <ivy:resolve file="../ivy.xml"/>
   <ivy:retrieve/>
   <ivy:deliver/>
-  <ivy:publish publishivy="false" artifactspattern="${basedir}/../java-repository/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]" resolver="nexus"/>
+  <ivy:publish publishivy="false" pubrevision="${project.revision}" artifactspattern="${basedir}/../java-repository/[orgPath]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]" resolver="nexus"/>
 </project>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+  <info organisation="org.apache.ant" module="ant"/>
+  <configurations>
+    <conf name="core" description="only Ant jar, without any dependencies"/>
+    <conf name="antlr" extends="core" description="core + optional ANTLR"/>
+    <conf name="antunit" extends="junit" description="core + optional AntUnit"/>
+    <conf name="bcel" extends="core" description="core + optional BCEL"/>
+    <conf name="debugging" description="internal Ant debugging"/>
+    <conf name="imageio" description="core + ImageIO task"/>
+    <conf name="ivy" description="core + Ivy dependency resolver"/>
+    <conf name="jai" extends="core" description="core + optional Java Advanced Imaging"/>
+    <conf name="javamail" extends="core" description="core + optional Java Mail API"/>
+    <conf name="jdepend" extends="core" description="core + optional JDepend"/>
+    <conf name="jmf" extends="core" description="core + Java Media Framework tasks"/>
+    <conf name="jspc" extends="core" description="core + optional Jasper"/>
+    <conf name="junit" extends="core" description="core + optional JUnit 3 and 4"/>
+    <conf name="junitlauncher" extends="core" description="core + optional JUnit 5"/>
+    <conf name="junit-engine-jupiter" extends="junitlauncher" description="core + optional JUnit 5 engine"/>
+    <conf name="junit-engine-vintage" extends="junitlauncher" description="core + optional JUnit 4 in 5 engine"/>
+    <conf name="logging" extends="core" description="core + optional logging libraries"/>
+    <conf name="netrexx" extends="core" description="core + optional NetRexx compiler"/>
+    <conf name="networking" extends="core" description="core + optional Commons Net/JSCh"/>
+    <conf name="regexp" extends="core" description="core + optional regexp libraries"/>
+    <conf name="script" extends="core" description="core + optional BSF"/>
+    <conf name="xml" extends="core" description="core + optional XML libraries"/>
+    <conf name="xz" extends="core" description="core + optional XZ"/>
+    <conf name="groovy" description="Groovy"/>
+    <conf name="jruby" description="JRuby"/>
+    <conf name="jython" description="Jython"/>
+    <conf name="rhino" description="Rhino"/>
+    <conf name="graal.js" description="Graal.js"/>
+    <conf name="default" extends="core" description="full Ant with all dependencies"/>
+    <conf name="source" description="Ant sources"/>
+    <conf name="test" description="dependencies used for testing Ant" visibility="private"/>
+    <conf name="release" description="dependencies used for releasing Ant" visibility="private"/>
+  </configurations>
+  <publications xmlns:e="urn:ant.apache.org:ivy-extras">
+    <artifact name="ant-parent" type="pom" ext="pom" conf="default"/>
+    <artifact name="ant" type="pom" ext="pom" conf="core"/>
+    <artifact name="ant" type="jar" ext="jar" conf="core"/>
+    <artifact name="ant" type="source" ext="jar" e:classifier="sources" conf="core,source"/>
+    <artifact name="ant" type="javadoc" ext="jar" e:classifier="javadoc" conf="core,source"/>
+    <artifact name="ant-antlr" type="pom" ext="pom" conf="default,antlr"/>
+    <artifact name="ant-antlr" type="jar" ext="jar" conf="default,antlr"/>
+    <artifact name="ant-antlr" type="source" ext="jar" e:classifier="sources" conf="default,source,antlr"/>
+    <artifact name="ant-apache-bcel" type="pom" ext="pom" conf="default,bcel"/>
+    <artifact name="ant-apache-bcel" type="jar" ext="jar" conf="default,bcel"/>
+    <artifact name="ant-apache-bcel" type="source" ext="jar" e:classifier="sources" conf="default,source,bcel"/>
+    <artifact name="ant-apache-bsf" type="pom" ext="pom" conf="default,script"/>
+    <artifact name="ant-apache-bsf" type="jar" ext="jar" conf="default,script"/>
+    <artifact name="ant-apache-bsf" type="source" ext="jar" e:classifier="sources" conf="default,source,script"/>
+    <artifact name="ant-apache-log4j" type="pom" ext="pom" conf="default,logging"/>
+    <artifact name="ant-apache-log4j" type="jar" ext="jar" conf="default,logging"/>
+    <artifact name="ant-apache-log4j" type="source" ext="jar" e:classifier="sources" conf="default,source,logging"/>
+    <artifact name="ant-apache-oro" type="pom" ext="pom" conf="default,regexp"/>
+    <artifact name="ant-apache-oro" type="jar" ext="jar" conf="default,regexp"/>
+    <artifact name="ant-apache-oro" type="source" ext="jar" e:classifier="sources" conf="default,source,regexp"/>
+    <artifact name="ant-apache-regexp" type="pom" ext="pom" conf="default,regexp"/>
+    <artifact name="ant-apache-regexp" type="jar" ext="jar" conf="default,regexp"/>
+    <artifact name="ant-apache-regexp" type="source" ext="jar" e:classifier="sources" conf="default,source,regexp"/>
+    <artifact name="ant-apache-resolver" type="pom" ext="pom" conf="default,xml"/>
+    <artifact name="ant-apache-resolver" type="jar" ext="jar" conf="default,xml"/>
+    <artifact name="ant-apache-resolver" type="source" ext="jar" e:classifier="sources" conf="default,source,xml"/>
+    <artifact name="ant-apache-xalan2" type="pom" ext="pom" conf="default,xml"/>
+    <artifact name="ant-apache-xalan2" type="jar" ext="jar" conf="default,xml"/>
+    <artifact name="ant-apache-xalan2" type="source" ext="jar" e:classifier="sources" conf="default,source,xml"/>
+    <artifact name="ant-commons-logging" type="pom" ext="pom" conf="default,logging"/>
+    <artifact name="ant-commons-logging" type="jar" ext="jar" conf="default,logging"/>
+    <artifact name="ant-commons-logging" type="source" ext="jar" e:classifier="sources" conf="default,source,logging"/>
+    <artifact name="ant-commons-net" type="pom" ext="pom" conf="default,networking"/>
+    <artifact name="ant-commons-net" type="jar" ext="jar" conf="default,networking"/>
+    <artifact name="ant-commons-net" type="source" ext="jar" e:classifier="sources" conf="default,source,networking"/>
+    <artifact name="ant-imageio" type="pom" ext="pom" conf="default,imageio"/>
+    <artifact name="ant-imageio" type="jar" ext="jar" conf="default,imageio"/>
+    <artifact name="ant-imageio" type="source" ext="jar" e:classifier="sources" conf="default,source,imageio"/>
+    <artifact name="ant-jai" type="pom" ext="pom" conf="default,jai"/>
+    <artifact name="ant-jai" type="jar" ext="jar" conf="default,jai"/>
+    <artifact name="ant-jai" type="source" ext="jar" e:classifier="sources" conf="default,source,jai"/>
+    <artifact name="ant-javamail" type="pom" ext="pom" conf="default,javamail"/>
+    <artifact name="ant-javamail" type="jar" ext="jar" conf="default,javamail"/>
+    <artifact name="ant-javamail" type="source" ext="jar" e:classifier="sources" conf="default,source,javamail"/>
+    <artifact name="ant-jdepend" type="pom" ext="pom" conf="default,jdepend"/>
+    <artifact name="ant-jdepend" type="jar" ext="jar" conf="default,jdepend"/>
+    <artifact name="ant-jdepend" type="source" ext="jar" e:classifier="sources" conf="default,source,jdepend"/>
+    <artifact name="ant-jmf" type="pom" ext="pom" conf="default,jmf"/>
+    <artifact name="ant-jmf" type="jar" ext="jar" conf="default,jmf"/>
+    <artifact name="ant-jmf" type="source" ext="jar" e:classifier="sources" conf="default,source,jmf"/>
+    <artifact name="ant-jsch" type="pom" ext="pom" conf="default,networking"/>
+    <artifact name="ant-jsch" type="jar" ext="jar" conf="default,networking"/>
+    <artifact name="ant-jsch" type="source" ext="jar" e:classifier="sources" conf="default,source,networking"/>
+    <artifact name="ant-junit" type="pom" ext="pom" conf="default,junit"/>
+    <artifact name="ant-junit" type="jar" ext="jar" conf="default,junit"/>
+    <artifact name="ant-junit" type="source" ext="jar" e:classifier="sources" conf="default,source,junit"/>
+    <artifact name="ant-junit4" type="pom" ext="pom" conf="default,junit"/>
+    <artifact name="ant-junit4" type="jar" ext="jar" conf="default,junit"/>
+    <artifact name="ant-junit4" type="source" ext="jar" e:classifier="sources" conf="default,source,junit"/>
+    <artifact name="ant-junitlauncher" type="pom" ext="pom" conf="default,junitlauncher"/>
+    <artifact name="ant-junitlauncher" type="jar" ext="jar" conf="default,junitlauncher"/>
+    <artifact name="ant-junitlauncher" type="source" ext="jar" e:classifier="sources" conf="default,source,junitlauncher"/>
+    <artifact name="ant-launcher" type="pom" ext="pom" conf="default,core"/>
+    <artifact name="ant-launcher" type="jar" ext="jar" conf="core"/>
+    <artifact name="ant-launcher" type="source" ext="jar" e:classifier="sources" conf="source,core"/>
+    <artifact name="ant-netrexx" type="pom" ext="pom" conf="default,netrexx"/>
+    <artifact name="ant-netrexx" type="jar" ext="jar" conf="default,netrexx"/>
+    <artifact name="ant-netrexx" type="source" ext="jar" e:classifier="sources" conf="default,source,netrexx"/>
+    <artifact name="ant-swing" type="pom" ext="pom" conf="default"/>
+    <artifact name="ant-swing" type="jar" ext="jar" conf="default"/>
+    <artifact name="ant-swing" type="source" ext="jar" e:classifier="sources" conf="default,source"/>
+    <artifact name="ant-testutil" type="pom" ext="pom" conf="default,junit"/>
+    <artifact name="ant-testutil" type="jar" ext="jar" conf="default,junit"/>
+    <artifact name="ant-testutil" type="source" ext="jar" e:classifier="sources" conf="default,source,junit"/>
+    <artifact name="ant-xz" type="pom" ext="pom" conf="default,xz"/>
+    <artifact name="ant-xz" type="jar" ext="jar" conf="default,xz"/>
+    <artifact name="ant-xz" type="source" ext="jar" e:classifier="sources" conf="default,source,xz"/>
+  </publications>
+  <dependencies defaultconfmapping="*->default">
+    <dependency org="jakarta-regexp" name="jakarta-regexp" rev="1.4" conf="default,regexp"/>
+    <dependency org="oro" name="oro" rev="2.0.8" conf="default,regexp"/>
+    <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.14.0" conf="default,logging"/>
+    <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.14.0" conf="default,logging"/>
+    <dependency org="commons-logging" name="commons-logging-api" rev="1.1" conf="default,logging"/>
+    <dependency org="jdepend" name="jdepend" rev="2.9.1" conf="default,jdepend"/>
+    <dependency org="com.github.jai-imageio" name="jai-imageio-core" rev="1.4.0" conf="default,imageio"/>
+    <dependency org="javax.media" name="jai-core" rev="1.1.3" conf="default,jai"/>
+    <dependency org="com.sun.media" name="jai-codec" rev="1.1.3" conf="default,jai"/>
+    <dependency org="tomcat" name="jasper-compiler" rev="4.1.36" conf="default,jspc"/>
+    <dependency org="tomcat" name="jasper-runtime" rev="4.1.36" conf="default,jspc"/>
+    <dependency org="javax.servlet" name="servlet-api" rev="2.3" conf="default,jspc"/>
+    <dependency org="xml-resolver" name="xml-resolver" rev="1.2" conf="default,xml"/>
+    <dependency org="xalan" name="xalan" rev="2.7.2" conf="default,xml"/>
+    <dependency org="antlr" name="antlr" rev="2.7.7" conf="default,antlr"/>
+    <dependency org="org.apache.bcel" name="bcel" rev="6.5.0" conf="default,bcel"/>
+    <dependency org="bsf" name="bsf" rev="2.4.0" conf="default,script"/>
+    <dependency org="org.beanshell" name="bsh" rev="2.0b5" conf="default,script"/>
+    <dependency org="org.python" name="jython" rev="2.7.2" conf="default,script,jython"/>
+    <dependency org="org.mozilla" name="rhino" rev="1.7.13" conf="default,script,rhino"/>
+    <dependency org="org.jruby" name="jruby" rev="1.6.8" conf="default,script,jruby"/>
+    <dependency org="org.codehaus.groovy" name="groovy-ant" rev="2.5.14" conf="default,script,groovy"/>
+    <dependency org="org.codehaus.groovy" name="groovy-bsf" rev="2.5.14" conf="default,script,groovy"/>
+    <dependency org="com.ibm.netrexx" name="com.springsource.com.ibm.netrexx" rev="2.0.5" conf="default,netrexx"/>
+    <dependency org="org.graalvm.js" name="js" rev="21.1.0" conf="default,script,graal.js"/>
+    <dependency org="org.graalvm.js" name="js-scriptengine" rev="21.1.0" conf="default,script,graal.js"/>
+    <dependency org="commons-net" name="commons-net" rev="3.8.0" conf="default,networking"/>
+    <dependency org="com.jcraft" name="jsch" rev="0.1.55" conf="default,networking"/>
+    <dependency org="com.sun.mail" name="jakarta.mail" rev="1.6.5" conf="default,javamail"/>
+    <dependency org="org.tukaani" name="xz" rev="1.8" conf="default,xz"/>
+    <dependency org="which" name="which" rev="1.0" conf="default,debugging"/>
+    <dependency org="junit" name="junit" rev="4.13.2" conf="junit,test"/>
+    <dependency org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.2.0" conf="default,junit-engine-jupiter"/>
+    <dependency org="org.junit.vintage" name="junit-vintage-engine" rev="5.2.0" conf="default,junit-engine-vintage">
+      <exclude module="junit"/>
+    </dependency>
+    <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test"/>
+    <dependency org="org.apache.ant" name="ant-antunit" rev="1.4.1" conf="antunit,test"/>
+    <dependency org="org.apache.ivy" name="ivy" rev="2.5.0" conf="ivy;release->optional"/>
+    <exclude org="org.apache.ant" module="ant" conf="*"/>
+    <exclude org="org.apache.ant" module="ant-launcher" conf="*"/>
+    <exclude org="org.apache.ant" module="ant-nodeps" conf="*"/>
+    <exclude org="org.apache.ant" module="ant-trax" conf="*"/>
+    <exclude org="org.apache.ant" module="ant-junit" conf="*"/>
+    <exclude org="org.apache.ant" module="ant-antlr" conf="*"/>
+    <exclude org="com.jcraft" conf="release"/>
+    <exclude org="commons-codec" conf="release"/>
+    <exclude org="commons-httpclient" conf="release"/>
+    <exclude org="commons-logging" conf="release"/>
+    <exclude org="commons-vfs" conf="release"/>
+    <exclude org="oro" conf="release"/>
+  </dependencies>
+</ivy-module>
