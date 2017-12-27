@@ -94,7 +94,7 @@ my $classpath = $ENV{CLASSPATH};
 if ($oncygwin) {
     $localpath = `cygpath --path --windows $localpath`;
     chomp ($localpath);
-    if (!$classpath) {
+    if ($classpath) {
         $classpath = `cygpath --path --windows "$classpath"`;
         chomp ($classpath);
     }
