@@ -163,8 +163,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <basedir>../../../..</basedir>
           <systemProperties>
-            <basedir>../../../..</basedir>
             <property>
               <name>ant.home</name>
               <value>${env.ANT_HOME}</value>
