@@ -93,6 +93,7 @@
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
+  <property name="build.pkg.dir" value="${build.dir}/pkg"/>
 
   <!--
        ===================================================================
@@ -1214,10 +1215,28 @@
   </condition>
 
   <target name="pkg-distribution" depends="zip-distribution" if="buildosxpackage">
-    <exec executable="release/build-osx-pkg.py">
-      <arg value="--output-dir"/>
-      <arg value="${dist.base.binaries}"/>
-      <arg value="${dist.base.binaries}/${dist.name}-bin.zip"/>
+    <mkdir dir="${build.pkg.dir}"/>
+    <unzip src="${dist.base.binaries}/${dist.name}-bin.zip" dest="${build.pkg.dir}">
+      <mapper type="regexp" from="^([^/]*)/(.*)$$" to="\2"/>
+    </unzip>
+    <chmod perm="+x" type="file">
+      <fileset dir="${build.pkg.dir}/bin">
+        <include name="ant"/>
+        <include name="antRun"/>
+        <include name="*.pl"/>
+        <include name="*.py"/>
+      </fileset>
+    </chmod>
+    <exec executable="/usr/bin/pkgbuild">
+      <arg value="--root"/>
+      <arg value="${build.pkg.dir}"/>
+      <arg value="--identifier"/>
+      <arg value="org.apache.ant"/>
+      <arg value="--version"/>
+      <arg value="${project.version}"/>
+      <arg value="--install-location"/>
+      <arg value="/usr/local/ant"/>
+      <arg value="${dist.base.binaries}/${dist.name}.pkg"/>
     </exec>
   </target>
 
