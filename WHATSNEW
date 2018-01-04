@@ -53,6 +53,10 @@ Fixed bugs:
    suggesting the fix.
    Bugzilla Report 19516
 
+ * Fixed an issue where the content redirected from output/error
+   streams of a process, could end up being truncated.
+   Bugzilla Report 58833, 58451
+
 Other changes:
 --------------
 
