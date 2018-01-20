@@ -294,10 +294,10 @@
   </selector>
 
   <selector id="needs.xz">
-      <or>
-         <filename name="${optional.package}/xz/"/>
-         <filename name="${type.package}/optional/xz/"/>
-      </or>
+    <or>
+      <filename name="${optional.package}/xz/"/>
+      <filename name="${type.package}/optional/xz/"/>
+    </or>
   </selector>
 
   <selector id="ant.launcher">
@@ -345,7 +345,7 @@
     <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
   </patternset>
 
-  <!--tests that need an XML Schema-supporting parser to work-->
+  <!-- tests that need an XML Schema-supporting parser to work -->
   <selector id="needs.xmlschema">
     <or>
       <filename name="${optional.package}/SchemaValidateTest.*"/>
@@ -516,7 +516,7 @@
 
     <property name="build.compiler" value="modern"/>
 
-    <!--check for XSD support in the parser-->
+    <!-- check for XSD support in the parser -->
     <condition property="xmlschema.present">
       <or>
         <parsersupports feature="http://apache.org/xml/features/validation/schema"/>
@@ -530,7 +530,7 @@
          Prepare the build
        ===================================================================
   -->
-  <target name="prepare">
+  <target name="prepare" depends="check-optional-packages">
     <tstamp>
       <format property="year" pattern="yyyy"/>
     </tstamp>
@@ -544,7 +544,7 @@
          Build the code
        ===================================================================
   -->
-  <target name="build" depends="prepare,check-optional-packages"
+  <target name="build" depends="prepare"
           description="--> compiles the source code">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
@@ -1312,7 +1312,7 @@
     <bzip2 destfile="${dist.base.manual}/${dist.name}-manual.tar.bz2"
            src="${dist.base.manual}/${dist.name}-manual.tar"/>
     <xz destfile="${dist.base.manual}/${dist.name}-manual.tar.xz"
-           src="${dist.base.manual}/${dist.name}-manual.tar"/>
+        src="${dist.base.manual}/${dist.name}-manual.tar"/>
     <delete file="${dist.base.manual}/${dist.name}-manual.tar"/>
 
     <delete dir="${dist.name}"/>
@@ -1436,20 +1436,23 @@
          Creates the API documentation
        ===================================================================
   -->
-  <target name="check-javadoc">
+  <target name="check-javadoc" depends="prepare">
     <uptodate property="javadoc.notrequired"
-      targetfile="${build.javadocs}/packages.html">
+              targetfile="${build.javadocs}/packages.html">
       <srcfiles dir="${java.dir}" includes="**/*.java"/>
     </uptodate>
     <uptodate property="tests.javadoc.notrequired"
-      targetfile="${build.tests.javadocs}/packages.html">
+              targetfile="${build.tests.javadocs}/packages.html">
       <srcfiles dir="${src.junit}">
         <patternset refid="useful.tests"/>
       </srcfiles>
     </uptodate>
+    <condition property="javadoc.jaf.module" value="--add-modules java.activation" else="">
+      <isset property="jdk9+"/>
+    </condition>
   </target>
 
-  <target name="javadocs" depends="prepare,check-javadoc,check-optional-packages"
+  <target name="javadocs" depends="check-javadoc"
           description="--> creates the API documentation" unless="javadoc.notrequired">
     <mkdir dir="${build.javadocs}"/>
     <javadoc useexternalfile="yes"
@@ -1479,10 +1482,11 @@
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*"/>
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*"/>
       <classpath refid="tests-classpath"/>
+      <arg line="${javadoc.jaf.module}"/>
     </javadoc>
   </target>
 
-  <target name="test-javadocs" depends="prepare,check-javadoc" unless="tests.javadoc.notrequired"
+  <target name="test-javadocs" depends="check-javadoc" unless="tests.javadoc.notrequired"
           description="--> creates the API documentation for test utilities">
     <mkdir dir="${build.tests.javadocs}"/>
     <javadoc useexternalfile="yes"
@@ -1808,8 +1812,7 @@ ${antunit.reports}
           <exclude name="${taskdefs.package}/TestProcess.java"/>
           <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
 
-          <!-- only run these tests if their required libraries are
-               installed -->
+          <!-- only run these tests if their required libraries are installed -->
           <selector refid="conditional-patterns"/>
 
           <!-- tests excluded if the test is run in offline mode -->
