@@ -24,7 +24,6 @@
   <property file="${user.home}/.ant.properties"/>
   <property environment="env"/>
 
-
   <!--
        ===================================================================
          Set the properties that control names and versions
@@ -538,7 +537,6 @@
     </condition>
   </target>
 
-
   <!--
        ===================================================================
          Prepare the build
@@ -558,9 +556,8 @@
          Build the code
        ===================================================================
   -->
-  <target name="build"
-    depends="prepare,check-optional-packages"
-    description="--> compiles the source code">
+  <target name="build" depends="prepare,check-optional-packages"
+          description="--> compiles the source code">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.lib}"/>
@@ -636,9 +633,8 @@
          Create the all of the Apache Ant jars
        ===================================================================
   -->
-  <target name="jars"
-    depends="build"
-    description="--> creates the Apache Ant jars">
+  <target name="jars" depends="build"
+          description="--> creates the Apache Ant jars">
 
     <copy todir="${build.dir}">
       <fileset dir="${basedir}">
@@ -773,8 +769,7 @@
   </target>
 
   <!--   Creates jar of test utility classes -->
-  <target name="test-jar"
-          depends="compile-tests"
+  <target name="test-jar" depends="compile-tests"
           description="--> creates the Apache Ant Test Utilities jar">
 
     <fail unless="junit.present">
@@ -883,8 +878,7 @@
          Create the essential distribution that can run Apache Ant
        ===================================================================
   -->
-  <target name="dist-lite"
-          depends="jars,test-jar"
+  <target name="dist-lite" depends="jars,test-jar"
           description="--> creates a minimum distribution to run Apache Ant">
 
     <mkdir dir="${dist.dir}"/>
@@ -947,7 +941,6 @@
       <fileset dir="${build.javadocs}"/>
     </copy>
   </target>
-
 
   <macrodef name="checksums-mvn" description="only md5 and sha1 are needed for the maven directory structure">
     <element name="resources" implicit="true"/>
@@ -1060,9 +1053,7 @@
         <include name="${bootstrap.jar}"/>
       </fileset>
     </copy>
-
   </target>
-
 
   <!--
        ===================================================================
@@ -1074,7 +1065,6 @@
       <param name="dist.dir" value="${bootstrap.dir}"/>
     </antcall>
   </target>
-
 
   <!--
        ===================================================================
@@ -1379,8 +1369,7 @@
          Cleans everything
        ===================================================================
   -->
-  <target name="allclean"
-          depends="clean"
+  <target name="allclean" depends="clean"
           description="--> cleans up everything">
     <delete file="${bootstrap.dir}/bin/antRun"/>
     <delete file="${bootstrap.dir}/bin/antRun.bat"/>
@@ -1458,8 +1447,7 @@
     </javadoc>
   </target>
 
-  <target name="test-javadocs" depends="prepare,check-javadoc"
-          unless="tests.javadoc.notrequired"
+  <target name="test-javadocs" depends="prepare,check-javadoc" unless="tests.javadoc.notrequired"
           description="--> creates the API documentation for test utilities">
     <mkdir dir="${build.tests.javadocs}"/>
     <javadoc useexternalfile="yes"
@@ -1527,8 +1515,7 @@
 
   <target name="dump-info" depends="dump-sys-properties,run-which"/>
 
-  <target name="dump-sys-properties" unless="which.present"
-          depends="xml-check">
+  <target name="dump-sys-properties" depends="xml-check" unless="which.present">
     <echo message="java.vm.info=${java.vm.info}"/>
     <echo message="java.vm.name=${java.vm.name}"/>
     <echo message="java.vm.vendor=${java.vm.vendor}"/>
@@ -1542,13 +1529,11 @@
   </target>
 
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
-  <target name="xml-check" depends="check-optional-packages"
-          if="xalan.envcheck" unless="which.present">
+  <target name="xml-check" depends="check-optional-packages" if="xalan.envcheck" unless="which.present">
     <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
   </target>
 
-  <target name="run-which" depends="check-optional-packages"
-          if="which.present">
+  <target name="run-which" depends="check-optional-packages" if="which.present">
     <java classname="org.apache.env.Which" taskname="which" classpathref="classpath"/>
   </target>
 
@@ -1581,8 +1566,8 @@
     </condition>
   </target>
 
-  <target name="test" description="--> run unit tests and reports"
-          depends="junit-report,antunit-report,check-failed">
+  <target name="test"depends="junit-report,antunit-report,check-failed"
+          description="--> run unit tests and reports">
     <fail if="tests.failed" unless="ignore.tests.failed">Unit tests failed; see:
 ${build.junit.reports}
 ${antunit.reports}
@@ -1748,8 +1733,7 @@ ${antunit.reports}
 
   <target name="junit-tests" depends="junit-batch,junit-single-test"/>
 
-  <target name="junit-batch" depends="compile-tests,test-init"
-          if="junit.batch">
+  <target name="junit-batch" depends="compile-tests,test-init" if="junit.batch">
 
     <property name="junit.includes" value="**/*Test*"/>
     <property name="junit.excludes" value=""/>
@@ -1891,8 +1875,8 @@ ${antunit.reports}
     </test-junit>
   </target>
 
-  <target name="interactive-tests" description="--> runs interactive tests"
-          depends="compile-tests">
+  <target name="interactive-tests" depends="compile-tests"
+          description="--> runs interactive tests">
     <java classpathref="tests-runtime-classpath"
           classname="org.apache.tools.ant.taskdefs.TestProcess"
           fork="true"/>
@@ -1911,8 +1895,8 @@ ${antunit.reports}
       <echo>AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.</echo>
   </target>
 
-  <target name="antunit-tests" depends="build,test-init,-antunit-warn-location"
-          if="run.antunit" description="--> run the antunit tests">
+  <target name="antunit-tests" depends="build,test-init,-antunit-warn-location" if="run.antunit"
+          description="--> run the antunit tests">
     <condition property="antunit.includes" value="${antunit.testcase}"
                else="**/test.xml,**/*-test.xml">
       <isset property="antunit.testcase"/>
@@ -1980,10 +1964,8 @@ ${antunit.reports}
          Main target - runs dist-lite by default
        ===================================================================
   -->
-  <target name="main"
-          description="--> creates a minimum distribution in ./dist"
-          depends="dist-lite"/>
-
+  <target name="main" depends="dist-lite"
+          description="--> creates a minimum distribution in ./dist"/>
 
   <!--
        ===================================================================
@@ -1991,10 +1973,8 @@ ${antunit.reports}
                       the WiX toolset and the dotnet Antlib.
        ===================================================================
   -->
-  <target name="msi"
-          description="--> creates an MSI file for Ant, requires WiX and the dotnet Antlib"
-          depends="dist-internal"
-          xmlns:dn="antlib:org.apache.ant.dotnet">
+  <target name="msi" depends="dist-internal" xmlns:dn="antlib:org.apache.ant.dotnet"
+          description="--> creates an MSI file for Ant, requires WiX and the dotnet Antlib">
 
     <property name="msi.dir" value="${build.dir}"/>
     <property name="msi.name" value="${name}-${project.version}.msi"/>
