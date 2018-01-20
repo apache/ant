@@ -1566,7 +1566,7 @@
     </condition>
   </target>
 
-  <target name="test"depends="junit-report,antunit-report,check-failed"
+  <target name="test" depends="junit-report,antunit-report,check-failed"
           description="--> run unit tests and reports">
     <fail if="tests.failed" unless="ignore.tests.failed">Unit tests failed; see:
 ${build.junit.reports}
