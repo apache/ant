@@ -18,48 +18,13 @@
 <html>
 <head>
   <meta http-equiv="Content-Language" content="en-us">
+  <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
   <title>Subant Task</title>
 </head>
 
-<body bgcolor="#ffffff" text="#000000" link="#525D76"
-      alink="#525D76" vlink="#525D76">
-
-<table border="0" width="100%" cellspacing="4">
-
-  <!-- PAGE HEADER -->
-  <tr>
-    <td>
-      <table border="0" width="100%"><tr>
-          <td valign="bottom">
-            <font size="+3" face="arial,helvetica,sanserif"><strong>Subant Task</strong></font>
-            <br><font face="arial,helvetica,sanserif">Calls a given target for all defined sub-builds.</font>
-          </td>
-          <td>
-            <!-- PROJECT LOGO -->
-            <a href="http://ant.apache.org/">
-              <img src="../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0">
-            </a>
-          </td>
-      </tr></table>
-    </td>
-  </tr>
-
-  <!-- START RIGHT SIDE MAIN BODY -->
-  <tr>
-    <td  valign="top" align="left">
-
-          <!-- Applying task/description -->
-    <!-- Start Description -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="description">
-          <strong>Description</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
+<body>
+<h2>Subant Task</h2>
+<h3 id="description">Description</h3>
 <p>
             Calls a given target for all defined sub-builds.
             This is an extension
@@ -68,26 +33,20 @@
             <strong>This task must not be used outside of a
                 <code>target</code> if it invokes the same build file it is
                 part of.</strong>
-        </p>
-        <p><em>Since Apache Ant 1.6</em></p>
+</p>
+<p><em>Since Apache Ant 1.6</em></p>
 
-<p><code>subant</code> uses <code>ant</code> internally so many things
+<p>
+  <code>subant</code> uses <code>ant</code> internally so many things
   said in <a href="ant.html"><code>ant</code>'s manual page</a> apply
-  here as well.</p>
+  here as well.
+</p>
 
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <!-- Subsection heading -->
-      <tr><td bgcolor="#828DA6">
-          <font color="#ffffff" face="arial,helvetica.sanserif">
-                              <a name="Use with directories">
-          <strong>Use with directories</strong></a></font>
-      </td></tr>
-      <!-- Subsection body -->
-      <tr><td>
-        <p>
+<h3 id="Use with directories">Use with directories</h3>
+<p>
                 subant can be used with directory sets to execute a build from different directories.
                 2 different options are offered :
-            </p>
+</p>
 <ul>
                 <li>
                     to run the same build file <code>/somepath/otherpath/mybuild.xml</code>
@@ -96,381 +55,196 @@
                 <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
                     use the antfile attribute. The subant task does not set the base directory for you in this case, because you can specify it in each build file.
                 </li>
-            </ul>
+</ul>
 
-      </td></tr>
-    </table>
-
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Description -->
-
- <!-- Ignore -->
-
-
-
-    <!-- Start Attributes -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="attributes">
-          <strong>Parameters</strong></a></font>
-      </td></tr>
-      <tr><td><blockquote>
-        <table>
-          <tr>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
-        </td>
-          </tr>
-    <!-- Attribute Group -->
-
-    <!-- Attribute Group -->
-        <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">antfile</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Build file name, to use in conjunction with directories.<br> Defaults to "build.xml".<br> If <code>genericantfile</code> is set, this attribute is ignored.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="10">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">buildpath</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the buildpath to be used to find sub-projects.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Path</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">buildpathref</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Buildpath to use, by reference.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Reference</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">failonerror</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets whether to fail with a build exception on error, or go on.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">genericantfile</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Build file path, to use in conjunction with directories.<br> Use <code>genericantfile</code>, in order to run the same build file with different basedirs.<br> If this attribute is set, <code>antfile</code> is ignored.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">inheritall</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1"
-                        face="arial,helvetica,sanserif">Corresponds to
-                        <code>&lt;ant&gt;</code>'s
-                        <code>inheritall</code> attribute but defaults
-                        to false in this task..</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">inheritrefs</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritrefs</code> attribute.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">output</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Corresponds to <code>&lt;ant&gt;</code>'s <code>output</code> attribute.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">target</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"></font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">verbose</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-            Enable/ disable log messages showing when each sub-build path is entered/ exited.
-            The default value is false.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
-        </td>
-    </tr>
-
-
-        </table>
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Attributes -->
-
-    <!-- Start Elements -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="elements">
-          <strong>Parameters as nested elements</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>any filesystem based <a href="../Types/resources.html#collection">resource collection</a></strong></font>
-      </td></tr>
-      <tr><td><blockquote>
+<h3 id="attributes">Parameters</h3>
+<table>
+  <tr>
+    <td valign="top" align="left">
+      <b>Attribute</b>
+    </td>
+    <td valign="top" align="left">
+      <b>Description</b>
+    </td>
+    <td valign="top" align="left">
+      <b>Type</b>
+    </td>
+    <td valign="top" align="left">
+      <b>Requirement</b>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      antfile
+    </td>
+    <td valign="top" align="left">
+      Build file name, to use in conjunction with directories.<br> Defaults to "build.xml".<br> If <code>genericantfile</code> is set, this attribute is ignored.
+    </td>
+    <td valign="top" align="left">
+      String
+    </td>
+    <td valign="top" align="left" rowspan="10">
+      Optional
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      buildpath
+    </td>
+    <td valign="top" align="left">
+      Set the buildpath to be used to find sub-projects.
+    </td>
+    <td valign="top" align="left">
+      Path
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      buildpathref
+    </td>
+    <td valign="top" align="left">
+      Buildpath to use, by reference.
+    </td>
+    <td valign="top" align="left">
+      Reference
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      failonerror
+    </td>
+    <td valign="top" align="left">
+      Sets whether to fail with a build exception on error, or go on.
+    </td>
+    <td valign="top" align="left">
+      boolean
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      genericantfile
+    </td>
+    <td valign="top" align="left">
+      Build file path, to use in conjunction with directories.<br> Use <code>genericantfile</code>, in order to run the same build file with different basedirs.<br> If this attribute is set, <code>antfile</code> is ignored.
+    </td>
+    <td valign="top" align="left">
+      File
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      inheritall
+    </td>
+    <td valign="top" align="left">
+      Corresponds to
+        <code>&lt;ant&gt;</code>'s
+        <code>inheritall</code> attribute but defaults
+        to false in this task..
+    </td>
+    <td valign="top" align="left">
+      boolean
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      inheritrefs
+    </td>
+    <td valign="top" align="left">
+      Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritrefs</code> attribute.
+    </td>
+    <td valign="top" align="left">
+      boolean
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      output
+    </td>
+    <td valign="top" align="left">
+      Corresponds to <code>&lt;ant&gt;</code>'s <code>output</code> attribute.
+    </td>
+    <td valign="top" align="left">
+      String
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      target
+    </td>
+    <td valign="top" align="left">&nbsp;</td>
+    <td valign="top" align="left">
+      String
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      verbose
+    </td>
+    <td valign="top" align="left">
+        Enable/ disable log messages showing when each sub-build path is entered/ exited.
+        The default value is false.
+    </td>
+    <td valign="top" align="left">
+      boolean
+    </td>
+  </tr>
+</table>
+<h3 id="elements">Parameters as nested elements</h3>
+<h4>any filesystem based <a href="../Types/resources.html#collection">resource collection</a></h4>
         This includes <code>&lt;fileset&gt;</code>,
         <code>&lt;dirset&gt;</code> and <code>&lt;filelist&gt;</code>
         which are the nested resource collections supported prior
         to Ant 1.7.
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>dirset</strong> (org.apache.tools.ant.types.DirSet)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>filelist</strong> (org.apache.tools.ant.types.FileList)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>fileset</strong> (org.apache.tools.ant.types.FileSet)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>property</strong> (org.apache.tools.ant.taskdefs.Property)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.
-
-<p>When more than one nested <code>&lt;property&gt;</code> element
+<h4><strong>dirset</strong> (org.apache.tools.ant.types.DirSet)</h4>
+Adds a directory set to the implicit build path.
+<p>
+  <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
+</p>
+<h4><strong>filelist</strong> (org.apache.tools.ant.types.FileList)</h4>
+Adds an ordered file list to the implicit build path.
+<p>
+  <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>
+</p>
+<h4><strong>fileset</strong> (org.apache.tools.ant.types.FileSet)</h4>
+Adds a file set to the implicit build path.
+<p>
+  <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
+</p>
+<h4><strong>property</strong> (org.apache.tools.ant.taskdefs.Property)</h4>
+Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.
+<p>
+  When more than one nested <code>&lt;property&gt;</code> element
   would set a property of the same name, the one declared last will
   win.  This is for backwards compatibility reasons even so it is
   different from the way <code>&lt;property&gt;</code> tasks in build
-  files behave.</p>
-
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>propertyset</strong> (org.apache.tools.ant.types.PropertySet)</font>
-      </td></tr>
-      <tr><td><blockquote>
+  files behave.
+</p>
+<h4><strong>propertyset</strong> (org.apache.tools.ant.types.PropertySet)</h4>
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>buildpath</strong> (org.apache.tools.ant.types.Path)</font>
-      </td></tr>
-      <tr><td><blockquote>
+<h4><strong>buildpath</strong> (org.apache.tools.ant.types.Path)</h4>
         Creates a nested build path, and add it to the implicit build path.
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>buildpathelement</strong> (org.apache.tools.ant.types.Path.PathElement)</font>
-      </td></tr>
-      <tr><td><blockquote>
+<h4><strong>buildpathelement</strong> (org.apache.tools.ant.types.Path.PathElement)</h4>
         Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.
- <!-- Ignore -->
- <!-- Ignore -->
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-
-
-
-
-<!-- manually written -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>target</strong> (org.apache.tools.ant.taskdefs.Ant.TargetElement)</font>
-      </td></tr>
-      <tr><td><blockquote>
+<h4><strong>target</strong> (org.apache.tools.ant.taskdefs.Ant.TargetElement)</h4>
         You can specify multiple targets using nested <code>&lt;target&gt;</code> elements
         instead of using the target attribute.  These will be executed as if
         Ant had been invoked with a single target whose dependencies are the
         targets so specified, in the order specified.
- <!-- Ignore -->
- <!-- Ignore -->
-      <table border="1" cellpadding="2" cellspacing="0">
-        <tr>
-          <td valign="top"><b>Attribute</b></td>
-          <td valign="top"><b>Description</b></td>
-          <td align="center" valign="top"><b>Required</b></td>
-        </tr>
-        <tr>
-          <td valign="top">name</td>
-          <td valign="top">The name of the called target.</td>
-          <td valign="top" align="center">Yes</td>
-        </tr>
-      </table>
-      <p><em>since Ant 1.7</em>.</p>
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-<!-- manually written end -->
-
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Elements -->
-
-
-
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-          <font color="#ffffff" face="arial,helvetica.sanserif">
-                              <a name="examples">
-          <strong>Examples</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote style="">
-        <pre>
+	<table>
+          <tr>
+            <td valign="top"><b>Attribute</b></td>
+            <td valign="top"><b>Description</b></td>
+            <td align="center" valign="top"><b>Required</b></td>
+          </tr>
+          <tr>
+            <td valign="top">name</td>
+            <td valign="top">The name of the called target.</td>
+            <td valign="top" align="center">Yes</td>
+          </tr>
+	</table>
+<p><em>since Ant 1.7</em>.</p>
+<h3 id="examples">Examples</h3>
+<pre>
         &lt;project name="subant" default="subant1"&gt;
             &lt;property name="build.dir" value="subant.build"/&gt;
             &lt;target name="subant1"&gt;
@@ -481,12 +255,12 @@
                 &lt;/subant&gt;
             &lt;/target&gt;
         &lt;/project&gt;
-        </pre>
+</pre>
 <p>
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
             The property build.dir will have the value subant1.build in the ant projects called by subant.
-        </p>
+</p>
 <pre>
           &lt;subant target=""&gt;
               &lt;propertyset&gt;
@@ -495,27 +269,27 @@
               &lt;/propertyset&gt;
               &lt;fileset dir="." includes="*/build.xml"/&gt;
           &lt;/subant&gt;
-        </pre>
+</pre>
 <p>
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
             All properties whose name starts with "foo" are passed, their names are changed to start with "bar" instead
-        </p>
+</p>
 <pre>
           &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
               &lt;dirset dir="." includes="projects*"/&gt;
           &lt;/subant&gt;
-        </pre>
+</pre>
 <p>
             assuming the subdirs of the project dir are called projects1, projects2, projects3
             this snippet will execute the compile target of /opt/project/build1.xml,
             setting the basedir to projects1, projects2, projects3
-        </p>
-
-        <!-- manually written -->
-        <p>Now a little more complex - but useful - scenario. Assume that we have
-        a directory structure like this:</p>
-        <pre>
+</p>
+<p>
+  Now a little more complex - but useful - scenario. Assume that we have
+  a directory structure like this:
+</p>
+<pre>
         root
           |  common.xml
           |  build.xml
@@ -542,7 +316,6 @@
 
         <u><b>build.xml:</b></u><br>
         &lt;project&gt;
-
             &lt;macrodef name="iterate"&gt;
                 &lt;attribute name="target"/&gt;
                 &lt;sequential&gt;
@@ -564,45 +337,33 @@
         &lt;project name="modA"&gt;
             &lt;import file="../../common.xml"/&gt;
         &lt;/project&gt;
-        </pre>
+</pre>
 
-        <p>This results in very small buildfiles in the modules, maintainable
-        buildfile (common.xml) and a clear project structure. Additionally
-        the root buildfile is capable to run the whole build over all
-        modules.
-        </p>
+<p>
+  This results in very small buildfiles in the modules, maintainable
+  buildfile (common.xml) and a clear project structure. Additionally
+  the root buildfile is capable to run the whole build over all
+  modules.
+</p>
 
-        <pre>
+<pre>
         &lt;subant failonerror="false"&gt;
             &lt;fileset dir="." includes="**/build.xml" excludes="build.xml"/&gt;
             &lt;target name="clean"/&gt;
             &lt;target name="build"/&gt;
         &lt;/subant&gt;
-        </pre>
+</pre>
 
-        <p>Does a &quot;clean build&quot; for each subproject.</p>
-        <p><b>Hint:</b> because buildfiles are plain xml, you could generate the
-        masterbuildfile from the common buildfile by using a XSLT transformation:
-        </p>
+<p>Does a &quot;clean build&quot; for each subproject.</p>
+<p>
+  <b>Hint:</b> because buildfiles are plain xml, you could generate the
+  masterbuildfile from the common buildfile by using a XSLT transformation:
+</p>
 
-        <pre>
+<pre>
         &lt;xslt in=&quot;common.xml&quot;
               out=&quot;master.xml&quot;
-              style=&quot;${ant.home}/etc/common2master.xsl&quot;
-        /&gt;
-        </pre>
-
-        <!-- manually written -->
-
-      </blockquote></td></tr>
-
-    </table>
-
-    </td>
-  </tr>
-  <!-- END RIGHT SIDE MAIN BODY -->
-
-</table>
-
+              style=&quot;${ant.home}/etc/common2master.xsl&quot;/&gt;
+</pre>
 </body>
 </html>
