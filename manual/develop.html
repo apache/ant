@@ -466,6 +466,8 @@ implementing class name to the <code>default.properties</code> file in the
 <code>org.apache.tools.ant.taskdefs</code>
 package. Then you can use it as if it were a built-in task.</p>
 
+
+
 <hr>
 <h2><a name="buildevents">Build Events</a></h2>
 <p>Ant is capable of generating build events as it performs the tasks necessary to build a project.
@@ -521,6 +523,49 @@ been configured.</p>
   Started" and "Build Finished" events may occur on several threads
   simultaneously - for example while Ant is executing
   a <code>&lt;parallel&gt;</code> task.</p>
+
+
+
+
+
+<h3>Example</h3>
+Writing an adapter to your favourite log library is very easy.
+Just implent the BuildListener interface, instantiate your logger and delegate
+the message to that instance. <br>
+When starting your build provide your adapter class and the log library to the
+build classpath and activate your logger via <code>-listener</code> option as
+described above.
+
+<blockquote>
+<pre>
+public class MyLogAdapter implements BuildListener {
+
+    private MyLogger getLogger() {
+        final MyLogger log = MyLoggerFactory.getLogger(Project.class.getName());
+        return log;
+    }
+
+    @Override
+    public void buildStarted(final BuildEvent event) {
+        final MyLogger log = getLogger();
+        log.info("Build started.");
+    }
+
+    @Override
+    public void buildFinished(final BuildEvent event) {
+        final MyLogger logger = getLogger();
+        MyLogLevelEnum loglevel = ... // map event.getPriority() to enum via Project.MSG_* constants
+        boolean allOK = event.getException() == null;
+        String logmessage = ... // create log message using data of the event and the message invoked
+        logger.log(loglevel, logmessage);
+    }
+
+    // implement all methods in that way
+}
+</pre>
+</blockquote>
+
+
 
 <hr>
 <h2><a name="integration">Source code integration</a></h2>
