@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="war">War</a></h2>
+<h2 id="war">War</h2>
 <h3>Description</h3>
 <p>An extension of the <a href="jar.html">Jar</a> task with special
 treatment for files that should end up in the
@@ -46,7 +46,7 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     it is not optional by default. The task will fail if the file is not
     included, unless the <code>needxmlfile</code> attribute
     is set to <code>false</code>. The task
-    will warn if more than one web.xml file is added to the JAR  
+    will warn if more than one web.xml file is added to the JAR
     through the filesets.
 </p>
 
@@ -58,7 +58,7 @@ to avoid this behavior you must set the <code>duplicate</code> attribute
 to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -180,7 +180,7 @@ to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
   </tr>
   <tr>
     <td valign="top">duplicate</td>
-    <td valign="top">behavior when a duplicate file is found.  Valid values are &quot;add&quot;, &quot;preserve&quot;, and &quot;fail&quot;.  The default value is &quot;add&quot;.  </td>
+    <td valign="top">behavior when a duplicate file is found.  Valid values are &quot;add&quot;, &quot;preserve&quot;, and &quot;fail&quot;.  The default value is &quot;add&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -357,8 +357,6 @@ report.<br/>
 Winzip has an option allowing all uppercase names (which is off by default!).  It can be enabled by:
 Menu "Options" -> "Configuration",  "View" property/tab page, then "General" group box has an option called "Allow all uppercase file names".
 </p>
-
-
 
 </body>
 </html>

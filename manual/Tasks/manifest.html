@@ -24,16 +24,14 @@
 
 <body>
 
-<h2><a name="manifest">Manifest</a></h2>
+<h2 id="manifest">Manifest</h2>
 <h3>Description</h3>
 <p>Creates a manifest file.</p>
 
 <p>This task can be used to write a Manifest file, optionally
 replacing or updating an existing file.</p>
 
-
-
-<p>Manifests are processed according to the 
+<p>Manifests are processed according to the
 <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html">Jar
 file specification.</a>. Specifically, a manifest element consists of
 a set of attributes and sections. These sections in turn may contain
@@ -52,14 +50,14 @@ line.</p>
 
 <p>
   If you find that Ant generates manifests incompatible with your runtime, take
-  a manifest it has built, fix it up however you need and switch to using the &lt;zip&gt
+  a manifest it has built, fix it up however you need and switch to using the <a href="zip.html">zip</a>
   task to create the JAR, feeding in the hand-crafted manifest.
 </p>
 
 
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -104,10 +102,10 @@ line.</p>
 </table>
 
 <h3>Nested elements</h3>
-<h4><a name="attribute">attribute</a></h4>
+<h4 id="attribute">attribute</h4>
 <p>One attribute for the manifest file.  Those attributes that are
 not nested into a section will be added to the "Main" section.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -132,7 +130,7 @@ not nested into a section will be added to the "Main" section.</p>
 <p>A manifest section - you can nest <a
 href="#attribute">attribute</a> elements into sections.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -156,7 +154,7 @@ href="#attribute">attribute</a> elements into sections.</p>
       &lt;attribute name=&quot;Specification-Version&quot; value=&quot;${version}&quot;/&gt;
       &lt;attribute name=&quot;Specification-Vendor&quot; value=&quot;Example Organization&quot;/&gt;
       &lt;attribute name=&quot;Implementation-Title&quot; value=&quot;common&quot;/&gt;
-      &lt;attribute name=&quot;Implementation-Version&quot; value=&quot;${version} ${TODAY}&quot;/&gt; 
+      &lt;attribute name=&quot;Implementation-Version&quot; value=&quot;${version} ${TODAY}&quot;/&gt;
       &lt;attribute name=&quot;Implementation-Vendor&quot; value=&quot;Example Corp.&quot;/&gt;
     &lt;/section&gt;
     &lt;section name=&quot;common/class1.class&quot;&gt;
@@ -168,7 +166,7 @@ href="#attribute">attribute</a> elements into sections.</p>
 <p>Creates or replaces the file MANIFEST.MF.  Note that the Built-By
 attribute will take the value of the Ant property ${user.name}.  The
 same is true for the ${version} and ${TODAY} properties.  This example
-produces a MANIFEST.MF that contains 
+produces a MANIFEST.MF that contains
 <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/versioning/spec/versioning2.html#wp90779">package
 version identification</a> for the package <code>common</code>.</p>
 
@@ -191,7 +189,5 @@ Sealed: false
 
 </code></pre>
 
-
 </body>
 </html>
-

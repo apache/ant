@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="Condition">Condition</a></h2>
+<h2 id="condition">Condition</h2>
 <h3>Description</h3>
 <p>Sets a property if a certain condition holds true - this is a
 generalization of <a href="available.html">Available</a> and <a
@@ -36,7 +36,7 @@ attribute.</p>
 <p>Conditions are specified as <a href="#nested">nested elements</a>,
 you must specify exactly one condition.</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -62,7 +62,7 @@ you must specify exactly one condition.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
-<h3><a name="nested">Parameters specified as nested elements</a></h3>
+<h3 id="nested">Parameters specified as nested elements</h3>
 <p>All conditions to test are specified as nested elements, for a
 complete list see <a href="conditions.html">here</a>.</p>
 
@@ -83,10 +83,8 @@ classpath.</p>
   &lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
     &lt;and&gt;
       &lt;os family=&quot;mac&quot;/&gt;
-
       &lt;not&gt;
         &lt;os family=&quot;unix&quot;/&gt;
-
       &lt;/not&gt;
     &lt;/and&gt;
   &lt;/condition&gt;
@@ -98,13 +96,10 @@ in the Unix family as well.</p>
 <pre>
   &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
     &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot;/&gt;
-
   &lt;/condition&gt;
 </pre>
 <p>sets the property <code>isSunOSonSparc</code> if the current
 operating system is SunOS and if it is running on a sparc architecture.</p>
-
-
 
 </body>
 </html>

@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="checksum">Checksum</a></h2>
+<h2 id="checksum">Checksum</h2>
 <h3>Description</h3>
 <p>
 Generates checksum for files.  This task can also be used to
@@ -53,7 +53,7 @@ or set the <tt>fileext</tt> attribute. The names of common hashing algorithms ca
 </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -129,27 +129,27 @@ or set the <tt>fileext</tt> attribute. The names of common hashing algorithms ca
   <tr>
     <td valign="top">format</td>
     <td valign="top">Specifies the pattern to use as one of a
-    well-known format.  Supported values are 
-      <table border="1">
+    well-known format.  Supported values are
+      <table>
       <tr>
         <th>name</th>
         <th>pattern</th>
         <th>description</th>
       </tr>
       <tr>
-        <td>CHECKSUM </td>
+        <td>CHECKSUM</td>
         <td><tt>{0}</tt></td>
-        <td>only the checksum itself </td>
+        <td>only the checksum itself</td>
       </tr>
       <tr>
-        <td>MD5SUM </td>
+        <td>MD5SUM</td>
         <td><tt>{0} *{1}</tt></td>
         <td>the format of GNU textutils md5sum</td>
       </tr>
       <tr>
-        <td>SVF </td>
+        <td>SVF</td>
         <td><tt>MD5 ({1}) = {0}</tt></td>
-        <td>the format of BSDs md5 command </td>
+        <td>the format of BSDs md5 command</td>
       </tr>
       </table>
        <em>Since Ant 1.7.0</em>
@@ -256,14 +256,10 @@ Works like Example 4, but only sets isChecksumEqual to true, if the
 checksum matches - it will never be set to false.  This example
 demonstrates use with the Condition task.
 
-
 <h3>Note:</h3>
 When working with more than one file, if condition and/or verifyproperty is used,
 the result will be true only if the checksums matched correctly for all files being
 considered.
 
-
-
 </body>
 </html>
-

@@ -22,39 +22,39 @@
 </head>
 <body>
 
-<h2><a name="sql">Sql</a></h2>
+<h2 id="sql">Sql</h2>
 <h3>Description</h3>
-<p>Executes a series of SQL statements via JDBC to a database. Statements can 
-either be read in from a text file using the <i>src</i> attribute or from 
+<p>Executes a series of SQL statements via JDBC to a database. Statements can
+either be read in from a text file using the <i>src</i> attribute or from
 between the enclosing SQL tags.</p>
 
-<p>Multiple statements can be provided, separated by semicolons (or the 
-defined <i>delimiter</i>). Individual lines within the statements can be 
+<p>Multiple statements can be provided, separated by semicolons (or the
+defined <i>delimiter</i>). Individual lines within the statements can be
 commented using either --, // or REM at the start of the line.</p>
 
-<p>The <i>autocommit</i> attribute specifies whether auto-commit should be 
-turned on or off whilst executing the statements. If auto-commit is turned 
-on each statement will be executed and committed. If it is turned off the 
+<p>The <i>autocommit</i> attribute specifies whether auto-commit should be
+turned on or off whilst executing the statements. If auto-commit is turned
+on each statement will be executed and committed. If it is turned off the
 statements will all be executed as one transaction.</p>
 
-<p>The <i>onerror</i> attribute specifies how to proceed when an error occurs 
-during the execution of one of the statements. 
+<p>The <i>onerror</i> attribute specifies how to proceed when an error occurs
+during the execution of one of the statements.
 The possible values are: <b>continue</b> execution, only show the error;
 <b>stop</b> execution, log the error but don't fail the task
 and <b>abort</b> execution and transaction and fail task.</p>
 
 <p>
-<b>Proxies</b>. Some JDBC drivers (including the Oracle thin driver), 
+<b>Proxies</b>. Some JDBC drivers (including the Oracle thin driver),
     use the JVM's proxy settings to route their JDBC operations to the database.
-    Since Apache Ant1.7, Ant running on Java1.5 or later defaults to 
+    Since Apache Ant 1.7, Ant running on Java 5 or later defaults to
     <a href="../proxy.html">using
-    the proxy settings of the operating system</a>. 
+    the proxy settings of the operating system</a>.
     Accordingly, the OS proxy settings need to be valid, or Ant's proxy
     support disabled with <code>-noproxy</code> option.
 </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -93,7 +93,7 @@ and <b>abort</b> execution and transaction and fail task.</p>
 <tr>
   <td valign="top">outputencoding</td>
   <td valign="top">The encoding of the files holding
-    results.  <em>since 1.9.4</em</td>
+    results.  <em>since 1.9.4</em></td>
   <td align="center">No - defaults to default JVM encoding</td>
 </tr>
 <tr>
@@ -292,12 +292,12 @@ and <b>abort</b> execution and transaction and fail task.</p>
 
 <h3>Parameters specified as nested elements</h3>
 <h4>transaction</h4>
-<p>Use nested <code>&lt;transaction&gt;</code> 
+<p>Use nested <code>&lt;transaction&gt;</code>
 elements to specify multiple blocks of commands to the executed
 executed in the same connection but different transactions. This
 is particularly useful when there are multiple files to execute
 on the same schema.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -333,7 +333,7 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 <p>Use nested <code>&lt;connectionProperty&gt;</code> elements to
   specify additional JDBC properties that need to be set when
   connecting to the database.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -357,12 +357,11 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
     password=&quot;pass&quot;
-    src=&quot;data.sql&quot;
-/&gt;
+    src=&quot;data.sql&quot;/&gt;
 </pre></blockquote>
 
-<p>Connects to the database given in <i>url</i> as the sa user using the 
-org.database.jdbcDriver and executes the SQL statements contained within 
+<p>Connects to the database given in <i>url</i> as the sa user using the
+org.database.jdbcDriver and executes the SQL statements contained within
 the file data.sql</p>
 
 <blockquote><pre>&lt;sql
@@ -384,8 +383,7 @@ property <i>internal_logon</i> to the value <i>SYSDBA</i>.</p>
     driver=&quot;org.database.jdbcDriver&quot;
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
-    password=&quot;pass&quot;
-    &gt;
+    password=&quot;pass&quot;&gt;
 insert
 into table some_table
 values(1,2,3,4);
@@ -395,7 +393,7 @@ truncate table some_other_table;
 </pre></blockquote>
 
 <p>Connects to the database given in <i>url</i> as the sa
- user using the org.database.jdbcDriver and executes the two SQL statements 
+ user using the org.database.jdbcDriver and executes the two SQL statements
  inserting data into some_table and truncating some_other_table. Ant Properties
  in the nested text will not be expanded.</p>
 
@@ -408,8 +406,7 @@ or other special characters. For example:</p>
     driver=&quot;org.database.jdbcDriver&quot;
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
-    password=&quot;pass&quot;
-    &gt;&lt;![CDATA[
+    password=&quot;pass&quot;&gt;&lt;![CDATA[
 
 update some_table set column1 = column1 + 1 where column2 &lt; 42;
 
@@ -417,32 +414,30 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 </pre></blockquote>
 
 The following command turns property expansion in nested text on (it is off purely for backwards
-compatibility), then creates a new user in the HSQLDB database using Ant properties. 
+compatibility), then creates a new user in the HSQLDB database using Ant properties.
 
 <blockquote><pre>&lt;sql
     driver="org.hsqldb.jdbcDriver";
     url="jdbc:hsqldb:file:${database.dir}"
     userid="sa"
     password=""
-    expandProperties="true"
-    &gt;
+    expandProperties="true"&gt;
   &lt;transaction&gt;
     CREATE USER ${newuser} PASSWORD ${newpassword}
   &lt;/transaction&gt;
 &lt;/sql&gt;
 </pre></blockquote>
 
-
-<p>The following connects to the database given in url as the sa user using 
-the org.database.jdbcDriver and executes the SQL statements contained within 
-the files data1.sql, data2.sql and data3.sql and then executes the truncate 
+<p>The following connects to the database given in url as the sa user using
+the org.database.jdbcDriver and executes the SQL statements contained within
+the files data1.sql, data2.sql and data3.sql and then executes the truncate
 operation on <i>some_other_table</i>.</p>
 
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
-    password=&quot;pass&quot; &gt;
+    password=&quot;pass&quot;&gt;
   &lt;transaction  src=&quot;data1.sql&quot;/&gt;
   &lt;transaction  src=&quot;data2.sql&quot;/&gt;
   &lt;transaction  src=&quot;data3.sql&quot;/&gt;
@@ -473,9 +468,9 @@ run before <code>data2.sql</code>.</p>
 &lt;/sql&gt;
 </pre></blockquote>
 
-<p>The following connects to the database given in url as the sa user using the 
-org.database.jdbcDriver and executes the SQL statements contained within the 
-file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar 
+<p>The following connects to the database given in url as the sa user using the
+org.database.jdbcDriver and executes the SQL statements contained within the
+file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar
 as well as the system classpath for the driver class.</p>
 
 <blockquote><pre>&lt;sql
@@ -485,15 +480,14 @@ as well as the system classpath for the driver class.</p>
     password=&quot;pass&quot;
     src=&quot;data.sql&quot;
     print=&quot;yes&quot;
-    output=&quot;outputfile.txt&quot;
-    &gt;
+    output=&quot;outputfile.txt&quot;&gt;
 &lt;classpath&gt;
 	&lt;pathelement location=&quot;/some/jdbc.jar&quot;/&gt;
 &lt;/classpath&gt;
 &lt;/sql&gt;
 </pre></blockquote>
 
-<p>The following will only execute if the RDBMS is &quot;oracle&quot; and the version 
+<p>The following will only execute if the RDBMS is &quot;oracle&quot; and the version
 starts with &quot;8.1.&quot;</p>
 
 <blockquote><pre>&lt;sql
@@ -503,8 +497,7 @@ starts with &quot;8.1.&quot;</p>
     password=&quot;pass&quot;
     src=&quot;data.sql&quot;
     rdbms=&quot;oracle&quot;
-    version=&quot;8.1.&quot;
-    &gt;
+    version=&quot;8.1.&quot;&gt;
 insert
 into table some_table
 values(1,2,3,4);
@@ -512,7 +505,6 @@ values(1,2,3,4);
 truncate table some_other_table;
 &lt;/sql&gt;
 </pre></blockquote>
-
 
 </body>
 </html>

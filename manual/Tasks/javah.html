@@ -24,13 +24,13 @@
 
 <body>
 
-<h2><a name="javah">Javah</a></h2>
+<h2 id="javah">Javah</h2>
 <h3>Description</h3>
 <p>Generates JNI headers from a Java class.</p>
-<p> When this task executes, it will generate the C header and source files that
+<p>When this task executes, it will generate the C header and source files that
 are needed to implement native methods. JNI operates differently depending on
-whether <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javah.html">JDK1.2+</a>
-or <a href="http://java.sun.com/products/jdk/1.1/docs/tooldocs/win32/javah.html">pre-JDK1.2</a>
+whether <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javah.html">JDK 1.2+</a>
+or <a href="http://java.sun.com/products/jdk/1.1/docs/tooldocs/win32/javah.html">pre-1.2 JDK</a>
 systems are used.</p>
 
 <p>If you are building with Java 8 or above consider
@@ -39,12 +39,13 @@ systems are used.</p>
   generate the native header files with a single step.</p>
 
 <p><b>Note</b> the <code>javah</code> has been deprecated as of Java 9
-  and removed as of Java 10. Trying to use it with Java10 will
+  and removed as of Java 10. Trying to use it with Java 10 will
   fail.</p>
 
-<p>It is possible to use different compilers. This can be selected
-with the <code>implementation</code> attribute or a nested element.  <a
-name="implementationvalues">Here are the choices of the attribute</a>:</p>
+<p id="implementationvalues">It is possible to use different
+compilers. This can be selected with the <code>implementation</code>
+attribute or a nested element. Here are the choices of the
+attribute:</p>
 <ul>
   <li>default - the default compiler for the platform.</li>
   <li>sun (the standard compiler of the JDK)</li>
@@ -64,7 +65,7 @@ name="implementationvalues">Here are the choices of the attribute</a>:</p>
   breaking the amount of classes to compile into smaller chunks.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -88,13 +89,13 @@ name="implementationvalues">Here are the choices of the attribute</a>:</p>
   </tr>
   <tr>
     <td valign="top">force</td>
-    <td valign="top">specifies that output files should always be written (JDK1.2 only)</td>
+    <td valign="top">specifies that output files should always be written (JDK 1.2 only)</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">old</td>
-    <td valign="top">specifies that old JDK1.0-style header files should be generated
-      (otherwise output file contain JNI-style native method      function prototypes) (JDK1.2 only)</td>
+    <td valign="top">specifies that old JDK 1.0-style header files should be generated
+      (otherwise output file contain JNI-style native method function prototypes) (JDK 1.2 only)</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -143,7 +144,7 @@ specified like <a href="../using.html#arg">Command-line Arguments</a>
 but have an additional attribute that can be used to enable arguments
 only if a given compiler implementation will be used.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -201,7 +202,7 @@ only if a given compiler implementation will be used.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
-<p>makes a JNI header of the named class, using the JDK1.2 JNI model. Assuming
+<p>makes a JNI header of the named class, using the JDK 1.2 JNI model. Assuming
 the directory 'c' already exists, the file <tt>org_foo_bar_Wibble.h</tt>
 is created there. If this file already exists, it is left unchanged.</p>
 <pre>  &lt;javah outputFile=&quot;wibble.h&quot;&gt;
@@ -251,5 +252,4 @@ describe its progress.</p>
   nested elements of its own.</p>
 
 </body>
-
 </html>

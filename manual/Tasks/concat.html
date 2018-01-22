@@ -19,17 +19,17 @@
     <head>
       <meta http-equiv="Content-Language" content="en-us">
       <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
-<title>Concat</title>
+      <title>Concat</title>
     </head>
 
     <body>
 
-      <h2><a name="Concat">Concat</a></h2>
+      <h2 id="concat">Concat</h2>
 
       <h3>Description</h3>
 
       <p>
-        Concatenates one or more 
+        Concatenates one or more
         <a href="../Types/resources.html">resource</a>s
         to a single file or to the console. The destination
         file will be created if it does not exist unless the resource
@@ -38,7 +38,7 @@
 
       <p><strong>Since Apache Ant 1.7.1</strong>, this task can be used as a
         <a href="../Types/resources.html#collection">Resource Collection</a>
-        that will return exactly one 
+        that will return exactly one
         <a href="../Types/resources.html">resource</a>.
       </p>
 
@@ -51,7 +51,7 @@ Resource Collection</a>s are used to
 
       <h3>Parameters</h3>
 
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
 
         <tr>
           <td valign="top"><b>Attribute</b></td>
@@ -93,7 +93,7 @@ Resource Collection</a>s are used to
           <td valign="top">
             Specifies whether or not the file specified by 'destfile'
             should be written to even if it is newer than all source files.
-            <em>since Ant 1.8.2</em>.
+            <em>Since Ant 1.8.2</em>.
             Defaults to &quot;yes&quot;.
           </td>
           <td valign="top" align="center">No</td>
@@ -102,7 +102,7 @@ Resource Collection</a>s are used to
         <tr>
           <td valign="top">forceReadOnly</td>
           <td valign="top">Overwrite read-only destination
-            files.  <em>since Ant 1.8.2</em></td>
+            files.  <em>Since Ant 1.8.2</em></td>
           <td valign="top" align="center">No; defaults to false.</td>
         </tr>
 
@@ -121,7 +121,7 @@ Resource Collection</a>s are used to
           <td valign="top">outputencoding</td>
           <td valign="top">
             The encoding to use when writing the output file
-            <em>since Ant 1.6</em>.
+            <em>Since Ant 1.6</em>.
             Defaults to the value of the encoding attribute
             if given or the default JVM encoding otherwise.
           </td>
@@ -135,7 +135,7 @@ Resource Collection</a>s are used to
             a new line. If this attribute is &quot;yes&quot;
             a new line will be appended to the stream if
             the file did not end in a new line.
-            <em>since Ant 1.6</em>.
+            <em>Since Ant 1.6</em>.
             Defaults to &quot;no&quot;.
             This attribute does not apply to embedded text.
           </td>
@@ -146,7 +146,7 @@ Resource Collection</a>s are used to
           <td valign="top">
             Specifies what the end of line character are
             for use by the fixlastline attribute.
-            <em>since Ant 1.6</em>
+            <em>Since Ant 1.6</em>
             Valid values for this property are:
             <ul>
               <li>cr: a single CR</li>
@@ -167,7 +167,7 @@ Resource Collection</a>s are used to
         <tr>
           <td valign="top">binary</td>
           <td valign="top">
-            <em>since Ant 1.6.2</em>
+            <em>Since Ant 1.6.2</em>
             If this attribute is set to true, the task concatenates the files
             in a byte by byte fashion. If this attribute is false, concat will
             not normally work for binary files due to character encoding
@@ -221,7 +221,7 @@ Resource Collection</a>s are used to
         <p><em>since Ant 1.6</em>.</p>
       <p>Used to prepend or postpend text into the concatenated stream.</p>
       <p>The text may be in-line or be in a file.</p>
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
         <tr>
           <td valign="top"><b>Attribute</b></td>
           <td valign="top"><b>Description</b></td>
@@ -292,7 +292,7 @@ Resource Collection</a>s are used to
   &lt;/concat&gt;
       </pre>
 
-      <p><b>Concatenate a series of files, expanding ant properties</b></p>
+      <p><b>Concatenate a series of files, expanding Ant properties</b></p>
         <pre>
    &lt;concat destfile="${build.dir}/subs"&gt;
       &lt;path&gt;
@@ -330,8 +330,5 @@ Resource Collection</a>s are used to
    &lt;/concat&gt;
         </pre>
 
-      
-
     </body>
-
-  </html>
+</html>

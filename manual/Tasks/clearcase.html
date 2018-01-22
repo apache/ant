@@ -35,25 +35,25 @@ Sean Egan    (sean at cm-logic dot com)</p>
 <h1>ClearCase Support</h1>
 <h2>Table of Contents</h2>
 <ul>
-  <li><A href="#introduction">Introduction</a>
-  <li><A href="#cccheckin">CCCheckin</a>
-  <li><A href="#cccheckout">CCCheckout</a>
-  <li><A href="#ccuncheckout">CCUnCheckout</a>
-  <li><A href="#ccupdate">CCUpdate</a>
-  <li><A href="#ccmklbtype">CCMklbtype</a>
-  <li><A href="#ccmklabel">CCMklabel</a>
-  <li><A href="#ccrmtype">CCRmtype</a>
-  <li><A href="#cclock">CCLock</a>
-  <li><A href="#ccunlock">CCUnlock</a>
-  <li><A href="#ccmkbl">CCMkbl</a>
-  <li><A href="#ccmkattr">CCMkattr</a>
-  <li><A href="#ccmkdir">CCMkdir</a>
-  <li><A href="#ccmkelem">CCMkelem</a></li>
+  <li><a href="#introduction">Introduction</a>
+  <li><a href="#cccheckin">CCCheckin</a>
+  <li><a href="#cccheckout">CCCheckout</a>
+  <li><a href="#ccuncheckout">CCUnCheckout</a>
+  <li><a href="#ccupdate">CCUpdate</a>
+  <li><a href="#ccmklbtype">CCMklbtype</a>
+  <li><a href="#ccmklabel">CCMklabel</a>
+  <li><a href="#ccrmtype">CCRmtype</a>
+  <li><a href="#cclock">CCLock</a>
+  <li><a href="#ccunlock">CCUnlock</a>
+  <li><a href="#ccmkbl">CCMkbl</a>
+  <li><a href="#ccmkattr">CCMkattr</a>
+  <li><a href="#ccmkdir">CCMkdir</a>
+  <li><a href="#ccmkelem">CCMkelem</a></li>
 
 </ul>
 
-<hr>
-<h2><a name="introduction">Introduction</a></h2>
+<hr/>
+<h2 id="introduction">Introduction</h2>
 <p>Apache Ant provides several optional tasks for working with ClearCase. These tasks correspond to various
 ClearCase commands using the Cleartool program. The current tasks available for Ant correspond to only
 a few of the significant ClearCase commands.</p>
@@ -67,12 +67,12 @@ functionality that is specific to that ClearCase command.</p>
 </p>
 
 
-<hr>
-<h2><a name="cccheckin">CCCheckin</a></h2>
+<hr/>
+<h2 id="cccheckin">CCCheckin</h2>
 <h3>Description</h3>
 Task to perform a "cleartool checkin" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -135,12 +135,12 @@ Task to perform a "cleartool checkin" command to ClearCase.
 Comment text from the file <i>acomment.txt</i> is added to ClearCase as a comment.
 All warning messages are suppressed. The file is checked in even if it is
 <i>identical</i> to the original.</p>
-<hr>
-<h2><a name="cccheckout">CCCheckout</a></h2>
+<hr/>
+<h2 id="cccheckout">CCCheckout</h2>
 <h3>Description</h3>
 Task to perform a "cleartool checkout" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -197,13 +197,13 @@ Task to perform a "cleartool checkout" command to ClearCase.
   <tr>
     <td>notco</td>
     <td>Fail if it's already checked out to the current view. Set to false to ignore it.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -221,12 +221,12 @@ Task to perform a "cleartool checkout" command to ClearCase.
 It is checked out as <i>reserved</i> on branch called <i>abranch</i>. All
 warning messages are suppressed. A <i>Some comment text</i> is added to
 ClearCase as a comment.</p>
-<hr>
-<h2><a name="ccuncheckout">CCUnCheckout</a></h2>
+<hr/>
+<h2 id="ccuncheckout">CCUnCheckout</h2>
 <h3>Description</h3>
 Task to perform a UnCheckout command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -246,8 +246,8 @@ Task to perform a UnCheckout command to ClearCase.
   </tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true<br>
-    Since ant 1.6.1</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -260,12 +260,12 @@ Task to perform a UnCheckout command to ClearCase.
 </blockquote>
 <p>Does a ClearCase <i>uncheckout</i> on the file <i>c:/views/viewdir/afile</i>.
 A copy of the file called <i>c:/views/viewdir/afile.keep</i> is kept.</p>
-<hr>
-<h2><a name="ccupdate">CCUpdate</a></h2>
+<hr/>
+<h2 id="ccupdate">CCUpdate</h2>
 <h3>Description</h3>
 Task to perform an "cleartool update" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -314,7 +314,7 @@ Task to perform an "cleartool update" command to ClearCase.
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -333,15 +333,12 @@ Task to perform an "cleartool update" command to ClearCase.
 A graphical dialog will be displayed. The output will be logged to
 <i>log.log</i> and it will overwrite any hijacked files. The modified
 time will be set to the current time.</p>
-
-
-
-<hr>
-<h2><a name="ccmklbtype">CCMklbtype</a></h2>
+<hr/>
+<h2 id="ccmklbtype">CCMklbtype</h2>
 <h3>Description</h3>
 Task to perform a "mklbtype" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -369,7 +366,7 @@ Task to perform a "mklbtype" command to ClearCase.
   <tr>
   <tr>
     <td>ordinary</td>
-    <td>Either global or ordinary can be specified, not both. Creates a label type that can be used only in the current VOB. <B>Default</B></td>
+    <td>Either global or ordinary can be specified, not both. Creates a label type that can be used only in the current VOB. <b>Default</b></td>
     <td>No</td>
   <tr>
   <tr>
@@ -394,8 +391,8 @@ Task to perform a "mklbtype" command to ClearCase.
   <tr></tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true<br>
-    Since ant 1.6.1</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -411,14 +408,12 @@ Task to perform a "mklbtype" command to ClearCase.
 <p>Does a ClearCase <i>mklbtype</i> to create a label type named <i>VERSION_1</i>.
 It is created as <i>ordinary</i> so it is available only to the current VOB.
 The text <i>Development version 1</i> is added as a comment.</p>
-
-
-<hr>
-<h2><a name="ccmklabel">CCMklabel</a></h2>
+<hr/>
+<h2 id="ccmklabel">CCMklabel</h2>
 <h3>Description</h3>
 Task to perform a "mklabel" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -466,8 +461,8 @@ Task to perform a "mklabel" command to ClearCase.
   <tr></tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true<br>
-    Since ant 1.6.1</td>
+    <td>Throw an exception if the command fails. Default is true.<br>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -485,14 +480,12 @@ Task to perform a "mklabel" command to ClearCase.
 <p>Does a ClearCase <i>mklabel</i> on the file <i>c:/views/viewdir/afile</i> under
 the main branch for version 2 (<i>\main\2</i>). Text <i>Some comment text</i> is added
 as a comment. It will <i>recurse</i> all subdirectories.
-
-
-<hr>
-<h2><a name="ccrmtype">CCRmtype</a></h2>
+<hr/>
+<h2 id="ccrmtype">CCRmtype</h2>
 <h3>Description</h3>
 Task to perform a "rmtype" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -501,30 +494,41 @@ Task to perform a "rmtype" command to ClearCase.
   <tr>
     <td>typekind</td>
     <td>The kind of type to create. Valid types are:
-      <table border="0" width="40%">
+      <table>
         <tr>
-          <td width="15%"> </td>
-          <td><b>attype</b><br>
-              <b>brtype</b><br>
-              <b>eltype</b><br>
-              <b>hltype</b><br>
-              <b>lbtype</b><br>
-              <b>trtype</b>
-          </td>
-          <td>- <br>
-              - <br>
-              - <br>
-              - <br>
-              - <br>
-              -
-          </td>
-          <td>attribute type<br>
-              branch type<br>
-              element type<br>
-              hyperlink type<br>
-              label type<br>
-              trigger type
-          </td>
+          <td>Kind</td>
+          <td>&nbsp;</td>
+          <td>Description</td>
+        </tr>
+        <tr>
+          <td><b>attype</b></td>
+          <td>-</td>
+          <td>attribute type</td>
+        </tr>
+        <tr>
+          <td><b>brtype</b></td>
+          <td>-</td>
+          <td>branch type</td>
+        </tr>
+        <tr>
+          <td><b>eltype</b></td>
+          <td>-</td>
+          <td>element type</td>
+        </tr>
+        <tr>
+          <td><b>hltype</b></td>
+          <td>-</td>
+          <td>hyperlink type</td>
+        </tr>
+        <tr>
+          <td><b>lbtype</b></td>
+          <td>-</td>
+          <td>label type</td>
+        </tr>
+        <tr>
+          <td><b>trtype</b></td>
+          <td>-</td>
+          <td>trigger type</td>
         </tr>
       </table>
     </td>
@@ -558,7 +562,7 @@ Task to perform a "rmtype" command to ClearCase.
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 </table>
@@ -575,13 +579,12 @@ Task to perform a "rmtype" command to ClearCase.
 <p>Does a ClearCase <i>rmtype</i> to remove a label type (<i>lbtype</i>) named <i>VERSION_1</i>.
 Comment text from the file <i>acomment.txt</i> is added as a comment. All instances of the type
 are removed, including the type object itself.</p>
-<hr>
-
-<h2><a name="cclock">CCLock</a></h2>
+<hr/>
+<h2 id="cclock">CCLock</h2>
 <h3>Description</h3>
 Task to perform a "cleartool lock" command to ClearCase.
 <h3>Parameters</h3>
- <table border="1" cellpadding="2" cellspacing="0">
+ <table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -619,13 +622,13 @@ Task to perform a "cleartool lock" command to ClearCase.
    <tr>
       <td>objsel</td>
       <td>Specifies the object(s) to be locked.<br>
-      Since ant 1.6.1</td>
+      <em>Since Ant 1.6.1</em></td>
       <td>No</td>
    <tr>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 
@@ -634,18 +637,16 @@ Task to perform a "cleartool lock" command to ClearCase.
 <blockquote>
 <pre>
 &lt;cclock
-    objsel="stream:Application_Integration@\MyProject_PVOB"
-    /&gt;
+    objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;
 </pre>
 </blockquote>
 <p>Does a ClearCase <i>lock</i> on the object <i>stream:Application_Integration@\MyProject_PVOB</i>.</p>
 <hr>
-
-<h2><a name="ccunlock">CCUnlock</a></h2>
+<h2 id="ccunlock">CCUnlock</h2>
 <h3>Description</h3>
 Task to perform a "cleartool unlock" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -668,13 +669,13 @@ Task to perform a "cleartool unlock" command to ClearCase.
    <tr>
       <td>objsel</td>
       <td>Specifies the object(s) to be unlocked.<br>
-      Since ant 1.6.1</td>
+      <em>Since Ant 1.6.1</em></td>
       <td>No</td>
    <tr>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
 
@@ -683,18 +684,16 @@ Task to perform a "cleartool unlock" command to ClearCase.
 <blockquote>
 <pre>
 &lt;ccunlock
-    objsel="stream:Application_Integration@\MyProject_PVOB"
-    /&gt;
+    objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;
 </pre>
 </blockquote>
 <p>Does a ClearCase <i>unlock</i> on the object <i>stream:Application_Integration@\MyProject_PVOB</i>.</p>
 <hr>
-
-<h2><a name="ccmkbl">CCMkbl</a></h2>
+<h2 id="ccmkbl">CCMkbl</h2>
 <h3>Description</h3>
 Task to perform a "cleartool mkbl" command to ClearCase.
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -741,7 +740,7 @@ previous baseline.</td>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    Since ant 1.6.1</td>
+    <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
  </table>
@@ -752,21 +751,19 @@ previous baseline.</td>
     baselinerootname="Application_Baseline_AUTO"
     identical="yes"
     full="no"
-    viewpath="v:\ApplicationCC"
-    /&gt;
+    viewpath="v:\ApplicationCC"/&gt;
 </pre>
 </blockquote>
 <p>Does a ClearCase <i>mkbl</i> on the Integration view at <i>v:\ApplicationCC</i>
 even if it is <i>identical</i> to a previous baseline. The new baseline with be
 incremental and named "Application_Baseline_AUTO".</p>
 <hr>
-
-<h2><a name="ccmkattr">CCMkattr</a></h2>
+<h2 id="ccmkattr">CCMkattr</h2>
 <h3>Description</h3>
 Task to perform a &quot;cleartool mkattr&quot; command to ClearCase.<br>
-Since ant 1.6.1
+<em>Since Ant 1.6.1</em>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -823,20 +820,18 @@ Since ant 1.6.1
 <pre>
 &lt;ccmkattr viewpath=&quot;c:/views/viewdir/afile&quot;
     typename=&quot;BugFix&quot;
-    typevalue=&quot;34445&quot;
-    /&gt;
+    typevalue=&quot;34445&quot;/&gt;
 </pre>
 </blockquote>
 <p>Does a ClearCase <i>mkattr</i> on the file <i>c:/views/viewdir/afile</i> and
 attaches the attribute <i>BugFix</i> with a value of <i>34445</i> to it.</p>
-<hr>
-
-<h2><a name="ccmkdir">CCMkdir</a></h2>
+<hr/>
+<h2 id="ccmkdir">CCMkdir</h2>
 <h3>Description</h3>
 Task to perform a &quot;cleartool mkdir&quot; command to ClearCase.<br>
-Since ant 1.6.1
+<em>Since Ant 1.6.1</em>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -878,14 +873,13 @@ Since ant 1.6.1
 </blockquote>
 <p>Does a ClearCase <i>mkdir</i> on the dir <i>c:/views/viewdir/adir</i> and
 does not automatically check it out.</p>
-<hr>
-
-<h2><a name="ccmkelem">CCMkelem</a></h2>
+<hr/>
+<h2 id="ccmkelem">CCMkelem</h2>
 <h3>Description</h3>
 Task to perform a &quot;cleartool mkelem&quot; command to ClearCase.<br>
-Since ant 1.6.1
+<em>Since Ant 1.6.1</em>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>

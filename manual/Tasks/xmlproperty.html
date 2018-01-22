@@ -22,7 +22,7 @@
 
 <body>
 
-<h2><a name="xmlproperty">XmlProperty</a></h2>
+<h2 id="xmlproperty">XmlProperty</h2>
 <h3>Description</h3>
 <p>
 Loads property values from a well-formed xml file. There are no other restrictions
@@ -45,9 +45,7 @@ does <em>no</em> processing of the input.  In particular, unlike the
 <a href="property.html">Property task</a>, property references
 (i.e., <samp>${foo}</samp>) are not resolved.
 <p>
-<a name="semanticAttributes">
-<h3>Semantic Attributes</h3>
-</a>
+<h3 id="semanticAttributes">Semantic Attributes</h3>
 Input processing can be enabled by using the <b>semanticAttributes</b>
 attribute.  If this attribute is set to <i>true</i> (its default is
 <i>false</i>), the following processing occurs as the input XML file
@@ -75,6 +73,7 @@ is loaded:
 <p>
 For example, with semantic attribute processing enabled, this XML property
 file:
+</p>
 <pre>
   &lt;root&gt;
     &lt;properties&gt;
@@ -89,10 +88,8 @@ is roughly equivalent to the following fragments in a build.xml file:
   &lt;property name="root.properties.quux" value="${root.properties.foo}"/&gt;
 </pre>
 
-</p>
-
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -144,7 +141,7 @@ is roughly equivalent to the following fragments in a build.xml file:
     <td valign="top">rootDirectory</td>
     <td valign="top">The directory to use for resolving file references. Ignored
                      if <i>semanticAttributes</i> is not set to <i>true</i>.</td>
-    <td valign="top" align="center">No, default is <i>${basedir}</i>.</td>
+    <td valign="top" align="center">No, default is <code>${basedir}</code>.</td>
   </tr>
   <tr>
     <td valign="top">delimiter</td>
@@ -153,7 +150,7 @@ is roughly equivalent to the following fragments in a build.xml file:
   </tr>
 </table>
 
-<h3><a name="nested">Nested Elements</a></h3>
+<h3 id="nested">Nested Elements</h3>
 <h4>xmlcatalog</h4>
 <p>The <a href="../Types/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a>
 element is used to perform entity resolution.</p>
@@ -163,9 +160,7 @@ resource collection</h4>
 
 <p>The specified resource will be used as input.</p>
 
-<a name="examples">
-<h3>Examples</h3>
-</a>
+<h3 id="examples">Examples</h3>
 
 <h4>Non-semantic Attributes</h4>
 
@@ -282,8 +277,6 @@ is equivalent to the following entries in a build file:
     &lt;pathelement path="${run-time.jars}"/&gt;
   &lt;/path&gt;
 </pre>
-
-
 
 </body>
 </html>

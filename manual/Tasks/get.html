@@ -24,22 +24,22 @@
 
 <body>
 
-<h2><a name="get">Get</a></h2>
+<h2 id="get">Get</h2>
 <h3>Description</h3>
 <p>Gets files from URLs.  When the verbose option is &quot;on&quot;, this task
 displays a '.' for every 100 Kb retrieved. Any URL schema supported by
-the runtime is valid here, including http:, ftp: and jar:; 
+the runtime is valid here, including http:, ftp: and jar:;
 </p>
 The <i>usetimestamp</i> option enables you to control downloads so that the remote file is
-only fetched if newer than the local copy. If there is no local copy, the download always takes 
-place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp. 
-NB: This timestamp facility only works on downloads using the HTTP protocol. 
+only fetched if newer than the local copy. If there is no local copy, the download always takes
+place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp.
+NB: This timestamp facility only works on downloads using the HTTP protocol.
 <p>
 A username and password can be specified, in which case basic 'slightly encoded
 plain text' authentication is used. This is only secure over an HTTPS link.
 </p>
 
-<p><b>Proxies</b>. Since Apache Ant 1.7.0, Ant running on Java1.5 or later can
+<p><b>Proxies</b>. Since Apache Ant 1.7.0, Ant running on Java 5 or later can
   <a href="../proxy.html">use the proxy settings of the operating
     system</a> if enabled with the
   <code>-autoproxy</code> option. There is also the
@@ -47,9 +47,9 @@ plain text' authentication is used. This is only secure over an HTTPS link.
   for earlier Java versions. With proxies turned
   on, <code>&lt;get&gt;</code> requests against localhost may not work
   as expected, if the request is relayed to the proxy.</p>
- 
+
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -91,12 +91,12 @@ plain text' authentication is used. This is only secure over an HTTPS link.
     <td valign="top">username</td>
     <td valign="top">username for 'BASIC' http authentication</td>
     <td align="center" valign="top">if password is set</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">password</td>
-    <td valign="top">password: required </td>
+    <td valign="top">password: required</td>
     <td align="center" valign="top">if username is set</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">maxtime</td>
     <td valign="top">Maximum time in seconds a single download may take,
@@ -104,7 +104,7 @@ plain text' authentication is used. This is only secure over an HTTPS link.
       error.  <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No: default 0 which means no
       maximum time</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">retries</td>
     <td valign="top">The number of attempts to make for opening the URI.<br/>
@@ -172,10 +172,9 @@ plain text' authentication is used. This is only secure over an HTTPS link.
 
 <h4>header</h4>
 <p>Any arbitrary number of HTTP headers can be added to a request.<br/>
-  The attributes of a nested <pre>&lt;header/&gt; </pre> node are as follow:
-<p></p>
+  The attributes of a nested <code>&lt;header/&gt;</code> node are as follows:</p>
 
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -197,18 +196,18 @@ plain text' authentication is used. This is only secure over an HTTPS link.
 <pre>  &lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 <p>Gets the index page of http://ant.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
 
-<pre>  &lt;get src=&quot;http://www.apache.org/dist/ant/KEYS&quot; 
-    dest=&quot;KEYS&quot; 
+<pre>  &lt;get src=&quot;http://www.apache.org/dist/ant/KEYS&quot;
+    dest=&quot;KEYS&quot;
     verbose=&quot;true&quot;
     usetimestamp=&quot;true&quot;/&gt;</pre>
 <p>
 Gets the PGP keys of Ant's (current and past) release managers, if the local copy
-is missing or out of date. Uses the verbose option 
+is missing or out of date. Uses the verbose option
 for progress information.
 </p>
 
-<pre>  &lt;get src=&quot;https://insecure-bank.org/statement/user=1214&quot; 
-    dest=&quot;statement.html&quot; 
+<pre>  &lt;get src=&quot;https://insecure-bank.org/statement/user=1214&quot;
+    dest=&quot;statement.html&quot;
     username="1214";
     password="secret"/&gt;</pre>
 <p>
@@ -253,7 +252,7 @@ the <a href="input.html">input task</a> to query for a password.</p>
 
 <pre>
 &lt;get dest=&quot;downloads&quot;&gt;
-  &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt; 
+  &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt;
   &lt;url url=&quot;http://ant.apache.org/faq.html&quot;/&gt;
 &lt;/get&gt;
 </pre>
@@ -272,4 +271,3 @@ the <a href="input.html">input task</a> to query for a password.</p>
   necessary.</p>
 </body>
 </html>
-

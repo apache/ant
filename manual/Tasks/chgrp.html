@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="Chgrp">Chgrp</a></h2>
+<h2 id="chgrp">Chgrp</h2>
 <p><em>Since Apache Ant 1.6.</em></p>
 <h3>Description</h3>
 
@@ -33,10 +33,10 @@ directories. Right now it has effect only under Unix.  The group
 attribute is equivalent to the corresponding argument for the chgrp
 command.</p>
 
-<p><a href="../Types/fileset.html">FileSet</a>s, 
+<p><a href="../Types/fileset.html">FileSet</a>s,
 <a href="../Types/dirset.html">DirSet</a>s or <a
 href="../Types/filelist.html">FileList</a>s can be specified using
-nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
+nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and
 <code>&lt;filelist&gt;</code> elements.</p>
 
 <p>Starting with Ant 1.7, this task supports arbitrary <a
@@ -61,17 +61,17 @@ could use as initial value for these experiments.</p>
   value to your current os.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the file or directory of which the group must be
     changed.</td>
-    <td valign="top" valign="middle">Yes, unless nested
+    <td valign="top" align="center">Yes, unless nested
       <code>&lt;fileset|filelist|dirset&gt;</code>
       elements are specified</td>
   </tr>
@@ -153,7 +153,7 @@ belong to the coders group on a UNIX system.</p>
 </pre>
 </blockquote>
 <p>makes all files below <code>shared/sources1</code> (except those
-below any directory named trial) belong to the coders group on a UNIX 
+below any directory named trial) belong to the coders group on a UNIX
 system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 group.</p>
@@ -172,14 +172,10 @@ group.</p>
 </pre>
 </blockquote>
 
-<p>makes all <code>.test.jsp</code>, and <code>.new</code> files belong to 
-group webdev. Directories beginning with <code>test_</code> also will belong 
+<p>makes all <code>.test.jsp</code>, and <code>.new</code> files belong to
+group webdev. Directories beginning with <code>test_</code> also will belong
 to webdev, but if there is a directory that ends in <code>.new</code> or a file
 that begins with <code>test_</code> it will be unaffected.</p>
 
-
-
-
 </body>
 </html>
-

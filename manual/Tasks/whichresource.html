@@ -14,19 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-    
+
 <html>
   <head>
     <meta http-equiv="Content-Language" content="en-us">
-      <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
-        <title>Whichresource Task</title>
-      </link>
-    </meta>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+    <title>Whichresource Task</title>
   </head>
 
-
   <body>
-    <h2><a name="whichresource">Whichresource</a></h2>
+    <h2 id="whichresource">Whichresource</h2>
     <h3>Description</h3>
     <p>
       Find a class or resource on the supplied classpath, or the
@@ -38,7 +35,7 @@
   &lt;whichresource resource="/log4j.properties" property="log4j.url" &gt;
 </pre></blockquote>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -116,5 +113,5 @@
   &lt;/whichresource&gt;
   &lt;echo&gt;${ant-contrib.antlib.location}&lt;/echo&gt;
 </pre></blockquote>
-  </body>
+</body>
 </html>

@@ -24,10 +24,10 @@
 
 <body>
 
-<h2><a name="changelog">CvsChangeLog</a></h2>
+<h2 id="changelog">CvsChangeLog</h2>
 <h3>Description</h3>
 <p>Generates an XML-formatted report file of the change logs recorded in a
-<a href="http://www.nongnu.org/cvs/" target="_top">CVS</a> repository. </p>
+<a href="http://www.nongnu.org/cvs/" target="_top">CVS</a> repository.</p>
 <p><b>Important:</b> This task needs &quot;<code>cvs</code>&quot; on the path. If it isn't, you will get
 an error (such as error <code>2</code> on windows). If <code>&lt;cvs&gt;</code> doesn't work, try to execute <code>cvs.exe</code>
 from the command line in the target directory in which you are working.
@@ -37,7 +37,7 @@ for certain other cvs clients - like CVSNT for example - and some
 operation may fail when using such an incompatible client.
 </p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -129,7 +129,7 @@ operation may fail when using such an incompatible client.
     <td valign="top">remote</td>
     <td valign="top">If set to true, works against the repository
       (using rlog) without a working copy.  Default is
-      false.  <em>Since Ant 1.8.0</em></td>
+      false. <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -137,7 +137,7 @@ operation may fail when using such an incompatible client.
     <td valign="top">The start of a tag range. If endTag is also
       specified, they must both be on the same branch. If endTag is not
       specified, the end of the range will be the latest on the same
-      branch on which startTag lives.  <em>Since Ant 1.8.0</em></td>
+      branch on which startTag lives. <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -145,14 +145,13 @@ operation may fail when using such an incompatible client.
     <td valign="top">The end of a tag range. If startTag is also
      specified, they must both be on the same branch. If startTag is
      not specified, the start of the range will be the top of the
-     branch on which endTag lives.</td>  included in the report.
-    <em>Since Ant 1.8.0</em></td>
+     branch on which endTag lives. <em>Since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
-<h4><a name="user">user</a></h4>
+<h4 id="user">user</h4>
 <p>The nested <code>&lt;user&gt;</code> element allows you to specify a
 mapping between a user ID as it appears on the CVS server and a name to
 include in the formatted report.
@@ -161,7 +160,7 @@ Anytime the specified user ID has made a change in the repository, the
 the name specified in <code>displayname</code> rather than the user ID.
 </p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -186,7 +185,7 @@ the name specified in <code>displayname</code> rather than the user ID.
   modules specified using this attribute can contain spaces in their
   name.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -201,8 +200,7 @@ the name specified in <code>displayname</code> rather than the user ID.
 
 <h3>Examples</h3>
 <pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
-                destfile=&quot;changelog.xml&quot;
-  /&gt;</pre>
+                destfile=&quot;changelog.xml&quot;/&gt;</pre>
 
 <p>Generates a change log report for all the changes that have been made
 under the <code>dve/network</code> directory.
@@ -210,8 +208,7 @@ It writes these changes into the file <code>changelog.xml</code>.</p>
 
 <pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
                 destfile=&quot;changelog.xml&quot;
-                daysinpast=&quot;10&quot;
-  /&gt;</pre>
+                daysinpast=&quot;10&quot;/&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
 under the <code>dve/network</code> directory in the past 10 days.
@@ -220,8 +217,7 @@ It writes these changes into the file <code>changelog.xml</code>.</p>
 <pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
                 destfile=&quot;changelog.xml&quot;
                 start=&quot;20 Feb 2002&quot;
-                end=&quot;20 Mar 2002&quot;
-  /&gt;</pre>
+                end=&quot;20 Mar 2002&quot;/&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
 between February 20, 2002 and March 20, 2002
@@ -230,8 +226,7 @@ It writes these changes into the file <code>changelog.xml</code>.</p>
 
 <pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
                 destfile=&quot;changelog.xml&quot;
-                start=&quot;20 Feb 2002&quot;
-  /&gt;</pre>
+                start=&quot;20 Feb 2002&quot;/&gt;</pre>
 
 <p>Generates a change log report for any changes that were made
 after February 20, 2002 under the <code>dve/network</code> directory.
@@ -254,13 +249,13 @@ It writes these changes into the file <code>changelog.xml</code>.</p>
                 destfile=&quot;changelogant.xml&quot; tag=&quot;ANT_16_BRANCH&quot;/&gt;
 </pre>
 <h4>Generate Report</h4>
-<p>Ant includes a basic XSLT stylesheet that you can use to generate 
+<p>Ant includes a basic XSLT stylesheet that you can use to generate
 a HTML report based on the xml output. The following example illustrates
 how to generate a HTML report from the XML report.</p>
 
 <pre>
-        &lt;style in="changelog.xml" 
-               out="changelog.html" 
+        &lt;style in="changelog.xml"
+               out="changelog.html"
                style="${ant.home}/etc/changelog.xsl"&gt;
           &lt;param name="title" expression="Ant ChangeLog"/&gt;
           &lt;param name="module" expression="ant"/&gt;
@@ -287,8 +282,5 @@ This allows templates to be stored inside jar]]&gt;&lt;/msg&gt;
 &lt;/changelog&gt;
 </pre>
 
-
-
 </body>
 </html>
-

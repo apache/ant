@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="property">Property</a></h2>
+<h2 id="property">Property</h2>
 <h3>Description</h3>
 <p>Sets a <a href="../using.html#properties">property</a>
 (by name and value), or set of properties (from file or
@@ -60,11 +60,11 @@ This also holds for properties loaded from a property file.</p>
 href="../properties.html#built-in-props">here</a>.</p>
 <p>Since Apache Ant 1.8.0 it is possible to load properties defined in xml
 according to <a href="http://java.sun.com/dtd/properties.dtd">Suns DTD</a>,
-if Java5+ is present. For this the name of the file, resource or url has 
+if Java 5+ is present. For this the name of the file, resource or url has
 to end with <tt>.xml</tt>.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -177,7 +177,7 @@ SYSTEM).
 </p>
 
 <h4>Any OS except OpenVMS</h4>
-<p>Starting with Ant 1.8.2 if Ant detects it is running of a Java 1.5
+<p>Starting with Ant 1.8.2 if Ant detects it is running of a Java 5
   VM (or better) Ant will use <code>System.getenv</code> rather than
   its own OS dependent native implementation.  For some OSes this
   causes minor differences when compared to older versions of Ant.
@@ -288,58 +288,56 @@ deploy.port=8080
 deploy.url=http://${deploy.server}:${deploy.port}/
 </pre>
 
-
-<a name="notes-env"></a>
-<h3>Notes about environment variables</h3>
+<h3 id="notes-env">Notes about environment variables</h3>
 <p>
-  Ant runs on Java 1.2 therefore it cannot use Java5 features for accessing environment
+  Ant runs on Java 1.2 therefore it cannot use Java 5 features for accessing environment
   variables. So it starts a command in a new process which prints the environment variables,
-  analyzes the output and creates the properties. <br>
+  analyzes the output and creates the properties.<br>
   There are commands for the following operating systems implemented in
   <a href="https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;hb=24e5a0e881dba01a6f012c4a271b743946412a0d">
   Execute.java</a> (method <tt>getProcEnvCommand()</tt>):
+</p>
   <table>
     <tr>
       <th>OS</th>
       <th>command</th>
     </tr>
     <tr>
-      <td> os/2 </td>
-      <td> cmd /c set </td>
+      <td>os/2</td>
+      <td>cmd /c set</td>
     </tr>
     <tr>
-      <td colspan="2"> windows </td>
+      <td colspan="2"> windows</td>
     </tr>
     <tr>
-      <td> * win9x </td>
-      <td> command.com /c set </td>
+      <td>* win9x</td>
+      <td>command.com /c set</td>
     </tr>
     <tr>
-      <td> * other </td>
-      <td> cmd /c set </td>
+      <td>* other</td>
+      <td>cmd /c set</td>
     </tr>
     <tr>
-      <td> z/os </td>
-      <td> /bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i> </td>
+      <td>z/os</td>
+      <td>/bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i></td>
     </tr>
     <tr>
-      <td> unix </td>
-      <td> /bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i> </td>
+      <td>unix</td>
+      <td>/bin/env <b>OR</b> /usr/bin/env <b>OR</b> env   <i>(depending on read rights)</i></td>
     </tr>
     <tr>
-      <td> netware </td>
-      <td> env </td>
+      <td>netware</td>
+      <td>env</td>
     </tr>
     <tr>
-      <td> os/400 </td>
-      <td> env </td>
+      <td>os/400</td>
+      <td>env</td>
     </tr>
     <tr>
-      <td> openvms </td>
-      <td> show logical </td>
+      <td>openvms</td>
+      <td>show logical</td>
     </tr>
   </table>
-</p>
 
 </body>
 </html>

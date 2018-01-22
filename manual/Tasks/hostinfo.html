@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="hostinfo">HostInfo</a></h2>
+<h2 id="hostinfo">HostInfo</h2>
 
 <h3>Description</h3>
 <p>Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and <code>ADDR6</code>
@@ -38,10 +38,10 @@ The <code>DOMAIN</code> contains the domain part of the canonical name of the ho
  If the host is not found, the domain will contain the domain as provided to the task,
  or <code>localdomain</code> if no host / domain was provided.<br/>
 The <code>ADDR4</code> contains the IPv4 address of the host with the widest meaning.<br/>
-If no IPv4 address is found and a host has been provided the address <code>0.0.0.0</code> 
+If no IPv4 address is found and a host has been provided the address <code>0.0.0.0</code>
 is returned, when no host was provided the address <code>127.0.0.1</code> is returned.<br/>
-The <code>ADDR6</code> contains the IPv6 address of the host with the widest meaning.<br/> 
-If no IPv6 address is found and a host has been provided the address <code>::</code> 
+The <code>ADDR6</code> contains the IPv6 address of the host with the widest meaning.<br/>
+If no IPv6 address is found and a host has been provided the address <code>::</code>
 is returned, when no host was provided the address <code>::1</code> is returned.<br/>
 </p>
 
@@ -51,7 +51,7 @@ to indicate, for example, the host where the build was performed on.
 The best place for this task is probably in an initialization target.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -79,18 +79,18 @@ The best place for this task is probably in an initialization target.</p>
 </pre>
 
 <p>
-Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and 
+Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and
 <code>ADDR6</code> for the local host, using the most &quot;global&quot; address
 available.</p>
 <pre>
   &lt;hostinfo prefix=&quot;remotehost&quot; host=&quot;www.apache.org&quot;/&gt;
 </pre>
 <p>
-Sets the properties <code>remotehost.NAME</code> to <code>eos</code>, 
-<code>remotehost.DOMAIN</code> to <code>apache.org</code>, 
-<code>remotehost.ADDR4</code> to <code>140.211.11.130</code> and 
+Sets the properties <code>remotehost.NAME</code> to <code>eos</code>,
+<code>remotehost.DOMAIN</code> to <code>apache.org</code>,
+<code>remotehost.ADDR4</code> to <code>140.211.11.130</code> and
 <code>remotehost.ADDR6</code> to <code>::</code>
-for the host with the name www.apache.org (provided the canonical name and ip 
+for the host with the name www.apache.org (provided the canonical name and ip
 addresses do not change).
 </p>
 

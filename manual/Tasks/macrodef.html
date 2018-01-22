@@ -17,14 +17,14 @@
 <html>
 
   <head>
-    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <meta http-equiv="Content-Language" content="en-us">
     <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
     <title>MacroDef Task</title>
   </head>
 
   <body>
 
-    <h2><a name="macrodef">MacroDef</a></h2>
+    <h2 id="macrodef">MacroDef</h2>
     <h3>Description</h3>
     <p>
       This defines a new task using a <code>&lt;sequential&gt;</code>
@@ -42,7 +42,7 @@
       <em>since Apache Ant 1.6</em>
     </p>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -88,7 +88,7 @@
     </p>
     <p>
       This attribute is placed in the body of the templated
-      task using a notation similar to the ant property notation
+      task using a notation similar to the Ant property notation
       - @{attribute name}. (May be remembered as "put the substitution
       AT this location").
     </p>
@@ -102,7 +102,7 @@
       same as @{MyAttribute}.
     </p>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -124,7 +124,7 @@
         <td valign="top">description</td>
         <td valign="top">
           This contains a description of the attribute.
-          <em>since ant 1.6.1</em>
+          <em>Since Ant 1.6.1</em>
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -133,7 +133,7 @@
         <td valign="top">
           Controls whether or not property references in the attribute are expanded twice or just once.
           See the <a href="http://ant.apache.org/faq.html#macrodef-property-expansion">FAQ</a> for details.
-          <em>since Ant 1.8.3</em>
+          <em>Since Ant 1.8.3</em>
         </td>
         <td valign="top" align="center">No; default true</td>
       </tr>
@@ -148,7 +148,7 @@
       The case of the element name is ignored.
     </p>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -175,7 +175,7 @@
           any nested elements of the macrodef instance will be placed
           in the element indicated by the name of this element.
           There can only be one element if an element is implicit.
-          The default value is false. <em>since ant 1.6.2</em>
+          The default value is false. <em>Since Ant 1.6.2</em>
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -184,7 +184,7 @@
         <td valign="top">
           This contains a description
           informing the user what the contents of the element are expected to be.
-          <em>since ant 1.6.1</em>
+          <em>Since Ant 1.6.1</em>
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -201,7 +201,7 @@
       The case of the text name is ignored.
     </p>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -379,7 +379,6 @@
 &lt;test one="test"/&gt;
 </pre>
     </blockquote>
-
 
 </body>
 </html>

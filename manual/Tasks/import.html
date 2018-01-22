@@ -14,7 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
   <meta http-equiv="Content-Language" content="en-us">
@@ -22,7 +21,7 @@
   <title>Import Task</title>
 </head>
 <body>
-  <h2><a name="import">Import</a></h2>
+  <h2 id="import">Import</h2>
   <h3>Description</h3>
   <p>
     Imports another build file into the current project.
@@ -44,7 +43,7 @@
 
   <p>
     In the common use case where only Ant's default project helper is
-    used, it basically works like the 
+    used, it basically works like the
     <a href="http://ant.apache.org/faq.html#xml-entity-include">Entity
       Includes as explained in the Ant FAQ</a>, as if the imported file was
     contained in the importing file, minus the top <code>&lt;project&gt;</code>
@@ -57,12 +56,11 @@
   </p>
   <p>
 There are two further functional aspects that pertain to this task and
-that are not possible with entity includes:
+that are not possible with entity includes:</p>
 <ul>
   <li>target overriding</li>
   <li>special properties</li>
 </ul>
-  </p>
 <h4>Target overriding</h4>
 
 <p>If a target in the main file is also present in at least one of the
@@ -165,7 +163,7 @@ project).</p>
 </pre>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tbody>
     <tr>
       <td valign="top"><b>Attribute</b></td>
@@ -179,7 +177,7 @@ project).</p>
       <td valign="top">
         The file to import. If this is a relative file name, the file name will be resolved
         relative to the <i>importing</i> file. <b>Note</b>, this is unlike most other
-        ant file attributes, where relative files are resolved relative to ${basedir}.
+        Ant file attributes, where relative files are resolved relative to ${basedir}.
       </td>
       <td valign="top" align="center">Yes or a nested resource collection</td>
     </tr>

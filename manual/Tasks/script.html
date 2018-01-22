@@ -17,14 +17,14 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Language" content="en-us"></meta>
+<meta http-equiv="Content-Language" content="en-us">
 <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
 <title>Script Task</title>
 </head>
 
 <body>
 
-<h2><a name="script">Script</a></h2>
+<h2 id="script">Script</h2>
 <h3>Description</h3>
   <p>Execute a script in a
     <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
@@ -38,7 +38,7 @@
   </p>
   <p>
     The task may use the BSF scripting manager or the JSR 223 manager that
-    is included in JDK6 and higher. This is controlled by the <code>manager</code>
+    is included in JDK 6 and higher. This is controlled by the <code>manager</code>
     attribute. The JSR 223 scripting manager is indicated by "javax".
   </p>
   <p>All items (tasks, targets, etc) of the running project are
@@ -67,7 +67,7 @@ Location to a useful value.  In particular all targets should have
 different location values.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -82,18 +82,18 @@ different location values.</p>
   <tr>
     <td valign="top">manager</td>
     <td valign="top">
-      <em>Since: Ant 1.7. </em>
+      <em>Since: Ant 1.7.</em>
       The script engine manager to use. This can have
       one of three values ("auto", "bsf" or "javax").
       The default value is "auto".
-      <dl>
+      <ul>
         <li>"bsf" use the BSF scripting manager to run
           the language.</li>
         <li>"javax" use the <em>javax.scripting</em> manager
-          to run the language. (This will only work for JDK6 and higher).</li>
+          to run the language. (This will only work for JDK 6 and higher).</li>
         <li>"auto" use the BSF engine if it exists,
           otherwise use the <em>javax.scripting</em> manager.</li>
-      </dl>
+      </ul>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -137,13 +137,14 @@ different location values.</p>
 <h4>classpath</h4>
   <p><em>Since Ant 1.7</em></p>
 <p>
-  <code>Script</code>'s <code>classpath</code> attribute is a 
+  <code>Script</code>'s <code>classpath</code> attribute is a
   <a href="../using.html#path">path-like structure</a> and can also be set via a nested
   <code>&lt;classpath&gt;</code> element.
+</p>
   <p>
     If a classpath is set, it will be used as the current thread
     context classloader, and
-    as the classloader given to the BSF manager. 
+    as the classloader given to the BSF manager.
     This means that it can be used to specify
     the classpath containing the language implementation for BSF
     or for JSR 223 managers.
@@ -159,7 +160,6 @@ different location values.</p>
     that have engines in the BSF jar file. This includes the
     javascript, jython, netrexx and jacl languages.
   </p>
-</p>
 <h3>Examples</h3>
 The following snippet shows use of five different languages:
   <blockquote><pre>

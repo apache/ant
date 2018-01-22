@@ -24,13 +24,13 @@
 
 <body>
 
-<h2><a name="rename">Rename</a></h2>
+<h2 id="rename">Rename</h2>
 <h3><i>Deprecated</i></h3>
 <p><i>This task has been deprecated.  Use the Move task instead.</i></p>
 <h3>Description</h3>
 <p>Renames a given file.</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -53,12 +53,10 @@
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;rename src=&quot;foo.jar&quot; dest=&quot;${name}-${version}.jar&quot;/&gt;</pre> 
+<pre>  &lt;rename src=&quot;foo.jar&quot; dest=&quot;${name}-${version}.jar&quot;/&gt;</pre>
 <p>Renames the file <code>foo.jar</code> to <code>${name}-${version}.jar</code> (assuming <code>name</code>
  and <code>version</code> being predefined properties). If a file named <code>${name}-${version}.jar</code>
  already exists, it will be removed prior to renaming <code>foo.jar</code>.</p>
 
-
 </body>
 </html>
-

@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<h2><a name="jlink">Jlink</a></h2>
+<h2 id="jlink">Jlink</h2>
 <h3><i>Deprecated</i></h3>
 <p><i>This task has been deprecated. Use a <a href="../Types/zipfileset.html">zipfileset</a>
  or <a href="../Tasks/zip.html#zipgroupfileset">zipgroupfileset</a> with the
@@ -31,32 +31,32 @@
 <h3><b>Description:</b></h3>
 <p>Links entries from sub-builds and libraries.</p>
 
-<p>The jlink task can be used to build jar and zip files, similar to 
+<p>The jlink task can be used to build jar and zip files, similar to
 the <i>jar</i> task.
-However, jlink provides options for controlling the way entries from 
+However, jlink provides options for controlling the way entries from
 input files
-are added to the output file. Specifically, capabilities for merging 
+are added to the output file. Specifically, capabilities for merging
 entries from
 multiple zip or jar files is available.</p>
 
-<p>If a mergefile is specified directly (eg. at the top level of a 
+<p>If a mergefile is specified directly (eg. at the top level of a
 <i>mergefiles</i>
-pathelement) <i>and</i> the mergefile ends in &quot;.zip&quot; or 
+pathelement) <i>and</i> the mergefile ends in &quot;.zip&quot; or
 &quot;.jar&quot;,
-entries in the mergefile will be merged into the outfile. A file with 
+entries in the mergefile will be merged into the outfile. A file with
 any other extension
-will be added to the output file, even if it is specified in the 
+will be added to the output file, even if it is specified in the
 mergefiles element.
-Directories specified in either the mergefiles or addfiles element 
+Directories specified in either the mergefiles or addfiles element
 are added to the
-output file as you would expect: all files in subdirectories are 
+output file as you would expect: all files in subdirectories are
 recursively added to
-the output file with appropriate prefixes in the output file 
+the output file with appropriate prefixes in the output file
 (without merging).
 </p>
 
 <p>
-In the case where duplicate entries and/or files are found among the 
+In the case where duplicate entries and/or files are found among the
 files to be merged or
 added, jlink merges or adds the first entry and ignores all subsequent entries.
 </p>
@@ -66,11 +66,11 @@ jlink ignores META-INF directories in mergefiles. Users should supply their
 own manifest information for the output file.
 </p>
 
-<p>It is possible to refine the set of files that are being jlinked. 
+<p>It is possible to refine the set of files that are being jlinked.
 This can be
-done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, 
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>,
 <i>excludesfile</i>,
-and <i>defaultexcludes</i> attributes on the <i>addfiles</i> and 
+and <i>defaultexcludes</i> attributes on the <i>addfiles</i> and
 <i>mergefiles</i>
 nested elements. With the <i>includes</i> or <i>includesfile</i>
 attribute you specify the files you want to have included by using patterns.
@@ -85,7 +85,7 @@ relative to the <i>base</i> directory.</p>
 
 
 <h3>Parameters:</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
    <tr>
      <td valign="top"><b>Attribute</b></td>
      <td valign="top"><b>Description</b></td>
@@ -98,7 +98,7 @@ relative to the <i>base</i> directory.</p>
    </tr>
    <tr>
      <td valign="top">compress</td>
-     <td valign="top">whether or not the output should be compressed. 
+     <td valign="top">whether or not the output should be compressed.
 <i>true</i>,
                       <i>yes</i>, or <i>on</i> result in compressed output.
                       If omitted, output will be uncompressed (inflated).</td>
@@ -107,7 +107,7 @@ relative to the <i>base</i> directory.</p>
    <tr>
      <td valign="top">mergefiles</td>
      <td valign="top">files to be merged into the output, if possible.</td>
-     <td valign="middle" align="center" rowspan="2">At least one of 
+     <td valign="middle" align="center" rowspan="2">At least one of
 mergefiles or addfiles</td>
    </tr>
    <tr>
@@ -118,7 +118,7 @@ mergefiles or addfiles</td>
 
 <h3>Examples</h3>
 
-<p>The following will merge the entries in mergefoo.jar and mergebar.jar 
+<p>The following will merge the entries in mergefoo.jar and mergebar.jar
 into out.jar.
 mac.jar and pc.jar will be added as single entries to out.jar.</p>
 <pre>
@@ -148,9 +148,9 @@ mac.jar and pc.jar will be added as single entries to out.jar.</p>
 &lt;/jar&gt;
 </pre>
 
-<p>Suppose the file foo.jar contains two entries: bar.class and 
+<p>Suppose the file foo.jar contains two entries: bar.class and
 barnone/myClass.zip.
-Suppose the path for file foo.jar is build/tempbuild/foo.jar. The 
+Suppose the path for file foo.jar is build/tempbuild/foo.jar. The
 following example
 will provide the entry tempbuild/foo.jar in the out.jar.</p>
 <pre>
@@ -171,7 +171,5 @@ namely bar.class and barnone/myClass.zip</p>
 &lt;/jlink&gt;
 </pre>
 
-
 </body>
-
 </html>

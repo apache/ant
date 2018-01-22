@@ -24,12 +24,12 @@
 
 <body>
 
-<h2><a name="echo">Dirname</a></h2>
+<h2 id="echo">Dirname</h2>
 <h3>Description</h3>
 <p>
 Task to determine the directory path of a specified file.
 </p>
-<p> 
+<p>
 When this task executes, it will set the specified property to the
 value of the specified file (or directory) up to, but not including,
 the last path element. If the specified file is a path that ends in a
@@ -42,7 +42,7 @@ a filename, the directory will be the current directory.
     determines the full directory path of the specified file.
   </p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -65,10 +65,7 @@ a filename, the directory will be the current directory.
 will set <code>antfile.dir</code> to the directory path for
 <code>${ant.file}</code>.
 <pre>  &lt;dirname property=&quot;foo.dirname&quot; file=&quot;foo.txt&quot;/&gt;</pre>
-will set <code>foo.dirname</code> to the project's basedir.</p>
-
-
+will set <code>foo.dirname</code> to the project's basedir.
 
 </body>
 </html>
-

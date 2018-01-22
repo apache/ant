@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="typedef">Typedef</a></h2>
+<h2 id="typedef">Typedef</h2>
 <h3>Description</h3>
   <p>
     Adds a task or a data type definition to the current project
@@ -56,7 +56,7 @@
   <pre>
     typename=fully.qualified.java.classname
   </pre>
-    
+
   <p>
     The xml format is described in the
     <a href="../Types/antlib.html">Antlib</a> section.
@@ -84,7 +84,7 @@
     attribute to work.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -126,12 +126,13 @@
       to <a href="../Types/antlib.html">Antlib</a>.
       The default is "properties" unless the file/resource name ends with
       ".xml", in which case the format attribute will have the value "xml".
-      <b>since Apache Ant 1.6</b>
+      <em>Since Ant 1.6</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">classpath</td> <td valign="top">the classpath to
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to
       use when looking up <code>classname</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -147,7 +148,7 @@
     <td valign="top">the name of the loader that is
       used to load the class, constructed from the specified classpath. Use
       this to allow multiple tasks/types to be loaded with the same loader,
-      so they can call each other. <b>since Ant 1.5</b> </td>
+      so they can call each other. <em>Since Ant 1.5</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -155,11 +156,11 @@
     <td valign="top">The action to take if there was a failure in defining the
       type. The values are <i>fail</i>: cause a build exception; <i>report</i>:
       output a warning, but continue; <i>ignore</i>: do nothing.
-      <b>since Ant 1.6</b>
-      An additional value is <i>failall</i>: cause all behavior of fail,
+      <em>Since Ant 1.6</em>,
+      an additional value is <i>failall</i>: cause all behavior of fail,
       as well as a build exception for the resource or file attribute
-      if the resource or file is not found. <b>since Ant 1.7</b>
-      The default is <i>fail</i>.
+      if the resource or file is not found. <em>Since Ant 1.7</em>,
+      the default is <i>fail</i>.
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -171,7 +172,7 @@
       to wrap the defined class unless the defined class implements/extends
       the class defined by the attribute "adaptto".
       If "adaptto" is not set, the defined class will always be wrapped.
-      <b>since Ant 1.6</b>
+      <em>Since Ant 1.6</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -181,7 +182,7 @@
       adapter attribute.
       If the defined class does not implement/extend the interface/class
       specified by this attribute, the adaptor class will be used
-      to wrap the class. <b>since Ant 1.6</b>
+      to wrap the class. <em>Since Ant 1.6</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -189,24 +190,23 @@
     <td valign="top">uri</td>
     <td valign="top">
       The uri that this definition should live in.
-      <b>since Ant 1.6</b>
+      <em>Since Ant 1.6</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
   <h3>Parameters specified as nested elements</h3>
   <h4>classpath</h4>
-  <p><code>Typedef</code>'s <i>classpath</i> attribute is a 
+  <p><code>Typedef</code>'s <i>classpath</i> attribute is a
     <a href="../using.html#path">path-like structure</a> and can also be set
     via a nested <i>classpath</i> element.</p>
 
 <h3>Examples</h3>
   The following fragment defines define a type called <i>urlset</i>.
   <pre>
-    &lt;typedef name="urlset" classname="com.mydomain.URLSet"/&gt; </pre>
+    &lt;typedef name="urlset" classname="com.mydomain.URLSet"/&gt;</pre>
   The data type is now available to Ant. The
-  class <code>com.mydomain.URLSet</code> implements this type.</p>
-
+  class <code>com.mydomain.URLSet</code> implements this type.
 
   <p>
     Assuming a class <i>org.acme.ant.RunnableAdapter</i> that
@@ -234,15 +234,12 @@
     &lt;typedef name="filter1"
              classname="org.acme.filters.Filter1"
              classpathref="lib.path"
-             loaderref="lib.path.loader"
-             /&gt;
+             loaderref="lib.path.loader"/&gt;
     &lt;typedef name="filter2"
              classname="org.acme.filters.Filter2"
-             loaderref="lib.path.loader"
-             /&gt;
+             loaderref="lib.path.loader"/&gt;
   </pre>
-  
-  
+
   <p>
     If you want to load an antlib into a special xml-namespace, the <tt>uri</tt> attribute
     is important:
@@ -253,7 +250,7 @@
               resource="net/sf/antcontrib/antlib.xml"
               classpath="path/to/ant-contrib.jar"/&gt;
   </pre>
-            
+
 <p>Here the namespace
   declaration <code>xmlns:antcontrib="antlib:net.sf.antcontrib"</code>
   allows tasks and types of the AntContrib Antlib to be used with the
@@ -263,7 +260,5 @@
   prefix at any element to make it usable for the element it is
   declared on as well as all its child elements.</p>
 
-
 </body>
 </html>
-

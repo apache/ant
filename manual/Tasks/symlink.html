@@ -24,17 +24,20 @@
 
 <body>
 
-<h2><a name="symlink">Symlink</a></h2>
+<h2 id="symlink">Symlink</h2>
 <h3>Description</h3>
-<p> Manages symbolic links on platforms where Java supports symbolic links.
+<p>
+Manages symbolic links on platforms where Java supports symbolic links.
 Can be used to make an individual link, delete a link, create multiple links
 from properties files, or create properties files describing links in the
 specified directories. Existing files are not overwritten by default.
-
-<p><a href="../Types/fileset.html">FileSet</a>s are used to select a
-set of links to record, or a set of property files to create links from. </p>
+</p>
+<p>
+<a href="../Types/fileset.html">FileSet</a>s are used to select a
+set of links to record, or a set of property files to create links from.
+</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -72,7 +75,7 @@ set of links to record, or a set of property files to create links from. </p>
   </tr>
   <tr>
     <td valign="top">overwrite</td>
-    <td valign="top">Overwrite existing files or not. If overwrite is set to true, then 
+    <td valign="top">Overwrite existing files or not. If overwrite is set to true, then
     any existing file, specified by the link attribute, will be overwritten irrespective
      of whether or not the existing file is a symbolic link.</td>
     <td valign="top" align="center">No; defaults to false.</td>
@@ -96,12 +99,12 @@ set of links to record, or a set of property files to create links from. </p>
 
 <h3>Examples</h3>
 
-  <p> Make a link named "foo" to a resource named "bar.foo" in subdir:</p>
+  <p>Make a link named "foo" to a resource named "bar.foo" in subdir:</p>
   <pre>
   &lt;symlink link="${dir.top}/foo" resource="${dir.top}/subdir/bar.foo"/&gt;
   </pre>
 
-  <p> Record all links in subdir and it's descendants in files named
+  <p>Record all links in subdir and it's descendants in files named
   "dir.links"</p>
   <pre>
   &lt;symlink action="record" linkfilename="dir.links"&gt;
@@ -109,14 +112,14 @@ set of links to record, or a set of property files to create links from. </p>
   &lt;/symlink&gt;
   </pre>
 
-  <p> Recreate the links recorded in the previous example:</p>
+  <p>Recreate the links recorded in the previous example:</p>
   <pre>
   &lt;symlink action="recreate"&gt;
      &lt;fileset dir="${dir.top}" includes="subdir&#47;**&#47;dir.links"/&gt;
   &lt;/symlink&gt;
   </pre>
 
- <p> Delete a link named "foo":
+ <p>Delete a link named "foo":</p>
  <pre>
  &lt;symlink action="delete" link="${dir.top}/foo"/&gt;
  </pre>
@@ -127,12 +130,10 @@ set of links to record, or a set of property files to create links from. </p>
   IOException where Apache Ant can't find /some/working/directory${ANT_HOME}/bin/antRun
   or something similar. The workaround is to change your ANT_HOME environment
   variable to an absolute path, which will remove the /some/working/directory portion
-  of the above path and allow ant to find the correct commandline execution script.
+  of the above path and allow Ant to find the correct commandline execution script.
 
   <p><strong>NOTE:</strong> Starting Ant version 1.10.2, this task relies on the symbolic
     link support introduced in Java 7 through the java.nio.file.Files APIs</p>
-
-
 
 </body>
 </html>

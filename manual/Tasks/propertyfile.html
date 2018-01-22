@@ -24,9 +24,8 @@
 <body>
 
 <h1>PropertyFile</h1>
-
-<hr>
-<h2><a name="introduction">Introduction</a></h2>
+<hr/>
+<h2 id="introduction">Introduction</h2>
 <p>Apache Ant provides an optional task for editing property files. This is
 very useful when wanting to make unattended modifications to
 configuration files for application servers and
@@ -40,10 +39,10 @@ file are preserved.</p>
   In general, linefeeds of the updated file will be the same as the
   first linefeed found when reading it.</p>
 
-<hr>
-<h2><a name="proptask">PropertyFile Task</a></h2>
+<hr/>
+<h2 id="proptask">PropertyFile Task</h2>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -73,10 +72,10 @@ previous behaviour of the task, in which the layout and any comments
 in the properties file were lost by the task.</p>
 
 <h3>Parameters specified as nested elements</h3>
-<h4><a name="entryElement">Entry</a></h4>
+<h4 id="entryElement">Entry</h4>
 <p>Use nested <code>&lt;entry&gt;</code>
 elements to specify actual modifications to the property file itself.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -156,7 +155,6 @@ operation occurs <b>after</b> these rules are considered.</p>
   <li>If value and default are both specified and the property did not exist in
   the property file, the property is set to default.</li>
 </ul>
-<p>&nbsp;</p>
 
 <h3>Examples</h3>
 
@@ -186,7 +184,7 @@ formated.int=0014
 
 formated.date=243 13\:47</pre>
 <p>
-The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary. 
+The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary.
 </p>
 
 <p>
@@ -228,7 +226,7 @@ Concatenation of strings :</p>
 <p>Each time called, a &quot;.&quot; will be appended to &quot;progress&quot;
 </p>
 
-<p>Pumps the project version to the next minor version (increase minor and set path=0):
+<p>Pumps the project version to the next minor version (increase minor and set path=0):</p>
 <blockquote><pre>&lt;target name="nextMinorVersion"&gt;
    &lt;property
      name="header"
@@ -242,8 +240,6 @@ Concatenation of strings :</p>
 &lt;/target&gt;
 </pre></blockquote>
 After running this target the version changed e.g. from 3.2.2 to 3.3.0.
-</p>
-
 
 </body>
 </html>

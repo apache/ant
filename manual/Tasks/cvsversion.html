@@ -24,14 +24,14 @@
 
 <body>
 
-<h2><a name="cvs">CvsVersion</a></h2>
+<h2 id="cvs">CvsVersion</h2>
 <h3>Description</h3>
 <p>
 This task allows to retrieve a CVS client and server version.
   <i>Since Apache Ant 1.6.1.</i>
 </p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -96,13 +96,9 @@ This task allows to retrieve a CVS client and server version.
 <pre>  &lt;cvsversion cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
        passfile=&quot;/home/myself/.cvspass&quot;
        serverversionproperty=&quot;apachecvsversion&quot;
-       clientversionproperty=&quot;localcvsversion&quot;
-  /&gt;</pre>
+       clientversionproperty=&quot;localcvsversion&quot;/&gt;</pre>
 <p>finds out the cvs client and server versions and stores the versions in the
 properties called apachecvsversion and localcvsversion</p>
 
-
-
 </body>
 </html>
-

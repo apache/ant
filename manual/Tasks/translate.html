@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="translate">Translate</a></h2>
+<h2 id="translate">Translate</h2>
 <h3>Description</h3>
 <p>Identifies keys in files delimited by special tokens
 and translates them with values read from resource bundles.
@@ -76,7 +76,7 @@ Line endings of source files are preserved in the translated files.
 translate.
 </p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -160,8 +160,7 @@ translate.
 </p>
 <h3>Examples</h3>
 <p><b>Translate source file encoded in english into its japanese
-equivalent using a resource bundle encoded in japanese.
-</b></p>
+equivalent using a resource bundle encoded in japanese.</b></p>
 <pre>
   &lt;translate toDir=&quot;$(dest.dir}/ja&quot;
         starttoken=&quot;#&quot;

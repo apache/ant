@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="antcall">AntCall</a></h2>
+<h2 id="antcall">AntCall</h2>
 <h3>Description</h3>
 
 <p>Call another target within the same buildfile optionally
@@ -75,7 +75,7 @@ persist back to the calling project.</p>
 behavior of this task is undefined.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -122,11 +122,11 @@ down, even through additional <code>&lt;*ant*&gt;</code> tasks with inheritall s
 false (see above).
 </p>
 
-<h4><a name="reference">reference</a></h4>
+<h4 id="reference">reference</h4>
 <p>Used to choose references that shall be copied into the new project,
 optionally changing their id.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -158,7 +158,7 @@ href="../Types/propertyset.html">propertyset</a>s.</p>
 instead of using the target attribute.  These will be executed as if
 Ant had been invoked with a single target whose dependencies are the
 targets so specified, in the order specified.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -194,8 +194,6 @@ targets so specified, in the order specified.</p>
 
 <p>will copy the parent's definition of <code>path1</code> into the
 new project using the id <code>path2</code>.</p>
-
-
 
 </body>
 </html>

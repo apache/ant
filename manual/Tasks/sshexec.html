@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="sshexec">SSHEXEC</a></h2>
+<h2 id="sshexec">SSHEXEC</h2>
 <h3>Description</h3>
 
 <p><em>since Apache Ant 1.6</em></p>
@@ -42,7 +42,7 @@ and won't work with versions of jsch earlier than
 <p>See also the <a href="scp.html">scp task</a></p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -61,18 +61,18 @@ and won't work with versions of jsch earlier than
   <tr>
     <td valign="top">command</td>
     <td valign="top">The command to run on the remote host.</td>
-    <td valian="top" align="center">Either this or commandResource must be set</td>
+    <td valign="top" align="center">Either this or commandResource must be set</td>
   </tr>
   <tr>
     <td valign="top">commandResource</td>
     <td valign="top">The resource (file) that contains the commands to run on the remote host.
     Since Ant 1.7.1</td>
-    <td valian="top" align="center">Either this or command must be set</td>
+    <td valign="top" align="center">Either this or command must be set</td>
   </tr>
   <tr>
     <td valign="top">port</td>
     <td valign="top">The port to connect to on the remote host.</td>
-    <td valian="top" align="center">No, defaults to 22.</td>
+    <td valign="top" align="center">No, defaults to 22.</td>
   </tr>
   <tr>
     <td valign="top">trust</td>
@@ -81,14 +81,14 @@ and won't work with versions of jsch earlier than
       <strong>Note</strong> If you set this to false (the default), the
       host you connect to must be listed in your knownhosts file, this
       also implies that the file exists.</td>
-    <td valian="top" align="center">No, defaults to No.</td>
+    <td valign="top" align="center">No, defaults to No.</td>
   </tr>
   <tr>
     <td valign="top">knownhosts</td>
     <td valign="top">This sets the known hosts file to use to validate
     the identity of the remote host.  This must be a SSH2 format file.
     SSH1 format is not supported.</td>
-    <td valian="top" align="center">No, defaults to
+    <td valign="top" align="center">No, defaults to
     ${user.home}/.ssh/known_hosts.</td>
   </tr>
   <tr>
@@ -152,7 +152,7 @@ and won't work with versions of jsch earlier than
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
-    <td valign="top">The name of a property in which the output of the 
+    <td valign="top">The name of a property in which the output of the
       command should be stored.  If you use the commandResource
       attribute, each command's output will be prefixed by the
       command itself.</td>
@@ -191,8 +191,8 @@ and won't work with versions of jsch earlier than
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">Determines whether sshexec outputs verbosely to the user.<br/> 
-    Similar output is generated as the ssh commandline tool wit the -v option. 
+    <td valign="top">Determines whether sshexec outputs verbosely to the user.<br/>
+    Similar output is generated as the ssh commandline tool wit the -v option.
     <em>since Ant 1.8.0</em></td>
     <td align="center">No, defaults to false</td>
   </tr>
@@ -283,21 +283,20 @@ and won't work with versions of jsch earlier than
 	commandResource=&quot;to_run&quot;/&gt;
 </pre>
 
-
 <p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
 in sshexec task can be a serious security hole.  Consider using variable
-substitution and include the password on the command line.  For example:<br>
+substitution and include the password on the command line.  For example:</p>
 <pre>
   &lt;sshexec host=&quot;somehost&quot;
 	username=&quot;${username}&quot;
 	password=&quot;${password}&quot;
 	command=&quot;touch somefile&quot;/&gt;
 </pre>
-Invoking ant with the following command line:
+Invoking Ant with the following command line:
 <pre>
     ant -Dusername=me -Dpassword=mypassword target1 target2
 </pre>
-
+<p>
 Is slightly better, but the username/password is exposed to all users
 on an Unix system (via the ps command). The best approach is to use
 the

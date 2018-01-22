@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="rpm">Rpm</a></h2>
+<h2 id="rpm">Rpm</h2>
 <h3>Description</h3>
 <p>
   A basic task for invoking the rpm executable to build a RedHat Package Manager Linux installation
@@ -32,7 +32,7 @@
 </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -73,7 +73,7 @@
   </tr>
   <tr>
     <td valign="top">removeSource</td>
-    <td valign="top">Flag (optional, default=false) 
+    <td valign="top">Flag (optional, default=false)
         to remove the sources after the build.
         See the the <tt>--rmsource</tt> option of rpmbuild.</td>
     <td align="center" valign="top">No</td>
@@ -104,7 +104,7 @@
   </tr>
   <tr>
     <td valign="top">failOnError</td>
-    <td valign="top">Stop the buildprocess if the RPM build command exits with 
+    <td valign="top">Stop the buildprocess if the RPM build command exits with
        a non-zero returncode. Defaults to false</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -120,4 +120,3 @@
 </pre>
 </body>
 </html>
-

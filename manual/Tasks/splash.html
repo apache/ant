@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="Splash">Splash</a></h2>
+<h2 id="splash">Splash</h2>
 <p>by Les Hughes (leslie.hughes@rubus.com)
 <h3>Description</h3>
 <p>This task creates a splash screen. The splash screen is displayed
@@ -32,7 +32,7 @@ for the duration of the build and includes a handy progress bar as
 well. Use in conjunction with the sound task to provide interest
 whilst waiting for your builds to complete...</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -45,7 +45,7 @@ whilst waiting for your builds to complete...</p>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">antlogo.gif from the classpath</td>
   </tr>
- 
+
   <tr>
     <td valign="top">showduration</td>
     <td valign="top">Initial period to pause the build to show the
@@ -76,11 +76,11 @@ whilst waiting for your builds to complete...</p>
 
 The following properties can be used to configure the proxy settings to retrieve
 an image from behind a firewall. However, the settings apply not just to this
-task, but to all following tasks. Therefore they are now deprecated in 
+task, but to all following tasks. Therefore they are now deprecated in
 preference to the <code>&lt;setproxy&gt;</code> task, that makes it clear to readers of
 the build exactly what is going on.
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top">useproxy</td>
     <td valign="top">Use a proxy to access imgurl. Note: Only tested
@@ -147,8 +147,5 @@ the build exactly what is going on.
         &lt;/target&gt;
 </pre></blockquote>
 
-
-
 </body>
 </html>
-

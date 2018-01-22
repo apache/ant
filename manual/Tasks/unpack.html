@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="unpack">GUnzip/BUnzip2/UnXZ</a></h2>
+<h2 id="unpack">GUnzip/BUnzip2/UnXZ</h2>
 <h3>Description</h3>
 <p>Expands a resource packed using GZip, BZip2 or XZ.</p>
 
@@ -41,7 +41,7 @@ See <a href="../install.html#librarydependencies">Library
 Dependencies</a> for more information.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -75,7 +75,7 @@ resource collection</h4>
 </pre></blockquote>
 <p>expands <i>test.tar.bz2</i> to <i>test.tar</i></p>
 <blockquote><pre>
-&lt;uncz src=&quot;test.tar.xz&quot;/&gt;
+&lt;unxz src=&quot;test.tar.xz&quot;/&gt;
 </pre></blockquote>
 <p>expands <i>test.tar.xz</i> to <i>test.tar</i></p>
 <blockquote><pre>
@@ -119,8 +119,6 @@ additional features like <a href="../Types/filterchain.html">filtering
 files</a> on the fly, allowing a file to be mapped to multiple
 destinations, preserving the last modified time or a configurable file
 system timestamp granularity.</p>
-
-
 
 </body>
 </html>

@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="java">Java</a></h2>
+<h2 id="java">Java</h2>
 <h3>Description</h3>
 <p>Executes a Java class within the running (Apache Ant) VM or forks another VM if
 specified.</p>
@@ -36,8 +36,7 @@ JVM.
 sending input to it via the <code>input</code> and <code>inputstring</code>
 attributes.</p>
 
-<h4><a name="background">Running Ant as a background process on
-    Unix(-like) systems</a></h4>
+<h4 id="background">Running Ant as a background process on Unix(-like) systems</h4>
 
 <p>If you run Ant as a background process (like <code>ant &</code>)
   and use the <code>&lt;java&gt;</code> task with <code>spawn</code>
@@ -47,14 +46,14 @@ attributes.</p>
   standard input.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
-  <tr>
-    <td valign="top"><a name="classname">classname</a></td>
+  <tr id="classname">
+    <td valign="top">classname</td>
     <td valign="top">the Java class to execute.</td>
     <td align="center" valign="top">Either <tt>jar</tt>, <tt>classname</tt> or <tt>module</tt></td>
   </tr>
@@ -92,7 +91,7 @@ attributes.</p>
   </tr>
   <tr>
     <td valign="top">spawn</td>
-    <td valign="top">if enabled allows to start a process which will outlive ant.<br>
+    <td valign="top">if enabled allows to start a process which will outlive Ant.<br>
     Requires fork=true, and not compatible
     with timeout, input, output, error, result attributes.<br>
       (disabled by default)</td>
@@ -166,7 +165,7 @@ attributes.</p>
   <tr>
     <td valign="top">error</td>
     <td valign="top">The file to which the standard error of the command should be
-      redirected. </td>
+      redirected.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -287,7 +286,7 @@ and treated like indicated in <i>failonerror</i>.</p>
 <p>Note:<br>
 If you do not specify permissions,
 a set of default permissions will be added to your Java invocation to make
-sure that the ant run will continue or terminated as indicated by
+sure that the Ant run will continue or terminated as indicated by
 <i>failonerror</i>. All permissions not granted per default will be
 checked by whatever security manager was already in place. exitVM will be
 disallowed.
@@ -306,20 +305,20 @@ subelement.</p>
 
 <p><em>since Ant 1.6.</em></p>
 
-<a name="redirector"><h4>redirector</h4></a>
-<i><b>Since Ant 1.6.2</b></i>
+<h4 id="redirector">redirector</h4>
+<em>Since Ant 1.6.2</em>
 <p>A nested <a href="../Types/redirector.html">I/O Redirector</a>
 can be specified.  In general, the attributes of the redirector behave
 as the corresponding attributes available at the task level.  The most
 notable peculiarity stems from the retention of the <code>&lt;java&gt;</code>
 attributes for backwards compatibility.  Any file mapping is done
-using a <CODE>null</CODE> sourcefile; therefore not all
+using a <code>null</code> sourcefile; therefore not all
 <a href="../Types/mapper.html">Mapper</a> types will return
 results.  When no results are returned, redirection specifications
 will fall back to the task level attributes.  In practice this means that
 defaults can be specified for input, output, and error output files.
 </p>
-<a name="failonerror"><h3>Errors and return codes</h3></a>
+<h3 id="failonerror">Errors and return codes</h3>
 By default the return code of a <code>&lt;java&gt;</code> is ignored.
 Alternatively, you can set <code>resultproperty</code> to the name
 of a property and have it assigned to the result code (barring immutability,
@@ -327,21 +326,20 @@ of course).
 When you set <code>failonerror="true"</code>, the only possible value for
 <code>resultproperty</code> is 0. Any non-zero response is treated as an
 error and would mean the build exits.
-<p> Similarly, if <code>failonerror="false"</code> and <code>fork="false"</code>
-, then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will
+<p>Similarly, if <code>failonerror="false"</code> and <code>fork="false"</code>,
+then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will
 exit, as the class was run by the build JVM.</p>
 
-<a name="modulepath"><h4>modulepath</h4>
-<i><b>Since Ant 1.9.7</b></i>
+<h4 id="modulepath">modulepath</h4>
+<em>Since Ant 1.9.7</em>
 <p><code>Java</code>'s <i>modulepath</i> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
 <i>modulepath</i> element.</p>
 
-<a name="upgrademodulepath"><h4>upgrademodulepath</h4>
-<i><b>Since Ant 1.9.7</b></i>
+<h4 id="upgrademodulepath">upgrademodulepath</h4>
+<em>Since Ant 1.9.7</em>
 <p>The location of modules that replace upgradeable modules in the runtime image
 can be specified using this <a href="../using.html#path">PATH like structure</a>.</p>
-
 
 <h3>JAR file execution</h3>
 
@@ -351,9 +349,9 @@ base directory of the project, <i>not</i> the directory in which the Java
 task is run. If you need to locate a JAR file relative to the directory
 the task will be run in, you need to explicitly create the full path
 to the JAR file.</p>
-<p>When using the <tt>jar</tt> attribute, all classpath settings are 
+<p>When using the <tt>jar</tt> attribute, all classpath settings are
 ignored according to <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html">Oracle's
-specification</a>. 
+specification</a>.
 
 
 <h3>Examples</h3>

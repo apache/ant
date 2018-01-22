@@ -23,7 +23,7 @@
 
 <body>
 
-<h2><a name="schemavalidate">SchemaValidate</a></h2>
+<h2 id="schemavalidate">SchemaValidate</h2>
 <h3>Description</h3>
 
 <p>This <tt>schemavalidate</tt> task validates XML files described by an XML Schema.
@@ -42,7 +42,8 @@ Note that nested catalogs are still used for lookup of the URLs given as the
 sources of schema documents, so you can still delegate lookup to a catalog, you
 just need to list all schema URIs and their URL equivalents.
 
-<p>This task supports the use of nested
+<p>This task supports the use of nested</p>
+<ul>
   <li><a href="../Types/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a> elements</li>
   <li> <tt>&lt;schema&gt;</tt> elements, that bind a namespace URI to a URL or a
   local filename.
@@ -51,16 +52,16 @@ just need to list all schema URIs and their URL equivalents.
       These can be any number of
       <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a>
       or other features that your parser may support.</li>
-  <li><tt>&lt;property&gt;</tt> elements, containing string properties
-</p>
+<li><tt>&lt;property&gt;</tt> elements, containing string properties</li>
+</ul>
 
 <p>
 The task only supports SAX2 or later parsers: it is an error to specify a SAX1
-parser. 
-
+parser.
+</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -73,14 +74,14 @@ parser.
   </tr>
   <tr>
     <td valign="top">classpathref</td>
-    <td valign="top">where to find the parser class. 
+    <td valign="top">where to find the parser class.
     Optionally can use an embedded <tt>&lt;classpath&gt;</tt> element.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">disableDTD</td>
     <td valign="top">
-      Flag to disable DTD support. DTD support is needed to 
+      Flag to disable DTD support. DTD support is needed to
       validate XSD files themselves, amongst others.
     </td>
     <td valign="top" align="center">No - default false</td>
@@ -102,7 +103,7 @@ parser.
     </td>
     <td valign="top" align="center">No - default true</td>
   </tr>
-  
+
   <tr>
     <td valign="top">lenient</td>
     <td valign="top">
@@ -113,7 +114,7 @@ parser.
   <tr>
     <td valign="top">noNamespaceFile</td>
     <td valign="top">
-      filename of a no-namespace XSD file to provide the 
+      filename of a no-namespace XSD file to provide the
       schema for no-namespace XML content.
     </td>
     <td valign="top" align="center">No</td>
@@ -121,7 +122,7 @@ parser.
   <tr>
     <td valign="top">noNamespaceURL</td>
     <td valign="top">
-      URL of a no-namespace XSD file to provide the 
+      URL of a no-namespace XSD file to provide the
       schema for no-namespace XML content.
     </td>
     <td valign="top" align="center">No</td>
@@ -133,15 +134,14 @@ parser.
   </tr>
 </table>
 
-<h3><a name="nested">Nested Elements</a></h3>
-
+<h3 id="nested">Nested Elements</h3>
 
 <h4>schema</h4>
 <p>
 Identify the name and location of a schema that may be used in validating
 the document(s).
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -168,7 +168,7 @@ the document(s).
 <p>
 <tt>&lt;dtd&gt;</tt> is used to specify different locations for DTD resolution.
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -197,7 +197,7 @@ Features usable with the xerces parser are defined here :
 SAX features are defined here:
  <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a><br>
  </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -214,7 +214,6 @@ SAX features are defined here:
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
-</p>
 
 <h4>property</h4>
 <p>The <tt>&lt;property&gt;</tt> element is used to set properties.
@@ -222,7 +221,7 @@ These properties are defined here for the xerces XML parser implementation :
  <a href="http://xml.apache.org/xerces-j/properties.html">XML Parser properties</a>
 Properties can be used to set the schema used to validate the XML file.
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -239,8 +238,6 @@ Properties can be used to set the schema used to validate the XML file.
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
-</p>
-
 
 <h3>Examples</h3>
 <pre>
@@ -250,7 +247,7 @@ Properties can be used to set the schema used to validate the XML file.
     &lt;/schemavalidate&gt;
 </pre>
 Validate a document against an XML schema. The document does not declare
-any schema itself, which is why the <tt>noNamespaceFile</tt> is needed. 
+any schema itself, which is why the <tt>noNamespaceFile</tt> is needed.
 <pre>
     &lt;presetdef name="validate-soap"&gt;
       &lt;schemavalidate&gt;
@@ -266,18 +263,16 @@ any schema itself, which is why the <tt>noNamespaceFile</tt> is needed.
     &lt;/presetdef&gt;
 </pre>
 Declare a new preset task, <tt>&lt;validate-soap&gt;</tt>, that validates
-XSD and WSDL documents against the relevant specifications. 
-To validate XSD documents, you also need XMLSchema.dtd and datatypes.dtd in 
+XSD and WSDL documents against the relevant specifications.
+To validate XSD documents, you also need XMLSchema.dtd and datatypes.dtd in
 the same directory as XMLSchema.xsd, or pointed to via the catalog. All
 these files can be fetched from <a href="http://www.w3.org/2001/XMLSchema">
-the W3C</a>. 
+the W3C</a>.
 <pre>
     &lt;validate-soap file="xml/test.xsd"/&gt;
 </pre>
 Use the preset task defined above to validate an XML Schema document.
 <br>
 
-
 </body>
 </html>
-

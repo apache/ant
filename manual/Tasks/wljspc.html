@@ -15,15 +15,17 @@
    limitations under the License.
 -->
 <html>
-<head><link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
-<title>WLJSPC Task</title></head>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+    <title>WLJSPC Task</title>
+  </head>
 <body>
 <h1>wljspc</h1>
 <h3>Description</h3>
 <p>Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)</p>
 Tested only on Weblogic 4.5.1 - NT4.0 and Solaris 5.7,5.8<br>
 <h3>Parameters</h3>
-<table border="1" cellPadding="2" cellSpacing="0">
+<table>
   <tbody>
     <tr>
       <th>Attribute</th>
@@ -38,13 +40,13 @@ Tested only on Weblogic 4.5.1 - NT4.0 and Solaris 5.7,5.8<br>
     <tr>
       <td>
 dest</td>
-      <td> root of destination directory, what you have set as WorkingDir in the weblogic properties</td>
+      <td>root of destination directory, what you have set as WorkingDir in the weblogic properties</td>
       <td>Yes</td>
     </tr>
     <tr>
       <td>
 package</td>
-      <td> start package name under which your JSP's would be compiled</td>
+      <td>start package name under which your JSP's would be compiled</td>
       <td>Yes</td>
     </tr>
     <tr>
@@ -67,13 +69,10 @@ The task checks timestamps on the JSP's and the generated classes, and compiles<
 only those files that have changed.<br>
 <br>
 It follows the weblogic naming convention of putting classes in<br>
-<b> _dirName/_fileName.class for dirname/fileName.jsp   </b><br>
+<b>_dirName/_fileName.class for dirname/fileName.jsp</b><br>
 <br>
 </p>
-<h3><br>
-Example<br>
-</h3>
-<p>
+<h3>Example</h3>
 <pre>
 &lt;target name="jspcompile" depends="compile"&gt;
   &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt
@@ -84,8 +83,6 @@ Example<br>
   &lt;/wljspc&gt;
 &lt;/target&gt;
 </pre>
-
-</p>
 
 <h3>Limitations</h3>
 <ul>

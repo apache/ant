@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="signjar">SignJar</a></h2>
+<h2 id="signjar">SignJar</h2>
 <h3>Description</h3>
 <p>Signing a jar allows users to authenticate the publisher.</p>
 <p>Signs JAR files with the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html"><tt>jarsigner</tt> command line tool</a>.
@@ -47,7 +47,7 @@ and <tt>lazy</tt> is false, the JAR is signed.</li>
 </ul>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -138,13 +138,13 @@ block</td>
   <tr>
     <td valign="top">tsaurl</td>
     <td valign="top">URL for a timestamp authority for timestamped
-    JAR files in Java1.5+</td>
+    JAR files in Java 5+</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">tsacert</td>
     <td valign="top">alias in the keystore for a timestamp authority for
-    timestamped JAR files in Java1.5+</td>
+    timestamped JAR files in Java 5+</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -191,7 +191,7 @@ block</td>
   </tr>
 </table>
 <h3>Parameters as nested elements</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -204,7 +204,7 @@ block</td>
   </tr>
   <tr>
     <td valign="top">fileset</td>
-    <td valign="top">fileset of JAR files to sign. </td>
+    <td valign="top">fileset of JAR files to sign.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -215,7 +215,7 @@ block</td>
   <tr>
     <td valign="top">sysproperty</td>
     <td valign="top">JVM system properties, with the syntax of Ant
-    <a href="exec.html#env">environment variables</a> </td>
+    <a href="exec.html#env">environment variables</a></td>
     <td valign="top" align="center">No, and only one can be supplied</td>
   </tr>
  </table>
@@ -287,18 +287,17 @@ SHA256withRSA.
 With trusted timestamping, users can verify that signing occurred before a certificate's expiration or revocation. Without this timestamp, users can only verify the signature as of their current date.</p>
 
 <p>
-Timestamped JAR files were introduced in Java1.5 and supported in Ant since
+Timestamped JAR files were introduced in Java 5 and supported in Ant since
 Ant 1.7. Since Ant 1.9.5, Ant can use unauthenticated proxies for this signing process.
 </p>
 
-<p>Common public timestamp authorities include
+<p>Common public timestamp authorities include</p>
   <ul>
     <li>http://timestamp.verisign.com</li>
 	<li>http://tsa.starfieldtech.com</li>
 	<li>https://timestamp.geotrust.com/tsa</li>
 	<li>Others (see your certificate authority)</li>
-  </ul></p>
+  </ul>
 
 </body>
 </html>
-

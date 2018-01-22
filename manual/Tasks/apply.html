@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="apply">Apply/<i>ExecOn</i></a></h2>
+<h2 id="apply">Apply/<i>ExecOn</i></h2>
 <p><i>The name <code>execon</code> is deprecated and only kept for backwards
 compatibility.</i></p>
 <h3>Description</h3>
@@ -40,8 +40,7 @@ href="../Types/resources.html#collection">Resource Collection</a>s
  (<em>since&nbsp;Ant&nbsp;1.6</em>) or
  <a href="../Types/filelist.html">FileList</a>s
  (<em>since&nbsp;Ant&nbsp;1.6</em>)
-&ndash;
- are passed as arguments to the system command.</p>
+&ndash; are passed as arguments to the system command.</p>
 <p>If you specify a nested <a href="../Types/mapper.html">mapper</a>,
 the timestamp of each source file is compared to the timestamp of a
 target file which is defined by the nested mapper element and searched
@@ -52,8 +51,8 @@ and you must not specify more than one mapper.</p>
 <p>Note that you cannot interact with the forked program, the only way
 to send input to it is via the input and inputstring attributes.</p>
 
-<h4><a name="background">Running Ant as a background process on
-    Unix(-like) systems</a></h4>
+<h4 id="background">Running Ant as a background process on
+    Unix(-like) systems</h4>
 
 <p>If you run Ant as a background process (like <code>ant &</code>)
   and use the <code>&lt;apply&gt;</code> task with <code>spawn</code>
@@ -62,7 +61,7 @@ to send input to it is via the input and inputstring attributes.</p>
   from the standard input.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -85,7 +84,7 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">spawn</td>
     <td valign="top">whether or not you want the commands to be spawned.<br>
-    If you spawn a command, its output will not be logged by ant.<br>
+    If you spawn a command, its output will not be logged by Ant.<br>
     The input, output, error, and result property settings are not active when spawning a process.<br>
     <em>since&nbsp;Ant&nbsp;1.6</em>
     </td>
@@ -211,7 +210,7 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">failifexecutionfails</td>
     <td valign="top">Stop the build if we can't start the program.
-      Defaults to true. </td>
+      Defaults to true.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -338,7 +337,7 @@ end of the command line (unless you set addsourcefile to
 <code>false</code>). If you need to place it somewhere different,
 use a nested <code>&lt;srcfile&gt;</code> element between your
 <code>&lt;arg&gt;</code> elements to mark the insertion point.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -363,7 +362,7 @@ use a nested <code>&lt;srcfile&gt;</code> element between your
 filename on the command line. If omitted, the target filenames will
 not be added to the command line at all. This element can only be
 specified if you also define a nested mapper.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -494,11 +493,6 @@ Conversion of the command <code>jsmin &lt; src/a.js &gt; dest/a.js</code> but fo
 all files in the src-directory. Because the filename itself should not be passed
 to the <code>jsmin</code> program, the <code>addsourcefile</code> is set to
 <code>false</code>.
-
-
-
-
-
 
 </body>
 </html>

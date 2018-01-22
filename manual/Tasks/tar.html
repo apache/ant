@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="tar">Tar</a></h2>
+<h2 id="tar">Tar</h2>
 <h3>Description</h3>
 <p>Creates a tar archive.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
@@ -78,14 +78,14 @@ that it produces a warning for each file path encountered that does not match
 the limit.  It uses gnu rather than posix for backwards compatibility
   reasons.</p>
 
-<p>To achivieve best interoperability you should use
+<p>To achieve best interoperability you should use
   either <code>fail</code> or <code>posix</code> for the longfile attribute.</p>
 
 <p>This task can perform compression by setting the compression attribute to "gzip"
 or "bzip2".</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -141,7 +141,7 @@ or "bzip2".</p>
   </tr>
   <tr>
     <td valign="top">compression</td>
-    <td valign="top">compression method.  Allowable values are 
+    <td valign="top">compression method.  Allowable values are
        &quot;none&quot;, &quot;gzip&quot;, &quot;xz&quot; and &quot;bzip2&quot;.  Default is
        &quot;none&quot;.</td>
     <td valign="top" align="center">No</td>
@@ -165,7 +165,7 @@ extended <a href="../Types/fileset.html">FileSets</a> which,
 in addition to the standard elements, support one additional
 attributes
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -196,8 +196,7 @@ it.</p>
 <pre>
 &lt;tar destfile=&quot;${dist}/manual.tar&quot;
      basedir=&quot;htdocs/manual&quot;
-     excludes=&quot;mydocs/**, **/todo.html&quot;
-/&gt;</pre>
+     excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
@@ -242,11 +241,9 @@ or files with the name <code>todo.html</code> are excluded.</p>
 where some files need to be marked as executable (mode 755)
 and the rest are use the default mode (read-write by owner). The first
 fileset selects just the executable files. The second fileset must exclude
-the executable files and include all others. </p>
+the executable files and include all others.</p>
 
-
-
-<p><strong>Note: </strong> The tar task does not ensure that a file is only selected
+<p><strong>Note:</strong> The tar task does not ensure that a file is only selected
 by one resource collection. If the same file is selected by more than one collection, it will be included in the
 tar file twice, with the same path.</p>
 
@@ -269,7 +266,7 @@ will be retained in the resulting tar archive.</p>
 
 
 <p><strong>Note:</strong>
-  Please note the tar task creates a tar file, it does not append 
+  Please note the tar task creates a tar file, it does not append
   to an existing tar file. The existing tar file is replaced instead.
   As with most tasks in Ant, the task only takes action if the output
   file (the tar file in this case) is older than the input files, or
@@ -278,4 +275,3 @@ will be retained in the resulting tar archive.</p>
 
 </body>
 </html>
-

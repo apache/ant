@@ -25,7 +25,7 @@
 
 <body>
 
-<h1><a name="serverdeploy">Apache Ant ServerDeploy User Manual</a></h1>
+<h1 id="serverdeploy">Apache Ant ServerDeploy User Manual</h1>
 <p>by</p>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
@@ -33,21 +33,21 @@
 <li>Cyrille Morvan (<a href="mailto:cmorvan@ingenosya.com">cmorvan@ingenosya.com</a>)</li>
 </ul>
 
-</p>
-<hr>
-<p> At present the tasks support:<br>
+<hr/>
+<p>At present the tasks support:</p>
 
 <ul>
 <li><a href="http://www.bea.com" target="_top">Weblogic</a> servers</li>
 <li><a href="http://www.objectweb.org/jonas/" target="_top">JOnAS</a>
 2.4 Open Source EJB server</li>
 </ul>
+<p>
 Over time we expect further optional tasks  to support additional J2EE Servers.
 </p>
 
-<hr>
+<hr/>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><td>Task</td><td colspan="2">Application Servers</td></tr>
 <tr><td rowspan="4"><a href="#serverdeploy_element">serverdeploy</a></td><td colspan="2" align="center"><b>Nested Elements</b></td></tr>
 <tr><td><a href="#serverdeploy_generic">generic</a></td><td>Generic task</td></tr>
@@ -56,8 +56,7 @@ Over time we expect further optional tasks  to support additional J2EE Servers.
 
 </table>
 
-<a name="serverdeploy_element">
-<h2>ServerDeploy element</h2>
+<h2 id="serverdeploy_element">ServerDeploy element</h2>
 
 <h3><b>Description:</b></h3>
 
@@ -69,7 +68,7 @@ attributes are required, depending on the tool.
 </p>
 
 <h3>Parameters:</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -98,7 +97,7 @@ attributes are required, depending on the tool.
 <h3>Vendor-specific nested elements</h3>
 
 <h3>Parameters used for all tools:</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -129,8 +128,7 @@ attributes are required, depending on the tool.
 
 <p>Also supported are nested vendor-specific elements.</p>
 
-<a name="serverdeploy_generic">
-<h3>Generic element</h3>
+<h3 id="serverdeploy_generic">Generic element</h3>
 This element is provided for generic Java-based deployment tools.
 The generic task accepts (but does not require) nested <code>arg</code>
 and <code>jvmarg</code> elements.
@@ -138,8 +136,7 @@ A JVM will be spawned with the provided attributes.  It is recommended
 that a vendor-specific element be used over the generic one if at all
 possible.
 <p>The following attributes are supported by the generic element.</p>
-<p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -152,7 +149,6 @@ possible.
     <td>Yes</td>
   </tr>
 </table>
-</p>
 
 <h3>Nested Elements</h3>
 <p>The generic element supports nested <code>&lt;arg&gt;</code> and <code>&lt;jvmarg&gt;</code> elements.</p>
@@ -176,8 +172,7 @@ using a Java based deploy tool:</p>
     &lt;/serverdeploy&gt;
 </pre>
 
-<a name="serverdeploy_weblogic">
-<h3>WebLogic element</h3>
+<h3 id="serverdeploy_weblogic">WebLogic element</h3>
 <p>
 The WebLogic element contains additional attributes to run the
 <code>weblogic.deploy</code> deployment tool.
@@ -190,7 +185,7 @@ the <code>application</code> attribute must be set.  If the <code>username</code
 attribute is omitted, it defaults to "system".  The <code>password</code> attribute is
 required for all actions.
 <p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -247,17 +242,16 @@ WebLogic server:</p>
     &lt;/serverdeploy&gt;
 </pre>
 
-<a name="serverdeploy_jonas">
-<h3>JOnAS (Java Open Application Server) element</h3>
+<h3 id="serverdeploy_jonas">JOnAS (Java Open Application Server) element</h3>
 <p>
 The JOnAS element contains additional attributes to run the
 <code>JonasAdmin</code> deployment tool.
 <p>Valid actions for the tool are <code>deploy</code>, <code>undeploy</code>,
 <code>list</code> and <code>update</code>.
-<p>You can't use <code>user</code> and <code>password</code> property with this 
+<p>You can't use <code>user</code> and <code>password</code> property with this
 task.
 <p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -272,7 +266,7 @@ task.
     <td valign="top">orb</td>
     <td valign="top">Choose your ORB : RMI, JEREMIE, DAVID, ... If omitted, it defaults
      to the one present in classpath. The corresponding JOnAS JAR is
-     automatically added to the classpath. If your orb is DAVID (RMI/IIOP) you must 
+     automatically added to the classpath. If your orb is DAVID (RMI/IIOP) you must
      specify davidhost and davidport properties.</td>
     <td>No</td>
   </tr>
@@ -328,8 +322,6 @@ JOnAS server and a WebLogic server:</p>
             password=&quot;${user.password}&quot;/&gt;
     &lt;/serverdeploy&gt;
 </pre>
-
-
 
 </body>
 </html>

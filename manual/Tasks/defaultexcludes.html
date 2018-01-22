@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="echo">DefaultExcludes</a></h2>
+<h2 id="echo">DefaultExcludes</h2>
 
 <p><em>since Apache Ant 1.6</em></p>
 
@@ -33,7 +33,7 @@
 build, and prints out the current default excludes if desired.
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -86,10 +86,10 @@ backup files and then restore normal behavior</p>
 </pre>
 
 <h3>Notes</h3>
-By default the pattern <tt>**/.svn</tt> and <tt>**/.svn/**</tt> are set as default 
-excludes. With version 1.3 Subversion supports the 
+By default the pattern <tt>**/.svn</tt> and <tt>**/.svn/**</tt> are set as default
+excludes. With version 1.3 Subversion supports the
 <a target="_blank" href="http://subversion.apache.org/docs/release-notes/1.3.html#_svn-hack">&quot;_svn hack&quot;</a>.
-That means, that the svn-libraries evaluate environment variables and use <i>.svn</i> 
+That means, that the svn-libraries evaluate environment variables and use <i>.svn</i>
 or <i>_svn</i> directory regarding to that value. We had chosen not to evaluate environment variables to
 get a more reliable build. Instead you have to change the settings by yourself by changing
 the exclude patterns:
@@ -99,9 +99,6 @@ the exclude patterns:
   &lt;defaultexcludes add=&quot;**/_svn&quot;/&gt;
   &lt;defaultexcludes add=&quot;**/_svn/**&quot;/&gt;
 </pre>
-
-
-
 
 </body>
 </html>

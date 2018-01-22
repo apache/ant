@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="echo">Echo</a></h2>
+<h2 id="echo">Echo</h2>
 <h3>Description</h3>
 <p>Echoes a message to the current loggers and listeners which
 means <tt>System.out</tt> unless overridden. A <tt>level</tt>
@@ -35,7 +35,7 @@ The task can also echo to a file, in which case the option to append rather
 than overwrite the file is available, and the <tt>level</tt> option is
 ignored</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -45,7 +45,7 @@ ignored</p>
     <td valign="top">message</td>
     <td valign="top">the message to echo.</td>
     <td valign="top" align="center">No.  Text may also be included in a
-      character section within this element.  If neither is included a 
+      character section within this element.  If neither is included a
       blank line will be emitted in the output.</td>
   </tr>
   <tr>
@@ -136,7 +136,7 @@ ignored:
 <tr>
   <th>Ant-Statement</th>
   <th>-quiet, -q</th>
-  <th><i>no statement</th>
+  <th><i>no statement</i></th>
   <th>-verbose, -v</th>
   <th>-debug, -d</th>
 </tr>
@@ -183,11 +183,6 @@ ignored:
   <td align="center">ok</td>
 </tr>
 </table>
-
-
-
-
-
 
 </body>
 </html>

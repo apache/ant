@@ -24,14 +24,14 @@
 
 <body>
 
-<h2><a name="fail">Fail</a></h2>
+<h2 id="fail">Fail</h2>
 <h3>Description</h3>
 <p>Exits the current build (just throwing a BuildException), optionally printing additional information.</p>
 <p>The message of the Exception can be set via the message attribute
 or character data nested into the element.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -69,7 +69,7 @@ or character data nested into the element.</p>
   conditional failure can be achieved using a single nested
   <code>&lt;condition&gt;</code> element, which should contain exactly one
   core or custom condition.  For information about conditions, see
-  <a href="conditions.html">here</a>.<br><b>Since Ant 1.6.2</b>
+  <a href="conditions.html">here</a>.<br><i>Since Ant 1.6.2</i>
 </p>
 
 <h3>Examples</h3>
@@ -140,4 +140,3 @@ will fail.</p>
 
 </body>
 </html>
-

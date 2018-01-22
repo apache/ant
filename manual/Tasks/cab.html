@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="cab">Cab</a></h2>
+<h2 id="cab">Cab</h2>
 <h3>Description</h3>
 <p>The cab task creates Microsoft cab archive files.  It is invoked
 similar to the <a href="../Tasks/jar.html">jar</a> or <a href="../Tasks/zip.html">zip</a> tasks.
@@ -42,7 +42,7 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -120,16 +120,14 @@ element to specify the files to be included in the archive.
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
-     basedir=&quot;htdocs/manual&quot;
-  /&gt;
+     basedir=&quot;htdocs/manual&quot;/&gt;
 </pre></blockquote>
 <p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory.</p>
 <blockquote><pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;
-     excludes=&quot;mydocs/**, **/todo.html&quot;
-  /&gt;
+     excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;
 </pre></blockquote>
 <p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Files in the directory mydocs,
@@ -139,8 +137,7 @@ or files with the name todo.html are excluded.</p>
      basedir=&quot;htdocs/manual&quot;
      includes=&quot;api/**/*.html&quot;
      excludes=&quot;**/todo.html&quot;
-     verbose=&quot;yes&quot;
-  /&gt;
+     verbose=&quot;yes&quot;/&gt;
 </pre></blockquote>
 <p>Cab all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Only html files under the
@@ -154,14 +151,10 @@ output.</p>
   &lt;fileset
        dir=&quot;htdocs/manual&quot;
        includes=&quot;api/**/*.html&quot;
-       excludes=&quot;**/todo.html&quot;
-  /&gt;
+       excludes=&quot;**/todo.html&quot;/&gt;
 &lt;/cab&gt;
 </pre></blockquote>
 <p>is equivalent to the example above.</p>
 
-
-
 </body>
 </html>
-

@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="filter">Filter</a></h2>
+<h2 id="filter">Filter</h2>
 <h3>Description</h3>
 <p>Sets a token filter for this project or read multiple token filter from
 an input file and sets these as filters.
@@ -36,7 +36,7 @@ Note 2: Either token and value attributes must be provided, or only the
 filtersfile attribute.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -49,13 +49,13 @@ filtersfile attribute.</p>
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">the string that should be put to replace the token when the 
+    <td valign="top">the string that should be put to replace the token when the
       file is copied</td>
     <td align="center" valign="top">Yes*</td>
   </tr>
   <tr>
     <td valign="top">filtersfile</td>
-    <td valign="top">The file from which the filters must be read. This file must be a formatted as a property file. </td>
+    <td valign="top">The file from which the filters must be read. This file must be a formatted as a property file.</td>
     <td align="center" valign="top">Yes*</td>
   </tr>
 </table>
@@ -64,7 +64,7 @@ filtersfile attribute.</p>
 <pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
   &lt;copy todir=&quot;${dest.dir}&quot; filtering=&quot;true&quot;&gt;
     &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
-  &lt;/copy&gt;</pre> 
+  &lt;/copy&gt;</pre>
 <p>will copy recursively all the files from the <i>src.dir</i> directory into
 the <i>dest.dir</i> directory replacing all the occurrences of the string <i>@year@</i>
 with <i>2000.</i></p>
@@ -72,8 +72,5 @@ with <i>2000.</i></p>
 will read all property entries from the <i>deploy_env.properties</i> file
 and set these as filters.
 
-
-
 </body>
 </html>
-

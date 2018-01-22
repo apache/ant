@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="rmic">Rmic</a></h2>
+<h2 id="rmic">Rmic</h2>
 <h3>Description</h3>
 <p>Runs the rmic compiler for a certain class.</p>
 <p>Rmic can be run on a single class (as specified with the classname
@@ -47,10 +47,9 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>base</code>) as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
-<p>It is possible to use different compilers. This can be selected
+<p id="compilervalues">It is possible to use different compilers. This can be selected
 with the &quot;build.rmic&quot; property, the <code>compiler</code>
-attribute. or a nested element.
-<a name="compilervalues">Here are the choices</a>:</p>
+attribute, or a nested element. Here are the choices:</p>
 <ul>
   <li>default -the default compiler (kaffe, sun or forking) for the platform.
   <li>sun (the standard compiler of the JDK &lt; JDK 9)</li>
@@ -62,12 +61,11 @@ attribute. or a nested element.
   <li>xnew - the sun compiler forked into a separate process,
       with the -Xnew option (since Ant 1.7).
     This is the most reliable way to use -Xnew.
-    <br></br>JDK9 has removed support for -Xnew and starting with Ant
-    1.9.8 this option will be rejected by ant when running on JDK9.</li>
-    <li> "" (empty string). This has the same behaviour as not setting the compiler attribute.
+    <br>JDK 9 has removed support for -Xnew and starting with Ant
+    1.9.8 this option will be rejected by Ant when running on JDK 9.</li>
+  <li> "" (empty string). This has the same behaviour as not setting the compiler attribute.
     First the value of <tt>build.rmic</tt> is used if defined, and if not, the default
-    for the platform is chosen. If build.rmic is set to this, you get the default.
-
+    for the platform is chosen. If build.rmic is set to this, you get the default.</li>
 </ul>
 
 <p>The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
@@ -75,7 +73,7 @@ project contains a compiler implementation for this task as well,
 please consult miniRMI's documentation to learn how to use it.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -113,9 +111,9 @@ please consult miniRMI's documentation to learn how to use it.</p>
     <td valign="top">Specify the JDK version for the generated stub code.
  Specify &quot;1.1&quot; to pass the &quot;-v1.1&quot; option to rmic,
  "1.2" for -v12, compat for -vcompat. <br>
-        Since Ant1.7, if you do not specify a version, and do not ask
+        <em>Since Ant 1.7</em>, if you do not specify a version, and do not ask
         for iiop or idl files, "compat" is selected.
- 
+
  </td>
     <td align="center" valign="top">No, default="compat"</td>
   </tr>
@@ -162,7 +160,7 @@ please consult miniRMI's documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td valign="top">verify</td>
-    <td valign="top">check that classes implement Remote before handing them 
+    <td valign="top">check that classes implement Remote before handing them
         to rmic (default is false)</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -192,13 +190,13 @@ please consult miniRMI's documentation to learn how to use it.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">includeAntRuntime</td> 
+    <td valign="top">includeAntRuntime</td>
     <td valign="top">whether to include the Ant run-time libraries;
       defaults to <code>yes</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">includeJavaRuntime</td> 
+    <td valign="top">includeJavaRuntime</td>
     <td valign="top">whether to include the default run-time
       libraries from the executing VM; defaults to <code>no</code>.</td>
     <td align="center" valign="top">No</td>
@@ -237,7 +235,7 @@ please consult miniRMI's documentation to learn how to use it.</p>
   </tr>
 </table>
 
-<p><a name="footnote-1">*1</a>:
+<p id="footnote-1">*1:</p>
 <ul>
   <li>Maintaining compatibility, <code>base</code>, when specified by
     itself, serves as both the parent directory for any source files
@@ -249,7 +247,6 @@ please consult miniRMI's documentation to learn how to use it.</p>
     must be specified and exist, or a runtime error will
     occur.</li>
 </ul>
-</p>
 
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath and extdirs</h4>
@@ -265,7 +262,7 @@ are specified like <a href="../using.html#arg">Command-line
 Arguments</a> but have an additional attribute that can be used to
 enable arguments only if a given compiler implementation will be
 used.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -354,4 +351,3 @@ files below <code>${build}/classes</code> whose classname starts with
 
 </body>
 </html>
-

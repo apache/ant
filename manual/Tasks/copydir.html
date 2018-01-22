@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="copydir">Copydir</a></h2>
+<h2 id="copydir">Copydir</h2>
 <h3><i>Deprecated</i></h3>
 <p><i>This task has been deprecated.  Use the Copy task instead.</i></p>
 <h3>Description</h3>
@@ -44,7 +44,7 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
 <code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -112,14 +112,12 @@ supports most attributes of <code>&lt;fileset&gt;</code>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;copydir src=&quot;${src}/resources&quot;
-           dest=&quot;${dist}&quot;
-  /&gt;</pre>
+           dest=&quot;${dist}&quot;/&gt;</pre>
 <p>copies the directory <code>${src}/resources</code> to <code>${dist}</code>.</p>
 <pre>  &lt;copydir src=&quot;${src}/resources&quot;
            dest=&quot;${dist}&quot;
            includes=&quot;**/*.java&quot;
-           excludes=&quot;**/Test.java&quot;
-  /&gt;</pre>
+           excludes=&quot;**/Test.java&quot;/&gt;</pre>
 <p>copies the directory <code>${src}/resources</code> to <code>${dist}</code>
 recursively. All java files are copied, except for files with the name <code>Test.java</code>.</p>
 <pre>  &lt;copydir src=&quot;${src}/resources&quot;
@@ -130,7 +128,5 @@ recursively. All java files are copied, except for files with the name <code>Tes
 recursively. All java files are copied, except for the files under the <code>mypackage/test</code>
 directory.</p>
 
-
 </body>
 </html>
-

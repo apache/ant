@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="ant">Ant</a></h2>
+<h2 id="ant">Ant</h2>
 <h3>Description</h3>
 
 <p>Runs Apache Ant on a supplied buildfile. This can be used to build
@@ -81,7 +81,7 @@ defined outside of targets in the new project - but not those defined
 inside of targets.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -115,7 +115,7 @@ inside of targets.</p>
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">Filename to write the ant output to.  This is
+    <td valign="top">Filename to write the Ant output to.  This is
     relative to the value of the dir attribute if it has been set or
     to the base directory of the current project otherwise.
     </td>
@@ -156,11 +156,11 @@ false (see above). <br>
 Note that the <code>refid</code> attribute points to a
 reference in the calling project, not in the new one.</p>
 
-<h4><a name="reference">reference</a></h4>
+<h4 id="reference">reference</h4>
 <p>Used to choose references that shall be copied into the new project,
 optionally changing their id.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -192,7 +192,7 @@ href="../Types/propertyset.html">propertyset</a>s.</p>
 instead of using the target attribute.  These will be executed as if
 Ant had been invoked with a single target whose dependencies are the
 targets so specified, in the order specified.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -215,7 +215,7 @@ targets so specified, in the order specified.</p>
   no matter what any other attribute of this task says and no matter
   how deeply nested into levels of
   <code>&lt;ant&gt;</code> invocations this task lives.</p>
- 
+
 <p>If you haven't set <code>useNativeBasedir</code> or set it to
   false, the following rules apply:</p>
 
@@ -231,7 +231,7 @@ targets so specified, in the order specified.</p>
   different <code>&lt;ant&gt;</code> (or <code>&lt;antcall&gt;</code>)
   task "higher up", the following table shows the details:</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>dir attribute</b></td>
     <td valign="top"><b>inheritAll attribute</b></td>
@@ -267,7 +267,7 @@ targets so specified, in the order specified.</p>
   attribute will always win, but if the dir attribute has been omitted
   an even more complex situation arises:</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>parent dir attribute</b></td>
     <td valign="top"><b>parent inheritAll attribute</b></td>
@@ -406,8 +406,6 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 
 <p>will copy the parent's definition of <code>path1</code> into the
 new project using the id <code>path2</code>.</p>
-
-
 
 </body>
 </html>

@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="exec">Exec</a></h2>
+<h2 id="exec">Exec</h2>
 <h3>Description</h3>
 <p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Apache Ant is run on one of the specified operating
@@ -40,13 +40,12 @@ EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
   use <code>vmlauncher="false"</code> on some operating systems - but
   even this may fail (Solaris 8/9 has been reported as problematic).
   The <code>resolveexecutable</code> attribute should be more
-  reliable, as would be something like
+  reliable, as would be something like</p>
 <pre>
   &lt;property name="executable-full-path"
             location="../relative/path/to/executable"/&gt;
   &lt;exec executable="${executable-full-path}" ...
 </pre>
-</p>
 
 <h4>Windows Users</h4>
 <p>The <code>&lt;exec&gt;</code> task delegates to <code>Runtime.exec</code> which in turn
@@ -87,7 +86,7 @@ for the executable parameter.  This is because the Java VM in which Ant is
 running is a standard Windows executable and is not aware of the Cygwin
 environment (i.e., doesn't load <code>cygwin1.dll</code>).  The only
 work-around for this is to compile a JVM under Cygwin (at your own risk).
-See for instance 
+See for instance
 <a href="http://hg.openjdk.java.net/jdk7/build/raw-file/tip/README-builds.html#cygwin">
 OpenJDK build instructions for cygwin</a>.
 </p>
@@ -95,7 +94,7 @@ OpenJDK build instructions for cygwin</a>.
 <h4>OpenVMS Users</h4>
 <p>The command specified using <code>executable</code> and
 <code>&lt;arg&gt;</code> elements is executed exactly as specified
-inside a temporary DCL script.  This has some implications:
+inside a temporary DCL script.  This has some implications:</p>
 <ul>
 <li>paths have to be written in VMS style</li>
 <li>if your <code>executable</code> points to a DCL script remember to
@@ -103,7 +102,7 @@ prefix it with an <code>@</code>-sign
 (e.g. <code>executable="@[FOO]BAR.COM"</code>), just as you would in a
 DCL script</li>
 </ul>
-For <code>&lt;exec&gt;</code> to work in an environment with a Java VM
+<p>For <code>&lt;exec&gt;</code> to work in an environment with a Java VM
 older than version 1.4.1-2 it is also <i>required</i> that the logical
 <code>JAVA$FORK_SUPPORT_CHDIR</code> is set to <code>TRUE</code> in
 the job table (see the <i>JDK Release Notes</i>).</p>
@@ -122,7 +121,7 @@ interpretation of exit codes.</p>
 href="http://listserv.uark.edu/scripts/wa.exe?A1=ind0404&L=vmesa-l#33">reported
 on the VMESA-LISTSERV</a> that shell scripts invoked via the Ant Exec
 task must have their interpreter specified, i.e., the scripts must
-start with something like:
+start with something like:</p>
 
 <blockquote>
 <pre>
@@ -130,7 +129,7 @@ start with something like:
 </pre>
 </blockquote>
 
-or the task will fail as follows:
+<p>or the task will fail as follows:</p>
 
 <blockquote>
 <pre>
@@ -138,10 +137,8 @@ or the task will fail as follows:
 [exec] Result: 255
 </pre>
 </blockquote>
-</p>
 
-<h4><a name="background">Running Ant as a background process on
-    Unix(-like) systems</a></h4>
+<h4 id="background">Running Ant as a background process on Unix(-like) systems</h4>
 
 <p>If you run Ant as a background process (like <code>ant &</code>)
   and use the <code>&lt;exec&gt;</code> task with <code>spawn</code>
@@ -150,7 +147,7 @@ or the task will fail as follows:
   from the standard input.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -197,7 +194,7 @@ or the task will fail as follows:
     <td valign="top">spawn</td>
     <td valign="top">whether or not you want the command to be spawned<br>
     Default is false.<br>
-    If you spawn a command, its output will not be logged by ant.<br>
+    If you spawn a command, its output will not be logged by Ant.<br>
     The input, output, error, and result property settings are not active when spawning a process.<br>
     <em>since Ant 1.6</em>
     </td>
@@ -278,9 +275,10 @@ or the task will fail as follows:
   <tr>
     <td valign="top">failifexecutionfails</td>
     <td valign="top">Stop the build if we can't start the program.
-      Defaults to true. </td>
+      Defaults to true.</td>
     <td align="center" valign="top">No</td>
-  </tr>  <tr>
+  </tr>
+  <tr>
     <td valign="top">newenvironment</td>
     <td valign="top">Do not propagate old environment when new environment
       variables are specified.</td>
@@ -331,10 +329,10 @@ or the task will fail as follows:
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
 href="../using.html#arg">Command line arguments</a>.</p>
-<h4><a name="env">env</a></h4>
+<h4 id="env">env</h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -345,8 +343,8 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
     <td valign="top">
       The name of the environment variable.
       <br/>
-      <em>Note: (Since Ant 1.7)</em>
-      For windows, the name is case-insensitive.
+      <em>Note: since Ant 1.7</em>,
+      for Windows, the name is case-insensitive.
     </td>
     <td align="center" valign="top">Yes</td>
   </tr>
@@ -367,14 +365,14 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
       replaced by the absolute filename of the file by Ant.</td>
   </tr>
 </table>
-<a name="redirector"><h4>redirector</h4></a>
-<i><b>Since Ant 1.6.2</b></i>
+<h4 id="redirector">redirector</h4>
+<i>Since Ant 1.6.2</i>
 <p>A nested <a href="../Types/redirector.html">I/O Redirector</a>
 can be specified.  In general, the attributes of the redirector behave
 as the corresponding attributes available at the task level.  The most
 notable peculiarity stems from the retention of the &lt;exec&gt;
 attributes for backwards compatibility.  Any file mapping is done
-using a <CODE>null</CODE> sourcefile; therefore not all
+using a <code>null</code> sourcefile; therefore not all
 <a href="../Types/mapper.html">Mapper</a> types will return
 results.  When no results are returned, redirection specifications
 will fall back to the task level attributes.  In practice this means that
@@ -448,18 +446,14 @@ Output is sent to the file &quot;redirector.out&quot; and stored
 in a property of the same name.  Similarly, error output is sent to
 a file and a property, both named &quot;redirector.err&quot;.
 
-
 <p><b>Note:</b> do not try to specify arguments using
 a simple arg-element and separate them by spaces. This results in
 only a single argument containing the entire string.</p>
 <p>
-<b>Timeouts: </b> If a timeout is specified, when it is reached the
+<b>Timeouts:</b> If a timeout is specified, when it is reached the
 sub process is killed and a message printed to the log. The return
 value of the execution will be "-1", which will halt the build if
 <tt>failonerror=true</tt>, but be ignored otherwise.
-
-
-
+</p>
 </body>
 </html>
-

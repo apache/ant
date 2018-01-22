@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="jar">Jar</a></h2>
+<h2 id="jar">Jar</h2>
 <h3>Description</h3>
 <p>Jars a set of files.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
@@ -91,12 +91,12 @@ to a value other than its default, <code>"add"</code>.</b></p>
 <p>To cryptographically sign your JAR file, use the <a href="signjar.html">SignJar task</a> on the JAR that you create from this task.</p>
 
 <p>For creating a simple version of a <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238 multi release jar</a>,
-you don't need any special tools. Just set the required manifest entry and place the files where required, as you could see 
-in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this kind of jar, e.g. decreasing the size by deleting 
-'same' classes from the versions-branches, you have to do more ...</p> 
+you don't need any special tools. Just set the required manifest entry and place the files where required, as you could see
+in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this kind of jar, e.g. decreasing the size by deleting
+'same' classes from the versions-branches, you have to do more ...</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -203,9 +203,9 @@ in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this ki
   </tr>
   <tr>
     <td valign="top">index</td>
-    <td valign="top">whether to create an <A
-    HREF="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#JAR_Index">index
-    list</A> to speed up classloading.  This is a JDK 1.3+ specific
+    <td valign="top">whether to create an <a
+    href="http://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#JAR_Index">index
+    list</a> to speed up classloading.  This is a JDK 1.3+ specific
     feature.  Unless you specify additional jars with nested <a
     href="#indexjars"><code>indexjars</code></a> elements, only the
     contents of this jar will be included in the index.  Defaults to
@@ -263,7 +263,7 @@ in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this ki
     <li><b>ignore</b> = logs a message on verbose level (default)</li>
     </ul>
     <em>Since Ant 1.7.1</em></td>
-    <td valign="top" align="center">No, defaults to <tt>ignore</tt>. </td>
+    <td valign="top" align="center">No, defaults to <tt>ignore</tt>.</td>
   </tr>
   <tr>
     <td valign="top">preserve0permissions</td>
@@ -365,9 +365,9 @@ If the manifest values have changed the jar will be updated or rebuilt, as
 appropriate.
 </p>
 
-<a name="indexjars"><h4>indexjars</h4></a>
+<h4 id="indexjars">indexjars</h4>
 
-<p><em>since ant 1.6.2</em></p>
+<p><em>since Ant 1.6.2</em></p>
 
 <p>The nested <code>indexjars</code> element specifies a <a
 href="../using.html#path">PATH like structure</a>.  Its content is
@@ -393,9 +393,9 @@ depend on your manifest:</p>
   the <code>indexmetainf</code> attribute has been set
   to <code>true</code>.</p>
 
-<a name="service"><h4>service</h4></a>
+<h4 id="service">service</h4>
 
-<p><em>since ant 1.7.0</em></p>
+<p><em>since Ant 1.7.0</em></p>
 
 <p>
   The nested <code>service</code> element specifies a service.
@@ -413,7 +413,7 @@ depend on your manifest:</p>
   "provider" nested elements.
 </p>
 <p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -439,8 +439,8 @@ depend on your manifest:</p>
     If a JAR file has more that one implementation of the service, a number of
     nested &lt;provider&gt; elements may be used.
   </p>
-  
-  
+
+
 <h3>Examples</h3>
 
 <h4>Simple</h4>
@@ -453,8 +453,7 @@ called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 
 <blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
-       excludes=&quot;**/Test.class&quot;
-  /&gt;</pre></blockquote>
+       excludes=&quot;**/Test.class&quot;/&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
@@ -462,8 +461,7 @@ with the name <code>Test.class</code> are excluded.</p>
 <blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        includes=&quot;mypackage/test/**&quot;
-       excludes=&quot;**/Test.class&quot;
-  /&gt;</pre></blockquote>
+       excludes=&quot;**/Test.class&quot;/&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
@@ -472,8 +470,7 @@ the name <code>Test.class</code> are excluded.</p>
 <h4>Multiple filesets</h4>
 <blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
-             excludes=&quot;**/Test.class&quot;
-    /&gt;
+             excludes=&quot;**/Test.class&quot;/&gt;
     &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
   &lt;/jar&gt;</pre></blockquote>
 <p>jars all files in the <code>${build}/classes</code> directory and also
@@ -542,7 +539,7 @@ by Java).</p>
   &lt;/jar&gt;</pre></blockquote>
 <p>
 This is an example of an inline manifest specification including the version of the build
-program (Implementation-Version). Note that the Built-By attribute will take the value of the Ant 
+program (Implementation-Version). Note that the Built-By attribute will take the value of the Ant
 property ${user.name}. The manifest produced by the above would look like this:
 </p>
 
@@ -562,7 +559,7 @@ Sealed: false</code></pre></blockquote>
 
 <p>
   The following shows how to create a jar file specifying a service
-  with an implementation of the JDK6 scripting interface:
+  with an implementation of the JDK 6 scripting interface:
 </p>
 <blockquote><pre>&lt;jar destfile="pinky.jar"&gt;
   &lt;fileset dir="build/classes"/&gt;
@@ -575,7 +572,7 @@ Sealed: false</code></pre></blockquote>
 
 <p>
   The following shows how to create a jar file specifing a service
-  with two implementations of the JDK6 scripting interface:
+  with two implementations of the JDK 6 scripting interface:
 </p>
 <blockquote><pre>
 &lt;jar destfile="pinkyandbrain.jar"&gt;
@@ -588,22 +585,21 @@ Sealed: false</code></pre></blockquote>
 </pre></blockquote>
 
 
-<a name="jep238-example"/>
-<h4>JEP238 example: a Multi-Release JAR Files</h4>
+<h4 id="jep238-example">JEP238 example: a Multi-Release JAR Files</h4>
 <p>
   Here we want to create a <i>Multi-Release JAR File</i> according the specification
   <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238</a>.
-  It defines on top of a JAR the possibility to place additional or overwriting classes 
-  in a jar, which are available according to the Java version you run.<br> 
-  Basically it sais, that you have to set the manifest entry <tt>Multi-Release: true</tt> 
-  and place all additional or overwriting classes in 
-  <tt>META-INF/versions/<i>number</i>/package-structure</tt>, e.g. 
+  It defines on top of a JAR the possibility to place additional or overwriting classes
+  in a jar, which are available according to the Java version you run.<br>
+  Basically it sais, that you have to set the manifest entry <tt>Multi-Release: true</tt>
+  and place all additional or overwriting classes in
+  <tt>META-INF/versions/<i>number</i>/package-structure</tt>, e.g.
   <tt>META-INF/versions/9/org/apache/ant/MyClass.class</tt>
 </p>
 <p>
   In this example we expect that the normal classes are compiled into
-  <code>${java.classes}</code> and the Java9 classes are compiled into 
-  <code>${java9.classes}</code>. 
+  <code>${java.classes}</code> and the Java 9 classes are compiled into
+  <code>${java9.classes}</code>.
 </p>
 <blockquote><pre>
     &lt;jar destfile=&quot;mrjar.jar&quot;&gt;
@@ -612,9 +608,9 @@ Sealed: false</code></pre></blockquote>
         &lt;attribute name=&quot;Multi-Release&quot; value=&quot;true&quot;/&gt;
       &lt;/manifest&gt;
       &lt;!-- directory structure according to the spec ... --&gt;
-      &lt;!-- ... default classes loadable by old (&lt;Java9) versions --&gt;
+      &lt;!-- ... default classes loadable by old (&lt;Java 9) versions --&gt;
       &lt;fileset dir=&quot;${java.classes}&quot;/&gt;
-      &lt;!-- ... per release classes, require Java9+ for loadable via standard ClassLoader --&gt;
+      &lt;!-- ... per release classes, require Java 9+ for loadable via standard ClassLoader --&gt;
       &lt;zipfileset prefix=&quot;META-INF/versions/9/&quot; dir=&quot;${java9.classes}&quot;/&gt;
     &lt;/jar&gt;
 </pre></blockquote>

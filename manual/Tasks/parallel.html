@@ -28,12 +28,12 @@
 <h3>Description</h3>
 <p>
     Executes nested tasks in parallel with no guarantees of thread safety.
-    Every task will run in its own thread, with the likelihood of 
+    Every task will run in its own thread, with the likelihood of
     concurrency problems scaling with the number of CPUs on the host system.
 </p>
-<p><b>Warning:</b> While the Apache Ant core is believed to be thread safe, no such 
+<p><b>Warning:</b> While the Apache Ant core is believed to be thread safe, no such
     guarantees are made about tasks, which are not tested for thread safety during
-    Ant's test process. 
+    Ant's test process.
     Third party tasks may or may not be thread safe, and some of Ant's core tasks, such as
     <code>&lt;javac&gt;</code> are definitely not re-entrant. This is because they use libraries that
     were never designed to be used in a multithreaded environment.
@@ -44,16 +44,16 @@
     same time. Anyone trying to run large Ant task sequences in parallel, such
     as javadoc and javac at the same time, is implicitly taking on the task
     of identifying and fixing all concurrency bugs the tasks that they run.
-    
+
 </p>
 <p>
     Accordingly, while this task has uses, it should be considered an advanced
     task which should be used in certain batch-processing or testing situations,
-    rather than an easy trick to speed up build times on a multiway CPU. 
+    rather than an easy trick to speed up build times on a multiway CPU.
 </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -130,13 +130,13 @@ processors (there is no affinity to a particular processor however).  This will
 override the value in <code>threadCount</code>.  If <code>threadsPerProcessor</code>
 is specified on any older JVM, then the value in <code>threadCount</code> will be used as is.</p>
 
-<p>When using <code>threadCount</code> and  <code>threadsPerProcessor</code> 
-    care should be taken to ensure that the build does not deadlock.  
+<p>When using <code>threadCount</code> and  <code>threadsPerProcessor</code>
+    care should be taken to ensure that the build does not deadlock.
     This can be caused by tasks such as <code>waitfor</code>
-    taking up all available threads before the tasks that would unlock the 
+    taking up all available threads before the tasks that would unlock the
     <code>waitfor</code>
 would occur.  This is not a replacement for Java Language level thread
-semantics and is best used for "embarassingly parallel" tasks.</p>
+semantics and is best used for "embarrassingly parallel" tasks.</p>
 
 
 <h3>Parameters specified as nested elements</h3>
@@ -169,7 +169,7 @@ terminated from Ant. By using <code>&lt;daemons&gt;</code> such servers do not h
 &lt;/parallel&gt;
 </pre>
 <p>This example represents a typical pattern for testing a server application.
-In one thread the server is started (the <code>&lt;wlrun&gt;</code> task). 
+In one thread the server is started (the <code>&lt;wlrun&gt;</code> task).
 The other thread consists
 of a three tasks which are performed in sequence. The <code>&lt;sleep&gt;</code> task is used to
 give the server time to come up. Another task which is capable of validating
@@ -191,8 +191,8 @@ resource utilization during the build. In this instance, some servlets are being
 compiled in one thead and a set of JSPs is being precompiled in another. Developers
 need to be careful that the two tasks are independent, both in
 terms of their dependencies and in terms of their potential interactions in
-Ant's external environment. Here we set <code>fork="true"</code> for the 
-<code>&lt;javac&gt;</code> task, so that it runs in a new process; 
+Ant's external environment. Here we set <code>fork="true"</code> for the
+<code>&lt;javac&gt;</code> task, so that it runs in a new process;
 if the <code>&lt;wljspc&gt;</code> task used the javac compiler in-VM
 (it may), concurrency problems may arise.
 </p>
@@ -206,7 +206,7 @@ if the <code>&lt;wljspc&gt;</code> task used the javac compiler in-VM
       &lt;/java&gt;
    &lt;/sequential&gt;
 &lt;/macrodef&gt;
-    
+
 &lt;parallel threadCount="4"&gt;
   &lt;dbpurge file="db/one" /&gt;
   &lt;dbpurge file="db/two" /&gt;
@@ -223,13 +223,11 @@ if the <code>&lt;wljspc&gt;</code> task used the javac compiler in-VM
 <p>This example represents a typical need for use of the threadCount and
 threadsPerProcessor attributes.  Spinning up all 40 of those tasks could cripple
 the system for memory and CPU time.  By limiting the number of
-concurrent executions you can reduce contention for CPU, memory and disk IO, 
+concurrent executions you can reduce contention for CPU, memory and disk IO,
 and so actually finish faster.  This is also a good
 candidate for use of threadCount (and possibly threadsPerProcessor) because
 each task is independent (every new JVM is forked) and has no dependencies on
 the other tasks.</p>
 
-
 </body>
 </html>
-

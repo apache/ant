@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<html lang="en-us">
+<html>
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="javac">Javac</a></h2>
+<h2 id="javac">Javac</h2>
 <h3>Description</h3>
 <p>Compiles a Java source tree.</p>
 <p>The source and destination directory will be recursively scanned for Java
@@ -57,7 +57,7 @@ element(s), or by using wildcard patterns. See the section on
 <a href="../dirtasks.html#directorybasedtasks">directory-based tasks</a>,
 for information on how the
 inclusion/exclusion of files works, and how to write wildcard patterns.</p>
-<p>It is possible to use different compilers. This can be specified by
+<p id="compilervalues">It is possible to use different compilers. This can be specified by
 either setting the global <code>build.compiler</code> property, which will
 affect all <code>&lt;javac&gt;</code> tasks throughout the build, by
 setting the <code>compiler</code> attribute, specific to the current
@@ -65,9 +65,9 @@ setting the <code>compiler</code> attribute, specific to the current
 <a href="typedef.html">typedef</a>fed or
 <a href="componentdef.html">componentdef</a>fed type that implements
 <code>org.apache.tools.ant.taskdefs.compilers.CompilerAdapter</code>.
-<a name="compilervalues">Valid values for either the
+Valid values for either the
 <code>build.compiler</code> property or the <code>compiler</code>
-attribute are:</a></p>
+attribute are:</p>
 <ul>
   <li><code>classic</code> (the standard compiler of JDK 1.1/1.2) &ndash;
       <code>javac1.1</code> and
@@ -106,7 +106,7 @@ classname in the <code>build.compiler</code> property or the
 </p>
 <p>The fork attribute overrides the <code>build.compiler</code> property
 or <code>compiler</code> attribute setting and
-expects a JDK1.1 or higher to be set in <code>JAVA_HOME</code>.
+expects a JDK 1.1 or higher to be set in <code>JAVA_HOME</code>.
 </p>
 <p>You can also use the <code>compiler</code> attribute to tell Ant
 which JDK version it shall assume when it puts together the command
@@ -136,7 +136,7 @@ invoking the compiler.</p>
   corresponding <code>.java</code> file the file will not get compiled
   even if a native header file generated for it would be outdated.</p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -299,7 +299,8 @@ invoking the compiler.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">depend</td> <td valign="top">Enables dependency-tracking
+    <td valign="top">depend</td>
+    <td valign="top">Enables dependency-tracking
       for compilers that support this (<code>jikes</code> and
       <code>classic</code>).</td>
     <td align="center" valign="top">No</td>
@@ -424,7 +425,7 @@ invoking the compiler.</p>
   <tr>
     <td valign="top">updatedProperty</td>
     <td valign="top">
-      The property to set (to the value "true") 
+      The property to set (to the value "true")
       if compilation has taken place
       and has been successful.
       <em>Since Ant 1.7.1</em>.
@@ -568,7 +569,7 @@ are specified like <a href="../using.html#arg">Command-line
 Arguments</a> but have an additional attribute that can be used to
 enable arguments only if a given compiler implementation will be
 used.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -630,8 +631,7 @@ used.</p>
          destdir=&quot;${build}&quot;
          classpath=&quot;xyz.jar&quot;
          debug=&quot;on&quot;
-         source=&quot;1.4&quot;
-  /&gt;</pre>
+         source=&quot;1.4&quot;/&gt;</pre>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores
 the <code>.class</code> files in the <code>${build}</code> directory.
@@ -643,8 +643,7 @@ so you can use <code>assert</code> statements.</p>
          destdir=&quot;${build}&quot;
          fork=&quot;true&quot;
          source=&quot;1.2&quot;
-         target=&quot;1.2&quot;
-  /&gt;</pre>
+         target=&quot;1.2&quot;/&gt;</pre>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores the <code>.class</code> files in the
 <code>${build}</code> directory.  This will fork off the javac
@@ -655,8 +654,7 @@ the class files should be runnable under JDK 1.2+ as well.</p>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
          fork=&quot;java$$javac.exe&quot;
-         source=&quot;1.5&quot;
-  /&gt;</pre>
+         source=&quot;1.5&quot;/&gt;</pre>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores the <code>.class</code> files in the
 <code>${build}</code> directory.  This will fork off the javac
@@ -669,8 +667,7 @@ The source level is 1.5, so you can use generics.</p>
          includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
          excludes=&quot;mypackage/p1/testpackage/**&quot;
          classpath=&quot;xyz.jar&quot;
-         debug=&quot;on&quot;
-  /&gt;</pre>
+         debug=&quot;on&quot;/&gt;</pre>
 <p>compiles <code>.java</code> files under the <code>${src}</code>
 directory, and stores the
 <code>.class</code> files in the <code>${build}</code> directory.
@@ -686,8 +683,7 @@ so the actual values used will depend on which JDK you ran Ant with.</p>
          includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
          excludes=&quot;mypackage/p1/testpackage/**&quot;
          classpath=&quot;xyz.jar&quot;
-         debug=&quot;on&quot;
-  /&gt;</pre>
+         debug=&quot;on&quot;/&gt;</pre>
 
 <p>is the same as the previous example, with the addition of a second
 source path, defined by
@@ -715,10 +711,9 @@ Java VM of a different version:</p>
          destdir=&quot;${build}&quot;
          fork=&quot;yes&quot;
          executable=&quot;/opt/java/jdk1.1/bin/javac&quot;
-         compiler=&quot;javac1.1&quot;
-  /&gt;</pre>
+         compiler=&quot;javac1.1&quot;/&gt;</pre>
 
-<p><a name="srcdirnote"><b>Note:</b></a>
+<p id="srcdirnote"><b>Note:</b>
 If you wish to compile only source files located in certain packages below a
 common root, use the <code>include</code>/<code>exclude</code> attributes
 or <code>&lt;include&gt;</code>/<code>&lt;exclude&gt;</code> nested elements
@@ -732,13 +727,13 @@ for additional information.</p>
 <p>
 If you wish to compile only files explicitly specified and disable
 javac's default searching mechanism then you can unset the sourcepath
-attribute:
+attribute:</p>
 <pre>  &lt;javac sourcepath=&quot;&quot; srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot; &gt;
     &lt;include name="**/*.java"/&gt;
     &lt;exclude name="**/Example.java"/&gt;
   &lt;/javac&gt;</pre>
-That way the javac will compile all java source files under &quot;${src}&quot;
+<p>That way the javac will compile all java source files under &quot;${src}&quot;
 directory but skip the examples. The compiler will even produce errors if some of
 the non-example files refers to them.
 </p>
@@ -746,14 +741,12 @@ the non-example files refers to them.
 <p>
 If you wish to compile with a special JDK (another than the one Ant is currently using),
 set the <code>executable</code> and <code>fork</code> attribute. Using <code>taskname</code>
-could show in the log, that these settings are fix.
-<pre>  &lt;javac srcdir=&quot;&quot; 
+could show in the log, that these settings are fix.</p>
+<pre>  &lt;javac srcdir=&quot;&quot;
          destdir=&quot;&quot;
-         executable=&quot;path-to-java14-home/bin/javac&quot; 
+         executable=&quot;path-to-java14-home/bin/javac&quot;
          fork=&quot;true&quot;
-         taskname=&quot;javac1.4&quot; /&gt;</pre>
-</p>
-
+         taskname=&quot;javac1.4&quot;/&gt;</pre>
 
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are
@@ -762,13 +755,12 @@ using.  This problem may occur with all JDKs &lt; 1.2.</p>
 
 <p>
 If you want to activate other compiler options like <i>lint</i> you could use
-the <tt>&lt;compilerarg&gt;</tt> element:
+the <tt>&lt;compilerarg&gt;</tt> element:</p>
 <pre>  &lt;javac srcdir="${src.dir}"
          destdir="${classes.dir}"
          classpathref="libraries"&gt;
     &lt;compilerarg value="-Xlint"/&gt;
-  &lt;/javac&gt; </pre>
-</p>  
+  &lt;/javac&gt;</pre>
 
 <p>If you want to use a custom
   CompilerAdapter <code>org.example.MyAdapter</code> you can either
@@ -776,8 +768,7 @@ the <tt>&lt;compilerarg&gt;</tt> element:
 <pre>
 &lt;javac srcdir="${src.dir}"
        destdir="${classes.dir}"
-       compiler="org.example.MyAdapter"/&gt;
-</pre>
+       compiler="org.example.MyAdapter"/&gt;</pre>
 <p>or a define a type and nest this into the task like in:</p>
 <pre>
 &lt;componentdef classname="org.example.MyAdapter"
@@ -794,8 +785,7 @@ the <tt>&lt;compilerarg&gt;</tt> element:
          destdir=&quot;${build}&quot;
          includeantruntime=&quot;false&quot;
          modulepath=&quot;modules&quot;
-         source=&quot;9&quot;
-  /&gt;</pre>
+         source=&quot;9&quot;/&gt;</pre>
 <p>compiles all <code>.java</code> files in a single module under the <code>${src}</code> directory,
   and stores the <code>.class</code> files in the <code>${build}</code> directory. The compilation uses
   application modules located in <code>modules</code> folder.The source level is <code>9</code> to enable modules.</p>
@@ -804,8 +794,7 @@ the <tt>&lt;compilerarg&gt;</tt> element:
          destdir=&quot;${build}&quot;
          includeantruntime=&quot;false&quot;
          modulepath=&quot;modules&quot;
-         source=&quot;9&quot;
-  /&gt;</pre>
+         source=&quot;9&quot;/&gt;</pre>
 <p>compiles all <code>.java</code> files in <code>gen/classes</code>, <code>lin32/classes</code> and
   <code>lin64/classes</code> in all source modules under the <code>${src}</code> directory.
   Generates module directories in the <code>${build}</code> directory. Each generated module directory under
@@ -831,7 +820,7 @@ interpreted as anything other than false. By default,
 <code>build.compiler.warnings</code> is <code>true</code>,
 while all others are <code>false</code>.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Property</b></td>
     <td valign="top"><b>Description</b></td>
@@ -893,7 +882,7 @@ while all others are <code>false</code>.</p>
 <code>build.compiler.jvc.extensions</code> to false before invoking
 <code>&lt;javac&gt;</code>.</p>
 
-<h3><a name="bootstrap">Bootstrap Options</h3>
+<h3 id="bootstrap">Bootstrap Options</h3>
 <p>
   The Sun javac compiler has a <em>bootclasspath</em> command
   line option - this corresponds to the "bootclasspath" attribute/element
@@ -912,9 +901,6 @@ while all others are <code>false</code>.</p>
     &lt;compilerarg arg="-Xbootclasspath/p:${toString:lib.path.ref}"/&gt;
   &lt;/javac&gt;
 </pre>
-
-  
-</p>
 
 <h3>OpenJDK Notes</h3>
 <p>
@@ -945,7 +931,7 @@ while all others are <code>false</code>.</p>
 
   <h3>Note on package-info.java</h3>
   <p>
-    <code>package-info.java</code> files were introduced in Java5 to
+    <code>package-info.java</code> files were introduced in Java 5 to
     allow package level annotations. On compilation, if the java file
     does not contain runtime annotations, there will be no .class file
     for the java file. Up to <b>Ant 1.7.1</b>, when the &lt;javac&gt;

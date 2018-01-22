@@ -23,7 +23,7 @@
 <body>
 
 
-<h2><a name="loadfile">LoadFile</a></h2>
+<h2 id="loadfile">LoadFile</h2>
 <h3>Description</h3>
 <p>
 Specialization of <a href="loadresource.html">loadresource</a> that
@@ -31,12 +31,12 @@ works on files exclusively and provides a srcFile attribute for
 convenience.  Unless an encoding is specified, the encoding of the
 current locale is used.
 </p>
-<p>If the resource content is empty (maybe after processing a filterchain) 
+<p>If the resource content is empty (maybe after processing a filterchain)
 the property is not set.</p>
 
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -64,9 +64,9 @@ the property is not set.</p>
   </tr>
   <tr>
     <td valign="top">quiet</td>
-    <td valign="top">Do not display a diagnostic message (unless Apache Ant has been 
+    <td valign="top">Do not display a diagnostic message (unless Apache Ant has been
     invoked with the <code>-verbose</code> or <code>-debug</code>
-    switches) or modify the exit status to reflect an error. Setting this to 
+    switches) or modify the exit status to reflect an error. Setting this to
     "true" implies setting failonerror to "false".
       <em>Since Ant 1.7.0.</em>
     </td>
@@ -88,7 +88,6 @@ can print this.  This is identical to
        &lt;file file="message.txt"/&gt;
     &lt;/loadresource&gt;
 </pre>
-</p>
 
 <pre>    &lt;loadfile property="encoded-file"
       srcFile="loadfile.xml"
@@ -125,9 +124,5 @@ merging lines to ensure this happens.
 Load an XML file into a property, expanding all properties declared
 in the file in the process.
 
-
-
-
 </body>
 </html>
-

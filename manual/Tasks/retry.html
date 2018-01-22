@@ -29,18 +29,18 @@ its <em>retrycount</em> has been exceeded. If this happens a BuildException is t
 <em>Since Apache Ant 1.7.1</em></p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+<table>
+  <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">retrycount</td>
     <td valign="top">number of times to attempt to execute the nested task</td>
     <td valign="top" align="center">Yes</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">retrydelay</td>
     <td valign="top">number of milliseconds to wait between retry attempts
     task. <em>Since Apache Ant 1.8.3</em></td>
@@ -52,7 +52,7 @@ its <em>retrycount</em> has been exceeded. If this happens a BuildException is t
 <h3>Example</h3>
 <pre>
 &lt;retry retrycount="3"&gt;
-  &lt;get src="http://www.unreliable-server.com/unreliable.tar.gz" 
+  &lt;get src="http://www.unreliable-server.com/unreliable.tar.gz"
        dest="/home/retry/unreliable.tar.gz" /&gt;
 &lt;/retry&gt;
 </pre>

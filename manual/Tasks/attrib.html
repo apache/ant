@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="attrib">Attrib</a></h2>
+<h2 id="attrib">Attrib</h2>
 <p><em>Since Apache Ant 1.6.</em></p>
 <h3>Description</h3>
 
@@ -33,10 +33,10 @@ directories.  Right now it has effect only under Windows. Each of the
 4 possible permissions has its own attribute, matching the arguments
 for the attrib command.</p>
 
-<p><a href="../Types/fileset.html">FileSet</a>s, 
+<p><a href="../Types/fileset.html">FileSet</a>s,
 <a href="../Types/dirset.html">DirSet</a>s or <a
 href="../Types/filelist.html">FileList</a>s can be specified using
-nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
+nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and
 <code>&lt;filelist&gt;</code> elements.</p>
 
 <p>Starting with Ant 1.7, this task supports arbitrary <a
@@ -61,23 +61,23 @@ directory tree), so you'll have to experiment a little.</p-->
   platform independent alternative.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the file or directory of which the permissions must be
     changed.</td>
-    <td valign="top" valign="middle">Yes or nested
+    <td valign="top" align="center">Yes or nested
     <code>&lt;fileset/list&gt;</code> elements.</td>
   </tr>
   <tr>
     <td valign="top">readonly</td>
     <td valign="top">the readonly permission.</td>
-    <td valign="top" rowspan="4">at least one of the four. </td>
+    <td valign="top" rowspan="4">at least one of the four.</td>
   </tr>
   <tr>
     <td valign="top">archive</td>
@@ -164,7 +164,5 @@ directory tree), so you'll have to experiment a little.</p-->
   to a FileSet with <code>id</code> <code>other.shared.sources</code> get the
   same attributes.</p>
 
-
 </body>
 </html>
-

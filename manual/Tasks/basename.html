@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="echo">Basename</a></h2>
+<h2 id="echo">Basename</h2>
 <h3>Description</h3>
 <p>
 Task to determine the basename of a specified file, optionally minus a
@@ -37,9 +37,9 @@ directory, the basename will be the last directory element. If
 <code>file</code> is a full-path, relative-path, or simple filename,
 the basename will be the simple file name, without any directory elements.
 </p>
-<p> 
+<p>
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -81,12 +81,8 @@ will set <code>cmdname</code> to <code>foo</code>.
 &lt;property environment=&quot;env&quot;/&gt;
 &lt;basename property=&quot;temp.dirname&quot; file=&quot;${env.TEMP}&quot;/&gt;
 </pre></blockquote>
-
 will set <code>temp.dirname</code> to the last directory element of
-the path defined for the <code>TEMP</code> environment variable.</p>
-
-
+the path defined for the <code>TEMP</code> environment variable.
 
 </body>
 </html>
-

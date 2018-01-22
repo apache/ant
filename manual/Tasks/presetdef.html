@@ -15,21 +15,16 @@
    limitations under the License.
 -->
 <html>
-  
+
   <head>
-    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <meta http-equiv="Content-Language" content="en-us">
     <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
-<title>PreSetDef Task</title>
-    <style type="text/css">
-      <!--
-           .code { background: #EFEFEF; margin-top: }
-           -->
-    </style>
+    <title>PreSetDef Task</title>
   </head>
-  
+
   <body>
-    
-    <h2><a name="presetdef">PreSetDef</a></h2>
+
+    <h2 id="presetdef">PreSetDef</h2>
     <h3>Description</h3>
     <p>
       The preset definition generates a new definition
@@ -45,7 +40,7 @@
       when the preset definition is defined.
     </p>
     <h3>Parameters</h3>
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -70,7 +65,7 @@
       This nested element can be any other type or task. The attributes
       and elements that need to be preset are placed here.
     </p>
-    
+
     <h3>Examples</h3>
       The following fragment defines a javac task with the debug, deprecation
       srcdir and destdir
@@ -177,8 +172,6 @@ properties to be available in child builds run with
 &lt;/macrodef&gt;
 &lt;showmessage-presetdef messageval="${message}"/&gt;
 </pre></blockquote>
-    <hr></hr>
-    
+
   </body>
 </html>
-

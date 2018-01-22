@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<h2><a name="junit">JUnit</a></h2>
+<h2 id="junit">JUnit</h2>
 <h3>Description</h3>
 
 <p>This task runs tests from the JUnit testing framework. The latest
@@ -71,7 +71,7 @@ FAQ</a> for details.
 elements</a>).</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -152,7 +152,7 @@ elements</a>).</p>
   <tr>
     <td valign="top">maxmemory</td>
     <td valign="top">Maximum amount of memory to allocate to the forked VM.
-      Ignored if <code>fork</code> is disabled. <strong>Note</strong>: 
+      Ignored if <code>fork</code> is disabled. <strong>Note</strong>:
       If you get <code>java.lang.OutOfMemoryError: Java heap space</code>
       in some of your tests then you need to raise the size like
       <code>maxmemory="128m"</code></td>
@@ -234,7 +234,7 @@ elements</a>).</p>
       formatter output to find the failing tests.
       <em>since Ant 1.8.0</em></td>
     <td align="center" valign="top">No</td>
-  </tr>    
+  </tr>
   <tr>
     <td valign="top">enableTestListenerEvents</td>
     <td valign="top">Whether Ant should send fine grained information
@@ -268,21 +268,21 @@ clean up, and still fail the build in the event of a failure.</p>
 stack traces before reporting them.
 It works with both the plain and XML formatters.  It filters out any lines
 that begin with the following string patterns:<pre>
-   "junit.framework.TestCase"
-   "junit.framework.TestResult"
-   "junit.framework.TestSuite"
-   "junit.framework.Assert."
-   "junit.swingui.TestRunner"
-   "junit.awtui.TestRunner"
-   "junit.textui.TestRunner"
-   "java.lang.reflect.Method.invoke("
-   "sun.reflect."
-   "org.apache.tools.ant."
-   "org.junit."
-   "junit.framework.JUnit4TestAdapter"
-   " more"</pre>
+   &quot;junit.framework.TestCase&quot;
+   &quot;junit.framework.TestResult&quot;
+   &quot;junit.framework.TestSuite&quot;
+   &quot;junit.framework.Assert.&quot;
+   &quot;junit.swingui.TestRunner&quot;
+   &quot;junit.awtui.TestRunner&quot;
+   &quot;junit.textui.TestRunner&quot;
+   &quot;java.lang.reflect.Method.invoke(&quot;
+   &quot;sun.reflect.&quot;
+   &quot;org.apache.tools.ant.&quot;
+   &quot;org.junit.&quot;
+   &quot;junit.framework.JUnit4TestAdapter&quot;
+   &quot; more&quot;</pre>
 
-<h3><a name="nested">Nested Elements</a></h3>
+<h3 id="nested">Nested Elements</h3>
 
 <p>The <code>&lt;junit&gt;</code> task
 supports a nested <code>&lt;classpath&gt;</code>
@@ -353,20 +353,20 @@ support it (i.e. Java 1.1).</p>
 <p><em>since Ant 1.6</em>.</p>
 
 <h4>permissions</h4>
-<p>Security permissions can be revoked and granted during the execution of the 
+<p>Security permissions can be revoked and granted during the execution of the
 class via a nested <i>permissions</i> element. For more information please
 see <a href="../Types/permissions.html">permissions</a></p>
 
 <p>Settings will be ignored if fork is enabled.</p>
 
 <p><em>since Ant 1.6</em>.</p>
- 
+
 <h4>assertions</h4>
 
 <p>You can control enablement of Java 1.4 assertions with an
 <a href="../Types/assertions.html"><tt>&lt;assertions&gt;</tt></a>
 subelement.</p>
- 
+
 <p>Assertion statements are currently ignored in non-forked mode.</p>
 
 <p><em>since Ant 1.6.</em></p>
@@ -407,14 +407,14 @@ can be specified.</p>
 that your tests have written as some characters are illegal in XML
 documents and will be dropped.</p>
 
-<p>The fourth formatter named <code>failure</code> (since Ant 1.8.0) 
+<p>The fourth formatter named <code>failure</code> (since Ant 1.8.0)
 collects all failing <code>testXXX()</code>
 methods and creates a new <code>TestCase</code> which delegates only these
 failing methods. The name and the location can be specified via Java System property or Ant property
-<code>ant.junit.failureCollector</code>. The value has to point to the directory and 
+<code>ant.junit.failureCollector</code>. The value has to point to the directory and
 the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir</i>/FailedTests.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -450,14 +450,14 @@ the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir
     <td valign="top">unless</td>
     <td valign="top">Only use formatter <a href="../properties.html#if+unless">if the named property is <b>not</b> set</a>.</td>
     <td align="center">No; default is <code>true</code>.</td>
-  </tr>  
+  </tr>
 </table>
 
 <h4>test</h4>
 
 <p>Defines a single test class.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -487,7 +487,7 @@ the name of the resulting class (without suffix). It defaults to <i>java-tmp-dir
       is specified, then no test method from the suite will be executed.</p>
     </td>
     <td align="center">No; default is to run all test methods in the suite.</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">fork</td>
     <td valign="top">Run the tests in a separate VM.
@@ -581,7 +581,7 @@ generates a test class name for each resource that ends in
 prior to Ant 1.7 only <code>&lt;fileset&gt;</code> has been
 supported.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
   <td width="78%" valign="top"><b>Description</b></td>
@@ -697,8 +697,7 @@ supported.</p>
 
 <p>to your <code>junit</code> task.</p>
 
-<h3><a name="enabletestlistenerevents"><code>ant.junit.enabletestlistenerevents</code></a>
-  magic property</h3>
+<h3 id="enabletestlistenerevents"><code>ant.junit.enabletestlistenerevents</code> magic property</h3>
 
 <p><em>Since Ant 1.8.2</em> the <code>enableTestListenerEvents</code>
   attribute of the task controls whether fine grained logging messages
@@ -760,7 +759,7 @@ stopped if the test fails.</p>
 <p>Runs <code>my.test.TestCase</code> in the same VM, ignoring the
 given CLASSPATH; only a warning is printed if this test fails. In
 addition to the plain text test results, for this test a XML result
-will be output to <code>result.xml</code>.  
+will be output to <code>result.xml</code>.
 Then, for each matching file in the directory defined for
 <code>${src.tests}</code> a
 test is run in a separate VM. If a test fails, the build process is
@@ -776,7 +775,7 @@ aborted. Results are collected in files named
     &lt;delete&gt;
         &lt;fileset dir=&quot;${collector.dir}&quot; includes=&quot;${collector.class}*.class&quot;/&gt;
     &lt;/delete&gt;
-    &lt;!-- compile the FailedTests class if present --&gt; 
+    &lt;!-- compile the FailedTests class if present --&gt;
     &lt;javac srcdir=&quot;${collector.dir}&quot; destdir=&quot;${collector.dir}&quot;/&gt;
     &lt;available file=&quot;${collector.dir}/${collector.class}.class&quot; property=&quot;hasFailingTests&quot;/&gt;
     &lt;junit haltonerror=&quot;false&quot; haltonfailure=&quot;false&quot;&gt;
@@ -802,8 +801,8 @@ aborted. Results are collected in files named
 </pre>
 <p>On the first run all tests are collected via the <code>&lt;batchtest/&gt;</code>
 element. Its <code>plain</code> formatter shows the output on the console. The
-<code>failure</code> formatter creates a java source file in 
-<code>${build.dir}/failingTests/FailedTests.java</code> which extends 
+<code>failure</code> formatter creates a java source file in
+<code>${build.dir}/failingTests/FailedTests.java</code> which extends
 <code>junit.framework.TestCase</code> and returns from a <code>suite()</code>
 method a test suite for the failing tests. <br/>
 On a second run the collector class exists and instead of the <code>&lt;batchtest/&gt;</code>

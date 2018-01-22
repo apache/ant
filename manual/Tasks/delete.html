@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="delete">Delete</a></h2>
+<h2 id="delete">Delete</h2>
 <h3>Description</h3>
 <p>Deletes a single file, a specified directory and all its files and
 subdirectories, or a set of files specified by one or more
@@ -53,7 +53,7 @@ in <strong>Directory-based Tasks</strong>, and see the
   control, use a nested <code>&lt;fileset&gt;</code>.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -84,7 +84,7 @@ in <strong>Directory-based Tasks</strong>, and see the
   <tr>
     <td valign="top">verbose</td>
     <td valign="top">Whether to show the name of each deleted file.</td>
-    <td align="center" valign="top">No, default &quot;false&quot;</i></td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
   <tr>
     <td valign="top">quiet</td>
@@ -219,10 +219,8 @@ and any subdirectories.</p>
   &lt;/delete&gt;
 </pre>
 <p>deletes the subversion metadata directories under <code>src</code>. Because <code>.svn</code>
-is on of the <a href="../dirtasks.html#defaultexcludes">default excludes</a> you have to use the 
+is on of the <a href="../dirtasks.html#defaultexcludes">default excludes</a> you have to use the
 <code>defaultexcludes</code> flag, otherwise Ant wont delete these directories and the files in it.</p>
-
-
 
 </body>
 </html>

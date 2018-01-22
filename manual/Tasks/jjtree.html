@@ -14,21 +14,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta http-equiv="Content-Language" content="en-us">
    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
 <title>JJTree Task</title>
 </head>
 <body>
 
-<h2>
-<a NAME="jjtree"></a>JJTree</h2>
+<h2 id="jjtree">JJTree</h2>
 
-<h3>
-Description</h3>
+<h3>Description</h3>
 <p>Invokes the <a href="http://javacc.dev.java.net/">JJTree</a> preprocessor
 for the JavaCC compiler compiler. It inserts parse tree building actions
 at various places in the JavaCC source that it generates. The output of
@@ -49,143 +45,143 @@ generated JavaCC file.</p>
 
 <h3>Parameters</h3>
 
-<table BORDER CELLSPACING=0 CELLPADDING=2 >
+<table>
 <tr>
-<td VALIGN=TOP><b>Attribute</b></td>
+<td valign="top"><b>Attribute</b></td>
 
-<td VALIGN=TOP><b>Description</b></td>
+<td valign="top"><b>Description</b></td>
 
-<td ALIGN=CENTER VALIGN=TOP><b>Required</b></td>
+<td align="center" valign="top"><b>Required</b></td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>target</td>
+<td valign="top">target</td>
 
-<td VALIGN=TOP>The jjtree grammar file to process.</td>
+<td valign="top">The jjtree grammar file to process.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>Yes</td>
+<td align="center" valign="top">Yes</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>javacchome</td>
+<td valign="top">javacchome</td>
 
-<td VALIGN=TOP>The directory containing the JavaCC distribution.</td>
+<td valign="top">The directory containing the JavaCC distribution.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>Yes</td>
+<td align="center" valign="top">Yes</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>outputdirectory</td>
+<td valign="top">outputdirectory</td>
 
-<td VALIGN=TOP>The directory to write the generated JavaCC grammar and node files to.
+<td valign="top">The directory to write the generated JavaCC grammar and node files to.
 If not set, the files are written to the directory containing the grammar file.&nbsp;</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>outputfile</td>
+<td valign="top">outputfile</td>
 
-<td VALIGN=TOP>The file to write the generated JavaCC grammar file
+<td valign="top">The file to write the generated JavaCC grammar file
 to. If not set, the file is written with the same name as the JJTree
 grammar file but with a the suffix <code>.jj</code>.  This is a
 filename relative to <em>outputdirectory</em> if specified, the
 project's basedir.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>buildnodefiles</td>
+<td valign="top">buildnodefiles</td>
 
-<td VALIGN=TOP>Sets the BUILD_NODE_FILES grammar option. This is a boolean
+<td valign="top">Sets the BUILD_NODE_FILES grammar option. This is a boolean
 option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>multi</td>
+<td valign="top">multi</td>
 
-<td VALIGN=TOP>Sets the MULTI grammar option. This is a boolean option.</td>
+<td valign="top">Sets the MULTI grammar option. This is a boolean option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodedefaultvoid</td>
+<td valign="top">nodedefaultvoid</td>
 
-<td VALIGN=TOP>Sets the NODE_DEFAULT_VOID grammar option. This is a boolean
+<td valign="top">Sets the NODE_DEFAULT_VOID grammar option. This is a boolean
 option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodefactory</td>
+<td valign="top">nodefactory</td>
 
-<td VALIGN=TOP>Sets the NODE_FACTORY grammar option. This is boolean option.</td>
+<td valign="top">Sets the NODE_FACTORY grammar option. This is boolean option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodescopehook</td>
+<td valign="top">nodescopehook</td>
 
-<td VALIGN=TOP>Sets the NODE_SCOPE_HOOK grammar option. This is a boolean
+<td valign="top">Sets the NODE_SCOPE_HOOK grammar option. This is a boolean
 option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodeusesparser</td>
+<td valign="top">nodeusesparser</td>
 
-<td VALIGN=TOP>Sets the NODE_USES_PARSER grammar option. This is a boolean
+<td valign="top">Sets the NODE_USES_PARSER grammar option. This is a boolean
 option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>static</td>
+<td valign="top">static</td>
 
-<td VALIGN=TOP>Sets the STATIC grammar option. This is a boolean option.</td>
+<td valign="top">Sets the STATIC grammar option. This is a boolean option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>visitor</td>
+<td valign="top">visitor</td>
 
-<td VALIGN=TOP>Sets the VISITOR grammar option. This is a boolean option.</td>
+<td valign="top">Sets the VISITOR grammar option. This is a boolean option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodepackage</td>
+<td valign="top">nodepackage</td>
 
-<td VALIGN=TOP>Sets the NODE_PACKAGE grammar option. This is a string option.</td>
+<td valign="top">Sets the NODE_PACKAGE grammar option. This is a string option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>visitorexception</td>
+<td valign="top">visitorexception</td>
 
-<td VALIGN=TOP>Sets the VISITOR_EXCEPTION grammar option. This is a string
+<td valign="top">Sets the VISITOR_EXCEPTION grammar option. This is a string
 option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP>nodeprefix</td>
+<td valign="top">nodeprefix</td>
 
-<td VALIGN=TOP>Sets the NODE_PREFIX grammar option. This is a string option.</td>
+<td valign="top">Sets the NODE_PREFIX grammar option. This is a string option.</td>
 
-<td ALIGN=CENTER VALIGN=TOP>No</td>
+<td align="center" valign="top">No</td>
 </tr>
 
   <tr>
@@ -196,16 +192,14 @@ option.</td>
   </tr>
 </table>
 
-<h3>
-Example</h3>
+<h3>Example</h3>
 
 <blockquote>
 <pre>&lt;jjtree&nbsp;
-&nbsp;&nbsp;&nbsp; target="src/Parser.jjt"&nbsp;
+&nbsp;&nbsp;&nbsp; target="src/Parser.jjt"
 &nbsp;&nbsp;&nbsp; outputdirectory="build/src"
-&nbsp;&nbsp;&nbsp; javacchome="c:/program files/JavaCC"&nbsp;
-&nbsp;&nbsp;&nbsp; nodeusesparser="true"
-/&gt;</pre>
+&nbsp;&nbsp;&nbsp; javacchome="c:/program files/JavaCC"
+&nbsp;&nbsp;&nbsp; nodeusesparser="true"/&gt;</pre>
 </blockquote>
 This invokes JJTree on grammar file src/Parser.jjt, writing the generated
 grammar file, Parser.jj, file to build/src. The grammar option NODE_USES_PARSER
@@ -214,7 +208,7 @@ is set to true when invoking JJTree.
 
 <h3>Comparison output locations between command line JJTree and different Ant taskdef versions</h3>
 
-<table cellpadding="3" border="1">
+<table>
 <tr>
   <td><b>Command Line JJTree options</b>
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>and Generated Files</i> (working directory: <code>/tmp</code>)</td>
@@ -541,23 +535,17 @@ is set to true when invoking JJTree.
 </tr>
 </table>
 
-<p>*) <u>Footnote</u>: When running JJTree with the Ant taskdef <i>jjtree</i> the option <code>-OUTPUT_DIRECTORY</code> must always 
-be set, because the project's basedir and the Ant working directory might differ. So even if you don't specify the jjtree taskdef 
-<i>outputdirectory</i> JJTree will be called with the <code>-OUTPUT_DIRECTORY</code> set to the project's basedirectory. 
-But when the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if relative to this 
-<code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute or contains a drive letter we have a 
-problem. 
+<p>*) <u>Footnote</u>: When running JJTree with the Ant taskdef <i>jjtree</i> the option <code>-OUTPUT_DIRECTORY</code> must always
+be set, because the project's basedir and the Ant working directory might differ. So even if you don't specify the jjtree taskdef
+<i>outputdirectory</i> JJTree will be called with the <code>-OUTPUT_DIRECTORY</code> set to the project's basedirectory.
+But when the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if relative to this
+<code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute or contains a drive letter we have a
+problem.
 Therefore absolute <i>outputfile</i>s (when the <i>outputdirectory</i> isn't specified) are made relative to the default directory.
 And for this reason <i>outputfile</i>s that contain a drive letter can't be supported.</p>
 
-<p>By the way: specifying a drive letter in the <code>-OUTPUT_FILE</code> when the <code>-OUTPUT_DIRECTORY</code> is set, also 
+<p>By the way: specifying a drive letter in the <code>-OUTPUT_FILE</code> when the <code>-OUTPUT_DIRECTORY</code> is set, also
 results in strange behavior when running JJTree from the command line.</p>
-
-<br>
-
-
-
 
 </body>
 </html>
-

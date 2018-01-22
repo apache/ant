@@ -24,16 +24,15 @@
 
 <body>
 
-<h2><a name="verifyjar">VerifyJar</a></h2>
+<h2 id="verifyjar">VerifyJar</h2>
 <h3>Description</h3>
 <p>Verifies JAR files with the <tt>jarsigner</tt> command line tool.
 It will take a named file in the <tt>jar</tt> attribute. Nested paths are also
 supported
 </p>
 
-
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -100,10 +99,10 @@ supported
       jarsigner command.
       <em>since Ant 1.8.0</em>.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
 </table>
 <h3>Parameters as nested elements</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -116,13 +115,13 @@ supported
   </tr>
   <tr>
     <td valign="top">fileset</td>
-    <td valign="top">fileset of JAR files to verify. </td>
+    <td valign="top">fileset of JAR files to verify.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">sysproperty</td>
     <td valign="top">JVM system properties, with the syntax of Ant
-    <a href="exec.html#env">environment variables</a> </td>
+    <a href="exec.html#env">environment variables</a></td>
     <td valign="top" align="center">No, and only one can be supplied</td>
   </tr>
  </table>
@@ -138,8 +137,5 @@ alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
   keystore and private key via &quot;secret&quot; password.
 </p>
 
-
-
 </body>
 </html>
-

@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="setpermissions">SetPermissions</a></h2>
+<h2 id="setpermissions">SetPermissions</h2>
 <p><em>Since Ant 1.10.0.</em></p>
 <h3>Description</h3>
 <p>Changes the file permissions using Java's NIO support for
@@ -35,7 +35,7 @@
 <p>If no permissions are specified either via the mode or the
   permissions attribute, then all permissions will be removed from the
   nested resources.</p>
-<p>The task accepts aribitrary resources as part of the nested
+<p>The task accepts arbitrary resources as part of the nested
   resource collections, but not all resources support setting
   permissions. This task won't do anything for resources that don't
   support setting permissions - for example URLs.</p>
@@ -45,7 +45,7 @@
   permissions to apply to either type of resource.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -61,7 +61,7 @@
   </tr>
   <tr>
     <td valign="top">mode</td>
-    <td valign="top">The permissions to set as tradional Unix
+    <td valign="top">The permissions to set as traditional Unix
       three-digit octal number.</td>
     <td valign="top" align="center">No</td>
   </tr>

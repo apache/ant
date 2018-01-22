@@ -24,8 +24,8 @@
 
 <body>
 
-<h2><a name="Conditions">Conditions</a></h2>
-  <p>Conditions are nested elements of the 
+<h2 id="conditions">Conditions</h2>
+  <p>Conditions are nested elements of the
 <a href="condition.html"><code>&lt;condition&gt;</code></a> and
 <a href="waitfor.html"><code>&lt;waitfor&gt;</code></a> tasks.
     There are core conditions and custom conditions. Custom
@@ -34,20 +34,20 @@
       Custom Conditions</a>.
     Core Conditions are described below.
   </p>
-  <h3><a name="coreconditions">Core Conditions</a></h3>
+<h3 id="coreconditions">Core Conditions</h3>
 
 <p>These are the nested elements that can be used as conditions in the
 <a href="condition.html"><code>&lt;condition&gt;</code></a> and
 <a href="waitfor.html"><code>&lt;waitfor&gt;</code></a> tasks.</p>
 
-<h4><a name="not">not</a></h4>
+<h4 id="not">not</h4>
 <p>The <code>&lt;not&gt;</code> element expects exactly one other
 condition to be nested into this element, negating the result of the
 condition.  It doesn't have any attributes and accepts all nested
 elements of the condition task as nested elements as well.</p>
 
-<h4><a name="and">and</a></h4> <p>
-The <code>&lt;and&gt;</code> element doesn't have any attributes and
+<h4 id="and">and</h4>
+<p>The <code>&lt;and&gt;</code> element doesn't have any attributes and
 accepts an arbitrary number of conditions as nested elements - all
 nested elements of the condition task are supported.  This condition
 is true if all of its contained conditions are, conditions will be
@@ -56,17 +56,18 @@ evaluated in the order they have been specified in the build file.</p>
 semantics as the Java &amp;&amp; operator, as soon as one of the
 nested conditions is false, no other condition will be evaluated.</p>
 
-<h4><a name="or">or</a></h4> <p>
-The <code>&lt;or&gt;</code> element doesn't have any attributes and
+<h4 id="or">or</h4>
+<p>The <code>&lt;or&gt;</code> element doesn't have any attributes and
 accepts an arbitrary number of conditions as nested elements - all
 nested elements of the condition task are supported.  This condition
 is true if at least one of its contained conditions is, conditions
 will be evaluated in the order they have been specified in the build
-file.</p> <p>The <code>&lt;or&gt;</code> condition has the same
+file.</p>
+<p>The <code>&lt;or&gt;</code> condition has the same
 shortcut semantics as the Java || operator, as soon as one of the
 nested conditions is true, no other condition will be evaluated.</p>
 
-<h4><a name="xor">xor</a></h4>
+<h4 id="xor">xor</h4>
 <p>The <code>&lt;xor&gt;</code> element performs an exclusive
 or on all nested elements, similar to the <code>^</code> operator
 in Java. It only evaluates to true if an odd number of nested conditions
@@ -75,24 +76,24 @@ and <code>&lt;or&gt;</code> tests.
 It doesn't have any attributes and accepts all nested
 elements of the condition task as nested elements as well.</p>
 
-<h4><a name="available">available</a></h4>
+<h4 id="available">available</h4>
 <p>This condition is identical to the <a
 href="available.html">Available</a> task, all attributes and nested
 elements of that task are supported, the property and value attributes
 are redundant and will be ignored.</p>
 
-<h4><a name="uptodate">uptodate</a></h4>
+<h4 id="uptodate">uptodate</h4>
 <p>This condition is identical to the <a
 href="uptodate.html">Uptodate</a> task, all attributes and nested
 elements of that task are supported, the property and value attributes
 are redundant and will be ignored.</p>
 
-<h4><a name="os">os</a></h4>
+<h4 id="os">os</h4>
 <p>Test whether the current operating system is of a given type.  Each
 defined attribute is tested and the result is true only if <i>all</i>
 the tests succeed.
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -137,9 +138,9 @@ the tests succeed.
   <li>openvms for OpenVMS</li>
 </ul>
 
-<h4><a name="equals">equals</a></h4>
+<h4 id="equals">equals</h4>
 <p>Tests whether the two given values are equal.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -176,9 +177,9 @@ the tests succeed.
   </tr>
 </table>
 
-<h4><a name="isset">isset</a></h4>
+<h4 id="isset">isset</h4>
 <p>Test whether a given property has been set in this project.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -191,17 +192,17 @@ the tests succeed.
   </tr>
 </table>
 
-<h4><a name="checksum">checksum</a></h4>
+<h4 id="checksum">checksum</h4>
 <p>This condition is identical to the <a href="checksum.html">Checksum</a>
 task, all attributes and nested elements of that task are supported,
 the property and overwrite attributes are redundant and will be
 ignored.</p>
 
-<h4><a name="http">http</a></h4>
+<h4 id="http">http</h4>
 <p>The <code>http</code> condition checks for a valid response from a
 web server of the specified url. By default, HTTP responses errors
 of 400 or greater are viewed as invalid.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -238,10 +239,10 @@ of 400 or greater are viewed as invalid.</p>
   </tr>
 </table>
 
-<h4><a name="socket">socket</a></h4>
+<h4 id="socket">socket</h4>
 <p>The <code>socket</code> condition checks for the existence of a
 TCP/IP listener at the specified host and port.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -259,7 +260,7 @@ TCP/IP listener at the specified host and port.</p>
   </tr>
 </table>
 
-<h4><a name="filesmatch">filesmatch</a></h4>
+<h4 id="filesmatch">filesmatch</h4>
 <p>Test two files for matching. Nonexistence of one file results in "false",
 although if neither exists they are considered equal in terms of content.
 This test does a byte for byte comparison, so test time scales with
@@ -267,7 +268,7 @@ byte size. NB: if the files are different sizes, one of them is missing
 or the filenames match the answer is so obvious the detailed test is omitted.
 
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -287,15 +288,15 @@ or the filenames match the answer is so obvious the detailed test is omitted.
     <td valign="top">textfile</td>
     <td valign="top">Whether to ignore line endings when comparing
         files; defaults to <i>false</i> which triggers a binary
-        comparison. <b>Since Ant 1.7</b>
+        comparison. <i>Since Ant 1.7</i>
     </td>
     <td align="center">No</td>
   </tr>
 </table>
 
-<h4><a name="contains">contains</a></h4>
+<h4 id="contains">contains</h4>
 <p>Tests whether a string contains another one.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -319,10 +320,10 @@ or the filenames match the answer is so obvious the detailed test is omitted.
   </tr>
 </table>
 
-<h4><a name="istrue">istrue</a></h4>
-<p>Tests whether a string equals any of the ant definitions of true,
+<h4 id="istrue">istrue</h4>
+<p>Tests whether a string equals any of the Ant definitions of true,
 that is "true","yes", or "on"</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -339,10 +340,10 @@ that is "true","yes", or "on"</p>
 &lt;istrue value=&quot;false&quot;/&gt;
 </pre></blockquote>
 
-<h4><a name="isfalse">isfalse</a></h4>
+<h4 id="isfalse">isfalse</h4>
 <p>Tests whether a string is not true, the negation of &lt;istrue&gt;
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -359,14 +360,13 @@ that is "true","yes", or "on"</p>
 &lt;isfalse value=&quot;false&quot;/&gt;
 </pre></blockquote>
 
-<h4><a name="isreference">isreference</a></h4>
-
+<h4 id="isreference">isreference</h4>
 <p>Test whether a given reference has been defined in this project and
 - optionally - is of an expected type.</p>
 
 <p>This condition has been added in Apache Ant 1.6.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -385,7 +385,7 @@ that is "true","yes", or "on"</p>
   </tr>
 </table>
 
-<h4><a name="issigned">issigned</a></h4>
+<h4 id="issigned">issigned</h4>
   <p>
     Test whether a jarfile is signed.
     If the name of the
@@ -397,7 +397,7 @@ that is "true","yes", or "on"</p>
   <p>
     This condition was added in Apache Ant 1.7.
   </p>
-  <table border="1" cellpadding="2" cellspacing="0">
+  <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -418,7 +418,7 @@ that is "true","yes", or "on"</p>
   </tr>
   </table>
 
-<h4><a name="isfileselected">isfileselected</a></h4>
+<h4 id="isfileselected">isfileselected</h4>
   <p>
     Test whether a file passes an embedded
     <a href="../Types/selectors.html">selector</a>.
@@ -426,7 +426,7 @@ that is "true","yes", or "on"</p>
   <p>
     This condition was added in Apache Ant 1.6.3.
   </p>
-  <table border="1" cellpadding="2" cellspacing="0">
+  <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -455,7 +455,7 @@ that is "true","yes", or "on"</p>
 &lt;/isfileselected&gt;
 </pre></blockquote>
 
-<h4><a name="typefound">typefound</a></h4>
+<h4 id="typefound">typefound</h4>
 
 <p>Test whether a given type is defined, and that
 its implementation class can be loaded. Types include
@@ -463,7 +463,7 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
 
 <p>This condition was added in Apache Ant 1.7.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -491,7 +491,7 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
 &lt;typefound uri="antlib:org.apache.maven.artifact.ant" name="artifact"/&gt;
 </pre></blockquote>
 
-<h4><a name="scriptcondition">scriptcondition</a></h4>
+<h4 id="scriptcondition">scriptcondition</h4>
 
 <p>Evaluate a condition based on a script in any
 <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
@@ -506,7 +506,7 @@ an explanation of scripts and dependencies.
 
 <p>This condition was added in Apache Ant 1.7.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -529,8 +529,8 @@ an explanation of scripts and dependencies.
   <tr>
     <td valign="top">value</td>
     <td valign="top">default boolean value</td>
-    <td valign="top" align="center">No -default is "false"</td>
-  </tr>  
+    <td valign="top" align="center">No - default is "false"</td>
+  </tr>
   <tr>
     <td valign="top">src</td>
     <td valign="top">filename of script source</td>
@@ -585,10 +585,10 @@ Example:
 &lt;/scriptcondition&gt;
 </pre></blockquote>
 
-Sets the default value of the condition to true, then in the script, 
+Sets the default value of the condition to true, then in the script,
 sets the value to false. This condition always evaluates to "false"
 
-<h4><a name="parsersupports">parsersupports</a></h4>
+<h4 id="parsersupports">parsersupports</h4>
 
 <p>Tests whether Ant's XML parser supports a given
 feature or property, as per the SAX/JAXP specifications, by
@@ -596,7 +596,7 @@ attempting to set the appropriate property/feature/</p>
 
 <p>This condition was added in Apache Ant 1.7.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -642,12 +642,12 @@ Check for XML Schema support.
 
 Check for Xerces-specific definition of the location of the no namespace schema.
 
-<h4><a name="isreachable">isreachable</a></h4>
+<h4 id="isreachable">isreachable</h4>
 
-<p>Uses Java1.5+ networking APIs to probe for a (remote) system being
+<p>Uses Java 5+ networking APIs to probe for a (remote) system being
 reachable. Exactly what probe mechanisms are used is an implementation
 feature of the JVM. They may include ICMP "ping" packets, UDP or TCP connections
-to port 7 "echo service" or other means. On Java1.4 and earlier, being able
+to port 7 "echo service" or other means. On Java 1.4 and earlier, being able
 to resolve the hostname is considered success. This means that if DNS is not
 working or a URL/hostname is bad, the test will fail, but otherwise succeed
 even if the remote host is actually absent.
@@ -672,7 +672,7 @@ not reachable on other ports (i.e. port 80), because of firewalls.
 
 This condition was added in Apache Ant 1.7.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -715,10 +715,10 @@ Probe for the maven repository being reachable.
 Probe for the maven repository being reachable using the hostname, ten second timeout..
 </p>
 
-<h4><a name="length">length</a></h4>
+<h4 id="length">length</h4>
 <p>This condition is a facet of the <a href="length.html">Length</a> task.
   It is used to test the length of a string or one or more files.
-  <b>Since Ant 1.6.3</b>
+  <i>Since Ant 1.6.3</i>
 </p>
 
 <blockquote><pre>
@@ -731,12 +731,12 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 </pre></blockquote>
 <p>Verify that file <i>foo</i> is not empty.</p>
 
-<h4><a name="isfailure">isfailure</a></h4>
+<h4 id="isfailure">isfailure</h4>
 
 <p>Test the return code of an executable (see the
-<a href="exec.html">Exec</a> task) for failure. <b>Since Ant 1.7</b></p>
+<a href="exec.html">Exec</a> task) for failure. <i>Since Ant 1.7</i></p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -749,12 +749,12 @@ Probe for the maven repository being reachable using the hostname, ten second ti
   </tr>
 </table>
 
-<h4><a name="resourcecount">resourcecount</a></h4>
+<h4 id="resourcecount">resourcecount</h4>
 <p>This condition is a facet of the
   <a href="resourcecount.html">ResourceCount</a> task.
-  It is used to test the size of a 
+  It is used to test the size of a
   <a href="../Types/resources.html#collection">resource collection</a>.
-  <b>Since Ant 1.7</b>
+  <i>Since Ant 1.7</i>
 </p>
 
 <blockquote><pre>
@@ -762,7 +762,7 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 </pre></blockquote>
 <p>Verify that a resource collection is not empty.</p>
 
-<h4><a name="resourcesmatch">resourcesmatch</a></h4>
+<h4 id="resourcesmatch">resourcesmatch</h4>
 <p>Test resources for matching. Nonexistence of one or more resources results in
 "false", although if none exists they are considered equal in terms of content.
 By default this test does a byte for byte comparison, so test time scales with
@@ -771,9 +771,9 @@ or the filenames match the answer is so obvious the detailed test is omitted.
 The resources to check are specified as nested
 <a href="../Types/resources.html#collection">resource collections</a>,
 meaning that more than two resources can be checked; in this case all resources
-must match. <b>Since Ant 1.7</b>
+must match. <i>Since Ant 1.7</i>
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -789,12 +789,12 @@ must match. <b>Since Ant 1.7</b>
   </tr>
 </table>
 
-<h4><a name="resourcecontains">resourcecontains</a></h4>
+<h4 id="resourcecontains">resourcecontains</h4>
 <p>Tests whether a resource contains a given (sub)string.</p>
 <p>The resources to check are specified via references or - in the
-  case of file resources via the resource attribute.  <b>Since Ant 1.7.1</b>
+  case of file resources via the resource attribute.  <i>Since Ant 1.7.1</i>
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -823,15 +823,16 @@ must match. <b>Since Ant 1.7</b>
   </tr>
 </table>
 
-<h4><a name="hasmethod">hasmethod</a></h4>
+<h4 id="hasmethod">hasmethod</h4>
 
-<p> Tests for a class having a method or field. If the class is not found 
-    or fails to load, the build fails. 
-    
-    <b>Since Ant 1.7</b>
+<p>
+    Tests for a class having a method or field. If the class is not found
+    or fails to load, the build fails.
+
+    <i>Since Ant 1.7</i>
 </p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
     <tr>
         <td width="12%" valign="top"><b>Attribute</b></td>
         <td width="78%" valign="top"><b>Description</b></td>
@@ -852,7 +853,7 @@ must match. <b>Since Ant 1.7</b>
         <td valign="top">name of a method to look for</td>
         <td align="center">one of field or method</td>
     </tr>
-    
+
     <tr>
         <td valign="top">ignoreSystemClasses</td>
         <td valign="top">should system classes be ignored?</td>
@@ -871,7 +872,7 @@ must match. <b>Since Ant 1.7</b>
 </table>
 
 <p>
-    There is also a nested &lt;classpath&gt; element, which can be used to specify 
+    There is also a nested &lt;classpath&gt; element, which can be used to specify
     a classpath.
 </p>
 <blockquote><pre>
@@ -880,14 +881,14 @@ must match. <b>Since Ant 1.7</b>
 
 <p>Looks for the method trimToSize in the ArrayList class.</p>
 
-<h4><a name="matches">matches</a></h4>
+<h4 id="matches">matches</h4>
 
 <p>
   Test if the specified string matches the specified regular
   expression pattern.
-  <b>Since Ant 1.7</b></p>
+  <i>Since Ant 1.7</i></p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -986,18 +987,18 @@ must match. <b>Since Ant 1.7</b>
 &lt;/au:assertFalse&gt;
 </pre></blockquote>
 
-<h4><a name="antversion">antversion</a></h4>
+<h4 id="antversion">antversion</h4>
 <p>This condition is identical to the <a
 href="antversion.html">Antversion</a> task, all attributes are supported, the property attribute
 is redundant and will be ignored.</p>
 
 
-<h4><a name="hasfreespace">hasfreespace</a></h4>
+<h4 id="hasfreespace">hasfreespace</h4>
 
 <p>
   Tests a partition to see if there is enough space.
-  <b>Since Ant 1.7.0</b></p>
-  <p>Needed attribute can be specified using standard computing terms:<br/>
+  <i>Since Ant 1.7.0</i></p>
+  <p>Needed attribute can be specified using standard computing terms:</p>
     <ul>
       <li>K : Kilobytes (1024 bytes)</li>
       <li>M : Megabytes (1024 K)</li>
@@ -1005,9 +1006,8 @@ is redundant and will be ignored.</p>
       <li>T : Terabytes (1024 G)</li>
       <li>P : Petabytes (1024 T)</li>
     </ul>
-  </p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -1031,12 +1031,12 @@ is redundant and will be ignored.</p>
 &lt;hasfreespace partition="c:" needed="100M"/&gt;
 </pre></blockquote>
 
-<h4><a name="islastmodified">islastmodified</a></h4>
+<h4 id="islastmodified">islastmodified</h4>
 
 <p>Tests the last modified date of a resource.  <em>Since Ant
 1.8.0</em></p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -1081,7 +1081,7 @@ is redundant and will be ignored.</p>
 &lt;/islastmodified&gt;
 </pre></blockquote>
 
-<h4><a name="resourceexists">resourceexists</a></h4>
+<h4 id="resourceexists">resourceexists</h4>
 
 <p>Tests a resource for existence.  <em>since Ant 1.8.0</em></p>
 
@@ -1096,12 +1096,12 @@ is redundant and will be ignored.</p>
 &lt;/resourceexists&gt;
 </pre></blockquote>
 
-<h4><a name="javaversion">javaversion</a></h4>
+<h4 id="javaversion">javaversion</h4>
 
 <p>Tests the version of the JVM executing Ant.  <em>Since Ant
 1.10.2</em></p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
@@ -1110,7 +1110,7 @@ is redundant and will be ignored.</p>
   <tr>
     <td valign="top">atleast</td>
     <td valign="top">The version that this JVM is at least.
-      The format is major.minor.point. Starting with Java9 really
+      The format is major.minor.point. Starting with Java 9 really
       only the major number is determined.</td>
     <td valign="top" align="center">No</td>
     <td valign="top" rowspan="2" align="center">One of these.</td>
@@ -1118,7 +1118,7 @@ is redundant and will be ignored.</p>
   <tr>
     <td valign="top">exactly</td>
     <td valign="top">The version that this JVM is exactly.
-      The format is <tt>major.minor.point</tt>. Starting with Java9 really
+      The format is <tt>major.minor.point</tt>. Starting with Java 9 really
       only the major number is determined.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -1132,7 +1132,7 @@ is redundant and will be ignored.</p>
 &lt;javaversion atleast=&quot;9&quot;/&gt;
 </pre></blockquote>
 
-<p>will evaluate to true if the current JVM is Java9 or above.</p>
+<p>will evaluate to true if the current JVM is Java 9 or above.</p>
 
 </body>
 </html>

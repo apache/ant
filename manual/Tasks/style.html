@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="style">XSLT</a></h2>
+<h2 id="style">XSLT</h2>
 <p><em>The name <code>style</code> is a deprecated name for the same task.</em></p>
 <h3>Description</h3>
 <p>Process a set of documents via XSLT.</p>
@@ -86,7 +86,7 @@ element which is used to perform Entity and URI resolution.</p>
   classloader (reference to an Ant PATH-like structure).</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -117,11 +117,11 @@ element which is used to perform Entity and URI resolution.</p>
     <td valign="top">name of the stylesheet to use - given either relative
       to the project's basedir or as an absolute path.<br/>
       <br/>
-      Alternatively, a nested element which ant can interpret as a resource
+      Alternatively, a nested element which Ant can interpret as a resource
       can be used to indicate where to find the stylesheet<br/>
       <em>deprecated variation :</em> <br/>
       If the stylesheet cannot be found, and if you have specified the
-      attribute basedir for the task, ant will assume that the style
+      attribute basedir for the task, Ant will assume that the style
       attribute is relative to the basedir of the task.
     </td>
     <td align="center" valign="top">No, if the location of
@@ -147,14 +147,13 @@ element which is used to perform Entity and URI resolution.</p>
   </tr>
   <tr>
     <td valign="top">processor</td>
-
     <td valign="top">name of the XSLT processor to use.
       Permissible value is :<ul>
       <li>&quot;trax&quot; for a TraX compliant processor (ie JAXP interface
       implementation such as Xalan 2 or Saxon)</li></ul>
       Defaults to trax.
       <br/>
-      Support for xalan1 has been removed in ant 1.7.
+      Support for Xalan 1 has been removed in Ant 1.7.
       </td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -237,7 +236,7 @@ element which is used to perform Entity and URI resolution.</p>
     <td valign="top">Specifies a xsl parameter for accessing the directory
     of the current processed file. For files in the current directory a
     value of '.' will be passed to the transformation.
-    If not set, the directory is not passed to the transformation. 
+    If not set, the directory is not passed to the transformation.
     <em>Since Ant 1.7</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -245,7 +244,7 @@ element which is used to perform Entity and URI resolution.</p>
     <td valign="top">suppressWarnings</td>
     <td valign="top">Whether processor warnings shall be suppressed.
     This option requires support by the processor, it is supported by
-    the trax processor bundled with Ant. 
+    the trax processor bundled with Ant.
     <em>Since Ant 1.8.0</em>.</td>
     <td valign="top" align="center">No, default is false.</td>
   </tr>
@@ -286,7 +285,7 @@ collection</a></h4>
 should be applied to.  Use a nested mapper and the task's destdir
 attribute to specify the output files.</p>
 
-<h4><a name="classpath">classpath</a></h4>
+<h4 id="classpath">classpath</h4>
 <p>The classpath to load the processor from can be specified via a
 nested <code>&lt;classpath&gt;</code>, as well - that is, a
 <a href="../using.html#path">path</a>-like structure.</p>
@@ -299,7 +298,7 @@ element is used to perform Entity and URI resolution.</p>
 <p>Param is used to pass a parameter to the XSL stylesheet.</p>
 <blockquote>
 <h4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -352,7 +351,7 @@ element is used to perform Entity and URI resolution.</p>
 </table>
 </blockquote>
 
-  <p>      
+  <p>
       The <code>XPATH_*</code> types says that the <code>expression</code> is not just a primitive-type value but an XPath expression.
       This expression will be evaluated on an empty XML document and the result will be passed to the XSLT transformer as a parameter of given type.
       In these expressions the declared Ant properties can be used as XPath variables e.g. <code>$someProperty</code>.
@@ -370,7 +369,7 @@ as specified in the <a href="http://www.w3.org/TR/xslt#output">
 XSLT specifications</a>.
 <blockquote>
 <h4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -389,11 +388,11 @@ XSLT specifications</a>.
 </table>
 </blockquote>
 
-<h4><a name="factory">factory ('trax' processors only)</a></h4>
+<h4 id="factory">factory ('trax' processors only)</h4>
 Used to specify factory settings.
 <blockquote>
 <h4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -433,7 +432,7 @@ And in Saxon 7.x:
 </ul>
 <blockquote>
 <h4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -491,7 +490,7 @@ support
 is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
 <blockquote>
 <h4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -580,9 +579,9 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
   element &lt;xsl:param name=&quot;date&quot;/&gt;, the variable
   <code>$date</code> will subsequently have the value 07-01-2000.
   </p>
-  
+
   <p>Various data types and XPath expressions:</p>
-  
+
   <pre>&lt;property name="antProperty1" value="ANT_PROPERTY_1"/&gt;
 &lt;property name="antProperty2" value="ANT_PROPERTY_2"/&gt;
 &lt;property name="antProperty3" value="3"/&gt;
@@ -594,38 +593,38 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 --&gt;
 
 &lt;xslt in="in.xml" out="out.xml" style="template.xsl"&gt;
-  
+
   &lt;!-- Simple String parameter: --&gt;
   &lt;param name="p0" expression="some nice string" type="STRING"/&gt;
-  
+
   &lt;!-- A value substituted by Ant --&gt;
   &lt;param name="p1" expression="some string with ${antProperty1} constructed by Ant" type="STRING"/&gt;
-  
+
   &lt;!-- XPath resulting in: and this is done in XPath: ANT_PROPERTY_2 --&gt;
   &lt;param name="p2" expression="concat('and this is done in XPath: ', $antProperty2)" type="XPATH_STRING"/&gt;
-  
+
   &lt;!-- Some XPath math, result: 42 --&gt;
   &lt;param name="p3" expression="64 * 64 div 128 + 10" type="XPATH_NUMBER"/&gt;
-  
+
   &lt;!-- Some numeric parameter: --&gt;
   &lt;param name="p4" expression="123.45" type="DOUBLE"/&gt;
-  
+
   &lt;!-- XPath expression, result: true boolean --&gt;
   &lt;param name="p5" expression="$antProperty1 = 'ANT_PROPERTY_1'" type="XPATH_BOOLEAN"/&gt;
-  
+
   &lt;!-- First one is an XPath variable, second one is a text substituted by Ant, result: true boolean --&gt;
   &lt;param name="p6" expression="$antProperty2 = '${antProperty2}'" type="XPATH_BOOLEAN"/&gt;
-  
+
   &lt;!-- Some XPath math with a variable, result: 64 --&gt;
   &lt;param name="p7" expression="$antProperty3 * 4 * 5 + 4" type="XPATH_NUMBER"/&gt;
-  
-  &lt;!-- 
+
+  &lt;!--
     XPath expression with substituted function name and a variable:
     substring-before($antProperty2, '_')
     result: ANT
   --&gt;
   &lt;param name="p8" expression="${antProperty4}($antProperty2, '_')" type="XPATH_STRING"/&gt;
-  
+
   &lt;!-- Without type attribute: --&gt;
   &lt;param name="p9" expression="default type is String"/&gt;
 &lt;/xslt&gt;</pre>
@@ -699,7 +698,6 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 &lt;xslt&gt;
 </pre>
 </blockquote>
-
 
 </body>
 </html>

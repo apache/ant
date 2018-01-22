@@ -14,18 +14,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta http-equiv="Content-Language" content="en-us">
    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
 <title>PVCS task</title>
 </head>
 <body>
 
-<h1>
-Apache Ant Pvcs Task User Manual</h1>
+<h1>Apache Ant Pvcs Task User Manual</h1>
 
 <p><b>Note:</b>
 Before using this task, the user running Ant must have access to the
@@ -47,160 +44,158 @@ Version 1.1 - 2001/06/27<br>
 Version 1.0 - 2001/01/31<br>
 <p>Initial release.</p>
 <hr>
-<h2>
-Table of Contents</h2>
+<h2>Table of Contents</h2>
 <ul>
   <li><a href="#introduction">Introduction</a></li>
   <li><a href="#pvcs">Pvcs Task</a></li>
 </ul>
-<hr>
+<hr/>
 
-<h2><a NAME="introduction">Introduction</a></h2>
+<h2 id="introduction">Introduction</h2>
 The pvcs task allows the user of Ant to extract the latest edition
 of the source code from a PVCS repository. PVCS is a version control system
 developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
 <br>
 This version has been tested against PVCS version 6.5 and 6.6 under Windows and Solaris.
 
-<hr>
-<h2><a NAME="pvcs">Pvcs Task</a></h2>
+<hr/>
+<h2 id="pvcs">Pvcs Task</h2>
 <h3>Description</h3>
 The pvcs task is set to point at a PVCS repository and optionally a project
 within that repository, and can from that specification get the latest
 version of the files contained by the repository.
-<h3>
-Parameters</h3>
+<h3>Parameters</h3>
 
-<table BORDER CELLSPACING=0 CELLPADDING=2 >
+<table>
 <tr>
-<td VALIGN=TOP WIDTH="12%"><b>Attribute</b></td>
+<td valign="top" width="12%"><b>Attribute</b></td>
 
-<td VALIGN=TOP WIDTH="78%"><b>Description</b></td>
+<td valign="top" width="78%"><b>Description</b></td>
 
-<td VALIGN=TOP WIDTH="10%"><b>Required</b></td>
+<td valign="top" width="10%"><b>Required</b></td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">repository</td>
+<td valign="top" width="12%">repository</td>
 
-<td VALIGN=TOP WIDTH="78%">The location of the repository (see your PVCS
+<td valign="top" width="78%">The location of the repository (see your PVCS
 manuals)</td>
 
-<td VALIGN=TOP WIDTH="10%">Yes</td>
+<td valign="top" width="10%">Yes</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">pvcsproject</td>
+<td valign="top" width="12%">pvcsproject</td>
 
-<td VALIGN=TOP WIDTH="78%">The project within the PVCS repository to extract
+<td valign="top" width="78%">The project within the PVCS repository to extract
 files from (&quot;/&quot; is root project and that is default if this attribute isn't
 specified)</td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">label</td>
+<td valign="top" width="12%">label</td>
 
-<td VALIGN=TOP WIDTH="78%">Only files marked with this label are extracted.</td>
+<td valign="top" width="78%">Only files marked with this label are extracted.</td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">promotiongroup</td>
+<td valign="top" width="12%">promotiongroup</td>
 
-<td VALIGN=TOP WIDTH="78%">Only files within this promotion group are extracted. Using
+<td valign="top" width="78%">Only files within this promotion group are extracted. Using
 both the <i>label</i> and the <i>promotiongroup</i> tag will cause the files in the
 promotion group and with that label to be extracted.
 </td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">config</td>
+<td valign="top" width="12%">config</td>
 
-<td VALIGN=TOP WIDTH="78%">path of a non default .cfg file.
+<td valign="top" width="78%">path of a non default .cfg file.
 Can be given absolute or relative to Ant's base directory.
 </td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">force</td>
+<td valign="top" width="12%">force</td>
 
-<td VALIGN=TOP WIDTH="78%">If set to <i>yes</i> all files that exists and are writable are overwritten. Default <i>no</i> causes the files that are writable to be ignored. This stops the PVCS command <i>get</i> to stop asking questions!</td>
+<td valign="top" width="78%">If set to <i>yes</i> all files that exists and are writable are overwritten. Default <i>no</i> causes the files that are writable to be ignored. This stops the PVCS command <i>get</i> to stop asking questions!</td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">workspace</td>
+<td valign="top" width="12%">workspace</td>
 
-<td VALIGN=TOP WIDTH="78%">By specifying a workspace, the files are extracted to that location. A PVCS workspace is a
+<td valign="top" width="78%">By specifying a workspace, the files are extracted to that location. A PVCS workspace is a
 name for a location of the workfiles and isn't as such the location itself. You define the location for a workspace
 using the PVCS GUI clients. If this isn't specified the default workspace for the current user is used.</td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">pvcsbin</td>
+<td valign="top" width="12%">pvcsbin</td>
 
-<td VALIGN=TOP WIDTH="78%">On some systems the PVCS executables <i>pcli</i>
+<td valign="top" width="78%">On some systems the PVCS executables <i>pcli</i>
 and <i>get</i> are not found in the PATH. In such cases this attribute
 should be set to the bin directory of the PVCS installation containing
 the executables mentioned before. If this attribute isn't specified the
 tag expects the executables to be found using the PATH environment variable.</td>
 
-<td VALIGN=TOP WIDTH="10%">No</td>
+<td valign="top" width="10%">No</td>
 </tr>
     <tr>
-      <td VALIGN=TOP WIDTH="12%">ignorereturncode</td>
-      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> the return value from executing
+      <td valign="top" width="12%">ignorereturncode</td>
+      <td valign="top" width="78%">If set to <i>true</i> the return value from executing
         the pvcs commands are ignored.</td>
-      <td VALIGN=TOP WIDTH="10%">No</td>
+      <td valign="top" width="10%">No</td>
     </tr>
     <tr>
-      <td VALIGN=TOP WIDTH="12%">updateonly</td>
-      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> files are gotten only if
+      <td valign="top" width="12%">updateonly</td>
+      <td valign="top" width="78%">If set to <i>true</i> files are gotten only if
         newer than existing local files.</td>
-      <td VALIGN=TOP WIDTH="10%">No</td>
+      <td valign="top" width="10%">No</td>
     </tr>
     <tr>
-      <td valign="TOP">filenameformat</td>
-      <td valign="TOP">The format of your folder names in a
+      <td valign="top">filenameformat</td>
+      <td valign="top">The format of your folder names in a
           format suitable for <code>java.text.MessageFormat</code>.
           Defaults to <code>{0}-arc({1})</code>.  Repositories where
           the archive extension is not  <code>-arc</code> should set
           this.</td>
-      <td valign="TOP">No</td>
+      <td valign="top">No</td>
     </tr>
     <tr>
-      <td valign="TOP">linestart</td>
-        <td valign="TOP">Used to parse the output of the pcli
+      <td valign="top">linestart</td>
+        <td valign="top">Used to parse the output of the pcli
           command. It defaults to <code>&quot;P:</code>.  The parser already
           knows about / and \\, this property is useful in cases where the
           repository is accessed on a Windows platform via a drive letter
           mapping.</td>
-      <td valign="TOP">No</td>
+      <td valign="top">No</td>
     </tr>
     <tr>
-      <td valign="TOP">revision</td>
-      <td valign="TOP">Retrieve the specified revision.</td>
-      <td valign="TOP">No</td>
+      <td valign="top">revision</td>
+      <td valign="top">Retrieve the specified revision.</td>
+      <td valign="top">No</td>
     </tr>
     <tr>
-      <td valign="TOP">userid</td>
-      <td valign="TOP">Use the specified userid.</td>
-      <td valign="TOP">No</td>
+      <td valign="top">userid</td>
+      <td valign="top">Use the specified userid.</td>
+      <td valign="top">No</td>
     </tr>
 </table>
-<h3><a name="nested">Nested Elements</a></h3>
+<h3 id="nested">Nested Elements</h3>
 
-<h3>pvcsproject element</h3>
+<h4>pvcsproject element</h4>
 <p><code>pvcs</code> supports a nested
 <code>&lt;pvcsproject&gt;</code> element, that represents a project
 within the PVCS repository to extract files from.  By nesting multiple
@@ -210,21 +205,21 @@ specified.</p>
 
 <h3>Parameters</h3>
 
-<table BORDER CELLSPACING=0 CELLPADDING=2 >
+<table>
 <tr>
-<td VALIGN=TOP WIDTH="12%"><b>Attribute</b></td>
+<td valign="top" width="12%"><b>Attribute</b></td>
 
-<td VALIGN=TOP WIDTH="78%"><b>Description</b></td>
+<td valign="top" width="78%"><b>Description</b></td>
 
-<td VALIGN=TOP WIDTH="10%"><b>Required</b></td>
+<td valign="top" width="10%"><b>Required</b></td>
 </tr>
 
 <tr>
-<td VALIGN=TOP WIDTH="12%">name</td>
+<td valign="top" width="12%">name</td>
 
-<td VALIGN=TOP WIDTH="78%">The name of the pvcs project</td>
+<td valign="top" width="78%">The name of the pvcs project</td>
 
-<td VALIGN=TOP WIDTH="10%">Yes</td>
+<td valign="top" width="10%">Yes</td>
 </tr>
 </table>
 
@@ -236,7 +231,7 @@ The following set-up extracts the latest version of the files in the pvcs reposi
   &lt;!-- =================================================================== --&gt;
   &lt;target name=&quot;getlatest&quot;&gt;
     &lt;pvcs repository=&quot;/mnt/pvcs&quot; pvcsproject=&quot;/myprj&quot;/&gt;
-  &lt;/target&gt;</ul>
+  &lt;/target&gt;
 </pre>
 <p>Now run:</p>
 <code>ant getlatest</code>
@@ -267,7 +262,7 @@ repository from two projects using nested <code>&lt;pvcsproject&gt;</code> eleme
       &lt;pvcsproject name=&quot;/myprj&quot;/&gt;
       &lt;pvcsproject name=&quot;/myprj2&quot;/&gt;
     &lt;/pvcs&gt;
-  &lt;/target&gt;</ul>
+  &lt;/target&gt;
 </pre>
 <p>Now run:</p>
 <code>ant getlatest2</code>
@@ -289,7 +284,7 @@ repository from two projects using nested <code>&lt;pvcsproject&gt;</code> eleme
 
   Total time: 22 seconds</pre>
 
-<hr WIDTH="100%">
+<hr/>
 <p>PVCS is a registered trademark of MERANT.</p>
 </body>
 </html>

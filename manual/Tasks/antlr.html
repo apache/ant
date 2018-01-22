@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="antlr">ANTLR</a></h2>
+<h2 id="antlr">ANTLR</h2>
 <h3>Description</h3>
 <p>
   Invokes the <a HREF="http://www.antlr.org/" target="_top">ANTLR</a> Translator generator
@@ -63,7 +63,7 @@ for more information.</p>
 </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -160,7 +160,7 @@ for more information.</p>
   </tr>
 </table>
 
-<h3><a name="nested">Nested Elements</a></h3>
+<h3 id="nested">Nested Elements</h3>
 
 <p><code>ANTLR</code> supports a nested <code>&lt;classpath&gt;</code>
 element, that represents a <a href="../using.html#path">PATH like
@@ -189,15 +189,12 @@ href="../using.html#arg">Command line arguments</a>.</p>
 <blockquote><pre>
 &lt;antlr
     target=&quot;etc/java.g&quot;
-    outputdirectory=&quot;build/src&quot;
-/&gt;
+    outputdirectory=&quot;build/src&quot;/&gt;
 </pre></blockquote>
 <p>
   This invokes ANTLR on grammar file etc/java.g, writing the generated
   files to build/src.
 </p>
 
-
 </body>
 </html>
-

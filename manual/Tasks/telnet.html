@@ -24,19 +24,19 @@
 
 <body>
 
-<h2><a name="telnet">Telnet</a></h2>
+<h2 id="telnet">Telnet</h2>
 <h3>Description</h3>
-Task to automate a remote telnet session. The task uses 
+Task to automate a remote telnet session. The task uses
 nested <tt>&lt;read&gt;</tt> to indicate strings to wait for, and
-<tt>&lt;write&gt;</tt> tags to specify text to send.  
+<tt>&lt;write&gt;</tt> tags to specify text to send.
 
-<p>If you do specify a userid and password, the system will 
+<p>If you do specify a userid and password, the system will
 assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
 <p><b>Note:</b> This task depends on external libraries not included in the Apache Ant distribution.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <th>Attribute</th>
     <th>Values</th>
@@ -73,16 +73,16 @@ See <a href="../install.html#librarydependencies">Library Dependencies</a> for m
      <td>No</td>
   </tr>
 </table>
-<h3><a name="nested">Nested Elements</a></h3>
+<h3 id="nested">Nested Elements</h3>
 The commands to send to the server, and responses to wait for, are
-described as nested elements.  
+described as nested elements.
 
 <h4>read</h4>
 
 <p>declare (as a text child of this element) a string to wait for.
 The element supports the timeout attribute, which overrides any
 timeout specified for the task as a whole. It also has a <tt>string</tt>
-attribute, which is an alternative to specifying the string as 
+attribute, which is an alternative to specifying the string as
 a text element.
 </p>
 <i>Always declare an opening and closing
@@ -93,7 +93,7 @@ the final command has completed.
 <h4>write</h4>
 
 <p>describes the text to send to the server. The <tt>echo</tt> boolean
-attribute controls whether the string is echoed to the local log; 
+attribute controls whether the string is echoed to the local log;
 this is "true" by default
 </p>
 <h3>Examples</h3>
@@ -122,8 +122,8 @@ This task can be rewritten as:
 &lt;/telnet&gt;
 </pre></blockquote>
 
-A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at the <code>&lt;read&gt;</code> level. 
-This will connect, issue a sleep command that is suppressed from displaying and wait 
+A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at the <code>&lt;read&gt;</code> level.
+This will connect, issue a sleep command that is suppressed from displaying and wait
 10 seconds before quitting.
 <blockquote><pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
@@ -143,13 +143,11 @@ The task can be used with other ports as well:
 &lt;/telnet&gt;
 </pre></blockquote>
 <p>
-To use this task against the WinNT telnet service, you need to configure the service to use 
-classic authentication rather than NTLM negotiated authentication. 
-This can be done in the Telnet Server Admin app: 
+To use this task against the WinNT telnet service, you need to configure the service to use
+classic authentication rather than NTLM negotiated authentication.
+This can be done in the Telnet Server Admin app:
 select "display/change registry settings", then "NTLM", then set the value of NTLM to 1.
 </p>
 
-
 </body>
 </html>
-

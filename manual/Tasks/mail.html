@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="mail">Mail</a></h2>
+<h2 id="mail">Mail</h2>
 <h3>Description</h3>
   <p>
     A task to send SMTP email.
@@ -49,13 +49,13 @@
   </p>
   <p>
     <strong>Note:</strong> This task may depend on external libraries
-    that are not included in the Ant distribution. 
+    that are not included in the Ant distribution.
     See <a href="../install.html#librarydependencies">Library Dependencies</a>
     for more information.
   </p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -149,18 +149,18 @@
   <tr>
     <td valign="top">user</td>
     <td valign="top">user name for SMTP auth</td>
-    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br></br>
+    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br>
     the email message will be then sent using Mime and requires JavaMail</td>
   </tr>
   <tr>
     <td valign="top">password</td>
     <td valign="top">password for SMTP auth</td>
-    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br></br>
+    <td valign="center">Yes, if SMTP auth is required on your SMTP server<br>
     the email message will be then sent using Mime and requires JavaMail</td>
   </tr>
   <tr>
     <td valign="top">ssl</td>
-    <td valign="top">"true", "on" or "yes" accepted here<br></br>
+    <td valign="top">"true", "on" or "yes" accepted here<br>
     indicates whether you need TLS/SSL</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -193,7 +193,7 @@
   </tr>
   <tr>
     <td valign="top">enableStartTLS</td>
-    <td valign="top">"true", "on" or "yes" accepted here<br></br>
+    <td valign="top">"true", "on" or "yes" accepted here<br>
       whether the STARTTLS command used to switch to an encrypted
       connection for authentication should be supported.  Requires
       JavaMail.  <em>Since Ant 1.8.0</em></td>
@@ -216,10 +216,10 @@ can contain email addresses of the form :
 
 <h3>Parameters specified as nested elements</h3>
 
-<h4>to / cc / bcc / from/ replyto </h4>
+<h4>to / cc / bcc / from/ replyto</h4>
 <p>Adds an email address element.  It takes the following attributes:</p>
 
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -242,7 +242,7 @@ can contain email addresses of the form :
 <p>Specifies the message to include in the email body.  It takes the following
 attributes:</p>
 
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -287,7 +287,7 @@ the <code>&lt;message&gt;</code> element.</p>
 <p><strong>Since Ant 1.7</strong>, arbitrary mail headers can be added by
   specifying these attributes on one or more nested header elements:</p>
 
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -355,8 +355,6 @@ will be replaced with the <code>buildname</code> property's value.</p>
 
 <p>Sends an eMail from <i>me@myisp.com</i> to <i>all@xyz.com</i> with a subject of
 <i>Test Build</i>, the message body being coded in UTF-8
-
-
 
 </body>
 </html>
