@@ -97,7 +97,11 @@ listeners and loggers.</p>
   <tr>
     <td width="33%"><code><a href="#Log4jListener">
     org.apache.tools.ant.listener.Log4jListener</a></code></td>
-    <td width="33%">Passes events to Log4j for highly customizable logging.</td>
+    <td width="33%">
+        Passes events to Apache Log4j for highly customizable logging.<br>
+        <b>Deprecated:</b> Apache Log4j (1) is not developed any more. Last
+        release is 1.2.17 from 26-May-2012 and contains vulnerability issues.
+    </td>
     <td width="34%">BuildListener</td>
   </tr>
   <tr>
@@ -364,6 +368,8 @@ Background is one of the following:
 
 
 <h3><a name="Log4jListener">Log4jListener</a></h3>
+<p><b>Deprecated:</b> Apache Log4j (1) is not developed any more. Last
+release is 1.2.17 from 26-May-2012 and contains vulnerability issues.</p>
 <p>Passes build events to Log4j, using the full classname's of the generator of
 each build event as the category:</p>
 <ul>
@@ -433,7 +439,6 @@ is declared at all.</p>
 <p><code>ant -listener org.apache.tools.ant.XmlLogger</code><br>
 <code>ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</code></p>
 </blockquote>
-
 
 
 

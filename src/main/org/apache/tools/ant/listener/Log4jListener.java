@@ -28,9 +28,12 @@ import org.apache.tools.ant.Task;
 
 
 /**
- *  Listener which sends events to Log4j logging system
- *
+ * Listener which sends events to Log4j logging system.
+ * @deprecated Apache Log4j (1) is not developed any more. Last
+ *     release is 1.2.17 from 26-May-2012 and contains vulnerability issues.
+ *     Use the standard listener or your own custom listener instead.
  */
+@Deprecated
 public class Log4jListener implements BuildListener {
 
     /** Indicates if the listener was initialized. */
