@@ -15,7 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:if="ant:if" xmlns:unless="ant:unless">
 
   <description>
     Check Ants codebase against certain code styleguide rules using
@@ -34,35 +34,48 @@
   </description>
 
   <import file="build.xml"/>
+
   <property name="config.dir" location="${etc.dir}/checkstyle"/>
 
-  <property name="checkstyle.reportdir" location="${build.dir}/reports/checkstyle"/>
-  <property name="checkstyle.raw" location="${checkstyle.reportdir}/raw.xml"/>
-  <property name="stylesheet.html" location="${config.dir}/checkstyle-frames.xsl"/>
-  <property name="stylesheet.html.sorted" location="${config.dir}/checkstyle-frames-sortby-check.xsl"/>
-  <property name="stylesheet.text" location="${config.dir}/checkstyle-text.xsl"/>
-  <property name="stylesheet.xdoc" location="${config.dir}/checkstyle-xdoc.xsl"/>
-
-  <property name="checkstyle.basedir" location="${java.dir}"/>
-
   <!-- Ant Checkstyle report -->
-  <property name="tocheck" value="**/*.java"/>
-  <property name="javadoc.scope" value="public"/>
+  <property name="checkstyle.reportdir"
+            location="${build.dir}/reports/checkstyle"
+            description="Where to store Checkstyle reports"/>
+  <property name="checkstyle.raw"
+            location="${checkstyle.reportdir}/raw.xml"
+            description="Name of Checkstyle XML-Report"/>
+  <property name="stylesheet.html"
+            location="${config.dir}/checkstyle-frames.xsl"
+            description="Name of Checkstyle XSLT for generating HTML"/>
+  <property name="stylesheet.html.sorted"
+            location="${config.dir}/checkstyle-frames-sortby-check.xsl"
+            description="Name of Checkstyle XSLT for generating 2nd HTML"/>
+  <property name="stylesheet.text"
+            location="${config.dir}/checkstyle-text.xsl"
+            description="Name of Checkstyle XSLT for generating plain text"/>
+  <property name="stylesheet.xdoc"
+            location="${config.dir}/checkstyle-xdoc.xsl"
+            description="Name of Checkstyle XSLT for generating XDOC"/>
 
-  <taskdef resource="simiantask.properties"/>
-  
+  <property name="checkstyle.basedir"
+            location="${java.dir}"
+            description="Where are the Java sources to check"/>
+  <property name="tocheck"
+            value="**/*.java"
+            description="Include pattern of the files to check"/>
+
   <!-- Findbugs: Running Findbugs -->
-  <property name="findbugs.reportdir" 
-            location="${build.dir}/reports/findbugs" 
+  <property name="findbugs.reportdir"
+            location="${build.dir}/reports/findbugs"
             description="Where to store Findbugs results"/>
-  <property name="findbugs.raw"       
-            value="raw.xml" 
+  <property name="findbugs.raw"
+            value="raw.xml"
             description="Findbugs Output xml-file"/>
-  <property name="findbugs.xsl"       
-            value="fancy.xsl" 
+  <property name="findbugs.xsl"
+            value="fancy.xsl"
             description="Which XSL to use for generating Output: default, fancy, plain, summary"/>
-  <property name="findbugs.jvmargs"   
-            value="-Xms128m -Xmx512m" 
+  <property name="findbugs.jvmargs"
+            value="-Xms128m -Xmx512m"
             description="JVMArgs for invoking Findbugs"/>
 
   <!-- RAT Release Auditing Tool -->
@@ -73,13 +86,26 @@
             value="${rat.report.dir}/report.html"
             description="RAT-Report file"/>
   <property name="rat.version"
-            value="0.7"
+            value="0.11"
             description="Which Version of RAT to use"/>
 
+  <!-- Simian -->
+  <property name="simian.version"
+            value="2.4.0"
+            description="Which Version of Simian to use"/>
+  <property name="simian.uri"
+            value="http://www.harukizaemon.com/simian/simian-${simian.version}.tar.gz"
+            description="Where to get Simian"/>
+  <property name="simian.lib.dir"
+            value="${build.dir}/simian-lib"
+            description="Where to store Simian resources"/>
+  <property name="simian.report.dir"
+            value="${build.dir}/simian"
+            description="Where to store Simian reports"/>
 
 
   <target name="init-ivy">
-    <property name="ivy.version"  value="2.4.0-rc1"/>
+    <property name="ivy.version"  value="2.4.0"/>
     <property name="ivy.jar.url"  value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
     <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
@@ -92,21 +118,30 @@
   </target>
 
   <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
-    <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="5.7"
-                   inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
-    <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />
-    <mkdir dir="${checkstyle.reportdir}"/>
-    <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
-      <formatter type="xml" toFile="${checkstyle.raw}"/>
-      <fileset dir="${java.dir}">
-        <include name="${tocheck}"/>
-        <exclude name="**/bzip2/*.java"/>
-        <exclude name="**/CVSPass.java"/>
-      </fileset>
-    </checkstyle>
+    <available property="antlr.present" classname="antlr.CommonAST"/>
+    <echo if:set="antlr.present">
+        Found antlr on the classpath.
+        Having a wrong antlr version on the same classpath as Checkstyle may produce errors like
+            'Can't find/access AST Node typecom.puppycrawl.tools.checkstyle.api.DetailAST'
+        Skip running Checkstyle.
+    </echo>
+    <sequential unless:set="antlr.present">
+      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.18"
+                     inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
+      <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath" />
+      <mkdir dir="${checkstyle.reportdir}"/>
+      <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
+        <formatter type="xml" toFile="${checkstyle.raw}"/>
+        <fileset dir="${java.dir}">
+          <include name="${tocheck}"/>
+          <exclude name="**/bzip2/*.java"/>
+          <exclude name="**/CVSPass.java"/>
+        </fileset>
+      </checkstyle>
+    </sequential>
   </target>
 
-  <target name="htmlreport" description="--> generates a html checkstyle report">
+  <target name="htmlreport" description="--> generates a html checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.html}"
           out="${checkstyle.reportdir}/html/output.txt">
       <param name="basedir" expression="${checkstyle.basedir}"/>
@@ -119,7 +154,7 @@
     </xslt>
   </target>
 
-  <target name="textreport" description="--> generates a text checkstyle report">
+  <target name="textreport" description="--> generates a text checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.text}"
           out="${checkstyle.reportdir}/report.txt">
     </xslt>
@@ -130,7 +165,7 @@
       <echo>${report}</echo>
   </target>
 
-  <target name="xdocreport" description="--> generates a xdoc checkstyle report">
+  <target name="xdocreport" description="--> generates a xdoc checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.xdoc}"
            out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
@@ -145,11 +180,34 @@
   </target>
 
   <target name="simiancheck" description="--> runs the check for duplicates">
-    <simian>
+    <available property="simian.jar.present" file="${simian.lib.dir}/simian-${simian.version}.jar"/>
+    <sequential unless:set="simian.jar.present">
+      <mkdir dir="${simian.lib.dir}"/>
+      <get src="${simian.uri}" dest="${simian.lib.dir}"/>
+      <gunzip src="${simian.lib.dir}/simian-${simian.version}.tar.gz" dest="${simian.lib.dir}/simian-${simian.version}.tar"/>
+      <untar src="${simian.lib.dir}/simian-${simian.version}.tar" dest="${simian.lib.dir}">
+        <patternset>
+          <include name="**/simian*.jar"/>
+          <include name="**/simian*.xsl"/>
+        </patternset>
+        <flattenmapper/>
+      </untar>
+    </sequential>
+
+    <taskdef resource="simiantask.properties">
+      <classpath>
+        <fileset dir="${simian.lib.dir}" includes="*.jar"/>
+      </classpath>
+    </taskdef>
+    <mkdir dir="${simian.report.dir}"/>
+    <simian failureProperty="simian.duplicates.found">
         <fileset dir="${java.dir}" />
+        <formatter type="plain" toFile="${simian.report.dir}/simian-log.txt"/>
+        <formatter type="xml" toFile="${simian.report.dir}/simian-log.xml"/>
     </simian>
+    <xslt in="${simian.report.dir}/simian-log.xml" style="${simian.lib.dir}/simian.xsl" out="${simian.report.dir}/simian.html"/>
   </target>
-	
+
   <target name="fixTS" description="--> fix checkstyle errors 'Line has trailing spaces'">
     <fail message="Define path to java file 'path'">
       <condition><not><isset property="path"/></not></condition>
@@ -163,15 +221,15 @@
     <fail message="Define path to java file 'path'">
       <condition><not><isset property="path"/></not></condition>
     </fail>
-  	<fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
+    <fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
   <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build" xmlns:fb="http://findbugs.sourceforge.net/">
-    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="1.3.9"
+    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="3.0.0"
                    inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
     <!-- Load the Findbugs AntTasks -->               
     <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties" classpathref="findbugs.real.classpath" />
-        
+
     <!-- Start Findbugs -->
     <mkdir dir="${findbugs.reportdir}"/>
     <fb:findbugs pluginlistref="findbugs.real.classpath"
@@ -183,7 +241,7 @@
       <class location="${build.classes}" />
       <sourcePath path="${java.dir}" />
     </fb:findbugs>
-    
+
     <!-- Generate (human) readable output -->
     <xslt basedir="${findbugs.reportdir}" includes="${findbugs.raw}" destdir="${findbugs.reportdir}">
       <style>
@@ -191,8 +249,8 @@
       </style>  
     </xslt>
   </target>
-  
-  <target name="rat" description="--> Runs the ReleaseAuditingTool"  depends="init-ivy">
+
+  <target name="rat" description="--> Runs the ReleaseAuditingTool" depends="init-ivy">
     <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
                    inline="true" conf="default" pathid="rat.classpath" transitive="true"/>
     <typedef resource="org/apache/rat/anttasks/antlib.xml"
@@ -205,6 +263,44 @@
         <exclude name="org/apache/tools/ant/version.txt"/>
       </fileset>
     </rat:report>
+  </target>
+
+  <target name="dependency-check" description="--> Runs the OWASP dependency check">
+    <property name="dependency-check.url" value="http://dl.bintray.com/jeremy-long/owasp/dependency-check-ant-3.1.0-release.zip"/>
+    <property name="tools.dir" value="tools"/>
+    <property name="dependency-check.dir" value="${tools.dir}/dependency-check"/>
+    <property name="dependency-check.home" value="${dependency-check.dir}/dependency-check-ant"/>
+
+    <!--available property="dependency-check.present" file="${dependency-check.home}/dependency-check-ant/dependency-check-ant.jar"/-->
+    <condition property="dependency-check.present">
+      <resourcecount when="greater" count="0">
+        <fileset dir="${dependency-check.home}" includes="**/dependency-check-ant.jar"/>
+      </resourcecount>
+    </condition>
+    
+    <sequential unless:set="dependency-check.present">
+      <mkdir dir="${dependency-check.home}"/>
+      <get src="${dependency-check.url}" dest="${dependency-check.dir}/dependency-check-ant.zip"/>
+      <unzip src="${dependency-check.dir}/dependency-check-ant.zip" dest="${dependency-check.dir}/dependency-check-ant"/>
+    </sequential>
+
+    <path id="dependency-check.path">
+      <pathelement location="${dependency-check.home}/dependency-check-ant.jar"/>
+      <fileset dir="${dependency-check.home}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <taskdef resource="dependency-check-taskdefs.properties" uri="https://jeremylong.github.io/">
+      <classpath refid="dependency-check.path"/>
+    </taskdef>
+
+    <owasp:dependency-check
+        xmlns:owasp="https://jeremylong.github.io/"
+        projectName="${ant.project.name}"
+    >
+      <fileset dir="lib" includes="**/*.jar"/>
+      <fileset dir="." includes="dist/**/*.jar"/>
+    </owasp:dependency-check>
   </target>
 
 </project>
