@@ -34,7 +34,7 @@
   </description>
 
   <import file="build.xml"/>
-  
+
   <property name="config.dir" location="${etc.dir}/checkstyle"/>
 
   <!-- Ant Checkstyle report -->
@@ -229,7 +229,7 @@
                    inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
     <!-- Load the Findbugs AntTasks -->               
     <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties" classpathref="findbugs.real.classpath" />
-        
+
     <!-- Start Findbugs -->
     <mkdir dir="${findbugs.reportdir}"/>
     <fb:findbugs pluginlistref="findbugs.real.classpath"
@@ -241,7 +241,7 @@
       <class location="${build.classes}" />
       <sourcePath path="${java.dir}" />
     </fb:findbugs>
-    
+
     <!-- Generate (human) readable output -->
     <xslt basedir="${findbugs.reportdir}" includes="${findbugs.raw}" destdir="${findbugs.reportdir}">
       <style>
@@ -249,8 +249,8 @@
       </style>  
     </xslt>
   </target>
-  
-  <target name="rat" description="--> Runs the ReleaseAuditingTool"  depends="init-ivy">
+
+  <target name="rat" description="--> Runs the ReleaseAuditingTool" depends="init-ivy">
     <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
                    inline="true" conf="default" pathid="rat.classpath" transitive="true"/>
     <typedef resource="org/apache/rat/anttasks/antlib.xml"
@@ -263,6 +263,44 @@
         <exclude name="org/apache/tools/ant/version.txt"/>
       </fileset>
     </rat:report>
+  </target>
+
+  <target name="dependency-check" description="--> Runs the OWASP dependency check">
+    <property name="dependency-check.url" value="http://dl.bintray.com/jeremy-long/owasp/dependency-check-ant-3.1.0-release.zip"/>
+    <property name="tools.dir" value="tools"/>
+    <property name="dependency-check.dir" value="${tools.dir}/dependency-check"/>
+    <property name="dependency-check.home" value="${dependency-check.dir}/dependency-check-ant"/>
+
+    <!--available property="dependency-check.present" file="${dependency-check.home}/dependency-check-ant/dependency-check-ant.jar"/-->
+    <condition property="dependency-check.present">
+      <resourcecount when="greater" count="0">
+        <fileset dir="${dependency-check.home}" includes="**/dependency-check-ant.jar"/>
+      </resourcecount>
+    </condition>
+    
+    <sequential unless:set="dependency-check.present">
+      <mkdir dir="${dependency-check.home}"/>
+      <get src="${dependency-check.url}" dest="${dependency-check.dir}/dependency-check-ant.zip"/>
+      <unzip src="${dependency-check.dir}/dependency-check-ant.zip" dest="${dependency-check.dir}/dependency-check-ant"/>
+    </sequential>
+
+    <path id="dependency-check.path">
+      <pathelement location="${dependency-check.home}/dependency-check-ant.jar"/>
+      <fileset dir="${dependency-check.home}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <taskdef resource="dependency-check-taskdefs.properties" uri="https://jeremylong.github.io/">
+      <classpath refid="dependency-check.path"/>
+    </taskdef>
+
+    <owasp:dependency-check
+        xmlns:owasp="https://jeremylong.github.io/"
+        projectName="${ant.project.name}"
+    >
+      <fileset dir="lib" includes="**/*.jar"/>
+      <fileset dir="." includes="dist/**/*.jar"/>
+    </owasp:dependency-check>
   </target>
 
 </project>
