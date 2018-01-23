@@ -418,6 +418,41 @@ log4j.appender.LogFile.file=build.log
 <p>For more information about configuring Log4J see <a href="http://logging.apache.org/log4j/docs/documentation.html">its
 documentation page</a>.</p>
 
+<h4>Using the Log4j 1.2 Bridge</h4>
+You could use the <a href="http://logging.apache.org/log4j/2.x/log4j-1.2-api/index.html">Log4j Bridge</a>
+if your application is written against the Log4j (1.x) API, but you want to use the Log4j 2.x runtime. 
+For using the bridge with Ant you have to add
+<ul>
+  <li>log4j-1.2-api-${log4j.version}.jar</li>
+  <li>log4j-api-${log4j.version}.jar</li>
+  <li>log4j-core-${log4j.version}.jar</li>
+  <li>log4j2.xml</li>
+</ul>
+to your classpath (e.g. via the <code>-lib</code> option).
+Translating the 1.x properties file into the 2.x xml syntax would result in
+<blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Configuration status=&quot;WARN&quot;&gt;
+  &lt;Appenders&gt;
+    &lt;File name=&quot;file&quot; fileName=&quot;build.log&quot;&gt;
+      &lt;PatternLayout&gt;
+        &lt;Pattern&gt;[%6r] %8c{1} : %m%n&lt;/Pattern&gt;
+      &lt;/PatternLayout&gt;
+    &lt;/File&gt;
+  &lt;/Appenders&gt;
+  &lt;Loggers&gt;
+    &lt;Root level=&quot;ERROR&quot;&gt;
+      &lt;AppenderRef ref=&quot;file&quot; level=&quot;DEBUG&quot;/&gt;
+    &lt;/Root&gt;
+    &lt;Logger name=&quot;org.apache.tools.ant.Project&quot; level=&quot;INFO&quot;/&gt;
+    &lt;Logger name=&quot;org.apache.tools.ant.Project&quot; level=&quot;INFO&quot;/&gt;
+    &lt;Logger name=&quot;org.apache.tools.ant.taskdefs&quot; level=&quot;INFO&quot;/&gt;
+    &lt;Logger name=&quot;org.apache.tools.ant.taskdefs.Echo&quot; level=&quot;WARN&quot;/&gt;
+  &lt;/Loggers&gt;
+&lt;/Configuration&gt;
+</code></pre>
+</blockquote>
+
 
 
 <h3><a name="XmlLogger">XmlLogger</a></h3>
@@ -605,7 +640,7 @@ developers.</p>
 
 <ul>
   <li>
-    A listener or logger should not write to standard output or error in the <code>messageLogged() method</code>;
+    A listener or logger should not write to standard output or error in the <code>messageLogged()</code> method;
     Ant captures these internally and it will trigger an infinite loop.
   </li>
   <li>
@@ -613,7 +648,7 @@ developers.</p>
     the output is processed. Slow logging means a slow build.
   </li>
   <li>When a build is started, and <code>BuildListener.buildStarted(BuildEvent event)</code> is called,
-    the project is not fully functional. The build has started, yes, and the event.getProject() method call
+    the project is not fully functional. The build has started, yes, and the <code>event.getProject()</code> method call
     returns the Project instance, but that project is initialized with JVM and ant properties, nor has it
     parsed the build file yet. You cannot call <code>Project.getProperty()</code> for property lookup, or
     <code>Project.getName()</code> to get the project name (it will return null).
