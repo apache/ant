@@ -527,7 +527,7 @@ public class FTPTest {
         private int matchCount;
 
         public void addLogMessageToSearch(String message) {
-            searchMap.put(message, new Integer(0));
+            searchMap.put(message, Integer.valueOf(0));
         }
 
         /*
@@ -537,7 +537,7 @@ public class FTPTest {
             String message = event.getMessage();
             Integer mcnt = (Integer) searchMap.get(message);
             if (null != mcnt) {
-                searchMap.put(message, new Integer(mcnt.intValue() + 1));
+                searchMap.put(message, Integer.valueOf(mcnt.intValue() + 1));
             }
             super.messageLogged(event);
         }
