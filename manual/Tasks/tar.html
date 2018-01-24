@@ -243,11 +243,11 @@ and the rest are use the default mode (read-write by owner). The first
 fileset selects just the executable files. The second fileset must exclude
 the executable files and include all others.</p>
 
-<p><strong>Note:</strong> The tar task does not ensure that a file is only selected
+<p><strong>Note</strong>: The tar task does not ensure that a file is only selected
 by one resource collection. If the same file is selected by more than one collection, it will be included in the
 tar file twice, with the same path.</p>
 
-<p><strong>Note:</strong> The patterns in the include and exclude
+<p><strong>Note</strong>: The patterns in the include and exclude
 elements are considered to be relative to the corresponding dir
 attribute as with all other filesets.  In the example above,
 <code>${dist.name}</code> is not an absolute path, but a simple name
@@ -265,7 +265,7 @@ Unix file permissions have been stored as part of the ZIP file, they
 will be retained in the resulting tar archive.</p>
 
 
-<p><strong>Note:</strong>
+<p><strong>Note</strong>:
   Please note the tar task creates a tar file, it does not append
   to an existing tar file. The existing tar file is replaced instead.
   As with most tasks in Ant, the task only takes action if the output

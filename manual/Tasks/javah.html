@@ -38,7 +38,7 @@ systems are used.</p>
   attribute instead which allows you to compile the classes and
   generate the native header files with a single step.</p>
 
-<p><b>Note</b> the <code>javah</code> has been deprecated as of Java 9
+<p><strong>Note</strong>: <code>javah</code> has been deprecated as of Java 9
   and removed as of Java 10. Trying to use it with Java 10 will
   fail.</p>
 
@@ -48,17 +48,17 @@ attribute or a nested element. Here are the choices of the
 attribute:</p>
 <ul>
   <li>default - the default compiler for the platform.</li>
-  <li>sun (the standard compiler of the JDK)</li>
-  <li>kaffeh (the native standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
-  <li>gcjh (the native standard compiler
+  <li>sun - the standard compiler of the JDK.</li>
+  <li>kaffeh - the native standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>.</li>
+  <li>gcjh - the native standard compiler
   of <a href="http://gcc.gnu.org/java/"
-        target="_top">gcj and gij</a>) <em>since Apache Ant 1.8.2</em></li>
+        target="_top">gcj and gij</a>. <em>Since Apache Ant 1.8.2</em></li>
   <li>forking - runs the javah executable via its command line
     interface in a separate process. Default when not running on
-    Kaffee or gcj/gij <em>since Ant 1.9.8</em></li>
+    Kaffee or gcj/gij. <em>Since Ant 1.9.8</em></li>
 </ul>
 
-<p><b>Note:</b> if you are using this task to work on multiple files
+<p><strong>Note</strong>: if you are using this task to work on multiple files
   the command line may become too long on some operating systems.
   Unfortunately the javah command doesn't support command argument
   files the way javac (for example) does, so all that can be done is
@@ -169,7 +169,7 @@ only if a given compiler implementation will be used.</p>
     <td valign="top">prefix</td>
     <td align="center" rowspan="2">See
     <a href="../using.html#arg">Command-line Arguments</a>.
-    <em>Since Ant 1.8.</em></td>
+    <em>Since Ant 1.8</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -186,7 +186,7 @@ only if a given compiler implementation will be used.</p>
   </tr>
 </table>
 
-<h4>implementationclasspath <em>since Ant 1.8.0</em></h4>
+<h4>implementationclasspath (<em>since Ant 1.8.0</em>)</h4>
 
 <p>A <a href="../using.html#path">PATH like structure</a> holding the
   classpath to use when loading the compiler implementation if a
@@ -194,7 +194,7 @@ only if a given compiler implementation will be used.</p>
   using one of the built-in compilers.</p>
 
 <h4>Any nested element of a type that implements JavahAdapter
-  <em>since Ant 1.8.0</em></h4>
+  (<em>since Ant 1.8.0</em>)</h4>
 
 <p>If a defined type implements the <code>JavahAdapter</code>
   interface a nested element of that type can be used as an

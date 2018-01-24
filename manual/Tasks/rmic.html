@@ -52,17 +52,15 @@ with the &quot;build.rmic&quot; property, the <code>compiler</code>
 attribute, or a nested element. Here are the choices:</p>
 <ul>
   <li>default -the default compiler (kaffe, sun or forking) for the platform.
-  <li>sun (the standard compiler of the JDK &lt; JDK 9)</li>
-  <li>kaffe (the standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>)</li>
+  <li>sun - the standard compiler of the JDK &lt; 9</li>
+  <li>kaffe - the standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a></li>
   <li>weblogic</li>
-  <li>forking - the sun compiler forked into a separate process (since
-    Apache Ant 1.7). Starting with Ant 1.9.8 this is the default when
-    running on JDK 9+.</li>
-  <li>xnew - the sun compiler forked into a separate process,
-      with the -Xnew option (since Ant 1.7).
-    This is the most reliable way to use -Xnew.
-    <br>JDK 9 has removed support for -Xnew and starting with Ant
-    1.9.8 this option will be rejected by Ant when running on JDK 9.</li>
+  <li>forking - (<em>since Apache Ant 1.7</em>) the sun compiler forked into a separate process.
+    <em>Since Ant 1.9.8</em>, this is the default when running on JDK 9+.</li>
+  <li>xnew - (<em>since Ant 1.7</em>) the sun compiler forked into a separate process,
+    with the -Xnew option. This is the most reliable way to use -Xnew.<br>
+    JDK 9 has removed support for -Xnew and <em>since Ant 1.9.8</em>
+    this option will be rejected when running on JDK 9.</li>
   <li> "" (empty string). This has the same behaviour as not setting the compiler attribute.
     First the value of <tt>build.rmic</tt> is used if defined, and if not, the default
     for the platform is chosen. If build.rmic is set to this, you get the default.</li>
@@ -110,7 +108,7 @@ please consult miniRMI's documentation to learn how to use it.</p>
     <td valign="top">stubversion</td>
     <td valign="top">Specify the JDK version for the generated stub code.
  Specify &quot;1.1&quot; to pass the &quot;-v1.1&quot; option to rmic,
- "1.2" for -v12, compat for -vcompat. <br>
+ "1.2" for -v12, compat for -vcompat.<br>
         <em>Since Ant 1.7</em>, if you do not specify a version, and do not ask
         for iiop or idl files, "compat" is selected.
 
@@ -287,7 +285,7 @@ used.</p>
     <td valign="top">prefix</td>
     <td align="center" rowspan="2">See
     <a href="../using.html#arg">Command-line Arguments</a>.
-    <em>Since Ant 1.8.</em></td>
+    <em>Since Ant 1.8</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -305,7 +303,7 @@ used.</p>
   </tr>
 </table>
 
-<h4>compilerclasspath <em>since Ant 1.8.0</em></h4>
+<h4>compilerclasspath (<em>since Ant 1.8.0</em>)</h4>
 
 <p>A <a href="../using.html#path">PATH like structure</a> holding the
   classpath to use when loading the compiler implementation if a
@@ -313,7 +311,7 @@ used.</p>
   using one of the built-in compilers.</p>
 
 <h4>Any nested element of a type that implements RmicAdapter
-  <em>since Ant 1.8.0</em></h4>
+  (<em>since Ant 1.8.0</em>)</h4>
 
 <p>If a defined type implements the <code>RmicAdapter</code>
   interface a nested element of that type can be used as an

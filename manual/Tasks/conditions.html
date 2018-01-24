@@ -264,7 +264,7 @@ TCP/IP listener at the specified host and port.</p>
 <p>Test two files for matching. Nonexistence of one file results in "false",
 although if neither exists they are considered equal in terms of content.
 This test does a byte for byte comparison, so test time scales with
-byte size. NB: if the files are different sizes, one of them is missing
+byte size. <strong>Note</strong>: if the files are different sizes, one of them is missing
 or the filenames match the answer is so obvious the detailed test is omitted.
 
 </p>
@@ -288,7 +288,7 @@ or the filenames match the answer is so obvious the detailed test is omitted.
     <td valign="top">textfile</td>
     <td valign="top">Whether to ignore line endings when comparing
         files; defaults to <i>false</i> which triggers a binary
-        comparison. <i>Since Ant 1.7</i>
+        comparison. <em>Since Ant 1.7</em>
     </td>
     <td align="center">No</td>
   </tr>
@@ -395,7 +395,7 @@ that is "true","yes", or "on"</p>
     signature validation; it only looks for the presence of a signature.
   </p>
   <p>
-    This condition was added in Apache Ant 1.7.
+    <em>Since Apache Ant 1.7</em>.
   </p>
   <table>
   <tr>
@@ -424,7 +424,7 @@ that is "true","yes", or "on"</p>
     <a href="../Types/selectors.html">selector</a>.
   </p>
   <p>
-    This condition was added in Apache Ant 1.6.3.
+    <em>Since Apache Ant 1.6.3</em>.
   </p>
   <table>
   <tr>
@@ -461,7 +461,7 @@ that is "true","yes", or "on"</p>
 its implementation class can be loaded. Types include
 tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
 
-<p>This condition was added in Apache Ant 1.7.</p>
+<p><em>Since Apache Ant 1.7</em>.</p>
 
 <table>
   <tr>
@@ -504,7 +504,7 @@ See the <a href="../Tasks/script.html">Script</a> task for
 an explanation of scripts and dependencies.
 </p>
 
-<p>This condition was added in Apache Ant 1.7.</p>
+<p><em>Since Apache Ant 1.7</em>.</p>
 
 <table>
   <tr>
@@ -538,7 +538,7 @@ an explanation of scripts and dependencies.
   </tr>
   <tr>
     <td valign="top">encoding</td>
-    <td valign="top">The encoding of the script source. <em>since Ant 1.10.2.</em></td>
+    <td valign="top">The encoding of the script source. <em>Since Ant 1.10.2</em>.</td>
     <td valign="top" align="center">No - defaults to default JVM encoding</td>
   </tr>
   <tr>
@@ -594,7 +594,7 @@ sets the value to false. This condition always evaluates to "false"
 feature or property, as per the SAX/JAXP specifications, by
 attempting to set the appropriate property/feature/</p>
 
-<p>This condition was added in Apache Ant 1.7.</p>
+<p><em>Since Apache Ant 1.7</em>.</p>
 
 <table>
   <tr>
@@ -668,9 +668,7 @@ using a protocol such as HTTP, while the lower level ICMP packets get dropped
 on the floor. Similarly, a host may detected as reachable with ICMP, but
 not reachable on other ports (i.e. port 80), because of firewalls.
 </p>
-<p>
-
-This condition was added in Apache Ant 1.7.</p>
+<p><em>Since Apache Ant 1.7</em>.</p>
 
 <table>
   <tr>
@@ -718,7 +716,7 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 <h4 id="length">length</h4>
 <p>This condition is a facet of the <a href="length.html">Length</a> task.
   It is used to test the length of a string or one or more files.
-  <i>Since Ant 1.6.3</i>
+  <em>Since Ant 1.6.3</em>
 </p>
 
 <blockquote><pre>
@@ -734,7 +732,7 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 <h4 id="isfailure">isfailure</h4>
 
 <p>Test the return code of an executable (see the
-<a href="exec.html">Exec</a> task) for failure. <i>Since Ant 1.7</i></p>
+<a href="exec.html">Exec</a> task) for failure. <em>Since Ant 1.7</em></p>
 
 <table>
   <tr>
@@ -754,7 +752,7 @@ Probe for the maven repository being reachable using the hostname, ten second ti
   <a href="resourcecount.html">ResourceCount</a> task.
   It is used to test the size of a
   <a href="../Types/resources.html#collection">resource collection</a>.
-  <i>Since Ant 1.7</i>
+  <em>Since Ant 1.7</em>
 </p>
 
 <blockquote><pre>
@@ -766,12 +764,12 @@ Probe for the maven repository being reachable using the hostname, ten second ti
 <p>Test resources for matching. Nonexistence of one or more resources results in
 "false", although if none exists they are considered equal in terms of content.
 By default this test does a byte for byte comparison, so test time scales with
-byte size. NB: if the files are different sizes, one of them is missing
+byte size. <strong>Note</strong>: if the files are different sizes, one of them is missing
 or the filenames match the answer is so obvious the detailed test is omitted.
 The resources to check are specified as nested
 <a href="../Types/resources.html#collection">resource collections</a>,
 meaning that more than two resources can be checked; in this case all resources
-must match. <i>Since Ant 1.7</i>
+must match. <em>Since Ant 1.7</em>
 </p>
 <table>
   <tr>
@@ -792,7 +790,7 @@ must match. <i>Since Ant 1.7</i>
 <h4 id="resourcecontains">resourcecontains</h4>
 <p>Tests whether a resource contains a given (sub)string.</p>
 <p>The resources to check are specified via references or - in the
-  case of file resources via the resource attribute.  <i>Since Ant 1.7.1</i>
+  case of file resources via the resource attribute.  <em>Since Ant 1.7.1</em>
 </p>
 <table>
   <tr>
@@ -829,7 +827,7 @@ must match. <i>Since Ant 1.7</i>
     Tests for a class having a method or field. If the class is not found
     or fails to load, the build fails.
 
-    <i>Since Ant 1.7</i>
+    <em>Since Ant 1.7</em>
 </p>
 
 <table>
@@ -886,7 +884,7 @@ must match. <i>Since Ant 1.7</i>
 <p>
   Test if the specified string matches the specified regular
   expression pattern.
-  <i>Since Ant 1.7</i></p>
+  <em>Since Ant 1.7</em></p>
 
 <table>
   <tr>
@@ -997,7 +995,7 @@ is redundant and will be ignored.</p>
 
 <p>
   Tests a partition to see if there is enough space.
-  <i>Since Ant 1.7.0</i></p>
+  <em>Since Ant 1.7.0</em></p>
   <p>Needed attribute can be specified using standard computing terms:</p>
     <ul>
       <li>K : Kilobytes (1024 bytes)</li>

@@ -33,7 +33,7 @@
 FileSet <i>only</i> works for copying files from the local machine to a
 remote machine.</p>
 
-<p><b>Note:</b> This task depends on external libraries not included
+<p><strong>Note</strong>: This task depends on external libraries not included
 in the Ant distribution.  See <a
 href="../install.html#librarydependencies">Library Dependencies</a>
 for more information.  This task has been tested with jsch-0.1.2 and later.</p>
@@ -121,7 +121,7 @@ for more information.  This task has been tested with jsch-0.1.2 and later.</p>
   <tr>
     <td valign="top">trust</td>
     <td valign="top">This trusts all unknown hosts if set to yes/true.<br>
-      <strong>Note</strong> If you set this to false (the default), the
+      <strong>Note</strong>: If you set this to false (the default), the
       host you connect to must be listed in your knownhosts file, this
       also implies that the file exists.</td>
     <td valign="top" align="center">No, defaults to No.</td>
@@ -291,7 +291,7 @@ authentication.</b></p>
   &lt;/scp&gt;
 </pre>
 
-<p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
+<p><strong>Security Note</strong>: Hardcoding passwords and/or usernames
 in scp task can be a serious security hole.  Consider using variable
 substitution and include the password on the command line.  For example:
 <p>
@@ -309,7 +309,7 @@ system (via the ps command). The best approach is to use the
 .properties file.
 </p>
 
-<p><strong>Unix Note:</strong> File permissions are not retained when files
+<p><strong>Unix Note</strong>: File permissions are not retained when files
 are downloaded; they end up with the default <code>UMASK</code> permissions
 instead. This is caused by the lack of any means to query or set file
 permissions in the current Java runtimes. If you need a permission-

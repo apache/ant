@@ -32,7 +32,7 @@ systems.</p>
 
 <p>Note that you cannot interact with the forked program, the only way
 to send input to it is via the input and inputstring attributes. Also note that
-since Ant 1.6, any attempt to read input in the forked program will receive an
+<em>since Ant 1.6</em>, any attempt to read input in the forked program will receive an
 EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
 <p>If you want to execute an executable using a path relative to the
@@ -169,7 +169,7 @@ start with something like:</p>
     <td valign="top">dir</td>
     <td valign="top">the directory in which the command should be executed.</td>
     <td align="center" valign="top">No.<br/>
-      <strong>Note:</strong> the default used when dir has not been
+      <strong>Note</strong>: the default used when dir has not been
       specified depends on the <code>vmlauncher</code> attribute.  If
       <code>vmlauncher</code> is <code>true</code> the task will use
       the current working directory, otherwise it uses the project's basedir.
@@ -343,7 +343,7 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
     <td valign="top">
       The name of the environment variable.
       <br/>
-      <em>Note: since Ant 1.7</em>,
+      <strong>Note</strong>: <em>since Ant 1.7</em>,
       for Windows, the name is case-insensitive.
     </td>
     <td align="center" valign="top">Yes</td>
@@ -366,7 +366,7 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
   </tr>
 </table>
 <h4 id="redirector">redirector</h4>
-<i>Since Ant 1.6.2</i>
+<em>Since Ant 1.6.2</em>
 <p>A nested <a href="../Types/redirector.html">I/O Redirector</a>
 can be specified.  In general, the attributes of the redirector behave
 as the corresponding attributes available at the task level.  The most
@@ -446,7 +446,7 @@ Output is sent to the file &quot;redirector.out&quot; and stored
 in a property of the same name.  Similarly, error output is sent to
 a file and a property, both named &quot;redirector.err&quot;.
 
-<p><b>Note:</b> do not try to specify arguments using
+<p><strong>Note</strong>: do not try to specify arguments using
 a simple arg-element and separate them by spaces. This results in
 only a single argument containing the entire string.</p>
 <p>

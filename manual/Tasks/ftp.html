@@ -29,7 +29,7 @@
 <p>The ftp task implements a basic FTP client that can send, receive,
 list, delete files, and create directories.  See below for descriptions and examples of how
 to perform each task.</p>
-<p><b>Note:</b> This task depends on external libraries not included in the Apache Ant distribution.
+<p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant distribution.
 See <a href="../install.html#commons-net">Library Dependencies</a> for more information.
 <i>Get the latest version of this library, for the best support in Ant</i>
 
@@ -50,7 +50,7 @@ This task does not currently use the proxy information set by the
 <a href="setproxy.html"><code>&lt;setproxy&gt;</code></a> task, and cannot go through
 a firewall via socks.
 <p>
-<b>Warning:</b> there have been problems reported concerning the ftp get with the <code>newer</code> attribute.
+<strong>Warning:</strong> there have been problems reported concerning the ftp get with the <code>newer</code> attribute.
 Problems might be due to format of <code>ls -l</code> differing from what is expected by commons-net,
 for instance due to specificities of language used by the ftp server in the directory listing.
 If you encounter such a problem, please send an email including a sample directory listing
@@ -219,13 +219,13 @@ try to set up a new connection.</p>
     <td valign="top">preservelastmodified</td>
     <td valign="top">Give the copied files the same last modified
       time as the original source files (applies to getting files only).
-      (<em>Note</em>: Ignored on Java 1.1)</td>
+      (<strong>Note</strong>: Ignored on Java 1.1)</td>
     <td valign="top" align="center">No; defaults to false.</td>
   </tr>
   <tr>
     <td valign="top">retriesAllowed</td>
     <td valign="top">Set the number of retries allowed on an file-transfer operation.
-    If a number > 0 specified, each file transfer can fail up to that
+    If a number &gt; 0 specified, each file transfer can fail up to that
     many times before the operation is failed.  If -1 or "forever" specified, the
     operation will keep trying until it succeeds.</td>
     <td valign="top" align="center">No; defaults to 0</td>

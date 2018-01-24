@@ -90,9 +90,9 @@ to a value other than its default, <code>"add"</code>.</b></p>
 
 <p>To cryptographically sign your JAR file, use the <a href="signjar.html">SignJar task</a> on the JAR that you create from this task.</p>
 
-<p>For creating a simple version of a <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238 multi release jar</a>,
+<p>For creating a simple version of a <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP 238 multi-release jar</a>,
 you don't need any special tools. Just set the required manifest entry and place the files where required, as you could see
-in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this kind of jar, e.g. decreasing the size by deleting
+in the <a href="#jep238-example">JEP 238 example</a>. If you want to tune this kind of jar, e.g. decreasing the size by deleting
 'same' classes from the versions-branches, you have to do more ...</p>
 
 <h3>Parameters</h3>
@@ -273,7 +273,7 @@ in the <a href="#jep238-example">JEP238-example</a>. If you want to tune this ki
     that the permissions haven't been stored at all rather than real
     permissions and will instead apply its own default values.<br/>
     Set this attribute to true if you really want to preserve the
-      original permission field.<em>since Ant 1.8.0</em>
+      original permission field. <em>since Ant 1.8.0</em>
     </td>
     <td valign="top" align="center">No, default is false</td>
   </tr>
@@ -585,10 +585,10 @@ Sealed: false</code></pre></blockquote>
 </pre></blockquote>
 
 
-<h4 id="jep238-example">JEP238 example: a Multi-Release JAR Files</h4>
+<h4 id="jep238-example">JEP 238 example: a Multi-Release JAR Files</h4>
 <p>
   Here we want to create a <i>Multi-Release JAR File</i> according the specification
-  <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP-238</a>.
+  <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP 238</a>.
   It defines on top of a JAR the possibility to place additional or overwriting classes
   in a jar, which are available according to the Java version you run.<br>
   Basically it sais, that you have to set the manifest entry <tt>Multi-Release: true</tt>

@@ -32,7 +32,7 @@ at the same time. In addition to working with a single file, this Task
 can also work on <a href="../Types/resources.html">resources</a> and
 resource collections (which also includes directories).  Prior to Apache Ant
 1.7 only FileSet or <a href="../Types/filelist.html">Filelist</a>
-(since Ant 1.6) have been supported.</p>
+(<em>since Ant 1.6</em>) have been supported.</p>
 
 <p>Ant uses the API of <code>java.io.File</code> to set the last
   modification time which has some limitations.  For example the
@@ -99,7 +99,7 @@ resource collections (which also includes directories).  Prior to Apache Ant
 
 <p>You can use any number of nested resource collection elements to
 define the resources for this task and refer to resources defined
-elsewhere.  <b>Note:</b> resources passed to this task must implement
+elsewhere.  <strong>Note</strong>: resources passed to this task must implement
 the <code>org.apache.tools.ant.types.resources.Touchable</code>
 interface, this is true for all filesystem-based resources like those
 returned by path, fileset ot filelist.</p>

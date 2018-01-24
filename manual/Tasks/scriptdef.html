@@ -41,7 +41,7 @@ of the script increases it would be better to migrate the task definition
 into a Java based custom task.
 </p>
 
-<p><b>Note:</b> This task depends on external libraries not included in the
+<p><strong>Note</strong>: This task depends on external libraries not included in the
 Ant distribution. See
 <a href="../install.html#librarydependencies">Library Dependencies</a>
 for more information.</p>
@@ -58,12 +58,12 @@ element name. This will return a list of all instances of the nested element.
 The instances in this list may be accessed by an integer index.
 </p>
 
-<p><b>Note:</b> Ant will turn all attribute and element names into all
+<p><strong>Note</strong>: Ant will turn all attribute and element names into all
 lowercase names, so even if you use name="SomeAttribute", you'll have
 to use "someattribute" to retrieve the attribute's value from the
 <code>attributes</code> collection.</p>
 
-<p>The name "self" (<i>since Ant 1.6.3</i>) is a pre-defined reference to the
+<p>The name "self" (<em>since Ant 1.6.3</em>) is a pre-defined reference to the
     script def task instance.
     It can be used for logging, or for integration with the rest of
     Ant. the <code>self.text attribute</code> contains
@@ -117,7 +117,7 @@ more information on writing scripts, please refer to the
   </tr>
   <tr>
     <td valign="top">encoding</td>
-    <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.2.</em></td>
+    <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.2</em>.</td>
     <td valign="top" align="center">No - defaults to default JVM encoding</td>
   </tr>
   <tr>
@@ -126,7 +126,7 @@ more information on writing scripts, please refer to the
     evaluation for faster multiple executions, on the condition that the <em>manager</em> is "javax" and the
     target engine implements <code>javax.script.Compilable</code>.
     Note that the <code>bsf</code> manager may automatically compiles the script.
-    <em>since Ant 1.10.2.</em></td>
+    <em>since Ant 1.10.2</em>.</td>
     <td valign="top" align="center">No - defaults to false</td>
   </tr>
   <tr>

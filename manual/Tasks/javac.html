@@ -32,7 +32,7 @@ source files to compile. Only Java files that have no corresponding
 <code>.class</code> file
 or where the class file is older than the
 <code>.java</code> file will be compiled.</p>
-<p>Note: Apache Ant uses only the names of the source and class files to find
+<p><strong>Note</strong>: Apache Ant uses only the names of the source and class files to find
 the classes that need a rebuild. It will not scan the source and therefore
 will have no knowledge about nested classes, classes that are named different
 from the source file, and so on. See the
@@ -120,7 +120,7 @@ switch <code>-depend</code> instead of <code>-Xdepend</code>.</p>
 files/directories from the classpath it passes to the compiler.</p>
 <p>The working directory for a forked executable (if any) is the
   project's base directory.</p>
-<p><strong>Windows Note:</strong>When the modern compiler is used
+<p><strong>Windows Note</strong>: When the modern compiler is used
 in unforked mode on Windows, it locks up the files present in the
 classpath of the <code>&lt;javac&gt;</code> task, and does not release them.
 The side effect of this is that you will not be able to delete or move
@@ -224,7 +224,7 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">encoding</td>
-    <td valign="top">Encoding of source files. (Note: gcj doesn't support
+    <td valign="top">Encoding of source files. (<strong>Note</strong>: gcj doesn't support
       this option yet.)</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -319,7 +319,7 @@ invoking the compiler.</p>
     <td valign="top">Whether to include the default run-time
       libraries from the executing VM in the classpath;
       defaults to <code>no</code>.<br/>
-      <b>Note:</b> In some setups the run-time libraries may be part
+      <strong>Note</strong>: In some setups the run-time libraries may be part
       of the "Ant run-time libraries" so you may need to explicitly
       set includeAntRuntime to false to ensure that the Java
       run-time libraries are not included.</td>
@@ -337,7 +337,7 @@ invoking the compiler.</p>
       executable to use in case of <code>fork=&quot;yes&quot;</code>.
       Defaults to the compiler of the Java version that is currently
       running Ant.  Ignored if <code>fork=&quot;no&quot;</code>.<br>
-      Since Ant 1.6 this attribute can also be used to specify the
+      <em>Since Ant 1.6</em> this attribute can also be used to specify the
       path to the executable when using jikes, jvc, gcj or sj.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -461,8 +461,8 @@ invoking the compiler.</p>
       Some package level annotations in <code>package-info.java</code>
       files don't create any <code>package-info.class</code> files so
       Ant would recompile the same file every time.<br/>
-      Starting with Ant 1.8 Ant will create an
-      empty <code>package-info.class</code> for
+      <em>Since Ant 1.8</em>, an
+      empty <code>package-info.class</code> is created for
       each <code>package-info.java</code> if there isn't one created
       by the compiler.<br/>
       In some setups this additional class causes problems and it can
@@ -594,7 +594,7 @@ used.</p>
     <td valign="top">prefix</td>
     <td align="center" rowspan="2">See
     <a href="../using.html#arg">Command-line Arguments</a>.
-    <em>Since Ant 1.8.</em></td>
+    <em>Since Ant 1.8</em>.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -612,7 +612,7 @@ used.</p>
   </tr>
 </table>
 
-<h4>compilerclasspath <em>since Ant 1.8.0</em></h4>
+<h4>compilerclasspath (<em>since Ant 1.8.0</em>)</h4>
 
 <p>A <a href="../using.html#path">PATH like structure</a> holding the
   classpath to use when loading the compiler implementation if a
@@ -620,7 +620,7 @@ used.</p>
   using one of the built-in compilers.</p>
 
 <h4>Any nested element of a type that implements CompilerAdapter
-  <em>since Ant 1.8.0</em></h4>
+  (<em>since Ant 1.8.0</em>)</h4>
 
 <p>If a defined type implements the <code>CompilerAdapter</code>
   interface a nested element of that type can be used as an
@@ -713,7 +713,7 @@ Java VM of a different version:</p>
          executable=&quot;/opt/java/jdk1.1/bin/javac&quot;
          compiler=&quot;javac1.1&quot;/&gt;</pre>
 
-<p id="srcdirnote"><b>Note:</b>
+<p id="srcdirnote"><strong>Note</strong>:
 If you wish to compile only source files located in certain packages below a
 common root, use the <code>include</code>/<code>exclude</code> attributes
 or <code>&lt;include&gt;</code>/<code>&lt;exclude&gt;</code> nested elements
@@ -748,7 +748,7 @@ could show in the log, that these settings are fix.</p>
          fork=&quot;true&quot;
          taskname=&quot;javac1.4&quot;/&gt;</pre>
 
-<p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
+<p><strong>Note</strong>: If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are
 using.  This problem may occur with all JDKs &lt; 1.2.</p>
 
@@ -887,8 +887,8 @@ while all others are <code>false</code>.</p>
   The Sun javac compiler has a <em>bootclasspath</em> command
   line option - this corresponds to the "bootclasspath" attribute/element
   of the &lt;javac&gt; task. The Sun compiler also allows more
-  control over the boot classpath using the -X and -J-X attributes.
-  One can set these by using the &lt;compilerarg&gt;. Since Ant 1.6.0,
+  control over the boot classpath using the <code>-X</code> and <code>-J-X</code> attributes.
+  One can set these by using the &lt;compilerarg&gt;. <em>Since Ant 1.6.0</em>,
   there is a shortcut to convert path references to strings that
   can by used in an OS independent fashion (see
   <a href="../using.html#pathshortcut">pathshortcut</a>). For example:
@@ -934,7 +934,7 @@ while all others are <code>false</code>.</p>
     <code>package-info.java</code> files were introduced in Java 5 to
     allow package level annotations. On compilation, if the java file
     does not contain runtime annotations, there will be no .class file
-    for the java file. Up to <b>Ant 1.7.1</b>, when the &lt;javac&gt;
+    for the java file. Prior to Ant 1.7.1, when the &lt;javac&gt;
     task is run again, the
     task will try to compile the package-info java files again.
   </p>
@@ -942,8 +942,8 @@ while all others are <code>false</code>.</p>
     involved the timestamp of the directory that would normally
     contain the .class file.  This logic turned out to lead to Ant not
     recompiling <code>package-info.java</code> in certain setup.</p>
-  <p>Starting with Ant 1.8.0 Ant will create
-    "empty" <code>package-info.class</code> files if it compiles
+<p><em>Since Ant 1.8.0</em>, an
+    "empty" <code>package-info.class</code> file is created if Ant compiles
     a <code>package-info.java</code> and
     no <code>package-info.class</code> file has been created by the
     compiler itself.</p>

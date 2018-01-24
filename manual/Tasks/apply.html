@@ -95,7 +95,7 @@ to send input to it is via the input and inputstring attributes.</p>
     <td valign="top">dir</td>
     <td valign="top">the directory in which the command should be executed.</td>
     <td align="center" valign="top">No.<br/>
-      <strong>Note:</strong> the default used when dir has not been
+      <strong>Note</strong>: the default used when dir has not been
       specified depends on the <code>vmlauncher</code> attribute.  If
       <code>vmlauncher</code> is <code>true</code> the task will use
       the current working directory, otherwise it uses the project's basedir.
@@ -233,7 +233,7 @@ to send input to it is via the input and inputstring attributes.</p>
       <i>both</i>. If set to <i>file</i>, only the names of plain
       files will be sent to the command. If set to <i>dir</i>, only
       the names of directories are considered.<br>
-      <strong>Note:</strong> The type attribute does not apply to
+      <strong>Note</strong>: The type attribute does not apply to
       nested <i>dirset</i>s - <i>dirset</i>s always implicitly
       assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
@@ -272,31 +272,31 @@ to send input to it is via the input and inputstring attributes.</p>
     <td valign="top">maxparallel</td>
     <td valign="top">Limit the amount of parallelism by passing at
       most this many sourcefiles at once.  Set it to &lt;= 0 for
-      unlimited. <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+      unlimited. <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
     <td align="center" valign="top">No, unlimited by default</td>
   </tr>
   <tr>
     <td valign="top">addsourcefile</td>
     <td valign="top">Whether source file names should be added to the
-      command automatically. <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+      command automatically. <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
     <td valign="top">Whether to print a summary after execution or not.
-      <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+      <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
     <td align="center" valign="top">No, default <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">ignoremissing</td>
     <td valign="top">Whether to ignore nonexistent files specified
-      via filelists.  <em>Since&nbsp;Ant&nbsp;1.6.2.</em></td>
+      via filelists.  <em>Since&nbsp;Ant&nbsp;1.6.2</em>.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">force</td>
     <td valign="top">Whether to bypass timestamp comparisons
-      for target files.  <em>Since&nbsp;Ant&nbsp;1.6.3.</em></td>
+      for target files.  <em>Since&nbsp;Ant&nbsp;1.6.3</em>.</td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 </table>
@@ -386,7 +386,7 @@ specified if you also define a nested mapper.</p>
 system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
 <h4>redirector</h4>
-<i><b>Since&nbsp;Ant&nbsp;1.6.2</b></i>
+<em>Since&nbsp;Ant&nbsp;1.6.2</em>
 <p>A nested <a href="../Types/redirector.html">I/O Redirector</a>
 can be specified.  &lt;apply&gt;'s behavior is like that of
 <a href="exec.html#redirector">exec</a> with regard to

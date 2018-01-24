@@ -210,7 +210,7 @@ archive.</p>
     <td valign="top">Whether the file modification times will be
     rounded up to the next even number of seconds.<br>
     Zip archives store file modification times with a granularity of
-    two seconds, so the times will either be rounded up or down.  If
+    two seconds, so the times will either be rounded up or down. If
     you round down, the archive will always seem out-of-date when you
     rerun the task, so the default is to round up.  Rounding up may
     lead to a different type of problems like JSPs inside a web
@@ -246,7 +246,7 @@ archive.</p>
   <tr>
     <td valign="top">useLanguageEncodingFlag</td>
     <td valign="top">Whether to set the language encoding flag if the
-      encoding is UTF-8.  This setting doesn't have any effect if the
+      encoding is UTF-8. This setting doesn't have any effect if the
       encoding is not UTF-8.
       <em>Since Ant 1.8.0</em>.<br/>
       See also the <a href="#encoding">discussion below</a></td>
@@ -301,7 +301,7 @@ archive.</p>
 <p>More recent versions of the ZIP specification introduce something
   called the &quot;language encoding flag&quot; which can be used to
   signal that a file name has been encoded using UTF-8. <em>Since
-  Ant 1.8.0</em>, all zip-/jar- and similar archives written by Ant will set
+  Ant 1.8.0</em>, all zip, jar and similar archives written by Ant will set
   this flag, if the encoding has been set to UTF-8.  Our
   interoperability tests with existing archivers didn't show any ill
   effects (in fact, most archivers ignore the flag to date), but you
@@ -345,7 +345,7 @@ archive.</p>
     jars from your CLASSPATH reads and writes UTF-8 names, it doesn't
     set or recognize any flags or unicode extra fields.</li>
 
-  <li>Starting with Java 7 <code>java.util.zip</code> writes UTF-8 by
+  <li>Since Java 7, <code>java.util.zip</code> writes UTF-8 by
     default and uses the language encoding flag.  It is possible to
     specify a different encoding when reading/writing ZIPs via new
     constructors.  The package now recognizes the language encoding
@@ -411,8 +411,8 @@ archive.</p>
   will be written has to be made before writing the entry's
   content.</p>
 
-<p>Starting with Ant 1.9.0 Ant supports Zip64 extensions but didn't
-  provide any control over their usage, starting with Ant 1.9.1 a
+<p>Ant 1.9.0 introduced support for Zip64 extensions but didn't
+  provide any control over their usage. <em>Since Ant 1.9.1</em>, a
   new <em>zip64mode</em> attribute was added to the <code>zip</code>
   family of tasks.  It supports three values:
 
@@ -420,7 +420,7 @@ archive.</p>
   <li><em>never</em> means no Zip64 extra fields will ever be
     written, this is the behavior of Ant 1.8.x and earlier and the
     default behavior of <code>jar</code>, <code>ear</code>
-    and <code>war</code> starting with Ant 1.9.1.</li>
+    and <code>war</code> <em>since Ant 1.9.1</em>.</li>
   <li><em>always</em> means Zip64 extra fields are written for all
     entries.</li>
   <li><em>as-needed</em> means Zip64 extra fields are written for all
@@ -461,29 +461,25 @@ the same way that <i>zipfileset src</i> files are added.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
-       basedir=&quot;htdocs/manual&quot;
-  /&gt;</pre>
+       basedir=&quot;htdocs/manual&quot;/&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory.</p>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
-       update=&quot;true&quot;
-  /&gt;</pre>
+       update=&quot;true&quot;/&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory into a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory. If <code>manual.zip</code>
 doesn't exist, it is created; otherwise it is updated with the
 new/changed files.</p>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
-       excludes=&quot;mydocs/**, **/todo.html&quot;
-  /&gt;</pre>
+       excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
        basedir=&quot;htdocs/manual&quot;
        includes=&quot;api/**/*.html&quot;
-       excludes=&quot;**/todo.html&quot;
-  /&gt;</pre>
+       excludes=&quot;**/todo.html&quot;/&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;

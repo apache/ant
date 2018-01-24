@@ -35,18 +35,18 @@ and management costs over time. This task, however, has no notion of
 &quot;changed&quot; files, unlike the <a href="javac.html">javac</a> task. This means
 all packages will be processed each time this task is run. In general, however,
 this task is used much less frequently.</p>
-<p>NOTE: since javadoc calls System.exit(), javadoc cannot be run inside the
+<p><strong>Note</strong>: since javadoc calls System.exit(), javadoc cannot be run inside the
 same VM as Apache Ant without breaking functionality. For this reason, this task
 always forks the VM. This overhead is not significant since javadoc is normally a heavy
 application and will be called infrequently.</p>
-<p>NOTE: the packagelist attribute allows you to specify the list of packages to
+<p><strong>Note</strong>: the packagelist attribute allows you to specify the list of packages to
 document outside of the Ant file. It's a much better practice to include everything
 inside the <code>build.xml</code> file. This option was added in order to make it easier to
 migrate from regular makefiles, where you would use this option of javadoc.
 The packages listed in packagelist are not checked, so the task performs even
 if some packages are missing or broken. Use this option if you wish to convert from
 an existing makefile. Once things are running you should then switch to the regular
-notation. </p>
+notation.</p>
 
 <p><i><b>DEPRECATION:</b> the javadoc2 task simply points to the javadoc task and it's
 there for back compatibility reasons. Since this task will be removed in future
@@ -59,14 +59,14 @@ any VM of at least version 1.2 is acceptable. JDKs &lt;1.4 are no longer support
 If you specify the <code>executable</code> attribute it is up to you
 to ensure that this command supports the attributes you wish to use.</p>
 
-<p><b>Note:</b><br>When generating the JavaDocs for classes which contains annotations
+<p><strong>Note</strong>:<br>When generating the JavaDocs for classes which contains annotations
 you maybe get a <tt>java.lang.ClassCastException: com.sun.tools.javadoc.ClassDocImpl</tt>.
 This is due <a href="https://bugs.openjdk.java.net/browse/JDK-6442982" target="_blank">bug-6442982</a>. The cause is that JavaDoc cannot find the implementations of used annotations.
 The workaround is providing the jars with these implementations (like JAXBs <tt>@XmlType</tt>, ...)
 to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or nested
 &lt;classpath&gt; element.</p>
 
-<p><b>Note:</b> many problems with running javadoc stem from command
+<p><strong>Note</strong>: many problems with running javadoc stem from command
   lines that have become too long - even though the error message
   doesn't give the slightest hint this may be the problem.  If you
   encounter problems with the task, try to set
@@ -208,9 +208,9 @@ to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or
     <td valign="top">Old</td>
     <td valign="top">Generate output using JDK 1.1 emulating
       doclet.<br>
-      <b>Note:</b> as of Ant 1.8.0 this attribute doesn't have any
-      effect since the javadoc of Java 1.4 (required by Ant 1.8.0)
-      doesn't support the -1.1 switch anymore.</td>
+      <strong>Note</strong>: <em>Since Ant 1.8.0</em> this attribute has no
+      effect since javadoc of Java 1.4 and later
+      does not support the -1.1 switch anymore.</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -791,12 +791,12 @@ not set the description attribute for those tags.</p>
     <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#javadoctags">Javadoc reference guide</a>:
     <pre>ejb.bean:t:XDoclet EJB Tag
 todo:a:To Do</pre>
-      <b>Note:</b> The  Javadoc reference quide has double quotes around
+      <strong>Note</strong>: The Javadoc reference quide has double quotes around
 the description part of the definition. This will not work when used in
 a file, as the definition is quoted again when given to
 the javadoc program.
     <br/>
-      <b>Note:</b> If this attribute is specified, all the other attributes in this
+      <strong>Note</strong>: If this attribute is specified, all the other attributes in this
     element will be ignored.
     </td>
     <td align="center" valign="top">No</td>

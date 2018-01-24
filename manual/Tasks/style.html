@@ -30,7 +30,7 @@
 <p>Process a set of documents via XSLT.</p>
 <p>This is useful for building views of XML based documentation,
 or for generating code.</p>
-<p><b>Note:</b> If you are using JDK 1.4 or higher, this task does not require external libraries
+<p><strong>Note</strong>: If you are using JDK 1.4 or higher, this task does not require external libraries
 not supplied in the Apache Ant distribution. However, often the built in XSL engine is not as up
 to date as a fresh download, so an update is still highly recommended
   in particular since the built-in XSLT processors of Java 5 (and to a
@@ -50,7 +50,7 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   as well as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
   and <code>&lt;patternset&gt;</code> elements.</p>
 
-<p><b>Note</b>: Unlike other similar tasks, this task treats
+<p><strong>Note</strong>: Unlike other similar tasks, this task treats
 directories that have been matched by the include/exclude patterns of
 the implicit fileset in a special way.  It will apply the stylesheets
 to all files contain in them as well.  Since the default include
@@ -296,8 +296,8 @@ element is used to perform Entity and URI resolution.</p>
 
 <h4>param</h4>
 <p>Param is used to pass a parameter to the XSL stylesheet.</p>
-<blockquote>
-<h4>Parameters</h4>
+
+<h5>Parameters</h5>
 <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -347,9 +347,7 @@ element is used to perform Entity and URI resolution.</p>
     <td valign="top">The param will not be passed <a href="../properties.html#if+unless">if this property is set</a>.</td>
     <td align="center" valign="top">No</td>
   </tr>
-
 </table>
-</blockquote>
 
   <p>
       The <code>XPATH_*</code> types says that the <code>expression</code> is not just a primitive-type value but an XPath expression.
@@ -367,8 +365,8 @@ element is used to perform Entity and URI resolution.</p>
 <p>Used to specify how you wish the result tree to be output
 as specified in the <a href="http://www.w3.org/TR/xslt#output">
 XSLT specifications</a>.
-<blockquote>
-<h4>Parameters</h4>
+
+<h5>Parameters</h5>
 <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -386,12 +384,11 @@ XSLT specifications</a>.
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
-</blockquote>
 
 <h4 id="factory">factory ('trax' processors only)</h4>
 Used to specify factory settings.
-<blockquote>
-<h4>Parameters</h4>
+
+<h5>Parameters</h5>
 <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -409,8 +406,8 @@ Used to specify factory settings.
     <td align="center" valign="top">No. Defaults to the JAXP lookup mechanism.</td>
   </tr>
 </table>
-<h3>Parameters specified as nested elements</h3>
-<h4>attribute</h4>
+<h5>Parameters specified as nested elements</h5>
+<h6>attribute</h6>
 <p>Used to specify settings of the processor factory.
 The attribute names and values are entirely processor specific
 so you must be aware of the implementation to figure them out.
@@ -431,7 +428,7 @@ And in Saxon 7.x:
 <li>...</li>
 </ul>
 <blockquote>
-<h4>Parameters</h4>
+<h6>Parameters</h6>
 <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -460,8 +457,9 @@ And in Saxon 7.x:
       with the given id. <em>since Ant 1.9.8</em></td>
   </tr>
 </table>
+</blockquote>
 
-<h4>Examples</h4>
+<h5>Examples</h5>
 
 <pre>
   &lt;path id="extension-path"&gt;
@@ -478,10 +476,10 @@ And in Saxon 7.x:
 </pre>
 <p>Sets the classloader to use when loading extension functions to a
   classloader using the <code>path</code> with the
-  id <code>extension-path</code>.
-</blockquote>
-<h4>feature</h4>
+  id <code>extension-path</code>.</p>
 <p><em>since Ant 1.9.8</em></p>
+
+<h6>feature</h6>
 <p>Used to specify settings of the processor factory.  The feature
 names are mostly processor specific so you must be aware of the
 implementation to figure them out.  Read the documentation of your
@@ -489,7 +487,7 @@ processor. The only feature all implementations are required to
 support
 is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
 <blockquote>
-<h4>Parameters</h4>
+<h6>Parameters</h6>
 <table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -504,12 +502,12 @@ is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
   <tr>
     <td valign="top">value</td>
     <td valign="top">value of the feature. A boolean value
-    (i.e. permitted values are true,false,yes,no,on,off).</td>
+    (i.e. permitted values are true, false, yes, no, on, off).</td>
     <td align="center" valign="top">No, defaults to false</td>
   </tr>
 </table>
 </blockquote>
-</blockquote>
+
 <h4>mapper</h4>
 
 <p><em>since Ant 1.6.2</em></p>
@@ -547,7 +545,6 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 <p><em>since Ant 1.8.0</em>.</p>
 
 <h3>Examples</h3>
-<blockquote>
   <pre>
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
@@ -670,8 +667,7 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 &lt;project&gt;
   &lt;xslt style=&quot;printFilename.xsl&quot; destdir=&quot;out&quot; basedir=&quot;in&quot; extension=&quot;.txt&quot;
         filenameparameter=&quot;filename&quot;
-        filedirparameter=&quot;filedir&quot;
-  /&gt;
+        filedirparameter=&quot;filedir&quot;/&gt;
 &lt;/project&gt;
 
 &lt;xsl:stylesheet
@@ -693,11 +689,9 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 <pre>
 &lt;xslt ...&gt;
     &lt;sysproperty key="org.apache.xerces.xni.parser.XMLParserConfiguration"
-                 value="org.apache.xerces.parsers.XIncludeParserConfiguration"
-     /&gt;
+                 value="org.apache.xerces.parsers.XIncludeParserConfiguration"/&gt;
 &lt;xslt&gt;
 </pre>
-</blockquote>
 
 </body>
 </html>

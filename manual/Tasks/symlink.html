@@ -52,7 +52,7 @@ set of links to record, or a set of property files to create links from.
   <tr>
     <td valign="top">link</td>
     <td valign="top">The name of the link to be created or deleted.<br/>
-      <b>Note</b> this attribute is resolved against the current
+      <strong>Note</strong>: this attribute is resolved against the current
       working directory rather than the project's basedir for
       historical reasons.  It is recommended you always use an
       absolute path or a path like <code>${basedir}/some-path</code>
@@ -124,7 +124,7 @@ set of links to record, or a set of property files to create links from.
  &lt;symlink action="delete" link="${dir.top}/foo"/&gt;
  </pre>
 
-  <p><strong>Java 1.2 and earlier:</strong> Due to limitations on executing system
+  <p><strong>Java 1.2 and earlier</strong>: Due to limitations on executing system
   level commands in Java versions earlier than 1.3 this task may have difficulty
   operating with a relative path in ANT_HOME. The typical symptom is an
   IOException where Apache Ant can't find /some/working/directory${ANT_HOME}/bin/antRun
@@ -132,7 +132,7 @@ set of links to record, or a set of property files to create links from.
   variable to an absolute path, which will remove the /some/working/directory portion
   of the above path and allow Ant to find the correct commandline execution script.
 
-  <p><strong>NOTE:</strong> Starting Ant version 1.10.2, this task relies on the symbolic
+<p><strong>Note</strong>: <em>Since Ant 1.10.2</em>, this task relies on the symbolic
     link support introduced in Java 7 through the java.nio.file.Files APIs</p>
 
 </body>

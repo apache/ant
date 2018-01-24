@@ -17,50 +17,70 @@
  */
 h2 {
   font-size: 200%;
-  background-color: ffffff;
+  background-color: white;
 }
 
 h3 {
   font-size: 130%;
-  color:     #ffffff;
+  color: white;
   background-color: #525D76;
 }
 
 h4 {
-  color:  #ffffff;
+  color: white;
   background-color: #828DA6;
 }
 
+h5 {
+  font-size: 100%;
+  color: white;
+  background-color: #a6adbe;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+h6 {
+  font-size: 100%;
+  color: white;
+  background-color: #c1c5d1;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+h5 + p, h6 + p {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
 td {
-   background-color: eeeeee;
-   color:            000000;
+   background-color: #eeeeee;
+   color: black;
 }
 
 /* first row */
 table tr:first-child td {
-   background-color: cccccc;
-   color:            000000;
+   background-color: silver;
+   color: black;
 }
 
 /* or th as first row */
 table th {
-   background-color: cccccc;
-   color:            000000;
+   background-color: silver;
+   color: black;
 }
 
 pre {
-   background-color: efefef;
+   background-color: #efefef;
 }
 
 /* code snippets in examples and tutorials */
 .code { 
    background: #EFEFEF; 
-   margin-top: 
 }
 
 /* highlight console output */
 .output { 
-   color: #FFFFFF; 
+   color: white;
    background: #837A67; 
 }
 
