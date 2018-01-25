@@ -53,7 +53,7 @@ nested elements of the condition task are supported.  This condition
 is true if all of its contained conditions are, conditions will be
 evaluated in the order they have been specified in the build file.</p>
 <p>The <code>&lt;and&gt;</code> condition has the same shortcut
-semantics as the Java &amp;&amp; operator, as soon as one of the
+semantics as the Java <code>&amp;&amp;</code> operator, as soon as one of the
 nested conditions is false, no other condition will be evaluated.</p>
 
 <h4 id="or">or</h4>
@@ -64,7 +64,7 @@ is true if at least one of its contained conditions is, conditions
 will be evaluated in the order they have been specified in the build
 file.</p>
 <p>The <code>&lt;or&gt;</code> condition has the same
-shortcut semantics as the Java || operator, as soon as one of the
+shortcut semantics as the Java <code>||</code> operator, as soon as one of the
 nested conditions is true, no other condition will be evaluated.</p>
 
 <h4 id="xor">xor</h4>
@@ -224,9 +224,8 @@ of 400 or greater are viewed as invalid.</p>
   <tr>
     <td valign="top">requestMethod</td>
     <td valign="top">The HTTP method to be used when issuing the request.
-    Any of GET, POST, HEAD, OPTIONS, PUT, DELETEm and TRACE
-    are valid, subject to protocol restrictions. The default if not
-    specified is &quot;GET&quot;.<br/>
+    Any of GET, POST, HEAD, OPTIONS, PUT, DELETE and TRACE
+    are valid, subject to protocol restrictions. The default is &quot;GET&quot;.<br/>
       <em>since Ant 1.8.0</em></td>
     <td align="center">No</td>
   </tr>
@@ -364,7 +363,7 @@ that is "true","yes", or "on"</p>
 <p>Test whether a given reference has been defined in this project and
 - optionally - is of an expected type.</p>
 
-<p>This condition has been added in Apache Ant 1.6.</p>
+<p><em>Since Apache Ant 1.6</em>.</p>
 
 <table>
   <tr>
