@@ -68,9 +68,9 @@ public class JavaEnvUtilsTest {
             String javaHomeParent = FILE_UTILS.normalize(javaHome + "/..").getAbsolutePath();
             assertTrue(j + " is normalized and in the JDK dir", j.startsWith(javaHomeParent));
             if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
-            assertTrue(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
+                assertTrue(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
             } else {
-            assertTrue(j + " is normalized and not in the JRE dir", !j.startsWith(javaHome));
+                assertTrue(j + " is normalized and not in the JRE dir", !j.startsWith(javaHome));
             }
         } catch (AssertionError e) {
             // java.home is bogus
