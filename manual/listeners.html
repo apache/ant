@@ -420,7 +420,7 @@ documentation page</a>.</p>
 
 <h4>Using the Log4j 1.2 Bridge</h4>
 You could use the <a href="http://logging.apache.org/log4j/2.x/log4j-1.2-api/index.html">Log4j Bridge</a>
-if your application is written against the Log4j (1.x) API, but you want to use the Log4j 2.x runtime. 
+if your application is written against the Log4j (1.x) API, but you want to use the Log4j 2.x runtime.
 For using the bridge with Ant you have to add
 <ul>
   <li>log4j-1.2-api-${log4j.version}.jar</li>
@@ -429,6 +429,7 @@ For using the bridge with Ant you have to add
   <li>log4j2.xml</li>
 </ul>
 to your classpath (e.g. via the <code>-lib</code> option).
+(For using the bridge Ant 1.9.10/1.10.2 or higher is required.)
 Translating the 1.x properties file into the 2.x xml syntax would result in
 <blockquote>
 <pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
