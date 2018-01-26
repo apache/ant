@@ -68,7 +68,7 @@ public class ZipShortTest {
         assertTrue("symmetric", zs2.equals(zs));
 
         assertTrue("null handling", !zs.equals(null));
-        assertTrue("non ZipShort handling", !zs.equals(new Integer(0x1234)));
+        assertTrue("non ZipShort handling", !zs.equals(Integer.valueOf(0x1234)));
     }
 
     /**
