@@ -21,7 +21,11 @@
         Build file be able to launch the boostrap build of Ant on every supported platform
     </description>
     
-    <property name="args" value="allclean test -Dignore.tests.failed=true -Doptional.jars.whenmanifestonly=skip" />
+    <property name="default-args" value="allclean test -Dignore.tests.failed=true -Doptional.jars.whenmanifestonly=skip" />
+    <condition property="args" value="${default-args} -Djenkins=t">
+      <isset property="jenkins"/>
+    </condition>
+    <property name="args" value="${default-args}" />
 
     <condition property="launch.cmd" value="${basedir}/build.sh">
         <os family="unix" />

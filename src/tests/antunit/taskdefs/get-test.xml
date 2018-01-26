@@ -94,7 +94,7 @@
     </target>
     
     
-    <target name="testInfiniteRedirect">
+    <target name="testInfiniteRedirect" unless="jenkins">
         <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
       <get  src="${location}/infinite.txt" dest="${output}/infinite.tmp"/>
         </au:expectfailure>
