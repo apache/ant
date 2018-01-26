@@ -116,7 +116,7 @@ public class Exit extends Task {
      * @param i   the <code>int</code> status
      */
     public void setStatus(int i) {
-        status = new Integer(i);
+        status = Integer.valueOf(i);
     }
 
     /**

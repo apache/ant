@@ -165,7 +165,7 @@ public class EmailTask extends Task {
      * @param port The port to use.
      */
     public void setMailport(int port) {
-        this.port = new Integer(port);
+        this.port = Integer.valueOf(port);
     }
 
     /**

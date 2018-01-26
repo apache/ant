@@ -533,9 +533,9 @@ public class IntrospectionHelperTest {
         assertAttrMethod("seven", "setSeven", String.class,
                          "2", "3");
         assertAttrMethod("eight", "setEight", Integer.TYPE,
-                         new Integer(2), new Integer(3));
+                         Integer.valueOf(2), Integer.valueOf(3));
         assertAttrMethod("nine", "setNine", Integer.class,
-                         new Integer(2), new Integer(3));
+                         Integer.valueOf(2), Integer.valueOf(3));
         assertAttrMethod("ten", "setTen", File.class,
                          new File(projectBasedir + 2), new File("toto"));
         assertAttrMethod("eleven", "setEleven", Boolean.TYPE,
@@ -547,15 +547,15 @@ public class IntrospectionHelperTest {
         assertAttrMethod("fourteen", "setFourteen", StringBuffer.class,
                          new StringBuffer("2"), new StringBuffer("3"));
         assertAttrMethod("fifteen", "setFifteen", Character.TYPE,
-                         new Character('a'), new Character('b'));
+                         Character.valueOf('a'), Character.valueOf('b'));
         assertAttrMethod("sixteen", "setSixteen", Character.class,
-                         new Character('a'), new Character('b'));
+                         Character.valueOf('a'), Character.valueOf('b'));
         assertAttrMethod("seventeen", "setSeventeen", Byte.TYPE,
-                         new Byte((byte) 17), new Byte((byte) 10));
+                         Byte.valueOf((byte) 17), Byte.valueOf((byte) 10));
         assertAttrMethod("eightteen", "setEightteen", Short.TYPE,
-                         new Short((short) 18), new Short((short) 10));
+                         Short.valueOf((short) 18), Short.valueOf((short) 10));
         assertAttrMethod("nineteen", "setNineteen", Double.TYPE,
-                         new Double(19), new Double((short) 10));
+                         Double.valueOf(19), Double.valueOf((short) 10));
 
         try {
             assertAttrMethod("onehundred", null, null, null, null);

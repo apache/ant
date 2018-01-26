@@ -363,7 +363,7 @@ public class LayoutPreservingProperties extends Properties {
                         // the new one
                         remove(key);
                     }
-                    keyedPairLines.put(key, new Integer(logicalLines.size()));
+                    keyedPairLines.put(key, Integer.valueOf(logicalLines.size()));
                 }
                 logicalLines.add(line);
                 logicalLineBuffer.setLength(0);
