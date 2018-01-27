@@ -125,8 +125,9 @@ the tests succeed.
   <li>windows (for all versions of Microsoft Windows)</li>
   <li>dos (for all Microsoft DOS based operating systems including
     Microsoft Windows and OS/2)</li>
-  <li>mac (for all Apple Macintosh systems)</li>
-  <li>unix (for all Unix and Unix-like operating systems)</li>
+  <li>mac (for all Apple Macintosh systems prior to Mac OS X)</li>
+  <li>unix (for all Unix and Unix-like operating systems, including Linux and
+      Mac OS X/macOS)</li>
   <li>netware (for Novell NetWare)</li>
   <li>os/2 (for OS/2)</li>
   <li>tandem (for HP's NonStop Kernel - formerly Tandem)</li>
@@ -470,7 +471,7 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">name of the type</td>
+    <td valign="top">Name of the type</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -604,12 +605,11 @@ attempting to set the appropriate property/feature/</p>
   <tr>
     <td valign="top">property</td>
     <td valign="top">property to set</td>
-    <td valign="top" align="center">one of property or feature</td>
+    <td valign="top" align="center" rowspan="2">Exactly one of the two</td>
   </tr>
   <tr>
     <td valign="top">feature</td>
     <td valign="top">feature to set</td>
-    <td valign="top" align="center">one of property or feature</td>
   </tr>
   <tr>
     <td valign="top">value</td>
@@ -678,12 +678,11 @@ not reachable on other ports (i.e. port 80), because of firewalls.
   <tr>
     <td valign="top">host</td>
     <td valign="top">host to check for</td>
-    <td valign="top" align="center">one of url or host</td>
+    <td valign="top" align="center" rowspan="2">Exactly one of the two</td>
   </tr>
   <tr>
     <td valign="top">url</td>
     <td valign="top">URL containing hostname</td>
-    <td valign="top" align="center">one of url or host</td>
   </tr>
   <tr>
     <td valign="top">timeout</td>
@@ -801,7 +800,7 @@ must match. <em>Since Ant 1.7</em>
     <td valign="top">resource</td>
     <td valign="top">Name of a file that is the resource to test.
     </td>
-    <td align="center" rowspan="2">One of the two</td>
+    <td align="center" rowspan="2">Exactly one of the two</td>
   </tr>
   <tr>
     <td valign="top">refid</td>
@@ -843,18 +842,17 @@ must match. <em>Since Ant 1.7</em>
     <tr>
         <td valign="top">field</td>
         <td valign="top">name of a field to look for</td>
-        <td align="center">one of field or method</td>
+        <td align="center" rowspan="2">Exactly one of the two</td>
     </tr>
     <tr>
         <td valign="top">method</td>
         <td valign="top">name of a method to look for</td>
-        <td align="center">one of field or method</td>
     </tr>
 
     <tr>
         <td valign="top">ignoreSystemClasses</td>
         <td valign="top">should system classes be ignored?</td>
-        <td align="center">No -default is false</td>
+        <td align="center">No - default is false</td>
     </tr>
     <tr>
         <td valign="top">classpath</td>
@@ -1044,7 +1042,7 @@ is redundant and will be ignored.</p>
     <td valign="top">Specifies the expected modification time of the resource
       in milliseconds since midnight Jan 1 1970.</td>
     <td valign="center" align="center" rowspan="2">Exactly one of the
-      two.</td>
+      two</td>
   </tr>
   <tr>
     <td valign="top">datetime</td>
@@ -1109,8 +1107,7 @@ is redundant and will be ignored.</p>
     <td valign="top">The version that this JVM is at least.
       The format is major.minor.point. Starting with Java 9 really
       only the major number is determined.</td>
-    <td valign="top" align="center">No</td>
-    <td valign="top" rowspan="2" align="center">One of these.</td>
+    <td valign="top" rowspan="2" align="center">Exactly one of the two</td>
   </tr>
   <tr>
     <td valign="top">exactly</td>

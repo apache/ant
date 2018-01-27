@@ -86,14 +86,12 @@ Task to perform a "cleartool checkin" command to ClearCase.
   </tr>
   <tr>
     <td>comment</td>
-    <td>Specify a comment. Only one of comment or commentfile may be used.</td>
-    <td>No</td>
+    <td>Specify a comment</td>
+    <td rowspan="2">No; only one of the two may be used</td>
   </tr>
   <tr>
     <td>commentfile</td>
-    <td>Specify a file containing a comment. Only one of comment or commentfile
-        may be used.</td>
-    <td>No</td>
+    <td>Specify a file containing a comment</td>
   </tr>
   <tr>
     <td>nowarn</td>
@@ -185,14 +183,12 @@ Task to perform a "cleartool checkout" command to ClearCase.
   </tr>
   <tr>
     <td>comment</td>
-    <td>Specify a comment. Only one of comment or commentfile may be used.</td>
-    <td>No</td>
+    <td>Specify a comment</td>
+    <td rowspan="2">No; only one of the two may be used</td>
   </tr>
   <tr>
     <td>commentfile</td>
-    <td>Specify a file containing a comment. Only one of comment or
-        commentfile may be used.</td>
-    <td>No</td>
+    <td>Specify a file containing a comment</td>
   </tr>
   <tr>
     <td>notco</td>
@@ -348,47 +344,46 @@ Task to perform a "mklbtype" command to ClearCase.
     <td>typename</td>
     <td>Name of the label type to create</td>
     <td>Yes</td>
-  <tr>
+  </tr>
   <tr>
     <td>vob</td>
     <td>Name of the VOB</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>replace</td>
     <td>Replace an existing label definition of the same type</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>global</td>
     <td>Either global or ordinary can be specified, not both. Creates a label type that is global to the VOB or to VOBs that use this VOB</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>ordinary</td>
     <td>Either global or ordinary can be specified, not both. Creates a label type that can be used only in the current VOB. <b>Default</b></td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>pbranch</td>
     <td>Allows the label type to be used once per branch in a given element's version tree</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>shared</td>
     <td>Sets the way mastership is checked by ClearCase. See ClearCase documentation for details</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>comment</td>
-    <td>Specify a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr>
+    <td>Specify a comment</td>
+    <td rowspan="2">No; only one of the two may be used</td>
+  </tr>
   <tr>
     <td>commentfile</td>
-    <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr></tr>
+    <td>Specify a file containing a comment</td>
+  </tr>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
@@ -423,42 +418,41 @@ Task to perform a "mklabel" command to ClearCase.
     <td>typename</td>
     <td>Name of the label type</td>
     <td>Yes</td>
-  <tr>
+  </tr>
   <tr>
     <td>viewpath</td>
     <td>Path to the ClearCase view file or directory that the command will operate on</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>replace</td>
     <td>Replace a label of the same type on the same branch</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>recurse</td>
     <td>Process each subdirectory under viewpath</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>version</td>
     <td>Identify a specific version to attach the label to</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>vob</td>
     <td>Name of the VOB</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>comment</td>
-    <td>Specify a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr>
+    <td>Specify a comment</td>
+    <td rowspan="2">No; only one of the two may be used</td>
+  </tr>
   <tr>
     <td>commentfile</td>
-    <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr></tr>
+    <td>Specify a file containing a comment</td>
+  </tr>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
@@ -533,35 +527,34 @@ Task to perform a "rmtype" command to ClearCase.
       </table>
     </td>
     <td>Yes</td>
-  <tr>
+  </tr>
   <tr>
     <td>typename</td>
     <td>The name of the type to remove</td>
     <td>Yes</td>
-  <tr>
+  </tr>
   <tr>
     <td>ignore</td>
     <td>Used with trigger types only. Forces removal of trigger type even if a pre-operation trigger would prevent its removal</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>rmall</td>
     <td>Removes all instances of a type and the type object itself</td>
     <td>No</td>
-  <tr>
+  </tr>
   <tr>
     <td>comment</td>
-    <td>Specify a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr>
+    <td>Specify a comment</td>
+    <td rowspan="2">No; only one of the two may be used</td>
+  </tr>
   <tr>
     <td>commentfile</td>
-    <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
-    <td>No</td>
-  <tr></tr>
+    <td>Specify a file containing a comment</td>
+  </tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true
+    <td>Throw an exception if the command fails. Default is true.
     <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
@@ -594,44 +587,44 @@ Task to perform a "cleartool lock" command to ClearCase.
       <td>replace</td>
       <td>Specifies replacing an existing lock</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>nusers</td>
       <td>Specifies user(s) who can still modify the object</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>obsolete</td>
       <td>Specifies that the object should be marked obsolete</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>comment</td>
       <td>Specifies how to populate comments fields</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>pname</td>
       <td>Specifies the object pathname to be locked.</td>
       <td>No</td>
+   </tr>
    <tr>
       <td>objselect</td>
-      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+      <td><em>Obsolete</em>. Use <i>objsel</i> instead.</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>objsel</td>
       <td>Specifies the object(s) to be locked.<br>
-      <em>Since Ant 1.6.1</em></td>
+       <em>Since Ant 1.6.1</em></td>
       <td>No</td>
+   </tr>
    <tr>
-  <tr>
-    <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true.<br>
-    <em>Since Ant 1.6.1</em></td>
-    <td>No</td>
-  </tr>
-
+     <td>failonerr</td>
+     <td>Throw an exception if the command fails. Default is true.<br>
+       <em>Since Ant 1.6.1</em></td>
+     <td>No</td>
+   </tr>
  </table>
 <h3>Examples</h3>
 <blockquote>
@@ -646,7 +639,7 @@ Task to perform a "cleartool lock" command to ClearCase.
 <h3>Description</h3>
 Task to perform a "cleartool unlock" command to ClearCase.
 <h3>Parameters</h3>
-<table>
+ <table>
    <tr>
      <th>Attribute</th>
      <th>Values</th>
@@ -656,31 +649,31 @@ Task to perform a "cleartool unlock" command to ClearCase.
       <td>comment</td>
       <td>Specifies how to populate comments fields</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>pname</td>
       <td>Specifies the object pathname to be unlocked.</td>
       <td>No</td>
+   </tr>
    <tr>
       <td>objselect</td>
-      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+      <td><em>Obsolete</em>. Use <i>objsel</i> instead.</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>objsel</td>
       <td>Specifies the object(s) to be unlocked.<br>
-      <em>Since Ant 1.6.1</em></td>
+       <em>Since Ant 1.6.1</em></td>
       <td>No</td>
+   </tr>
    <tr>
-  <tr>
-    <td>failonerr</td>
-    <td>Throw an exception if the command fails. Default is true.<br>
-    <em>Since Ant 1.6.1</em></td>
-    <td>No</td>
-  </tr>
-
+     <td>failonerr</td>
+     <td>Throw an exception if the command fails. Default is true.<br>
+       <em>Since Ant 1.6.1</em></td>
+     <td>No</td>
+   </tr>
  </table>
- <h3>Examples</h3>
+<h3>Examples</h3>
 <blockquote>
 <pre>
 &lt;ccunlock
@@ -701,14 +694,12 @@ Task to perform a "cleartool mkbl" command to ClearCase.
    </tr>
    <tr>
       <td>comment</td>
-      <td>Specify a comment. Only one of comment or cfile may be
-used.</td>
-      <td>No</td>
+      <td>Specify a comment</td>
+      <td rowspan="2">No; only one of the two may be used</td>
    </tr>
    <tr>
       <td>commentfile</td>
-      <td>Specify a file containing a comment. Only one of comment or
-cfile may be used.</td>
+      <td>Specify a file containing a comment</td>
       <td>No</td>
    </tr>
    <tr>
@@ -720,11 +711,11 @@ cfile may be used.</td>
       <td>nowarn</td>
       <td>Suppress warning messages</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>identical</td>
       <td>Allows the baseline to be created even if it is identical to the
-previous baseline.</td>
+       previous baseline.</td>
       <td>No</td>
    </tr>
    <tr>
@@ -740,7 +731,7 @@ previous baseline.</td>
   <tr>
     <td>failonerr</td>
     <td>Throw an exception if the command fails. Default is true.<br>
-    <em>Since Ant 1.6.1</em></td>
+       <em>Since Ant 1.6.1</em></td>
     <td>No</td>
   </tr>
  </table>
@@ -801,12 +792,12 @@ Task to perform a &quot;cleartool mkattr&quot; command to ClearCase.<br>
    </tr>
    <tr>
       <td>comment</td>
-      <td>Specify a comment. Only one of comment or cfile may be used.</td>
-      <td>No</td>
+      <td>Specify a comment</td>
+      <td rowspan="2">No; only one of the two may be used</td>
    </tr>
    <tr>
       <td>commentfile</td>
-      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+      <td>Specify a file containing a comment</td>
       <td>No</td>
    </tr>
    <tr>
@@ -844,13 +835,12 @@ Task to perform a &quot;cleartool mkdir&quot; command to ClearCase.<br>
    </tr>
    <tr>
       <td>comment</td>
-      <td>Specify a comment. Only one of comment or cfile may be used.</td>
-      <td>No</td>
+      <td>Specify a comment</td>
+      <td rowspan="2">No; only one of the two may be used</td>
    </tr>
    <tr>
       <td>commentfile</td>
-      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
-      <td>No</td>
+      <td>Specify a file containing a comment</td>
    </tr>
    <tr>
       <td>nocheckout</td>
@@ -889,52 +879,52 @@ Task to perform a &quot;cleartool mkelem&quot; command to ClearCase.<br>
       <td>viewpath</td>
       <td>Path to the ClearCase view file or directory that the command will operate on</td>
       <td>Yes</td>
-   <tr>
+   </tr>
    <tr>
       <td>comment</td>
-      <td>Specify a comment. Only one of comment or cfile may be used.</td>
-      <td>No</td>
-   <tr>
+      <td>Specify a comment</td>
+      <td rowspan="2">No; only one of the two may be used</td>
+   </tr>
    <tr>
       <td>commentfile</td>
-      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+      <td>Specify a file containing a comment</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>nowarn</td>
       <td>Suppress warning messages</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>nocheckout</td>
       <td>Do not checkout after element creation</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>checkin</td>
       <td>Checkin element after creation</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>preservetime</td>
       <td>Preserve the modification time (for checkin)</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>master</td>
       <td>Assign mastership of the main branch to the current site</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>eltype</td>
       <td>Element type to use during element creation</td>
       <td>No</td>
-   <tr>
+   </tr>
    <tr>
       <td>failonerr</td>
       <td>Throw an exception if the command fails. Default is true</td>
       <td>No</td>
-   <tr>
+   </tr>
  </table>
 <h3>Examples</h3>
 <blockquote>
