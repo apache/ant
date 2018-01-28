@@ -1,6 +1,9 @@
 Changes from Ant 1.9.9 TO Ant 1.9.10
 ====================================
 
+ * The Log4jListener is marked as deprecated as the required log4j library
+   (in version 1.x) is not maintained any more.
+
 Fixed bugs:
 -----------
 
