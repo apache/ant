@@ -23,6 +23,9 @@ Changes that could break older environments:
  * Commons Net 3.6 is binary-code, but not source compatible;
    see change list of Commons Net 3.0 for details
 
+ * The Log4jListener is marked as deprecated as the required log4j library
+   (in version 1.x) is not maintained any more.
+
 Fixed bugs:
 -----------
 
