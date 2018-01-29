@@ -53,9 +53,12 @@ import com.sun.media.jai.codec.FileSeekableStream;
  * href="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
  * JAI Programming Guide</a>.
  *
+ * @deprecated JAI is not developed any more. Internal APIs that JAI depends on were
+ * scheduled for removal in Java 7 and finally removed in Java 9.
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType
  */
+@Deprecated
 public class Image extends MatchingTask {
     // CheckStyle:VisibilityModifier OFF - bc
     protected Vector<ImageOperation> instructions = new Vector<>();
