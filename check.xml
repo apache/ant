@@ -91,7 +91,7 @@
 
   <!-- Simian -->
   <property name="simian.version"
-            value="2.5.8"
+            value="2.5.9"
             description="Which Version of Simian to use"/>
   <property name="simian.uri"
             value="http://www.harukizaemon.com/simian/simian-${simian.version}.tar.gz"
@@ -182,6 +182,7 @@
   <target name="simiancheck" description="--> runs the check for duplicates">
     <available property="simian.jar.present" file="${simian.lib.dir}/simian-${simian.version}.jar"/>
     <sequential unless:set="simian.jar.present">
+      <echo>Install Simian ${simian.version}</echo>
       <mkdir dir="${simian.lib.dir}"/>
       <get src="${simian.uri}" dest="${simian.lib.dir}"/>
       <gunzip src="${simian.lib.dir}/simian-${simian.version}.tar.gz" dest="${simian.lib.dir}/simian-${simian.version}.tar"/>
@@ -194,6 +195,7 @@
       </untar>
     </sequential>
 
+    <echo>Run Simian</echo>
     <taskdef resource="simiantask.properties">
       <classpath>
         <fileset dir="${simian.lib.dir}" includes="*.jar"/>
@@ -202,17 +204,7 @@
     <mkdir dir="${simian.report.dir}"/>
     <simian failureProperty="simian.duplicates.found">
         <fileset dir="${java.dir}" />
-        <!--
-        Having both formatters defined results in a 
-            java.lang.UnsupportedOperationException
-                at java.util.AbstractList.add(Unknown Source)
-                at java.util.AbstractList.add(Unknown Source)
-                at com.harukizaemon.simian.CompositeAuditListener.add(Unknown Source)
-                at com.harukizaemon.simian.SimianTask.A(Unknown Source)
-                at com.harukizaemon.simian.SimianTask.B(Unknown Source)
-                at com.harukizaemon.simian.SimianTask.execute(Unknown Source)
         <formatter type="plain" toFile="${simian.report.dir}/simian-log.txt"/>
-        -->
         <formatter type="xml" toFile="${simian.report.dir}/simian-log.xml"/>
     </simian>
     <xslt in="${simian.report.dir}/simian-log.xml" style="${simian.lib.dir}/simian.xsl" out="${simian.report.dir}/simian.html"/>
