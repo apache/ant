@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.image;
 import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -29,6 +30,7 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 
@@ -48,6 +50,8 @@ public class ImageTest {
 
     @Before
     public void setUp() {
+        /* JAI depends on internal API removed in Java 9 */
+        assumeFalse(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.configureProject(TASKDEFS_DIR + "image.xml");
     }
 
@@ -72,7 +76,7 @@ public class ImageTest {
         buildRule.executeTarget("testSimpleScale");
         AntAssert.assertContains("Processing File", buildRule.getLog());
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);
-        assumeTrue("Could not change file modificaiton date",
+        assumeTrue("Could not change file modification date",
                 f.setLastModified(f.lastModified() - FILE_UTILS.getFileTimestampGranularity() * 2));
         long lastModified = f.lastModified();
         buildRule.executeTarget("testOverwriteTrue");

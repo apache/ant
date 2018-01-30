@@ -26,6 +26,10 @@ Changes that could break older environments:
  * The Log4jListener is marked as deprecated as the required log4j library
    (in version 1.x) is not maintained any more.
 
+ * Image task is marked as deprecated as the required JAI library is not
+   maintained any more and internal APIs that JAI depended on are no longer
+   available in Java 9.
+
 Fixed bugs:
 -----------
 
