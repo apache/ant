@@ -667,8 +667,8 @@ public class ProjectHelper2 extends ProjectHelper {
         @Override
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
-            if (name.equals("project")
-                && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
+            if ("project".equals(name)
+                && (uri.isEmpty() || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.projectHandler;
             }
             if (name.equals(qname)) {
@@ -727,19 +727,19 @@ public class ProjectHelper2 extends ProjectHelper {
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String attrUri = attrs.getURI(i);
-                if (attrUri != null && !attrUri.equals("") && !attrUri.equals(uri)) {
+                if (attrUri != null && !attrUri.isEmpty() && !attrUri.equals(uri)) {
                     continue; // Ignore attributes from unknown uris
                 }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
-                if (key.equals("default")) {
-                    if (value != null && !value.equals("")) {
+                if ("default".equals(key)) {
+                    if (value != null && !value.isEmpty()) {
                         if (!context.isIgnoringProjectTag()) {
                             project.setDefault(value);
                         }
                     }
-                } else if (key.equals("name")) {
+                } else if ("name".equals(key)) {
                     if (value != null) {
                         context.setCurrentProjectName(value);
                         nameAttributeSet = true;
@@ -754,14 +754,14 @@ public class ProjectHelper2 extends ProjectHelper {
                             }
                         }
                     }
-                } else if (key.equals("id")) {
+                } else if ("id".equals(key)) {
                     if (value != null) {
                         // What's the difference between id and name ?
                         if (!context.isIgnoringProjectTag()) {
                             project.addReference(value, project);
                         }
                     }
-                } else if (key.equals("basedir")) {
+                } else if ("basedir".equals(key)) {
                     if (!context.isIgnoringProjectTag()) {
                         baseDir = value;
                     }
@@ -864,8 +864,8 @@ public class ProjectHelper2 extends ProjectHelper {
         @Override
         public AntHandler onStartChild(String uri, String name, String qname, Attributes attrs,
                                        AntXMLContext context) throws SAXParseException {
-            return (name.equals("target") || name.equals("extension-point"))
-                && (uri.equals("") || uri.equals(ANT_CORE_URI))
+            return ("target".equals(name) || "extension-point".equals(name))
+                && (uri.isEmpty() || uri.equals(ANT_CORE_URI))
                 ? ProjectHelper2.targetHandler : ProjectHelper2.elementHandler;
         }
     }
@@ -912,32 +912,32 @@ public class ProjectHelper2 extends ProjectHelper {
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String attrUri = attrs.getURI(i);
-                if (attrUri != null && !attrUri.equals("") && !attrUri.equals(uri)) {
+                if (attrUri != null && !attrUri.isEmpty() && !attrUri.equals(uri)) {
                     continue; // Ignore attributes from unknown uris
                 }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
-                if (key.equals("name")) {
+                if ("name".equals(key)) {
                     name = value;
-                    if ("".equals(name)) {
+                    if (name.isEmpty()) {
                         throw new BuildException("name attribute must " + "not be empty");
                     }
-                } else if (key.equals("depends")) {
+                } else if ("depends".equals(key)) {
                     depends = value;
-                } else if (key.equals("if")) {
+                } else if ("if".equals(key)) {
                     target.setIf(value);
-                } else if (key.equals("unless")) {
+                } else if ("unless".equals(key)) {
                     target.setUnless(value);
-                } else if (key.equals("id")) {
-                    if (value != null && !value.equals("")) {
+                } else if ("id".equals(key)) {
+                    if (value != null && !value.isEmpty()) {
                         context.getProject().addReference(value, target);
                     }
-                } else if (key.equals("description")) {
+                } else if ("description".equals(key)) {
                     target.setDescription(value);
-                } else if (key.equals("extensionOf")) {
+                } else if ("extensionOf".equals(key)) {
                     extensionPoint = value;
-                } else if (key.equals("onMissingExtensionPoint")) {
+                } else if ("onMissingExtensionPoint".equals(key)) {
                     try {
                         extensionPointMissing = OnMissingExtensionPoint.valueOf(value);
                     } catch (IllegalArgumentException e) {
@@ -1167,7 +1167,7 @@ public class ProjectHelper2 extends ProjectHelper {
             for (int i = 0; i < attrs.getLength(); i++) {
                 String name = attrs.getLocalName(i);
                 String attrUri = attrs.getURI(i);
-                if (attrUri != null && !attrUri.equals("") && !attrUri.equals(uri)) {
+                if (attrUri != null && !attrUri.isEmpty() && !attrUri.equals(uri)) {
                     name = attrUri + ":" + attrs.getQName(i);
                 }
                 String value = attrs.getValue(i);
