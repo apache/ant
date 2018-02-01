@@ -506,7 +506,7 @@ public class FTP extends Task implements FTPTaskConfig {
                     return;
                 }
                 String completePath = null;
-                if (!vpath.equals("")) {
+                if (!vpath.isEmpty()) {
                     completePath = rootPath + remoteFileSep
                         + vpath.replace(File.separatorChar, remoteFileSep.charAt(0));
                 } else {
@@ -521,8 +521,8 @@ public class FTP extends Task implements FTPTaskConfig {
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
                     if (file != null
-                        && !file.getName().equals(".")
-                        && !file.getName().equals("..")) {
+                        && !".".equals(file.getName())
+                        && !"..".equals(file.getName())) {
                         String name = vpath + file.getName();
                         scannedDirs.put(name, new FTPFileProxy(file));
                         if (isFunctioningAsDirectory(ftp, dir, file)) {
@@ -1536,7 +1536,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(LanguageCode serverLanguageCode) {
-        if (serverLanguageCode != null && !serverLanguageCode.getValue().equals("")) {
+        if (serverLanguageCode != null && !serverLanguageCode.getValue().isEmpty()) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }
