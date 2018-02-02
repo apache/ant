@@ -238,7 +238,16 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (getDir() != null) {
+        if (fileAttributeUsed) {
+            if (getDir().equals(file.getParentFile())) {
+                String[] includes = defaultPatterns.getIncludePatterns(getProject());
+                if (includes.length == 1 && includes[0].equals(file.getName())) {
+                    // NOOP, setFile has been invoked twice with the same parameter
+                    return;
+                }
+            }
+            throw new BuildException("setFile cannot be called twice with different arguments");
+        } else if (getDir() != null) {
             throw dirAndFileAreMutuallyExclusive();
         }
         setDir(file.getParentFile());
@@ -298,7 +307,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Appends <code>excludes</code> to the current list of include
+     * Appends <code>excludes</code> to the current list of exclude
      * patterns.
      *
      * @param excludes array containing the exclude patterns.

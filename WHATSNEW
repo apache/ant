@@ -64,6 +64,11 @@ Fixed bugs:
    streams of a process, could end up being truncated.
    Bugzilla Report 58833, 58451
 
+ * <fileset>/<zipfileset>/<tarfileset> will now throw an exception
+   with a more useful error message when setFile is called twice on
+   the same instance.
+   Bugzilla Report 62071
+
 Other changes:
 --------------
 
