@@ -244,4 +244,24 @@ public abstract class AbstractFileSetTest {
         File dir = f1.getDir(project);
         assertEquals("Dir is basedir", dir, project.getBaseDir());
     }
+
+    @Test
+    public void canCallSetFileTwiceWithSameArgument() {
+        AbstractFileSet f = getInstance();
+        f.setFile(new File("/a"));
+        f.setFile(new File("/a"));
+        // really only asserts no exception is thrown
+    }
+
+    @Test
+    public void cantCallSetFileTwiceWithDifferentArguments() {
+        AbstractFileSet f = getInstance();
+        f.setFile(new File("/a"));
+        try {
+            f.setFile(new File("/b"));
+            fail("expected an exception");
+        } catch (BuildException ex) {
+            assertEquals("setFile cannot be called twice with different arguments", ex.getMessage());
+        }
+    }
 }
