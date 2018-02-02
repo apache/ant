@@ -292,7 +292,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Appends <code>excludes</code> to the current list of include
+     * Appends <code>excludes</code> to the current list of exclude
      * patterns.
      *
      * @param excludes array containing the exclude patterns.
