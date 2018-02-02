@@ -508,8 +508,8 @@ public class FTP extends Task implements FTPTaskConfig {
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
                     if (file != null
-                        && !file.getName().equals(".")
-                        && !file.getName().equals("..")) {
+                        && !".".equals(file.getName())
+                        && !"..".equals(file.getName())) {
                         String name = vpath + file.getName();
                         scannedDirs.put(name, new FTPFileProxy(file));
                         if (isFunctioningAsDirectory(ftp, dir, file)) {
