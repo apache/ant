@@ -109,6 +109,7 @@ Set -Ddest=LOCATION on the command line
       <attribute name="project"/>
       <attribute name="archive" default="@{project}"/>
       <attribute name="repository" default="${m2.repo}"/>
+      <attribute name="id" default="central"/>
       <sequential>
         <fail>
           Unknown archive @{archive} -no property @{archive}.version defined in ${lib.dir}/libraries.properties.
@@ -118,7 +119,6 @@ Set -Ddest=LOCATION on the command line
             </not>
           </condition>
         </fail>
-        <artifact:remoteRepository url="@{repository}" id="central"/>
         <artifact:dependencies pathID="@{archive}.path" useScope="runtime">
           <dependency groupId="@{project}"
                       artifactId="@{archive}"
@@ -127,6 +127,7 @@ Set -Ddest=LOCATION on the command line
             <exclusion groupId="org.apache.ant" artifactId="ant"/>
             <exclusion groupId="org.apache.ant" artifactId="ant-launcher"/>
           </dependency>
+          <artifact:remoteRepository url="@{repository}" id="@{id}"/>
         </artifact:dependencies>
         <!-- now we are left with the problem of getting the files into our directory -->
         <copy todir="${dest.dir}">
@@ -328,9 +329,9 @@ Set -Ddest=LOCATION on the command line
   <target name="jai"
           description="load Java Advanced Imaging"
           depends="init">
-    <f2 project="javax.media" archive="jai-core"
+    <f2 project="javax.media" archive="jai-core" id="jboss"
         repository="https://repository.jboss.org/nexus/content/groups/public/"/>
-    <f2 project="com.sun.media" archive="jai-codec"
+    <f2 project="com.sun.media" archive="jai-codec" id="jboss"
         repository="https://repository.jboss.org/nexus/content/groups/public/"/>
   </target>
 
