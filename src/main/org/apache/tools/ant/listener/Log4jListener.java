@@ -34,21 +34,18 @@ import org.apache.tools.ant.Task;
 @Deprecated
 public class Log4jListener implements BuildListener {
 
-    /** Indicates if the listener was initialized. */
-    private final boolean initialized;
-
     /**
      * log category we log into
      */
     public static final String LOG_ANT = "org.apache.tools.ant";
 
-     /**
+    /**
      * Construct the listener
-      */
-     public Log4jListener() {
+     */
+    public Log4jListener() {
         // trigger the log4j initialization (if at all it's not yet initialized)
-         final Logger log = Logger.getLogger(LOG_ANT);
-     }
+        final Logger log = Logger.getLogger(LOG_ANT);
+    }
 
     /**
      * @see BuildListener#buildStarted
