@@ -1984,6 +1984,9 @@ ${antunit.reports}
     </length>
   </target>
 
+  <!-- JetBrains builds need this target -->
+  <target name="printFailingTests" depends="print-failing-tests"/>
+
   <target name="print-failing-tests">
     <property name="failingtests.dir" value="${build.dir}/errors"/>
     <mkdir dir=""/>
