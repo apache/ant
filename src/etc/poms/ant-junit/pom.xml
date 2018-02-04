@@ -67,6 +67,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
                   <fileset dir="${project.build.sourceDirectory}/../etc">
                     <include name="junit-frames.xsl"/>
                     <include name="junit-noframes.xsl"/>
+                    <include name="junit-frames-saxon.xsl"/>
+                    <include name="junit-noframes-saxon.xsl"/>
                   </fileset>
                 </copy>              
               </tasks>
