@@ -611,6 +611,8 @@
       <fileset dir="${etc.dir}">
         <include name="junit-frames.xsl"/>
         <include name="junit-noframes.xsl"/>
+        <include name="junit-frames-saxon.xsl"/>
+        <include name="junit-noframes-saxon.xsl"/>
       </fileset>
     </copy>
   </target>
