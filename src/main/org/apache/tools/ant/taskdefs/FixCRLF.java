@@ -404,11 +404,11 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
 
         private int state = filter.getJavafiles() ? LOOKING : NOTJAVA;
 
-        private StringBuffer eolStr = new StringBuffer(LINEBUFLEN);
-        private StringBuffer eofStr = new StringBuffer();
+        private StringBuilder eolStr = new StringBuilder(LINEBUFLEN);
+        private StringBuilder eofStr = new StringBuilder();
 
         private BufferedReader reader;
-        private StringBuffer line = new StringBuffer();
+        private StringBuilder line = new StringBuilder();
         private boolean reachedEof = false;
         private File srcFile;
 
@@ -442,8 +442,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             int ch = -1;
             int eolcount = 0;
 
-            eolStr = new StringBuffer();
-            line = new StringBuffer();
+            eolStr = new StringBuilder();
+            line = new StringBuilder();
 
             try {
                 ch = reader.read();

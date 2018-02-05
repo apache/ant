@@ -1662,7 +1662,7 @@ public final class IntrospectionHelper {
             return text;
         }
         final int ends = (MAX_REPORT_NESTED_TEXT - ELLIPSIS.length()) / 2;
-        return new StringBuffer(text).replace(ends, text.length() - ends, ELLIPSIS).toString();
+        return new StringBuilder(text).replace(ends, text.length() - ends, ELLIPSIS).toString();
     }
 
 

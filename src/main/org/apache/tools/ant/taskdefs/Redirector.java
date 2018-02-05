@@ -559,7 +559,7 @@ public class Redirector {
         final BufferedReader in = new BufferedReader(new StringReader(Execute
                 .toString(baos)));
         String line = null;
-        final StringBuffer val = new StringBuffer();
+        final StringBuilder val = new StringBuilder();
         while ((line = in.readLine()) != null) {
             if (val.length() != 0) {
                 val.append(StringUtils.LINE_SEP);
@@ -677,13 +677,13 @@ public class Redirector {
                 ((ConcatFileInputStream) inputStream)
                         .setManagingComponent(managingTask);
             } else if (inputString != null) {
-                final StringBuffer buf = new StringBuffer("Using input ");
+                final StringBuilder sb = new StringBuilder("Using input ");
                 if (logInputString) {
-                    buf.append('"').append(inputString).append('"');
+                    sb.append('"').append(inputString).append('"');
                 } else {
-                    buf.append("string");
+                    sb.append("string");
                 }
-                managingTask.log(buf.toString(), Project.MSG_VERBOSE);
+                managingTask.log(sb.toString(), Project.MSG_VERBOSE);
                 inputStream = new ByteArrayInputStream(inputString.getBytes());
             }
 
@@ -708,7 +708,7 @@ public class Redirector {
     /** outStreams */
     private void outStreams() {
         if (out != null && out.length > 0) {
-            final String logHead = new StringBuffer("Output ").append(
+            final String logHead = new StringBuilder("Output ").append(
                     ((appendOut) ? "appended" : "redirected")).append(" to ")
                     .toString();
             outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE,
@@ -731,7 +731,7 @@ public class Redirector {
 
     private void errorStreams() {
         if (error != null && error.length > 0) {
-            final String logHead = new StringBuffer("Error ").append(
+            final String logHead = new StringBuilder("Error ").append(
                     ((appendErr) ? "appended" : "redirected")).append(" to ")
                     .toString();
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE,

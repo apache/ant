@@ -42,7 +42,7 @@ import org.apache.tools.ant.Task;
 public class TaskOutputStream extends OutputStream {
 
     private Task task;
-    private StringBuffer line;
+    private StringBuilder line;
     private int msgOutputLevel;
 
     /**
@@ -60,7 +60,7 @@ public class TaskOutputStream extends OutputStream {
         this.task = task;
         this.msgOutputLevel = msgOutputLevel;
 
-        line = new StringBuffer();
+        line = new StringBuilder();
     }
 
     /**
@@ -90,7 +90,7 @@ public class TaskOutputStream extends OutputStream {
     private void processLine() {
         String s = line.toString();
         task.log(s, msgOutputLevel);
-        line = new StringBuffer();
+        line = new StringBuilder();
     }
 }
 
