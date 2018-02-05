@@ -743,10 +743,10 @@
     </macrodef>
 
     <optional-jar dep="apache-resolver" mod="types.resolver"/>
-    <optional-jar dep="junit" mod="taskdefs.optional.junit" jpms="false"/>
+    <optional-jar dep="junit" jpms="false"/>
     <optional-jar dep="junit4" mod="taskdefs.optional.junit"/>
     <optional-jar dep="apache-regexp" mod="util.regexp" jpms="false"/>
-    <optional-jar dep="apache-oro" mod="util.regexp.oro" jpms="false"/>
+    <optional-jar dep="apache-oro" mod="util.regexp" jpms="false"/>
     <optional-jar dep="apache-bcel" mod="util.depend.bcel" jpms="false"/>
     <optional-jar dep="apache-log4j" mod="listener" jpms="false"/>
     <optional-jar dep="commons-logging" mod="listener" jpms="false"/>
