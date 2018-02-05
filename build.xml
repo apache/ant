@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="apache-ant" default="main" basedir=".">
+<project name="apache-ant" default="main" basedir="." xmlns:if="ant:if">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D on each invocation) -->
@@ -700,6 +700,7 @@
     <macrodef name="optional-jar">
       <attribute name="dep"/>
       <attribute name="mod" default="taskdefs.optional.@{dep}"/>
+      <attribute name="jpms" default="true"/>
       <sequential>
         <local name="module.name"/>
         <property name="module.name" value="org.apache.tools.ant.@{mod}"/>
@@ -719,7 +720,7 @@
             <include name="NOTICE.txt"/>
           </metainf>
           <manifest>
-            <attribute name="Automatic-Module-Name" value="${module.name}"/>
+            <attribute name="Automatic-Module-Name" value="${module.name}" if:true="@{jpms}"/>
             <section name="${section.name}/">
               <attribute name="Extension-Name"
                          value="${module.name}"/>
@@ -742,24 +743,24 @@
     </macrodef>
 
     <optional-jar dep="apache-resolver" mod="types.resolver"/>
-    <optional-jar dep="junit"/>
-    <optional-jar dep="junit4"/>
-    <optional-jar dep="apache-regexp" mod="util.regexp.rx"/>
-    <optional-jar dep="apache-oro" mod="util.regexp.oro"/>
-    <optional-jar dep="apache-bcel" mod="util.depend.bcel"/>
-    <optional-jar dep="apache-log4j" mod="listener.log4j"/>
-    <optional-jar dep="commons-logging" mod="listener.jcl"/>
-    <optional-jar dep="apache-bsf" mod="util.bsf"/>
+    <optional-jar dep="junit" mod="taskdefs.optional.junit" jpms="false"/>
+    <optional-jar dep="junit4" mod="taskdefs.optional.junit"/>
+    <optional-jar dep="apache-regexp" mod="util.regexp" jpms="false"/>
+    <optional-jar dep="apache-oro" mod="util.regexp.oro" jpms="false"/>
+    <optional-jar dep="apache-bcel" mod="util.depend.bcel" jpms="false"/>
+    <optional-jar dep="apache-log4j" mod="listener" jpms="false"/>
+    <optional-jar dep="commons-logging" mod="listener" jpms="false"/>
+    <optional-jar dep="apache-bsf" mod="util.optional" jpms="false"/>
     <optional-jar dep="javamail" mod="taskdefs.email"/>
-    <optional-jar dep="netrexx"/>
+    <optional-jar dep="netrexx" mod="taskdefs.optional" jpms="false"/>
     <optional-jar dep="commons-net" mod="taskdefs.optional.net"/>
-    <optional-jar dep="antlr"/>
+    <optional-jar dep="antlr" mod="taskdefs.optional" jpms="false"/>
     <optional-jar dep="jmf" mod="taskdefs.optional.sound"/>
-    <optional-jar dep="jai" mod="taskdefs.optional.image"/>
+    <optional-jar dep="jai" mod="taskdefs.optional.image" jpms="false"/>
     <optional-jar dep="swing" mod="taskdefs.optional.splash"/>
     <optional-jar dep="jsch" mod="taskdefs.optional.ssh"/>
     <optional-jar dep="jdepend"/>
-    <optional-jar dep="apache-xalan2" mod="taskdefs.optional.xalan2"/>
+    <optional-jar dep="apache-xalan2" mod="taskdefs.optional" jpms="false"/>
     <optional-jar dep="xz"/>
 
   </target>
@@ -779,11 +780,11 @@
         <include name="LICENSE.txt"/>
         <include name="NOTICE.txt"/>
       </metainf>
+      <!-- testutil cannot be a JPMS module -->
       <manifest>
-        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant.util.test"/>
-        <section name="${ant.package}/util/test/">
+        <section name="${ant.package}/">
           <attribute name="Extension-Name"
-                     value="org.apache.tools.ant.test"/>
+                     value="org.apache.tools.ant"/>
           <attribute name="Specification-Title"
                      value="Apache Ant"/>
           <attribute name="Specification-Version"
