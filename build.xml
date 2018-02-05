@@ -66,7 +66,6 @@
   <property name="src.junit" value="${src.dir}/tests/junit"/>
   <property name="src.antunit" value="${src.dir}/tests/antunit"/>
   <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
-  <property name="manifest" value="${src.dir}/etc/manifest"/>
   <property name="resource.dir" value="${src.dir}/resources"/>
 
   <!--
@@ -89,7 +88,6 @@
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
   <property name="antunit.loglevel" value="none"/>
   <property name="build.junit.reports" location="${build.tests}/reports"/>
-  <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
   <property name="build.pkg.dir" value="${build.dir}/pkg"/>
@@ -636,28 +634,8 @@
       <mapper type="glob" from="*" to="*.txt"/>
     </copy>
 
-    <copy file="${manifest}" tofile="${manifest.tmp}"/>
-    <manifest file="${manifest.tmp}">
-      <section name="${optional.package}/">
-        <attribute name="Extension-name"
-                   value="org.apache.tools.ant"/>
-        <attribute name="Specification-Title"
-                   value="Apache Ant"/>
-        <attribute name="Specification-Version"
-                   value="${manifest-version}"/>
-        <attribute name="Specification-Vendor"
-                   value="Apache Software Foundation"/>
-        <attribute name="Implementation-Title"
-                   value="org.apache.tools.ant"/>
-        <attribute name="Implementation-Version"
-                   value="${manifest-version}"/>
-        <attribute name="Implementation-Vendor"
-                   value="Apache Software Foundation"/>
-      </section>
-    </manifest>
-
     <jar destfile="${build.lib}/${name}-launcher.jar"
-         basedir="${build.classes}"
+         basedir="${build.classes}" index="true"
          whenmanifestonly="fail">
       <selector refid="ant.launcher"/>
       <metainf dir="${build.dir}">
@@ -665,13 +643,13 @@
         <include name="NOTICE.txt"/>
       </metainf>
       <manifest>
+        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant.launch"/>
         <attribute name="Main-Class" value="org.apache.tools.ant.launch.Launcher"/>
       </manifest>
     </jar>
 
     <jar destfile="${build.lib}/${name}.jar"
-         basedir="${build.classes}"
-         manifest="${manifest}"
+         basedir="${build.classes}" index="true"
          whenmanifestonly="fail">
       <!-- Verification: (cd dist/lib; for j in *.jar; do jar tf $j; done) | egrep -v '/$|META-INF/MANIFEST\.MF' | sort | uniq -d -->
       <selector refid="ant.core"/>
@@ -679,10 +657,11 @@
         <include name="LICENSE.txt"/>
         <include name="NOTICE.txt"/>
       </metainf>
-
       <manifest>
+        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant"/>
+        <attribute name="Main-Class" value="org.apache.tools.ant.Main"/>
         <section name="${ant.package}/">
-          <attribute name="Extension-name"
+          <attribute name="Extension-Name"
                      value="org.apache.tools.ant"/>
           <attribute name="Specification-Title"
                      value="Apache Ant"/>
@@ -706,7 +685,6 @@
 
     <jar destfile="${build.lib}/${bootstrap.jar}"
          basedir="${build.classes}"
-         manifest="${manifest}"
          whenmanifestonly="fail">
       <include name="${ant.package}/Main.class"/>
       <metainf dir="${build.dir}">
@@ -714,46 +692,74 @@
         <include name="NOTICE.txt"/>
       </metainf>
       <manifest>
-        <attribute name="Class-Path"
-                   value="ant.jar xalan.jar"/>
+        <attribute name="Main-Class" value="org.apache.tools.ant.Main"/>
+        <attribute name="Class-Path" value="ant.jar xalan.jar"/>
       </manifest>
     </jar>
 
     <macrodef name="optional-jar">
       <attribute name="dep"/>
+      <attribute name="mod" default="taskdefs.optional.@{dep}"/>
       <sequential>
+        <local name="module.name"/>
+        <property name="module.name" value="org.apache.tools.ant.@{mod}"/>
+        <local name="section.name"/>
+        <loadresource property="section.name">
+          <propertyresource name="module.name"/>
+          <filterchain>
+            <replacestring from="." to="/"/>
+          </filterchain>
+        </loadresource>
         <jar destfile="${build.lib}/${optional.jars.prefix}-@{dep}.jar"
-             basedir="${build.classes}"
-             manifest="${manifest.tmp}"
+             basedir="${build.classes}" index="true"
              whenmanifestonly="${optional.jars.whenmanifestonly}">
           <selector refid="needs.@{dep}"/>
           <metainf dir="${build.dir}">
             <include name="LICENSE.txt"/>
             <include name="NOTICE.txt"/>
           </metainf>
+          <manifest>
+            <attribute name="Automatic-Module-Name" value="${module.name}"/>
+            <section name="${section.name}/">
+              <attribute name="Extension-Name"
+                         value="${module.name}"/>
+              <attribute name="Specification-Title"
+                         value="Apache Ant"/>
+              <attribute name="Specification-Version"
+                         value="${manifest-version}"/>
+              <attribute name="Specification-Vendor"
+                         value="Apache Software Foundation"/>
+              <attribute name="Implementation-Title"
+                         value="org.apache.tools.ant"/>
+              <attribute name="Implementation-Version"
+                         value="${manifest-version}"/>
+              <attribute name="Implementation-Vendor"
+                         value="Apache Software Foundation"/>
+            </section>
+          </manifest>
         </jar>
       </sequential>
     </macrodef>
 
-    <optional-jar dep="apache-resolver"/>
+    <optional-jar dep="apache-resolver" mod="types.resolver"/>
     <optional-jar dep="junit"/>
     <optional-jar dep="junit4"/>
-    <optional-jar dep="apache-regexp"/>
-    <optional-jar dep="apache-oro"/>
-    <optional-jar dep="apache-bcel"/>
-    <optional-jar dep="apache-log4j"/>
-    <optional-jar dep="commons-logging"/>
-    <optional-jar dep="apache-bsf"/>
-    <optional-jar dep="javamail"/>
+    <optional-jar dep="apache-regexp" mod="util.regexp.rx"/>
+    <optional-jar dep="apache-oro" mod="util.regexp.oro"/>
+    <optional-jar dep="apache-bcel" mod="util.depend.bcel"/>
+    <optional-jar dep="apache-log4j" mod="listener.log4j"/>
+    <optional-jar dep="commons-logging" mod="listener.jcl"/>
+    <optional-jar dep="apache-bsf" mod="util.bsf"/>
+    <optional-jar dep="javamail" mod="taskdefs.email"/>
     <optional-jar dep="netrexx"/>
-    <optional-jar dep="commons-net"/>
+    <optional-jar dep="commons-net" mod="taskdefs.optional.net"/>
     <optional-jar dep="antlr"/>
-    <optional-jar dep="jmf"/>
-    <optional-jar dep="jai"/>
-    <optional-jar dep="swing"/>
-    <optional-jar dep="jsch"/>
+    <optional-jar dep="jmf" mod="taskdefs.optional.sound"/>
+    <optional-jar dep="jai" mod="taskdefs.optional.image"/>
+    <optional-jar dep="swing" mod="taskdefs.optional.splash"/>
+    <optional-jar dep="jsch" mod="taskdefs.optional.ssh"/>
     <optional-jar dep="jdepend"/>
-    <optional-jar dep="apache-xalan2"/>
+    <optional-jar dep="apache-xalan2" mod="taskdefs.optional.xalan2"/>
     <optional-jar dep="xz"/>
 
   </target>
@@ -766,13 +772,32 @@
       We cannot build the test jar unless JUnit is present,
       as JUnit is needed to compile the test classes.
     </fail>
-    <jar destfile="${build.lib}/${name}-testutil.jar"
+    <jar destfile="${build.lib}/${name}-testutil.jar" index="true"
          basedir="${build.tests}">
       <patternset refid="useful.tests"/>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
         <include name="NOTICE.txt"/>
       </metainf>
+      <manifest>
+        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant.util.test"/>
+        <section name="${ant.package}/util/test/">
+          <attribute name="Extension-Name"
+                     value="org.apache.tools.ant.test"/>
+          <attribute name="Specification-Title"
+                     value="Apache Ant"/>
+          <attribute name="Specification-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Specification-Vendor"
+                     value="Apache Software Foundation"/>
+          <attribute name="Implementation-Title"
+                     value="org.apache.tools.ant"/>
+          <attribute name="Implementation-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Implementation-Vendor"
+                     value="Apache Software Foundation"/>
+        </section>
+      </manifest>
     </jar>
   </target>
 
