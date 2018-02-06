@@ -16,7 +16,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="apache-ant" default="main" basedir="." xmlns:if="ant:if">
+<project name="apache-ant" default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D on each invocation) -->
@@ -643,7 +643,6 @@
         <include name="NOTICE.txt"/>
       </metainf>
       <manifest>
-        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant.launch"/>
         <attribute name="Main-Class" value="org.apache.tools.ant.launch.Launcher"/>
       </manifest>
     </jar>
@@ -658,7 +657,6 @@
         <include name="NOTICE.txt"/>
       </metainf>
       <manifest>
-        <attribute name="Automatic-Module-Name" value="org.apache.tools.ant"/>
         <attribute name="Main-Class" value="org.apache.tools.ant.Main"/>
         <section name="${ant.package}/">
           <attribute name="Extension-Name"
@@ -699,18 +697,7 @@
 
     <macrodef name="optional-jar">
       <attribute name="dep"/>
-      <attribute name="mod" default="taskdefs.optional.@{dep}"/>
-      <attribute name="jpms" default="true"/>
       <sequential>
-        <local name="module.name"/>
-        <property name="module.name" value="org.apache.tools.ant.@{mod}"/>
-        <local name="section.name"/>
-        <loadresource property="section.name">
-          <propertyresource name="module.name"/>
-          <filterchain>
-            <replacestring from="." to="/"/>
-          </filterchain>
-        </loadresource>
         <jar destfile="${build.lib}/${optional.jars.prefix}-@{dep}.jar"
              basedir="${build.classes}" index="true"
              whenmanifestonly="${optional.jars.whenmanifestonly}">
@@ -720,10 +707,9 @@
             <include name="NOTICE.txt"/>
           </metainf>
           <manifest>
-            <attribute name="Automatic-Module-Name" value="${module.name}" if:true="@{jpms}"/>
-            <section name="${section.name}/">
+            <section name="${optional.package}/">
               <attribute name="Extension-Name"
-                         value="${module.name}"/>
+                         value="org.apache.tools.ant"/>
               <attribute name="Specification-Title"
                          value="Apache Ant"/>
               <attribute name="Specification-Version"
@@ -742,25 +728,25 @@
       </sequential>
     </macrodef>
 
-    <optional-jar dep="apache-resolver" mod="types.resolver"/>
-    <optional-jar dep="junit" jpms="false"/>
-    <optional-jar dep="junit4" mod="taskdefs.optional.junit"/>
-    <optional-jar dep="apache-regexp" mod="util.regexp" jpms="false"/>
-    <optional-jar dep="apache-oro" mod="util.regexp" jpms="false"/>
-    <optional-jar dep="apache-bcel" mod="util.depend.bcel" jpms="false"/>
-    <optional-jar dep="apache-log4j" mod="listener" jpms="false"/>
-    <optional-jar dep="commons-logging" mod="listener" jpms="false"/>
-    <optional-jar dep="apache-bsf" mod="util.optional" jpms="false"/>
-    <optional-jar dep="javamail" mod="taskdefs.email"/>
-    <optional-jar dep="netrexx" mod="taskdefs.optional" jpms="false"/>
-    <optional-jar dep="commons-net" mod="taskdefs.optional.net"/>
-    <optional-jar dep="antlr" mod="taskdefs.optional" jpms="false"/>
-    <optional-jar dep="jmf" mod="taskdefs.optional.sound"/>
-    <optional-jar dep="jai" mod="taskdefs.optional.image" jpms="false"/>
-    <optional-jar dep="swing" mod="taskdefs.optional.splash"/>
-    <optional-jar dep="jsch" mod="taskdefs.optional.ssh"/>
+    <optional-jar dep="apache-resolver"/>
+    <optional-jar dep="junit"/>
+    <optional-jar dep="junit4"/>
+    <optional-jar dep="apache-regexp"/>
+    <optional-jar dep="apache-oro"/>
+    <optional-jar dep="apache-bcel"/>
+    <optional-jar dep="apache-log4j"/>
+    <optional-jar dep="commons-logging"/>
+    <optional-jar dep="apache-bsf"/>
+    <optional-jar dep="javamail"/>
+    <optional-jar dep="netrexx"/>
+    <optional-jar dep="commons-net"/>
+    <optional-jar dep="antlr"/>
+    <optional-jar dep="jmf"/>
+    <optional-jar dep="jai"/>
+    <optional-jar dep="swing"/>
+    <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
-    <optional-jar dep="apache-xalan2" mod="taskdefs.optional" jpms="false"/>
+    <optional-jar dep="apache-xalan2"/>
     <optional-jar dep="xz"/>
 
   </target>
@@ -780,25 +766,6 @@
         <include name="LICENSE.txt"/>
         <include name="NOTICE.txt"/>
       </metainf>
-      <!-- testutil cannot be a JPMS module -->
-      <manifest>
-        <section name="${ant.package}/">
-          <attribute name="Extension-Name"
-                     value="org.apache.tools.ant"/>
-          <attribute name="Specification-Title"
-                     value="Apache Ant"/>
-          <attribute name="Specification-Version"
-                     value="${manifest-version}"/>
-          <attribute name="Specification-Vendor"
-                     value="Apache Software Foundation"/>
-          <attribute name="Implementation-Title"
-                     value="org.apache.tools.ant"/>
-          <attribute name="Implementation-Version"
-                     value="${manifest-version}"/>
-          <attribute name="Implementation-Vendor"
-                     value="Apache Software Foundation"/>
-        </section>
-      </manifest>
     </jar>
   </target>
 
