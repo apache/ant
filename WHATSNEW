@@ -1,6 +1,13 @@
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 
+Fixed bugs:
+-----------
+
+ * Fixed NullPointerException in ChainedMapper
+   Bugzilla Report 62086
+
+
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
 
