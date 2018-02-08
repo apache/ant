@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -224,6 +225,9 @@ public class MapperTest {
         List list = Arrays.asList(targets);
         assertTrue("cannot find expected target \"def\"", list.contains("def"));
         assertTrue("cannot find expected target \"ghi\"", list.contains("ghi"));
+
+        targets = fileNameMapper.mapFileName("z");
+        assertNull(targets);
     }
 
     @Test

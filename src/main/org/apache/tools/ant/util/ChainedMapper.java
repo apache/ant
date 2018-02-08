@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.util;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -33,7 +34,7 @@ public class ChainedMapper extends ContainerMapper {
     public String[] mapFileName(String sourceFileName) {
         String[] result = getMappers().stream()
             .reduce(new String[] { sourceFileName }, (i, m) -> Stream.of(i)
-                .map(m::mapFileName).flatMap(Stream::of).toArray(String[]::new),
+                .map(m::mapFileName).filter(Objects::nonNull).flatMap(Stream::of).toArray(String[]::new),
                 (i, o) -> o);
         return result == null || result.length == 0 ? null : result;
     }
