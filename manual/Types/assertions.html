@@ -24,22 +24,22 @@
 
 <body>
 
-<h2><a name="assertions">Assertions</a></h2>
+<h2 id="assertions">Assertions</h2>
 <p>
 The <tt>assertions</tt> type enables or disables the Java 1.4 assertions feature,
 on a whole Java program, or components of a program. It can be used
 in <a href="../Tasks/java.html"><code>&lt;java&gt;</code></a> and
-<a href="../Tasks/junit.html"><code>&lt;junit&gt;</code></a> to add extra validation to code.  
+<a href="../Tasks/junit.html"><code>&lt;junit&gt;</code></a> to add extra validation to code.
 
 <p>
-Assertions are covered in the 
+Assertions are covered in the
 <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/language/assert.html">Java SE documentation</a>,
 and the
 <a href="http://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html#jls-14.10">Java Language Specification</a>.
 
 <p>
 The key points to note are that a <tt>java.lang.AssertionError</tt>
-is thrown when an assertion fails, and that the facility is only available 
+is thrown when an assertion fails, and that the facility is only available
 on Java 1.4 and later. To enable assertions one must set <tt>source="1.4"</tt>
 (or later) in <tt>&lt;javac&gt;</tt> when the source is being compiled, and
 that the code must contain <tt>assert</tt> statements to be tested. The
@@ -47,20 +47,16 @@ result of such an action is code that neither compiles or runs on earlier
 versions of Java. For this reason Apache Ant itself currently contains no assertions.
 <p>
 
-When assertions are enabled (or disabled) in a task through nested 
-assertions elements, the class loader or command line is modified with the 
+When assertions are enabled (or disabled) in a task through nested
+assertions elements, the class loader or command line is modified with the
 appropriate options. This means that the JVM executed must be a Java 1.4
 or later JVM, even if there are no assertions in the code. Attempting to
-enable assertions on earlier VMs will result in an "Unrecognized option" 
-error and the JVM will not start.  
+enable assertions on earlier VMs will result in an "Unrecognized option"
+error and the JVM will not start.
 
 <p>
 <h4>Attributes</h4>
-<p>
-
-
-</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -75,7 +71,7 @@ error and the JVM will not start.
 <p>
 When system assertions have been neither enabled nor disabled, then
 the JVM is not given any assertion information - the default action of the
- current JVMs is to disable system assertions. 
+ current JVMs is to disable system assertions.
 <p>
 Note also that there is no apparent documentation for what parts of the
 JRE come with useful assertions.
@@ -87,7 +83,7 @@ JRE come with useful assertions.
 Enable assertions in portions of code.
 If neither a package nor class is specified, assertions are turned on in <i>all</i> (user) code.
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -113,7 +109,7 @@ If neither a package nor class is specified, assertions are turned on in <i>all<
 Disable assertions in portions of code.
 
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -137,7 +133,6 @@ Disable assertions in portions of code.
 
 Because assertions are disabled by default, it only makes sense to disable
 assertions where they have been enabled in a parent package.
-
 
 <h4>Examples</h4>
 
@@ -190,7 +185,6 @@ Disable system assertions; enable those in the anonymous package
 &lt;/assertions&gt;
 </pre>
 
-
 <h5>Example: referenced assertions</h5>
 
 This type is a datatype, so you can declare assertions and use them later
@@ -202,7 +196,6 @@ This type is a datatype, so you can declare assertions and use them later
 
 &lt;assertions refid="project.assertions"/&gt;
 </pre>
-
 
 </body>
 </html>

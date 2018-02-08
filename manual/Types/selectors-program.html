@@ -169,9 +169,7 @@
        <li>verify the work</li>
     </ol>
 
-
-
-    <p>An example test would be:<pre>
+    <p>An example test would be:</p><pre>
 package org.apache.tools.ant.types.selectors;
 
 public class MySelectorTest {
@@ -181,7 +179,6 @@ public class MySelectorTest {
 
     @Test
     public void testCase1() {
-
 
         // Configure the selector
         MySelector s = new MySelector();
@@ -203,7 +200,7 @@ public class MySelectorTest {
     [junit] expected:&lt;FTTTFTTTF...&gt; but was:&lt;TTTTTTTTT...&gt;
     [junit]     at junit.framework.Assert.assertEquals(Assert.java:81)
     [junit]     at org.apache.tools.ant.types.selectors.BaseSelectorTest.performTest(BaseSelectorTest.java:194)
-    </pre></p>
+    </pre>
 
     <p>Described above the test class should provide a <tt>getInstance()</tt>
     method. But that isn't used here. The used <tt>getSelector()</tt> method is
@@ -213,7 +210,6 @@ public class MySelectorTest {
     ability to use its own Project object (<tt>getProject()</tt>), for example
     for logging.</p>
 
-
     <h3>Logging</h3>
 
     <p>During development and maybe later you sometimes need the output of information.
@@ -221,7 +217,7 @@ public class MySelectorTest {
     BaseSelector it is an Ant <tt>DataType</tt> and therefore a <tt>ProjectComponent</tt>. <br>
     That means that you have access to the project object and its logging capability.
     <tt>ProjectComponent</tt> itself provides <i>log</i> methods which will do the
-    access to the project instance. Logging is therefore done simply with:
+    access to the project instance. Logging is therefore done simply with:</p>
     <pre>
         log( "message" );
     </pre>
@@ -229,16 +225,14 @@ public class MySelectorTest {
     <pre>
         log( "message" , loglevel );
     </pre>
-    where the <tt>loglevel</tt> is one of the values <ul>
+    where the <tt>loglevel</tt> is one of the values
+    <ul>
     <li> org.apache.tools.ant.Project.MSG_ERR </li>
     <li> org.apache.tools.ant.Project.MSG_WARN </li>
     <li> org.apache.tools.ant.Project.MSG_INFO  (= default) </li>
     <li> org.apache.tools.ant.Project.MSG_VERBOSE </li>
     <li> org.apache.tools.ant.Project.MSG_DEBUG </li>
     </ul>
-    </p>
 
-    
   </body>
-
 </html>

@@ -14,8 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
@@ -23,13 +21,13 @@
 </head>
 
 <body>
-<h2><a name="filterset">FilterSet</a></h2>
+<h2 id="filterset">FilterSet</h2>
 
 <p>FilterSets are groups of filters. Filters can be defined as token-value
-pairs 
-or be read in from a file. FilterSets can appear inside tasks that support this 
+pairs
+or be read in from a file. FilterSets can appear inside tasks that support this
 feature or at the same level as <code>&lt;target&gt;</code> - i.e., as
-children of 
+children of
 <code>&lt;project&gt;</code>.</p>
 
 <p>FilterSets support the <code>id</code> and <code>refid</code>
@@ -40,9 +38,9 @@ filtersets into filtersets to get a set union of the contained
 filters.</p>
 
 <p>In addition, FilterSets can specify
-<code>begintoken</code> and/or 
+<code>begintoken</code> and/or
 <code>endtoken</code> attributes to define what to match.</p>
-<p>Filtersets are used for doing 
+<p>Filtersets are used for doing
 replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
 
 <p>Filters can also by specified by one or more nested propertysets, the
@@ -52,96 +50,96 @@ replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
   defined within a filterset will be used.</p>
 
 <p>
-<strong>Note: </strong>When a filterset is used in an operation, the files are 
+<strong>Note: </strong>When a filterset is used in an operation, the files are
 processed in text mode and the filters applied line by line. This means that
 the copy operations will typically corrupt binary files. When applying filters
 you should ensure that the set of files being filtered are all text files.
 </p>
 
-<h2>Filterset</h2>
+<h3>Filterset</h3>
 
-<table cellSpacing=0 cellPadding=2 border=1>
+<table>
   <tr>
-    <td vAlign=top><b>Attribute</b></td>
-    <td vAlign=top><b>Description</b></td>
-    <td vAlign=top><b>Default</b></td>
-    <td vAlign=top align="center"><b>Required</b></td>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top"><b>Default</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td vAlign=top>begintoken</td>
-    <td vAlign=top>The string marking the beginning of a token (eg.,
+    <td valign="top">begintoken</td>
+    <td valign="top">The string marking the beginning of a token (eg.,
       <code>&#64;DATE&#64;</code>).</td>
-    <td vAlign=top>@</td>
-    <td vAlign=top align="center">No</td>
+    <td valign="top">@</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td vAlign=top>endtoken</td>
-    <td vAlign=top>The string marking the end of a token (eg.,
+    <td valign="top">endtoken</td>
+    <td valign="top">The string marking the end of a token (eg.,
       <code>&#64;DATE&#64;</code>).</td>
-    <td vAlign=top>@</td>
-    <td vAlign=top align="center">No</td>
+    <td valign="top">@</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td vAlign=top>filtersfile</td>
-    <td vAlign=top>Specify a single filtersfile.</td>
-    <td vAlign=top><i>none</i></td>
-    <td vAlign=top align="center">No</td>
+    <td valign="top">filtersfile</td>
+    <td valign="top">Specify a single filtersfile.</td>
+    <td valign="top"><i>none</i></td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td vAlign=top>recurse</td>
-    <td vAlign=top>Indicates whether the replacement text of tokens
-      should be searched for more tokens. <b>Since Ant 1.6.3</b></td>
-    <td vAlign=top><i>true</i></td>
-    <td vAlign=top align="center">No</td>
+    <td valign="top">recurse</td>
+    <td valign="top">Indicates whether the replacement text of tokens
+      should be searched for more tokens. <em>Since Ant 1.6.3</em></td>
+    <td valign="top"><i>true</i></td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td vAlign=top>onmissingfiltersfile</td>
-    <td vAlign=top>Indicate behavior when a nonexistent <i>filtersfile</i>
-      is specified.  One of "fail", "warn", "ignore". <b>Since Ant 1.7</b></td>
-    <td vAlign=top>"fail"</td>
-    <td vAlign=top align="center">No</td>
+    <td valign="top">onmissingfiltersfile</td>
+    <td valign="top">Indicate behavior when a nonexistent <i>filtersfile</i>
+      is specified.  One of "fail", "warn", "ignore". <em>Since Ant 1.7</em></td>
+    <td valign="top">"fail"</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 
-<h2>Filter</h2>
-<table cellSpacing=0 cellPadding=2 border=1>
+<h3>Filter</h3>
+<table>
   <tr>
-    <td vAlign=top><b>Attribute</b></td>
-    <td vAlign=top><b>Description</b></td>
-    <td vAlign=top align="center"><b>Required</b></td>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td vAlign=top>token</td>
-    <td vAlign=top>The token to replace (eg., <code>&#64;DATE&#64;</code>)</td>
-    <td vAlign=top align="center">Yes</td>
+    <td valign="top">token</td>
+    <td valign="top">The token to replace (eg., <code>&#64;DATE&#64;</code>)</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
-    <td vAlign=top>value</td>
-    <td vAlign=top>The value to replace it with
+    <td valign="top">value</td>
+    <td valign="top">The value to replace it with
      (eg., <code>Thursday, April 26, 2001</code>).</td>
-    <td vAlign=top align="center">Yes</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
 </table>
 
-<h2>Filtersfile</h2>
-<table cellSpacing=0 cellPadding=2 border=1>
+<h3>Filtersfile</h3>
+<table>
   <tr>
-    <td vAlign=top><b>Attribute</b></td>
-    <td vAlign=top><b>Description</b></td>
-    <td vAlign=top align="center"><b>Required</b></td>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
   </tr>
   <tr>
-    <td vAlign=top>file</td>
-    <td vAlign=top>A properties file of 
+    <td valign="top">file</td>
+    <td valign="top">A properties file of
       name-value pairs from which to load the tokens.</td>
-    <td vAlign=top align="center">Yes</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
 </table>
 
 <h4>Examples</h4>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the <code>build</code> directory 
+directory from the <code>build</code> directory
 but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 <blockquote><pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
@@ -152,7 +150,7 @@ but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 </pre></blockquote>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the build directory 
+directory from the build directory
 but wish to replace the token <code>%DATE*</code> with today's date.</p>
 <blockquote><pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
@@ -186,7 +184,7 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 </pre></blockquote>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the <code>build</code> directory 
+directory from the <code>build</code> directory
 but wish to replace the token <code>&#64;project.date&#64;</code> with the property of the same name.</p>
 <blockquote><pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;

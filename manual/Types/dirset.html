@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="dirset">DirSet</a></h2>
+<h2 id="dirset">DirSet</h2>
 <p>A DirSet is a group of directories. These directories can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a href="patternset.html">PatternSets</a>
@@ -41,7 +41,7 @@ elements of <code>&lt;patternset&gt;</code> directly, as well as
 If any of the selectors within the DirSet do not select the directory, it
 is not considered part of the DirSet. This makes a DirSet
 equivalent to an <code>&lt;and&gt;</code> selector container.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -148,7 +148,5 @@ using the same patterns as the above example.</p>
 <p>Selects all directories somewhere under <code>${workingdir}</code>
 which contain a <code>${markerfile}</code>.</p>
 
-
 </body>
 </html>
-

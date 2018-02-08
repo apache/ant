@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="fileset">FileSet</a></h2>
+<h2 id="fileset">FileSet</h2>
 <p>A FileSet is a group of files. These files can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a
@@ -41,7 +41,7 @@ attributes.</p>
 If any of the selectors within the FileSet do not select the file, the
 file is not considered part of the FileSet. This makes a FileSet
 equivalent to an <code>&lt;and&gt;</code> selector container.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -115,7 +115,7 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
   </tr>
 </table>
 
-<p><a name="symlink"><b>Note</b></a>: All files/directories for which
+<p id="symlink"><b>Note</b>: All files/directories for which
 the canonical path is different from its path are considered symbolic
 links.  On Unix systems this usually means the file really is a
 symbolic link but it may lead to false results on other
@@ -176,11 +176,8 @@ selector container.</p>
 <blockquote><pre>
 &lt;fileset dir="src" includes="main/" /&gt;
 </pre></blockquote>
-<p>Selects all files in <i>src/main</i> (e.g. <i>src/main/Foo.java</i> or 
+<p>Selects all files in <i>src/main</i> (e.g. <i>src/main/Foo.java</i> or
 <i>src/main/application/Bar.java</i>).</p>
-
-
 
 </body>
 </html>
-

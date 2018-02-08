@@ -22,9 +22,9 @@
 </head>
 
 <body>
-<h2><a name="fileset">ClassFileSet</a></h2>
-<p>A classfileset is a specialized type of fileset which, given a set of 
-&quot;root&quot; classes, will include all of the class files upon which the 
+<h2 id="fileset">ClassFileSet</h2>
+<p>A classfileset is a specialized type of fileset which, given a set of
+&quot;root&quot; classes, will include all of the class files upon which the
 root classes depend. This is typically used to create a jar with all of the
 required classes for a particular application.
 </p>
@@ -37,14 +37,13 @@ is expected.
 This type requires the <code>BCEL</code> <a href="../install.html#librarydependencies">library</a>.
 </p>
 
-
 <h3>Attributes</h3>
 <p>The class fileset support the following attributes in addition
-to those supported by the 
-<a href="../Types/fileset.html">standard fileset</a>:
+to those supported by the
+<a href="fileset.html">standard fileset</a>:
 </p>
- 
-<table border="1" cellpadding="2" cellspacing="0">
+
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -64,7 +63,7 @@ to those supported by the
 When more than one root class is required, multiple nested <code>&lt;root&gt;</code> elements
 may be used
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -79,9 +78,9 @@ may be used
 
 <h4>RootFileSet</h4>
 <p>
-A root fileset is used to add a set of root classes from a fileset. In this case the entries in 
-the fileset are expected to be Java class files. The name of the Java class is determined by the 
-relative location of the classfile in the fileset. So, the file 
+A root fileset is used to add a set of root classes from a fileset. In this case the entries in
+the fileset are expected to be Java class files. The name of the Java class is determined by the
+relative location of the classfile in the fileset. So, the file
 <code>org/apache/tools/ant/Project.class</code> corresponds to the Java class
 <code>org.apache.tools.ant.Project</code>.</p>
 
@@ -92,9 +91,9 @@ relative location of the classfile in the fileset. So, the file
 &lt;/classfileset&gt;
 </pre></blockquote>
 
-<p>This example creates a fileset containing all the class files upon which the 
-<code>org.apache.tools.ant.Project</code> class depends. This fileset could 
-then be used to create a jar. 
+<p>This example creates a fileset containing all the class files upon which the
+<code>org.apache.tools.ant.Project</code> class depends. This fileset could
+then be used to create a jar.
 </p>
 
 <blockquote><pre>
@@ -109,11 +108,8 @@ then be used to create a jar.
 &lt;/classfileset&gt;
 </pre></blockquote>
 
-<p>This example constructs the classfileset using all the class with names starting with Project 
-in the org.apache.tools.ant package</p> 
-
-
+<p>This example constructs the classfileset using all the class with names starting with Project
+in the org.apache.tools.ant package</p>
 
 </body>
 </html>
-

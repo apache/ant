@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="patternset">PatternSet</a></h2>
+<h2 id="patternset">PatternSet</h2>
 <p><a href="../dirtasks.html#patterns">Patterns</a> can be grouped to
 sets and later be referenced by their <code>id</code> attribute. They
 are defined via a <code>patternset</code> element, which can appear
@@ -36,7 +36,7 @@ the same level as <code>target</code> &#151; i.e., as children of
 <code>target</code>.</p> <p>Patterns can be specified by nested
 <code>&lt;include&gt;</code>, or <code>&lt;exclude&gt;</code> elements
 or the following attributes.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -71,7 +71,7 @@ or the following attributes.</p>
 <h4><code>include</code> and <code>exclude</code></h4>
 <p>Each such element defines a single pattern for files to include or
 exclude.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -102,7 +102,7 @@ attributes or elements.  Using the attribute, you can only specify a
 single file of each type, while the nested elements can be specified
 more than once - the nested elements also support if/unless attributes
 you can use to test the existence of a property.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -169,24 +169,21 @@ that it should be used only if a property is not set.</p>
 <p>and</p>
 <blockquote><pre>
 &lt;patternset&gt;
-  &lt;includesfile name=&quot;some-file&quot;/&gt; 
+  &lt;includesfile name=&quot;some-file&quot;/&gt;
 &lt;patternset/&gt;
 </pre></blockquote>
 <p>are identical.  The include patterns will be read from the file
 <code>some-file</code>, one pattern per line.</p>
 <blockquote><pre>
 &lt;patternset&gt;
-  &lt;includesfile name=&quot;some-file&quot;/&gt; 
-  &lt;includesfile name=&quot;${some-other-file}&quot; 
-                if=&quot;some-other-file&quot;
-  /&gt; 
+  &lt;includesfile name=&quot;some-file&quot;/&gt;
+  &lt;includesfile name=&quot;${some-other-file}&quot;
+                if=&quot;some-other-file&quot;/&gt;
 &lt;patternset/&gt;
 </pre></blockquote>
 <p>will also read include patterns from the file the property
 <code>some-other-file</code> points to, if a property of that name has
 been defined.</p>
 
-
 </body>
 </html>
-

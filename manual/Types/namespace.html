@@ -14,14 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html><head><link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
-<title>XmlNamespaceSupport</title></head>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
+<title>XmlNamespaceSupport</title>
+</head>
   <body>
-    <h2><a name="namespace">XML Namespace Support</a></h2>
-    Apache Ant 1.6 introduces support for XML namespaces. 
+    <h2 id="namespace">XML Namespace Support</h2>
+    Apache Ant 1.6 introduces support for XML namespaces.
     <h3>History</h3>
-    
+
     <p>
       All releases of Ant prior to Ant 1.6 do not support XML namespaces.
       No support basically implies two things here:
@@ -72,7 +74,7 @@
       and another time to actually map the namespace to occurrences of
       elements from that namespace, by using the 'xmlns' attribute. This
       mapping can happen at any level in the build file:
-    </p><pre> &lt;project name="test" xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt; 
+    </p><pre> &lt;project name="test" xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
    &lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
    &lt;my:task&gt;
      ...
@@ -82,7 +84,7 @@
     <p>
       Use of a namespace prefix is of course optional. Therefore
       the example could also look like this:
-    </p><pre> &lt;project name="test"&gt; 
+    </p><pre> &lt;project name="test"&gt;
    &lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
    &lt;task xmlns="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
      ...
@@ -103,8 +105,6 @@
       ....
 &lt;/task&gt;
     </pre>
-
-     
 
     <h3>Namespaces and Nested Elements</h3>
 
@@ -132,14 +132,14 @@
       From Ant 1.6.2, elements nested inside a namespaced element may also be
       in Ant's default namespace. This means that the following is now allowed:
     </p>
-    </p><pre> &lt;typedef resource="org/example/tasks.properties"
+    <pre> &lt;typedef resource="org/example/tasks.properties"
    uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
  &lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
    &lt;config a="foo" b="bar"/&gt;
    ...
  &lt;/my:task&gt;
 </pre>
-      
+
     <h3>Namespaces and Attributes</h3>
 
     <p>

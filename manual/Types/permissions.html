@@ -24,26 +24,26 @@
 
 <body>
 
-<h2><a name="permissions">Permissions</a></h2>
+<h2 id="permissions">Permissions</h2>
 <p>
 Permissions represents a set of security permissions granted or revoked to
 a specific part code executed in the JVM where Apache Ant is running in.
 The actual Permissions are specified via a set of nested permission items either
 <code>&lt;grant&gt;</code>ed or <code>&lt;revoke&gt;</code>d.</p>
 <p>
-In the base situation a <a href="#baseset">base set</a> of permissions granted. 
+In the base situation a <a href="#baseset">base set</a> of permissions granted.
 Extra permissions can be
 granted. A granted permission can be overruled by revoking a permission.
-The security manager installed by the permissions will throw an 
+The security manager installed by the permissions will throw an
 <code>SecurityException</code> if
-the code subject to these permissions try to use an permission that has not been 
+the code subject to these permissions try to use an permission that has not been
 granted or that has been revoked.</p>
 <h3>Nested elements</h3>
 <h4>grant</h4>
 <p>
-Indicates a specific permission is always granted. Its attributes indicate which 
+Indicates a specific permission is always granted. Its attributes indicate which
 permissions are granted.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -62,7 +62,7 @@ permissions are granted.</p>
   </tr>
   <tr>
     <td valign="top">actions</td>
-    <td valign="top">The actions allowed. The actual contents depend on the 
+    <td valign="top">The actions allowed. The actual contents depend on the
     Permission class and name.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -77,7 +77,7 @@ Permission class.
 <h4>revoke</h4>
 <p>
 Indicates a specific permission is revoked.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -96,7 +96,7 @@ Indicates a specific permission is revoked.</p>
   </tr>
   <tr>
     <td valign="top">actions</td>
-    <td valign="top">The actions allowed. The actual contents depend on the 
+    <td valign="top">The actions allowed. The actual contents depend on the
     Permission class and name.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -105,14 +105,14 @@ Indicates a specific permission is revoked.</p>
 Implied permissions are not resolved and therefore also not revoked.
 </p>
 <p>
-The name can handle the * wildcard at the end of the name, in which case all 
+The name can handle the * wildcard at the end of the name, in which case all
 permissions of the specified class of which the name starts with the specified name
 (excluding the *) are revoked. Note that the - wildcard often supported by the
 granted properties is not supported.
 If the name is left empty all names match, and are revoked.
 If the actions are left empty all actions match, and are revoked.
 </p>
-<h3><a name="baseset">Base set</a></h3>
+<h3 id="baseset">Base set</h3>
 A permissions set implicitly contains the following permissions:
 <blockquote><pre>
 &lt;grant class=&quot;java.net.SocketPermission&quot; name=&quot;localhost:1024-&quot; actions=&quot;listen&quot;&gt;
@@ -136,7 +136,7 @@ A permissions set implicitly contains the following permissions:
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.version&quot; actions=&quot;read&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.vendor&quot; actions=&quot;read&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.name&quot; actions=&quot;read&quot;&gt;
-</blockquote></pre>
+</pre></blockquote>
 These permissions can be revoked via <code>&lt;revoke&gt;</code> elements if necessary.
 
 <h3>Examples</h3>

@@ -16,7 +16,7 @@
 -->
 <html>
   <head>
-    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <meta http-equiv="Content-Language" content="en-us">
 <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
 <title>Custom Components</title>
   </head>
@@ -57,7 +57,7 @@
       After the class has been written, it is added to the ant system
       by using <code>&lt;typedef&gt;</code>.
     </p>
-    <h3><a name="customconditions">Custom Conditions</a></h3>
+    <h3 id="customconditions">Custom Conditions</h3>
     <p>
       Custom conditions are datatypes that implement
       <code>org.apache.tools.ant.taskdefs.condition.Condition</code>.
@@ -112,7 +112,7 @@ public class AllUpperCaseCondition implements Condition {
 &lt;/condition&gt;
       </pre>
     </blockquote>
-    <h3><a name="customselectors">Custom Selectors</a></h3>
+    <h3 id="customselectors">Custom Selectors</h3>
     <p>
       Custom selectors are datatypes that implement
       <code>org.apache.tools.ant.types.selectors.FileSelector</code>.
@@ -265,12 +265,11 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
         core selectors demonstrate how to do that because they can
         also be used as custom selectors.</p>
 
-
     <p>Once that is written, you include it in your build file by using
       the <code>&lt;custom&gt;</code> tag.
     </p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -315,7 +314,6 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
 &lt;/fileset&gt;
       </pre></blockquote>
 
-
     <p>The core selectors that can also be used as custom selectors
       are</p>
 
@@ -351,7 +349,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     <p>Selects all files in the base directory and one directory below
       that.</p>
 
-    <h3><a name="filterreaders">Custom Filter Readers</a></h3>
+    <h3 id="filterreaders">Custom Filter Readers</h3>
     <p>
       Custom filter readers selectors are datatypes that implement
       <code>org.apache.tools.ant.types.filters.ChainableReader</code>.
@@ -408,8 +406,5 @@ public class AddLineNumber extends ChainableReaderFilter {
       </pre>
     </blockquote>
 
-
-    <hr></hr>
   </body>
 </html>
-

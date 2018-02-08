@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="filelist">FileList</a></h2> 
+<h2 id="filelist">FileList</h2>
 
 <p>FileLists are explicitly named lists of files.  Whereas FileSets
 act as filters, returning only those files that exist in the file
@@ -36,7 +36,7 @@ included in the list unchanged).
 FileLists can appear inside tasks that support this feature or as stand-alone
 types.
 </p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -61,7 +61,7 @@ types.
     white space and commas.
   </p>
   <p><em>Since Apache Ant 1.6.2</em></p>
-  <table border="1" cellpadding="2" cellspacing="0">
+  <table>
     <tr>
       <td valign="top"><b>Attribute</b></td>
       <td valign="top"><b>Description</b></td>
@@ -72,13 +72,13 @@ types.
       <td valign="top">The name of the file.</td>
       <td valign="top" align="center">Yes</td>
     </tr>
-</table>  
+</table>
 <h4>Examples</h4>
 <blockquote><pre>
-&lt;filelist 
-    id=&quot;docfiles&quot; 
+&lt;filelist
+    id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;
-    files=&quot;foo.xml,bar.xml&quot;/&gt; 
+    files=&quot;foo.xml,bar.xml&quot;/&gt;
 </pre></blockquote>
 
 <p>The files <code>${doc.src}/foo.xml</code> and
@@ -87,24 +87,24 @@ actually exist.
 </p>
 
 <blockquote><pre>
-&lt;filelist 
-    id=&quot;docfiles&quot; 
+&lt;filelist
+    id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;
     files=&quot;foo.xml
-           bar.xml&quot;/&gt; 
+           bar.xml&quot;/&gt;
 </pre></blockquote>
 
 <p>Same files as the example above.</p>
 
 <blockquote><pre>
-&lt;filelist refid=&quot;docfiles&quot;/&gt; 
+&lt;filelist refid=&quot;docfiles&quot;/&gt;
 </pre></blockquote>
 
 <p>Same files as the example above.</p>
 
 <blockquote><pre>
-&lt;filelist 
-    id=&quot;docfiles&quot; 
+&lt;filelist
+    id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;&gt;
     &lt;file name="foo.xml"/&gt;
     &lt;file name="bar.xml"/&gt;
@@ -113,8 +113,5 @@ actually exist.
 
 <p>Same files as the example above.</p>
 
-
-
 </body>
 </html>
-

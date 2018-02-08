@@ -46,7 +46,7 @@
     <a href="#coreselect"><code>Core Selectors</code></a>.
     </p>
 
-    <h3><a name="coreselect">Core Selectors</a></h3>
+    <h3 id="coreselect">Core Selectors</h3>
 
     <p>Core selectors are the ones that come standard
     with Ant. They can be used within a fileset and can be contained
@@ -82,12 +82,10 @@
         the return value of the configured algorithm is different from that
         stored in a cache.</li>
       <li><a href="#signedselector"><code>&lt;signedselector&gt;</code></a> - Select files if
-        they are signed, and optionally if they have a signature of a certain name.
-      </li>
-      <li><a href="#scriptselector"><code>&lt;scriptselector&gt;</code></a> - 
+        they are signed, and optionally if they have a signature of a certain name.</li>
+      <li><a href="#scriptselector"><code>&lt;scriptselector&gt;</code></a> -
         Use a BSF or JSR 223 scripting language to create
-        your own selector
-      </li>
+        your own selector</li>
       <li><a href="#readable"><code>&lt;readable&gt;</code></a> -
         Select files if they are readable.</li>
       <li><a href="#writable"><code>&lt;writable&gt;</code></a> -
@@ -100,7 +98,7 @@
         Select files if they are owned by a given user.</li>
     </ul>
 
-    <h4><a name="containsselect">Contains Selector</a></h4>
+    <h4 id="containsselect">Contains Selector</h4>
 
     <p>The <code>&lt;contains&gt;</code> tag in a FileSet limits
     the files defined by that fileset to only those which contain the
@@ -111,7 +109,7 @@
       <a href="resources.html#restrict">&lt;restrict&gt;</a>
       ResourceCollection).</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -145,7 +143,7 @@
                 Required in practice if the encoding of the files being
                 selected is different from the default encoding of the JVM
                 where Ant is running.
-                Since Ant 1.9.0
+                <em>Since Ant 1.9.0</em>
             </td>
             <td valign="top" align="center">No</td>
         </tr>
@@ -162,15 +160,14 @@
     <p>Selects all the HTML files that contain the string
     <code>script</code>.</p>
 
-
-    <h4><a name="dateselect">Date Selector</a></h4>
+    <h4 id="dateselect">Date Selector</h4>
 
     <p>The <code>&lt;date&gt;</code> tag in a FileSet will put
     a limit on the files specified by the include tag, so that tags
     whose last modified date does not meet the date limits specified
     by the selector will not end up being selected.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -220,7 +217,7 @@
         <td valign="top">The <CODE>SimpleDateFormat</CODE>-compatible pattern
           to use when interpreting the <i>datetime</i> attribute using
           the current locale.
-          <i>Since Ant 1.6.2</i>
+          <em>Since Ant 1.6.2</em>
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -244,8 +241,7 @@
     <p>Selects all JAR files which were last modified before midnight
     January 1, 2001.</p>
 
-
-    <h4><a name="dependselect">Depend Selector</a></h4>
+    <h4 id="dependselect">Depend Selector</h4>
 
     <p>The <code>&lt;depend&gt;</code> tag selects files
     whose last modified date is later than another, equivalent file in
@@ -259,7 +255,7 @@
 
     <p>The <code>&lt;depend&gt;</code> selector is case-sensitive.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -296,15 +292,14 @@
       1.5 release.
     </p>
 
-
-    <h4><a name="depthselect">Depth Selector</a></h4>
+    <h4 id="depthselect">Depth Selector</h4>
 
     <p>The <code>&lt;depth&gt;</code> tag selects files based on
     how many directory levels deep they are in relation to the base
     directory of the fileset.
     </p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -338,8 +333,7 @@
     <p>Selects all files in the base directory and one directory below
     that.</p>
 
-    
-    <h4><a name="differentselect">Different Selector</a></h4>
+    <h4 id="differentselect">Different Selector</h4>
 
     <p>The <code>&lt;different&gt;</code> selector will select a file
     if it is deemed to be 'different' from an equivalent file in
@@ -351,10 +345,10 @@
       mapper) the file is selected.
     <li>If a file is only present in targetdir (or after applying the
       mapper) it is ignored.
-    <li> Files with different lengths are different.
-    <li> If <tt>ignoreFileTimes</tt> is turned off, then differing file
+    <li>Files with different lengths are different.
+    <li>If <tt>ignoreFileTimes</tt> is turned off, then differing file
     timestamps will cause files to be regarded as different.
-    <li> Unless <tt>ignoreContents</tt> is set to true,
+    <li>Unless <tt>ignoreContents</tt> is set to true,
          a byte-for-byte check is run against the two files.
     </ol>
 
@@ -374,7 +368,7 @@
     <code>&lt;mapper&gt;</code> element is specified, the
     <code>identity</code> type mapper is used.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -399,7 +393,7 @@
         <td valign="top">ignoreContents</td>
         <td valign="top">Whether to do a byte per byte compare.
           Default is false (contents are compared).
-          Since Ant 1.6.3
+            <em>Since Ant 1.6.3</em>
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -427,7 +421,7 @@
     and selects those who are different, disregarding file times.
     </p>
 
-    <h4><a name="filenameselect">Filename Selector</a></h4>
+    <h4 id="filenameselect">Filename Selector</h4>
 
     <p>The <code>&lt;filename&gt;</code> tag acts like the
     <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code>
@@ -439,7 +433,7 @@
     <p>The <code>&lt;filename&gt;</code> selector is
     case-sensitive.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -484,8 +478,7 @@
 
     <p>Selects all the cascading style sheet files.</p>
 
-
-    <h4><a name="presentselect">Present Selector</a></h4>
+    <h4 id="presentselect">Present Selector</h4>
 
     <p>The <code>&lt;present&gt;</code> tag selects files
     that have an equivalent file in another directory tree.</p>
@@ -498,7 +491,7 @@
 
     <p>The <code>&lt;present&gt;</code> selector is case-sensitive.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -543,7 +536,7 @@
       1.5 release.
     </p>
 
-    <h4><a name="regexpselect">Regular Expression Selector</a></h4>
+    <h4 id="regexpselect">Regular Expression Selector</h4>
 
     <p>The <code>&lt;containsregexp&gt;</code> tag in a FileSet limits
     the files defined by that fileset to only those which contents contain a
@@ -554,7 +547,7 @@
       <a href="resources.html#restrict">&lt;restrict&gt;</a>
       ResourceCollection).</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -569,14 +562,14 @@
       <tr>
         <td valign="top">casesensitive</td>
         <td valign="top">Perform a case sensitive match.  Default is
-          true. <em>since Ant 1.8.2</em></td>
+          true. <em>Since Ant 1.8.2</em></td>
         <td valign="top" align="center">No</td>
       </tr>
       <tr>
         <td valign="top">multiline</td>
         <td valign="top">
           Perform a multi line match.
-          Default is false. <em>since Ant 1.8.2</em></td>
+          Default is false. <em>Since Ant 1.8.2</em></td>
         <td valign="top" align="center">No</td>
       </tr>
       <tr>
@@ -585,7 +578,7 @@
           This allows '.' to match new lines.
           SingleLine is not to be confused with multiline, SingleLine is a perl
           regex term, it corresponds to dotall in java regex.
-          Default is false. <em>since Ant 1.8.2</em></td>
+          Default is false. <em>Since Ant 1.8.2</em></td>
         <td valign="top" align="center">No</td>
       </tr>
     </table>
@@ -601,15 +594,14 @@
     <p>Selects all the text files that match the regular expression
     (have a 4,5 or 6 followed by a period and a number from 0 to 9).
 
-
-    <h4><a name="sizeselect">Size Selector</a></h4>
+    <h4 id="sizeselect">Size Selector</h4>
 
     <p>The <code>&lt;size&gt;</code> tag in a FileSet will put
     a limit on the files specified by the include tag, so that tags
     which do not meet the size limits specified by the selector will not
     end up being selected.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -662,12 +654,12 @@
 
     <p>Selects all JAR files that are larger than 4096 bytes.</p>
 
-    <h4><a name="typeselect">Type Selector</a></h4>
+    <h4 id="typeselect">Type Selector</h4>
 
     <p>The <code>&lt;type&gt;</code> tag selects files of a certain type:
     directory or regular.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -708,19 +700,18 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-
-    <h4><a name="modified">Modified Selector</a></h4>
+    <h4 id="modified">Modified Selector</h4>
     <p>The <code>&lt;modified&gt;</code> selector computes a value for a file, compares that
     to the value stored in a cache and select the file, if these two values
     differ.</p>
     <p>Because this selector is highly configurable the order in which the selection is done
     is: <ol>
-        <li> get the absolute path for the file </li>
-        <li> get the cached value from the configured cache (absolute path as key) </li>
-        <li> get the new value from the configured algorithm </li>
-        <li> compare these two values with the configured comparator </li>
-        <li> update the cache if needed and requested </li>
-        <li> do the selection according to the comparison result </li>
+        <li>get the absolute path for the file</li>
+        <li>get the cached value from the configured cache (absolute path as key)</li>
+        <li>get the new value from the configured algorithm</li>
+        <li>compare these two values with the configured comparator</li>
+        <li>update the cache if needed and requested</li>
+        <li>do the selection according to the comparison result</li>
         </ol>
     <p>The comparison, computing of the hashvalue and the store is done by implementation
     of special interfaces. Therefore they may provide additional parameters.</p>
@@ -734,178 +725,171 @@
     to (<b>attention!</b>) copy the content into a local file for computing the
     hashvalue.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
         <td align="center" valign="top"><b>Required</b></td>
       </tr>
       <tr>
-        <td valign="top"> algorithm </td>
-        <td valign="top"> The type of algorithm should be used.
+        <td valign="top">algorithm</td>
+        <td valign="top">The type of algorithm should be used.
             Acceptable values are (further information see later):
             <ul>
-                <li> hashvalue - HashvalueAlgorithm </li>
-                <li> digest - DigestAlgorithm </li>
-                <li> checksum - ChecksumAlgorithm </li>
+                <li>hashvalue - HashvalueAlgorithm</li>
+                <li>digest - DigestAlgorithm</li>
+                <li>checksum - ChecksumAlgorithm</li>
             </ul>
         </td>
-        <td valign="top" align="center"> No, defaults to <i>digest</i> </td>
+        <td valign="top" align="center">No, defaults to <i>digest</i></td>
       </tr>
       <tr>
-        <td valign="top"> cache </td>
-        <td valign="top"> The type of cache should be used.
+        <td valign="top">cache</td>
+        <td valign="top">The type of cache should be used.
             Acceptable values are (further information see later):
             <ul>
-                <li> propertyfile - PropertyfileCache </li>
+                <li>propertyfile - PropertyfileCache</li>
             </ul>
         </td>
-        <td valign="top" align="center"> No, defaults to <i>propertyfile</i> </td>
+        <td valign="top" align="center">No, defaults to <i>propertyfile</i></td>
       </tr>
       <tr>
-        <td valign="top"> comparator </td>
-        <td valign="top"> The type of comparator should be used.
+        <td valign="top">comparator</td>
+        <td valign="top">The type of comparator should be used.
             Acceptable values are (further information see later):
             <ul>
-                <li> equal - EqualComparator </li>
-                <li> rule - java.text.RuleBasedCollator
+                <li>equal - EqualComparator</li>
+                <li>rule - java.text.RuleBasedCollator
                   <!-- NOTE -->
-                  <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
-                </li>
+                  <i>(see <a href="#ModSelNote">note</a> for restrictions)</i></li>
             </ul>
         </td>
-        <td valign="top" align="center"> No, defaults to <i>equal</i> </td>
+        <td valign="top" align="center">No, defaults to <i>equal</i></td>
       </tr>
       <tr>
-        <td valign="top"> algorithmclass </td>
-        <td valign="top"> Classname of custom algorithm implementation. Lower
-          priority than <i>algorithm</i>. </td>
-        <td valign="top" align="center"> No </td>
+        <td valign="top">algorithmclass</td>
+        <td valign="top">Classname of custom algorithm implementation. Lower
+          priority than <i>algorithm</i>.</td>
+        <td valign="top" align="center">No</td>
       </tr>
       <tr>
-        <td valign="top"> cacheclass </td>
-        <td valign="top"> Classname of custom cache implementation. Lower
-          priority than <i>cache</i>. </td>
-        <td valign="top" align="center"> No </td>
+        <td valign="top">cacheclass</td>
+        <td valign="top">Classname of custom cache implementation. Lower
+          priority than <i>cache</i>.</td>
+        <td valign="top" align="center"> No</td>
       </tr>
       <tr>
-        <td valign="top"> comparatorclass </td>
-        <td valign="top"> Classname of custom comparator implementation. Lower
-          priority than <i>comparator</i>. </td>
-        <td valign="top" align="center"> No </td>
+        <td valign="top">comparatorclass</td>
+        <td valign="top">Classname of custom comparator implementation. Lower
+          priority than <i>comparator</i>.</td>
+        <td valign="top" align="center"> No</td>
       </tr>
       <tr>
-        <td valign="top"> update </td>
-        <td valign="top"> Should the cache be updated when values differ? (boolean) </td>
-        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+        <td valign="top">update</td>
+        <td valign="top">Should the cache be updated when values differ? (boolean)</td>
+        <td valign="top" align="center"> No, defaults to <i>true</i></td>
       </tr>
       <tr>
-        <td valign="top"> seldirs </td>
-        <td valign="top"> Should directories be selected? (boolean) </td>
-        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+        <td valign="top">seldirs</td>
+        <td valign="top">Should directories be selected? (boolean)</td>
+        <td valign="top" align="center"> No, defaults to <i>true</i></td>
       </tr>
       <tr>
-        <td valign="top"> selres </td>
-        <td valign="top"> Should Resources without an InputStream, and
-           therefore without checking, be selected?  (boolean) </td>
+        <td valign="top">selres</td>
+        <td valign="top">Should Resources without an InputStream, and
+           therefore without checking, be selected?  (boolean)</td>
         <td valign="top" align="center"> No, defaults to <i>true</i>. Only relevant
-           when used as ResourceSelector. </td>
+           when used as ResourceSelector.</td>
       </tr>
       <tr>
-        <td valign="top"> delayupdate </td>
-        <td valign="top"> If set to <i>true</i>, the storage of the cache will be delayed until the
+        <td valign="top">delayupdate</td>
+        <td valign="top">If set to <i>true</i>, the storage of the cache will be delayed until the
              next finished BuildEvent; task finished, target finished or build finished,
              whichever comes first.  This is provided for increased performance.  If set
              to <i>false</i>, the storage of the cache will happen with each change.  This
              attribute depends upon the <i>update</i> attribute. (boolean)</td>
-        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+        <td valign="top" align="center"> No, defaults to <i>true</i></td>
       </tr>
     </table>
 
-    <p>These attributes can be set with nested <code>&lt;param/&gt;</code> tags. With <code>&lt;param/&gt;</code>
-    tags you can set other values too - as long as they are named according to
-    the following rules: <ul>
-        <li> <b> algorithm </b>: same as attribute algorithm </li>
-        <li> <b> cache </b>: same as attribute cache </li>
-        <li> <b> comparator </b>: same as attribute comparator </li>
-        <li> <b> algorithmclass </b>: same as attribute algorithmclass </li>
-        <li> <b> cacheclass </b>: same as attribute cacheclass </li>
-        <li> <b> comparatorclass </b>: same as attribute comparatorclass </li>
-        <li> <b> update </b>: same as attribute update </li>
-        <li> <b> seldirs </b>: same as attribute seldirs </li>
-        <li> <b> algorithm.* </b>: Value is transferred to the algorithm via its
-                                   <i>set</i>XX-methods </li>
-        <li> <b> cache.* </b>: Value is transferred to the cache via its
-                                   <i>set</i>XX-methods </li>
-        <li> <b> comparator.* </b>: Value is transferred to the comparator via its
-                                   <i>set</i>XX-methods </li>
-    </ul>
+    <h5>Parameters specified as nested elements</h5>
 
-    <table border="1" cellpadding="2" cellspacing="0">
-      <tr><td colspan="2"><font size="+1"><b> Algorithm options</b></font></td></tr>
-      <tr>
+    <p>The <code>&lt;modified&gt;</code> selector supports a nested
+    <code>&lt;classpath&gt;</code> element that represents a <a href="../using.html#path">
+    PATH like structure</a> for finding custom interface implementations.</p>
+
+    <p>All attributes of a <code>&lt;modified&gt;</code> selector an be set with
+    nested <code>&lt;param/&gt;</code> tags. Additional values can be set
+    with <code>&lt;param/&gt;</code> tags according to the rules below.</p>
+
+    <h6>algorithm</h6>
+    Same as algorithm attribute, with the following additional values:
+    <table>
+     <tr>
         <td valign="top"><b>Name</b></td>
         <td valign="top"><b>Description</b></td>
       </tr>
       <tr>
-        <td valign="top"> hashvalue </td>
-        <td valign="top"> Reads the content of a file into a java.lang.String
-          and use thats hashValue(). No additional configuration required.
-        </td>
+        <td valign="top">hashvalue</td>
+        <td valign="top">Reads the content of a file into a java.lang.String
+          and use that hashValue(). No additional configuration required.</td>
       </tr>
       <tr>
-        <td valign="top"> digest </td>
-        <td valign="top"> Uses java.security.MessageDigest. This Algorithm supports
+        <td valign="top">digest</td>
+        <td valign="top">Uses java.security.MessageDigest. This Algorithm supports
           the following attributes:
           <ul>
             <li><i>algorithm.algorithm</i> (optional): Name of the Digest algorithm
-                (e.g. 'MD5' or 'SHA', default = <i>MD5</i>) </li>
+                (e.g. 'MD5' or 'SHA', default = <i>MD5</i>)</li>
             <li><i>algorithm.provider</i> (optional): Name of the Digest provider
-                (default = <i>null</i>) </li>
+                (default = <i>null</i>)</li>
           </ul>
         </td>
       </tr>
       <tr>
-        <td valign="top"> checksum </td>
-        <td valign="top"> Uses java.util.zip.Checksum. This Algorithm supports
+        <td valign="top">checksum</td>
+        <td valign="top">Uses java.util.zip.Checksum. This Algorithm supports
           the following attributes:
           <ul>
             <li><i>algorithm.algorithm</i> (optional): Name of the algorithm
-                (e.g. 'CRC' or 'ADLER', default = <i>CRC</i>) </li>
+                (e.g. 'CRC' or 'ADLER', default = <i>CRC</i>)</li>
           </ul>
         </td>
       </tr>
-      <tr><td colspan="2"><font size="+1"><b> Cache options </b></font></td></tr>
+    </table>
+    <h6>cache</h6>
+    Same as cache attribute, with the following additional values:
+    <table>
+     <tr>
+        <td valign="top"><b>Name</b></td>
+        <td valign="top"><b>Description</b></td>
+      </tr>
       <tr>
-        <td valign="top"> propertyfile </td>
-        <td valign="top"> Use the java.util.Properties class and its possibility
+        <td valign="top">propertyfile</td>
+        <td valign="top">Use the java.util.Properties class and its possibility
           to load and store to file.
           This Cache implementation supports the following attributes:
           <ul>
             <li><i>cache.cachefile</i> (optional): Name of the properties-file
-                (default = <i>cache.properties</i>) </li>
+                (default = <i>cache.properties</i>)</li>
           </ul>
         </td>
       </tr>
-      <tr><td colspan="2"><font size="+1"><b> Comparator options</b></font></td></tr>
-      <tr>
-        <td valign="top"> equal </td>
-        <td valign="top"> Very simple object comparison. </td>
-      </tr>
-      <tr>
-        <td valign="top"> rule </td>
-        <td valign="top"> Uses <i>java.text.RuleBasedCollator</i> for Object
-          comparison.
-          <!-- NOTE -->
-          <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
-        </td>
-      </tr>
     </table>
+    <h6>comparator</h6>
+    Same as comparator attribute.
+    <h6>algorithmclass</h6>
+    Same as algorithmclass attribute.
+    <h6>comparatorclass</h6>
+    Same as comparatorclass attribute.
+    <h6>cacheclass</h6>
+    Same as cacheclass attribute.
+    <h6>update</h6>
+    Same as update attribute.
+    <h6>seldirs</h6>
+    Same as comparatorclass attribute.
 
-    <p>The <code>&lt;modified&gt;</code> selector supports a nested
-    <code>&lt;classpath&gt;</code> element that represents a <a href="../using.html#path">
-    PATH like structure</a> for finding custom interface implementations. </p>
-
+    <h5>Examples</h5>
     <p>Here are some examples of how to use the Modified Selector:</p>
 
     <blockquote><pre>
@@ -981,12 +965,12 @@
     <p>Uses <tt>com.mycompany.MyCache</tt> from a jar outside of Ants own classpath
     as cache implementation</p>
 
-  <h4><a name="ModSelNote">Note on RuleBasedCollator</a></h4>
+  <h4 id="ModSelNote">Note on RuleBasedCollator</h4>
   <p>The RuleBasedCollator needs a format for its work, but its needed while
   instantiation. There is a problem in the initialization algorithm for this
   case. Therefore you should not use this (or tell me the workaround :-).</p>
 
-      <h4><a name="signedselector">Signed Selector</a></h4>
+      <h4 id="signedselector">Signed Selector</h4>
 
       <p>
         The <code>&lt;signedselector&gt;</code> tag selects signed files and optionally
@@ -995,7 +979,7 @@
       <p>
         This selector has been added in Apache Ant 1.7.
       </p>
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
         <tr>
           <td valign="top"><b>Attribute</b></td>
           <td valign="top"><b>Description</b></td>
@@ -1003,12 +987,12 @@
         </tr>
         <tr>
           <td valign="top">name</td>
-          <td valign="top"> The signature name to check for.</td>
+          <td valign="top">The signature name to check for.</td>
           <td valign="top" align="center">no</td>
         </tr>
       </table>
 
-      <h4><a name="readable">Readable Selector</a></h4>
+      <h4 id="readable">Readable Selector</h4>
 
       <p>The <code>&lt;readable&gt;</code> selector selects only files
         that are readable.  Ant only invokes
@@ -1016,15 +1000,15 @@
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
 
-      <h4><a name="writable">Writable Selector</a></h4>
+      <h4 id="writable">Writable Selector</h4>
 
       <p>The <code>&lt;writable&gt;</code> selector selects only files
         that are writable.  Ant only invokes
-        <code>java.io.File#canWrite</code> so if a file is unwritable
+        <code>java.io.File#canWrite</code> so if a file is nonwritable
         but the Java VM cannot detect this state, this selector will
         still select the file.</p>
 
-      <h4><a name="executable">Executable Selector</a></h4>
+      <h4 id="executable">Executable Selector</h4>
 
       <p>The <code>&lt;executable&gt;</code> selector selects only files
         that are executable.  Ant only invokes
@@ -1034,7 +1018,7 @@
 
       <p><em>Since Ant 1.10.0</em></p>
 
-      <h4><a name="symlink">Symlink Selector</a></h4>
+      <h4 id="symlink">Symlink Selector</h4>
 
       <p>The <code>&lt;symlink&gt;</code> selector selects only files
         that are symbolic links.  Ant only invokes
@@ -1044,7 +1028,7 @@
 
       <p><em>Since Ant 1.10.0</em></p>
 
-      <h4><a name="ownedBy">OwnedBy Selector</a></h4>
+      <h4 id="ownedBy">OwnedBy Selector</h4>
 
       <p>The <code>&lt;ownedBy&gt;</code> selector selects only files
         that are owned by the given user.  Ant only invokes
@@ -1054,7 +1038,7 @@
 
       <p><em>Since Ant 1.10.0</em></p>
 
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
         <tr>
           <td valign="top"><b>Attribute</b></td>
           <td valign="top"><b>Description</b></td>
@@ -1067,7 +1051,7 @@
         </tr>
       </table>
 
-      <h4><a name="scriptselector">Script Selector</a></h4>
+      <h4 id="scriptselector">Script Selector</h4>
 
       <p>
         The <code>&lt;scriptselector&gt;</code> element enables you
@@ -1082,7 +1066,7 @@
       <p>
         This selector was added in Apache Ant 1.7.
       </p>
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
         <tr>
           <td valign="top"><b>Attribute</b></td>
           <td valign="top"><b>Description</b></td>
@@ -1109,7 +1093,7 @@
         </tr>
         <tr>
           <td valign="top">encoding</td>
-          <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.2.</em></td>
+          <td valign="top">The encoding of the script as a file. <em>since Ant 1.10.2</em></td>
           <td valign="top" align="center">No - defaults to default JVM encoding</td>
         </tr>
         <tr>
@@ -1152,7 +1136,7 @@
       The following beans are configured for every script, alongside
       the classic set of project, properties, and targets.
 
-      <table border="1" cellpadding="2" cellspacing="0">
+      <table>
         <tr>
           <td valign="top"><b>Bean</b></td>
           <td valign="top"><b>Description</b></td>
@@ -1185,7 +1169,7 @@
       attributes. Only the <code>selected</code> flag is writable, the rest
       are read only via their getter methods.
 
-            <table border="1" cellpadding="2" cellspacing="0">
+            <table>
         <tr>
           <td valign="top"><b>Attribute</b></td>
           <td valign="top"><b>Description</b></td>
@@ -1232,7 +1216,7 @@
 </pre>
 Select files whose filename length is even.
 
-    <h3><a name="selectcontainers">Selector Containers</a></h3>
+    <h3 id="selectcontainers">Selector Containers</h3>
 
     <p>To create more complex selections, a variety of selectors that
     contain other selectors are available for your use. They combine the
@@ -1283,7 +1267,7 @@ Select files whose filename length is even.
       <li><code>&lt;size&gt;</code></li>
     </ul>
 
-    <h4><a name="andselect">And Selector</a></h4>
+    <h4 id="andselect">And Selector</h4>
 
     <p>The <code>&lt;and&gt;</code> tag selects files that are
     selected by all of the elements it contains. It returns as
@@ -1306,15 +1290,14 @@ Select files whose filename length is even.
       since the last millennium.
     </p>
 
-
-    <h4><a name="majorityselect">Majority Selector</a></h4>
+    <h4 id="majorityselect">Majority Selector</h4>
 
     <p>The <code>&lt;majority&gt;</code> tag selects files provided
     that a majority of the contained elements also select it. Ties are
     dealt with as specified by the <code>allowtie</code> attribute.
     </p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -1329,7 +1312,6 @@ Select files whose filename length is even.
         <td valign="top" align="center">No</td>
       </tr>
     </table>
-
 
     <p>Here is an example of how to use the Majority Selector:</p>
 
@@ -1348,8 +1330,7 @@ Select files whose filename length is even.
     match case exactly).
     </p>
 
-
-    <h4><a name="noneselect">None Selector</a></h4>
+    <h4 id="noneselect">None Selector</h4>
 
     <p>The <code>&lt;none&gt;</code> tag selects files that are
     not selected by any of the elements it contains. It returns as
@@ -1374,8 +1355,7 @@ Select files whose filename length is even.
     class files in the dest directory.
     </p>
 
-
-    <h4><a name="notselect">Not Selector</a></h4>
+    <h4 id="notselect">Not Selector</h4>
 
     <p>The <code>&lt;not&gt;</code> tag reverses the meaning of the
     single selector it contains.
@@ -1395,8 +1375,7 @@ Select files whose filename length is even.
     string "test".
     </p>
 
-
-    <h4><a name="orselect">Or Selector</a></h4>
+    <h4 id="orselect">Or Selector</h4>
 
     <p>The <code>&lt;or&gt;</code> tag selects files that are
     selected by any one of the elements it contains. It returns as
@@ -1421,8 +1400,7 @@ Select files whose filename length is even.
     image files below it.
     </p>
 
-
-    <h4><a name="selectorselect">Selector Reference</a></h4>
+    <h4 id="selectorselect">Selector Reference</h4>
 
     <p>The <code>&lt;selector&gt;</code> tag is used to create selectors
     that can be reused through references. It is the only selector which can
@@ -1440,7 +1418,7 @@ Select files whose filename length is even.
     <code>&lt;exclude&gt;</code> tags within a
     <code>&lt;patternset&gt;</code>.</p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -1519,7 +1497,7 @@ Select files whose filename length is even.
     <p>A fileset that conditionally contains Java source files and Test
     source and class files.</p>
 
-    <h3><a name="customselect">Custom Selectors</a></h3>
+    <h3 id="customselect">Custom Selectors</h3>
 
     <p>You can write your own selectors and use them within the selector
     containers by specifying them within the <code>&lt;custom&gt;</code> tag.</p>
@@ -1535,7 +1513,7 @@ Select files whose filename length is even.
     the <code>&lt;custom&gt;</code> tag.
     </p>
 
-    <table border="1" cellpadding="2" cellspacing="0">
+    <table>
       <tr>
         <td valign="top"><b>Attribute</b></td>
         <td valign="top"><b>Description</b></td>
@@ -1614,8 +1592,5 @@ Select files whose filename length is even.
     <p>For more details concerning writing your own selectors, consult
     <a href="selectors-program.html">Programming Selectors in Ant</a>.</p>
 
-    
-
   </body>
-
 </html>

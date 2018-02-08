@@ -17,13 +17,13 @@
 <html>
 
   <head>
-    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <meta http-equiv="Content-Language" content="en-us">
     <link rel="stylesheet" type="text/css" href="../stylesheets/style.css">
     <title>AntLib</title>
   </head>
 
   <body>
-    <h2><a name="antlib">Antlib</a></h2>
+    <h2 id="antlib">Antlib</h2>
 
 
     <h3>Description</h3>
@@ -108,7 +108,7 @@
     </blockquote>
 
 
-    <h3><a name="antlibnamespace">Antlib namespace</a></h3>
+    <h3 id="antlibnamespace">Antlib namespace</h3>
     <p>
       The name space URIs with the pattern <b>antlib:<i>java package</i></b>
       are given special treatment.
@@ -152,14 +152,14 @@
     </blockquote>
     <p>
       The requirement that the resource is in the default classpath
-      may be removed in future versions of Ant.</p>
+      may be removed in future versions of Ant.
     </p>
 
 
-	<h3><a name="loadFromInside">Load antlib from inside of the buildfile</a></h3>
+	<h3 id="loadFromInside">Load antlib from inside of the buildfile</h3>
 	<p>
-	  If you want to separate the antlib from your local Ant installation, e.g. because you 
-	  want to hold that jar in your projects SCM system, you have to specify a classpath, so 
+	  If you want to separate the antlib from your local Ant installation, e.g. because you
+	  want to hold that jar in your projects SCM system, you have to specify a classpath, so
 	  that Ant could find that jar. The best solution is loading the antlib with <tt>&lt;taskdef&gt;</tt>.
 	</p>
     <blockquote>
@@ -168,7 +168,7 @@
    &lt;taskdef uri="<font color="red">antlib:net.sf.antcontrib</font>"
             resource="net/sf/antcontrib/antlib.xml"
             classpath="path/to/ant-contrib.jar"/&gt;
-   
+
    &lt;target name="iterate"&gt;
       &lt;<font color="green">antcontrib</font>:for param="file"&gt;
          &lt;fileset dir="."/&gt;
@@ -181,10 +181,7 @@
       </pre>
     </blockquote>
 
-	
-	
-
-    <h3><a name="currentnamespace">Current namespace</a></h3>
+    <h3 id="currentnamespace">Current namespace</h3>
     <p>
       Definitions defined in antlibs may be used in antlibs. However
       the namespace that definitions are placed in are dependent on
@@ -258,9 +255,6 @@
 &lt;/project&gt;
       </pre>
     </blockquote>
-    
-
 
 </body>
 </html>
-
