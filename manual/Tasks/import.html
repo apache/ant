@@ -118,12 +118,12 @@ properties from <code>imported.properties</code>:</p>
 
 <pre>&lt;!-- importing.xml --&gt;
 &lt;project name="importing" basedir="." default="..."&gt;
-&nbsp; &lt;import file="${path_to_imported}/imported.xml"/&gt;
+  &lt;import file="${path_to_imported}/imported.xml"/&gt;
 &lt;/project&gt;
 
 &lt;!-- imported.xml --&gt;
 &lt;project name="imported" basedir="." default="..."&gt;
-&nbsp; &lt;property file="imported.properties"/&gt;
+  &lt;property file="imported.properties"/&gt;
 &lt;/project&gt;
 </pre>
 
@@ -135,8 +135,8 @@ of <code>imported.xml</code> is ignored by Ant. The right way to use
 <pre>
 &lt;!-- imported.xml --&gt;
 &lt;project name="imported" basedir="." default="..."&gt;
-&nbsp; &lt;dirname property="imported.basedir" file="${ant.file.imported}"/&gt;
-&nbsp; &lt;property file="${imported.basedir}/imported.properties"/&gt;
+  &lt;dirname property="imported.basedir" file="${ant.file.imported}"/&gt;
+  &lt;property file="${imported.basedir}/imported.properties"/&gt;
 &lt;/project&gt;
 </pre>
 
@@ -224,14 +224,12 @@ collection</h4>
     1.8.0</em></p>
 
 <h3>Examples</h3>
-<pre>&nbsp; &lt;import file=&quot;../common-targets.xml&quot;/&gt;
-</pre>
+<pre>  &lt;import file=&quot;../common-targets.xml&quot;/&gt;</pre>
 
 <p>Imports targets from the common-targets.xml file that is in a parent
 directory.</p>
 
-<pre>&nbsp; &lt;import file=&quot;${deploy-platform}.xml&quot;/&gt;
-</pre>
+<pre>  &lt;import file=&quot;${deploy-platform}.xml&quot;/&gt;</pre>
 
 <p>Imports the project defined by the property deploy-platform</p>
 

@@ -113,12 +113,12 @@ properties from <code>included.properties</code>:</p>
 
 <pre>&lt;!-- including.xml --&gt;
 &lt;project name="including" basedir="." default="..."&gt;
-&nbsp; &lt;include file="${path_to_included}/included.xml"/&gt;
+  &lt;include file="${path_to_included}/included.xml"/&gt;
 &lt;/project&gt;
 
 &lt;!-- included.xml --&gt;
 &lt;project name="included" basedir="." default="..."&gt;
-&nbsp; &lt;property file="included.properties"/&gt;
+  &lt;property file="included.properties"/&gt;
 &lt;/project&gt;
 </pre>
 
@@ -130,8 +130,8 @@ of <code>included.xml</code> is ignored by Ant. The right way to use
 <pre>
 &lt;!-- included.xml --&gt;
 &lt;project name="included" basedir="." default="..."&gt;
-&nbsp; &lt;dirname property="included.basedir" file="${ant.file.included}"/&gt;
-&nbsp; &lt;property file="${included.basedir}/included.properties"/&gt;
+  &lt;dirname property="included.basedir" file="${ant.file.included}"/&gt;
+  &lt;property file="${included.basedir}/included.properties"/&gt;
 &lt;/project&gt;
 </pre>
 
@@ -219,14 +219,12 @@ collection</h4>
 <p>The specified resources will be included.</p>
 
 <h3>Examples</h3>
-<pre>&nbsp; &lt;include file=&quot;../common-targets.xml&quot;/&gt;
-</pre>
+<pre>  &lt;include file=&quot;../common-targets.xml&quot;/&gt;</pre>
 
 <p>Includes targets from the common-targets.xml file that is in a parent
 directory.</p>
 
-<pre>&nbsp; &lt;include file=&quot;${deploy-platform}.xml&quot;/&gt;
-</pre>
+<pre>  &lt;include file=&quot;${deploy-platform}.xml&quot;/&gt;</pre>
 
 <p>Includes the project defined by the property deploy-platform</p>
 

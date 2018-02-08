@@ -68,101 +68,101 @@ version of the files contained by the repository.
 
 <table>
 <tr>
-<td valign="top" width="12%"><b>Attribute</b></td>
+<td valign="top"><b>Attribute</b></td>
 
-<td valign="top" width="78%"><b>Description</b></td>
+<td valign="top"><b>Description</b></td>
 
-<td valign="top" width="10%"><b>Required</b></td>
+<td valign="top"><b>Required</b></td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">repository</td>
+<td valign="top">repository</td>
 
-<td valign="top" width="78%">The location of the repository (see your PVCS
+<td valign="top">The location of the repository (see your PVCS
 manuals)</td>
 
-<td valign="top" width="10%">Yes</td>
+<td valign="top">Yes</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">pvcsproject</td>
+<td valign="top">pvcsproject</td>
 
-<td valign="top" width="78%">The project within the PVCS repository to extract
+<td valign="top">The project within the PVCS repository to extract
 files from (&quot;/&quot; is root project and that is default if this attribute isn't
 specified)</td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">label</td>
+<td valign="top">label</td>
 
-<td valign="top" width="78%">Only files marked with this label are extracted.</td>
+<td valign="top">Only files marked with this label are extracted.</td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">promotiongroup</td>
+<td valign="top">promotiongroup</td>
 
-<td valign="top" width="78%">Only files within this promotion group are extracted. Using
+<td valign="top">Only files within this promotion group are extracted. Using
 both the <i>label</i> and the <i>promotiongroup</i> tag will cause the files in the
 promotion group and with that label to be extracted.
 </td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">config</td>
+<td valign="top">config</td>
 
-<td valign="top" width="78%">path of a non default .cfg file.
+<td valign="top">path of a non default .cfg file.
 Can be given absolute or relative to Ant's base directory.
 </td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">force</td>
+<td valign="top">force</td>
 
-<td valign="top" width="78%">If set to <i>yes</i> all files that exists and are writable are overwritten. Default <i>no</i> causes the files that are writable to be ignored. This stops the PVCS command <i>get</i> to stop asking questions!</td>
+<td valign="top">If set to <i>yes</i> all files that exists and are writable are overwritten. Default <i>no</i> causes the files that are writable to be ignored. This stops the PVCS command <i>get</i> to stop asking questions!</td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">workspace</td>
+<td valign="top">workspace</td>
 
-<td valign="top" width="78%">By specifying a workspace, the files are extracted to that location. A PVCS workspace is a
+<td valign="top">By specifying a workspace, the files are extracted to that location. A PVCS workspace is a
 name for a location of the workfiles and isn't as such the location itself. You define the location for a workspace
 using the PVCS GUI clients. If this isn't specified the default workspace for the current user is used.</td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">pvcsbin</td>
+<td valign="top">pvcsbin</td>
 
-<td valign="top" width="78%">On some systems the PVCS executables <i>pcli</i>
+<td valign="top">On some systems the PVCS executables <i>pcli</i>
 and <i>get</i> are not found in the PATH. In such cases this attribute
 should be set to the bin directory of the PVCS installation containing
 the executables mentioned before. If this attribute isn't specified the
 tag expects the executables to be found using the PATH environment variable.</td>
 
-<td valign="top" width="10%">No</td>
+<td valign="top">No</td>
 </tr>
     <tr>
-      <td valign="top" width="12%">ignorereturncode</td>
-      <td valign="top" width="78%">If set to <i>true</i> the return value from executing
+      <td valign="top">ignorereturncode</td>
+      <td valign="top">If set to <i>true</i> the return value from executing
         the pvcs commands are ignored.</td>
-      <td valign="top" width="10%">No</td>
+      <td valign="top">No</td>
     </tr>
     <tr>
-      <td valign="top" width="12%">updateonly</td>
-      <td valign="top" width="78%">If set to <i>true</i> files are gotten only if
+      <td valign="top">updateonly</td>
+      <td valign="top">If set to <i>true</i> files are gotten only if
         newer than existing local files.</td>
-      <td valign="top" width="10%">No</td>
+      <td valign="top">No</td>
     </tr>
     <tr>
       <td valign="top">filenameformat</td>
@@ -207,19 +207,19 @@ specified.</p>
 
 <table>
 <tr>
-<td valign="top" width="12%"><b>Attribute</b></td>
+<td valign="top"><b>Attribute</b></td>
 
-<td valign="top" width="78%"><b>Description</b></td>
+<td valign="top"><b>Description</b></td>
 
-<td valign="top" width="10%"><b>Required</b></td>
+<td valign="top"><b>Required</b></td>
 </tr>
 
 <tr>
-<td valign="top" width="12%">name</td>
+<td valign="top">name</td>
 
-<td valign="top" width="78%">The name of the pvcs project</td>
+<td valign="top">The name of the pvcs project</td>
 
-<td valign="top" width="10%">Yes</td>
+<td valign="top">Yes</td>
 </tr>
 </table>
 

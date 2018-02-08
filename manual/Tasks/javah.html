@@ -38,9 +38,8 @@ systems are used.</p>
   attribute instead which allows you to compile the classes and
   generate the native header files with a single step.</p>
 
-<p><strong>Note</strong>: <code>javah</code> has been deprecated as of Java 9
-  and removed as of Java 10. Trying to use it with Java 10 will
-  fail.</p>
+<p><strong>Note</strong>: <code>javah</code> has been deprecated in Java 9
+  and removed in Java 10. Attempts to use it with Java 10 will fail.</p>
 
 <p id="implementationvalues">It is possible to use different
 compilers. This can be selected with the <code>implementation</code>
@@ -132,7 +131,7 @@ attribute:</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
-<p>Either outputFile or destdir must be supplied, but not both.&nbsp;</p>
+<p>Either outputFile or destdir must be supplied, but not both.</p>
 
 <h3>Parameters specified as nested elements</h3>
 
@@ -146,9 +145,9 @@ only if a given compiler implementation will be used.</p>
 
 <table>
 <tr>
-  <td width="12%" valign="top"><b>Attribute</b></td>
-  <td width="78%" valign="top"><b>Description</b></td>
-  <td width="10%" valign="top"><b>Required</b></td>
+  <td valign="top"><b>Attribute</b></td>
+  <td valign="top"><b>Description</b></td>
+  <td valign="top"><b>Required</b></td>
 </tr>
   <tr>
     <td valign="top">value</td>

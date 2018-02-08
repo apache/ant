@@ -56,34 +56,34 @@ and <b>abort</b> execution and transaction and fail task.</p>
 <h3>Parameters</h3>
 <table>
 <tr>
-  <td width="12%" valign="top"><b>Attribute</b></td>
-  <td width="78%" valign="top"><b>Description</b></td>
-  <td width="10%" valign="top"><b>Required</b></td>
+  <td valign="top"><b>Attribute</b></td>
+  <td valign="top"><b>Description</b></td>
+  <td valign="top"><b>Required</b></td>
 </tr>
 <tr>
-  <td width="12%" valign="top">driver</td>
-  <td width="78%" valign="top">Class name of the jdbc driver</td>
-  <td width="10%" valign="top">Yes</td>
+  <td valign="top">driver</td>
+  <td valign="top">Class name of the jdbc driver</td>
+  <td valign="top">Yes</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">url</td>
-  <td width="78%" valign="top">Database connection url</td>
-  <td width="10%" valign="top">Yes</td>
+  <td valign="top">url</td>
+  <td valign="top">Database connection url</td>
+  <td valign="top">Yes</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">userid</td>
-  <td width="78%" valign="top">Database user name</td>
-  <td width="10%" valign="top">Yes</td>
+  <td valign="top">userid</td>
+  <td valign="top">Database user name</td>
+  <td valign="top">Yes</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">password</td>
-  <td width="78%" valign="top">Database password</td>
-  <td width="10%" valign="top">Yes</td>
+  <td valign="top">password</td>
+  <td valign="top">Database password</td>
+  <td valign="top">Yes</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">src</td>
-  <td width="78%" valign="top">File containing SQL statements</td>
-  <td width="10%" valign="top">Yes, unless statements enclosed within tags</td>
+  <td valign="top">src</td>
+  <td valign="top">File containing SQL statements</td>
+  <td valign="top">Yes, unless statements enclosed within tags</td>
 </tr>
 <tr>
   <td valign="top">encoding</td>
@@ -97,37 +97,37 @@ and <b>abort</b> execution and transaction and fail task.</p>
   <td align="center">No - defaults to default JVM encoding</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">delimiter</td>
-  <td width="78%" valign="top">String that separates SQL statements</td>
-  <td width="10%" valign="top">No, default &quot;;&quot;</td>
+  <td valign="top">delimiter</td>
+  <td valign="top">String that separates SQL statements</td>
+  <td valign="top">No, default &quot;;&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">autocommit</td>
-  <td width="78%" valign="top">Auto commit flag for database connection (default false)</td>
-  <td width="10%" valign="top">No, default &quot;false&quot;</td>
+  <td valign="top">autocommit</td>
+  <td valign="top">Auto commit flag for database connection (default false)</td>
+  <td valign="top">No, default &quot;false&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">print</td>
-  <td width="78%" valign="top">Print result sets from the statements (default false)</td>
-  <td width="10%" valign="top">No, default &quot;false&quot;</td>
+  <td valign="top">print</td>
+  <td valign="top">Print result sets from the statements (default false)</td>
+  <td valign="top">No, default &quot;false&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">showheaders</td>
-  <td width="78%" valign="top">Print headers for result sets from the statements (default true)</td>
-  <td width="10%" valign="top">No, default &quot;true&quot;</td>
+  <td valign="top">showheaders</td>
+  <td valign="top">Print headers for result sets from the statements (default true)</td>
+  <td valign="top">No, default &quot;true&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">showtrailers</td>
-  <td width="78%" valign="top">Print trailer for number of rows affected (default true)</td>
-  <td width="10%" valign="top">No, default &quot;true&quot;</td>
+  <td valign="top">showtrailers</td>
+  <td valign="top">Print trailer for number of rows affected (default true)</td>
+  <td valign="top">No, default &quot;true&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">output</td>
-  <td width="78%" valign="top">Output file for result sets (defaults to System.out).
+  <td valign="top">output</td>
+  <td valign="top">Output file for result sets (defaults to System.out).
     <em>Since Ant 1.8</em> can specify any Resource that supports output (see
     <a href="../develop.html#set-magic">note</a>).
   </td>
-  <td width="10%" valign="top">No (print to System.out by default)</td>
+  <td valign="top">No (print to System.out by default)</td>
 </tr>
   <tr>
     <td valign="top">append</td>
@@ -137,120 +137,120 @@ and <b>abort</b> execution and transaction and fail task.</p>
       specify a filesystem destination.</td>
   </tr>
 <tr>
-  <td width="12%" valign="top">classpath</td>
-  <td width="78%" valign="top">Classpath used to load driver</td>
-  <td width="10%" valign="top">No (use system classpath)</td>
+  <td valign="top">classpath</td>
+  <td valign="top">Classpath used to load driver</td>
+  <td valign="top">No (use system classpath)</td>
 </tr>
   <tr>
-    <td width="12%" valign="top">classpathref</td>
-    <td width="78%" valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
-  <td width="10%" valign="top">No (use system classpath)</td>
+    <td valign="top">classpathref</td>
+    <td valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
+  <td valign="top">No (use system classpath)</td>
   </tr>
 <tr>
-  <td width="12%" valign="top">onerror</td>
-  <td width="78%" valign="top">Action to perform when statement fails: continue, stop, abort</td>
-  <td width="10%" valign="top">No, default &quot;abort&quot;</td>
+  <td valign="top">onerror</td>
+  <td valign="top">Action to perform when statement fails: continue, stop, abort</td>
+  <td valign="top">No, default &quot;abort&quot;</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">rdbms</td>
-  <td width="78%" valign="top">Execute task only if this rdbms</td>
-  <td width="10%" valign="top">No (no restriction)</td>
+  <td valign="top">rdbms</td>
+  <td valign="top">Execute task only if this rdbms</td>
+  <td valign="top">No (no restriction)</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">version</td>
-  <td width="78%" valign="top">Execute task only if rdbms version match</td>
-  <td width="10%" valign="top">No (no restriction)</td>
+  <td valign="top">version</td>
+  <td valign="top">Execute task only if rdbms version match</td>
+  <td valign="top">No (no restriction)</td>
 </tr>
 <tr>
-  <td width="12%" valign="top">caching</td>
-  <td width="78%" valign="top">Should the task cache loaders and the driver?</td>
-  <td width="10%" valign="top">No (default=true)</td>
+  <td valign="top">caching</td>
+  <td valign="top">Should the task cache loaders and the driver?</td>
+  <td valign="top">No (default=true)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">delimitertype</td>
-  <td width="78%" valign="top">Control whether the delimiter will only be recognized on a line by itself.<br>
+  <td valign="top">delimitertype</td>
+  <td valign="top">Control whether the delimiter will only be recognized on a line by itself.<br>
     Can be "normal" -anywhere on the line, or "row", meaning it must be on a line by itself</td>
-  <td width="10%" valign="top">No (default:normal)</td>
+  <td valign="top">No (default:normal)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">keepformat</td>
-  <td width="78%" valign="top">Control whether the format of the sql will be preserved.<br>
+  <td valign="top">keepformat</td>
+  <td valign="top">Control whether the format of the sql will be preserved.<br>
     Useful when loading packages and procedures.
-  <td width="10%" valign="top">No (default=false)</td>
+  <td valign="top">No (default=false)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">escapeprocessing</td>
-  <td width="78%" valign="top">Control whether the Java statement
+  <td valign="top">escapeprocessing</td>
+  <td valign="top">Control whether the Java statement
     object will perform escape substitution.<br>
     See <a
     href="http://docs.oracle.com/javase/7/docs/api/java/sql/Statement.html#setEscapeProcessing%28boolean%29">Statement's
     API docs</a> for details.  <em>Since Ant 1.6</em>.
-  <td width="10%" valign="top">No (default=true)</td>
+  <td valign="top">No (default=true)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">expandproperties</td>
-  <td width="78%" valign="top">Set to true to turn on property expansion in
+  <td valign="top">expandproperties</td>
+  <td valign="top">Set to true to turn on property expansion in
   nested SQL, inline in the task or nested transactions. <em>Since Ant 1.7</em>.
-  <td width="10%" valign="top">No (default=true)</td>
+  <td valign="top">No (default=true)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">rawblobs</td>
-  <td width="78%" valign="top">If true, will write raw streams rather than hex encoding when
+  <td valign="top">rawblobs</td>
+  <td valign="top">If true, will write raw streams rather than hex encoding when
     printing BLOB results. <em>Since Ant 1.7.1</em>.</td>
-  <td width="10%" valign="top">No, default <em>false</em></td>
+  <td valign="top">No, default <em>false</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">failOnConnectionError</td>
-  <td width="78%" valign="top">If false, will only print a warning
+  <td valign="top">failOnConnectionError</td>
+  <td valign="top">If false, will only print a warning
     message and not execute any statement if the task fails to connect
     to the database.  <em>Since Ant 1.8.0</em>.</td>
-  <td width="10%" valign="top">No, default <em>true</em></td>
+  <td valign="top">No, default <em>true</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">strictDelimiterMatching</td>
-  <td width="78%" valign="top">If false, delimiters will be searched
+  <td valign="top">strictDelimiterMatching</td>
+  <td valign="top">If false, delimiters will be searched
     for in a case-insensitive manner (i.e. delimiter="go" matches "GO")
     and surrounding whitespace will be ignored (delimiter="go" matches
     "GO ").  <em>Since Ant 1.8.0</em>.</td>
-  <td width="10%" valign="top">No, default <em>true</em></td>
+  <td valign="top">No, default <em>true</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">showWarnings</td>
-  <td width="78%" valign="top">If true, SQLWarnings will be logged at
+  <td valign="top">showWarnings</td>
+  <td valign="top">If true, SQLWarnings will be logged at
     the WARN level.  <em>Since Ant 1.8.0</em>.<br/>
     <strong>Note</strong>: even if the attribute is set to false, warnings that
     apply to the connection will be logged at the verbose level.</td>
-  <td width="10%" valign="top">No, default <em>false</em></td>
+  <td valign="top">No, default <em>false</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">treatWarningsAsErrors</td>
-  <td width="78%" valign="top">If true, SQLWarnings will be treated
+  <td valign="top">treatWarningsAsErrors</td>
+  <td valign="top">If true, SQLWarnings will be treated
     like errors - and the logic selected via the onError attribute
     applies.
     <em>Since Ant 1.8.0</em>.</td>
-  <td width="10%" valign="top">No, default <em>false</em></td>
+  <td valign="top">No, default <em>false</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">csvColumnSeparator</td>
-  <td width="78%" valign="top">The column separator used when printing
+  <td valign="top">csvColumnSeparator</td>
+  <td valign="top">The column separator used when printing
     the results.
     <em>Since Ant 1.8.0</em>.</td>
-  <td width="10%" valign="top">No, default <em>','</em></td>
+  <td valign="top">No, default <em>','</em></td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">csvQuoteCharacter</td>
-  <td width="78%" valign="top">The character used to quote column
+  <td valign="top">csvQuoteCharacter</td>
+  <td valign="top">The character used to quote column
     values.<br/>
     If set, columns that contain either the column separator or the
     quote character itself will be surrounded by the quote character.
@@ -258,14 +258,14 @@ and <b>abort</b> execution and transaction and fail task.</p>
     the column's value.<br/>
     <strong>Note</strong>: BLOB values will never be quoted.
     <em>Since Ant 1.8.0</em>.</td>
-  <td width="10%" valign="top">No, default is not set (i.e. no quoting
+  <td valign="top">No, default is not set (i.e. no quoting
     ever occurs)</td>
 </tr>
 
 <tr>
-  <td width="12%" valign="top">forceCsvQuoteChar</td>
-  <td width="78%" valign="top">If true, quoting always occurs</td>
-  <td width="10%" valign="top">No, default is not set (i.e. quoting
+  <td valign="top">forceCsvQuoteChar</td>
+  <td valign="top">If true, quoting always occurs</td>
+  <td valign="top">No, default is not set (i.e. quoting
     occurs only where needed)</td>
 </tr>
 

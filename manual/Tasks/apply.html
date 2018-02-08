@@ -37,9 +37,9 @@ href="../Types/resources.html#collection">Resource Collection</a>s
 &ndash; including but not restricted to
  <a href="../Types/fileset.html">FileSet</a>s,
  <a href="../Types/dirset.html">DirSet</a>s
- (<em>since&nbsp;Ant&nbsp;1.6</em>) or
+ (<em>since Ant 1.6</em>) or
  <a href="../Types/filelist.html">FileList</a>s
- (<em>since&nbsp;Ant&nbsp;1.6</em>)
+ (<em>since Ant 1.6</em>)
 &ndash; are passed as arguments to the system command.</p>
 <p>If you specify a nested <a href="../Types/mapper.html">mapper</a>,
 the timestamp of each source file is compared to the timestamp of a
@@ -86,7 +86,7 @@ to send input to it is via the input and inputstring attributes.</p>
     <td valign="top">whether or not you want the commands to be spawned.<br>
     If you spawn a command, its output will not be logged by Ant.<br>
     The input, output, error, and result property settings are not active when spawning a process.<br>
-    <em>since&nbsp;Ant&nbsp;1.6</em>
+    <em>since Ant 1.6</em>
     </td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
@@ -139,7 +139,7 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">error</td>
     <td valign="top">The file to which the standard error of the
-    command should be redirected.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
+    command should be redirected.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -149,7 +149,7 @@ to send input to it is via the input and inputstring attributes.</p>
     file/property. The error output will not be included in the output
     file/property. If you redirect error with the &quot;error&quot; or
     &quot;errorProperty&quot; attributes, this will have no effect.
-    <em>since&nbsp;Ant&nbsp;1.6</em></td>
+    <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -170,21 +170,21 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">errorproperty</td>
     <td valign="top">The name of a property in which the standard error of the
-      command should be stored.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
+      command should be stored.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">input</td>
     <td valign="top">A file from which the executed command's standard
     input is taken. This attribute is mutually exclusive with the
-    inputstring attribute.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
+    inputstring attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
     <td valign="top">A string which serves as the input stream for the
     executed command. This attribute is mutually exclusive with the
-    input attribute.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
+    input attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -265,38 +265,38 @@ to send input to it is via the input and inputstring attributes.</p>
     that does not exist, against the execution directory if
     specified. On Unix systems, if you only want to allow execution of
     commands in the user's path, set this to false.
-    <em>since&nbsp;Ant&nbsp;1.6</em></td>
+    <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">maxparallel</td>
     <td valign="top">Limit the amount of parallelism by passing at
       most this many sourcefiles at once.  Set it to &lt;= 0 for
-      unlimited. <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
+      unlimited. <em>Since Ant 1.6</em>.</td>
     <td align="center" valign="top">No, unlimited by default</td>
   </tr>
   <tr>
     <td valign="top">addsourcefile</td>
     <td valign="top">Whether source file names should be added to the
-      command automatically. <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
+      command automatically. <em>Since Ant 1.6</em>.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
     <td valign="top">Whether to print a summary after execution or not.
-      <em>Since&nbsp;Ant&nbsp;1.6</em>.</td>
+      <em>Since Ant 1.6</em>.</td>
     <td align="center" valign="top">No, default <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">ignoremissing</td>
     <td valign="top">Whether to ignore nonexistent files specified
-      via filelists.  <em>Since&nbsp;Ant&nbsp;1.6.2</em>.</td>
+      via filelists.  <em>Since Ant 1.6.2</em>.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">force</td>
     <td valign="top">Whether to bypass timestamp comparisons
-      for target files.  <em>Since&nbsp;Ant&nbsp;1.6.3</em>.</td>
+      for target files.  <em>Since Ant 1.6.3</em>.</td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 </table>
@@ -306,12 +306,12 @@ to send input to it is via the input and inputstring attributes.</p>
 elements to define the files for this task and refer to
 <code>&lt;fileset&gt;</code>s defined elsewhere.</p>
 <h4>filelist</h4>
-<p><em>Since&nbsp;Ant&nbsp;1.6</em></p>
+<p><em>Since Ant 1.6</em></p>
 <p>You can use any number of nested <code>&lt;filelist&gt;</code>
 elements to define the files for this task and refer to
 <code>&lt;filelist&gt;</code>s defined elsewhere.</p>
 <h4>dirset</h4>
-<p><em>Since&nbsp;Ant&nbsp;1.6</em></p>
+<p><em>Since Ant 1.6</em></p>
 <p>You can use any number of nested <code>&lt;dirset&gt;</code>
 elements to define the directories for this task and refer to
 <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
@@ -386,7 +386,7 @@ specified if you also define a nested mapper.</p>
 system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
 <h4>redirector</h4>
-<em>Since&nbsp;Ant&nbsp;1.6.2</em>
+<em>Since Ant 1.6.2</em>
 <p>A nested <a href="../Types/redirector.html">I/O Redirector</a>
 can be specified.  &lt;apply&gt;'s behavior is like that of
 <a href="exec.html#redirector">exec</a> with regard to

@@ -120,9 +120,9 @@ to ignore (requires JDepend 2.5 or above).</p>
 <blockquote>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
-&nbsp;&nbsp;&nbsp; &lt;classespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="build"/&gt;
-&nbsp;&nbsp;&nbsp; &lt;/classespath&gt;
+    &lt;classespath&gt;
+        &lt;pathelement location="build"/&gt;
+    &lt;/classespath&gt;
 &lt;/jdepend&gt;
 </pre>
 </blockquote>
@@ -134,13 +134,13 @@ classpath reference.</p>
 <blockquote>
 <pre>
 &lt;jdepend outputfile="docs/jdepend.xml" fork="yes" format="xml"&gt;
-&nbsp;&nbsp;&nbsp; &lt;sourcespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src"/&gt;
-&nbsp;&nbsp;&nbsp; &lt;/sourcespath&gt;
-&nbsp;&nbsp;&nbsp; &lt;classpath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="classes"/&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="lib/jdepend.jar"/&gt;
-&nbsp;&nbsp;&nbsp; &lt;/classpath&gt;
+    &lt;sourcespath&gt;
+        &lt;pathelement location="src"/&gt;
+    &lt;/sourcespath&gt;
+    &lt;classpath&gt;
+        &lt;pathelement location="classes"/&gt;
+        &lt;pathelement location="lib/jdepend.jar"/&gt;
+    &lt;/classpath&gt;
 &lt;/jdepend&gt;
 </pre>
 </blockquote>
@@ -153,11 +153,11 @@ classpath is defined using nested elements.</p>
 <blockquote>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
-&nbsp;&nbsp;&nbsp; &lt;exclude name="java.*&gt;
-&nbsp;&nbsp;&nbsp; &lt;exclude name="javax.*&gt;
-&nbsp;&nbsp;&nbsp; &lt;classespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="build"/&gt;
-&nbsp;&nbsp;&nbsp; &lt;/classespath&gt;
+    &lt;exclude name="java.*&gt;
+    &lt;exclude name="javax.*&gt;
+    &lt;classespath&gt;
+        &lt;pathelement location="build"/&gt;
+    &lt;/classespath&gt;
 &lt;/jdepend&gt;
 </pre>
 </blockquote>
