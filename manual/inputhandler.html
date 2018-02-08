@@ -49,7 +49,7 @@ every Ant process, users can specify the implementation using the
 method</p>
 
 <pre>
-    void handleInput(InputRequest request) 
+    void handleInput(InputRequest request)
         throws org.apache.tools.ant.BuildException;
 </pre>
 
@@ -60,7 +60,7 @@ situation.</p>
 
 <p>Ant comes with three built-in implementations of this interface:</p>
 
-<h3><a name="defaulthandler">DefaultInputHandler</a></h3>
+<h3 id="defaulthandler">DefaultInputHandler</h3>
 
 <p>This is the implementation you get, when you don't use the
 <code>-inputhandler</code> command line switch at all.  This
@@ -92,13 +92,13 @@ define it inside the <code>ANT_OPTS</code> environment variable.</p>
 
 <p>Like the default implementation, this InputHandler reads from standard
 input. However, it consumes <i>all</i> available input. This behavior is
-useful for sending Ant input via an OS pipe. <b>Since Ant 1.7</b>.</p>
+useful for sending Ant input via an OS pipe. <em>Since Ant 1.7</em></p>
 
 <h3>SecureInputHandler</h3>
 
 <p>This InputHandler calls <code>System.console().readPassword()</code>,
 available since Java 1.6.  On earlier platforms it falls back to the
-behavior of DefaultInputHandler. <b>Since Ant 1.7.1</b>.</p>
+behavior of DefaultInputHandler. <em>Since Ant 1.7.1</em></p>
 
 <h2>InputRequest</h2>
 
@@ -112,5 +112,5 @@ input, but subclasses may use stricter validations.
 should be used if the user input must be part of a predefined set of
 choices.</p>
 
-
+</body>
 </html>

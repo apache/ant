@@ -43,14 +43,14 @@
     the <a href="Tasks/ant.html">ant</a>, antcall or subant tasks
     and make it available to the calling build process, though.</p>
 
-  <p>Starting with Ant 1.8.0
+  <p><em>Since Ant 1.8.0</em>
     the <a href="Tasks/local.html">local</a> task can be used to
     create properties that are locally scoped to a target or
     a <a href="Tasks/sequential.html">sequential</a> element like
     the one of the <a href="Tasks/macrodef.html">macrodef</a>
     task.</p>
 
-  <h2><a name="built-in-props">Built-in Properties</a></h2>
+  <h2 id="built-in-props">Built-in Properties</h2>
 
   <p>Ant provides access to all system properties as if they had been
     defined using a <code>&lt;property&gt;</code> task.  For
@@ -105,7 +105,7 @@ ant.library.dir     the directory that has been used to load Ant's
                     jars from.  In most cases this is ANT_HOME/lib.
 </pre>
 
-  <h1><a name="propertyHelper">PropertyHelpers</a></h1>
+  <h1 id="propertyHelper">PropertyHelpers</h1>
 
   <p>Ant's property handling is accomplished by an instance of
     <code>org.apache.tools.ant.PropertyHelper</code> associated with
@@ -210,7 +210,6 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 }
 </pre>
 
-
   <h1>Property Expansion</h1>
 
   <p>When Ant encounters a construct <code>${some-text}</code> the
@@ -238,7 +237,7 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <p>if the property <code>builddir</code> has the
     value <code>build/classes</code>.</p>
-    
+
   <p>In order to maintain backward compatibility with older Ant
     releases, a single '$' character encountered apart from a
     property-like construct (including a matched pair of french
@@ -284,8 +283,8 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
       Antlib</a> provides a few interesting evaluators but there are
       also a few built-in ones.</p>
 
-  <h3><a name="toString">Getting the value of a Reference with
-      ${toString:}</a></h3>
+  <h3 id="toString">Getting the value of a Reference with
+      ${toString:}</h3>
 
   <p>Any Ant type which has been declared with a reference can also
     its string value extracted by using the <code>${toString:}</code>
@@ -305,8 +304,8 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
   <p>There is no guarantee that external types provide meaningful
     information in such a situation</p>
 
-  <h3><a name="ant.refid">Getting the value of a Reference with
-      ${ant.refid:}</a></h3>
+  <h3 id="ant.refid">Getting the value of a Reference with
+      ${ant.refid:}</h3>
 
   <p>Any Ant type which has been declared with a reference can also be
     used as a property by using the <code>${ant.refid:}</code>
@@ -332,7 +331,7 @@ public void setAttr(Resource r) { ... }
   &lt;my:task attr="${ant.refid:anturl}"/&gt;
 </pre>
 
-  <h2><a name="if+unless">If/Unless Attributes</a></h2>
+  <h2 id="if+unless">If/Unless Attributes</h2>
   <p>
       The <code>&lt;target></code> element and various tasks (such as
       <code>&lt;fail></code>) and task elements (such as <code>&lt;test></code>
@@ -357,7 +356,7 @@ public void setAttr(Resource r) { ... }
 &lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/>
   </pre>
   <p>
-      As of Ant 1.8.0, you may instead use property expansion; a value of
+      <em>Since Ant 1.8.0</em>, you may instead use property expansion; a value of
       <tt>true</tt> (or <tt>on</tt> or <tt>yes</tt>) will enable the
       item, while <tt>false</tt> (or <tt>off</tt> or <tt>no</tt>) will
       disable it. Other values are still assumed to be property
@@ -402,3 +401,4 @@ public void setAttr(Resource r) { ... }
   </pre>
 
 </body>
+</html>

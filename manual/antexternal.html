@@ -14,7 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -31,12 +30,12 @@
 administrators.  But what about programmers?  Can the functionality
 provided by Ant tasks be used in java programs?</p>
 
-<p>Yes, and its quite easy.  Before getting into the details, however, 
+<p>Yes, and its quite easy.  Before getting into the details, however,
 we should mention the pros and cons of this approach:
 
 <h3>Pros</h3>
 
-<table cellpadding="0" margin="0" border="1">
+<table>
 <tr>
 <td><b>Robust</b></td>
 <td>
@@ -65,7 +64,7 @@ code is supported by the entire Apache Ant community.
 
 <h3>Cons</h3>
 
-<table cellpadding="0" margin="0" border="1">
+<table>
 <tr>
 <td><b>Dependency on Ant Libraries</b></td>
 <td>
@@ -85,7 +84,6 @@ open source!
 </td>
 </tr>
 </table>
-
 
 <h2>Example</h2>
 
@@ -136,7 +134,7 @@ static public void unzip(String zipFilepath, String destinationDir) {
 	    taskType = "unzip";
 	    taskName = "unzip";
 	    target = new Target();
-	}	
+	}
     }
     Expander expander = new Expander();
     expander.setSrc(new File(zipfile));
@@ -156,5 +154,5 @@ don't.  Ultimately, you have to be willing to get your feet wet and
 read the source code.  The above example is merely designed to whet
 your appetite and get you started.  Go for it!</p>
 
-
+</body>
 </html>

@@ -24,16 +24,17 @@
 
 <body>
 <h1>Using Apache Ant</h1>
-<h2><a name="buildfile">Writing a Simple Buildfile</a></h2>
+<h2 id="buildfile">Writing a Simple Buildfile</h2>
 <p>Apache Ant's buildfiles are written in XML. Each buildfile contains one project
 and at least one (default) target. Targets contain task elements.
 Each task element of the buildfile can have an <code>id</code> attribute and
 can later be referred to by the value supplied to this. The value has
 to be unique. (For additional information, see the
 <a href="#tasks"> Tasks</a> section below.)</p>
-<h3><a name="projects">Projects</a></h3>
+
+<h3 id="projects">Projects</h3>
 <p>A <i>project</i> has three attributes:</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
@@ -47,7 +48,7 @@ to be unique. (For additional information, see the
   <tr>
     <td valign="top">default</td>
     <td valign="top">the default target to use when no target is supplied.</td>
-    <td align="center" valign="top">No; however, <b>since Ant 1.6.0</b>,
+    <td align="center" valign="top">No; however, <em>since Ant 1.6.0</em>,
         every project includes an implicit target that contains any and
         all top-level tasks and/or types. This target will always be
         executed as part of the project's initialization, even when Ant is
@@ -78,7 +79,7 @@ to be executed. When starting Ant, you can select which target(s) you
 want to have executed. When no target is given,
 the project's default is used.</p>
 
-<h3><a name="targets">Targets</a></h3>
+<h3 id="targets">Targets</h3>
 <p>A target can depend on other targets. You might have a target for compiling,
 for example, and a target for creating a distributable. You can only build a
 distributable when you have compiled first, so the distribute target
@@ -92,7 +93,7 @@ executed if the dependent target(s) did not (need to) run.
 <p>More information can be found in the
   dedicated <a href="targets.html">manual page</a>.</p>
 
-<h3><a name="tasks">Tasks</a></h3>
+<h3 id="tasks">Tasks</h3>
 <p>A task is a piece of code that can be executed.</p>
 <p>A task can have multiple attributes (or arguments, if you prefer). The value
 of an attribute might contain references to a property. These references will be
@@ -140,7 +141,7 @@ be backward-compatible with this behaviour, since there will likely be no
 task instances at all, only proxies.
 </p>
 
-<h3><a name="properties">Properties</a></h3>
+<h3 id="properties">Properties</h3>
 
 <p>Properties are an important way to customize a build process or
   to just provide shortcuts for strings that are used repeatedly
@@ -163,7 +164,7 @@ task instances at all, only proxies.
   found <a href="properties.html">in the concepts section</a> of this
   manual.</p>
 
-<h3><a name="example">Example Buildfile</a></h3>
+<h3 id="example">Example Buildfile</h3>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
   &lt;description&gt;
@@ -205,8 +206,8 @@ task instances at all, only proxies.
 &lt;/project&gt;
 </pre>
 
-<p>Notice that we are declaring properties outside any target.  As of
-Ant 1.6 all tasks can be declared outside targets (earlier version
+<p>Notice that we are declaring properties outside any target. <em>Since
+  Ant 1.6</em>, all tasks can be declared outside targets (earlier version
 only allowed <tt>&lt;property&gt;</tt>,<tt>&lt;typedef&gt;</tt> and
 <tt>&lt;taskdef&gt;</tt>).  When you do this they are evaluated before
 any targets are executed.  Some tasks will generate build failures if
@@ -222,7 +223,7 @@ Finally, for this target to work the source in the <tt>src</tt> subdirectory
 should be stored in a directory tree which matches the package names. Check the
 <tt>&lt;javac&gt;</tt> task for details.
 
-<h3><a name="filters">Token Filters</a></h3>
+<h3 id="filters">Token Filters</h3>
 <p>A project can have a set of tokens that might be automatically expanded if
 found when a file is copied, when the filtering-copy behavior is selected in the
 tasks that support this. These might be set in the buildfile
@@ -243,7 +244,7 @@ tokens, this should not cause problems.</p>
 <p><b>Warning:</b> If you copy binary files with filtering turned on, you can corrupt the
 files. This feature should be used with text files <em>only</em>.</p>
 
-<h3><a name="path">Path-like Structures</a></h3>
+<h3 id="path">Path-like Structures</h3>
 <p>You can specify <code>PATH</code>- and <code>CLASSPATH</code>-type
 references using both
 &quot;<code>:</code>&quot; and &quot;<code>;</code>&quot; as separator
@@ -359,10 +360,10 @@ can be written as:
     &lt;path id=&quot;base.path&quot; path=&quot;${classpath}&quot;/&gt;
 </pre>
 
-  <h4><a name="pathshortcut">Path Shortcut</a></h4>
+  <h4 id="pathshortcut">Path Shortcut</h4>
   <p>
     In Ant 1.6 a shortcut for converting paths to OS specific strings
-    in properties has been added. One can use the expression 
+    in properties has been added. One can use the expression
     ${toString:<em>pathreference</em>} to convert a path element
     reference to a string that can be used for a path argument.
     For example:
@@ -376,16 +377,15 @@ can be written as:
   &lt;/javac&gt;
 </pre>
 
-
-<h3><a name="arg">Command-line Arguments</a></h3>
+<h3 id="arg">Command-line Arguments</h3>
 <p>Several tasks take arguments that will be passed to another
 process on the command line. To make it easier to specify arguments
 that contain space characters, nested <code>arg</code> elements can be used.</p>
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
 <tr>
-  <td width="12%" valign="top"><b>Attribute</b></td>
-  <td width="78%" valign="top"><b>Description</b></td>
-  <td width="10%" valign="top"><b>Required</b></td>
+  <td valign="top"><b>Attribute</b></td>
+  <td valign="top"><b>Description</b></td>
+  <td valign="top"><b>Required</b></td>
 </tr>
   <tr>
     <td valign="top">value</td>
@@ -454,7 +454,7 @@ is very different from what you expect under some circumstances.</p>
 <code>\dir;\dir2;\dir3</code> on DOS-based systems and
 <code>/dir:/dir2:/dir3</code> on Unix-like systems.</p>
 
-<h3><a name="references">References</a></h3>
+<h3 id="references">References</h3>
 
 <p>Any project element can be assigned an identifier using its
 <code>id</code> attribute. In most cases the element can subsequently
@@ -508,29 +508,28 @@ replicate the same snippet of XML over and over again--using a
   &lt;/target&gt;
 &lt;/project&gt;
 </pre></blockquote>
-<p>All tasks that use nested elements for 
-<a href="Types/patternset.html">PatternSet</a>s, 
-<a href="Types/fileset.html">FileSet</a>s, 
-<a href="Types/zipfileset.html">ZipFileSet</a>s or 
-<a href="#path">path-like structures</a> accept references to these structures 
-as shown in the examples. Using <code>refid</code> on a task will ordinarily 
-have the same effect (referencing a task already declared), but the user 
-should be aware that the interpretation of this attribute is dependent on the 
-implementation of the element upon which it is specified. Some tasks (the 
-<a href="Tasks/property.html">property</a> task is a handy example) 
+<p>All tasks that use nested elements for
+<a href="Types/patternset.html">PatternSet</a>s,
+<a href="Types/fileset.html">FileSet</a>s,
+<a href="Types/zipfileset.html">ZipFileSet</a>s or
+<a href="#path">path-like structures</a> accept references to these structures
+as shown in the examples. Using <code>refid</code> on a task will ordinarily
+have the same effect (referencing a task already declared), but the user
+should be aware that the interpretation of this attribute is dependent on the
+implementation of the element upon which it is specified. Some tasks (the
+<a href="Tasks/property.html">property</a> task is a handy example)
 deliberately assign a different meaning to <code>refid</code>.</p>
 
-
-<h3><a name="external-tasks">Use of external tasks</a></h3> 
-Ant supports a plugin mechanism for using third party tasks. For using them you 
-have to do two steps: 
+<h3 id="external-tasks">Use of external tasks</h3>
+Ant supports a plugin mechanism for using third party tasks. For using them you
+have to do two steps:
 <ol>
   <li>place their implementation somewhere where Ant can find them</li>
   <li>declare them.</li>
-</ol> 
-Don't add anything to the CLASSPATH environment variable - this is often the  
-reason for very obscure errors. Use Ant's own <a href="install.html#optionalTasks">mechanisms</a> 
-for adding libraries: 
+</ol>
+Don't add anything to the CLASSPATH environment variable - this is often the
+reason for very obscure errors. Use Ant's own <a href="install.html#optionalTasks">mechanisms</a>
+for adding libraries:
 <ul>
   <li>via command line argument <code>-lib</code></li>
   <li>adding to <code>${user.home}/.ant/lib</code></li>
@@ -538,29 +537,29 @@ for adding libraries:
 </ul>
 For the declaration there are several ways:
 <ul>
-  <li>declare a single task per using instruction using  
-      <code>&lt;<a href="Tasks/taskdef.html">taskdef</a> name=&quot;taskname&quot; 
+  <li>declare a single task per using instruction using
+      <code>&lt;<a href="Tasks/taskdef.html">taskdef</a> name=&quot;taskname&quot;
       classname=&quot;ImplementationClass&quot;/&gt;</code>
       <br>
-      <code>&lt;taskdef name=&quot;for&quot; classname=&quot;net.sf.antcontrib.logic.For&quot; /&gt; 
+      <code>&lt;taskdef name=&quot;for&quot; classname=&quot;net.sf.antcontrib.logic.For&quot; /&gt;
       &lt;for ... /&gt;</code>
   </li>
-  <li>declare a bundle of tasks using a properties-file holding these 
+  <li>declare a bundle of tasks using a properties-file holding these
       taskname-ImplementationClass-pairs and <code>&lt;taskdef&gt;</code>
       <br>
-      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antcontrib.properties&quot; /&gt; 
+      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antcontrib.properties&quot; /&gt;
       &lt;for ... /&gt;</code>
   </li>
-  <li>declare a bundle of tasks using a <a href="Types/antlib.html">xml-file</a> holding these  
+  <li>declare a bundle of tasks using a <a href="Types/antlib.html">xml-file</a> holding these
       taskname-ImplementationClass-pairs and <code>&lt;taskdef&gt;</code>
       <br>
-      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antlib.xml&quot; /&gt; 
+      <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antlib.xml&quot; /&gt;
       &lt;for ... /&gt;</code>
   </li>
-  <li>declare a bundle of tasks using a xml-file named antlib.xml, XML-namespace and 
-      <a href="Types/antlib.html#antlibnamespace"><code>antlib:</code> protocol handler</a> 
+  <li>declare a bundle of tasks using a xml-file named antlib.xml, XML-namespace and
+      <a href="Types/antlib.html#antlibnamespace"><code>antlib:</code> protocol handler</a>
       <br>
-      <code>&lt;project xmlns:ac=&quot;antlib:net.sf.antcontrib&quot;/&gt; 
+      <code>&lt;project xmlns:ac=&quot;antlib:net.sf.antcontrib&quot;/&gt;
       &lt;ac:for ... /&gt;</code>
   </li>
 </ul>
@@ -569,7 +568,7 @@ If you need a special function, you should
 <ol>
   <li>have a look at this manual, because Ant provides lot of tasks</li>
   <li>have a look at the external task page <a href="http://ant.apache.org/external.html">online</a></li>
-  <li>have a look at the external task <a href="http://wiki.apache.org/ant/AntExternalTaskdefs">wiki 
+  <li>have a look at the external task <a href="http://wiki.apache.org/ant/AntExternalTaskdefs">wiki
       page</a></li>
   <li>ask on the <a href="http://ant.apache.org/mail.html#User%20List">Ant user</a> list</li>
   <li><a href="tutorial-writing-tasks.html">implement </a>(and share) your own</li>

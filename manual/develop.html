@@ -25,13 +25,13 @@
 <body>
 <h1>Developing with Apache Ant</h1>
 
-<h2><a name="writingowntask">Writing Your Own Task</a></h2>
+<h2 id="writingowntask">Writing Your Own Task</h2>
 <p>It is very easy to write your own task:</p>
 <ol>
   <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>
       or <a href="base_task_classes.html">another class</a> that was designed to be extended.</li>
 
-  <li>For each attribute, write a <i>setter</i> method. The setter method must be a
+  <li id="footnote-1-back">For each attribute, write a <i>setter</i> method. The setter method must be a
     <code>public void</code> method that takes a single argument. The
     name of the method must begin with <code>set</code>, followed by the
     attribute name, with the first character of the name in uppercase, and the rest in
@@ -44,7 +44,7 @@
     <a href="Tasks/parallel.html"><code>parallel</code></a>), your
     class must implement the interface
     <code>org.apache.tools.ant.TaskContainer</code>.  If you do so, your
-    task can not support any other nested elements.  See 
+    task can not support any other nested elements.  See
     <a href="#taskcontainer">below</a>.</li>
 
   <li>If the task should support character data (text nested between the
@@ -61,7 +61,7 @@
     takes a single argument of an <code>Object</code> type with a
     no-argument constructor.  The name of the add (addConfigured) method
     must begin with <code>add</code> (<code>addConfigured</code>),
-    followed by the element name.  For a more complete discussion see 
+    followed by the element name.  For a more complete discussion see
     <a href="#nested-elements">below</a>.</li>
 
   <li>Write a <code>public void execute</code> method, with no arguments, that
@@ -70,7 +70,7 @@
 </ol>
 
 <hr>
-<p><a name="footnote-1">*</a> Actually the case of the letters after
+<p id="footnote-1"><a href="#footnote-1-back">*</a> Actually the case of the letters after
 the first one doesn't really matter to Ant, using all lower case is a
 good convention, though.</p>
 
@@ -124,17 +124,17 @@ good convention, though.</p>
     have been created for <code>addConfiguredXXX()</code> methods,
     those methods get invoked now.</li>
 
-  <li><a name="execute"><code>execute()</code></a> is called at runtime.
+  <li id="execute"><code>execute()</code> is called at runtime.
     If <code>target1</code> and <code>target2</code> both depend
     on <code>target3</code>, then running
     <code>'ant target1 target2'</code> will run all tasks in
     <code>target3</code> twice.</li>
 </ol>
 
-<h3><a name="set-magic">Conversions Ant will perform for attributes</a></h3>
+<h3 id="set-magic">Conversions Ant will perform for attributes</h3>
 
 <p>Ant will always expand properties before it passes the value of an
-attribute to the corresponding setter method. <b>Since Ant 1.8</b>, it is
+attribute to the corresponding setter method. <em>Since Ant 1.8</em>, it is
 possible to <a href="Tasks/propertyhelper.html">extend Ant's property handling</a>
 such that a non-string Object may be the result of the evaluation of a string
 containing a single property reference. These will be assigned directly via
@@ -173,7 +173,7 @@ is more!  If the argument of you setter method is</p>
   <code>org.apache.tools.ant.types.Resource</code>, Ant will
   resolve the string as a <code>java.io.File</code> as above, then
   pass in as a <code>org.apache.tools.ant.types.resources.FileResource</code>.
-  <b>Since Ant 1.8</b>
+  <em>Since Ant 1.8</em>
   </li>
 
   <li><code>org.apache.tools.ant.types.Path</code>, Ant will tokenize
@@ -205,7 +205,7 @@ is more!  If the argument of you setter method is</p>
   <code>toString()</code> in the enumeration is ignored; the build file must use
   the declared name (see <code>Enum.getName()</code>). You may wish to use lowercase
   enum constant names, in contrast to usual Java style, to look better in build files.
-  <em>As of Ant 1.7.0.</em></li>
+  <em>Since Ant 1.7.0</em></li>
 
 </ul>
 
@@ -216,7 +216,7 @@ setters Ant could chose from, only one of them will be called, but we
 don't know which, this depends on the implementation of your Java
 virtual machine.</p>
 
-<h3><a name="nested-elements">Supporting nested elements</a></h3>
+<h3 id="nested-elements">Supporting nested elements</h3>
 
 <p>Let's assume your task shall support nested elements with the name
 <code>inner</code>.  First of all, you need a class that represents
@@ -261,7 +261,7 @@ handled.</p>
 the methods will be called, but we don't know which, this depends on
 the implementation of your Java virtual machine.</p>
 
-<h3><a name="nestedtype">Nested Types</a></h3>
+<h3 id="nestedtype">Nested Types</h3>
 If your task needs to nest an arbitrary type that has been defined
   using <code>&lt;typedef&gt;</code> you have two options.
   <ol>
@@ -318,13 +318,13 @@ public class Sample {
 
     interface MyInterface {
         void setVerbose(boolean val);
-    }        
+    }
 
     public static class BuildPath extends Path {
         public BuildPath(Project project) {
             super(project);
         }
-        
+
         public void add(MyInterface inter) {}
         public void setUrl(String url) {}
     }
@@ -342,7 +342,6 @@ public class Sample {
     as follows:
   </p>
   <pre>
-    <blockquote>
 &lt;typedef name="myfileselector" classname="Sample$MyFileSelector"
          classpath="classes" loaderref="classes"/&gt;
 &lt;typedef name="buildpath" classname="Sample$BuildPath"
@@ -359,10 +358,9 @@ public class Sample {
       &lt;/myfileselector&gt;
    &lt;/fileset&gt;
 &lt;/copy&gt;
-    </blockquote>
   </pre>
 
-<h3><a name="taskcontainer">TaskContainer</a></h3>
+<h3 id="taskcontainer">TaskContainer</h3>
 
 <p>The <code>TaskContainer</code> consists of a single method,
 <code>addTask</code> that basically is the same as an <a
@@ -466,10 +464,8 @@ implementing class name to the <code>default.properties</code> file in the
 <code>org.apache.tools.ant.taskdefs</code>
 package. Then you can use it as if it were a built-in task.</p>
 
-
-
 <hr>
-<h2><a name="buildevents">Build Events</a></h2>
+<h2 id="buildevents">Build Events</h2>
 <p>Ant is capable of generating build events as it performs the tasks necessary to build a project.
 Listeners can be attached to Ant to receive these events. This capability could be used, for example,
 to connect Ant to a GUI or to integrate Ant with an IDE.
@@ -488,13 +484,13 @@ for the following events</p>
   <li>Message logged</li>
 </ul>
 
-<p>If the build file invokes another build file via 
-<a href="Tasks/ant.html"><code>&lt;ant&gt;</code></a> or 
-<a href="Tasks/subant.html"><code>&lt;subant&gt;</code></a> or uses 
+<p>If the build file invokes another build file via
+<a href="Tasks/ant.html"><code>&lt;ant&gt;</code></a> or
+<a href="Tasks/subant.html"><code>&lt;subant&gt;</code></a> or uses
 <a href="Tasks/antcall.html"><code>&lt;antcall&gt;</code></a>, you are creating a
 new Ant "project" that will send target and task level events of its
-own but never sends build started/finished events.  Ant 1.6.2
-introduces an extension of the BuildListener interface named
+    own but never sends build started/finished events. <em>Since Ant 1.6.2</em>,
+BuildListener interface has an extension named
 SubBuildListener that will receive two new events for</p>
 <ul>
   <li>SubBuild started</li>
@@ -512,21 +508,17 @@ listener, of course).</p>
 <p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
-<p><b>Note: </b>A listener must not access System.out and System.err directly since output on 
-these streams is redirected by Ant's core to the build event system. Accessing these 
+<p><b>Note</b>: A listener must not access System.out and System.err directly since output on
+these streams is redirected by Ant's core to the build event system. Accessing these
 streams can cause an infinite loop in Ant. Depending on the version of Ant, this will
-either cause the build to terminate or the Java VM to run out of Stack space. A logger, also, may 
+either cause the build to terminate or the Java VM to run out of Stack space. A logger, also, may
 not access System.out and System.err directly. It must use the streams with which it has
 been configured.</p>
 
-<p><b>Note2:</b> All methods of a BuildListener except for the "Build
+<p><b>Note</b>: All methods of a BuildListener except for the "Build
   Started" and "Build Finished" events may occur on several threads
   simultaneously - for example while Ant is executing
   a <code>&lt;parallel&gt;</code> task.</p>
-
-
-
-
 
 <h3>Example</h3>
 Writing an adapter to your favourite log library is very easy.
@@ -565,25 +557,22 @@ public class MyLogAdapter implements BuildListener {
 </pre>
 </blockquote>
 
-
-
 <hr>
-<h2><a name="integration">Source code integration</a></h2>
+<h2 id="integration">Source code integration</h2>
 
 <p>The other way to extend Ant through Java is to make changes to existing tasks, which is positively encouraged.
 Both changes to the existing source and new tasks can be incorporated back into the Ant codebase, which
 benefits all users and spreads the maintenance load around.</p>
 
 <p>Please consult the
-<a href="http://www.apache.org/foundation/getinvolved.html">Getting Involved</a> pages on the Apache web site
+<a href="https://www.apache.org/foundation/getinvolved.html">Getting Involved</a> pages on the Apache web site
 for details on how to fetch the latest source and how to submit changes for reincorporation into the
 source tree.</p>
 
 <p>Ant also has some
-<a href="http://ant.apache.org/ant_task_guidelines.html">task guidelines</a>
+<a href="https://ant.apache.org/ant_task_guidelines.html">task guidelines</a>
 which provides some advice to people developing and testing tasks. Even if you intend to
 keep your tasks to yourself, you should still read this as it should be informative.</p>
 
 </body>
 </html>
-

@@ -223,7 +223,7 @@ target="_top">http://archive.apache.org/dist/ant/</a>. The files are organized a
 Ant has been used successfully on many platforms, including Linux, commercial flavours of Unix such as Solaris and
 HP-UX, macOS, Windows NT descendants, OS/2 Warp, Novell Netware 6, OpenVMS. The platforms used most for development
 are, in no particular order, Linux, macOS, Microsoft Windows and Unix; these are therefore that platforms that tend to
-work best. As of Ant 1.7, Windows 9x is no longer supported.
+  work best. <em>Since Ant 1.7</em>, Windows 9x is no longer supported.
 </p>
 <p>
 For the current version of Ant (1.10), you will also need a JDK installed on your system, version 8 or later required.
@@ -275,36 +275,22 @@ To install Ant, choose a directory and copy the distribution files there. This d
 <code>ANT_HOME</code>.
 </p>
 
-<table width="80%">
-<tr>
-  <td colspan="2">
-    <b>Windows 95, Windows 98 &amp; Windows ME Note:</b>
-  </td>
-</tr>
-<tr>
-  <td width="5%">&nbsp;</td>
-  <td>
+<h3>Windows 95, Windows 98 &amp; Windows ME Note:</h3>
+  <p>
     <i>Note that current releases of Ant no longer support these systems. If you are using an older version of Ant,
     however, the script used to launch Ant will have problems if <code>ANT_HOME</code> is a long filename (i.e. a
     filename which is not of the format known as &quot;8.3&quot;). This is due to limitations in the OS's handling of
     the <code>&quot;for&quot;</code> batch file statement. It is recommended, therefore, that Ant be installed in a
     <b>short</b>, 8.3 path, such as <code>C:\Ant</code>.</i>
-  </td>
-</tr>
-<tr>
-  <td width="5%">&nbsp;</td>
-  <td>
-    <p>
+  </p>
+  <p>
     On these systems you will also need to configure more environment space to cater for the environment variables used
     in the Ant launch script. To do this, you will need to add or update the following line in the
     <code>config.sys</code> file
-    </p>
-    <p>
+  </p>
+  <p>
     <code>shell=c:\command.com c:\ /p /e:32768</code>
-    </p>
-  </td>
-</tr>
-</table>
+  </p>
 
 <h3 id="setup">Setup</h3>
 <p>
@@ -330,22 +316,13 @@ JDK/JRE. Ant is an application, whilst the extension directory is intended for J
 security restrictions on the classes which may be loaded by an extension.
 </p>
 
-<table width="80%">
-<tr>
-  <td colspan="2">
-    <b>Windows Note:</b>
-  </td>
-</tr>
-<tr>
-  <td width="5%">&nbsp;</td>
-  <td>
+<h3>Windows Note:</h3>
+<p>
     The <code>ant.bat</code> script makes use of three environment variables - <code>ANT_HOME</code>,
     <code>CLASSPATH</code> and <code>JAVA_HOME</code>. <b>Ensure</b> that <code>ANT_HOME</code> and
     <code>JAVA_HOME</code> variables are set, and that they do <b><u>not</u></b> have quotes (either ' or &quot;) and
     they do <b><u>not</u></b> end with \ or with /. <code>CLASSPATH</code> should be unset or empty.
-  </td>
-</tr>
-</table>
+</p>
 
 <h3 id="checkInstallation">Check Installation</h3>
 <p>
@@ -398,7 +375,7 @@ In <code><i>ANT_HOME</i>/lib</code>. This makes the JAR files available to all A
 
 <li>
 <p>
-In <code>${user.home}/.ant/lib</code> (as of Ant 1.6). This allows different users to add new libraries to Ant. All JAR
+  In <code>${user.home}/.ant/lib</code> (<em>since Ant 1.6</em>). This allows different users to add new libraries to Ant. All JAR
 files added to this directory are available to command-line Ant.
 </p>
 </li>
@@ -418,7 +395,7 @@ applications, and causes no end of support calls. See <a href="#classpath">below
 
 <li>
 <p>
-In some <code>&lt;classpath&gt;</code> accepted by the task itself. For example, as of Ant 1.7.0 you can run
+  In some <code>&lt;classpath&gt;</code> accepted by the task itself. <em>Since Ant 1.7.0</em>, you can run
 the <code>&lt;junit&gt;</code> task without <code>junit.jar</code> in Ant's own classpath, so long as it is included
 (along with your program and tests) in the classpath passed when running the task.
 </p>
@@ -627,7 +604,7 @@ version, it is not necessary to set <code> JAVA_HOME</code> or <code>ANT_HOME</c
 installer will correctly place the Ant executable on your path.
 </p>
 <p>
-<b>NOTE:</b> <i>Since Ant 1.7.0</i>, if the <code>ANT_HOME</code> environment variable is set, the JPackage
+<b>Note</b>: <em>Since Ant 1.7.0</em>, if the <code>ANT_HOME</code> environment variable is set, the JPackage
 distribution will be ignored.
 </p>
 <p>
@@ -716,7 +693,7 @@ on how to do this.
 </p>
 
 <p>
-As of version 1.7.0 Ant has a hard dependency on JUnit. The <code>fetch.xml</code> build script will download JUnit
+  <em>Since Ant 1.7.0</em>, Ant has a hard dependency on JUnit. The <code>fetch.xml</code> build script will download JUnit
 automatically, but if you don't use this you must install it manually into <code>lib/optional</code> (download it
 from <a href="http://junit.org/" target="_top">JUnit.org</a>) if you are using a source distribution of Ant.
 </p>
@@ -797,7 +774,7 @@ automatically). You will also need to install the particular Ant optional JAR co
 these tasks available. Please refer to the <a href="#optionalTasks"> Installing Ant / Optional Tasks</a> section above.
 </p>
 
-<table border="1" cellpadding="2" cellspacing="0">
+<table>
   <tr>
     <td><b>JAR Name</b></td>
     <td><b>Needed For</b></td>

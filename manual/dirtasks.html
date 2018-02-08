@@ -24,7 +24,7 @@
 
 <body>
 
-<h2><a name="directorybasedtasks">Directory-based Tasks</a></h2>
+<h2 id="directorybasedtasks">Directory-based Tasks</h2>
 <p>Some tasks use directory trees for the actions they perform.
 For example, the <a href="Tasks/javac.html">javac</a> task, which
 compiles a directory tree with <code>.java</code> files into
@@ -45,7 +45,7 @@ which can be used at the same time:</p>
   <li>Select files based on selection criteria defined by a collection of
     <a href="Types/selectors.html">selector</a> nested elements.</li>
 </ul>
-<h3><a name="patternset">Patternset</a></h3>
+<h3 id="patternset">Patternset</h3>
 
 <p>We said that Directory-based tasks can sometimes act as an implicit
 <a href="Types/fileset.html"><code>&lt;fileset&gt;</code></a>,
@@ -77,7 +77,7 @@ exclude patterns are used. If no include pattern is given, all files
 are assumed to match the include pattern (with the possible exception of
 the default excludes).</p>
 
-<h4><a name="patterns">Patterns</a></h4>
+<h4 id="patterns">Patterns</h4>
 
 <p>As described earlier, patterns are used for the inclusion and exclusion
 of files. These patterns look very much like the patterns used in DOS and
@@ -92,7 +92,7 @@ directory are considered.  So while a pattern like
 applied since the base directory's parent is never scanned for
 files.</p>
 
-<p><b>Examples:</b></p>
+<h5>Examples:</h5>
 <p>
 <code>*.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>.java</code>,
 <code>x.java</code> and <code>FooBar.java</code>, but
@@ -129,8 +129,8 @@ or <code>\</code>, then <code>**</code>
 is appended.
 For example, <code>mypackage/test/</code> is interpreted as if it were
 <code>mypackage/test/**</code>.</p>
-<p><b>Example patterns:</b></p>
-<table border="1" cellpadding="2" cellspacing="0">
+<h5>Example patterns:</h5>
+<table>
   <tr>
     <td valign="top"><code>**/CVS/*</code></td>
     <td valign="top">Matches all files in <code>CVS</code>
@@ -189,7 +189,7 @@ For example, <code>mypackage/test/</code> is interpreted as if it were
 <p>When these patterns are used in inclusion and exclusion, you have a powerful
 way to select just the files you want.</p>
 
-<h3><a name="selectors">Selectors</a></h3>
+<h3 id="selectors">Selectors</h3>
 <p>The <a href="Types/fileset.html"><code>&lt;fileset&gt;</code></a>,
 whether implicit or explicit in the
 directory-based task, also acts as an
@@ -199,7 +199,7 @@ selection criteria for the files the task should work with. See the
 <a href="Types/selectors.html">Selector</a> documentation for more
 information.</p>
 
-<h3><a name="tasklist">Standard Tasks/Filesets</a></h3>
+<h3 id="tasklist">Standard Tasks/Filesets</h3>
 <p>Many of the standard tasks in ant take one or more filesets which follow
 the rules given here. This list, a subset of those, is a list of standard ant
 tasks that can act as an implicit fileset:</p>
@@ -232,7 +232,7 @@ tasks that can act as an implicit fileset:</p>
   <li><a href="Tasks/wljspc.html"><code>&lt;wljspc&gt;</code></a></li>
 </ul>
 
-<h3><a name="examples">Examples</a></h3>
+<h3 id="examples">Examples</h3>
 <pre>
 &lt;copy todir=&quot;${dist}&quot;&gt;
   &lt;fileset dir=&quot;${src}&quot;
@@ -263,9 +263,9 @@ but excludes all <code>*.gif</code> files from the copy.</p>
 <p>Deleting the original set of files, the <code>delete</code> task can act
 as an implicit fileset.</p>
 
-<h3><a name="defaultexcludes">Default Excludes</a></h3>
+<h3 id="defaultexcludes">Default Excludes</h3>
 <p>There are a set of definitions that are excluded by default from all
-directory-based tasks. As of Ant 1.8.1 they are:</p>
+    directory-based tasks. <em>Since Ant 1.8.1</em> they are:</p>
 <pre>
      **/*~
      **/#*#
@@ -282,7 +282,7 @@ directory-based tasks. As of Ant 1.8.1 they are:</p>
      **/.svn/**
      **/.DS_Store
 </pre>
-<p>Ant 1.8.2 adds the following default excludes:</p>
+<p><em>Since Ant 1.8.2</em>, additional default excludes are:</p>
 <pre>
      **/.git
      **/.git/**
@@ -307,8 +307,5 @@ attribute.</p>
 default excludes by using the <a
 href="Tasks/defaultexcludes.html">defaultexcludes</a> task.</p>
 
-
-
 </body>
 </html>
-

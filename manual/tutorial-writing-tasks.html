@@ -41,8 +41,7 @@ tasks.</p>
 <li><a href="#resources">Resources</a></li>
 </ul>
 
-<a name="buildenvironment"></a>
-<h2>Set up the build environment</h2>
+<h2 id="buildenvironment">Set up the build environment</h2>
 <p>Apache Ant builds itself, we are using Ant too (why we would write
 a task if not? :-) therefore we should use Ant for our build.</p>
 <p>We choose a directory as root directory. All things will be done
@@ -107,9 +106,7 @@ the execution of some steps before. So the refactored code is:
 <a href="http://ant.apache.org/manual/properties.html#built-in-props" target="_blank">
 build-in properties [1]</a> of Ant.
 
-
-<a name="write1"></a>
-<h2>Write the Task</h2>
+<h2 id="write1">Write the Task</h2>
 
 Now we write the simplest Task - a HelloWorld-Task (what else?). Create a text file
 <i>HelloWorld.java</i> in the src-directory with:
@@ -123,10 +120,7 @@ public class HelloWorld {
 and we can compile and jar it with <tt>ant</tt> (default target is "jar" and via
 its <i>depends</i>-clause the "compile" is executed before).
 
-
-
-<a name="use1"></a>
-<h2>Use the Task</h2>
+<h2 id="use1">Use the Task</h2>
 <p>But after creating the jar we want to use our new Task. Therefore we need a
 new target "use". Before we can use our new task we have to declare it with
 <a href="http://ant.apache.org/manual/Tasks/taskdef.html" target="_blank">
@@ -166,10 +160,7 @@ BUILD SUCCESSFUL
 Total time: 3 seconds
 </pre>
 
-
-
-<a name="TaskAdapter"></a>
-<h2>Integration with TaskAdapter</h2>
+<h2 id="TaskAdapter">Integration with TaskAdapter</h2>
 <p>Our class has nothing to do with Ant. It extends no superclass and implements
 no interface. How does Ant know to integrate? Via name convention: our class provides
 a method with signature <tt>public void execute()</tt>. This class is wrapped by Ant's
@@ -202,9 +193,7 @@ use:
 Here is project 'MyTask'.
 </pre>
 
-
-<a name="derivingFromTask"></a>
-<h2>Deriving from Ant's Task</h2>
+<h2 id="derivingFromTask">Deriving from Ant's Task</h2>
 <p>Ok, that works ... But usually you will extend <tt>org.apache.tools.ant.Task</tt>.
 That class is integrated in Ant, get's the project-reference, provides documentation
 fields, provides easier access to the logging facility and (very useful) gives you
@@ -234,8 +223,7 @@ use:
 [helloworld] I am used in: C:\tmp\anttests\MyFirstTask\build.xml:23:
 </pre>
 
-<a name="accessTaskProject"></a>
-<h2>Accessing the Task's Project</h2>
+<h2 id="accessTaskProject">Accessing the Task's Project</h2>
 <p>The parent project of your custom task may be accessed through method <code>getProject()</code>.  However, do not call this from the custom task constructor, as the return value will be null.  Later, when node attributes or text are set, or method <code>execute()</code> is called, the Project object is available.</p>
 <p>Here are two useful methods from class Project:</p>
 <ul>
@@ -247,8 +235,7 @@ use:
 
 <p>The method <code>replaceProperties()</code> is discussed further in section <a href="#NestedText">Nested Text</a>.</p>
 
-<a name="attributes"></a>
-<h2>Attributes</h2>
+<h2 id="attributes">Attributes</h2>
 <p>Now we want to specify the text of our message (it seems that we are
 rewriting the <code>&lt;echo/&gt;</code> task :-). First we well do that with an attribute.
 It is very easy - for each attribute provide a <tt>public void set<code>&lt;attributename&gt;</code>(<code>&lt;type&gt;</code>
@@ -304,9 +291,7 @@ Helper</a></li>
 Before calling the set-method all properties are resolved. So a <tt>&lt;helloworld message="${msg}"/&gt;</tt>
 would not set the message string to "${msg}" if there is a property "msg" with a set value.
 
-
-<a name="NestedText"></a>
-<h2>Nested Text</h2>
+<h2 id="NestedText">Nested Text</h2>
 <p>Maybe you have used the <code>&lt;echo&gt;</code> task in a way like <tt>&lt;echo&gt;Hello World&lt;/echo&gt;</tt>.
 For that you have to provide a <tt>public void addText(String text)</tt> method.</p>
 <pre class="code">
@@ -330,9 +315,7 @@ property name as argument and returns its value (or ${propname} if not set).</p>
     }
 </pre>
 
-
-<a name="NestedElements"></a>
-<h2>Nested Elements</h2>
+<h2 id="NestedElements">Nested Elements</h2>
 <p>There are several ways for inserting the ability of handling nested elements. See
 the <a href="http://ant.apache.org/manual/develop.html#nested-elements">Manual [4]</a> for other.
 We use the first way of the three described ways. There are several steps for that:</p><ol>
@@ -387,8 +370,7 @@ the buildfile</p>
 <p>Note that if you choose to use methods 2 or 3, the class that represents the nested
 element must be declared as <code>static</code></p>
 
-<a name="complex"></a>
-<h2>Our task in a little more complex version</h2>
+<h2 id="complex">Our task in a little more complex version</h2>
 <p>For recapitulation now a little refactored buildfile:</p>
 <pre class="code">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -589,10 +571,7 @@ C:\tmp\anttests\MyFirstTask&gt;
 </pre>
 Next step: test ...
 
-
-
-<a name="TestingTasks"></a>
-<h2>Test the Task</h2>
+<h2 id="TestingTasks">Test the Task</h2>
 <p>We have written a test already: the use.* tasks in the buildfile. But its
 difficult to test that automatically. Common (and in Ant) used is JUnit for
 that. For testing tasks Ant provides a JUnit Rule <tt>org.apache.tools.ant.BuildFileRule</tt>.
@@ -771,9 +750,7 @@ Total time: 7 seconds
 C:\tmp\anttests\MyFirstTask&gt;
 </pre>
 
-
-<a name="Debugging"></a>
-<h2>Debugging</h2>
+<h2 id="Debugging">Debugging</h2>
 
 <p>Try running Ant with the flag <code>-verbose</code>.  For more information, try flag <code>-debug</code>.</p>
 <p>For deeper issues, you may need to run the custom task code in a Java debugger.  First, get the source for Ant and build it with debugging information.</p>
@@ -785,10 +762,7 @@ C:\tmp\anttests\MyFirstTask&gt;
 
 <p>If you need to debug when a task attribute or the text is set, begin by debugging into method <code>execute()</code> of your custom task.  Then set breakpoints in other methods.  This will ensure the class byte-code has been loaded by the Java VM.</p>
 
-
-
-<a name="resources"></a>
-<h2>Resources</h2>
+<h2 id="resources">Resources</h2>
 <p>This tutorial and its resources are available via
 <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22570">BugZilla [6]</a>.
 The ZIP provided there contains</p><ul>
@@ -805,15 +779,16 @@ The ZIP provided there contains</p><ul>
 <a href="tutorial-writing-tasks-src.zip">here [7]</a> inside the manual.
 </p>
 
-<p>Used Links:<br />
-&nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/properties.html#built-in-props">http://ant.apache.org/manual/properties.html#built-in-props</a><br />
-&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/Tasks/taskdef.html">http://ant.apache.org/manual/Tasks/taskdef.html</a><br />
-&nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br />
-&nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br />
-&nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br />
-&nbsp;&nbsp;[6] <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22570">http://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a><br />
-&nbsp;&nbsp;[7] <a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a><br />
-</p>
+<p>Used Links:</p>
+<ol class="refs">
+<li><a href="http://ant.apache.org/manual/properties.html#built-in-props">http://ant.apache.org/manual/properties.html#built-in-props</a></li>
+<li><a href="http://ant.apache.org/manual/Tasks/taskdef.html">http://ant.apache.org/manual/Tasks/taskdef.html</a></li>
+<li><a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a></li>
+<li><a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a></li>
+<li><a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a></li>
+<li><a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22570">http://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a></li>
+<li><a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a></li>
+</ol>
 
 </body>
 </html>

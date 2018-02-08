@@ -23,7 +23,7 @@
 </head>
 
 <body>
-  <h1><a name="targets">Targets</a></h1>
+  <h1 id="targets">Targets</h1>
 
   <p>A target is a container of tasks that cooperate to reach a
     desired state during the build process.</p>
@@ -52,7 +52,7 @@
     C, then B and then A is executed.  Wrong! C depends on B, and B
     depends on A, so first A is executed, then B, then C, and finally
     D.</p>
-    
+
   <blockquote><pre><b>Call-Graph:</b>  A --> B --> C --> D</pre></blockquote>
 
   <p>In a chain of dependencies stretching back from a given target
@@ -116,7 +116,7 @@
   <p>If no <code>if</code> and no <code>unless</code> attribute is
     present, the target will always be executed.</p>
 
-  <p><b>Important:</b> the <code>if</code> and <code>unless</code>
+  <p><b>Important</b>: the <code>if</code> and <code>unless</code>
     attributes only enable or disable the target to which they are
     attached. They do not control whether or not targets that a
     conditional target depends upon get executed.  In fact, they do
@@ -160,7 +160,7 @@
 
   <p>A target has the following attributes:</p>
 
-  <table border="1" cellpadding="2" cellspacing="0">
+  <table>
     <tr>
       <td valign="top"><b>Attribute</b></td>
       <td valign="top"><b>Description</b></td>
@@ -213,7 +213,7 @@
         "warn", "ignore").
         <em>since Ant 1.8.2.</em></td>
       <td align="center" valign="top">No. Not allowed unless
-        <code>extensionOf</code> is present. Defaults to <code>fail</code>. 
+        <code>extensionOf</code> is present. Defaults to <code>fail</code>.
       </td>
     </tr>
   </table>
@@ -236,7 +236,7 @@
     don't use Ants main class as entry point and calling them from the IDE
     is usually possible.</p>
 
-  <h1><a name="extension-points">Extension-Points</a></h1>
+  <h1 id="extension-points">Extension-Points</h1>
 
   <p><em>since Ant 1.8.0.</em></p>
 
@@ -248,16 +248,16 @@
     is to collect targets that contribute to the desired state in
     their depends list.</p>
 
-  <p>Targets can add themselves to an extension-points's depends list via
+  <p>Targets can add themselves to an extension-point's depends list via
     their extensionOf attribute.  The targets that add themselves will be
-    added after the targets of the explicit depends-attribute of the
+    added after the targets of the explicit depends attribute of the
     extension-point, if multiple targets add themselves, their relative
     order is not defined.</p>
 
   <p>The main purpose of an extension-point is to act as an extension
     point for build files designed to
     be <a href="Tasks/import.html">imported</a>.  In the imported
-    file an extension-point defines a state that must be reached and
+    file, an extension-point defines a state that must be reached and
     targets from other build files can join the depends list of said
     extension-point in order to contribute to that state.</p>
 
@@ -276,7 +276,6 @@
 
   <blockquote><pre><b>Call-Graph:</b>  create-directory-layout --> 'empty slot' --> compile</pre></blockquote>
 
-
   <p>And you need to generate some source before compilation, then in
     your main build file you may use something like</p>
 <blockquote><pre>
@@ -287,7 +286,6 @@
 </pre></blockquote>
 
   <blockquote><pre><b>Call-Graph:</b>  create-directory-layout --> generate-sources  --> compile</pre></blockquote>
-
 
   <p>This will ensure that the <em>generate-sources</em> target is
     executed before the <em>compile</em> target.</p>

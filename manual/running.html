@@ -25,7 +25,7 @@
 <body>
 
 <h1>Running Apache Ant</h1>
-<h2><a name="commandline">Command Line</a></h2>
+<h2 id="commandline">Command Line</h2>
 <p> If you've installed Apache Ant as described in the
 <a href="install.html"> Installing Ant</a> section,
 running Ant from the command-line is simple: just type
@@ -36,10 +36,10 @@ build file and runs the target specified in the <code>default</code>
 attribute of the <code>&lt;project&gt;</code> tag.
 To make Ant use
 a build file other than <code>build.xml</code>, use the command-line
-option <nobr><code>-buildfile <i>file</i></code></nobr>,
+option <code>-buildfile <i>file</i></code>,
 where <i>file</i> is the name of the build file you want to use
 (or a directory containing a <code>build.xml</code> file).</p>
-If you use the <nobr><code>-find [<i>file</i>]</code></nobr> option,
+If you use the <code>-find [<i>file</i>]</code> option,
 Ant will search for a build file first in the current directory, then in
 the parent directory, and so on, until either a build file is found or the root
 of the filesystem has been reached. By default, it will look for a build file
@@ -47,13 +47,13 @@ called <code>build.xml</code>. To have it search for a build file other
 than <code>build.xml</code>, specify a file argument.
 <strong>Note:</strong> If you include any other flags or arguments
 on the command line after
-the <nobr><code>-find</code></nobr> flag, you must include the file argument
-for the <nobr><code>-find</code></nobr> flag, even if the name of the
+the <code>-find</code> flag, you must include the file argument
+for the <code>-find</code> flag, even if the name of the
 build file you want to find is <code>build.xml</code>.
 
 <p>You can also set <a href="using.html#properties">properties</a> on the
 command line.  This can be done with
-the <nobr><code>-D<i>property</i>=<i>value</i></code></nobr> option,
+the <code>-D<i>property</i>=<i>value</i></code> option,
 where <i>property</i> is the name of the property,
 and <i>value</i> is the value for that property. If you specify a
 property that is also set in the build file
@@ -63,8 +63,8 @@ command line will override the value specified in the
 build file.
 Defining properties on the command line can also be used to pass in
 the value of environment variables; just pass
-<nobr><code>-DMYVAR=%MYVAR%</code></nobr> (Windows) or
-<nobr><code>-DMYVAR=$MYVAR</code></nobr> (Unix)
+<code>-DMYVAR=%MYVAR%</code> (Windows) or
+<code>-DMYVAR=$MYVAR</code> (Unix)
 to Ant. You can then access
 these variables inside your build file as <code>${MYVAR}</code>.
 You can also access environment variables using the
@@ -73,13 +73,13 @@ You can also access environment variables using the
 </p>
 
 <p>Options that affect the amount of logging output by Ant are:
-<nobr><code>-quiet</code></nobr>,
+<code>-quiet</code>,
 which instructs Ant to print less
 information to the console;
-<nobr><code>-verbose</code></nobr>, which causes Ant to print
-additional information to the console; <nobr><code>-debug</code></nobr>,
+<code>-verbose</code>, which causes Ant to print
+additional information to the console; <code>-debug</code>,
 which causes Ant to print considerably more additional information; and
-<nobr><code>-silent</code></nobr> which makes Ant print nothing but task
+<code>-silent</code> which makes Ant print nothing but task
 output and build failures (useful to capture Ant output by scripts).
 </p>
 
@@ -89,7 +89,7 @@ When omitted, the target that is specified in the
 <a href="using.html#projects"><code>project</code></a> tag is
 used.</p>
 
-<p>The <nobr><code>-projecthelp</code></nobr> option prints out a list
+<p>The <code>-projecthelp</code> option prints out a list
 of the build file's targets. Targets that include a
 <code>description</code> attribute are listed as &quot;Main targets&quot;,
 those without a <code>description</code> are listed as
@@ -97,7 +97,7 @@ those without a <code>description</code> are listed as
 ("Other targets" are only displayed if there are no main
 targets, or if Ant is invoked in -verbose or -debug mode).
 
-<h3><a name="options">Command-line Options Summary</a></h3>
+<h3 id="options">Command-line Options Summary</h3>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
   -help, -h              print this message and exit
@@ -139,20 +139,20 @@ Options:
 <a href="listeners.html">Loggers &amp; Listeners</a>.
 <p>For more information about <code>-inputhandler</code> see
 <a href="inputhandler.html">InputHandler</a>.
-<p>Easiest way of changing the exit-behaviour is subclassing the original main class:
+<p>Easiest way of changing the exit-behaviour is subclassing the original main class:</p>
 <pre>
 public class CustomExitCode extends org.apache.tools.ant.Main {
     protected void exit(int exitCode) {
         // implement your own behaviour, e.g. NOT exiting the JVM
     }
 }
-</pre> and starting Ant with access (<tt>-lib path-to-class</tt>) to this class.
-</p>
+</pre>
+<p>and starting Ant with access (<tt>-lib path-to-class</tt>) to this class.</p>
 
-<h3><a name="libs">Library Directories</a></h3>
+<h3 id="libs">Library Directories</h3>
 <p>
 Prior to Ant 1.6, all jars in the ANT_HOME/lib would be added to the CLASSPATH
-used to run Ant. This was done in the scripts that started Ant. From Ant 1.6,
+  used to run Ant. This was done in the scripts that started Ant. <em>Since Ant 1.6</em>,
 two directories are scanned by default and more can be added as required. The
 default directories scanned are ANT_HOME/lib and a user specific directory,
 ${user.home}/.ant/lib. This arrangement allows the Ant installation to be
@@ -180,7 +180,6 @@ option. Ant itself is started with a very minimalistic classpath.
 Ant should work perfectly well with an empty CLASSPATH environment variable,
 something the the -noclasspath option actually enforces. We get many more support calls related to classpath problems (especially quoting problems) than
 we like.
-
 </p>
 
 <p>
@@ -229,9 +228,7 @@ to the value <code>build/classes</code>.</p>
 </blockquote>
 <p>adds two jars to Ants classpath.</p>
 
-
-
-<h3><a name="files">Files</a></h3>
+<h3 id="files">Files</h3>
 
 <p>The Ant wrapper script for Unix will source (read and evaluate) the
 file <code>~/.antrc</code> before it does anything. On Windows, the Ant
@@ -240,7 +237,7 @@ wrapper batch-file invokes <code>%HOME%\antrc_pre.bat</code> at the start and
 files, for example, to set/unset environment variables that should only be
 visible during the execution of Ant.  See the next section for examples.</p>
 
-<h3><a name="envvars">Environment Variables</a></h3>
+<h3 id="envvars">Environment Variables</h3>
 
 <p>The wrapper scripts use the following environment variables (if
 set):</p>
@@ -255,24 +252,24 @@ set):</p>
 
   <li><code>ANT_ARGS</code> - Ant command-line arguments. For example,
   set <code>ANT_ARGS</code> to point to a different logger, include a
-  listener, and to include the <code>-find</code> flag.</li>
+  listener, and to include the <code>-find</code> flag.<br/>
   <strong>Note:</strong> If you include <code>-find</code>
   in <code>ANT_ARGS</code>, you should include the name of the build file
-  to find, even if the file is called <code>build.xml</code>.
+  to find, even if the file is called <code>build.xml</code>.</li>
 </ul>
 
-<h3><a name="sysprops">Java System Properties</a></h3>
+<h3 id="sysprops">Java System Properties</h3>
 <p>Some of Ant's core classes can be configured via system properties.</p>
 <p>Here is the result of a search through the codebase. Because system properties are
-available via Project instance, I searched for them with a
+  available via Project instance, I searched for them with a</p>
 <pre>
     grep -r -n "getPropert" * &gt; ..\grep.txt
 </pre>
-command. After that I filtered out the often-used but not-so-important values (most of them
+<p>command. After that I filtered out the often-used but not-so-important values (most of them
 read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name,
 line.separator, java.home, java.version, java.version, user.home, java.class.path</i><br>
 And I filtered out the <i>getPropertyHelper</i> access.</p>
-<table border="1">
+<table>
 <tr>
   <th>property name</th>
   <th>valid values /default value</th>
@@ -291,12 +288,11 @@ And I filtered out the <i>getPropertyHelper</i> access.</p>
 <tr>
   <td><code>ant.executor.class</code></td>
   <td>classname; default is org. apache. tools. ant. helper. DefaultExecutor</td>
-  <td><b>Since Ant 1.6.3</b> Ant will delegate Target invocation to the
+  <td><em>Since Ant 1.6.3</em> Ant will delegate Target invocation to the
 org.apache.tools.ant.Executor implementation specified here.
   </td>
 </tr>
-
-<tr>
+  <tr>
   <td><code>ant.file</code></td>
   <td>read only: full filename of the build file</td>
   <td>This is set to the name of the build file. In
@@ -304,8 +300,7 @@ org.apache.tools.ant.Executor implementation specified here.
   &lt;import&gt;-ed</a> files, this is set to the containing build file.
   </td>
 </tr>
-
-<tr>
+  <tr>
   <td><code>ant.file.*</code></td>
   <td>read only: full filename of the build file of Ant projects
   </td>
@@ -314,8 +309,7 @@ org.apache.tools.ant.Executor implementation specified here.
   &lt;import&gt;-ed</a> files,
   </td>
 </tr>
-
-<tr>
+  <tr>
   <td><code>ant.input.properties</code></td>
   <td>filename (required)</td>
   <td>Name of the file holding the values for the
@@ -509,7 +503,7 @@ the return code of the java program. So a successful build returns 0,
 failed builds return other values.
 </p>
 
-<h2><a name="cygwin">Cygwin Users</a></h2>
+<h2 id="cygwin">Cygwin Users</h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
 should not have any problems launching Ant from the Cygwin shell. It is
 important to note, however, that once Ant is running it is part of the JDK
@@ -521,7 +515,7 @@ shell from which Ant was launched. You can use an executable name such as
 &quot;sh&quot; and rely on that command being available in the Windows path.
 </p>
 
-<h2><a name="os2">OS/2 Users</a></h2>
+<h2 id="os2">OS/2 Users</h2>
 <p>The OS/2 launch script was developed to perform complex tasks. It has two parts:
 <code>ant.cmd</code> which calls Ant and <code>antenv.cmd</code> which sets the environment for Ant.
 Most often you will just call <code>ant.cmd</code> using the same command line options as described
@@ -552,8 +546,8 @@ shell (of course unless called automatically from <code>ant.cmd</code>). It is t
 <p>Scripts <code>envset.cmd</code> and <code>runrc.cmd</code> perform auxiliary tasks. All scripts
 have some documentation inside.</p>
 
-<h2><a name="background">Running Ant as a background process on
-    Unix(-like) systems</a></h2>
+<h2 id="background">Running Ant as a background process on
+    Unix(-like) systems</h2>
 
 <p>If you start Ant as a background process (like in <code>ant
     &amp;</code>) and the build process creates another process, Ant will
@@ -568,7 +562,7 @@ have some documentation inside.</p>
   or <code>&lt;java&gt;</code> when the <code>fork</code> attribute is
   <code>true</code>.</p>
 
-<h2><a name="viajava">Running Ant via Java</a></h2>
+<h2 id="viajava">Running Ant via Java</h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
 from one of two entry points:</p>
 <blockquote>
@@ -599,11 +593,10 @@ The latter method supports the -lib, -nouserlib, -noclasspath options and will
 classpath possible, generally just the ant-launcher.jar.
 </p>
 
-<a name="viaant"/>
-
-Ant can be started in Ant via the <code>&lt;java&gt;</code> command.
-Here is an example:
-
+<p id="viaant">
+  Ant can be started in Ant via the <code>&lt;java&gt;</code> command.
+  Here is an example:
+</p>
 <pre>
 &lt;java
         classname="org.apache.tools.ant.launch.Launcher"
@@ -624,8 +617,6 @@ Here is an example:
     &lt;arg value="${sub.target}"/&gt;
 &lt;/java&gt;
 </pre>
-<br>
-
 
 </body>
 </html>
