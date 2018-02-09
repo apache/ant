@@ -154,6 +154,9 @@ public class GlobPatternMapper implements FileNameMapper {
      * @return a list of converted filenames
      */
     public String[] mapFileName(String sourceFileName) {
+        if (sourceFileName == null) {
+            return null;
+        }
         String modName = modifyName(sourceFileName);
         if (fromPrefix == null
             || (sourceFileName.length() < (prefixLength + postfixLength))

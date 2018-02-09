@@ -49,6 +49,7 @@ public class FlatFileNameMapper implements FileNameMapper {
      * @return the file name in a one-element array.
      */
     public String[] mapFileName(String sourceFileName) {
-        return new String[] {new java.io.File(sourceFileName).getName()};
+        return sourceFileName == null ? null
+            : new String[] {new java.io.File(sourceFileName).getName()};
     }
 }

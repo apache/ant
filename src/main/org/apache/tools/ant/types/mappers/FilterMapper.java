@@ -63,6 +63,9 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      *          the filterchain returns an empty string.
      */
     public String[] mapFileName(String sourceFileName) {
+        if (sourceFileName == null) {
+            return null;
+        }
         try {
             Reader stringReader = new StringReader(sourceFileName);
             ChainReaderHelper helper = new ChainReaderHelper();
