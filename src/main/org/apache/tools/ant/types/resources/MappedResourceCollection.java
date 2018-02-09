@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -237,6 +238,7 @@ public class MappedResourceCollection
         if (enableMultipleMappings) {
             stream = nested.stream()
                 .flatMap(r -> Stream.of(m.mapFileName(r.getName()))
+                    .filter(Objects::nonNull)
                     .map(MergingMapper::new)
                     .map(mm -> new MappedResource(r, mm)));
         } else {
