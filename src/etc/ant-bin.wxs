@@ -436,16 +436,18 @@
           <File DiskId="1" Id="file594" Name="JUNIT-_3.XSL" LongName="junit-frames-xalan1.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames-xalan1.xsl" />
           <File DiskId="1" Id="file595" Name="JUNIT-_1.XSL" LongName="junit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames.xsl" />
           <File DiskId="1" Id="file596" Name="JUNIT-_2.XSL" LongName="junit-noframes.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-noframes.xsl" />
-          <File DiskId="1" Id="file597" Name="log.xsl" Vital="yes" src="$(var.dist.dir)/etc\log.xsl" />
-          <File DiskId="1" Id="file598" Name="MAUDIT_1.XSL" LongName="maudit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\maudit-frames.xsl" />
-          <File DiskId="1" Id="file599" Name="MMETRI_1.XSL" LongName="mmetrics-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\mmetrics-frames.xsl" />
-          <File DiskId="1" Id="file600" Name="tagdiff.xsl" Vital="yes" src="$(var.dist.dir)/etc\tagdiff.xsl" />
+          <File DiskId="1" Id="file597" Name="JUNIT-_4.XSL" LongName="junit-frames-saxon.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-frames-saxon.xsl" />
+          <File DiskId="1" Id="file598" Name="JUNIT-_5.XSL" LongName="junit-noframes-saxon.xsl" Vital="yes" src="$(var.dist.dir)/etc\junit-noframes-saxon.xsl" />
+          <File DiskId="1" Id="file599" Name="log.xsl" Vital="yes" src="$(var.dist.dir)/etc\log.xsl" />
+          <File DiskId="1" Id="file600" Name="MAUDIT_1.XSL" LongName="maudit-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\maudit-frames.xsl" />
+          <File DiskId="1" Id="file601" Name="MMETRI_1.XSL" LongName="mmetrics-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\mmetrics-frames.xsl" />
+          <File DiskId="1" Id="file602" Name="tagdiff.xsl" Vital="yes" src="$(var.dist.dir)/etc\tagdiff.xsl" />
         </Component>
         <Directory Id="directory98" Name="CHECKS_1" LongName="checkstyle">
           <Component Id="component95" DiskId="1" Guid="2AEB59C7-5CEF-401c-9AB9-911B995F00FC">
-            <File DiskId="1" Id="file601" Name="CHECKS_1.XSL" LongName="checkstyle-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-frames.xsl" />
-            <File DiskId="1" Id="file602" Name="CHECKS_3.XSL" LongName="checkstyle-text.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-text.xsl" />
-            <File DiskId="1" Id="file603" Name="CHECKS_2.XSL" LongName="checkstyle-xdoc.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-xdoc.xsl" />
+            <File DiskId="1" Id="file603" Name="CHECKS_1.XSL" LongName="checkstyle-frames.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-frames.xsl" />
+            <File DiskId="1" Id="file604" Name="CHECKS_3.XSL" LongName="checkstyle-text.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-text.xsl" />
+            <File DiskId="1" Id="file605" Name="CHECKS_2.XSL" LongName="checkstyle-xdoc.xsl" Vital="yes" src="$(var.dist.dir)/etc\checkstyle\checkstyle-xdoc.xsl" />
           </Component>
         </Directory>
       </Directory>

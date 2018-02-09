@@ -297,10 +297,7 @@ public class AggregateTransformer {
      * @return stylesheet as a resource
      */
     protected Resource getStylesheet() {
-        String xslname = "junit-frames.xsl";
-        if (NOFRAMES.equals(format)) {
-            xslname = "junit-noframes.xsl";
-        }
+        final String xslname = getXslName();
         if (styleDir == null) {
             // If style dir is not specified we have to retrieve
             // the stylesheet from the classloader
@@ -311,6 +308,32 @@ public class AggregateTransformer {
         // If we are here, then the style dir is here and we
         // should read the stylesheet from the filesystem
         return new FileResource(new File(styleDir, xslname));
+    }
+
+    /**
+     * Gets the filename of the XSL stylesheet
+     *
+     * Will provide Xalan or Saxon specific
+     * stylesheets.
+     *
+     * @return The filename of the stylesheet
+     */
+    private String getXslName() {
+        final String suffix;
+
+        final String xsltFactoryName = xsltFactory == null ? null :  xsltFactory.getName();
+        if(xsltFactoryName != null && "net.sf.saxon.TransformerFactoryImpl".equals(xsltFactoryName)) {
+            suffix = "-saxon.xsl";
+        } else {
+            suffix = ".xsl";
+        }
+        final String xslname;
+        if (NOFRAMES.equals(format)) {
+            xslname = "junit-noframes" + suffix;
+        } else {
+            xslname = "junit-frames" + suffix;
+        }
+        return xslname;
     }
 
     /** check for invalid options
@@ -335,10 +358,7 @@ public class AggregateTransformer {
      * not exist.
      */
     protected String getStylesheetSystemId() throws IOException {
-        String xslname = "junit-frames.xsl";
-        if (NOFRAMES.equals(format)) {
-            xslname = "junit-noframes.xsl";
-        }
+        final String xslname = getXslName();
         if (styleDir == null) {
             URL url = getClass().getResource("xsl/" + xslname);
             if (url == null) {
