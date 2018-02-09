@@ -788,6 +788,9 @@ public class Copy extends Task {
         for (int i = 0; i < toCopy.length; i++) {
             final File src = new File(fromDir, toCopy[i]);
             final String[] mappedFiles = mapper.mapFileName(toCopy[i]);
+            if (mappedFiles == null || mappedFiles.length == 0) {
+                continue;
+            }
 
             if (!enableMultipleMappings) {
                 map.put(src.getAbsolutePath(),
@@ -831,7 +834,7 @@ public class Copy extends Task {
         }
         for (int i = 0; i < toCopy.length; i++) {
             final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
-            if (mappedFiles == null) {
+            if (mappedFiles == null || mappedFiles.length == 0) {
                 throw new BuildException("Can't copy a resource without a"
                         + " name if the mapper doesn't"
                         + " provide one.");

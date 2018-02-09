@@ -53,5 +53,7 @@ public class FlatFileNameMapper implements FileNameMapper {
     @Override
     public String[] mapFileName(String sourceFileName) {
         return new String[] { new java.io.File(sourceFileName).getName() };
+        return sourceFileName == null ? null
+            : new String[] {new java.io.File(sourceFileName).getName()};
     }
 }

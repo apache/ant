@@ -256,7 +256,10 @@ public class Native2Ascii extends MatchingTask {
             + (count != 1 ? "s" : "") + " from ";
         log(message + srcDir + " to " + destDir);
         for (int i = 0; i < files.length; i++) {
-            convert(files[i], m.mapFileName(files[i])[0]);
+            String[] dest = m.mapFileName(files[i]);
+            if (dest != null && dest.length > 0) {
+                convert(files[i], dest[0]);
+            }
         }
     }
 

@@ -182,6 +182,9 @@ public class CopyPath extends Task {
             String sourceFileName = sourceFiles[sources];
             File sourceFile = new File(sourceFileName);
             String[] toFiles = (String[]) mapper.mapFileName(sourceFileName);
+            if (toFiles == null) {
+                continue;
+            }
 
             for (int i = 0; i < toFiles.length; i++) {
                 String destFileName = toFiles[i];

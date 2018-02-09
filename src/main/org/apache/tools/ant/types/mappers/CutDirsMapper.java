@@ -66,6 +66,9 @@ public class CutDirsMapper implements FileNameMapper {
             throw new BuildException("dirs must be set to a positive number");
         }
         final char fileSep = File.separatorChar;
+        if (sourceFileName == null) {
+            return null;
+        }
         final String fileSepCorrected =
             sourceFileName.replace('/', fileSep).replace('\\', fileSep);
         int nthMatch = fileSepCorrected.indexOf(fileSep);

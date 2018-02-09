@@ -115,6 +115,9 @@ public class RegexpPatternMapper implements FileNameMapper {
      */
     @Override
     public String[] mapFileName(String sourceFileName) {
+        if (sourceFileName == null) {
+            return null;
+        }
         if (handleDirSep) {
             if (sourceFileName.indexOf("\\") != -1) {
                 sourceFileName = sourceFileName.replace('\\', '/');

@@ -705,6 +705,9 @@ public class Rmic extends MatchingTask {
         String classFileName = classname.replace('.', File.separatorChar)
             + ".class";
         String[] generatedFiles = adapter.getMapper().mapFileName(classFileName);
+        if (generatedFiles == null) {
+            return;
+        }
 
         for (String generatedFile : generatedFiles) {
             if (!generatedFile.endsWith(".class")) {
