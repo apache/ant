@@ -831,13 +831,11 @@ public class Copy extends Task {
         }
         for (int i = 0; i < toCopy.length; i++) {
             final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
-            for (String mappedFile : mappedFiles) {
-                if (mappedFile == null) {
-                    throw new BuildException(
-                        "Can't copy a resource without a name if the mapper doesn't provide one.");
-                }
+            if (mappedFiles == null) {
+                throw new BuildException("Can't copy a resource without a"
+                        + " name if the mapper doesn't"
+                        + " provide one.");
             }
-
             if (!enableMultipleMappings) {
                 map.put(toCopy[i],
                         new String[] {new File(toDir, mappedFiles[0]).getAbsolutePath()});
