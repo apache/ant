@@ -127,22 +127,22 @@ could use as initial value for these experiments.</p>
 
 </table>
 <h3>Examples</h3>
-  <blockquote><pre>
+<pre>
 &lt;chgrp file=&quot;${dist}/start.sh&quot; group=&quot;coders&quot;/&gt;
 </pre>
-</blockquote>
+
 <p>makes the &quot;start.sh&quot; file belong to the coders group on a
 UNIX system.</p>
-<blockquote>
+
 <pre>
 &lt;chgrp group=&quot;coders&quot;&gt;
   &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
 &lt;/chgrp&gt;
 </pre>
-</blockquote>
+
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
 belong to the coders group on a UNIX system.</p>
-<blockquote>
+
 <pre>
 &lt;chgrp group=&quot;coders&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
@@ -151,14 +151,14 @@ belong to the coders group on a UNIX system.</p>
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/chgrp&gt;
 </pre>
-</blockquote>
+
 <p>makes all files below <code>shared/sources1</code> (except those
 below any directory named trial) belong to the coders group on a UNIX
 system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 group.</p>
 
-<blockquote>
+
 <pre>
 &lt;chgrp group=&quot;webdev&quot; type=&quot;file&quot;&gt;
   &lt;fileset dir=&quot;/web&quot;&gt;
@@ -170,7 +170,6 @@ group.</p>
   &lt;/dirset&gt;
 &lt;/chmod&gt;
 </pre>
-</blockquote>
 
 <p>makes all <code>.test.jsp</code>, and <code>.new</code> files belong to
 group webdev. Directories beginning with <code>test_</code> also will belong

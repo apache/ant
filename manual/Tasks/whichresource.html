@@ -31,9 +31,9 @@
       The named property is set if the item can be found.
       For example:
     </p>
-<blockquote><pre>
+<pre>
   &lt;whichresource resource="/log4j.properties" property="log4j.url" &gt;
-</pre></blockquote>
+</pre>
     <h3>Parameters</h3>
     <table>
       <tr>
@@ -91,7 +91,7 @@
     <p>
       The following shows using a classpath reference.
     </p>
-<blockquote><pre>
+<pre>
   &lt;path id="bsf.classpath"&gt;
     &lt;fileset dir="${user.home}/lang/bsf" includes="*.jar"/&gt;
   &lt;/path&gt;
@@ -99,11 +99,11 @@
                  class="org.apache.bsf.BSFManager"
                  classpathref="bsf.classpath"/&gt;
   &lt;echo&gt;${bsf.class.location}&lt;/echo&gt;
-</pre></blockquote>
+</pre>
     <p>
       The following shows using a nested classpath.
     </p>
-<blockquote><pre>
+<pre>
   &lt;whichresource
     property="ant-contrib.antlib.location"
     resource="net/sf/antcontrib/antlib.xml"&gt;
@@ -112,6 +112,6 @@
     &lt;/classpath&gt;
   &lt;/whichresource&gt;
   &lt;echo&gt;${ant-contrib.antlib.location}&lt;/echo&gt;
-</pre></blockquote>
+</pre>
 </body>
 </html>

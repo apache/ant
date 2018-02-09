@@ -134,15 +134,13 @@ listeners and loggers.</p>
 
 <h3 id="DefaultLogger">DefaultLogger</h3>
 <p>Simply run Ant normally, or:</p>
-<blockquote>
-<p><code>ant -logger org.apache.tools.ant.DefaultLogger</code></p>
-</blockquote>
+
+<pre>ant -logger org.apache.tools.ant.DefaultLogger</pre>
 
 <h3 id="NoBannerLogger">NoBannerLogger</h3>
 <p>Removes output of empty target output.</p>
-<blockquote>
-<p><code>ant -logger org.apache.tools.ant.NoBannerLogger</code></p>
-</blockquote>
+
+<pre>ant -logger org.apache.tools.ant.NoBannerLogger</pre>
 
 <h3 id="MailLogger">MailLogger</h3>
 <p>The MailLogger captures all output logged through DefaultLogger (standard Ant
@@ -280,9 +278,7 @@ control for turning off success or failure messages individually.</p>
   </tr>
 </table>
 
-<blockquote>
-<p><code>ant -logger org.apache.tools.ant.listener.MailLogger</code></p>
-</blockquote>
+<pre>ant -logger org.apache.tools.ant.listener.MailLogger</pre>
 
 <h3 id="AnsiColorLogger">AnsiColorLogger</h3>
 
@@ -353,9 +349,7 @@ Background is one of the following:
 46 -&gt; Cyan
 47 -&gt; White</pre>
 
-<blockquote>
 <pre>ant -logger org.apache.tools.ant.listener.AnsiColorLogger</pre>
-</blockquote>
 
 <h3 id="Log4jListener">Log4jListener</h3>
 <p><b>Deprecated:</b> Apache Log4j (1) is not developed any more. Last
@@ -374,24 +368,19 @@ INFO or ERROR depending on whether the build failed during that stage. Message
 events are logged according to their Ant logging level, mapping directly to a
 corresponding Log4j level.</p>
 
-<blockquote>
 <pre>ant -listener org.apache.tools.ant.listener.Log4jListener</pre>
-</blockquote>
 
 <p>To use Log4j you will need the Log4j JAR file and a 'log4j.properties'
 configuration file.  Both should be placed somewhere in your Ant
 classpath. If the log4j.properties is in your project root folder you can
 add this with <i>-lib</i> option:</p>
 
-<blockquote>
 <pre>ant -listener org.apache.tools.ant.listener.Log4jListener -lib .</pre>
-</blockquote>
 
 <p>If, for example, you wanted to capture the same information output to the
 console by the DefaultLogger and send it to a file named 'build.log', you
 could use the following configuration:</p>
 
-<blockquote>
 <pre>log4j.rootLogger=ERROR, LogFile
 log4j.logger.org.apache.tools.ant.Project=INFO
 log4j.logger.org.apache.tools.ant.Target=INFO
@@ -403,7 +392,6 @@ log4j.appender.LogFile.layout=org.apache.log4j.PatternLayout
 log4j.appender.LogFile.layout.ConversionPattern=[%6r] %8c{1} : %m%n
 log4j.appender.LogFile.file=build.log
 </pre>
-</blockquote>
 
 <p>For more information about configuring Log4J see <a href="http://logging.apache.org/log4j/docs/documentation.html">its
 documentation page</a>.</p>
@@ -421,7 +409,6 @@ For using the bridge with Ant you have to add
 to your classpath (e.g. via the <code>-lib</code> option).
 (For using the bridge Ant 1.9.10/1.10.2 or higher is required.)
 Translating the 1.x properties file into the 2.x xml syntax would result in
-<blockquote>
 <pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;Configuration status=&quot;WARN&quot;&gt;
   &lt;Appenders&gt;
@@ -442,7 +429,6 @@ Translating the 1.x properties file into the 2.x xml syntax would result in
   &lt;/Loggers&gt;
 &lt;/Configuration&gt;
 </pre>
-</blockquote>
 
 <h3 id="XmlLogger">XmlLogger</h3>
 <p>Writes all build information out to an XML file named log.xml, or the value
@@ -459,10 +445,8 @@ this can be a relative or absolute file path, or an http URL.
 If you set the property to the empty string, "", no XSLT transform
 is declared at all.</p>
 
-<blockquote>
 <pre>ant -listener org.apache.tools.ant.XmlLogger
 ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</pre>
-</blockquote>
 
 <h3 id="TimestampedLogger">TimestampedLogger</h3>
 <p>
@@ -474,9 +458,7 @@ ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</pre>
 </pre>
 <p>To use this listener, use the command:</p>
 
-<blockquote>
 <pre>ant  -logger org.apache.tools.ant.listener.TimestampedLogger</pre>
-</blockquote>
 
 <h3 id="BigProjectLogger">BigProjectLogger</h3>
 <p>
@@ -528,9 +510,7 @@ Exiting project "junit"
   are in charge -or more importantly, which project is failing.
 </p>
 <p>To use this listener, use the command:</p>
-<blockquote>
 <pre>ant  -logger org.apache.tools.ant.listener.BigProjectLogger</pre>
-</blockquote>
 
 <h3 id="SimpleBigProjectLogger">SimpleBigProjectLogger</h3>
 <p>Like <code>BigProjectLogger</code>, project-qualified target names are printed,
@@ -558,9 +538,7 @@ Total time: 1 second
 </pre>
 <p><em>since Ant 1.8.1</em></p>
 <p>To use this listener, use the command:</p>
-<blockquote>
 <pre>ant -logger org.apache.tools.ant.listener.SimpleBigProjectLogger</pre>
-</blockquote>
 
 <h3 id="ProfileLogger">ProfileLogger</h3>
 <p>This logger stores the time needed for executing a task, target and the whole build and prints

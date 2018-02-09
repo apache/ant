@@ -330,7 +330,7 @@ targets so specified, in the order specified.</p>
   corresponding Ant tasks set the dir attribute explicitly.</p>
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subproject/subbuild.xml&quot; target=&quot;compile&quot;/&gt;
 
 &lt;ant dir=&quot;subproject&quot;/&gt;
@@ -343,66 +343,66 @@ targets so specified, in the order specified.</p>
 &lt;ant inheritAll=&quot;false&quot; antfile=&quot;subproject/subbuild.xml&quot;&gt;
   &lt;property name=&quot;output.type&quot; value=&quot;html&quot;/&gt;
 &lt;/ant&gt;
-</pre></blockquote>
+</pre>
 
 <p>These lines invoke the same build file:</p>
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;sub1/sub2/build.xml&quot; /&gt;
 &lt;ant antfile=&quot;sub2/build.xml&quot; dir=&quot;sub1&quot; /&gt;
 &lt;ant antfile=&quot;build.xml&quot; dir=&quot;sub1/sub2&quot; /&gt;
-</pre></blockquote>
+</pre>
 
 <p>The build file of the calling project defines some
 <code>&lt;path&gt;</code> elements like this:</p>
 
-<blockquote><pre>
+<pre>
 &lt;path id="path1"&gt;
     ...
 &lt;/path&gt;
 &lt;path id="path2"&gt;
     ...
 &lt;/path&gt;
-</pre></blockquote>
+</pre>
 
 <p>and the called build file (<code>subbuild.xml</code>) also defines
 a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path2</code> is not defined:</p>
 
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>will not override <code>subbuild</code>'s definition of
 <code>path1</code>, but make the parent's definition of
 <code>path2</code> available in the subbuild.</p>
 
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subbuild.xml&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>as well as</p>
 
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>will neither override <code>path1</code> nor copy
 <code>path2</code>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
   &lt;reference refid=&quot;path1&quot;/&gt;
 &lt;/ant&gt;
-</pre></blockquote>
+</pre>
 
 <p>will override <code>subbuild</code>'s definition of
 <code>path1</code>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
   &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
 &lt;/ant&gt;
-</pre></blockquote>
+</pre>
 
 <p>will copy the parent's definition of <code>path1</code> into the
 new project using the id <code>path2</code>.</p>

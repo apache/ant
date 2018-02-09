@@ -102,27 +102,27 @@ true within the specified time.</p>
 <a href="conditions.html">here</a> for the full list.</p>
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;waitfor maxwait="30" maxwaitunit="second"&gt;
         &lt;available file="errors.log"/&gt;
 &lt;/waitfor&gt;
-</pre></blockquote>
+</pre>
 <p>waits up to 30 seconds for a file called errors.log to appear.</p>
-<blockquote><pre>
+<pre>
 &lt;waitfor maxwait="3" maxwaitunit="minute" checkevery="500"&gt;
         &lt;http url="http://localhost/myapp/index.html"/&gt;
 &lt;/waitfor&gt;
-</pre></blockquote>
+</pre>
 <p>waits up to 3 minutes (and checks every 500 milliseconds) for a web server on localhost
   to serve up the specified URL.</p>
-<blockquote><pre>
+<pre>
 &lt;waitfor maxwait="10" maxwaitunit="second"&gt;
         &lt;and&gt;
             &lt;socket server="dbserver" port="1521"/&gt;
             &lt;http url="http://webserver/mypage.html"/&gt;
         &lt;/and&gt;
 &lt;/waitfor&gt;
-</pre></blockquote>
+</pre>
 <p>waits up to 10 seconds for a server on the dbserver machine to begin listening
   on port 1521 and for the http://webserver/mypage.html web page
   to become available.</p>

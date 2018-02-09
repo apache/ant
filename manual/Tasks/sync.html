@@ -137,23 +137,23 @@ defaults to false.</p>
 
 <h3>Examples</h3>
 
-<blockquote><pre>
+<pre>
 &lt;sync todir=&quot;site&quot;&gt;
   &lt;fileset dir=&quot;generated-site&quot;/&gt;
 &lt;/sync&gt;
-</pre></blockquote>
+</pre>
 <p>overwrites all files in <em>site</em> with newer files from
 <em>generated-site</em>, deletes files from <em>site</em> that are not
 present in <em>generated-site</em>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;sync todir=&quot;site&quot;&gt;
   &lt;fileset dir=&quot;generated-site&quot;/&gt;
   &lt;preserveintarget&gt;
     &lt;include name=&quot;**/CVS/**&quot;/&gt;
   &lt;/preserveintarget&gt;
 &lt;/sync&gt;
-</pre></blockquote>
+</pre>
 <p>overwrites all files in <em>site</em> with newer files from
 <em>generated-site</em>, deletes files from <em>site</em> that are not
 present in <em>generated-site</em> but keeps all files in any

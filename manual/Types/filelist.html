@@ -74,42 +74,42 @@ types.
     </tr>
 </table>
 <h4>Examples</h4>
-<blockquote><pre>
+<pre>
 &lt;filelist
     id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;
     files=&quot;foo.xml,bar.xml&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>The files <code>${doc.src}/foo.xml</code> and
 <code>${doc.src}/bar.xml</code>.  Note that these files may not (yet)
 actually exist.
 </p>
 
-<blockquote><pre>
+<pre>
 &lt;filelist
     id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;
     files=&quot;foo.xml
            bar.xml&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>Same files as the example above.</p>
 
-<blockquote><pre>
+<pre>
 &lt;filelist refid=&quot;docfiles&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>Same files as the example above.</p>
 
-<blockquote><pre>
+<pre>
 &lt;filelist
     id=&quot;docfiles&quot;
     dir=&quot;${doc.src}&quot;&gt;
     &lt;file name="foo.xml"/&gt;
     &lt;file name="bar.xml"/&gt;
 &lt;/filelist&gt;
-</pre></blockquote>
+</pre>
 
 <p>Same files as the example above.</p>
 

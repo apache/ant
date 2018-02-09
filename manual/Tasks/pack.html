@@ -63,20 +63,20 @@ resource collection</h4>
 <p>The specified resource will be used as src. <em>Since Apache Ant 1.7</em></p>
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;gzip src=&quot;test.tar&quot; destfile=&quot;test.tar.gz&quot;/&gt;
-</pre></blockquote>
-<blockquote><pre>
+</pre>
+<pre>
 &lt;bzip2 src=&quot;test.tar&quot; destfile=&quot;test.tar.bz2&quot;/&gt;
-</pre></blockquote>
-<blockquote><pre>
+</pre>
+<pre>
 &lt;xz src=&quot;test.tar&quot; destfile=&quot;test.tar.xz&quot;/&gt;
-</pre></blockquote>
-<blockquote><pre>
+</pre>
+<pre>
 &lt;gzip destfile=&quot;archive.tar.gz&quot;&gt;
   &lt;url url="http://example.org/archive.tar"/&gt;
 &lt;/gzip&gt;
-</pre></blockquote>
+</pre>
 <p>downloads <i>http://example.org/archive.tar</i> and compresses it
 to <i>archive.tar.gz</i> in the project's basedir on the fly.</p>
 

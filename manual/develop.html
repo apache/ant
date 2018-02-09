@@ -275,7 +275,6 @@ If your task needs to nest an arbitrary type that has been defined
     org.apache.tools.ant.taskdefs.condition.Condition, one may
     have a class:
   </p>
-  <blockquote>
   <pre>
 public class MyTask extends Task {
     private List conditions = new ArrayList();
@@ -287,25 +286,21 @@ public class MyTask extends Task {
     }
 }
   </pre>
-  </blockquote>
   <p>
     One may define and use this class like this:
   </p>
-  <blockquote>
-    <pre>
+<pre>
 &lt;taskdef name="mytask" classname="MyTask" classpath="classes"/&gt;
 &lt;typedef name="condition.equals"
          classname="org.apache.tools.ant.taskdefs.conditions.Equals"/&gt;
 &lt;mytask&gt;
     &lt;condition.equals arg1="${debug}" arg2="true"/&gt;
 &lt;/mytask&gt;
-    </pre>
-  </blockquote>
+</pre>
   <p>
     A more complicated example follows:
   </p>
-  <blockquote>
-    <pre>
+<pre>
 public class Sample {
     public static class MyFileSelector implements FileSelector {
          public void setAttrA(int a) {}
@@ -334,14 +329,13 @@ public class Sample {
         public void setCount(int c) {}
     }
 }
-    </pre>
-  </blockquote>
+</pre>
   <p>
     This class defines a number of static classes that implement/extend
     Path, MyFileSelector and MyInterface. These may be defined and used
     as follows:
   </p>
-  <pre>
+<pre>
 &lt;typedef name="myfileselector" classname="Sample$MyFileSelector"
          classpath="classes" loaderref="classes"/&gt;
 &lt;typedef name="buildpath" classname="Sample$BuildPath"
@@ -358,7 +352,7 @@ public class Sample {
       &lt;/myfileselector&gt;
    &lt;/fileset&gt;
 &lt;/copy&gt;
-  </pre>
+</pre>
 
 <h3 id="taskcontainer">TaskContainer</h3>
 
@@ -382,7 +376,7 @@ invoke <code>perform</code> on these instances instead of
 <p>Let's write our own task, which prints a message on the
 <code>System.out</code> stream.
 The task has one attribute, called <code>message</code>.</p>
-<blockquote>
+
 <pre>
 package com.mydomain;
 
@@ -403,7 +397,7 @@ public class MyVeryOwnTask extends Task {
     }
 }
 </pre>
-</blockquote>
+
 <p>It's really this simple ;-)</p>
 <p>Adding your task to the system is rather simple too:</p>
 <ol>
@@ -415,7 +409,7 @@ public class MyVeryOwnTask extends Task {
 </ol>
 
 <h3>Example</h3>
-<blockquote>
+
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
 
@@ -427,7 +421,6 @@ public class MyVeryOwnTask extends Task {
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
-</blockquote>
 
 <h3>Example 2</h3>
 To use a task directly from the buildfile which created it, place the
@@ -435,7 +428,7 @@ To use a task directly from the buildfile which created it, place the
 <i>after the compilation</i>. Use the <code>classpath</code> attribute of
 <code>&lt;taskdef&gt;</code> to point to where the code has just been
 compiled.
-<blockquote>
+
 <pre>
 &lt;?xml version=&quot;1.0&quot;?&gt;
 
@@ -457,7 +450,6 @@ compiled.
   &lt;/target&gt;
 &lt;/project&gt;
 </pre>
-</blockquote>
 
 <p>Another way to add a task (more permanently), is to add the task name and
 implementing class name to the <code>default.properties</code> file in the
@@ -502,9 +494,9 @@ listener, of course).</p>
 
 <p>If you wish to attach a listener from the command line you may use the
 <code>-listener</code> option. For example:</p>
-<blockquote>
-  <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
-</blockquote>
+
+<pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
+
 <p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard output.</p>
 
@@ -528,7 +520,6 @@ When starting your build provide your adapter class and the log library to the
 build classpath and activate your logger via <code>-listener</code> option as
 described above.
 
-<blockquote>
 <pre>
 public class MyLogAdapter implements BuildListener {
 
@@ -555,7 +546,6 @@ public class MyLogAdapter implements BuildListener {
     // implement all methods in that way
 }
 </pre>
-</blockquote>
 
 <hr>
 <h2 id="integration">Source code integration</h2>

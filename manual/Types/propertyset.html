@@ -56,8 +56,7 @@ supports this.</p>
 
 <h4>propertyref</h4>
 
-<p>Selects properties from the current project to be included in the
-set.</p>
+<p>Selects properties from the current project to be included in the set.</p>
 
 <table>
   <tr>
@@ -100,7 +99,7 @@ set.</p>
 
 <p>For example:</p>
 
-<blockquote><pre>
+<pre>
 &lt;propertyset id=&quot;properties-starting-with-foo&quot;&gt;
   &lt;propertyref prefix=&quot;foo&quot;/&gt;
 &lt;/propertyset&gt;
@@ -111,7 +110,7 @@ set.</p>
   &lt;propertyset refid=&quot;properties-starting-with-foo&quot;/&gt;
   &lt;propertyset refid=&quot;properties-starting-with-bar&quot;/&gt;
 &lt;/propertyset&gt;
-</pre></blockquote>
+</pre>
 
 <p>collects all properties whose name starts with either
 &quot;foo&quot; or &quot;bar&quot; in the set named
@@ -123,12 +122,12 @@ set.</p>
 specified.  The mapper is used to change the names of the property
 keys, for example:
 
-<blockquote><pre>
+<pre>
 &lt;propertyset id=&quot;properties-starting-with-foo&quot;&gt;
   &lt;propertyref prefix=&quot;foo&quot;/&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;foo*&quot; to=&quot;bar*&quot;/&gt;
 &lt;/propertyset&gt;
-</pre></blockquote>
+</pre>
 
 <p>collects all properties whose name starts with &quot;foo&quot;, but
 changes the names to start with &quot;bar&quot; instead.</p>

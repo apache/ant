@@ -105,7 +105,6 @@ the build exactly what is going on.
     <td valign="top">User to authenticate to the proxy as.</td>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">None</td>
-
   </tr>
   <tr>
     <td valign="top">password</td>
@@ -113,23 +112,20 @@ the build exactly what is going on.
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">None</td>
   </tr>
-
 </table>
 <h3>Examples</h3>
-<blockquote><pre>
-&lt;splash/&gt;
-</pre></blockquote>
+<pre>&lt;splash/&gt;</pre>
 <p>Splash <code>images/ant_logo_large.gif</code> from the classpath.</p>
-<blockquote><pre>
+<pre>
 &lt;splash imageurl=&quot;http://jakarta.apache.org/images/jakarta-logo.gif&quot;
            useproxy=&quot;true&quot;
            showduration=&quot;5000&quot;/&gt;
 
-</pre></blockquote>
+</pre>
 <p>Splashes the jakarta logo, for an initial period of 5 seconds.</p>
 
 <p>Splash with controlled progress and nondefault text</p>
-<blockquote><pre>
+<pre>
         &lt;target name="test_new_features"&gt;
                 &lt;echo&gt;New features&lt;/echo&gt;
                 &lt;splash progressRegExp="Progress: (.*)%" showduration="0" displayText="Test text"/&gt;
@@ -145,7 +141,7 @@ the build exactly what is going on.
                 &lt;echo&gt;Progress: 100%&lt;/echo&gt;
                 &lt;sleep seconds="3"/&gt;
         &lt;/target&gt;
-</pre></blockquote>
+</pre>
 
 </body>
 </html>

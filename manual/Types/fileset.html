@@ -122,60 +122,60 @@ symbolic link but it may lead to false results on other
 platforms.</p>
 
 <h4>Examples</h4>
-<blockquote><pre>
+<pre>
 &lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups all files in directory <code>${server.src}</code> that are Java
 source files and don't have the text <code>Test</code> in their
 name.</p>
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
   &lt;patternset id=&quot;non.test.sources&quot;&gt;
     &lt;include name=&quot;**/*.java&quot;/&gt;
     &lt;exclude name=&quot;**/*Test*&quot;/&gt;
   &lt;/patternset&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups the same files as the above example, but also establishes
 a PatternSet that can be referenced in other
 <code>&lt;fileset&gt;</code> elements, rooted at a different directory.</p>
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir=&quot;${client.src}&quot; &gt;
   &lt;patternset refid=&quot;non.test.sources&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups all files in directory <code>${client.src}</code>, using the
 same patterns as the above example.</p>
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
   &lt;filename name=&quot;**/*.java&quot;/&gt;
   &lt;filename name=&quot;**/*Test*&quot; negate=&quot;true&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups the same files as the top example, but using the
 <code>&lt;filename&gt;</code> selector.</p>
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
   &lt;filename name=&quot;**/*.java&quot;/&gt;
   &lt;not&gt;
     &lt;filename name=&quot;**/*Test*&quot;/&gt;
   &lt;/not&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups the same files as the previous example using a combination of the
 <code>&lt;filename&gt;</code> selector and the <code>&lt;not&gt;</code>
 selector container.</p>
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir="src" includes="main/" /&gt;
-</pre></blockquote>
+</pre>
 <p>Selects all files in <i>src/main</i> (e.g. <i>src/main/Foo.java</i> or
 <i>src/main/application/Bar.java</i>).</p>
 

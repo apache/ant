@@ -28,11 +28,10 @@
   <p><em>Since Ant 1.9.1</em>, it is possible to add if and unless attributes on all tasks and nested elements using special namespaces.</p>
 
   <p>In order to use this feature you need to add the following namespace declarations</p>
-  <blockquote><pre>
+  <pre>
     xmlns:if=&quot;ant:if&quot;
     xmlns:unless=&quot;ant:unless&quot;
     </pre>
-  </blockquote>
 
   <p>The if and unless namespaces support the following 3 conditions:</p>
   <ul>
@@ -40,8 +39,6 @@
     <li>blank</li>true if the value of the attribute is null or empty
     <li>set</li>true if the specified property is set
   </ul>
-
-<blockquote>
 <pre>
 &lt;project name=&quot;tryit&quot;
  xmlns:if=&quot;ant:if&quot;
@@ -58,7 +55,6 @@
  &lt;echo unless:set=&quot;onmac&quot;&gt;not running on MacOS&lt;/echo&gt;
 &lt;/project&gt;
 </pre>
-</blockquote>
 
 </body>
 </html>

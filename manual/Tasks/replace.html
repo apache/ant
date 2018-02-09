@@ -159,30 +159,30 @@ them.</p>
   <tr>
     <td valign="top">expandProperties</td>
     <td valign="top">Whether to expand properties in the nested text.
-      <em>since Ant 1.8.0</em>.</td>
+      <em>Since Ant 1.8.0</em>.</td>
     <td align="center">No, defaults to true.</td>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
   &lt;include name=&quot;**/*.html&quot;/&gt;
   &lt;replacetoken&gt;&lt;![CDATA[multi line
 token]]&gt;&lt;/replacetoken&gt;
 &lt;/replace&gt;
-</pre></blockquote>
+</pre>
 <p>replaces occurrences of the string &quot;multi
 line<i>\n</i>token&quot; with the string &quot;wombat&quot;, in all
 HTML files in the directory <code>${src}</code>.Where <i>\n</i> is
 the platform specific line separator.</p>
-<blockquote><pre>
+<pre>
 &lt;replace file=&quot;${src}/index.html&quot;&gt;
   &lt;replacetoken&gt;&lt;![CDATA[two line
 token]]&gt;&lt;/replacetoken&gt;
   &lt;replacevalue&gt;&lt;![CDATA[two line
 token]]&gt;&lt;/replacevalue&gt;
 &lt;/replace&gt;
-</pre></blockquote>
+</pre>
 <h4>replacefilter</h4>
 <p>In addition to allowing for multiple replacements, optional nested <code>&lt;replacefilter&gt;</code> elements allow replacement values to be extracted from a property file. The name of this file is specified using the <code>&lt;replace&gt;</code> attribute <i>propertyFile</i>.
 </p>
@@ -213,7 +213,7 @@ token]]&gt;&lt;/replacevalue&gt;
 <p>If neither <i>value</i> nor <i>property</i> is used, the value provided using the <code>&lt;replace&gt;</code> attribute <i>value</i> and/or the <code>&lt;replacevalue&gt;</code> element is used. If no value was specified using either of these options, the token is replaced with an empty string.
 </p>
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;replace
     file=&quot;configure.sh&quot;
     value=&quot;defaultvalue&quot;
@@ -231,7 +231,7 @@ token]]&gt;&lt;/replacevalue&gt;
     &lt;replacevalue&gt;value4&lt;/replacevalue&gt;
   &lt;/replacefilter&gt;
 &lt;/replace&gt;
-</pre></blockquote>
+</pre>
 <p>In file <code>configure.sh</code>, replace all instances of &quot;@token1@&quot; with &quot;defaultvalue&quot;, all instances of &quot;@token2@&quot; with &quot;value2&quot;, and all instances of &quot;@token3@&quot; with the value of the property &quot;property.key&quot;, as it appears in property file <code>src/name.properties</code>.</p>
 <p><strong>Note</strong>: It is possible to use either the <i>token</i>/<code>&lt;replacetoken&gt;</code> and <i>value</i>/<code>&lt;replacevalue&gt;</code> attributes/elements, the nested replacefilter elements, or both in the same operation.</p>
 

@@ -309,18 +309,18 @@ the <code>&lt;message&gt;</code> element.</p>
 
 <h3>Examples</h3>
 
-<blockquote><pre>
+<pre>
 &lt;mail from=&quot;me&quot;
       tolist=&quot;you&quot;
       subject=&quot;Results of nightly build&quot;
       files=&quot;build.log&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>Sends an email from <i>me</i> to <i>you</i> with a subject of
 <i>Results of nightly build</i> and includes the contents of the file
 <i>build.log</i> in the body of the message.</p>
 
-<blockquote><pre>
+<pre>
 &lt;mail mailhost=&quot;smtp.myisp.com&quot; mailport=&quot;1025&quot; subject=&quot;Test build&quot;&gt;
   &lt;from address=&quot;config@myisp.com&quot;/&gt;
   &lt;replyto address=&quot;me@myisp.com&quot;/&gt;
@@ -332,7 +332,7 @@ the <code>&lt;message&gt;</code> element.</p>
     &lt;/fileset&gt;
   &lt;/attachments&gt;
 &lt;/mail&gt;
-</pre></blockquote>
+</pre>
 
 <p>Sends an eMail from <i>config@myisp.com</i> to <i>all@xyz.com</i> with a subject of
 <i>Test Build</i>. Replies to this email will go to <i>me@myisp.com</i>.
@@ -341,7 +341,7 @@ task will attempt to use JavaMail and fall back to UU encoding or no encoding in
 that order depending on what support classes are available. <code>${buildname}</code>
 will be replaced with the <code>buildname</code> property's value.</p>
 
-<blockquote><pre>
+<pre>
 &lt;property name=&quot;line2&quot; value=&quot;some_international_message&quot;/&gt;
 &lt;echo message=&quot;${line2}&quot;/&gt;
 
@@ -350,7 +350,7 @@ will be replaced with the <code>buildname</code> property's value.</p>
   &lt;to address=&quot;all@xyz.com&quot;/&gt;
   &lt;message&gt;some international text:${line2}&lt;/message&gt;
 &lt;/mail&gt;
-</pre></blockquote>
+</pre>
 
 <p>Sends an eMail from <i>me@myisp.com</i> to <i>all@xyz.com</i> with a subject of
 <i>Test Build</i>, the message body being coded in UTF-8

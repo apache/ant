@@ -136,21 +136,15 @@ directory tree), so you'll have to experiment a little.</p-->
 </table>
 
 <h3>Examples</h3>
-  <blockquote>
-<pre>&lt;attrib file=&quot;${dist}/run.bat&quot; readonly=&quot;true&quot; hidden=&quot;true&quot;/&gt;</pre>
-</blockquote>
-<p>makes the &quot;run.bat&quot; file read-only and hidden.</p>
 
-<blockquote>
-  <pre>&lt;attrib readonly=&quot;false&quot;&gt;
+<pre>&lt;attrib file=&quot;${dist}/run.bat&quot; readonly=&quot;true&quot; hidden=&quot;true&quot;/&gt;</pre>
+<p>makes the &quot;run.bat&quot; file read-only and hidden.</p>
+<pre>&lt;attrib readonly=&quot;false&quot;&gt;
   &lt;fileset dir=&quot;${meta.inf}&quot; includes=&quot;**/*.xml&quot;/&gt;
 &lt;/attrib&gt;
 </pre>
-</blockquote>
 <p>makes all &quot;.xml&quot; files below <code>${meta.inf}</code> readable.</p>
-
-<blockquote>
-  <pre>
+<pre>
 &lt;attrib readonly=&quot;true&quot; archive=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
     &lt;exclude name=&quot;**/trial/**&quot;/&gt;
@@ -158,7 +152,7 @@ directory tree), so you'll have to experiment a little.</p-->
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/attrib&gt;
 </pre>
-</blockquote>
+
 <p>makes all files below <code>shared/sources1</code> (except those below any
   directory named trial) read-only and archived. In addition all files belonging
   to a FileSet with <code>id</code> <code>other.shared.sources</code> get the

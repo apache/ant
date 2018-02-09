@@ -219,38 +219,38 @@ nested inside the Draw object.</p>
 
 <h3>Examples</h3>
 
-<blockquote><pre>
+<pre>
  &lt;image destdir="samples/low" overwrite="yes"&gt;
      &lt;fileset dir="samples/full"&gt;
          &lt;include name="**/*.jpg"/&gt;
      &lt;/fileset&gt;
      &lt;scale width="160" height="160" proportions="fit"/&gt;
  &lt;/image&gt;
-</pre></blockquote>
+</pre>
 <p>Create thumbnails of my images and make sure they all fit within the 160x160 size whether the
 image is portrait or landscape.</p>
 
-<blockquote><pre>
+<pre>
 &lt;image srcdir="src" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
 &lt;/image&gt;
-</pre></blockquote>
+</pre>
 <p>Creates a thumbnail for all PNG-files in <i>src</i> in the size of 40 pixel keeping the proportions
 and stores the <i>src</i>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
 &lt;/image&gt;
-</pre></blockquote>
+</pre>
 <p>Same as above but stores the result in <i>dest</i>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
     &lt;globmapper from="*" to="scaled-*"/&gt;
 &lt;/image&gt;
-</pre></blockquote>
+</pre>
 <p>Same as above but stores the resulting file names will be prefixed
   by "scaled-".</p>
 

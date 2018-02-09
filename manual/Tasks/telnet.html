@@ -101,16 +101,16 @@ A simple example of connecting to a server and running a command.  This assumes
  a prompt of &quot;ogin:&quot; for the userid, and a prompt of &quot;assword:&quot;
  for the password.
 
-<blockquote><pre>
+<pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
    &lt;write&gt;ls&lt;/write&gt;
    &lt;read string=&quot;/home/bob&quot;/&gt;
 &lt;/telnet&gt;
-</pre></blockquote>
+</pre>
 
 This task can be rewritten as:
-<blockquote><pre>
+<pre>
 &lt;telnet server=&quot;localhost&quot;&gt;
    &lt;read&gt;ogin:&lt;/read&gt;
    &lt;write&gt;bob&lt;/write&gt;
@@ -120,28 +120,28 @@ This task can be rewritten as:
    &lt;write&gt;ls&lt;/write&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
 &lt;/telnet&gt;
-</pre></blockquote>
+</pre>
 
 A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at the <code>&lt;read&gt;</code> level.
 This will connect, issue a sleep command that is suppressed from displaying and wait
 10 seconds before quitting.
-<blockquote><pre>
+<pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
    &lt;write echo=&quot;false&quot;&gt;sleep 15&lt;/write&gt;
    &lt;read timeout=&quot;10&quot;&gt;/home/bob&lt;/read&gt;
 &lt;/telnet&gt;
-</pre></blockquote>
+</pre>
 
 The task can be used with other ports as well:
-<blockquote><pre>
+<pre>
 &lt;telnet port=&quot;80&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read/&gt;
    &lt;write&gt;GET / http/0.9&lt;/write&gt;
    &lt;write/&gt;
    &lt;read timeout=&quot;10&quot;&gt;&amp;lt;/HTML&amp;gt;&lt;/read&gt;
 &lt;/telnet&gt;
-</pre></blockquote>
+</pre>
 <p>
 To use this task against the WinNT telnet service, you need to configure the service to use
 classic authentication rather than NTLM negotiated authentication.

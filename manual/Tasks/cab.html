@@ -118,34 +118,34 @@ element to specify the files to be included in the archive.
 </p>
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory.</p>
-<blockquote><pre>
+<pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;
      excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>cabs all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Files in the directory mydocs,
 or files with the name todo.html are excluded.</p>
-<blockquote><pre>
+<pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;
      includes=&quot;api/**/*.html&quot;
      excludes=&quot;**/todo.html&quot;
      verbose=&quot;yes&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>Cab all files in the htdocs/manual directory into a file called
 manual.cab in the ${dist} directory. Only html files under the
 directory api are archived, and files with the name todo.html are
 excluded. Output from the cabarc tool is displayed in the build
 output.</p>
 
-<blockquote><pre>
+<pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      verbose=&quot;yes&quot;&gt;
   &lt;fileset
@@ -153,7 +153,7 @@ output.</p>
        includes=&quot;api/**/*.html&quot;
        excludes=&quot;**/todo.html&quot;/&gt;
 &lt;/cab&gt;
-</pre></blockquote>
+</pre>
 <p>is equivalent to the example above.</p>
 
 </body>

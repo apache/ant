@@ -44,56 +44,42 @@ generated BNF documentation file.</p>
 
 <table>
 <tr>
-<td valign="top"><b>Attribute</b></td>
-
-<td valign="top"><b>Description</b></td>
-
-<td align="center" valign="top"><b>Required</b></td>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
 </tr>
 
 <tr>
-<td valign="top">target</td>
-
-<td valign="top">The javacc grammar file to process.</td>
-
-<td align="center" valign="top">Yes</td>
+    <td valign="top">target</td>
+    <td valign="top">The javacc grammar file to process.</td>
+    <td align="center" valign="top">Yes</td>
 </tr>
 
 <tr>
-<td valign="top">javacchome</td>
-
-<td valign="top">The directory containing the JavaCC distribution.</td>
-
-<td align="center" valign="top">Yes</td>
+    <td valign="top">javacchome</td>
+    <td valign="top">The directory containing the JavaCC distribution.</td>
+    <td align="center" valign="top">Yes</td>
 </tr>
 
 <tr>
-<td valign="top">outputfile</td>
-
-<td valign="top">The file to write the generated BNF documentation file to. If not set,
-the file is written with the same name as the JavaCC grammar file but with a the suffix .html or .txt</td>
-
-<td align="center" valign="top">No</td>
+    <td valign="top">outputfile</td>
+    <td valign="top">The file to write the generated BNF documentation file to. If not set,
+    the file is written with the same name as the JavaCC grammar file but with a the suffix .html or .txt</td>
+    <td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top">text</td>
-
-<td valign="top">Sets the TEXT BNF documentation option. This is a boolean
-option.</td>
-
-<td align="center" valign="top">No</td>
+    <td valign="top">text</td>
+    <td valign="top">Sets the TEXT BNF documentation option. This is a boolean option.</td>
+    <td align="center" valign="top">No</td>
 </tr>
 
 <tr>
-<td valign="top">onetable</td>
-
-<td valign="top">Sets the ONE_TABLE BNF documentation option. This is a boolean option.</td>
-
-<td align="center" valign="top">No</td>
+    <td valign="top">onetable</td>
+    <td valign="top">Sets the ONE_TABLE BNF documentation option. This is a boolean option.</td>
+    <td align="center" valign="top">No</td>
 </tr>
-
-  <tr>
+<tr>
     <td valign="top">maxmemory</td>
     <td valign="top">Max amount of memory to allocate to the forked
       VM.  <em>since Ant 1.8.3</em></td>
@@ -101,15 +87,13 @@ option.</td>
   </tr>
 </table>
 
-<h3>
-Example</h3>
+<h3>Example</h3>
 
-<blockquote>
 <pre>&lt;jjdoc
     target="src/Parser.jj"
     outputfile="doc/ParserBNF.html"
     javacchome="c:/program files/JavaCC"/&gt;</pre>
-</blockquote>
+
 This invokes JJDoc on grammar file src/Parser.jj, writing the generated
 BNF documentation file, ParserBNF.html, file to doc.
 

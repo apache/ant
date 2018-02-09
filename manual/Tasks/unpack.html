@@ -66,32 +66,22 @@ resource collection</h4>
 <p>The specified resource will be used as src.</p>
 
 <h3>Examples</h3>
-<blockquote><pre>
-&lt;gunzip src=&quot;test.tar.gz&quot;/&gt;
-</pre></blockquote>
+<pre>&lt;gunzip src=&quot;test.tar.gz&quot;/&gt;</pre>
 <p>expands <i>test.tar.gz</i> to <i>test.tar</i></p>
-<blockquote><pre>
-&lt;bunzip2 src=&quot;test.tar.bz2&quot;/&gt;
-</pre></blockquote>
+<pre>&lt;bunzip2 src=&quot;test.tar.bz2&quot;/&gt;</pre>
 <p>expands <i>test.tar.bz2</i> to <i>test.tar</i></p>
-<blockquote><pre>
-&lt;unxz src=&quot;test.tar.xz&quot;/&gt;
-</pre></blockquote>
+<pre>&lt;unxz src=&quot;test.tar.xz&quot;/&gt;</pre>
 <p>expands <i>test.tar.xz</i> to <i>test.tar</i></p>
-<blockquote><pre>
-&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;test2.tar&quot;/&gt;
-</pre></blockquote>
+<pre>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;test2.tar&quot;/&gt;</pre>
 <p>expands <i>test.tar.gz</i> to <i>test2.tar</i></p>
-<blockquote><pre>
-&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;subdir&quot;/&gt;
-</pre></blockquote>
+<pre>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;subdir&quot;/&gt;</pre>
 <p>expands <i>test.tar.gz</i> to <i>subdir/test.tar</i> (assuming
 subdir is a directory).</p>
-<blockquote><pre>
+<pre>
 &lt;gunzip dest=&quot;.&quot;&gt;
   &lt;url url="http://example.org/archive.tar.gz"/&gt;
 &lt;/gunzip&gt;
-</pre></blockquote>
+</pre>
 <p>downloads <i>http://example.org/archive.tar.gz</i> and expands it
 to <i>archive.tar</i> in the project's basedir on the fly.</p>
 
@@ -100,9 +90,7 @@ to <i>archive.tar</i> in the project's basedir on the fly.</p>
 <pre>
 &lt;gunzip src="some-archive.gz" dest="some-dest-dir"/&gt;
 </pre>
-
 is identical to
-
 <pre>
 &lt;copy todir="some-dest-dir"&gt;
   &lt;gzipresource&gt;

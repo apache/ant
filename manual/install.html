@@ -418,9 +418,7 @@ the optional Ant tasks need.
 To do so, change to the <code>ANT_HOME</code> directory and execute the command:
 </p>
 
-<blockquote>
-  <pre>ant -f fetch.xml -Ddest=<i>[option]</i></pre>
-</blockquote>
+<pre>ant -f fetch.xml -Ddest=<i>[option]</i></pre>
 
 <p>
 where option is one of the following, as described above:
@@ -528,21 +526,15 @@ laptop, you have to change these settings as you roam. To set <code>ANT_OPTS</co
 <p>
 For csh/tcsh:
 </p>
-<pre>
-    setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
-</pre>
+<pre>setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
 <p>
 For bash:
 </p>
-<pre>
-    export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
-</pre>
+<pre>export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
 <p>
 For Windows, set the environment variable in the appropriate dialog box and open a new console or, by hand
 </p>
-<pre>
-    set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
-</pre>
+<pre>set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080</pre>
 </blockquote>
 </li>
 
@@ -757,9 +749,9 @@ reasons why the <a href="Tasks/chmod.html">chmod</a> task might fail (like when 
 different user than the one who installed Ant initially). In this case you can set the Ant
 property <code>chmod.fail</code> to false when starting the build like in
 </p>
-<blockquote>
-  <p><code>sh build.sh install -Dchmod.fail=false</code></p>
-</blockquote>
+
+<pre>sh build.sh install -Dchmod.fail=false</pre>
+
 <p>
 and any error to change permission will not result in a build failure.
 </p>

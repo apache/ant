@@ -133,12 +133,12 @@ patterns to the parent patternset.</p>
 <p>A nested patternset can be inverted using the <code>&lt;invert&gt;</code>
 element. <em>Since Apache Ant 1.7.1</em></p>
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;patternset id=&quot;non.test.sources&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/patternset&gt;
-</pre></blockquote>
+</pre>
 <p>Builds a set of patterns that matches all <code>.java</code> files
 that do not contain the text <code>Test</code> in their name. This set
 can be <a href="../using.html#references">referred</a> to via
@@ -153,34 +153,34 @@ attribute to hold a single pattern.</p>
 specify that the element should only be used if a property is set, or
 that it should be used only if a property is not set.</p>
 <p>For example</p>
-<blockquote><pre>
+<pre>
 &lt;patternset id=&quot;sources&quot;&gt;
   &lt;include name=&quot;std/**/*.java&quot;/&gt;
   &lt;include name=&quot;prof/**/*.java&quot; if=&quot;professional&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/patternset&gt;
-</pre></blockquote>
+</pre>
 <p>will only include the files in the sub-directory <em>prof</em> if the property
 <em>professional</em> is set to some value.</p>
 <p>The two sets</p>
-<blockquote><pre>
+<pre>
 &lt;patternset includesfile=&quot;some-file&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>and</p>
-<blockquote><pre>
+<pre>
 &lt;patternset&gt;
   &lt;includesfile name=&quot;some-file&quot;/&gt;
 &lt;patternset/&gt;
-</pre></blockquote>
+</pre>
 <p>are identical.  The include patterns will be read from the file
 <code>some-file</code>, one pattern per line.</p>
-<blockquote><pre>
+<pre>
 &lt;patternset&gt;
   &lt;includesfile name=&quot;some-file&quot;/&gt;
   &lt;includesfile name=&quot;${some-other-file}&quot;
                 if=&quot;some-other-file&quot;/&gt;
 &lt;patternset/&gt;
-</pre></blockquote>
+</pre>
 <p>will also read include patterns from the file the property
 <code>some-other-file</code> points to, if a property of that name has
 been defined.</p>

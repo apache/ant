@@ -440,39 +440,38 @@ depend on your manifest:</p>
     nested &lt;provider&gt; elements may be used.
   </p>
 
-
 <h3>Examples</h3>
 
 <h4>Simple</h4>
-<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre></blockquote>
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 
 
 <h4>With filters</h4>
 
-<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
-       excludes=&quot;**/Test.class&quot;/&gt;</pre></blockquote>
+       excludes=&quot;**/Test.class&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Files
 with the name <code>Test.class</code> are excluded.</p>
 
-<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
        basedir=&quot;${build}/classes&quot;
        includes=&quot;mypackage/test/**&quot;
-       excludes=&quot;**/Test.class&quot;/&gt;</pre></blockquote>
+       excludes=&quot;**/Test.class&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
 
 <h4>Multiple filesets</h4>
-<blockquote><pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
              excludes=&quot;**/Test.class&quot;/&gt;
     &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
-  &lt;/jar&gt;</pre></blockquote>
+  &lt;/jar&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory and also
 in the <code>${src}/resources</code> directory together into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
@@ -484,20 +483,20 @@ by Java).</p>
 
 <h4>Merging archives</h4>
 
-<blockquote><pre> &lt;jar destfile="build/main/checksites.jar"&gt;
+<pre> &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
     &lt;zipfileset includes="**/*.class" src="lib/main/some.jar"/&gt;
     &lt;manifest&gt;
       &lt;attribute name="Main-Class"
             value="com.acme.checksites.Main"/&gt;
     &lt;/manifest&gt;
-  &lt;/jar&gt;</pre></blockquote>
+  &lt;/jar&gt;</pre>
 <p>
   Creates an executable jar file with a main class "com.acme.checksites.Main", and
   embeds all the classes from the jar <code>lib/main/some.jar</code>.
 </p>
 
-<blockquote><pre> &lt;jar destfile="build/main/checksites.jar"&gt;
+<pre> &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
     &lt;restrict&gt;
      &lt;name name="**/*.class"/&gt;
@@ -511,14 +510,14 @@ by Java).</p>
       &lt;attribute name="Main-Class"
             value="com.acme.checksites.Main"/&gt;
     &lt;/manifest&gt;
-  &lt;/jar&gt;</pre></blockquote>
+  &lt;/jar&gt;</pre>
 <p>
   Creates an executable jar file with a main class "com.acme.checksites.Main", and
   embeds all the classes from all the jars in <code>lib/main</code>.
 </p>
 
 <h4>Inline manifest</h4>
-<blockquote><pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
+<pre>  &lt;jar destfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
       &lt;!-- If this is an Applet or Web Start application, include
@@ -536,14 +535,14 @@ by Java).</p>
         &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
       &lt;/section&gt;
     &lt;/manifest&gt;
-  &lt;/jar&gt;</pre></blockquote>
+  &lt;/jar&gt;</pre>
 <p>
 This is an example of an inline manifest specification including the version of the build
 program (Implementation-Version). Note that the Built-By attribute will take the value of the Ant
 property ${user.name}. The manifest produced by the above would look like this:
 </p>
 
-<blockquote><pre>Manifest-Version: 1.0
+<pre>Manifest-Version: 1.0
 Permissions: sandbox
 Codebase: example.com
 Built-By: conor
@@ -553,7 +552,7 @@ Implementation-Version: 1.0.0beta2
 Created-By: Apache Ant 1.9.2
 
 Name: common/MyClass.class
-Sealed: false</pre></blockquote>
+Sealed: false</pre>
 
 <h4>Service Provider</h4>
 
@@ -561,20 +560,18 @@ Sealed: false</pre></blockquote>
   The following shows how to create a jar file specifying a service
   with an implementation of the JDK 6 scripting interface:
 </p>
-<blockquote><pre>&lt;jar destfile="pinky.jar"&gt;
+<pre>&lt;jar destfile="pinky.jar"&gt;
   &lt;fileset dir="build/classes"/&gt;
   &lt;service type="javax.script.ScriptEngineFactory"
            provider="org.acme.PinkyLanguage"/&gt;
 &lt;/jar&gt;
-</pre></blockquote>
-
-
+</pre>
 
 <p>
   The following shows how to create a jar file specifying a service
   with two implementations of the JDK 6 scripting interface:
 </p>
-<blockquote><pre>
+<pre>
 &lt;jar destfile="pinkyandbrain.jar"&gt;
   &lt;fileset dir="classes"/&gt;
   &lt;service type="javax.script.ScriptEngineFactory"&gt;
@@ -582,8 +579,7 @@ Sealed: false</pre></blockquote>
     &lt;provider classname="org.acme.BrainLanguage"/&gt;
   &lt;/service&gt;
 &lt;/jar&gt;
-</pre></blockquote>
-
+</pre>
 
 <h4 id="jep238-example">JEP 238 example: a Multi-Release JAR Files</h4>
 <p>
@@ -601,7 +597,7 @@ Sealed: false</pre></blockquote>
   <code>${java.classes}</code> and the Java 9 classes are compiled into
   <code>${java9.classes}</code>.
 </p>
-<blockquote><pre>
+<pre>
     &lt;jar destfile=&quot;mrjar.jar&quot;&gt;
       &lt;manifest&gt;
         &lt;!-- special mf-entry according to the spec --&gt;
@@ -613,7 +609,7 @@ Sealed: false</pre></blockquote>
       &lt;!-- ... per release classes, require Java 9+ for loadable via standard ClassLoader --&gt;
       &lt;zipfileset prefix=&quot;META-INF/versions/9/&quot; dir=&quot;${java9.classes}&quot;/&gt;
     &lt;/jar&gt;
-</pre></blockquote>
+</pre>
 
 </body>
 </html>

@@ -191,41 +191,30 @@ JVM documentation for more details.
 </p>
 
 <h3>Examples</h3>
-<blockquote>
-  <pre>ant</pre>
-</blockquote>
+
+<pre>ant</pre>
 <p>runs Ant using the <code>build.xml</code> file in the current directory, on
 the default target.</p>
 
-<blockquote>
-  <pre>ant -buildfile test.xml</pre>
-</blockquote>
+<pre>ant -buildfile test.xml</pre>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the default target.</p>
 
-<blockquote>
-  <pre>ant -buildfile test.xml dist</pre>
-</blockquote>
+<pre>ant -buildfile test.xml dist</pre>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the target called <code>dist</code>.</p>
 
-<blockquote>
-  <pre>ant -buildfile test.xml -Dbuild=build/classes dist</pre>
-</blockquote>
+<pre>ant -buildfile test.xml -Dbuild=build/classes dist</pre>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the target called <code>dist</code>, setting the <code>build</code> property
 to the value <code>build/classes</code>.</p>
 
-<blockquote>
-  <pre>ant -lib /home/ant/extras</pre>
-</blockquote>
+<pre>ant -lib /home/ant/extras</pre>
 <p>runs Ant picking up additional task and support jars from the
 /home/ant/extras location</p>
 
-<blockquote>
-  <pre>ant -lib one.jar;another.jar</pre>
-  <pre>ant -lib one.jar -lib another.jar</pre>
-</blockquote>
+<pre>ant -lib one.jar;another.jar</pre>
+<pre>ant -lib one.jar -lib another.jar</pre>
 <p>adds two jars to Ants classpath.</p>
 
 <h3 id="files">Files</h3>
@@ -262,9 +251,7 @@ set):</p>
 <p>Some of Ant's core classes can be configured via system properties.</p>
 <p>Here is the result of a search through the codebase. Because system properties are
   available via Project instance, I searched for them with a</p>
-<pre>
-    grep -r -n "getPropert" * &gt; ..\grep.txt
-</pre>
+<pre>grep -r -n "getPropert" * &gt; ..\grep.txt</pre>
 <p>command. After that I filtered out the often-used but not-so-important values (most of them
 read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name,
 line.separator, java.home, java.version, java.version, user.home, java.class.path</i><br>
@@ -565,13 +552,9 @@ have some documentation inside.</p>
 <h2 id="viajava">Running Ant via Java</h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
 from one of two entry points:</p>
-<blockquote>
-  <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
-</blockquote>
 
-<blockquote>
-  <pre>java -Dant.home=c:\ant org.apache.tools.ant.launch.Launcher [options] [target]</pre>
-</blockquote>
+<pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
+<pre>java -Dant.home=c:\ant org.apache.tools.ant.launch.Launcher [options] [target]</pre>
 
 <p>
 The first method runs Ant's traditional entry point. The second method uses

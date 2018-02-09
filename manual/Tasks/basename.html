@@ -64,23 +64,23 @@ the basename will be the simple file name, without any directory elements.
 </table>
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;basename property=&quot;jar.filename&quot; file=&quot;${lib.jarfile}&quot;/&gt;
-</pre></blockquote>
+</pre>
 will set <code>jar.filename</code> to
 <code>myjar.jar</code>, if <code>lib.jarfile</code> is defined as either a
 full-path filename (eg., <code>/usr/local/lib/myjar.jar</code>),
 a relative-path filename (eg., <code>lib/myjar.jar</code>),
 or a simple filename (eg., <code>myjar.jar</code>).
-<blockquote><pre>
+<pre>
 &lt;basename property=&quot;cmdname&quot; file=&quot;D:/usr/local/foo.exe&quot;
           suffix=&quot;.exe&quot;/&gt;
-</pre></blockquote>
+</pre>
 will set <code>cmdname</code> to <code>foo</code>.
-<blockquote><pre>
+<pre>
 &lt;property environment=&quot;env&quot;/&gt;
 &lt;basename property=&quot;temp.dirname&quot; file=&quot;${env.TEMP}&quot;/&gt;
-</pre></blockquote>
+</pre>
 will set <code>temp.dirname</code> to the last directory element of
 the path defined for the <code>TEMP</code> environment variable.
 

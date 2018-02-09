@@ -155,25 +155,23 @@ could use as initial value for these experiments.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-  <blockquote><pre>
+  <pre>
 &lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
 UNIX system.</p>
-<blockquote><pre>
+<pre>
 &lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>makes the &quot;start.sh&quot; file readable, writable and executable only for the owner on a
 UNIX system.</p>
-<blockquote>
 <pre>
 &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot;
        includes=&quot;**/*.sh&quot;/&gt;
 </pre>
-</blockquote>
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
 readable and executable for anyone on a UNIX system.</p>
-<blockquote>
+
 <pre>
 &lt;chmod perm=&quot;g+w&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
@@ -182,14 +180,11 @@ readable and executable for anyone on a UNIX system.</p>
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/chmod&gt;
 </pre>
-</blockquote>
 <p>makes all files below <code>shared/sources1</code> (except those
 below any directory named trial) writable for members of the same
 group on a UNIX system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 permissions.</p>
-
-<blockquote>
 <pre>
 &lt;chmod perm=&quot;go-rwx&quot; type=&quot;file&quot;&gt;
   &lt;fileset dir=&quot;/web&quot;&gt;
@@ -201,13 +196,10 @@ permissions.</p>
   &lt;/dirset&gt;
 &lt;/chmod&gt;
 </pre>
-</blockquote>
-
 <p>keeps non-owners from touching cgi scripts, files with a <code>.old</code>
 extension or directories beginning with <code>private_</code>. A directory
 ending in <code>.old</code> or a file beginning with private_ would remain
 unaffected.</p>
-
 
   <h3>Note on maxparallel attribute</h3>
   <p>

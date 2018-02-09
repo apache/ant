@@ -60,7 +60,6 @@ types listed in the environment variable PATHEXT. That is only used by the shell
     One normally needs to execute the command shell executable <code>cmd</code>
     using the <code>/c</code> switch.
   </p>
-  <blockquote>
 <pre>
 &lt;target name="help"&gt;
   &lt;exec executable="cmd"&gt;
@@ -69,7 +68,7 @@ types listed in the environment variable PATHEXT. That is only used by the shell
     &lt;arg value="-p"/&gt;
   &lt;/exec&gt;
 &lt;/target&gt;
-</pre></blockquote>
+</pre>
 
 <p>A common problem is not having the executable on the PATH. In case you get an error
 message <tt>Cannot run program "...":CreateProcess error=2. The system cannot find
@@ -78,7 +77,6 @@ the command line and if Windows finds it, Ant should do it too. (Otherwise ask o
 to the PATH (<tt>set PATH=%PATH%;dirOfProgram</tt>) or specify the absolute path in the
 <tt>executable</tt> attribute in your buildfile.
 </p>
-
 
 <h4>Cygwin Users</h4>
 <p>The <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh
@@ -116,27 +114,20 @@ set to <code>true</code> instead as this task will follow the VM's
 interpretation of exit codes.</p>
 
 <h4>RedHat S/390 Users</h4>
-
 <p>It has been <a
 href="http://listserv.uark.edu/scripts/wa.exe?A1=ind0404&L=vmesa-l#33">reported
 on the VMESA-LISTSERV</a> that shell scripts invoked via the Ant Exec
 task must have their interpreter specified, i.e., the scripts must
 start with something like:</p>
 
-<blockquote>
 <pre>
 #!/bin/bash
 </pre>
-</blockquote>
-
 <p>or the task will fail as follows:</p>
-
-<blockquote>
 <pre>
 [exec] Warning: UNIXProcess.forkAndExec native error: Exec format error
 [exec] Result: 255
 </pre>
-</blockquote>
 
 <h4 id="background">Running Ant as a background process on Unix(-like) systems</h4>
 
@@ -318,12 +309,11 @@ start with something like:</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
 <pre>
 &lt;exec dir=&quot;${src}&quot; executable=&quot;cmd.exe&quot; os=&quot;Windows 2000&quot; output=&quot;dir.txt&quot;&gt;
   &lt;arg line=&quot;/c dir&quot;/&gt;
 &lt;/exec&gt;</pre>
-</blockquote>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
@@ -398,34 +388,31 @@ it is not on the path. Any time you see such an error from any Ant task, it is
 usually not an Ant bug, but some configuration problem on your machine.
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;exec executable=&quot;emacs&quot;&gt;
   &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot;/&gt;
 &lt;/exec&gt;
-</pre></blockquote>
+</pre>
 <p>starts <code>emacs</code> on display 1 of the X Window System.</p>
-
-<blockquote><pre>
+<pre>
 &lt;property environment=&quot;env&quot;/&gt;
 &lt;exec ... &gt;
   &lt;env key=&quot;PATH&quot; path=&quot;${env.PATH}:${basedir}/bin&quot;/&gt;
 &lt;/exec&gt;
-</pre></blockquote>
+</pre>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
 system command.</p>
-
-<blockquote><pre>
+<pre>
 &lt;property name="browser" location="C:/Program Files/Internet Explorer/iexplore.exe"/&gt;
 &lt;property name="file" location="ant/docs/manual/index.html"/&gt;
 
 &lt;exec executable="${browser}" spawn="true"&gt;
     &lt;arg value="${file}"/&gt;
 &lt;/exec&gt;
-</pre></blockquote>
+</pre>
 <p>Starts the <i>${browser}</i> with the specified <i>${file}</i> and end the
 Ant process. The browser will remain.</p>
-
-<blockquote><pre>
+<pre>
 &lt;exec executable=&quot;cat&quot;&gt;
     &lt;redirector outputproperty=&quot;redirector.out&quot;
                 errorproperty=&quot;redirector.err&quot;
@@ -437,7 +424,7 @@ Ant process. The browser will remain.</p>
         &lt;errormapper type=&quot;merge&quot; to=&quot;redirector.err&quot;/&gt;
     &lt;/redirector&gt;
 &lt;/exec&gt;
-</pre></blockquote>
+</pre>
 
 Sends the string &quot;blah before blah&quot; to the &quot;cat&quot; executable,
 using an <a href="../Types/filterchain.html">&lt;inputfilterchain&gt;</a>

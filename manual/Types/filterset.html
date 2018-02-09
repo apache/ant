@@ -141,27 +141,27 @@ you should ensure that the set of files being filtered are all text files.
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the <code>build</code> directory
 but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
-<blockquote><pre>
+<pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;
     &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the build directory
 but wish to replace the token <code>%DATE*</code> with today's date.</p>
-<blockquote><pre>
+<pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
     &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>Copy all the docs but change all dates and appropriate notices as stored in a file.</p>
-<blockquote><pre>
+<pre>
 &lt;copy toDir=&quot;${dist.dir}/docs&quot;&gt;
   &lt;fileset dir=&quot;${build.dir}/docs&quot;&gt;
     &lt;include name=&quot;**/*.html&quot;&gt;
@@ -170,10 +170,10 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
     &lt;filtersfile file=&quot;${user.dir}/dist.properties&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>Define a FilterSet and reference it later.</p>
-<blockquote><pre>
+<pre>
 &lt;filterset id=&quot;myFilterSet&quot; begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
   &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
 &lt;/filterset&gt;
@@ -181,12 +181,12 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset refid=&quot;myFilterSet&quot;/&gt;
 &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the <code>build</code> directory
 but wish to replace the token <code>&#64;project.date&#64;</code> with the property of the same name.</p>
-<blockquote><pre>
+<pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;
     &lt;propertyset&gt;
@@ -194,5 +194,6 @@ but wish to replace the token <code>&#64;project.date&#64;</code> with the prope
     &lt;/propertyset&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
-</pre></blockquote>
-</body></html>
+</pre>
+</body>
+</html>

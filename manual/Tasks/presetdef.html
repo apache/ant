@@ -71,7 +71,6 @@
       srcdir and destdir
       attributes set. It also has a src element to source files from a generated
       directory.
-    <blockquote>
 <pre class="code">
 &lt;presetdef name="my.javac"&gt;
    &lt;javac debug="${debug}" deprecation="${deprecation}"
@@ -80,24 +79,18 @@
    &lt;/javac&gt;
 &lt;/presetdef&gt;
 </pre>
-    </blockquote>
       This can be used as a normal javac task - example:
-    <blockquote>
 <pre class="code">
 &lt;my.javac/&gt;
 </pre>
-    </blockquote>
       The attributes specified in the preset task may be overridden - i.e.
       they may be seen as optional attributes - example:
-    <blockquote>
 <pre class="code">
 &lt;my.javac srcdir="${test.src}" deprecation="no"/&gt;
 </pre>
-    </blockquote>
       One may put a presetdef definition in an antlib.
       For example suppose the jar file antgoodies.jar has
       the antlib.xml as follows:
-    <blockquote>
 <pre class="code">
 &lt;antlib&gt;
    &lt;taskdef resource="com/acme/antgoodies/tasks.properties"/&gt;
@@ -108,9 +101,7 @@
    &lt;/presetdef&gt;
 &lt;/antlib&gt;
 </pre>
-    </blockquote>
       One may then use this in a build file as follows:
-    <blockquote>
 <pre class="code">
 &lt;project default="example" xmlns:antgoodies="antlib:com.acme.antgoodies"&gt;
    &lt;target name="example"&gt;
@@ -121,12 +112,10 @@
    &lt;/target&gt;
 &lt;/project&gt;
 </pre>
-    </blockquote>
     <p>
       The following is an example of evaluation of properties when the
       definition is used:
     </p>
-     <blockquote>
 <pre class="code">
 &lt;target name="defineandcall"&gt;
    &lt;presetdef name="showmessage"&gt;
@@ -143,11 +132,9 @@
    &lt;showmessage/&gt;
 &lt;/target&gt;
 </pre>
-     </blockquote>
      <p>
         The command ant defineandcall results in the output:
      </p>
-     <blockquote>
 <pre class="code">
 defineandcall:
 [showmessage] message is '${message}'
@@ -156,14 +143,13 @@ defineandcall:
 called:
 [showmessage] message is 'Message 2'
 </pre>
-     </blockquote>
 <p>
 It is possible to use a trick to evaluate properties when the definition is
 <em>made</em> rather than used. This can be useful if you do not expect some
 properties to be available in child builds run with
 <code>&lt;ant ... inheritall="false"&gt;</code>:
 </p>
-<blockquote><pre class="code">
+<pre class="code">
 &lt;macrodef name="showmessage-presetdef"&gt;
   &lt;attribute name="messageval"/&gt;
   &lt;presetdef name="showmessage"&gt;
@@ -171,7 +157,7 @@ properties to be available in child builds run with
   &lt;/presetdef&gt;
 &lt;/macrodef&gt;
 &lt;showmessage-presetdef messageval="${message}"/&gt;
-</pre></blockquote>
+</pre>
 
   </body>
 </html>

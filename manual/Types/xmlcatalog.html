@@ -241,17 +241,17 @@ resolver library from xml-commons is not available in the classpath, all
 <p>Set up an XMLCatalog with a single dtd referenced locally in a user's
 home
 directory:</p>
-<blockquote><pre>
+<pre>
     &lt;xmlcatalog&gt;
         &lt;dtd
             publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
             location=&quot;/home/dion/downloads/docbook/docbookx.dtd&quot;/&gt;
     &lt;/xmlcatalog&gt;
-</pre></blockquote>
+</pre>
 <p>Set up an XMLCatalog with a multiple dtds to be found either in the
 filesystem (relative to the Ant project basedir) or in the classpath:
 </p>
-<blockquote><pre>
+<pre>
     &lt;xmlcatalog id=&quot;commonDTDs&quot;&gt;
         &lt;dtd
             publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
@@ -260,13 +260,13 @@ filesystem (relative to the Ant project basedir) or in the classpath:
             publicId=&quot;-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN&quot;
             location=&quot;web-app_2_2.dtd&quot;/&gt;
     &lt;/xmlcatalog&gt;
-</pre></blockquote>
+</pre>
 
 <p>Set up an XMLCatalog with a combination of DTDs and entities as
 well as a nested XMLCatalog and external catalog files in both
 formats:</p>
 
-<blockquote><pre>
+<pre>
     &lt;xmlcatalog id=&quot;allcatalogs&quot;&gt;
         &lt;dtd
             publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
@@ -286,9 +286,9 @@ formats:</p>
             &lt;/catalogpath&gt;
         &lt;/xmlcatalog&gt;
     &lt;/xmlcatalog&gt;
-</pre></blockquote>
+</pre>
 <p>To reference the above XMLCatalog in an <code>xslt</code> task:<p>
-<blockquote><pre>
+<pre>
     &lt;xslt basedir="${source.doc}"
            destdir="${dest.xdocs}"
            extension=".xml"
@@ -297,7 +297,7 @@ formats:</p>
            force="true"&gt;
         &lt;xmlcatalog refid=&quot;allcatalogs&quot;/&gt;
     &lt;/xslt&gt;
-</pre></blockquote>
+</pre>
 
 </body>
 </html>

@@ -117,7 +117,6 @@ to ignore (requires JDepend 2.5 or above).</p>
 
 <h3>Examples</h3>
 
-<blockquote>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
     &lt;classespath&gt;
@@ -125,13 +124,12 @@ to ignore (requires JDepend 2.5 or above).</p>
     &lt;/classespath&gt;
 &lt;/jdepend&gt;
 </pre>
-</blockquote>
 
 <p>This invokes JDepend on the <code>build</code> directory, writing
 the output on the standard output. The classpath is defined using a
 classpath reference.</p>
 
-<blockquote>
+
 <pre>
 &lt;jdepend outputfile="docs/jdepend.xml" fork="yes" format="xml"&gt;
     &lt;sourcespath&gt;
@@ -143,14 +141,12 @@ classpath reference.</p>
     &lt;/classpath&gt;
 &lt;/jdepend&gt;
 </pre>
-</blockquote>
 
 <p>This invokes JDepend in a separate VM on the <code>src</code> and
 <code>testsrc</code> directories, writing the output to the
 <code>&lt;docs/jdepend.xml&gt;</code> file in xml format. The
 classpath is defined using nested elements.</p>
 
-<blockquote>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
     &lt;exclude name="java.*&gt;
@@ -160,7 +156,6 @@ classpath is defined using nested elements.</p>
     &lt;/classespath&gt;
 &lt;/jdepend&gt;
 </pre>
-</blockquote>
 
 <p>This invokes JDepend with the build directory as the base for class
 files to analyze, and will ignore all classes in the java.* and

@@ -60,34 +60,33 @@ Stores the Apache Ant version (when used as task) or checks for a specific Ant v
   </tr>
 </table>
 
-
 <h3>Examples</h3>
 
-<blockquote><pre>
+<pre>
 &lt;antversion property=&quot;antversion&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>Stores the current Ant version in the property <i>antversion</i>.</p>
 
-<blockquote><pre>
+<pre>
 &lt;antversion property=&quot;antversion&quot; atleast=&quot;1.6&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>Stores the Ant version in the property <i>antversion</i> if the current Ant version is 1.6.0
 or higher. Otherwise the property remains unset.</p>
 
-<blockquote><pre>
+<pre>
 &lt;antversion property=&quot;ant-is-exact-7&quot; exactly=&quot;1.7.0&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>Sets the property <i>ant-is-exact-7</i> if Ant 1.7.0 is running. Neither 1.6.5 nor 1.7.0
 would match.</p>
 
-<blockquote><pre>
+<pre>
 &lt;condition property=&quot;Ant17isOnline&quot;&gt;
   &lt;and&gt;
     &lt;antversion exactly=&quot;1.7.0&quot;/&gt;
     &lt;http url=&quot;http://ant.apache.org&quot;/&gt;
   &lt;/and&gt;
 &lt;/condition&gt;
-</pre></blockquote>
+</pre>
 <p>Sets <i>Ant17isOnline</i> if Ant 1.7.0 is running and can get a non-error-response from
 the Ant homepage.</p>
 

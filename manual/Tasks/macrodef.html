@@ -243,7 +243,6 @@
       The following example defined a task called testing and
       runs it.
     </p>
-    <blockquote>
 <pre class=code>
 &lt;macrodef name="testing"&gt;
    &lt;attribute name="v" default="NOT SET"/&gt;
@@ -260,7 +259,6 @@
    &lt;/some-tasks&gt;
 &lt;/testing&gt;
 </pre>
-    </blockquote>
     <p>
       The following fragment defines a task called <code>&lt;call-cc&gt;</code> which
       take the attributes "target", "link" and "target.dir" and the
@@ -268,7 +266,6 @@
       uses the <code>&lt;cc&gt;</code> task from the
       <a href="http://ant-contrib.sourceforge.net/">ant-contrib</a> project.
     </p>
-    <blockquote>
 <pre class="code">
 &lt;macrodef name="call-cc"&gt;
    &lt;attribute name="target"/&gt;
@@ -286,11 +283,9 @@
       &lt;/sequential&gt;
 &lt;/macrodef&gt;
 </pre>
-    </blockquote>
     <p>
       This then can be used as follows:
     </p>
-    <blockquote>
 <pre class="code">
 &lt;call-cc target="unittests" link="executable"
          target.dir="${build.bin.dir}"&gt;
@@ -303,13 +298,11 @@
    &lt;/cc-elements&gt;
 &lt;/call-cc&gt;
 </pre>
-    </blockquote>
     <p>
       The following fragment shows &lt;call-cc&gt;, but this time
       using an implicit element and with the link and target.dir arguments
       having default values.
     </p>
-    <blockquote>
 <pre class="code">
 &lt;macrodef name="call-cc"&gt;
    &lt;attribute name="target"/&gt;
@@ -327,12 +320,10 @@
       &lt;/sequential&gt;
 &lt;/macrodef&gt;
 </pre>
-    </blockquote>
     <p>
       This then can be used as follows, note that &lt;cc-elements&gt;
       is not specified.
     </p>
-    <blockquote>
 <pre class="code">
 &lt;call-cc target="unittests"&gt;
    &lt;includepath location="${gen.dir}"/&gt;
@@ -342,11 +333,9 @@
    &lt;linker refid="linker-libs"/&gt;
 &lt;/call-cc&gt;
 </pre>
-    </blockquote>
     <p>
       The following shows the use of the <code>text</code> element.
     </p>
-    <blockquote>
 <pre class="code">
 &lt;macrodef name="echotest"&gt;
    &lt;text name="text"/&gt;
@@ -358,7 +347,6 @@
    Hello world
 &lt;/echotest&gt;
 </pre>
-    </blockquote>
     <p>
       The following uses a prior defined attribute for setting the
       default value of another. The output would be
@@ -367,7 +355,6 @@
       because while processing the <i>two</i>-line the value for
       <i>one</i> is not set.
     </p>
-    <blockquote>
 <pre class="code">
 &lt;macrodef name="test"&gt;
    &lt;attribute name="one"/&gt;                     <b>*1</b>
@@ -378,7 +365,6 @@
 &lt;/macrodef&gt;
 &lt;test one="test"/&gt;
 </pre>
-    </blockquote>
 
 </body>
 </html>

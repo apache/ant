@@ -64,8 +64,7 @@
       For example a custom condition that returns true if a
       string is all upper case could be written as:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 package com.mydomain;
 
 import org.apache.tools.ant.BuildException;
@@ -87,31 +86,25 @@ public class AllUpperCaseCondition implements Condition {
         return value.toUpperCase().equals(value);
    }
 }
-      </pre>
-    </blockquote>
-
+    </pre>
     <p>
         Adding the condition to the system is achieved as follows:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 &lt;typedef
     name="alluppercase"
     classname="com.mydomain.AllUpperCaseCondition"
     classpath="${mydomain.classes}"/&gt;
-      </pre>
-    </blockquote>
+    </pre>
     <p>
       This condition can now be used wherever a Core Ant condition
       is used.
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 &lt;condition property="allupper"&gt;
    &lt;alluppercase value="THIS IS ALL UPPER CASE"/&gt;
 &lt;/condition&gt;
-      </pre>
-    </blockquote>
+    </pre>
     <h3 id="customselectors">Custom Selectors</h3>
     <p>
       Custom selectors are datatypes that implement
@@ -128,8 +121,7 @@ public class AllUpperCaseCondition implements Condition {
       An example of a custom selection that selects filenames ending
       in ".java" would be:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 package com.mydomain;
 import java.io.File;
 import org.apache.tools.ant.types.selectors.FileSelector;
@@ -138,34 +130,28 @@ public class JavaSelector implements FileSelector {
        return filename.toLowerCase().endsWith(".java");
     }
 }
-      </pre>
-    </blockquote>
+    </pre>
     <p>
       Adding the selector to the system is achieved as follows:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 &lt;typedef
     name="javaselector"
     classname="com.mydomain.JavaSelector"
     classpath="${mydomain.classes}"/&gt;
-      </pre>
-    </blockquote>
-        <p>
+    </pre>
+    <p>
       This selector can now be used wherever a Core Ant selector
       is used, for example:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 &lt;copy todir="to"&gt;
    &lt;fileset dir="src"&gt;
       &lt;javaselector/&gt;
    &lt;/fileset&gt;
 &lt;/copy&gt;
-      </pre>
-    </blockquote>
-
-      <p>
+    </pre>
+    <p>
         One may use
         <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
         a convenience class that provides reasonable default
@@ -197,8 +183,7 @@ public class JavaSelector implements FileSelector {
       if a certain number of contained selectors select, one could write
       a selector as follows:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 public class MatchNumberSelectors extends BaseSelectorContainer {
     private int number = -1;
     public void setNumber(int number) {
@@ -221,13 +206,11 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
         return numberSelected == number;
     }
 }
-      </pre>
-    </blockquote>
+    </pre>
     <p>
       To define and use this selector one could do:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 &lt;typedef name="numberselected"
          classname="com.mydomain.MatchNumberSelectors"/&gt;
 ...
@@ -238,8 +221,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
       &lt;javaselector/&gt;
    &lt;/numberselected&gt;
 &lt;/fileset&gt;
-      </pre>
-    </blockquote>
+    </pre>
     <p>
       <i>The custom selector</i>
     </p>
@@ -250,7 +232,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     <p>You can write your own selectors and use them within the selector
       containers by specifying them within the <code>&lt;custom&gt;</code> tag.</p>
 
-        <p>To create a new Custom Selector, you have to create a class that
+    <p>To create a new Custom Selector, you have to create a class that
         implements
         <code>org.apache.tools.ant.types.selectors.ExtendFileSelector</code>.
         The easiest way to do that is through the convenience base class
@@ -305,15 +287,13 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     <p>Here is how you use <code>&lt;custom&gt;</code> to
       use your class as a selector:
     </p>
-
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir="${mydir}" includes="**/*"&gt;
     &lt;custom classname="com.mydomain.MySelector"&gt;
         &lt;param name="myattribute" value="myvalue"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
-      </pre></blockquote>
-
+    </pre>
     <p>The core selectors that can also be used as custom selectors
       are</p>
 
@@ -337,15 +317,13 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
 
     <p>Here is the example from the Depth Selector section rewritten
     to use the selector through <code>&lt;custom&gt;</code>.</p>
-
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir="${doc.path}" includes="**/*"&gt;
     &lt;custom classname="org.apache.tools.ant.types.selectors.DepthSelector"&gt;
         &lt;param name="max" value="1"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
-      </pre></blockquote>
-
+    </pre>
     <p>Selects all files in the base directory and one directory below
       that.</p>
 
@@ -363,8 +341,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
       For example a filterreader that removes every second character
       could be:
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 public class RemoveOddCharacters implements ChainableReader {
    public Reader chain(Reader reader) {
       return new BaseFilterReader(reader) {
@@ -384,8 +361,7 @@ public class RemoveOddCharacters implements ChainableReader {
       }
    }
 }
-      </pre>
-    </blockquote>
+    </pre>
     <p>
       For line oriented filters it may be easier to extend
       <code>ChainableFilterReader</code> an inner class of
@@ -394,8 +370,7 @@ public class RemoveOddCharacters implements ChainableReader {
     <p>
       For example a filter that appends the line number could be
     </p>
-    <blockquote>
-      <pre>
+    <pre>
 public class AddLineNumber extends ChainableReaderFilter {
    private void lineNumber = 0;
    public String filter(String string) {
@@ -403,8 +378,7 @@ public class AddLineNumber extends ChainableReaderFilter {
       return "" + lineNumber + "\t" + string;
    }
 }
-      </pre>
-    </blockquote>
+    </pre>
 
   </body>
 </html>

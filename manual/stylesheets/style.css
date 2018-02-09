@@ -84,11 +84,13 @@ code {
 
 pre {
    background-color: #efefef;
+   margin-right: 4rem;
+   margin-left: 4rem;
 }
 
 /* code snippets in examples and tutorials */
 .code { 
-   background: #EFEFEF; 
+   background: #efefef;
 }
 
 /* highlight console output */

@@ -56,7 +56,7 @@ FilterReaders can be easily plugged in as nested elements of
 <code>&lt;filterchain&gt;</code> by using <code>&lt;filterreader&gt;</code> elements.
 <p>
 Example:
-<blockquote><pre>
+<pre>
 &lt;copy file=&quot;${src.file}&quot; tofile=&quot;${dest.file}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;your.extension.of.java.io.FilterReader&quot;&gt;
@@ -71,21 +71,21 @@ Example:
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 Ant provides some built-in filter readers.  These filter readers
 can also be declared using a syntax similar to the above syntax.
 However, they can be declared using some simpler syntax also.<p>
 Example:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 is equivalent to:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
@@ -93,7 +93,7 @@ is equivalent to:
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 The following built-in tasks support nested <code>&lt;filterchain&gt;</code> elements.<br>
 <a href="../Tasks/concat.html">Concat</a>,<br>
@@ -188,18 +188,18 @@ distribution.
 
 This loads the basic constants defined in a Java class as Ant properties.
 
-<blockquote><pre>
+<pre>
 &lt;loadproperties srcfile="foo.class" encoding="ISO-8859-1"&gt;
   &lt;filterchain&gt;
     &lt;classconstants/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
-</pre></blockquote>
+</pre>
 
 This loads the constants from a Java class file as Ant properties,
 prepending the names with a prefix.
 
-    <blockquote><pre>
+    <pre>
 &lt;loadproperties srcfile="build/classes/org/acme/bar.class"
                 encoding="ISO-8859-1"&gt;
   &lt;filterchain&gt;
@@ -207,7 +207,7 @@ prepending the names with a prefix.
     &lt;prefixlines prefix="ini."/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
-</pre></blockquote>
+</pre>
 <h3 id="escapeunicode">EscapeUnicode</h3>
 <p>
 This filter converts its input by changing all non US-ASCII characters
@@ -218,34 +218,34 @@ into their equivalent unicode escape backslash u plus 4 digits.</p>
 <h4>Example:</h4>
 
 This loads the basic constants defined in a Java class as Ant properties.
-<blockquote><pre>
+<pre>
 &lt;loadproperties srcfile=&quot;non_ascii_property.properties&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadproperties srcfile=&quot;non_ascii_property.properties&quot;&gt;
   &lt;filterchain&gt;
     &lt;escapeunicode/&gt;
   &lt;/filterchain&gt;
 &lt;/loadproperties&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="expandproperties">ExpandProperties</h3>
 <p>
 If the data contains data that represents Ant
 properties (of the form ${...}), that is substituted
 with the property's actual value.
-<p>
+</p>
 <h4>Example:</h4>
 
 This results in the property modifiedmessage holding the value
 &quot;All these moments will be lost in time, like teardrops in the rain&quot;
-<blockquote><pre>
+<pre>
 &lt;echo
   message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
   file=&quot;loadfile1.tmp&quot;
@@ -256,10 +256,10 @@ This results in the property modifiedmessage holding the value
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;echo
   message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
   file=&quot;loadfile1.tmp&quot;
@@ -270,12 +270,12 @@ Convenience method:
     &lt;expandproperties/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <p><em>Since Ant 1.8.3</em>, a nested
- <a href="propertyset.html">PropertySet</a> can be specified:
+  <a href="propertyset.html">PropertySet</a> can be specified:</p>
 
-<blockquote><pre>
+<pre>
 &lt;property name=&quot;weather&quot; value=&quot;rain&quot;/&gt;
 &lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
   &lt;filterchain&gt;
@@ -286,7 +286,7 @@ Convenience method:
     &lt;/expandproperties&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="headfilter">HeadFilter</h3>
 
@@ -316,7 +316,7 @@ This filter reads the first few lines from the data supplied to it.
 <h4>Example:</h4>
 
 This stores the first 15 lines of the supplied data in the property src.file.head
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
@@ -324,26 +324,26 @@ This stores the first 15 lines of the supplied data in the property src.file.hea
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This stores the first 15 lines, skipping the first 2 lines, of the supplied data
 in the property src.file.head. (Means: lines 3-17)
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot; skip=&quot;2&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 See the testcases for more examples (<i>src\etc\testcases\filters\head-tail.xml</i> in the
 source distribution).
@@ -376,36 +376,36 @@ strings.
 
 This will include only those lines that contain <code>foo</code> and
 <code>bar</code>.
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContains&quot;&gt;
   &lt;param type=&quot;contains&quot; value=&quot;foo&quot;/&gt;
   &lt;param type=&quot;contains&quot; value=&quot;bar&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;linecontains&gt;
   &lt;contains value=&quot;foo&quot;/&gt;
   &lt;contains value=&quot;bar&quot;/&gt;
 &lt;/linecontains&gt;
-</pre></blockquote>
+</pre>
 
 Negation:
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContains&quot;&gt;
   &lt;param type=&quot;negate&quot; value=&quot;true&quot;/&gt;
   &lt;param type=&quot;contains&quot; value=&quot;foo&quot;/&gt;
   &lt;param type=&quot;contains&quot; value=&quot;bar&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 <i>or</i>
-<blockquote><pre>
+<pre>
 &lt;linecontains negate=&quot;true&quot;&gt;
   &lt;contains value=&quot;foo&quot;/&gt;
   &lt;contains value=&quot;bar&quot;/&gt;
 &lt;/linecontains&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="linecontainsregexp">LineContainsRegExp</h3>
 
@@ -447,32 +447,32 @@ the choice of regular expression implementation.
 <h4>Example:</h4>
 
 This will fetch all those lines that contain the pattern <code>foo</code>
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
   &lt;param type=&quot;regexp&quot; value=&quot;foo*&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;linecontainsregexp&gt;
   &lt;regexp pattern=&quot;foo*&quot;/&gt;
 &lt;/linecontainsregexp&gt;
-</pre></blockquote>
+</pre>
 
 Negation:
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
   &lt;param type=&quot;negate&quot; value=&quot;true&quot;/&gt;
   &lt;param type=&quot;regexp&quot; value=&quot;foo*&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 <i>or</i>
-<blockquote><pre>
+<pre>
 &lt;linecontainsregexp negate=&quot;true&quot;&gt;
   &lt;regexp pattern=&quot;foo*&quot;/&gt;
 &lt;/linecontainsregexp&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="prefixlines">PrefixLines</h3>
 
@@ -494,16 +494,16 @@ Attaches a prefix to every line.
 <h4>Example:</h4>
 
 This will attach the prefix <code>Foo</code> to all lines.
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
   &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="suffixlines">SuffixLines</h3>
 
@@ -527,16 +527,16 @@ Attaches a suffix to every line.
 <h4>Example:</h4>
 
 This will attach the suffix <code>Foo</code> to all lines.
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.SuffixLines&quot;&gt;
   &lt;param name=&quot;suffix&quot; value=&quot;Foo&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;suffixlines suffix=&quot;Foo&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="replacetokens">ReplaceTokens</h3>
 
@@ -598,7 +598,7 @@ user defined values.
 
 This replaces occurrences of the string &#64;DATE&#64; in the data
 with today's date and stores it in the property ${src.file.replaced}.
-<blockquote><pre>
+<pre>
 &lt;tstamp/&gt;
 &lt;!-- just for explaining the use of the properties --&gt;
 &lt;property name=&quot;src.file&quot; value=&quot;orders.csv&quot;/&gt;
@@ -615,10 +615,10 @@ with today's date and stores it in the property ${src.file.replaced}.
 
 &lt;!-- just for explaining the use of the properties --&gt;
 &lt;echo message=&quot;${orders.replaced}&quot;/>
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;tstamp/&gt;
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
@@ -627,11 +627,11 @@ Convenience method:
     &lt;/replacetokens&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This replaces occurrences of the string {{DATE}} in the data
 with today's date and stores it in the property ${src.file.replaced}.
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ReplaceTokens&quot;&gt;
@@ -640,10 +640,10 @@ with today's date and stores it in the property ${src.file.replaced}.
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;tstamp/&gt;
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
@@ -652,10 +652,10 @@ Convenience method:
     &lt;/replacetokens&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This will treat each properties file entry in sample.properties as a token/key pair :
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ReplaceTokens&quot;&gt;
@@ -663,10 +663,10 @@ This will treat each properties file entry in sample.properties as a token/key p
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This reads the properties from an Ant resource referenced by its id:
-<blockquote><pre>
+<pre>
 &lt;string id=&quot;embedded-properties&quot;&gt;
 foo=bar
 baz=xyzzy
@@ -676,7 +676,7 @@ baz=xyzzy
     &lt;replacetokens propertiesResource=&quot;${ant.refid:embedded-properties}&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="stripjavacomments">StripJavaComments</h3>
 
@@ -686,22 +686,22 @@ take in any parameters.
 <p>
 <h4>Example:</h4>
 
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${java.src.file}&quot; property=&quot;${java.src.file.nocomments}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripJavaComments&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${java.src.file}&quot; property=&quot;${java.src.file.nocomments}&quot;&gt;
   &lt;filterchain&gt;
     &lt;stripjavacomments/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="striplinebreaks">StripLineBreaks</h3>
 
@@ -725,26 +725,26 @@ from the data supplied to it.
 <h4>Examples:</h4>
 
 This strips the '\r' and '\n' characters.
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.contents}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.contents}&quot;&gt;
   &lt;filterchain&gt;
     &lt;striplinebreaks/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This treats the '(' and ')' characters as line break characters and
 strips them.
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.contents}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;&gt;
@@ -752,7 +752,7 @@ strips them.
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="striplinecomments">StripLineComments</h3>
 
@@ -776,7 +776,7 @@ that represent comments as specified by the user.
 <h4>Examples:</h4>
 
 This removes all lines that begin with #, --, REM, rem and //
-<blockquote><pre>
+<pre>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
   &lt;param type=&quot;comment&quot; value=&quot;#&quot;/&gt;
   &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
@@ -784,10 +784,10 @@ This removes all lines that begin with #, --, REM, rem and //
   &lt;param type=&quot;comment&quot; value=&quot;rem &quot;/&gt;
   &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
 &lt;/filterreader&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;striplinecomments&gt;
   &lt;comment value=&quot;#&quot;/&gt;
   &lt;comment value=&quot;--&quot;/&gt;
@@ -795,7 +795,7 @@ Convenience method:
   &lt;comment value=&quot;rem &quot;/&gt;
   &lt;comment value=&quot;//&quot;/&gt;
 &lt;/striplinecomments&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="tabstospaces">TabsToSpaces</h3>
 
@@ -817,22 +817,22 @@ This filter replaces tabs with spaces
 <h4>Examples:</h4>
 
 This replaces tabs in ${src.file} with spaces.
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.notab}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.TabsToSpaces&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.notab}&quot;&gt;
   &lt;filterchain&gt;
     &lt;tabstospaces/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="tailfilter">TailFilter</h3>
 
@@ -931,7 +931,7 @@ This graphic shows the dependencies:
 <h4>Examples:</h4>
 
 This stores the last 15 lines of the supplied data in the property ${src.file.tail}
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.tail}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.TailFilter&quot;&gt;
@@ -939,20 +939,20 @@ This stores the last 15 lines of the supplied data in the property ${src.file.ta
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.tail}&quot;&gt;
   &lt;filterchain&gt;
     &lt;tailfilter lines=&quot;15&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This stores the last 5 lines of the first 15 lines of the supplied
 data in the property ${src.file.mid}
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.mid}&quot;&gt;
   &lt;filterchain&gt;
     &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
@@ -963,28 +963,28 @@ data in the property ${src.file.mid}
     &lt;/filterreader&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 Convenience method:
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.mid}&quot;&gt;
   &lt;filterchain&gt;
     &lt;headfilter lines=&quot;15&quot;/&gt;
     &lt;tailfilter lines=&quot;5&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 This stores the last 10 lines, skipping the last 2 lines, of the supplied data
 in the property src.file.head. (Means: if supplied data contains 60 lines,
 lines 49-58 are extracted)
-<blockquote><pre>
+<pre>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;src.file.head&quot;&gt;
   &lt;filterchain&gt;
     &lt;tailfilter lines=&quot;10&quot; skip=&quot;2&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="deletecharacters">DeleteCharacters</h3>
 
@@ -1011,9 +1011,9 @@ lines 49-58 are extracted)
 <h4>Examples:</h4>
 
 Delete tabs and returns from the data.
-<blockquote><pre>
+<pre>
 &lt;deletecharacters chars="\t\r"/&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="concatfilter">ConcatFilter</h3>
   <p>This filter prepends or appends the content file to the filtered files.</p>
@@ -1044,18 +1044,18 @@ Delete tabs and returns from the data.
 <h4>Examples:</h4>
 
 Do nothing:
-<blockquote><pre>
+<pre>
 &lt;filterchain&gt;
     &lt;concatfilter/&gt;
 &lt;/filterchain&gt;
-</pre></blockquote>
+</pre>
 
 Adds a license text before each java source:
-<blockquote><pre>
+<pre>
 &lt;filterchain&gt;
     &lt;concatfilter prepend="apache-license-java.txt"/&gt;
 &lt;/filterchain&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="sortfilter">SortFilter</h3>
   <p><em>since Ant 1.8.0</em></p>
@@ -1094,14 +1094,14 @@ Adds a license text before each java source:
 
 <h4>Examples:</h4>
 
-<blockquote><pre>
+<pre>
   &lt;copy todir=&quot;build&quot;&gt;
       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
       &lt;filterchain&gt;
           &lt;sortfilter/&gt;
       &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>
 Sort all files <code>*.txt</code> from <i>src</i> location
@@ -1110,21 +1110,21 @@ ascendant order comparing the lines via the
 <code>String.compareTo(Object o)</code> method.
 </p>
 
-<blockquote><pre>
+<pre>
   &lt;copy todir=&quot;build&quot;&gt;
       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
       &lt;filterchain&gt;
           &lt;sortfilter reverse=&quot;true&quot;/&gt;
       &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>
 Sort all files <code>*.txt</code> from <i>src</i> location into reverse
 order and copy them into <i>build</i> location.
 </p>
 
-<blockquote><pre>
+<pre>
   &lt;copy todir=&quot;build&quot;&gt;
       &lt;fileset dir=&quot;input&quot; includes=&quot;*.txt&quot;/&gt;
       &lt;filterchain&gt;
@@ -1133,7 +1133,7 @@ order and copy them into <i>build</i> location.
           &lt;/filterreader&gt;
       &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <p>
 Sort all files <code>*.txt</code> from <i>src</i> location using as
@@ -1157,7 +1157,7 @@ implement <code>java.util.Comparator</code> interface, for example:
 
 <p>The example above is equivalent to:</p>
 
-<blockquote><pre>
+<pre>
   &lt;componentdef name=&quot;evenfirst&quot;
                 classname=&quot;org.apache.tools.ant.filters.EvenFirstCmp&quot;/&gt;
   &lt;copy todir=&quot;build&quot;&gt;
@@ -1168,7 +1168,7 @@ implement <code>java.util.Comparator</code> interface, for example:
           &lt;/sortfilter&gt;
       &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
 <h3 id="tokenfilter">TokenFilter</h3>
 This filter tokenizes the inputstream into strings and passes these
@@ -1274,17 +1274,17 @@ This is the default tokenizer.
 <h5>Examples:</h5>
 
 Convert input current line endings to unix style line endings.
-<blockquote><pre>
+<pre>
 &lt;tokenfilter delimoutput=&quot;\n&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 Remove blank lines.
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;ignoreblank/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 <h4 id="filetokenizer">FileTokenizer</h4>
 This tokenizer treats <b>all</b> the input as a token. So be
@@ -1292,14 +1292,14 @@ careful not to use this on very large input.
 <h5>Examples:</h5>
 
 Replace the first occurrence of package with //package.
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
       &lt;filetokenizer/&gt;
       &lt;replaceregex pattern="([\n\r]+[ \t]*|^[ \t]*)package"
                     flags="s"
                     replace="\1//package"/&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="stringtokenizer">StringTokenizer</h4>
 This tokenizer is based on java.util.StringTokenizer.
@@ -1353,13 +1353,13 @@ attribute is used).
 
 Surround each non space token with a "[]".
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;stringtokenizer/&gt;
     &lt;replaceregex pattern="(.+)" replace="[\1]"/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 <h4 id="replacestring">ReplaceString</h4>
 This is a simple filter to replace strings.
@@ -1389,11 +1389,11 @@ This filter may be used directly within a filterchain.
 
 Replace "sun" with "moon".
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;replacestring from="sun" to="moon"/&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="containsstring">ContainsString</h4>
 This is a simple filter to filter tokens that contains
@@ -1416,12 +1416,12 @@ a specified string.
 
 Include only lines that contain "foo";
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;containsstring contains="foo"/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 <h4 id="replaceregex">ReplaceRegex</h4>
 This string filter replaces regular expressions.
@@ -1461,12 +1461,12 @@ for an explanation of regex flags.</td>
 
 Replace all occurrences of "hello" with "world", ignoring case.
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;replaceregex pattern="hello" replace="world" flags="gi"/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 <h4 id="containsregex">ContainsRegex</h4>
 This filters strings that match regular expressions.
@@ -1509,23 +1509,23 @@ for an explanation of regex flags.</td>
 
 Filter lines that contain "hello" or "world", ignoring case.
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;containsregex pattern="(hello|world)" flags="i"/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 This example replaces lines like "SUITE(TestSuite, bits);" with
 "void register_bits();" and removes other lines.
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;containsregex
         pattern="^ *SUITE\(.*,\s*(.*)\s*\).*"
         replace="void register_\1();"/&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="trim">Trim</h4>
 This filter trims whitespace from the start and end of
@@ -1557,14 +1557,14 @@ This filter deletes specified characters from tokens.
 
 Delete tabs from lines, trim the lines and removes empty lines.
 
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;deletecharacters chars="\t"/&gt;
     &lt;trim/&gt;
     &lt;ignoreblank/&gt;
 &lt;/tokenfilter&gt;
 
-</pre></blockquote>
+</pre>
 
 <h4 id="uniqfilter">UniqFilter</h4>
 
@@ -1576,11 +1576,11 @@ Delete tabs from lines, trim the lines and removes empty lines.
 <h5>Example:</h5>
 
 This suppresses duplicate lines.
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
   &lt;uniqfilter/&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="native2asciifilter">Native2AsciiFilter</h4>
 
@@ -1609,11 +1609,11 @@ This suppresses duplicate lines.
 <h5>Example:</h5>
 
 <p>This replaces all non-ASCII characters by their Unicode-escapes.</p>
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
   &lt;native2asciifilter/&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="scriptfilter">ScriptFilter</h4>
 <p>
@@ -1694,18 +1694,17 @@ Must be a supported Apache BSF or JSR 223 language</td>
 <h5>Examples:</h5>
 
 Convert to uppercase:
-<blockquote><pre>
+<pre>
 &lt;tokenfilter&gt;
     &lt;scriptfilter language="javascript"&gt;
         self.setToken(self.getToken().toUpperCase());
     &lt;/scriptfilter&gt;
 &lt;/tokenfilter&gt;
-</pre></blockquote>
+</pre>
 
 Remove lines containing the string "bad" while
 copying text files:
-  <blockquote>
-    <pre>
+<pre>
 &lt;copy todir="dist"&gt;
   &lt;fileset dir="src" includes="**/*.txt"/&gt;
   &lt;filterchain&gt;
@@ -1716,8 +1715,7 @@ copying text files:
     &lt;/scriptfilter&gt;
   &lt;/filterchain&gt;
 &lt;/copy&gt;
-    </pre>
-  </blockquote>
+</pre>
 
 <h4 id="custom">Custom tokenizers and string filters</h4>
 
@@ -1727,7 +1725,7 @@ and org.apache.tools.ant.util.Tokenizer respectly.
 
 They are defined in the build file using <code>&lt;typedef/&gt;</code>. For
 example a string filter that capitalizes words may be declared as:
-<blockquote><pre>
+<pre>
 package my.customant;
 import org.apache.tools.ant.filters.TokenFilter;
 
@@ -1741,10 +1739,10 @@ public class Capitalize
                 token.substring(1);
    }
 }
-</pre></blockquote>
+</pre>
 
 This may be used as follows:
-<blockquote><pre>
+<pre>
   &lt;typedef name="capitalize" classname="my.customant.Capitalize"
            classpath="my.customant.path"/&gt;
   &lt;copy file="input" tofile="output"&gt;
@@ -1755,6 +1753,7 @@ This may be used as follows:
       &lt;/tokenfilter&gt;
     &lt;/filterchain&gt;
   &lt;/copy&gt;
-</pre></blockquote>
+</pre>
 
-</body></html>
+</body>
+</html>

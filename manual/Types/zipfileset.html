@@ -130,21 +130,19 @@ single element resource collection</h4>
 <p>The specified resource will be used as src.</p>
 
 <h4>Examples</h4>
-<blockquote>
-  <pre>  &lt;zip destfile="${dist}/manual.zip"&gt;
+<pre>  &lt;zip destfile="${dist}/manual.zip"&gt;
     &lt;zipfileset dir="htdocs/manual" prefix="docs/user-guide"/&gt;
     &lt;zipfileset dir="." includes="ChangeLog27.txt" fullpath="docs/ChangeLog.txt"/&gt;
     &lt;zipfileset src="examples.zip" includes="**/*.html" prefix="docs/examples"/&gt;
   &lt;/zip&gt;</pre>
-  <p>zips all files in the <code>htdocs/manual</code> directory into
+<p>zips all files in the <code>htdocs/manual</code> directory into
 the <code>docs/user-guide</code> directory in the archive, adds the
 file <code>ChangeLog27.txt</code> in the current directory as <code>docs/ChangeLog.txt</code>,
 and includes all the html files in <code>examples.zip</code> under <code>docs/examples</code>.
 The archive might end up containing the files:</p>
-  <code>docs/user-guide/html/index.html<br>
-docs/ChangeLog.txt<br>
-docs/examples/index.html<br>
-  </code></blockquote>
+<pre>docs/user-guide/html/index.html
+docs/ChangeLog.txt
+docs/examples/index.html</pre>
 
 </body>
 </html>

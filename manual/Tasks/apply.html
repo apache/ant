@@ -399,7 +399,7 @@ files for each sourcefile.
   of executions (with <i>maxparallel</i> &gt; 0) and null will be used
   a source file just like it is in the case of <code>exec</code>.</p>
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;apply executable=&quot;ls&quot;&gt;
   &lt;arg value=&quot;-l&quot;/&gt;
   &lt;fileset dir=&quot;/tmp&quot;&gt;
@@ -409,25 +409,25 @@ files for each sourcefile.
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.files&quot;/&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 <p>invokes <code>ls -l</code>, adding the absolute filenames of all
 files below <code>/tmp</code> not ending in <code>.txt</code> and all
 files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
-<blockquote><pre>
+<pre>
 &lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;arg1&quot;/&gt;
   &lt;srcfile/&gt;
   &lt;arg value=&quot;arg2&quot;/&gt;
   &lt;fileset dir=&quot;/tmp&quot;/&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 <p>invokes <code>somecommand arg1 SOURCEFILENAME arg2</code> for each
 file in <code>/tmp</code> replacing SOURCEFILENAME with the absolute
 filename of each file in turn. If <code>parallel</code> had been set
 to true, SOURCEFILENAME would be replaced with the absolute filenames
 of all files separated by spaces.</p>
-<blockquote><pre>
+<pre>
 &lt;apply executable=&quot;cc&quot; dest=&quot;src/C&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;-c&quot;/&gt;
   &lt;arg value=&quot;-o&quot;/&gt;
@@ -436,13 +436,13 @@ of all files separated by spaces.</p>
   &lt;fileset dir=&quot;src/C&quot; includes=&quot;*.c&quot;/&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.c&quot; to=&quot;*.o&quot;/&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 <p>invokes <code>cc -c -o TARGETFILE SOURCEFILE</code> for each
 <code>.c</code> file that is newer than the corresponding
 <code>.o</code>, replacing TARGETFILE with the absolute filename of
 the <code>.o</code> and SOURCEFILE with the absolute name of the
 <code>.c</code> file.</p>
-<blockquote><pre>
+<pre>
 &lt;mapper id=&quot;out&quot; type=&quot;glob&quot;
            from=&quot;src${file.separator}*.file&quot;
            to=&quot;dest${file.separator}*.out&quot;/&gt;
@@ -454,7 +454,7 @@ the <code>.o</code> and SOURCEFILE with the absolute name of the
     &lt;outputmapper refid=&quot;out&quot;/&gt;
   &lt;/redirector&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 Applies the fictitious &quot;processfile&quot; executable to all
 files matching <code>*.file</code> in the <code>src</code> directory.
 The <code>out</code> <code>&lt;mapper&gt;</code> has been set up to map
@@ -464,7 +464,7 @@ task.  A reference to <code>out</code> is then used as an
 <code>&lt;outputmapper&gt;</code> nested in a <code>&lt;redirector&gt;</code>, which in turn is
 nested beneath this <code>&lt;apply&gt;</code> instance.  This allows us to perform
 dependency checking against output files--the target files in this case.
-<blockquote><pre>
+<pre>
 &lt;apply executable="ls" parallel="true"
        force="true" dest="${basedir}" append="true" type="both"&gt;
   &lt;path&gt;
@@ -472,11 +472,11 @@ dependency checking against output files--the target files in this case.
   &lt;/path&gt;
   &lt;identitymapper/&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 Applies the "ls" executable to all directories in the PATH, effectively
 listing all executables that are available on the PATH.
 
-<blockquote><pre>
+<pre>
 &lt;apply executable="jsmin" addsourcefile="false"&gt;
     &lt;!-- Collect the JS-files --&gt;
     &lt;fileset dir="src" includes="*.js"/&gt;
@@ -488,7 +488,7 @@ listing all executables that are available on the PATH.
         &lt;outputmapper id="out" type="glob" from="*.js" to="dest/*.js"/&gt;
     &lt;/redirector&gt;
 &lt;/apply&gt;
-</pre></blockquote>
+</pre>
 Conversion of the command <code>jsmin &lt; src/a.js &gt; dest/a.js</code> but for
 all files in the src-directory. Because the filename itself should not be passed
 to the <code>jsmin</code> program, the <code>addsourcefile</code> is set to

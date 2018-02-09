@@ -181,20 +181,18 @@ a nested &lt;factory&gt; can be used to specify factory settings.</p>
 
 
 <h3>Example of report</h3>
-<blockquote>
-  <pre>&lt;junitreport todir=&quot;./reports&quot;&gt;
+<pre>&lt;junitreport todir=&quot;./reports&quot;&gt;
   &lt;fileset dir=&quot;./reports&quot;&gt;
     &lt;include name=&quot;TEST-*.xml&quot;/&gt;
   &lt;/fileset&gt;
   &lt;report format=&quot;frames&quot; todir=&quot;./report/html&quot;/&gt;
-&lt;/junitreport&gt;
-</pre>
-</blockquote>
+&lt;/junitreport&gt;</pre>
+
 <p>would generate a <tt>TESTS-TestSuites.xml</tt> file in the directory <tt>reports</tt> and
 generate the default framed report in the directory <tt>report/html</tt>.</p>
+
 <h3>Example of report with xsl params</h3>
-<blockquote>
-  <pre>
+<pre>
 &lt;junitreport todir="${outputdir}"&gt;
     &lt;fileset dir="${jrdir}"&gt;
         &lt;include name="TEST-*.xml"/&gt;
@@ -205,9 +203,8 @@ generate the default framed report in the directory <tt>report/html</tt>.</p>
         &lt;param name="key1" expression="value1"/&gt;
         &lt;param name="key2" expression="value2"/&gt;
     &lt;/report&gt;
-&lt;/junitreport&gt;
-  </pre>
-  </blockquote>
+&lt;/junitreport&gt;</pre>
+
 <p>This example requires a file called <tt>junitreport/junit-frames.xsl</tt>.
     The XSL parameters key1 and key2 will be passed to the XSL transformation.</p>
 

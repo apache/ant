@@ -335,10 +335,10 @@ that is "true","yes", or "on"</p>
     <td valign="top" align="center">Yes</td>
   </tr>
 </table>
-<blockquote><pre>
+<pre>
 &lt;istrue value=&quot;${someproperty}&quot;/&gt;
 &lt;istrue value=&quot;false&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="isfalse">isfalse</h4>
 <p>Tests whether a string is not true, the negation of &lt;istrue&gt;
@@ -355,10 +355,10 @@ that is "true","yes", or "on"</p>
     <td valign="top" align="center">Yes</td>
   </tr>
 </table>
-<blockquote><pre>
+<pre>
 &lt;isfalse value=&quot;${someproperty}&quot;/&gt;
 &lt;isfalse value=&quot;false&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="isreference">isreference</h4>
 <p>Test whether a given reference has been defined in this project and
@@ -449,11 +449,11 @@ that is "true","yes", or "on"</p>
   <p>
     Example usage:
   </p>
-<blockquote><pre>
+<pre>
 &lt;isfileselected file="a.xml"&gt;
   &lt;date datetime="06/28/2000 2:02 pm" when="equal"/&gt;
 &lt;/isfileselected&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="typefound">typefound</h4>
 
@@ -486,10 +486,10 @@ tasks, datatypes, scriptdefs, macrodefs and presetdefs.</p>
   <p>
     Example usages:
   </p>
-<blockquote><pre>
+<pre>
 &lt;typefound name="junit"/&gt;
 &lt;typefound uri="antlib:org.apache.maven.artifact.ant" name="artifact"/&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="scriptcondition">scriptcondition</h4>
 
@@ -578,12 +578,12 @@ Alternatively, <code>self.value</code> can be used to set the evaluation result.
 <p>
 Example:
 </p>
-<blockquote><pre>
+<pre>
 &lt;scriptcondition language=&quot;javascript&quot;
         value=&quot;true&quot;&gt;
     self.setValue(false);
 &lt;/scriptcondition&gt;
-</pre></blockquote>
+</pre>
 
 Sets the default value of the condition to true, then in the script,
 sets the value to false. This condition always evaluates to "false"
@@ -618,18 +618,18 @@ attempting to set the appropriate property/feature/</p>
   </tr>
 </table>
 
-<blockquote><pre>
+<pre>
 &lt;parsersupports feature="http://xml.org/sax/features/namespaces"/&gt;
-</pre></blockquote>
+</pre>
 Check for namespace support. All SAX2 parsers should have this.
-<blockquote><pre>
+<pre>
 &lt;or&gt;
   &lt;parsersupports
     feature="http://apache.org/xml/features/validation/schema"/&gt;
   &lt;parsersupports
     feature="http://java.sun.com/xml/jaxp/properties/schemaSource"/&gt;
 &lt;/or&gt;
-</pre></blockquote>
+</pre>
 
 Check for XML Schema support.
 
@@ -691,21 +691,21 @@ not reachable on other ports (i.e. port 80), because of firewalls.
   </tr>
 </table>
 
-<blockquote><pre>
+<pre>
 &lt;condition property="offline"&gt;
   &lt;isreachable url="http://ibiblio.org/maven/" /&gt;
 &lt;/condition&gt;
-</pre></blockquote>
+</pre>
 
 <p>
 Probe for the maven repository being reachable.
 </p>
 
-<blockquote><pre>
+<pre>
 &lt;condition property="offline"&gt;
   &lt;isreachable host="ibiblio.org" timeout="10" /&gt;
 &lt;/condition&gt;
-</pre></blockquote>
+</pre>
 
 <p>
 Probe for the maven repository being reachable using the hostname, ten second timeout..
@@ -717,14 +717,14 @@ Probe for the maven repository being reachable using the hostname, ten second ti
   <em>Since Ant 1.6.3</em>
 </p>
 
-<blockquote><pre>
+<pre>
 &lt;length string=" foo " trim="true" length="3" /&gt;
-</pre></blockquote>
+</pre>
 <p>Verify a string is of a certain length.</p>
 
-<blockquote><pre>
+<pre>
 &lt;length file=&quot;foo&quot; when=&quot;greater&quot; length=&quot;0&quot; /&gt;
-</pre></blockquote>
+</pre>
 <p>Verify that file <i>foo</i> is not empty.</p>
 
 <h4 id="isfailure">isfailure</h4>
@@ -753,9 +753,9 @@ Probe for the maven repository being reachable using the hostname, ten second ti
   <em>Since Ant 1.7</em>
 </p>
 
-<blockquote><pre>
+<pre>
 &lt;resourcecount refid=&quot;myresourcecollection&quot; when=&quot;greater&quot; count=&quot;0&quot; /&gt;
-</pre></blockquote>
+</pre>
 <p>Verify that a resource collection is not empty.</p>
 
 <h4 id="resourcesmatch">resourcesmatch</h4>
@@ -870,9 +870,9 @@ must match. <em>Since Ant 1.7</em>
     There is also a nested &lt;classpath&gt; element, which can be used to specify
     a classpath.
 </p>
-<blockquote><pre>
+<pre>
 &lt;hasmethod classname="java.util.ArrayList" method="trimToSize"  /&gt;
-</pre></blockquote>
+</pre>
 
 <p>Looks for the method trimToSize in the ArrayList class.</p>
 
@@ -934,29 +934,29 @@ must match. <em>Since Ant 1.7</em>
   <p>
     An example:
   </p>
-<blockquote><pre>
+<pre>
 &lt;condition property="legal-password"&gt;
   &lt;matches pattern="[1-9]" string="${user-input}"/&gt;
 &lt;/condition&gt;
 &lt;fail message="Your password should at least contain one number"
       unless="legal-password"/&gt;
-</pre></blockquote>
+</pre>
   <p>
     The following example sets the property "ok" if
     the property "input" is three characters long, starting
     with 'a' and ending with 'b'.
   </p>
-<blockquote><pre>
+<pre>
 &lt;condition property="ok"&gt;
   &lt;matches string="${input}" pattern="^a.b$"/&gt;
 &lt;/condition&gt;
-</pre></blockquote>
+</pre>
   <p>
     The following defines a reference regular expression for
     matching dates and then uses antunit to check if the
     property "today" is in the correct format:
   </p>
-<blockquote><pre>
+<pre>
 &lt;regexp id="date.pattern" pattern="^[0123]\d-[01]\d-[12]\d\d\d$"/&gt;
 
 &lt;au:assertTrue xmlns:au="antlib:org.apache.ant.antunit"&gt;
@@ -964,12 +964,12 @@ must match. <em>Since Ant 1.7</em>
     &lt;regexp refid="date.pattern"/&gt;
   &lt;/matches&gt;
 &lt;/au:assertTrue&gt;
-</pre></blockquote>
+</pre>
   <p>
     The following example shows the use of the singleline and the casesensitive
     flags.
   </p>
-<blockquote><pre>
+<pre>
 &lt;au:assertTrue&gt;
   &lt;matches string="AB${line.separator}C" pattern="^ab.*C$"
            casesensitive="false"
@@ -980,7 +980,7 @@ must match. <em>Since Ant 1.7</em>
            casesensitive="false"
            singleline="false"/&gt;
 &lt;/au:assertFalse&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="antversion">antversion</h4>
 <p>This condition is identical to the <a
@@ -1022,9 +1022,9 @@ is redundant and will be ignored.</p>
   <p>
     An example:
   </p>
-<blockquote><pre>
+<pre>
 &lt;hasfreespace partition="c:" needed="100M"/&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="islastmodified">islastmodified</h4>
 
@@ -1070,11 +1070,11 @@ is redundant and will be ignored.</p>
   <p>
     An example:
   </p>
-<blockquote><pre>
+<pre>
 &lt;islastmodified dateTime="08/18/2009 04:41:19 AM" mode="not-before"&gt;
   &lt;file file="${file}"/&gt;
 &lt;/islastmodified&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="resourceexists">resourceexists</h4>
 
@@ -1085,11 +1085,11 @@ is redundant and will be ignored.</p>
   <p>
     An example:
   </p>
-<blockquote><pre>
+<pre>
 &lt;resourceexists&gt;
   &lt;file file="${file}"/&gt;
 &lt;/resourceexists&gt;
-</pre></blockquote>
+</pre>
 
 <h4 id="javaversion">javaversion</h4>
 
@@ -1122,9 +1122,9 @@ is redundant and will be ignored.</p>
     An example:
   </p>
 
-<blockquote><pre>
+<pre>
 &lt;javaversion atleast=&quot;9&quot;/&gt;
-</pre></blockquote>
+</pre>
 
 <p>will evaluate to true if the current JVM is Java 9 or above.</p>
 

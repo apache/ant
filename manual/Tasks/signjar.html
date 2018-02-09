@@ -223,15 +223,15 @@ block</td>
 
 <h3>Examples</h3>
 <p>For instructions on generating a code signing certificate, see the <a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html">keytool documentation</a> and/or instructions from your certificate authority.</p>
-  <blockquote><pre>
+<pre>
 &lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
 alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
-</pre></blockquote>
+</pre>
 <p>
   signs the ant.jar with alias &quot;apache-group&quot; accessing the
   keystore and private key via &quot;secret&quot; password.
 </p>
-  <blockquote><pre>
+<pre>
 &lt;signjar destDir="signed"
     alias="testonly" keystore="testkeystore"
     storepass="apacheant"
@@ -241,14 +241,13 @@ alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
   &lt;/path&gt;
   &lt;flattenmapper /&gt;
 &lt;/signjar&gt;
-</pre></blockquote>
+</pre>
 <p>
 Sign all JAR files matching the dist/**/*.jar pattern, copying them to the
 directory "signed" afterwards. The flatten mapper means that they will
 all be copied to this directory, not to subdirectories.
-
 </p>
-  <blockquote><pre>
+<pre>
 &lt;signjar
     alias="testonly" keystore="testkeystore"
     storepass="apacheant"
@@ -258,12 +257,12 @@ all be copied to this directory, not to subdirectories.
     &lt;fileset dir="dist" includes="**/*.jar" /&gt;
   &lt;/path&gt;
 &lt;/signjar&gt;
-</pre></blockquote>
+</pre>
 <p>
 Sign all the JAR files in dist/**/*.jar <i>in-situ</i>. Lazy signing is used,
 so the files will only be signed if they are not already signed.
 </p>
-  <blockquote><pre>
+<pre>
 &lt;signjar
     alias="testonly" keystore="testkeystore"
     storepass="apacheant"
@@ -273,7 +272,7 @@ so the files will only be signed if they are not already signed.
     &lt;fileset dir="dist" includes="**/*.jar" /&gt;
   &lt;/path&gt;
 &lt;/signjar&gt;
-</pre></blockquote>
+</pre>
 <p>
 Sign all the JAR files in dist/**/*.jar using the digest algorithm SHA1 and the
 signature algorithm MD5withRSA. This is especially useful when you want to use

@@ -162,7 +162,7 @@ different location values.</p>
   </p>
 <h3>Examples</h3>
 The following snippet shows use of five different languages:
-  <blockquote><pre>
+  <pre>
     &lt;property name="message" value="Hello world"/&gt;
 
     &lt;script language="groovy"&gt;
@@ -185,7 +185,6 @@ The following snippet shows use of five different languages:
 print "message is %s" % message
     &lt;/script&gt;
 </pre>
-  </blockquote>
   <p>
   Note that for the <i>jython</i> example, the script contents <b>must</b>
   start on the first column.
@@ -196,28 +195,26 @@ print "message is %s" % message
   <p>
     The following script shows a little more complicated jruby example:
   </p>
-  <blockquote><pre>
+  <pre>
 &lt;script language="ruby"&gt;
   xmlfiles = Dir.new(".").entries.delete_if { |i| ! (i =~ /\.xml$/) }
   xmlfiles.sort.each { |i| $self.log(i) }
 &lt;/script&gt;
 </pre>
-  </blockquote>
   <p>
     The same example in groovy is:
   </p>
-  <blockquote><pre>
+  <pre>
 &lt;script language="groovy"&gt;
   xmlfiles = new java.io.File(".").listFiles().findAll{ it =~ "\.xml$"}
   xmlfiles.sort().each { self.log(it.toString())}
 &lt;/script&gt;
 </pre>
-  </blockquote>
   <p>
     The following example shows the use of classpath to specify the location
     of the beanshell jar file.
   </p>
-  <blockquote><pre>
+  <pre>
 &lt;script language="beanshell" setbeans="true"&gt;
   &lt;classpath&gt;
     &lt;fileset dir="${user.home}/lang/beanshell" includes="*.jar" /&gt;
@@ -225,12 +222,11 @@ print "message is %s" % message
   System.out.println("Hello world");
 &lt;/script&gt;
 </pre>
-  </blockquote>
   <p>
     The following script uses javascript to create a number of
     echo tasks and execute them.
   </p>
-<blockquote><pre>
+<pre>
 &lt;project name=&quot;squares&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
 
   &lt;target name=&quot;main&quot;&gt;
@@ -248,9 +244,9 @@ print "message is %s" % message
   &lt;/target&gt;
 
 &lt;/project&gt;
-</pre></blockquote>
+</pre>
 <p>generates</p>
-<blockquote><pre>
+<pre>
 main:
 1
 4
@@ -264,11 +260,11 @@ main:
 100
 
 BUILD SUCCESSFUL
-</pre></blockquote>
+</pre>
 
 <p>Now a more complex example using the Java API and the Ant API. The goal is to list the
 filesizes of all files a <code>&lt;fileset/&gt;</code> caught.</p>
-<blockquote><pre>
+<pre>
 
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
 &lt;project name="<font color=blue>MyProject</font>" basedir="." default="main"&gt;
@@ -316,7 +312,7 @@ filesizes of all files a <code>&lt;fileset/&gt;</code> caught.</p>
     ]]&gt;&lt;/script&gt;
   &lt;/target&gt;
 &lt;/project&gt;
-</pre></blockquote>
+</pre>
 <p>We want to use the Java API. Because we don't want always typing the package signature
 we do an import. Rhino knows two different methods for import statements: one for packages
 and one for a single class. By default only the <i>java</i> packages are available, so
@@ -343,7 +339,7 @@ appropriate logging before and after invoking execute().
   task. This task will add filesets and paths to a referenced
   path. If the path does not exist, it will be created.
 </p>
-<blockquote><pre>
+<pre>
 &lt;!--
        Define addtopath task
  --&gt;
@@ -372,14 +368,14 @@ appropriate logging before and after invoking execute().
     }
     project.addTaskDefinition("addtopath", AddToPath.class);
 &lt;/script&gt;
-</pre></blockquote>
+</pre>
   <p>
     An example of using this task to create a path
     from a list of directories (using antcontrib's
     <a href="http://ant-contrib.sourceforge.net/tasks/tasks/for.html">
       &lt;for&gt;</a> task) follows:
   </p>
-<blockquote><pre>
+<pre>
 &lt;path id="main.path"&gt;
   &lt;fileset dir="build/classes"/&gt;
 &lt;/path&gt;
@@ -392,7 +388,7 @@ appropriate logging before and after invoking execute().
     &lt;/addtopath&gt;
   &lt;/sequential&gt;
 &lt;/ac:for&gt;
-</pre></blockquote>
+</pre>
 
 </body>
 </html>

@@ -143,25 +143,25 @@ an <code>&lt;and&gt;</code> selector container.</p>
 
 <h4>Examples</h4>
 
-<blockquote><pre>
+<pre>
 &lt;multirootfileset basedirs=&quot;${build.dir},${other.project.dir}&quot;&gt;
   &lt;include name=&quot;apps/**/classes&quot;/&gt;
   &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
 &lt;/multirootfileset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups all files inside <code>classes</code> found under the
 <code>apps</code> subdirectory of <code>${build.dir}</code> or
 <code>${other.project.dir}</code>, except those that have the text
 <code>Test</code> in their name.</p>
 
-<blockquote><pre>
+<pre>
 &lt;multirootfileset&gt;
   &lt;basedir file=&quot;${build.dir}&quot;/&gt;
   &lt;basedir file=&quot;${other.project.dir}&quot;
   &lt;include name=&quot;apps/**/classes&quot;/&gt;
   &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
 &lt;/multirootfileset&gt;
-</pre></blockquote>
+</pre>
 <p>Is equivalent to the first example but used
   nested <code>basedir</code> elements.  The nested elements and
   the <code>basedirs</code> attribute can be used at the same time and

@@ -151,11 +151,11 @@
 
     <p>Here is an example of how to use the Contains Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*.html&quot;&gt;
     &lt;contains text=&quot;script&quot; casesensitive=&quot;no&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the HTML files that contain the string
     <code>script</code>.</p>
@@ -232,11 +232,11 @@
 
     <p>Here is an example of how to use the Date Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${jar.path}&quot; includes=&quot;**/*.jar&quot;&gt;
     &lt;date datetime=&quot;01/01/2001 12:00 AM&quot; when=&quot;before&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all JAR files which were last modified before midnight
     January 1, 2001.</p>
@@ -282,11 +282,11 @@
 
     <p>Here is an example of how to use the Depend Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
     &lt;depend targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the Java source files which were modified in the
       1.5 release.
@@ -324,11 +324,11 @@
 
     <p>Here is an example of how to use the Depth Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
     &lt;depth max=&quot;1&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all files in the base directory and one directory below
     that.</p>
@@ -410,12 +410,12 @@
 
     <p>Here is an example of how to use the Different Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
     &lt;different targetdir=&quot;${ant.1.4.1}/src/main&quot;
         ignoreFileTimes="true"/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Compares all the Java source files between the 1.4.1 and the 1.5 release
     and selects those who are different, disregarding file times.
@@ -470,11 +470,11 @@
 
     <p>Here is an example of how to use the Filename Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
     &lt;filename name=&quot;**/*.css&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the cascading style sheet files.</p>
 
@@ -526,11 +526,11 @@
 
     <p>Here is an example of how to use the Present Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${ant.1.5}/src/main&quot; includes=&quot;**/*.java&quot;&gt;
     &lt;present present=&quot;srconly&quot; targetdir=&quot;${ant.1.4.1}/src/main&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the Java source files which are new in the
       1.5 release.
@@ -585,11 +585,11 @@
 
     <p>Here is an example of how to use the regular expression Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;*.txt&quot;&gt;
     &lt;containsregexp expression=&quot;[4-6]\.[0-9]&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the text files that match the regular expression
     (have a 4,5 or 6 followed by a period and a number from 0 to 9).
@@ -643,14 +643,14 @@
 
     <p>Here is an example of how to use the Size Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${jar.path}&quot;&gt;
   &lt;patternset&gt;
     &lt;include name=&quot;**/*.jar&quot;/&gt;
   &lt;/patternset&gt;
   &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all JAR files that are larger than 4096 bytes.</p>
 
@@ -681,24 +681,24 @@
     <p>Here is an example of how to use the Type Selector to select only
     directories in <code>${src}</code></p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${src}&quot;&gt;
   &lt;type type="dir"/&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>The Type Selector is often used in conjunction with other selectors.
     For example, to select files that also exist in a <code>template</code>
     directory, but avoid selecting empty directories, use:
 
-<blockquote><pre>
+<pre>
 &lt;fileset dir="${src}"&gt;
     &lt;and&gt;
         &lt;present targetdir="template"/&gt;
         &lt;type type="file"/&gt;
     &lt;/and&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <h4 id="modified">Modified Selector</h4>
     <p>The <code>&lt;modified&gt;</code> selector computes a value for a file, compares that
@@ -892,18 +892,18 @@
     <h5>Examples</h5>
     <p>Here are some examples of how to use the Modified Selector:</p>
 
-    <blockquote><pre>
+    <pre>
     &lt;copy todir="dest"&gt;
         &lt;fileset dir="src"&gt;
             &lt;modified/&gt;
         &lt;/fileset&gt;
     &lt;/copy&gt;
-    </pre></blockquote>
+    </pre>
     <p>This will copy all files from <i>src</i> to <i>dest</i> which content has changed.
     Using an updating PropertyfileCache with cache.properties and
     MD5-DigestAlgorithm.</p>
 
-    <blockquote><pre>
+    <pre>
     &lt;copy todir="dest"&gt;
         &lt;fileset dir="src"&gt;
             &lt;modified update="true"
@@ -916,11 +916,11 @@
             &lt;/modified&gt;
         &lt;/fileset&gt;
     &lt;/copy&gt;
-    </pre></blockquote>
+    </pre>
   <p>This is the same example rewritten as CoreSelector with setting the all the values
   (same as defaults are).</p>
 
-    <blockquote><pre>
+    <pre>
     &lt;copy todir="dest"&gt;
         &lt;fileset dir="src"&gt;
             &lt;custom class="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector"&gt;
@@ -934,10 +934,10 @@
             &lt;/custom&gt;
         &lt;/fileset&gt;
     &lt;/copy&gt;
-    </pre></blockquote>
+    </pre>
   <p>And this is the same rewritten as CustomSelector.</p>
 
-    <blockquote><pre>
+    <pre>
   &lt;target name="generate-and-upload-site"&gt;
       &lt;echo&gt; generate the site using forrest &lt;/echo&gt;
       &lt;antcall target="site"/&gt;
@@ -949,19 +949,19 @@
           &lt;/fileset&gt;
       &lt;/ftp&gt;
   &lt;/target&gt;
-    </pre></blockquote>
+    </pre>
   <p>A useful scenario for this selector inside a build environment
   for homepage generation (e.g. with <a href="http://xml.apache.org/forrest/">
   Apache Forrest</a>). Here all <b>changed</b> files are uploaded to the server. The
   CacheSelector saves therefore much upload time.</p>
 
-    <blockquote><pre>
+    <pre>
   &lt;modified cacheclassname="com.mycompany.MyCache"&gt;
       &lt;classpath&gt;
           &lt;pathelement location="lib/mycompany-antutil.jar"/&gt;
       &lt;/classpath&gt;
   &lt;/modified&gt;
-    </pre></blockquote>
+    </pre>
     <p>Uses <tt>com.mycompany.MyCache</tt> from a jar outside of Ants own classpath
     as cache implementation</p>
 
@@ -1277,14 +1277,14 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the And Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${dist}&quot; includes=&quot;**/*.jar&quot;&gt;
     &lt;and&gt;
         &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
         &lt;date datetime=&quot;01/01/2001 12:00 AM&quot; when=&quot;before&quot;/&gt;
     &lt;/and&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the JAR file larger than 4096 bytes which haven't been update
       since the last millennium.
@@ -1315,7 +1315,7 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the Majority Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${docs}&quot; includes=&quot;**/*.html&quot;&gt;
     &lt;majority&gt;
         &lt;contains text=&quot;project&quot; casesensitive="false"/&gt;
@@ -1323,7 +1323,7 @@ Select files whose filename length is even.
         &lt;contains text=&quot;IntrospectionHelper&quot; casesensitive="true"/&gt;
     &lt;/majority&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the HTML files which contain at least two of the three
     phrases "project", "taskdef", and "IntrospectionHelper" (this last phrase must
@@ -1340,7 +1340,7 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the None Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${src}&quot; includes=&quot;**/*.java&quot;&gt;
     &lt;none&gt;
         &lt;present targetdir=&quot;${dest}&quot;/&gt;
@@ -1349,7 +1349,7 @@ Select files whose filename length is even.
         &lt;/present&gt;
     &lt;/none&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects only Java files which do not have equivalent java or
     class files in the dest directory.
@@ -1363,13 +1363,13 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the Not Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${src}&quot; includes=&quot;**/*.java&quot;&gt;
     &lt;not&gt;
         &lt;contains text=&quot;test&quot;/&gt;
     &lt;/not&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the files in the src directory that do not contain the
     string "test".
@@ -1385,7 +1385,7 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the Or Selector:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${basedir}&quot;&gt;
     &lt;or&gt;
         &lt;depth max=&quot;0&quot;/&gt;
@@ -1394,7 +1394,7 @@ Select files whose filename length is even.
         &lt;filename name="*.jpg"/&gt;
     &lt;/or&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all the files in the top directory along with all the
     image files below it.
@@ -1442,7 +1442,7 @@ Select files whose filename length is even.
 
     <p>Here is an example of how to use the Selector Reference:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;project default=&quot;all&quot; basedir=&quot;./ant&quot;&gt;
 
     &lt;selector id=&quot;completed&quot;&gt;
@@ -1465,7 +1465,7 @@ Select files whose filename length is even.
     &lt;/target&gt;
 
 &lt;/project&gt;
-</pre></blockquote>
+</pre>
 
     <p>Zips up all the Java files which have an up-to-date equivalent
     class file and javadoc file associated with them.
@@ -1474,7 +1474,7 @@ Select files whose filename length is even.
     <p>And an example of selecting files conditionally, based on whether
     properties are set:</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${working.copy}&quot;&gt;
     &lt;or&gt;
         &lt;selector if=&quot;include.tests&quot;&gt;
@@ -1492,7 +1492,7 @@ Select files whose filename length is even.
         &lt;/selector&gt;
     &lt;/or&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>A fileset that conditionally contains Java source files and Test
     source and class files.</p>
@@ -1550,13 +1550,13 @@ Select files whose filename length is even.
     use your class as a selector:
     </p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${mydir}&quot; includes=&quot;**/*&quot;&gt;
     &lt;custom classname=&quot;com.mydomain.MySelector&quot;&gt;
         &lt;param name=&quot;myattribute&quot; value=&quot;myvalue&quot;/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>A number of core selectors can also be used as custom selectors
     by specifying their attributes using <code>&lt;param&gt;</code> elements. These
@@ -1578,13 +1578,13 @@ Select files whose filename length is even.
     <p>Here is the example from the Depth Selector section rewritten
     to use the selector through <code>&lt;custom&gt;</code>.</p>
 
-    <blockquote><pre>
+    <pre>
 &lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
     &lt;custom classname=&quot;org.apache.tools.ant.types.selectors.DepthSelector&quot;&gt;
         &lt;param name=&quot;max&quot; value=&quot;1&quot;/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
-</pre></blockquote>
+</pre>
 
     <p>Selects all files in the base directory and one directory below
     that.</p>

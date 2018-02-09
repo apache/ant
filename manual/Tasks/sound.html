@@ -84,7 +84,7 @@ will be logged.
 </table>
 
 <h3>Examples</h3>
-<blockquote>
+
 <pre>
 &lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
   &lt;sound&gt;
@@ -94,7 +94,6 @@ will be logged.
   &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
 </pre>
-</blockquote>
 plays the <code>bell.wav</code> sound-file if the build succeeded, or
 the <code>ohno.wav</code> sound-file if the build failed, three times,
 if the <code>fun</code> property is set to <code>true</code>.
@@ -103,7 +102,6 @@ is a dependency of an &quot;initialization&quot; target that other
 targets depend on, the
 <code>fun.done</code> property prevents the target from being executed
 more than once.
-<blockquote>
 <pre>
 &lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
   &lt;sound&gt;
@@ -113,7 +111,6 @@ more than once.
   &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
 </pre>
-</blockquote>
 randomly selects a sound-file to play when the build succeeds or fails.
 
 </body>

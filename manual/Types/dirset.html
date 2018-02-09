@@ -98,9 +98,8 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
       Specify what happens if the base directory does not exist.
       If true a build error will happen, if false, the dirset
       will be ignored/empty.
-      Defaults to true.
-      <em>Since Apache Ant 1.7.1 (default is true for backward compatibility
-        reasons.)</em>
+      Defaults to true (for backward compatibility reasons).
+      <em>Since Apache Ant 1.7.1</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -108,43 +107,43 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 
 <h4>Examples</h4>
 
-<blockquote><pre>
+<pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
   &lt;include name=&quot;apps/**/classes&quot;/&gt;
   &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
 &lt;/dirset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups all directories named <code>classes</code> found under the
 <code>apps</code> subdirectory of <code>${build.dir}</code>, except those
 that have the text <code>Test</code> in their name.</p>
 
-<blockquote><pre>
+<pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
   &lt;patternset id=&quot;non.test.classes&quot;&gt;
     &lt;include name=&quot;apps/**/classes&quot;/&gt;
     &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
   &lt;/patternset&gt;
 &lt;/dirset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups the same directories as the above example, but also establishes
 a PatternSet that can be referenced in other
 <code>&lt;dirset&gt;</code> elements, rooted at a different directory.</p>
 
-<blockquote><pre>
+<pre>
 &lt;dirset dir=&quot;${debug_build.dir}&quot;&gt;
   &lt;patternset refid=&quot;non.test.classes&quot;/&gt;
 &lt;/dirset&gt;
-</pre></blockquote>
+</pre>
 <p>Groups all directories in directory <code>${debug_build.dir}</code>,
 using the same patterns as the above example.</p>
 
-<blockquote><pre>
+<pre>
 &lt;dirset id=&quot;dirset&quot; dir=&quot;${workingdir}&quot;&gt;
    &lt;present targetdir=&quot;${workingdir}&quot;&gt;
         &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*/${markerfile}&quot; /&gt;
    &lt;/present&gt;
 &lt;/dirset&gt;
-</pre></blockquote>
+</pre>
 <p>Selects all directories somewhere under <code>${workingdir}</code>
 which contain a <code>${markerfile}</code>.</p>
 

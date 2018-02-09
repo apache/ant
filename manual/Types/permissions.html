@@ -114,7 +114,7 @@ If the actions are left empty all actions match, and are revoked.
 </p>
 <h3 id="baseset">Base set</h3>
 A permissions set implicitly contains the following permissions:
-<blockquote><pre>
+<pre>
 &lt;grant class=&quot;java.net.SocketPermission&quot; name=&quot;localhost:1024-&quot; actions=&quot;listen&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.version&quot; actions=&quot;read&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vendor&quot; actions=&quot;read&quot;&gt;
@@ -136,25 +136,25 @@ A permissions set implicitly contains the following permissions:
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.version&quot; actions=&quot;read&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.vendor&quot; actions=&quot;read&quot;&gt;
 &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.name&quot; actions=&quot;read&quot;&gt;
-</pre></blockquote>
+</pre>
 These permissions can be revoked via <code>&lt;revoke&gt;</code> elements if necessary.
 
 <h3>Examples</h3>
-<blockquote><pre>
+<pre>
 &lt;permissions&gt;
   &lt;grant class=&quot;java.security.AllPermission&quot;/&gt;
   &lt;revoke class=&quot;java.util.PropertyPermission&quot;/&gt;
 &lt;/permissions&gt;
-</pre></blockquote>
+</pre>
 <p>
 Grants all permissions to the code except for those handling Properties.
 </p>
-<blockquote><pre>
+<pre>
 &lt;permissions&gt;
   &lt;grant class=&quot;java.net.SocketPermission&quot; name=&quot;foo.bar.com&quot; action=&quot;connect&quot;/&gt;
   &lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;user.home&quot; action=&quot;read,write&quot;/&gt;
 &lt;/permissions&gt;
-</pre></blockquote>
+</pre>
 <p>
 Grants the base set of permissions with the addition of a SocketPermission to connect
 to foo.bar.com and the permission to read and write the user.home system property.

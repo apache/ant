@@ -42,15 +42,11 @@ Regexp represents a regular expression.
 </table>
 
 <h3>Examples</h3>
-<blockquote><pre>
-     &lt;regexp id="myregexp" pattern="alpha(.+)beta"/&gt;<br>
-</pre></blockquote>
+<pre>&lt;regexp id="myregexp" pattern="alpha(.+)beta"/&gt;</pre>
 <p>
 Defines a regular expression for later use with id myregexp.
 </p>
-<blockquote><pre>
-     &lt;regexp refid="myregexp"/&gt;<br>
-</pre></blockquote>
+<pre>&lt;regexp refid="myregexp"/&gt;</pre>
 <p>
 Use the regular expression with id myregexp.
 </p>
@@ -67,15 +63,9 @@ See <a href="../install.html#librarydependencies">installation dependencies</a>
 The property <code>ant.regexp.regexpimpl</code> governs which regular expression implementation will be chosen.
     Possible values for this property are:</p>
 <ul>
-<li>
-org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp
-</li>
-<li>
-org.apache.tools.ant.util.regexp.JakartaOroRegexp
-</li>
-<li>
-org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
-</li>
+<li>org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp</li>
+<li>org.apache.tools.ant.util.regexp.JakartaOroRegexp</li>
+<li>org.apache.tools.ant.util.regexp.JakartaRegexpRegexp</li>
 </ul>
 <p>It can also be another implementation of the interface <code>org.apache.tools.ant.util.regexp.Regexp</code>.
 If <code>ant.regexp.regexpimpl</code> is not defined, Ant uses Jdk14Regexp as this is always available.</p>
