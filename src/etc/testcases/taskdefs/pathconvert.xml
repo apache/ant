@@ -17,6 +17,8 @@
 -->
 <project name="pathconvert">
 
+    <import file="../buildfiletest-base.xml"/>
+
     <path id="testpath">
         <pathelement path="${ant.file}" />
     </path>
@@ -37,6 +39,22 @@
 
     <target name="testnotargetos">
         <pathconvert property="result" refid="testpath" />
+    </target>
+
+    <target name="test-nonmatching-mapper" description="test for bug fix bz-62076">
+        <mkdir dir="${output}/mapper-source-dir"/>
+        <!-- create 2 files, one of which will be matched/included by the globmapper
+        later in this target -->
+        <touch file="${output}/mapper-source-dir/file1.txt"/>
+        <touch file="${output}/mapper-source-dir/file2.log"/>
+
+        <pathconvert property="pc">
+            <mappedresources>
+                <fileset dir="${output}/mapper-source-dir"/>
+                <!-- we intentionally exclude one of the files -->
+                <globmapper from="*.log" to="*.txt"/>
+            </mappedresources>
+        </pathconvert>
     </target>
 
 </project>

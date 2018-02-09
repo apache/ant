@@ -7,6 +7,9 @@ Fixed bugs:
  * Fixed NullPointerException in ChainedMapper
    Bugzilla Report 62086
 
+ * Fixed NullPointerException when a mappedresource is used in pathconvert
+   Bugzilla Report 62076
+
 
 Changes from Ant 1.10.1 TO Ant 1.10.2
 =====================================
