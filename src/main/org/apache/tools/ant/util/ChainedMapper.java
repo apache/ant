@@ -35,6 +35,9 @@ public class ChainedMapper extends ContainerMapper {
     public String[] mapFileName(String sourceFileName) {
         List inputs = new ArrayList();
         List results = new ArrayList();
+        // we do this even if the sourceFileName is null. Some
+        // resources have a null name and users may use a mapper like
+        // MergeMapper to provide a name for it.
         results.add(sourceFileName);
         FileNameMapper mapper = null;
 

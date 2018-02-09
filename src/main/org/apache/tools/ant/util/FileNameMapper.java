@@ -52,7 +52,9 @@ public interface FileNameMapper {
      * omit the source file in question.</p>
      *
      * @param sourceFileName the name of the source file relative to
-     *                       some given basedirectory.
+     *                       some given basedirectory. Might be {@code
+     *                       null} for resources that don't provide a
+     *                       name.
      * @return an array of strings if the rule applies to the source file, or
      *         null if it does not.
      */
