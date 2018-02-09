@@ -46,7 +46,16 @@ public class IdentityMapper implements FileNameMapper {
      * @param sourceFileName the name to map.
      * @return the source filename in a one-element array.
      */
-    public String[] mapFileName(String sourceFileName) {
+    @Override
+    public String[] mapFileName(final String sourceFileName) {
+        if (sourceFileName == null) {
+            // The FileNameMapper#mapFileName contract states that:
+            // "if the given rule doesn't apply to the source file,
+            //  implementation must return null"
+            // we consider a null source file name as non-matching and
+            // hence return null
+            return null;
+        }
         return new String[] {sourceFileName};
     }
 }

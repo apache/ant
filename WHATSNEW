@@ -1,6 +1,13 @@
 Changes from Ant 1.9.10 TO Ant 1.9.11
 =====================================
 
+Fixed bugs:
+-----------
+
+ * Fixed NullPointerException when a mappedresource is used in pathconvert
+   Bugzilla Report 62076
+
+
 Changes from Ant 1.9.9 TO Ant 1.9.10
 ====================================
 

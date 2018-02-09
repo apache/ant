@@ -57,6 +57,17 @@ public class PathConvertTest {
         buildRule.executeTarget("testnotargetos");
     }
 
+    /**
+     * Tests that if a {@code mappedresource}, that excludes certain resources, is used in a {@code pathconvert},
+     * then it doesn't lead to a {@link NullPointerException}.
+     *
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=62076">bz-62076</a> for more details
+     */
+    @Test
+    public void testNonMatchingMapper() {
+        buildRule.executeTarget("test-nonmatching-mapper");
+    }
+
     private void test(String target) {
         buildRule.executeTarget(target);
         assertEquals("test#" + BUILD_FILENAME, buildRule.getProject().getProperty("result"));
