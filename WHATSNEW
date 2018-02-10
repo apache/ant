@@ -1,6 +1,15 @@
 Changes from Ant 1.9.10 TO Ant 1.9.11
 =====================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * Previous versions of Ant's copy task would throw a BuildException
+   if the "name" of the resource to copy was null. Starting
+   this version, the copy task instead silently skips such resources
+   and no longer throws an exception.
+   ant-dev list https://www.mail-archive.com/dev@ant.apache.org/msg46634.html
+
 Fixed bugs:
 -----------
 
