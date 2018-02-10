@@ -859,7 +859,7 @@ public class Jar extends Zip {
         if (!skipWriting) {
             log("Building MANIFEST-only jar: "
                     + getDestFile().getAbsolutePath());
-        }
+
         try (ZipOutputStream zOut = new ZipOutputStream(getDestFile())) {
             zOut.setEncoding(getEncoding());
             zOut.setUseZip64(getZip64Mode().getMode());
@@ -876,6 +876,7 @@ public class Jar extends Zip {
                                      getLocation());
         } finally {
             createEmpty = false;
+        }
         }
         return true;
     }
