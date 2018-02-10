@@ -116,7 +116,7 @@ public class GenerateKey extends Task {
          */
         @Override
         public String toString() {
-            return params.stream().map(p -> p.getName() + "=" + p.getValue())
+            return params.stream().map(p -> encode(p.getName()) + "=" + encode(p.getValue()))
                 .collect(Collectors.joining(", "));
         }
 
