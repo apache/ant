@@ -83,12 +83,12 @@ public class NullByteStreamResource extends Resource {
   </target>
 
   <target name="testResourceWithoutName"
-          depends="-setupNullByteStreamResource">
-    <au:expectfailure>
-      <copy todir="${output}">
-        <nullstream/>
-      </copy>
-    </au:expectfailure>
+          depends="-setupNullByteStreamResource" description="Tests that a
+          copy operation, of a resource without a name, doesn't run into (NPE)
+           exceptions. The resource itself will however be silently ignored">
+    <copy todir="${output}">
+      <nullstream/>
+    </copy>
   </target>
 
   <target name="testResourceWithoutNameWithMergeMapper"
