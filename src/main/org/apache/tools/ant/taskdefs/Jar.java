@@ -860,23 +860,23 @@ public class Jar extends Zip {
             log("Building MANIFEST-only jar: "
                     + getDestFile().getAbsolutePath());
 
-        try (ZipOutputStream zOut = new ZipOutputStream(getDestFile())) {
-            zOut.setEncoding(getEncoding());
-            zOut.setUseZip64(getZip64Mode().getMode());
-            if (isCompress()) {
-                zOut.setMethod(ZipOutputStream.DEFLATED);
-            } else {
-                zOut.setMethod(ZipOutputStream.STORED);
+            try (ZipOutputStream zOut = new ZipOutputStream(getDestFile())) {
+                zOut.setEncoding(getEncoding());
+                zOut.setUseZip64(getZip64Mode().getMode());
+                if (isCompress()) {
+                    zOut.setMethod(ZipOutputStream.DEFLATED);
+                } else {
+                    zOut.setMethod(ZipOutputStream.STORED);
+                }
+                initZipOutputStream(zOut);
+                finalizeZipOutputStream(zOut);
+            } catch (IOException ioe) {
+                throw new BuildException("Could not create almost empty JAR archive"
+                                         + " (" + ioe.getMessage() + ")", ioe,
+                                         getLocation());
+            } finally {
+                createEmpty = false;
             }
-            initZipOutputStream(zOut);
-            finalizeZipOutputStream(zOut);
-        } catch (IOException ioe) {
-            throw new BuildException("Could not create almost empty JAR archive"
-                                     + " (" + ioe.getMessage() + ")", ioe,
-                                     getLocation());
-        } finally {
-            createEmpty = false;
-        }
         }
         return true;
     }

@@ -349,8 +349,8 @@ public abstract class JDBCTask extends Task {
             info.put("password", getPassword());
 
             for (Property p : connectionProperties) {
-            String name = p.getName();
-            String value = p.getValue();
+                String name = p.getName();
+                String value = p.getValue();
                 if (name == null || value == null) {
                     log("Only name/value pairs are supported as connection properties.",
                         Project.MSG_WARN);
