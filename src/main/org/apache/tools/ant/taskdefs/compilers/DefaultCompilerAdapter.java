@@ -64,6 +64,7 @@ public abstract class DefaultCompilerAdapter
     //must keep for subclass BC, though unused:
     // CheckStyle:ConstantNameCheck OFF - bc
     protected static final String lSep = StringUtils.LINE_SEP;
+    // CheckStyle:ConstantNameCheck ON
 
     protected Path src;
     protected File destDir;
@@ -92,7 +93,6 @@ public abstract class DefaultCompilerAdapter
     protected File[] compileList;
     protected Javac attributes;
 
-    // CheckStyle:ConstantNameCheck ON
     // CheckStyle:VisibilityModifier ON
 
     /**
