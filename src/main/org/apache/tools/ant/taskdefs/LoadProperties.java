@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -177,7 +178,7 @@ public class LoadProperties extends Task {
         Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
 
         try (ChainReader instream = new ChainReaderHelper(getProject(),
-            new InputStreamReader(src.getInputStream(), charset), filterChains)
+            new InputStreamReader(new BufferedInputStream(src.getInputStream()), charset), filterChains)
                 .getAssembledReader()) {
 
             String text = instream.readFully();
