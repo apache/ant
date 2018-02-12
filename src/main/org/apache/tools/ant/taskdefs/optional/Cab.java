@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -178,10 +177,13 @@ public class Cab extends MatchingTask {
         throws IOException {
         File listFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
 
-        try (PrintWriter writer =
-            new PrintWriter(new BufferedWriter(new FileWriter(listFile)))) {
-            files.stream().map(f -> String.format("\"%s\"", f))
-                .forEach(writer::println);
+        try (BufferedWriter writer =
+            new BufferedWriter(new FileWriter(listFile))) {
+            for (String f : files) {
+                String s = String.format("\"%s\"", f);
+                writer.write(s);
+                writer.newLine();
+            }
         }
         return listFile;
     }
