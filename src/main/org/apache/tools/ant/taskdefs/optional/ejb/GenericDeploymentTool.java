@@ -520,7 +520,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         for (FileSet supportFileSet : config.supportFileSets) {
             File supportBaseDir = supportFileSet.getDir(project);
             DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
-            supportScanner.scan();
             for (String supportFile : supportScanner.getIncludedFiles()) {
                 ejbFiles.put(supportFile, new File(supportBaseDir, supportFile));
             }
