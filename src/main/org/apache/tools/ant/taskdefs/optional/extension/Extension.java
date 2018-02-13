@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -191,7 +192,8 @@ public final class Extension {
             return new Extension[0];
         }
         return Stream
-            .concat(Stream.of(manifest.getMainAttributes()),
+            .concat(Optional.ofNullable(manifest.getMainAttributes())
+                    .map(Stream::of).orElse(Stream.empty()),
                 manifest.getEntries().values().stream())
             .map(attrs -> getExtension("", attrs)).filter(Objects::nonNull)
             .toArray(Extension[]::new);
