@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -222,12 +221,15 @@ public class Depend extends MatchingTask {
         if (cache != null) {
             cache.mkdirs();
             File depFile = new File(cache, CACHE_FILE_NAME);
-            try (PrintWriter pw =
-                new PrintWriter(new BufferedWriter(new FileWriter(depFile)))) {
+            try (BufferedWriter pw =
+                new BufferedWriter(new FileWriter(depFile))) {
                 for (Map.Entry<String, List<String>> e : dependencyMap
                     .entrySet()) {
-                    pw.printf("%s%s%n", CLASSNAME_PREPEND, e.getKey());
-                    e.getValue().forEach(pw::println);
+                    pw.write(String.format("%s%s%n", CLASSNAME_PREPEND, e.getKey()));
+                    for (String s : e.getValue()) {
+                        pw.write(s);
+                        pw.newLine();
+                    }
                 }
             }
         }
