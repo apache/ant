@@ -736,10 +736,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                                 }
                                 //Object class Changed   update it.
                                 replaceEntries.put(filepath, genericEntry);
-                            } else if (!genericEntry.getName()
-                                .equals("META-INF/MANIFEST.MF")) {
-                                // it is the manifest, so ignore it
-                                //File other then class changed   rebuild
+                            } else if (!"META-INF/MANIFEST.MF".equals(genericEntry.getName())) {
+                                // it is not the manifest, otherwise we'd ignore it
+                                // File other then class changed   rebuild
                                 log("Non class file " + genericEntry.getName()
                                     + " has changed", Project.MSG_VERBOSE);
                                 rebuild = true;
