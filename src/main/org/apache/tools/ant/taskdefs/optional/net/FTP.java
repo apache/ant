@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1009,7 +1010,9 @@ public class FTP extends Task implements FTPTaskConfig {
                 Predicate<String> test =
                     isCaseSensitive() ? lastpathelement::equals
                         : lastpathelement::equalsIgnoreCase;
-                return Stream.of(theFiles).filter(f -> test.test(f.getName()))
+                return Stream.of(theFiles)
+                    .filter(Objects::nonNull)
+                    .filter(f -> test.test(f.getName()))
                     .findFirst().orElse(null);
             }
 

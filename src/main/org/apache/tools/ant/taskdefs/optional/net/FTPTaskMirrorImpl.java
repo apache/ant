@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -913,7 +914,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 Predicate<String> test =
                     isCaseSensitive() ? lastpathelement::equals
                         : lastpathelement::equalsIgnoreCase;
-                return Stream.of(theFiles).filter(f -> test.test(f.getName()))
+                return Stream.of(theFiles)
+                    .filter(Objects::nonNull)
+                    .filter(f -> test.test(f.getName()))
                     .findFirst().orElse(null);
             }
 
