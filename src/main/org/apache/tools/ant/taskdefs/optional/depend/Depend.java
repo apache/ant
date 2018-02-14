@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,8 +45,8 @@ import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.WLRmic;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.resources.Difference;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
@@ -244,16 +245,17 @@ public class Depend extends MatchingTask {
         if (dependClasspath == null) {
             return null;
         }
-        Difference diff = new Difference();
-        diff.add(destPath);
-        diff.add(dependClasspath);
+
+        Set<Resource> dependNotInDest = new LinkedHashSet<>();
+        dependClasspath.forEach(dependNotInDest::add);
+        destPath.forEach(dependNotInDest::remove);
 
         Path p;
-        if (diff.isEmpty()) {
+        if (dependNotInDest.isEmpty()) {
             p = null;
         } else {
             p = new Path(getProject());
-            p.add(diff);
+            dependNotInDest.forEach(p::add);
         }
 
         log("Classpath without dest dir is " + p, Project.MSG_DEBUG);
