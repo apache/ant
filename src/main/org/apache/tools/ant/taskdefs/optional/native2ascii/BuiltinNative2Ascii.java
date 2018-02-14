@@ -25,7 +25,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.function.UnaryOperator;
@@ -33,6 +32,7 @@ import java.util.function.UnaryOperator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
 import org.apache.tools.ant.util.Native2AsciiUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Encapsulates the built-in Native2Ascii implementation.
@@ -83,11 +83,10 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
 
     private void translate(BufferedReader input, Writer output,
         UnaryOperator<String> translation) throws IOException {
-        PrintWriter pw = new PrintWriter(output);
-
         for (String line : (Iterable<String>) () -> input.lines()
             .map(translation).iterator()) {
-            pw.println(line);
+            output.write(line);
+            output.write(StringUtils.LINE_SEP);
         }
     }
 }
