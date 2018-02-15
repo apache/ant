@@ -739,7 +739,7 @@ public class IntrospectionHelperTest {
 
     public void addConfigured(Map m) {
         // Valid extension point
-        assertTrue(m.size() == 0);
+        assertTrue(m.isEmpty());
     }
 
     public void addConfigured(Hashtable h) {

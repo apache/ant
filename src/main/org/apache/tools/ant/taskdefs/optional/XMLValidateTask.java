@@ -288,7 +288,7 @@ public class XMLValidateTask extends Task {
     public void execute() throws BuildException {
         try {
             int fileProcessed = 0;
-            if (file == null && (filesets.size() == 0)) {
+            if (file == null && (filesets.isEmpty())) {
                 throw new BuildException(
                     "Specify at least one source - " + "a file or a fileset.");
             }
