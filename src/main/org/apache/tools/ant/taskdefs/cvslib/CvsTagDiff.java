@@ -468,7 +468,7 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @exception BuildException if a parameter is not correctly set
      */
     private void validate() throws BuildException {
-        if (null == mypackage && getModules().size() == 0) {
+        if (null == mypackage && getModules().isEmpty()) {
             throw new BuildException("Package/module must be set.");
         }
 

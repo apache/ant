@@ -850,7 +850,7 @@ public class ComponentHelper  {
         }
         checkedNamespaces.add(uri);
 
-        if (antTypeTable.size() == 0) {
+        if (antTypeTable.isEmpty()) {
             // Project instance doesn't know the tasks and types
             // defined in defaults.properties, likely created by the
             // user - without those definitions it cannot parse antlib

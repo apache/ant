@@ -840,7 +840,7 @@ public class Main implements AntMain {
                 }
 
                 // make sure that we have a target to execute
-                if (targets.size() == 0) {
+                if (targets.isEmpty()) {
                     if (project.getDefaultTarget() != null) {
                         targets.addElement(project.getDefaultTarget());
                     }

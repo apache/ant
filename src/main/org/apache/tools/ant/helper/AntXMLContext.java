@@ -377,7 +377,7 @@ public class AntXMLContext {
      */
     public void endPrefixMapping(String prefix) {
         List<String> list = prefixMapping.get(prefix);
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return; // Should not happen
         }
         list.remove(list.size() - 1);
@@ -391,7 +391,7 @@ public class AntXMLContext {
      */
     public String getPrefixMapping(String prefix) {
         List<String> list = prefixMapping.get(prefix);
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
         return (String) list.get(list.size() - 1);
