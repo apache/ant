@@ -203,7 +203,7 @@ public class Classloader extends Task {
                     // The core loader must be reverse
                     //reverse=true;
                 }
-                getProject().log("Setting parent loader " + name + " "
+                getProject().log("Setting parent loader " + name + ' '
                     + parent + " " + parentFirst, Project.MSG_DEBUG);
 
                 // The param is "parentFirst"
@@ -225,7 +225,7 @@ public class Classloader extends Task {
                 for (int i = 0; i < list.length; i++) {
                     File f = new File(list[i]);
                     if (f.exists()) {
-                        log("Adding to class loader " + acl + " " + f.getAbsolutePath(),
+                        log("Adding to class loader " + acl + ' ' + f.getAbsolutePath(),
                                 Project.MSG_DEBUG);
                         acl.addPathElement(f.getAbsolutePath());
                     }

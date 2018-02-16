@@ -140,7 +140,7 @@ public class Location implements Serializable {
             buf.append(fileName);
 
             if (lineNumber != 0) {
-                buf.append(":");
+                buf.append(':');
                 buf.append(lineNumber);
             }
 

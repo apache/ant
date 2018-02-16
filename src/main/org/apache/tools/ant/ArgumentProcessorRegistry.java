@@ -92,7 +92,7 @@ public class ArgumentProcessorRegistry {
         } catch (Exception e) {
             System.err.println("Unable to load ArgumentProcessor from service "
                     + SERVICE_ID + " (" + e.getClass().getName() + ": "
-                    + e.getMessage() + ")");
+                    + e.getMessage() + ')');
             if (DEBUG) {
                 e.printStackTrace(System.err); //NOSONAR
             }

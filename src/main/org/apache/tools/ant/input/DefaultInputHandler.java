@@ -105,10 +105,10 @@ public class DefaultInputHandler implements InputHandler {
                 }
                 first = false;
             }
-            sb.append(")");
+            sb.append(')');
             return sb.toString();
         } else if (def != null) {
-            return prompt + " [" + def + "]";
+            return prompt + " [" + def + ']';
         } else {
             return prompt;
         }

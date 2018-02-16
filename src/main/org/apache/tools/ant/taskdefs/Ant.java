@@ -449,7 +449,7 @@ public class Ant extends Task {
                         .addLocationToBuildException(ex, getLocation());
                     throw be;
                 } finally {
-                    log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
+                    log("Exiting " + antFile + '.', Project.MSG_VERBOSE);
                     newProject.fireSubBuildFinished(be);
                 }
             }
