@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types.optional.image;
 
 import java.awt.Color;
+import java.util.Locale;
 
 /**
  *
@@ -66,7 +67,7 @@ public final class ColorMapper {
      * @todo refactor to use an EnumeratedAttribute (maybe?)
      */
     public static Color getColorByName(String colorName) {
-        switch (colorName.toLowerCase()) {
+        switch (colorName.toLowerCase(Locale.ENGLISH)) {
         case COLOR_BLUE:
             return Color.blue;
         case COLOR_CYAN:
