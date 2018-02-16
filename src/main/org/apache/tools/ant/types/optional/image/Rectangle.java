@@ -105,11 +105,11 @@ public class Rectangle extends BasicShape implements DrawOperation {
                 PlanarImage img = ((DrawOperation) instr).executeDrawOperation();
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
-                graphics = (Graphics2D) bi.getGraphics();
                 PlanarImage image
                     = ((TransformOperation) instr)
                     .executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
+                graphics = bi.createGraphics();
             }
         }
         return PlanarImage.wrapRenderedImage(bi);
