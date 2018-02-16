@@ -103,7 +103,7 @@ public class Text extends ImageOperation implements DrawOperation {
             RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(
             RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        Font f = new Font(font, Font.PLAIN, point);
+        Font f = createFont();
         FontMetrics fmetrics = graphics.getFontMetrics(f);
         height = fmetrics.getMaxAscent() + fmetrics.getMaxDescent();
         width = fmetrics.stringWidth(strText);
@@ -122,5 +122,16 @@ public class Text extends ImageOperation implements DrawOperation {
         graphics.drawString(strText, 0, height - fmetrics.getMaxDescent());
         PlanarImage image = PlanarImage.wrapRenderedImage(bi);
         return image;
+    }
+
+    private Font createFont() {
+        int style = Font.PLAIN;
+        if (bold) {
+            style |= Font.BOLD;
+        }
+        if (italic) {
+            style |= Font.ITALIC;
+        }
+        return new Font(font, style, point);
     }
 }
