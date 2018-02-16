@@ -887,7 +887,7 @@ public abstract class AbstractFileSet extends DataType
         }
         dieOnCircularReference();
         DirectoryScanner ds = getDirectoryScanner(getProject());
-        return Stream.of(ds.getIncludedFiles()).collect(Collectors.joining(File.pathSeparator));
+        return Stream.of(ds.getIncludedFiles()).collect(Collectors.joining(";"));
     }
 
     /**
