@@ -789,6 +789,8 @@ public class XMLCatalog extends DataType
      * the ExternalResolver strategy.
      */
     private interface CatalogResolver extends URIResolver, EntityResolver {
+        @Override
+        InputSource resolveEntity(String publicId, String systemId);
     }
 
     /**
