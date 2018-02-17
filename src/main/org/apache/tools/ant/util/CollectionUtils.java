@@ -252,7 +252,7 @@ public class CollectionUtils {
      */
     @Deprecated
     public static int frequency(Collection<?> c, Object o) {
-        return Collections.frequency(c, o);
+        return c == null ? 0 : Collections.frequency(c, o);
     }
 
     private CollectionUtils() {
