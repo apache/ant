@@ -404,13 +404,12 @@ public class ModifiedSelector extends BaseExtendSelector
                 clazz = Class.forName(classname);
             }
 
-            @SuppressWarnings("unchecked")
-            T rv = (T) clazz.newInstance();
+            Object rv = clazz.newInstance();
 
             if (!type.isInstance(rv)) {
                 throw new BuildException("Specified class (%s) %s", classname, msg);
             }
-            return rv;
+            return (T) rv;
         } catch (ClassNotFoundException e) {
             throw new BuildException("Specified class (%s) not found.", classname);
         } catch (Exception e) {
