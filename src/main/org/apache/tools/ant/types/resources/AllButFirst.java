@@ -42,7 +42,7 @@ public class AllButFirst extends SizeLimitCollection {
 
     @Override
     public synchronized int size() {
-        return (int) getResourceCollection().stream().skip(getValidCount()).count();
+        return Math.max(getResourceCollection().size() - getValidCount(), 0);
     }
 
 }
