@@ -36,6 +36,7 @@ public class ChainedMapper extends ContainerMapper {
         // resources have a null name and users may use a mapper like
         // MergeMapper to provide a name for it.
         String[] result = getMappers().stream()
+            .filter(Objects::nonNull)
             .reduce(new String[] { sourceFileName }, (i, m) -> Stream.of(i)
                 .map(m::mapFileName).filter(Objects::nonNull).flatMap(Stream::of).toArray(String[]::new),
                 (i, o) -> o);
