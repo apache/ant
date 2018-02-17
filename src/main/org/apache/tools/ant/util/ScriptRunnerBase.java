@@ -222,6 +222,9 @@ public abstract class ScriptRunnerBase {
      */
     public void setSrc(File file) {
         String filename = file.getPath();
+        if (!file.exists()) {
+            throw new BuildException("file " + filename + " not found.");
+        }
 
         try (InputStream in = Files.newInputStream(file.toPath())) {
             final Charset charset = null == encoding ? Charset.defaultCharset()
