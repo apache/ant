@@ -42,7 +42,7 @@ public class DateSelector extends BaseExtendSelector {
     private long millis = -1;
     private String dateTime = null;
     private boolean includeDirs = false;
-    private long granularity = 0;
+    private long granularity = FILE_UTILS.getFileTimestampGranularity();
     private String pattern;
     private TimeComparison when = TimeComparison.EQUAL;
 

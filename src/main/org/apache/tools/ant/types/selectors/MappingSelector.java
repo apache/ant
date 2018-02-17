@@ -40,7 +40,7 @@ public abstract class MappingSelector extends BaseSelector {
     protected File targetdir = null;
     protected Mapper mapperElement = null;
     protected FileNameMapper map = null;
-    protected int granularity = 0;
+    protected int granularity = (int) FILE_UTILS.getFileTimestampGranularity();
 
     // CheckStyle:VisibilityModifier ON
 
