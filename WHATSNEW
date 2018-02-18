@@ -19,6 +19,9 @@ Fixed bugs:
  * Fixed NullPointerException when a mappedresource is used in pathconvert
    Bugzilla Report 62076
 
+Other changes:
+--------------
+
  * Allow Saxon to be used for junitreport XSL transformation
    Github Pull Request #57
 
