@@ -460,4 +460,20 @@ public class NullByteStreamResource extends Resource {
     <au:assertFileExists file="${input}/somefile"/>
     <au:assertFileExists file="${output}/somefile"/>
   </target>
+
+
+  <target name="test-with-some-resources-mapped-away"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=62076">
+    <mkdir dir="${input}"/>
+    <touch file="${input}/a.filea"/>
+    <touch file="${input}/b.fileb"/>
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <mappedresources>
+	<fileset dir="${input}" />
+	<globmapper from="a.*" to="*" />
+      </mappedresources>
+    </copy>
+    <au:assertFileExists file="${output}/filea"/>
+  </target>
 </project>
