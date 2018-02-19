@@ -7,14 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
  */
 public class JupiterSampleTest {
+
+    private static final String message = "The quick brown fox jumps over the lazy dog";
 
     @BeforeAll
     static void beforeAll() {
@@ -26,8 +26,8 @@ public class JupiterSampleTest {
 
     @Test
     void testSucceeds() {
-        System.out.println("in test succeeds " + new Date());
-        System.out.println("in test succeeds 2" + new Date());
+        System.out.println(message);
+        System.out.print("<some-other-message>Hello world! <!-- some comment --></some-other-message>");
     }
 
     @Test

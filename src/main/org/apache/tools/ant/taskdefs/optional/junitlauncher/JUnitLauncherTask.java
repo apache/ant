@@ -295,10 +295,12 @@ public class JUnitLauncherTask extends Task {
         final PrintStream printStream = new PrintStream(pipedOutputStream, true);
         System.setOut(new PrintStream(printStream));
 
-        final SysOutErrStreamReader streamer = new SysOutErrStreamReader(pipedInputStream, StreamType.SYS_OUT, testRequest.getSysOutInterests());
+        final SysOutErrStreamReader streamer = new SysOutErrStreamReader(this, pipedInputStream,
+                StreamType.SYS_OUT, testRequest.getSysOutInterests());
         final Thread sysOutStreamer = new Thread(streamer);
         sysOutStreamer.setDaemon(true);
         sysOutStreamer.setName("junitlauncher-sysout-stream-reader");
+        sysOutStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in sysout streaming", e, Project.MSG_INFO));
         sysOutStreamer.start();
         return Optional.of(new SwitchedStreamHandle(pipedOutputStream, streamer));
     }
@@ -319,11 +321,13 @@ public class JUnitLauncherTask extends Task {
         final PrintStream printStream = new PrintStream(pipedOutputStream, true);
         System.setErr(new PrintStream(printStream));
 
-        final SysOutErrStreamReader streamer = new SysOutErrStreamReader(pipedInputStream, StreamType.SYS_ERR, testRequest.getSysErrInterests());
-        final Thread sysOutStreamer = new Thread(streamer);
-        sysOutStreamer.setDaemon(true);
-        sysOutStreamer.setName("junitlauncher-syserr-stream-reader");
-        sysOutStreamer.start();
+        final SysOutErrStreamReader streamer = new SysOutErrStreamReader(this, pipedInputStream,
+                StreamType.SYS_ERR, testRequest.getSysErrInterests());
+        final Thread sysErrStreamer = new Thread(streamer);
+        sysErrStreamer.setDaemon(true);
+        sysErrStreamer.setName("junitlauncher-syserr-stream-reader");
+        sysErrStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in syserr streaming", e, Project.MSG_INFO));
+        sysErrStreamer.start();
         return Optional.of(new SwitchedStreamHandle(pipedOutputStream, streamer));
     }
 
@@ -342,14 +346,17 @@ public class JUnitLauncherTask extends Task {
         SYS_ERR
     }
 
-    private final class SysOutErrStreamReader implements Runnable {
+    private static final class SysOutErrStreamReader implements Runnable {
+        private static final byte[] EMPTY = new byte[0];
 
+        private final JUnitLauncherTask task;
         private final InputStream sourceStream;
         private final StreamType streamType;
         private final Collection<TestResultFormatter> resultFormatters;
         private volatile SysOutErrContentDeliverer contentDeliverer;
 
-        SysOutErrStreamReader(final InputStream source, final StreamType streamType, final Collection<TestResultFormatter> resultFormatters) {
+        SysOutErrStreamReader(final JUnitLauncherTask task, final InputStream source, final StreamType streamType, final Collection<TestResultFormatter> resultFormatters) {
+            this.task = task;
             this.sourceStream = source;
             this.streamType = streamType;
             this.resultFormatters = resultFormatters == null ? Collections.emptyList() : resultFormatters;
@@ -375,17 +382,22 @@ public class JUnitLauncherTask extends Task {
                     System.arraycopy(data, 0, copy, 0, numRead);
                     streamContentDeliver.availableData.offer(copy);
                 }
-            } catch (Exception e) {
-                // TODO: log and return
-                JUnitLauncherTask.this.log("Failed in streaming", e, Project.MSG_INFO);
+            } catch (IOException e) {
+                task.log("Failed while streaming " + (this.streamType == StreamType.SYS_OUT ? "sysout" : "syserr") + " data",
+                        e, Project.MSG_INFO);
                 return;
             } finally {
                 streamContentDeliver.stop = true;
+                // just "wakeup" the delivery thread, to take into account
+                // those race conditions, where that other thread didn't yet
+                // notice that it was asked to stop and has now gone into a
+                // X amount of wait, waiting for any new data
+                streamContentDeliver.availableData.offer(EMPTY);
             }
         }
     }
 
-    private final class SysOutErrContentDeliverer implements Runnable {
+    private static final class SysOutErrContentDeliverer implements Runnable {
         private volatile boolean stop;
         private final Collection<TestResultFormatter> resultFormatters;
         private final StreamType streamType;
@@ -426,6 +438,9 @@ public class JUnitLauncherTask extends Task {
         }
 
         private void deliver(final byte[] data) {
+            if (data == null || data.length == 0) {
+                return;
+            }
             for (final TestResultFormatter resultFormatter : this.resultFormatters) {
                 // send it to the formatter
                 switch (streamType) {
