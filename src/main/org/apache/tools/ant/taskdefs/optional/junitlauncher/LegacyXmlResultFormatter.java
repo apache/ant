@@ -1,6 +1,7 @@
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DateUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
@@ -12,9 +13,12 @@ import org.junit.platform.launcher.TestPlan;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
@@ -305,10 +309,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 return;
             }
             writer.writeStartElement(ELEM_SYSTEM_OUT);
-            // not really a good thing to load the entire sysout content in memory,
-            // but there's no other optional available on the xmlstreamwriter to write CData
-            // in any other fashion
-            writer.writeCData(new String(Files.readAllBytes(LegacyXmlResultFormatter.this.sysOutFilePath)));
+            writeCharactersFrom(LegacyXmlResultFormatter.this.sysOutFilePath, writer);
             writer.writeEndElement();
         }
 
@@ -317,11 +318,26 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 return;
             }
             writer.writeStartElement(ELEM_SYSTEM_ERR);
-            // not really a good thing to load the entire syserr content in memory,
-            // but there's no other optional available on the xmlstreamwriter to write CData
-            // in any other fashion
-            writer.writeCData(new String(Files.readAllBytes(LegacyXmlResultFormatter.this.sysErrFilePath)));
+            writeCharactersFrom(LegacyXmlResultFormatter.this.sysErrFilePath, writer);
             writer.writeEndElement();
+        }
+
+        private void writeCharactersFrom(final Path path, final XMLStreamWriter writer) throws IOException, XMLStreamException {
+            // we use a FileReader here so that we can use the system default character
+            // encoding for reading the contents on sysout/syserr stream, since that's the
+            // encoding that System.out/System.err uses to write out the messages
+            try (final BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+                final char[] chars = new char[1024];
+                int numRead = -1;
+                while ((numRead = reader.read(chars)) != -1) {
+                    // although it's called a DOMElementWriter, the encode method is just a
+                    // straight forward XML util method which doesn't concern about whether
+                    // DOM, SAX, StAX semantics.
+                    // TODO: Perhaps make it a static method
+                    final String encoded = new DOMElementWriter().encode(new String(chars, 0, numRead));
+                    writer.writeCharacters(encoded);
+                }
+            }
         }
 
         private String determineTestSuiteName() {
