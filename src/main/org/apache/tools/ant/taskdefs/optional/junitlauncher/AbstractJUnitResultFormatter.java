@@ -2,13 +2,15 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -54,7 +56,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             try {
                 this.sysErrFilePath = Files.createTempFile(null, "syserr");
                 this.sysErrFilePath.toFile().deleteOnExit();
-                this.sysErrStream = Files.newOutputStream(this.sysOutFilePath);
+                this.sysErrStream = Files.newOutputStream(this.sysErrFilePath);
             } catch (IOException e) {
                 handleException(e);
                 return;
@@ -105,31 +107,22 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
     }
 
     private void writeFrom(final Path path, final Writer writer) throws IOException {
-        final byte[] content = new byte[1024];
-        int numBytes;
-        try (final InputStream is = Files.newInputStream(path)) {
-            while ((numBytes = is.read(content)) != -1) {
-                writer.write(new String(content, 0, numBytes));
+        final char[] chars = new char[1024];
+        int numRead = -1;
+        // we use a FileReader here so that we can use the system default character
+        // encoding for reading the contents on sysout/syserr stream, since that's the
+        // encoding that System.out/System.err uses to write out the messages
+        try (final BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+            while ((numRead = reader.read(chars)) != -1) {
+                writer.write(chars, 0, numRead);
             }
         }
     }
 
     @Override
     public void close() throws IOException {
-        if (this.sysOutStream != null) {
-            try {
-                this.sysOutStream.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        if (this.sysErrStream != null) {
-            try {
-                this.sysErrStream.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
+        FileUtils.close(this.sysOutStream);
+        FileUtils.close(this.sysErrStream);
     }
 
     protected void handleException(final Throwable t) {
