@@ -15,7 +15,6 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -344,16 +343,6 @@ public class JUnitLauncherTask extends Task {
         sysErrStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in syserr streaming", e, Project.MSG_INFO));
         sysErrStreamer.start();
         return Optional.of(new SwitchedStreamHandle(pipedOutputStream, streamer));
-    }
-
-    private static void safeClose(final Closeable... closeables) {
-        for (final Closeable closeable : closeables) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
     }
 
     private enum StreamType {
