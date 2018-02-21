@@ -20,7 +20,7 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
     private String testClass;
     private Set<String> testMethods;
 
-    SingleTestClass() {
+    public SingleTestClass() {
 
     }
 

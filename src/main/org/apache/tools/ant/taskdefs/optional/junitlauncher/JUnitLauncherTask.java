@@ -5,6 +5,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -116,40 +117,50 @@ public class JUnitLauncherTask extends Task {
     }
 
     /**
-     * @return Creates and returns the a {@link Path} which will be used as the classpath of this
-     * task. This classpath will then be used for execution of the tests
+     * Adds the {@link Path} to the classpath which will be used for execution of the tests
+     *
+     * @param path The classpath
      */
-    public Path createClassPath() {
-        this.classPath = new Path(getProject());
-        return this.classPath;
+    public void addConfiguredClassPath(final Path path) {
+        if (this.classPath == null) {
+            // create a "wrapper" path which can hold on to multiple
+            // paths that get passed to this method (if at all the task in the build is
+            // configured with multiple classpaht elements)
+            this.classPath = new Path(getProject());
+        }
+        this.classPath.add(path);
     }
 
     /**
-     * @return Creates and returns a {@link SingleTestClass}. This test will be considered part of the
-     * tests that will be passed on to the underlying JUnit platform for possible execution of the test
+     * Adds a {@link SingleTestClass} that will be passed on to the underlying JUnit platform
+     * for possible execution of the test
+     *
+     * @param test The test
      */
-    public SingleTestClass createTest() {
-        final SingleTestClass test = new SingleTestClass();
+    public void addConfiguredTest(final SingleTestClass test) {
         this.preConfigure(test);
         this.tests.add(test);
-        return test;
     }
 
     /**
-     * @return Creates and returns a {@link TestClasses}. The {@link TestClasses#getTests() tests} that belong to it,
-     * will be passed on to the underlying JUnit platform for possible execution of the tests
+     * Adds {@link TestClasses} that will be passed on to the underlying JUnit platform for
+     * possible execution of the tests
+     *
+     * @param testClasses The test classes
      */
-    public TestClasses createTestClasses() {
-        final TestClasses batch = new TestClasses();
-        this.preConfigure(batch);
-        this.tests.add(batch);
-        return batch;
+    public void addConfiguredTestClasses(final TestClasses testClasses) {
+        this.preConfigure(testClasses);
+        this.tests.add(testClasses);
     }
 
-    public ListenerDefinition createListener() {
-        final ListenerDefinition listener = new ListenerDefinition();
+    /**
+     * Adds a {@link ListenerDefinition listener} which will be enrolled for listening to test
+     * execution events
+     *
+     * @param listener The listener
+     */
+    public void addConfiguredListener(final ListenerDefinition listener) {
         this.listeners.add(listener);
-        return listener;
     }
 
     public void setHaltonfailure(final boolean haltonfailure) {
@@ -161,8 +172,12 @@ public class JUnitLauncherTask extends Task {
     }
 
     private void preConfigure(final TestDefinition test) {
-        test.setHaltOnFailure(this.haltOnFailure);
-        test.setFailureProperty(this.failureProperty);
+        if (test.getHaltOnFailure() == null) {
+            test.setHaltOnFailure(this.haltOnFailure);
+        }
+        if (test.getFailureProperty() == null) {
+            test.setFailureProperty(this.failureProperty);
+        }
     }
 
     private List<TestRequest> buildTestRequests() {
@@ -359,15 +374,11 @@ public class JUnitLauncherTask extends Task {
             this.task = task;
             this.sourceStream = source;
             this.streamType = streamType;
-            this.resultFormatters = resultFormatters == null ? Collections.emptyList() : resultFormatters;
+            this.resultFormatters = resultFormatters;
         }
 
         @Override
         public void run() {
-            if (this.resultFormatters.isEmpty()) {
-                // no one to feed the stream content to
-                return;
-            }
             final SysOutErrContentDeliverer streamContentDeliver = new SysOutErrContentDeliverer(this.streamType, this.resultFormatters);
             final Thread deliveryThread = new Thread(streamContentDeliver);
             deliveryThread.setName("junitlauncher-" + (this.streamType == StreamType.SYS_OUT ? "sysout" : "syserr") + "-stream-deliverer");
@@ -497,7 +508,7 @@ public class JUnitLauncherTask extends Task {
         }
 
         private void closeAndWait(final SwitchedStreamHandle handle) throws InterruptedException {
-            safeClose(handle.outputStream);
+            FileUtils.close(handle.outputStream);
             if (handle.streamReader.contentDeliverer == null) {
                 return;
             }

@@ -13,7 +13,7 @@ import java.util.List;
 abstract class TestDefinition {
     protected String ifProperty;
     protected String unlessProperty;
-    protected boolean haltOnFailure;
+    protected Boolean haltOnFailure;
     protected String failureProperty;
     protected String outputDir;
     protected String includeEngines;
@@ -38,6 +38,10 @@ abstract class TestDefinition {
     }
 
     boolean isHaltOnFailure() {
+        return this.haltOnFailure == null ? false : this.haltOnFailure;
+    }
+
+    Boolean getHaltOnFailure() {
         return this.haltOnFailure;
     }
 

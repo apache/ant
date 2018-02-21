@@ -23,6 +23,10 @@ public class ListenerDefinition {
 
     private String defaultResultFileSuffix = "txt";
 
+    public ListenerDefinition() {
+
+    }
+
     public void setClassName(final String className) {
         this.className = className;
     }

@@ -16,6 +16,9 @@ public class TestClasses extends TestDefinition {
 
     private final Resources resources = new Resources();
 
+    public TestClasses() {
+
+    }
 
     public void add(final ResourceCollection resourceCollection) {
         this.resources.add(resourceCollection);
