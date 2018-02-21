@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -378,8 +379,7 @@ public class JUnitLauncherTask extends Task {
             final byte[] data = new byte[1024];
             try {
                 while ((numRead = this.sourceStream.read(data)) != -1) {
-                    final byte[] copy = new byte[numRead];
-                    System.arraycopy(data, 0, copy, 0, numRead);
+                    final byte[] copy = Arrays.copyOf(data, numRead);
                     streamContentDeliver.availableData.offer(copy);
                 }
             } catch (IOException e) {
