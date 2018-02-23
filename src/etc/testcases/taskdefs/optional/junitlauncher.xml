@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="junitlauncher-test" basedir=".">
+
+    <property name="output.dir" location="${java.io.tmpdir}"/>
+    <property name="build.classes.dir" value="../../../../../build/testcases"/>
+    <target name="init">
+        <mkdir dir="${output.dir}"/>
+    </target>
+
+    <path id="junit.platform.classpath">
+        <fileset dir="../../../../../lib/optional" includes="junit-platform*.jar"/>
+    </path>
+
+    <path id="junit.engine.vintage.classpath">
+        <fileset dir="../../../../../lib/optional" includes="junit-vintage-engine*.jar"/>
+    </path>
+
+    <path id="junit.engine.jupiter.classpath">
+        <fileset dir="../../../../../lib/optional">
+            <include name="junit-jupiter*.jar"/>
+            <include name="opentest4j*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test.classpath">
+        <pathelement location="${build.classes.dir}"/>
+        <path refid="junit.platform.classpath"/>
+        <path refid="junit.engine.vintage.classpath"/>
+        <path refid="junit.engine.jupiter.classpath"/>
+    </path>
+
+    <target name="test-failure-stops-build" depends="init">
+        <junitlauncher>
+            <!-- A specific test meant to fail -->
+            <test name="org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test" haltOnFailure="true"/>
+            <!-- classpath to be used for the tests -->
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-failure-continues-build" depends="init">
+        <junitlauncher>
+            <!-- A specific test meant to fail -->
+            <test name="org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-success" depends="init">
+        <junitlauncher>
+            <!-- A specific test meant to pass -->
+            <test name="org.example.junitlauncher.vintage.JUnit4SampleTest"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-one-specific-method" depends="init">
+        <junitlauncher>
+            <test name="org.example.junitlauncher.vintage.JUnit4SampleTest" methods="testBar" haltonfailure="true"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-multiple-specific-methods" depends="init">
+        <junitlauncher>
+            <test name="org.example.junitlauncher.vintage.JUnit4SampleTest" methods=" testFoo, testFooBar "
+                  haltonfailure="true"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-multiple-individual" depends="init">
+        <junitlauncher>
+            <test name="org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test"/>
+            <test name="org.example.junitlauncher.vintage.JUnit4SampleTest"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-batch" depends="init">
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="${output.dir}">
+                <fileset dir="${build.classes.dir}">
+                    <include name="org/example/**/junitlauncher/**/"/>
+                </fileset>
+                <fileset dir="${build.classes.dir}">
+                    <include name="org/apache/tools/ant/taskdefs/optional/junitlauncher/example/**/"/>
+                </fileset>
+                <listener type="legacy-brief" sendSysOut="true"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+</project>
+
