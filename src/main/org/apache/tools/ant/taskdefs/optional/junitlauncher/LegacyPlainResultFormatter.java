@@ -31,7 +31,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,14 +83,14 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
         }
         // write out sysout and syserr content if any
         try {
-            if (this.sysOutFilePath != null && Files.exists(this.sysOutFilePath)) {
+            if (this.hasSysOut()) {
                 this.writer.write("------------- Standard Output ---------------");
                 this.writer.newLine();
                 writeSysOut(writer);
                 this.writer.write("------------- ---------------- ---------------");
                 this.writer.newLine();
             }
-            if (this.sysErrFilePath != null && Files.exists(this.sysErrFilePath)) {
+            if (this.hasSysErr()) {
                 this.writer.write("------------- Standard Error ---------------");
                 this.writer.newLine();
                 writeSysErr(writer);
