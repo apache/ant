@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="MyTask" basedir="." default="test">
+
+    <property name="src.dir"     value="src"/>
+    <property name="classes.dir" value="classes"/>
+
+    <property name="ant.test.lib" value="ant-testutil.jar"/>
+    <property name="report.dir"   value="report"/>
+    <property name="junit.out.dir.xml"  value="${report.dir}/junit/xml"/>
+    <property name="junit.out.dir.html" value="${report.dir}/junit/html"/>
+
+    <path id="classpath.run">
+        <path path="${java.class.path}"/>
+        <path location="${ant.project.name}.jar"/>
+    </path>
+
+    <path id="classpath.test">
+        <path refid="classpath.run"/>
+        <path location="${ant.test.lib}"/>
+    </path>
+
+    <target name="clean" description="Delete all generated files">
+        <delete failonerror="false" includeEmptyDirs="true">
+            <fileset dir="." includes="${ant.project.name}.jar"/>
+            <fileset dir="${classes.dir}"/>
+            <fileset dir="${report.dir}"/>
+        </delete>
+    </target>
+
+    <target name="compile" description="Compiles the Task">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpath="${ant.test.lib}"/>
+    </target>
+
+    <target name="jar" description="JARs the Task" depends="compile">
+        <jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/>
+    </target>
+
+
+    <target name="use.init" description="Taskdef´ the HelloWorld-Task" depends="jar">
+        <taskdef name="helloworld" classname="HelloWorld" classpath="${ant.project.name}.jar"/>
+    </target>
+
+
+    <target name="use.without" description="Use without any" depends="use.init">
+        <helloworld/>
+    </target>
+
+    <target name="use.message" description="Use with attribute 'message'" depends="use.init">
+        <helloworld message="attribute-text"/>
+    </target>
+
+    <target name="use.fail" description="Use with attribute 'fail'" depends="use.init">
+        <helloworld fail="true"/>
+    </target>
+
+    <target name="use.nestedText" description="Use with nested text" depends="use.init">
+        <helloworld>nested-text</helloworld>
+    </target>
+
+    <target name="use.nestedElement" description="Use with nested 'message'" depends="use.init">
+        <helloworld>
+            <message msg="Nested Element 1"/>
+            <message msg="Nested Element 2"/>
+        </helloworld>
+    </target>
+
+
+    <target name="use"
+            description="Try all (w/out use.fail)"
+            depends="use.without,use.message,use.nestedText,use.nestedElement"
+    />
+
+
+    <target name="junit" description="Runs the unit tests" depends="jar">
+        <delete dir="${junit.out.dir.xml}" />
+        <mkdir  dir="${junit.out.dir.xml}" />
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath refid="classpath.test"/>
+            <formatter type="xml"/>
+            <batchtest fork="yes" todir="${junit.out.dir.xml}">
+                <fileset dir="${src.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="junitreport" description="Create a report for the rest result">
+        <mkdir dir="${junit.out.dir.html}" />
+        <junitreport todir="${junit.out.dir.html}">
+            <fileset dir="${junit.out.dir.xml}">
+                <include name="*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.out.dir.html}"/>
+        </junitreport>
+    </target>
+
+    <target name="test"
+            depends="junit,junitreport"
+            description="Runs unit tests and creates a report"
+    />
+
+
+</project>

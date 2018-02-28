@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title> Find Task</title>
+</head>
+
+<body>
+
+<h2><a name="find">Find</a></h2>
+<h3>Description</h3>
+<p>Searchs in a given path for a file and returns the absolute to it as property.
+If delimiter is set this task returns all found locations.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The name of the file to search.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">location</td>
+    <td valign="top">The name of the property where to store the location</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">delimiter</td>
+    <td valign="top">A delimiter to use when returning the list</td>
+    <td align="center" valign="top">only if the list is required</td>
+  </tr>
+</table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>path</h4>
+<p>The path where to search the file.</p>
+
+<h3>Examples</h3>
+<pre>
+    &lt;find file="ant.jar" location="loc">
+        &lt;path>
+            &lt;fileset dir="${ant.home}"/>
+        &lt;path>
+    &lt;/find>
+</pre>
+Searches in Ants home directory for a file <i>ant.jar</i> and stores its location in
+property <i>loc</i> (should be ANT_HOME/bin/ant.jar).
+
+<pre>
+    &lt;find file="ant.jar" location="loc" delimiter=";">
+        &lt;path>
+            &lt;fileset dir="C:/"/>
+        &lt;path>
+    &lt;/find>
+    &lt;echo>ant.jar found in: ${loc}&lt;/echo>
+</pre>
+Searches in Windows C: drive for all <i>ant.jar</i> and stores their locations in
+property <i>loc</i> delimited with <i>';'</i>. (should need a long time :-)
+After that it prints out the result (e.g. C:/ant-1.5.4/bin/ant.jar;C:/ant-1.6/bin/ant.jar).
+
+</body>
+</html>
