@@ -134,7 +134,7 @@ public class Archives extends DataType
      * @return a cloned instance.
      */
     @Override
-    public Archives clone() {
+    public Object clone() {
         try {
             final Archives a = (Archives) super.clone();
             a.zips = (Union) zips.clone();

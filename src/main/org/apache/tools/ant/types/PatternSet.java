@@ -513,7 +513,7 @@ public class PatternSet extends DataType implements Cloneable {
      * @return a clone of this patternset.
      */
     @Override
-    public PatternSet clone() {
+    public Object clone() {
         try {
             PatternSet ps = (PatternSet) super.clone();
             ps.includeList = new ArrayList<>(includeList);

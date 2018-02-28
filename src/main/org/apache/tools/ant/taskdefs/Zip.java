@@ -659,7 +659,7 @@ public class Zip extends MatchingTask {
         // collect filesets to pass them to getResourcesToAdd
         final List<ResourceCollection> vfss = new ArrayList<>();
         if (baseDir != null) {
-            final FileSet fs = getImplicitFileSet().clone();
+            final FileSet fs = (FileSet) getImplicitFileSet().clone();
             fs.setDir(baseDir);
             vfss.add(fs);
         }

@@ -349,9 +349,9 @@ public abstract class AbstractSelectorContainer extends DataType
         }
     }
 
-    public synchronized AbstractSelectorContainer clone() {
+    public synchronized Object clone() {
         if (isReference()) {
-            return getCheckedRef().clone();
+            return ((AbstractSelectorContainer) getCheckedRef()).clone();
         }
         try {
             AbstractSelectorContainer sc =

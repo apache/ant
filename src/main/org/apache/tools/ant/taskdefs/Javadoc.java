@@ -1721,7 +1721,7 @@ public class Javadoc extends Task {
 
         log("Generating Javadoc", Project.MSG_INFO);
 
-        final Commandline toExecute = cmd.clone();
+        final Commandline toExecute = (Commandline) cmd.clone();
         if (executable != null) {
             toExecute.setExecutable(executable);
         } else {
@@ -2311,7 +2311,7 @@ public class Javadoc extends Task {
             if (rc instanceof FileSet) {
                 final FileSet fs = (FileSet) rc;
                 if (!fs.hasPatterns() && !fs.hasSelectors()) {
-                    final FileSet fs2 = fs.clone();
+                    final FileSet fs2 = (FileSet) fs.clone();
                     fs2.createInclude().setName("**/*.java");
                     if (includeNoSourcePackages) {
                         fs2.createInclude().setName("**/package.html");

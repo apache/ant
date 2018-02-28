@@ -212,7 +212,7 @@ public class LayoutPreservingProperties extends Properties {
     }
 
     @Override
-    public LayoutPreservingProperties clone() {
+    public Object clone() {
         final LayoutPreservingProperties dolly =
             (LayoutPreservingProperties) super.clone();
         dolly.keyedPairLines = new HashMap<>(this.keyedPairLines);
@@ -222,7 +222,7 @@ public class LayoutPreservingProperties extends Properties {
             final LogicalLine line = dolly.logicalLines.get(j);
             if (line instanceof Pair) {
                 final Pair p = (Pair) line;
-                dolly.logicalLines.set(j, p.clone());
+                dolly.logicalLines.set(j, (Pair) p.clone());
             }
             // no reason to clone other lines are they are immutable
         }
@@ -705,10 +705,10 @@ public class LayoutPreservingProperties extends Properties {
         }
 
         @Override
-        public Pair clone() {
-            Pair dolly = null;
+        public Object clone() {
+            Object dolly = null;
             try {
-                dolly = (Pair) super.clone();
+                dolly = super.clone();
             } catch (final CloneNotSupportedException e) {
                 // should be fine
                 e.printStackTrace(); //NOSONAR

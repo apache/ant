@@ -898,13 +898,13 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.6
      */
     @Override
-    public synchronized AbstractFileSet clone() {
+    public synchronized Object clone() {
         if (isReference()) {
             return (getRef(getProject())).clone();
         }
         try {
             AbstractFileSet fs = (AbstractFileSet) super.clone();
-            fs.defaultPatterns = defaultPatterns.clone();
+            fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
             fs.additionalPatterns = additionalPatterns.stream().map(
                     PatternSet::clone).map(PatternSet.class::cast).collect(Collectors.toList());
             fs.selectors = new ArrayList<>(selectors);
@@ -951,7 +951,7 @@ public abstract class AbstractFileSet extends DataType
             return getRef(p).mergePatterns(p);
         }
         dieOnCircularReference();
-        PatternSet ps = defaultPatterns.clone();
+        PatternSet ps = (PatternSet) defaultPatterns.clone();
         additionalPatterns.forEach(pat -> ps.append(pat, p));
         return ps;
     }

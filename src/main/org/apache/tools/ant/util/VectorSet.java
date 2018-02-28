@@ -142,7 +142,7 @@ public final class VectorSet<E> extends Vector<E> {
     }
 
     @Override
-    public VectorSet<E> clone() {
+    public Object clone() {
         @SuppressWarnings("unchecked")
         final VectorSet<E> vs = (VectorSet<E>) super.clone();
         vs.set.addAll(set);

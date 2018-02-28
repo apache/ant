@@ -221,7 +221,7 @@ public abstract class BaseResourceCollectionContainer
      * @return a cloned instance.
      */
     @Override
-    public BaseResourceCollectionContainer clone() {
+    public Object clone() {
         try {
             BaseResourceCollectionContainer c
                 = (BaseResourceCollectionContainer) super.clone();

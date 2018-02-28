@@ -668,7 +668,7 @@ public class Delete extends MatchingTask {
             if (fs.getProject() == null) {
                 log("Deleting fileset with no project specified; assuming executing project",
                     Project.MSG_VERBOSE);
-                fs = fs.clone();
+                fs = (FileSet) fs.clone();
                 fs.setProject(getProject());
             }
             final File fsDir = fs.getDir();

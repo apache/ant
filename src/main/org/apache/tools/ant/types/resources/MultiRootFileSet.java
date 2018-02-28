@@ -112,7 +112,7 @@ public class MultiRootFileSet extends AbstractFileSet
      * @return the cloned MultiRootFileSet.
      */
     @Override
-    public MultiRootFileSet clone() {
+    public Object clone() {
         if (isReference()) {
             return ((MultiRootFileSet) getRef(getProject())).clone();
         }

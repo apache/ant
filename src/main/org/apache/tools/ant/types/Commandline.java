@@ -550,7 +550,7 @@ public class Commandline implements Cloneable {
      * @return a clone of the contained object
      */
     @Override
-    public Commandline clone() {
+    public Object clone() {
         try {
             Commandline c = (Commandline) super.clone();
             c.arguments = new ArrayList<>(arguments);

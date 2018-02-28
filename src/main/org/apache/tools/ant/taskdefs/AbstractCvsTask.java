@@ -399,7 +399,7 @@ public abstract class AbstractCvsTask extends Task {
         String c = this.getCommand();
         Commandline cloned = null;
         if (c != null) {
-            cloned = cmd.clone();
+            cloned = (Commandline) cmd.clone();
             cloned.createArgument(true).setLine(c);
             this.addConfiguredCommandline(cloned, true);
         }

@@ -720,7 +720,7 @@ public class CommandlineJava implements Cloneable {
      * @throws CloneNotSupportedException never.
      */
     @Override
-    public CommandlineJava clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         try {
             CommandlineJava c = (CommandlineJava) super.clone();
             c.vmCommand = (Commandline) vmCommand.clone();

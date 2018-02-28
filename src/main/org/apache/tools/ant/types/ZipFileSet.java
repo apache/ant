@@ -93,11 +93,11 @@ public class ZipFileSet extends ArchiveFileSet {
      * @return the cloned zipFileSet
      */
     @Override
-    public ZipFileSet clone() {
+    public Object clone() {
         if (isReference()) {
             return ((ZipFileSet) getRef(getProject())).clone();
         }
-        return (ZipFileSet) super.clone();
+        return super.clone();
     }
 
 }

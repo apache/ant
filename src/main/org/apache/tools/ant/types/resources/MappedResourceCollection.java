@@ -174,7 +174,7 @@ public class MappedResourceCollection
      * @return a cloned instance.
      */
     @Override
-    public MappedResourceCollection clone() {
+    public Object clone() {
         try {
             MappedResourceCollection c =
                 (MappedResourceCollection) super.clone();

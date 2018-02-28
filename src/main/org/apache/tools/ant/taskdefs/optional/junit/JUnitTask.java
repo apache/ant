@@ -1022,7 +1022,7 @@ public class JUnitTask extends Task {
     protected void execute(final JUnitTest arg, final int thread) throws BuildException {
         validateTestName(arg.getName());
 
-        final JUnitTest test = arg.clone();
+        final JUnitTest test = (JUnitTest) arg.clone();
         test.setThread(thread);
 
         // set the default values if not specified
@@ -1165,7 +1165,7 @@ public class JUnitTask extends Task {
 
         CommandlineJava cmd;
         try {
-            cmd = getCommandline().clone();
+            cmd = (CommandlineJava) getCommandline().clone();
         } catch (final CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
         }
@@ -1563,7 +1563,7 @@ public class JUnitTask extends Task {
             setupJUnitDelegate();
         }
 
-        final JUnitTest test = arg.clone();
+        final JUnitTest test = (JUnitTest) arg.clone();
         test.setProperties(getProject().getProperties());
         if (dir != null) {
             log("dir attribute ignored if running in the same VM",
@@ -2337,7 +2337,7 @@ public class JUnitTask extends Task {
      * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=45227"
      */
     private static JUnitTest createDummyTestForBatchTest(final JUnitTest test) {
-        final JUnitTest t = test.clone();
+        final JUnitTest t = (JUnitTest) test.clone();
         final int index = test.getName().lastIndexOf('.');
         // make sure test looks as if it was in the same "package" as
         // the last test of the batch

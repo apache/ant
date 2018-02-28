@@ -505,12 +505,12 @@ public abstract class ArchiveFileSet extends FileSet {
      * @since Ant 1.6
      */
     @Override
-    public ArchiveFileSet clone() {
+    public Object clone() {
         if (isReference()) {
             return getCheckedRef(ArchiveFileSet.class, getDataTypeName(),
                 getProject()).clone();
         }
-        return (ArchiveFileSet) super.clone();
+        return super.clone();
     }
 
     /**

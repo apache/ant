@@ -701,7 +701,7 @@ public class Manifest {
          * @since Ant 1.5.2
          */
         @Override
-        public Section clone() {
+        public Object clone() {
             Section cloned = new Section();
             cloned.setName(name);
             Enumeration<String> e = getAttributeKeys();
@@ -954,7 +954,7 @@ public class Manifest {
          throws ManifestException {
         if (other != null) {
              if (overwriteMain) {
-                 mainSection = other.mainSection.clone();
+                 mainSection = (Section) other.mainSection.clone();
              } else {
                  mainSection.merge(other.mainSection, mergeClassPaths);
              }
@@ -971,7 +971,7 @@ public class Manifest {
                     = other.sections.get(sectionName);
                  if (ourSection == null) {
                      if (otherSection != null) {
-                         addConfiguredSection(otherSection.clone());
+                         addConfiguredSection((Section) otherSection.clone());
                      }
                  } else {
                      ourSection.merge(otherSection, mergeClassPaths);

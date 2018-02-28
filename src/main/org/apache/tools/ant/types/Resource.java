@@ -256,9 +256,9 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @return copy of this.
      */
     @Override
-    public Resource clone() {
+    public Object clone() {
         try {
-            return (Resource) super.clone();
+            return super.clone();
         } catch (CloneNotSupportedException e) {
             throw new UnsupportedOperationException(
                 "CloneNotSupportedException for a Resource caught. Derived classes must support cloning.");

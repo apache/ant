@@ -171,7 +171,7 @@ public class Patch extends Task {
             throw new BuildException("patchfile argument is required",
                                      getLocation());
         }
-        Commandline toExecute =  cmd.clone();
+        Commandline toExecute =  (Commandline) cmd.clone();
         toExecute.setExecutable(PATCH);
 
         if (originalFile != null) {

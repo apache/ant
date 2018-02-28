@@ -525,7 +525,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public JUnitTest clone() {
+    public Object clone() {
         try {
             JUnitTest t = (JUnitTest) super.clone();
             t.props = props == null ? null : (Properties) props.clone();

@@ -162,7 +162,7 @@ public class ClassfileSet extends FileSet {
      * @return a clone of the class file set.
      */
     @Override
-    public ClassfileSet clone() {
+    public Object clone() {
         return new ClassfileSet(isReference()
             ? (ClassfileSet) (getRef(getProject())) : this);
     }

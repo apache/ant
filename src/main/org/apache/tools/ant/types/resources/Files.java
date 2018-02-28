@@ -392,7 +392,7 @@ public class Files extends AbstractSelectorContainer
      * @return a cloned Object.
      */
     @Override
-    public synchronized Files clone() {
+    public synchronized Object clone() {
         if (isReference()) {
             return getRef().clone();
         }

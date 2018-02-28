@@ -247,11 +247,11 @@ public class TarFileSet extends ArchiveFileSet {
      * @return the cloned tarFileSet
      */
     @Override
-    public TarFileSet clone() {
+    public Object clone() {
         if (isReference()) {
             return ((TarFileSet) getRef(getProject())).clone();
         }
-        return (TarFileSet) super.clone();
+        return super.clone();
     }
 
     /**

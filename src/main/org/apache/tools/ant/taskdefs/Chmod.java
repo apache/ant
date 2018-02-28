@@ -192,7 +192,7 @@ public class Chmod extends ExecuteOn {
         } else if (isValidOs()) {
             // we are chmodding the given directory
             Execute execute = prepareExec();
-            Commandline cloned = cmdl.clone();
+            Commandline cloned = (Commandline) cmdl.clone();
             cloned.createArgument().setValue(defaultSet.getDir(getProject())
                                              .getPath());
             try {
