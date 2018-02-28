@@ -1,4 +1,20 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 <project name="MyTask" basedir="." default="test">
 
     <property name="src.dir"     value="src"/>
@@ -29,7 +45,7 @@
 
     <target name="compile" description="Compiles the Task">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpath="${ant.test.lib}"/>
+        <javac includeantruntime="true" srcdir="${src.dir}" destdir="${classes.dir}" classpath="${ant.test.lib}"/>
     </target>
 
     <target name="jar" description="JARs the Task" depends="compile">
@@ -37,7 +53,7 @@
     </target>
 
 
-    <target name="use.init" description="Taskdef´ the HelloWorld-Task" depends="jar">
+    <target name="use.init" description="Taskdef the HelloWorld-Task" depends="jar">
         <taskdef name="helloworld" classname="HelloWorld" classpath="${ant.project.name}.jar"/>
     </target>
 
@@ -68,8 +84,7 @@
 
     <target name="use"
             description="Try all (w/out use.fail)"
-            depends="use.without,use.message,use.nestedText,use.nestedElement"
-    />
+            depends="use.without,use.message,use.nestedText,use.nestedElement"/>
 
 
     <target name="junit" description="Runs the unit tests" depends="jar">
@@ -96,8 +111,6 @@
 
     <target name="test"
             depends="junit,junitreport"
-            description="Runs unit tests and creates a report"
-    />
-
+            description="Runs unit tests and creates a report"/>
 
 </project>

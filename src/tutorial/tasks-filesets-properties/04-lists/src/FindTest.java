@@ -1,78 +1,92 @@
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.taskdefs.Property;
-import java.io.File;
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-public class FindTest extends BuildFileTest {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-    public FindTest(String name) {
-        super(name);
-    }
+public class FindTest {
 
+    @Rule
+    public BuildFileRule rule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException tried = ExpectedException.none();
+
+    @Before
     public void setUp() {
-        configureProject("build.xml");
+        rule.configureProject("build.xml");
     }
 
+    @Test
     public void testMissingFile() {
+        tried.expect(BuildException.class);
+        tried.expectMessage("file not set");
         Find find = new Find();
-        try {
-            find.execute();
-            fail("No 'no-file'-exception thrown.");
-        } catch (Exception e) {
-            // exception expected
-            String expected = "file not set";
-            assertEquals("Wrong exception message.", expected, e.getMessage());
-        }
+        find.execute();
     }
 
+    @Test
     public void testMissingLocation() {
+        tried.expect(BuildException.class);
+        tried.expectMessage("location not set");
         Find find = new Find();
         find.setFile("ant.jar");
-        try {
-            find.execute();
-            fail("No 'no-location'-exception thrown.");
-        } catch (Exception e) {
-            // exception expected
-            String expected = "location not set";
-            assertEquals("Wrong exception message.", expected, e.getMessage());
-        }
+        find.execute();
     }
 
+    @Test
     public void testMissingPath() {
+        tried.expect(BuildException.class);
+        tried.expectMessage("path not set");
         Find find = new Find();
         find.setFile("ant.jar");
         find.setLocation("location.ant-jar");
-        try {
-            find.execute();
-            fail("No 'no-fileset'-exception thrown.");
-        } catch (Exception e) {
-            // exception expected
-            String expected = "path not set";
-            assertEquals("Wrong exception message.", expected, e.getMessage());
-        }
+        find.execute();
     }
 
+    @Test
     public void testFileNotPresent() {
-        executeTarget("testFileNotPresent");
-        String result = getProject().getProperty("location.ant-jar");
+        rule.executeTarget("testFileNotPresent");
+        String result = rule.getProject().getProperty("location.ant-jar");
         assertNull("Property set to wrong value.", result);
     }
 
     public void testFilePresent() {
-        executeTarget("testFilePresent");
-        String result = getProject().getProperty("location.ant-jar");
+        rule.executeTarget("testFilePresent");
+        String result = rule.getProject().getProperty("location.ant-jar");
         assertNotNull("Property not set.", result);
         assertTrue("Wrong file found.", result.endsWith("ant.jar"));
     }
 
 
     public void testMultipleFiles() {
-        executeTarget("testMultipleFiles");
-        String result = getProject().getProperty("location.test");
+        rule.executeTarget("testMultipleFiles");
+        String result = rule.getProject().getProperty("location.test");
         assertNotNull("Property not set.", result);
-        assertTrue("Only one file found.", result.indexOf(";") > -1);
+        assertTrue("Only one file found.", result.contains(";"));
         //assertTrue("Wrong file found.", result.endsWith("ant.jar"));
     }
-
 
 }

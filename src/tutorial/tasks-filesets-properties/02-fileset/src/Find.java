@@ -1,17 +1,34 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.DirectoryScanner;
 
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.File;
 
 public class Find extends Task {
 
     private String file;
     private String location;
-    private Vector filesets = new Vector();
+    private List<FileSet> filesets = new ArrayList<>();
 
     public void setFile(String file) {
         this.file = file;
@@ -26,29 +43,28 @@ public class Find extends Task {
     }
 
     protected void validate() {
-        if (file==null) throw new BuildException("file not set");
-        if (location==null) throw new BuildException("location not set");
-        if (filesets.size()<1) throw new BuildException("fileset not set");
+        if (file == null) throw new BuildException("file not set");
+        if (location == null) throw new BuildException("location not set");
+        if (filesets.size() < 1) throw new BuildException("fileset not set");
     }
 
     public void execute2() {
         validate();
         String foundLocation = null;
-        for(Iterator itFSets = filesets.iterator(); itFSets.hasNext(); ) {
-            FileSet fs = (FileSet)itFSets.next();
+        for (FileSet fs : filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] includedFiles = ds.getIncludedFiles();
-            for(int i=0; i<includedFiles.length; i++) {
-                String filename = includedFiles[i].replace('\\','/');
-                filename = filename.substring(filename.lastIndexOf("/")+1);
-                if (foundLocation==null && file.equals(filename)) {
+            for (String includedFile : includedFiles) {
+                String filename = includedFile.replace('\\','/');
+                filename = filename.substring(filename.lastIndexOf("/") + 1);
+                if (foundLocation == null && file.equals(filename)) {
                     File base  = ds.getBasedir();
-                    File found = new File(base, includedFiles[i]);
+                    File found = new File(base, includedFile);
                     foundLocation = found.getAbsolutePath();
                 }
             }
         }
-        if (foundLocation!=null)
+        if (foundLocation != null)
             getProject().setNewProperty(location, foundLocation);
     }
 
