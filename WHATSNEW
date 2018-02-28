@@ -10,6 +10,10 @@ Changes that could break older environments:
    and no longer throws an exception.
    ant-dev list https://www.mail-archive.com/dev@ant.apache.org/msg46634.html
 
+ * Reverted the signature change of various clone method
+   implementation in Ant's data-types introduced with 1.10.2 as they
+   broke subclasses of said data-types which tried to override clone.
+
 Fixed bugs:
 -----------
 
