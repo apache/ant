@@ -25,83 +25,68 @@
 <body>
 
 <h2 id="dirset">DirSet</h2>
-<p>A DirSet is a group of directories. These directories can be found in a
-directory tree starting in a base directory and are matched by
-patterns taken from a number of <a href="patternset.html">PatternSets</a>
-and <a href="selectors.html">Selectors</a>.
-</p>
-<p>PatternSets can be specified as nested
-<code>&lt;patternset&gt;</code> elements. In addition, DirSet holds
-an implicit PatternSet and supports the nested
-<code>&lt;include&gt;</code>, <code>&lt;includesfile&gt;</code>,
-<code>&lt;exclude&gt;</code> and <code>&lt;excludesfile&gt;</code>
-elements of <code>&lt;patternset&gt;</code> directly, as well as
-<code>&lt;patternset&gt;</code>'s attributes.</p>
-<p>Selectors are available as nested elements within the DirSet.
-If any of the selectors within the DirSet do not select the directory, it
-is not considered part of the DirSet. This makes a DirSet
-equivalent to an <code>&lt;and&gt;</code> selector container.</p>
-<table>
+<p>A DirSet is a group of directories. These directories can be found in a directory tree
+starting in a base directory and are matched by patterns taken from a number
+of <a href="patternset.html">PatternSets</a> and <a href="selectors.html">Selectors</a>.</p>
+<p>PatternSets can be specified as nested <code>&lt;patternset&gt;</code> elements. In
+addition, DirSet holds an implicit PatternSet and supports the
+nested <code>&lt;include&gt;</code>, <code>&lt;includesfile&gt;</code>, <code>&lt;exclude&gt;</code>
+and <code>&lt;excludesfile&gt;</code> elements of <code>&lt;patternset&gt;</code> directly,
+as well as <code>&lt;patternset&gt;</code>'s attributes.</p>
+<p>Selectors are available as nested elements within the DirSet.  If any of the selectors
+within the DirSet do not select the directory, it is not considered part of the DirSet. This
+makes a DirSet equivalent to an <code>&lt;and&gt;</code> selector container.</p>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">dir</td>
-    <td valign="top">The root of the directory tree of this DirSet.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>dir</td>
+    <td>The root of the directory tree of this DirSet.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">includes</td>
-    <td valign="top">A comma- or space-separated list of patterns of directories that
-     must be included; all directories are included when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>includes</td>
+    <td>Comma- or space-separated list of patterns of directories that must be included.</td>
+    <td>No; defaults to all directories</td>
   </tr>
   <tr>
-    <td valign="top">includesfile</td>
-    <td valign="top">The name of a file; each line of this file is
-      taken to be an include pattern.
-      <b>Note:</b> if the file is empty and there are no other
-      patterns defined for the fileset, all directories will be included.
-    </td>
-    <td valign="top" align="center">No</td>
+    <td>includesfile</td>
+    <td>Name of a file; each line of this file is taken to be an include
+      pattern. <strong>Note:</strong> if the file is empty and there are no other patterns defined
+      for the fileset, all directories will be included.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">excludes</td>
-    <td valign="top">A comma- or space-separated list of patterns of directories that
-     must be excluded; no directories are excluded when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>excludes</td>
+    <td>Comma- or space-separated list of patterns of directories that must be excluded.</td>
+    <td>No; defaults to none</td>
   </tr>
   <tr>
-    <td valign="top">excludesfile</td>
-    <td valign="top">The name of a file; each line of this file is
-      taken to be an exclude pattern.</td>
-    <td valign="top" align="center">No</td>
+    <td>excludesfile</td>
+    <td>Name of a file; each line of this file is taken to be an exclude pattern.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">casesensitive</td>
-    <td valign="top">Specifies whether case-sensitivity should be applied
-     (<code>true</code>|<code>yes</code>|<code>on</code> or
-     <code>false</code>|<code>no</code>|<code>off</code>).</td>
-    <td valign="top" align="center">No; defaults to true.</td>
+    <td>casesensitive</td>
+    <td>Specifies whether case-sensitivity should be applied (<q>true</q>, <q>yes</q>, <q>on</q>
+      or <q>false</q>, <q>no</q>, <q>off</q>).</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">followsymlinks</td>
-    <td valign="top">Shall symbolic links be followed? Defaults to
-      true. See <a href="fileset.html#symlink">fileset's documentation</a>.</td>
-    <td valign="top" align="center">No</td>
+    <td>followsymlinks</td>
+    <td>Shall symbolic links be followed?  See <a href="fileset.html#symlink">fileset's
+      documentation</a>.</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">erroronmissingdir</td>
-    <td valign="top">
-      Specify what happens if the base directory does not exist.
-      If true a build error will happen, if false, the dirset
-      will be ignored/empty.
-      Defaults to true (for backward compatibility reasons).
-      <em>Since Apache Ant 1.7.1</em>
-    </td>
-    <td valign="top" align="center">No</td>
+    <td>erroronmissingdir</td>
+    <td>Specify what happens if the base directory does not exist.  If <q>true</q> a build error
+      will happen, if <q>false</q>, the dirset will be ignored/empty.  <em>Since Apache Ant
+      1.7.1</em></td>
+    <td>No; defaults to true (for backward compatibility reasons)</td>
   </tr>
 </table>
 
@@ -113,9 +98,8 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
   &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
 &lt;/dirset&gt;
 </pre>
-<p>Groups all directories named <code>classes</code> found under the
-<code>apps</code> subdirectory of <code>${build.dir}</code>, except those
-that have the text <code>Test</code> in their name.</p>
+<p>Groups all directories named <samp>classes</samp> found under the <samp>apps</samp> subdirectory
+of <samp>${build.dir}</samp>, except those that have the text <samp>Test</samp> in their name.</p>
 
 <pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
@@ -125,27 +109,26 @@ that have the text <code>Test</code> in their name.</p>
   &lt;/patternset&gt;
 &lt;/dirset&gt;
 </pre>
-<p>Groups the same directories as the above example, but also establishes
-a PatternSet that can be referenced in other
-<code>&lt;dirset&gt;</code> elements, rooted at a different directory.</p>
+<p>Groups the same directories as the above example, but also establishes a PatternSet that can be
+referenced in other <code>&lt;dirset&gt;</code> elements, rooted at a different directory.</p>
 
 <pre>
 &lt;dirset dir=&quot;${debug_build.dir}&quot;&gt;
   &lt;patternset refid=&quot;non.test.classes&quot;/&gt;
 &lt;/dirset&gt;
 </pre>
-<p>Groups all directories in directory <code>${debug_build.dir}</code>,
-using the same patterns as the above example.</p>
+<p>Groups all directories in directory <samp>${debug_build.dir}</samp>, using the same patterns as
+the above example.</p>
 
 <pre>
 &lt;dirset id=&quot;dirset&quot; dir=&quot;${workingdir}&quot;&gt;
    &lt;present targetdir=&quot;${workingdir}&quot;&gt;
-        &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*/${markerfile}&quot; /&gt;
+        &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*/${markerfile}&quot;/&gt;
    &lt;/present&gt;
 &lt;/dirset&gt;
 </pre>
-<p>Selects all directories somewhere under <code>${workingdir}</code>
-which contain a <code>${markerfile}</code>.</p>
+<p>Selects all directories somewhere under <samp>${workingdir}</samp> which contain
+a <samp>${markerfile}</samp>.</p>
 
 </body>
 </html>

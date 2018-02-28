@@ -26,98 +26,57 @@
 
 <h2>Makeurl Task</h2>
 <h3 id="description">Description</h3>
-This task takes one or more filenames and turns them into URLs, which it then assigns to a property.
-Useful when setting up RMI or JNLP codebases, for example.
-Nested filesets are supported; if present, these are turned into the URLs with the supplied separator between them (default: space).
-<p>Examples:</p>
-<pre>
-&lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url"/&gt;
-</pre>
-Sets the property <code>m2.repository.url</code> to the file: URL of the local Maven2 repository.
-<pre>
-&lt;makeurl property="codebase"&gt;&lt;fileset dir="lib includes="*.jar"/&gt;&lt;/makeurl&gt;
-</pre>
-Set the property <code>codebase</code> to the three URLs of the files provided as nested elements.
+<p>This task takes one or more filenames and turns them into URLs, which it then assigns to a
+property.  Useful when setting up RMI or JNLP codebases, for example.  Nested filesets are
+supported; if present, these are turned into the URLs with the supplied <var>separator</var> between
+them.</p>
 <h3 id="attributes">Parameters</h3>
 <table>
   <tr>
-    <td valign="top" align="left">
-      <b>Attribute</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Description</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Type</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Requirement</b>
-    </td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      file
-    </td>
-    <td valign="top" align="left">
-      name of a file to be converted into a URL
-    </td>
-    <td valign="top" align="left">
-      File
-    </td>
-    <td valign="top" align="left">
-      optional, if a nested fileset or path is supplied
-    </td>
+    <td>file</td>
+    <td>name of a file to be converted into a URL</td>
+    <td>File</td>
+    <td>No, if a nested fileset or path is supplied</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      property
-    </td>
-    <td valign="top" align="left">
-      name of a property to set to the URL
-    </td>
-    <td valign="top" align="left">
-      String
-    </td>
-    <td valign="top" align="left">
-      required
-    </td>
+    <td>property</td>
+    <td>name of a property to set to the URL</td>
+    <td>String</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      separator
-    </td>
-    <td valign="top" align="left">
-      separator for the multi-URL option
-    </td>
-    <td valign="top" align="left">
-      String
-    </td>
-    <td valign="top" align="left">
-      optional
-    </td>
+    <td>separator</td>
+    <td>separator for the multi-URL option</td>
+    <td>String</td>
+    <td>No; default is space</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      validate
-    </td>
-    <td valign="top" align="left">
-      validate that every named file exists
-    </td>
-    <td valign="top" align="left">
-      boolean
-    </td>
-    <td valign="top" align="left">
-      optional; default: true
-    </td>
+    <td>validate</td>
+    <td>validate that every named file exists</td>
+    <td>boolean</td>
+    <td>No; default is <q>true</q></td>
   </tr>
 </table>
 <h3 id="elements">Parameters as nested elements</h3>
 <h4><strong>fileset</strong> (org.apache.tools.ant.types.FileSet)</h4>
 
-A fileset of JAR files to include in the URL list, each separated by the separator.
+<p>A fileset of JAR files to include in the URL list, each separated by the separator.</p>
 
 <h4><strong>path</strong> (org.apache.tools.ant.types.Path)</h4>
 
-Add a path to the URL. All elements in the path will be converted to individual URL entries.
+<p>Add a path to the URL. All elements in the path will be converted to individual URL entries.</p>
+<h3>Examples</h3>
+<pre>&lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url"/&gt;</pre>
+<p>Sets the property <code>m2.repository.url</code> to the file: URL of the local Maven2
+repository.</p>
+<pre>&lt;makeurl property="codebase"&gt;&lt;fileset dir="lib includes="*.jar"/&gt;&lt;/makeurl&gt;</pre>
+<p>Set the property <code>codebase</code> to the three URLs of the files provided as nested
+elements.</p>
 </body>
 </html>

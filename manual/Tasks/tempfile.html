@@ -25,110 +25,63 @@
 <body>
 <h2>Tempfile Task</h2>
 <h3 id="description">Description</h3>
-          This task sets a property to the name of a temporary file.
-          Unlike <code>java.io.File.createTempFile</code>,
-          this task does not actually create the temporary file, but it does guarantee that the
-          file did not exist when the task was executed.
-<h3>Examples:</h3>
-          <pre>&lt;tempfile property="temp.file"/&gt;</pre>
-
-          create a temporary file
-
-          <pre>&lt;tempfile property="temp.file" suffix=".xml"/&gt;</pre>
-
-          create a temporary file with the <code>.xml</code> suffix
-
-          <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
-
-          create a temporary file in the <code>build</code> subdirectory
+<p>This task sets a property to the name of a temporary file.
+Unlike <code>java.io.File.createTempFile</code>, this task does not actually create the temporary
+file, but it does guarantee that the file did not exist when the task was executed.</p>
 <h3 id="attributes">Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top" align="left">
-      <b>Attribute</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Description</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Type</b>
-    </td>
-    <td valign="top" align="left">
-      <b>Requirement</b>
-    </td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      property
-    </td>
-    <td valign="top" align="left">
-      Sets the property you wish to assign the temporary file to.
-    </td>
-    <td valign="top" align="left">
-      String
-    </td>
-    <td valign="top" align="left" rowspan="1">
-      Required
-    </td>
+    <td>property</td>
+    <td>Sets the property you wish to assign the temporary file to.</td>
+    <td>String</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      destdir
-    </td>
-    <td valign="top" align="left">
-      Sets the destination directory. If not set, the basedir directory is used instead.
-    </td>
-    <td valign="top" align="left">
-      File
-    </td>
-    <td valign="top" align="left" rowspan="5">
-      Optional
-    </td>
+    <td>destdir</td>
+    <td>Sets the destination directory.</td>
+    <td>File</td>
+    <td>No; defaults to <var>basedir</var></td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      prefix
-    </td>
-    <td valign="top" align="left">
-      Sets the optional prefix string for the temp file.
-    </td>
-    <td valign="top" align="left">
-      String
-    </td>
+    <td>prefix</td>
+    <td>Sets the optional prefix string for the temp file.</td>
+    <td>String</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      suffix
-    </td>
-    <td valign="top" align="left">
-      Sets the optional suffix string for the temp file.
-    </td>
-    <td valign="top" align="left">
-      String
-    </td>
+    <td>suffix</td>
+    <td>Sets the optional suffix string for the temp file.</td>
+    <td>String</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      deleteonexit
-    </td>
-    <td valign="top" align="left">
-      Whether the temp file will be marked for deletion on normal exit of the Java Virtual Machine (even though the file may never be created); default <em>false</em>. <em>Since Apache Ant 1.7</em>
-    </td>
-    <td valign="top" align="left">
-      boolean
-    </td>
+    <td>deleteonexit</td>
+    <td>Whether the temp file will be marked for deletion on normal exit of JVM (even though the
+      file may never be created). <em>Since Apache Ant 1.7</em></td>
+    <td>boolean</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top" align="left">
-      createfile
-    </td>
-    <td valign="top" align="left">
-      Whether the temp file should be created by this task; default <em>false</em>. <em>Since Ant 1.8</em>
-    </td>
-    <td valign="top" align="left">
-      boolean
-    </td>
+    <td>createfile</td>
+    <td>Whether the temp file should be created by this task. <em>Since Ant 1.8</em></td>
+    <td>boolean</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
 </table>
+<h3>Examples</h3>
+<pre>&lt;tempfile property="temp.file"/&gt;</pre>
+<p>create a temporary file</p>
+
+<pre>&lt;tempfile property="temp.file" suffix=".xml"/&gt;</pre>
+<p>create a temporary file with the <code>.xml</code> suffix</p>
+
+<pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
+<p>create a temporary file in the <code>build</code> subdirectory</p>
 </body>
 </html>

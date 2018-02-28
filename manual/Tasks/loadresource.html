@@ -28,62 +28,54 @@
 <p><em>Since Apache Ant 1.7</em></p>
 
 <h3>Description</h3>
-<p>
-Load a text resource into a single property. Unless an encoding is
-specified, the encoding of the current locale is used.  Resources to
-load are specified as nested <a
-href="../Types/resources.html">resource</a> elements or single
-element resource collections. If the resource content is empty (maybe after
-processing a filterchain) the property is not set.
-</p>
+<p>Load a text resource into a single property. Unless an encoding is specified, the encoding of the
+current locale is used.  Resources to load are specified as
+nested <a href="../Types/resources.html">resource</a> elements or single element resource
+collections. If the resource content is empty (maybe after processing a <code>filterchain</code>)
+the property is not set.</p>
 
-<p>Since properties are immutable, the task will not change the value
-  of an existing property.</p>
+<p>Since properties are immutable, the task will not change the value of an existing property.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">property</td>
-    <td valign="top">property to save to</td>
-    <td valign="top" align="center">Yes</td>
+    <td>property</td>
+    <td>property to save to</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">encoding</td>
-    <td valign="top">encoding to use when loading the resource</td>
-    <td align="center" valign="top">No</td>
+    <td>encoding</td>
+    <td>encoding to use when loading the resource</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">failonerror</td>
-    <td valign="top">Whether to halt the build on failure</td>
-    <td align="center" valign="top">No, default "true"</td>
+    <td>failonerror</td>
+    <td>Whether to halt the build on failure</td>
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">quiet</td>
-    <td valign="top">Do not display a diagnostic message (unless Ant has been
-    invoked with the <code>-verbose</code> or <code>-debug</code>
-    switches) or modify the exit status to reflect an error. Setting this to
-    "true" implies setting failonerror to "false".
-    </td>
-    <td align="center" valign="top">No, default "false"</td>
+    <td>quiet</td>
+    <td>Do not display a diagnostic message (unless Ant has been invoked with
+      the <code>-verbose</code> or <code>-debug</code> switches) or modify the exit status to
+      reflect an error. Setting this to <q>true</q> implies setting <var>failonerror</var>
+      to <q>false</q>.</td>
+    <td>No; default is <q>false</q></td>
   </tr>
 </table>
-<p>
-The LoadResource task supports nested <a href="../Types/filterchain.html">
-FilterChain</a>s.
+<p>The LoadResource task supports nested <a href="../Types/filterchain.html"> FilterChain</a>s.</p>
 
 <h3>Examples</h3>
 <pre>
 &lt;loadresource property="homepage"&gt;
-  &lt;url url="http://ant.apache.org/index.html"/&gt;
-&lt;/loadresource&gt;
-</pre>
-Load the entry point of Ant's homepage into property "homepage"; an
-<tt>&lt;echo&gt;</tt> can print this.
+    &lt;url url="http://ant.apache.org/index.html"/&gt;
+&lt;/loadresource&gt;</pre>
+<p>Load the entry point of Ant's homepage into property <code>homepage</code>;
+an <code>&lt;echo&gt;</code> can print this.</p>
 
 <p>For more examples see the <a href="loadfile.html">loadfile</a> task.</p>
 

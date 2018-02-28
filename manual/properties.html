@@ -25,7 +25,7 @@
 <body>
   <h1>Properties</h1>
 
-  <p>Properties are key-value-pairs where Apache Ant tries to
+  <p>Properties are key-value pairs where Apache Ant tries to
     expand <code>${key}</code> to <code>value</code> at runtime.</p>
 
   <p>There are many tasks that can set properties, the most common one
@@ -38,78 +38,83 @@
     set, most tasks will not allow its value to be modified.  In
     general properties are of global scope, i.e. once they have been
     defined they are available for any task or target invoked
-    subsequently - it is not possible to set a property in a child
+    subsequently&mdash;it is not possible to set a property in a child
     build process created via
-    the <a href="Tasks/ant.html">ant</a>, antcall or subant tasks
-    and make it available to the calling build process, though.</p>
+    the <a href="Tasks/ant.html">ant</a>, <a href="Tasks/antcall.html">antcall</a>
+    or <a href="Tasks/subant.html">subant</a> tasks and make it
+    available to the calling build process, though.</p>
 
-  <p><em>Since Ant 1.8.0</em>
-    the <a href="Tasks/local.html">local</a> task can be used to
-    create properties that are locally scoped to a target or
-    a <a href="Tasks/sequential.html">sequential</a> element like
-    the one of the <a href="Tasks/macrodef.html">macrodef</a>
+  <p><em>Since Ant 1.8.0</em> the <a href="Tasks/local.html">local</a>
+    task can be used to create properties that are locally scoped to a
+    target or a <a href="Tasks/sequential.html">sequential</a> element
+    like the one of the <a href="Tasks/macrodef.html">macrodef</a>
     task.</p>
 
   <h2 id="built-in-props">Built-in Properties</h2>
 
   <p>Ant provides access to all system properties as if they had been
     defined using a <code>&lt;property&gt;</code> task.  For
-    example, <code>${os.name}</code> expands to the name of the
+    example, <samp>${os.name}</samp> expands to the name of the
     operating system.</p>
-  <p>For a list of system properties see
-    <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/System.html#getProperties%28%29">the Javadoc of System.getProperties</a>.
+
+  <p>For a list of system properties,
+    see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#getProperties--">the javadoc of System.getProperties</a>.
   </p>
 
   <p>In addition, Ant has some built-in properties:</p>
-<pre><!-- TODO use <dl><dt><code>...</code></dt><dd>...</dd></dl> instead -->
-basedir             the absolute path of the project's basedir (as set
-                    with the basedir attribute of <a href="using.html#projects">&lt;project&gt;</a>).
-ant.file            the absolute path of the buildfile.
-ant.version         the version of Ant
-ant.project.name    the name of the project that is currently executing;
-                    it is set in the name attribute of &lt;project&gt;.
-ant.project.default-target
-                    the name of the currently executing project's
-                    default target;  it is set via the default
-                    attribute of &lt;project&gt;.
-ant.project.invoked-targets
-                    a comma separated list of the targets that have
-                    been specified on the command line (the IDE,
-                    an &lt;ant&gt; task ...) when invoking the current
-                    project.
-                    This property is set properly when the first target is executed.
-                    If you use it in the implicit target (directly
-                    under the &lt;project&gt; tag) the list will be
-                    empty if no target has been specified while it
-                    will contain the project's default target in this
-                    case for tasks nested into targets..
-ant.java.version    the JVM version Ant detected; currently it can hold
-                    the values &quot;9&quot;, &quot;1.8&quot;,
-                    &quot;1.7&quot;, &quot;1.6&quot;, &quot;1.5&quot;,
-                    &quot;1.4&quot;, &quot;1.3&quot; and
-                    &quot;1.2&quot;.
-ant.core.lib        the absolute path of the <code>ant.jar</code> file.
-</pre>
+  <dl>
+    <dt><code>basedir</code></dt>
+    <dd>the absolute path of the project's basedir (as set
+      with the <var>basedir</var> attribute of <a href="using.html#projects">&lt;project&gt;</a>).</dd>
+    <dt><code>ant.file</code></dt>
+    <dd>the absolute path of the buildfile.</dd>
+    <dt><code>ant.version</code></dt>
+    <dd>the version of Ant</dd>
+    <dt><code>ant.project.name</code></dt>
+    <dd>the name of the project that is currently executing; it is set
+      in the <var>name</var> attribute of &lt;project&gt;.</dd>
+    <dt><code>ant.project.default-target</code></dt>
+    <dd>the name of the currently executing project's default target;
+      it is set via the <var>default</var> attribute
+      of <code>&lt;project&gt;</code>.</dd>
+    <dt><code>ant.project.invoked-targets</code></dt>
+    <dd>a comma separated list of the targets that have been specified
+      on the command line (the IDE, an <code>&lt;ant&gt;</code> task
+      ...) when invoking the current project.<br/>
+      This property is set properly when the first target is executed.
+      If you use it in the implicit target (directly under
+      the <code>&lt;project&gt;</code> tag) the list will be empty if
+      no target has been specified while it will contain the project's
+      default target in this case for tasks nested into targets.</dd>
+    <dt><code>ant.java.version</code></dt>
+    <dd>the JVM version Ant detected; currently it can hold the
+      values <q>9</q>, <q>1.8</q>, <q>1.7</q>, <q>1.6</q>, <q>1.5</q>, <q>1.4</q>, <q>1.3</q>
+      and <q>1.2</q>.</dd>
+    <dt><code>ant.core.lib</code></dt>
+    <dd>the absolute path of the <samp>ant.jar</samp> file.</dd>
+  </dl>
 
   <p>There is also another property, but this is set by the launcher
     script and therefore maybe not set inside IDEs:</p>
-<pre>
-ant.home            home directory of Ant
-</pre>
+  <dl>
+    <dt><code>ant.home</code></dt>
+    <dd>home directory of Ant</dd>
+  </dl>
 
   <p>The following property is only set if Ant is started via the
     Launcher class (which means it may not be set inside IDEs
     either):</p>
-<pre>
-ant.library.dir     the directory that has been used to load Ant's
-                    jars from.  In most cases this is ANT_HOME/lib.
-</pre>
+  <dl>
+    <dt><code>ant.library.dir</code></dt>
+    <dd>the directory that has been used to load Ant's
+      jars from.  In most cases this is <samp>ANT_HOME/lib</samp>.</dd>
+  </dl>
 
   <h1 id="propertyHelper">PropertyHelpers</h1>
 
-  <p>Ant's property handling is accomplished by an instance of
-    <code>org.apache.tools.ant.PropertyHelper</code> associated with
-    the current Project.  You can learn more about this class by
+  <p>Ant's property handling is accomplished by an instance
+    of <code>org.apache.tools.ant.PropertyHelper</code> associated
+    with the current Project.  You can learn more about this class by
     examining Ant's Java API. In Ant 1.8 the PropertyHelper class was
     much reworked and now itself employs a number of helper classes
     (actually instances of
@@ -117,9 +122,9 @@ ant.library.dir     the directory that has been used to load Ant's
     marker interface) to take care of discrete tasks such as property
     setting, retrieval, parsing, etc. This makes Ant's property
     handling highly extensible; also of interest is the
-    new <a href="Tasks/propertyhelper.html">propertyhelper</a>
-    task used to manipulate the PropertyHelper and its delegates from
-    the context of the Ant buildfile.
+    new <a href="Tasks/propertyhelper.html">propertyhelper</a> task
+    used to manipulate the PropertyHelper and its delegates from the
+    context of the Ant buildfile.</p>
 
   <p>There are three sub-interfaces of <code>Delegate</code> that may be
     useful to implement.</p>
@@ -127,22 +132,22 @@ ant.library.dir     the directory that has been used to load Ant's
   <ul>
     <li><code>org.apache.tools.ant.property.PropertyExpander</code> is
       responsible for finding the property name inside a string in the
-      first place (the default extracts <code>foo</code>
-      from <code>${foo}</code>).
+      first place (the default extracts <samp>foo</samp>
+      from <samp>${foo}</samp>).
 
       <p>This is the interface you'd implement if you wanted to invent
-        your own property syntax - or allow nested property expansions
+        your own property syntax&mdash;or allow nested property expansions
         since the default implementation doesn't balance braces
         (see <a href="https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-props.git;a=blob;f=src/main/org/apache/ant/props/NestedPropertyExpander.java;hb=HEAD"><code>NestedPropertyExpander</code>
-        in the "props" Antlib</a> for an example).</p>
+        in the <samp>props</samp> Antlib</a> for an example).</p>
     </li>
 
     <li><code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code>
-      is used to expand <code>${some-string}</code> into
+      is used to expand <samp>${some-string}</samp> into
       an <code>Object</code>.
 
       <p>This is the interface you'd implement if you want to provide
-        your own storage independent of Ant's project instance - the
+        your own storage independent of Ant's project instance&mdash;the
         interface represents the reading end.  An example for this
         would
         be <code>org.apache.tools.ant.property.LocalProperties</code>
@@ -152,7 +157,7 @@ ant.library.dir     the directory that has been used to load Ant's
       <p>Another reason to implement this interface is if you wanted
         to provide your own "property protocol" like
         expanding <code>toString:foo</code> by looking up the project
-        reference foo and invoking <code>toString()</code> on it
+        reference <samp>foo</samp> and invoking <code>toString()</code> on it
         (which is already implemented in Ant, see below).</p>
     </li>
 
@@ -160,7 +165,7 @@ ant.library.dir     the directory that has been used to load Ant's
       is responsible for setting properties.
 
       <p>This is the interface you'd implement if you want to provide
-        your own storage independent of Ant's project instance - the
+        your own storage independent of Ant's project instance&mdash;the
         interface represents the reading end.  An example for this
         would
         be <code>org.apache.tools.ant.property.LocalProperties</code>
@@ -188,12 +193,11 @@ public class DefaultExpander implements PropertyExpander {
         }
         return null;
     }
-}
-</pre>
+}</pre>
 
-  <p>The logic that replaces <code>${toString:some-id}</code> with the
+  <p>The logic that replaces <samp>${toString:<i>some-id</i>}</samp> with the
     stringified representation of the object with
-    id <code>some-id</code> inside the current build is contained in a
+    <var>id</var> <samp>some-id</samp> inside the current build is contained in a
     PropertyEvaluator similar to the following code:</p>
 
 <pre>
@@ -207,198 +211,194 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
         }
         return o == null ? null : o.toString();
     }
-}
-</pre>
+}</pre>
 
   <h1>Property Expansion</h1>
 
-  <p>When Ant encounters a construct <code>${some-text}</code> the
+  <p>When Ant encounters a construct <samp>${some-text}</samp> the
     exact parsing semantics are subject to the configured property
     helper delegates.</p>
 
   <h2><code>$$</code> Expansion</h2>
 
-  <p>In its default configuration Ant will expand the
-    text <code>$$</code> to a single <code>$</code> and suppress the
-    normal property expansion mechanism for the text immediately
-    following it, i.e. <code>$${key}</code> expands
-    to <code>${key}</code> and not <code>value</code> even though a
-    property named <code>key</code> was defined and had the
-    value <code>value</code>.  This can be used to escape
-    literal <code>$</code> characters and is useful in constructs that
-    only look like property expansions or when you want to provide
+  <p>In its default configuration Ant will expand the text <q>$$</q>
+    to a single <q>$</q> and suppress the normal property expansion
+    mechanism for the text immediately following it,
+    i.e. <samp>$${key}</samp> expands to <samp>${key}</samp> and
+    not <code>value</code> even though a property
+    named <code>key</code> was defined and had the
+    value <samp>value</samp>.  This can be used to escape
+    literal <q>$</q> characters and is useful in constructs that only
+    look like property expansions or when you want to provide
     diagnostic output like in</p>
 
-<pre>  &lt;echo&gt;$${builddir}=${builddir}&lt;/echo&gt;</pre>
+<pre>&lt;echo&gt;$${builddir}=${builddir}&lt;/echo&gt;</pre>
 
-    <p>which will echo this message:</p>
+  <p>which will echo this message:</p>
 
-<pre>  ${builddir}=build/classes</pre>
+<pre>${builddir}=build/classes</pre>
 
   <p>if the property <code>builddir</code> has the
-    value <code>build/classes</code>.</p>
+    value <samp>build/classes</samp>.</p>
 
   <p>In order to maintain backward compatibility with older Ant
-    releases, a single '$' character encountered apart from a
+    releases, a single <q>$</q> character encountered apart from a
     property-like construct (including a matched pair of french
-    braces) will be interpreted literally; that is, as '$'.  The
+    braces) will be interpreted literally; that is, as <q>$</q>.  The
     "correct" way to specify this literal character, however, is by
-    using the escaping mechanism unconditionally, so that "$$" is
-    obtained by specifying "$$$$".  Mixing the two approaches yields
-    unpredictable results, as "$$$" results in "$$".</p>
+    using the escaping mechanism unconditionally, so that <q>$$</q> is
+    obtained by specifying <q>$$$$</q>.  Mixing the two approaches
+    yields unpredictable results, as <q>$$$</q> results
+    in <q>$$</q>.</p>
 
   <h2>Nesting of Braces</h2>
 
   <p>In its default configuration Ant will not try to balance braces
     in property expansions, it will only consume the text up to the
     first closing brace when creating a property name.  I.e. when
-    expanding something like <code>${a${b}}</code> it will be
+    expanding something like <samp>${a${b}}</samp> it will be
     translated into two parts:</p>
 
   <ol>
-    <li>the expansion of property <code>a${b</code> - likely nothing
+    <li>the expansion of property <samp>a${b</samp>&mdash;likely nothing
       useful.</li>
-    <li>the literal text <code>}</code> resulting from the second
+    <li>the literal text <samp>}</samp> resulting from the second
       closing brace</li>
   </ol>
 
   <p>This means you can't use easily expand properties whose names are
     given by properties, but there
-    are <a href="http://ant.apache.org/faq.html#propertyvalue-as-name-for-property">some
+    are <a href="https://ant.apache.org/faq.html#propertyvalue-as-name-for-property">some
     workarounds</a> for older versions of Ant.  With Ant 1.8.0 and the
-    <a href="http://ant.apache.org/antlib/props/">the props Antlib</a>
+    <a href="https://ant.apache.org/antlib/props/">the props Antlib</a>
     you can configure Ant to use
     the <code>NestedPropertyExpander</code> defined there if you need
     such a feature.</p>
 
   <h2>Expanding a "Property Name"</h2>
 
-  <p>In its most simple form <code>${key}</code> is supposed to look
+  <p>In its most simple form <samp>${key}</samp> is supposed to look
     up a property named <code>key</code> and expand to the value of
     the property.  Additional <code>PropertyEvaluator</code>s may
     result in a different interpretation of <code>key</code>,
     though.</p>
 
-  <p>The <a href="http://ant.apache.org/antlibs/props/">props
-      Antlib</a> provides a few interesting evaluators but there are
-      also a few built-in ones.</p>
+  <p>The <a href="https://ant.apache.org/antlibs/props/">props Antlib</a>
+    provides a few interesting evaluators but there are
+    also a few built-in ones.</p>
 
   <h3 id="toString">Getting the value of a Reference with
-      ${toString:}</h3>
+    <samp>${toString:}</samp></h3>
 
   <p>Any Ant type which has been declared with a reference can also
-    its string value extracted by using the <code>${toString:}</code>
+    its string value extracted by using the <samp>${toString:}</samp>
     operation, with the name of the reference listed after
     the <code>toString:</code> text.  The <code>toString()</code>
-    method of the Java class instance that is referenced is invoked
-    -all built in types strive to produce useful and relevant output
-    in such an instance.</p>
+    method of the Java class instance that is referenced is
+    invoked&mdash;all built in types strive to produce useful and
+    relevant output in such an instance.</p>
 
   <p>For example, here is how to get a listing of the files in a fileset,<p>
 
 <pre>
-&lt;fileset id=&quot;sourcefiles&quot; dir=&quot;src&quot; includes=&quot;**/*.java&quot; /&gt;
-&lt;echo&gt; sourcefiles = ${toString:sourcefiles} &lt;/echo&gt;
-</pre>
+&lt;fileset id=&quot;sourcefiles&quot; dir=&quot;src&quot; includes=&quot;**/*.java&quot;/&gt;
+&lt;echo&gt; sourcefiles = ${toString:sourcefiles} &lt;/echo&gt;</pre>
 
   <p>There is no guarantee that external types provide meaningful
     information in such a situation</p>
 
-  <h3 id="ant.refid">Getting the value of a Reference with
-      ${ant.refid:}</h3>
+  <h3 id="ant.refid">Getting the value of a Reference with <samp>${ant.refid:}</samp></h3>
 
   <p>Any Ant type which has been declared with a reference can also be
-    used as a property by using the <code>${ant.refid:}</code>
+    used as a property by using the <samp>${ant.refid:}</samp>
     operation, with the name of the reference listed after
     the <code>ant.refid:</code> text.  The difference between this
-    operation and <a href="#toString"><code>${toString:}</code></a> is
-    that <code>${ant.refid:}</code> will expand to the referenced
-    object itself.  In most circumstances the toString method will be
-    invoked anyway, for example if the <code>${ant.refid:}</code> is
-    surrounded by other text.</p>
+    operation and <a href="#toString"><samp>${toString:}</samp></a> is
+    that <samp>${ant.refid:}</samp> will expand to the referenced
+    object itself.  In most circumstances the <code>toString</code>
+    method will be invoked anyway, for example if
+    the <samp>${ant.refid:}</samp> is surrounded by other text.</p>
 
   <p>This syntax is most useful when using a task with attribute
-    setters that accept objects other than String.  For example if the
-    setter accepts a Resource object as in</p>
-<pre>
-public void setAttr(Resource r) { ... }
-</pre>
+    setters that accept objects other than String.  For example, if
+    the setter accepts a Resource object as in</p>
+
+  <pre>public void setAttr(Resource r) { ... }</pre>
 
   <p>then the syntax can be used to pass in resource subclasses
     previously defined as references like</p>
 <pre>
-  &lt;url url="http://ant.apache.org/" id="anturl"/&gt;
-  &lt;my:task attr="${ant.refid:anturl}"/&gt;
-</pre>
+&lt;url url="http://ant.apache.org/" id="anturl"/&gt;
+&lt;my:task attr="${ant.refid:anturl}"/&gt;</pre>
 
   <h2 id="if+unless">If/Unless Attributes</h2>
   <p>
-      The <code>&lt;target></code> element and various tasks (such as
-      <code>&lt;fail></code>) and task elements (such as <code>&lt;test></code>
-      in <code>&lt;junit></code>) support <code>if</code> and <code>unless</code>
-      attributes which can be used to control whether the item is run or otherwise
-      takes effect.
+    The <code>&lt;target&gt;</code> element and various tasks (such
+    as <code>&lt;fail&gt;</code>) and task elements (such
+    as <code>&lt;test&gt;</code> in <code>&lt;junit&gt;</code>)
+    support <var>if</var> and <var>unless</var> attributes which can
+    be used to control whether the item is run or otherwise takes
+    effect.
   </p>
   <p>
-      In Ant 1.7.1 and earlier, these attributes could only be property names.
-      The item was enabled if a property with that name was defined - even to be
-      the empty string or <tt>false</tt> - and disabled if the property was not
-      defined. For example, the following works but there is no way to override
-      the file existence check negatively (only positively):
+    In Ant 1.7.1 and earlier, these attributes could only be property
+    names.  The item was enabled if a property with that name was
+    defined&mdash;even to be the empty string
+    or <q>false</q>&mdash;and disabled if the property was not
+    defined. For example, the following works but there is no way to
+    override the file existence check negatively (only positively):
   </p>
   <pre>
-&lt;target name="-check-use-file">
-    &lt;available property="file.exists" file="some-file"/>
+&lt;target name="-check-use-file"&gt;
+    &lt;available property="file.exists" file="some-file"/&gt;
+&lt;/target&gt;
+&lt;target name="use-file" depends="-check-use-file" <strong>if="file.exists"</strong>&gt;
+    &lt;!-- do something requiring that file... --&gt;
 &lt;/target>
-&lt;target name="use-file" depends="-check-use-file" <b>if="file.exists"</b>>
-    &lt;!-- do something requiring that file... -->
-&lt;/target>
-&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/>
-  </pre>
+&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/&gt;</pre>
   <p>
-      <em>Since Ant 1.8.0</em>, you may instead use property expansion; a value of
-      <tt>true</tt> (or <tt>on</tt> or <tt>yes</tt>) will enable the
-      item, while <tt>false</tt> (or <tt>off</tt> or <tt>no</tt>) will
-      disable it. Other values are still assumed to be property
-      names and so the item is enabled only if the named property is defined.
+    <em>Since Ant 1.8.0</em>, you may instead use property expansion;
+    a value of <q>true</q> (or <q>on</q> or <q>yes</q>) will enable
+    the item, while <q>false</q> (or <q>off</q> or <q>no</q>) will
+    disable it. Other values are still assumed to be property names
+    and so the item is enabled only if the named property is defined.
   </p>
   <p>
-      Compared to the older style, this gives you additional flexibility, because
-      you can override the condition from the command line or parent scripts:
-  </p>
-  <pre>
-&lt;target name="-check-use-file" <b>unless="file.exists"</b>>
-    &lt;available property="file.exists" file="some-file"/>
-&lt;/target>
-&lt;target name="use-file" depends="-check-use-file" <b>if="${file.exists}"</b>>
-    &lt;!-- do something requiring that file... -->
-&lt;/target>
-&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/>
-  </pre>
-  <p>
-      Now <code>ant -Dfile.exists=false lots-of-stuff</code> will run
-      <code>other-unconditional-stuff</code> but not <code>use-file</code>,
-      as you might expect, and you can disable the condition from another script
-      too:
+    Compared to the older style, this gives you additional
+    flexibility, because you can override the condition from the
+    command line or parent scripts:
   </p>
   <pre>
-&lt;antcall target="lots-of-stuff">
-    &lt;param name="file.exists" value="false"/>
-&lt;/antcall>
-  </pre>
+&lt;target name="-check-use-file" <strong>unless="file.exists"</strong>&gt;
+    &lt;available property="file.exists" file="some-file"/&gt;
+&lt;/target>
+&lt;target name="use-file" depends="-check-use-file" <strong>if="${file.exists}"</strong>&gt;
+    &lt;!-- do something requiring that file... --&gt;
+&lt;/target>
+&lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/&gt;</pre>
   <p>
-      Similarly, an <code>unless</code> attribute disables the item if it is
-      either the name of property which is defined, or if it evaluates to a
-      <tt>true</tt>-like value. For example, the following allows you to define
-      <tt>skip.printing.message=true</tt> in <tt>my-prefs.properties</tt> with
-      the results you might expect:
+    Now <code>ant -Dfile.exists=false lots-of-stuff</code> will
+    run <q>other-unconditional-stuff</q> but not <q>use-file</q>, as
+    you might expect, and you can disable the condition from another
+    script too:
   </p>
   <pre>
-&lt;property file="my-prefs.properties"/>
-&lt;target name="print-message" <b>unless="${skip.printing.message}"</b>>
+&lt;antcall target="lots-of-stuff"&gt;
+    &lt;param name="file.exists" value="false"/&gt;
+&lt;/antcall&gt;</pre>
+  <p>
+    Similarly, an <var>unless</var> attribute disables the item if it
+    is either the name of property which is defined, or if it
+    evaluates to a <q>true</q>-like value. For example, the following
+    allows you to define <code>skip.printing.message=true</code>
+    in <samp>my-prefs.properties</samp> with the results you might
+    expect:
+  </p>
+  <pre>
+&lt;property file="my-prefs.properties"/&gt;
+&lt;target name="print-message" <strong>unless="${skip.printing.message}"</strong>&gt;
     &lt;echo>hello!&lt;/echo>
-&lt;/target>
-  </pre>
+&lt;/target&gt;</pre>
 
 </body>
 </html>

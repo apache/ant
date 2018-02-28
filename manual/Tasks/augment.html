@@ -27,57 +27,48 @@
 <h2>Augment</h2>
 
 <h3>Description</h3>
-<p>Modify an existing reference by adding nested elements or (re-)assigning properties
-mapped as XML attributes. This is an unusual task that makes use of Ant's internal
-processing mechanisms to reload a previously declared reference by means of the 'id'
-attribute, then treats the declared <code>augment</code> element as though it were the
-original element.
-<em>Since Apache Ant 1.8.1</em></p>
+<p>Modify an existing reference by adding nested elements or (re-)assigning properties mapped as XML
+attributes. This is an unusual task that makes use of Ant's internal processing mechanisms to reload
+a previously declared reference by means of the <var>id</var> attribute, then treats the
+declared <code>augment</code> element as though it were the original element. <em>Since Apache Ant
+1.8.1</em></p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">id</td>
-    <td valign="top">The id of the reference to augment. If no such reference has
-      been declared a <code>BuildException</code> is generated.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>id</td>
+    <td>The <var>id</var> of the reference to augment. If no such reference has been declared
+      a <code>BuildException</code> is thrown.</td>
+    <td>Yes</td>
   </tr>
 </table>
-<p>
-Additional permissible attributes are dependent on the reference to be modified.
-</p>
+<p>Additional permissible attributes are dependent on the reference to be modified.</p>
 
 <h3>Parameters specified as nested elements</h3>
 
-<p>
-Permissible nested elements are dependent on the reference to be modified.
-</p>
+<p>Permissible nested elements are dependent on the reference to be modified.</p>
 
 <h3>Examples</h3>
 
-Given
-<pre>
-  &lt;fileset id="input-fs" dir="${basedir}" /&gt;
-</pre>
+<p>Given</p>
+
+<pre>&lt;fileset id="input-fs" dir="${basedir}"/&gt;</pre>
+
+<pre>&lt;augment id="input-fs" excludes="foo"/&gt;</pre>
+
+<p>modifies the <var>excludes</var> attribute of <samp>input-fs</samp>.</p>
 
 <pre>
-  &lt;augment id="input-fs" excludes="foo" /&gt;
-</pre>
+&lt;augment id="input-fs"&gt;
+  &lt;filename name="bar"/&gt;
+&lt;/augment&gt;</pre>
 
-<p>Modifies the <code>excludes</code> attribute of <code>input-fs</code>.</p>
-
-<pre>
-  &lt;augment id="input-fs"&gt;
-    &lt;filename name="bar" /&gt;
-  &lt;/augment&gt;
-</pre>
-
-<p>Adds a <code>filename</code> selector to <code>input-fs</code>.</p>
+<p>Adds a <code>filename</code> selector to <samp>input-fs</samp>.</p>
 
 </body>
 </html>

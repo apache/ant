@@ -15,6 +15,10 @@
  *  limitations under the License.
  *
  */
+body {
+    font-family: “Palatino Linotype”, Palatino, Georgia, “Century Schoolbook”, serif;
+}
+
 h2 {
   font-size: 200%;
   background-color: white;
@@ -52,57 +56,129 @@ h5 + p, h6 + p {
   margin-bottom: .5rem;
 }
 
-h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
+h3 > a, h4 > a, h5 > a, h6 > a {
    color: white;
 }
 
-h1 > a:visited, h2 > a:visited, h3 > a:visited, h4 > a:visited, h5 > a:visited, h6 > a:visited,
-h1 > a:hover, h2 > a:hover, h3 > a:hover, h4 > a:hover, h5 > a:hover, h6 > a:hover {
+h3 > a:visited, h4 > a:visited, h5 > a:visited, h6 > a:visited,
+h3 > a:hover, h4 > a:hover, h5 > a:hover, h6 > a:hover {
    color: lightskyblue;
 }
 
-td {
-   background-color: #eeeeee;
-   color: black;
+var {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 0.8rem;
 }
 
-/* first row */
-table tr:first-child td {
-   background-color: silver;
-   color: black;
+q {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 0.8rem;
 }
 
-/* or th as first row */
-table th {
-   background-color: silver;
-   color: black;
-}
-
-code {
+q.no-break {
     white-space: nowrap;
+    hyphens: none;
+}
+
+code, samp {
+    white-space: nowrap;
+    hyphens: none;
+    font-size: 1.125rem;
+}
+
+h2 > code, h2 > samp {
+    font-size: 2rem;
+}
+
+h3 > code, h3 > samp {
+    font-size: 1.5rem;
 }
 
 pre {
    background-color: #efefef;
    margin-right: 4rem;
    margin-left: 4rem;
+   font-size: 1.125rem;
+}
+
+pre var, code var {
+    font-size: 0.65rem;
 }
 
 /* code snippets in examples and tutorials */
-.code { 
+.code {
    background: #efefef;
 }
 
 /* highlight console output */
-.output { 
+.output {
    color: white;
-   background: #837A67; 
+   background: #837A67;
+}
+
+td {
+   vertical-align: top;
+   background-color: #eeeeee;
+   color: black;
+}
+
+th {
+   background-color: silver;
+   color: black;
+   vertical-align: middle;
+}
+
+td pre {
+    margin: 0 0 0 0;
+    font-size: 1rem;
+}
+
+thead.no-bold th {
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+table.attr {
+    width: 100%;
+}
+
+table.attr td:first-child {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+table.attr td:last-child {
+    text-align: center;
+}
+
+table.attr td.center, h1.center, p.center {
+    text-align: center;
+}
+
+table.attr td.left {
+    font-family: “Palatino Linotype”, Palatino, Georgia, “Century Schoolbook”, serif;
+    font-size: 1rem;
+    font-style: normal;
+    text-align: left;
+}
+
+table.attr td.var {
+    text-align: left;
+}
+
+td[rowspan] {
+   vertical-align: middle;
 }
 
 ul.inlinelist {
    list-style-type: none;
    margin-left: 0;
    padding: 0;
+}
+
+li.indent {
+    padding-left: 1rem;
 }
 
 div.float {
@@ -130,7 +206,7 @@ div.float + table tr:first-child {
 
 span.left {
     float: left;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-weight: bold;
 }
 
@@ -153,7 +229,7 @@ ol.refs > li {
 }
 
 ol.refs > li:before {
-    content: "[" counter(refs, decimal) "] ";
+    content: "[" counter(refs, decimal) "]";
     counter-increment: refs;
     position: absolute;
     left: -2rem;

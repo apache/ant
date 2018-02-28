@@ -25,61 +25,56 @@
 
 <h2 id="sleep">Sleep</h2>
 <h3>Description</h3>
-<p>
-A task for sleeping a short period of time, useful when a build or deployment
-process requires an interval between tasks.
-</p>
+<p>A task for sleeping a short period of time, useful when a build or deployment process requires an
+interval between tasks.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">hours</td>
-    <td valign="top">hours to to add to the sleep time</td>
-    <td valign="top" align="center">No</td>
+    <td>hours</td>
+    <td>hours to to add to the sleep time</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">minutes</td>
-    <td valign="top"> minutes to add to the sleep time</td>
-    <td valign="top" align="center">No</td>
+    <td>minutes</td>
+    <td>minutes to add to the sleep time</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">seconds</td>
-    <td valign="top">seconds to add to the sleep time</td>
-    <td align="center" valign="top">No</td>
+    <td>seconds</td>
+    <td>seconds to add to the sleep time</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">milliseconds</td>
-    <td valign="top">milliseconds to add to the sleep time</td>
-    <td align="center" valign="top">No</td>
+    <td>milliseconds</td>
+    <td>milliseconds to add to the sleep time</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">failonerror</td>
-    <td valign="top">flag controlling whether to break the build on an error.
-    </td>
-    <td align="center" valign="top">No</td>
+    <td>failonerror</td>
+    <td>flag controlling whether to break the build on an error</td>
+    <td>No</td>
   </tr>
 </table>
-<p>The sleep time is the sum of specified values, hours, minutes seconds and milliseconds.
-  A negative value can be supplied to any of them provided the total sleep time
-  is positive</p>
-<p>Note that sleep times are always hints to be interpreted by the OS how it feels
-  - small times may either be ignored or rounded up to a minimum timeslice. Note
-  also that the system clocks often have a fairly low granularity too, which complicates
-  measuring how long a sleep actually took.</p>
+<p>The sleep time is the sum of specified values, hours, minutes seconds and milliseconds.  A
+negative value can be supplied to any of them provided the total sleep time is positive</p>
+<p>Note that sleep times are always hints to be interpreted by the OS how it feels&mdash;small times
+may either be ignored or rounded up to a minimum timeslice. Note also that the system clocks often
+have a fairly low granularity too, which complicates measuring how long a sleep actually took.</p>
 <h3>Examples</h3>
-<pre>   &lt;sleep milliseconds=&quot;10&quot;/&gt;</pre>
-Sleep for about 10 mS.
-<pre>   &lt;sleep seconds=&quot;2&quot;/&gt;</pre>
-Sleep for about 2 seconds.
-<pre>   &lt;sleep hours=&quot;1&quot; minutes=&quot;-59&quot; seconds=&quot;-58&quot;/&gt;</pre>
-<p>Sleep for one hour less 59:58, or two seconds again</p>
-<pre>   &lt;sleep/&gt;</pre>
-Sleep for no time at all. This may yield the CPU time to another thread or process.
+<pre>&lt;sleep milliseconds=&quot;10&quot;/&gt;</pre>
+<p>Sleep for about 10 ms.</p>
+<pre>&lt;sleep seconds=&quot;2&quot;/&gt;</pre>
+<p>Sleep for about 2 seconds.</p>
+<pre>&lt;sleep hours=&quot;1&quot; minutes=&quot;-59&quot; seconds=&quot;-58&quot;/&gt;</pre>
+<p>Sleep for one hour less 59:58, or two seconds again.</p>
+<pre>&lt;sleep/&gt;</pre>
+<p>Sleep for no time at all. This may yield the CPU time to another thread or process.</p>
 
 </body>
 </html>

@@ -26,57 +26,51 @@
 
 <h2 id="antversion">Antversion</h2>
 <h3>Description</h3>
-<p>
-Stores the Apache Ant version (when used as task) or checks for a specific Ant version
-(when used as condition).
-<em>Since Ant 1.7.0</em>
-</p>
+<p>Stores the Apache Ant version (when used as task) or checks for a
+specific Ant version (when used as condition). <em>Since Ant
+1.7.0</em></p>
 
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required (Task)</b></td>
-    <td align="center" valign="top"><b>Required (Condition)</b></td>
+    <th rowspan="2">Attribute</th>
+    <th rowspan="2">Description</th>
+    <th colspan="2">Required</th>
   </tr>
   <tr>
-    <td valign="top">atleast</td>
-    <td valign="top">The version that this Ant is of at least.
-      The format is <code>major.minor.point</code>.</td>
-    <td valign="top" align="center">No</td>
-    <td valign="top" rowspan="2" align="center">Exactly one of these</td>
+    <th>Task</th>
+    <th>Condition</th>
   </tr>
   <tr>
-    <td valign="top">exactly</td>
-    <td valign="top">The version that this Ant is of exactly.
-      The format is <code>major.minor.point</code>.</td>
-    <td valign="top" align="center">No</td>
+    <td>atleast</td>
+    <td>The version that this Ant is of at least.  The format
+      is <code>major.minor.point</code>.</td>
+    <td class="center">No</td>
+    <td rowspan="2">Exactly one of these</td>
   </tr>
   <tr>
-    <td valign="top">property</td>
-    <td valign="top">The name of the property to set.</td>
-    <td valign="top" align="center">Yes</td>
-    <td valign="top" align="center">No (ignored)</td>
+    <td>exactly</td>
+    <td>The version that this Ant is of exactly.  The format is <code>major.minor.point</code>.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>property</td>
+    <td>The name of the property to set.</td>
+    <td class="center">Yes</td>
+    <td>Ignored</td>
   </tr>
 </table>
 
 <h3>Examples</h3>
 
-<pre>
-&lt;antversion property=&quot;antversion&quot;/&gt;
-</pre>
-<p>Stores the current Ant version in the property <i>antversion</i>.</p>
+<pre>&lt;antversion property=&quot;antversion&quot;/&gt;</pre>
+<p>Stores the current Ant version in the property <code>antversion</code>.</p>
 
-<pre>
-&lt;antversion property=&quot;antversion&quot; atleast=&quot;1.6&quot;/&gt;
-</pre>
-<p>Stores the Ant version in the property <i>antversion</i> if the current Ant version is 1.6.0
-or higher. Otherwise the property remains unset.</p>
+<pre>&lt;antversion property=&quot;antversion&quot; atleast=&quot;1.6&quot;/&gt;</pre>
+<p>Stores the Ant version in the property <code>antversion</code> if the current Ant version is
+1.6.0 or higher. Otherwise the property remains unset.</p>
 
-<pre>
-&lt;antversion property=&quot;ant-is-exact-7&quot; exactly=&quot;1.7.0&quot;/&gt;
-</pre>
-<p>Sets the property <i>ant-is-exact-7</i> if Ant 1.7.0 is running. Neither 1.6.5 nor 1.7.0
+<pre>&lt;antversion property=&quot;ant-is-exact-7&quot; exactly=&quot;1.7.0&quot;/&gt;</pre>
+<p>Sets the property <code>ant-is-exact-7</code> if Ant 1.7.0 is running. Neither 1.6.5 nor 1.7.0
 would match.</p>
 
 <pre>
@@ -85,10 +79,9 @@ would match.</p>
     &lt;antversion exactly=&quot;1.7.0&quot;/&gt;
     &lt;http url=&quot;http://ant.apache.org&quot;/&gt;
   &lt;/and&gt;
-&lt;/condition&gt;
-</pre>
-<p>Sets <i>Ant17isOnline</i> if Ant 1.7.0 is running and can get a non-error-response from
-the Ant homepage.</p>
+&lt;/condition&gt;</pre>
+<p>Sets <code>Ant17isOnline</code> if Ant 1.7.0 is running and can get a non-error-response from the
+Ant homepage.</p>
 
 </body>
 </html>

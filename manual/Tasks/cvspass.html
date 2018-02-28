@@ -26,42 +26,43 @@
 
 <h2 id="cvs">cvspass</h2>
 <h3>Description</h3>
-<p>Adds entries to a .cvspass file. Adding entries to this file has the same affect as a cvs login command.</p>
+<p>Adds entries to a <samp>.cvspass</samp> file. Adding entries to this file has the same affect as
+a <code>cvs login</code> command.</p>
 
-<p><strong>CVSNT Note</strong>: CVSNT prefers users to store the passwords
-inside the registry.  If the task doesn't seem to work for you, the
-most likely reason is that CVSNT ignores your .cvspass file
-completely.  See <a
-href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21657#c5">bug
-zilla report 21657</a> for recommended workarounds.</p>
+<p><strong>CVSNT Note</strong>: CVSNT prefers users to store the passwords inside the registry.  If
+the task doesn't seem to work for you, the most likely reason is that CVSNT ignores
+your <samp>.cvspass</samp> file
+completely. See <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=21657#c5">bugzilla
+report 21657</a> for recommended workarounds.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">cvsroot</td>
-    <td valign="top">the CVS repository to add an entry for.</td>
-    <td align="center" valign="top">Yes</td>
+    <td>cvsroot</td>
+    <td>the CVS repository to add an entry for.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">password</td>
-    <td valign="top">Password to be added to the password file.</td>
-    <td align="center" valign="top">Yes</td>
+    <td>password</td>
+    <td>Password to be added to the password file.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">passfile</td>
-    <td valign="top">Password file to add the entry to.</td>
-    <td align="center" valign="top">No, default is <code>~/.cvspass</code>.</td>
+    <td>passfile</td>
+    <td>Password file to add the entry to.</td>
+    <td>No; default is <q>~/.cvspass</q></td>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;cvspass cvsroot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
-       password=&quot;anoncvs&quot;/&gt;</pre>
-<p>Adds an entry into the ~/.cvspass password file.</p>
+<pre>
+&lt;cvspass cvsroot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
+         password=&quot;anoncvs&quot;/&gt;</pre>
+<p>Adds an entry into the <samp>~/.cvspass</samp> password file.</p>
 
 </body>
 </html>

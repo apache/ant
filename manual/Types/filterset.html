@@ -23,124 +23,113 @@
 <body>
 <h2 id="filterset">FilterSet</h2>
 
-<p>FilterSets are groups of filters. Filters can be defined as token-value
-pairs
-or be read in from a file. FilterSets can appear inside tasks that support this
-feature or at the same level as <code>&lt;target&gt;</code> - i.e., as
-children of
-<code>&lt;project&gt;</code>.</p>
+<p>FilterSets are groups of filters. Filters can be defined as token-value pairs or be read in
+from a file. FilterSets can appear inside tasks that support this feature or at the same level
+as <code>&lt;target&gt;</code>&mdash;i.e., as children of <code>&lt;project&gt;</code>.</p>
 
-<p>FilterSets support the <code>id</code> and <code>refid</code>
-attributes.  You can define a FilterSet with an <code>id</code>
-attribute and then refer to that definition from another FilterSet
-with a <code>refid</code> attribute.  It is also possible to nest
-filtersets into filtersets to get a set union of the contained
-filters.</p>
+<p>FilterSets support the <var>id</var> and <var>refid</var> attributes.  You can define a
+FilterSet with an <var>id</var> attribute and then refer to that definition from another
+FilterSet with a <var>refid</var> attribute.  It is also possible to nest filtersets into
+filtersets to get a set union of the contained filters.</p>
 
-<p>In addition, FilterSets can specify
-<code>begintoken</code> and/or
-<code>endtoken</code> attributes to define what to match.</p>
-<p>Filtersets are used for doing
-replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
+<p>In addition, FilterSets can specify <var>begintoken</var> and/or <var>endtoken</var>
+attributes to define what to match.</p>
 
-<p>Filters can also by specified by one or more nested propertysets, the
-  contents of which are applied when the filterset is created.</p>
+<p>Filtersets are used for doing replacements in tasks such as <code>&lt;copy&gt;</code>,
+etc.</p>
 
-<p>If you specify multiple values for the same token, the last one
-  defined within a filterset will be used.</p>
+<p>Filters can also by specified by one or more nested propertysets, the contents of which are
+applied when the filterset is created.</p>
 
-<p>
-<strong>Note: </strong>When a filterset is used in an operation, the files are
-processed in text mode and the filters applied line by line. This means that
-the copy operations will typically corrupt binary files. When applying filters
-you should ensure that the set of files being filtered are all text files.
-</p>
+<p>If you specify multiple values for the same token, the last one defined within a filterset
+will be used.</p>
+
+<p><strong>Note</strong>: When a filterset is used in an operation, the files are processed in
+text mode and the filters applied line by line. This means that the copy operations will
+typically corrupt binary files. When applying filters you should ensure that the set of files
+being filtered are all text files.</p>
 
 <h3>Filterset</h3>
 
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td valign="top"><b>Default</b></td>
-    <td valign="top" align="center"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">begintoken</td>
-    <td valign="top">The string marking the beginning of a token (eg.,
-      <code>&#64;DATE&#64;</code>).</td>
-    <td valign="top">@</td>
-    <td valign="top" align="center">No</td>
+    <td>begintoken</td>
+    <td>The string marking the beginning of a token (eg., <samp>@DATE@</samp>).</td>
+    <td><q>@</q></td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">endtoken</td>
-    <td valign="top">The string marking the end of a token (eg.,
-      <code>&#64;DATE&#64;</code>).</td>
-    <td valign="top">@</td>
-    <td valign="top" align="center">No</td>
+    <td>endtoken</td>
+    <td>The string marking the end of a token (eg., <samp>@DATE@</samp>).</td>
+    <td><q>@</q></td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">filtersfile</td>
-    <td valign="top">Specify a single filtersfile.</td>
-    <td valign="top"><i>none</i></td>
-    <td valign="top" align="center">No</td>
+    <td>filtersfile</td>
+    <td>Specify a single filtersfile.</td>
+    <td><em>none</em></td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">recurse</td>
-    <td valign="top">Indicates whether the replacement text of tokens
-      should be searched for more tokens. <em>Since Ant 1.6.3</em></td>
-    <td valign="top"><i>true</i></td>
-    <td valign="top" align="center">No</td>
+    <td>recurse</td>
+    <td>Indicates whether the replacement text of tokens should be searched for more
+      tokens. <em>Since Ant 1.6.3</em></td>
+    <td><q>true</q></td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">onmissingfiltersfile</td>
-    <td valign="top">Indicate behavior when a nonexistent <i>filtersfile</i>
-      is specified.  One of "fail", "warn", "ignore". <em>Since Ant 1.7</em></td>
-    <td valign="top">"fail"</td>
-    <td valign="top" align="center">No</td>
+    <td>onmissingfiltersfile</td>
+    <td>Indicate behavior when a nonexistent <var>filtersfile</var> is specified.  One
+      of <q>fail</q>, <q>warn</q>, <q>ignore</q>. <em>Since Ant 1.7</em></td>
+    <td><q>fail</q></td>
+    <td>No</td>
   </tr>
 </table>
 
 <h3>Filter</h3>
 <table>
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td valign="top" align="center"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">token</td>
-    <td valign="top">The token to replace (eg., <code>&#64;DATE&#64;</code>)</td>
-    <td valign="top" align="center">Yes</td>
+    <td>token</td>
+    <td>The token to replace (eg., <samp>@DATE@</samp>)</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">value</td>
-    <td valign="top">The value to replace it with
-     (eg., <code>Thursday, April 26, 2001</code>).</td>
-    <td valign="top" align="center">Yes</td>
+    <td>value</td>
+    <td>The value to replace it with (eg., <q>Thursday, April 26, 2001</q>).</td>
+    <td>Yes</td>
   </tr>
 </table>
 
 <h3>Filtersfile</h3>
 <table>
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td valign="top" align="center"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">A properties file of
-      name-value pairs from which to load the tokens.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>file</td>
+    <td>A properties file of name-value pairs from which to load the tokens.</td>
+    <td>Yes</td>
   </tr>
 </table>
 
 <h4>Examples</h4>
 
-<p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the <code>build</code> directory
-but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
+<p>You are copying the <samp>version.txt</samp> file to the <samp>dist</samp> directory from
+the <samp>build</samp> directory but wish to replace the token <samp>@DATE@</samp> with today's
+date.</p>
 <pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;
@@ -149,9 +138,8 @@ but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 &lt;/copy&gt;
 </pre>
 
-<p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the build directory
-but wish to replace the token <code>%DATE*</code> with today's date.</p>
+<p>You are copying the <samp>version.txt</samp> file to the <samp>dist</samp> directory from the
+build directory but wish to replace the token <samp>%DATE*</samp> with today's date.</p>
 <pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
@@ -183,9 +171,9 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 &lt;/copy&gt;
 </pre>
 
-<p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the <code>build</code> directory
-but wish to replace the token <code>&#64;project.date&#64;</code> with the property of the same name.</p>
+<p>You are copying the <samp>version.txt</samp> file to the <samp>dist</samp> directory from
+the <samp>build</samp> directory but wish to replace the token <samp>@project.date@</samp> with
+the property of the same name.</p>
 <pre>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;

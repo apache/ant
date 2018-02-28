@@ -29,86 +29,83 @@
 <p>Generates a key in a keystore.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">alias</td>
-    <td valign="top">the alias to add under</td>
-    <td valign="top" align="center">Yes.</td>
+    <td>alias</td>
+    <td>the alias to add under</td>
+    <td>Yes.</td>
   </tr>
   <tr>
-    <td valign="top">storepass</td>
-    <td valign="top">password for keystore integrity. Must
-	be at least 6 characters long</td>
-    <td valign="top" align="center">Yes.</td>
+    <td>storepass</td>
+    <td>password for keystore integrity. Must be at least 6 characters long</td>
+    <td>Yes.</td>
   </tr>
   <tr>
-    <td valign="top">keystore</td>
-    <td valign="top">keystore location</td>
-    <td valign="top" align="center">No</td>
+    <td>keystore</td>
+    <td>keystore location</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">storetype</td>
-    <td valign="top">keystore type</td>
-    <td valign="top" align="center">No</td>
+    <td>storetype</td>
+    <td>keystore type</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">keypass</td>
-    <td valign="top">password for private key (if different)</td>
-    <td valign="top" align="center">No</td>
+    <td>keypass</td>
+    <td>password for private key (if different)</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">sigalg</td>
-    <td valign="top">the algorithm to use in signing</td>
-    <td valign="top" align="center">No</td>
+    <td>sigalg</td>
+    <td>the algorithm to use in signing</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">keyalg</td>
-    <td valign="top">the method to use when generating name-value pair</td>
-    <td valign="top" align="center">No</td>
+    <td>keyalg</td>
+    <td>the method to use when generating name-value pair</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">verbose</td>
-    <td valign="top">(true | false) verbose output when signing</td>
-    <td valign="top" align="center">No</td>
+    <td>verbose</td>
+    <td>(<q>true|false</q>) verbose output when signing</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">dname</td>
-    <td valign="top">The distinguished name for entity</td>
-    <td valign="top" align="center">Yes if dname element unspecified</td>
+    <td>dname</td>
+    <td>The distinguished name for entity</td>
+    <td>Yes unless <code>&lt;dname&gt;</code> element is specified</td>
   </tr>
   <tr>
-    <td valign="top">validity</td>
-    <td valign="top">(integer) indicates how many days certificate is valid</td>
-    <td valign="top" align="center">No</td>
+    <td>validity</td>
+    <td>(integer) indicates how many days certificate is valid</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">keysize</td>
-    <td valign="top">(integer) indicates the size of key generated</td>
-    <td valign="top" align="center">No</td>
+    <td>keysize</td>
+    <td>(integer) indicates the size of key generated</td>
+    <td>No</td>
   </tr>
 </table>
 
-<p>Alternatively you can specify the distinguished name by creating a
-sub-element named dname and populating it with param elements that
-have a name and a value. When using the subelement it is automatically
-encoded properly and commas (&quot;<code>,</code>&quot;) are replaced
-with &quot;<code>\,</code>&quot;.</p>
+<p>Alternatively you can specify the distinguished name by creating a <code>&lt;dname&gt;</code>
+sub-element and populating it with <code>&lt;param&gt;</code> elements that have a <var>name</var>
+and a <var>value</var>. When using the subelement, it is automatically encoded properly and commas
+(<q>,</q>) are replaced with <q>\,</q>.</p>
 
 <p>The following two examples are identical:</p>
 
 <h3>Examples</h3>
 <pre>
 &lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot;
-  dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot;/&gt;
-</pre>
+        dname=&quot;CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US&quot;/&gt;</pre>
 
 <pre>
-&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot; &gt;
+&lt;genkey alias=&quot;apache-group&quot; storepass=&quot;secret&quot;&gt;
   &lt;dname&gt;
     &lt;param name=&quot;CN&quot; value=&quot;Ant Group&quot;/&gt;
     &lt;param name=&quot;OU&quot; value=&quot;Jakarta Division&quot;/&gt;

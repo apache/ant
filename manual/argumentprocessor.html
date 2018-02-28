@@ -37,8 +37,8 @@ Ant behaviour.
 <p>
 An <code>ArgumentProcessor</code> is called each time Ant parse an unknown
 argument, an <code>ArgumentProcessor</code> doesn't take precedence over Ant to
-parse already suported options. It is then recommended to third party
-<code>ArgumentProcessor</code> implementation to chose specific 'enough'
+parse already supported options. It is then recommended to third
+party <code>ArgumentProcessor</code> implementation to chose specific 'enough'
 argument name, avoiding for instance one letter arguments.
 </p>
 
@@ -47,16 +47,16 @@ It is also called at the different phases so different behaviour can be
 implemented. It is called just after every arguments are parsed, just
 before the project is being configured (the build file being parsed),
 and just after. Some of the methods to be implemented return a boolean:
-if <code>true</code> is returned, Ant will terminate immediately, without
+if <q>true</q> is returned, Ant will terminate immediately, without
 error.
 </p>
 
 <p>
 Being called during all these phases, an <code>ArgumentProcessor</code>
-can just print some specific system properties and quit (like
-<code>-diagnose</code>), or print some specific properties of a project after
-being parsed and quit (like <code>-projectHelp</code>), or just set some
-custom properties on the project and let it run.
+can just print some specific system properties and quit
+(like <code>-diagnose</code>), or print some specific properties of a
+project after being parsed and quit (like <code>-projectHelp</code>),
+or just set some custom properties on the project and let it run.
 </p>
 
 <h2 id="repository">How to register it's own ArgumentProcessor</h2>
@@ -65,9 +65,9 @@ custom properties on the project and let it run.
 <code>org.apache.tools.ant.ArgumentProcessor</code>.
 </p>
 
-<p>Then to decare it: create a file
-<code>META-INF/services/org.apache.tools.ant.ArgumentProcessor</code> which
-contains only one line the fully qualified name of the class of the
+<p>Then to declare it: create a
+file <samp>META-INF/services/org.apache.tools.ant.ArgumentProcessor</samp>
+which contains only one line the fully qualified name of the class of the
 implementation. This file together with the implementation class need then to
 be found in Ant's classpath.
 </p>

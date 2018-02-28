@@ -26,90 +26,83 @@
 
 <h2 id="telnet">Telnet</h2>
 <h3>Description</h3>
-Task to automate a remote telnet session. The task uses
-nested <tt>&lt;read&gt;</tt> to indicate strings to wait for, and
-<tt>&lt;write&gt;</tt> tags to specify text to send.
+<q>Task to automate a remote telnet session. The task uses nested <code>&lt;read&gt;</code> to
+indicate strings to wait for, and <code>&lt;write&gt;</code> tags to specify text to send.</q>
 
-<p>If you do specify a userid and password, the system will
-assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
-<p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant distribution.
-See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
+<p>If you do specify a userid and password, the system will assume a common Unix prompt to wait
+on. This behavior can be easily overridden.</p>
+<p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant
+distribution.  See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
+information.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
     <th>Attribute</th>
     <th>Values</th>
     <th>Required</th>
   </tr>
   <tr>
-     <td>userid</td>
-     <td>the login id to use on the telnet server.</td>
-     <td>Only if password is specified</td>
+    <td>userid</td>
+    <td>the login id to use on the telnet server.</td>
+    <td>Only if <var>password</var> is specified</td>
   </tr>
   <tr>
-     <td>password</td>
-     <td>the login password to use on the telnet server.</td>
-     <td>Only if userid is specified</td>
+    <td>password</td>
+    <td>the login password to use on the telnet server.</td>
+    <td>Only if <var>userid</var> is specified</td>
   </tr>
   <tr>
-     <td>server</td>
-     <td>the address of the remote telnet server.</td>
-     <td>Yes</td>
+    <td>server</td>
+    <td>the address of the remote telnet server.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-     <td>port</td>
-     <td>the port number of the remote telnet server. Defaults to port 23.</td>
-     <td>No</td>
+    <td>port</td>
+    <td>the port number of the remote telnet server.</td>
+    <td>No; defaults to <q>23</q></td>
   </tr>
   <tr>
-     <td>initialCR</td>
-     <td>send a cr after connecting (&quot;yes&quot;). Defaults to &quot;no&quot;.</td>
-     <td>No</td>
+    <td>initialCR</td>
+    <td>send a cr after connecting if <q>yes</q>.</td>
+    <td>No; defaults to <q>no</q></td>
   </tr>
   <tr>
-     <td>timeout</td>
-     <td>set a default timeout to wait for a response. Specified in seconds. Default is no timeout.</td>
-     <td>No</td>
+    <td>timeout</td>
+    <td>set a default timeout to wait for a response. Specified in seconds.</td>
+    <td>No; default is no timeout</td>
   </tr>
 </table>
 <h3 id="nested">Nested Elements</h3>
-The commands to send to the server, and responses to wait for, are
-described as nested elements.
+<p>The commands to send to the server, and responses to wait for, are described as nested
+elements.</p>
 
 <h4>read</h4>
 
-<p>declare (as a text child of this element) a string to wait for.
-The element supports the timeout attribute, which overrides any
-timeout specified for the task as a whole. It also has a <tt>string</tt>
-attribute, which is an alternative to specifying the string as
-a text element.
-</p>
-<i>Always declare an opening and closing
-<code>&lt;read&gt;</code> element to ensure that statements are not sent before
-the connection is ready, and that the connection is not broken before
-the final command has completed.
-</i>
-<h4>write</h4>
+<p>declare (as a text child of this element) a string to wait for.  The element supports
+the <var>timeout</var> attribute, which overrides any timeout specified for the task as a whole. It
+also has a <var>string</var> attribute, which is an alternative to specifying the string as a text
+element.</p>
+<p><em>Always declare an opening and closing <code>&lt;read&gt;</code> element to ensure that
+statements are not sent before the connection is ready, and that the connection is not broken before
+the final command has completed.</em></p>
 
-<p>describes the text to send to the server. The <tt>echo</tt> boolean
-attribute controls whether the string is echoed to the local log;
-this is "true" by default
-</p>
+<h4>write</h4>
+<p>describes the text to send to the server. The <var>echo</var> boolean attribute controls whether
+the string is echoed to the local log; this is <q>true</q> by default.</p>
+
 <h3>Examples</h3>
-A simple example of connecting to a server and running a command.  This assumes
- a prompt of &quot;ogin:&quot; for the userid, and a prompt of &quot;assword:&quot;
- for the password.
+<p>A simple example of connecting to a server and running a command.  This assumes a prompt
+of <q>ogin:</q> for the userid, and a prompt of <q>assword:</q> for the password.</p>
 
 <pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
    &lt;write&gt;ls&lt;/write&gt;
    &lt;read string=&quot;/home/bob&quot;/&gt;
-&lt;/telnet&gt;
-</pre>
+&lt;/telnet&gt;</pre>
 
-This task can be rewritten as:
+<p>This task can be rewritten as:</p>
 <pre>
 &lt;telnet server=&quot;localhost&quot;&gt;
    &lt;read&gt;ogin:&lt;/read&gt;
@@ -119,35 +112,32 @@ This task can be rewritten as:
    &lt;read&gt;/home/bob&lt;/read&gt;
    &lt;write&gt;ls&lt;/write&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
-&lt;/telnet&gt;
-</pre>
+&lt;/telnet&gt;</pre>
 
-A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at the <code>&lt;read&gt;</code> level.
-This will connect, issue a sleep command that is suppressed from displaying and wait
-10 seconds before quitting.
+<p>A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at
+the <code>&lt;read&gt;</code> level.  This will connect, issue a <code>sleep</code> command that is
+suppressed from displaying and wait 10 seconds before quitting.</p>
+
 <pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
    &lt;write echo=&quot;false&quot;&gt;sleep 15&lt;/write&gt;
    &lt;read timeout=&quot;10&quot;&gt;/home/bob&lt;/read&gt;
-&lt;/telnet&gt;
-</pre>
+&lt;/telnet&gt;</pre>
 
-The task can be used with other ports as well:
+<p>The task can be used with other ports as well:</p>
 <pre>
 &lt;telnet port=&quot;80&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read/&gt;
    &lt;write&gt;GET / http/0.9&lt;/write&gt;
    &lt;write/&gt;
    &lt;read timeout=&quot;10&quot;&gt;&amp;lt;/HTML&amp;gt;&lt;/read&gt;
-&lt;/telnet&gt;
-</pre>
-<p>
-To use this task against the WinNT telnet service, you need to configure the service to use
-classic authentication rather than NTLM negotiated authentication.
-This can be done in the Telnet Server Admin app:
-select "display/change registry settings", then "NTLM", then set the value of NTLM to 1.
-</p>
+&lt;/telnet&gt;</pre>
+
+<p>To use this task against the Windows NT telnet service, you need to configure the service to use
+classic authentication rather than NTLM negotiated authentication.  This can be done in the Telnet
+Server Admin app: select <q>display/change registry settings</q>, then <q>NTLM</q>, then set the
+value of NTLM to 1.</p>
 
 </body>
 </html>

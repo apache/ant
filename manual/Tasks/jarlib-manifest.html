@@ -26,76 +26,69 @@
 
 <h2 id="jarlib-manifest">jarlib-manifest</h2>
 <h3>Description</h3>
-<p>Task to generate a manifest that declares all the dependencies
- in manifest. The dependencies are determined by looking in the
- specified path and searching for Extension / "Optional Package"
- specifications in the manifests of the jars.</p>
+<p>Task to generate a manifest that declares all the dependencies in manifest. The dependencies are
+determined by looking in the specified path and searching for Extension / "Optional Package"
+specifications in the manifests of the jars.</p>
 
-<p>Note that this task
-works with extensions as defined by the "Optional Package" specification.
- For more information about optional packages, see the document
-<em>Optional Package Versioning</em> in the documentation bundle for your
-Java Standard Edition package, in file
-<code>guide/extensions/versioning.html</code> or the online
-<a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/extensions/versioning.html">
-Extension and ExtensionSet documentation</a> for further details</p>
+<p>Note that this task works with extensions as defined by the "Optional Package" specification.
+For more information about optional packages, see the document <em>Optional Package Versioning</em>
+in the documentation bundle for your Java Standard Edition package, in file
+<code>guide/extensions/versioning.html</code> or the online <a target="_blank"
+href="https://docs.oracle.com/javase/8/docs/technotes/guides/extensions/versioning.html">Extension
+and ExtensionSet documentation</a> for further details.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">destfile</td>
-    <td valign="top">The file to generate Manifest into</td>
-    <td valign="top" align="center">Yes.</td>
+    <td>destfile</td>
+    <td>The file to generate Manifest into</td>
+    <td>Yes</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
 <h4>extension</h4>
- <p><a href="../Types/extension.html">Extension</a> the extension
- that this library implements.</p>
+<p><a href="../Types/extension.html">Extension</a> the extension that this library implements.</p>
 
 <h4>depends</h4>
- <p><a href="../Types/extensionset.html">ExtensionSet</a>s containing
- all dependencies for jar.</p>
+<p><a href="../Types/extensionset.html">ExtensionSet</a>s containing all dependencies for jar.</p>
 
 <h4>options</h4>
- <p><a href="../Types/extensionset.html">ExtensionSet</a>s containing
- all optional dependencies for jar. (Optional dependencies will be used if
- present else they will be ignored)</p>
+<p><a href="../Types/extensionset.html">ExtensionSet</a>s containing all optional dependencies for
+jar. (Optional dependencies will be used if present else they will be ignored)</p>
 
 <h3>Examples</h3>
-<p><b>Basic Manifest generated for single Extension</b></p>
+<p><strong>Basic Manifest generated for single Extension</strong></p>
 <pre>
 &lt;extension id=&quot;e1&quot;
-    extensionName=&quot;MyExtensions&quot;
-    specificationVersion=&quot;1.0&quot;
-    specificationVendor=&quot;Peter Donald&quot;
-    implementationVendorID=&quot;vv&quot;
-    implementationVendor=&quot;Apache&quot;
-    implementationVersion=&quot;2.0&quot;
-    implementationURL=&quot;http://somewhere.com&quot;/&gt;
+           extensionName=&quot;MyExtensions&quot;
+           specificationVersion=&quot;1.0&quot;
+           specificationVendor=&quot;Peter Donald&quot;
+           implementationVendorID=&quot;vv&quot;
+           implementationVendor=&quot;Apache&quot;
+           implementationVersion=&quot;2.0&quot;
+           implementationURL=&quot;http://somewhere.com&quot;/&gt;
 
 &lt;jarlib-manifest destfile=&quot;myManifest.txt&quot;&gt;
     &lt;extension refid=&quot;e1&quot;/&gt;
-&lt;/jarlib-manifest&gt;
-</pre>
+&lt;/jarlib-manifest&gt;</pre>
 
-<p><b>Search for extension in fileset</b></p>
-<p><b>A large example with required and optional dependencies</b></p>
+<p><strong>Search for extension in fileset</strong></p>
+<p><strong>A large example with required and optional dependencies</strong></p>
 <pre>
 &lt;extension id=&quot;e1&quot;
-    extensionName=&quot;MyExtensions&quot;
-    specificationVersion=&quot;1.0&quot;
-    specificationVendor=&quot;Peter Donald&quot;
-    implementationVendorID=&quot;vv&quot;
-    implementationVendor=&quot;Apache&quot;
-    implementationVersion=&quot;2.0&quot;
-    implementationURL=&quot;http://somewhere.com&quot;/&gt;
+           extensionName=&quot;MyExtensions&quot;
+           specificationVersion=&quot;1.0&quot;
+           specificationVendor=&quot;Peter Donald&quot;
+           implementationVendorID=&quot;vv&quot;
+           implementationVendor=&quot;Apache&quot;
+           implementationVersion=&quot;2.0&quot;
+           implementationURL=&quot;http://somewhere.com&quot;/&gt;
 
 &lt;extensionSet id=&quot;option.ext&quot;&gt;
     &lt;libfileset dir=&quot;lib/option&quot;&gt;
@@ -113,8 +106,7 @@ Extension and ExtensionSet documentation</a> for further details</p>
     &lt;extension refid=&quot;e1&quot;/&gt;
     &lt;depends refid=&quot;depends.ext&quot;/&gt;
     &lt;options refid=&quot;option.ext&quot;/&gt;
-&lt;/jarlib-manifest&gt;
-</pre>
+&lt;/jarlib-manifest&gt;</pre>
 
 </body>
 </html>

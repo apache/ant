@@ -26,100 +26,100 @@
 
 <h2>Length</h2>
 <h3>Description</h3>
-<p>Display or set a property containing length information for
-   a string, a file, or one or more nested
-   <a href="../Types/resources.html#collection">Resource Collection</a>s.
-   Can also be used as a condition. <em>Since Apache Ant 1.6.3</em></p>
+<p>Display or set a property containing length information for a string, a file, or one or more
+nested <a href="../Types/resources.html#collection">Resource Collection</a>s.  Can also be used as
+a <code>condition</code>. <em>Since Apache Ant 1.6.3</em></p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th rowspan="2">Attribute</th>
+    <th rowspan="2">Description</th>
+    <th colspan="2">Required</th>
   </tr>
   <tr>
-    <td valign="top">property</td>
-    <td valign="top">The property to set.  If omitted
-      the results are written to the log. Ignored when
-      processing as a condition.</td>
-    <td valign="top" align="center">No</td>
+    <th>Task</th>
+    <th>Condition</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">Single file whose length to report.</td>
-    <td valign="top" align="center" rowspan="3">One of these,
-      or one or more nested filesets</td>
+    <td>property</td>
+    <td>The property to set.</td>
+    <td class="center">No; by default, output value to the log</td>
+    <td>Ignored</td>
   </tr>
   <tr>
-    <td valign="top">resource</td>
-    <td valign="top">Single resource whose length to report (using extended
-      <a href="../properties.html#propertyHelper">properties handling</a>).
-      <em>Since Ant 1.8.1</em>
+    <td>mode</td>
+    <td>File length mode; when <q>all</q> the resulting value is the sum of all included resources'
+      lengths; when <q>each</q> the task outputs the absolute path and length of each included
+      resource, one per line.</td>
+    <td class="center">No; default is <q>all</q></td>
+    <td>Ignored</td>
+  </tr>
+  <tr>
+    <td>file</td>
+    <td>Single file whose length to report.</td>
+    <td rowspan="3" colspan="2">One of these, or one or more nested filesets</td>
+  </tr>
+  <tr>
+    <td>resource</td>
+    <td class="left">Single resource whose length to report (using
+      extended <a href="../properties.html#propertyHelper">properties handling</a>).  <em>Since Ant
+      1.8.1</em>
     </td>
   </tr>
   <tr>
-    <td valign="top">string</td>
-    <td valign="top">The string whose length to report.</td>
+    <td>string</td>
+    <td class="left">The string whose length to report.</td>
   </tr>
   <tr>
-    <td valign="top">mode</td>
-    <td valign="top">File length mode; when &quot;all&quot; the resulting
-      value is the sum of all included resources' lengths; when &quot;each&quot;
-      the task outputs the absolute path and length of each included resource,
-      one per line. Ignored when processing as a condition.</td>
-    <td valign="top" align="center">No; default is &quot;all&quot;</td>
+    <td>trim</td>
+    <td>Whether to trim when operating on a string.</td>
+    <td colspan="2">No; default is <q>false</q>, ignored unless <var>string</var> is set</td>
   </tr>
   <tr>
-    <td valign="top">trim</td>
-    <td valign="top">Whether to trim when operating on a string. Default <i>false</i>.</td>
-    <td valign="top" align="center">No; only valid when string is set</td>
+    <td>length</td>
+    <td>Comparison length.</td>
+    <td class="center">Ignored</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">length</td>
-    <td valign="top">Comparison length for processing as a condition.</td>
-    <td valign="top" align="center">Yes, in condition mode</td>
-  </tr>
-  <tr>
-    <td valign="top">when</td>
-    <td valign="top">Comparison type: "equal", "eq", "greater", "gt", "less",
-      "lt", "ge" (greater or equal), "ne" (not equal), "le" (less or equal)
-      for use when operating as a condition.</td>
-    <td valign="top" align="center">No; default is "equal"</td>
+    <td>when</td>
+    <td>Comparison
+      type: <q>equal</q>, <q>eq</q>, <q>greater</q>, <q>gt</q>, <q>less</q>, <q>lt</q>, <q>ge</q>
+      (greater or equal), <q>ne</q> (not equal), <q>le</q> (less or equal).</td>
+    <td class="center">Ignored</td>
+    <td>No; default is <q>equal</q></td>
   </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
 
 <h4>Resource Collections</h4>
-<p>You can include resources via nested
-  <a href="../Types/resources.html#collection">Resource Collection</a>s.</p>
+<p>You can include resources via nested <a href="../Types/resources.html#collection">Resource
+Collection</a>s.</p>
 
 <h3>Examples</h3>
 
-<pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot; /&gt;
-</pre>
-<p>Stores the length of the string &quot;foo&quot; in the property named
-<i>length.foo</i>.</p>
+<pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot;/&gt;</pre>
+<p>Stores the length of the string <q>foo</q> in the property named <code>length.foo</code>.</p>
 
-<pre>&lt;length file=&quot;bar&quot; property=&quot;length.bar&quot; /&gt;
-</pre>
-<p>Stores the length of file &quot;bar&quot; in the property named
-<i>length.bar</i>.</p>
+<pre>&lt;length file=&quot;bar&quot; property=&quot;length.bar&quot;/&gt;</pre>
+<p>Stores the length of file <samp>bar</samp> in the property named <code>length.bar</code>.</p>
 
 <pre>
 &lt;length property=&quot;length&quot; mode=&quot;each&quot;&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
 &lt;/length&gt;
 </pre>
-<p>Writes the file paths of <i>foo</i> and <i>bar</i> and their length into
-the property <i>length</i>.</p>
+<p>Writes the file paths of <samp>foo</samp> and <samp>bar</samp> and their length into the
+property <code>length</code>.</p>
 
 <pre>
 &lt;length property=&quot;length&quot; mode=&quot;all&quot;&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
 &lt;/length&gt;
 </pre>
-<p>Adds the length of <i>foo</i> and <i>bar</i> and stores the result in property <i>length</i>.</p>
+<p>Adds the length of <samp>foo</samp> and <samp>bar</samp> and stores the result in
+property <code>length</code>.</p>
 
 </body>
 </html>

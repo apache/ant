@@ -28,35 +28,32 @@
 <h3>Description</h3>
 <p>Echo nested XML to the console or a file. <em>Since Apache Ant 1.7</em></p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">The file to receive the XML. If omitted nested
-      XML will be echoed to the log.</td>
-    <td valign="top" align="center">No</td>
+    <td>file</td>
+    <td>The file to receive the XML.</td>
+    <td>No; by default nested XML is echoed to the log</td>
   </tr>
   <tr>
-    <td valign="top">append</td>
-    <td valign="top">Whether to append <code>file</code>, if specified.</td>
-    <td valign="top" align="center">No</td>
+    <td>append</td>
+    <td>Whether to append <var>file</var>, if specified.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">namespacePolicy</td>
-    <td valign="top">Sets the namespace policy as defined
-      by <code>org.apache.tools.ant.util.DOMElementWriter.XmlNamespacePolicy</code>.
-      Valid values are <code>ignore</code>, <code>elementsOnly</code>, or <code>all</code>.
-      <em>Since Apache Ant 1.8</em>
-    </td>
-    <td valign="top" align="center">No, default <code>ignore</code></td>
+    <td>namespacePolicy</td>
+    <td>Sets the namespace policy as defined
+      by <code>org.apache.tools.ant.util.DOMElementWriter.XmlNamespacePolicy</code>.  Valid values
+      are <q>ignore</q>, <q>elementsOnly</q>, or <q>all</q>.  <em>Since Apache Ant 1.8</em></td>
+    <td>No; default <q>ignore</q></td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-Nested XML content is required.
+<p>Nested XML content is required.</p>
 
 <h3>Examples</h3>
 <pre>&lt;echoxml file=&quot;subbuild.xml&quot;&gt;
@@ -65,9 +62,8 @@ Nested XML content is required.
       &lt;echo&gt;foo&lt;/echo&gt;
     &lt;/target&gt;
   &lt;/project&gt;
-&lt;/echoxml&gt;
-</pre>
-<p>Creates an Ant buildfile, <code>subbuild.xml</code>.</p>
+&lt;/echoxml&gt;</pre>
+<p>Creates an Ant buildfile, <samp>subbuild.xml</samp>.</p>
 
 </body>
 </html>

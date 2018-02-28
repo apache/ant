@@ -26,80 +26,71 @@
 
 <h2 id="condition">Condition</h2>
 <h3>Description</h3>
-<p>Sets a property if a certain condition holds true - this is a
-generalization of <a href="available.html">Available</a> and <a
-href="uptodate.html">Uptodate</a>.</p>
-<p>If the condition holds true, the property value is set to true by
-default; otherwise, the property is not set. You can set the value to
-something other than the default by specifying the <code>value</code>
-attribute.</p>
-<p>Conditions are specified as <a href="#nested">nested elements</a>,
-you must specify exactly one condition.</p>
+<p>Sets a property if a certain condition holds true&mdash;this is a generalization
+of <a href="available.html">Available</a> and <a href="uptodate.html">Uptodate</a>.</p>
+<p>If the condition holds true, the property value is set to <q>true</q> by default; otherwise, the
+property is not set. You can set the value to something other than the default by specifying
+the <var>value</var> attribute.</p>
+<p>Conditions are specified as <a href="#nested">nested elements</a>, you must specify exactly one
+condition.</p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">property</td>
-    <td valign="top">The name of the property to set.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>property</td>
+    <td>The name of the property to set.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">value</td>
-    <td valign="top">The value to set the property to. Defaults to
-      &quot;true&quot;.</td>
-    <td valign="top" align="center">No</td>
+    <td>value</td>
+    <td>The value to set the property to.</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">else</td>
-    <td valign="top">The value to set the property to if the condition
-      evaluates to <i>false</i>. By default the property will remain unset.
-      <em>Since Apache Ant 1.6.3</em>
+    <td>else</td>
+    <td>The value to set the property to if the condition evaluates to <q>false</q>. <em>Since
+      Apache Ant 1.6.3</em>
     </td>
-    <td valign="top" align="center">No</td>
+    <td>No; by default the property will remain unset</td>
   </tr>
 </table>
 <h3 id="nested">Parameters specified as nested elements</h3>
-<p>All conditions to test are specified as nested elements, for a
-complete list see <a href="conditions.html">here</a>.</p>
+<p>All conditions to test are specified as nested elements, for a complete list
+see <a href="conditions.html">here</a>.</p>
 
 <h3>Examples</h3>
 <pre>
-  &lt;condition property=&quot;javamail.complete&quot;&gt;
-    &lt;and&gt;
-      &lt;available classname=&quot;javax.activation.DataHandler&quot;/&gt;
-      &lt;available classname=&quot;javax.mail.Transport&quot;/&gt;
-    &lt;/and&gt;
-  &lt;/condition&gt;
-</pre>
-<p>sets the property <code>javamail.complete</code> if both the
-JavaBeans Activation Framework and JavaMail are available in the
-classpath.</p>
+&lt;condition property=&quot;javamail.complete&quot;&gt;
+  &lt;and&gt;
+    &lt;available classname=&quot;javax.activation.DataHandler&quot;/&gt;
+    &lt;available classname=&quot;javax.mail.Transport&quot;/&gt;
+  &lt;/and&gt;
+&lt;/condition&gt;</pre>
+<p>sets the property <code>javamail.complete</code> if both the JavaBeans Activation Framework and
+JavaMail are available in the classpath.</p>
 
 <pre>
-  &lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
-    &lt;and&gt;
-      &lt;os family=&quot;mac&quot;/&gt;
-      &lt;not&gt;
-        &lt;os family=&quot;unix&quot;/&gt;
-      &lt;/not&gt;
-    &lt;/and&gt;
-  &lt;/condition&gt;
-</pre>
-<p>sets the property <code>isMacOsButNotMacOsX</code> if the current
-operating system is MacOS, but not MacOS X - which Ant considers to be
-in the Unix family as well.</p>
+&lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
+  &lt;and&gt;
+    &lt;os family=&quot;mac&quot;/&gt;
+    &lt;not&gt;
+      &lt;os family=&quot;unix&quot;/&gt;
+    &lt;/not&gt;
+  &lt;/and&gt;
+&lt;/condition&gt;</pre>
+<p>sets the property <code>isMacOsButNotMacOsX</code> if the current operating system is MacOS, but
+not MacOS X/macOS&mdash;which Ant considers to be in the Unix family as well.</p>
 
 <pre>
-  &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
-    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot;/&gt;
-  &lt;/condition&gt;
-</pre>
-<p>sets the property <code>isSunOSonSparc</code> if the current
-operating system is SunOS and if it is running on a sparc architecture.</p>
+&lt;condition property=&quot;isSunOSonSparc&quot;&gt;
+  &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot;/&gt;
+&lt;/condition&gt;</pre>
+<p>sets the property <code>isSunOSonSparc</code> if the current operating system is SunOS and if it
+is running on a SPARC architecture.</p>
 
 </body>
 </html>

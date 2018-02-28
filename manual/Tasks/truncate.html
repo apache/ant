@@ -27,83 +27,75 @@
 <h2 id="touch">Truncate</h2>
 <h3>Description</h3>
 
-<p>Set the length of one or more files, as the intermittently available
-<code>truncate</code> Unix utility/function. In addition to working with
-a single file, this Task can also work on
-<a href="../Types/resources.html">resources</a> and resource collections.
-<em>Since Apache Ant 1.7.1</em>.
-</p>
+<p>Set the length of one or more files, as the intermittently available <code>truncate</code> Unix
+utility/function. In addition to working with a single file, this Task can also work
+on <a href="../Types/resources.html">resources</a> and resource collections. <em>Since Apache Ant
+1.7.1</em>.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">The name of the file.</td>
-    <td valign="top" align="center">Unless a nested resource collection element
-       has been specified.</td>
+    <td>file</td>
+    <td>The name of the file.</td>
+    <td>Unless a nested resource collection element has been specified</td>
   </tr>
   <tr>
-    <td valign="top">length</td>
-    <td valign="top">Specifies the new file length (in bytes) to set.
-                     The following suffixes are supported:
+    <td>length</td>
+    <td>Specifies the new file length (in bytes) to set.  The following suffixes are supported:
       <ul>
-        <li>K : Kilobytes (1024 bytes)</li>
-        <li>M : Megabytes (1024 K)</li>
-        <li>G : Gigabytes (1024 M)</li>
-        <li>T : Terabytes (1024 G)</li>
-        <li>P : Petabytes (1024 T)</li>
+        <li><q>K</q> : Kilobytes (1024 bytes)</li>
+        <li><q>M</q> : Megabytes (1024 K)</li>
+        <li><q>G</q> : Gigabytes (1024 M)</li>
+        <li><q>T</q> : Terabytes (1024 G)</li>
+        <li><q>P</q> : Petabytes (1024 T)</li>
       </ul>
     </td>
-    <td valign="center" align="center" rowspan="2">At most one of these.
-      Omitting both implies <code>length="0"</code>.
+    <td rowspan="2">At most one of these; omitting both implies <var>length</var>=<q>0</q>
     </td>
   </tr>
   <tr>
-    <td valign="top">adjust</td>
-    <td valign="top">Specifies the number of bytes
-      (and positive/negative direction)
-      by which to adjust file lengths.  The same suffixes are supported
-      for this attribute as for the <code>length</code> attribute.
+    <td>adjust</td>
+    <td class="left">Specifies the number of bytes (and positive/negative direction) by which to
+      adjust file lengths.  The same suffixes are supported for this attribute as for
+      the <var>length</var> attribute.
     </td>
   </tr>
   <tr>
-    <td valign="top">create</td>
-    <td valign="top">Whether to create nonexistent files.</td>
-    <td valign="top" align="center">No, default <i>true</i>.</td>
+    <td>create</td>
+    <td>Whether to create nonexistent files.</td>
+    <td>No; default <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">mkdirs</td>
-    <td valign="top">Whether to create nonexistent parent
-       directories when creating new files.</td>
-    <td valign="top" align="center">No, default <i>false</i>.</td>
+    <td>mkdirs</td>
+    <td>Whether to create nonexistent parent directories when creating new files.</td>
+    <td>No; default <q>false</q></td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>any resource collection</h4>
 
-<p>You can use any number of nested resource collection elements to
-define the resources for this task and refer to resources defined
-elsewhere.  <strong>Note</strong>: resources passed to this task are expected
-to be filesystem-based.</p>
+<p>You can use any number of nested resource collection elements to define the resources for this
+task and refer to resources defined elsewhere.  <strong>Note</strong>: resources passed to this task
+are expected to be filesystem-based.</p>
 
 <h3>Examples</h3>
 
-<pre>  &lt;truncate file="foo" /&gt;</pre>
-<p>Sets the length of file <code>foo</code> to zero.</p>
+<pre>&lt;truncate file="foo"/&gt;</pre>
+<p>Sets the length of file <samp>foo</samp> to zero.</p>
 
-<pre>  &lt;truncate file="foo" length="1K" /&gt;</pre>
-<p>Sets the length of file <code>foo</code> to 1 kilobyte (1024 bytes).</p>
+<pre>&lt;truncate file="foo" length="1K"/&gt;</pre>
+<p>Sets the length of file <samp>foo</samp> to 1 kilobyte (1024 bytes).</p>
 
-<pre>  &lt;truncate file="foo" adjust="1K" /&gt;</pre>
-<p>Adjusts the length of file <code>foo</code> upward by 1 kilobyte.</p>
+<pre>&lt;truncate file="foo" adjust="1K"/&gt;</pre>
+<p>Adjusts the length of file <samp>foo</samp> upward by 1 kilobyte.</p>
 
-<pre>  &lt;truncate file="foo" adjust="-1M" /&gt;</pre>
-<p>Adjusts the length of file <code>foo</code> downward by 1 megabyte.</p>
+<pre>&lt;truncate file="foo" adjust="-1M"/&gt;</pre>
+<p>Adjusts the length of file <samp>foo</samp> downward by 1 megabyte.</p>
 
 </body>
 </html>

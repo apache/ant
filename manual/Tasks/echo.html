@@ -26,161 +26,143 @@
 
 <h2 id="echo">Echo</h2>
 <h3>Description</h3>
-<p>Echoes a message to the current loggers and listeners which
-means <tt>System.out</tt> unless overridden. A <tt>level</tt>
-can be specified, which controls at what logging level the message is
-filtered at.
-<p>
-The task can also echo to a file, in which case the option to append rather
-than overwrite the file is available, and the <tt>level</tt> option is
-ignored</p>
+<p>Echoes a message to the current loggers and listeners which means <code>System.out</code> unless
+overridden. A <var>level</var> can be specified, which controls at what logging level the message is
+filtered at.</p>
+<p>The task can also echo to a file, in which case the option to append rather than overwrite the
+file is available, and the <var>level</var> option is ignored</p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">message</td>
-    <td valign="top">the message to echo.</td>
-    <td valign="top" align="center">No.  Text may also be included in a
-      character section within this element.  If neither is included a
-      blank line will be emitted in the output.</td>
+    <td>message</td>
+    <td>the message to echo.</td>
+    <td>No; defaults to a blank line unless text is included in a character section within this
+      element</td>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">the file to write the message to.</td>
-    <td valign="top" align="center" rowspan="2">No; only one of these may be used.</td>
+    <td>file</td>
+    <td>the file to write the message to.</td>
+    <td rowspan="2">No; only one of these may be used</td>
   </tr>
   <tr>
-    <td valign="top">output</td>
-    <td valign="top">the <a href="../Types/resources.html">Resource</a>
+    <td>output</td>
+    <td class="left">the <a href="../Types/resources.html">Resource</a>
       to write the message to (see <a href="../develop.html#set-magic">note</a>).
       <em>Since Apache Ant 1.8</em></td>
   </tr>
   <tr>
-    <td valign="top">append</td>
-    <td valign="top">Append to an existing file (or
-      <a href="http://docs.oracle.com/javase/7/docs/api//java/io/FileWriter.html#FileWriter%28java.lang.String,%20boolean%29" target="_blank">
-      open a new file / overwrite an existing file</a>)? Default <i>false</i>.
+    <td>append</td>
+    <td>Append to an existing file
+      (or <a href="https://docs.oracle.com/javase/8/docs/api//java/io/FileWriter.html#FileWriter-java.lang.String-boolean-"
+      target="_blank"> open a new file / overwrite an existing file</a>)?
     </td>
-    <td valign="top" align="center">No; ignored unless <i>output</i> indicates a
-      filesystem destination.</td>
+    <td>No; ignored unless <var>output</var> indicates a filesystem destination, default
+      is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">level</td>
-    <td valign="top">Control the level at which this message is reported.
-            One of "error", "warning", "info", "verbose", "debug" (decreasing order)</td>
-    <td valign="top" align="center">No - default is "warning".</td>
+    <td>level</td>
+    <td>Control the level at which this message is reported.  One
+      of <q>error</q>, <q>warning</q>, <q>info</q>, <q>verbose</q>, <q>debug</q> (decreasing
+      order)</td>
+    <td>No; default is <q>warning</q></td>
   </tr>
   <tr>
-    <td valign="top">encoding</td>
-    <td valign="top">encoding to use, default is ""; the local system encoding. <em>since Ant 1.7</em></td>
-    <td valign="top" align="center">No</td>
+    <td>encoding</td>
+    <td>encoding to use. <em>since Ant 1.7</em></td>
+    <td>No; defaults to default JVM character encoding</td>
   </tr>
   <tr>
-    <td valign="top">force</td>
-    <td valign="top">Overwrite read-only destination
-      files.  <em>since Ant 1.8.2</em></td>
-    <td valign="top" align="center">No; defaults to false.</td>
+    <td>force</td>
+    <td>Overwrite read-only destination files.  <em>since Ant 1.8.2</em></td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
 </table>
 
 <h3>Examples</h3>
-<pre>
-&lt;echo message=&quot;Hello, world&quot;/&gt;
-</pre>
-<pre>
-&lt;echo message=&quot;Embed a line break:${line.separator}&quot;/&gt;
-</pre>
-<pre>
-&lt;echo&gt;Embed another:${line.separator}&lt;/echo&gt;
-</pre>
-<pre>
-&lt;echo&gt;This is a longer message stretching over
+<pre>&lt;echo message=&quot;Hello, world&quot;/&gt;</pre>
+<pre>&lt;echo message=&quot;Embed a line break:${line.separator}&quot;/&gt;</pre>
+<pre>&lt;echo&gt;Embed another:${line.separator}&lt;/echo&gt;</pre>
+<pre>&lt;echo&gt;This is a longer message stretching over
 two lines.
-&lt;/echo&gt;
-</pre>
-<pre>
-&lt;echo&gt;
+&lt;/echo&gt;</pre>
+<pre>&lt;echo&gt;
 This is a longer message stretching over
 three lines; the first line is a blank
-&lt;/echo&gt;
-</pre>
-The newline immediately following the &lt;echo&gt; tag will be part of the output.<br>
-Newlines in character data within the content of an element are not discarded by XML parsers.<br>
-See <a href="http://www.w3.org/TR/2004/REC-xml-20040204/#sec-line-ends">
-W3C Recommendation 04 February 2004 / End of Line handling
-</a> for more details.
+&lt;/echo&gt;</pre>
+<p>The newline immediately following the <code>&lt;echo&gt;</code> tag will be part of the
+output. Newlines in character data within the content of an element are not discarded by XML
+parsers.<br/>See <a href="https://www.w3.org/TR/xml/#sec-line-ends">W3C Recommendation 26 November
+2008 / End of Line handling</a> for more details.</p>
 
 <pre>&lt;echo message=&quot;Deleting drive C:&quot; level=&quot;debug&quot;/&gt;</pre>
-A message which only appears in <tt>-debug</tt> mode.
+<p>A message which only appears in <code>-debug</code> mode.</p>
 <pre>&lt;echo level=&quot;error&quot;&gt;
 Imminent failure in the antimatter containment facility.
 Please withdraw to safe location at least 50km away.
-&lt;/echo&gt;
-</pre>
-A message which appears even in <tt>-quiet</tt> mode.
+&lt;/echo&gt;</pre>
+<p>A message which appears even in <code>-quiet</code> mode.</p>
 
 <pre>&lt;echo file="runner.csh" append="false"&gt;#\!/bin/tcsh
 java-1.3.1 -mx1024m ${project.entrypoint} $$*
 &lt;/echo&gt;</pre>
-Generate a shell script by echoing to a file.
-Note the use of a double $ symbol to stop Ant
-filtering out the single $ during variable expansion
+<p>Generate a shell script by echoing to a file.  Note the use of a double <q>$</q> symbol to stop
+Ant filtering out the single <q>$</q> during variable expansion.</p>
 
-<p>Depending on the loglevel Ant runs, messages are print out or silently
-ignored:
+<p>Depending on the log level Ant runs at, messages are print out or silently ignored:</p>
 <table>
 <tr>
-  <th>Ant-Statement</th>
-  <th>-quiet, -q</th>
-  <th><i>no statement</i></th>
-  <th>-verbose, -v</th>
-  <th>-debug, -d</th>
+  <th>Ant command line</th>
+  <th><code>-quiet</code>, <code>-q</code></th>
+  <th><em>no switch</em></th>
+  <th><code>-verbose</code>, <code>-v</code></th>
+  <th><code>-debug</code>, <code>-d</code></th>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is error message." level="error" /&gt;</pre></td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is error message." level="error"/&gt;</pre></td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is warning message." /&gt;</pre></td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is warning message."/&gt;</pre></td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is warning message." level="warning" /&gt;</pre></td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is warning message." level="warning"/&gt;</pre></td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is info message." level="info" /&gt;</pre></td>
-  <td align="center">not logged</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is info message." level="info"/&gt;</pre></td>
+  <td>not logged</td>
+  <td>ok</td>
+  <td>ok</td>
+  <td>ok</td>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is verbose message." level="verbose" /&gt;</pre></td>
-  <td align="center">not logged</td>
-  <td align="center">not logged</td>
-  <td align="center">ok</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is verbose message." level="verbose"/&gt;</pre></td>
+  <td>not logged</td>
+  <td>not logged</td>
+  <td>ok</td>
+  <td>ok</td>
 </tr>
 <tr>
-  <td><pre>&lt;echo message="This is debug message." level="debug" /&gt;</pre></td>
-  <td align="center">not logged</td>
-  <td align="center">not logged</td>
-  <td align="center">not logged</td>
-  <td align="center">ok</td>
+  <td><pre>&lt;echo message="This is debug message." level="debug"/&gt;</pre></td>
+  <td>not logged</td>
+  <td>not logged</td>
+  <td>not logged</td>
+  <td>ok</td>
 </tr>
 </table>
 

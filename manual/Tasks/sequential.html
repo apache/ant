@@ -26,14 +26,12 @@
 
 <h2>Sequential</h2>
 <h3>Description</h3>
-<p>Sequential is a container task - it can contain other Apache Ant tasks. The nested
-tasks are simply executed in sequence. Sequential's primary use is to support
-the sequential execution of a subset of tasks within the
-<a href="parallel.html">parallel</a> task</p>
+<p><code>Sequential</code> is a container task&mdash;it can contain other Apache Ant tasks. The
+nested tasks are simply executed in sequence. Sequential's primary use is to support the sequential
+execution of a subset of tasks within the <a href="parallel.html">parallel</a> task</p>
 
-<p>The sequential task has no attributes and does not support any nested
-elements apart from Ant tasks. Any valid Ant task may be embedded within the
-sequential task.</p>
+<p>The <code>sequential</code> task has no attributes and does not support any nested elements apart
+from Ant tasks. Any valid Ant task may be embedded within the sequential task.</p>
 
 <h3>Example</h3>
 <pre>
@@ -44,9 +42,8 @@ sequential task.</p>
     &lt;junit ... &gt;
     &lt;wlstop/&gt;
   &lt;/sequential&gt;
-&lt;/parallel&gt;
-</pre>
-<p>This example shows how the sequential task is used to execute three tasks in
+&lt;/parallel&gt;</pre>
+<p>This example shows how the <code>sequential</code> task is used to execute three tasks in
 sequence, while another task is being executed in a separate thread.</p>
 
 </body>

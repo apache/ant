@@ -26,46 +26,39 @@
 
 <h2 id="echo">Dirname</h2>
 <h3>Description</h3>
-<p>
-Task to determine the directory path of a specified file.
-</p>
-<p>
-When this task executes, it will set the specified property to the
-value of the specified file (or directory) up to, but not including,
-the last path element. If the specified file is a path that ends in a
-filename, the filename will be dropped. If the specified file is just
-a filename, the directory will be the current directory.
-</p>
-  <p>
-    <strong>Note</strong>: This is not the same as the UNIX dirname command, which is
-    defined as "strip non-directory suffix from filename". &lt;dirname&gt;
-    determines the full directory path of the specified file.
-  </p>
+<p>Task to determine the directory path of a specified file.</p>
+<p>When this task executes, it will set the specified property to the value of the specified file
+(or directory) up to, but not including, the last path element. If the specified file is a path that
+ends in a filename, the filename will be dropped. If the specified file is just a filename, the
+directory will be the current directory.</p>
+<p><strong>Note</strong>: This is not the same as the UNIX <code>dirname</code> command, which is
+defined as "strip non-directory suffix from filename". <code>&lt;dirname&gt;</code> determines the
+full directory path of the specified file.</p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">The path to take the dirname of.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>file</td>
+    <td>The path to take the dirname of.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">property</td>
-    <td valign="top">The name of the property to set.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>property</td>
+    <td>The name of the property to set.</td>
+    <td>Yes</td>
   </tr>
 </table>
 
 <h3>Examples</h3>
-<pre>  &lt;dirname property=&quot;antfile.dir&quot; file=&quot;${ant.file}&quot;/&gt;</pre>
-will set <code>antfile.dir</code> to the directory path for
-<code>${ant.file}</code>.
-<pre>  &lt;dirname property=&quot;foo.dirname&quot; file=&quot;foo.txt&quot;/&gt;</pre>
-will set <code>foo.dirname</code> to the project's basedir.
+<pre>&lt;dirname property=&quot;antfile.dir&quot; file=&quot;${ant.file}&quot;/&gt;</pre>
+<p>will set <code>antfile.dir</code> to the directory path for <samp>${ant.file}</samp>.</p>
+
+<pre>&lt;dirname property=&quot;foo.dirname&quot; file=&quot;foo.txt&quot;/&gt;</pre>
+<p>will set <code>foo.dirname</code> to the project's <var>basedir</var>.</p>
 
 </body>
 </html>

@@ -26,59 +26,49 @@
 
 <h2 id="pack">GZip/BZip2/XZ</h2>
 <h3>Description</h3>
-<p>Packs a resource using the GZip, BZip2 or XZ algorithm.
-The output file is only generated if it doesn't exist or the source
-resource is newer.</p>
+<p>Packs a resource using the GZip, BZip2 or XZ algorithm.  The output file is only generated if it
+doesn't exist or the source resource is newer.</p>
 
-<p>XZ compression support has been added with Apache Ant 1.10.1 and
-depends on external libraries not included in the Ant distribution.
-See <a href="../install.html#librarydependencies">Library
-Dependencies</a> for more information.</p>
+<p>XZ compression support has been added <em>since Apache Ant 1.10.1</em> and depends on external
+libraries not included in the Ant distribution.
+See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">src</td>
-    <td valign="top">the file to gzip/bzip/xz.</td>
-    <td align="center" valign="top">Yes, or a nested resource collection.</td>
+    <td>src</td>
+    <td>the file to gzip/bzip/xz.</td>
+    <td>Yes, or a nested resource collection</td>
   </tr>
   <tr>
-    <td valign="top">destfile</td>
-    <td valign="top">the destination file to create.</td>
-    <td align="center" valign="top" rowspan="2">Exactly one of the two</td>
+    <td>destfile</td>
+    <td>the destination file to create.</td>
+    <td rowspan="2">Exactly one of the two</td>
   </tr>
   <tr>
-    <td valign="top">zipfile</td>
-    <td valign="top">the <i>deprecated</i> old name of destfile.</td>
+    <td>zipfile</td>
+    <td class="left"><em><u>deprecated</u></em> old name of <var>destfile</var>.</td>
   </tr>
 </table>
-<h4>any <a href="../Types/resources.html">resource</a> or single element
-resource collection</h4>
+<h4>any <a href="../Types/resources.html">resource</a> or single element resource collection</h4>
 
-<p>The specified resource will be used as src. <em>Since Apache Ant 1.7</em></p>
+<p>The specified resource will be used as <var>src</var>. <em>Since Apache Ant 1.7</em></p>
 
 <h3>Examples</h3>
-<pre>
-&lt;gzip src=&quot;test.tar&quot; destfile=&quot;test.tar.gz&quot;/&gt;
-</pre>
-<pre>
-&lt;bzip2 src=&quot;test.tar&quot; destfile=&quot;test.tar.bz2&quot;/&gt;
-</pre>
-<pre>
-&lt;xz src=&quot;test.tar&quot; destfile=&quot;test.tar.xz&quot;/&gt;
-</pre>
+<pre>&lt;gzip src=&quot;test.tar&quot; destfile=&quot;test.tar.gz&quot;/&gt;</pre>
+<pre>&lt;bzip2 src=&quot;test.tar&quot; destfile=&quot;test.tar.bz2&quot;/&gt;</pre>
+<pre>&lt;xz src=&quot;test.tar&quot; destfile=&quot;test.tar.xz&quot;/&gt;</pre>
 <pre>
 &lt;gzip destfile=&quot;archive.tar.gz&quot;&gt;
   &lt;url url="http://example.org/archive.tar"/&gt;
-&lt;/gzip&gt;
-</pre>
-<p>downloads <i>http://example.org/archive.tar</i> and compresses it
-to <i>archive.tar.gz</i> in the project's basedir on the fly.</p>
+&lt;/gzip&gt;</pre>
+<p>downloads <samp>http://example.org/archive.tar</samp> and compresses it
+to <samp>archive.tar.gz</samp> in the project's <var>basedir</var> on the fly.</p>
 
 </body>
 </html>

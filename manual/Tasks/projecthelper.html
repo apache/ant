@@ -26,29 +26,26 @@
 
 <h2>ProjectHelper</h2>
 <h3>Description</h3>
-<p>This task is provided for the purpose of allowing the user to install a different
-ProjectHelper at runtime.
-</p>
-<p>The helpers will be added after all the already registered helpers, but before
-the default one (ProjectHelper2)
-</p>
-<p>See the description of Apache Ant's
-<a href="../projecthelper.html">Project Helper</a> for more information.
-</p>
+<p>This task is provided for the purpose of allowing the user to install a different ProjectHelper
+at runtime.</p>
+<p>The helpers will be added after all the already registered helpers, but before the default one
+(<code>ProjectHelper2</code>)</p>
+<p>See the description of Apache Ant's <a href="../projecthelper.html">Project Helper</a> for more
+information.</p>
 <p><em>Since Ant 1.8.2</em></p>
 
 <h3>Parameters specified as nested elements</h3>
 
-You may specify many configured <code>org.apache.tools.ant.ProjectHelper</code> instances.
+<p>You may specify many configured <code>org.apache.tools.ant.ProjectHelper</code> instances.</p>
 
 <h3>Example</h3>
 
-<p>Install a custom ProjectHelper implementation
-  (assuming <code>MyProjectHelper extends ProjectHelper</code>):</p>
+<p>Install a custom ProjectHelper implementation (assuming <code>MyProjectHelper extends
+ProjectHelper</code>):</p>
 
 <pre>
 &lt;typedef classname="org.example.MyProjectHelper"
-              name="myprojecthelper"/>
+         name="myprojecthelper"/>
 &lt;projecthelper>
   &lt;myprojecthelper/>
 &lt;/projecthelper>

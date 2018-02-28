@@ -28,7 +28,7 @@
 
 <p>Apache Ant provides a rich set of tasks for buildfile creators and
 administrators.  But what about programmers?  Can the functionality
-provided by Ant tasks be used in java programs?</p>
+provided by Ant tasks be used in Java programs?</p>
 
 <p>Yes, and its quite easy.  Before getting into the details, however,
 we should mention the pros and cons of this approach:
@@ -37,7 +37,7 @@ we should mention the pros and cons of this approach:
 
 <table>
 <tr>
-<td><b>Robust</b></td>
+<td><strong>Robust</strong></td>
 <td>
 Ant tasks are very robust.  They have been banged on by many people.
 Ant tasks have been used in many different contexts, and have
@@ -46,7 +46,7 @@ conditions and potentially obscure errors.
 </td>
 </tr>
 <tr>
-<td><b>Cross Platform</b></td>
+<td><strong>Cross Platform</strong></td>
 <td>
 Ant tasks are cross platform.  They have been tested on all of the
 volume platforms, and several rather unusual ones (Netware and OS/390, to
@@ -54,7 +54,7 @@ name a few).
 </td>
 </tr>
 <tr>
-<td><b>Community Support</b></td>
+<td><strong>Community Support</strong></td>
 <td>
 Using Ant tasks means you have less of your own code to support.  Ant
 code is supported by the entire Apache Ant community.
@@ -66,16 +66,16 @@ code is supported by the entire Apache Ant community.
 
 <table>
 <tr>
-<td><b>Dependency on Ant Libraries</b></td>
+<td><strong>Dependency on Ant Libraries</strong></td>
 <td>
 Obviously, if you use an Ant task in your code, you will have to add
-"ant.jar" to your path.  Of course, you could use a code optimizer to
+<q>ant.jar</q> to your path.  Of course, you could use a code optimizer to
 remove the unnecessary classes, but you will still probably require a
 chunk of the Ant core.
 </td>
 </tr>
 <tr>
-<td><b>Loss of Flexibility</b></td>
+<td><strong>Loss of Flexibility</strong></td>
 <td>
 At some point, if you find yourself having to modify the Ant code, it
 probably makes more sense to "roll your own."  Of course, you can
@@ -107,8 +107,8 @@ this:</p>
 </pre>
 
 <p>
-The Ant task to perform this function is
-<code>org.apache.tools.ant.taskdefs.Expand</code>.  All we have to do
+The Ant task to perform this function
+is <code>org.apache.tools.ant.taskdefs.Expand</code>.  All we have to do
 is create a dummy Ant <code>Project</code> and <code>Target</code>,
 set the <code>Task</code> parameters that would normally be set in a
 buildfile, and call <code>execute()</code>.</p>
@@ -119,8 +119,7 @@ buildfile, and call <code>execute()</code>.</p>
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.taskdefs.Expand;
-import java.io.File;
-</pre>
+import java.io.File;</pre>
 
 <p>The function call is actually quite simple:</p>
 
@@ -129,27 +128,27 @@ static public void unzip(String zipFilepath, String destinationDir) {
 
     final class Expander extends Expand {
         public Expander() {
- 	    project = new Project();
-	    project.init();
-	    taskType = "unzip";
-	    taskName = "unzip";
-	    target = new Target();
-	}
+            project = new Project();
+            project.init();
+            taskType = "unzip";
+            taskName = "unzip";
+            target = new Target();
+        }
     }
     Expander expander = new Expander();
     expander.setSrc(new File(zipfile));
     expander.setDest(new File(destdir));
     expander.execute();
-</pre>
+}</pre>
 
 <p>In actual practice, you will probably want to add your own error
 handling code and you may not want to use a local inner class.
 However, the point of the example is to show how an Ant task can be
 called programmatically in relatively few lines of code.</p>
 
-<p>The question you are probably asking yourself at this point is:
-<i>How would I know which classes and methods have to be called in
-order to set up a dummy Project and Target?</i> The answer is: you
+<p>The question you are probably asking yourself at this point
+is: <em>How would I know which classes and methods have to be called in
+order to set up a dummy Project and Target?</em> The answer is: you
 don't.  Ultimately, you have to be willing to get your feet wet and
 read the source code.  The above example is merely designed to whet
 your appetite and get you started.  Go for it!</p>

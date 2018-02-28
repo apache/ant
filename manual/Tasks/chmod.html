@@ -26,151 +26,129 @@
 
 <h2 id="chmod">Chmod</h2>
 <h3>Description</h3>
-<p>Changes the permissions of a file or all files inside specified
-directories. Right now it has effect only under Unix or NonStop Kernel (Tandem).
-The permissions are also UNIX style, like the argument for the chmod command.</p>
-<p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based
-tasks</a>, on how the inclusion/exclusion of files works, and how to
-write patterns.</p>
+<p>Changes the permissions of a file or all files inside specified directories. Right now it has
+effect only under Unix or NonStop Kernel (Tandem).  The permissions are also UNIX style, like the
+argument for the <code>chmod</code> command.</p>
+<p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on
+how the inclusion/exclusion of files works, and how to write patterns.</p>
 
-<p>This task holds an implicit <a
-href="../Types/fileset.html">FileSet</a> and supports all of
-FileSet's attributes and nested elements directly. More sets can be
-specified using nested <code>&lt;fileset&gt;</code> or
-<code>&lt;dirset&gt;</code> (<em>since Apache Ant 1.6</em>) elements.</p>
+<p>This task holds an implicit <a href="../Types/fileset.html">FileSet</a> and supports all of
+FileSet's attributes and nested elements directly. More sets can be specified using
+nested <code>&lt;fileset&gt;</code> or <code>&lt;dirset&gt;</code> (<em>since Apache Ant 1.6</em>)
+elements.</p>
 
-<p><em>Since Ant 1.6</em>, this task also supports nested <a
-href="../Types/filelist.html">filelist</a>s.</p>
+<p><em>Since Ant 1.6</em>, this task also supports
+nested <a href="../Types/filelist.html">filelist</a>s.</p>
 
-<p><em>Since Ant 1.7</em>, this task supports arbitrary <a
-href="../Types/resources.html#collection">Resource Collection</a>s
-as nested elements.</p>
+<p><em>Since Ant 1.7</em>, this task supports
+arbitrary <a href="../Types/resources.html#collection">Resource Collection</a>s as nested
+elements.</p>
 
-<p>By default this task will use a single invocation of the underlying
-chmod command.  If you are working on a large number of files this may
-result in a command line that is too long for your operating system.
-If you encounter such problems, you should set the maxparallel
-attribute of this task to a non-zero value.  The number to use highly
-depends on the length of your file names (the depth of your directory
-tree) and your operating system, so you'll have to experiment a
-little.  POSIX recommends command line length limits of at least 4096
-characters, this may give you an approximation for the number you
-could use as initial value for these experiments.</p>
+<p>By default this task will use a single invocation of the underlying <code>chmod</code> command.
+If you are working on a large number of files this may result in a command line that is too long for
+your operating system.  If you encounter such problems, you should set the <var>maxparallel</var>
+attribute of this task to a non-zero value.  The number to use highly depends on the length of your
+file names (the depth of your directory tree) and your operating system, so you'll have to
+experiment a little.  POSIX recommends command line length limits of at least 4096 characters, this
+may give you an approximation for the number you could use as initial value for these
+experiments.</p>
 
-<p>By default this task won't do anything unless it detects it is
-  running on a Unix system.  If you know for sure that you have a
-  "chmod" executable on your PATH that is command line compatible with
-  the Unix command, you can use the task's os attribute and set its
-  value to your current os.</p>
+<p>By default this task won't do anything unless it detects it is running on a Unix system.  If you
+know for sure that you have a <code>chmod</code> executable on your <code>PATH</code> that is
+command line compatible with the Unix command, you can use the task's <var>os</var> attribute and
+set its value to your current OS.</p>
 
-<p>See the <a href="setpermissions.html">setpermissions</a> task for a
-  platform independent alternative.</p>
+<p>See the <a href="setpermissions.html">setpermissions</a> task for a platform independent
+alternative.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td valign="top" align="center"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">the file or single directory of which the permissions
-      must be changed.</td>
-    <td valign="top" align="center" rowspan="2">Exactly one of the two, or nested <code>&lt;fileset/list&gt;</code>s</td>
+    <td>file</td>
+    <td>the file or single directory of which the permissions must be changed.</td>
+    <td rowspan="2">Exactly one of the two, or nested <code>&lt;fileset/list&gt;</code>s</td>
   </tr>
   <tr>
-    <td valign="top">dir</td>
-    <td valign="top">the directory which holds the files whose permissions
-      must be changed.<br/>
-      <strong>Note</strong>: for backwards compatibility
-      reasons <code>&lt;chmod&nbsp;dir="some-dir"/&gt;</code> will
-      only change the permissions on "some-dir" but not recurse into
-      it, unless you also specify any patterns.</td>
+    <td>dir</td>
+    <td class="left">the directory which holds the files whose permissions must be
+      changed.<br/><strong>Note</strong>: for backwards compatibility reasons <code>&lt;chmod
+      dir="some-dir"/&gt;</code> will only change the permissions on <samp>some-dir</samp> but not
+      recurse into it, unless you also specify any patterns.</td>
   </tr>
   <tr>
-    <td valign="top">perm</td>
-    <td valign="top">the new permissions.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>perm</td>
+    <td>the new permissions.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">includes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be
-      included.</td>
-    <td valign="top" align="center">No</td>
+    <td>includes</td>
+    <td>comma- or space-separated list of patterns of files that must be included.</td>
+    <td>No; defaults to all (<q>**</q>)</td>
   </tr>
   <tr>
-    <td valign="top">excludes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be
-      excluded. No files (except default excludes) are excluded when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>excludes</td>
+    <td>comma- or space-separated list of patterns of files that must be excluded.</td>
+    <td>No; defaults to default excludes or none if <var>defaultexcludes</var> is <q>no</q></td>
   </tr>
   <tr>
-    <td valign="top">defaultexcludes</td>
-    <td valign="top">indicates whether default excludes should be used or not
-      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>defaultexcludes</td>
+    <td>indicates whether default excludes should be used or not (<q>yes|no</q>).</td>
+    <td>No; defaults to <q>yes</q></td>
   </tr>
   <tr>
-    <td valign="top">parallel</td>
-    <td valign="top">process all specified files using a single
-      <code>chmod</code> command. Defaults to true.</td>
-    <td valign="top" align="center">No</td>
+    <td>parallel</td>
+    <td>process all specified files using a single <code>chmod</code> command.</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">type</td>
-    <td valign="top">One of <i>file</i>, <i>dir</i> or
-      <i>both</i>. If set to <i>file</i>, only the permissions of
-      plain files are going to be changed. If set to <i>dir</i>, only
-      the directories are considered.<br>
-      <strong>Note</strong>: The type attribute does not apply to
-      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
-      assume type to be <i>dir</i>.</td>
-    <td align="center" valign="top">No, default is <i>file</i></td>
+    <td>type</td>
+    <td>One of <q>file</q>, <q>dir</q> or <q>both</q>. If set to <q>file</q>, only the permissions
+      of plain files are going to be changed. If set to <q>dir</q>, only the directories are
+      considered.<br/><strong>Note</strong>: The type attribute does not apply to
+      nested <code>dirset</code>s&mdash;<code>dirset</code>s always implicitly assume type to
+      be <q>dir</q>.</td>
+    <td>No; default is <q>file</q></td>
   </tr>
   <tr>
-    <td valign="top">maxparallel</td>
-    <td valign="top">Limit the amount of parallelism by passing at
-      most this many sourcefiles at once.  Set it to &lt;= 0 for
-      unlimited.  Defaults to unlimited.  <em>Since Ant 1.6</em>.</td>
-    <td align="center" valign="top">No</td>
+    <td>maxparallel</td>
+    <td>Limit the amount of parallelism by passing at most this many sourcefiles at once.  Set it to
+      negative integer for unlimited.  <em>Since Ant 1.6</em>.</td>
+    <td>No; defaults to unlimited</td>
   </tr>
   <tr>
-    <td valign="top">verbose</td>
-    <td valign="top">Whether to print a summary after execution or not.
-      Defaults to <code>false</code>.  <em>Since Ant 1.6</em>.</td>
-    <td align="center" valign="top">No</td>
+    <td>verbose</td>
+    <td>Whether to print a summary after execution or not.  <em>Since Ant 1.6</em>.</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">os</td>
-    <td valign="top">list of Operating Systems on which the command may be
-      executed.</td>
-    <td align="center" valign="top">No</td>
+    <td>os</td>
+    <td>list of Operating Systems on which the command may be executed.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">osfamily</td>
-    <td valign="top">OS family as used in
-      the <a href="conditions.html#os">&lt;os&gt;</a> condition.</td>
-    <td align="center" valign="top">No - defaults to "unix"</td>
+    <td>osfamily</td>
+    <td>OS family as used in the <a href="conditions.html#os">&lt;os&gt;</a> condition.</td>
+    <td>No; defaults to <q>unix</q></td>
   </tr>
 </table>
 <h3>Examples</h3>
-  <pre>
-&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;
-</pre>
-<p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
+<pre>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;</pre>
+<p>makes the <samp>start.sh</samp> file readable and executable for anyone on a UNIX system.</p>
+
+<pre>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;</pre>
+<p>makes the <samp>start.sh</samp> file readable, writable and executable only for the owner on a
 UNIX system.</p>
-<pre>
-&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;
-</pre>
-<p>makes the &quot;start.sh&quot; file readable, writable and executable only for the owner on a
-UNIX system.</p>
+
 <pre>
 &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot;
-       includes=&quot;**/*.sh&quot;/&gt;
-</pre>
-<p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
-readable and executable for anyone on a UNIX system.</p>
+       includes=&quot;**/*.sh&quot;/&gt;</pre>
+<p>makes all <samp>.sh</samp> files below <samp>${dist}/bin</samp> readable and executable for
+anyone on a UNIX system.</p>
 
 <pre>
 &lt;chmod perm=&quot;g+w&quot;&gt;
@@ -178,13 +156,11 @@ readable and executable for anyone on a UNIX system.</p>
     &lt;exclude name=&quot;**/trial/**&quot;/&gt;
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
-&lt;/chmod&gt;
-</pre>
-<p>makes all files below <code>shared/sources1</code> (except those
-below any directory named trial) writable for members of the same
-group on a UNIX system. In addition all files belonging to a FileSet
-with <code>id</code> <code>other.shared.sources</code> get the same
-permissions.</p>
+&lt;/chmod&gt;</pre>
+<p>makes all files below <samp>shared/sources1</samp> (except those below any directory named trial)
+writable for members of the same group on a UNIX system. In addition all files belonging to a
+FileSet with <var>id</var> <samp>other.shared.sources</samp> get the same permissions.</p>
+
 <pre>
 &lt;chmod perm=&quot;go-rwx&quot; type=&quot;file&quot;&gt;
   &lt;fileset dir=&quot;/web&quot;&gt;
@@ -194,26 +170,17 @@ permissions.</p>
   &lt;dirset dir=&quot;/web&quot;&gt;
     &lt;include name=&quot;**/private_*&quot;/&gt;
   &lt;/dirset&gt;
-&lt;/chmod&gt;
-</pre>
-<p>keeps non-owners from touching cgi scripts, files with a <code>.old</code>
-extension or directories beginning with <code>private_</code>. A directory
-ending in <code>.old</code> or a file beginning with private_ would remain
-unaffected.</p>
+&lt;/chmod&gt;</pre>
+<p>keeps non-owners from touching cgi scripts, files with a <samp>.old</samp> extension or
+directories beginning with <samp>private_</samp>. A directory ending in <samp>.old</samp> or a file
+beginning with <samp>private_</samp> would remain unaffected.</p>
 
-  <h3>Note on maxparallel attribute</h3>
-  <p>
-    Some shells have a limit of the number of characters that
-    a command line may contain.
-    This maximum limit varies from shell to shell and from operating
-    system to operating system.
-    If one has a large number of files to change mode on, consider
-    using the <em>maxparallel</em> attribute. For example
-    when using AIX and the limit is reached, the system responds
-    with a warning: "Warning:
-    UNIXProcess.forkAndExec native error: The parameter or environment lists
-    are too long". A value of about 300 seems to result in a
-    command line that is acceptable.
-  </p>
+<h3>Note on <var>maxparallel</var> attribute</h3>
+<p>Some shells have a limit of the number of characters that a command line may contain.  This
+maximum limit varies from shell to shell and from operating system to operating system.  If one has
+a large number of files to change mode on, consider using the <var>maxparallel</var> attribute. For
+example when using AIX and the limit is reached, the system responds with a warning: <code>"Warning:
+UNIXProcess.forkAndExec native error: The parameter or environment lists are too long"</code>. A
+value of about 300 seems to result in a command line that is acceptable.</p>
 </body>
 </html>

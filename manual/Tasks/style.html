@@ -25,436 +25,386 @@
 <body>
 
 <h2 id="style">XSLT</h2>
-<p><em>The name <code>style</code> is a deprecated name for the same task.</em></p>
+<p><em>The name <code>style</code> is a <u>deprecated</u> name for the same task.</em></p>
 <h3>Description</h3>
 <p>Process a set of documents via XSLT.</p>
-<p>This is useful for building views of XML based documentation,
-or for generating code.</p>
-<p><strong>Note</strong>: If you are using JDK 1.4 or higher, this task does not require external libraries
-not supplied in the Apache Ant distribution. However, often the built in XSL engine is not as up
-to date as a fresh download, so an update is still highly recommended
-  in particular since the built-in XSLT processors of Java 5 (and to a
-  certain extent Java 6) are known to have serious issues.
-See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
-<p>It is possible to refine the set of files that are being processed. This can be
-done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
-the files you want to have excluded. This is also done with patterns. And
-finally with the <i>defaultexcludes</i> attribute, you can specify whether you
-want to use default exclusions or not. See the section on <a
-href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
+<p>This is useful for building views of XML based documentation, or for generating code.</p>
+<p><strong>Note</strong>: If you are using JDK 1.4 or higher, this task does not require external
+libraries not supplied in the Apache Ant distribution. However, often the built in XSL engine is not
+as up to date as a fresh download, so an update is still highly recommended in particular since the
+built-in XSLT processors of Java 5 (and to a certain extent Java 6) are known to have serious
+issues.  See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
+information.</p>
+<p>It is possible to refine the set of files that are being processed. This can be done with
+the <var>includes</var>, <var>includesfile</var>, <var>excludes</var>, <var>excludesfile</var>
+and <var>defaultexcludes</var> attributes. With the <var>includes</var> or <var>includesfile</var>
+attribute you specify the files you want to have included by using patterns. The <var>exclude</var>
+or <var>excludesfile</var> attribute is used to specify the files you want to have excluded. This is
+also done with patterns. And finally with the <var>defaultexcludes</var> attribute, you can specify
+whether you want to use default exclusions or not. See the section
+on <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="../Types/fileset.html">FileSet</a> and supports all
-  attributes of <code>&lt;fileset&gt;</code> (<code>dir</code> becomes <code>basedir</code>)
-  as well as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
-  and <code>&lt;patternset&gt;</code> elements.</p>
+attributes of <code>&lt;fileset&gt;</code> (<code>dir</code> becomes <code>basedir</code>) as well
+as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
+and <code>&lt;patternset&gt;</code> elements.</p>
 
-<p><strong>Note</strong>: Unlike other similar tasks, this task treats
-directories that have been matched by the include/exclude patterns of
-the implicit fileset in a special way.  It will apply the stylesheets
-to all files contain in them as well.  Since the default include
-pattern is <code>**</code> this means it will apply the stylesheet to
-all files.  If you specify an excludes pattern, it may still work on
-the files matched by those patterns because the parent directory has
-been matched.  If this behavior is not what you want, set the
-scanincludedirectories attribute to false.</p>
+<p><strong>Note</strong>: Unlike other similar tasks, this task treats directories that have been
+matched by the include/exclude patterns of the implicit fileset in a special way.  It will apply the
+stylesheets to all files contain in them as well.  Since the default <var>includes</var> pattern
+is <code>**</code> this means it will apply the stylesheet to all files.  If you specify
+an <var>excludes</var> pattern, it may still work on the files matched by those patterns because the
+parent directory has been matched.  If this behavior is not what you want, set
+the <var>scanincludedirectories</var> attribute to false.</p>
 
-<p><em>Since Ant 1.7</em>, this task supports nested <a
-href="../Types/resources.html#collection">resource collection</a>s
-in addition to (or instead of, depending on the useImplicitFileset
-attribute) the implicit fileset formed by this task.</p>
+<p><em>Since Ant 1.7</em>, this task supports
+nested <a href="../Types/resources.html#collection">resource collection</a>s in addition to (or
+instead of, depending on the <var>useImplicitFileset</var> attribute) the implicit fileset formed by
+this task.</p>
 
-<p>This task supports the use of a nested <code>&lt;param&gt;</code> element which is used to pass values
-  to an <code>&lt;xsl:param&gt;</code> declaration.</p>
-<p>This task supports the use of a nested <a href="../Types/xmlcatalog.html">xmlcatalog</a>
-element which is used to perform Entity and URI resolution.</p>
+<p>This task supports the use of a nested <code>&lt;param&gt;</code> element which is used to pass
+values to an <code>&lt;xsl:param&gt;</code> declaration.</p>
+<p>This task supports the use of a nested <a href="../Types/xmlcatalog.html">xmlcatalog</a> element
+which is used to perform Entity and URI resolution.</p>
 
-<p><b>Note on XSLT extension functions</b>: when using the default
-  TraX implementation of the Java class library and
-  a <code>SecurityManager</code> is active - e.g. when running from
-  within an IDE - XSLT extension functions cannot be used as "secure
-  processing" is active in Java 7 and above. Ant contains a special
-  "hack" that allows XSLT extensions to be used in Java 7 and 8, but
-  this hack fails for Java 9. If you want to use extensions like the
-  redirect extension that are provided by the Java class library
-  itself, you can allow them by enabling the
-  feature <code>http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions</code>
-  in Java 9 and above. If you need to use an extension function not
-  provided by Java itself you can set the
-  attribute <code>jdk.xml.transform.extensionClassLoader</code> to a
-  classloader (reference to an Ant PATH-like structure).</p>
+<p><strong>Note on XSLT extension functions</strong>: when using the default TrAX implementation of
+the Java class library and a <code>SecurityManager</code> is active&mdash;e.g. when running from
+within an IDE&mdash;XSLT extension functions cannot be used as "secure processing" is active in Java
+7 and above. Ant contains a special "hack" that allows XSLT extensions to be used in Java 7 and 8,
+but this hack fails for Java 9. If you want to use extensions like the redirect extension that are
+provided by the Java class library itself, you can allow them by enabling the
+feature <var>http://www.oracle.com/xml/jaxp/properties/enableExtensionFunctions</var> in Java 9 and
+above. If you need to use an extension function not provided by Java itself you can set the
+attribute <var>jdk.xml.transform.extensionClassLoader</var> to a classloader (reference to an Ant
+path-like structure).</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">basedir</td>
-    <td valign="top">where to find the source XML file, default is the
-      project's basedir.</td>
-    <td align="center" valign="top">No</td>
+    <td>basedir</td>
+    <td>where to find the source XML file.</td>
+    <td>No; defaults to the project's <var>basedir</var></td>
   </tr>
   <tr>
-    <td valign="top">destdir</td>
-    <td valign="top">directory in which to store the results.</td>
-    <td align="center" valign="top">Yes, unless in and out have been
-      specified.</td>
+    <td>destdir</td>
+    <td>directory in which to store the results.</td>
+    <td>Yes, unless <var>in</var> and <var>out</var> have been specified.</td>
   </tr>
   <tr>
-    <td valign="top">extension</td>
-    <td valign="top">desired file extension to be used for the targets. If not
-      specified, the default is &quot;.html&quot;.  Will be ignored if
-      a nested <code>&lt;mapper&gt;</code> or both <code>in</code> and
-      <code>out</code> have been specified.</td>
-    <td align="center" valign="top">No</td>
+    <td>extension</td>
+    <td>desired file extension to be used for the targets.</td>
+    <td>No; default is <q>.html</q>, ignored if a nested <code>&lt;mapper&gt;</code> or
+      both <var>in</var> and <var>out</var> have been specified</td>
   </tr>
   <tr>
-    <td valign="top">style</td>
-    <td valign="top">name of the stylesheet to use - given either relative
-      to the project's basedir or as an absolute path.<br/>
-      <br/>
-      Alternatively, a nested element which Ant can interpret as a resource
-      can be used to indicate where to find the stylesheet<br/>
-      <em>deprecated variation :</em> <br/>
-      If the stylesheet cannot be found, and if you have specified the
-      attribute basedir for the task, Ant will assume that the style
-      attribute is relative to the basedir of the task.
+    <td>style</td>
+    <td>name of the stylesheet to use&mdash;given either relative to the
+      project's <var>basedir</var> or as an absolute path.<br/>  Alternatively, a nested element
+      which Ant can interpret as a resource can be used to indicate where to find the
+      stylesheet.<br/><em><u>Deprecated</u> variation</em>:<br/> If the stylesheet cannot be found,
+      and if you have specified the attribute <var>basedir</var> for the task, Ant will assume that
+      the <var>style</var> attribute is relative to the <var>basedir</var> of the task.</td>
+    <td>No, if the location of the stylesheet is specified using a nested <code>&lt;style&gt;</code>
+      element</td>
+  </tr>
+  <tr>
+    <td>classpath</td>
+    <td>the classpath to use when looking up the XSLT processor.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>classpathref</td>
+    <td>the classpath to use, given as <a href="../using.html#references">reference</a> to a path
+      defined elsewhere.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>force</td>
+    <td>Recreate target files, even if they are newer than their corresponding source files or the
+      stylesheet.</td>
+    <td>No; default is <q>false</q></td>
+  </tr>
+  <tr>
+    <td>processor</td>
+    <td>name of the XSLT processor to use.  Permissible value is:
+      <ul>
+        <li><q>trax</q> for a TraX compliant processor (ie JAXP interface implementation such as
+	  Xalan 2 or Saxon)</li>
+      </ul>
+      Support for Xalan 1 has been removed <em>since Ant 1.7</em>.
     </td>
-    <td align="center" valign="top">No, if the location of
-        the stylesheet is specified using a nested &lt;style&gt; element</td>
+    <td>No; defaults to <q>trax</q></td>
   </tr>
   <tr>
-    <td valign="top">classpath</td>
-    <td valign="top">the classpath to use when looking up the XSLT
-      processor.</td>
-    <td align="center" valign="top">No</td>
+    <td>includes</td>
+    <td>comma- or space-separated list of patterns of files that must be included.</td>
+    <td>No; defaults to all (<q>**</q>)</td>
   </tr>
   <tr>
-    <td valign="top">classpathref</td>
-    <td valign="top">the classpath to use, given as <a
-      href="../using.html#references">reference</a> to a path defined elsewhere.</td>
-    <td align="center" valign="top">No</td>
+    <td>includesfile</td>
+    <td>name of a file. Each line of this file is taken to be an include pattern</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">force</td>
-    <td valign="top">Recreate target files, even if they are newer
-      than their corresponding source files or the stylesheet.</td>
-    <td valign="top" align="center">No; default is false</td>
+    <td>excludes</td>
+    <td>comma- or space-separated list of patterns of files that must be excluded.</td>
+    <td>No; defaults to default excludes or none if <var>defaultexcludes</var> is <q>no</q></td>
   </tr>
   <tr>
-    <td valign="top">processor</td>
-    <td valign="top">name of the XSLT processor to use.
-      Permissible value is :<ul>
-      <li>&quot;trax&quot; for a TraX compliant processor (ie JAXP interface
-      implementation such as Xalan 2 or Saxon)</li></ul>
-      Defaults to trax.
-      <br/>
-      Support for Xalan 1 has been removed in Ant 1.7.
-      </td>
-    <td align="center" valign="top">No</td>
+    <td>excludesfile</td>
+    <td>name of a file. Each line of this file is taken to be an exclude pattern</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">includes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be included.
-      All files are included when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>defaultexcludes</td>
+    <td>indicates whether default excludes should be used or not (<q>yes|no</q>).</td>
+    <td>No; defaults to <q>yes</q></td>
   </tr>
   <tr>
-    <td valign="top">includesfile</td>
-    <td valign="top">the name of a file. Each line of this file is taken to be
-      an include pattern</td>
-    <td valign="top" align="center">No</td>
+    <td>in</td>
+    <td>specifies a single XML document to be styled. Should be used
+      with the <var>out</var> attribute.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">excludes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be excluded.
-      No files (except default excludes) are excluded when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>out</td>
+    <td>specifies the output name for the styled result from the <var>in</var> attribute.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file. Each line of this file is taken to be
-      an exclude pattern</td>
-    <td valign="top" align="center">No</td>
+    <td>scanincludeddirectories</td>
+    <td>If any directories are matched by the <var>includes</var>/<var>excludes</var> patterns, try
+      to transform all files in these directories.
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">defaultexcludes</td>
-    <td valign="top">indicates whether default excludes should be used or not
-      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>reloadstylesheet</td>
+    <td>Control whether the stylesheet transformer is created anew for every transform operation. If
+      you set this to <q>true</q>, performance may suffer, but you may work around a bug in certain
+      Xalan versions.  <em>Since Ant 1.5.2</em>.</td>
+    <td>No; default is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">in</td>
-    <td valign="top">specifies a single XML document to be styled. Should be used
-      with the out attribute.</td>
-    <td valign="top" align="center">No</td>
+    <td>useImplicitFileset</td>
+    <td>Whether the implicit fileset formed by this task shall be used.  If you set this
+      to <q>false</q> you must use nested resource collections&mdash;or the <var>in</var> attribute,
+      in which case this attribute has no impact anyway. <em>Since Ant 1.7</em>.</td>
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">out</td>
-    <td valign="top">specifies the output name for the styled result from the
-      in attribute.</td>
-    <td valign="top" align="center">No</td>
+    <td>filenameparameter</td>
+    <td>Specifies an XSL parameter for accessing the name of the current processed file. If not set,
+      the file name is not passed to the transformation.  <em>Since Ant 1.7</em>.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">scanincludeddirectories</td>
-    <td valign="top">If any directories are matched by the
-      includes/excludes patterns, try to transform all files in these
-      directories.  Default is <code>true</code></td>
-    <td valign="top" align="center">No</td>
+    <td>filedirparameter</td>
+    <td>Specifies a XSL parameter for accessing the directory of the current processed file. For
+      files in the current directory, a value of <q>.</q> will be passed to the transformation.  If
+      not set, the directory is not passed to the transformation.  <em>Since Ant 1.7</em>.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">reloadstylesheet</td>
-    <td valign="top">Control whether the stylesheet transformer is created
-    anew for every transform operation. If you set this to true, performance may
-    suffer, but you may work around a bug in certain Xalan-J versions.
-    Default is <code>false</code>.  <em>Since Ant 1.5.2</em>.</td>
-    <td valign="top" align="center">No</td>
+    <td>suppressWarnings</td>
+    <td>Whether processor warnings shall be suppressed.  This option requires support by the
+      processor, it is supported by the TrAX processor bundled with Ant.  <em>Since Ant
+      1.8.0</em>.</td>
+    <td>No; default is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">useImplicitFileset</td>
-    <td valign="top">Whether the implicit fileset formed by this task
-    shall be used.  If you set this to false you must use nested
-    resource collections - or the in attribute, in which case this
-    attribute has no impact anyway.  Default is <code>true</code>.
-    <em>Since Ant 1.7</em>.</td>
-    <td valign="top" align="center">No</td>
+    <td>failOnError</td>
+    <td>Whether the build should fail if any error occurs.  Note that transformation errors can
+      still be suppressed by setting <q>failOnTransformationError</q> to <q>false</q> even if this
+      attribute is <q>true</q>.  <em>Since Ant 1.8.0</em>.</td>
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">filenameparameter</td>
-    <td valign="top">Specifies a xsl parameter for accessing the name
-    of the current processed file. If not set, the file name is not
-    passed to the transformation.
-    <em>Since Ant 1.7</em>.</td>
-    <td valign="top" align="center">No</td>
+    <td>failOnTransformationError</td>
+    <td>Whether the build should fail if an error occurs while transforming the document.  Note that
+      this attribute has no effect if <var>failOnError</var> is <q>false</q>.  <em>Since Ant
+      1.8.0</em>.</td>
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">filedirparameter</td>
-    <td valign="top">Specifies a xsl parameter for accessing the directory
-    of the current processed file. For files in the current directory a
-    value of '.' will be passed to the transformation.
-    If not set, the directory is not passed to the transformation.
-    <em>Since Ant 1.7</em>.</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">suppressWarnings</td>
-    <td valign="top">Whether processor warnings shall be suppressed.
-    This option requires support by the processor, it is supported by
-    the trax processor bundled with Ant.
-    <em>Since Ant 1.8.0</em>.</td>
-    <td valign="top" align="center">No, default is false.</td>
-  </tr>
-  <tr>
-    <td valign="top">failOnError</td>
-    <td valign="top">Whether the build should fail if any error
-    occurs.  Note that transformation errors can still be suppressed by
-    setting failOnTransformationError to false even if this attribute
-    is true.
-    <em>Since Ant 1.8.0</em>.</td>
-    <td valign="top" align="center">No, default is true.</td>
-  </tr>
-  <tr>
-    <td valign="top">failOnTransformationError</td>
-    <td valign="top">Whether the build should fail if an error occurs
-    while transforming the document.  Note that this attribute has no
-    effect of <code>failOnError</code> is false.
-    <em>Since Ant 1.8.0</em>.</td>
-    <td valign="top" align="center">No, default is true.</td>
-  </tr>
-  <tr>
-    <td valign="top">failOnNoResources</td>
-    <td valign="top">Whether the build should fail if the nested
-    resource collection is empty.  Note that this attribute has no
-    effect of <code>failOnError</code> is false.
-    <em>Since Ant 1.8.0</em>.</td>
-    <td valign="top" align="center">No, default is true.</td>
+    <td>failOnNoResources</td>
+    <td>Whether the build should fail if the nested resource collection is empty.  Note that this
+      attribute has no effect of <var>failOnError</var> is <q>false</q>.  <em>Since Ant
+      1.8.0</em>.</td>
+    <td>No; default is <q>true</q></td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
-<h4>any <a href="../Types/resources.html#collection">resource
-collection</a></h4>
+<h4>any <a href="../Types/resources.html#collection">resource collection</a></h4>
 
 <p><em>since Ant 1.7</em></p>
 
-<p>Use resource collections to specify resources that the stylesheet
-should be applied to.  Use a nested mapper and the task's destdir
-attribute to specify the output files.</p>
+<p>Use resource collections to specify resources that the stylesheet should be applied to.  Use a
+nested mapper and the task's <q>destdir</q> attribute to specify the output files.</p>
 
 <h4 id="classpath">classpath</h4>
 <p>The classpath to load the processor from can be specified via a
-nested <code>&lt;classpath&gt;</code>, as well - that is, a
-<a href="../using.html#path">path</a>-like structure.</p>
+nested <code>&lt;classpath&gt;</code>, as well&mdash;that is,
+a <a href="../using.html#path">path-like structure</a>.</p>
 
 <h4>xmlcatalog</h4>
-<p>The <a href="../Types/xmlcatalog.html">xmlcatalog</a>
-element is used to perform Entity and URI resolution.</p>
+<p>The <a href="../Types/xmlcatalog.html">xmlcatalog</a> element is used to perform Entity and URI
+resolution.</p>
 
 <h4>param</h4>
-<p>Param is used to pass a parameter to the XSL stylesheet.</p>
+<p><code>Param</code> is used to pass a parameter to the XSL stylesheet.</p>
 
 <h5>Parameters</h5>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">name</td>
-    <td valign="top">Name of the XSL parameter</td>
-    <td align="center" valign="top">Yes</td>
+    <td>name</td>
+    <td>Name of the XSL parameter</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">expression</td>
-    <td valign="top">
-        The value to be placed into the param or an XPath expression
-        (depending on <code>type</code>).
+    <td>expression</td>
+    <td>The value to be placed into the param or an XPath expression (depending
+    on <var>type</var>).</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>Data type of the parameter. Possible values are:
+      <ul>
+        <li><q>STRING</q></li>
+        <li><q>BOOLEAN</q></li>
+        <li><q>INT</q></li>
+        <li><q>LONG</q></li>
+        <li><q>DOUBLE</q></li>
+        <li><q>XPATH_STRING</q></li>
+        <li><q>XPATH_BOOLEAN</q></li>
+        <li><q>XPATH_NUMBER</q></li>
+        <li><q>XPATH_NODE</q></li>
+        <li><q>XPATH_NODESET</q></li>
+      </ul><em>since Ant 1.9.3</em>
     </td>
-    <td align="center" valign="top">Yes</td>
+    <td>No; default is <q>STRING</q></td>
   </tr>
   <tr>
-    <td valign="top">type</td>
-    <td valign="top">
-        Data type of the parameter. Possible values are:
-        <ul>
-            <li><code>STRING</code></li>
-            <li><code>BOOLEAN</code></li>
-            <li><code>INT</code></li>
-            <li><code>LONG</code></li>
-            <li><code>DOUBLE</code></li>
-            <li><code>XPATH_STRING</code></li>
-            <li><code>XPATH_BOOLEAN</code></li>
-            <li><code>XPATH_NUMBER</code></li>
-            <li><code>XPATH_NODE</code></li>
-            <li><code>XPATH_NODESET</code></li>
-        </ul>
-        <em>since Ant 1.9.3</em>
-    </td>
-    <td align="center" valign="top">No; default is <code>STRING</code></td>
+    <td>if</td>
+    <td>The param will only be passed <a href="../properties.html#if+unless">if this property is
+	set</a>.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">if</td>
-    <td valign="top">The param will only be passed <a href="../properties.html#if+unless">if this property is set</a>.</td>
-    <td align="center" valign="top">No</td>
+    <td>unless</td>
+    <td>The param will not be passed <a href="../properties.html#if+unless">if this property is
+	set</a>.</td>
+    <td>No</td>
+  </tr>
+</table>
+<p>The <q>XPATH_*</q> types says that the <var>expression</var> is not just a primitive-type value
+but an XPath expression.  This expression will be evaluated on an empty XML document and the result
+will be passed to the XSLT transformer as a parameter of given type.  In these expressions the
+declared Ant properties can be used as XPath variables e.g. <code>$someProperty</code>.  So you can
+compute something using standard XPath functions and operators.</p>
+<p>If you write <code>${someProperty}</code> instead of <code>$someProperty</code>, the value will
+be simply substituted by Ant before evaluating the XPath expression (this substitution works also
+for primitive types).</p>
+
+<h4>outputproperty (<var>trax</var> processors only)</h4>
+<p>Used to specify how you wish the result tree to be output as specified in
+the <a href="https://www.w3.org/TR/xslt#output"> XSLT specifications</a>.
+
+<h5>Parameters</h5>
+<table class="attr">
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">unless</td>
-    <td valign="top">The param will not be passed <a href="../properties.html#if+unless">if this property is set</a>.</td>
-    <td align="center" valign="top">No</td>
+    <td>name</td>
+    <td>Name of the property</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Value of the property</td>
+    <td>Yes</td>
   </tr>
 </table>
 
-  <p>
-      The <code>XPATH_*</code> types says that the <code>expression</code> is not just a primitive-type value but an XPath expression.
-      This expression will be evaluated on an empty XML document and the result will be passed to the XSLT transformer as a parameter of given type.
-      In these expressions the declared Ant properties can be used as XPath variables e.g. <code>$someProperty</code>.
-      So you can compute something using standard XPath functions and operators.
-  </p>
-  <p>
-      If you write <code>${someProperty}</code> instead of <code>$someProperty</code>,
-      the value will be simply substituted by Ant before evaluating the XPath expression
-      (this substitution works also for primitive types).
-  </p>
-
-<h4>outputproperty ('trax' processors only)</h4>
-<p>Used to specify how you wish the result tree to be output
-as specified in the <a href="http://www.w3.org/TR/xslt#output">
-XSLT specifications</a>.
+<h4 id="factory">factory (<var>trax</var> processors only)</h4>
+<p>Used to specify factory settings.</p>
 
 <h5>Parameters</h5>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">name</td>
-    <td valign="top">Name of the property</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">value</td>
-    <td valign="top">value of the property.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-</table>
-
-<h4 id="factory">factory ('trax' processors only)</h4>
-Used to specify factory settings.
-
-<h5>Parameters</h5>
-<table>
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">name</td>
-    <td valign="top">fully qualified classname of the
-    transformer factory to use. For example
-      <tt>org.apache.xalan.processor.TransformerFactoryImpl</tt>
-       or <tt>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</tt>
-       or <tt>net.sf.saxon.TransformerFactoryImpl</tt>...
-    </td>
-    <td align="center" valign="top">No. Defaults to the JAXP lookup mechanism.</td>
+    <td>name</td>
+    <td>fully qualified classname of the transformer factory to use. For
+       example <code>org.apache.xalan.processor.TransformerFactoryImpl</code>
+       or <code>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</code>
+       or <code>net.sf.saxon.TransformerFactoryImpl</code>...</td>
+    <td>No; defaults to the JAXP lookup mechanism</td>
   </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
 <h6>attribute</h6>
-<p>Used to specify settings of the processor factory.
-The attribute names and values are entirely processor specific
-so you must be aware of the implementation to figure them out.
-Read the documentation of your processor.
-For example, in Xalan 2.x:
+<p>Used to specify settings of the processor factory.  The attribute names and values are entirely
+processor specific so you must be aware of the implementation to figure them out.  Read the
+documentation of your processor.  For example, in Xalan 2.x:</p>
 <ul>
-<li>http://xml.apache.org/xalan/features/optimize (boolean)</li>
-<li>http://xml.apache.org/xalan/features/incremental (boolean)</li>
-<li>...</li>
+  <li><var>http://xml.apache.org/xalan/features/optimize</var> (boolean)</li>
+  <li><var>http://xml.apache.org/xalan/features/incremental</var> (boolean)</li>
+  <li>...</li>
 </ul>
-And in Saxon 7.x:
+<p>And in Saxon 7.x:</p>
 <ul>
-<li>http://saxon.sf.net/feature/allow-external-functions (boolean)</li>
-<li>http://saxon.sf.net/feature/timing (boolean)</li>
-<li>http://saxon.sf.net/feature/traceListener (string)</li>
-<li>http://saxon.sf.net/feature/treeModel (integer)</li>
-<li>http://saxon.sf.net/feature/linenumbering (integer)</li>
-<li>...</li>
+  <li><var>http://saxon.sf.net/feature/allow-external-functions</var> (boolean)</li>
+  <li><var>http://saxon.sf.net/feature/timing</var> (boolean)</li>
+  <li><var>http://saxon.sf.net/feature/traceListener</var> (string)</li>
+  <li><var>http://saxon.sf.net/feature/treeModel</var> (integer)</li>
+  <li><var>http://saxon.sf.net/feature/linenumbering</var> (integer)</li>
+  <li>...</li>
 </ul>
 <blockquote>
 <h6>Parameters</h6>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">name</td>
-    <td valign="top">Name of the attribute</td>
-    <td align="center" valign="top">Yes</td>
+    <td>name</td>
+    <td>Name of the attribute</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">value</td>
-    <td valign="top">value of the attribute.</td>
-    <td align="center" valign="middle" rowspan="3">Exactly one of these</td>
+    <td>value</td>
+    <td>Value of the attribute.</td>
+    <td rowspan="3">Exactly one of these</td>
   </tr>
   <tr>
-    <td valign="top">valueref</td>
-    <td valign="top">value of the attribute is the value of the
-      project reference with the given id. <em>since Ant 1.9.8</em></td>
+    <td>valueref</td>
+    <td class="left">Value of the attribute is the value of the project reference with the given
+      id. <em>since Ant 1.9.8</em></td>
   </tr>
   <tr>
-    <td valign="top">classloaderforpath</td>
-    <td valign="top">value of the attribute is a classloader that uses
-      the classpath specified by a path that is the project reference
-      with the given id. <em>since Ant 1.9.8</em></td>
+    <td>classloaderforpath</td>
+    <td class="left">Value of the attribute is a classloader that uses the classpath specified by a
+      path that is the project reference with the given id. <em>since Ant 1.9.8</em></td>
   </tr>
 </table>
 </blockquote>
@@ -462,48 +412,44 @@ And in Saxon 7.x:
 <h5>Examples</h5>
 
 <pre>
-  &lt;path id="extension-path"&gt;
-    ...
-  &lt;/path&gt;
+&lt;path id="extension-path"&gt;
+  ...
+&lt;/path&gt;
 
+&lt;xslt ...&gt;
+  &lt;factory&gt;
+    &lt;attribute name="jdk.xml.transform.extensionClassLoader"
+               classloaderforpath="extension-path"/&gt;
+  &lt;/factory&gt;
+&lt;/xslt ...&gt;</pre>
 
-  &lt;xslt ...&gt;
-    &lt;factory&gt;
-      &lt;attribute name="jdk.xml.transform.extensionClassLoader"
-                 classloaderforpath="extension-path"/&gt;
-    &lt;/factory&gt;
-  &lt;/xslt ...&gt;
-</pre>
-<p>Sets the classloader to use when loading extension functions to a
-  classloader using the <code>path</code> with the
-  id <code>extension-path</code>.</p>
+<p>Sets the classloader to use when loading extension functions to a classloader using
+the <code>path</code> with the id <code>extension-path</code>.</p>
 <p><em>since Ant 1.9.8</em></p>
 
 <h6>feature</h6>
-<p>Used to specify settings of the processor factory.  The feature
-names are mostly processor specific so you must be aware of the
-implementation to figure them out.  Read the documentation of your
-processor. The only feature all implementations are required to
-support
-is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
+<p>Used to specify settings of the processor factory.  The feature names are mostly processor
+specific so you must be aware of the implementation to figure them out.  Read the documentation of
+your processor. The only feature all implementations are required to support
+is <var>http://javax.xml.XMLConstants/feature/secure-processing</var>.
 <blockquote>
 <h6>Parameters</h6>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">name</td>
-    <td valign="top">Name of the feature</td>
-    <td align="center" valign="top">Yes</td>
+    <td>name</td>
+    <td>Name of the feature</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">value</td>
-    <td valign="top">value of the feature. A boolean value
-    (i.e. permitted values are true, false, yes, no, on, off).</td>
-    <td align="center" valign="top">No, defaults to false</td>
+    <td>value</td>
+    <td>Value of the feature. A boolean value (i.e. permitted values
+      are <q>true</q>, <q>false</q>, <q>yes</q>, <q>no</q>, <q>on</q>, <q>off</q>).</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
 </table>
 </blockquote>
@@ -512,28 +458,25 @@ is <code>http://javax.xml.XMLConstants/feature/secure-processing</code>.
 
 <p><em>since Ant 1.6.2</em></p>
 
-<p>You can define filename transformations by using a nested <a
-href="../Types/mapper.html">mapper</a> element. The default mapper
-used by <code>&lt;xslt&gt;</code> removes the file extension from the
-source file and adds the extension specified via the extension
-attribute.</p>
+<p>You can define filename transformations by using a
+nested <a href="../Types/mapper.html">mapper</a> element. The default mapper used
+by <code>&lt;xslt&gt;</code> removes the file extension from the source file and adds the extension
+specified via the extension attribute.</p>
 
 <h4>style</h4>
 
 <p><em>Since Ant 1.7</em></p>
 
-<p>The nested style element can be used to specify your stylesheet in terms
-of Ant's <a href="../Types/resources.html">resource</a> types.  With
-this element, the stylesheet should be specified as a nested resource or
-single-element collection.  Alternatively, use the <code>refid</code> to
-specify the resource or collection as a reference.</p>
+<p>The nested <code>style</code> element can be used to specify your stylesheet in terms of
+Ant's <a href="../Types/resources.html">resource</a> types.  With this element, the stylesheet
+should be specified as a nested resource or single-element collection.  Alternatively, use
+the <var>refid</var> to specify the resource or collection as a reference.</p>
 
 <h4>sysproperty</h4>
-<p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify
-system properties required by the factory or transformation.  These
-properties will be made available to the VM during the execution of
-the class. The attributes for this element are the same as
-for <a href="exec.html#env">environment variables</a>.</p>
+<p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify system properties required by the
+factory or transformation.  These properties will be made available to JVM during the execution of
+the class. The attributes for this element are the same as for <a href="exec.html#env">environment
+variables</a>.</p>
 
 <p><em>since Ant 1.8.0</em>.</p>
 
@@ -545,41 +488,40 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 <p><em>since Ant 1.8.0</em>.</p>
 
 <h3>Examples</h3>
-  <pre>
+<pre>
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
-  <h4>Using an xmlcatalog</h4>
-  <pre>
+<h4>Using an xmlcatalog</h4>
+<pre>
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
   &lt;xmlcatalog refid=&quot;mycatalog&quot;/&gt;
 &lt;/xslt&gt;
 
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
-   extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
+      extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
    &lt;xmlcatalog&gt;
        &lt;dtd
          publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
          location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
    &lt;/xmlcatalog&gt;
-&lt;/xslt&gt;
-</pre>
-  <h4>Using XSL parameters</h4>
-  <p>Simple String parameter:</p>
+&lt;/xslt&gt;</pre>
+<h4>Using XSL parameters</h4>
+<p>Simple String parameter:</p>
 <pre>
 &lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
   &lt;param name=&quot;date&quot; expression=&quot;07-01-2000&quot;/&gt;
 &lt;/xslt&gt;</pre>
 
-  <p>Then if you declare a global parameter &quot;date&quot; with the top-level
-  element &lt;xsl:param name=&quot;date&quot;/&gt;, the variable
-  <code>$date</code> will subsequently have the value 07-01-2000.
-  </p>
+<p>Then if you declare a global parameter <q>date</q> with the top-level element <code>&lt;xsl:param
+name=&quot;date&quot;/&gt;</code>, the variable <code>$date</code> will subsequently have the value
+07-01-2000.</p>
 
-  <p>Various data types and XPath expressions:</p>
+<p>Various data types and XPath expressions:</p>
 
-  <pre>&lt;property name="antProperty1" value="ANT_PROPERTY_1"/&gt;
+<pre>
+&lt;property name="antProperty1" value="ANT_PROPERTY_1"/&gt;
 &lt;property name="antProperty2" value="ANT_PROPERTY_2"/&gt;
 &lt;property name="antProperty3" value="3"/&gt;
 &lt;property name="antProperty4" value="substring-before"/&gt;
@@ -626,7 +568,7 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
   &lt;param name="p9" expression="default type is String"/&gt;
 &lt;/xslt&gt;</pre>
 
-  <h4>Using output properties</h4>
+<h4>Using output properties</h4>
 <pre>
 &lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
       style=&quot;style/apache.xsl&quot;&gt;
@@ -634,10 +576,9 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
   &lt;outputproperty name=&quot;standalone&quot; value=&quot;yes&quot;/&gt;
   &lt;outputproperty name=&quot;encoding&quot; value=&quot;iso8859_1&quot;/&gt;
   &lt;outputproperty name=&quot;indent&quot; value=&quot;yes&quot;/&gt;
-&lt;/xslt&gt;
-</pre>
+&lt;/xslt&gt;</pre>
 
-  <h4>Using factory settings</h4>
+<h4>Using factory settings</h4>
 <pre>
 &lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
       style=&quot;style/apache.xsl&quot;&gt;
@@ -646,15 +587,15 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
   &lt;/factory&gt;
 &lt;/xslt&gt;</pre>
 
-  <h4>Using a mapper</h4>
+<h4>Using a mapper</h4>
 <pre>
 &lt;xslt basedir=&quot;in&quot; destdir=&quot;out&quot;
       style=&quot;style/apache.xsl&quot;&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.xml.en&quot; to=&quot;*.html.en&quot;/&gt;
 &lt;/xslt&gt;</pre>
 
-  <h4>Using a nested resource to define the stylesheet</h4>
-    <pre>
+<h4>Using a nested resource to define the stylesheet</h4>
+<pre>
 &lt;xslt in="data.xml" out="${out.dir}/out.xml"&gt;
     &lt;style&gt;
         &lt;url url="${printParams.xsl.url}"/&gt;
@@ -662,7 +603,7 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
     &lt;param name="set" expression="value"/&gt;
 &lt;/xslt&gt;</pre>
 
-  <h4>Print the current processed file name</h4>
+<h4>Print the current processed file name</h4>
 <pre>
 &lt;project&gt;
   &lt;xslt style=&quot;printFilename.xsl&quot; destdir=&quot;out&quot; basedir=&quot;in&quot; extension=&quot;.txt&quot;
@@ -671,15 +612,15 @@ with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
 &lt;/project&gt;
 
 &lt;xsl:stylesheet
-  version=&quot;1.0&quot;
-  xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
+     version=&quot;1.0&quot;
+     xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
 
-    &lt;xsl:param name=&quot;filename&quot;&gt;&lt;/xsl:param&gt;
-    &lt;xsl:param name=&quot;filedir&quot;&gt;.&lt;/xsl:param&gt;
+  &lt;xsl:param name=&quot;filename&quot;&gt;&lt;/xsl:param&gt;
+  &lt;xsl:param name=&quot;filedir&quot;&gt;.&lt;/xsl:param&gt;
 
-&lt;xsl:template match=&quot;/&quot;&gt;
-  Current file is &lt;xsl:value-of select=&quot;$filename&quot;/&gt; in directory &lt;xsl:value-of select=&quot;$filedir&quot;/&gt;.
-&lt;/xsl:template&gt;
+  &lt;xsl:template match=&quot;/&quot;&gt;
+    Current file is &lt;xsl:value-of select=&quot;$filename&quot;/&gt; in directory &lt;xsl:value-of select=&quot;$filedir&quot;/&gt;.
+  &lt;/xsl:template&gt;
 
 &lt;/xsl:stylesheet&gt;
 </pre>

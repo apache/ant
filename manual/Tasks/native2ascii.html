@@ -22,131 +22,104 @@
   <body>
     <h2>Native2Ascii</h2>
 
-    <h3>Description:</h3>
+    <h3>Description</h3>
 
-    <p>
-      Converts files from native encodings to ASCII with escaped Unicode.
-      A common usage is to convert source files maintained in a native
-      operating system encoding, to ASCII prior to compilation.
-    </p>
+    <p>Converts files from native encodings to ASCII with escaped Unicode.  A common usage is to
+      convert source files maintained in a native operating system encoding, to ASCII prior to
+      compilation.</p>
 
-    <p>
-      Files in the directory <em>src</em>
-      are converted from a native encoding to ASCII.
-      By default, all files in the directory are converted.
-      However, conversion may be limited to selected files using
-      <em>includes</em> and <em>excludes</em> attributes.
-      For more information on file matching patterns,
-      see the section on
-      <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>.
-      If no <em>encoding</em> is specified,
-      the default encoding for the JVM is used.
-      If <em>ext</em> is specified, then output files are renamed
-      to use it as a new extension.
-      More sophisticated file name translations can be achieved using a nested
-      <em><code>&lt;mapper&gt;</code></em> element. By default an
-      <a href="../Types/mapper.html#identity-mapper">identity mapper</a> will be used.
-      If <em>dest</em> and <em>src</em> point to the same directory,
-      the <em>ext</em> attribute or a nested <em><code>&lt;mapper&gt;</code></em>
-      is required.
-    </p>
+    <p>Files in the directory <var>src</var> are converted from a native encoding to ASCII.  By
+      default, all files in the directory are converted.  However, conversion may be limited to
+      selected files using <var>includes</var> and <var>excludes</var> attributes.  For more
+      information on file matching patterns, see the section
+      on <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>.  If
+      no <var>encoding</var> is specified, the default encoding for the JVM is used.
+      If <var>ext</var> is specified, then output files are renamed to use it as a new extension.
+      More sophisticated file name translations can be achieved using a
+      nested <code>&lt;mapper&gt;</code> element. By default
+      an <a href="../Types/mapper.html#identity-mapper">identity mapper</a> will be used.
+      If <var>dest</var> and <var>src</var> point to the same directory, the <var>ext</var>
+      attribute or a nested <code>&lt;mapper&gt;</code> is required.</p>
 
-    <p>
-      This task forms an implicit <a href="../Types/fileset.html">File Set</a>,
-      and supports most attributes of <code>&lt;fileset&gt;</code>
-      (<code>dir</code> becomes <code>src</code>) as well as
+    <p>This task forms an implicit <a href="../Types/fileset.html">FileSet</a>, and supports most
+      attributes of <code>&lt;fileset&gt;</code> (<var>dir</var> becomes <var>src</var>) as well as
       nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-      and <code>&lt;patternset&gt;</code> elements.
-    </p>
+      and <code>&lt;patternset&gt;</code> elements.</p>
 
-    <p id="implementationvalues">
-      It is possible to use different converters. This can be selected
-      with the <code>implementation</code> attribute or a nested
-      element. Here are the choices of the attribute:
-    </p>
+    <p id="implementationvalues">It is possible to use different converters. This can be selected
+      with the <var>implementation</var> attribute or a nested element. Here are the choices of the
+      attribute:</p>
     <ul>
-      <li>default - the default converter for the platform: kaffe
-        when run on Kaffe, builtin otherwise.</li>
-      <li>sun - used to be the standard converter of the JDK &lt; 9</li>
-      <li>kaffe - the standard converter
-        of <a href="http://www.kaffe.org" target="_top">Kaffe</a></li>
-      <li>builtin - Ant's internal implementation. <em>Since Ant
-          1.9.8</em></li>
+      <li><q>default</q>&mdash;the default converter for the platform: kaffe when run on Kaffe,
+        builtin otherwise.</li>
+      <li><q>sun</q>&mdash;used to be the standard converter of the JDK &lt; 9</li>
+      <li><q>kaffe</q>&mdash;the standard converter of <a href="http://www.kaffe.org"
+        target="_top">Kaffe</a></li>
+      <li><q>builtin</q>&mdash;Ant's internal implementation. <em>Since Ant 1.9.8</em></li>
     </ul>
 
-    <table>
+    <table class="attr">
       <tr>
-        <td><b>Attribute</b></td>
-        <td><b>Description</b></td>
-        <td><b>Required</b></td>
+        <th>Attribute</th>
+        <th>Description</th>
+        <th>Required</th>
       </tr>
       <tr>
         <td>reverse</td>
-        <td>Reverse the sense of the conversion,
-          i.e. convert from ASCII to native <b>only supported by the
-            sun and builtin converters</b></td>
-        <td align="center">No</td>
+        <td>Reverse the sense of the conversion, i.e. convert from ASCII to native <strong>only
+          supported by the <q>sun</q> and <q>builtin</q> converters</strong></td>
+        <td>No</td>
       </tr>
       <tr>
         <td>encoding</td>
-        <td>The native encoding the files are in
-          (default is the default encoding for the JVM)</td>
-        <td align="center">No</td>
+        <td>The native encoding the files are in</td>
+        <td>No; defaults to default JVM character encoding</td>
       </tr>
       <tr>
         <td>src</td>
-        <td>The directory to find files in (default is <em>basedir</em>)</td>
-        <td align="center">No</td>
+        <td>The directory to find files in; default is <var>basedir</var></td>
+        <td>No</td>
       </tr>
       <tr>
         <td>dest</td>
         <td>The directory to output file to</td>
-        <td align="center">Yes</td>
+        <td>Yes</td>
       </tr>
       <tr>
         <td>ext</td>
         <td>File extension to use in renaming output files</td>
-        <td align="center">No</td>
-      </tr>
-      <tr>
-        <td>defaultexcludes</td>
-        <td>indicates whether default excludes should be used or not
-          (&quot;yes&quot;/&quot;no&quot;).
-          Default excludes are used when omitted.
-        </td>
-        <td align="center">No</td>
+        <td>No</td>
       </tr>
       <tr>
         <td>includes</td>
-        <td>comma- or space-separated list of patterns of files that must be
-          included. All files are included when omitted.</td>
-        <td align="center">No</td>
+        <td>Comma- or space-separated list of patterns of files that must be included.</td>
+        <td>No; defaults to all (<q>**</q>)</td>
       </tr>
       <tr>
         <td>includesfile</td>
-        <td>the name of a file. Each line of this file is
-          taken to be an include pattern</td>
-        <td align="center">No</td>
+        <td>Name of a file. Each line of this file is taken to be an include pattern</td>
+        <td>No</td>
       </tr>
       <tr>
         <td>excludes</td>
-        <td>comma- or space-separated list of patterns of files that must be excluded.
-          No files (except default excludes) are excluded when omitted.</td>
-        <td align="center">No</td>
+        <td>Comma- or space-separated list of patterns of files that must be excluded.</td>
+        <td>No; defaults to default excludes or none if <var>defaultexcludes</var> is <q>no</q></td>
       </tr>
       <tr>
         <td>excludesfile</td>
-        <td>the name of a file. Each line of this file is
-          taken to be an exclude pattern</td>
-        <td align="center">No</td>
+        <td>Name of a file. Each line of this file is taken to be an exclude pattern</td>
+        <td>No</td>
       </tr>
       <tr>
-        <td valign="top">implementation</td>
-        <td valign="top">The converter implementation to use.
-          If this attribute is not set, the default converter for the
-          current VM will be used.  (See the above <a
-          href="#implementationvalues">list</a> of valid converters.)</td>
-        <td align="center" valign="top">No</td>
+        <td>defaultexcludes</td>
+        <td>Indicates whether default excludes should be used or not (<q>yes|no</q>).</td>
+        <td>No; defaults to <q>yes</q></td>
+      </tr>
+      <tr>
+        <td>implementation</td>
+        <td>The converter implementation to use.  (See the
+          above <a href="#implementationvalues">list</a> of valid converters.)</td>
+        <td>No; defaults to default converter for the current JVM</td>
       </tr>
     </table>
 
@@ -154,101 +127,84 @@
 
 <h4>arg</h4>
 
-<p>You can specify additional command line arguments for the converter
-with nested <code>&lt;arg&gt;</code> elements.  These elements are
-specified like <a href="../using.html#arg">Command-line Arguments</a>
-but have an additional attribute that can be used to enable arguments
-only if a given converter implementation will be used.</p>
+<p>You can specify additional command line arguments for the converter with
+nested <code>&lt;arg&gt;</code> elements.  These elements are specified
+like <a href="../using.html#arg">Command-line Arguments</a> but have an additional attribute that
+can be used to enable arguments only if a given converter implementation will be used.</p>
 
-<table>
+<table class="attr">
 <tr>
-  <td valign="top"><b>Attribute</b></td>
-  <td valign="top"><b>Description</b></td>
-  <td valign="top"><b>Required</b></td>
+  <th>Attribute</th>
+  <th>Description</th>
+  <th>Required</th>
 </tr>
   <tr>
-    <td valign="top">value</td>
-    <td align="center" rowspan="4">See
-    <a href="../using.html#arg">Command-line Arguments</a>.</td>
-    <td align="center" rowspan="4">Exactly one of these</td>
+    <td>value</td>
+    <td rowspan="4">See <a href="../using.html#arg">Command-line Arguments</a>.</td>
+    <td rowspan="4">Exactly one of these</td>
   </tr>
   <tr>
-    <td valign="top">line</td>
+    <td class="var">line</td>
   </tr>
   <tr>
-    <td valign="top">file</td>
+    <td class="var">file</td>
   </tr>
   <tr>
-    <td valign="top">path</td>
+    <td class="var">path</td>
   </tr>
   <tr>
-    <td valign="top">implementation</td>
-    <td>Only pass the specified argument if the chosen converter
-    implementation matches the value of this attribute.  Legal values
-    are the same as those in the above <a
-    href="#implementationvalues">list</a> of valid compilers.)</td>
-    <td align="center">No</td>
+    <td>implementation</td>
+    <td>Only pass the specified argument if the chosen converter implementation matches the value of
+    this attribute.  Legal values are the same as those in the
+    above <a href="#implementationvalues">list</a> of valid compilers.)</td>
+    <td>No</td>
   </tr>
 </table>
 
 <h4>implementationclasspath (<em>since Apache Ant 1.8.0</em>)</h4>
 
-<p>A <a href="../using.html#path">PATH like structure</a> holding the
-  classpath to use when loading the converter implementation if a
-  custom class has been specified.  Doesn't have any effect when
-  using one of the built-in converters.</p>
+<p>A <a href="../using.html#path">path-like structure</a> holding the classpath to use when loading
+the converter implementation if a custom class has been specified.  Doesn't have any effect when
+using one of the built-in converters.</p>
 
-<h4>Any nested element of a type that implements Native2AsciiAdapter
-  (<em>since Ant 1.8.0</em>)</h4>
+<h4>Any nested element of a type that implements Native2AsciiAdapter (<em>since Ant 1.8.0</em>)</h4>
 
-<p>If a defined type implements the <code>Native2AsciiAdapter</code>
-  interface a nested element of that type can be used as an
-  alternative to the <code>implementation</code> attribute.</p>
+<p>If a defined type implements the <code>Native2AsciiAdapter</code> interface a nested element of
+that type can be used as an alternative to the <var>implementation</var> attribute.</p>
 
-    <h3>Examples</h3>
+<h3>Examples</h3>
 
-    <pre>
+<pre>
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;srcdir&quot; dest=&quot;srcdir&quot;
-   includes=&quot;**/*.eucjis&quot; ext=&quot;.java&quot;/&gt;
-    </pre>
+              includes=&quot;**/*.eucjis&quot; ext=&quot;.java&quot;/&gt;</pre>
 
-    <p>
-      Converts all files in the directory <em>srcdir</em>
-      ending in <code>.eucjis</code> from the EUCJIS encoding to ASCII
-      and renames them to end in <code>.java</code>.
-    </p>
+    <p>Converts all files in the directory <samp>srcdir</samp> ending in <samp>.eucjis</samp> from
+      the EUCJIS encoding to ASCII and renames them to end in <samp>.java</samp>.</p>
 
 <pre>
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;native/japanese&quot; dest=&quot;src&quot;
-   includes=&quot;**/*.java&quot;/&gt;
-</pre>
+              includes=&quot;**/*.java&quot;/&gt;</pre>
 
-    <p>
-      Converts all the files ending in <code>.java</code>
-      in the directory <em>native/japanese</em> to ASCII,
-      placing the results in the directory <em>src</em>.
-      The names of the files remain the same.
-    </p>
+<p>Converts all the files ending in <samp>.java</samp> in the directory <samp>native/japanese</samp>
+to ASCII, placing the results in the directory <samp>src</samp>.  The names of the files remain the
+same.</p>
 
-<p>If you want to use a custom
-  Native2AsciiAdapter <code>org.example.MyAdapter</code> you can either
-  use the implementation attribute:</p>
+<p>If you want to use a custom Native2AsciiAdapter <code>org.example.MyAdapter</code> you can either
+use the implementation attribute:</p>
 <pre>
 &lt;native2ascii encoding="EUCJIS" src="srcdir" dest="srcdir"
-       includes="**/*.eucjis" ext=".java"
-       implementation="org.example.MyAdapter"/&gt;
-</pre>
+              includes="**/*.eucjis" ext=".java"
+              implementation="org.example.MyAdapter"/&gt;</pre>
 <p>or a define a type and nest this into the task like in:</p>
 <pre>
 &lt;componentdef classname="org.example.MyAdapter"
               name="myadapter"/&gt;
 &lt;native2ascii encoding="EUCJIS" src="srcdir" dest="srcdir"
-       includes="**/*.eucjis" ext=".java"&gt;
-  &lt;myadapter/&gt;
-&lt;/native2ascii&gt;
-</pre>
-<p>in which case your native2ascii adapter can support attributes and
-  nested elements of its own.</p>
+              includes="**/*.eucjis" ext=".java"&gt;
+    &lt;myadapter/&gt;
+&lt;/native2ascii&gt;</pre>
+<p>in which case your native2ascii adapter can support attributes and nested elements of its
+own.</p>
 
 </body>
 </html>

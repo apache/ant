@@ -26,115 +26,106 @@
 
 <h2 id="verifyjar">VerifyJar</h2>
 <h3>Description</h3>
-<p>Verifies JAR files with the <tt>jarsigner</tt> command line tool.
-It will take a named file in the <tt>jar</tt> attribute. Nested paths are also
-supported
-</p>
+<p>Verifies JAR files with the <code>jarsigner</code> command line tool.  It will take a named file
+in the <var>jar</var> attribute. Nested paths are also supported.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">jar</td>
-    <td valign="top">the jar file to verify</td>
-    <td valign="top" align="center">Yes, unless nested paths have
-      been used.</td>
+    <td>jar</td>
+    <td>the jar file to verify</td>
+    <td>Yes, unless nested paths have been used</td>
   </tr>
   <tr>
-    <td valign="top">alias</td>
-    <td valign="top">the alias to verify under</td>
-    <td valign="top" align="center">Yes.</td>
+    <td>alias</td>
+    <td>the alias to verify under</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">storepass</td>
-    <td valign="top">password for keystore integrity.</td>
-    <td valign="top" align="center">Yes.</td>
+    <td>storepass</td>
+    <td>password for keystore integrity.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">keystore</td>
-    <td valign="top">keystore location</td>
-    <td valign="top" align="center">No</td>
+    <td>keystore</td>
+    <td>keystore location</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">storetype</td>
-    <td valign="top">keystore type</td>
-    <td valign="top" align="center">No</td>
+    <td>storetype</td>
+    <td>keystore type</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">keypass</td>
-    <td valign="top">password for private key (if different)</td>
-    <td valign="top" align="center">No</td>
+    <td>keypass</td>
+    <td>password for private key (if different)</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">certificates</td>
-    <td valign="top">(true | false) display information about certificates</td>
-    <td valign="top" align="center">No; default false</td>
+    <td>certificates</td>
+    <td>(<q>true|false</q>) display information about certificates</td>
+    <td>No; default <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">verbose</td>
-    <td valign="top">(true | false) verbose output when verifying</td>
-    <td valign="top" align="center">No; default false</td>
+    <td>verbose</td>
+    <td>(<q>true|false</q>) verbose output when verifying</td>
+    <td>No; default <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">strict</td>
-    <td valign="top">(true | false) strict checking when verifying.<br/><em>since Ant 1.9.1</em>.</td>
-    <td valign="top" align="center">No; default false</td>
+    <td>strict</td>
+    <td>(<q>true|false</q>) strict checking when verifying.<br/><em>since Ant 1.9.1</em>.</td>
+    <td>No; default <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">maxmemory</td>
-    <td valign="top">Specifies the maximum memory the jarsigner VM will use. Specified in the
-                     style of standard java memory specs (e.g. 128m = 128 MBytes)</td>
-    <td valign="top" align="center">No</td>
+    <td>maxmemory</td>
+    <td>Specifies the maximum memory the <code>jarsigner</code> JVM will use. Specified in the style
+      of standard Java memory specs (e.g. <q>128m</q> = 128 MBytes)</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">executable</td>
-    <td valign="top">Specify a particular <code>jarsigner</code> executable
-      to use in place of the default binary (found in the same JDK as
-      Apache Ant is running in).<br/>
-      Must support the same command line options as the Sun JDK
-      jarsigner command.
-      <em>since Ant 1.8.0</em>.</td>
-    <td align="center" valign="top">No</td>
+    <td>executable</td>
+    <td>Specify a particular <code>jarsigner</code> executable to use in place of the default binary
+      (found in the same JDK as Apache Ant is running in).<br/>  Must support the same command line
+      options as the Sun JDK <code>jarsigner</code> command.  <em>since Ant 1.8.0</em>.</td>
+    <td>No</td>
   </tr>
 </table>
 <h3>Parameters as nested elements</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">path</td>
-    <td valign="top">path of JAR files to verify. <em>since Ant 1.7</em></td>
-    <td valign="top" align="center">No</td>
+    <td>path</td>
+    <td>path of JAR files to verify. <em>since Ant 1.7</em></td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">fileset</td>
-    <td valign="top">fileset of JAR files to verify.</td>
-    <td valign="top" align="center">No</td>
+    <td>fileset</td>
+    <td>fileset of JAR files to verify.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">sysproperty</td>
-    <td valign="top">JVM system properties, with the syntax of Ant
-    <a href="exec.html#env">environment variables</a></td>
-    <td valign="top" align="center">No, and only one can be supplied</td>
+    <td>sysproperty</td>
+    <td>JVM system properties, with the syntax of Ant <a href="exec.html#env">environment
+      variables</a></td>
+    <td>No, and only one can be supplied</td>
   </tr>
  </table>
 
 <h3>Examples</h3>
 <pre>
 &lt;verifyjar jar=&quot;${dist}/lib/ant.jar&quot;
-alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
-</pre>
-<p>
-  verifies the ant.jar with alias &quot;apache-group&quot; accessing the
-  keystore and private key via &quot;secret&quot; password.
-</p>
+           alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;</pre>
+<p>verifies the <samp>ant.jar</samp> with alias <q>apache-group</q> accessing the keystore and
+private key via <q>secret</q> password.</p>
 
 </body>
 </html>

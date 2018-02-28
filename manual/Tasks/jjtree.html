@@ -25,193 +25,153 @@
 <h2 id="jjtree">JJTree</h2>
 
 <h3>Description</h3>
-<p>Invokes the <a href="http://javacc.dev.java.net/">JJTree</a> preprocessor
-for the JavaCC compiler compiler. It inserts parse tree building actions
-at various places in the JavaCC source that it generates. The output of
-JJTree is run through JavaCC to create the parser.
-<p>To use the jjtree task, set the <i>target</i> attribute to the name
-of the JJTree grammar file to process. You also need to specify the directory
-containing the JavaCC installation using the <i>javacchome</i> attribute,
-so that Ant can find the JavaCC classes. Optionally, you can also set the
-<i>outputdirectory</i>
-to write the generated JavaCC grammar and node files to a specific directory.
-Otherwise jjtree writes the generated JavaCC grammar and node files to the directory
-containing the JJTree grammar file. As an extra option, you can also set the
-<i>outputfile</i> to write the generated JavaCC grammar file to a specific (directory and) file.
-Otherwise jjtree writes the generated JavaCC grammar file as the JJTree
-grammar file with a suffix .jj.</p>
-<p>This task only invokes JJTree if the grammar file is newer than the
-generated JavaCC file.</p>
+<p>Invokes the <a href="https://javacc.org/">JJTree</a> preprocessor for the JavaCC compiler
+compiler. It inserts parse tree building actions at various places in the JavaCC source that it
+generates. The output of JJTree is run through JavaCC to create the parser.</p>
+<p>To use the <code>jjtree</code> task, set the <var>target</var> attribute to the name of the
+JJTree grammar file to process. You also need to specify the directory containing the JavaCC
+installation using the <var>javacchome</var> attribute, so that Ant can find the JavaCC
+classes. Optionally, you can also set the <var>outputdirectory</var> to write the generated JavaCC
+grammar and node files to a specific directory.  Otherwise <code>jjtree</code> writes the generated
+JavaCC grammar and node files to the directory containing the JJTree grammar file. As an extra
+option, you can also set the <var>outputfile</var> to write the generated JavaCC grammar file to a
+specific (directory and) file.  Otherwise <code>jjtree</code> writes the generated JavaCC grammar
+file as the JJTree grammar file with a suffix <samp>.jj</samp>.</p>
+<p>This task only invokes JJTree if the grammar file is newer than the generated JavaCC file.</p>
 
 <h3>Parameters</h3>
 
-<table>
+<table class="attr">
 <tr>
-<td valign="top"><b>Attribute</b></td>
-
-<td valign="top"><b>Description</b></td>
-
-<td align="center" valign="top"><b>Required</b></td>
+  <th>Attribute</th>
+  <th>Description</th>
+  <th>Required</th>
 </tr>
 
 <tr>
-<td valign="top">target</td>
-
-<td valign="top">The jjtree grammar file to process.</td>
-
-<td align="center" valign="top">Yes</td>
+  <td>target</td>
+  <td>The JJTree grammar file to process.</td>
+  <td>Yes</td>
 </tr>
 
 <tr>
-<td valign="top">javacchome</td>
-
-<td valign="top">The directory containing the JavaCC distribution.</td>
-
-<td align="center" valign="top">Yes</td>
+  <td>javacchome</td>
+  <td>The directory containing the JavaCC distribution.</td>
+  <td>Yes</td>
 </tr>
 
 <tr>
-<td valign="top">outputdirectory</td>
-
-<td valign="top">The directory to write the generated JavaCC grammar and node files to.
-If not set, the files are written to the directory containing the grammar file.</td>
-
-<td align="center" valign="top">No</td>
+  <td>outputdirectory</td>
+  <td>The directory to write the generated JavaCC grammar and node files to.  If not set, the files
+    are written to the directory containing the grammar file.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">outputfile</td>
-
-<td valign="top">The file to write the generated JavaCC grammar file
-to. If not set, the file is written with the same name as the JJTree
-grammar file but with a the suffix <code>.jj</code>.  This is a
-filename relative to <em>outputdirectory</em> if specified, the
-project's basedir.</td>
-
-<td align="center" valign="top">No</td>
+  <td>outputfile</td>
+  <td>The file to write the generated JavaCC grammar file to. If not set, the file is written with
+    the same name as the JJTree grammar file but with a the suffix <code>.jj</code>.  This is a
+    filename relative to <var>outputdirectory</var> if specified, the project's basedir.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">buildnodefiles</td>
-
-<td valign="top">Sets the BUILD_NODE_FILES grammar option. This is a boolean
-option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>buildnodefiles</td>
+  <td>Sets the BUILD_NODE_FILES grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">multi</td>
-
-<td valign="top">Sets the MULTI grammar option. This is a boolean option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>multi</td>
+  <td>Sets the MULTI grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodedefaultvoid</td>
-
-<td valign="top">Sets the NODE_DEFAULT_VOID grammar option. This is a boolean
-option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodedefaultvoid</td>
+  <td>Sets the NODE_DEFAULT_VOID grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodefactory</td>
-
-<td valign="top">Sets the NODE_FACTORY grammar option. This is boolean option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodefactory</td>
+  <td>Sets the NODE_FACTORY grammar option. This is boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodescopehook</td>
-
-<td valign="top">Sets the NODE_SCOPE_HOOK grammar option. This is a boolean
-option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodescopehook</td>
+  <td>Sets the NODE_SCOPE_HOOK grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodeusesparser</td>
-
-<td valign="top">Sets the NODE_USES_PARSER grammar option. This is a boolean
-option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodeusesparser</td>
+  <td>Sets the NODE_USES_PARSER grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">static</td>
-
-<td valign="top">Sets the STATIC grammar option. This is a boolean option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>static</td>
+  <td>Sets the STATIC grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">visitor</td>
-
-<td valign="top">Sets the VISITOR grammar option. This is a boolean option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>visitor</td>
+  <td>Sets the VISITOR grammar option. This is a boolean option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodepackage</td>
-
-<td valign="top">Sets the NODE_PACKAGE grammar option. This is a string option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodepackage</td>
+  <td>Sets the NODE_PACKAGE grammar option. This is a string option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">visitorexception</td>
-
-<td valign="top">Sets the VISITOR_EXCEPTION grammar option. This is a string
-option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>visitorexception</td>
+  <td>Sets the VISITOR_EXCEPTION grammar option. This is a string option.</td>
+  <td>No</td>
 </tr>
 
 <tr>
-<td valign="top">nodeprefix</td>
-
-<td valign="top">Sets the NODE_PREFIX grammar option. This is a string option.</td>
-
-<td align="center" valign="top">No</td>
+  <td>nodeprefix</td>
+  <td>Sets the NODE_PREFIX grammar option. This is a string option.</td>
+  <td>No</td>
 </tr>
 
   <tr>
-    <td valign="top">maxmemory</td>
-    <td valign="top">Max amount of memory to allocate to the forked
-      VM.  <em>since Ant 1.8.3</em></td>
-    <td align="center" valign="top">No</td>
+    <td>maxmemory</td>
+    <td>Max amount of memory to allocate to the forked JVM.  <em>since Ant 1.8.3</em></td>
+    <td>No</td>
   </tr>
 </table>
 
 <h3>Example</h3>
 
-<pre>&lt;jjtree
-    target="src/Parser.jjt"
-    outputdirectory="build/src"
-    javacchome="c:/program files/JavaCC"
-    nodeusesparser="true"/&gt;</pre>
-This invokes JJTree on grammar file src/Parser.jjt, writing the generated
-grammar file, Parser.jj, file to build/src. The grammar option NODE_USES_PARSER
-is set to true when invoking JJTree.
+<pre>
+&lt;jjtree target="src/Parser.jjt"
+        outputdirectory="build/src"
+        javacchome="c:/program files/JavaCC"
+        nodeusesparser="true"/&gt;</pre>
 
-<h3>Comparison output locations between command line JJTree and different Ant taskdef versions</h3>
+<p>This invokes JJTree on grammar file <samp>src/Parser.jjt</samp>, writing the generated grammar
+file, <samp>Parser.jj</samp>, file to <samp>build/src</samp>. The grammar option NODE_USES_PARSER is
+set to <q>true</q> when invoking JJTree.</p>
+
+<h3>Comparison output locations between command line JJTree and different Ant <code>taskdef</code>
+versions</h3>
 
 <table>
+  <thead class="no-bold">
 <tr>
-  <td><b>Command Line JJTree options</b>
-    <i>and Generated Files</i> (working directory: <code>/tmp</code>)</td>
-  <td><b>Ant 1.5.3</b> versus command line</td>
-  <td><b>Ant 1.6</b> versus command line</td>
+  <th><strong>Command line JJTree options</strong> and <em>generated files</em> (working directory: <samp>/tmp</samp>)</th>
+  <th><strong>Ant 1.5.3</strong> versus command line</th>
+  <th><strong>Ant 1.6</strong> versus command line</th>
 </tr>
+  </thead>
+  <tbody>
 <tr>
   <td><pre><b>jjtree  grammar.jjt</b>
     /tmp/grammar.jj
@@ -232,7 +192,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree /tmp/absolute/grammar.jjt</b>
     /tmp/grammar.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -243,7 +203,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:relative  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:relative grammar.jjt</b>
     /tmp/relative/grammar.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -251,7 +211,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:relative  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:relative relative/grammar.jjt</b>
     /tmp/relative/grammar.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -259,7 +219,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:relative  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:relative /tmp/absolute/grammar.jjt</b>
     /tmp/relative/grammar.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -267,7 +227,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:/tmp/absolute/  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:/tmp/absolute/ grammar.jjt</b>
     /tmp/absolute/grammar.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -275,7 +235,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:/tmp/absolute/  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:/tmp/absolute/ relative/grammar.jjt</b>
     /tmp/absolute/grammar.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -283,7 +243,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_DIRECTORY:/tmp/absolute/  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_DIRECTORY:/tmp/absolute/ /tmp/absolute/grammar.jjt</b>
     /tmp/absolute/grammar.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -291,7 +251,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj grammar.jjt</b>
     /tmp/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -299,7 +259,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj relative/grammar.jjt</b>
     /tmp/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -307,7 +267,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj /tmp/absolute/grammar.jjt</b>
     /tmp/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -315,7 +275,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:relative  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:relative grammar.jjt</b>
     /tmp/relative/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -323,7 +283,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:relative  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:relative relative/grammar.jjt</b>
     /tmp/relative/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -331,7 +291,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:relative  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:relative /tmp/absolute/grammar.jjt</b>
     /tmp/relative/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -339,7 +299,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ grammar.jjt</b>
     /tmp/absolute/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -347,7 +307,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ relative/grammar.jjt</b>
     /tmp/absolute/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -355,7 +315,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ /tmp/absolute/grammar.jjt</b>
     /tmp/absolute/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -363,7 +323,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -371,7 +331,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj relative/grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -379,7 +339,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj /tmp/absolute/grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -387,7 +347,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:relative  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:relative grammar.jjt</b>
     /tmp/relative/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -395,7 +355,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:relative  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:relative relative/grammar.jjt</b>
     /tmp/relative/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -403,7 +363,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:relative  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:relative /tmp/absolute/grammar.jjt</b>
     /tmp/relative/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -411,7 +371,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ grammar.jjt</b>
     /tmp/absolute/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -419,7 +379,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ relative/grammar.jjt</b>
     /tmp/absolute/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -427,7 +387,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ /tmp/absolute/grammar.jjt</b>
     /tmp/absolute/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -435,7 +395,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -443,7 +403,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj relative/grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -451,7 +411,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj /tmp/absolute/grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -459,15 +419,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:<i><u>D:</u></i>/tmp/subdir/output.jj  grammar.jjt</b>
-    /tmp/subdir/output.jj
-    /tmp/&lt;generated&gt;.java</pre>
-  </td>
-  <td>Not Supported</td>
-  <td>Not Supported *)</td>
-</tr>
-<tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:<i><u>D:</u></i>/tmp/subdir/output.jj  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -475,7 +427,7 @@ is set to true when invoking JJTree.
   <td>Not Supported *)</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:<i><u>D:</u></i>/tmp/subdir/output.jj  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj relative/grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
@@ -483,7 +435,15 @@ is set to true when invoking JJTree.
   <td>Not Supported *)</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:relative  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj /tmp/absolute/grammar.jjt</b>
+    /tmp/subdir/output.jj
+    /tmp/&lt;generated&gt;.java</pre>
+  </td>
+  <td>Not Supported</td>
+  <td>Not Supported *)</td>
+</tr>
+<tr>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:relative grammar.jjt</b>
     /tmp/relative/tmp/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -491,7 +451,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:relative  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:relative relative/grammar.jjt</b>
     /tmp/relative/tmp/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -499,7 +459,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:relative  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:relative /tmp/absolute/grammar.jjt</b>
     /tmp/relative/tmp/subdir/output.jj
     /tmp/relative/&lt;generated&gt;.java</pre>
   </td>
@@ -507,7 +467,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ grammar.jjt</b>
     /tmp/absolute/tmp/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -515,7 +475,7 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  relative/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ relative/grammar.jjt</b>
     /tmp/absolute/tmp/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
@@ -523,26 +483,30 @@ is set to true when invoking JJTree.
   <td>Same</td>
 </tr>
 <tr>
-  <td><pre><b>jjtree  -OUTPUT_FILE:/tmp/subdir/output.jj  -OUTPUT_DIRECTORY:/tmp/absolute/  /tmp/absolute/grammar.jjt</b>
+  <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:/tmp/absolute/ /tmp/absolute/grammar.jjt</b>
     /tmp/absolute/tmp/subdir/output.jj
     /tmp/absolute/&lt;generated&gt;.java</pre>
   </td>
   <td>Not Supported</td>
   <td>Same</td>
 </tr>
+  </tbody>
 </table>
 
-<p>*) <u>Footnote</u>: When running JJTree with the Ant taskdef <i>jjtree</i> the option <code>-OUTPUT_DIRECTORY</code> must always
-be set, because the project's basedir and the Ant working directory might differ. So even if you don't specify the jjtree taskdef
-<i>outputdirectory</i> JJTree will be called with the <code>-OUTPUT_DIRECTORY</code> set to the project's basedirectory.
-But when the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if relative to this
-<code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute or contains a drive letter we have a
-problem.
-Therefore absolute <i>outputfile</i>s (when the <i>outputdirectory</i> isn't specified) are made relative to the default directory.
-And for this reason <i>outputfile</i>s that contain a drive letter can't be supported.</p>
+<p>*) <strong>Footnote</strong>: When running JJTree with the Ant <code>taskdef jjtree</code> the
+option <code>-OUTPUT_DIRECTORY</code> must always be set, because the project's <var>basedir</var>
+and the Ant working directory might differ. So even if you don't specify
+the <var>outputdirectory</var> for <code>taskdef jjtree</code>, JJTree will be called with
+the <code>-OUTPUT_DIRECTORY</code> set to the project's <var>basedir</var>.  But when
+the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if
+relative to this <code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute
+or contains a drive letter we have a problem.  Therefore absolute <var>outputfile</var>s (when
+the <var>outputdirectory</var> isn't specified) are made relative to the default directory.  And for
+this reason <var>outputfile</var>s that contain a drive letter can't be supported.</p>
 
-<p>By the way: specifying a drive letter in the <code>-OUTPUT_FILE</code> when the <code>-OUTPUT_DIRECTORY</code> is set, also
-results in strange behavior when running JJTree from the command line.</p>
+<p>By the way: specifying a drive letter in the <code>-OUTPUT_FILE</code> when
+the <code>-OUTPUT_DIRECTORY</code> is set, also results in strange behavior when running JJTree from
+the command line.</p>
 
 </body>
 </html>

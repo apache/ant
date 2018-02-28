@@ -25,45 +25,43 @@
 <body>
 
 <h2 id="copyfile">Copyfile</h2>
-<h3><i>Deprecated</i></h3>
-<p><i>This task has been deprecated.  Use the Copy task instead.</i></p>
+<h3><em><u>Deprecated</u></em></h3>
+<p><em>This task has been <em>deprecated</em>.  Use the <code>Copy</code> task instead.</em></p>
 <h3>Description</h3>
-<p>Copies a file from the source to the destination. The file is only copied if
-the source file is newer than the destination file, or when the destination file
-does not exist.</p>
+<p>Copies a file from the source to the destination. The file is only copied if the source file is
+newer than the destination file, or when the destination file does not exist.</p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">src</td>
-    <td valign="top">the filename of the file to copy.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>src</td>
+    <td>the filename of the file to copy.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">dest</td>
-    <td valign="top">the filename of the file where to copy to.</td>
-    <td valign="top" align="center">Yes</td>
+    <td>dest</td>
+    <td>the filename of the file where to copy to.</td>
+    <td>Yes</td>
   </tr>
   <tr>
-    <td valign="top">filtering</td>
-    <td valign="top">indicates whether token filtering should take place during
-      the copy</td>
-    <td valign="top" align="center">No</td>
+    <td>filtering</td>
+    <td>indicates whether token filtering should take place during the copy</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">forceoverwrite</td>
-    <td valign="top">overwrite existing files even if the destination
-      files are newer (default is false).</td>
-    <td valign="top" align="center">No</td>
+    <td>forceoverwrite</td>
+    <td>overwrite existing files even if the destination files are newer.</td>
+    <td>No; default is <q>false</q></td>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;copyfile src=&quot;test.java&quot; dest=&quot;subdir/test.java&quot;/&gt;
-  &lt;copyfile src=&quot;${src}/index.html&quot; dest=&quot;${dist}/help/index.html&quot;/&gt;</pre>
+<pre>
+&lt;copyfile src=&quot;test.java&quot; dest=&quot;subdir/test.java&quot;/&gt;
+&lt;copyfile src=&quot;${src}/index.html&quot; dest=&quot;${dist}/help/index.html&quot;/&gt;</pre>
 
 </body>
 </html>

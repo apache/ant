@@ -26,51 +26,46 @@
 
 <h2 id="jarlib-display">jarlib-display</h2>
 <h3>Description</h3>
-<p>Display the "Optional Package" and "Package Specification" information
- contained within the specified jars.</p>
+<p>Display the "Optional Package" and "Package Specification" information contained within the
+specified jars.</p>
 
-<p>Note that this task
-works with extensions as defined by the "Optional Package" specification.
- For more information about optional packages, see the document
-<em>Optional Package Versioning</em> in the documentation bundle for your
-Java Standard Edition package, in file
-<code>guide/extensions/versioning.html</code> or the online
-<a target="_blank" href="http://docs.oracle.com/javase/7/docs/technotes/guides/extensions/versioning.html">
-Extension and ExtensionSet documentation</a> for further details</p>
+<p>Note that this task works with extensions as defined by the "Optional Package" specification.
+For more information about optional packages, see the document <em>Optional Package Versioning</em>
+in the documentation bundle for your Java Standard Edition package, in file
+<samp>guide/extensions/versioning.html</samp> or the online <a target="_blank"
+href="https://docs.oracle.com/javase/8/docs/technotes/guides/extensions/versioning.html"> Extension
+and ExtensionSet documentation</a> for further details.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">The file to display extension information about.</td>
-    <td valign="top" align="center">Yes, unless a nested fileset is specified</td>
+    <td>file</td>
+    <td>The file to display extension information about</td>
+    <td>Yes, unless a nested <code>&lt;fileset&gt;</code> is specified</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
 <h4>fileset</h4>
- <p><a href="../Types/fileset.html">FileSet</a>s contain list of files to
- display Extension information about.</p>
+<p><a href="../Types/fileset.html">FileSet</a>s contain list of files to display Extension
+information about.</p>
 
 <h3>Examples</h3>
-<p><b>Display Extension info for a single file</b></p>
-<pre>
-  &lt;jarlib-display file=&quot;myfile.jar&quot;&gt;
-</pre>
+<p><strong>Display Extension info for a single file</strong></p>
+<pre>&lt;jarlib-display file=&quot;myfile.jar&quot;&gt;</pre>
 
-<p><b>Display Extension info for a fileset</b></p>
+<p><strong>Display Extension info for a fileset</strong></p>
 <pre>
-  &lt;jarlib-display&gt;
-    &lt;fileset dir="lib"&gt;
-      &lt;include name="*.jar"/&gt;
-    &lt;/fileset&gt;
-  &lt;/jarlib-display&gt;
-</pre>
+&lt;jarlib-display&gt;
+  &lt;fileset dir="lib"&gt;
+    &lt;include name="*.jar"/&gt;
+  &lt;/fileset&gt;
+&lt;/jarlib-display&gt;</pre>
 
 </body>
 </html>

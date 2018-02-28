@@ -30,69 +30,55 @@
 <p>Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and <code>ADDR6</code>
 properties in the current project.</p>
 <p>
-The <code>NAME</code> contains the host part of the canonical name of the host.<br/>
-If the host is not found, the host will contain the name as provided to the task,
-or <code>localhost</code> if no host was provided, and no name for the local
-host was found.<br/>
-The <code>DOMAIN</code> contains the domain part of the canonical name of the host.<br/>
- If the host is not found, the domain will contain the domain as provided to the task,
- or <code>localdomain</code> if no host / domain was provided.<br/>
-The <code>ADDR4</code> contains the IPv4 address of the host with the widest meaning.<br/>
-If no IPv4 address is found and a host has been provided the address <code>0.0.0.0</code>
-is returned, when no host was provided the address <code>127.0.0.1</code> is returned.<br/>
-The <code>ADDR6</code> contains the IPv6 address of the host with the widest meaning.<br/>
-If no IPv6 address is found and a host has been provided the address <code>::</code>
-is returned, when no host was provided the address <code>::1</code> is returned.<br/>
-</p>
+The <code>NAME</code> contains the host part of the canonical name of the host.<br/>  If the host is
+not found, the host will contain the name as provided to the task, or <code>localhost</code> if no
+host was provided, and no name for the local host was found.<br/>The <code>DOMAIN</code> contains
+the domain part of the canonical name of the host.<br/>If the host is not found, the domain will
+contain the domain as provided to the task, or <code>localdomain</code> if no host / domain was
+provided.<br/>The <code>ADDR4</code> contains the IPv4 address of the host with the widest
+meaning.<br/>If no IPv4 address is found and a host has been provided the
+address <code>0.0.0.0</code> is returned, when no host was provided the
+address <code>127.0.0.1</code> is returned.<br/>The <code>ADDR6</code> contains the IPv6 address of
+the host with the widest meaning.<br/>If no IPv6 address is found and a host has been provided the
+address <code>::</code> is returned, when no host was provided the address <code>::1</code> is
+returned.</p>
 
-<p>These properties can be used in the build-file, for instance, to create
-host-stamped filenames, or used to replace placeholder tags inside documents
-to indicate, for example, the host where the build was performed on.
-The best place for this task is probably in an initialization target.</p>
+<p>These properties can be used in the build-file, for instance, to create host-stamped filenames,
+or used to replace placeholder tags inside documents to indicate, for example, the host where the
+build was performed on.  The best place for this task is probably in an initialization target.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">prefix</td>
-    <td valign="top">Prefix used for all properties set. The default is no prefix.</td>
-    <td align="center" valign="top">No</td>
+    <td>prefix</td>
+    <td>Prefix used for all properties set.</td>
+    <td>No; defaults to no prefix</td>
   </tr>
   <tr>
-    <td valign="top">host</td>
-    <td valign="top">
-        The host to retrieve the information for, default is to retrieve
-        information for the host the task is running on.
-    </td>
-    <td align="center" valign="top">No</td>
+    <td>host</td>
+    <td>The host to retrieve the information for.</td>
+    <td>No; default is to retrieve information for the host the task is running on</td>
   </tr>
 </table>
 
 <h3>Examples</h3>
 
-<pre>
-  &lt;hostinfo/&gt;
-</pre>
+<pre>&lt;hostinfo/&gt;</pre>
 
-<p>
-Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and
-<code>ADDR6</code> for the local host, using the most &quot;global&quot; address
-available.</p>
-<pre>
-  &lt;hostinfo prefix=&quot;remotehost&quot; host=&quot;www.apache.org&quot;/&gt;
-</pre>
-<p>
-Sets the properties <code>remotehost.NAME</code> to <code>eos</code>,
-<code>remotehost.DOMAIN</code> to <code>apache.org</code>,
-<code>remotehost.ADDR4</code> to <code>140.211.11.130</code> and
-<code>remotehost.ADDR6</code> to <code>::</code>
-for the host with the name www.apache.org (provided the canonical name and ip
-addresses do not change).
-</p>
+<p>Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and <code>ADDR6</code> for
+the local host, using the most &quot;global&quot; address available.</p>
+
+<pre>&lt;hostinfo prefix=&quot;remotehost&quot; host=&quot;www.apache.org&quot;/&gt;</pre>
+<p>Sets the properties <code>remotehost.NAME</code>
+to <samp>eos</samp>, <code>remotehost.DOMAIN</code>
+to <samp>apache.org</samp>, <code>remotehost.ADDR4</code> to <samp>140.211.11.130</samp>
+and <code>remotehost.ADDR6</code> to <samp>::</samp> for the host with the
+name <samp>www.apache.org</samp> (provided the canonical name and IP addresses do not change).</p>
 
 </body>
 </html>

@@ -26,51 +26,51 @@
 
 <h2 id="filter">Filter</h2>
 <h3>Description</h3>
-<p>Sets a token filter for this project or read multiple token filter from
-an input file and sets these as filters.
-Token filters are used by all tasks that perform file copying operations
-through the Project commodity methods. See the warning
-<a href="../using.html#filters"><em>here</em></a> before using.</p>
-<p>Note 1: the token string must not contain the separators chars (@).<br>
-Note 2: Either token and value attributes must be provided, or only the
-filtersfile attribute.</p>
+<p>Sets a token filter for this project or read multiple token filter from an input file and sets
+these as filters.  Token filters are used by all tasks that perform file copying operations through
+the Project commodity methods. See the warning <a href="../using.html#filters"><em>here</em></a>
+before using.</p>
+<p>Note 1: the token string must not contain the separators chars (<q>@</q>).<br/>Note 2:
+Either <var>token</var> and <var>value</var> attributes must be provided, or only
+the <var>filtersfile</var> attribute.</p>
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">token</td>
-    <td valign="top">the token string without @</td>
-    <td align="center" valign="top">Yes*</td>
+    <td>token</td>
+    <td>the token string without <q>@</q></td>
+    <td>Yes<sup>*</sup></td>
   </tr>
   <tr>
-    <td valign="top">value</td>
-    <td valign="top">the string that should be put to replace the token when the
-      file is copied</td>
-    <td align="center" valign="top">Yes*</td>
+    <td>value</td>
+    <td>the string that should be put to replace the token when the file is copied</td>
+    <td>Yes<sup>*</sup></td>
   </tr>
   <tr>
-    <td valign="top">filtersfile</td>
-    <td valign="top">The file from which the filters must be read. This file must be a formatted as a property file.</td>
-    <td align="center" valign="top">Yes*</td>
+    <td>filtersfile</td>
+    <td>The file from which the filters must be read. This file must be a formatted as a property
+      file.</td>
+    <td>Yes<sup>*</sup></td>
   </tr>
 </table>
-<p>* see notes 1 and 2 above parameters table.</p>
+<p>* see Note 1 and 2 above parameters table.</p>
 <h3>Examples</h3>
-<pre>  &lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
-  &lt;copy todir=&quot;${dest.dir}&quot; filtering=&quot;true&quot;&gt;
-    &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
-  &lt;/copy&gt;</pre>
-<p>will copy recursively all the files from the <i>src.dir</i> directory into
-the <i>dest.dir</i> directory replacing all the occurrences of the string <i>@year@</i>
-with <i>2000.</i></p>
-<pre>  &lt;filter filtersfile=&quot;deploy_env.properties&quot;/&gt;</pre>
-will read all property entries from the <i>deploy_env.properties</i> file
-and set these as filters.
+<pre>
+&lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
+&lt;copy todir=&quot;${dest.dir}&quot; filtering=&quot;true&quot;&gt;
+  &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
+&lt;/copy&gt;</pre>
+<p>will copy recursively all the files from the <samp>src.dir</samp> directory into
+the <samp>dest.dir</samp> directory replacing all the occurrences of the string <code>@year@</code>
+with <q>2000</q>.</p>
+<pre>&lt;filter filtersfile=&quot;deploy_env.properties&quot;/&gt;</pre>
+<p>will read all property entries from the <samp>deploy_env.properties</samp> file and set these as
+filters.</p>
 
 </body>
 </html>

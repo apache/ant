@@ -33,174 +33,166 @@
 <img src="image-classdiagram.gif" border="0" alt="Class-Diagram">
 
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">failonerror</td>
-    <td valign="top">Boolean value. If false, note errors to the output but keep going.</td>
-    <td align="center">no (defaults to <i>true</i>)</td>
+    <td>failonerror</td>
+    <td>Boolean value. If <q>false</q>, note errors to the output but keep going.</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
-    <td valign="top">srcdir</td>
-    <td valign="top">Directory containing the images.</td>
-    <td align="center">yes, unless nested fileset is used</td>
+    <td>srcdir</td>
+    <td>Directory containing the images.</td>
+    <td>Yes, unless nested fileset is used</td>
   </tr>
   <tr>
-    <td valign="top">encoding</td>
-    <td valign="top">Image encoding type.<br>
-      Valid (caseinsensitive) are: jpg, jpeg, tif, tiff
+    <td>encoding</td>
+    <td>Image encoding type.<br/>Valid (case insensitive)
+      are: <q>jpg</q>, <q>jpeg</q>, <q>tif</q>, <q>tiff</q>
     </td>
-    <td align="center">no (defaults to <i>JPEG</i>)</td>
+    <td>No; defaults to <q>jpeg</q></td>
   </tr>
   <tr>
-    <td valign="top">overwrite</td>
-    <td valign="top">Boolean value. Sets whether or not to overwrite
-      a file if there is naming conflict.
-    </td>
-    <td align="center">no (defaults to <i>false</i>)</td>
+    <td>overwrite</td>
+    <td>Boolean value. Sets whether or not to overwrite a file if there is naming conflict.</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">gc</td>
-    <td valign="top">Boolean value. Enables garbage collection after
-      each image processed.
-    </td>
-    <td align="center">no (defaults to <i>false</i>)</td>
+    <td>gc</td>
+    <td>Boolean value. Enables garbage collection after each image processed.</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">destdir</td>
-    <td valign="top">Directory where the result images are stored.</td>
-    <td align="center">no (defaults to value of <i>srcdir</i>)</td>
+    <td>destdir</td>
+    <td>Directory where the result images are stored.</td>
+    <td>No; defaults to value of <var>srcdir</var></td>
   </tr>
   <!-- attributes inherited from MatchingTask -->
   <tr>
-    <td valign="top">includes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be
-      included. All files are included when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>includes</td>
+    <td>comma- or space-separated list of patterns of files that must be included.</td>
+    <td>No; defaults to all (<q>**</q>)</td>
   </tr>
   <tr>
-    <td valign="top">includesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an include pattern</td>
-    <td valign="top" align="center">No</td>
+    <td>includesfile</td>
+    <td>name of a file. Each line of this file is taken to be an include pattern</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">excludes</td>
-    <td valign="top">comma- or space-separated list of patterns of files that must be
-      excluded. No files (except default excludes) are excluded when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>excludes</td>
+    <td>comma- or space-separated list of patterns of files that must be excluded.</td>
+    <td>No; defaults to default excludes or none if <var>defaultexcludes</var> is <q>no</q></td>
   </tr>
   <tr>
-    <td valign="top">excludesfile</td>
-    <td valign="top">the name of a file. Each line of this file is
-      taken to be an exclude pattern</td>
-    <td valign="top" align="center">No</td>
+    <td>excludesfile</td>
+    <td>name of a file. Each line of this file is taken to be an exclude pattern</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">defaultexcludes</td>
-    <td valign="top">indicates whether default excludes should be used or not
-      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td>defaultexcludes</td>
+    <td>indicates whether default excludes should be used or not (<q>yes|no</q>).</td>
+    <td>No; defaults to <q>yes</q></td>
   </tr>
   <tr>
-    <td valign="top">caseSensitive</td>
-    <td valign="top">Boolean value. Sets case sensitivity of the file system.</td>
-    <td align="center">no (defaults to <i>false</i>)</td>
+    <td>caseSensitive</td>
+    <td>Boolean value. Sets case sensitivity of the file system.</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">followSymlinks</td>
-    <td valign="top">Boolean value. Sets whether or not symbolic links should be followed.</td>
-    <td align="center">no (defaults to <i>true</i>)</td>
+    <td>followSymlinks</td>
+    <td>Boolean value. Sets whether or not symbolic links should be followed.</td>
+    <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
-<p>This task forms an implicit <a href="../Types/fileset.html">FileSet</a> and
-supports most attributes of <code>&lt;fileset&gt;</code> as well as the
-nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
-<code>&lt;patternset&gt;</code> elements.</p>
-
+<p>This task forms an implicit <a href="../Types/fileset.html">FileSet</a> and supports most
+attributes of <code>&lt;fileset&gt;</code> as well as the
+nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
+and <code>&lt;patternset&gt;</code> elements.</p>
 
 <h4>ImageOperation</h4>
 <p>Adds an ImageOperation to chain.</p>
 <h5>Nested Elements</h5>
-ImageOperation can handle nested Rotate, Draw, Rectangle, Text and Scale objects.
+<p>ImageOperation can handle
+nested <code>Rotate</code>, <code>Draw</code>, <code>Rectangle</code>, <code>Text</code>
+and <code>Scale</code> objects.</p>
 
 <h4>Rotate</h4>
 <p>Adds a Rotate ImageOperation to chain.</p>
 <h5>Parameters</h5>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">angle</td>
-    <td valign="top">Float value. Sets the angle of rotation in degrees.</td>
-    <td align="center">no (defaults to <i>0.0F</i>)</td>
+    <td>angle</td>
+    <td>Float value. Sets the angle of rotation in degrees.</td>
+    <td>No; defaults to <q>0.0F</q></td>
   </tr>
 </table>
 
 <h4>Scale</h4>
 <p>Adds a Scale ImageOperation to chain.</p>
 <h5>Parameters</h5>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">proportions</td>
-    <td valign="top">Sets which dimension to control proportions from. Valid values are:
+    <td>proportions</td>
+    <td>Sets which dimension to control proportions from. Valid values are:
       <ul>
-        <li>&quot;ignore&quot; -  treat the dimensions independently.</li>
-        <li>&quot;height&quot; - keep proportions based on the width.</li>
-        <li>&quot;width&quot; - keep proportions based on the height.</li>
-        <li>&quot;cover&quot; - keep proportions and fit in the supplied dimensions.</li>
-        <li>&quot;fit&quot; - keep proportions and cover the supplied dimensions.</li>
+        <li><q>ignore</q>&mdash; treat the dimensions independently.</li>
+        <li><q>height</q>&mdash;keep proportions based on the width.</li>
+        <li><q>width</q>&mdash;keep proportions based on the height.</li>
+        <li><q>cover</q>&mdash;keep proportions and fit in the supplied dimensions.</li>
+        <li><q>fit</q>&mdash;keep proportions and cover the supplied dimensions.</li>
       </ul>
     </td>
-    <td align="center">no (defaults to <i>ignore</i>)</td>
+    <td>No; defaults to <q>ignore</q></td>
   </tr>
   <tr>
-    <td valign="top">width</td>
-    <td valign="top">Sets the width of the image, either as an integer or a %.</td>
+    <td>width</td>
+    <td>Sets the width of the image, either as an integer or a %.</td>
         <!-- todo: if integer, what kind? cm, px, inches, ... -->
-    <td align="center">no (defaults to <i>100%</i>)</td>
+    <td>No; defaults to <q>100%</q></td>
   </tr>
   <tr>
-    <td valign="top">height</td>
-    <td valign="top">Sets the height of the image, either as an integer or a %.</td>
+    <td>height</td>
+    <td>Sets the height of the image, either as an integer or a %.</td>
         <!-- todo: if integer, what kind? cm, px, inches, ... -->
-    <td align="center">no (defaults to <i>100%</i>)</td>
+    <td>No; defaults to <q>100%</q></td>
   </tr>
 </table>
 
 <h4>Draw</h4>
-<p>Adds a Draw ImageOperation to chain. DrawOperation DataType objects can be
-nested inside the Draw object.</p>
+<p>Adds a Draw ImageOperation to chain. DrawOperation DataType objects can be nested inside the Draw
+object.</p>
 <h5>Parameters</h5>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">xloc</td>
-    <td valign="top">X-Position where to draw nested image elements.</td>
-    <td align="center">no (defaults to <i>0</i>)</td>
+    <td>xloc</td>
+    <td>X-Position where to draw nested image elements.</td>
+    <td>No; defaults to <q>0</q></td>
   </tr>
   <tr>
-    <td valign="top">yloc</td>
-    <td valign="top">Y-Position where to draw nested image elements.</td>
-    <td align="center">no (defaults to <i>0</i>)</td>
+    <td>yloc</td>
+    <td>Y-Position where to draw nested image elements.</td>
+    <td>No; defaults to <q>0</q></td>
   </tr>
 </table>
 
@@ -208,51 +200,44 @@ nested inside the Draw object.</p>
 <p><em>Since Apache Ant 1.8.0</em></p>
 
 <p>You can define filename transformations by using a
-  nested <a href="../Types/mapper.html">mapper</a> element. The
-  default mapper used by
-  <code>&lt;image&gt;</code> is
-  the <a href="../Types/mapper.html#identity-mapper">identity
-  mapper</a>.</p>
+nested <a href="../Types/mapper.html">mapper</a> element. The default mapper used
+by <code>&lt;image&gt;</code> is the <a href="../Types/mapper.html#identity-mapper">identity
+mapper</a>.</p>
 
-<p>You can also use a filenamemapper type in place of the mapper
-  element.</p>
+<p>You can also use a <code>filenamemapper</code> type in place of the <code>mapper</code>
+element.</p>
 
 <h3>Examples</h3>
 
 <pre>
- &lt;image destdir="samples/low" overwrite="yes"&gt;
-     &lt;fileset dir="samples/full"&gt;
-         &lt;include name="**/*.jpg"/&gt;
-     &lt;/fileset&gt;
-     &lt;scale width="160" height="160" proportions="fit"/&gt;
- &lt;/image&gt;
-</pre>
+&lt;image destdir="samples/low" overwrite="yes"&gt;
+    &lt;fileset dir="samples/full"&gt;
+        &lt;include name="**/*.jpg"/&gt;
+    &lt;/fileset&gt;
+    &lt;scale width="160" height="160" proportions="fit"/&gt;
+&lt;/image&gt;</pre>
 <p>Create thumbnails of my images and make sure they all fit within the 160x160 size whether the
 image is portrait or landscape.</p>
 
 <pre>
 &lt;image srcdir="src" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
-&lt;/image&gt;
-</pre>
-<p>Creates a thumbnail for all PNG-files in <i>src</i> in the size of 40 pixel keeping the proportions
-and stores the <i>src</i>.</p>
+&lt;/image&gt;</pre>
+<p>Creates a thumbnail for all PNG files in <samp>src</samp> of the size of 40 pixel keeping the
+proportions and stores the <samp>src</samp>.</p>
 
 <pre>
 &lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
-&lt;/image&gt;
-</pre>
-<p>Same as above but stores the result in <i>dest</i>.</p>
+&lt;/image&gt;</pre>
+<p>Same as above but stores the result in <samp>dest</samp>.</p>
 
 <pre>
 &lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
     &lt;scale proportions="width" width="40"/&gt;
     &lt;globmapper from="*" to="scaled-*"/&gt;
-&lt;/image&gt;
-</pre>
-<p>Same as above but stores the resulting file names will be prefixed
-  by "scaled-".</p>
+&lt;/image&gt;</pre>
+<p>Same as above but stores the resulting file names will be prefixed by <samp>scaled-</samp>.</p>
 
 </body>
 </html>

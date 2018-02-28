@@ -29,26 +29,26 @@
 If delimiter is set this task returns all found locations.</p>
 
 <h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <td><b>Attribute</b></td>
+    <td><b>Description</b></td>
+    <td><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">file</td>
-    <td valign="top">The name of the file to search.</td>
-    <td align="center" valign="top">yes</td>
+    <td>file</td>
+    <td>The name of the file to search.</td>
+    <td>yes</td>
   </tr>
   <tr>
-    <td valign="top">location</td>
-    <td valign="top">The name of the property where to store the location</td>
-    <td align="center" valign="top">yes</td>
+    <td>location</td>
+    <td>The name of the property where to store the location</td>
+    <td>yes</td>
   </tr>
   <tr>
-    <td valign="top">delimiter</td>
-    <td valign="top">A delimiter to use when returning the list</td>
-    <td align="center" valign="top">only if the list is required</td>
+    <td>delimiter</td>
+    <td>A delimiter to use when returning the list</td>
+    <td>only if the list is required</td>
   </tr>
 </table>
 
@@ -65,8 +65,8 @@ If delimiter is set this task returns all found locations.</p>
         &lt;path>
     &lt;/find>
 </pre>
-Searches in Ants home directory for a file <i>ant.jar</i> and stores its location in
-property <i>loc</i> (should be ANT_HOME/bin/ant.jar).
+Searches in Ant home directory for a file <samp>ant.jar</samp> and stores its location in
+property <samp>loc</samp> (should be <samp>ANT_HOME/bin/ant.jar</samp>).
 
 <pre>
     &lt;find file="ant.jar" location="loc" delimiter=";">
@@ -76,9 +76,9 @@ property <i>loc</i> (should be ANT_HOME/bin/ant.jar).
     &lt;/find>
     &lt;echo>ant.jar found in: ${loc}&lt;/echo>
 </pre>
-Searches in Windows C: drive for all <i>ant.jar</i> and stores their locations in
-property <i>loc</i> delimited with <i>';'</i>. (should need a long time :-)
-After that it prints out the result (e.g. C:/ant-1.5.4/bin/ant.jar;C:/ant-1.6/bin/ant.jar).
+Searches in Windows <samp>C:</samp> drive for all <samp>ant.jar</samp> and stores their locations in
+property <samp>loc</samp> delimited with <q>;</q>. (should need a long time :-)
+After that it prints out the result (e.g. <samp>C:/ant-1.5.4/bin/ant.jar;C:/ant-1.6/bin/ant.jar</samp>).
 
 </body>
 </html>

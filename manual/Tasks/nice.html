@@ -26,43 +26,36 @@
 
 <h2 id="echo">Nice</h2>
 <h3>Description</h3>
-<p>Provide "nice-ness" to the current thread
-   and/or query the current value.</p>
+<p>Provide &quot;nice-ness&quot; to the current thread and/or query the current value.</p>
 <h3>Parameters</h3>
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">currentpriority</td>
-    <td valign="top">the name of the property whose value should be
-                     set to the current &quot;nice-ness&quot; level.
-    </td>
-    <td valign="top" align="center">No</td>
+    <td>currentpriority</td>
+    <td>name of the property whose value should be set to the current &quot;nice-ness&quot;
+      level.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">newpriority</td>
-    <td valign="top">the value to which the
-                     &quot;nice-ness&quot; level should be set.
-                     Must be a valid Java Thread priority.
-    </td>
-    <td valign="top" align="center">No</td>
+    <td>newpriority</td>
+    <td>value to which the &quot;nice-ness&quot; level should be set.  Must be a valid Java Thread
+      priority.</td>
+    <td>No</td>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>   &lt;nice newpriority=&quot;10&quot;/&gt;</pre>
-Set the Thread priority to 10 (highest).
-<pre>   &lt;nice currentpriority=&quot;priority&quot;/&gt;</pre>
-Store the current Thread priority in the user property "priority".
-<pre>
-   &lt;nice currentpriority=&quot;currentpriority&quot; newpriority=&quot;1&quot;/&gt;
-</pre>
-<p>Set the current Thread priority to 1 (lowest), storing the original
-priority in the user property "currentpriority".  This
-can be used to set the priority back to its original value later.
-</p>
+<pre>&lt;nice newpriority=&quot;10&quot;/&gt;</pre>
+<p>Set the Thread priority to 10 (highest).</p>
+<pre>&lt;nice currentpriority=&quot;priority&quot;/&gt;</pre>
+<p>Store the current Thread priority in the user property <code>priority</code>.</p>
+<pre>&lt;nice currentpriority=&quot;currentpriority&quot; newpriority=&quot;1&quot;/&gt;</pre>
+<p>Set the current Thread priority to 1 (lowest), storing the original priority in the user
+property <code>currentpriority</code>.  This can be used to set the priority back to its original
+value later.</p>
 
 </body>
 </html>

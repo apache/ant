@@ -29,91 +29,92 @@
 
 <p>Invokes the <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> parser.</p>
 
-<p>This parser &quot;traverses a set of Java source file directories and generates design quality metrics for each Java package&quot;.
-It allows to &quot;automatically measure the quality of a design in terms of its extensibility, reusability, and maintainability to
-effectively manage and control package dependencies.&quot;</p>
+<p>This parser &quot;traverses a set of Java source file directories and generates design quality
+metrics for each Java package&quot;.  It allows to &quot;automatically measure the quality of a
+design in terms of its extensibility, reusability, and maintainability to effectively manage and
+control package dependencies.&quot;</p>
 
-<p>Source file directories are defined by nested
-<code>&lt;sourcespath&gt;</code>; Class file directories are defined
-by nested <code>&lt;classespath&gt;</code>, see <a
-href="#nested">nested elements</a>.</p>
+<p>Source file directories are defined by nested <code>&lt;sourcespath&gt;</code>. Class file
+directories are defined by nested <code>&lt;classespath&gt;</code>. See <a href="#nested">nested
+elements</a>.</p>
 
-<p>Optionally, you can also set the <code>outputfile</code> name where the output is stored. By default the task writes its report to the standard output.</P>
+<p>Optionally, you can also set the <var>outputfile</var> name where the output is stored. By
+default the task writes its report to the standard output.</p>
 
 <p>The task requires at least the JDepend 1.2 version.</p>
 
 <h3>Parameters</h3>
 
-<table>
+<table class="attr">
   <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Required</th>
   </tr>
   <tr>
-    <td valign="top">outputfile</td>
-    <td valign="top">The output file name. If not set, the output is printed on the standard output.</td>
-    <td align="center" valign="top">No</td>
+    <td>outputfile</td>
+    <td>The output file name. If not set, the output is printed on the standard output.</td>
+    <td>No</td>
   </tr>
   <tr>
-    <td valign="top">format</td>
-    <td valign="top">The format to write the output in. The default is "text", the alternative is "xml"</td>
-    <td align="center" valign="top">No</td>
+    <td>format</td>
+    <td>The format to write the output in,
+    either <q>text</q> (default) or <q>xml</q></td>
+    <td>No; the default is <q>text</q></td>
   </tr>
   <tr>
-    <td valign="top">fork</td>
-    <td valign="top">Run the tests in a separate VM.</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td>fork</td>
+    <td>Run the tests in a separate JVM.</td>
+    <td>No; default is <q>off</q></td>
   </tr>
   <tr>
-    <td valign="top">haltonerror</td>
-    <td valign="top">Stop the build process if an error occurs during the jdepend analysis.</td>
-    <td align="center" valign="top">No, default is "off"</td>
+    <td>haltonerror</td>
+      <td>Stop the build process if an error occurs during the <code>jdepend</code> analysis.</td>
+    <td>No; default is <q>off</q></td>
   </tr>
   <tr>
-    <td valign="top">timeout</td>
-    <td valign="top">Cancel the operation if it doesn't finish in the given time (measured in milliseconds). (Ignored if fork is disabled.)</td>
-    <td align="center" valign="top">No</td>
+    <td>timeout</td>
+    <td>Cancel the operation if it doesn't finish in the given time (measured in milliseconds).</td>
+    <td>No, ignored if <var>fork</var> is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">jvm</td>
-    <td valign="top">The command used to invoke the Java Virtual Machine, default is 'java'. The command is resolved by java.lang.Runtime.exec(). (Ignored if fork is disabled.)</td>
-    <td align="center" valign="top">No, default "java"</td>
+    <td>jvm</td>
+    <td>The command used to invoke JVM. The command is resolved
+      by <code>java.lang.Runtime.exec()</code>.</td>
+    <td>No; default <q>java</q>, ignored if <var>fork</var> is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">dir</td>
-    <td valign="top">The directory to invoke the VM in. (Ignored if fork is disabled)</td>
-    <td align="center" valign="top">No</td>
+    <td>dir</td>
+    <td>The directory to invoke JVM in.</td>
+    <td>No, ignored if <var>fork</var> is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">includeruntime</td>
-    <td valign="top">Implicitly add the classes required to run jdepend
-      in forked mode. (Ignored if fork is disabled). <em>Since Apache Ant 1.6</em>.</td>
-    <td align="center" valign="top">No, default is "no".</td>
+    <td>includeruntime</td>
+    <td>Implicitly add the classes required to run <code>jdepend</code> in forked mode. <em>Since
+      Apache Ant 1.6</em>.</td>
+    <td>No; default is <q>no</q>, ignored if <var>fork</var> is <q>false</q></td>
   </tr>
   <tr>
-    <td valign="top">classpathref</td>
-    <td valign="top">the classpath to use, given as reference to a PATH defined elsewhere.</td>
-    <td align="center" valign="top">No</td>
+    <td>classpathref</td>
+    <td>the <var>classpath</var> to use, given as reference to a PATH defined elsewhere.</td>
+    <td>No</td>
   </tr>
 </table>
 
 <h3 id="nested">Nested Elements</h3>
 
-<p><code>jdepend</code> supports four nested elements:
-<code>&lt;classpath&gt;, &lt;classespath&gt;</code> and
-<code>&lt;sourcespath&gt;</code>, that represent <a
-href="../using.html#path">PATH like structures</a>, and
-<code>&lt;exclude&gt;</code>.</p>
+<p><code>jdepend</code> supports four nested
+elements: <code>&lt;classpath&gt;</code>, <code>&lt;classespath&gt;</code>
+and <code>&lt;sourcespath&gt;</code>, that represent <a href="../using.html#path">path-like
+structures</a>, and <code>&lt;exclude&gt;</code>.</p>
 
-<p><code>&lt;sourcespath&gt;</code> is used to define the paths of the
-source code to analyze, but it is deprecated. With version 2.5 of
-JDepend, only class files are analyzed. The nested element
-<code>&lt;classespath&gt;</code> replaces <code>&lt;sourcespath&gt;</code> and is used to define
-the paths of compiled class code to analyze; the <code>&lt;sourcespath&gt;</code>
-variable is still available in case you are using an earlier version
-of JDepend.  The <code>&lt;exclude&gt;</code> element can be used to set packages
-to ignore (requires JDepend 2.5 or above).</p>
+<p><code>&lt;sourcespath&gt;</code> is used to define the paths of the source code to analyze, but
+it is deprecated. With version 2.5 of JDepend, only class files are analyzed. The nested
+element <code>&lt;classespath&gt;</code> replaces <code>&lt;sourcespath&gt;</code> and is used to
+define the paths of compiled class code to analyze; the <code>&lt;sourcespath&gt;</code> variable is
+still available in case you are using an earlier version of JDepend.
+The <code>&lt;exclude&gt;</code> element can be used to set packages to ignore (requires JDepend 2.5
+or above).</p>
 
 <h3>Examples</h3>
 
@@ -122,13 +123,10 @@ to ignore (requires JDepend 2.5 or above).</p>
     &lt;classespath&gt;
         &lt;pathelement location="build"/&gt;
     &lt;/classespath&gt;
-&lt;/jdepend&gt;
-</pre>
+&lt;/jdepend&gt;</pre>
 
-<p>This invokes JDepend on the <code>build</code> directory, writing
-the output on the standard output. The classpath is defined using a
-classpath reference.</p>
-
+<p>This invokes JDepend on the <samp>build</samp> directory, writing the output on the standard
+output. The classpath is defined using a classpath reference.</p>
 
 <pre>
 &lt;jdepend outputfile="docs/jdepend.xml" fork="yes" format="xml"&gt;
@@ -139,12 +137,10 @@ classpath reference.</p>
         &lt;pathelement location="classes"/&gt;
         &lt;pathelement location="lib/jdepend.jar"/&gt;
     &lt;/classpath&gt;
-&lt;/jdepend&gt;
-</pre>
+&lt;/jdepend&gt;</pre>
 
-<p>This invokes JDepend in a separate VM on the <code>src</code> and
-<code>testsrc</code> directories, writing the output to the
-<code>&lt;docs/jdepend.xml&gt;</code> file in xml format. The
+<p>This invokes JDepend in a separate JVM on the <samp>src</samp> and <samp>testsrc</samp>
+directories, writing the output to the <samp>docs/jdepend.xml</samp> file in xml format. The
 classpath is defined using nested elements.</p>
 
 <pre>
@@ -154,12 +150,10 @@ classpath is defined using nested elements.</p>
     &lt;classespath&gt;
         &lt;pathelement location="build"/&gt;
     &lt;/classespath&gt;
-&lt;/jdepend&gt;
-</pre>
+&lt;/jdepend&gt;</pre>
 
-<p>This invokes JDepend with the build directory as the base for class
-files to analyze, and will ignore all classes in the java.* and
-javax.* packages.</p>
+<p>This invokes JDepend with the build directory as the base for class files to analyze, and will
+ignore all classes in the <samp>java.*</samp> and <samp>javax.*</samp> packages.</p>
 
 </body>
 </html>
