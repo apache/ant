@@ -50,7 +50,7 @@ import org.xml.sax.XMLReader;
 /**
  * <p>This data type provides a catalog of resource locations (such as
  * DTDs and XML entities), based on the <a
- * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * href="https://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.  The catalog entries are used
  * both for Entity resolution and URI resolution, in accordance with
  * the {@link org.xml.sax.EntityResolver EntityResolver} and {@link
@@ -62,9 +62,9 @@ import org.xml.sax.XMLReader;
  * external catalog file(s), or both.  In order to use an external
  * catalog file, the xml-commons resolver library ("resolver.jar")
  * must be in your classpath.  External catalog files may be either <a
- * href="http://oasis-open.org/committees/entity/background/9401.html">
+ * href="https://oasis-open.org/committees/entity/background/9401.html">
  * plain text format</a> or <a
- * href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
  * XML format</a>.  If the xml-commons resolver library is not found
  * in the classpath, external catalog files, specified in
  * <code>&lt;catalogpath&gt;</code> paths, will be ignored and a warning will

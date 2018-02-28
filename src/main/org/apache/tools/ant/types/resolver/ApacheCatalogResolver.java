@@ -40,9 +40,9 @@ import org.apache.xml.resolver.tools.CatalogResolver;
  * <p>The {@link org.apache.tools.ant.types.resolver.ApacheCatalog
  * ApacheCatalog} class is used to parse external catalog files, which
  * can be in either <a
- * href="http://oasis-open.org/committees/entity/background/9401.html">
+ * href="https://oasis-open.org/committees/entity/background/9401.html">
  * plain text format</a> or <a
- * href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
  * XML format</a>.</p>
  *
  * <p>For each entry found in an external catalog file, if any, an

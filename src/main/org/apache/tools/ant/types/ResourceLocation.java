@@ -24,7 +24,7 @@ import java.net.URL;
  * <code>&lt;entity&gt;</code> nested elements.  These correspond to
  * the <code>PUBLIC</code> and <code>URI</code> catalog entry types,
  * respectively, as defined in the <a
- * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * href="https://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.</p>
  *
  * <p>Possible Future Enhancements:</p>

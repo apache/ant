@@ -36,9 +36,9 @@ import java.util.stream.Stream;
  * It is used at boot time in the launcher, and cannot make use of any of Ant's other classes.
  * <p>
  * This is a surprisingly brittle piece of code, and has had lots of bugs filed against it:
- * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>,
- * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=8031">use File.toURI().toURL().toExternalForm()</a>,
- * <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=42222">Locator implementation not encoding URI strings properly: spaces in paths</a>.
+ * <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>,
+ * <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=8031">use File.toURI().toURL().toExternalForm()</a>,
+ * <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=42222">Locator implementation not encoding URI strings properly: spaces in paths</a>.
  * It also breaks Eclipse 3.3 Betas:
  * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=183283">Exception if installation path has spaces</a>.
  * <p>
@@ -157,7 +157,7 @@ public final class Locator {
      * <p>Prior to Java 1.4,<!-- TODO is JDK version actually relevant? -->
      * swallows '%' that are not followed by two characters.</p>
      *
-     * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * See <a href="https://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
      * which makes some mention of how
      * characters not supported by URI Reference syntax should be escaped.
      *

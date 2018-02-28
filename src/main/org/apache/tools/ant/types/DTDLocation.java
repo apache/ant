@@ -21,7 +21,7 @@ package org.apache.tools.ant.types;
  * <p>Helper class to handle the DTD nested element.  Instances of
  * this class correspond to the <code>PUBLIC</code> catalog entry type
  * of the <a
- * href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * href="https://oasis-open.org/committees/entity/spec-2001-08-06.html">
  * OASIS "Open Catalog" standard</a>.</p>
  *
  * <p>Possible Future Enhancement: Bring the Ant element name into

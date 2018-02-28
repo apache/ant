@@ -115,7 +115,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  * comparison.</p>
  *
  * <p>A useful scenario for this selector is inside a build environment
- * for homepage generation (e.g. with <a href="http://forrest.apache.org/">
+ * for homepage generation (e.g. with <a href="https://forrest.apache.org/">
  * Apache Forrest</a>).</p><pre>
  * &lt;target name="generate-and-upload-site"&gt;
  *     &lt;echo&gt; generate the site using forrest &lt;/echo&gt;
