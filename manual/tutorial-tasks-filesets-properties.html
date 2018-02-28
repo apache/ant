@@ -477,7 +477,7 @@ reuse later (<strong>*3</strong>).
             for (File includedFile : path.list()) {
                 String filename = includedFile.replace('\\','/');
                 filename = filename.substring(filename.lastIndexOf("/")+1);
-                if (file.equals(filename) &amp;&amp; <b>!foundFiles.contains(includedFile)</b>) {   // 1
+                if (file.equals(filename) &amp;&amp; <b>!foundFiles.contains(includedFile)</b>) {  // 1
                     foundFiles.add(includedFile);
                 }
             }
@@ -485,16 +485,16 @@ reuse later (<strong>*3</strong>).
 
         // create the return value (list/single)
         String rv = null;
-        if (!foundFiles.isEmpty()) {                                                 // 2
+        if (!foundFiles.isEmpty()) {                                                // 2
             if (delimiter == null) {
                 // only the first
                 rv = foundFiles.get(0);
             } else {
                 // create list
                 StringBuilder list = new StringBuilder();
-                for (String file : foundFiles) {                                     // 3
+                for (String file : foundFiles) {                                    // 3
                     list.append(it.next());
-                    if (<b>list.length() > 0</b>) list.append(delimiter);                    // 4
+                    if (<b>list.length() > 0</b>) list.append(delimiter);                  // 4
                  }
                 rv = list.toString();
             }
