@@ -44,6 +44,22 @@
     </au:assertTrue>
   </target>
 
+  <target name="testPropReplacement" description="bz-62147 - tests that string resource tokens aren't replaced with property values">
+    <property name="bz-62147-four" value="four"/>
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <tokens>
+            <string>one two three $${bz-62147-four} $${bz-62417-nonexistent-prop}</string>
+          </tokens>
+          <resources>
+            <string value="one two three $${bz-62147-four} $${bz-62417-nonexistent-prop}" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
   <target name="testExplicitLines">
     <au:assertTrue>
       <resourcecount count="0">
