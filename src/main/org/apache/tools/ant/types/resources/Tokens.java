@@ -65,7 +65,12 @@ public class Tokens extends BaseResourceCollectionWrapper {
             List<Resource> result = new ArrayList<>();
             for (String s = tokenizer.getToken(rdr); s != null; s =
                 tokenizer.getToken(rdr)) {
-                StringResource resource = new StringResource(getProject(), s);
+                // do not send the Project to the constructor of StringResource, since
+                // the semantics of that constructor clearly state that property value
+                // replacement takes place on the passed string value. We don't want
+                // that to happen.
+                final StringResource resource = new StringResource(s);
+                resource.setProject(getProject());
                 result.add(resource);
             }
             return result;
