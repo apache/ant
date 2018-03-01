@@ -23,6 +23,10 @@ Fixed bugs:
  * Fixed NullPointerException when a mappedresource is used in pathconvert
    Bugzilla Report 62076
 
+ * Fixed an issue where a string, when used as a resource collection, within
+   tokens, would be replaced by property values
+   Bugzilla Report 62147
+
 Other changes:
 --------------
 
