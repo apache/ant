@@ -70,8 +70,8 @@ target="_top">https://ant.apache.org/</a>
 The binary distribution of Ant is available as 3 different archives
 </p>
 <ol>
-<li><samp>.zip</samp>&mdash;Recommended compression format for Windows, can also be used on other platforms. Supported by many
-programs and some operating systems natively.</li>
+<li><samp>.zip</samp>&mdash;Recommended compression format for Windows, can also be used on other platforms. Supported
+by many programs and some operating systems natively.</li>
 <li><samp>.tar.gz</samp>&mdash;Using the tar program to gather files together, and gzip to compress and uncompress.</li>
 <li><samp>.tar.bz2</samp>&mdash;Using the tar program to gather files together, and bzip2 to compress and uncompress.</li>
 </ol>
@@ -111,14 +111,15 @@ the <a href="#diagnostics">diagnostics</a> advice.
 <h3 id="sourceEdition">Source Distribution</h3>
 
 <p>
-If you prefer the source distribution, you can download the source for the latest Ant release from
-<a href="https://ant.apache.org/srcdownload.cgi" target="_top">https://ant.apache.org/srcdownload.cgi</a>.
+If you prefer the source distribution, you can download the source for the latest Ant release
+from <a href="https://ant.apache.org/srcdownload.cgi" target="_top">https://ant.apache.org/srcdownload.cgi</a>.
 </p>
 <p>
 If you prefer the leading-edge code, you can access the code as it is being developed via Git. The Ant website has
 details on <a href="https://ant.apache.org/git.html" target="_top">accessing Git</a>. All bug fixes will go in against
-the HEAD of the source tree, and the first response to many bug reports will be "have you tried the latest version". Don't
-be afraid to download and build a prerelease distribution, as everything other than new features are usually stable.
+the HEAD of the source tree, and the first response to many bug reports will be "have you tried the latest
+version". Don't be afraid to download and build a prerelease distribution, as everything other than new features are
+usually stable.
 </p>
 <p>
 See the section <a href="#buildingant">Building Ant</a> on how to build Ant from the source code. You can also access
@@ -150,40 +151,39 @@ target="_top">https://archive.apache.org/dist/ant/</a>. The files are organized 
 <tr>
   <td><samp>ant-current-bin.zip</samp></td>
   <td>
-    ZIP archive containing the compiled version of Ant in the last released version. It is recommended that
-    you do not download the latest version this way, as the standard way of downloading described above will
-    redirect you to a mirror closer to you, thus making the download faster for you and reducing the load
-    on Apache servers.
+    ZIP archive containing the compiled version of Ant in the last released version. It is recommended that you do not
+    download the latest version this way, as the standard way of downloading described above will redirect you to a
+    mirror closer to you, thus making the download faster for you and reducing the load on Apache servers.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-src.zip</samp></td>
   <td>
-    ZIP archive containing the sources of Ant. If you have this you can compile Ant. If you do not have the
-    <em>required</em> dependencies, the classes depending on them are just not built. Again, it is preferred to use the
-    standard way of getting the source package described above to make your download quicker and to reduce the load on
-    Apache servers.
+    ZIP archive containing the sources of Ant. If you have this you can compile Ant. If you do not have
+    the <em>required</em> dependencies, the classes depending on them are just not built. Again, it is preferred to use
+    the standard way of getting the source package described above to make your download quicker and to reduce the load
+    on Apache servers.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-*.asc</samp></td>
   <td>
-    Security file for checking the correctness of the zip file. This one is the
-    <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a> signature.
+    Security file for checking the correctness of the zip file. This one is
+    the <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a> signature.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-*.md5</samp></td>
   <td>
-    Security file for checking the correctness of the zip file. This one is the
-    <a href="https://en.wikipedia.org/wiki/Md5" target="_blank">MD5</a> checksum.
+    Security file for checking the correctness of the zip file. This one is
+    the <a href="https://en.wikipedia.org/wiki/Md5" target="_blank">MD5</a> checksum.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-*.sha1</samp></td>
   <td>
-    Security file for checking the correctness of the zip file. This one is the
-    <a href="https://en.wikipedia.org/wiki/SHA-1" target="_blank">SHA1</a> checksum.
+    Security file for checking the correctness of the zip file. This one is
+    the <a href="https://en.wikipedia.org/wiki/SHA-1" target="_blank">SHA1</a> checksum.
   </td>
 </tr>
 <tr>
@@ -222,9 +222,9 @@ target="_top">https://archive.apache.org/dist/ant/</a>. The files are organized 
 <h2 id="sysrequirements">System Requirements</h2>
 <p>
 Ant has been used successfully on many platforms, including Linux, commercial flavours of Unix such as Solaris and
-HP-UX, macOS, Windows NT descendants, OS/2 Warp, Novell Netware 6, OpenVMS. The platforms used most for development
-are, in no particular order, Linux, macOS, Microsoft Windows and Unix; these are therefore that platforms that tend to
-work best. <em>Since Ant 1.7</em>, Windows 9x is no longer supported.
+HP-UX, macOS, Windows NT descendants, OS/2 Warp, Novell Netware 6, OpenVMS. The platforms used most for development are,
+in no particular order, Linux, macOS, Microsoft Windows and Unix; these are therefore that platforms that tend to work
+best. <em>Since Ant 1.7</em>, Windows 9x is no longer supported.
 </p>
 <p>
 For the current version of Ant (1.10), you will also need a JDK installed on your system, version 8 or later required.
@@ -271,8 +271,8 @@ other open source Java runtimes, and so strives to have a product that works wel
 Only the <samp>bin</samp> and <samp>lib</samp> directories are required to run Ant.
 </p>
 <p>
-To install Ant, choose a directory and copy the distribution files there. This directory will be known as
-<code>ANT_HOME</code>.
+To install Ant, choose a directory and copy the distribution files there. This directory will be known
+as <code>ANT_HOME</code>.
 </p>
 
 <h3>Windows 95, Windows 98 &amp; Windows ME Note</h3>
@@ -280,20 +280,20 @@ To install Ant, choose a directory and copy the distribution files there. This d
     <em>Note that current releases of Ant no longer support these systems. If you are using an older version of Ant,
     however, the script used to launch Ant will have problems if <code>ANT_HOME</code> is a long filename (i.e. a
     filename which is not of the format known as &quot;8.3&quot;). This is due to limitations in the OS's handling of
-    the <code>&quot;for&quot;</code> batch file statement. It is recommended, therefore, that Ant be installed in a
-    <strong>short</strong>, 8.3 path, such as <samp>C:\Ant</samp>.</em>
+    the <code>&quot;for&quot;</code> batch file statement. It is recommended, therefore, that Ant be installed in
+    a <strong>short</strong>, 8.3 path, such as <samp>C:\Ant</samp>.</em>
   </p>
   <p>
     On these systems you will also need to configure more environment space to cater for the environment variables used
-    in the Ant launch script. To do this, you will need to add or update the following line in the
-    <samp>config.sys</samp> file
+    in the Ant launch script. To do this, you will need to add or update the following line in
+    the <samp>config.sys</samp> file
   </p>
   <pre>shell=c:\command.com c:\ /p /e:32768</pre>
 
 <h3 id="setup">Setup</h3>
 <p>
-Before you can run Ant there is some additional setup you will need to do unless you are installing the
-<a href="#jpackage">RPM version from jpackage.org</a>:
+Before you can run Ant there is some additional setup you will need to do unless you are installing
+the <a href="#jpackage">RPM version from jpackage.org</a>:
 </p>
 <ul>
 <li>Add the <samp>bin</samp> directory to your path.</li>
@@ -304,9 +304,9 @@ better to not rely on this behavior.</li>
 below). This should be set to the directory where your JDK is installed.</li>
 </ul>
 <p>
-Operating System-specific instructions for doing this from the command line are in the <a href="#windows">Windows</a>,
-<a href="#bash">Linux/Unix (bash)</a>, and <a href="#tcshcsh">Linux/Unix (csh)</a> sections. Note that using this
-method, the settings will only be valid for the command line session you run them in.
+Operating System-specific instructions for doing this from the command line are in
+the <a href="#windows">Windows</a>, <a href="#bash">Linux/Unix (bash)</a>, and <a href="#tcshcsh">Linux/Unix (csh)</a>
+sections. Note that using this method, the settings will only be valid for the command line session you run them in.
 </p>
 <p>
 <strong>Note</strong>: Do not install Ant's <samp>ant.jar</samp> file into the <samp>lib/ext</samp> directory of the
@@ -316,10 +316,11 @@ security restrictions on the classes which may be loaded by an extension.
 
 <h3>Windows Note</h3>
 <p>
-    The <samp>ant.bat</samp> script makes use of three environment variables&mdash;<code>ANT_HOME</code>,
-    <code>CLASSPATH</code> and <code>JAVA_HOME</code>. <strong>Ensure</strong> that <code>ANT_HOME</code> and
-    <code>JAVA_HOME</code> variables are set, and that they do <strong>not</strong> have quotes (either ' or &quot;) and
-    they do <strong>not</strong> end with \ or with /. <code>CLASSPATH</code> should be unset or empty.
+    The <samp>ant.bat</samp> script makes use of three environment
+    variables&mdash;<code>ANT_HOME</code>, <code>CLASSPATH</code> and <code>JAVA_HOME</code>. <strong>Ensure</strong>
+    that <code>ANT_HOME</code> and <code>JAVA_HOME</code> variables are set, and that they do <strong>not</strong> have
+    quotes (either ' or &quot;) and they do <strong>not</strong> end with \ or with /. <code>CLASSPATH</code> should be
+    unset or empty.
 </p>
 
 <h3 id="checkInstallation">Check Installation</h3>
@@ -347,11 +348,11 @@ If this does not work, ensure your environment variables are set right. E.g., on
   <li>required: <code>%PATH%=...<i>maybe-other-entries</i>...;%ANT_HOME%\bin;...<i>maybe-other-entries</i>...</code></li>
 </ul>
 <p>
-<code>ANT_HOME</code> is used by the launcher script for finding the libraries.
-<code>JAVA_HOME</code> is used by the launcher for finding the JDK/JRE to use. (JDK is recommended as some tasks require the
-Java tools.) If not set, the launcher tries to find one via the <code>%PATH%</code> environment variable.
-<code>PATH</code> is set for user convenience. With that set you can just start <code>ant</code> instead of always typing
-<samp>the/complete/path/to/your/ant/installation/bin/ant</samp>.
+<code>ANT_HOME</code> is used by the launcher script for finding the libraries. <code>JAVA_HOME</code> is used by the
+launcher for finding the JDK/JRE to use. (JDK is recommended as some tasks require the Java tools.) If not set, the
+launcher tries to find one via the <code>%PATH%</code> environment variable. <code>PATH</code> is set for user
+convenience. With that set you can just start <code>ant</code> instead of always
+typing <samp>the/complete/path/to/your/ant/installation/bin/ant</samp>.
 </p>
 
 <h3 id="optionalTasks">Optional Tasks</h3>
@@ -373,8 +374,8 @@ In <code><i>ANT_HOME</i>/lib</code>. This makes the JAR files available to all A
 
 <li>
 <p>
-In <code>${user.home}/.ant/lib</code> (<em>since Ant 1.6</em>). This allows different users to add new libraries to Ant. All JAR
-files added to this directory are available to command-line Ant.
+In <code>${user.home}/.ant/lib</code> (<em>since Ant 1.6</em>). This allows different users to add new libraries to
+Ant. All JAR files added to this directory are available to command-line Ant.
 </p>
 </li>
 
@@ -773,16 +774,16 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   <tr>
     <td>jakarta-regexp-1.4.jar</td>
     <td><a href="Types/mapper.html#regexp-mapper">regexp</a> type with mappers (if you do not wish to use
-    java.util.regex)</td>
+      java.util.regex)</td>
     <td><a href="https://attic.apache.org/projects/jakarta-regexp.html"
-    target="_top">https://attic.apache.org/projects/jakarta-regexp.html</a></td>
+           target="_top">https://attic.apache.org/projects/jakarta-regexp.html</a></td>
   </tr>
   <tr>
     <td>jakarta-oro-2.0.8.jar</td>
     <td><a href="Types/mapper.html#regexp-mapper">regexp</a> type with mappers (if you do not wish to use
-    java.util.regex) or <a href="Tasks/ftp.html">ftp</a> task with <a href="#commons-net">commons-net</a> 1.4.1</td>
+      java.util.regex) or <a href="Tasks/ftp.html">ftp</a> task with <a href="#commons-net">commons-net</a> 1.4.1</td>
     <td><a href="https://attic.apache.org/projects/jakarta-oro.html"
-    target="_top">https://attic.apache.org/projects/jakarta-oro.html</a></td>
+           target="_top">https://attic.apache.org/projects/jakarta-oro.html</a></td>
   </tr>
   <tr>
     <td>junit.jar</td>
@@ -812,23 +813,20 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
     <td>Groovy JARs</td>
     <td>Groovy Ant tasks with bindings or Groovy with <a href="Tasks/script.html">script</a>
     and <a href="Tasks/scriptdef.html">scriptdef</a> tasks</td>
-    <td>
-      <a href="http://groovy-lang.org/" target="_top">http://groovy-lang.org/</a><br/>
-      Use either groovy-ant for Groovy Ant tasks with bindings or groovy-bsf for Groovy with script and scriptdef tasks
-      (or groovy-all)
+    <td><a href="http://groovy-lang.org/" target="_top">http://groovy-lang.org/</a><br/> Use either groovy-ant for
+      Groovy Ant tasks with bindings or groovy-bsf for Groovy with script and scriptdef tasks (or groovy-all)
     </td>
   </tr>
   <tr>
     <td>netrexx.jar</td>
     <td><a href="Tasks/netrexxc.html">netrexxc</a> task, Rexx with <a href="Tasks/script.html">script</a> task</td>
     <td><a href="https://www.ibm.com/software/awdtools/netrexx/library.html"
-    target="_top">https://www.ibm.com/software/awdtools/netrexx/library.html</a></td>
+           target="_top">https://www.ibm.com/software/awdtools/netrexx/library.html</a></td>
   </tr>
   <tr>
-    <td>rhino.jar<br/>
-    (included in Java 7 runtime, replaced by Nashorn in Java&nbsp;8 and later)</td>
-    <td>JavaScript with <a href="Tasks/script.html">script</a> task<br/>
-    <strong>Note</strong>: Apache BSF 2.4.0 works only with Rhino 1.5R4 and later versions.</td>
+    <td>rhino.jar<br/>(included in Java 7 runtime, replaced by Nashorn in Java&nbsp;8 and later)</td>
+    <td>JavaScript with <a href="Tasks/script.html">script</a> task<br/><strong>Note</strong>: Apache BSF 2.4.0 works
+      only with Rhino 1.5R4 and later versions.</td>
     <td><a href="https://www.mozilla.org/rhino/" target="_top">https://www.mozilla.org/rhino/</a></td>
   </tr>
   <tr>
@@ -848,8 +846,8 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   </tr>
   <tr>
     <td>BeanShell JAR(s)</td>
-    <td>BeanShell with <a href="Tasks/script.html">script</a> task.<br/>
-    <strong>Note</strong>: Ant requires BeanShell version 1.3 or later</td>
+    <td>BeanShell with <a href="Tasks/script.html">script</a> task.<br/><strong>Note</strong>: Ant requires BeanShell
+      version 1.3 or later</td>
     <td><a href="http://www.beanshell.org/" target="_top">http://www.beanshell.org/</a></td>
   </tr>
   <tr>
@@ -875,33 +873,30 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   <tr id="commons-net">
     <td>commons-net.jar</td>
     <td><a href="Tasks/ftp.html">ftp</a>, <a href="Tasks/rexec.html">rexec</a>
-    and <a href="Tasks/telnet.html">telnet</a> tasks<br/>
-    A minimum version of commons-net of 1.4.0 is needed to compile Ant, earlier versions did not support the full range
-    of configuration options.<br/>
-    jakarta-oro 2.0.8 is required together with commons-net 1.4.x at run time.<br/>
-    <strong>Note</strong>: do not use commons-net 3.2 because
-    of <a href="https://issues.apache.org/jira/browse/NET-493">performance issues</a>
+      and <a href="Tasks/telnet.html">telnet</a> tasks<br/> A minimum version of commons-net of 1.4.0 is needed to
+      compile Ant, earlier versions did not support the full range of configuration options.<br/>jakarta-oro 2.0.8 is
+      required together with commons-net 1.4.x at run time.<br/><strong>Note</strong>: do not use commons-net 3.2
+      because of <a href="https://issues.apache.org/jira/browse/NET-493">performance issues</a>
     </td>
     <td><a href="https://commons.apache.org/net/" target="_top">https://commons.apache.org/net/</a></td>
   </tr>
   <tr>
     <td>bcel.jar</td>
     <td><a href="Types/classfileset.html">classfileset</a> data type, JavaClassHelper used by the ClassConstants filter
-    reader and optionally used by <a href="Tasks/ejb.html#ejbjar">ejbjar</a> task for dependency determination</td>
+      reader and optionally used by <a href="Tasks/ejb.html#ejbjar">ejbjar</a> task for dependency determination</td>
     <td><a href="https://commons.apache.org/bcel/" target="_top">https://commons.apache.org/bcel/</a></td>
   </tr>
   <tr>
     <td>javax.mail-api.jar</td>
     <td><a href="Tasks/mail.html">mail</a> task with MIME encoding,
-    and <em><u>deprecated</u></em> <a href="Tasks/mimemail.html">mimemail</a> task</td>
+      and <em><u>deprecated</u></em> <a href="Tasks/mimemail.html">mimemail</a> task</td>
     <td><a href="https://javaee.github.io/javamail/"
-        target="_top">https://javaee.github.io/javamail/</a></td>
+           target="_top">https://javaee.github.io/javamail/</a></td>
   </tr>
   <tr>
-    <td>activation.jar<br/>
-    (included in Java 6 and later runtime)</td>
+    <td>activation.jar<br/>(included in Java 6 and later runtime)</td>
     <td><a href="Tasks/mail.html">mail</a> task with MIME encoding,
-    and <em><u>deprecated</u></em> <a href="Tasks/mimemail.html">mimemail</a> task</td>
+      and <em><u>deprecated</u></em> <a href="Tasks/mimemail.html">mimemail</a> task</td>
     <td><a href="https://www.oracle.com/technetwork/java/javase/jaf-135115.html"
            target="_top">https://www.oracle.com/technetwork/java/javase/jaf-135115.html</a></td>
   </tr>
@@ -914,9 +909,9 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   <tr>
     <td>resolver.jar <strong>1.1 or later</strong></td>
     <td><a href="Types/xmlcatalog.html">xmlcatalog</a> datatype <em>only if support for external catalog files is
-    desired</em></td>
+      desired</em></td>
     <td><a href="https://xerces.apache.org/xml-commons/components/resolver/"
-	   target="_top">https://xerces.apache.org/xml-commons/components/resolver/</a></td>
+           target="_top">https://xerces.apache.org/xml-commons/components/resolver/</a></td>
   </tr>
   <tr>
     <td>jsch.jar <strong>0.1.54 or later</strong></td>
@@ -927,13 +922,13 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
     <td>JAI&mdash;Java Advanced Imaging</td>
     <td><a href="Tasks/image.html">image</a> task</td>
     <td><a href="https://download.java.net/media/jai/builds/release/1_1_3/INSTALL.html"
-	   target="_top">https://download.java.net/media/jai/builds/release/1_1_3/INSTALL.html</a></td>
+           target="_top">https://download.java.net/media/jai/builds/release/1_1_3/INSTALL.html</a></td>
   </tr>
   <tr>
     <td>XZ&mdash;XZ for Java <strong>1.6 or later</strong></td>
     <td><a href="Tasks/pack.html">xz</a> and <a href="Tasks/unpack.html">unxz</a>
-    tasks, <a href="Types/resources.html#xzresource">xzresource</a>, xz compression
-    in <a href="Tasks/tar.html">tar</a>/<a href="Tasks/unzip.html">untar</a> tasks</td>
+      tasks, <a href="Types/resources.html#xzresource">xzresource</a>, xz compression
+      in <a href="Tasks/tar.html">tar</a>/<a href="Tasks/unzip.html">untar</a> tasks</td>
     <td><a href="https://www.tukaani.org/xz/java.html" target="_top">https://www.tukaani.org/xz/java.html</a></td>
   </tr>
 </table>
@@ -943,15 +938,16 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
 <h3 id="diagnostics">Diagnostics</h3>
 
 <p>
-Ant has a built in diagnostics feature. If you run <code>ant -diagnostics</code>, Ant will look at its internal state and
-print it out. This code will check and print the following things.
+Ant has a built in diagnostics feature. If you run <code>ant -diagnostics</code>, Ant will look at its internal state
+and print it out. This code will check and print the following things.
 </p>
 
 <ul>
 
 <li>Where Ant is running from. Sometimes you can be surprised.</li>
 
-<li>The version of <samp>ant.jar</samp> and of the <samp>ant-*.jar</samp> containing the optional tasks&mdash;and whether they match</li>
+<li>The version of <samp>ant.jar</samp> and of the <samp>ant-*.jar</samp> containing the optional tasks&mdash;and
+whether they match</li>
 
 <li>Which JAR files are in <code>ANT_HOME/lib</code></li>
 
@@ -962,8 +958,8 @@ libraries that it depends on are absent.</li>
 
 <li>JVM system properties</li>
 
-<li>The status of the <samp>temp</samp> directory. If this is not writable, or its timestamp is horribly wrong (possible if it is on a
-network drive), a lot of tasks may fail with obscure error messages.</li>
+<li>The status of the <samp>temp</samp> directory. If this is not writable, or its timestamp is horribly wrong (possible
+if it is on a network drive), a lot of tasks may fail with obscure error messages.</li>
 
 <li>The current time zone as Java sees it. If this is not what it should be for your location, then dependency logic may
 get confused.</li>
