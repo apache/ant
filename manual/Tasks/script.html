@@ -41,7 +41,7 @@ either their <var>name</var> or <var>id</var> attributes (as long as their names
 valid Java identifiers, that is).  This is controlled by the <var>setbeans</var> attribute of the
 task.  The name <code>project</code> is a pre-defined reference to the Project, which can be used
 instead of the project name. The name <code>self</code> is a pre-defined reference to the
-actual <code>&lt;script&gt;</code>-Task instance.<br>From these objects you have access to the Ant
+actual <code>&lt;script&gt;</code>-Task instance.<br/>From these objects you have access to the Ant
 Java API, see the <a href="../api/index.html">JavaDoc</a> (especially
 for <a href="../api/org/apache/tools/ant/Project.html">Project</a>
 and <a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more
@@ -272,11 +272,11 @@ be imported
 with <code>importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileUtils)</code><br/>
 The <code>&lt;script&gt;</code> task populates the Project instance under the
 name <code>project</code>, so we can use that reference. Another way is to use its given name or
-getting its reference from the task itself.<br>  The Project provides methods for accessing and
-setting properties, creating DataTypes and Tasks and much more.<br>  After creating a FileSet object
+getting its reference from the task itself.<br/>  The Project provides methods for accessing and
+setting properties, creating DataTypes and Tasks and much more.<br/>  After creating a FileSet object
 we initialize that by calling its set-methods. Then we can use that object like a normal Ant task
-(<code>&lt;copy&gt;</code> for example).<br>  For getting the size of a file we instantiate
-a <code>java.io.File</code>. So we are using normal Java API here.<br>  Finally we use
+(<code>&lt;copy&gt;</code> for example).<br/>  For getting the size of a file we instantiate
+a <code>java.io.File</code>. So we are using normal Java API here.<br/>  Finally we use
 the <code>&lt;echo&gt;</code> task for producing the output. The task is not executed by
 its <code>execute()</code> method, because the <code>perform()</code> method (implemented in Task
 itself) does the appropriate logging before and after invoking <code>execute()</code>.</p>

@@ -24,10 +24,10 @@
 
 <body>
 <h1>Apache Ant ClearCase Tasks</h1>
-<p>by:<br>
-Curtis White (cwhite at aracnet dot com),<br>
-Sean P. Kane (spkane at genomatica dot com),<br>
-Rob Anderson (Anderson.Rob at vectorscm dot com), and<br>
+<p>by:<br/>
+Curtis White (cwhite at aracnet dot com),<br/>
+Sean P. Kane (spkane at genomatica dot com),<br/>
+Rob Anderson (Anderson.Rob at vectorscm dot com), and<br/>
 Sean Egan    (sean at cm-logic dot com)</p>
 
 <p>Version 1.6&mdash;02/25/2003</p>
@@ -189,12 +189,11 @@ original.</p>
     <td>notco</td>
     <td>Fail if it's already checked out to the current view. Set to <q>false</q> to ignore
     it.<br/><em>Since Ant 1.6.1</em></td>
-    <td>No</td>
+    <td>No; default is <q>true</q></td>
   </tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails.<br>
-    <em>Since Ant 1.6.1</em></td>
+    <td>Throw an exception if the command fails.<br/><em>Since Ant 1.6.1</em></td>
     <td>No; default is <q>true</q></td>
   </tr>
 </table>
@@ -375,8 +374,7 @@ set to the current time.</p>
   </tr>
   <tr>
     <td>failonerr</td>
-    <td>Throw an exception if the command fails.<br>
-    <em>Since Ant 1.6.1</em></td>
+    <td>Throw an exception if the command fails.<br/><em>Since Ant 1.6.1</em></td>
     <td>No; default is <q>true</q></td>
   </tr>
 </table>
@@ -845,8 +843,8 @@ automatically check it out.</p>
 
 <h2 id="ccmkelem">CCMkelem</h2>
 <h3>Description</h3>
-Task to perform a <code>cleartool mkelem</code> command to ClearCase.<br>
-<em>Since Ant 1.6.1</em>
+<p>Task to perform a <code>cleartool mkelem</code> command to ClearCase.<br/><em>Since Ant
+1.6.1</em></p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>

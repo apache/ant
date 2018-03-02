@@ -82,34 +82,34 @@ also.</p>
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;</pre>
 
-<p>The following built-in tasks support nested <code>&lt;filterchain&gt;</code> elements.<br>
-<a href="../Tasks/concat.html">Concat</a>,<br>
-<a href="../Tasks/copy.html">Copy</a>,<br>
-<a href="../Tasks/loadfile.html">LoadFile</a>,<br>
-<a href="../Tasks/loadproperties.html">LoadProperties</a>,<br>
-<a href="../Tasks/loadresource.html">LoadResource</a>,<br>
+<p>The following built-in tasks support nested <code>&lt;filterchain&gt;</code> elements.<br/>
+<a href="../Tasks/concat.html">Concat</a>,<br/>
+<a href="../Tasks/copy.html">Copy</a>,<br/>
+<a href="../Tasks/loadfile.html">LoadFile</a>,<br/>
+<a href="../Tasks/loadproperties.html">LoadProperties</a>,<br/>
+<a href="../Tasks/loadresource.html">LoadResource</a>,<br/>
 <a href="../Tasks/move.html">Move</a></p>
 
-<p>A FilterChain is formed by defining zero or more of the following nested elements.<br>
-<a href="#filterreader">FilterReader</a><br>
-<a href="#classconstants">ClassConstants</a><br>
-<a href="#escapeunicode">EscapeUnicode</a><br>
-<a href="#expandproperties">ExpandProperties</a><br>
-<a href="#headfilter">HeadFilter</a><br>
-<a href="#linecontains">LineContains</a><br>
-<a href="#linecontainsregexp">LineContainsRegExp</a><br>
-<a href="#prefixlines">PrefixLines</a><br>
-<a href="#replacetokens">ReplaceTokens</a><br>
-<a href="#stripjavacomments">StripJavaComments</a><br>
-<a href="#striplinebreaks">StripLineBreaks</a><br>
-<a href="#striplinecomments">StripLineComments</a><br>
-<a href="#suffixlines">SuffixLines</a><br>
-<a href="#tabstospaces">TabsToSpaces</a><br>
-<a href="#tailfilter">TailFilter</a><br>
-<a href="#deletecharacters">DeleteCharacters</a><br>
-<a href="#concatfilter">ConcatFilter</a><br>
-<a href="#sortfilter">SortFilter</a><br>
-<a href="#tokenfilter">TokenFilter</a><br>
+<p>A FilterChain is formed by defining zero or more of the following nested elements.<br/>
+<a href="#filterreader">FilterReader</a><br/>
+<a href="#classconstants">ClassConstants</a><br/>
+<a href="#escapeunicode">EscapeUnicode</a><br/>
+<a href="#expandproperties">ExpandProperties</a><br/>
+<a href="#headfilter">HeadFilter</a><br/>
+<a href="#linecontains">LineContains</a><br/>
+<a href="#linecontainsregexp">LineContainsRegExp</a><br/>
+<a href="#prefixlines">PrefixLines</a><br/>
+<a href="#replacetokens">ReplaceTokens</a><br/>
+<a href="#stripjavacomments">StripJavaComments</a><br/>
+<a href="#striplinebreaks">StripLineBreaks</a><br/>
+<a href="#striplinecomments">StripLineComments</a><br/>
+<a href="#suffixlines">SuffixLines</a><br/>
+<a href="#tabstospaces">TabsToSpaces</a><br/>
+<a href="#tailfilter">TailFilter</a><br/>
+<a href="#deletecharacters">DeleteCharacters</a><br/>
+<a href="#concatfilter">ConcatFilter</a><br/>
+<a href="#sortfilter">SortFilter</a><br/>
+<a href="#tokenfilter">TokenFilter</a><br/>
 <a href="../Tasks/fixcrlf.html">FixCRLF</a></p>
 
 <h3 id="filterreader">FilterReader</h3>
@@ -364,9 +364,8 @@ matching strings.</p>
   </tr>
   <tr>
     <td>regexp</td>
-    <td>Regular expression to be searched for.<br>
-      <em>Since Ant 1.10.2</em>, this also works as an attribute
-      on <code>linecontainsregexp</code>. In earlier versions of Ant you must use a nested
+    <td>Regular expression to be searched for.<br/><em>Since Ant 1.10.2</em>, this also works as an
+      attribute on <code>linecontainsregexp</code>. In earlier versions of Ant you must use a nested
       element when using the convenience method.
     </td>
     <td>Yes</td>
@@ -1093,25 +1092,25 @@ following are understood: <q>\n</q>, <q>\r</q>, <q>\f</q>, <q>\t</q> and <q>\\</
 </table>
 <p>The following tokenizers are provided by the default distribution.</p>
 <p>
-  <a href="#linetokenizer">LineTokenizer</a><br>
-  <a href="#filetokenizer">FileTokenizer</a><br>
-  <a href="#stringtokenizer">StringTokenizer</a><br>
+  <a href="#linetokenizer">LineTokenizer</a><br/>
+  <a href="#filetokenizer">FileTokenizer</a><br/>
+  <a href="#stringtokenizer">StringTokenizer</a>
 </p>
 <p>The following string filters are provided by the default distribution.</p>
 <p>
-  <a href="#replacestring">ReplaceString</a><br>
-  <a href="#containsstring">ContainsString</a><br>
-  <a href="#replaceregex">ReplaceRegex</a><br>
-  <a href="#containsregex">ContainsRegex</a><br>
-  <a href="#trim">Trim</a><br>
-  <a href="#ignoreblank">IgnoreBlank</a><br>
-  <a href="#filterdeletecharacters">DeleteCharacters</a><br>
-  <a href="#uniqfilter">UniqFilter</a><br>
-  <a href="#native2asciifilter">Native2AsciiFilter</a><br>
+  <a href="#replacestring">ReplaceString</a><br/>
+  <a href="#containsstring">ContainsString</a><br/>
+  <a href="#replaceregex">ReplaceRegex</a><br/>
+  <a href="#containsregex">ContainsRegex</a><br/>
+  <a href="#trim">Trim</a><br/>
+  <a href="#ignoreblank">IgnoreBlank</a><br/>
+  <a href="#filterdeletecharacters">DeleteCharacters</a><br/>
+  <a href="#uniqfilter">UniqFilter</a><br/>
+  <a href="#native2asciifilter">Native2AsciiFilter</a>
 </p>
 <p>The following string filters are provided by the optional distribution.</p>
 <p>
-  <a href="#scriptfilter">ScriptFilter</a><br>
+  <a href="#scriptfilter">ScriptFilter</a>
 </p>
 <p>
   <a href="#custom">Custom</a> tokenizers and string filters can be declared

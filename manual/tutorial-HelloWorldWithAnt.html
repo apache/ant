@@ -464,7 +464,7 @@ steps: 1. let <code>&lt;junit&gt;</code> log the information and 2. convert thes
 define a report directory, create it before running the <q>junit</q> and redirect the logging to it. The log format is
 XML so <q>junitreport</q> could parse it. In a second target <q>junitreport</q> should create a browsable HTML report
 for all generated XML log files in the report directory. Now you can open the <samp>${report.dir}\index.html</samp> and
-see the result (looks something like JavaDoc).<br>  Personally I use two different targets
+see the result (looks something like JavaDoc).<br/>  Personally I use two different targets
 for <code>&lt;junit&gt;</code> and <code>&lt;junitreport&gt;</code>. Generating the HTML report needs some time and you
 don't need the HTML report just for testing, e.g. if you are fixing an error or a integration server is doing a job.</p>
 

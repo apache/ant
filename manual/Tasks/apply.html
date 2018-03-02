@@ -72,7 +72,7 @@ standard input.</p>
   </tr>
   <tr>
     <td>spawn</td>
-    <td>whether or not you want the commands to be spawned.<br>  If you spawn a command, its output
+    <td>whether or not you want the commands to be spawned.<br/>  If you spawn a command, its output
     will not be logged by Ant.<br/>  The input, output, error, and result property settings are not
     active when spawning a process.<br/>  <em>since Ant 1.6</em></td>
     <td>No; default is <q>false</q></td>
@@ -175,8 +175,8 @@ standard input.</p>
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if the command exits with a return code other than 0.</td>
-    <td>No</td>
+    <td>Stop the build process if the command exits with a return code other than <q>0</q>.</td>
+    <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
     <td>failifexecutionfails</td>
@@ -200,7 +200,7 @@ standard input.</p>
     <td>type</td>
     <td>One of <q>file</q>, <q>dir</q> or <q>both</q>. If set to <q>file</q>, only the names of
       plain files will be sent to the command. If set to <q>dir</q>, only the names of directories
-      are considered.<br>
+      are considered.<br/>
       <strong>Note</strong>: The <var>type</var> attribute does not apply to
       nested <code>dirset</code>s&mdash;<code>dirset</code>s always implicitly assume type to
       be <q>dir</q>.</td>

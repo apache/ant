@@ -61,14 +61,14 @@ the <a href="../Types/regexp.html#implementation">Regexp Type</a>.</p>
   <tr>
     <td>flags</td>
     <td>The flags to use when matching the regular expression.  For more information, consult the
-      Perl 5 syntax<br>
-      <q>g</q> : Global replacement.  Replace all occurrences found<br>
-      <q>i</q> : Case Insensitive.  Do not consider case in the match<br>
+      Perl 5 syntax<br/>
+      <q>g</q> : Global replacement.  Replace all occurrences found<br/>
+      <q>i</q> : Case Insensitive.  Do not consider case in the match<br/>
       <q>m</q> : Multiline.  Treat the string as multiple lines of input, using <q>^</q>
       and <q>$</q> as the start or end of any line, respectively, rather than start or end of
-      string.<br>
+      string.<br/>
       <q>s</q> : Singleline.  Treat the string as a single line of input, using <q>.</q> to match
-      any character, including a newline, which normally, it would not match.<br>
+      any character, including a newline, which normally, it would not match.
     </td>
     <td>No</td>
   </tr>
@@ -118,7 +118,7 @@ pattern.  You can use this element to refer to a previously defined substitution
 instance.</p>
 
 <pre>
-&lt;substitution id="id" expression="beta\1alpha"/&gt;<br>
+&lt;substitution id="id" expression="beta\1alpha"/&gt;<br/>
 &lt;substitution refid="id"/&gt;</pre>
 
 <h3>Examples</h3>
@@ -151,7 +151,7 @@ input</p>
 &lt;html&gt; &lt;body&gt;
  &lt;h1&gt; T E S T &lt;/h1&gt; &lt;/body&gt;&lt;/html&gt;</pre>
 
-<br><!-- small distance from code of the previous example -->
+<br/><!-- small distance from code of the previous example -->
 
 <pre>
 &lt;replaceregexp match="\\n" replace="${line.separator}" flags="g" byline="true"&gt;
