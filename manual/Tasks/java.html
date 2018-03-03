@@ -56,7 +56,7 @@ because it tries to read from the standard input.</p>
     <td>jar</td>
     <td class="left">the location of the jar file to execute (must have a <code>Main-Class</code>
       entry in the manifest). <var>fork</var> must be set to <q>true</q> if this option is selected.
-      See notes below for more details.
+      See notes <a href="#jar-execute">below</a> for more details.
     </td>
   </tr>
   <tr>
@@ -302,7 +302,7 @@ structure</a> and can also be set via a nested <code>modulepath</code> element.<
 <p>The location of modules that replace upgradeable modules in the runtime image can be specified
 using this <a href="../using.html#path">path-like structure</a>.</p>
 
-<h3>JAR file execution</h3>
+<h3 id="jar-execute">JAR file execution</h3>
 
 <p>The parameter of the <var>jar</var> attribute is of type <code>File</code>; that is, the
 parameter is resolved to an absolute file relative to the base directory of the

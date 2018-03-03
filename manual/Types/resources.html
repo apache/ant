@@ -503,17 +503,17 @@ selection.
     <td>Whether patterns are case-sensitive</td>
     <td>No; default <q>true</q></td>
   </tr>
-  <tr>
+  <tr id="followsymlinks">
     <td>followsymlinks</td>
     <td>Whether to follow symbolic links (see note <a href="#symlink">below</a>)</td>
     <td>No; default <q>true</q></td>
   </tr>
 </table>
 
-<p id="symlink"><strong>Note</strong>: All files/directories for which the canonical path is
-different from its path are considered symbolic links.  On Unix systems this usually means the
-file really is a symbolic link but it may lead to false results on other platforms.
-</p>
+<p id="symlink"><a href="#followsymlinks"><strong>Note</strong></a>: All files/directories for which
+the canonical path is different from its path are considered symbolic links.  On Unix systems this
+usually means the file really is a symbolic link but it may lead to false results on other
+platforms.</p>
 
 <h4 id="restrict">restrict</h4>
 <p>Restricts a nested resource collection using resource selectors:</p>

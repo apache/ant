@@ -418,13 +418,13 @@ versions</h3>
   <td>Not Supported</td>
   <td>Same</td>
 </tr>
-<tr>
+<tr id="footnote-1-back">
   <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj grammar.jjt</b>
     /tmp/subdir/output.jj
     /tmp/&lt;generated&gt;.java</pre>
   </td>
   <td>Not Supported</td>
-  <td>Not Supported *)</td>
+  <td>Not Supported<a href="#footnote-1"><sup>*</sup></a></td>
 </tr>
 <tr>
   <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj relative/grammar.jjt</b>
@@ -432,7 +432,7 @@ versions</h3>
     /tmp/&lt;generated&gt;.java</pre>
   </td>
   <td>Not Supported</td>
-  <td>Not Supported *)</td>
+  <td>Not Supported<a href="#footnote-1"><sup>*</sup></a></td>
 </tr>
 <tr>
   <td><pre><b>jjtree -OUTPUT_FILE:<i>D:</i>/tmp/subdir/output.jj /tmp/absolute/grammar.jjt</b>
@@ -440,7 +440,7 @@ versions</h3>
     /tmp/&lt;generated&gt;.java</pre>
   </td>
   <td>Not Supported</td>
-  <td>Not Supported *)</td>
+  <td>Not Supported<a href="#footnote-1"><sup>*</sup></a></td>
 </tr>
 <tr>
   <td><pre><b>jjtree -OUTPUT_FILE:/tmp/subdir/output.jj -OUTPUT_DIRECTORY:relative grammar.jjt</b>
@@ -493,11 +493,11 @@ versions</h3>
   </tbody>
 </table>
 
-<p>*) <strong>Footnote</strong>: When running JJTree with the Ant <code>taskdef jjtree</code> the
-option <code>-OUTPUT_DIRECTORY</code> must always be set, because the project's <var>basedir</var>
-and the Ant working directory might differ. So even if you don't specify
-the <var>outputdirectory</var> for <code>taskdef jjtree</code>, JJTree will be called with
-the <code>-OUTPUT_DIRECTORY</code> set to the project's <var>basedir</var>.  But when
+<p id="footnote-1"><a href="#footnote-1-back"><strong>Note</strong></a>: When running JJTree with
+the Ant <code>taskdef jjtree</code> the option <code>-OUTPUT_DIRECTORY</code> must always be set,
+because the project's <var>basedir</var> and the Ant working directory might differ. So even if you
+don't specify the <var>outputdirectory</var> for <code>taskdef jjtree</code>, JJTree will be called
+with the <code>-OUTPUT_DIRECTORY</code> set to the project's <var>basedir</var>.  But when
 the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if
 relative to this <code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute
 or contains a drive letter we have a problem.  Therefore absolute <var>outputfile</var>s (when
