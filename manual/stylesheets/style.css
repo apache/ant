@@ -94,6 +94,10 @@ h3 > code, h3 > samp {
     font-size: 1.5rem;
 }
 
+h3 > var {
+    font-size: 1.125rem;
+}
+
 pre {
    background-color: #efefef;
    margin-right: 4rem;
