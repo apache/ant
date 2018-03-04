@@ -618,8 +618,9 @@ firewalls.</p>
 <p>Probe for the Maven repository being reachable using the hostname, ten second timeout.</p>
 
 <h4 id="length">length</h4>
+<p><em>Since Ant 1.6.3</em></p>
 <p>This condition is a facet of the <a href="length.html">Length</a> task. It is used to test the
-length of a string or one or more files.  <em>Since Ant 1.6.3</em></p>
+length of a string or one or more files.</p>
 
 <pre>&lt;length string=" foo " trim="true" length="3"/&gt;</pre>
 <p>Verify a string is of a certain length.</p>
@@ -628,9 +629,9 @@ length of a string or one or more files.  <em>Since Ant 1.6.3</em></p>
 <p>Verify that file <samp>foo</samp> is not empty.</p>
 
 <h4 id="isfailure">isfailure</h4>
-
+<p><em>Since Ant 1.7</em></p>
 <p>Test the return code of an executable (see the <a href="exec.html">Exec</a> task) for
-failure. <em>Since Ant 1.7</em></p>
+failure.</p>
 
 <table class="attr">
   <tr>
@@ -646,21 +647,23 @@ failure. <em>Since Ant 1.7</em></p>
 </table>
 
 <h4 id="resourcecount">resourcecount</h4>
+<p><em>Since Ant 1.7</em></p>
 <p>This condition is a facet of the <a href="resourcecount.html">ResourceCount</a> task.  It is used
 to test the size of a <a href="../Types/resources.html#collection">resource
-collection</a>.  <em>Since Ant 1.7</em></p>
+collection</a>.</p>
 
 <pre>&lt;resourcecount refid=&quot;myresourcecollection&quot; when=&quot;greater&quot; count=&quot;0&quot;/&gt;</pre>
 <p>Verify that a resource collection is not empty.</p>
 
 <h4 id="resourcesmatch">resourcesmatch</h4>
+<p><em>Since Ant 1.7</em></p>
 <p>Test resources for matching. Nonexistence of one or more resources results in <q>false</q>,
 although if none exists they are considered equal in terms of content.  By default, this test does a
 byte for byte comparison, so test time scales with byte size. <strong>Note</strong>: if the files
 are different sizes, one of them is missing or the filenames match the answer is so obvious the
 detailed test is omitted.  The resources to check are specified as
 nested <a href="../Types/resources.html#collection">resource collections</a>, meaning that more than
-two resources can be checked; in this case all resources must match. <em>Since Ant 1.7</em></p>
+two resources can be checked; in this case all resources must match.</p>
 <table class="attr">
   <tr>
     <th>Attribute</th>
@@ -676,9 +679,10 @@ two resources can be checked; in this case all resources must match. <em>Since A
 </table>
 
 <h4 id="resourcecontains">resourcecontains</h4>
+<p><em>Since Ant 1.7.1</em></p>
 <p>Tests whether a resource contains a given (sub)string.</p>
 <p>The resources to check are specified via references or&mdash;in the case of file
-resources&mdash;via the resource attribute.  <em>Since Ant 1.7.1</em></p>
+resources&mdash;via the resource attribute.</p>
 <table class="attr">
   <tr>
     <th>Attribute</th>
@@ -707,9 +711,9 @@ resources&mdash;via the resource attribute.  <em>Since Ant 1.7.1</em></p>
 </table>
 
 <h4 id="hasmethod">hasmethod</h4>
-
+<p><em>Since Ant 1.7</em></p>
 <p>Tests for a class having a method or field. If the class is not found or fails to load, the build
-fails.  <em>Since Ant 1.7</em></p>
+fails.</p>
 
 <table class="attr">
   <tr>
@@ -754,9 +758,8 @@ classpath.</p>
 <p>Looks for the method <code>trimToSize()</code> in the <code>java.util.ArrayList</code> class.</p>
 
 <h4 id="matches">matches</h4>
-
-<p>Test if the specified string matches the specified regular expression pattern. <em>Since Ant
-1.7</em></p>
+<p><em>Since Ant 1.7</em></p>
+<p>Test if the specified string matches the specified regular expression pattern</p>
 
 <table class="attr">
   <tr>
@@ -839,8 +842,8 @@ flags.</p>
 are supported, the <var>property</var> attribute is redundant and will be ignored.</p>
 
 <h4 id="hasfreespace">hasfreespace</h4>
-
-<p>Tests a partition to see if there is enough space.  <em>Since Ant 1.7.0</em></p>
+<p><em>Since Ant 1.7.0</em></p>
+<p>Tests a partition to see if there is enough space.</p>
 <p>Needed attribute can be specified using standard computing terms:</p>
 <ul>
   <li>K : Kilobytes (1024 bytes)</li>
@@ -871,8 +874,8 @@ are supported, the <var>property</var> attribute is redundant and will be ignore
 <pre>&lt;hasfreespace partition="c:" needed="100M"/&gt;</pre>
 
 <h4 id="islastmodified">islastmodified</h4>
-
-<p>Tests the last modified date of a resource.  <em>Since Ant 1.8.0</em></p>
+<p><em>Since Ant 1.8.0</em></p>
+<p>Tests the last modified date of a resource.</p>
 
 <table class="attr">
   <tr>
@@ -913,8 +916,8 @@ are supported, the <var>property</var> attribute is redundant and will be ignore
 &lt;/islastmodified&gt;</pre>
 
 <h4 id="resourceexists">resourceexists</h4>
-
-<p>Tests a resource for existence.  <em>since Ant 1.8.0</em></p>
+<p><em>Since Ant 1.8.0</em></p>
+<p>Tests a resource for existence.</p>
 
 <p>The actual resource to test is specified as a nested element.</p>
 
@@ -925,8 +928,8 @@ are supported, the <var>property</var> attribute is redundant and will be ignore
 &lt;/resourceexists&gt;</pre>
 
 <h4 id="javaversion">javaversion</h4>
-
-<p>Tests the version of the JVM executing Ant.  <em>Since Ant 1.10.2</em></p>
+<p><em>Since Ant 1.10.2</em></p>
+<p>Tests the version of the JVM executing Ant.</p>
 
 <table class="attr">
   <tr>

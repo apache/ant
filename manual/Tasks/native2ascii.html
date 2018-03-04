@@ -161,14 +161,14 @@ can be used to enable arguments only if a given converter implementation will be
   </tr>
 </table>
 
-<h4>implementationclasspath (<em>since Apache Ant 1.8.0</em>)</h4>
-
+<h4>implementationclasspath</h4>
+<p><em>Since Apache Ant 1.8.0</em></p>
 <p>A <a href="../using.html#path">path-like structure</a> holding the classpath to use when loading
 the converter implementation if a custom class has been specified.  Doesn't have any effect when
 using one of the built-in converters.</p>
 
-<h4>Any nested element of a type that implements Native2AsciiAdapter (<em>since Ant 1.8.0</em>)</h4>
-
+<h4>Any nested element of a type that implements Native2AsciiAdapter</h4>
+<p><em>Since Ant 1.8.0</em></p>
 <p>If a defined type implements the <code>Native2AsciiAdapter</code> interface a nested element of
 that type can be used as an alternative to the <var>implementation</var> attribute.</p>
 
@@ -178,8 +178,8 @@ that type can be used as an alternative to the <var>implementation</var> attribu
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;srcdir&quot; dest=&quot;srcdir&quot;
               includes=&quot;**/*.eucjis&quot; ext=&quot;.java&quot;/&gt;</pre>
 
-    <p>Converts all files in the directory <samp>srcdir</samp> ending in <samp>.eucjis</samp> from
-      the EUCJIS encoding to ASCII and renames them to end in <samp>.java</samp>.</p>
+<p>Converts all files in the directory <samp>srcdir</samp> ending in <samp>.eucjis</samp> from the
+EUCJIS encoding to ASCII and renames them to end in <samp>.java</samp>.</p>
 
 <pre>
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;native/japanese&quot; dest=&quot;src&quot;

@@ -24,11 +24,11 @@
 
 <body>
 <h2>Subant Task</h2>
+<p><em>Since Apache Ant 1.6</em></p>
 <h3 id="description">Description</h3>
 <p>Calls a given target for all defined sub-builds.  This is an extension of Ant for bulk project
 execution.  <strong>This task must not be used outside of a <code>target</code> if it invokes the
 same build file it is part of.</strong></p>
-<p><em>Since Apache Ant 1.6</em></p>
 
 <p><code>subant</code> uses <code>ant</code> internally so many things said
 in <a href="ant.html"><code>ant</code>'s manual page</a> apply here as well.</p>
@@ -140,6 +140,7 @@ different from the way <code>&lt;property&gt;</code> tasks in build files behave
 <p>Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build
 path.</p>
 <h4><strong>target</strong> (org.apache.tools.ant.taskdefs.Ant.TargetElement)</h4>
+<p><em>Since Ant 1.7</em>.</p>
 <p>You can specify multiple targets using nested <code>&lt;target&gt;</code> elements instead of
 using the target attribute.  These will be executed as if Ant had been invoked with a single target
 whose dependencies are the targets so specified, in the order specified.</p>
@@ -155,7 +156,6 @@ whose dependencies are the targets so specified, in the order specified.</p>
     <td>Yes</td>
   </tr>
 </table>
-<p><em>since Ant 1.7</em>.</p>
 <h3 id="examples">Examples</h3>
 <pre>
 &lt;project name="subant" default="subant1"&gt;

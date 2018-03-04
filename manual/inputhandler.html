@@ -87,16 +87,16 @@ define it as a simple parameter to <code>ant</code>, but you can
 define it inside the <code>ANT_OPTS</code> environment variable.</p>
 
 <h3>GreedyInputHandler</h3>
-
+<p><em>Since Ant 1.7</em></p>
 <p>Like the default implementation, this InputHandler reads from standard
 input. However, it consumes <em>all</em> available input. This behavior is
-useful for sending Ant input via an OS pipe. <em>Since Ant 1.7</em></p>
+useful for sending Ant input via an OS pipe.</p>
 
 <h3>SecureInputHandler</h3>
-
+<p><em>Since Ant 1.7.1</em></p>
 <p>This InputHandler calls <code>System.console().readPassword()</code>,
 available since Java 6.  On earlier platforms it falls back to the
-behavior of DefaultInputHandler. <em>Since Ant 1.7.1</em></p>
+behavior of DefaultInputHandler.</p>
 
 <h2>InputRequest</h2>
 

@@ -242,7 +242,7 @@ path-like structure).</p>
 
 <h4>any <a href="../Types/resources.html#collection">resource collection</a></h4>
 
-<p><em>since Ant 1.7</em></p>
+<p><em>Since Ant 1.7</em></p>
 
 <p>Use resource collections to specify resources that the stylesheet should be applied to.  Use a
 nested mapper and the task's <q>destdir</q> attribute to specify the output files.</p>
@@ -341,6 +341,7 @@ the <a href="https://www.w3.org/TR/xslt#output"> XSLT specifications</a>.
 </table>
 
 <h4 id="factory">factory (<var>trax</var> processors only)</h4>
+<p><em>Since Ant 1.9.8</em></p>
 <p>Used to specify factory settings.</p>
 
 <h5>Parameters</h5>
@@ -425,7 +426,6 @@ documentation of your processor.  For example, in Xalan 2.x:</p>
 
 <p>Sets the classloader to use when loading extension functions to a classloader using
 the <code>path</code> with the id <code>extension-path</code>.</p>
-<p><em>since Ant 1.9.8</em></p>
 
 <h6>feature</h6>
 <p>Used to specify settings of the processor factory.  The feature names are mostly processor
@@ -456,7 +456,7 @@ is <var>http://javax.xml.XMLConstants/feature/secure-processing</var>.
 
 <h4>mapper</h4>
 
-<p><em>since Ant 1.6.2</em></p>
+<p><em>Since Ant 1.6.2</em></p>
 
 <p>You can define filename transformations by using a
 nested <a href="../Types/mapper.html">mapper</a> element. The default mapper used
@@ -473,19 +473,19 @@ should be specified as a nested resource or single-element collection.  Alternat
 the <var>refid</var> to specify the resource or collection as a reference.</p>
 
 <h4>sysproperty</h4>
+
+<p><em>Since Ant 1.8.0</em>.</p>
 <p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify system properties required by the
 factory or transformation.  These properties will be made available to JVM during the execution of
 the class. The attributes for this element are the same as for <a href="exec.html#env">environment
 variables</a>.</p>
 
-<p><em>since Ant 1.8.0</em>.</p>
-
 <h4>syspropertyset</h4>
+
+<p><em>Since Ant 1.8.0</em>.</p>
 
 <p>You can specify a set of properties to be used as system properties
 with <a href="../Types/propertyset.html">syspropertyset</a>s.</p>
-
-<p><em>since Ant 1.8.0</em>.</p>
 
 <h3>Examples</h3>
 <pre>

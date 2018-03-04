@@ -441,9 +441,9 @@ and of the choice of regular expression implementation.</p>
 
 <h3 id="suffixlines">SuffixLines</h3>
 
-<p>Attaches a suffix to every line.</p>
+<p><em>Since Ant 1.8.0</em></p>
 
-<p><em>since Ant 1.8.0</em></p>
+<p>Attaches a suffix to every line.</p>
 
 <table class="attr">
   <tr>
@@ -887,8 +887,10 @@ extracted)</p>
 
 <h3 id="deletecharacters">DeleteCharacters</h3>
 
+<p><em>Since Ant 1.6</em></p>
+
 <p>This filter deletes specified characters.</p>
-<p><em>since Ant 1.6</em></p>
+
 <p>This filter is only available in the convenience form.</p>
 
 <table class="attr">
@@ -912,8 +914,8 @@ extracted)</p>
 <pre>&lt;deletecharacters chars="\t\r"/&gt;</pre>
 
 <h3 id="concatfilter">ConcatFilter</h3>
+<p><em>Since Ant 1.6</em></p>
 <p>This filter prepends or appends the content file to the filtered files.</p>
-<p><em>since Ant 1.6</em></p>
 <table class="attr">
   <tr>
     <th>Parameter Name</th>
@@ -952,7 +954,7 @@ extracted)</p>
 &lt;/filterchain&gt;</pre>
 
 <h3 id="sortfilter">SortFilter</h3>
-<p><em>since Ant 1.8.0</em></p>
+<p><em>Since Ant 1.8.0</em></p>
 
 <p>The sort filter reads all lines and sorts them.  The sort order can be reversed and it is
 possible to specify a custom implementation of the <code>java.util.Comparator</code> interface
@@ -1414,11 +1416,12 @@ sort filter.</p>
 
 <h4 id="native2asciifilter">Native2AsciiFilter</h4>
 
+<p><em>Since Ant 1.9.8</em></p>
+
 <p>Uses the "builtin" implementation of
 the <a href="../Tasks/native2ascii.html">native2ascii</a> task.</p>
 
-<p>Replaces non-ascii characters by their Unicode-escapes or vice-versa.  <em>Since Ant
-1.9.8</em></p>
+<p>Replaces non-ASCII characters by their Unicode-escapes or vice-versa.</p>
 
 <p>This filter may be used directly within a <code>filterchain</code>.</p>
 

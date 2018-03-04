@@ -22,10 +22,9 @@
 </head>
 <body>
   <h2 id="include">Include</h2>
+  <p><em>Since Apache Ant 1.8.0</em></p>
   <h3>Description</h3>
   <p>Include another build file into the current project.</p>
-
-  <p><em>since Apache Ant 1.8.0</em></p>
 
   <p><strong>Note</strong> this task heavily relies on the ProjectHelper implementation and doesn't
     really perform any work of its own.  If you have configured Ant to use a ProjectHelper other
@@ -37,8 +36,10 @@
     in the Ant FAQ</a> insofar as the target names get prefixed by the included
     project's <var>name</var> or <var>as</var> attribute and do not appear as if the file was
     contained in the including file.</p>
+
   <p>The <code>include</code> task may only be used as a top-level task. This means that
     it may not be used in a target.</p>
+
   <p>There are two further functional aspects that pertain to this task and that are not possible
     with entity includes:</p>
   <ul>

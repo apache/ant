@@ -503,6 +503,7 @@ are in charge&mdash;or, more importantly, which project is failing.
 <pre>ant -logger org.apache.tools.ant.listener.BigProjectLogger</pre>
 
 <h3 id="SimpleBigProjectLogger">SimpleBigProjectLogger</h3>
+<p><em>Since Ant 1.8.1</em></p>
 <p>Like <code>BigProjectLogger</code>, project-qualified target names
 are printed, useful for big builds with subprojects. Otherwise it is
 as quiet as <code>NoBannerLogger</code>:</p>
@@ -525,17 +526,16 @@ Building jar: /sources/myapp/build/myapp.jar
 
 BUILD SUCCESSFUL
 Total time: 1 second</pre>
-<p><em>since Ant 1.8.1</em></p>
 <p>To use this listener, use the command:</p>
 <pre>ant -logger org.apache.tools.ant.listener.SimpleBigProjectLogger</pre>
 
 <h3 id="ProfileLogger">ProfileLogger</h3>
+<!-- This is the 'since' as described in the Loggers JavaDoc -->
+<p><em>Since Ant 1.8.0</em></p>
 <p>This logger stores the time needed for executing a task, target and
 the whole build and prints these information. The output contains a
 timestamp when entering the build, target or task and a timestamp
 and the needed time when exiting.</p>
-<!-- This is the 'since' as described in the Loggers JavaDoc -->
-<p><em>since Ant 1.8.0</em></p>
 <h4>Example</h4>
 Having that buildfile
 <pre>

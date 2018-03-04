@@ -25,6 +25,7 @@
 <body>
 
 <h2>Local</h2>
+<p><em>Since Ant 1.8</em></p>
 <h3>Description</h3>
 <p>Adds a local property to the current scope. Property scopes exist at Apache Ant's various "block"
 levels. These include targets as well as the <a href="parallel.html">Parallel</a>
@@ -33,10 +34,10 @@ and <a href="sequential.html">Sequential</a> task containers
 properties of the same name at higher scopes, including the global scope. Note that using
 the <code>Local</code> task at the global level effectively makes the property local to the
 "anonymous target" in which top-level operations are carried out; it will not be defined for other
-targets in the buildfile. <em>Since Ant 1.8</em></p>
+targets in the buildfile.</p>
 
-<p>A property is made local if the <code>&lt;local&gt;</code> task
-  precedes its definition.  See the examples section.</p>
+<p>A property is made local if the <code>&lt;local&gt;</code> task precedes its definition.  See the
+examples section.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
