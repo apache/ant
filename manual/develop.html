@@ -61,7 +61,7 @@
     a <code>BuildException</code>. This method implements the task itself.</li>
 </ol>
 
-<hr>
+<hr/>
 <p id="footnote-1"><a href="#footnote-1-back">*</a> Actually the case of the letters after the first
 one doesn't really matter to Ant, using all lower case is a good convention, though.</p>
 
@@ -108,7 +108,7 @@ one doesn't really matter to Ant, using all lower case is a good convention, tho
 
   <li id="execute"><code>execute()</code> is called at runtime.  If <q>target1</q>
     and <q>target2</q> both depend on <q>target3</q>, then running <code>'ant target1
-    target2'</code> will run all tasks in <q>target3</code> twice.</li>
+    target2'</code> will run all tasks in <q>target3</q> twice.</li>
 </ol>
 
 <h3 id="set-magic">Conversions Ant will perform for attributes</h3>
@@ -381,7 +381,7 @@ just been compiled.</p>
 to the <samp>default.properties</samp> file in the <code>org.apache.tools.ant.taskdefs</code>
 package. Then you can use it as if it were a built-in task.</p>
 
-<hr>
+<hr/>
 <h2 id="buildevents">Build Events</h2>
 <p>Ant is capable of generating build events as it performs the tasks necessary to build a project.
 Listeners can be attached to Ant to receive these events. This capability could be used, for
@@ -466,7 +466,7 @@ public class MyLogAdapter implements BuildListener {
     // implement all methods in that way
 }</pre>
 
-<hr>
+<hr/>
 <h2 id="integration">Source code integration</h2>
 
 <p>The other way to extend Ant through Java is to make changes to existing tasks, which is

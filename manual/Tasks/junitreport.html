@@ -42,8 +42,9 @@ out of the box. The table below summarize the compatibility status.</p>
 <tr><th>Xalan</th><th>Sun JDK Bundle</th><th>Status<th></tr>
 <tr><td>2.4.1+</td><td>JDK 1.4.2-01+</td><td>OK</td></tr>
 <tr><td>XSLTC</td><td>JDK 1.5.x</td><td>OK</td></tr>
-<tr><td>2.x</td><td>JDK 1.4.x</td><td><em><u>Deprecated</u>, use <samp>${ant.home}/etc/junit-frames-xalan1.xsl</samp>
-<br/>Upgrade Xalan using the JDK endorsement mechanism</em></td></tr>
+<tr><td>2.x</td><td>JDK 1.4.x</td><td><em><u>Deprecated</u>,
+use <samp>${ant.home}/etc/junit-frames-xalan1.xsl</samp><br/>Upgrade Xalan using the JDK endorsement
+mechanism</em></td></tr>
 </table>
 
 <p>In Ant 1.6.2, we had to decide between supporting Xalan 1/Xalan 2.4.1- and Xalan 2.4.1+/XSLTC,
@@ -94,8 +95,10 @@ using the nested <a href="../Types/fileset.html"><code>&lt;FileSet&gt;</code></a
     <td>The directory where the stylesheets are defined. They must be conforming to the following
       conventions:
       <ul>
-        <li><q>frames</q> format: the stylesheet must be named <samp>junit-frames.xsl</samp>, or <i>junit-frames-saxon.xsl if you are using Saxon 9+.</li>
-        <li><q>noframes</q> format: the stylesheet must be named <samp>junit-noframes.xsl</samp>, or <i>junit-noframes-saxon.xsl if you are using Saxon 9+.</li>
+        <li><q>frames</q> format: the stylesheet must be named <samp>junit-frames.xsl</samp>,
+          or <samp>junit-frames-saxon.xsl</samp> if you are using Saxon 9+.</li>
+        <li><q>noframes</q> format: the stylesheet must be named <samp>junit-noframes.xsl</samp>,
+          or <samp>junit-noframes-saxon.xsl</samp> if you are using Saxon 9+.</li>
       </ul>
     </td>
     <td>No; defaults to embedded stylesheets</td>
