@@ -39,6 +39,7 @@ public abstract class Task extends ProjectComponent {
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getOwningTarget()} method.
      */
+    @Deprecated
     protected Target target;
 
     /**
@@ -52,6 +53,7 @@ public abstract class Task extends ProjectComponent {
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getTaskName()} method.
      */
+    @Deprecated
     protected String taskName;
 
     /**
@@ -61,6 +63,7 @@ public abstract class Task extends ProjectComponent {
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getTaskType()} method.
      */
+    @Deprecated
     protected String taskType;
 
     /**
@@ -70,6 +73,7 @@ public abstract class Task extends ProjectComponent {
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getWrapper()} method.
      */
+    @Deprecated
     protected RuntimeConfigurable wrapper;
 
     // CheckStyle:VisibilityModifier ON

@@ -47,6 +47,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *             The user should not be directly referencing
      *             variable. Please use {@link #getRefid} instead.
      */
+    @Deprecated
     protected Reference ref;
 
     /**
@@ -62,6 +63,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *             variable. Please use {@link #setChecked} or
      *             {@link #isChecked} instead.
      */
+    @Deprecated
     protected boolean checked = true;
     // CheckStyle:VisibilityModifier ON
 

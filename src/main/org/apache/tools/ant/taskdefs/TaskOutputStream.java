@@ -38,7 +38,7 @@ import org.apache.tools.ant.Task;
  * @deprecated since 1.2.x.
  * Use LogOutputStream instead.
  */
-
+@Deprecated
 public class TaskOutputStream extends OutputStream {
 
     private Task task;

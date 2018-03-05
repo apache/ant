@@ -43,6 +43,7 @@ import org.apache.tools.ant.util.StringUtils;
  * @deprecated KeySubst is deprecated since Ant 1.1. Use Filter + Copy
  * instead.
  */
+@Deprecated
 public class KeySubst extends Task {
     private File source = null;
     private File dest = null;

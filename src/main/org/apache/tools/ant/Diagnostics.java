@@ -90,6 +90,7 @@ public final class Diagnostics {
      * @deprecated Obsolete since Ant 1.8.2
      * @return <tt>true</tt>
      */
+    @Deprecated
     public static boolean isOptionalAvailable() {
         return true;
     }
@@ -98,6 +99,7 @@ public final class Diagnostics {
      * Doesn't do anything.
      * @deprecated Obsolete since Ant 1.8.2
      */
+    @Deprecated
     public static void validateVersion() throws BuildException {
     }
 

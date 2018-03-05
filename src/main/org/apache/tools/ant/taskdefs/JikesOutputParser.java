@@ -38,6 +38,7 @@ import org.apache.tools.ant.Task;
  * @deprecated since 1.2.
  *             Use Jikes' exit value to detect compilation failure.
  */
+@Deprecated
 public class JikesOutputParser implements ExecuteStreamHandler {
     // CheckStyle:VisibilityModifier OFF - bc
     protected Task task;

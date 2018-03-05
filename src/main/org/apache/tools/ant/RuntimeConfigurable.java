@@ -64,6 +64,7 @@ public class RuntimeConfigurable implements Serializable {
      * XML attributes for the element.
      * @deprecated since 1.6.x
      */
+    @Deprecated
     private transient AttributeList attributes;
 
     // The following is set to true if any of the attributes are namespaced

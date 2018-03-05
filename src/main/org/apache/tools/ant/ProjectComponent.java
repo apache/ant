@@ -32,6 +32,7 @@ public abstract class ProjectComponent implements Cloneable {
      *             You should access project object via the getProject()
      *             or setProject() accessor/mutators.
      */
+    @Deprecated
     protected Project project;
 
     /**
@@ -40,6 +41,7 @@ public abstract class ProjectComponent implements Cloneable {
      *             You should not be accessing this variable directly.
      *             Please use the {@link #getLocation()} method.
      */
+    @Deprecated
     protected Location location = Location.UNKNOWN_LOCATION;
 
     /**
@@ -47,6 +49,7 @@ public abstract class ProjectComponent implements Cloneable {
      * @deprecated since 1.6.x.
      *             You should not be accessing this variable directly.
      */
+    @Deprecated
     protected String description;
     // CheckStyle:VisibilityModifier ON
 

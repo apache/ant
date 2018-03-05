@@ -36,6 +36,7 @@ public class Reference {
      *             Please use {@link Reference#Reference(Project,String)}
      *             instead.
      */
+    @Deprecated
     public Reference() {
     }
 
@@ -46,6 +47,7 @@ public class Reference {
      *             Please use {@link Reference#Reference(Project,String)}
      *             instead.
      */
+    @Deprecated
     public Reference(String id) {
         setRefId(id);
     }

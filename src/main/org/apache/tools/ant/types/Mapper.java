@@ -274,6 +274,7 @@ public class Mapper extends DataType {
      *             FileNameMapper implementation directly.
      * @return the referenced Mapper
      */
+    @Deprecated
     protected Mapper getRef() {
         return getCheckedRef(Mapper.class, getDataTypeName());
     }
