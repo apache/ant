@@ -38,6 +38,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @deprecated since 1.2.
  *             Merged into the class Javac.
  */
+@Deprecated
 public class Jikes {
     // There have been reports that 300 files could be compiled
     // on a command line so 250 is a conservative approach

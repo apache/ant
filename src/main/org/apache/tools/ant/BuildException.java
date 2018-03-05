@@ -131,6 +131,7 @@ public class BuildException extends RuntimeException {
      *         exception is associated with this one
      * @deprecated Use {@link #getCause} instead.
      */
+    @Deprecated
     public Throwable getException() {
         return getCause();
     }

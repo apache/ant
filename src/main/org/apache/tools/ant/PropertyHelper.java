@@ -347,6 +347,7 @@ public class PropertyHelper implements GetProperty {
      * @param next the next property helper in the chain.
      * @deprecated use the delegate mechanism instead
      */
+    @Deprecated
     public void setNext(PropertyHelper next) {
         this.next = next;
     }
@@ -362,6 +363,7 @@ public class PropertyHelper implements GetProperty {
      * @return the next property helper.
      * @deprecated use the delegate mechanism instead
      */
+    @Deprecated
     public PropertyHelper getNext() {
         return next;
     }
@@ -432,6 +434,7 @@ public class PropertyHelper implements GetProperty {
      *    has a good reason not to).
      * @deprecated PropertyHelper chaining is deprecated.
      */
+    @Deprecated
     public boolean setPropertyHook(String ns, String name,
                                    Object value,
                                    boolean inherited, boolean user,
@@ -459,6 +462,7 @@ public class PropertyHelper implements GetProperty {
      * @return The property, if returned by a hook, or null if none.
      * @deprecated PropertyHelper chaining is deprecated.
      */
+    @Deprecated
     public Object getPropertyHook(String ns, String name, boolean user) {
         if (getNext() != null) {
             Object o = getNext().getPropertyHook(ns, name, user);
@@ -506,6 +510,7 @@ public class PropertyHelper implements GetProperty {
      *                           <code>}</code>
      * @deprecated use the other mechanisms of this class instead
      */
+    @Deprecated
     public void parsePropertyString(String value, Vector<String> fragments,
                                     Vector<String> propertyRefs) throws BuildException {
         parsePropertyStringDefault(value, fragments, propertyRefs);
@@ -605,6 +610,7 @@ public class PropertyHelper implements GetProperty {
      * @return true if the property is set.
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public boolean setProperty(String ns, String name, Object value, boolean verbose) {
         return setProperty(name, value, verbose);
     }
@@ -662,6 +668,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.6
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public void setNewProperty(String ns, String name, Object value) {
         setNewProperty(name, value);
     }
@@ -713,6 +720,7 @@ public class PropertyHelper implements GetProperty {
      *              Must not be <code>null</code>.
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public void setUserProperty(String ns, String name, Object value) {
         setUserProperty(name, value);
     }
@@ -755,6 +763,7 @@ public class PropertyHelper implements GetProperty {
      *              Must not be <code>null</code>.
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public void setInheritedProperty(String ns, String name, Object value) {
         setInheritedProperty(name, value);
     }
@@ -801,6 +810,7 @@ public class PropertyHelper implements GetProperty {
      *         or if a <code>null</code> name is provided.
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public Object getProperty(String ns, String name) {
         return getProperty(name);
     }
@@ -849,6 +859,7 @@ public class PropertyHelper implements GetProperty {
      *         or if a <code>null</code> name is provided.
      * @deprecated namespaces are unnecessary.
      */
+    @Deprecated
     public Object getUserProperty(String ns, String name) {
         return getUserProperty(name);
     }

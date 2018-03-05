@@ -50,6 +50,7 @@ public class CollectionUtils {
      * @since Ant 1.5
      * @deprecated since 1.6.x.
      */
+    @Deprecated
     public static boolean equals(Vector<?> v1, Vector<?> v2) {
         return Objects.equals(v1, v2);
     }
@@ -65,6 +66,7 @@ public class CollectionUtils {
      * @since Ant 1.5
      * @deprecated since 1.6.x.
      */
+    @Deprecated
     public static boolean equals(Dictionary<?, ?> d1, Dictionary<?, ?> d2) {
         if (d1 == d2) {
             return true;
@@ -115,6 +117,7 @@ public class CollectionUtils {
      * @since Ant 1.6
      * @deprecated since 1.6.x.
      */
+    @Deprecated
     public static <K, V> void putAll(Dictionary<? super K, ? super V> m1,
         Dictionary<? extends K, ? extends V> m2) {
         for (Enumeration<? extends K> it = m2.keys(); it.hasMoreElements();) {

@@ -38,6 +38,7 @@ public class FileResourceIterator implements Iterator<Resource> {
      * Construct a new FileResourceIterator.
      * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project)}
      */
+    @Deprecated
     public FileResourceIterator() {
     }
 
@@ -56,6 +57,7 @@ public class FileResourceIterator implements Iterator<Resource> {
      * @param basedir the base directory of this instance.
      * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project, File)}
      */
+    @Deprecated
     public FileResourceIterator(File basedir) {
         this(null, basedir);
     }
@@ -79,6 +81,7 @@ public class FileResourceIterator implements Iterator<Resource> {
      * @param filenames the String[] of filenames.
      * @deprecated in favor of {@link FileResourceIterator#FileResourceIterator(Project, File, String[])}
      */
+    @Deprecated
     public FileResourceIterator(File basedir, String[] filenames) {
         this(null, basedir, filenames);
     }

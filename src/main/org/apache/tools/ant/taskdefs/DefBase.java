@@ -51,6 +51,7 @@ public abstract class DefBase extends AntlibDefinition {
      *             stop using this attribute
      * @ant.attribute ignore="true"
      */
+    @Deprecated
     public void setReverseLoader(boolean reverseLoader) {
         getDelegate().setReverseLoader(reverseLoader);
         log("The reverseloader attribute is DEPRECATED. It will be removed",

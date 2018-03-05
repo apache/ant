@@ -305,6 +305,7 @@ public class ProjectHelper {
      * @return the current context class loader, or <code>null</code>
      * if the context class loader is unavailable.
      */
+    @Deprecated
     public static ClassLoader getContextClassLoader() {
         return LoaderUtils.isContextLoaderAvailable() ? LoaderUtils.getContextClassLoader() : null;
     }
@@ -327,6 +328,7 @@ public class ProjectHelper {
      * @exception BuildException if any of the attributes can't be handled by
      *                           the target
      */
+    @Deprecated
     public static void configure(Object target, AttributeList attrs,
                                  Project project) throws BuildException {
         if (target instanceof TypeAdapter) {
@@ -430,6 +432,7 @@ public class ProjectHelper {
      *             Use project.replaceProperties().
      * @since 1.5
      */
+    @Deprecated
      public static String replaceProperties(Project project, String value) throws BuildException {
         // needed since project properties are not accessible
          return project.replaceProperties(value);
@@ -455,6 +458,7 @@ public class ProjectHelper {
      * @deprecated since 1.6.x.
      *             Use PropertyHelper.
      */
+    @Deprecated
      public static String replaceProperties(Project project, String value, Hashtable<String, Object> keys)
              throws BuildException {
         PropertyHelper ph = PropertyHelper.getPropertyHelper(project);
@@ -482,6 +486,7 @@ public class ProjectHelper {
      * @exception BuildException if the string contains an opening
      *                           <code>${</code> without a closing <code>}</code>
      */
+    @Deprecated
     public static void parsePropertyString(String value, Vector<String> fragments, Vector<String> propertyRefs)
             throws BuildException {
         PropertyHelper.parsePropertyStringDefault(value, fragments, propertyRefs);

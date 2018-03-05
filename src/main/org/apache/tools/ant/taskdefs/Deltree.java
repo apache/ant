@@ -32,7 +32,7 @@ import org.apache.tools.ant.Task;
  * @deprecated The deltree task is deprecated since Ant 1.2.  Use
  * delete instead.
  */
-
+@Deprecated
 public class Deltree extends Task {
 
     private File dir;

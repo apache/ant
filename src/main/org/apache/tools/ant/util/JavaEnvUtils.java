@@ -111,11 +111,13 @@ public final class JavaEnvUtils {
      * Version constant for Java 1.9
      * @deprecated use #JAVA_9 instead
      */
+    @Deprecated
     public static final String JAVA_1_9 = "1.9";
     /**
      * Number Version constant for Java 1.9
      * @deprecated use #VERSION_9 instead
      */
+    @Deprecated
     public static final int VERSION_1_9 = 19;
 
     /**
@@ -250,6 +252,7 @@ public final class JavaEnvUtils {
      * be 0 for all versions of Java starting with Java 9.
      * @deprecated use #getParsedJavaVersion instead
      */
+    @Deprecated
     public static int getJavaVersionNumber() {
         return javaVersionNumber;
     }

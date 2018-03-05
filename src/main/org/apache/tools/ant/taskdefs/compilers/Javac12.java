@@ -37,6 +37,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @since Ant 1.3
  * @deprecated Use {@link Javac13} instead.
  */
+@Deprecated
 public class Javac12 extends DefaultCompilerAdapter {
     protected static final String CLASSIC_COMPILER_CLASSNAME = "sun.tools.javac.Main";
 

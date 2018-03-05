@@ -85,6 +85,7 @@ public final class StringUtils {
      * @return the new string with replaced occurrences.
      * @deprecated Use {@link String#replace(CharSequence, CharSequence)} now.
      */
+    @Deprecated
     public static String replace(String data, String from, String to) {
         return data.replace(from, to);
     }

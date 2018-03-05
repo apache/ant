@@ -39,7 +39,7 @@ import org.apache.tools.ant.util.FileUtils;
  * obsoleted by ResourceCollection support in Copy available since Ant
  * 1.7.0.  Don't use it.
  */
-
+@Deprecated
 public class CopyPath extends Task {
 
     // Error messages

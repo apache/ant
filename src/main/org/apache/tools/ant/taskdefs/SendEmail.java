@@ -39,6 +39,7 @@ public class SendEmail extends EmailTask {
      * @deprecated since 1.5.x.
      *             Use {@link #setMailport(int)} instead.
      */
+    @Deprecated
     public void setMailport(Integer value) {
         setMailport(value.intValue());
     }
