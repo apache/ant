@@ -948,9 +948,9 @@
   <macrodef name="checksums">
     <element name="resources" implicit="true"/>
     <sequential>
-      <checksums-mvn>
+      <checksum algorithm="sha1">
         <resources/>
-      </checksums-mvn>
+      </checksum>
       <checksum fileext=".sha512" algorithm="sha-512">
         <resources/>
       </checksum>
@@ -1314,13 +1314,11 @@
     <checksums>
       <fileset dir="${dist.base.binaries}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
       <fileset dir="${dist.base.manual}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
@@ -1366,7 +1364,6 @@
     <checksums>
       <fileset dir="${dist.base.source}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.md5"/>
         <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
