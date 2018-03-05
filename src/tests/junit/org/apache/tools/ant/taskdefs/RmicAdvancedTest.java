@@ -29,9 +29,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Date: 04-Aug-2004
@@ -43,6 +44,9 @@ public class RmicAdvancedTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException tried = ExpectedException.none();
 
     /**
      * The JUnit setup method
@@ -198,12 +202,9 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testBadName() throws Exception {
-        try {
-            buildRule.executeTarget("testBadName");
-            fail("Compile not known");
-        } catch (BuildException ex) {
-            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
-        }
+        tried.expect(BuildException.class);
+        tried.expectMessage(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        buildRule.executeTarget("testBadName");
     }
 
     /**
@@ -219,12 +220,9 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testWrongClass() throws Exception {
-        try {
-            buildRule.executeTarget("testWrongClass");
-            fail("Class not an RMIC adapter");
-        } catch (BuildException ex) {
-            AntAssert.assertContains(RmicAdapterFactory.ERROR_NOT_RMIC_ADAPTER, ex.getMessage());
-        }
+        tried.expect(BuildException.class);
+        tried.expectMessage(RmicAdapterFactory.ERROR_NOT_RMIC_ADAPTER);
+        buildRule.executeTarget("testWrongClass");
     }
 
     /**
@@ -232,14 +230,14 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testDefaultBadClass() throws Exception {
+        tried.expect(BuildException.class);
+        tried.expectMessage(Rmic.ERROR_RMIC_FAILED);
         try {
             buildRule.executeTarget("testDefaultBadClass");
-            fail("expected the class to fail");
-        } catch(BuildException ex) {
-            AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
+        } finally {
+            // don't look for much text here as it is vendor and version dependent
+            AntAssert.assertContains("unimplemented.class", buildRule.getLog());
         }
-        //dont look for much text here as it is vendor and version dependent
-        AntAssert.assertContains("unimplemented.class", buildRule.getLog());
     }
 
     /**
@@ -247,12 +245,9 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testMagicProperty() throws Exception {
-        try {
-            buildRule.executeTarget("testMagicProperty");
-            fail("Magic property not working");
-        } catch (BuildException ex) {
-            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
-        }
+        tried.expect(BuildException.class);
+        tried.expectMessage(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        buildRule.executeTarget("testMagicProperty");
     }
 
     /**
@@ -260,12 +255,9 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testMagicPropertyOverridesEmptyString() throws Exception {
-        try {
-            buildRule.executeTarget("testMagicPropertyOverridesEmptyString");
-            fail("Magic property not working");
-        } catch (BuildException ex) {
-            AntAssert.assertContains(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER, ex.getMessage());
-        }
+        tried.expect(BuildException.class);
+        tried.expectMessage(RmicAdapterFactory.ERROR_UNKNOWN_COMPILER);
+        buildRule.executeTarget("testMagicPropertyOverridesEmptyString");
     }
 
     @Test
@@ -276,12 +268,9 @@ public class RmicAdvancedTest {
     @Test
     @Ignore("Previously named to prevent execution")
     public void NotestFailingAdapter() throws Exception {
-        try {
-            buildRule.executeTarget("testFailingAdapter");
-            fail("Expected failures to propagate");
-        } catch (BuildException ex) {
-            AntAssert.assertContains(Rmic.ERROR_RMIC_FAILED, ex.getMessage());
-        }
+        tried.expect(BuildException.class);
+        tried.expectMessage(Rmic.ERROR_RMIC_FAILED);
+        buildRule.executeTarget("testFailingAdapter");
     }
 
     /**
@@ -349,7 +338,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForked() throws Exception {
-        xnewTest("testXnewForked");
+        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        buildRule.executeTarget("testXnewForked");
+    }
+
+    @Test
+    public void testXnewForkedJava9plus() throws Exception {
+        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        tried.expect(BuildException.class);
+        tried.expectMessage("JDK9 has removed support for -Xnew");
+        buildRule.executeTarget("testXnewForked");
     }
 
     /**
@@ -359,7 +357,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedDest() throws Exception {
-        xnewTest("testXnewForkedDest");
+        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        buildRule.executeTarget("testXnewForkedDest");
+    }
+
+    @Test
+    public void testXnewForkedDestJava9plus() throws Exception {
+        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        tried.expect(BuildException.class);
+        tried.expectMessage("JDK9 has removed support for -Xnew");
+        buildRule.executeTarget("testXnewForkedDest");
     }
 
     /**
@@ -369,7 +376,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompiler() throws Exception {
-        xnewTest("testXnewCompiler");
+        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        buildRule.executeTarget("testXnewCompiler");
+    }
+
+    @Test
+    public void testXnewCompilerJava9plus() throws Exception {
+        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        tried.expect(BuildException.class);
+        tried.expectMessage("JDK9 has removed support for -Xnew");
+        buildRule.executeTarget("testXnewCompiler");
     }
 
     /**
@@ -379,7 +395,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerDest() throws Exception {
-        xnewTest("testXnewCompilerDest");
+        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        buildRule.executeTarget("testXnewCompilerDest");
+    }
+
+    @Test
+    public void testXnewCompilerDestJava9plus() throws Exception {
+        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        tried.expect(BuildException.class);
+        tried.expectMessage("JDK9 has removed support for -Xnew");
+        buildRule.executeTarget("testXnewCompilerDest");
     }
 
     /**
@@ -389,7 +414,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDL() throws Exception {
-        corbaTest("testIDL");
+        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        buildRule.executeTarget("testIDL");
+    }
+
+    @Test
+    public void testIDLJava11plus() throws Exception {
+        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        tried.expect(BuildException.class);
+        tried.expectMessage("this rmic implementation doesn't support the -idl switch");
+        buildRule.executeTarget("testIDL");
     }
 
     /**
@@ -399,8 +433,17 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDLDest() throws Exception {
-        corbaTest("testIDLDest");
+        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        buildRule.executeTarget("testIDLDest");
     }
+
+    @Test
+    public void testIDLDestJava11plus() throws Exception {
+        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        tried.expect(BuildException.class);
+        tried.expectMessage("this rmic implementation doesn't support the -idl switch");
+        buildRule.executeTarget("testIDL");
+   }
 
     /**
      * test that verifies that IIOP compiles.
@@ -409,7 +452,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOP() throws Exception {
-        corbaTest("testIIOP");
+        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        buildRule.executeTarget("testIIOP");
+    }
+
+    @Test
+    public void testIIOPJava11plus() throws Exception {
+        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        tried.expect(BuildException.class);
+        tried.expectMessage("this rmic implementation doesn't support the -iiop switch");
+        buildRule.executeTarget("testIIOP");
     }
 
     /**
@@ -419,37 +471,16 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOPDest() throws Exception {
-        corbaTest("testIIOPDest");
+        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        buildRule.executeTarget("testIIOPDest");
     }
 
-    private void xnewTest(String target) {
-        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
-            buildRule.executeTarget(target);
-        } else {
-            try {
-                buildRule.executeTarget(target);
-                fail("Target should have thrown a BuildException");
-            } catch (BuildException ex) {
-                assertEquals("JDK9 has removed support for -Xnew", ex.getMessage());
-            }
-        }
-    }
-
-    private void corbaTest(String target) {
-        if (!JavaEnvUtils.isAtLeastJavaVersion("11")) {
-            buildRule.executeTarget(target);
-        } else {
-            try {
-                buildRule.executeTarget(target);
-                fail("Target should have thrown a BuildException");
-            } catch (BuildException ex) {
-                if (target.indexOf("IDL") > -1) {
-                    assertEquals("this rmic implementation doesn't support the -idl switch", ex.getMessage());
-                } else {
-                    assertEquals("this rmic implementation doesn't support the -iiop switch", ex.getMessage());
-                }
-            }
-        }
+    @Test
+    public void testIIOPDestJava11plus() throws Exception {
+        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        tried.expect(BuildException.class);
+        tried.expectMessage("this rmic implementation doesn't support the -iiop switch");
+        buildRule.executeTarget("testIIOP");
     }
 
     /**
