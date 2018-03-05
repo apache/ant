@@ -263,16 +263,18 @@ standard input.</p>
 <h4>fileset</h4>
 <p>You can use any number of nested <code>&lt;fileset&gt;</code> elements to define the files for
 this task and refer to <code>&lt;fileset&gt;</code>s defined elsewhere.</p>
+
 <h4>filelist</h4>
 <p><em>Since Ant 1.6</em></p>
 <p>You can use any number of nested <code>&lt;filelist&gt;</code> elements to define the files for
 this task and refer to <code>&lt;filelist&gt;</code>s defined elsewhere.</p>
+
 <h4>dirset</h4>
 <p><em>Since Ant 1.6</em></p>
 <p>You can use any number of nested <code>&lt;dirset&gt;</code> elements to define the directories
 for this task and refer to <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
 
-<h4>Any other <a href="../Types/resources.html#collection">Resource Collection</a></h4>
+<h4>Any other <a href="../Types/resources.html#collection">resource collection</a></h4>
 <p><em>Since Ant 1.7</em></p>
 <p>You can use any number of nested resource collections.</p>
 
@@ -281,14 +283,16 @@ for this task and refer to <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
 attribute for dependency checking. If the <var>dest</var> attribute is specified it will be used as
 a base directory for resolving relative pathnames returned by the mapper. At least one
 <code>&lt;fileset&gt;</code> or <code>&lt;filelist&gt;</code> is required.</p>
+
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested <code>&lt;arg&gt;</code>
 elements. See <a href="../using.html#arg">Command line arguments</a>.</p>
+
 <h4>srcfile</h4>
 <p>By default the file names of the source files will be added to the end of the command line
-(unless you set addsourcefile to <q>false</q>). If you need to place it somewhere different, use a
-nested <code>&lt;srcfile&gt;</code> element between your <code>&lt;arg&gt;</code> elements to mark
-the insertion point.</p>
+(unless you set <var>addsourcefile</var> to <q>false</q>). If you need to place it somewhere
+different, use a nested <code>&lt;srcfile&gt;</code> element between your <code>&lt;arg&gt;</code>
+elements to mark the insertion point.</p>
 <table class="attr">
   <tr>
     <th>Attribute</th>

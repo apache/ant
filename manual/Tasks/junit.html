@@ -223,7 +223,7 @@ the following string patterns:</p>
    &quot;junit.framework.JUnit4TestAdapter&quot;
    &quot; more&quot;</pre>
 
-<h3 id="nested">Nested Elements</h3>
+<h3 id="nested">Parameters specified as nested elements</h3>
 
 <p>The <code>&lt;junit&gt;</code> task supports a nested <code>&lt;classpath&gt;</code> element that
 represents a <a href="../using.html#path">PATH like structure</a>.</p>
@@ -498,11 +498,11 @@ to <samp><i>java-tmp-dir</i>/FailedTests</samp>.</p>
 <p>Define a number of tests based on pattern matching.</p>
 
 <p><code>batchtest</code> collects the included <a href="../Types/resources.html">resources</a> from
-any number of nested <a href="../Types/resources.html#collection">Resource Collection</a>s. It then
+any number of nested <a href="../Types/resources.html#collection">resource collections</a>. It then
 generates a test class name for each resource that ends in <samp>.java</samp>
 or <samp>.class</samp>.</p>
 
-<p>Any type of Resource Collection is supported as a nested element, prior to Ant 1.7
+<p>Any type of resource collection is supported as a nested element, prior to Ant 1.7
 only <code>&lt;fileset&gt;</code> has been supported.</p>
 
 <table class="attr">

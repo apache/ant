@@ -57,8 +57,8 @@ The built-in resource types are:
 <p>
 A basic resource. Other resource types derive from this basic type; as such all its attributes
 are available, though in most cases irrelevant attributes will be ignored. This and all resource
-implementations are also usable as single-element <a href="#collection">Resource
-Collections</a>.
+implementations are also usable as single-element <a href="#collection">resource
+collections</a>.
 </p>
 
 <table class="attr">
@@ -360,9 +360,9 @@ attribute is unset:</p>
 <hr/>
 <h2 id="collection">Resource Collections</h2>
 <p>
-A Resource Collection is an abstraction of an entity that groups together a number
+A resource collection is an abstraction of an entity that groups together a number
 of <a href="#resource">resources</a>. Several of Ant's "legacy" datatypes have been modified to
-behave as Resource Collections:
+behave as resource collections:
 </p>
 <ul>
   <li><a href="fileset.html">fileset</a>,
@@ -426,7 +426,7 @@ The additional built-in resource collections are:
 <p>
 A generic resource collection, designed for use
 with <a href="../using.html#references">references</a>.  For example, if a third-party Ant task
-generates a Resource Collection of an unknown type, it can still be accessed via
+generates a resource collection of an unknown type, it can still be accessed via
 a <code>&lt;resources&gt;</code> collection. The secondary use of this collection type is as a
 container of other resource collections, preserving the order of nested collections as well as
 duplicate resources (contrast with <a href="#union">union</a>).
