@@ -74,6 +74,14 @@ attribute. or a nested element.
 project contains a compiler implementation for this task as well,
 please consult miniRMI's documentation to learn how to use it.</p>
 
+<h4>CORBA support</h4>
+
+<p>Java 11 removes the CORBA and JavaEE packages and rmic no longer
+  supports either <code>iiop</code> nor <code>idl</code>. Starting
+  with Ant 1.9.11 the rmic task will fail when using either while
+  running Java11+ unless you fork the task and explicitly specify an
+  executable.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -168,7 +176,10 @@ please consult miniRMI's documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td valign="top">iiop</td>
-    <td valign="top">indicates that portable (RMI/IIOP) stubs should be generated</td>
+    <td valign="top">indicates that portable (RMI/IIOP) stubs should
+      be generated.<br/>
+      See the note on CORBA support above.
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -178,7 +189,8 @@ please consult miniRMI's documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td valign="top">idl</td>
-    <td valign="top">indicates that IDL output files should be generated</td>
+    <td valign="top">indicates that IDL output files should be
+      generated.<br/>  See the note on CORBA support above.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

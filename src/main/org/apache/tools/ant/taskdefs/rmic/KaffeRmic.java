@@ -43,6 +43,16 @@ public class KaffeRmic extends DefaultRmicAdapter {
      */
     public static final String COMPILER_NAME = "kaffe";
 
+    /**
+     * @since Ant 1.9.11
+     */
+    @Override
+    protected boolean areIiopAndIdlSupported() {
+        // actually I don't think Kaffee supports either, but we've
+        // accepted the flags prior to 1.9.11
+        return true;
+    }
+
     /** {@inheritDoc} */
     public boolean execute() throws BuildException {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);

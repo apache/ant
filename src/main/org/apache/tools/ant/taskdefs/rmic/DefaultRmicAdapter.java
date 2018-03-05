@@ -177,6 +177,18 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     }
 
     /**
+     * Whether the iiop and idl switches are supported.
+     *
+     * <p>This implementation returns false if running on Java 11
+     * onwards and true otherwise.</p>
+     * @return true if the iiop and idl switches are supported
+     * @since Ant 1.9.11
+     */
+    protected boolean areIiopAndIdlSupported() {
+        return !JavaEnvUtils.isAtLeastJavaVersion("11");
+    }
+
+    /**
      * Setup rmic argument for rmic.
      * @return the command line
      */
@@ -223,6 +235,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
 
         if (attributes.getIiop()) {
+            if (!areIiopAndIdlSupported()) {
+                throw new BuildException("this rmic implementation doesn't support the -iiop switch");
+            }
             attributes.log("IIOP has been turned on.", Project.MSG_INFO);
             cmd.createArgument().setValue("-iiop");
             if (attributes.getIiopopts() != null) {
@@ -233,6 +248,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         }
 
         if (attributes.getIdl())  {
+            if (!areIiopAndIdlSupported()) {
+                throw new BuildException("this rmic implementation doesn't support the -idl switch");
+            }
             cmd.createArgument().setValue("-idl");
             attributes.log("IDL has been turned on.", Project.MSG_INFO);
             if (attributes.getIdlopts() != null) {

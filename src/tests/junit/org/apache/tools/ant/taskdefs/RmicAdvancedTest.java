@@ -411,7 +411,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDL() throws Exception {
-        buildRule.executeTarget("testIDL");
+        corbaTest("testIDL");
     }
 
     /**
@@ -421,7 +421,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDLDest() throws Exception {
-        buildRule.executeTarget("testIDLDest");
+        corbaTest("testIDLDest");
     }
 
     /**
@@ -431,7 +431,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOP() throws Exception {
-        buildRule.executeTarget("testIIOP");
+        corbaTest("testIIOP");
     }
 
     /**
@@ -441,7 +441,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOPDest() throws Exception {
-        buildRule.executeTarget("testIIOPDest");
+        corbaTest("testIIOPDest");
     }
 
     private void xnewTest(String target) {
@@ -453,6 +453,23 @@ public class RmicAdvancedTest {
                 fail("Target should have thrown a BuildException");
             } catch (BuildException ex) {
                 assertEquals("JDK9 has removed support for -Xnew", ex.getMessage());
+            }
+        }
+    }
+
+    private void corbaTest(String target) {
+        if (!JavaEnvUtils.isAtLeastJavaVersion("11")) {
+            buildRule.executeTarget(target);
+        } else {
+            try {
+                buildRule.executeTarget(target);
+                fail("Target should have thrown a BuildException");
+            } catch (BuildException ex) {
+                if (target.indexOf("IDL") > -1) {
+                    assertEquals("this rmic implementation doesn't support the -idl switch", ex.getMessage());
+                } else {
+                    assertEquals("this rmic implementation doesn't support the -iiop switch", ex.getMessage());
+                }
             }
         }
     }

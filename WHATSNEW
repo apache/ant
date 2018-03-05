@@ -17,6 +17,13 @@ Fixed bugs:
    Bugzilla Report 62076
 
 
+Other changes:
+--------------
+
+ * when running on Java 11+ rmic will fail early if iiop or idl are
+   requested. Java11 removes support for CORBA and the switches have
+   been removed from the rmic tool.
+
 Changes from Ant 1.9.9 TO Ant 1.9.10
 ====================================
 
