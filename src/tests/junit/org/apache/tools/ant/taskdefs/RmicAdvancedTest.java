@@ -338,13 +338,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForked() throws Exception {
-        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewForked");
     }
 
     @Test
     public void testXnewForkedJava9plus() throws Exception {
-        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         tried.expect(BuildException.class);
         tried.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewForked");
@@ -357,13 +357,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedDest() throws Exception {
-        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewForkedDest");
     }
 
     @Test
     public void testXnewForkedDestJava9plus() throws Exception {
-        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         tried.expect(BuildException.class);
         tried.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewForkedDest");
@@ -376,13 +376,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompiler() throws Exception {
-        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewCompiler");
     }
 
     @Test
     public void testXnewCompilerJava9plus() throws Exception {
-        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         tried.expect(BuildException.class);
         tried.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewCompiler");
@@ -395,13 +395,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerDest() throws Exception {
-        assumeFalse("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewCompilerDest");
     }
 
     @Test
     public void testXnewCompilerDestJava9plus() throws Exception {
-        assumeTrue("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         tried.expect(BuildException.class);
         tried.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewCompilerDest");
@@ -414,13 +414,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDL() throws Exception {
-        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeFalse("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
         buildRule.executeTarget("testIDL");
     }
 
     @Test
     public void testIDLJava11plus() throws Exception {
-        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
         tried.expect(BuildException.class);
         tried.expectMessage("this rmic implementation doesn't support the -idl switch");
         buildRule.executeTarget("testIDL");
@@ -433,13 +433,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIDLDest() throws Exception {
-        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeFalse("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
         buildRule.executeTarget("testIDLDest");
     }
 
     @Test
     public void testIDLDestJava11plus() throws Exception {
-        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
         tried.expect(BuildException.class);
         tried.expectMessage("this rmic implementation doesn't support the -idl switch");
         buildRule.executeTarget("testIDL");
@@ -452,13 +452,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOP() throws Exception {
-        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeFalse("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
         buildRule.executeTarget("testIIOP");
     }
 
     @Test
     public void testIIOPJava11plus() throws Exception {
-        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
         tried.expect(BuildException.class);
         tried.expectMessage("this rmic implementation doesn't support the -iiop switch");
         buildRule.executeTarget("testIIOP");
@@ -471,13 +471,13 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testIIOPDest() throws Exception {
-        assumeFalse("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeFalse("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
         buildRule.executeTarget("testIIOPDest");
     }
 
     @Test
     public void testIIOPDestJava11plus() throws Exception {
-        assumeTrue("Current system is Java 11 or newer", JavaEnvUtils.isAtLeastJavaVersion("11"));
+        assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
         tried.expect(BuildException.class);
         tried.expectMessage("this rmic implementation doesn't support the -iiop switch");
         buildRule.executeTarget("testIIOP");
