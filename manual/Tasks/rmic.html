@@ -70,6 +70,14 @@ are the choices:</p>
 project contains a compiler implementation for this task as well, please consult miniRMI's
 documentation to learn how to use it.</p>
 
+<h4>CORBA support</h4>
+
+<p>Java 11 removes the CORBA and JavaEE packages and rmic no longer
+  supports either <code>iiop</code> nor <code>idl</code>. Starting
+  with Ant 1.10.3 the rmic task will fail when using either while
+  running Java11+ unless you fork the task and explicitly specify an
+  executable.</p>
+
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -155,7 +163,8 @@ documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td>iiop</td>
-    <td>indicates that portable (RMI/IIOP) stubs should be generated</td>
+    <td>indicates that portable (RMI/IIOP) stubs should be
+      generated.<br/>  See the note on CORBA support above.</td>
     <td>No</td>
   </tr>
   <tr>
@@ -165,7 +174,8 @@ documentation to learn how to use it.</p>
   </tr>
   <tr>
     <td>idl</td>
-    <td>indicates that IDL output files should be generated</td>
+    <td>indicates that IDL output files should be generated.<br/>  See
+      the note on CORBA support above.</td>
     <td>No</td>
   </tr>
   <tr>

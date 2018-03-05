@@ -52,6 +52,16 @@ public class WLRmic extends DefaultRmicAdapter {
     public static final String UNSUPPORTED_STUB_OPTION = "Unsupported stub option: ";
 
     /**
+     * @since Ant 1.10.3
+     */
+    @Override
+    protected boolean areIiopAndIdlSupported() {
+        // actually I don't think Weblogic's rmic supports either, but
+        // we've accepted the flags prior to 1.10.3
+        return true;
+    }
+
+    /**
      * Carry out the rmic compilation.
      * @return true if the compilation succeeded
      * @throws  BuildException on error

@@ -46,6 +46,21 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
     public static final String COMPILER_NAME = "forking";
 
     /**
+     * @since Ant 1.10.3
+     */
+    @Override
+    protected boolean areIiopAndIdlSupported() {
+        boolean supported = !JavaEnvUtils.isAtLeastJavaVersion("11");
+        if (!supported && getRmic().getExecutable() != null) {
+            getRmic().getProject()
+                .log("Allowing -iiop and -idl for forked rmic even though this version of Java doesn't support it.",
+                     Project.MSG_INFO);
+            return true;
+        }
+        return supported;
+    }
+
+    /**
      * exec by creating a new command
      * @return true if the command ran successfully
      * @throws BuildException on error
