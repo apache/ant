@@ -38,7 +38,7 @@
 <p>By default, this load does <em>no</em> processing of the input.  In particular, unlike
 the <a href="property.html">Property task</a>, property references (i.e., <samp>${foo}</samp>) are
 not resolved.</p>
-<h3 id="semanticAttributes">Semantic Attributes</h3>
+<h3 id="semanticAttributes">Semantic attributes</h3>
 <p>Input processing can be enabled by using the <var>semanticAttributes</var> attribute.  If this
 attribute is set to <q>true</q> (its default is <q>false</q>), the following processing occurs as
 the input XML file is loaded:/p>
@@ -143,9 +143,9 @@ perform entity resolution.</p>
 
 <h3 id="examples">Examples</h3>
 
-<h4>Non-semantic Attributes</h4>
+<h4>Non-semantic attributes</h4>
 
-<p>Here is an example xml file that does not have any semantic attributes.</p>
+<p>Here is an example XML file that does not have any semantic attributes.</p>
 
 <pre>
 &lt;root-tag myattr="true"&gt;
@@ -163,7 +163,7 @@ root-tag.inner-tag=Text
 root-tag.inner-tag(someattr)=val
 root-tag.a2.a3.a4=false</pre>
 
-<h5>collapseAttributes=false</h5>
+<h5><var>collapseAttributes</var>=<q>false</q></h5>
 <p>This entry in a build file:</p>
 <pre>&lt;xmlproperty file="somefile.xml" collapseAttributes="true"/&gt;</pre>
 <p>is equivalent to the following properties:</p>
@@ -173,7 +173,7 @@ root-tag.inner-tag=Text
 root-tag.inner-tag.someatt=val
 root-tag.a2.a3.a4=false</pre>
 
-<h5>keepRoot=false</h5>
+<h5><var>keepRoot</var>=<q>false</q></h5>
 <p>This entry in a build file:</p>
 <pre>&lt;xmlproperty file="somefile.xml" keepRoot="false"/&gt;</pre>
 <p>is equivalent to the following properties:</p>
@@ -182,9 +182,9 @@ inner-tag=Text
 inner-tag(someattr)=val
 a2.a3.a4=false</pre>
 
-<h4>Semantic Attributes</h4>
+<h4>Semantic attributes</h4>
 
-<p>Here is an example xml file that has semantic attributes.</p>
+<p>Here is an example XML file that has semantic attributes.</p>
 <pre>
 &lt;root-tag&gt;
   &lt;version value="0.0.1"/&gt;
@@ -206,7 +206,7 @@ a2.a3.a4=false</pre>
   &lt;/run-time&gt;
 &lt;/root-tag&gt;</pre>
 
-<h5>default loading (semanticAttributes=true)</h5>
+<h5>default loading (<var>semanticAttributes</var>=<q>true</q>)</h5>
 <p>This entry in a build file:</p>
 <pre>
 &lt;xmlproperty file="somefile.xml" keepRoot="false"
@@ -229,7 +229,7 @@ a2.a3.a4=false</pre>
   &lt;pathelement path="${run-time.jars}"/&gt;
 &lt;/path&gt;</pre>
 
-<h5>includeSemanticAttribute="true"</h5>
+<h5><var>includeSemanticAttribute</var>=<q>true</q></h5>
 <p>This entry in a build file:</p>
 <pre>
 &lt;xmlproperty file="somefile.xml"

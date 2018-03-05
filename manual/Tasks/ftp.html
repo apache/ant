@@ -393,7 +393,7 @@ files to be retrieved, or deleted, or listed, or whose mode you want to change.<
 to <q>false</q>.</em>  On remote filesets hidden files are not checked for being symbolic links.
 Hidden files are currently assumed to not be symbolic links.</p>
 
-<h3>Sending Files</h3>
+<h3>Sending files</h3>
 <p>The easiest way to describe how to send files is with a couple of examples:</p>
 <pre>
 &lt;ftp server="ftp.apache.org"
@@ -465,7 +465,7 @@ the <samp>/pub/incoming</samp> directory. The files are transferred in text mode
 password <samp>java1</samp> and uploads all HTML files in the <samp>htdocs/manual</samp> directory
 to the <samp>c:\uploads</samp> directory.  Progress messages are displayed as each file is
 uploaded.</p>
-<h3>Getting Files</h3>
+<h3>Getting files</h3>
 <p>Getting files from an FTP server works pretty much the same way as sending them does.  The only
 difference is that the nested filesets use the <var>remotedir</var> attribute as the base directory
 for the files on the FTP server, and the <var>dir</var> attribute as the local directory to put the
@@ -514,7 +514,7 @@ names in Standard European format, as <samp>anonymous</samp>, and recursively do
 all <samp>.html</samp> files from default directory for that user into
 the <samp>htdocs/manual</samp> directory on the local machine.</p>
 
-<h3>Deleting Files</h3>
+<h3>Deleting files</h3>
 <p>As you've probably guessed by now, you use nested fileset elements to select the files to delete
 from the remote FTP server.  Again, the filesets are relative to the remote directory, not a local
 directory.  In fact, the <var>dir</var> attribute of the fileset is ignored completely.</p>
@@ -546,7 +546,7 @@ to delete a file, a BuildException is thrown.</p>
 relative to the default directory of the <samp>anonymous</samp> user. The listing is in whatever
 format the FTP server normally lists files.</p>
 
-<h3>Creating Directories</h3>
+<h3>Creating directories</h3>
 <p>Note that with the <q>mkdir</q> action, the directory to create is specified using
 the <var>remotedir</var> attribute.</p>
 <pre>
@@ -558,7 +558,7 @@ the <var>remotedir</var> attribute.</p>
 <p>This creates the directory <samp>some/remote/dir</samp> beneath the default root directory.  As
 with all other actions, the directory separator character must be correct according to the desires
 of the FTP server.</p>
-<h3>Removing Directories</h3>
+<h3>Removing directories</h3>
 <p>This action uses nested fileset elements to select the directories to remove from the remote FTP
 server.  The filesets are relative to the remote directory, not a local directory.
 The <var>dir</var> attribute of the fileset is ignored completely.  The directories to be removed

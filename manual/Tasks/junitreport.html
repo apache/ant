@@ -119,7 +119,7 @@ using the nested <a href="../Types/fileset.html"><code>&lt;FileSet&gt;</code></a
 <p>Custom versions of <samp>junit-frames.xsl</samp> or <samp>junit-noframes.xsl</samp> must adhere
 to the above conventions.</p>
 
-<h3>Nested Element of the report tag</h3>
+<h3>Nested element of the report tag</h3>
 <h4>param</h4>
 <p><em>Since Ant 1.7</em>, the <var>report</var> tag supports nested <code>param</code> tags.  These
 tags can pass XSL parameters to the stylesheet.</p>
@@ -189,15 +189,15 @@ nested <code>&lt;factory&gt;</code> can be used to specify factory settings.</p>
 <p>would generate a <samp>TESTS-TestSuites.xml</samp> file in the directory <samp>reports</samp> and
 generate the default framed report in the directory <samp>report/html</samp>.</p>
 
-<h3>Example of report with xsl params</h3>
+<h3>Example of report with XSL params</h3>
 <pre>
 &lt;junitreport todir="${outputdir}"&gt;
     &lt;fileset dir="${jrdir}"&gt;
         &lt;include name="TEST-*.xml"/&gt;
     &lt;/fileset&gt;
     &lt;report todir="${outputdir}/html"
-        styledir="junitreport"
-        format="frames"&gt;
+            styledir="junitreport"
+            format="frames"&gt;
         &lt;param name="key1" expression="value1"/&gt;
         &lt;param name="key2" expression="value2"/&gt;
     &lt;/report&gt;
