@@ -28,22 +28,22 @@ that contained the string <q>blee</q> from the first 10 lines of a text file <sa
 (<em>you wouldn't want to filter a binary file</em>) to a file <samp>bar</samp>, you would do
 something like:</p>
 <pre>cat foo|head -n10|grep blee &gt; bar</pre>
-<p>Apache Ant was not flexible enough.  There was no way for the <code>&lt;copy&gt;</code> task
-to do something similar.  If you wanted the <code>&lt;copy&gt;</code> task to get the first 10
-lines, you would have had to create special attributes:</p>
+<p>Apache Ant was not flexible enough.  There was no way for the <code>&lt;copy&gt;</code> task to
+do something similar.  If you wanted the <code>&lt;copy&gt;</code> task to get the first 10 lines,
+you would have had to create special attributes:</p>
 <pre>&lt;copy file=&quot;foo&quot; tofile=&quot;bar&quot; head=&quot;10&quot; contains=&quot;blee&quot;/&gt;</pre>
 <p>The obvious problem thus surfaced: Ant tasks would not be able to accommodate such data
 transformation attributes as they would be endless.  The task would also not know in which order
 these attributes were to be interpreted.  That is, must the task execute the contains attribute
 first and then the head attribute or vice-versa?  What Ant tasks needed was a mechanism to allow
-pluggable filter (data transformer) chains.  Ant would provide a few filters for which there
-have been repeated requests.  Users with special filtering needs would be able to easily write
-their own and plug them in.</p>
+pluggable filter (data transformer) chains.  Ant would provide a few filters for which there have
+been repeated requests.  Users with special filtering needs would be able to easily write their own
+and plug them in.</p>
 
 <p>The solution was to refactor data transformation oriented tasks to support FilterChains.  A
-FilterChain is a group of ordered FilterReaders.  Users can define their own FilterReaders by
-just extending the <code>java.io.FilterReader</code> class.  Such custom FilterReaders can be
-easily plugged in as nested elements of <code>&lt;filterchain&gt;</code> by
+FilterChain is a group of ordered FilterReaders.  Users can define their own FilterReaders by just
+extending the <code>java.io.FilterReader</code> class.  Such custom FilterReaders can be easily
+plugged in as nested elements of <code>&lt;filterchain&gt;</code> by
 using <code>&lt;filterreader&gt;</code> elements.</p>
 <p>Example:</p>
 <pre>
@@ -114,14 +114,13 @@ also.</p>
 
 <h3 id="filterreader">FilterReader</h3>
 
-<p>The <code>filterreader</code> element is the generic way to define a filter.  User defined
-filter elements are defined in the build file using this.  Please note that built in filter
-readers can also be defined using this syntax.</p>
+<p>The <code>filterreader</code> element is the generic way to define a filter.  User defined filter
+elements are defined in the build file using this.  Please note that built in filter readers can
+also be defined using this syntax.</p>
 
 <p>A FilterReader element must be supplied with a class name as an attribute value.  The class
-resolved by this name must extend <code>java.io.FilterReader</code>.  If the custom filter
-reader needs to be parameterized, it must
-implement <code>org.apache.tools.type.Parameterizable</code>.</p>
+resolved by this name must extend <code>java.io.FilterReader</code>.  If the custom filter reader
+needs to be parameterized, it must implement <code>org.apache.tools.type.Parameterizable</code>.</p>
 
 <table class="attr">
   <tr>
@@ -138,23 +137,22 @@ implement <code>org.apache.tools.type.Parameterizable</code>.</p>
 
 <h4>Nested elements</h4>
 <p><code>&lt;filterreader&gt;</code> supports <code>&lt;classpath&gt;</code>
-and <code>&lt;param&gt;</code> as nested elements.  Each <code>&lt;param&gt;</code> element may
-take in the following attributes&mdash;<var>name</var>, <var>type</var> and <var>value</var>.</p>
+and <code>&lt;param&gt;</code> as nested elements.  Each <code>&lt;param&gt;</code> element may take
+in the following attributes&mdash;<var>name</var>, <var>type</var> and <var>value</var>.</p>
 <p>The following FilterReaders are supplied with the default distribution.</p>
 
 <h3 id="classconstants">ClassConstants</h3>
-<p>This filters basic constants defined in a Java Class, and outputs them in lines composed of
-the format <em>name</em>=<em>value</em>.  This filter uses the BCEL library to understand the
-Java Class file.  See <a href="../install.html#librarydependencies">Library Dependencies</a>.</p>
-<p><strong>Important</strong>: This filter is different from most of the other filters.  Most of
-the filters operate on a sequence of characters.  This filter operates on the sequence of bytes
-that makes up a class. However the bytes arrive to the filter as a sequence of characters. This
-means that one must be careful on the choice of character encoding to use. Most encodings lose
-information on conversion from an arbitrary sequence of bytes to characters and back again to
-bytes. In particular, the usual default character encodings (CP1252 and UTF-8) do.  For this
-reason, <em>since Ant 1.7</em>, the character encoding <strong>ISO-8859-1</strong> is used to
-convert from characters back to bytes, so one <strong>has</strong> to use this encoding for
-reading the java class file.</p>
+<p>This filters basic constants defined in a Java Class, and outputs them in lines composed of the
+format <em>name</em>=<em>value</em>.  This filter uses the BCEL library to understand the Java Class
+file.  See <a href="../install.html#librarydependencies">Library Dependencies</a>.</p>
+<p><strong>Important</strong>: This filter is different from most of the other filters.  Most of the
+filters operate on a sequence of characters.  This filter operates on the sequence of bytes that
+makes up a class. However the bytes arrive to the filter as a sequence of characters. This means
+that one must be careful on the choice of character encoding to use. Most encodings lose information
+on conversion from an arbitrary sequence of bytes to characters and back again to bytes. In
+particular, the usual default character encodings (CP1252 and UTF-8) do.  For this reason, <em>since
+Ant 1.7</em>, the character encoding <strong>ISO-8859-1</strong> is used to convert from characters
+back to bytes, so one <strong>has</strong> to use this encoding for reading the Java class file.</p>
 <h4>Example</h4>
 
 <p>This loads the basic constants defined in a Java class as Ant properties.</p>
@@ -203,8 +201,8 @@ Unicode escape backslash u plus 4 digits.</p>
 &lt;/loadproperties&gt;</pre>
 
 <h3 id="expandproperties">ExpandProperties</h3>
-<p>If the data contains data that represents Ant properties (of the form <code>${...}</code>),
-that is substituted with the property's actual value.</p>
+<p>If the data contains data that represents Ant properties (of the form <code>${...}</code>), that
+is substituted with the property's actual value.</p>
 
 <h4>Example</h4>
 
@@ -663,8 +661,8 @@ them.</p>
 
 <h3 id="striplinecomments">StripLineComments</h3>
 
-<p>This filter removes all those lines that begin with strings that represent comments as
-specified by the user.</p>
+<p>This filter removes all those lines that begin with strings that represent comments as specified
+by the user.</p>
 
 <table class="attr">
   <tr>
@@ -764,8 +762,8 @@ and <q>//</q></p>
 <p>
 
 <h4>Background</h4>
-<p>With HeadFilter and TailFilter you can extract each part of a text file you want.  This
-graphic shows the dependencies:</p>
+<p>With HeadFilter and TailFilter you can extract each part of a text file you want.  This graphic
+shows the dependencies:</p>
 
 <table>
 <tr>
@@ -1120,15 +1118,14 @@ following are understood: <q>\n</q>, <q>\r</q>, <q>\f</q>, <q>\t</q> and <q>\\</
 </p>
 <p>
 Some of the filters may be used directly within a <code>filterchain</code>. In this case
-a <code>tokenfilter</code> is created implicitly. An extra attribute <var>byline</var> is added
-to the filter to specify whether to use a <code>linetokenizer</code>
-(<var>byline</var>=<q>true</q>) or a <code>filetokenizer</code>
-(<var>byline</var>=<q>false</q>). The default is <q>true</q>.
+a <code>tokenfilter</code> is created implicitly. An extra attribute <var>byline</var> is added to
+the filter to specify whether to use a <code>linetokenizer</code> (<var>byline</var>=<q>true</q>) or
+a <code>filetokenizer</code> (<var>byline</var>=<q>false</q>). The default is <q>true</q>.
 </p>
 
 <h4 id="linetokenizer">LineTokenizer</h4>
-<p>This tokenizer splits the input into lines.  The tokenizer delimits lines
-by <q>\r</q>, <q>\n</q> or <q>\r\n</q>.  This is the default tokenizer.</p>
+<p>This tokenizer splits the input into lines.  The tokenizer delimits lines by <q>\r</q>, <q>\n</q>
+or <q>\r\n</q>.  This is the default tokenizer.</p>
 <table class="attr">
   <tr>
     <th>Attribute</th>
@@ -1451,8 +1448,8 @@ the <a href="../Tasks/native2ascii.html">native2ascii</a> task.</p>
 <p>
 This is an optional filter that executes a script in a <a href="https://jakarta.apache.org/bsf"
 target="_top">Apache BSF</a>
-or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html">JSR
-223</a> supported language.
+or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html"
+target="_top">JSR 223</a> supported language.
 </p>
 <p>
 See the <a href="../Tasks/script.html">Script</a> task for an explanation of scripts and
@@ -1460,8 +1457,8 @@ dependencies.
 </p>
 <p>
 The script is provided with an object <samp>self</samp> that has <code>getToken()</code>
-and <code>setToken(String)</code> methods.  The <code>getToken()</code> method returns the
-current token. The <code>setToken(String)</code> method replaces the current token.
+and <code>setToken(String)</code> methods.  The <code>getToken()</code> method returns the current
+token. The <code>setToken(String)</code> method replaces the current token.
 </p>
 <p>
 This filter may be used directly within a <code>filterchain</code>.
@@ -1474,14 +1471,14 @@ This filter may be used directly within a <code>filterchain</code>.
   </tr>
   <tr>
     <td>language</td>
-    <td>Programming language the script is written in.  Must be a supported Apache BSF or
-      JSR 223 language</td>
+    <td>Programming language the script is written in.  Must be a supported Apache BSF or JSR 223
+      language</td>
     <td>Yes</td>
   </tr>
   <tr>
     <td>manager</td>
-    <td>Script engine manager to use.  See the <a href="../Tasks/script.html">script</a>
-      task for using this attribute.</td>
+    <td>Script engine manager to use.  See the <a href="../Tasks/script.html">script</a> task for
+      using this attribute.</td>
     <td>No; default is <q>auto</q></td>
   </tr>
   <tr>
@@ -1507,8 +1504,8 @@ This filter may be used directly within a <code>filterchain</code>.
   </tr>
   <tr>
     <td>classpathref</td>
-    <td>The classpath to use, given as a <a href="../using.html#references">reference</a> to a
-      path defined elsewhere.
+    <td>The classpath to use, given as a <a href="../using.html#references">reference</a> to a path
+      defined elsewhere.
     <td>No</td>
   </tr>
 </table>

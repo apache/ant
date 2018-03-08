@@ -223,8 +223,8 @@ connection.</p>
   <tr>
     <td colspan="3" class="left">
       <p><strong>The following attributes
-      require <a href="https://commons.apache.org/net/download_net.cgi">jakarta-commons-net-1.4.0 or
-      greater</a>.</strong></p>
+      require <a href="https://commons.apache.org/net/download_net.cgi"
+      target="_top">jakarta-commons-net-1.4.0 or greater</a>.</strong></p>
       <p>Use these options when the standard options don't work, because</p>
       <ul>
         <li>the server is in a different timezone and you need timestamp dependency checking</li>
@@ -259,44 +259,45 @@ connection.</p>
   <tr>
     <td>serverTimeZoneConfig</td>
     <td>Specify as a
-      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html">TimeZone</a>
-      identifier, (e.g. <q>GMT</q>, <q>America/Chicago</q> or <q>Asia/Jakarta</q>) the timezone used
-      by the server for timestamps.  This enables timestamp dependency checking even when the server
-      is in a different time zone from the client. Time Zones know, also, about daylight savings
-      time, and do not require you to calculate milliseconds of difference.  If not specified, (or
-      specified as <q></q>), the time zone of the client is assumed.<br/><em>Since Ant 1.7</em></td>
+      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html"
+      target="_top">TimeZone</a> identifier, (e.g. <q>GMT</q>, <q>America/Chicago</q>
+      or <q>Asia/Jakarta</q>) the timezone used by the server for timestamps.  This enables
+      timestamp dependency checking even when the server is in a different time zone from the
+      client. Time Zones know, also, about daylight savings time, and do not require you to
+      calculate milliseconds of difference.  If not specified, (or specified as <q></q>), the time
+      zone of the client is assumed.<br/><em>Since Ant 1.7</em></td>
     <td>No</td>
   </tr>
   <tr>
     <td>defaultDateFormatConfig</td>
     <td>Specify in
-      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a>
-      notation, (e.g. <q>yyyy-MM-dd</q>), the date format generally used by the FTP server to parse
-      dates.  In some cases this will be the only date format used.  In others, (<q>unix</q> for
-      example) this will be used for dates older than a year
-      old. (See <var>recentDateFormatConfig</var>).  When specified as <q></q>, default value will
-      be used.<br/><em>Since Ant 1.7</em></td>
+      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
+      target="_top">SimpleDateFormat</a> notation, (e.g. <q>yyyy-MM-dd</q>), the date format
+      generally used by the FTP server to parse dates.  In some cases this will be the only date
+      format used.  In others, (<q>unix</q> for example) this will be used for dates older than a
+      year old. (See <var>recentDateFormatConfig</var>).  When specified as <q></q>, default value
+      will be used.<br/><em>Since Ant 1.7</em></td>
     <td>No; defaults to default date format for the system type indicated
       by <var>systemTypeKey</var></td>
   </tr>
   <tr>
     <td>recentDateFormatConfig</td>
     <td>Specify in
-      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a>
-      notation, (e.g. <q>MMM dd hh:mm</q>) the date format used by the FTP server to parse dates
-      less than a year old.  If not specified (or specified as <q></q>), and if the system type
-      indicated by the <var>systemTypeKey</var> uses a recent date format, its standard format will
-      be used.<br/><em>Since Ant 1.7</em></td>
+      Java <a href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
+      target="_top">SimpleDateFormat</a> notation, (e.g. <q>MMM dd hh:mm</q>) the date format used
+      by the FTP server to parse dates less than a year old.  If not specified (or specified
+      as <q></q>), and if the system type indicated by the <var>systemTypeKey</var> uses a recent
+      date format, its standard format will be used.<br/><em>Since Ant 1.7</em></td>
     <td>No</td>
   </tr>
   <tr>
     <td>serverLanguageCodeConfig</td>
-    <td>a <a href="http://www.mathguide.de/info/tools/languagecode.html">two-letter ISO-639 language
-      code</a> used to specify the language used by the server to format month names.  This only
-      needs to be specified when the server uses non-numeric abbreviations for months in its date
-      listings in a language other than English.  This appears to be becoming rarer and rarer, as
-      commonly distributed FTP servers seem increasingly to use English or all-numeric formats.
-      Languages supported are:
+    <td>a <a href="http://www.mathguide.de/info/tools/languagecode.html" target="_top">two-letter
+      ISO-639 language code</a> used to specify the language used by the server to format month
+      names.  This only needs to be specified when the server uses non-numeric abbreviations for
+      months in its date listings in a language other than English.  This appears to be becoming
+      rarer and rarer, as commonly distributed FTP servers seem increasingly to use English or
+      all-numeric formats.  Languages supported are:
       <ul>
         <li><q>en</q>&mdash;English</li>
         <li><q>fr</q>&mdash;French</li>

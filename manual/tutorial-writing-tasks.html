@@ -99,7 +99,7 @@ fail; <q>jar</q> requires the execution of some steps before. So the refactored 
     &lt;/target&gt;
 
 &lt;/project&gt;</pre>
-<p><code>ant.project.name</code> is one of the <a href="properties.html#built-in-props" target="_blank">build-in
+<p><code>ant.project.name</code> is one of the <a href="properties.html#built-in-props" target="_top">build-in
 properties [1]</a> of Ant.</p>
 
 <h2 id="write1">Write the Task</h2>
@@ -117,7 +117,7 @@ attribute the <q>compile</q> is executed before).</p>
 
 <h2 id="use1">Use the Task</h2>
 <p>But after creating the jar we want to use our new Task. Therefore we need a new target <q>use</q>. Before we can use
-our new task we have to declare it with <a href="Tasks/taskdef.html" target="_blank"><code>&lt;taskdef&gt;</code>
+our new task we have to declare it with <a href="Tasks/taskdef.html" target="_top"><code>&lt;taskdef&gt;</code>
 [2]</a>.  And for easier process we change the <var>default</var> attribute:</p>
 <pre class="code">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -724,9 +724,8 @@ of your custom task.  Then set breakpoints in other methods.  This will ensure t
 JVM.</p>
 
 <h2 id="resources">Resources</h2>
-<p>This tutorial and its resources are available
-via <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=22570">BugZilla [5]</a>.  The ZIP provided there
-contains</p>
+<p>This tutorial and its resources are available via <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=22570"
+target="_top">BugZilla [5]</a>.  The ZIP provided there contains</p>
 <ul>
 <li>this initial version of this tutorial</li>
 <li>the buildfile (last version)</li>
@@ -746,7 +745,8 @@ the manual.</p>
 <li><a href="Tasks/taskdef.html">https://ant.apache.org/manual/Tasks/taskdef.html</a></li>
 <li><a href="develop.html#set-magic">https://ant.apache.org/manual/develop.html#set-magic</a></li>
 <li><a href="develop.html#nested-elements">https://ant.apache.org/manual/develop.html#nested-elements</a></li>
-<li><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=22570">https://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a></li>
+<li><a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=22570"
+       target="_top">https://issues.apache.org/bugzilla/show_bug.cgi?id=22570</a></li>
 <li><a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a></li>
 </ol>
 

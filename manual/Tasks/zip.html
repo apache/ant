@@ -81,10 +81,10 @@ see <a href="#encoding">below</a></p>
 <p><em>Since Ant 1.5.2</em>, <code>&lt;zip&gt;</code> can store Unix permissions inside the archive
 (see description of the <var>filemode</var> and <var>dirmode</var> attributes
 for <a href="../Types/zipfileset.html">&lt;zipfileset&gt;</a>).  Unfortunately there is no portable
-way to store these permissions.  Ant uses the algorithm used
-by <a href="http://www.info-zip.org">Info-Zip's</a> implementation of the <code>zip</code>
-and <code>unzip</code> commands&mdash;these are the default versions of <code>zip</code>
-and <code>unzip</code> for many Unix(-like) systems.</p>
+way to store these permissions.  Ant uses the algorithm used by <a href="http://www.info-zip.org"
+target="_top">Info-Zip's</a> implementation of the <code>zip</code> and <code>unzip</code>
+commands&mdash;these are the default versions of <code>zip</code> and <code>unzip</code> for many
+Unix(-like) systems.</p>
 
 <p><strong>Please note that the zip format allows multiple files of the same fully-qualified name to
 exist within a single archive.  This has been documented as causing various problems for
@@ -143,8 +143,8 @@ extract an Ant generated ZIP archive.</p>
     <td>encoding</td>
     <td>The character encoding to use for filenames inside the zip file.  For a list of possible
       values see
-      the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">Supported
-      Encodings</a>.</td>
+      the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html"
+      target="_top">Supported Encodings</a>.</td>
     <td>No; defaults to default JVM character encoding</td>
   </tr>
   <tr>

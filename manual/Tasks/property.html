@@ -58,8 +58,8 @@ from a property file.</p>
 <p>A list of predefined properties can be
 found <a href="../properties.html#built-in-props">here</a>.</p>
 <p><em>Since Apache Ant 1.8.0</em>, it is possible to load properties defined in XML according
-to <a href="http://java.sun.com/dtd/properties.dtd">Sun DTD</a>, when running on Java 5+. For this
-the name of the file, resource or url has to end with <samp>.xml</samp>.</p>
+to <a href="http://java.sun.com/dtd/properties.dtd" target="_top">Sun DTD</a>, when running on Java
+5+. For this the name of the file, resource or url has to end with <samp>.xml</samp>.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -166,8 +166,8 @@ local definition is available (the table priority order being PROCESS, JOB, GROU
 <p><em>Since Ant 1.8.2</em>, if Ant detects it is running on a Java 5 or newer, Ant will
 use <code>System.getenv()</code> rather than its own OS dependent native implementation.  For some
 OSes this causes minor differences when compared to older versions of Ant.  For a full list
-see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=49366">Bugzilla Issue 49366</a>.  In
-particular:</p>
+see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=49366" target="_top">Bugzilla Issue
+49366</a>.  In particular:</p>
 <ul>
   <li>On Windows, Ant will now return additional "environment variables" that correspond to the
     drive specific current working directories when Ant is run from the command line.  The keys of
@@ -244,7 +244,8 @@ on a classpath. Here are some interesting facts about this feature</p>
   <li>If the file is not there, nothing is printed except at <code>-verbose</code> log level. This
     lets you have optional configuration files for every project, that team members can customize.
   <li>The rules for this format
-    match <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.InputStream-">java.util.Properties</a>.</li>
+    match <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.InputStream-"
+    target="_top">java.util.Properties</a>.</li>
   <li>Trailing spaces are not stripped. It may have been what you wanted.</li>
   <li>Want unusual characters? Escape them <code>\u0456</code> or <code>\&quot;</code> style.</li>
   <li>Ant Properties are expanded in the file</li>
@@ -265,8 +266,8 @@ deploy.url=http://${deploy.server}:${deploy.port}/</pre>
 variables. So it starts a command in a new process which prints the environment variables, analyzes
 the output and creates the properties.<br/>  There are commands for the following operating systems
 implemented
-in <a href="https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;hb=refs/heads/master">Execute.java</a>
-(method <code>getProcEnvCommand()</code>):
+in <a href="https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;hb=refs/heads/master"
+target="_top">Execute.java</a> (method <code>getProcEnvCommand()</code>):
 </p>
   <table>
     <tr>

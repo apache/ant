@@ -24,22 +24,21 @@
 <h2 id="fileset">ZipFileSet</h2>
 
 <p>A <code>&lt;zipfileset&gt;</code> is a special form of
-a <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> which can behave in 2 different
-ways:</p>
+a <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> which can behave in 2 different ways:</p>
 <ul>
   <li>When the <var>src</var> attribute is used&mdash;or a nested resource collection has been
-  specified (<em>since Apache Ant 1.7</em>), the zipfileset is populated with zip entries found
-  in the file <var>src</var>.</li>
-  <li>When the <var>dir</var> attribute is used, the zipfileset is populated with filesystem
-  files found under <var>dir</var>.</li>
+  specified (<em>since Apache Ant 1.7</em>), the zipfileset is populated with zip entries found in
+  the file <var>src</var>.</li>
+  <li>When the <var>dir</var> attribute is used, the zipfileset is populated with filesystem files
+  found under <var>dir</var>.</li>
 </ul>
 <p><code>&lt;zipfileset&gt;</code> supports all attributes
-of <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> in addition to those listed below.
-Note that zip archives in general don't contain entries with leading slashes so you shouldn't
+of <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> in addition to those listed below.  Note
+that zip archives in general don't contain entries with leading slashes so you shouldn't
 use <var>includes</var>/<var>excludes</var> patterns that start with slashes either.</p>
 
-<p><em>Since Ant 1.6</em>, a zipfileset can be defined with the <var>id</var> attribute and
-referred to with the <var>refid</var> attribute.</p>
+<p><em>Since Ant 1.6</em>, a zipfileset can be defined with the <var>id</var> attribute and referred
+to with the <var>refid</var> attribute.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -61,37 +60,34 @@ referred to with the <var>refid</var> attribute.</p>
     </tr>
     <tr>
       <td>src</td>
-      <td>may be used in place of the <var>dir</var> attribute to specify a zip file whose
-      contents will be extracted and included in the archive.</td>
+      <td>may be used in place of the <var>dir</var> attribute to specify a zip file whose contents
+	will be extracted and included in the archive.</td>
       <td>No</td>
     </tr>
     <tr>
       <td>filemode</td>
       <td>A 3 digit octal string, specify the user, group and other modes in the standard Unix
-      fashion. Only applies to plain files. <em>Since Ant 1.5.2</em></td>
+	fashion. Only applies to plain files. <em>Since Ant 1.5.2</em></td>
       <td>No; default is <q>644</q></td>
     </tr>
     <tr>
       <td>dirmode</td>
       <td>A 3 digit octal string, specify the user, group and other modes in the standard Unix
-      fashion. Only applies to directories. <em>Since Ant 1.5.2</em></td>
+	fashion. Only applies to directories. <em>Since Ant 1.5.2</em></td>
       <td>No; default is <q>755</q></td>
     </tr>
     <tr>
       <td>encoding</td>
-      <td>The character encoding to use for filenames inside the zip file.  For a list of
-      possible values see
-      the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">Supported
-      Encodings</a>.
+      <td>The character encoding to use for filenames inside the zip file.  For a list of possible
+	values see
+	the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html"
+	target="_top">Supported Encodings</a>.
       <td>No; defaults to default JVM character encoding</td>
     </tr>
     <tr>
       <td>erroronmissingarchive</td>
-      <td>
-        Specify what happens if the archive does not exist.  If <q>true</q>, a build error will
-        happen; if <q>false</q>, the fileset will be ignored/empty.
-        <em>Since Ant 1.8.0</em>
-      </td>
+      <td>Specify what happens if the archive does not exist.  If <q>true</q>, a build error will
+        happen; if <q>false</q>, the fileset will be ignored/empty.  <em>Since Ant 1.8.0</em></td>
       <td>No; defaults to <q>true</q></td>
     </tr>
   </tbody>

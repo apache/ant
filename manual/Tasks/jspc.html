@@ -31,9 +31,10 @@ the task shipping with Tomcat instead.</em>  This task is only tested against To
 known problems with Tomcat 5.x that won't get fixed in Ant, please use Tomcat's <code>jspc</code>
 task instead.<br/>  Instead of relying on container-specific JSP compilers we suggest deploying the
 raw files (<samp>*.jsp</samp>) and use the container build-in functions: after deploying run a test
-suite (e.g. with <a href="https://attic.apache.org/projects/jakarta-cactus.html">Cactus</a>
-or <a href="http://httpunit.sourceforge.net/">HttpUnit</a>) against the deployed web application. So
-you'll get the test result <em>and</em> the compiled JSPs.</p>
+suite (e.g. with <a href="https://attic.apache.org/projects/jakarta-cactus.html"
+target="_top">Cactus</a> or <a href="http://httpunit.sourceforge.net/" target="_top">HttpUnit</a>)
+against the deployed web application. So you'll get the test result <em>and</em> the compiled
+JSPs.</p>
 <h3>Description</h3>
 
 <p>Apache Ant task to run the JSP compiler and turn JSP pages into Java source files.</p>
@@ -47,8 +48,8 @@ dependencies, or <code>&lt;jsp:include&gt;</code> references.</p>
 
 <p>By default the task uses the Jasper JSP compiler. This means the task
 needs <samp>jasper.jar</samp> and <samp>jasper-runtime.jar</samp>, which come with builds of Tomcat
-4/Catalina from the <a href="https://tomcat.apache.org/">Apache Tomcat project</a>, and any other
-jar files which may be needed in future versions (it changes).</p>
+4/Catalina from the <a href="https://tomcat.apache.org/" target="_top">Apache Tomcat project</a>,
+and any other jar files which may be needed in future versions (it changes).</p>
 
 <p>We recommend (in March 2003) Tomcat version 4.1.x for the most robust version of Jasper.</p>
 

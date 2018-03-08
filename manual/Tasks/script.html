@@ -27,8 +27,8 @@
 <h2 id="script">Script</h2>
 <h3>Description</h3>
 <p>Execute a script in a <a href="https://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
-or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html">JSR
-223</a> supported language.
+or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html"
+target="_top">JSR 223</a> supported language.
 </p>
 <p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant
 distribution.  See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
@@ -46,15 +46,16 @@ Java API, see the <a href="../api/index.html">JavaDoc</a> (especially
 for <a href="../api/org/apache/tools/ant/Project.html">Project</a>
 and <a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more
 information.</p>
-<p>If you are using JavaScript under BSF, a good resource is <a target="_blank"
-href="https://www.mozilla.org/rhino/doc.html">https://www.mozilla.org/rhino/doc.html</a> as we are
-using their JavaScript interpreter.</p>
+<p>If you are using JavaScript under BSF, a good resource
+is <a href="https://www.mozilla.org/rhino/doc.html"
+target="_top">https://www.mozilla.org/rhino/doc.html</a> as we are using their JavaScript
+interpreter.</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
 <p>Rhino provides a special construct&mdash;the <code>JavaAdapter</code>. With that you can create
 an object which implements several interfaces, extends classes and for which you can overwrite
 methods. Because this is an undocumented feature (yet), here is the link to an
-explanation: <a href="https://groups.google.com/forum/#!msg/netscape.public.mozilla.jseng/YlRQE0OvM8c/F8Mvq-XkpxcJ">Google
-Groups: "Rhino, enum.js, JavaAdapter?"</a>  by Norris Boyd in the
+explanation: <a href="https://groups.google.com/forum/#!msg/netscape.public.mozilla.jseng/YlRQE0OvM8c/F8Mvq-XkpxcJ"
+target="_top">Google Groups: "Rhino, enum.js, JavaAdapter?"</a>  by Norris Boyd in the
 newsgroup <em>netscape.public.mozilla.jseng</em>.</p>
 
 <p>If you are creating Targets programmatically, make sure you set the Location to a useful value.
@@ -273,9 +274,9 @@ with <code>importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileU
 The <code>&lt;script&gt;</code> task populates the Project instance under the
 name <code>project</code>, so we can use that reference. Another way is to use its given name or
 getting its reference from the task itself.<br/>  The Project provides methods for accessing and
-setting properties, creating DataTypes and Tasks and much more.<br/>  After creating a FileSet object
-we initialize that by calling its set-methods. Then we can use that object like a normal Ant task
-(<code>&lt;copy&gt;</code> for example).<br/>  For getting the size of a file we instantiate
+setting properties, creating DataTypes and Tasks and much more.<br/>  After creating a FileSet
+object we initialize that by calling its set-methods. Then we can use that object like a normal Ant
+task (<code>&lt;copy&gt;</code> for example).<br/>  For getting the size of a file we instantiate
 a <code>java.io.File</code>. So we are using normal Java API here.<br/>  Finally we use
 the <code>&lt;echo&gt;</code> task for producing the output. The task is not executed by
 its <code>execute()</code> method, because the <code>perform()</code> method (implemented in Task
@@ -312,8 +313,8 @@ paths to a referenced path. If the path does not exist, it will be created.</p>
     project.addTaskDefinition("addtopath", AddToPath.class);
 &lt;/script&gt;</pre>
 <p>An example of using this task to create a path from a list of directories (using
-antcontrib's <a href="http://ant-contrib.sourceforge.net/tasks/tasks/for.html"> &lt;for&gt;</a>
-task) follows:</p>
+ant-contrib's <a href="http://ant-contrib.sourceforge.net/tasks/tasks/for.html"
+target="_top">&lt;for&gt;</a> task) follows:</p>
 <pre>
 &lt;path id="main.path"&gt;
   &lt;fileset dir="build/classes"/&gt;

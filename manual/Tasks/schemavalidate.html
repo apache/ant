@@ -49,12 +49,13 @@ their URL equivalents.</p>
   <li><code>&lt;dtd&gt;</code> elements which are used to resolve DTDs and entities.</li>
   <li><code>&lt;attribute&gt;</code> elements which are used to set features on the parser.  These
     can be any number
-    of <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><code>http://xml.org/sax/features/</code></a>
-    or other features that your parser may support.</li>
+    of <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
+    target="_top"><code>http://xml.org/sax/features/</code></a> or other features that your parser
+    may support.</li>
   <li><code>&lt;property&gt;</code> elements, containing string properties</li>
 </ul>
 
-<p>The task only supports SAX2 or later parsers: it is an error to specify a esSAX1 parser.</p>
+<p>The task only supports SAX2 or later parsers: it is an error to specify a SAX1 parser.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -168,10 +169,10 @@ their URL equivalents.</p>
 perform entity resolution.</p>
 <h4>attribute</h4>
 <p>The <code>&lt;attribute&gt;</code> element is used to set parser features.<br/>Features usable
-with the xerces parser are defined
-here: <a href="https://xml.apache.org/xerces-j/features.html">Setting features</a><br/>SAX features
-are defined
-here: <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><code>http://xml.org/sax/features/</code></a></p>
+with the xerces parser are defined here: <a href="https://xml.apache.org/xerces-j/features.html"
+target="_top">Setting features</a><br/>SAX features are defined
+here: <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
+target="_top"><code>http://xml.org/sax/features/</code></a></p>
 <table class="attr">
   <tr>
   <th>Attribute</th>
@@ -193,8 +194,8 @@ here: <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html
 <h4>property</h4>
 <p>The <code>&lt;property&gt;</code> element is used to set properties.  These properties are
 defined here for the Xerces XML parser
-implementation: <a href="https://xml.apache.org/xerces-j/properties.html">XML Parser properties</a>
-Properties can be used to set the schema used to validate the XML file.
+implementation: <a href="https://xml.apache.org/xerces-j/properties.html" target="_top">XML Parser
+properties</a>. Properties can be used to set the schema used to validate the XML file.
 </p>
 <table class="attr">
 <tr>
@@ -237,7 +238,7 @@ is why the <var>noNamespaceFile</var> is needed.</p>
 documents against the relevant specifications.  To validate XSD documents, you also
 need <samp>XMLSchema.dtd</samp> and <samp>datatypes.dtd</samp> in the same directory
 as <samp>XMLSchema.xsd</samp>, or pointed to via the catalog. All these files can be fetched
-from <a href="https://www.w3.org/2001/XMLSchema">W3C</a>.</p>
+from <a href="https://www.w3.org/2001/XMLSchema" target="_top">W3C</a>.</p>
 <pre>&lt;validate-soap file="xml/test.xsd"/&gt;</pre>
 <p>Use the preset task defined above to validate an XML Schema document.</p>
 

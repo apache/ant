@@ -404,10 +404,9 @@ properties are available via Project instance, I searched for them with a</p>
       for <var>srcencoding</var>, <var>destencoding</var>
       and <var>bundleencoding</var>
       in <a href="Tasks/translate.html">translate</a><br/> see JavaDoc
-      of <a target="_blank"
-      href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
-      for more information about character sets (not used in Ant, but
-      has nice docs).
+      of <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html"
+      target="_top">java.nio.charset.Charset</a> for more information
+      about character sets (not used in Ant, but has nice docs).
   </td>
 </tr>
 <tr>
@@ -416,7 +415,7 @@ properties are available via Project instance, I searched for them with a</p>
   <td>The specified path is added to the classpath if Jikes is used as compiler.</td>
 </tr>
 <tr>
-  <td><code>MailLogger.properties.file, MailLogger.*</code></td>
+  <td><code>MailLogger.properties.file</code>, <code>MailLogger.*</code></td>
   <td>filename (optional, defaults derived from Project instance)</td>
   <td>Name of the file holding properties for sending emails by
   the <a href="listeners.html#MailLogger">MailLogger</a>. Override

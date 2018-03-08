@@ -27,12 +27,13 @@
 <h2 id="signjar">SignJar</h2>
 <h3>Description</h3>
 <p>Signing a jar allows users to authenticate the publisher.</p>
-<p>Signs JAR files with the <a target="_blank"
-href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jarsigner.html"><code>jarsigner</code>
-command line tool</a>.  It will take a named file in the <var>jar</var> attribute, and an
-optional <var>destDir</var> or <var>signedJar</var> attribute. Nested paths are also supported; here
-only an (optional) <var>destDir</var> is allowed. If a destination directory or explicit JAR file
-name is not provided, JARs are signed in place.</p>
+<p>Signs JAR files with
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jarsigner.html"
+target="_top"><code>jarsigner</code> command line tool</a>.  It will take a named file in
+the <var>jar</var> attribute, and an optional <var>destDir</var> or <var>signedJar</var>
+attribute. Nested paths are also supported; here only an (optional) <var>destDir</var> is
+allowed. If a destination directory or explicit JAR file name is not provided, JARs are signed in
+place.</p>
 <p>Dependency rules</p>
 <ul>
   <li>Nonexistent destination JARs are created/signed</li>
@@ -207,9 +208,9 @@ name is not provided, JARs are signed in place.</p>
  </table>
 
 <h3>Examples</h3>
-<p>For instructions on generating a code signing certificate, see the <a target="_blank"
-href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html">keytool
-documentation</a> and/or instructions from your certificate authority.</p>
+<p>For instructions on generating a code signing certificate, see
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html"
+target="_top">keytool documentation</a> and/or instructions from your certificate authority.</p>
 <pre>
 &lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
          alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;</pre>

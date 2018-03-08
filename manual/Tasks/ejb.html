@@ -56,13 +56,15 @@ Server.</p>
 <p>The tasks support:</p>
 
 <ul>
-  <li><a href="http://www.borland.com">Borland</a>Application Server 4.5</li>
-  <li><a href="https://web.archive.org/web/20020202082841/http://www.iplanet.com:80/products/iplanet_application/home_ias.html">iPlanet</a>Application Server 6.0</li>
+  <li><a href="http://www.borland.com" target="_top">Borland</a>Application Server 4.5</li>
+  <li><a href="https://web.archive.org/web/20020202082841/http://www.iplanet.com:80/products/iplanet_application/home_ias.html"
+	 target="_top">iPlanet</a> Application Server 6.0</li>
   <li><a href="https://www.jboss.org/" target="_top">JBoss 2.1</a> and above EJB servers</li>
-  <li><a href="https://web.archive.org/web/20080516210506/http://www.ironflare.com/">Orion Application Server</a> 2.0 (<em>since Ant 1.10.2</em>)</li>
+  <li><a href="https://web.archive.org/web/20080516210506/http://www.ironflare.com/"
+	 target="_top">Orion Application Server</a> 2.0 (<em>since Ant 1.10.2</em>)</li>
   <li><a href="http://www.bea.com" target="_top">WebLogic</a> 4.5.1 through to 7.0 EJB servers</li>
   <li><a href="https://jonas.ow2.org/" target="_top">JOnAS</a> 2.4.x and 2.5 Open Source EJB server</li>
-  <li><a href="https://www.ibm.com/websphere">IBM WebSphere</a> 4.0</li>
+  <li><a href="https://www.ibm.com/websphere" target="_top">IBM WebSphere</a> 4.0</li>
 </ul>
 <p>Vendors such as BEA and IBM now provide custom Ant tasks to work with their particular
 products. More importantly, EJB 3.0 renders this whole process obsolete.  Accordingly, development
@@ -74,16 +76,20 @@ applications and definitely not new EJB 2.x servers.</p>
 <h2 id="ejbtasks">EJB Tasks</h2>
 <table>
   <tr><th>Task</th><th colspan="2">Application Servers</th></tr>
-  <tr><td><a href="BorlandGenerateClient.html">blgenclient</a></td><td colspan="2">Borland Application Server 4.5 and 5.x</td></tr>
-  <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td colspan="2">iPlanet Application Server 6.0</td></tr>
+  <tr><td><a href="BorlandGenerateClient.html">blgenclient</a></td><td colspan="2">Borland
+    Application Server 4.5 and 5.x</td></tr>
+  <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td colspan="2">iPlanet Application Server
+    6.0</td></tr>
   <tr><td rowspan="8"><a href="#ejbjar">ejbjar</a></td><th colspan="2">Nested Elements</th></tr>
-  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5 and 5.x</td></tr>
+  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5 and
+    5.x</td></tr>
   <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
   <tr><td><a href="#ejbjar_jboss">jboss</a></td><td>JBoss</td></tr>
   <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4.x and 2.5</td></tr>
   <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>WebLogic 5.1 to 7.0</td></tr>
   <tr><td><a href="#ejbjar_websphere">websphere</a></td><td>IBM WebSphere 4.0</td></tr>
-  <tr><td><a href="#ejbjar_orion">orion</a></td><td>IronFlare (Oracle) Orion Application Server 2.0.6</td></tr>
+  <tr><td><a href="#ejbjar_orion">orion</a></td><td>IronFlare (Oracle) Orion Application Server
+    2.0.6</td></tr>
 </table>
 
 <hr/>
@@ -504,7 +510,8 @@ specific deployment tools. These currently include:</p>
   <li>WebLogic 5.1/6.0 session/entity beans using the <code>weblogic.ejbc</code> tool</li>
   <li>IBM WebSphere 4.0</li>
   <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
-  <li><a href="https://jonas.ow2.org/">JOnAS</a> 2.4.x and 2.5 Open Source EJB server</li>
+  <li><a href="https://jonas.ow2.org/" target="_top">JOnAS</a> 2.4.x and 2.5 Open Source EJB
+    server</li>
   <li>IronFlare Orion Application Server 2.0</li>
 </ul>
 
@@ -528,11 +535,10 @@ its target jar file and determine if it is out of date with respect to the class
 deployment descriptors that make up the bean. If any of these files are newer than the jar file the
 jar will be rebuilt otherwise a message is logged that the jar file is up to date.</p>
 
-<p>The task uses
-the <a href="https://commons.apache.org/bcel/">BCEL</a> <a href="../install.html#librarydependencies">library</a>
-to extract all dependent classes. This means that, in addition to the classes that are mentioned in
-the deployment descriptor, any classes that these depend on are also automatically included in the
-jar file.</p>
+<p>The task uses the <a href="https://commons.apache.org/bcel/"
+target="_top">BCEL</a> <a href="../install.html#librarydependencies">library</a> to extract all
+dependent classes. This means that, in addition to the classes that are mentioned in the deployment
+descriptor, any classes that these depend on are also automatically included in the jar file.</p>
 
 <h3 id="naming">Naming convention</h3>
 
@@ -596,10 +602,10 @@ classes or as parameters to the bean's methods.</p>
 super classes and super interfaces of the bean classes. For this technique to work the bean classes
 had to be loaded into Ant's JVM. This was not always possible due to class dependencies.</p>
 
-<p><em>Since Ant 1.5</em> the task uses the <a href="https://commons.apache.org/bcel/">BCEL</a>
-library to analyze the bean's class files directly, rather than loading them into the JVM. This also
-allows <code>ejbjar</code> to add all of the required support classes for a bean and not just super
-classes.</p>
+<p><em>Since Ant 1.5</em> the task uses the <a href="https://commons.apache.org/bcel/"
+target="_top">BCEL</a> library to analyze the bean's class files directly, rather than loading them
+into the JVM. This also allows <code>ejbjar</code> to add all of the required support classes for a
+bean and not just super classes.</p>
 
 <p><em>Since Ant 1.5</em>, a <var>dependency</var> attribute allows the buildfile to control what
 additional classes are added to the generated jar. It takes three possible values</p>
@@ -611,9 +617,9 @@ additional classes are added to the generated jar. It takes three possible value
   <li><q>full</q>&mdash;In this mode all classes used by the bean's classes and interfaces are added
     to the jar</li>
 </ul>
-<p>The <q>super</q> and <q>full</q> values require
-the <a href="https://commons.apache.org/bcel/">BCEL</a> library to be available. If it is
-not, <code>ejbjar</code> will drop back to the behaviour corresponding to the value <q>none</q>.</p>
+<p>The <q>super</q> and <q>full</q> values require the <a href="https://commons.apache.org/bcel/"
+target="_top">BCEL</a> library to be available. If it is not, <code>ejbjar</code> will drop back to
+the behaviour corresponding to the value <q>none</q>.</p>
 
 <h3>Parameters</h3>
 <table class="attr">

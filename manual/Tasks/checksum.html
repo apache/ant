@@ -31,19 +31,19 @@
 <p>Note that many popular message digest functions&mdash;including MD5 and SHA-1&mdash;have been
 broken recently.  If you are going to use the task to create checksums used in an environment where
 security is important, please take some time to investigate the algorithms offered by your JCE
-provider.  Note also that some JCE providers like the one
-by <a href="https://www.bouncycastle.org/">The Legion of the Bouncy Castle</a>,
-the <a href="https://www.gnu.org/software/gnu-crypto/">GNU project</a>
-or <a href="https://jce.iaik.tugraz.at/sic/Products">the Technical University Graz</a> offer more
-digest algorithms than those built-in into your JDK.</p>
+provider.  Note also that some JCE providers like the one by <a href="https://www.bouncycastle.org/"
+target="_top">The Legion of the Bouncy Castle</a>,
+the <a href="https://www.gnu.org/software/gnu-crypto/" target="_top">GNU project</a>
+or <a href="https://jce.iaik.tugraz.at/sic/Products" target="_top">the Technical University Graz</a>
+offer more digest algorithms than those built-in into your JDK.</p>
 
 <p>Warning: the case of the extension is that of the algorithm used.  If you ask
 for <samp>SHA1</samp>, you get a <samp>.SHA1</samp> extension; if you ask for <samp>sha1</samp>, you
 get a file ending in <samp>.sha1</samp>. The Java Crypto Engines are case-insensitive in matching
 algorithms, so choose a name to match your desired output extension, or set the <var>fileext</var>
-attribute. The names of common hashing algorithms can be located on the <a target="_blank"
-href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest">Cryptography
-Architecture Standard Algorithm Name Documentation</a></p>
+attribute. The names of common hashing algorithms can be located on
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest"
+target="_top">Cryptography Architecture Standard Algorithm Name Documentation</a></p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -66,10 +66,10 @@ Architecture Standard Algorithm Name Documentation</a></p>
   </tr>
   <tr>
     <td>algorithm</td>
-    <td>Specifies the algorithm to be used to compute the checksum. Please check the
-      <a target="_blank"
-      href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest">documentation</a>
-      for available algorithm names, like <q>SHA-1</q> or <q>SHA-512</q>.
+    <td>Specifies the algorithm to be used to compute the checksum. Please check
+      the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest"
+      target="_top">documentation</a> for available algorithm names, like <q>SHA-1</q>
+      or <q>SHA-512</q>.
     </td>
     <td>No; defaults to <q>MD5</q></td>
   </tr>
@@ -101,12 +101,12 @@ Architecture Standard Algorithm Name Documentation</a></p>
   <tr>
     <td>pattern</td>
     <td>Specifies the pattern to use as a pattern suitable
-    for <a href="https://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html">MessageFormat</a>
-    where <code>{0}</code> is replaced with the checksum and <code>{1}</code> with the file
-    name. <em>Since Ant 1.7.0</em><br/><em>Since Ant 1.8.2</em> <code>{2}</code> is replaced by the
-    path of the file relative to the checksum file being written, <code>{3}</code> with tha path of
-    the file relative to the project's <var>basedir</var> and <code>{4}</code> with the absolute
-    path of the file.</td>
+    for <a href="https://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html"
+    target="_top">MessageFormat</a> where <code>{0}</code> is replaced with the checksum
+    and <code>{1}</code> with the file name. <em>Since Ant 1.7.0</em><br/><em>Since Ant
+    1.8.2</em> <code>{2}</code> is replaced by the path of the file relative to the checksum file
+    being written, <code>{3}</code> with the path of the file relative to the
+    project's <var>basedir</var> and <code>{4}</code> with the absolute path of the file.</td>
     <td>No; default is <q>{0}</q></td>
   </tr>
   <tr>

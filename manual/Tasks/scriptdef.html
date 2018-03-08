@@ -28,14 +28,13 @@
 <h3>Description</h3>
 <p><code>Scriptdef</code> can be used to define an Apache Ant task using a scripting language. Ant
 scripting languages supported by <a href="https://jakarta.apache.org/bsf" target="_top">Apache
-BSF</a>
-or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html">JSR
-223</a> may be used to define the script. <code>Scriptdef</code> provides a mechanism to encapsulate
-control logic from a build within an Ant task minimizing the need for providing control style tasks
-in Ant itself. Complex logic can be made available while retaining the simple structure of an Ant
-build file. <code>Scriptdef</code> is also useful for prototyping new custom tasks. Certainly as the
-complexity of the script increases it would be better to migrate the task definition into a Java
-based custom task.</p>
+BSF</a> or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html"
+target="_top">JSR 223</a> may be used to define the script. <code>Scriptdef</code> provides a
+mechanism to encapsulate control logic from a build within an Ant task minimizing the need for
+providing control style tasks in Ant itself. Complex logic can be made available while retaining the
+simple structure of an Ant build file. <code>Scriptdef</code> is also useful for prototyping new
+custom tasks. Certainly as the complexity of the script increases it would be better to migrate the
+task definition into a Java based custom task.</p>
 
 <p><strong>Note</strong>: This task depends on external libraries not included in the Ant
 distribution. See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
@@ -282,9 +281,9 @@ beanshell jar.</p>
 
 <h3>Testing scripts</h3>
 
-<p>The easiest way to test scripts is to use
-the <a href="https://ant.apache.org/antlibs/antunit/">AntUnit</a> Ant library.  This will run all
-targets in a script that begin with <q>test</q> (and their dependencies).</p>
+<p>The easiest way to test scripts is to use the <a href="https://ant.apache.org/antlibs/antunit/"
+target="_top">AntUnit</a> Ant library.  This will run all targets in a script that begin
+with <q>test</q> (and their dependencies).</p>
 
 </body>
 </html>

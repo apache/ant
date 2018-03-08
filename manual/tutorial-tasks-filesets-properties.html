@@ -322,8 +322,8 @@ the <code>&lt;path&gt;</code>. Filesets are easy if the files are all under a co
 the case, you have a problem. Another disadvantage is its speed: if you have only a few files in a huge directory
 structure, why not use a <code>&lt;filelist&gt;</code> instead? <code>&lt;path&gt;</code>s combines these datatypes in
 that way that a path contains other paths, filesets, dirsets and filelists. This is
-why <a href="http://ant-contrib.sourceforge.net/">Ant-Contrib [4]</a> <code>&lt;foreach&gt;</code> task is modified to
-support paths instead of filesets. So we want that, too.</p>
+why <a href="http://ant-contrib.sourceforge.net/" target="_top">Ant-Contrib [4]</a> <code>&lt;foreach&gt;</code> task is
+modified to support paths instead of filesets. So we want that, too.</p>
 
 <p>Changing from fileset to path support is very easy:</p>
 <em><strong>Change Java code from:</strong></em>
@@ -659,8 +659,8 @@ After that it prints out the result (e.g. &lt;samp&gt;C:/ant-1.5.4/bin/ant.jar;C
 <li>create a patch file</li>
 <li>publishing that patch file</li>
 </ul>
-<p>The <a href="https://ant.apache.org/ant_task_guidelines.html">Ant Task Guidelines [6]</a> support additional
-information on that.</p>
+<p>The <a href="https://ant.apache.org/ant_task_guidelines.html" target="_top">Ant Task Guidelines [6]</a> support
+additional information on that.</p>
 
 <p>Now we will check the "Checklist before submitting a new task" described in that guideline.</p>
 <ul>
@@ -762,7 +762,7 @@ after <code>git clone</code> (without our modifications).</p>
 <h3>Test on JDK 5</h3>
 <p>Ant 1.10 uses Java 8 for development, but Ant 1.9 is actively maintained, too.  That means that Ant code must be able
 to run on a JDK 5. So we have to test that. You can download older JDKs
-from <a href="https://www.oracle.com/technetwork/java/archive-139210.html">Oracle [8]</a>.</p>
+from <a href="https://www.oracle.com/technetwork/java/archive-139210.html" target="_top">Oracle [8]</a>.</p>
 
 <p>Clean the <code>ANT_HOME</code> variable, delete the <samp>build</samp>, <samp>bootstrap</samp> and <samp>dist</samp>
 directories, and point <code>JAVA_HOME</code> to the JDK 5 home directory. Then create the patch with your commit,
@@ -773,11 +773,11 @@ run <code>ant test</code> (like above).</p>
 
 <h3>Checkstyle</h3>
 <p>There are many things we have to ensure. Indentation with 4 spaces, blanks here and there, ...  (all described in
-the <a href="https://ant.apache.org/ant_task_guidelines.html">Ant Task Guidelines [6]</a> which includes
-the <a href="https://www.oracle.com/technetwork/java/codeconvtoc-136057.html">Sun code style [9]</a>). Because there are
-so many things we would be happy to have a tool for do the checks.  There is one: checkstyle. Checkstyle is available
-at <a href="http://checkstyle.sourceforge.net/"> Sourceforge [10]</a> and Ant provides with the <samp>check.xml</samp> a
-buildfile which will do the job for us.</p>
+the <a href="https://ant.apache.org/ant_task_guidelines.html" target="_top">Ant Task Guidelines [6]</a> which includes
+the <a href="https://www.oracle.com/technetwork/java/codeconvtoc-136057.html" target="_top">Sun code style
+[9]</a>). Because there are so many things we would be happy to have a tool for do the checks.  There is one:
+checkstyle. Checkstyle is available at <a href="http://checkstyle.sourceforge.net/" target="_top">Sourceforge [10]</a>
+and Ant provides with the <samp>check.xml</samp> a buildfile which will do the job for us.</p>
 
 <p>Download it and put the <samp>checkstyle-*-all.jar</samp> into your <samp>%USERPROFILE%\.ant\lib</samp> directory.
 All jar's stored there are available to Ant so you haven't to add it to you <samp>%ANT_HOME%\lib</samp> directory (this
@@ -796,9 +796,9 @@ will find the next error place much more easier without redoing the checkstyle.<
 run. Now our task isn't listed. That's fine :-)</p>
 
 <h3>Publish the task</h3>
-<p>Finally we publish that archive. As described in the <a href="https://ant.apache.org/ant_task_guidelines.html">Ant
-Task Guidelines [7]</a> we can announce it on the developer mailing list, create a BugZilla entry and open a GitHub pull
-request. For both we need some information:</p>
+<p>Finally we publish that archive. As described in the <a href="https://ant.apache.org/ant_task_guidelines.html"
+target="_top">Ant Task Guidelines [7]</a> we can announce it on the developer mailing list, create a BugZilla entry and
+open a GitHub pull request. For both we need some information:</p>
 
 <table>
 <tr>
@@ -826,13 +826,14 @@ request. For both we need some information:</p>
 more difficult.  But the advantage is that entries will not be forgotten (a report is generated once every weekend).  So
 I will describe the process.</p>
 
-<p>First, you must have a BugZilla account. So open the <a href="https://issues.apache.org/bugzilla/">BugZilla Main Page
-[11]</a> and follow the link <a href="https://issues.apache.org/bugzilla/createaccount.cgi">Open a new Bugzilla account
-[12]</a> and the steps described there if you haven't one.</p>
+<p>First, you must have a BugZilla account. So open the <a href="https://issues.apache.org/bugzilla/"
+target="_top">BugZilla Main Page [11]</a> and follow the
+link <a href="https://issues.apache.org/bugzilla/createaccount.cgi" target="_top">Open a new Bugzilla account [12]</a>
+and the steps described there if you haven't one.</p>
 
 <ol>
-<li>From the BugZilla main page choose <a href="https://issues.apache.org/bugzilla/enter_bug.cgi">Enter a new bug report
-    [13]</a></li>
+<li>From the BugZilla main page choose <a href="https://issues.apache.org/bugzilla/enter_bug.cgi" target="_top">Enter a
+    new bug report [13]</a></li>
 <li>Choose "Ant" as product</li>
 <li>Version is the last "Alpha (nightly)" (at this time 1.10)</li>
 <li>Component is "Core tasks"</li>
@@ -854,16 +855,21 @@ I will describe the process.</p>
     <li><a href="tutorial-writing-tasks.html">tutorial-writing-tasks.html</a></li>
     <li><a href="tutorial-tasks-filesets-properties.zip">tutorial-tasks-filesets-properties.zip</a></li>
     <li><a href="properties.html#built-in-props">properties.html#built-in-props</a></li>
-    <li><a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a></li>
+    <li><a href="http://ant-contrib.sourceforge.net/" target="_top">http://ant-contrib.sourceforge.net/</a></li>
     <li><a href="Tasks/java.html">Tasks/java.html</a></li>
-    <li><a href="https://ant.apache.org/ant_task_guidelines.html">https://ant.apache.org/ant_task_guidelines.html</a></li>
-    <li><a href="https://github.com/apache/ant">https://github.com/apache/ant</a></li>
-    <li><a href="https://www.oracle.com/technetwork/java/archive-139210.html">https://www.oracle.com/technetwork/java/archive-139210.html</a></li>
-    <li><a href="https://www.oracle.com/technetwork/java/codeconvtoc-136057.html">https://www.oracle.com/technetwork/java/codeconvtoc-136057.html</a></li>
-    <li><a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a></li>
-    <li><a href="https://issues.apache.org/bugzilla/">https://issues.apache.org/bugzilla/</a></li>
-    <li><a href="https://issues.apache.org/bugzilla/createaccount.cgi">https://issues.apache.org/bugzilla/createaccount.cgi</a></li>
-    <li><a href="https://issues.apache.org/bugzilla/enter_bug.cgi">https://issues.apache.org/bugzilla/enter_bug.cgi</a></li>
+    <li><a href="https://ant.apache.org/ant_task_guidelines.html"
+           target="_top">https://ant.apache.org/ant_task_guidelines.html</a></li>
+    <li><a href="https://github.com/apache/ant" target="_top">https://github.com/apache/ant</a></li>
+    <li><a href="https://www.oracle.com/technetwork/java/archive-139210.html"
+           target="_top">https://www.oracle.com/technetwork/java/archive-139210.html</a></li>
+    <li><a href="https://www.oracle.com/technetwork/java/codeconvtoc-136057.html"
+           target="_top">https://www.oracle.com/technetwork/java/codeconvtoc-136057.html</a></li>
+    <li><a href="http://checkstyle.sourceforge.net/" target="_top">http://checkstyle.sourceforge.net/</a></li>
+    <li><a href="https://issues.apache.org/bugzilla/" target="_top">https://issues.apache.org/bugzilla/</a></li>
+    <li><a href="https://issues.apache.org/bugzilla/createaccount.cgi"
+           target="_top">https://issues.apache.org/bugzilla/createaccount.cgi</a></li>
+    <li><a href="https://issues.apache.org/bugzilla/enter_bug.cgi"
+           target="_top">https://issues.apache.org/bugzilla/enter_bug.cgi</a></li>
 </ol>
 
 </body>

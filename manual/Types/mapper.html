@@ -26,16 +26,15 @@
 
 <h2 id="mapper">Mapping File Names</h2>
 <p>Some tasks take source files and create target files. Depending on the task, it may be quite
-obvious which name a target file will have (using <a href="../Tasks/javac.html">javac</a>, you
-know there will be <samp>.class</samp> files for your <samp>.java</samp> files)&mdash;in other
-cases you may want to specify the target files, either to help Apache Ant or to get an extra bit
-of functionality.</p>
+obvious which name a target file will have (using <a href="../Tasks/javac.html">javac</a>, you know
+there will be <samp>.class</samp> files for your <samp>.java</samp> files)&mdash;in other cases you
+may want to specify the target files, either to help Apache Ant or to get an extra bit of
+functionality.</p>
 <p>While source files are usually specified as <a href="fileset.html">fileset</a>s, you don't
 specify target files directly&mdash;instead, you tell Ant how to find the target file(s) for one
-source file. An instance of <code>org.apache.tools.ant.util.FileNameMapper</code> is responsible
-for this. It constructs target file names based on rules that can be parameterized
-with <var>from</var> and <var>to</var> attributes&mdash;the exact meaning of which is
-implementation-dependent.</p>
+source file. An instance of <code>org.apache.tools.ant.util.FileNameMapper</code> is responsible for
+this. It constructs target file names based on rules that can be parameterized with <var>from</var>
+and <var>to</var> attributes&mdash;the exact meaning of which is implementation-dependent.</p>
 <p>These instances are defined in <code>&lt;mapper&gt;</code> elements with the following
 attributes:</p>
 <table class="attr">
@@ -76,37 +75,37 @@ attributes:</p>
     <td>Depends on implementation</td>
   </tr>
 </table>
-<p>Note that Ant will not automatically convert <q>/</q> or <q>\</q> characters in
-the <var>to</var> and <var>from</var> attributes to the correct directory separator of your
-current platform.  If you need to specify this separator, use <code>${file.separator}</code>
-instead.  For the regexp mapper, <code>${file.separator}</code> will not work, as on Windows it
-is the <q>\</q> character, and this is an escape character for regular expressions, one should
-use the <code>handledirsep</code> attribute instead.
+<p>Note that Ant will not automatically convert <q>/</q> or <q>\</q> characters in the <var>to</var>
+and <var>from</var> attributes to the correct directory separator of your current platform.  If you
+need to specify this separator, use <code>${file.separator}</code> instead.  For the regexp
+mapper, <code>${file.separator}</code> will not work, as on Windows it is the <q>\</q> character,
+and this is an escape character for regular expressions, one should use
+the <code>handledirsep</code> attribute instead.
 </p>
 <h3>Parameters specified as nested elements</h3>
-<p>The classpath can be specified via a nested <code>&lt;classpath&gt;</code>, as
-well&mdash;that is, a <a href="../using.html#path">path</a>-like structure.</p>
+<p>The classpath can be specified via a nested <code>&lt;classpath&gt;</code>, as well&mdash;that
+is, a <a href="../using.html#path">path</a>-like structure.</p>
 <p><em>Since Ant 1.7.0</em>, nested File Mappers can be supplied via
 either <code>&lt;mapper&gt;</code> elements
 or <a href="../Tasks/typedef.html"><code>&lt;typedef&gt;</code></a>'d implementations
-of <code>org.apache.tools.ant.util.FileNameMapper</code>.  If nested File Mappers are specified
-by either means, the mapper will be implicitly configured as
-a <a href="#composite-mapper">composite mapper</a>.</p>
+of <code>org.apache.tools.ant.util.FileNameMapper</code>.  If nested File Mappers are specified by
+either means, the mapper will be implicitly configured as a <a href="#composite-mapper">composite
+mapper</a>.</p>
 <h3>The built-in mapper types</h3>
 <p>All built-in mappers are case-sensitive.</p>
-<p><em>Since Ant 1.7.0</em>, each of the built-in mapper implementation types is directly
-accessible using a specific tagname. This makes it possible for filename mappers to support
-attributes in addition to the generally available <var>to</var> and <var>from</var>.<br/>
-The <code>&lt;mapper type|classname=&quot;...&quot;&gt;</code> usage form remains valid for
-reasons of backward compatibility.</p>
+<p><em>Since Ant 1.7.0</em>, each of the built-in mapper implementation types is directly accessible
+using a specific tagname. This makes it possible for filename mappers to support attributes in
+addition to the generally available <var>to</var> and <var>from</var>.<br/>  The <code>&lt;mapper
+type|classname=&quot;...&quot;&gt;</code> usage form remains valid for reasons of backward
+compatibility.</p>
 
     <!--                                        -->
     <!--             Identity Mapper            -->
     <!--                                        -->
 
 <h4 id="identity-mapper">identity</h4>
-<p>The target file name is identical to the source file name. Both <var>to</var>
-and <var>from</var> will be ignored.</p>
+<p>The target file name is identical to the source file name. Both <var>to</var> and <var>from</var>
+will be ignored.</p>
 <h5>Examples</h5>
 <pre>
 &lt;mapper type=&quot;identity&quot;/&gt;
@@ -139,8 +138,8 @@ and <var>from</var> will be ignored.</p>
     <!--                                        -->
 
 <h4 id="flatten-mapper">flatten</h4>
-<p>The target file name is identical to the source file name, with all leading directory
-information stripped off. Both <var>to</var> and <var>from</var> will be ignored.</p>
+<p>The target file name is identical to the source file name, with all leading directory information
+stripped off. Both <var>to</var> and <var>from</var> will be ignored.</p>
 <h5>Examples</h5>
 <pre>
 &lt;mapper type=&quot;flatten&quot;/&gt;
@@ -173,8 +172,8 @@ information stripped off. Both <var>to</var> and <var>from</var> will be ignored
     <!--                                        -->
 
 <h4 id="merge-mapper">merge</h4>
-<p>The target file name will always be the same, as defined
-by <var>to</var>&mdash;<var>from</var> will be ignored.</p>
+<p>The target file name will always be the same, as defined by <var>to</var>&mdash;<var>from</var>
+will be ignored.</p>
 <h5>Examples</h5>
 <pre>
 &lt;mapper type=&quot;merge&quot; to=&quot;archive.tar&quot;/&gt;
@@ -207,11 +206,11 @@ by <var>to</var>&mdash;<var>from</var> will be ignored.</p>
     <!--                                        -->
 
 <h4 id="glob-mapper">glob</h4>
-<p>Both <var>to</var> and <var>from</var> are required and define patterns that may contain at
-most one <q>*</q>. For each source file that matches the <var>from</var> pattern, a target file
-name will be constructed from the <var>to</var> pattern by substituting the <q>*</q> in
-the <var>to</var> pattern with the text that matches the <q>*</q> in the <var>from</var>
-pattern. Source file names that don't match the <var>from</var> pattern will be ignored.</p>
+<p>Both <var>to</var> and <var>from</var> are required and define patterns that may contain at most
+one <q>*</q>. For each source file that matches the <var>from</var> pattern, a target file name will
+be constructed from the <var>to</var> pattern by substituting the <q>*</q> in the <var>to</var>
+pattern with the text that matches the <q>*</q> in the <var>from</var> pattern. Source file names
+that don't match the <var>from</var> pattern will be ignored.</p>
 <h5>Examples</h5>
 <pre>
 &lt;mapper type=&quot;glob&quot; from=&quot;*.java&quot; to=&quot;*.java.bak&quot;/&gt;
@@ -273,9 +272,8 @@ pattern. Source file names that don't match the <var>from</var> pattern will be 
   <tr>
     <td>casesensitive</td>
     <td>
-      This attribute can be <q>true</q> or <q>false</q>.  If this is <q>false</q>, the mapper
-      will ignore case when matching the glob pattern.
-      <em>Since Ant 1.6.3</em>
+      This attribute can be <q>true</q> or <q>false</q>.  If this is <q>false</q>, the mapper will
+      ignore case when matching the glob pattern.  <em>Since Ant 1.6.3</em>
     </td>
     <td>No; default is <q>true</q></td>
   </tr>
@@ -284,8 +282,8 @@ pattern. Source file names that don't match the <var>from</var> pattern will be 
     <td>
       This attribute can be <q>true</q> or <q>false</q>.  If this is specified, the mapper will
       ignore the difference between the normal directory separator characters&mdash;<q>\</q>
-      and <q>/</q>.  This attribute is useful for cross-platform build files.
-      <em>Since Ant 1.6.3</em>
+      and <q>/</q>.  This attribute is useful for cross-platform build files.  <em>Since Ant
+      1.6.3</em>
     <td>No; default is <q>false</q></td>
   </tr>
 </table>
@@ -318,14 +316,14 @@ pattern. Source file names that don't match the <var>from</var> pattern will be 
 
 <h4 id="regexp-mapper">regexp</h4>
 
-<p>Both <var>to</var> and <var>from</var> are required and define regular expressions. If the
-source file name (as a whole or in part) matches the <var>from</var> pattern, the target file
-name will be constructed from the <var>to</var> pattern, using <code>\0</code>
-to <code>\9</code> as back-references for the full match (<code>\0</code>) or the matches of the
-subexpressions in parentheses.  The <var>to</var> pattern determines the <strong>whole</strong>
-file name, so if you wanted to replace the extension of a file you should not
-use <code>from="\.old$" to=".new"</code> but rather <code>from="(.*)\.old$" to="\1.new"</code>
-(or rather use a glob mapper in this case).</p>
+<p>Both <var>to</var> and <var>from</var> are required and define regular expressions. If the source
+file name (as a whole or in part) matches the <var>from</var> pattern, the target file name will be
+constructed from the <var>to</var> pattern, using <code>\0</code> to <code>\9</code> as
+back-references for the full match (<code>\0</code>) or the matches of the subexpressions in
+parentheses.  The <var>to</var> pattern determines the <strong>whole</strong> file name, so if you
+wanted to replace the extension of a file you should not use <code>from="\.old$" to=".new"</code>
+but rather <code>from="(.*)\.old$" to="\1.new"</code> (or rather use a glob mapper in this
+case).</p>
 
 <p>Source files not matching the <var>from</var> pattern will be ignored.</p>
 
@@ -334,30 +332,29 @@ use <code>from="\.old$" to=".new"</code> but rather <code>from="(.*)\.old$" to="
 <p>The regexp mapper needs a supporting library and an implementation
 of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that hides the specifics of the
 library. <em>Since Ant 1.8.0</em>, Java 1.4 or later is required, so the implementation based on
-the <code>java.util.regex</code> package is always be available.  You can still use the now
-retired Jakarta ORO or Jakarta Regex instead if your provide the corresponding jar in
+the <code>java.util.regex</code> package is always be available.  You can still use the now retired
+Jakarta ORO or Jakarta Regex instead if your provide the corresponding jar in
 your <code>CLASSPATH</code>.</p>
 
 <p>For information about using <a href="https://savannah.gnu.org/projects/gnu-regexp/"
-target="_top">gnu.regexp</a> or <a href="https://github.com/kzn/regex4j/"
-target="_top">gnu.rex</a> with Ant,
-see <a href="https://marc.info/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
-article. Please keep in mind that <a href="http://tusker.org/regex/regex_benchmark.html">your
-mileage may vary</a> with different regexp engines.</p>
+target="_top">gnu.regexp</a> or <a href="https://github.com/kzn/regex4j/" target="_top">gnu.rex</a>
+with Ant, see <a href="https://marc.info/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
+article. Please keep in mind that <a href="http://tusker.org/regex/regex_benchmark.html"
+target="_top">your mileage may vary</a> with different regexp engines.</p>
 
-<p>If you want to use one of the <a href="../install.html#librarydependencies">regular
-expression libraries</a> other than <code>java.util.regex</code> you need to also use the
-corresponding <code>ant-[apache-oro, apache-regexp].jar</code> from the Ant release you are
-using.  Make sure that both will be loaded from the same classpath, that is either put them into
+<p>If you want to use one of the <a href="../install.html#librarydependencies">regular expression
+libraries</a> other than <code>java.util.regex</code> you need to also use the
+corresponding <code>ant-[apache-oro, apache-regexp].jar</code> from the Ant release you are using.
+Make sure that both will be loaded from the same classpath, that is either put them into
 your <code>CLASSPATH</code>, <samp>ANT_HOME/lib</samp> directory or a
 nested <code>&lt;classpath&gt;</code> element of the mapper&mdash;you cannot
-have <code>ant-[apache-oro, apache-regexp].jar</code> in <samp>ANT_HOME/lib</samp> and the
-library in a nested <code>&lt;classpath&gt;</code>.</p>
+have <code>ant-[apache-oro, apache-regexp].jar</code> in <samp>ANT_HOME/lib</samp> and the library
+in a nested <code>&lt;classpath&gt;</code>.</p>
 <p>Ant will choose the regular expression library based on the following algorithm:</p>
 <ul>
-<li>If the system property <code>ant.regexp.matcherimpl</code> has been set, it is taken as the
-name of the class implementing <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that
-should be used.</li>
+<li>If the system property <code>ant.regexp.matcherimpl</code> has been set, it is taken as the name
+of the class implementing <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that should be
+used.</li>
 <li>If it has not been set, uses the JDK 1.4 classes.</li>
 </ul>
 
@@ -472,8 +469,8 @@ should be used.</li>
   <tr>
     <td>casesensitive</td>
     <td>
-      This attribute can be <q>true</q> or <q>false</q>.  If this is <q>false</q>, the mapper
-      will ignore case when matching the pattern.
+      This attribute can be <q>true</q> or <q>false</q>.  If this is <q>false</q>, the mapper will
+      ignore case when matching the pattern.
       <em>Since Ant 1.6.3</em>
     </td>
     <td>No; default is <q>true</q></td>
@@ -514,9 +511,9 @@ should be used.</li>
 
 <h4 id="package-mapper">package</h4>
 <p>Sharing the same syntax as the <a href="#glob-mapper">glob mapper</a>, the package mapper
-replaces directory separators found in the matched source pattern with dots in the target
-pattern placeholder. This mapper is particularly useful in combination
-with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
+replaces directory separators found in the matched source pattern with dots in the target pattern
+placeholder. This mapper is particularly useful in combination with <code>&lt;uptodate&gt;</code>
+and <code>&lt;junit&gt;</code> output.</p>
 <p>The <var>to</var> and <var>from</var> attributes are both required.</p>
 <h5>Example</h5>
 <pre>
@@ -543,9 +540,9 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
 
 <h4 id="unpackage-mapper">unpackage</h4>
 <p><em>Since Ant 1.6.0</em></p>
-<p>This mapper is the inverse of the <a href="#package-mapper">package</a> mapper.  It replaces
-the dots in a package name with directory separators. This is useful for matching XML formatter
-results against their JUnit test test cases. The mapper shares the sample syntax as
+<p>This mapper is the inverse of the <a href="#package-mapper">package</a> mapper.  It replaces the
+dots in a package name with directory separators. This is useful for matching XML formatter results
+against their JUnit test test cases. The mapper shares the sample syntax as
 the <a href="#glob-mapper">glob mapper</a>.</p>
 <p>The <var>to</var> and <var>from</var> attributes are both required.</p>
 <h5>Example</h5>
@@ -572,8 +569,8 @@ the <a href="#glob-mapper">glob mapper</a>.</p>
 <p>This mapper implementation can contain multiple nested mappers.  File mapping is performed by
 passing the source filename to each nested <code>&lt;mapper&gt;</code> in turn, returning all
 results.  The <var>to</var> and <var>from</var> attributes are ignored.</p>
-<p><em>Since Ant 1.8.0</em>, the order of the mapped results is the same as the order of the
-nested mappers; prior to Ant 1.8.0 the order has been undefined.</p>
+<p><em>Since Ant 1.8.0</em>, the order of the mapped results is the same as the order of the nested
+mappers; prior to Ant 1.8.0 the order has been undefined.</p>
 <h5>Examples</h5>
 <pre>
 &lt;compositemapper&gt;
@@ -603,9 +600,9 @@ attribute.</p>
 <h4 id="chained-mapper">chained</h4>
 <p><em>Since Ant 1.7.0</em></p>
 <p>This mapper implementation can contain multiple nested mappers.  File mapping is performed by
-passing the source filename to the first nested mapper, its results to the second, and so on.
-The target filenames generated by the last nested mapper comprise the ultimate results of the
-mapping operation.  The <var>to</var> and <var>from</var> attributes are ignored.</p>
+passing the source filename to the first nested mapper, its results to the second, and so on.  The
+target filenames generated by the last nested mapper comprise the ultimate results of the mapping
+operation.  The <var>to</var> and <var>from</var> attributes are ignored.</p>
 <h5>Examples</h5>
 <pre>
 &lt;chainedmapper&gt;
@@ -693,8 +690,8 @@ file name.</p>
 <p><em>Since Ant 1.7</em></p>
 <p>This mapper executes a script written in <a href="https://jakarta.apache.org/bsf"
 target="_top">Apache BSF</a>
-or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html">JSR
-223</a> supported language, once per file to map.</p>
+or <a href="https://jcp.org/aboutJava/communityprocess/maintenance/jsr223/223ChangeLog.html"
+target="_top">JSR 223</a> supported language, once per file to map.</p>
 <p>The script can be declared inline or in a specified file.</p>
 <p>See the <a href="../Tasks/script.html">Script</a> task for an explanation of scripts and
 dependencies.</p>
@@ -800,9 +797,9 @@ every source file, with the list of mapped names reset after every invocation.</
 
 <h4 id="firstmatch-mapper">firstmatchmapper</h4>
 <p><em>Since Ant 1.8.0</em></p>
-<p>This mapper supports an arbitrary number of nested mappers and returns the results of the
-first mapper that matches.  This is different from <a href="#composite-mapper">composite
-mapper</a> which collects the results of all matching children.</p>
+<p>This mapper supports an arbitrary number of nested mappers and returns the results of the first
+mapper that matches.  This is different from <a href="#composite-mapper">composite mapper</a> which
+collects the results of all matching children.</p>
 <h5>Examples</h5>
 <pre>
 &lt;firstmatchmapper&gt;
@@ -846,8 +843,7 @@ attribute.</p>
   </tr>
 </table>
 
-<p>The cutdirsmapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code>
-attribute.</p>
+<p>The cutdirsmapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code> attribute.</p>
 
 <table class="attr">
   <tr>

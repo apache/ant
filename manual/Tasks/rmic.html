@@ -66,16 +66,16 @@ are the choices:</p>
     platform is chosen. If <code>build.rmic</code> is set to this, you get the default.</li>
 </ul>
 
-<p>The <a href="https://web.archive.org/web/20131225023602/http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
-project contains a compiler implementation for this task as well, please consult miniRMI's
-documentation to learn how to use it.</p>
+<p>The <a href="https://web.archive.org/web/20131225023602/http://dione.zcu.cz/~toman40/miniRMI/"
+target="_top">miniRMI</a> project contains a compiler implementation for this task as well, please
+consult miniRMI's documentation to learn how to use it.</p>
 
 <h4>CORBA support</h4>
 
-<p>Java 11 removes the CORBA and JavaEE packages and <code>rmic</code> no longer supports
-either <code>iiop</code> nor <code>idl</code>. Starting with Ant 1.10.3, the <code>rmic</code> task
-will fail when using either while running Java 11+ unless you fork the task and explicitly specify an
-executable.</p>
+<p>Java 11 <a href="http://openjdk.java.net/jeps/320" target="_top">removes</a> the Java EE and
+CORBA packages and <code>rmic</code> no longer supports either <code>iiop</code>
+or <code>idl</code>. Starting with Ant 1.10.3, the <code>rmic</code> task will fail when using
+either while running Java 11+ unless you fork the task and explicitly specify an executable.</p>
 
 <h3>Parameters</h3>
 <table class="attr">

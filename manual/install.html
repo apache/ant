@@ -169,21 +169,21 @@ target="_top">https://archive.apache.org/dist/ant/</a>. The files are organized 
   <td><samp>ant-current-*.asc</samp></td>
   <td>
     Security file for checking the correctness of the zip file. This one is
-    the <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_blank">PGP</a> signature.
+    the <a href="https://en.wikipedia.org/wiki/Pretty_Good_Privacy" target="_top">PGP</a> signature.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-*.md5</samp></td>
   <td>
     Security file for checking the correctness of the zip file. This one is
-    the <a href="https://en.wikipedia.org/wiki/Md5" target="_blank">MD5</a> checksum.
+    the <a href="https://en.wikipedia.org/wiki/Md5" target="_top">MD5</a> checksum.
   </td>
 </tr>
 <tr>
   <td><samp>ant-current-*.sha1</samp></td>
   <td>
     Security file for checking the correctness of the zip file. This one is
-    the <a href="https://en.wikipedia.org/wiki/SHA-1" target="_blank">SHA1</a> checksum.
+    the <a href="https://en.wikipedia.org/wiki/SHA-1" target="_top">SHA1</a> checksum.
   </td>
 </tr>
 <tr>
@@ -241,7 +241,7 @@ The more up-to-date the version of Java, the more Ant tasks you get.
 
 <h3>Open Source Java Runtimes</h3>
 <p>
-The Ant team strongly supports users running Ant on <a target="_blank" href="http://openjdk.java.net/">OpenJDK</a> and
+The Ant team strongly supports users running Ant on <a href="http://openjdk.java.net/" target="_top">OpenJDK</a> and
 other open source Java runtimes, and so strives to have a product that works well on those platforms.
 </p>
 
@@ -665,8 +665,8 @@ installed. See <a href="#installing">Installing Ant</a> for examples on how to d
 </p>
 
 <p>
-<strong>Note</strong>: The bootstrap process of Ant requires a greedy compiler like OpenJDK or Oracle's javac. It does not work
-with gcj or kjc.
+<strong>Note</strong>: The bootstrap process of Ant requires a greedy compiler like OpenJDK or Oracle's javac. It does
+not work with gcj or kjc.
 </p>
 
 <p>
@@ -684,8 +684,8 @@ on how to do this.
 </p>
 
 <p>
-<em>Since Ant 1.7.0</em>, Ant has a hard dependency on JUnit. The <samp>fetch.xml</samp> build script will download JUnit
-automatically, but if you don't use this you must install it manually into <samp>lib/optional</samp> (download it
+<em>Since Ant 1.7.0</em>, Ant has a hard dependency on JUnit. The <samp>fetch.xml</samp> build script will download
+JUnit automatically, but if you don't use this you must install it manually into <samp>lib/optional</samp> (download it
 from <a href="https://junit.org/" target="_top">JUnit.org</a>) if you are using a source distribution of Ant.
 </p>
 
@@ -708,7 +708,7 @@ The above action does the following:
 <li>If necessary it will bootstrap the Ant code. Bootstrapping involves the manual compilation of enough Ant code to be
 able to run Ant. The bootstrapped Ant is used for the remainder of the build steps.</li>
 <li>Invokes the bootstrapped Ant with the parameters passed to the build script. In this case, these parameters define
-an Ant property value and specify the &quot;dist&quot; target in Ant's own <samp>build.xml</samp> file.</li>
+an Ant property value and specify the <q>dist</q> target in Ant's own <samp>build.xml</samp> file.</li>
 <li>Create the <samp>ant.jar</samp> and <samp>ant-launcher.jar</samp> JAR files</li>
 <li>Create optional JARs for which the build had the relevant libraries. If a particular library is missing
 from <samp>lib/optional</samp>, then the matching ant-library JAR file will not be created. For
@@ -876,7 +876,7 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
       and <a href="Tasks/telnet.html">telnet</a> tasks<br/> A minimum version of commons-net of 1.4.0 is needed to
       compile Ant, earlier versions did not support the full range of configuration options.<br/>jakarta-oro 2.0.8 is
       required together with commons-net 1.4.x at run time.<br/><strong>Note</strong>: do not use commons-net 3.2
-      because of <a href="https://issues.apache.org/jira/browse/NET-493">performance issues</a>
+      because of <a href="https://issues.apache.org/jira/browse/NET-493" target="_top">performance issues</a>
     </td>
     <td><a href="https://commons.apache.org/net/" target="_top">https://commons.apache.org/net/</a></td>
   </tr>
@@ -890,8 +890,7 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
     <td>javax.mail-api.jar</td>
     <td><a href="Tasks/mail.html">mail</a> task with MIME encoding,
       and <em><u>deprecated</u></em> <a href="Tasks/mimemail.html">mimemail</a> task</td>
-    <td><a href="https://javaee.github.io/javamail/"
-           target="_top">https://javaee.github.io/javamail/</a></td>
+    <td><a href="https://javaee.github.io/javamail/" target="_top">https://javaee.github.io/javamail/</a></td>
   </tr>
   <tr>
     <td>activation.jar<br/>(included in Java 6 and later runtime)</td>
@@ -903,8 +902,7 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   <tr>
     <td>jdepend.jar</td>
     <td><a href="Tasks/jdepend.html">jdepend</a> task</td>
-    <td><a href="https://github.com/clarkware/jdepend"
-           target="_top">https://github.com/clarkware/jdepend</a></td>
+    <td><a href="https://github.com/clarkware/jdepend" target="_top">https://github.com/clarkware/jdepend</a></td>
   </tr>
   <tr>
     <td>resolver.jar <strong>1.1 or later</strong></td>

@@ -26,23 +26,22 @@
 
 <h2 id="XMLCatalog">XMLCatalog</h2>
 
-<p>An XMLCatalog is a catalog of public resources such as DTDs or entities that are referenced
-in an XML document.  Catalogs are typically used to make web references to resources point to a
-locally cached copy of the resource.</p>
+<p>An XMLCatalog is a catalog of public resources such as DTDs or entities that are referenced in an
+XML document.  Catalogs are typically used to make web references to resources point to a locally
+cached copy of the resource.</p>
 
 <p>This allows the XML Parser, XSLT Processor or other consumer of XML documents to efficiently
 allow a local substitution for a resource available on the web.</p>
 <p><strong>Note:</strong> This task <em>uses, but does not depend on</em> external libraries not
-included in the Apache Ant distribution.
-See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
-information.</p>
+included in the Apache Ant distribution.  See <a href="../install.html#librarydependencies">Library
+Dependencies</a> for more information.</p>
 <p>This data type provides a catalog of resource locations based on
-the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">OASIS
-XML Catalog standard</a>.  The catalog entries are used both for Entity resolution and URI
-resolution, in accordance with the <code>org.xml.sax.EntityResolver</code>
+the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html"
+target="_top">OASIS XML Catalog standard</a>.  The catalog entries are used both for Entity
+resolution and URI resolution, in accordance with the <code>org.xml.sax.EntityResolver</code>
 and <code>javax.xml.transform.URIResolver</code> interfaces as defined in
-the <a href="https://download.oracle.com/otn-pub/jcp/jaxp-1_6-mrel3-spec/JAXP1_6-FinalSpec.pdf">Java
-API for XML Processing (JAXP) Specification</a>.</p>
+the <a href="https://download.oracle.com/otn-pub/jcp/jaxp-1_6-mrel3-spec/JAXP1_6-FinalSpec.pdf"
+target="_top">Java API for XML Processing (JAXP) Specification</a>.</p>
 <p>For example, in a <code>web.xml</code> file, the DTD is referenced as:</p>
 <pre>
 &lt;!DOCTYPE web-app PUBLIC &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN&quot;
@@ -75,64 +74,62 @@ the system classpath is used for this as well.</p>
 <p>XMLCatalogs can also be nested inside other XMLCatalogs.  For example, a "superset"
 XMLCatalog could be made by including several nested XMLCatalogs that referred to other,
 previously defined XMLCatalogs.</p>
-<p>Resource locations can be specified either in-line or in external catalog file(s), or both.
-In order to use an external catalog file, the xml-commons resolver library
-(<samp>resolver.jar</samp>) must be in your path.  External catalog files may be
-either <a href="https://oasis-open.org/committees/entity/background/9401.html">plain text
-format</a> or <a href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html">XML
-format</a>.  If the xml-commons resolver library is not found in the classpath, external catalog
-files, specified in <code>catalogpath</code>, will be ignored and a warning will be logged.  In
-this case, however, processing of inline entries will proceed normally.</p>
+<p>Resource locations can be specified either in-line or in external catalog file(s), or both.  In
+order to use an external catalog file, the xml-commons resolver library (<samp>resolver.jar</samp>)
+must be in your path.  External catalog files may be
+either <a href="https://oasis-open.org/committees/entity/background/9401.html" target="_top">plain
+text format</a> or <a href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html"
+target="_top">XML format</a>.  If the xml-commons resolver library is not found in the classpath,
+external catalog files, specified in <code>catalogpath</code>, will be ignored and a warning will be
+logged.  In this case, however, processing of inline entries will proceed normally.</p>
 <p>Currently, only <code>&lt;dtd&gt;</code> and <code>&lt;entity&gt;</code> elements may be
 specified inline; these roughly correspond to OASIS catalog entry types <code>PUBLIC</code>
 and <code>URI</code> respectively.  By contrast, external catalog files may use any of the entry
 types defined in
-the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">OASIS
-specification</a>.</p>
+the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html"
+target="_top">OASIS specification</a>.</p>
 <h3 id="ResolverAlgorithm">Entity/DTD/URI resolution algorithm</h3>
-<p>When an entity, DTD, or URI is looked up by the XML processor, the XMLCatalog searches its
-list of entries to see if any match.  That is, it attempts to match the <var>publicId</var>
-attribute of each entry with the PublicID or URI of the entity to be resolved.  Assuming a
-matching entry is found, XMLCatalog then executes the following steps:</p>
+<p>When an entity, DTD, or URI is looked up by the XML processor, the XMLCatalog searches its list
+of entries to see if any match.  That is, it attempts to match the <var>publicId</var> attribute of
+each entry with the PublicID or URI of the entity to be resolved.  Assuming a matching entry is
+found, XMLCatalog then executes the following steps:</p>
 
 <h4>1. Filesystem lookup</h4>
 
-<p>The <var>location</var> is first looked up in the filesystem.  If the <var>location</var> is
-a relative path, the Ant project <var>basedir</var> attribute is used as the base directory.  If
-the <var>location</var> specifies an absolute path, it is used as is.  Once we have an absolute
-path in hand, we check to see if a valid and readable file exists at that path.  If so, we are
-done.  If not, we proceed to the next step.</p>
+<p>The <var>location</var> is first looked up in the filesystem.  If the <var>location</var> is a
+relative path, the Ant project <var>basedir</var> attribute is used as the base directory.  If
+the <var>location</var> specifies an absolute path, it is used as is.  Once we have an absolute path
+in hand, we check to see if a valid and readable file exists at that path.  If so, we are done.  If
+not, we proceed to the next step.</p>
 
 <h4>2. Classpath lookup</h4>
 
 <p>The <var>location</var> is next looked up in the classpath.  Recall that jar files are merely
 fancy zip files.  For classpath lookup, the <var>location</var> is used as is (no base is
-prepended).  We use a Classloader to attempt to load the resource from the classpath.  For
-example, if <samp>hello.jar</samp> is in the classpath and it
-contains <samp>foo/bar/blat.dtd</samp> it will resolve an entity whose <var>location</var>
-is <samp>foo/bar/blat.dtd</samp>.  Of course, it will <em>not</em> resolve an entity
-whose <var>location</var> is <code>blat.dtd</code>.</p>
+prepended).  We use a Classloader to attempt to load the resource from the classpath.  For example,
+if <samp>hello.jar</samp> is in the classpath and it contains <samp>foo/bar/blat.dtd</samp> it will
+resolve an entity whose <var>location</var> is <samp>foo/bar/blat.dtd</samp>.  Of course, it
+will <em>not</em> resolve an entity whose <var>location</var> is <code>blat.dtd</code>.</p>
 
 <h4>3a. Apache xml-commons resolver lookup</h4>
 
-<p>What happens next depends on whether the resolver library from xml-commons is available on
-the classpath.  If so, we defer all further attempts at resolving to it.  The resolver library
-supports extremely sophisticated functionality like URL rewriting and so on, which can be
-accessed by making the appropriate entries in external catalog files (XMLCatalog does not yet
-provide inline support for all of the entries defined in
-the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">OASIS
-standard</a>).</p>
+<p>What happens next depends on whether the resolver library from xml-commons is available on the
+classpath.  If so, we defer all further attempts at resolving to it.  The resolver library supports
+extremely sophisticated functionality like URL rewriting and so on, which can be accessed by making
+the appropriate entries in external catalog files (XMLCatalog does not yet provide inline support
+for all of the entries defined in
+the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html"
+target="_top">OASIS standard</a>).</p>
 
 <h4>3. URL-space lookup</h4>
 
-<p>Finally, we attempt to make a URL out of the <var>location</var>.  At first this may seem
-like this would defeat the purpose of XMLCatalogs&mdash;why go back out to the internet?  But in
-fact, this can be used to (in a sense) implement HTTP redirects, substituting one URL for
-another.  The mapped-to URL might also be served by a local web server.  If the URL resolves to
-a valid and readable resource, we are done.  Otherwise, we give up.  In this case, the XML
-processor will perform its normal resolution algorithm.  Depending on the processor
-configuration, further resolution failures may or may not result in fatal (i.e. build-ending)
-errors.</p>
+<p>Finally, we attempt to make a URL out of the <var>location</var>.  At first this may seem like
+this would defeat the purpose of XMLCatalogs&mdash;why go back out to the internet?  But in fact,
+this can be used to (in a sense) implement HTTP redirects, substituting one URL for another.  The
+mapped-to URL might also be served by a local web server.  If the URL resolves to a valid and
+readable resource, we are done.  Otherwise, we give up.  In this case, the XML processor will
+perform its normal resolution algorithm.  Depending on the processor configuration, further
+resolution failures may or may not result in fatal (i.e. build-ending) errors.</p>
 
 <h3>XMLCatalog attributes</h3>
 <table class="attr">
@@ -173,26 +170,25 @@ identical in their structure</p>
   </tr>
   <tr>
     <td>location</td>
-    <td>The location of the local replacement to be used for the public identifier
-    specified. This may be specified as a file name, resource name found on the classpath, or a
-    URL.  Relative paths will be resolved according to the base, which by default is the Ant
+    <td>The location of the local replacement to be used for the public identifier specified. This
+    may be specified as a file name, resource name found on the classpath, or a URL.  Relative paths
+    will be resolved according to the base, which by default is the Ant
     project <var>basedir</var>.</td>
     <td>Yes</td>
   </tr>
 </table>
 <h4>classpath</h4>
 <p>The classpath to use for <a href="#ResolverAlgorithm">entity resolution</a>.  The
-nested <code>&lt;classpath&gt;</code> is a <a href="../using.html#path">path</a>-like
-structure.</p>
+nested <code>&lt;classpath&gt;</code> is a <a href="../using.html#path">path</a>-like structure.</p>
 <h4>catalogpath</h4>
 <p>The nested <code>catalogpath</code> element is a <a href="../using.html#path">path</a>-like
-structure listing catalog files to search.  All files in this path are assumed to be OASIS
-catalog files, in
-either <a href="https://oasis-open.org/committees/entity/background/9401.html">plain text
-format</a> or <a href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html">XML
+structure listing catalog files to search.  All files in this path are assumed to be OASIS catalog
+files, in either <a href="https://oasis-open.org/committees/entity/background/9401.html"
+target="_top">plain text format</a>
+or <a href="https://www.oasis-open.org/committees/entity/spec-2001-08-06.html" target="_top">XML
 format</a>. Entries specifying nonexistent files will be ignored. If the resolver library from
-xml-commons is not available in the classpath, all <code>catalogpath</code>s will be ignored and
-a warning will be logged.</p>
+xml-commons is not available in the classpath, all <code>catalogpath</code>s will be ignored and a
+warning will be logged.</p>
 <h3>Examples</h3>
 <p>Set up an XMLCatalog with a single DTD referenced locally in a user's home directory:</p>
 <pre>

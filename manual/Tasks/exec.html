@@ -46,11 +46,11 @@ should be more reliable, as would be something like</p>
 <h4>Windows Users</h4>
 <p>The <code>&lt;exec&gt;</code> task delegates to <code>Runtime.exec</code> which in turn
 apparently
-calls <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx"> <code>::CreateProcess</code></a>. It
-is the latter Win32 function that defines the exact semantics of the call. In particular, if you do
-not put a file extension on the executable, only <samp>.EXE</samp> files are looked for,
-not <samp>.COM</samp>, <samp>.CMD</samp> or other file types listed in the environment
-variable <code>PATHEXT</code>. That is only used by the shell.</p>
+calls <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx"
+target="_top"><code>::CreateProcess</code></a>. It is the latter Win32 function that defines the
+exact semantics of the call. In particular, if you do not put a file extension on the executable,
+only <samp>.EXE</samp> files are looked for, not <samp>.COM</samp>, <samp>.CMD</samp> or other file
+types listed in the environment variable <code>PATHEXT</code>. That is only used by the shell.</p>
 <p>Note that <samp>.bat</samp> files cannot in general by executed directly.  One normally needs to
 execute the command shell executable <code>cmd</code> using the <code>/c</code> switch.</p>
 <pre>
@@ -75,8 +75,8 @@ the <var>executable</var> attribute in your buildfile.</p>
 executable parameter.  This is because JVM in which Ant is running is a standard Windows executable
 and is not aware of the Cygwin environment (i.e., doesn't load <samp>cygwin1.dll</samp>).  The only
 work-around for this is to compile a JVM under Cygwin (at your own risk).  See for
-instance <a href="https://cdn.rawgit.com/AdoptOpenJDK/openjdk-jdk9/dev/common/doc/building.html#cygwin">OpenJDK
-build instructions for cygwin</a>.</p>
+instance <a href="https://cdn.rawgit.com/AdoptOpenJDK/openjdk-jdk9/dev/common/doc/building.html#cygwin"
+target="_top">OpenJDK build instructions for cygwin</a>.</p>
 
 <h4>OpenVMS Users</h4>
 <p>The command specified using <code>executable</code> and <code>&lt;arg&gt;</code> elements is
@@ -98,9 +98,9 @@ the <var>fork</var> attribute set to <q>true</q> instead as this task will follo
 interpretation of exit codes.</p>
 
 <h4>RedHat S/390 Users</h4>
-<p>It has been <a href="https://www.mail-archive.com/linux-390@vm.marist.edu/msg22223.html">reported
-on linux-390</a> that shell scripts invoked via the Ant Exec task must have their interpreter
-specified, i.e., the scripts must start with something like:</p>
+<p>It has been <a href="https://www.mail-archive.com/linux-390@vm.marist.edu/msg22223.html"
+target="_top">reported on linux-390</a> that shell scripts invoked via the Ant Exec task must have
+their interpreter specified, i.e., the scripts must start with something like:</p>
 
 <pre>#!/bin/bash</pre>
 <p>or the task will fail as follows:</p>
@@ -323,10 +323,10 @@ property and have it assigned to the result code (barring immutability, of cours
 then <code>&lt;exec&gt;</code> halts the build unless <var>failifexecutionfails</var> is set
 to <q>false</q>. You can use that to run a program if it exists, but otherwise do nothing.</p>
 <p>What do those error codes mean? Well, they are OS dependent. On Windows boxes you have to look
-at <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx"> the
-documentation</a>; <code>error=2</code> means 'no such program', which usually means it is not on
-the path. Any time you see such an error from any Ant task, it is usually not an Ant bug, but some
-configuration problem on your machine.</p>
+at <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx"
+target="_top">the documentation</a>; <code>error=2</code> means 'no such program', which usually
+means it is not on the path. Any time you see such an error from any Ant task, it is usually not an
+Ant bug, but some configuration problem on your machine.</p>
 
 <h3>Examples</h3>
 <pre>

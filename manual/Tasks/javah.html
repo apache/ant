@@ -29,10 +29,10 @@
 <p>Generates JNI headers from a Java class.</p>
 <p>When this task executes, it will generate the C header and source files that are needed to
 implement native methods. JNI operates differently depending on
-whether <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javah.html">JDK
-1.2+</a>
-or <a href="https://web.archive.org/web/20021018232717/http://java.sun.com/products/jdk/1.1/docs/tooldocs/win32/javah.html">pre-1.2
-JDK</a> systems are used.</p>
+whether <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javah.html"
+target="_top">JDK 1.2+</a>
+or <a href="https://web.archive.org/web/20021018232717/http://java.sun.com/products/jdk/1.1/docs/tooldocs/win32/javah.html"
+target="_top">pre-1.2 JDK</a> systems are used.</p>
 
 <p>If you are building with Java 8 or above consider
 using <a href="javac.html"><code>javac</code></a>'s <var>nativeheaderdir</var> attribute instead
@@ -47,7 +47,8 @@ attribute:</p>
 <ul>
   <li><q>default</q>&mdash;the default compiler for the platform.</li>
   <li><q>sun</q>&mdash;the standard compiler of the JDK.</li>
-  <li><q>kaffeh</q>&mdash;the native standard compiler of <a href="http://www.kaffe.org" target="_top">Kaffe</a>.</li>
+  <li><q>kaffeh</q>&mdash;the native standard compiler of <a href="http://www.kaffe.org"
+    target="_top">Kaffe</a>.</li>
   <li><q>gcjh</q>&mdash;the native standard compiler
     of <a href="https://gcc.gnu.org/gcc-7/changes.html#java" target="_top">gcj and
     gij</a>. <em>Since Apache Ant 1.8.2</em></li>

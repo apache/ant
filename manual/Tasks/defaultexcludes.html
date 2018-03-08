@@ -84,12 +84,12 @@ normal behavior</p>
 
 <h3>Notes</h3>
 <p>By default the pattern <samp>**/.svn</samp> and <samp>**/.svn/**</samp> are set as default
-excludes. Since version 1.3, Subversion supports the <a target="_blank"
-href="https://subversion.apache.org/docs/release-notes/1.3.html#_svn-hack">&quot;_svn
-hack&quot;</a>.  That means, that the svn-libraries evaluate environment variables and
-use <samp>.svn</samp> or <samp>_svn</samp> directory regarding to that value. We had chosen not to
-evaluate environment variables to get a more reliable build. Instead you have to change the settings
-by yourself by changing the exclude patterns:</p>
+excludes. Since version 1.3, Subversion supports
+the <a href="https://subversion.apache.org/docs/release-notes/1.3.html#_svn-hack"
+target="_top">&quot;_svn hack&quot;</a>.  That means, that the svn-libraries evaluate environment
+variables and use <samp>.svn</samp> or <samp>_svn</samp> directory regarding to that value. We had
+chosen not to evaluate environment variables to get a more reliable build. Instead you have to
+change the settings by yourself by changing the exclude patterns:</p>
 <pre>
 &lt;defaultexcludes remove=&quot;**/.svn&quot;/&gt;
 &lt;defaultexcludes remove=&quot;**/.svn/**&quot;/&gt;

@@ -43,25 +43,18 @@ Regexp represents a regular expression.
 
 <h3>Examples</h3>
 <pre>&lt;regexp id="myregexp" pattern="alpha(.+)beta"/&gt;</pre>
-<p>
-Defines a regular expression for later use with <var>id</var> <q>myregexp</q>.
-</p>
+<p>Defines a regular expression for later use with <var>id</var> <q>myregexp</q>.</p>
 <pre>&lt;regexp refid="myregexp"/&gt;</pre>
-<p>
-Use the regular expression with <var>id</var> <q>myregexp</q>.
-</p>
+<p>Use the regular expression with <var>id</var> <q>myregexp</q>.</p>
 <h3 id="implementation">Choice of regular expression implementation</h3>
-<p>
-Apache Ant comes with wrappers for
+<p>Apache Ant comes with wrappers for
 the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/package-summary.html"
 target="_top">java.util.regex
 package</a>, <a href="https://attic.apache.org/projects/jakarta-regexp.html"
-target="_top">jakarta-regexp</a>
-and <a href="https://attic.apache.org/projects/jakarta-oro.html" target="_top">jakarta-ORO</a>,
-see <a href="../install.html#librarydependencies">installation dependencies</a> concerning the
-supporting libraries.</p>
-<p>
-The property <code>ant.regexp.regexpimpl</code> governs which regular expression implementation
+target="_top">jakarta-regexp</a> and <a href="https://attic.apache.org/projects/jakarta-oro.html"
+target="_top">jakarta-ORO</a>, see <a href="../install.html#librarydependencies">installation
+dependencies</a> concerning the supporting libraries.</p>
+<p>The property <code>ant.regexp.regexpimpl</code> governs which regular expression implementation
 will be chosen.  Possible values for this property are:</p>
 <ul>
 <li><code>org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp</code></li>
@@ -76,27 +69,23 @@ available.</p>
 There are cross-platform issues for matches related to line terminator.  For example if you
 use <q>$</q> to anchor your regular expression on the end of a line the results might be very
 different depending on both your platform and the regular expression library you use. It
-is <em>highly recommended</em> that you test your pattern on both Unix and Windows platforms
-before you rely on it.</p>
+is <em>highly recommended</em> that you test your pattern on both Unix and Windows platforms before
+you rely on it.</p>
 <ul>
   <li>Jakarta Oro defines a line terminator as <q>\n</q> and is consistent with Perl.</li>
   <li>Jakarta RegExp uses a system-dependent line terminator.</li>
   <li>JDK 1.4 uses <q>\n</q>, <q>\r\n</q>, <q>\u0085</q>, <q>\u2028</q>, <q>\u2029</q> as a
     default but is configured in the wrapper to use only <q>\n</q> (UNIX_LINE)</li>
 </ul>
-<p>
-<em>We used to recommend that you use Jakarta ORO but since its development has been retired
-Java's built-in regex package is likely the best choice going forward.</em>
-</p>
+<p><em>We used to recommend that you use Jakarta ORO but since its development has been retired
+Java's built-in regex package is likely the best choice going forward.</em></p>
 <h3>Usage</h3> The following tasks and types use the Regexp type:
 <ul>
 <li><a href="../Tasks/replaceregexp.html">ReplaceRegExp task</a></li>
 <li><a href="filterchain.html#linecontainsregexp">LineContainsRegexp filter</a></li>
 </ul>
-<p>
-These string filters also use the mechanism of regexp to choose a regular expression
-implementation:
-</p>
+<p>These string filters also use the mechanism of regexp to choose a regular expression
+implementation:</p>
 <ul>
 <li><a href="filterchain.html#containsregex">ContainsRegex string filter</a></li>
 <li><a href="filterchain.html#replaceregex">ReplaceRegex string filter</a></li>

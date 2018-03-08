@@ -122,10 +122,10 @@ attribute to a value other than its default, <q>add</q>.</strong></p>
   <tr>
     <td>filesetmanifest</td>
     <td>behavior when a manifest file is found in a <code>zipfileset</code>
-    or <code>zipgroupfileset</code> file.  Valid values are <q>skip</q>, <q>merge</q>,
-    and <q>mergewithoutmain</q>.  <q>merge</q> will merge all of the manifests together, and merge
-    this into any other specified manifests.  <q>mergewithoutmain</q> merges everything but the Main
-    section of the manifests.</td>
+      or <code>zipgroupfileset</code> file.  Valid values are <q>skip</q>, <q>merge</q>,
+      and <q>mergewithoutmain</q>.  <q>merge</q> will merge all of the manifests together, and merge
+      this into any other specified manifests.  <q>mergewithoutmain</q> merges everything but the
+      Main section of the manifests.</td>
     <td>No; defaults to <q>skip</q></td>
   </tr>
   <tr>
@@ -142,10 +142,11 @@ attribute to a value other than its default, <q>add</q>.</strong></p>
   <tr>
     <td>index</td>
     <td>whether to create
-    an <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index">index
-    list</a> to speed up classloading.  This is a JDK 1.3+ specific feature.  Unless you specify
-    additional jars with nested <a href="jar.html#indexjars"><code>indexjars</code></a> elements,
-    only the contents of this jar will be included in the index.</td>
+      an <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index"
+      target="_top">index list</a> to speed up classloading.  This is a JDK 1.3+ specific feature.
+      Unless you specify additional jars with
+      nested <a href="jar.html#indexjars"><code>indexjars</code></a> elements, only the contents of
+      this jar will be included in the index.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
@@ -153,9 +154,10 @@ attribute to a value other than its default, <q>add</q>.</strong></p>
     <td>whether to include <samp>META-INF</samp> and its children in the index.  Doesn't have any
       effect if <var>index</var> is false.<br/>Oracle's jar implementation used to skip
       the <samp>META-INF</samp> directory and Ant followed that example.  The behavior has been
-      changed with <a href="https://bugs.openjdk.java.net/browse/JDK-4408526">Java 5</a>.  In order
-      to avoid problems with Ant generated jars on Java 1.4 or earlier, Ant will not
-      include <samp>META-INF</samp> unless explicitly asked to.<br/><em>Since Ant 1.8.0</em>.</td>
+      changed with <a href="https://bugs.openjdk.java.net/browse/JDK-4408526" target="_top">Java
+      5</a>.  In order to avoid problems with Ant generated jars on Java 1.4 or earlier, Ant will
+      not include <samp>META-INF</samp> unless explicitly asked to.<br/><em>Since Ant
+      1.8.0</em>.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>

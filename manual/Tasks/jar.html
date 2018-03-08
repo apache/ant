@@ -71,15 +71,14 @@ a <code>zipfileset</code> in a <code>Zip</code> task. The one difference is that
 the <var>manifest</var> attribute is not specified, the <code>Jar</code> task will include an empty
 one for you.)</p>
 
-<p>Manifests are processed by the <code>Jar</code> task according to the <a target="_blank"
-href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html">Jar file
-specification.</a>  Note in particular that this may result in manifest lines greater than 72 bytes
-being wrapped and continued on the next line.</p>
+<p>Manifests are processed by the <code>Jar</code> task according to
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html" target="_top">Jar
+file specification.</a>  Note in particular that this may result in manifest lines greater than 72
+bytes being wrapped and continued on the next line.</p>
 
 <p>The <code>Jar</code> task checks whether you specified package information according to
-the <a target="_blank"
-href="https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp90779">
-versioning specification</a>.</p>
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp90779"
+target="_top">versioning specification</a>.</p>
 
 <p><strong>Please note that the ZIP format allows multiple files of the same fully-qualified name to
 exist within a single archive. This has been documented as causing various problems for unsuspecting
@@ -89,7 +88,7 @@ other than its default, <q>add</q>.</strong></p>
 <p>To cryptographically sign your JAR file, use the <a href="signjar.html">SignJar task</a> on the
 JAR that you create from this task.</p>
 
-<p>For creating a simple version of a <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP
+<p>For creating a simple version of a <a href="http://openjdk.java.net/jeps/238" target="_top">JEP
 238 multi-release jar</a>, you don't need any special tools. Just set the
 required <code>manifest</code> entry and place the files where required, as you could see in
 the <a href="#jep238-example">JEP 238 example</a>. If you want to tune this kind of jar,
@@ -202,10 +201,10 @@ e.g. decreasing the size by deleting 'same' classes from the versions-branches, 
   <tr>
     <td>index</td>
     <td>whether to create
-      an <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index">index
-      list</a> to speed up classloading.  This is a JDK 1.3+ specific feature.  Unless you specify
-      additional jars with nested <a href="#indexjars"><code>indexjars</code></a> elements, only the
-      contents of this jar will be included in the index.</td>
+      an <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index"
+      target="_top">index list</a> to speed up classloading.  This is a JDK 1.3+ specific feature.
+      Unless you specify additional jars with nested <a href="#indexjars"><code>indexjars</code></a>
+      elements, only the contents of this jar will be included in the index.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
@@ -213,8 +212,8 @@ e.g. decreasing the size by deleting 'same' classes from the versions-branches, 
     <td>whether to include <samp>META-INF</samp> and its children in the index.  Doesn't have any
       effect if <var>index</var> is <q>false</q>.<br/>Sun's jar implementation used to skip
       the <samp>META-INF</samp> directory and Ant followed that example.  The behavior has been
-      changed with <a href="https://bugs.openjdk.java.net/browse/JDK-4408526">Java 5</a>.  In order
-      to avoid problems with Ant generated jars on Java 1.4 or earlier Ant will not
+      changed with <a href="https://bugs.openjdk.java.net/browse/JDK-4408526" target="_top">Java
+      5</a>.  In order to avoid problems with Ant generated jars on Java 1.4 or earlier Ant will not
       include <samp>META-INF</samp> unless explicitly asked to. <em>Since Ant 1.8.0</em></td>
     <td>No; defaults to <q>false</q></td>
   </tr>
@@ -355,10 +354,11 @@ to <q>true</q>.</p>
 <p><em>Since Ant 1.7.0</em></p>
 
 <p>The nested <code>service</code> element specifies a service.  Services are described in
-the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider">service
-provider overview</a>.  The approach is to have providers JARs include files named by the service
-provided, for example, <samp>META-INF/services/javax.script.ScriptEngineFactory</samp> which can
-include implementation class names, one per line (usually just one per JAR).</p>
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider"
+target="_top">service provider overview</a>.  The approach is to have providers JARs include files
+named by the service provided, for
+example, <samp>META-INF/services/javax.script.ScriptEngineFactory</samp> which can include
+implementation class names, one per line (usually just one per JAR).</p>
 
 <p>The name of the service is set by the <var>type</var> attribute. The classname implementing the
 service is the the <var>provider</var> attribute, or if one wants to specify a number of classes
@@ -464,7 +464,7 @@ embeds all the classes from all the jars in <samp>lib/main</samp>.</p>
     &lt;include name=&quot;build&quot;/&gt;
     &lt;manifest&gt;
         &lt;!-- If this is an Applet or Web Start application, include
-             the proper attributes from <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jweb/index.html">https://docs.oracle.com/javase/8/docs/technotes/guides/jweb/index.html</a> --&gt;
+             the proper attributes from <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jweb/index.html" target="_top">https://docs.oracle.com/javase/8/docs/technotes/guides/jweb/index.html</a> --&gt;
         &lt;attribute name=&quot;Permissions&quot; value=&quot;sandbox&quot;/&gt;
         &lt;attribute name=&quot;Codebase&quot; value=&quot;example.com&quot;/&gt;
         &lt;!-- Who is building this jar? --&gt;
@@ -521,7 +521,7 @@ JDK 6 scripting interface:</p>
 
 <h4 id="jep238-example">JEP 238 example: a Multi-Release JAR Files</h4>
 <p>Here we want to create a <em>Multi-Release JAR File</em> according the
-specification <a target="_blank" href="http://openjdk.java.net/jeps/238">JEP 238</a>.  It defines on
+specification <a href="http://openjdk.java.net/jeps/238" target="_top">JEP 238</a>.  It defines on
 top of a JAR the possibility to place additional or overwriting classes in a jar, which are
 available according to the Java version you run.<br/>  Basically it says, that you have to set the
 manifest entry <code>Multi-Release: true</code> and place all additional or overwriting classes

@@ -45,17 +45,18 @@ attributes point to files in the format of Java property files or an xml format.
 <p>If you are defining tasks or types that share the same classpath with
 multiple <code>taskdef</code> or <code>typedef</code> tasks, the corresponding classes will be
 loaded by different
-Java <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html">ClassLoaders</a>.
-Two classes with the same name loaded via different ClassLoaders are not the same class from the
-point of view of JVM, they don't share static variables and instances of these classes can't access
-private methods or attributes of instances defined by "the other class" of the same name.  They
-don't even belong to the same Java package and can't access package private code, either.</p>
+Java <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html"
+target="_top">ClassLoaders</a>.  Two classes with the same name loaded via different ClassLoaders
+are not the same class from the point of view of JVM, they don't share static variables and
+instances of these classes can't access private methods or attributes of instances defined by "the
+other class" of the same name.  They don't even belong to the same Java package and can't access
+package private code, either.</p>
 
 <p>The best way to load several tasks/types that are supposed to cooperate with each other via
 shared Java code is to use the <var>resource</var> attribute and an <code>antlib</code> descriptor.
 If this is not possible, the second best option is to use the <var>loaderref</var> attribute and
-specify the same name for each and every <code>typedef</code>/<code>taskdef</code> -- this way the
-classes will share the same <code>ClassLoader</code>.  Note that
+specify the same name for each and every <code>typedef</code>/<code>taskdef</code>&mdash;this way
+the classes will share the same <code>ClassLoader</code>.  Note that
 the <code>typedef</code>/<code>taskdef</code> tasks must use identical classpath definitions (this
 includes the order of path components) for the <var>loaderref</var> attribute to work.</p>
 

@@ -69,7 +69,7 @@ for either the <code>build.compiler</code> property or the <var>compiler</var> a
     (the <a href="https://web.archive.org/web/20050212025507/http://www.dms.at/kopi/index.html"
     target="_top">kopi</a> compiler).</li>
   <li><q>gcj</q> (the <code>gcj</code> compiler
-    from <a href="https://gcc.gnu.org/gcc-7/changes.html#java">GCC</a>).</li>
+    from <a href="https://gcc.gnu.org/gcc-7/changes.html#java" target="_top">GCC</a>).</li>
   <li><q>sj</q> (Symantec Java compiler) &ndash; <q>symantec</q> can be used as an alias.</li>
   <li><q>extJavac</q> (run either modern or classic in a JVM of its own).</li>
 </ul>
@@ -309,8 +309,9 @@ file will not get compiled even if a native header file generated for it would b
       magic <a href="../javacprops.html#target"><code>ant.build.javac.target</code></a> property is
       set<br/><strong>Note that the default value depends on JDK that is running Ant and
       on <var>source</var>
-      (see <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJDCID">Cross-Compilation
-      Options</a>).  We highly recommend to always specify this attribute.</strong></td>
+      (see <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJDCID"
+      target="_top">Cross-Compilation Options</a>).  We highly recommend to always specify this
+      attribute.</strong></td>
   </tr>
   <tr>
     <td>compiler</td>
@@ -345,9 +346,10 @@ file will not get compiled even if a native header file generated for it would b
       compiler for doing unnecessary work. However, for some edge cases, involving generics,
       the <code>javac</code> compiler needs to compile the dependent classes to get the generics
       information. One example is documented in the bug
-      report: <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=40776">Bug 40776 - a
-      problem compiling a Java 5 project with generics</a>.  Setting the attribute to <q>false</q>
-      will cause the compiler to recompile dependent classes.  <em>Since Ant 1.7.1</em>.</td>
+      report: <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=40776" target="_top">Bug
+      40776 - a problem compiling a Java 5 project with generics</a>.  Setting the attribute
+      to <q>false</q> will cause the compiler to recompile dependent classes.  <em>Since Ant
+      1.7.1</em>.</td>
     <td>No; default is <q>true</q></td>
   </tr>
   <tr>
@@ -578,8 +580,8 @@ certain packages below a common root, use the <var>include</var>/<var>exclude</v
 or <code>&lt;include&gt;</code>/<code>&lt;exclude&gt;</code> nested elements to filter for these
 packages. Do not include part of your package structure in the <var>srcdir</var> attribute (or
 nested <code>&lt;src&gt;</code> elements), or Ant will recompile your source files every time you
-run your compile target. See the <a href="https://ant.apache.org/faq.html#always-recompiles">Ant
-FAQ</a> for additional information.</p>
+run your compile target. See the <a href="https://ant.apache.org/faq.html#always-recompiles"
+target="_top">Ant FAQ</a> for additional information.</p>
 
 <p>If you wish to compile only files explicitly specified and disable <code>javac</code>'s default
 searching mechanism then you can unset the <var>sourcepath</var> attribute:</p>
@@ -734,9 +736,9 @@ references to strings that can by used in an OS independent fashion
 &lt;/javac&gt;</pre>
 
 <h3>OpenJDK notes</h3>
-<p>The <a href="http://openjdk.java.net/">openjdk</a> project has provided
-the <code>javac</code> <a href="http://openjdk.java.net/groups/compiler/">compiler</a> as an open
-source project. The output of this project is a <code>javac.jar</code> which contains
+<p>The <a href="http://openjdk.java.net/" target="_top">OpenJDK</a> project has provided
+the <code>javac</code> <a href="http://openjdk.java.net/groups/compiler/" target="_top">compiler</a>
+as an open source project. The output of this project is a <code>javac.jar</code> which contains
 the <code>javac</code> compiler.  This compiler may be used with the <code>&lt;javac&gt;</code> task
 with the use of a <code>-Xbootclasspath/p</code> Java argument. The argument needs to be given to
 the runtime system of the <code>javac</code> executable, so it needs to be prepended with
