@@ -192,8 +192,7 @@ error, rather than halt the build.</p>
 &lt;xmlvalidate failonerror="no"&gt;
   &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
   &lt;xmlcatalog&gt;
-       &lt;dtd
-         publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
+    &lt;dtd publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
          location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
   &lt;/xmlcatalog&gt;
 &lt;/xmlvalidate&gt;</pre>
@@ -220,14 +219,11 @@ automatically enabled, and makes it easy to add a list of schema files/URLs to a
 &lt;/path&gt;
 &lt;/pathconvert&gt;
 
-&lt;xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false"
-  failonerror="true" warn="true"&gt;
-  &lt;attribute name="http://apache.org/xml/features/validation/schema"
-  value="true"/&gt;
+&lt;xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false" failonerror="true" warn="true"&gt;
+  &lt;attribute name="http://apache.org/xml/features/validation/schema" value="true"/&gt;
   &lt;attribute name="http://xml.org/sax/features/namespaces" value="true"/&gt;
-  &lt;property
-  name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
-  value="${xsd.file}"/&gt;
+  &lt;property name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/&gt;
 &lt;/xmlvalidate&gt;</pre>
 <p>Validate the file <samp>xml/endpiece-noSchema.xml</samp> against the
 schema <samp>xml/doc.xsd</samp>.</p>
