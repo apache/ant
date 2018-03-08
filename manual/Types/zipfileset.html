@@ -27,10 +27,10 @@
 a <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> which can behave in 2 different ways:</p>
 <ul>
   <li>When the <var>src</var> attribute is used&mdash;or a nested resource collection has been
-  specified (<em>since Apache Ant 1.7</em>), the zipfileset is populated with zip entries found in
-  the file <var>src</var>.</li>
+    specified (<em>since Apache Ant 1.7</em>), the zipfileset is populated with zip entries found in
+    the file <var>src</var>.</li>
   <li>When the <var>dir</var> attribute is used, the zipfileset is populated with filesystem files
-  found under <var>dir</var>.</li>
+    found under <var>dir</var>.</li>
 </ul>
 <p><code>&lt;zipfileset&gt;</code> supports all attributes
 of <code>&lt;<a href="fileset.html">fileset</a>&gt;</code> in addition to those listed below.  Note
@@ -61,27 +61,27 @@ to with the <var>refid</var> attribute.</p>
     <tr>
       <td>src</td>
       <td>may be used in place of the <var>dir</var> attribute to specify a zip file whose contents
-	will be extracted and included in the archive.</td>
+        will be extracted and included in the archive.</td>
       <td>No</td>
     </tr>
     <tr>
       <td>filemode</td>
       <td>A 3 digit octal string, specify the user, group and other modes in the standard Unix
-	fashion. Only applies to plain files. <em>Since Ant 1.5.2</em></td>
+        fashion. Only applies to plain files. <em>Since Ant 1.5.2</em></td>
       <td>No; default is <q>644</q></td>
     </tr>
     <tr>
       <td>dirmode</td>
       <td>A 3 digit octal string, specify the user, group and other modes in the standard Unix
-	fashion. Only applies to directories. <em>Since Ant 1.5.2</em></td>
+        fashion. Only applies to directories. <em>Since Ant 1.5.2</em></td>
       <td>No; default is <q>755</q></td>
     </tr>
     <tr>
       <td>encoding</td>
       <td>The character encoding to use for filenames inside the zip file.  For a list of possible
-	values see
-	the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html"
-	target="_top">Supported Encodings</a>.
+        values see
+        the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html"
+        target="_top">Supported Encodings</a>.
       <td>No; defaults to default JVM character encoding</td>
     </tr>
     <tr>
