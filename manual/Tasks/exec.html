@@ -62,13 +62,13 @@ execute the command shell executable <kbd>cmd</kbd> using the <kbd>/c</kbd> swit
   &lt;/exec&gt;
 &lt;/target&gt;</pre>
 
-<p>A common problem is not having the executable on the <code>PATH</code>code>. In case you get an
-error message <code class="output">Cannot run program "...":CreateProcess error=2. The system cannot
-find the path specified.</code> have a look at your <code>PATH</code> variable. Just type the
-command directly on the command line and if Windows finds it, Ant should do it too. (Otherwise ask
-on the user mailinglist for help.) If Windows can not execute the program, add the directory of the
-program to the <code>PATH</code> (<code>set PATH=%PATH%;dirOfProgram</code>) or specify the absolute
-path in the <var>executable</var> attribute in your buildfile.</p>
+<p>A common problem is not having the executable on the <code>PATH</code>. In case you get an error
+message <code class="output">Cannot run program "...":CreateProcess error=2. The system cannot find
+the path specified.</code> have a look at your <code>PATH</code> variable. Just type the command
+directly on the command line and if Windows finds it, Ant should do it too. (Otherwise ask on the
+user mailinglist for help.) If Windows can not execute the program, add the directory of the program
+to the <code>PATH</code> (<code>set PATH=%PATH%;dirOfProgram</code>) or specify the absolute path in
+the <var>executable</var> attribute in your buildfile.</p>
 
 <h4>Cygwin Users</h4>
 <p>The <code>&lt;exec&gt;</code> task will not understand paths such as <q>/bin/sh</q> for
@@ -111,7 +111,7 @@ their interpreter specified, i.e., the scripts must start with something like:</
 
 <h4 id="background">Running Ant as a background process on Unix(-like) systems</h4>
 
-<p>If you run Ant as a background process (like <kbd>ant &</kbd>) and use
+<p>If you run Ant as a background process (like <kbd>ant &amp;</kbd>) and use
 the <code>&lt;exec&gt;</code> task with <var>spawn</var> set to <q>false</q>, you must provide
 explicit input to the forked process or Ant will be suspended because it tries to read from the
 standard input.</p>
