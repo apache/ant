@@ -26,7 +26,7 @@
 
 <h2 id="rmic">Rmic</h2>
 <h3>Description</h3>
-<p>Runs the <code>rmic</code> compiler for a certain class.</p>
+<p>Runs the <kbd>rmic</kbd> compiler for a certain class.</p>
 <p><code>Rmic</code> can be run on a single class (as specified with the classname attribute) or a
 number of classes at once (all classes below base that are neither <code>_Stub</code>
 nor <code>_Skel</code> classes).  If you want to <code>rmic</code> a single class and this class is
@@ -58,9 +58,9 @@ are the choices:</p>
   <li><q>forking</q>&mdash;(<em>since Apache Ant 1.7</em>) the <q>sun</q> compiler forked into a
     separate process.  <em>Since Ant 1.9.8</em>, this is the default when running on JDK 9+.</li>
   <li><q>xnew</q>&mdash;(<em>since Ant 1.7</em>) the <q>sun</q> compiler forked into a separate
-    process, with the <code>-Xnew</code> option. This is the most reliable way to
-    use <code>-Xnew</code>.<br/>JDK 9 has removed support for <code>-Xnew</code> and <em>since Ant
-    1.9.8</em> this option will be rejected when running on JDK 9.</li>
+    process, with the <kbd>-Xnew</kbd> option. This is the most reliable way to
+    use <kbd>-Xnew</kbd>.<br/>JDK 9 has removed support for <kbd>-Xnew</kbd> and <em>since Ant
+    1.9.8</em> this option will be rejected when running on JDK 9+.</li>
   <li><q></q> (empty string). This has the same behaviour as not setting the compiler attribute.
     First the value of <code>build.rmic</code> is used if defined, and if not, the default for the
     platform is chosen. If <code>build.rmic</code> is set to this, you get the default.</li>
@@ -73,8 +73,8 @@ consult miniRMI's documentation to learn how to use it.</p>
 <h4>CORBA support</h4>
 
 <p>Java 11 <a href="http://openjdk.java.net/jeps/320" target="_top">removes</a> the Java EE and
-CORBA packages and <code>rmic</code> no longer supports either <code>iiop</code>
-or <code>idl</code>. Starting with Ant 1.10.3, the <code>rmic</code> task will fail when using
+CORBA packages and <kbd>rmic</kbd> no longer supports either <kbd>-iiop</kbd>
+or <kbd>-idl</kbd> options. Starting with Ant 1.10.3, the <kbd>rmic</kbd> task will fail when using
 either while running Java 11+ unless you fork the task and explicitly specify an executable.</p>
 
 <h3>Parameters</h3>
@@ -96,7 +96,7 @@ either while running Java 11+ unless you fork the task and explicitly specify an
   </tr>
   <tr>
     <td>classname</td>
-    <td>the class for which to run <code>rmic</code>.</td>
+    <td>the class for which to run <kbd>rmic</kbd>.</td>
     <td>No</td>
   </tr>
   <tr>
@@ -106,15 +106,15 @@ either while running Java 11+ unless you fork the task and explicitly specify an
   </tr>
   <tr>
     <td>sourcebase</td>
-    <td>Pass the <code>-keepgenerated</code> flag to <code>rmic</code> and move the generated source
+    <td>Pass the <kbd>-keepgenerated</kbd> flag to <kbd>rmic</kbd> and move the generated source
       file to the given <var>sourcebase</var> directory.</td>
     <td>No</td>
   </tr>
   <tr>
     <td>stubversion</td>
     <td>Specify the JDK version for the generated stub code.  Specify <q>1.1</q> to pass
-      the <code>-v1.1</code> option to <code>rmic</code>, <q>1.2</q>
-      for <code>-v12</code>, <q>compat</q> for <code>-vcompat</code>.<br/><em>Since Ant 1.7</em>, if
+      the <kbd>-v1.1</kbd> option to <kbd>rmic</kbd>, <q>1.2</q>
+      for <kbd>-v1.2</kbd>, <q>compat</q> for <kbd>-vcompat</kbd>.<br/><em>Since Ant 1.7</em>, if
       you do not specify a version, and do not ask for <samp>.iiop</samp> or <samp>.idl</samp>
       files, <q>compat</q> is selected.</td>
     <td>No; default is <q>compat</q></td>
@@ -157,7 +157,7 @@ either while running Java 11+ unless you fork the task and explicitly specify an
   </tr>
   <tr>
     <td>verify</td>
-    <td>check that classes implement <code>Remote</code> before handing them to <code>rmic</code></td>
+    <td>check that classes implement <code>Remote</code> before handing them to <kbd>rmic</kbd></td>
     <td>No; default is <q>false</q></td>
   </tr>
   <tr>
@@ -184,7 +184,7 @@ either while running Java 11+ unless you fork the task and explicitly specify an
   </tr>
   <tr>
     <td>debug</td>
-    <td>generate debug info (passes <code>-g</code> to <code>rmic</code>)</td>
+    <td>generate debug info (passes <kbd>-g</kbd> to <kbd>rmic</kbd>)</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
@@ -211,9 +211,9 @@ either while running Java 11+ unless you fork the task and explicitly specify an
   </tr>
   <tr>
     <td>executable</td>
-    <td>Complete path to the <code>rmic</code> executable to use in case of the <q>forking</q>
+    <td>Complete path to the <kbd>rmic</kbd> executable to use in case of the <q>forking</q>
       or <q>xnew</q> compiler. <em>Since Ant 1.8.0</em>.</td>
-    <td>No; defaults to the <code>rmic</code> compiler of JDK that is currently running Ant</td>
+    <td>No; defaults to the <kbd>rmic</kbd> compiler of JDK that is currently running Ant</td>
   </tr>
   <tr>
     <td>listfiles</td>
@@ -298,10 +298,10 @@ can be used as an alternative to the <var>compiler</var> attribute.</p>
 
 <h3>Examples</h3>
 <pre>&lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
-<p>runs the <code>rmic</code> compiler for the class <code>com.xyz.FooBar</code>. The compiled files
+<p>runs the <kbd>rmic</kbd> compiler for the class <code>com.xyz.FooBar</code>. The compiled files
 will be stored in the directory <samp>${build}/classes</samp>.</p>
 <pre>&lt;rmic base=&quot;${build}/classes&quot; includes=&quot;**/Remote*.class&quot;/&gt;</pre>
-<p>runs the <code>rmic</code> compiler for all classes with <samp>.class</samp> files
+<p>runs the <kbd>rmic</kbd> compiler for all classes with <samp>.class</samp> files
 below <samp>${build}/classes</samp> whose classname starts with <code>Remote</code>. The compiled
 files will be stored in the directory <samp>${build}/classes</samp>.</p>
 

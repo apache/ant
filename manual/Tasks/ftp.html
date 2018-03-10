@@ -45,10 +45,10 @@ the <a href="setproxy.html"><code>&lt;setproxy&gt;</code></a> task, and cannot g
 via socks.</p>
 <p><strong>Warning</strong>: there have been problems reported concerning
 the <code>ftp</code> <q>get</q> with the <var>newer</var> attribute.  Problems might be due to
-format of <code>ls -l</code> differing from what is expected by commons-net, for instance due to
+format of <kbd>ls -l</kbd> differing from what is expected by commons-net, for instance due to
 specifics of language used by the FTP server in the directory listing.  If you encounter such a
 problem, please send an email including a sample directory listing coming from your FTP server
-(<code>ls -l</code> on the FTP prompt).</p>
+(<kbd>ls -l</kbd> on the FTP prompt).</p>
 <p>If you can connect but not upload or download, try setting the <var>passive</var> attribute
 to <q>true</q> to use the existing (open) channel, instead of having the server try to set up a new
 connection.</p>
@@ -134,15 +134,15 @@ connection.</p>
   </tr>
   <tr id="timestampGranularity">
     <td>timestampGranularity</td>
-    <td>Specify either <q>MINUTE</q>, <q>NONE</q>, (or you may specify <q></q> which is equivalent
-      to not specifying a value, useful for property-file driven scripts).  Allows override of the
-      typical situation in <q>PUT</q> and <q>GET</q> where local filesystem timestamps
+    <td>Specify either <q>MINUTE</q> or <q>NONE</q> (you may specify <q></q> which is equivalent to
+      not specifying a value, useful for property-file driven scripts).  Allows override of the
+      typical situation in <q>put</q> and <q>get</q> where local filesystem timestamps
       are <code>HH:mm:ss</code> and the typical FTP server's timestamps are <code>HH:mm</code>.
       This can throw off <var>uptodate</var> calculations.  However, the default values should
       suffice for most applications.<br/><em>Since Ant 1.7</em></td>
-    <td>No; only applies in <q>put</q> and <q>get</q> where the default values are <q>MINUTE</q>
-      for <code>PUT</code> and <q>NONE</q> for <code>GET</code>.  (It is not as necessary
-      in <q>get</q> because we have the <var>preservelastmodified</var> option.)</td>
+    <td>No; only applies for <q>put</q> (default is <q>MINUTE</q>) and <q>get</q> (default
+      is <q>NONE</q>; not as necessary because we have the <var>preservelastmodified</var>
+      option)</td>
   </tr>
   <tr>
     <td>timediffmillis</td>
@@ -167,14 +167,13 @@ connection.</p>
   <tr>
     <td>chmod</td>
     <td>sets or changes file permissions for new or existing files, Unix only. If used with
-      a <q>put</q> action, <code>chmod</code> will be issued for each file.</td>
+      a <q>put</q> action, <q>chmod</q> will be issued for each file.</td>
     <td>No</td>
   </tr>
   <tr>
     <td>listing</td>
-    <td>the file to write results of the <q>list</q> action.  Required for the <q>list</q> action,
-      ignored otherwise.</td>
-    <td>No</td>
+    <td>the file to write results of the <q>list</q> action.</td>
+    <td>Yes, for the <q>list</q> action; ignored otherwise</td>
   </tr>
   <tr>
     <td>ignoreNoncriticalErrors</td>
@@ -531,7 +530,7 @@ directory.  In fact, the <var>dir</var> attribute of the fileset is ignored comp
 &lt;/ftp&gt;</pre>
 <p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and tries to delete
 all <samp>*.tmp</samp> files from the default directory for that user.  If you don't have permission
-to delete a file, a BuildException is thrown.</p>
+to delete a file, a <code>BuildException</code> is thrown.</p>
 <h3>Listing Files</h3>
 <pre>
 &lt;ftp action="list"
@@ -564,8 +563,8 @@ of the FTP server.</p>
 server.  The filesets are relative to the remote directory, not a local directory.
 The <var>dir</var> attribute of the fileset is ignored completely.  The directories to be removed
 must be empty, or contain only other directories that have been also selected to be removed by the
-filesets patterns, otherwise a BuildException will be thrown.  Also, if you don't have permission to
-remove a directory, a BuildException is thrown.</p>
+filesets patterns, otherwise a <code>BuildException</code> will be thrown.  Also, if you don't have
+permission to remove a directory, a <code>BuildException</code> is thrown.</p>
 
 <pre>
 &lt;ftp action="rmdir"

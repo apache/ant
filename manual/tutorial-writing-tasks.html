@@ -17,7 +17,7 @@
 <html>
 <head>
   <title>Tutorial: Writing Tasks</title>
-  <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
 </head>
 <body>
 <h1>Tutorial: Writing Tasks</h1>
@@ -53,7 +53,7 @@ names <samp>build.xml</samp>. What should Ant do for us?</p>
 <li>clean up everything</li>
 </ul>
 So the buildfile contains three targets.
-<pre class="code">
+<pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;project name="MyTask" basedir="." default="jar"&gt;
 
@@ -77,7 +77,7 @@ rewrite that using <code>&lt;property&gt;</code>s. On second there are some hand
 requires that the destination directory exists; a call of <q>clean</q> with a non existing classes directory will
 fail; <q>jar</q> requires the execution of some steps before. So the refactored code is:
 
-<pre class="code">
+<pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;project name="MyTask" basedir="." default="jar"&gt;
 
@@ -106,20 +106,20 @@ properties [1]</a> of Ant.</p>
 
 <p>Now we write the simplest Task&mdash;a HelloWorld Task (what else?). Create a text file <samp>HelloWorld.java</samp>
 in the src-directory with:</p>
-<pre class="code">
+<pre>
 public class HelloWorld {
     public void execute() {
         System.out.println("Hello World");
     }
 }</pre>
-<p>and we can compile and jar it with <code>ant</code> (default target is <q>jar</q> and via its <var>depends</var>
+<p>and we can compile and jar it with <kbd>ant</kbd> (default target is <q>jar</q> and via its <var>depends</var>
 attribute the <q>compile</q> is executed before).</p>
 
 <h2 id="use1">Use the Task</h2>
 <p>But after creating the jar we want to use our new Task. Therefore we need a new target <q>use</q>. Before we can use
 our new task we have to declare it with <a href="Tasks/taskdef.html" target="_top"><code>&lt;taskdef&gt;</code>
 [2]</a>.  And for easier process we change the <var>default</var> attribute:</p>
-<pre class="code">
+<pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;project name="MyTask" basedir="." default="<b>use</b>"&gt;
 
@@ -135,7 +135,7 @@ our new task we have to declare it with <a href="Tasks/taskdef.html" target="_to
 <p>Important is the <var>classpath</var> attribute. Ant searches in its <samp>/lib</samp> directory for tasks and our
 task isn't there. So we have to provide the right location.</p>
 
-<p>Now we can type in <code>ant</code> and all should work ...</p>
+<p>Now we can type in <kbd>ant</kbd> and all should work ...</p>
 <pre class="output">
 Buildfile: build.xml
 
@@ -154,13 +154,14 @@ Total time: 3 seconds</pre>
 
 <h2 id="TaskAdapter">Integration with TaskAdapter</h2>
 <p>Our class has nothing to do with Ant. It extends no superclass and implements no interface. How does Ant know to
-integrate? Via name convention: our class provides a method with signature <code>public void execute()</code>. This
-class is wrapped by Ant's <code>org.apache.tools.ant.TaskAdapter</code> which is a task and uses reflection for setting
-a reference to the project and calling the <code>execute()</code> method.</p>
+integrate? Via name convention: our class provides a method with signature <code class="code">public void
+execute()</code>. This class is wrapped by Ant's <code class="code">org.apache.tools.ant.TaskAdapter</code> which is a
+task and uses reflection for setting a reference to the project and calling the <code class="code">execute()</code>
+method.</p>
 
 <p><em>Setting a reference to the project</em>? Could be interesting. The Project class gives us some nice abilities:
 access to Ant's logging facilities getting and setting properties and much more. So we try to use that class:</p>
-<pre class="code">
+<pre>
 import org.apache.tools.ant.Project;
 
 public class HelloWorld {
@@ -176,18 +177,18 @@ public class HelloWorld {
         project.log("Here is project '" + message + "'.", Project.MSG_INFO);
     }
 }</pre>
-<p>and the execution with <code>ant</code> will show us the expected</p>
+<p>and the execution with <kbd>ant</kbd> will show us the expected</p>
 <pre class="output">
 use:
 Here is project 'MyTask'.</pre>
 
 <h2 id="derivingFromTask">Deriving from Ant's Task</h2>
-<p>Ok, that works ... But usually you will extend <code>org.apache.tools.ant.Task</code>.  That class is integrated in
-Ant, gets the project reference, provides documentation fields, provides easier access to the logging facility and (very
-useful) gives you the exact location where <em>in the buildfile</em> this task instance is used.</p>
+<p>Ok, that works ... But usually you will extend <code class="code">org.apache.tools.ant.Task</code>.  That class is
+integrated in Ant, gets the project reference, provides documentation fields, provides easier access to the logging
+facility and (very useful) gives you the exact location where <em>in the buildfile</em> this task instance is used.</p>
 
 <p>Oki-doki&mdash;let's us use some of these:</p>
-<pre class="code">
+<pre>
 import org.apache.tools.ant.Task;
 
 public class HelloWorld extends Task {
@@ -209,23 +210,25 @@ use:
 [helloworld] I am used in: C:\tmp\anttests\MyFirstTask\build.xml:23:</pre>
 
 <h2 id="accessTaskProject">Accessing the Task's Project</h2>
-<p>The parent project of your custom task may be accessed through method <code>getProject()</code>.  However, do not
-call this from the custom task constructor, as the return value will be null.  Later, when node attributes or text are
-set, or method <code>execute()</code> is called, the Project object is available.</p>
+<p>The parent project of your custom task may be accessed through method <code class="code">getProject()</code>.
+However, do not call this from the custom task constructor, as the return value will be null.  Later, when node
+attributes or text are set, or method <code class="code">execute()</code> is called, the Project object is
+available.</p>
 <p>Here are two useful methods from class Project:</p>
 <ul>
-  <li><code>String getProperty(String propertyName)</code></li>
-  <li><code>String replaceProperties(String value)</code></li>
+  <li><code class="code">String getProperty(String propertyName)</code></li>
+  <li><code class="code">String replaceProperties(String value)</code></li>
 </ul>
 
-<p>The method <code>replaceProperties()</code> is discussed further in section <a href="#NestedText">Nested Text</a>.</p>
+<p>The method <code class="code">replaceProperties()</code> is discussed further in section <a href="#NestedText">Nested
+Text</a>.</p>
 
 <h2 id="attributes">Attributes</h2>
 <p>Now we want to specify the text of our message (it seems that we are rewriting the <code>&lt;echo/&gt;</code> task
-:-). First we well do that with an attribute.  It is very easy&mdash;for each attribute provide a <code>public void
-set<code>&lt;attributename&gt;</code>(<code>&lt;type&gt;</code> newValue)</code> method and Ant will do the rest via
-reflection.</p>
-<pre class="code">
+:-). First we well do that with an attribute.  It is very easy&mdash;for each attribute provide
+a <code class="code">public void set<i>Attributename</i>(<i>Type</i> newValue)</code> method and Ant will do the rest
+via reflection.</p>
+<pre>
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
@@ -244,14 +247,14 @@ public class HelloWorld extends Task {
     }
 
 }</pre>
-<p>Oh, what's that in <code>execute()</code>? Throw a <code>BuildException</code>? Yes, that's the usual way to show Ant
-that something important is missed and complete build should fail. The string provided there is written as
-build-fails-message. Here it's necessary because the <code>log()</code> method can't handle a <code>null</code> value as
-parameter and throws a NullPointerException.  (Of course you can initialize the <var>message</var> with a default
-string.)</p>
+<p>Oh, what's that in <code class="code">execute()</code>? Throw a <code>BuildException</code>? Yes, that's the usual
+way to show Ant that something important is missed and complete build should fail. The string provided there is written
+as build-fails-message. Here it's necessary because the <code class="code">log()</code> method can't handle
+a <code>null</code> value as parameter and throws a <code>NullPointerException</code>.  (Of course you can initialize
+the <var>message</var> with a default string.)</p>
 
 <p>After that we have to modify our buildfile:</p>
-<pre class="code">
+<pre>
     &lt;target name="use" description="Use the Task" depends="jar"&gt;
         &lt;taskdef name="helloworld"
                  classname="HelloWorld"
@@ -262,11 +265,12 @@ string.)</p>
 
 <p>Some background for working with attributes: Ant supports any of these datatypes as arguments of the set-method:</p>
 <ul>
-<li>primitive data types like <code>int</code>, <code>long</code>, ...</li>
-<li>their wrapper classes like <code>java.lang.Integer</code>, <code>java.lang.Long</code>, ...</li>
-<li><code>java.lang.String</code></li>
-<li>some other classes (e.g. <code>java.io.File</code>; see <a href="develop.html#set-magic">Manual 'Writing Your Own
-Task' [3]</a>)</li>
+<li>primitive data types like <code class="code">int</code>, <code class="code">long</code>, ...</li>
+<li>their wrapper classes like <code class="code">java.lang.Integer</code>, <code class="code">java.lang.Long</code>,
+...</li>
+<li><code class="code">java.lang.String</code></li>
+<li>some other classes (e.g. <code class="code">java.io.File</code>; see <a href="develop.html#set-magic">Manual
+'Writing Your Own Task' [3]</a>)</li>
 <li>Any Java Object parsed from Ant 1.8's <a href="Tasks/propertyhelper.html">Property
 Helper</a></li>
 </ul>
@@ -275,8 +279,9 @@ would not set the message string to <q>${msg}</q> if there is a property <code>m
 
 <h2 id="NestedText">Nested Text</h2>
 <p>Maybe you have used the <code>&lt;echo&gt;</code> task in a way like <code>&lt;echo&gt;Hello
-World&lt;/echo&gt;</code>.  For that you have to provide a <code>public void addText(String text)</code> method.</p>
-<pre class="code">
+World&lt;/echo&gt;</code>.  For that you have to provide a <code class="code">public void addText(String text)</code>
+method.</p>
+<pre>
 ...
 public class HelloWorld extends Task {
     private String message;
@@ -287,10 +292,11 @@ public class HelloWorld extends Task {
     ...
 }</pre>
 <p>But here properties are <strong>not</strong> resolved! For resolving properties we have to use
-Project's <code>replaceProperties(String propname)</code> method which takes the property name as argument and returns
-its value (or <code>${propname}</code> if not set).</p>
-<p>Thus, to replace properties in the nested node text, our method <code>addText()</code> can be written as:</p>
-<pre class="code">
+Project's <code class="code">replaceProperties(String propname)</code> method which takes the property name as argument
+and returns its value (or <code>${propname}</code> if not set).</p>
+<p>Thus, to replace properties in the nested node text, our method <code class="code">addText()</code> can be written
+as:</p>
+<pre>
     public void addText(String text) {
         message = getProject().replaceProperties(text);
     }</pre>
@@ -301,12 +307,13 @@ the <a href="develop.html#nested-elements">Manual [4]</a> for other.  We use the
 ways. There are several steps for that:</p>
 <ol>
 <li>We create a class for collecting all the info the nested element should contain.  This class is created by the same
-rules for attributes and nested elements as for the task (<code>set<i>attributename</i>()</code> methods).</li>
+rules for attributes and nested elements as for the task (<code class="code">set<i>Attributename</i>()</code>
+methods).</li>
 <li>The task holds multiple instances of this class in a list.</li>
 <li>A factory method instantiates an object, saves the reference in the list and returns it to Ant Core.</li>
-<li>The <code>execute()</code> method iterates over the list and evaluates its values.</li>
+<li>The <code class="code">execute()</code> method iterates over the list and evaluates its values.</li>
 </ol>
-<pre class="code">
+<pre>
 import java.util.ArrayList;
 import java.util.List;
 ...
@@ -335,9 +342,9 @@ import java.util.List;
     }
 ...</pre>
 <p>Then we can use the new nested element. But where is XML-name for that defined?  The mapping XML-name &rarr;
-classname is defined in the factory method: <code>public <i>classname</i> create<i>XML-name</i>()</code>. Therefore we
-write in the buildfile</p>
-<pre class="code">
+classname is defined in the factory method: <code class="code">public <i>classname</i>
+create<i>XML-name</i>()</code>. Therefore we write in the buildfile</p>
+<pre>
         &lt;helloworld&gt;
             &lt;message msg="Nested Element 1"/&gt;
             &lt;message msg="Nested Element 2"/&gt;
@@ -347,7 +354,7 @@ as <code>static</code></p>
 
 <h2 id="complex">Our task in a little more complex version</h2>
 <p>For recapitulation now a little refactored buildfile:</p>
-<pre class="code">
+<pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;project name="MyTask" basedir="." default="use"&gt;
 
@@ -418,7 +425,7 @@ as <code>static</code></p>
 
 &lt;/project&gt;</pre>
 <p>And the code of the task:</p>
-<pre class="code">
+<pre>
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import java.util.ArrayList;
@@ -438,7 +445,7 @@ public class HelloWorld extends Task {
         message = msg;
     }
 
-    /** Should the build fail? Defaults to <em>false</em>. As attribute. */
+    /** Should the build fail? Defaults to <i>false</i>. As attribute. */
     boolean fail = false;
     public void setFail(boolean b) {
         fail = b;
@@ -542,10 +549,10 @@ C:\tmp\anttests\MyFirstTask&gt;</pre>
 <h2 id="TestingTasks">Test the Task</h2>
 <p>We have written a test already: the <q>use.*</q> targets in the buildfile. But it's difficult to test that
 automatically. Commonly (and in Ant) JUnit is used for that. For testing tasks Ant provides a JUnit
-Rule <code>org.apache.tools.ant.BuildFileRule</code>.  This class provides some for testing tasks useful methods:
-initialize Ant, load a buildfile, execute targets, capture debug and run logs ...</p>
+Rule <code class="code">org.apache.tools.ant.BuildFileRule</code>.  This class provides some for testing tasks useful
+methods: initialize Ant, load a buildfile, execute targets, capture debug and run logs ...</p>
 
-<p>In Ant it is usual that the testcase has the same name as the task with a prepending <code>Test</code>, therefore we
+<p>In Ant it is usual that the testcase has the same name as the task with a prepended <code>Test</code>, therefore we
 will create a file <samp>HelloWorldTest.java</samp>. Because we have a very small project we can put this file
 into <samp>src</samp> directory (Ant's own testclasses are in <samp>/src/testcases/...</samp>). Because we have already
 written our tests for "hand-test" we can use that for automatic tests, too. All test supporting classes are a part of
@@ -554,7 +561,7 @@ jar file from source distro with target "test-jar".
 
 <p>For executing the test and creating a report we need the optional tasks <code>&lt;junit&gt;</code>
 and <code>&lt;junitreport&gt;</code>. So we add to the buildfile:</p>
-<pre class="code">
+<pre>
 <span style="color:gray">&lt;project name="MyTask" basedir="." </span>default="test"<span style="color:gray">&gt;</span>
 ...
     &lt;property name="ant.test.lib" value="ant-testutil.jar"/&gt;
@@ -613,11 +620,12 @@ and <code>&lt;junitreport&gt;</code>. So we add to the buildfile:</p>
 ...
 <span style="color:gray">&lt;/project&gt;</span></pre>
 
-<p>Back to the <samp>src/HelloWorldTest.java</samp>. We create a class with a public <code>BuildFileRule</code> field
-annotated with JUnit's <code>@Rule</code> annotation. As per conventional JUnit4 tests, this class should have no
-constructors, or a default no-args constructor, setup methods should be annotated with <code>@Before</code>, tear down
-methods annotated with <code>@After</code> and any test method annotated with <code>@Test</code>.
-<pre class="code">
+<p>Back to the <samp>src/HelloWorldTest.java</samp>. We create a class with a
+public <code class="code">BuildFileRule</code> field annotated with JUnit's <code class="code">@Rule</code>
+annotation. As per conventional JUnit4 tests, this class should have no constructors, nor a default no-args constructor,
+setup methods should be annotated with <code class="code">@Before</code>, tear down methods annotated
+with <code class="code">@After</code> and any test method annotated with <code class="code">@Test</code>.
+<pre>
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Assert;
 import org.junit.Test;
@@ -677,7 +685,7 @@ public class HelloWorldTest {
     }
 }</pre>
 
-<p>When starting <code>ant</code> we'll get a short message to STDOUT and a nice HTML report.</p>
+<p>When starting <kbd>ant</kbd> we'll get a short message to STDOUT and a nice HTML report.</p>
 <pre class="output">
 C:\tmp\anttests\MyFirstTask&gt;ant
 Buildfile: build.xml
@@ -709,19 +717,20 @@ C:\tmp\anttests\MyFirstTask&gt;</pre>
 
 <h2 id="Debugging">Debugging</h2>
 
-<p>Try running Ant with the flag <code>-verbose</code>.  For more information, try flag <code>-debug</code>.</p>
+<p>Try running Ant with the flag <kbd>-verbose</kbd>.  For more information, try flag <kbd>-debug</kbd>.</p>
 <p>For deeper issues, you may need to run the custom task code in a Java debugger.  First, get the source for Ant and
 build it with debugging information.</p>
 <p>Since Ant is a large project, it can be a little tricky to set the right breakpoints.  Here are two important
 breakpoints for version 1.8:</p>
 <ul>
-  <li>Initial <code>main()</code> function: <code>com.apache.tools.ant.launch.Launcher.main()</code></li>
-  <li>Task entry point: <code>com.apache.tools.ant.UnknownElement.execute()</code></li>
+  <li>Initial <code class="code">main()</code>
+  function: <code class="code">com.apache.tools.ant.launch.Launcher.main()</code></li>
+  <li>Task entry point: <code class="code">com.apache.tools.ant.UnknownElement.execute()</code></li>
 </ul>
 
-<p>If you need to debug when a task attribute or the text is set, begin by debugging into method <code>execute()</code>
-of your custom task.  Then set breakpoints in other methods.  This will ensure the class byte-code has been loaded by
-JVM.</p>
+<p>If you need to debug when a task attribute or the text is set, begin by debugging into
+method <code class="code">execute()</code> of your custom task.  Then set breakpoints in other methods.  This will
+ensure the class bytecode has been loaded by JVM.</p>
 
 <h2 id="resources">Resources</h2>
 <p>This tutorial and its resources are available via <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=22570"

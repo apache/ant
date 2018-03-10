@@ -111,14 +111,14 @@ named <samp>dir.links</samp></p>
 
 <p><strong>Java 1.2 and earlier</strong>: Due to limitations on executing system level commands in
 Java versions earlier than 1.3 this task may have difficulty operating with a relative path
-in <code>ANT_HOME</code>. The typical symptom is an IOException where Apache Ant can't
+in <code>ANT_HOME</code>. The typical symptom is an <code>IOException</code> where Apache Ant can't
 find <samp>/some/working/directory${ANT_HOME}/bin/antRun</samp> or something similar. The workaround
 is to change your <code>ANT_HOME</code> environment variable to an absolute path, which will remove
 the <samp>/some/working/directory</samp> portion of the above path and allow Ant to find the correct
 command line execution script.</p>
 
 <p><strong>Note</strong>: <em>Since Ant 1.10.2</em>, this task relies on the symbolic link support
-introduced in Java 7 through the <code>java.nio.file.Files</code> APIs</p>
+introduced in Java 7 through the <code class="code">java.nio.file.Files</code> APIs</p>
 
 </body>
 </html>

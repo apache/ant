@@ -29,23 +29,23 @@
 task and it's there for backwards compatibility reasons. Since this task will be removed in future
 versions, you are strongly encouraged to use <a href="javadoc.html">javadoc</a> instead.</em></p>
 <h3>Description</h3>
-<p>Generates code documentation using the <code>javadoc</code> tool.</p>
+<p>Generates code documentation using the <kbd>javadoc</kbd> tool.</p>
 <p>The source directory will be recursively scanned for Java source files to process but only those
 matching the inclusion rules, and not matching the exclusions rules will be passed to
-the <code>javadoc</code> tool. This allows wildcards to be used to choose between package names,
+the <kbd>javadoc</kbd> tool. This allows wildcards to be used to choose between package names,
 reducing verbosity and management costs over time. This task, however, has no notion of
 &quot;changed&quot; files, unlike the <a href="javac.html">javac</a> task. This means all packages
 will be processed each time this task is run. In general, however, this task is used much less
 frequently.</p>
-<p><strong>Note</strong>: since <code>javadoc</code>
-calls <code>System.exit()</code>, <code>javadoc</code> cannot be run inside the same JVM as Apache
-Ant without breaking functionality. For this reason, this task always forks JVM. This overhead is
-not significant since <code>javadoc</code> is normally a heavy application and will be called
-infrequently.</p>
+<p><strong>Note</strong>: since <kbd>javadoc</kbd>
+calls <code class="code">System.exit()</code>, <kbd>javadoc</kbd> cannot be run inside the same
+JVM as Apache Ant without breaking functionality. For this reason, this task always forks JVM. This
+overhead is not significant since <kbd>javadoc</kbd> is normally a heavy application and will be
+called infrequently.</p>
 <p><strong>Note</strong>: the <var>packagelist</var> attribute allows you to specify the list of
 packages to document outside of the Ant file. It's a much better practice to include everything
 inside the <code>build.xml</code> file. This option was added in order to make it easier to migrate
-from regular makefiles, where you would use this option of <code>javadoc</code>.  The packages
+from regular makefiles, where you would use this option of <kbd>javadoc</kbd>.  The packages
 listed in <var>packagelist</var> are not checked, so the task performs even if some packages are
 missing or broken. Use this option if you wish to convert from an existing makefile. Once things are
 running you should then switch to the regular notation.</p>
@@ -56,20 +56,22 @@ acceptable. JDKs &lt; 1.4 are no longer supported.  If you specify the <var>exec
 attribute it is up to you to ensure that this command supports the attributes you wish to use.</p>
 
 <p><strong>Note</strong>: When generating the JavaDocs for classes which contains annotations you
-maybe get a <code>java.lang.ClassCastException: com.sun.tools.javadoc.ClassDocImpl</code>.  This is
-due <a href="https://bugs.openjdk.java.net/browse/JDK-6442982" target="_top">bug-6442982</a>. The
-cause is that JavaDoc cannot find the implementations of used annotations.  The workaround is
-providing the jars with these implementations (like JAXBs <code>@XmlType</code>, ...)
-to <code>&lt;javadoc&gt;</code> using <var>classpath</var>, <var>classpathref</var> attributes or
+maybe get a <code class="output">java.lang.ClassCastException:
+com.sun.tools.javadoc.ClassDocImpl</code>.  This is
+due <a href="https://bugs.openjdk.java.net/browse/JDK-6442982" target="_top">bug 6442982</a>. The
+cause is that <kbd>javadoc</kbd> cannot find the implementations of used annotations.  The
+workaround is providing the jars with these implementations (like
+JAXBs <code class="code">@XmlType</code>, ...)  to <code>&lt;javadoc&gt;</code>
+using <var>classpath</var>, <var>classpathref</var> attributes or
 nested <code>&lt;classpath&gt;</code> element.</p>
 
-<p><strong>Note</strong>: many problems with running <code>javadoc</code> stem from command lines
+<p><strong>Note</strong>: many problems with running <kbd>javadoc</kbd> stem from command lines
 that have become too long&mdash;even though the error message doesn't give the slightest hint this
 may be the problem.  If you encounter problems with the task, try to set
 the <var>useexternalfile</var> attribute to <q>true</q> first.</p>
 
-<p>If you use multiple ways to specify where <code>javadoc</code> should be looking for sources,
-your result will be the union of all specified documentations.  If you, e.g., specify
+<p>If you use multiple ways to specify where <kbd>javadoc</kbd> should be looking for sources, your
+result will be the union of all specified documentations.  If you, e.g., specify
 a <var>sourcepath</var> attribute and also a nested <code>packageset</code> both pointing at the
 same directory your <var>excludepackagenames</var> attribute won't have any effect unless it agrees
 with the <var>exclude</var> patterns of the <code>packageset</code> (and vice versa).</p>
@@ -110,7 +112,7 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>maxmemory</td>
-    <td>Max amount of memory to allocate to the <code>javadoc</code> JVM</td>
+    <td>Max amount of memory to allocate to the <kbd>javadoc</kbd> JVM</td>
     <td>all</td>
     <td>No</td>
   </tr>
@@ -199,14 +201,14 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   <tr>
     <td>Old</td>
     <td>Generate output using JDK 1.1 emulating doclet.<br/><strong>Note</strong>: <em>Since Ant
-      1.8.0</em> this attribute has no effect because <code>javadoc</code> of Java 1.4 and later
-      does not support the <code>-1.1</code> switch anymore.</td>
+      1.8.0</em> this attribute has no effect because <kbd>javadoc</kbd> of Java 1.4 and later
+      does not support the <kbd>-1.1</kbd> switch anymore.</td>
     <td>1.2</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Verbose</td>
-    <td>Output messages about what Javadoc is doing</td>
+    <td>Output messages about what <kbd>javadoc</kbd> is doing</td>
     <td>all</td>
     <td>No</td>
   </tr>
@@ -375,24 +377,23 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>docletpath</td>
-    <td>Specifies the path to the doclet class file that is specified with the <code>-doclet</code>
+    <td>Specifies the path to the doclet class file that is specified with the <kbd>-doclet</kbd>
       option.</td>
     <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>docletpathref</td>
-    <td>Specifies the path to the doclet class file that is specified with the <code>-doclet</code>
-      option by <a href="../using.html#references">reference</a> to a PATH defined elsewhere.</td>
+    <td>Specifies the path to the doclet class file that is specified with the <kbd>-doclet</kbd>
+      option by <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
     <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>additionalparam</td>
-    <td>Lets you add additional parameters to the <code>javadoc</code> command line. Useful for
+    <td>Lets you add additional parameters to the <kbd>javadoc</kbd> command line. Useful for
       doclets. Parameters containing spaces need to be quoted using &amp;quot;&mdash;see also the
-      nested
-    <code>arg</code> element.</td>
+      nested <code>arg</code> element.</td>
     <td>all</td>
     <td>No</td>
   </tr>
@@ -404,7 +405,7 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>failonwarning</td>
-    <td>Stop the build process if a warning is emitted&mdash;i.e. if <code>javadoc</code>'s output
+    <td>Stop the build process if a warning is emitted&mdash;i.e. if <kbd>javadoc</kbd>'s output
       contains the word <q>warning</q>.  <em>since Ant 1.9.4</em></td>
     <td>all</td>
     <td>No</td>
@@ -434,8 +435,8 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>source</td>
-    <td>Enable <code>javadoc</code> to handle Java language features.  Set this to <q>1.4</q> to
-      document code that compiles using <code>javac -source 1.4</code>, etc.</td>
+    <td>Enable <kbd>javadoc</kbd> to handle Java language features.  Set this to <q>1.4</q> to
+      document code that compiles using <kbd>javac -source 1.4</kbd>, etc.</td>
     <td>1.4+</td>
     <td>No; default can be provided using the magic
     <a href="../javacprops.html#source"><code>ant.build.javac.source</code></a> property.</td>
@@ -454,7 +455,7 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>noqualifier</td>
-    <td>Enables the <code>-noqualifier</code> argument&mdash;must be <q>all</q> or a colon separated
+    <td>Enables the <kbd>-noqualifier</kbd> argument&mdash;must be <q>all</q> or a colon separated
       list of packages.  <em>since Ant 1.6</em>.</td>
     <td>1.4+</td>
     <td>No</td>
@@ -468,7 +469,7 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   </tr>
   <tr>
     <td>executable</td>
-    <td>Specify a particular <code>javadoc</code> executable to use in place of the default binary
+    <td>Specify a particular <kbd>javadoc</kbd> executable to use in place of the default binary
       (found in the same JDK as Ant is running in).  <em>since Ant 1.6.3</em>.</td>
     <td>all</td>
     <td>No</td>
@@ -514,7 +515,7 @@ recommended.</p>
 <h4>packageset</h4>
 
 <p>A <a href="../Types/dirset.html">DirSet</a>.  All matched directories that contain Java source
-files will be passed to <code>javadoc</code> as package names.  Package names are created from the
+files will be passed to <kbd>javadoc</kbd> as package names.  Package names are created from the
 directory names by translating the directory separator into dots.  Ant assumes the base directory of
 the <code>packageset</code> points to the root of a package hierarchy.</p>
 
@@ -524,14 +525,14 @@ attributes of the task have no effect on the nested <code>&lt;packageset&gt;</co
 <h4>fileset</h4>
 
 <p>A <a href="../Types/fileset.html">FileSet</a>.  All matched files will be passed
-to <code>javadoc</code> as source files.  Ant will automatically add the include
+to <kbd>javadoc</kbd> as source files.  Ant will automatically add the include
 pattern <samp>**/*.java</samp> (and <samp>**/package.html</samp>
 if <var>includenosourcepackages</var> is <q>true</q>) to these filesets.</p>
 
 <p>Nested filesets can be used to document sources that are in the default package or if you want to
 exclude certain files from documentation.  If you want to document all source files and don't use
 the default package, <code>packageset</code>s should be used instead as this increases performance
-of <code>javadoc</code>.</p>
+of <kbd>javadoc</kbd>.</p>
 
 <p>The <var>packagenames</var>, <var>excludepackagenames</var> and <var>defaultexcludes</var>
 attributes of the task have no effect on the nested <code>&lt;fileset&gt;</code> elements.</p>
@@ -602,7 +603,7 @@ and set it to <q>true</q>.</p>
 <p>Similar to <code>&lt;doctitle&gt;</code>.</p>
 
 <h4>link</h4>
-<p>Create link to <code>javadoc</code> output at the given URL. This performs the same role as
+<p>Create link to <kbd>javadoc</kbd> output at the given URL. This performs the same role as
 the <var>link</var> and <var>linkoffline</var> attributes. You can use either syntax (or both at
 once), but with the nested elements you can easily specify multiple occurrences of the
 arguments.</p>
@@ -642,7 +643,7 @@ arguments.</p>
     <td>If the <var>link</var> attribute is a relative file name, Ant will first try to locate the
       file relative to the current project's <var>basedir</var> and if it finds a file there use an
       absolute URL for the <var>link</var> attribute, otherwise it will pass the file name verbatim
-      to the <code>javadoc</code> command.</td>
+      to the <kbd>javadoc</kbd> command.</td>
     <td>No; default is <q>false</q></td>
   </tr>
 </table>
@@ -679,8 +680,8 @@ task.</p>
 <h4>doclet</h4>
 <p>The doclet nested element is used to specify
 the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/javadoc/doclet/overview.html"
-target="_top">doclet</a> that <code>javadoc</code> will use to process the input source files. A
-number of the standard <code>javadoc</code> arguments are actually arguments of the standard
+target="_top">doclet</a> that <kbd>javadoc</kbd> will use to process the input source files. A
+number of the standard <kbd>javadoc</kbd> arguments are actually arguments of the standard
 doclet. If these are specified in the <code>javadoc</code> task's attributes, they will be passed to
 the doclet specified in the <code>&lt;doclet&gt;</code> nested element. Such attributes should only
 be specified, therefore, if they can be interpreted by the doclet in use.</p>
@@ -721,7 +722,7 @@ those tags.</p>
     <td>description</td>
     <td>Description for tag (e.g. <q>To do:</q>)</td>
     <td>
-      No, the <code>javadoc</code> executable will pick a default if this is not specified
+      No, the <kbd>javadoc</kbd> executable will pick a default if this is not specified
     </td>
   </tr>
   <tr>
@@ -748,7 +749,7 @@ those tags.</p>
 todo:a:To Do</pre>
       <strong>Note</strong>: The Javadoc reference quide has double quotes around the description
       part of the definition. This will not work when used in a file, as the definition is quoted
-      again when given to the <code>javadoc</code> program.<br/>
+      again when given to the <kbd>javadoc</kbd> program.<br/>
       <strong>Note</strong>: If this attribute is specified, all the other attributes in this
       element will be ignored.</td>
     <td>No</td>

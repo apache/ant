@@ -260,9 +260,9 @@ can be a serious security hole.  Consider using variable substitution and includ
 the command line.  For example:</p>
 <pre>&lt;scp todir=&quot;${username}:${password}@host:/dir&quot; ...&gt;</pre>
 <p>Invoking Ant with the following command line:</p>
-<pre>ant -Dusername=me -Dpassword=mypassword target1 target2</pre>
-<p>Is slightly better, but the username/password is exposed to all users on an Unix system (via
-the <code>ps</code> command). The best approach is to use the <code>&lt;input&gt;</code> task and/or
+<pre class="input">ant -Dusername=me -Dpassword=mypassword target1 target2</pre>
+<p>is slightly better, but the username/password is exposed to all users on an Unix system (via
+the <kbd>ps</kbd> command). The best approach is to use the <code>&lt;input&gt;</code> task and/or
 retrieve the password from a (secured) <samp>.properties</samp> file.</p>
 
 <p><strong>Unix Note</strong>: File permissions are not retained when files are downloaded; they end

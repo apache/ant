@@ -26,8 +26,8 @@
 
 <h2 id="telnet">Telnet</h2>
 <h3>Description</h3>
-<q>Task to automate a remote telnet session. The task uses nested <code>&lt;read&gt;</code> to
-indicate strings to wait for, and <code>&lt;write&gt;</code> tags to specify text to send.</q>
+<p>Task to automate a remote telnet session. The task uses nested <code>&lt;read&gt;</code> to
+indicate strings to wait for, and <code>&lt;write&gt;</code> tags to specify text to send.</p>
 
 <p>If you do specify a userid and password, the system will assume a common Unix prompt to wait
 on. This behavior can be easily overridden.</p>
@@ -115,7 +115,7 @@ of <q>ogin:</q> for the userid, and a prompt of <q>assword:</q> for the password
 &lt;/telnet&gt;</pre>
 
 <p>A timeout can be specified at the <code>&lt;telnet&gt;</code> level or at
-the <code>&lt;read&gt;</code> level.  This will connect, issue a <code>sleep</code> command that is
+the <code>&lt;read&gt;</code> level.  This will connect, issue a <kbd>sleep</kbd> command that is
 suppressed from displaying and wait 10 seconds before quitting.</p>
 
 <pre>

@@ -45,7 +45,7 @@ loggers.</p>
 </ul>
 
 <p>These are used internally for various recording and housekeeping operations, however new
-listeners may registered on the command line through the <code>-listener</code> argument.</p>
+listeners may registered on the command line through the <kbd>-listener</kbd> argument.</p>
 
 <h3 id="Loggers">Loggers</h3>
 
@@ -53,8 +53,8 @@ listeners may registered on the command line through the <code>-listener</code> 
 
 <ul>
   <li>Receives a handle to the standard output and error print streams and therefore can log
-    information to the console or the <code>-logfile</code> specified file.</li>
-  <li>Logging level (<code>-quiet</code>, <code>-verbose</code>, <code>-debug</code>) aware</li>
+    information to the console or the <kbd>-logfile</kbd> specified file.</li>
+  <li>Logging level (<kbd>-quiet</kbd>, <kbd>-verbose</kbd>, <kbd>-debug</kbd>) aware</li>
   <li>Emacs-mode aware</li>
 </ul>
 
@@ -68,7 +68,7 @@ listeners may registered on the command line through the <code>-listener</code> 
   </tr>
   <tr>
     <td><code><a href="#DefaultLogger">org.apache.tools.ant.DefaultLogger</a></code></td>
-    <td>The logger used implicitly unless overridden with the <code>-logger</code> command-line
+    <td>The logger used implicitly unless overridden with the <kbd>-logger</kbd> command-line
       switch.</td>
     <td>BuildLogger</td>
   </tr>
@@ -127,12 +127,12 @@ listeners may registered on the command line through the <code>-listener</code> 
 <h3 id="DefaultLogger">DefaultLogger</h3>
 <p>Simply run Ant normally, or:</p>
 
-<pre>ant -logger org.apache.tools.ant.DefaultLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.DefaultLogger</pre>
 
 <h3 id="NoBannerLogger">NoBannerLogger</h3>
 <p>Removes output of empty target output.</p>
 
-<pre>ant -logger org.apache.tools.ant.NoBannerLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.NoBannerLogger</pre>
 
 <h3 id="MailLogger">MailLogger</h3>
 <p>The MailLogger captures all output logged through DefaultLogger (standard Ant output) and will
@@ -266,7 +266,7 @@ failure messages individually.</p>
   </tr>
 </table>
 
-<pre>ant -logger org.apache.tools.ant.listener.MailLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.listener.MailLogger</pre>
 
 <h3 id="AnsiColorLogger">AnsiColorLogger</h3>
 
@@ -275,13 +275,13 @@ code escape sequences to it.  It is just an extension of <a href="#DefaultLogger
 and hence provides all features that DefaultLogger does.</p>
 <p>AnsiColorLogger differentiates the output by assigning different colors depending upon the type
 of the message.</p>
-<p>If used with the <code>-logfile</code> option, the output file will contain all the necessary
+<p>If used with the <kbd>-logfile</kbd> option, the output file will contain all the necessary
 escape codes to display the text in colorized mode when displayed in the console using applications
 like <code>cat</code>, <code>more</code>, etc.</p>
-<p>This is designed to work on terminals that support ANSI color codes.  It works on XTerm, ETerm, Win9x Console (with
-ANSI.SYS loaded.), etc.</p>
+<p>This is designed to work on terminals that support ANSI color codes.  It works on XTerm, ETerm,
+Win9x Console (with <code>ANSI.SYS</code> loaded.), etc.</p>
 <p><strong>Note</strong>: It doesn't work on WinNT and successors, even when
-a <code>COMMAND.COM</code> console loaded with ANSI.SYS is used.</p>
+a <code>COMMAND.COM</code> console loaded with <code>ANSI.SYS<</code> is used.</p>
 <p>If the user wishes to override the default colors with custom ones, a file containing zero or
 more of the custom color key-value pairs must be created.  The recognized keys and their default
 values are shown below:</p>
@@ -294,11 +294,11 @@ AnsiColorLogger.DEBUG_COLOR=2;34</pre>
 <p>Each key takes as value a color combination defined as <q>Attribute;Foreground;Background</q>.
 In the above example, background value has not been used.</p>
 <p>This file must be specified as the value of a system variable
-named <code>ant.logger.defaults</code> and passed as an argument using the <code>-D</code> option to
-the <code>java</code> command that invokes the Ant application. An easy way to achieve this is to
-add <code>-Dant.logger.defaults=</code><samp>/path/to/your/file</samp> to the <code>ANT_OPTS</code>
-environment variable. Ant's launching script recognizes this flag and will pass it to
-the <code>java</code> command appropriately.</p>
+named <code>ant.logger.defaults</code> and passed as an argument using the <kbd>-D</kbd> option to
+the <kbd>java</kbd> command that invokes the Ant application. An easy way to achieve this is to
+add <kbd>-Dant.logger.defaults=</kbd><samp class="input">/path/to/your/file</samp> to
+the <code>ANT_OPTS</code> environment variable. Ant's launching script recognizes this flag and will
+pass it to the <kbd>java</kbd> command appropriately.</p>
 <p>Format:</p>
 <pre>
 AnsiColorLogger.*=Attribute;Foreground;Background
@@ -332,7 +332,7 @@ Background is one of the following:
 46 &rarr; Cyan
 47 &rarr; White</pre>
 
-<pre>ant -logger org.apache.tools.ant.listener.AnsiColorLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.listener.AnsiColorLogger</pre>
 
 <h3 id="Log4jListener">Log4jListener</h3>
 <p><em><u>Deprecated</u></em>: Apache Log4j (1) is not developed any more. Last release is 1.2.17
@@ -340,8 +340,8 @@ from 26 May 2012 and contains vulnerability issues.</p>
 <p>Passes build events to Log4j, using the full classname's of the generator of each build event as
 the category:</p>
 <ul>
-  <li>build started / build finished&mdash;<code>org.apache.tools.ant.Project</code></li>
-  <li>target started / target finished&mdash;<code>org.apache.tools.ant.Target</code></li>
+  <li>build started / build finished&mdash;<code class="code">org.apache.tools.ant.Project</code></li>
+  <li>target started / target finished&mdash;<code class="code">org.apache.tools.ant.Target</code></li>
   <li>task started / task finished&mdash;the fully qualified classname of the task</li>
   <li>message logged&mdash;the classname of one of the above, so if a task logs a message, its
     classname is the category used, and so on.</li>
@@ -350,13 +350,13 @@ the category:</p>
 on whether the build failed during that stage. Message events are logged according to their Ant
 logging level, mapping directly to a corresponding Log4j level.</p>
 
-<pre>ant -listener org.apache.tools.ant.listener.Log4jListener</pre>
+<pre class="input">ant -listener org.apache.tools.ant.listener.Log4jListener</pre>
 
 <p>To use Log4j you will need the Log4j JAR file and a <samp>log4j.properties</samp> configuration
 file.  Both should be placed somewhere in your Ant classpath. If the <samp>log4j.properties</samp>
-is in your project root folder you can add this with <code>-lib</code> option:</p>
+is in your project root folder you can add this with <kbd>-lib</kbd> option:</p>
 
-<pre>ant -listener org.apache.tools.ant.listener.Log4jListener -lib .</pre>
+<pre class="input">ant -listener org.apache.tools.ant.listener.Log4jListener -lib .</pre>
 
 <p>If, for example, you wanted to capture the same information output to the console by the
 DefaultLogger and send it to a file named <samp>build.log</samp>, you could use the following
@@ -387,7 +387,7 @@ want to use the Log4j 2.x runtime.  For using the bridge with Ant you have to ad
   <li><samp>log4j-core-${log4j.version}.jar</samp></li>
   <li><samp>log4j2.xml</samp></li>
 </ul>
-<p>to your classpath, e.g. via the <code>-lib</code> option.  (For using the bridge, Ant
+<p>to your classpath, e.g. via the <kbd>-lib</kbd> option.  (For using the bridge, Ant
 1.9.10/1.10.2 or higher is required.)  Translating the 1.x properties file into the 2.x XML syntax
 would result in</p>
 <pre>
@@ -414,7 +414,7 @@ would result in</p>
 <h3 id="XmlLogger">XmlLogger</h3>
 <p>Writes all build information out to an XML file named <samp>log.xml</samp>, or the value of
 the <code>XmlLogger.file</code> property if present, when used as a listener. When used as a logger,
-it writes all output to either the console or to the value of <code>-logfile</code>. Whether used as
+it writes all output to either the console or to the value of <kbd>-logfile</kbd>. Whether used as
 a listener or logger, the output is not generated until the build is complete, as it buffers the
 information in order to provide timing information for task, targets, and the project.</p>
 <p>By default the XML file creates a reference to an XSLT file <samp>log.xsl</samp> in the current
@@ -423,16 +423,16 @@ property <code>ant.XmlLogger.stylesheet.uri</code> to provide a URI to a style s
 relative or absolute file path, or an HTTP URL. If you set the property to the empty
 string, <q></q>, no XSLT transform is declared at all.</p>
 
-<pre>ant -listener org.apache.tools.ant.XmlLogger
+<pre class="input">ant -listener org.apache.tools.ant.XmlLogger
 ant -logger org.apache.tools.ant.XmlLogger -verbose -logfile build_log.xml</pre>
 
 <h3 id="TimestampedLogger">TimestampedLogger</h3>
 <p>Acts like the default logger, except that the final success/failure message also includes the
 time that the build completed. For example:</p>
-<pre>BUILD SUCCESSFUL - at 16/08/05 16:24</pre>
+<pre class="output">BUILD SUCCESSFUL - at 16/08/05 16:24</pre>
 <p>To use this listener, use the command:</p>
 
-<pre>ant  -logger org.apache.tools.ant.listener.TimestampedLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.listener.TimestampedLogger</pre>
 
 <h3 id="BigProjectLogger">BigProjectLogger</h3>
 <p>This logger is designed to make examining the logs of a big build easier, especially those run
@@ -447,7 +447,7 @@ under continuous integration tools. It</p>
 <p>This is useful when using <code>&lt;subant&gt;</code> to build a large project from many smaller
 projects&mdash;the output shows which particular project is building. Here is an example in which
 "clean" is being called on all a number of child projects, only some of which perform work:</p>
-<pre>
+<pre class="output">
 ======================================================================
 Entering project "xunit"
 In /home/ant/components/xunit
@@ -474,13 +474,13 @@ Exiting project "junit"
 testing many child components, the messages are reduced to becoming clear delimiters of where
 different projects are in charge&mdash;or, more importantly, which project is failing.</p>
 <p>To use this listener, use the command:</p>
-<pre>ant -logger org.apache.tools.ant.listener.BigProjectLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.listener.BigProjectLogger</pre>
 
 <h3 id="SimpleBigProjectLogger">SimpleBigProjectLogger</h3>
 <p><em>Since Ant 1.8.1</em></p>
 <p>Like <code>BigProjectLogger</code>, project-qualified target names are printed, useful for big
 builds with subprojects. Otherwise it is as quiet as <code>NoBannerLogger</code>:</p>
-<pre>
+<pre class="output">
 Buildfile: /sources/myapp/build.xml
 
 myapp-lib.compile:
@@ -500,7 +500,7 @@ Building jar: /sources/myapp/build/myapp.jar
 BUILD SUCCESSFUL
 Total time: 1 second</pre>
 <p>To use this listener, use the command:</p>
-<pre>ant -logger org.apache.tools.ant.listener.SimpleBigProjectLogger</pre>
+<pre class="input">ant -logger org.apache.tools.ant.listener.SimpleBigProjectLogger</pre>
 
 <h3 id="ProfileLogger">ProfileLogger</h3>
 <!-- This is the 'since' as described in the Loggers JavaDoc -->
@@ -522,9 +522,9 @@ Having that buildfile
         &lt;echo&gt;another-echo-task&lt;/echo&gt;
     &lt;/target&gt;
 &lt;/project&gt;</pre>
-<p>and executing with <code>ant -logger org.apache.tools.ant.listener.ProfileLogger
-anotherTarget</code> gives that output (with other timestamps and duration of course ;-):</p>
-<pre>
+<p>and executing with <kbd>ant -logger org.apache.tools.ant.listener.ProfileLogger
+anotherTarget</kbd> gives that output (with other timestamps and duration of course ;-):</p>
+<pre class="output">
 Buildfile: ...\build.xml
 
 Target aTarget: started Thu Jan 22 09:01:00 CET 2009
@@ -562,23 +562,23 @@ Total time: 2 seconds</pre>
 <ul>
   <li>
     A listener or logger should not write to standard output or error in
-    the <code>messageLogged()</code> method; Ant captures these internally and it will trigger an
-    infinite loop.
+    the <code class="code">messageLogged()</code> method; Ant captures these internally and it will
+    trigger an infinite loop.
   </li>
   <li>
     Logging is synchronous; all listeners and loggers are called one after the other, with the build
     blocking until the output is processed. Slow logging means a slow build.
   </li>
-  <li>When a build is started, and <code>BuildListener.buildStarted(BuildEvent event)</code> is
-    called, the project is not fully functional. The build has started, yes, and
-    the <code>event.getProject()</code> method call returns the Project instance, but that project
-    is initialized with JVM and Ant properties, nor has it parsed the build file yet. You cannot
-    call <code>Project.getProperty()</code> for property lookup, or
-    <code>Project.getName()</code> to get the project name (it will return null).
+  <li>When a build is started, and <code class="code">BuildListener.buildStarted(BuildEvent
+    event)</code> is called, the project is not fully functional. The build has started, yes, and
+    the <code class="code">event.getProject()</code> method call returns the Project instance, but
+    that project is initialized with JVM and Ant properties, nor has it parsed the build file
+    yet. You cannot call <code class="code">Project.getProperty()</code> for property lookup, or
+    <code class="code">Project.getName()</code> to get the project name (it will return null).
   </li>
   <li>
-    Classes that implement <code>org.apache.tools.ant.SubBuildListener</code> receive notifications
-    when child projects start and stop.
+    Classes that implement <code class="code">org.apache.tools.ant.SubBuildListener</code> receive
+    notifications when child projects start and stop.
   </li>
 </ul>
 

@@ -184,17 +184,17 @@
     <h3>Mixing Elements from Different Namespaces</h3>
 
     <p>
-      Now comes the difficult part: elements from different namespaces can be woven together
-      under certain circumstances. This has a lot to do with the Ant
-      1.6 <a href="../develop.html#nestedtype">add type introspection rules</a>: Ant types and
-      tasks are now free to accept arbitrary named types as nested elements, as long as the
-      concrete type implements the interface expected by the task/type. The most obvious example
-      for this is the <code>&lt;condition&gt;</code> task, which supports various nested
-      conditions, all of which extend the interface <code>Condition</code>. To integrate a
-      custom condition in Ant, you can now simply <code>&lt;typedef&gt;</code> the condition,
-      and then use it anywhere nested conditions are allowed (assuming the containing element
-      has a generic <code>add(Condition)</code> or <code>addConfigured(Condition)</code>
-      method):
+      Now comes the difficult part: elements from different namespaces can be woven together under
+      certain circumstances. This has a lot to do with the Ant
+      1.6 <a href="../develop.html#nestedtype">add type introspection rules</a>: Ant types and tasks
+      are now free to accept arbitrary named types as nested elements, as long as the concrete type
+      implements the interface expected by the task/type. The most obvious example for this is
+      the <code>&lt;condition&gt;</code> task, which supports various nested conditions, all of
+      which extend the interface <code class="code">Condition</code>. To integrate a custom
+      condition in Ant, you can now simply <code>&lt;typedef&gt;</code> the condition, and then use
+      it anywhere nested conditions are allowed (assuming the containing element has a
+      generic <code class="code">add(Condition)</code>
+      or <code class="code">addConfigured(Condition)</code> method):
     </p>
     <pre>
 &lt;typedef resource="org/example/conditions.properties" uri="<a href="http://example.org/conditions">http://example.org/conditions</a>"/&gt;

@@ -494,18 +494,18 @@ versions</h3>
 </table>
 
 <p id="footnote-1"><a href="#footnote-1-back"><strong>Note</strong></a>: When running JJTree with
-the Ant <code>taskdef jjtree</code> the option <code>-OUTPUT_DIRECTORY</code> must always be set,
+the Ant <code>taskdef jjtree</code> the option <kbd>-OUTPUT_DIRECTORY</kbd> must always be set,
 because the project's <var>basedir</var> and the Ant working directory might differ. So even if you
 don't specify the <var>outputdirectory</var> for <code>taskdef jjtree</code>, JJTree will be called
-with the <code>-OUTPUT_DIRECTORY</code> set to the project's <var>basedir</var>.  But when
-the <code>-OUTPUT_DIRECTORY</code> is set, the <code>-OUTPUT_FILE</code> setting is handled as if
-relative to this <code>-OUTPUT_DIRECTORY</code>. Thus when the <code>-OUTPUT_FILE</code> is absolute
+with the <kbd>-OUTPUT_DIRECTORY</kbd> set to the project's <var>basedir</var>.  But when
+the <kbd>-OUTPUT_DIRECTORY</kbd> is set, the <kbd>-OUTPUT_FILE</kbd> setting is handled as if
+relative to this <kbd>-OUTPUT_DIRECTORY</kbd>. Thus when the <kbd>-OUTPUT_FILE</kbd> is absolute
 or contains a drive letter we have a problem.  Therefore absolute <var>outputfile</var>s (when
 the <var>outputdirectory</var> isn't specified) are made relative to the default directory.  And for
 this reason <var>outputfile</var>s that contain a drive letter can't be supported.</p>
 
-<p>By the way: specifying a drive letter in the <code>-OUTPUT_FILE</code> when
-the <code>-OUTPUT_DIRECTORY</code> is set, also results in strange behavior when running JJTree from
+<p>By the way: specifying a drive letter in the <kbd>-OUTPUT_FILE</kbd> when
+the <kbd>-OUTPUT_DIRECTORY</kbd> is set, also results in strange behavior when running JJTree from
 the command line.</p>
 
 </body>

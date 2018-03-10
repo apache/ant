@@ -28,25 +28,25 @@
 <h2 id="writingowntask">Writing Your Own Task</h2>
 <p>It is very easy to write your own task:</p>
 <ol>
-  <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>
+  <li>Create a Java class that extends <code class="code">org.apache.tools.ant.Task</code>
     or <a href="base_task_classes.html">another class</a> that was designed to be extended.</li>
 
   <li id="footnote-1-back">For each attribute, write a <em>setter</em> method. The setter method
     must be a <code>public void</code> method that takes a single argument. The name of the method
     must begin with <code>set</code>, followed by the attribute name, with the first character of
-    the name in uppercase, and the rest in lowercase<a href="#footnote-1"><sup>*</sup></a>.  That
-    is, to support an attribute named <code>file</code> you create a method <code>setFile</code>.
-    Depending on the type of the argument, Ant will perform some conversions for you,
-    see <a href="#set-magic">below</a>.</li>
+    the name in uppercase, and the rest in lowercase<a href="#footnote-1">*</a>.  That
+    is, to support an attribute named <code>file</code> you create a
+    method <code class="code">setFile</code>.  Depending on the type of the argument, Ant will
+    perform some conversions for you, see <a href="#set-magic">below</a>.</li>
 
   <li>If your task shall contain other tasks as nested elements
     (like <a href="Tasks/parallel.html"><code>parallel</code></a>), your class must implement the
-    interface <code>org.apache.tools.ant.TaskContainer</code>.  If you do so, your task can not
-    support any other nested elements.  See <a href="#taskcontainer">below</a>.</li>
+    interface <code class="code">org.apache.tools.ant.TaskContainer</code>.  If you do so, your task
+    can not support any other nested elements.  See <a href="#taskcontainer">below</a>.</li>
 
   <li>If the task should support character data (text nested between the start and end tags), write
-    a <code>public void addText(String)</code> method.  Note that Ant does <strong>not</strong>
-    expand properties on the text it passes to the task.</li>
+    a <code class="code">public void addText(String)</code> method.  Note that Ant
+    does <strong>not</strong> expand properties on the text it passes to the task.</li>
 
   <li>For each nested element, write a <em>create</em>, <em>add</em> or <em>addConfigured</em>
   method.  A create method must be a <code>public</code> method that takes no arguments and returns
@@ -57,7 +57,7 @@
   (<code>addConfigured</code>), followed by the element name.  For a more complete discussion
   see <a href="#nested-elements">below</a>.</li>
 
-  <li>Write a <code>public void execute</code> method, with no arguments, that throws
+  <li>Write a <code class="code">public void execute()</code> method, with no arguments, that throws
     a <code>BuildException</code>. This method implements the task itself.</li>
 </ol>
 
@@ -68,13 +68,14 @@ one doesn't really matter to Ant, using all lower case is a good convention, tho
 <h3>The Life-cycle of a Task</h3>
 <ol>
   <li>The xml element that contains the tag corresponding to the task gets converted to
-    an <code>UnknownElement</code> at parse time.  This <code>UnknownElement</code> gets placed in a
-    list within a target object, or recursively within another <code>UnknownElement</code>.
+    an <code class="code">UnknownElement</code> at parse time.
+    This <code class="code">UnknownElement</code> gets placed in a list within a target object, or
+    recursively within another <code class="code">UnknownElement</code>.
   </li>
 
-  <li>When the target is executed, each <code>UnknownElement</code> is invoked using
-    an <code>perform()</code> method. This instantiates the task. This means that tasks only gets
-    instantiated at run time.
+  <li>When the target is executed, each <code class="code">UnknownElement</code> is invoked using
+    an <code class="code">perform()</code> method. This instantiates the task. This means that tasks
+    only gets instantiated at run time.
   </li>
 
   <li>The task gets references to its project and location inside the buildfile via its
@@ -86,29 +87,29 @@ one doesn't really matter to Ant, using all lower case is a good convention, tho
   <li>The task gets a reference to the target it belongs to via its inherited <code>target</code>
     variable.</li>
 
-  <li><code>init()</code> is called at run time.</li>
+  <li><code class="code">init()</code> is called at run time.</li>
 
   <li>All child elements of the XML element corresponding to this task are created via this
-    task's <code>createXXX()</code> methods or instantiated and added to this task via
-    its <code>addXXX()</code> methods, at run time.  Child elements corresponding
-    to <code>addConfiguredXXX()</code> are created at this point but the
-    actual <code>addConfigured</code> method is not called.</li>
+    task's <code class="code">createXXX()</code> methods or instantiated and added to this task via
+    its <code class="code">addXXX()</code> methods, at run time.  Child elements corresponding
+    to <code class="code">addConfiguredXXX()</code> are created at this point but the
+    actual <em>addConfigured</em> method is not called.</li>
 
-  <li>All attributes of this task get set via their corresponding <code>setXXX</code> methods, at
-    runtime.</li>
-
-  <li>The content character data sections inside the XML element corresponding to this task is added
-    to the task via its <code>addText</code> method, at runtime.</li>
-
-  <li>All attributes of all child elements get set via their corresponding <code>setXXX</code>
+  <li>All attributes of this task get set via their corresponding <code class="code">setXXX()</code>
     methods, at runtime.</li>
 
-  <li>If child elements of the XML element corresponding to this task have been created
-    for <code>addConfiguredXXX()</code> methods, those methods get invoked now.</li>
+  <li>The content character data sections inside the XML element corresponding to this task is added
+    to the task via its <code class="code">addText()</code> method, at runtime.</li>
 
-  <li id="execute"><code>execute()</code> is called at runtime.  If <q>target1</q>
-    and <q>target2</q> both depend on <q>target3</q>, then running <code>'ant target1
-    target2'</code> will run all tasks in <q>target3</q> twice.</li>
+  <li>All attributes of all child elements get set via their
+    corresponding <code class="code">setXXX()</code> methods, at runtime.</li>
+
+  <li>If child elements of the XML element corresponding to this task have been created
+    for <code class="code">addConfiguredXXX()</code> methods, those methods get invoked now.</li>
+
+  <li id="execute"><code class="code">execute()</code> is called at runtime.  If <q>target1</q>
+    and <q>target2</q> both depend on <q>target3</q>, then running <kbd>ant target1 target2</kbd>
+    will run all tasks in <q>target3</q> twice.</li>
 </ol>
 
 <h3 id="set-magic">Conversions Ant will perform for attributes</h3>
@@ -120,93 +121,98 @@ string containing a single property reference. These will be assigned directly v
 matching type. Since it requires some beyond-the-basics intervention to enable this behavior, it may
 be a good idea to flag attributes intended to permit this usage paradigm.</p>
 
-<p>The most common way to write an attribute setter is to use a <code>java.lang.String</code>
-argument.  In this case Ant will pass the literal value (after property expansion) to your task.
-But there is more!  If the argument of you setter method is</p>
+<p>The most common way to write an attribute setter is to use
+a <code class="code">java.lang.String</code> argument.  In this case Ant will pass the literal value
+(after property expansion) to your task.  But there is more!  If the argument of you setter method
+is</p>
 
 <ul>
-  <li><code>boolean</code>, your method will be passed the value <code>true</code> if the value
-    specified in the build file is one of <code>true</code>, <code>yes</code>, or <code>on</code>
-    and <code>false</code> otherwise.</li>
+  <li><code>boolean</code>, your method will be passed the value <q>true</q> if the value specified
+    in the build file is one of <q>true</q>, <q>yes</q>, or <q>on</q> and <q>false</q>
+    otherwise.</li>
 
-  <li><code>char</code> or <code>java.lang.Character</code>, your method will be passed the first
-    character of the value specified in the build file.</li>
+  <li><code>char</code> or <code class="code">java.lang.Character</code>, your method will be passed
+    the first character of the value specified in the build file.</li>
 
-  <li>any other primitive type (<code>int</code>, <code>short</code> and so on), Ant will convert
-    the value of the attribute into this type, thus making sure that you'll never receive input that
-    is not a number for that attribute.</li>
+  <li>any other primitive type (<code class="code">int</code>, <code class="code">short</code> and
+    so on), Ant will convert the value of the attribute into this type, thus making sure that you'll
+    never receive input that is not a number for that attribute.</li>
 
-  <li><code>java.io.File</code>, Ant will first determine whether the value given in the build file
-    represents an absolute path name.  If not, Ant will interpret the value as a path name relative
-    to the project's basedir.</li>
+  <li><code class="code">java.io.File</code>, Ant will first determine whether the value given in
+    the build file represents an absolute path name.  If not, Ant will interpret the value as a path
+    name relative to the project's <var>basedir</var>.</li>
 
-  <li><code>org.apache.tools.ant.types.Resource</code>, Ant will resolve the string as
-    a <code>java.io.File</code> as above, then pass in as
-    a <code>org.apache.tools.ant.types.resources.FileResource</code>.  <em>Since Ant 1.8</em></li>
+  <li><code class="code">org.apache.tools.ant.types.Resource</code>, Ant will resolve the string as
+    a <code class="code">java.io.File</code> as above, then pass in as
+    a <code class="code">org.apache.tools.ant.types.resources.FileResource</code>.  <em>Since Ant
+    1.8</em></li>
 
-  <li><code>org.apache.tools.ant.types.Path</code>, Ant will tokenize the value specified in the
-    build file, accepting <q>:</q> and <q>;</q> as path separators.  Relative path names will be
-    interpreted as relative to the project's <var>basedir</var>.</li>
+  <li><code class="code">org.apache.tools.ant.types.Path</code>, Ant will tokenize the value
+    specified in the build file, accepting <q>:</q> and <q>;</q> as path separators.  Relative path
+    names will be interpreted as relative to the project's <var>basedir</var>.</li>
 
-  <li><code>java.lang.Class</code>, Ant will interpret the value given in the build file as a Java
-    class name and load the named class from the system class loader.</li>
+  <li><code class="code">java.lang.Class</code>, Ant will interpret the value given in the build
+    file as a Java class name and load the named class from the system class loader.</li>
 
-  <li>any other type that has a constructor with a single <code>String</code> argument, Ant will use
-    this constructor to create a new instance from the value given in the build file.</li>
+  <li>any other type that has a constructor with a single <code class="code">String</code> argument,
+    Ant will use this constructor to create a new instance from the value given in the build
+    file.</li>
 
-  <li>A subclass of <code>org.apache.tools.ant.types.EnumeratedAttribute</code>, Ant will invoke
-    this classes <code>setValue</code> method.  Use this if your task should support enumerated
-    attributes (attributes with values that must be part of a predefined set of values).
-    See <code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> and the
-    inner <code>AddAsisRemove</code> class used in <code>setCr</code> for an example.</li>
+  <li>A subclass of <code class="code">org.apache.tools.ant.types.EnumeratedAttribute</code>, Ant
+    will invoke this class's <code class="code">setValue</code> method.  Use this if your task
+    should support enumerated attributes (attributes with values that must be part of a predefined
+    set of values).  See <code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> and the
+    inner <code class="code">AddAsisRemove</code> class used in <code class="code">setCr</code> for
+    an example.</li>
 
   <li>A (Java 5) enumeration, Ant will call the setter with the enum constant matching the value
-    given in the build file. This is easier than using <code>EnumeratedAttribute</code> and can
-    result in cleaner code, but of course your task will not run on JDK 1.4 or earlier. Note that
-    any override of <code>toString()</code> in the enumeration is ignored; the build file must use
-    the declared name (see <code>Enum.getName()</code>). You may wish to use lowercase enum constant
-    names, in contrast to usual Java style, to look better in build files.  <em>Since Ant
-    1.7.0</em></li>
+    given in the build file. This is easier than using <code class="code">EnumeratedAttribute</code>
+    and can result in cleaner code, but of course your task will not run on JDK 1.4 or earlier. Note
+    that any override of <code class="code">toString()</code> in the enumeration is ignored; the
+    build file must use the declared name (see <code>Enum.getName()</code>). You may wish to use
+    lowercase enum constant names, in contrast to usual Java style, to look better in build
+    files.  <em>Since Ant 1.7.0</em></li>
 </ul>
 
 <p>What happens if more than one setter method is present for a given attribute?  A method taking
-a <code>String</code> argument will always lose against the more specific methods.  If there are
-still more setters Ant could chose from, only one of them will be called, but we don't know which,
-this depends on the implementation of your Java virtual machine.</p>
+a <code class="code">String</code> argument will always lose against the more specific methods.  If
+there are still more setters Ant could chose from, only one of them will be called, but we don't
+know which, this depends on the implementation of your Java virtual machine.</p>
 
 <h3 id="nested-elements">Supporting nested elements</h3>
 
 <p>Let's assume your task shall support nested elements with the name <code>inner</code>.  First of
 all, you need a class that represents this nested element.  Often you simply want to use one of
-Ant's classes like <code>org.apache.tools.ant.types.FileSet</code> to support
+Ant's classes like <code class="code">org.apache.tools.ant.types.FileSet</code> to support
 nested <code>fileset</code> elements.</p>
 
 <p>Attributes of the nested elements or nested child elements of them will be handled using the same
-mechanism used for tasks (i.e. setter methods for attributes, addText for nested text and
-create/add/addConfigured methods for child elements).</p>
+mechanism used for tasks (i.e. <em>setter</em> methods for
+attributes, <code class="code">addText()</code> for nested text
+and <em>create</em>/<em>add</em>/<em>addConfigured</em> methods for child elements).</p>
 
-<p>Now you have a class <code>NestedElement</code> that is supposed to be used for your
+<p>Now you have a class <code class="code">NestedElement</code> that is supposed to be used for your
 nested <code>&lt;inner&gt;</code> elements, you have three options:</p>
 
 <ol>
-  <li><code>public NestedElement createInner()</code></li>
-  <li><code>public void addInner(NestedElement anInner)</code></li>
-  <li><code>public void addConfiguredInner(NestedElement anInner)</code></li>
+  <li><code class="code">public NestedElement createInner()</code></li>
+  <li><code class="code">public void addInner(NestedElement anInner)</code></li>
+  <li><code class="code">public void addConfiguredInner(NestedElement anInner)</code></li>
 </ol>
 
 <p>What is the difference?</p>
 
-<p>Option 1 makes the task create the instance of <code>NestedElement</code>, there are no
-restrictions on the type.  For the options 2 and 3, Ant has to create an instance
-of <code>NestedInner</code> before it can pass it to the task, this means, <code>NestedInner</code>
-must have a <code>public</code> no-arg constructor or a <code>public</code> one-arg constructor
-taking a <code>Project</code> class as a parameter.  This is the only difference between options 1
-and 2.</p>
+<p>Option 1 makes the task create the instance of <code class="code">NestedElement</code>, there are
+no restrictions on the type.  For the options 2 and 3, Ant has to create an instance
+of <code class="code">NestedInner</code> before it can pass it to the task, this
+means, <code class="code">NestedInner</code> must have a <code>public</code> no-arg constructor or
+a <code>public</code> one-arg constructor taking a <code class="code">Project</code> class as a
+parameter.  This is the only difference between options 1 and 2.</p>
 
 <p>The difference between 2 and 3 is what Ant has done to the object before it passes it to the
-method.  <code>addInner</code> will receive an object directly after the constructor has been
-called, while <code>addConfiguredInner</code> gets the object <em>after</em> the attributes and
-nested children for this new object have been handled.</p>
+method.  <code class="code">addInner()</code> will receive an object directly after the constructor
+has been called, while <code class="code">addConfiguredInner()</code> gets the object <em>after</em>
+the attributes and nested children for this new object have been handled.</p>
 
 <p>What happens if you use more than one of the options?  Only one of the methods will be called,
 but we don't know which, this depends on the implementation of your JVM.</p>
@@ -215,12 +221,13 @@ but we don't know which, this depends on the implementation of your JVM.</p>
 <p>If your task needs to nest an arbitrary type that has been defined
 using <code>&lt;typedef&gt;</code> you have two options.</p>
 <ol>
-  <li><code>public void add(Type type)</code></li>
-  <li><code>public void addConfigured(Type type)</code></li>
+  <li><code class="code">public void add(Type type)</code></li>
+  <li><code class="code">public void addConfigured(Type type)</code></li>
 </ol>
 <p>The difference between 1 and 2 is the same as between 2 and 3 in the previous section.</p>
 <p>For example suppose one wanted to handle objects object of
-type <code>org.apache.tools.ant.taskdefs.condition.Condition</code>, one may have a class:</p>
+type <code class="code">org.apache.tools.ant.taskdefs.condition.Condition</code>, one may have a
+class:</p>
 <pre>
 public class MyTask extends Task {
     private List conditions = new ArrayList();
@@ -270,8 +277,8 @@ public class Sample {
     }
 }</pre>
 <p>This class defines a number of static classes that
-implement/extend <code>Path</code>, <code>MyFileSelector</code> and <code>MyInterface</code>. These
-may be defined and used as follows:</p>
+implement/extend <code class="code">Path</code>, <code class="code">MyFileSelector</code>
+and <code class="code">MyInterface</code>. These may be defined and used as follows:</p>
 <pre>
 &lt;typedef name="myfileselector" classname="Sample$MyFileSelector"
          classpath="classes" loaderref="classes"/&gt;
@@ -292,17 +299,19 @@ may be defined and used as follows:</p>
 
 <h3 id="taskcontainer">TaskContainer</h3>
 
-<p>The <code>TaskContainer</code> consists of a single method, <code>addTask</code> that basically
-is the same as an <a href="#nested-elements">add method</a> for nested elements.  The task instances
-will be configured (their attributes and nested elements have been handled) when your
-task's <code>execute</code> method gets invoked, but not before that.</p>
+<p>The <code class="code">TaskContainer</code> consists of a single
+method, <code class="code">addTask</code> that basically is the same as
+an <a href="#nested-elements">add method</a> for nested elements.  The task instances will be
+configured (their attributes and nested elements have been handled) when your
+task's <code class="code">execute</code> method gets invoked, but not before that.</p>
 
-<p>When we <a href="#execute">said</a> <code>execute</code> would be called, we lied ;-).  In fact,
-Ant will call the <code>perform</code> method in <code>org.apache.tools.ant.Task</code>, which in
-turn calls <code>execute</code>.  This method makes sure that <a href="#buildevents">Build
+<p>When we <a href="#execute">said</a> <code class="code">execute</code> would be called, we lied
+;-).  In fact, Ant will call the <code class="code">perform</code> method
+in <code class="code">org.apache.tools.ant.Task</code>, which in turn
+calls <code class="code">execute</code>.  This method makes sure that <a href="#buildevents">Build
 Events</a> will be triggered.  If you execute the task instances nested into your task, you should
-also invoke <code>perform</code> on these instances instead of
-<code>execute</code>.</p>
+also invoke <code class="code">perform</code> on these instances instead
+of <code class="code">execute</code>.</p>
 
 <h3>Example</h3>
 <p>Let's write our own task, which prints a message on the <code>System.out</code> stream.  The task
@@ -378,17 +387,19 @@ just been compiled.</p>
 &lt;/project&gt;</pre>
 
 <p>Another way to add a task (more permanently) is to add the task name and implementing class name
-to the <samp>default.properties</samp> file in the <code>org.apache.tools.ant.taskdefs</code>
-package. Then you can use it as if it were a built-in task.</p>
+to the <samp>default.properties</samp> file in
+the <code class="code">org.apache.tools.ant.taskdefs</code> package. Then you can use it as if it
+were a built-in task.</p>
 
 <hr/>
 <h2 id="buildevents">Build Events</h2>
 <p>Ant is capable of generating build events as it performs the tasks necessary to build a project.
 Listeners can be attached to Ant to receive these events. This capability could be used, for
 example, to connect Ant to a GUI or to integrate Ant with an IDE.</p>
-<p>To use build events you need to create an ant <code>Project</code> object. You can then call
-the <code>addBuildListener</code> method to add your listener to the project. Your listener must
-implement the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive
+<p>To use build events you need to create an ant <code class="code">Project</code> object. You can
+then call the <code class="code">addBuildListener</code> method to add your listener to the
+project. Your listener must implement
+the <code class="code">org.apache.tools.antBuildListener</code> interface. The listener will receive
 BuildEvents for the following events</p>
 <ul>
   <li>Build started</li>
@@ -405,40 +416,43 @@ via <a href="Tasks/ant.html"><code>&lt;ant&gt;</code></a>
 or <a href="Tasks/subant.html"><code>&lt;subant&gt;</code></a> or
 uses <a href="Tasks/antcall.html"><code>&lt;antcall&gt;</code></a>, you are creating a new Ant
 "project" that will send target and task level events of its own but never sends build
-started/finished events. <em>Since Ant 1.6.2</em>, BuildListener interface has an extension named
-SubBuildListener that will receive two new events for</p>
+started/finished events. <em>Since Ant 1.6.2</em>, <code class="code">BuildListener</code> interface
+has an extension named <code class="code">SubBuildListener</code> that will receive two new events
+for</p>
 <ul>
   <li>SubBuild started</li>
   <li>SubBuild finished</li>
 </ul>
 <p>If you are interested in those events, all you need to do is to implement the new interface
-instead of BuildListener (and register the listener, of course).</p>
+instead of <code class="code">BuildListener</code> (and register the listener, of course).</p>
 
-<p>If you wish to attach a listener from the command line you may use the <code>-listener</code>
+<p>If you wish to attach a listener from the command line you may use the <kbd>-listener</kbd>
 option. For example:</p>
 
-<pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
+<pre class="input">ant -listener org.apache.tools.ant.XmlLogger</pre>
 
 <p>will run Ant with a listener that generates an XML representation of the build progress. This
 listener is included with Ant, as is the default listener, which generates the logging to standard
 output.</p>
 
-<p><strong>Note</strong>: A listener must not access <code>System.out</code>
-and <code>System.err</code> directly since output on these streams is redirected by Ant's core to
-the build event system. Accessing these streams can cause an infinite loop in Ant. Depending on the
-version of Ant, this will either cause the build to terminate or the JVM to run out of Stack
-space. A logger, also, may not access <code>System.out</code> and <code>System.err</code>
-directly. It must use the streams with which it has been configured.</p>
+<p><strong>Note</strong>: A listener must not access <code class="code">System.out</code>
+and <code class="code">System.err</code> directly since output on these streams is redirected by
+Ant's core to the build event system. Accessing these streams can cause an infinite loop in
+Ant. Depending on the version of Ant, this will either cause the build to terminate or the JVM to
+run out of Stack space. A logger, also, may not access <code class="code">System.out</code>
+and <code class="code">System.err</code> directly. It must use the streams with which it has been
+configured.</p>
 
-<p><strong>Note</strong>: All methods of a BuildListener except for the "Build Started" and "Build
-Finished" events may occur on several threads simultaneously&mdash;for example while Ant is
-executing a <code>&lt;parallel&gt;</code> task.</p>
+<p><strong>Note</strong>: All methods of a <code class="code">BuildListener</code> except for the
+"Build Started" and "Build Finished" events may occur on several threads simultaneously&mdash;for
+example while Ant is executing a <code>&lt;parallel&gt;</code> task.</p>
 
 <h3>Example</h3>
-<p>Writing an adapter to your favourite log library is very easy.  Just implement the BuildListener
-interface, instantiate your logger and delegate the message to that instance.</p>
+<p>Writing an adapter to your favourite log library is very easy.  Just implement
+the <code class="code">BuildListener</code> interface, instantiate your logger and delegate the
+message to that instance.</p>
 <p>When starting your build provide your adapter class and the log library to the build classpath
-and activate your logger via <code>-listener</code> option as described above.</p>
+and activate your logger via <kbd>-listener</kbd> option as described above.</p>
 
 <pre>
 public class MyLogAdapter implements BuildListener {

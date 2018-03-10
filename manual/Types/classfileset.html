@@ -77,11 +77,11 @@ may be used
 
 <h4>RootFileSet</h4>
 <p>
-A root fileset is used to add a set of root classes from a fileset. In this case the entries in
-the fileset are expected to be Java class files. The name of the Java class is determined by the
+A root fileset is used to add a set of root classes from a fileset. In this case the entries in the
+fileset are expected to be Java class files. The name of the Java class is determined by the
 relative location of the classfile in the fileset. So, the
 file <code>org/apache/tools/ant/Project.class</code> corresponds to the Java
-class <code>org.apache.tools.ant.Project</code>.</p>
+class <code class="code">org.apache.tools.ant.Project</code>.</p>
 
 <h4>Examples</h4>
 <pre>
@@ -90,8 +90,8 @@ class <code>org.apache.tools.ant.Project</code>.</p>
 &lt;/classfileset&gt;</pre>
 <p>
 This example creates a fileset containing all the class files upon which
-the <code>org.apache.tools.ant.Project</code> class depends. This fileset could then be used to
-create a jar.
+the <code class="code">org.apache.tools.ant.Project</code> class depends. This fileset could then be
+used to create a jar.
 </p>
 
 <pre>
@@ -104,8 +104,9 @@ create a jar.
   &lt;rootfileset dir=&quot;${classes.dir}&quot; includes=&quot;org/apache/tools/ant/Project*.class&quot;/&gt;
 &lt;/classfileset&gt;</pre>
 <p>
-This example constructs the classfileset using all the class with names starting with Project in
-the <samp>org.apache.tools.ant</samp> package.
+This example constructs the classfileset using all the class with names starting
+with <code class="code">Project</code> in the <code class="code">org.apache.tools.ant</code>
+package.
 </p>
 
 </body>

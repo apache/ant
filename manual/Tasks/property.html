@@ -38,11 +38,11 @@ they are most definitely not variables.</p>
   <li>By supplying both the <var>name</var> and <var>refid</var> attributes.</li>
   <li>By setting the <var>file</var> attribute with the filename of the property file to load. This
     property file has the format as defined by the file used in the
-    class <code>java.util.Properties</code>, with the same rules about how non-ISO-8859-1 characters
-    must be escaped.</li>
+    class <code class="code">java.util.Properties</code>, with the same rules about how
+    non-ISO-8859-1 characters must be escaped.</li>
   <li>By setting the <var>url</var> attribute with the URL from which to load the properties. This
     URL must be directed to a file that has the format as defined by the file used in the
-    class <code>java.util.Properties</code>.</li>
+    class <code class="code">java.util.Properties</code>.</li>
   <li>By setting the <var>resource</var> attribute with the resource name of the property file to
     load. A resource is a property file on the current classpath, or on the specified
     classpath.</li>
@@ -164,16 +164,16 @@ local definition is available (the table priority order being PROCESS, JOB, GROU
 
 <h4>Any OS except OpenVMS</h4>
 <p><em>Since Ant 1.8.2</em>, if Ant detects it is running on a Java 5 or newer, Ant will
-use <code>System.getenv()</code> rather than its own OS dependent native implementation.  For some
-OSes this causes minor differences when compared to older versions of Ant.  For a full list
-see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=49366" target="_top">Bugzilla Issue
-49366</a>.  In particular:</p>
+use <code class="code">System.getenv()</code> rather than its own OS dependent native
+implementation.  For some OSes this causes minor differences when compared to older versions of Ant.
+For a full list see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=49366"
+target="_top">Bugzilla Issue 49366</a>.  In particular:</p>
 <ul>
   <li>On Windows, Ant will now return additional "environment variables" that correspond to the
     drive specific current working directories when Ant is run from the command line.  The keys of
     these variables starts with an equals sign.</li>
   <li>Some users reported that some Cygwin specific variables (in particular <code>PROMPT</code>)
-    was no longer present.</li>
+    were no longer present.</li>
   <li>On OS/2, Ant no longer returns the <code>BEGINLIBPATH</code> variable.</li>
 </ul>
 
@@ -241,7 +241,7 @@ personal settings with a file per user.</p>
 <p>As stated, this task will load in a properties file stored in the file system, or as a resource
 on a classpath. Here are some interesting facts about this feature</p>
 <ol>
-  <li>If the file is not there, nothing is printed except at <code>-verbose</code> log level. This
+  <li>If the file is not there, nothing is printed except at <kbd>-verbose</kbd> log level. This
     lets you have optional configuration files for every project, that team members can customize.
   <li>The rules for this format
     match <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.InputStream-"
@@ -267,7 +267,7 @@ variables. So it starts a command in a new process which prints the environment 
 the output and creates the properties.<br/>  There are commands for the following operating systems
 implemented
 in <a href="https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;hb=refs/heads/master"
-target="_top">Execute.java</a> (method <code>getProcEnvCommand()</code>):
+target="_top">Execute.java</a> (method <code class="code">getProcEnvCommand()</code>):
 </p>
   <table>
     <tr>

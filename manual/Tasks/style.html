@@ -45,7 +45,7 @@ whether you want to use default exclusions or not. See the section
 on <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="../Types/fileset.html">FileSet</a> and supports all
-attributes of <code>&lt;fileset&gt;</code> (<code>dir</code> becomes <code>basedir</code>) as well
+attributes of <code>&lt;fileset&gt;</code> (<var>dir</var> becomes <var>basedir</var>) as well
 as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
 and <code>&lt;patternset&gt;</code> elements.</p>
 
@@ -55,7 +55,7 @@ stylesheets to all files contain in them as well.  Since the default <var>includ
 is <code>**</code> this means it will apply the stylesheet to all files.  If you specify
 an <var>excludes</var> pattern, it may still work on the files matched by those patterns because the
 parent directory has been matched.  If this behavior is not what you want, set
-the <var>scanincludedirectories</var> attribute to false.</p>
+the <var>scanincludedirectories</var> attribute to <q>false</q>.</p>
 
 <p><em>Since Ant 1.7</em>, this task supports
 nested <a href="../Types/resources.html#collection">resource collections</a> in addition to (or
@@ -405,7 +405,7 @@ documentation of your processor.  For example, in Xalan 2.x:</p>
   <tr>
     <td>classloaderforpath</td>
     <td class="left">Value of the attribute is a classloader that uses the classpath specified by a
-      path that is the project reference with the given id. <em>since Ant 1.9.8</em></td>
+      path that is the project reference with the given <var>id</var>. <em>since Ant 1.9.8</em></td>
   </tr>
 </table>
 </blockquote>

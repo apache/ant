@@ -38,10 +38,10 @@ details.</li>
 <li>Set environmental variables: <code>JAVA_HOME</code> to your Java environment, <code>ANT_HOME</code> to the directory
 you uncompressed Ant to, and add <samp>${ANT_HOME}/bin</samp> (Unix) or <samp>%ANT_HOME%/bin</samp> (Windows) to
 your <code>PATH</code>. See <a href="#setup">Setup</a> for details.</li>
-<li>Optionally, from the <code>ANT_HOME</code> directory run <code>ant -f fetch.xml -Ddest=system</code> to get the
+<li>Optionally, from the <code>ANT_HOME</code> directory run <kbd>ant -f fetch.xml -Ddest=system</kbd> to get the
 library dependencies of most of the Ant tasks that require them. If you don't do this, many of the dependent Ant tasks
 will not be available. See <a href="#optionalTasks">Optional Tasks</a> for details and other options for
-the <code>-Ddest</code> parameter.</li>
+the <kbd>-Ddest</kbd> parameter.</li>
 <li>Optionally, add any desired Antlibs. See <a href="https://ant.apache.org/antlibs/proper.html" target="_top">Ant
 Libraries</a> for a list.</li>
 </ol>
@@ -325,7 +325,7 @@ security restrictions on the classes which may be loaded by an extension.
 
 <h3 id="checkInstallation">Check Installation</h3>
 <p>
-You can check the basic installation with opening a new shell and typing <code>ant</code>. You should get a message like
+You can check the basic installation with opening a new shell and typing <kbd>ant</kbd>. You should get a message like
 this
 </p>
 <pre>
@@ -333,8 +333,8 @@ Buildfile: build.xml does not exist!
 Build failed
 </pre>
 <p>
-So Ant works. This message is there because you need to write a buildfile for your project. With a <code>ant
--version</code> you should get an output like
+So Ant works. This message is there because you need to write a buildfile for your project. With a <kbd>ant
+-version</kbd> you should get an output like
 </p>
 <pre>
 Apache Ant(TM) version 1.9.2 compiled on July 8 2013
@@ -351,7 +351,7 @@ If this does not work, ensure your environment variables are set right. E.g., on
 <code>ANT_HOME</code> is used by the launcher script for finding the libraries. <code>JAVA_HOME</code> is used by the
 launcher for finding the JDK/JRE to use. (JDK is recommended as some tasks require the Java tools.) If not set, the
 launcher tries to find one via the <code>%PATH%</code> environment variable. <code>PATH</code> is set for user
-convenience. With that set you can just start <code>ant</code> instead of always
+convenience. With that set you can just start <kbd>ant</kbd> instead of always
 typing <samp>the/complete/path/to/your/ant/installation/bin/ant</samp>.
 </p>
 
@@ -381,7 +381,7 @@ Ant. All JAR files added to this directory are available to command-line Ant.
 
 <li>
 <p>
-On the command line with a <code>-lib</code> parameter. This lets you add new JAR files on a case-by-case basis.
+On the command line with a <kbd>-lib</kbd> parameter. This lets you add new JAR files on a case-by-case basis.
 </p>
 </li>
 
@@ -417,7 +417,7 @@ the optional Ant tasks need.
 To do so, change to the <code>ANT_HOME</code> directory and execute the command:
 </p>
 
-<pre>ant -f fetch.xml -Ddest=<em>[option]</em></pre>
+<pre class="input">ant -f fetch.xml -Ddest=<em>[option]</em></pre>
 
 <p>
 where option is one of the following, as described above:
@@ -471,14 +471,14 @@ space in a directory. This will break Ant, and it is not needed.</li>
 Ant's ability to quote the string. Again, this is not needed for the correct operation of the <code>CLASSPATH</code>
 environment variable, even if a DOS directory is to be added to the path.</li>
 
-<li>You can stop Ant using the <code>CLASSPATH</code> environment variable by setting the <code>-noclasspath</code>
+<li>You can stop Ant using the <code>CLASSPATH</code> environment variable by setting the <kbd>-noclasspath</kbd>
 option on the command line. This is an easy way to test for classpath-related problems.</li>
 </ol>
 
 <p>
 The usual symptom of <code>CLASSPATH</code> problems is that Ant will not run with some error about not being able to
 find <code>org.apache.tools.ant.launch.Launcher</code>, or, if you have got the quotes/backslashes wrong, some very
-weird Java startup error. To see if this is the case, run <code>ant -noclasspath</code> or unset
+weird Java startup error. To see if this is the case, run <kbd>ant -noclasspath</kbd> or unset
 the <code>CLASSPATH</code> environment variable.
 </p>
 
@@ -510,7 +510,7 @@ this.
 <li><strong>With Java 5 or above</strong><br/>
 <p>
 When you run Ant on Java 5 or above, you could try to use the automatic proxy setup mechanism
-with <code>-autoproxy</code>.
+with <kbd>-autoproxy</kbd>.
 </p>
 </li>
 
@@ -525,15 +525,15 @@ laptop, you have to change these settings as you roam. To set <code>ANT_OPTS</co
 <p>
 For csh/tcsh:
 </p>
-<pre>setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
+<pre class="input">setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
 <p>
 For bash:
 </p>
-<pre>export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
+<pre class="input">export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"</pre>
 <p>
 For Windows, set the environment variable in the appropriate dialog box and open a new console or, by hand
 </p>
-<pre>set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080</pre>
+<pre class="input">set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080</pre>
 </blockquote>
 </li>
 
@@ -554,7 +554,7 @@ do not work, because those are <em>Ant properties</em> being set, not JVM option
 up the command line:
 </p>
 
-<pre>ant -Dhttp.proxyHost=proxy -Dhttp.proxyPort=81</pre>
+<pre class="input">ant -Dhttp.proxyHost=proxy -Dhttp.proxyPort=81</pre>
 
 <p>
 All it does is set up two Ant properties.
@@ -569,19 +569,19 @@ have to spend much time configuring the JVM properties until they are happy.
 <h3 id="windows">Windows and OS/2</h3>
 <p>Assume Ant is installed in <samp>c:\ant\</samp>. The following sets up the
 environment:</p>
-<pre>set ANT_HOME=c:\ant
+<pre class="input">set ANT_HOME=c:\ant
 set JAVA_HOME=c:\jdk1.7.0_51
 set PATH=%PATH%;%ANT_HOME%\bin</pre>
 
 <h3 id="bash">Linux/Unix (bash)</h3>
 <p>Assume Ant is installed in <samp>/usr/local/ant</samp>. The following sets up
 the environment:</p>
-<pre>export ANT_HOME=/usr/local/ant
+<pre class="input">export ANT_HOME=/usr/local/ant
 export JAVA_HOME=/usr/local/jdk1.7.0_51
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
 
 <h3 id="tcshcsh">Linux/Unix (csh)</h3>
-<pre>setenv ANT_HOME /usr/local/ant
+<pre class="input">setenv ANT_HOME /usr/local/ant
 setenv JAVA_HOME /usr/local/jdk/jdk1.7.0_51
 set path=( $path $ANT_HOME/bin )</pre>
 
@@ -592,7 +592,7 @@ Having a symbolic link set up to point to the JVM/JDK version makes updates more
 <p>
 The <a href="http://www.jpackage.org" target="_top">JPackage project</a> distributes an RPM version of Ant. With this
 version, it is not necessary to set <code>JAVA_HOME</code> or <code>ANT_HOME</code> environment variables and the RPM
-installer will correctly place the Ant executable on your path.
+installer will correctly place the <kbd>ant</kbd> executable on your path.
 </p>
 <p>
 <strong>Note</strong>: <em>Since Ant 1.7.0</em>, if the <code>ANT_HOME</code> environment variable is set, the JPackage
@@ -626,7 +626,7 @@ above.</li>
 
 Finally, if for some reason you are running on a system with both the JPackage and Apache versions of Ant available, if
 you should want to run the Apache version (which will have to be specified with an absolute file name, not found on the
-path), you should use Ant's <code>--noconfig</code> command-line switch to avoid JPackage's classpath mechanism.
+path), you should use Ant's <kbd>--noconfig</kbd> command-line switch to avoid JPackage's classpath mechanism.
 
 <h3 id="advanced">Advanced</h3>
 
@@ -665,8 +665,8 @@ installed. See <a href="#installing">Installing Ant</a> for examples on how to d
 </p>
 
 <p>
-<strong>Note</strong>: The bootstrap process of Ant requires a greedy compiler like OpenJDK or Oracle's javac. It does
-not work with gcj or kjc.
+<strong>Note</strong>: The bootstrap process of Ant requires a greedy compiler like OpenJDK or
+Oracle's <kbd>javac</kbd>. It does not work with <kbd>gcj</kbd> or <kbd>kjc</kbd>.
 </p>
 
 <p>
@@ -693,8 +693,8 @@ from <a href="https://junit.org/" target="_top">JUnit.org</a>) if you are using 
 Your are now ready to build Ant:
 </p>
 <blockquote>
-  <p><code>build -Ddist.dir=&lt;<i>directory-to-contain-Ant-distribution</i>&gt; dist</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
-  <p><code>sh build.sh -Ddist.dir=&lt;<i>directory-to-contain-Ant-distribution</i>&gt; dist</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
+  <p><kbd>build -Ddist.dir=&lt;<i>directory-to-contain-Ant-distribution</i>&gt; dist</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
+  <p><kbd>sh build.sh -Ddist.dir=&lt;<i>directory-to-contain-Ant-distribution</i>&gt; dist</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
 </blockquote>
 
 <p>
@@ -719,21 +719,21 @@ directory.</li>
 <p>
 On most occasions you will not need to explicitly bootstrap Ant since the build scripts do that for you. However, if the
 build file you are using makes use of features not yet compiled into the bootstrapped Ant, you will need to manually
-bootstrap. Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX) to build a new bootstrap version
+bootstrap. Run <kbd>bootstrap.bat</kbd> (Windows) or <kbd>bootstrap.sh</kbd> (UNIX) to build a new bootstrap version
 of Ant.
 </p>
 
 If you wish to install the build into the current <code>ANT_HOME</code>
 directory, you can use:
 <blockquote>
-  <p><code>build install</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
-  <p><code>sh build.sh install</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
+  <p><kbd>build install</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
+  <p><kbd>sh build.sh install</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
 </blockquote>
 
 You can avoid the lengthy Javadoc step, if desired, with:
 <blockquote>
-  <p><code>build install-lite</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
-  <p><code>sh build.sh install-lite</code>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
+  <p><kbd>build install-lite</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Windows</em>)</p>
+  <p><kbd>sh build.sh install-lite</kbd>&nbsp;&nbsp;&nbsp;&nbsp;(<em>Unix</em>)</p>
 </blockquote>
 This will only install the <samp>bin</samp> and <samp>lib</samp> directories.
 
@@ -749,7 +749,7 @@ different user than the one who installed Ant initially). In this case you can s
 property <code>chmod.fail</code> to false when starting the build like in
 </p>
 
-<pre>sh build.sh install -Dchmod.fail=false</pre>
+<pre class="input">sh build.sh install -Dchmod.fail=false</pre>
 
 <p>
 and any error to change permission will not result in a build failure.
@@ -936,7 +936,7 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
 <h3 id="diagnostics">Diagnostics</h3>
 
 <p>
-Ant has a built in diagnostics feature. If you run <code>ant -diagnostics</code>, Ant will look at its internal state
+Ant has a built in diagnostics feature. If you run <kbd>ant -diagnostics</kbd>, Ant will look at its internal state
 and print it out. This code will check and print the following things.
 </p>
 
@@ -965,7 +965,7 @@ get confused.</li>
 </ul>
 
 <p>
-Running <code>ant -diagnostics</code> is a good way to check that Ant is installed. It is also a first step towards
+Running <kbd>ant -diagnostics</kbd> is a good way to check that Ant is installed. It is also a first step towards
 self-diagnosis of any problem. Any configuration problem reported to the user mailing list will probably result ins
 someone asking you to run the command and show the results, so save time by using it yourself.
 </p>

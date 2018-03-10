@@ -40,27 +40,28 @@ access mode, username and groupname to be applied to the tar entries. This is us
 when preparing archives for Unix systems where some files need to have execute permission.  By
 default this task will use Unix permissions of 644 for files and 755 for directories.</p>
 
-<p>Early versions of <code>tar</code> utility did not support paths longer than 100 characters. Over
+<p>Early versions of <kbd>tar</kbd> utility did not support paths longer than 100 characters. Over
 time several incompatible extensions have been developed until a new POSIX standard was created that
-added so called PAX extension headers (as the <code>pax</code> utility first introduced them) that
-among another things addressed file names longer than 100 characters.  All modern implementations of
-tar support PAX extension headers.</p>
+added so called PAX extension headers (as the <kbd>pax</kbd> utility first introduced them) that
+among another things addressed file names longer than 100 characters.  All modern implementations
+of <kbd>tar</kbd> support PAX extension headers.</p>
 
-<p>Ant's tar support predates the standard with PAX extension headers, it supports different
-dialects that can be enabled using the <var>longfile</var> attribute.  If the <var>longfile</var>
-attribute is set to <q>fail</q>, any long paths will cause the tar task to fail.  If
-the <var>longfile</var> attribute is set to <q>truncate</q>, any long paths will be truncated to the
-100 character maximum length prior to adding to the archive. If the value of the <var>longfile</var>
-attribute is set to <q>omit</q> then files containing long paths will be omitted from the archive.
-Either option ensures that the archive can be untarred by any compliant version of tar.</p>
+<p>Ant's <kbd>tar</kbd> support predates the standard with PAX extension headers, it supports
+different dialects that can be enabled using the <var>longfile</var> attribute.  If
+the <var>longfile</var> attribute is set to <q>fail</q>, any long paths will cause
+the <code>tar</code> task to fail.  If the <var>longfile</var> attribute is set to <q>truncate</q>,
+any long paths will be truncated to the 100 character maximum length prior to adding to the
+archive. If the value of the <var>longfile</var> attribute is set to <q>omit</q> then files
+containing long paths will be omitted from the archive.  Either option ensures that the archive can
+be untarred by any compliant version of <kbd>tar</kbd>.</p>
 
 <p>If the loss of path or file information is not acceptable, and it rarely is, <var>longfile</var>
 may be set to the value <q>gnu</q> or <q>posix</q>.  With <q>posix</q> Ant will add PAX extension
-headers, with <q>gnu</q> it adds GNU tar specific extensions that newer versions of GNU tar
-call <q>oldgnu</q>.  GNU tar still creates these extensions by default but supports PAX extension
-headers as well.  Either choice will produce a tar file which can have arbitrary length paths. Note
-however, that the resulting archive will only be able to be untarred with tar tools that support the
-chosen format.</p>
+headers, with <q>gnu</q> it adds GNU <kbd>tar</kbd> specific extensions that newer versions of
+GNU <kbd>tar</kbd> call <q>oldgnu</q>.  GNU <kbd>tar</kbd> still creates these extensions by default
+but supports PAX extension headers as well.  Either choice will produce a tar file which can have
+arbitrary length paths. Note however, that the resulting archive will only be able to be untarred
+with <kbd>tar</kbd> tools that support the chosen format.</p>
 
 <p>The default for the <var>longfile</var> attribute is <q>warn</q> which behaves just like
 the <q>gnu</q> option except that it produces a warning for each filepath encountered that does not

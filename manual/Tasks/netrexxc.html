@@ -50,8 +50,9 @@ nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
 and <code>&lt;patternset&gt;</code> elements.</p>
 <p>All attributes except <var>classpath</var>, <var>srcdir</var> and <var>destDir</var> are also
 available as properties in the form <code>ant.netrexxc.<i>attributename</i></code>,
-eg.<br/><code>&lt;property name="ant.netrexxc.verbose" value="noverbose"/&gt;</code><br/> or from the
-command line as<br/><code>ant -Dant.netrexxc.verbose=noverbose ...</code></p>
+eg.<br/><code class="code">&lt;property name="ant.netrexxc.verbose"
+value="noverbose"/&gt;</code><br/> or from the command line as<br/><kbd>ant
+-Dant.netrexxc.verbose=noverbose ...</kbd></p>
 <p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant
 distribution. See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
 information.</p>
@@ -174,7 +175,7 @@ information.</p>
     <td>removeKeepExtension</td>
     <td>Tells whether the trailing <samp>.keep</samp> in <var>compile</var>=<q>false</q> mode should
       be removed so that the resulting Java source file really ends on <samp>.java</samp>. This
-      facilitates the use of the <code>javadoc</code> tool later on.</td>
+      facilitates the use of the <kbd>javadoc</kbd> tool later on.</td>
     <td>No</td>
   </tr>
   <tr>

@@ -46,7 +46,7 @@ or <code>&lt;apply&gt;</code> the real tar program.</li>
 to build up a list of files. Unexpected things can happen.</li>
 <li>Linux on IA-64: apparently you need a larger heap than the default one (64M) to compile big
 projects. If you get out of heap errors, either increase the heap or use a
-forking <code>javac</code>. Better yet, use jikes for extra compilation speed.</li>
+forking <code>javac</code>. Better yet, use <code>jikes</code> for extra compilation speed.</li>
 </ul>
 
 <h2>Microsoft Windows</h2>
@@ -87,7 +87,7 @@ Ant is trying to run, it is not on the path.
 <p>
 There are reports of problems with Windows Vista security bringing up dialog boxes asking if the
 user wants to run an untrusted executable during an Ant run, such as when the &lt;signjar&gt; task
-runs the <code>jarsigner.exe</code> program. This is beyond Ant's control, and stems from the OS
+runs the <kbd>jarsigner.exe</kbd> program. This is beyond Ant's control, and stems from the OS
 trying to provide some illusion of security by being reluctant to run unsigned native executables.
 The latest Java versions appear to resolve this problem by having signed binaries.
 </p>
@@ -102,7 +102,7 @@ and JRE tools under Windows or cygwin. Relative path names such as <samp>src/org
 are supported, but Java tools do not understand <samp>/cygdrive/c</samp> to mean <samp>c:\</samp>.
 </p>
 <p>
-The utility <code>cygpath</code> (used industrially in the <code>ant</code> script to support
+The utility <kbd>cygpath</kbd> (used industrially in the <kbd>ant</kbd> script to support
 cygwin) can convert cygwin path names to Windows.  You can use the <code>&lt;exec&gt;</code> task in
 Ant to convert cygwin paths to Windows path, for instance like that:
 </p>
@@ -139,7 +139,7 @@ or <samp>dist\bin</samp>).
   <li><code>CLASSPATH</code>&mdash;put <samp>ant.jar</samp> and any other needed jars on the system
     classpath.</li>
   <li><code>ANT_OPTS</code>&mdash;On NetWare, <code>ANT_OPTS</code> needs to include a parameter of
-    the form, <code>-envCWD=<i>ANT_HOME</i></code>, with <code><i>ANT_HOME</i></code> being the
+    the form, <kbd>-envCWD=<i>ANT_HOME</i></kbd>, with <kbd><i>ANT_HOME</i></kbd> being the
     fully expanded location of Ant, <strong>not</strong> an environment variable.  This is due to
     the fact that the NetWare System Console has no notion of a current working directory.</li>
 </ul>

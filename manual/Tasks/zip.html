@@ -82,8 +82,8 @@ see <a href="#encoding">below</a></p>
 (see description of the <var>filemode</var> and <var>dirmode</var> attributes
 for <a href="../Types/zipfileset.html">&lt;zipfileset&gt;</a>).  Unfortunately there is no portable
 way to store these permissions.  Ant uses the algorithm used by <a href="http://www.info-zip.org"
-target="_top">Info-Zip's</a> implementation of the <code>zip</code> and <code>unzip</code>
-commands&mdash;these are the default versions of <code>zip</code> and <code>unzip</code> for many
+target="_top">Info-Zip's</a> implementation of the <kbd>zip</kbd> and <kbd>unzip</kbd>
+commands&mdash;these are the default versions of <kbd>zip</kbd> and <kbd>unzip</kbd> for many
 Unix(-like) systems.</p>
 
 <p><strong>Please note that the zip format allows multiple files of the same fully-qualified name to
@@ -264,8 +264,8 @@ extract an Ant generated ZIP archive.</p>
 sufficient for many international character sets.</p>
 
 <p>Over time different archivers have chosen different ways to work around the
-limitation&mdash;the <code>java.util.zip</code> packages simply uses UTF-8 as its encoding for
-example.</p>
+limitation&mdash;the <code class="code">java.util.zip</code> packages simply uses UTF-8 as its
+encoding for example.</p>
 
 <p>Ant has been offering the <q>encoding</q> attribute of the <code>zip</code>
 and <code>unzip</code> task as a way to explicitly specify the encoding to use (or expect) <em>since
@@ -307,13 +307,13 @@ ZIP archives.  Below are some test results which may be superseded with later ve
 tool.</p>
 
 <ul>
-  <li>The <code>java.util.zip</code> package used by the <code>jar</code> executable or to read jars
-    from your <code>CLASSPATH</code> reads and writes UTF-8 names, it doesn't set or recognize any
-    flags or unicode extra fields.</li>
-  <li>Since Java 7, <code>java.util.zip</code> writes UTF-8 by default and uses the language
-    encoding flag.  It is possible to specify a different encoding when reading/writing ZIPs via new
-    constructors.  The package now recognizes the language encoding flag when reading and ignores
-    the Unicode extra fields.</li>
+  <li>The <code class="code">java.util.zip</code> package used by the <kbd>jar</kbd> executable or
+    to read jars from your <code>CLASSPATH</code> reads and writes UTF-8 names, it doesn't set or
+    recognize any flags or unicode extra fields.</li>
+  <li>Since Java 7, <code class="code">java.util.zip</code> writes UTF-8 by default and uses the
+    language encoding flag.  It is possible to specify a different encoding when reading/writing
+    ZIPs via new constructors.  The package now recognizes the language encoding flag when reading
+    and ignores the Unicode extra fields.</li>
   <li>7Zip writes CodePage 437 by default but uses UTF-8 and the language encoding flag when writing
     entries that cannot be encoded as CodePage 437 (similar to the <code>zip</code> task
     with <var>fallbacktoUTF8</var> set to <q>true</q>).  It recognizes the language encoding flag
@@ -332,16 +332,16 @@ tool.</p>
 
 <p>So, what to do?</p>
 
-<p>If you are creating jars, then <code>java.util.zip</code> is your main consumer.  We recommend
-you set the encoding to UTF-8 and keep the language encoding flag enabled.  The flag won't help or
-hurt <code>java.util.zip</code> prior to Java 7 but archivers that support it will show the correct
-file names.</p>
+<p>If you are creating jars, then <code class="code">java.util.zip</code> is your main consumer.  We
+recommend you set the encoding to UTF-8 and keep the language encoding flag enabled.  The flag won't
+help or hurt <code class="code">java.util.zip</code> prior to Java 7 but archivers that support it
+will show the correct file names.</p>
 
 <p>For maximum interoparability it is probably best to set the encoding to UTF-8, enable the
 language encoding flag and create Unicode extra fields when writing ZIPs.  Such archives should be
-extracted correctly by <code>java.util.zip</code>, 7Zip, WinZIP, PKWARE tools and most likely
-InfoZIP tools.  They will be unusable with Windows' "compressed folders" feature and bigger than
-archives without the Unicode extra fields, though.</p>
+extracted correctly by <code class="code">java.util.zip</code>, 7Zip, WinZIP, PKWARE tools and most
+likely InfoZIP tools.  They will be unusable with Windows' "compressed folders" feature and bigger
+than archives without the Unicode extra fields, though.</p>
 
 <p>If Windows' "compressed folders" is your primary consumer, then your best option is to explicitly
 set the encoding to the target platform.  You may want to enable creation of Unicode extra fields so
@@ -376,9 +376,9 @@ the <code>zip</code> family of tasks.  It supports three values:
 limits of traditional zip files but don't want to waste too much space (the Zip64 extensions take up
 extra space).  Unfortunately some ZIP implementations don't understand Zip64 extra fields or fail to
 parse archives with extra fields in local file headers that are not present in the central
-directory, one such implementation is the <code>java.util.zip</code> package of Java 5, that's why
-the <code>jar</code> tasks default to <q>never</q>.  Archives created with <q>as-needed</q> can be
-read without problems with Java 6 and later.</p>
+directory, one such implementation is the <code class="code">java.util.zip</code> package of Java 5,
+that's why the <code>jar</code> tasks default to <q>never</q>.  Archives created
+with <q>as-needed</q> can be read without problems with Java 6 and later.</p>
 
 <h3>Parameters specified as nested elements</h3>
 

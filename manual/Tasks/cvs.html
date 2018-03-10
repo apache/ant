@@ -28,11 +28,11 @@
 <h3>Description</h3>
 <p>Handles packages/modules retrieved from a <a href="https://www.nongnu.org/cvs/"
 target="_top">CVS</a> repository.</p>
-<p><strong>Important:</strong> This task needs <code>cvs</code> binary on the path. If it isn't, you
+<p><strong>Important:</strong> This task needs <kbd>cvs</kbd> binary on the path. If it isn't, you
 will get an error (such as <code>error=2</code> on Windows). If <code>&lt;cvs&gt;</code> doesn't
-work, try to execute <code>cvs.exe</code> from the command line in the target directory in which you
-are working.  Also note that this task assumes that the cvs executable is compatible with the Unix
-version, this is not completely true for certain other CVS clients&mdash;like CVSNT for
+work, try to execute <kbd>cvs.exe</kbd> from the command line in the target directory in which you
+are working.  Also note that this task assumes that the <kbd>cvs</kbd> executable is compatible with
+the Unix version, this is not completely true for certain other CVS clients&mdash;like CVSNT for
 example&mdash;and some operation may fail when using such an incompatible client.</p>
 
 <p><strong>CVSNT Note</strong>: CVSNT prefers users to store the passwords inside the registry.  If
@@ -61,7 +61,7 @@ report 21657</a> for recommended workarounds.</p>
   <tr>
     <td>compressionlevel</td>
     <td>A number between <q>1</q> and <q>9</q> (corresponding to possible values for
-      CVS <code>-z#</code> argument). Any other value is treated
+      CVS <kbd>-z#</kbd> argument). Any other value is treated
       as <var>compression</var>=<q>false</q></td>
     <td>No; defaults to no compression</td>
   </tr>
@@ -78,7 +78,7 @@ report 21657</a> for recommended workarounds.</p>
   <tr>
     <td>dest</td>
     <td>the directory where the checked out files should be placed.  Note that this is different
-      from CVS's <code>-d</code> command line switch as Apache Ant will never shorten pathnames to
+      from CVS's <kbd>-d</kbd> command line switch as Apache Ant will never shorten pathnames to
       avoid empty directories.</td>
     <td>No; default is project's <var>basedir</var></td>
   </tr>
@@ -101,13 +101,13 @@ report 21657</a> for recommended workarounds.</p>
   </tr>
   <tr>
     <td>quiet</td>
-    <td>suppress informational messages. This is the same as <code>-q</code> on the command
+    <td>suppress informational messages. This is the same as <kbd>-q</kbd> on the command
     line.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
     <td>reallyquiet</td>
-    <td>suppress all messages. This is the same as <code>-Q</code> on the command line.  <em>since
+    <td>suppress all messages. This is the same as <kbd>-Q</kbd> on the command line.  <em>since
       Ant 1.6</em>.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
@@ -181,9 +181,9 @@ the <var>cvsRoot</var> attribute, and stores the files in <samp>${ws.dir}</samp>
 
 <pre>&lt;cvs command=&quot;-q diff -u -N&quot; output=&quot;patch.txt&quot;/&gt;</pre>
 
-<p>silently (<code>-q</code>) creates a file called <samp>patch.txt</samp> which contains a unified
-(<code>-u</code>) diff which includes new files added via <code>cvs add</code> (<code>-N</code>) and
-can be used as input to <code>patch</code>.  The equivalent, using <code>&lt;commandline&gt;</code>
+<p>silently (<kbd>-q</kbd>) creates a file called <samp>patch.txt</samp> which contains a unified
+(<kbd>-u</kbd>) diff which includes new files added via <kbd>cvs add</kbd> (<kbd>-N</kbd>) and
+can be used as input to <kbd>patch</kbd>.  The equivalent, using <code>&lt;commandline&gt;</code>
 elements, is:</p>
 <pre>
 &lt;cvs output=&quot;patch&quot;&gt;
@@ -206,9 +206,9 @@ the <var>failonerror</var>, <var>compression</var>, and other &quot;global&quot;
 the <code>&lt;cvs&gt;</code> element.</p>
 
 <pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
-<p>Updates from the head of repository ignoring sticky bits (<code>-A</code>) and creating any new
-directories as necessary (<code>-d</code>).</p>
-<p>Note: the text of the command is passed to <code>cvs</code> &quot;as-is&quot; so any cvs options
+<p>Updates from the head of repository ignoring sticky bits (<kbd>-A</kbd>) and creating any new
+directories as necessary (<kbd>-d</kbd>).</p>
+<p>Note: the text of the command is passed to <kbd>cvs</kbd> &quot;as-is&quot; so any cvs options
 should appear before the command, and any command options should appear after the command as in the
 diff example above. See <a href="http://cvsbook.red-bean.com/cvsbook.html" target="_top">the CVS
 book</a> for details, specifically

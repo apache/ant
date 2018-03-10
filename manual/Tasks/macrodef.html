@@ -186,7 +186,7 @@
 
     <h3>Examples</h3>
     <p>The following example defined a task called testing and runs it.</p>
-    <pre class="code">
+    <pre>
 &lt;macrodef name="testing"&gt;
     &lt;attribute name="v" default="NOT SET"/&gt;
     &lt;element name="some-tasks" optional="yes"/&gt;
@@ -206,7 +206,7 @@
       element <code>cc-elements</code>. The body of the task uses the <code>&lt;cc&gt;</code> task
       from the <a href="http://ant-contrib.sourceforge.net/" target="_top">ant-contrib</a>
       project.</p>
-    <pre class="code">
+    <pre>
 &lt;macrodef name="call-cc"&gt;
     &lt;attribute name="target"/&gt;
     &lt;attribute name="link"/&gt;
@@ -223,7 +223,7 @@
     &lt;/sequential&gt;
 &lt;/macrodef&gt;</pre>
     <p>This then can be used as follows:</p>
-    <pre class="code">
+    <pre>
 &lt;call-cc target="unittests" link="executable"
          target.dir="${build.bin.dir}"&gt;
    &lt;cc-elements&gt;
@@ -234,9 +234,10 @@
       &lt;linker refid="linker-libs"/&gt;
    &lt;/cc-elements&gt;
 &lt;/call-cc&gt;</pre>
-    <p>The following fragment shows &lt;call-cc&gt;, but this time using an implicit element and
-      with the <var>link</var> and <var>target.dir</var> arguments having default values.</p>
-    <pre class="code">
+    <p>The following fragment shows <code>&lt;call-cc&gt;</code>, but this time using an implicit
+      element and with the <var>link</var> and <var>target.dir</var> arguments having default
+      values.</p>
+    <pre>
 &lt;macrodef name="call-cc"&gt;
    &lt;attribute name="target"/&gt;
    &lt;attribute name="link" default="executable"/&gt;
@@ -252,8 +253,9 @@
          &lt;/cc&gt;
       &lt;/sequential&gt;
 &lt;/macrodef&gt;</pre>
-    <p>This then can be used as follows, note that &lt;cc-elements&gt; is not specified.</p>
-    <pre class="code">
+    <p>This then can be used as follows, note that <code>&lt;cc-elements&gt;</code> is not
+    specified.</p>
+    <pre>
 &lt;call-cc target="unittests"&gt;
    &lt;includepath location="${gen.dir}"/&gt;
    &lt;includepath location="test"/&gt;
@@ -263,7 +265,7 @@
 &lt;/call-cc&gt;
     </pre>
     <p>The following shows the use of the <code>text</code> element.</p>
-    <pre class="code">
+    <pre>
 &lt;macrodef name="echotest"&gt;
    &lt;text name="text"/&gt;
    &lt;sequential&gt;
@@ -275,10 +277,10 @@
 &lt;/echotest&gt;
     </pre>
     <p>The following uses a prior defined attribute for setting the default value of another. The
-      output would be <code>one=test two=test</code>. If you change the order of lines *1 and *2 the
-      output would be <code>one=test two=@{one}</code>, because while processing
-      the <var>two</var>-line the value for <var>one</var> is not set.</p>
-    <pre class="code">
+      output would be <code class="output">one=test two=test</code>. If you change the order of
+      lines *1 and *2 the output would be <code class="output">one=test two=@{one}</code>, because
+      while processing the <var>two</var>-line the value for <var>one</var> is not set.</p>
+    <pre>
 &lt;macrodef name="test"&gt;
    &lt;attribute name="one"/&gt;                     <strong>*1</strong>
    &lt;attribute name="two" default="@{one}"/&gt;    <strong>*2</strong>

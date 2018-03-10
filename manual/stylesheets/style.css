@@ -80,7 +80,7 @@ q.no-break {
     hyphens: none;
 }
 
-code, samp {
+code, samp, kbd {
     white-space: nowrap;
     hyphens: none;
     font-size: 1.125rem;
@@ -114,10 +114,29 @@ pre var, code var {
    background: #efefef;
 }
 
+/* highlight console input */
+.input, kbd {
+   color: white;
+   background: darkseagreen;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
 /* highlight console output */
 .output {
    color: white;
    background: #837A67;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+/* a workaround for invisible
+   (white on white) overflows */
+pre.input:hover, pre.output:hover {
+    margin-right: 0;
+    margin-left: 0;
+    overflow: scroll;
+    text-overflow: initial;
 }
 
 td {

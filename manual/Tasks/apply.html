@@ -47,7 +47,7 @@ the <var>input</var> and <var>inputstring</var> attributes.</p>
 
 <h4 id="background">Running Ant as a background process on Unix(-like) systems</h4>
 
-<p>If you run Ant as a background process (like <code>ant &</code>) and use
+<p>If you run Ant as a background process (like <kbd>ant &</kbd>) and use
 the <code>&lt;apply&gt;</code> task with <var>spawn</var> set to <q>false</q>, you must provide
 explicit input to the forked process or Ant will be suspended because it tries to read from the
 standard input.</p>
@@ -214,7 +214,7 @@ standard input.</p>
   <tr>
     <td>vmlauncher</td>
     <td>Run command using the JVM's execution facilities where available. If set to <q>false</q> the
-      underlying OS's shell, either directly or through the <code>antRun</code> scripts, will be
+      underlying OS's shell, either directly or through the <kbd>antRun</kbd> scripts, will be
       used.  Under some operating systems, this gives access to facilities not normally available
       through JVM including, under Windows, being able to execute scripts, rather than their
       associated interpreter.  If you want to specify the name of the executable as a relative path
@@ -360,9 +360,9 @@ of <code>exec</code>.</p>
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.files&quot;/&gt;
 &lt;/apply&gt;</pre>
-<p>invokes <code>ls -l</code>, adding the absolute filenames of all files below <samp>/tmp</samp>
-not ending in <samp>.txt</samp> and all files of the FileSet
-with <var>id</var> <samp>other.files</samp> to the command line.</p>
+<p>invokes <kbd>ls -l</kbd>, adding the absolute filenames of all files below <samp>/tmp</samp> not
+ending in <samp>.txt</samp> and all files of the FileSet with <var>id</var> <samp>other.files</samp>
+to the command line.</p>
 <pre>
 &lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;arg1&quot;/&gt;
@@ -384,7 +384,7 @@ with the absolute filenames of all files separated by spaces.</p>
   &lt;fileset dir=&quot;src/C&quot; includes=&quot;*.c&quot;/&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.c&quot; to=&quot;*.o&quot;/&gt;
 &lt;/apply&gt;</pre>
-<p>invokes <code>cc -c -o TARGETFILE SOURCEFILE</code> for each <samp>.c</samp> file that is newer
+<p>invokes <kbd>cc -c -o TARGETFILE SOURCEFILE</kbd> for each <samp>.c</samp> file that is newer
 than the corresponding <samp>.o</samp>, replacing <code>TARGETFILE</code> with the absolute filename
 of the <samp>.o</samp> and <code>SOURCEFILE</code> with the absolute name of the <samp>.c</samp>
 file.</p>
@@ -400,7 +400,7 @@ file.</p>
     &lt;outputmapper refid=&quot;out&quot;/&gt;
   &lt;/redirector&gt;
 &lt;/apply&gt;</pre>
-<p>Applies the fictitious <code>processfile</code> executable to all files
+<p>Applies the fictitious <kbd>processfile</kbd> executable to all files
 matching <samp>*.file</samp> in the <samp>src</samp> directory.
 The <samp>out</samp> <code>&lt;mapper&gt;</code> has been set up to map <samp>*.file</samp>
 to <samp>*.out</samp>, then this <code>&lt;mapper&gt;</code> is used to
@@ -416,7 +416,7 @@ dependency checking against output files&mdash;the target files in this case.</p
   &lt;/path&gt;
   &lt;identitymapper/&gt;
 &lt;/apply&gt;</pre>
-<p>Applies the <code>ls</code> executable to all directories in the <code>PATH</code>, effectively
+<p>Applies the <kbd>ls</kbd> executable to all directories in the <code>PATH</code>, effectively
 listing all executables that are available on the <code>PATH</code>.</p>
 
 <pre>
@@ -431,7 +431,7 @@ listing all executables that are available on the <code>PATH</code>.</p>
         &lt;outputmapper id="out" type="glob" from="*.js" to="dest/*.js"/&gt;
     &lt;/redirector&gt;
 &lt;/apply&gt;</pre>
-<p>Conversion of the command <code>jsmin &lt; src/a.js &gt; dest/a.js</code> but for all files in
+<p>Conversion of the command <kbd>jsmin &lt; src/a.js &gt; dest/a.js</kbd> but for all files in
 the <samp>src</samp> directory. Because the filename itself should not be passed to
 the <code>jsmin</code> program, the <var>addsourcefile</var> is set to <q>false</q>.</p>
 

@@ -28,7 +28,7 @@
 <h3>Description</h3>
 <p>Changes the permissions of a file or all files inside specified directories. Right now it has
 effect only under Unix or NonStop Kernel (Tandem).  The permissions are also UNIX style, like the
-argument for the <code>chmod</code> command.</p>
+argument for the <kbd>chmod</kbd> command.</p>
 <p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on
 how the inclusion/exclusion of files works, and how to write patterns.</p>
 
@@ -44,7 +44,7 @@ nested <a href="../Types/filelist.html">filelist</a>s.</p>
 arbitrary <a href="../Types/resources.html#collection">resource collections</a> as nested
 elements.</p>
 
-<p>By default this task will use a single invocation of the underlying <code>chmod</code> command.
+<p>By default this task will use a single invocation of the underlying <kbd>chmod</kbd> command.
 If you are working on a large number of files this may result in a command line that is too long for
 your operating system.  If you encounter such problems, you should set the <var>maxparallel</var>
 attribute of this task to a non-zero value.  The number to use highly depends on the length of your
@@ -54,7 +54,7 @@ may give you an approximation for the number you could use as initial value for 
 experiments.</p>
 
 <p>By default this task won't do anything unless it detects it is running on a Unix system.  If you
-know for sure that you have a <code>chmod</code> executable on your <code>PATH</code> that is
+know for sure that you have a <kbd>chmod</kbd> executable on your <code>PATH</code> that is
 command line compatible with the Unix command, you can use the task's <var>os</var> attribute and
 set its value to your current OS.</p>
 
@@ -103,7 +103,7 @@ alternative.</p>
   </tr>
   <tr>
     <td>parallel</td>
-    <td>process all specified files using a single <code>chmod</code> command.</td>
+    <td>process all specified files using a single <kbd>chmod</kbd> command.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>

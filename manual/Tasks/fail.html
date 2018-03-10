@@ -75,7 +75,7 @@ see <a href="conditions.html">here</a>.<br/><em>Since Ant 1.6.2</em>
 
 <pre>&lt;fail/&gt;</pre>
 <p>will exit the current build with no further information given.</p>
-<pre>
+<pre class="output">
 BUILD FAILED
 
 build.xml:4: No message</pre>
@@ -83,7 +83,7 @@ build.xml:4: No message</pre>
 <pre>&lt;fail message=&quot;Something wrong here.&quot;/&gt;</pre>
 <p>will exit the current build and print something like the following to wherever your output
 goes:</p>
-<pre>
+<pre class="output">
 BUILD FAILED
 
 build.xml:4: Something wrong here.</pre>
@@ -94,7 +94,7 @@ build.xml:4: Something wrong here.</pre>
 <pre>&lt;fail unless=&quot;thisdoesnotexist&quot;/&gt;</pre>
 <p>will exit the current build and print something like the following to wherever your output
 goes:</p>
-<pre>
+<pre class="output">
 BUILD FAILED
 
 build.xml:2: unless=thisdoesnotexist</pre>
@@ -111,7 +111,7 @@ Using a condition to achieve the same effect:
 &lt;/fail&gt;</pre>
 
 <p>Output:</p>
-<pre>
+<pre class="output">
 BUILD FAILED
 
 build.xml:2: condition satisfied</pre>

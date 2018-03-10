@@ -118,10 +118,10 @@ perform entity resolution.</p>
 <h4>attribute</h4>
 <p>The <code>&lt;attribute&gt;</code> element is used to set parser features.</p>
 <p>Features usable with the Xerces parser are defined
-here: <a href="https://xml.apache.org/xerces-j/features.html" target="_top">Setting features</a></p>
+here: <a href="https://xml.apache.org/xerces-j/features.html" target="_top">Setting Features</a></p>
 <p>SAX features are defined
 here: <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
-target="_top"><code>http://xml.org/sax/features/</code></a></p>
+target="_top">SAX2 Standard Feature Flags</a></p>
 <table class="attr">
   <tr>
     <th>Attribute</th>
@@ -212,7 +212,7 @@ task is better for validating W3C XML Schemas, as it extends this task with the 
 automatically enabled, and makes it easy to add a list of schema files/URLs to act as sources.</p>
 
 <pre>
-<!-- Converts path to URL format -->
+&lt;!-- Convert path to URL format --&gt;
 &lt;pathconvert dirsep="/" property="xsd.file"&gt;
 &lt;path&gt;
    &lt;pathelement location="xml/doc.xsd"/&gt;

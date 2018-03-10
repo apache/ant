@@ -27,7 +27,7 @@
 that contained the string <q>blee</q> from the first 10 lines of a text file <samp>foo</samp>
 (<em>you wouldn't want to filter a binary file</em>) to a file <samp>bar</samp>, you would do
 something like:</p>
-<pre>cat foo|head -n10|grep blee &gt; bar</pre>
+<pre class="input">cat foo|head -n10|grep blee &gt; bar</pre>
 <p>Apache Ant was not flexible enough.  There was no way for the <code>&lt;copy&gt;</code> task to
 do something similar.  If you wanted the <code>&lt;copy&gt;</code> task to get the first 10 lines,
 you would have had to create special attributes:</p>
@@ -42,8 +42,8 @@ and plug them in.</p>
 
 <p>The solution was to refactor data transformation oriented tasks to support FilterChains.  A
 FilterChain is a group of ordered FilterReaders.  Users can define their own FilterReaders by just
-extending the <code>java.io.FilterReader</code> class.  Such custom FilterReaders can be easily
-plugged in as nested elements of <code>&lt;filterchain&gt;</code> by
+extending the <code class="code">java.io.FilterReader</code> class.  Such custom FilterReaders can
+be easily plugged in as nested elements of <code>&lt;filterchain&gt;</code> by
 using <code>&lt;filterreader&gt;</code> elements.</p>
 <p>Example:</p>
 <pre>
@@ -119,8 +119,9 @@ elements are defined in the build file using this.  Please note that built in fi
 also be defined using this syntax.</p>
 
 <p>A FilterReader element must be supplied with a class name as an attribute value.  The class
-resolved by this name must extend <code>java.io.FilterReader</code>.  If the custom filter reader
-needs to be parameterized, it must implement <code>org.apache.tools.type.Parameterizable</code>.</p>
+resolved by this name must extend <code class="code">java.io.FilterReader</code>.  If the custom
+filter reader needs to be parameterized, it must
+implement <code class="code">org.apache.tools.type.Parameterizable</code>.</p>
 
 <table class="attr">
   <tr>
@@ -206,8 +207,8 @@ is substituted with the property's actual value.</p>
 
 <h4>Example</h4>
 
-<p>This results in the property <code>modifiedmessage</code> holding the value &quot;All these
-moments will be lost in time, like teardrops in the rain&quot;</p>
+<p>This results in the property <code>modifiedmessage</code> holding the value <q>All these moments
+will be lost in time, like teardrops in the rain</q></p>
 <pre>
 &lt;echo message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
       file=&quot;loadfile1.tmp&quot;/&gt;
@@ -955,8 +956,8 @@ extracted)</p>
 <p><em>Since Ant 1.8.0</em></p>
 
 <p>The sort filter reads all lines and sorts them.  The sort order can be reversed and it is
-possible to specify a custom implementation of the <code>java.util.Comparator</code> interface
-to get even more control.</p>
+possible to specify a custom implementation of the <code class="code">java.util.Comparator</code>
+interface to get even more control.</p>
 
 <table class="attr">
   <tr>
@@ -972,8 +973,8 @@ to get even more control.</p>
   </tr>
   <tr>
     <td>comparator</td>
-    <td>Class name of a class that implements <code>java.util.Comparator</code> for Strings.
-      This class will be used to determine the sort order of lines.</td>
+    <td>Class name of a class that implements <code class="code">java.util.Comparator</code> for
+      Strings.  This class will be used to determine the sort order of lines.</td>
     <td>No</td>
   </tr>
 </table>
@@ -1023,12 +1024,12 @@ them into <samp>build</samp> location.
 
 <p>
 Sort all files <samp>*.txt</samp> from <samp>src</samp> location using as sorting
-criterium <code>EvenFirstCmp</code> class, that sorts the file lines putting even lines first
-then odd lines for example. The modified files are copied into <samp>build</samp>
-location. The <code>EvenFirstCmp</code>, has to an instanciable class
-via <code>Class.newInstance()</code>, therefore in case of inner class has to
-be <em>static</em>. It also has to implement <code>java.util.Comparator</code> interface, for
-example:
+criterium <code class="code">EvenFirstCmp</code> class, that sorts the file lines putting even lines
+first then odd lines for example. The modified files are copied into <samp>build</samp>
+location. The <code class="code">EvenFirstCmp</code> has to an instanciable class
+via <code class="code">Class.newInstance()</code>, therefore in case of inner class has to
+be <em>static</em>. It also has to implement <code class="code">java.util.Comparator</code>
+interface, for example:
 </p>
 
 <pre>
@@ -1166,9 +1167,9 @@ this on very large input.</p>
 &lt;/tokenfilter&gt;</pre>
 
 <h4 id="stringtokenizer">StringTokenizer</h4>
-<p>This tokenizer is based on <code>java.util.StringTokenizer</code>.  It splits up the input
-into strings separated by white space, or by a specified list of delimiting characters.  If the
-stream starts with delimiter characters, the first token will be the empty string (unless
+<p>This tokenizer is based on <code class="code">java.util.StringTokenizer</code>.  It splits up the
+input into strings separated by white space, or by a specified list of delimiting characters.  If
+the stream starts with delimiter characters, the first token will be the empty string (unless
 the <var>delimsaretokens</var> attribute is used).</p>
 
 <table class="attr">
@@ -1430,8 +1431,7 @@ the <a href="../Tasks/native2ascii.html">native2ascii</a> task.</p>
   </tr>
   <tr>
     <td>reverse</td>
-    <td>Reverse the sense of the conversion,
-      i.e. convert from ASCII to native.</td>
+    <td>Reverse the sense of the conversion, i.e. convert from ASCII to native.</td>
     <td>No</td>
   </tr>
 </table>
@@ -1456,9 +1456,10 @@ See the <a href="../Tasks/script.html">Script</a> task for an explanation of scr
 dependencies.
 </p>
 <p>
-The script is provided with an object <samp>self</samp> that has <code>getToken()</code>
-and <code>setToken(String)</code> methods.  The <code>getToken()</code> method returns the current
-token. The <code>setToken(String)</code> method replaces the current token.
+The script is provided with an object <samp class="code">self</samp> that
+has <code class="code">getToken()</code> and <code class="code">setToken(String)</code> methods.
+The <code class="code">getToken()</code> method returns the current
+token. The <code class="code">setToken(String)</code> method replaces the current token.
 </p>
 <p>
 This filter may be used directly within a <code>filterchain</code>.
@@ -1538,8 +1539,8 @@ the <a href="../Tasks/script.html">script</a> task on how to use this element.
 <h4 id="custom">Custom tokenizers and string filters</h4>
 
 <p>Custom string filters and tokenizers may be plugged in by extending the
-interfaces <code>org.apache.tools.ant.filters.TokenFilter.Filter</code>
-and <code>org.apache.tools.ant.util.Tokenizer</code> respectly.</p>
+interfaces <code class="code">org.apache.tools.ant.filters.TokenFilter.Filter</code>
+and <code class="code">org.apache.tools.ant.util.Tokenizer</code> respectly.</p>
 
 <p>They are defined in the build file using <code>&lt;typedef/&gt;</code>. For example, a string
 filter that capitalizes words may be declared as:</p>

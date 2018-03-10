@@ -29,7 +29,7 @@
 <p>Signing a jar allows users to authenticate the publisher.</p>
 <p>Signs JAR files with
 the <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jarsigner.html"
-target="_top"><code>jarsigner</code> command line tool</a>.  It will take a named file in
+target="_top"><kbd>jarsigner</kbd></a> command line tool.  It will take a named file in
 the <var>jar</var> attribute, and an optional <var>destDir</var> or <var>signedJar</var>
 attribute. Nested paths are also supported; here only an (optional) <var>destDir</var> is
 allowed. If a destination directory or explicit JAR file name is not provided, JARs are signed in
@@ -119,7 +119,7 @@ place.</p>
   </tr>
   <tr>
     <td>maxmemory</td>
-    <td>Specifies the maximum memory the <code>jarsigner</code> JVM will use. Specified in the style
+    <td>Specifies the maximum memory the <kbd>jarsigner</kbd> JVM will use. Specified in the style
       of standard Java memory specs (e.g. <q>128m</q> = 128 MBytes)</td>
     <td>No</td>
   </tr>
@@ -150,9 +150,9 @@ place.</p>
   </tr>
   <tr>
     <td>executable</td>
-    <td>Specify a particular <code>jarsigner</code> executable to use in place of the default binary
+    <td>Specify a particular <kbd>jarsigner</kbd> executable to use in place of the default binary
       (found in the same JDK as Apache Ant is running in).<br/>Must support the same command line
-      options as the Sun JDK <code>jarsigner</code> command.  <em>since Ant 1.8.0</em>.</td>
+      options as the Sun JDK <kbd>jarsigner</kbd> command.  <em>since Ant 1.8.0</em>.</td>
     <td>No</td>
   </tr>
   <tr>
@@ -250,7 +250,7 @@ the files will only be signed if they are not already signed.</p>
 &lt;/signjar&gt;</pre>
 <p>Sign all the JAR files in <samp>dist/**/*.jar</samp> using the digest algorithm SHA1 and the
 signature algorithm MD5withRSA. This is especially useful when you want to use the JDK
-7 <code>jarsigner</code> (which uses SHA256 and SHA256withRSA as default) to create signed jars that
+7 <kbd>jarsigner</kbd> (which uses SHA256 and SHA256withRSA as default) to create signed jars that
 will be deployed on platforms not supporting SHA256 and SHA256withRSA.</p>
 <h3>About timestamp signing</h3>
 

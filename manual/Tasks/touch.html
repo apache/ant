@@ -33,10 +33,10 @@ on <a href="../Types/resources.html">resources</a> and resource collections (whi
 directories).  Prior to Apache Ant 1.7 only FileSet or <a href="../Types/filelist.html">Filelist</a>
 (<em>since Ant 1.6</em>) were supported.</p>
 
-<p>Ant uses the API of <code>java.io.File</code> to set the last modification time which has some
-limitations.  For example, the timestamp granularity depends on the operating system and sometimes
-the operating system may allow a granularity smaller than milliseconds.  If you need more control
-you have to fall back to the <code>&lt;exec&gt;</code> task and native commands.</p>
+<p>Ant uses the API of <code class="code">java.io.File</code> to set the last modification time
+which has some limitations.  For example, the timestamp granularity depends on the operating system
+and sometimes the operating system may allow a granularity smaller than milliseconds.  If you need
+more control you have to fall back to the <code>&lt;exec&gt;</code> task and native commands.</p>
 
 <p><em>Since Ant 1.8.2</em>, a warning message is logged upon failure to change the file
 modification time.  This will happen if you try to change the modification time of a file you do not
@@ -90,8 +90,9 @@ own on many Unix systems, for example.</p>
 
 <p>You can use any number of nested resource collection elements to define the resources for this
 task and refer to resources defined elsewhere. <strong>Note</strong>: resources passed to this task
-must implement the <code>org.apache.tools.ant.types.resources.Touchable</code> interface, this is
-true for all filesystem-based resources like those returned by path, fileset ot filelist.</p>
+must implement the <code class="code">org.apache.tools.ant.types.resources.Touchable</code>
+interface, this is true for all filesystem-based resources like those returned by path, fileset ot
+filelist.</p>
 
 <p>For backwards compatibility directories matched by nested filesets will be "touched" as well, use
 a <var>type</var> selector to suppress this.  This only applies to filesets nested into the task
@@ -103,7 +104,7 @@ Files specified via nested <code>fileset</code>s, <code>filelist</code>s, or the
 attribute are mapped using the specified mapper.  For each file mapped, the resulting files are
 touched. If no time has been specified and the original file exists its timestamp will be used.  If
 no time has been specified and the original file does not exist the current time is used. <em>Since
-Ant 1.8</em>, the task settings (<var>millis</var>, and <var>datetime</var>) have priority over the
+Ant 1.8</em>, the task settings (<var>millis</var> and <var>datetime</var>) have priority over the
 timestamp of the original file.</p>
 <h3>Examples</h3>
 

@@ -30,7 +30,7 @@
 
 <p>Changes the group of a file or all files inside specified directories. Right now it has effect
 only under Unix.  The group attribute is equivalent to the corresponding argument for
-the <code>chgrp</code> command.</p>
+the <kbd>chgrp</kbd> command.</p>
 
 <p><a href="../Types/fileset.html">FileSet</a>s, <a href="../Types/dirset.html">DirSet</a>s
 or <a href="../Types/filelist.html">FileList</a>s can be specified using
@@ -41,7 +41,7 @@ elements.</p>
 arbitrary <a href="../Types/resources.html#collection">resource collections</a> as nested
 elements.</p>
 
-<p>By default this task will use a single invocation of the underlying <code>chgrp</code> command.
+<p>By default this task will use a single invocation of the underlying <kbd>chgrp</kbd> command.
 If you are working on a large number of files this may result in a command line that is too long for
 your operating system.  If you encounter such problems, you should set the <var>maxparallel</var>
 attribute of this task to a non-zero value.  The number to use highly depends on the length of your
@@ -51,7 +51,7 @@ may give you an approximation for the number you could use as initial value for 
 experiments.</p>
 
 <p>By default this task won't do anything unless it detects it is running on a Unix system.  If you
-know for sure that you have a <code>chgrp</code> executable on your <code>PATH</code> that is
+know for sure that you have a <kbd>chgrp</kbd> executable on your <code>PATH</code> that is
 command line compatible with the Unix command, you can use the task's <var>os</var> attribute and
 set its value to your current OS.</p>
 
@@ -74,7 +74,7 @@ set its value to your current OS.</p>
   </tr>
   <tr>
     <td>parallel</td>
-    <td>process all specified files using a single <code>chgrp</code> command.</td>
+    <td>process all specified files using a single <kbd>chgrp</kbd> command.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>

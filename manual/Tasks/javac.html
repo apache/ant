@@ -85,7 +85,7 @@ in <code>JAVA_HOME</code>.</p>
 when it puts together the command line switches&mdash;even if you set <var>fork</var>=<q>true</q>.
 This is useful if you want to run the compiler of JDK 1.1 while your current JDK is 1.2+.  If you
 use <var>compiler</var>=<q>javac1.1</q> and (for example) <var>depend</var>=<q>true</q>, Ant will
-use the command line switch <code>-depend</code> instead of <code>-Xdepend</code>.</p>
+use the command line switch <kbd>-depend</kbd> instead of <kbd>-Xdepend</kbd>.</p>
 <p>This task will drop all entries that point to non-existent files/directories from the classpath
 it passes to the compiler.</p>
 <p>The working directory for a forked executable (if any) is the project's base directory.</p>
@@ -95,7 +95,7 @@ release them.  The side effect of this is that you will not be able to delete or
 later on in the build.  The workaround is to fork when invoking the compiler.</p>
 <p>If you are using Java 8 or above and your source contains native methods or fields annotated with
 the <code>@Native</code> annotation you can set the <var>nativeheaderdir</var> attribute in order to
-use the <code>-h</code> switch of <code>javac</code> to generate the native header files. Note that
+use the <kbd>-h</kbd> switch of <kbd>javac</kbd> to generate the native header files. Note that
 the logic Ant uses to determine which files to compile does not take native headers into account,
 i.e. if the <samp>.class</samp> is more recent than the corresponding <samp>.java</samp> file the
 file will not get compiled even if a native header file generated for it would be outdated.</p>
@@ -157,7 +157,7 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>bootclasspath</td>
     <td>Location of bootstrap class files. (See <a href="#bootstrap">below</a> for using
-      the <code>-X</code> and <code>-J-X</code> parameters for specifying the bootstrap
+      the <kbd>-X</kbd> and <kbd>-J-X</kbd> parameters for specifying the bootstrap
       classpath).</td>
     <td>No</td>
   </tr>
@@ -192,13 +192,13 @@ file will not get compiled even if a native header file generated for it would b
   </tr>
   <tr>
     <td>nowarn</td>
-    <td>Indicates whether the <code>-nowarn</code> switch should be passed to the compiler.</td>
+    <td>Indicates whether the <kbd>-nowarn</kbd> switch should be passed to the compiler.</td>
     <td>No; defaults to <q>off</q></td>
   </tr>
   <tr>
     <td>debug</td>
     <td>Indicates whether source should be compiled with debug information.  If set
-      to <q>off</q>, <code>-g:none</code> will be passed on the command line for compilers that
+      to <q>off</q>, <kbd>-g:none</kbd> will be passed on the command line for compilers that
       support it (for other compilers, no command line argument will be used).  If set
       to <q>true</q>, the value of the <var>debuglevel</var> attribute determines the command line
       argument.</td>
@@ -206,17 +206,17 @@ file will not get compiled even if a native header file generated for it would b
   </tr>
   <tr>
     <td>debuglevel</td>
-    <td>Keyword list to be appended to the <code>-g</code> command-line switch. Legal values
+    <td>Keyword list to be appended to the <kbd>-g</kbd> command-line switch. Legal values
       are <q>none</q> or a comma-separated list of the following
       keywords: <q>lines</q>, <q>vars</q>, and <q>source</q>.</td>
     <td>No; ignored when <var>debug</var> is <q>false</q> or any implementation other
       than <q>modern</q>, <q>javac1.2</q> and <q>jikes</q>; by default, nothing will be appended
-      to <code>-g</code></td>
+      to <kbd>-g</kbd></td>
   </tr>
   <tr>
     <td>optimize</td>
     <td>Indicates whether source should be compiled with optimization. <strong>Note</strong> that
-      this flag is just ignored by Sun's <code>javac</code> since JDK 1.3 (because compile-time
+      this flag is just ignored by Sun's <kbd>javac</kbd> since JDK 1.3 (because compile-time
       optimization is unnecessary).</td>
     <td>No; defaults to <q>off</q></td>
   </tr>
@@ -259,21 +259,21 @@ file will not get compiled even if a native header file generated for it would b
   </tr>
   <tr>
     <td>executable</td>
-    <td>Complete path to the <code>javac</code> executable to use in case of <var>fork</var>
+    <td>Complete path to the <kbd>javac</kbd> executable to use in case of <var>fork</var>
       is <q>yes</q>.<br/><em>Since Ant 1.6</em> this attribute can also be used to specify the path
       to the executable when using <q>jikes</q>, <q>jvc</q>, <q>gcj</q> or <q>sj</q>.</td>
     <td>No; defaults to the compiler of current JDK, ignored if <var>fork</var> is <q>no</q></td>
   </tr>
   <tr>
     <td>memoryInitialSize</td>
-    <td>The initial size of the memory for the underlying JVM, if <code>javac</code> is run
+    <td>The initial size of the memory for the underlying JVM, if <kbd>javac</kbd> is run
       externally.  (Examples: <q>83886080</q>, <q>81920k</q>, or <q>80m</q>)</td>
     <td>No; defaults to the standard JVM memory setting, ignored if <var>fork</var>
       is <q>no</q></td>
   </tr>
   <tr>
     <td>memoryMaximumSize</td>
-    <td>The maximum size of the memory for the underlying JVM, if <code>javac</code> is run
+    <td>The maximum size of the memory for the underlying JVM, if <kbd>javac</kbd> is run
       externally; ignored otherwise.  (Examples: <q>83886080</q>, <q>81920k</q>, or <q>80m</q>)</td>
     <td>No; defaults to the standard JVM memory setting, ignored if <var>fork</var>
       is <q>no</q></td>
@@ -290,14 +290,14 @@ file will not get compiled even if a native header file generated for it would b
   </tr>
   <tr>
     <td>source</td>
-    <td>Java language features accepted by compiler, as specified by the <code>-source</code>
+    <td>Java language features accepted by compiler, as specified by the <kbd>-source</kbd>
       command-line switch.  Valid feature versions are <q>1.3</q>, <q>1.4</q>, <q>1.5</q>
       or <q>5</q>, etc.  The attribute will be ignored by all implementations prior
       to <q>javac1.4</q> (or <q>modern</q> when Ant is not running in a JVM 1.3), <q>gcj</q>
       and <q>jikes</q>.<br/>  If you use this attribute together with <q>gcj</q> or <q>jikes</q>, you
-      must make sure that your version supports the <code>-source</code> (or <code>-fsource</code>
-      for <code>gcj</code>) switch.</td>
-    <td>No; by default, no <code>-source</code> argument will be used at all unless the magic
+      must make sure that your version supports the <kbd>-source</kbd> (or <kbd>-fsource</kbd>
+      for <kbd>gcj</kbd>) switch.</td>
+    <td>No; by default, no <kbd>-source</kbd> argument will be used at all unless the magic
       <a href="../javacprops.html#source"><code>ant.build.javac.source</code></a> property is
       set<br/><strong>Note that the default value depends on JDK that is running Ant.  We highly
       recommend to always specify this attribute.</strong></td>
@@ -305,7 +305,7 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>target</td>
     <td>Generate class files for specific JVM version (cross-compile).</td>
-    <td>No; by default, no <code>-target</code> argument will be used at all unless the
+    <td>No; by default, no <kbd>-target</kbd> argument will be used at all unless the
       magic <a href="../javacprops.html#target"><code>ant.build.javac.target</code></a> property is
       set<br/><strong>Note that the default value depends on JDK that is running Ant and
       on <var>source</var>
@@ -344,7 +344,7 @@ file will not get compiled even if a native header file generated for it would b
       are on the classpath for the compiler. This means that "greedy" compilers will not recompile
       dependent classes that are already compiled.  In general this is a good thing as it stops the
       compiler for doing unnecessary work. However, for some edge cases, involving generics,
-      the <code>javac</code> compiler needs to compile the dependent classes to get the generics
+      the <kbd>javac</kbd> compiler needs to compile the dependent classes to get the generics
       information. One example is documented in the bug
       report: <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=40776" target="_top">Bug
       40776 - a problem compiling a Java 5 project with generics</a>.  Setting the attribute
@@ -371,7 +371,7 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>modulepathref</td>
     <td>The <var>modulepath</var> to use, given as <a href="../using.html#references">reference</a>
-    to a PATH defined elsewhere.  <em>since Ant 1.9.7</em></td>
+    to a path defined elsewhere.  <em>since Ant 1.9.7</em></td>
     <td>No</td>
   </tr>
   <tr>
@@ -384,7 +384,7 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>modulesourcepathref</td>
     <td>The <var>modulesourcepath</var> to use, given
-      as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.  <em>since
+      as <a href="../using.html#references">reference</a> to a path defined elsewhere.  <em>since
       Ant 1.9.7</em></td>
     <td>No</td>
   </tr>
@@ -397,22 +397,21 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>upgrademodulepathref</td>
     <td>The <var>upgrademodulepath</var> to use, given
-    as <a href="../using.html#references">reference</a> to a PATH defined elsewhere.  <em>since Ant
+    as <a href="../using.html#references">reference</a> to a path defined elsewhere.  <em>since Ant
     1.9.7</em></td>
     <td>No</td>
   </tr>
   <tr>
     <td>nativeheaderdir</td>
-    <td>Specify where to place generated native header files. Ignored when running on JDK &lt;
-    8.  <em>Since Ant 1.9.8</em>.
-    <td>No</td>
+    <td>Specify where to place generated native header files.  <em>Since Ant 1.9.8</em>.
+    <td>No, ignored when running on JDK 7 or earlier</td>
   </tr>
   <tr>
     <td>release</td>
-    <td>Specify the value for the <code>--release</code> switch. Ignored when running on JDK &lt;
-      9.<br/>When set and running on JDK &gt;= 9 the <var>source</var> and <var>target</var>
-      attributes as well as the <var>bootclasspath</var> will be ignored.  <em>Since Ant 1.9.8</em>.
-    <td>No</td>
+    <td>Specify the value for the <kbd>--release</kbd> switch.<br/>When set and running on JDK 9+
+      the <var>source</var> and <var>target</var> attributes as well as the <var>bootclasspath</var>
+      will be ignored.  <em>Since Ant 1.9.8</em>.
+    <td>No, ignored when running on JDK 8 or earlier</td>
   </tr>
 </table>
 
@@ -510,7 +509,7 @@ is <q>1.4</q>, so you can use <code>assert</code> statements.</p>
 
 <p>compiles all <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
 the <samp>.class</samp> files in the <samp>${build}</samp> directory.  This will fork off the Java
-compiler using the default <code>javac</code> executable.  The source level is <q>1.2</q> (similar
+compiler using the default <kbd>javac</kbd> executable.  The source level is <q>1.2</q> (similar
 to <q>1.1</q> or <q>1.3</q>) and the class files should be runnable under JDK 1.2+ as well.</p>
 
 <pre>
@@ -521,7 +520,7 @@ to <q>1.1</q> or <q>1.3</q>) and the class files should be runnable under JDK 1.
 
 <p>compiles all <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
 the <samp>.class</samp> files in the <samp>${build}</samp> directory.  This will fork off the Java
-compiler, using the executable named <code>java$javac.exe</code>.  Note that the <q>$</q> sign needs
+compiler, using the executable named <kbd>java$javac.exe</kbd>.  Note that the <q>$</q> sign needs
 to be escaped by a second one.  The source level is <q>1.5</q>, so you can use generics.</p>
 
 <pre>
@@ -563,9 +562,9 @@ elements as follows:</p>
   &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
 &lt;/javac&gt;</pre>
 
-<p>If you want to run the <code>javac</code> compiler of a different JDK, you should tell Ant, where
+<p>If you want to run the <kbd>javac</kbd> compiler of a different JDK, you should tell Ant, where
 to find the compiler and which version of JDK you will be using so it can choose the correct command
-line switches.  The following example executes a JDK 1.1 <code>javac</code> in a new process and
+line switches.  The following example executes a JDK 1.1 <kbd>javac</kbd> in a new process and
 uses the correct command line switches even when Ant is running in a JVM of a different version:</p>
 
 <pre>
@@ -610,7 +609,7 @@ log, that these settings are fix.</p>
 
 <p><strong>Note</strong>: If you are using Ant on Windows and a new DOS window pops up for every use
 of an external compiler, this may be a problem of the JDK you are using.  This problem may occur
-with all JDKs &lt; 1.2.</p>
+with all JDKs prior to 1.2.</p>
 
 <p>If you want to activate other compiler options like <code>lint</code> you could use
 the <code>&lt;compilerarg&gt;</code> element:</p>
@@ -670,7 +669,7 @@ compilation module set.  The <code>{ ... , ... }</code> express alternates for e
 compilation uses application modules located in <code>modules</code> folder.The source level
 is <q>9</q> to enable modules.</p>
 
-<h3>Jikes notes</h3>
+<h3 id="jikes">Jikes notes</h3>
 
 <p>You need Jikes 1.15 or later.</p>
 
@@ -682,7 +681,7 @@ and must be set to <q>true</q> or <q>yes</q> to be interpreted as anything other
 than <q>false</q>. By default, <code>build.compiler.warnings</code> is <q>true</q>, while all others
 are <q>false</q>.</p>
 
-<table class="attr">
+<table>
   <tr>
     <th>Property</th>
     <th>Description</th>
@@ -705,24 +704,24 @@ are <q>false</q>.</p>
     <td><q>false</q></td>
   </tr>
   <tr>
-    <td>build.compiler.warnings<br/><em><u>Deprecated</u></em>. Use <code>&lt;javac&gt;</code>'s <var>nowarn</var>
-      attribute instead.</td>
+    <td><code>build.compiler.warnings</code><br/><em><u>Deprecated</u></em>.
+      Use <code>&lt;javac&gt;</code>'s <var>nowarn</var> attribute instead.</td>
     <td>Don't disable warning messages.</td>
     <td><q>true</q></td>
   </tr>
 </table>
 
-<h3>Jvc notes</h3>
+<h3 id="jvc">Jvc notes</h3>
 
 <p><q>Jvc</q> will enable Microsoft extensions unless you set the
 property <code>build.compiler.jvc.extensions</code> to <q>false</q> before
 invoking <code>&lt;javac&gt;</code>.</p>
 
 <h3 id="bootstrap">Bootstrap options</h3>
-<p>The Sun <code>javac</code> compiler has a <code>bootclasspath</code> command line
+<p>The Sun <kbd>javac</kbd> compiler has a <kbd>-bootclasspath</kbd> command line
 option&mdash;this corresponds to the <var>bootclasspath</var> attribute/element of
 the <code>&lt;javac&gt;</code> task. The Sun compiler also allows more control over the boot
-classpath using the <code>-X</code> and <code>-J-X</code> attributes.  One can set these by using
+classpath using the <kbd>-X</kbd> and <kbd>-J-X</kbd> attributes.  One can set these by using
 the <code>&lt;compilerarg&gt;</code>. <em>Since Ant 1.6.0</em>, there is a shortcut to convert path
 references to strings that can by used in an OS independent fashion
 (see <a href="../using.html#pathshortcut">pathshortcut</a>). For example:</p>
@@ -739,10 +738,10 @@ references to strings that can by used in an OS independent fashion
 <p>The <a href="http://openjdk.java.net/" target="_top">OpenJDK</a> project has provided
 the <code>javac</code> <a href="http://openjdk.java.net/groups/compiler/" target="_top">compiler</a>
 as an open source project. The output of this project is a <code>javac.jar</code> which contains
-the <code>javac</code> compiler.  This compiler may be used with the <code>&lt;javac&gt;</code> task
-with the use of a <code>-Xbootclasspath/p</code> Java argument. The argument needs to be given to
-the runtime system of the <code>javac</code> executable, so it needs to be prepended with
-a <code>-J</code>, for example:</p>
+the <kbd>javac</kbd> compiler.  This compiler may be used with the <code>&lt;javac&gt;</code> task
+with the use of a <kbd>-Xbootclasspath/p</kbd> Java argument. The argument needs to be given to the
+runtime system of the <kbd>javac</kbd> executable, so it needs to be prepended with a <kbd>-J</kbd>,
+for example:</p>
 
 <pre>
 &lt;property name="patched.javac.jar"

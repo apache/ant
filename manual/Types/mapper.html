@@ -32,9 +32,10 @@ may want to specify the target files, either to help Apache Ant or to get an ext
 functionality.</p>
 <p>While source files are usually specified as <a href="fileset.html">fileset</a>s, you don't
 specify target files directly&mdash;instead, you tell Ant how to find the target file(s) for one
-source file. An instance of <code>org.apache.tools.ant.util.FileNameMapper</code> is responsible for
-this. It constructs target file names based on rules that can be parameterized with <var>from</var>
-and <var>to</var> attributes&mdash;the exact meaning of which is implementation-dependent.</p>
+source file. An instance of <code class="code">org.apache.tools.ant.util.FileNameMapper</code> is
+responsible for this. It constructs target file names based on rules that can be parameterized
+with <var>from</var> and <var>to</var> attributes&mdash;the exact meaning of which is
+implementation-dependent.</p>
 <p>These instances are defined in <code>&lt;mapper&gt;</code> elements with the following
 attributes:</p>
 <table class="attr">
@@ -88,16 +89,16 @@ is, a <a href="../using.html#path">path</a>-like structure.</p>
 <p><em>Since Ant 1.7.0</em>, nested File Mappers can be supplied via
 either <code>&lt;mapper&gt;</code> elements
 or <a href="../Tasks/typedef.html"><code>&lt;typedef&gt;</code></a>'d implementations
-of <code>org.apache.tools.ant.util.FileNameMapper</code>.  If nested File Mappers are specified by
-either means, the mapper will be implicitly configured as a <a href="#composite-mapper">composite
-mapper</a>.</p>
+of <code class="code">org.apache.tools.ant.util.FileNameMapper</code>.  If nested File Mappers are
+specified by either means, the mapper will be implicitly configured as
+a <a href="#composite-mapper">composite mapper</a>.</p>
 <h3>The built-in mapper types</h3>
 <p>All built-in mappers are case-sensitive.</p>
 <p><em>Since Ant 1.7.0</em>, each of the built-in mapper implementation types is directly accessible
 using a specific tagname. This makes it possible for filename mappers to support attributes in
-addition to the generally available <var>to</var> and <var>from</var>.<br/>  The <code>&lt;mapper
-type|classname=&quot;...&quot;&gt;</code> usage form remains valid for reasons of backward
-compatibility.</p>
+addition to the generally available <var>to</var> and <var>from</var>.<br/>
+The <code>&lt;mapper <var>type</var>|<var>classname</var>=&quot;...&quot;&gt;</code> usage form
+remains valid for reasons of backward compatibility.</p>
 
     <!--                                        -->
     <!--             Identity Mapper            -->
@@ -330,10 +331,10 @@ case).</p>
 <p>Note that you need to escape a dollar-sign (<q>$</q>) with another dollar-sign in Ant.</p>
 
 <p>The regexp mapper needs a supporting library and an implementation
-of <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that hides the specifics of the
-library. <em>Since Ant 1.8.0</em>, Java 1.4 or later is required, so the implementation based on
-the <code>java.util.regex</code> package is always be available.  You can still use the now retired
-Jakarta ORO or Jakarta Regex instead if your provide the corresponding jar in
+of <code class="code">org.apache.tools.ant.util.regexp.RegexpMatcher</code> that hides the specifics
+of the library. <em>Since Ant 1.8.0</em>, Java 1.4 or later is required, so the implementation based
+on the <code class="code">java.util.regex</code> package is always be available.  You can still use
+the now retired Jakarta ORO or Jakarta Regex instead if your provide the corresponding jar in
 your <code>CLASSPATH</code>.</p>
 
 <p>For information about using <a href="https://savannah.gnu.org/projects/gnu-regexp/"
@@ -344,17 +345,17 @@ target="_top">your mileage may vary</a> with different regexp engines.</p>
 
 <p>If you want to use one of the <a href="../install.html#librarydependencies">regular expression
 libraries</a> other than <code>java.util.regex</code> you need to also use the
-corresponding <code>ant-[apache-oro, apache-regexp].jar</code> from the Ant release you are using.
+corresponding <samp>ant-[apache-oro, apache-regexp].jar</samp> from the Ant release you are using.
 Make sure that both will be loaded from the same classpath, that is either put them into
 your <code>CLASSPATH</code>, <samp>ANT_HOME/lib</samp> directory or a
 nested <code>&lt;classpath&gt;</code> element of the mapper&mdash;you cannot
-have <code>ant-[apache-oro, apache-regexp].jar</code> in <samp>ANT_HOME/lib</samp> and the library
+have <samp>ant-[apache-oro, apache-regexp].jar</samp> in <samp>ANT_HOME/lib</samp> and the library
 in a nested <code>&lt;classpath&gt;</code>.</p>
 <p>Ant will choose the regular expression library based on the following algorithm:</p>
 <ul>
 <li>If the system property <code>ant.regexp.matcherimpl</code> has been set, it is taken as the name
-of the class implementing <code>org.apache.tools.ant.util.regexp.RegexpMatcher</code> that should be
-used.</li>
+of the class implementing <code class="code">org.apache.tools.ant.util.regexp.RegexpMatcher</code>
+that should be used.</li>
 <li>If it has not been set, uses the JDK 1.4 classes.</li>
 </ul>
 
@@ -590,7 +591,7 @@ mappers; prior to Ant 1.8.0 the order has been undefined.</p>
     <td><code>foo.bar.A</code></td>
   </tr>
 </table>
-<p>The composite mapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code>
+<p>The composite mapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var>
 attribute.</p>
 
     <!--                                        -->
@@ -633,7 +634,7 @@ operation.  The <var>to</var> and <var>from</var> attributes are ignored.</p>
     <td><code>new/path/B.java2</code></td>
   </tr>
 </table>
-<p>The chained mapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code>
+<p>The chained mapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var>
 attribute.</p>
 
     <!--                                        -->
@@ -678,9 +679,7 @@ file name.</p>
   </tr>
 </table>
 
-  <p>The filtermapper has no corresponding
-    <code>&lt;mapper <var>type</var>&gt;</code> attribute.
-  </p>
+<p>The filtermapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var> attribute.</p>
 
     <!--                                        -->
     <!--             Script Mapper              -->
@@ -742,8 +741,7 @@ dependencies.</p>
   </tr>
 </table>
 <p>This filename mapper can take a nested &lt;classpath&gt; element.  See
-the <a href="../Tasks/script.html">script</a> task on how to use this element.
-</p>
+the <a href="../Tasks/script.html">script</a> task on how to use this element.</p>
 
 <h5>Example</h5>
 <pre>
@@ -793,7 +791,7 @@ every source file, with the list of mapped names reset after every invocation.</
   </tr>
 </table>
 
-<p>The scriptmapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code> attribute.</p>
+<p>The scriptmapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var> attribute.</p>
 
 <h4 id="firstmatch-mapper">firstmatchmapper</h4>
 <p><em>Since Ant 1.8.0</em></p>
@@ -822,7 +820,7 @@ collects the results of all matching children.</p>
   </tr>
 </table>
 
-<p>The firstmatchmapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code>
+<p>The firstmatchmapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var>
 attribute.</p>
 
 <h4 id="cutdirs-mapper">cutdirsmapper</h4>
@@ -843,7 +841,7 @@ attribute.</p>
   </tr>
 </table>
 
-<p>The cutdirsmapper has no corresponding <code>&lt;mapper <var>type</var>&gt;</code> attribute.</p>
+<p>The cutdirsmapper has no corresponding <code>&lt;mapper&gt;</code> <var>type</var> attribute.</p>
 
 <table class="attr">
   <tr>

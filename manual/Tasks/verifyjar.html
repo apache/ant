@@ -26,8 +26,10 @@
 
 <h2 id="verifyjar">VerifyJar</h2>
 <h3>Description</h3>
-<p>Verifies JAR files with the <code>jarsigner</code> command line tool.  It will take a named file
-in the <var>jar</var> attribute. Nested paths are also supported.</p>
+<p>Verifies JAR files with
+the <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jarsigner.html"
+target="_top"><kbd>jarsigner</kbd></a> command line tool.  It will take a named file in
+the <var>jar</var> attribute. Nested paths are also supported.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -83,15 +85,15 @@ in the <var>jar</var> attribute. Nested paths are also supported.</p>
   </tr>
   <tr>
     <td>maxmemory</td>
-    <td>Specifies the maximum memory the <code>jarsigner</code> JVM will use. Specified in the style
+    <td>Specifies the maximum memory the <kbd>jarsigner</kbd> JVM will use. Specified in the style
       of standard Java memory specs (e.g. <q>128m</q> = 128 MBytes)</td>
     <td>No</td>
   </tr>
   <tr>
     <td>executable</td>
-    <td>Specify a particular <code>jarsigner</code> executable to use in place of the default binary
+    <td>Specify a particular <kbd>jarsigner</kbd> executable to use in place of the default binary
       (found in the same JDK as Apache Ant is running in).<br/>  Must support the same command line
-      options as the Sun JDK <code>jarsigner</code> command.  <em>since Ant 1.8.0</em>.</td>
+      options as the Sun JDK <kbd>jarsigner</kbd> command.  <em>since Ant 1.8.0</em>.</td>
     <td>No</td>
   </tr>
 </table>

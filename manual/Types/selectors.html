@@ -34,10 +34,10 @@
     any target by using the <code>&lt;selector&gt;</code> tag and then using it as a reference.</p>
 
     <p>Different selectors have different attributes. Some selectors can contain other selectors,
-    and these are called <a href="#selectcontainers"><code>Selector Containers</code></a>.  There is
-    also a category of selectors that allow user-defined extensions,
-    called <a href="#customselect"><code>Custom Selectors</code></a>.  The ones built in to Apache
-    Ant are called <a href="#coreselect"><code>Core Selectors</code></a>.</p>
+    and these are called <a href="#selectcontainers"><q>Selector Containers</q></a>.  There is also
+    a category of selectors that allow user-defined extensions,
+    called <a href="#customselect"><q>Custom Selectors</q></a>.  The ones built in to Apache Ant are
+    called <a href="#coreselect"><q>Core Selectors</q></a>.</p>
 
     <h3 id="coreselect">Core Selectors</h3>
 
@@ -877,36 +877,36 @@
     <h4 id="readable">Readable Selector</h4>
 
     <p>The <code>&lt;readable&gt;</code> selector selects only files that are readable.  Ant only
-    invokes <code>java.io.File#canRead</code> so if a file is unreadable but JVM cannot detect this
-    state, this selector will still select the file.</p>
+    invokes <code class="code">java.io.File#canRead</code> so if a file is unreadable but JVM cannot
+    detect this state, this selector will still select the file.</p>
 
     <h4 id="writable">Writable Selector</h4>
 
     <p>The <code>&lt;writable&gt;</code> selector selects only files that are writable.  Ant only
-    invokes <code>java.io.File#canWrite</code> so if a file is nonwritable but JVM cannot detect
-    this state, this selector will still select the file.</p>
+    invokes <code class="code">java.io.File#canWrite</code> so if a file is nonwritable but JVM
+    cannot detect this state, this selector will still select the file.</p>
 
     <h4 id="executable">Executable Selector</h4>
 
     <p>The <code>&lt;executable&gt;</code> selector selects only files that are executable.  Ant
-    only invokes <code>java.nio.file.Files#isExecutable</code> so if a file is not executable but
-    JVM cannot detect this state, this selector will still select the file.</p>
+    only invokes <code class="code">java.nio.file.Files#isExecutable</code> so if a file is not
+    executable but JVM cannot detect this state, this selector will still select the file.</p>
 
     <p><em>Since Ant 1.10.0</em></p>
 
     <h4 id="symlink">Symlink Selector</h4>
 
     <p>The <code>&lt;symlink&gt;</code> selector selects only files that are symbolic links.  Ant
-    only invokes <code>java.nio.file.Files#isSymbolicLink</code> so if a file is a symbolic link but
-    JVM cannot detect this state, this selector will not select the file.</p>
+    only invokes <code class="code">java.nio.file.Files#isSymbolicLink</code> so if a file is a
+    symbolic link but JVM cannot detect this state, this selector will not select the file.</p>
 
     <p><em>Since Ant 1.10.0</em></p>
 
     <h4 id="ownedBy">OwnedBy Selector</h4>
 
     <p>The <code>&lt;ownedBy&gt;</code> selector selects only files that are owned by the given
-    user.  Ant only invokes <code>java.nio.file.Files#getOwner</code> so if a file system doesn't
-    support the operation this selector will not select the file.</p>
+    user.  Ant only invokes <code class="code">java.nio.file.Files#getOwner</code> so if a file
+    system doesn't support the operation this selector will not select the file.</p>
 
     <p><em>Since Ant 1.10.0</em></p>
 
@@ -1312,9 +1312,9 @@
 
     <p>First, you have to write your selector class in Java. The only requirement it must meet in
     order to be a selector is that it implements
-    the <code>org.apache.tools.ant.types.selectors.FileSelector</code> interface, which contains a
-    single method. See <a href="selectors-program.html">Programming Selectors in Ant</a> for more
-    information.</p>
+    the <code class="code">org.apache.tools.ant.types.selectors.FileSelector</code> interface, which
+    contains a single method. See <a href="selectors-program.html">Programming Selectors in Ant</a>
+    for more information.</p>
 
     <p>Once that is written, you include it in your build file by using
     the <code>&lt;custom&gt;</code> tag.</p>
@@ -1328,7 +1328,7 @@
       <tr>
         <td>classname</td>
         <td>The name of your class that
-        implements <code>org.apache.tools.ant.types.selectors.FileSelector</code>.
+        implements <code class="code">org.apache.tools.ant.types.selectors.FileSelector</code>.
         </td>
         <td>Yes</td>
       </tr>
@@ -1362,15 +1362,15 @@
 
     <ul>
       <li><a href="#containsselect">Contains Selector</a> with
-        classname <code>org.apache.tools.ant.types.selectors.ContainsSelector</code>
+        classname <code class="code">org.apache.tools.ant.types.selectors.ContainsSelector</code>
       <li><a href="#dateselect">Date Selector</a> with
-        classname <code>org.apache.tools.ant.types.selectors.DateSelector</code>
+        classname <code class="code">org.apache.tools.ant.types.selectors.DateSelector</code>
       <li><a href="#depthselect">Depth Selector</a> with
-        classname <code>org.apache.tools.ant.types.selectors.DepthSelector</code>
+        classname <code class="code">org.apache.tools.ant.types.selectors.DepthSelector</code>
       <li><a href="#filenameselect">Filename Selector</a> with
-        classname <code>org.apache.tools.ant.types.selectors.FilenameSelector</code>
+        classname <code class="code">org.apache.tools.ant.types.selectors.FilenameSelector</code>
       <li><a href="#sizeselect">Size Selector</a> with
-        classname <code>org.apache.tools.ant.types.selectors.SizeSelector</code>
+        classname <code class="code">org.apache.tools.ant.types.selectors.SizeSelector</code>
     </ul>
 
     <p>Here is the example from the Depth Selector section rewritten to use the selector

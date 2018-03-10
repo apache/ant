@@ -60,7 +60,7 @@
       the <var>debug</var>, <var>deprecation</var>, <var>srcdir</var> and <var>destdir</var>
       attributes set. It also has a <code>src</code> element to source files from a generated
       directory.</p>
-    <pre class="code">
+    <pre>
 &lt;presetdef name="my.javac"&gt;
    &lt;javac debug="${debug}" deprecation="${deprecation}"
           srcdir="${src.dir}" destdir="${classes.dir}"&gt;
@@ -68,13 +68,13 @@
    &lt;/javac&gt;
 &lt;/presetdef&gt;</pre>
     <p>This can be used as a normal <code>javac</code> task&mdash;for example:</p>
-    <pre class="code">&lt;my.javac/&gt;</pre>
+    <pre>&lt;my.javac/&gt;</pre>
     <p>The attributes specified in the preset task may be overridden&mdash;i.e.  they may be seen as
       optional attributes&mdash;for example:</p>
-    <pre class="code">&lt;my.javac srcdir="${test.src}" deprecation="no"/&gt;</pre>
+    <pre>&lt;my.javac srcdir="${test.src}" deprecation="no"/&gt;</pre>
     <p>One may put a <code>presetdef</code> definition in an antlib.  For example suppose the jar
       file <samp>antgoodies.jar</samp> has the <samp>antlib.xml</samp> as follows:</p>
-    <pre class="code">
+    <pre>
 &lt;antlib&gt;
    &lt;taskdef resource="com/acme/antgoodies/tasks.properties"/&gt;
    &lt;!-- Implement the common use of the javac command --&gt;
@@ -84,7 +84,7 @@
    &lt;/presetdef&gt;
 &lt;/antlib&gt;</pre>
     <p>One may then use this in a build file as follows:</p>
-    <pre class="code">
+    <pre>
 &lt;project default="example" xmlns:antgoodies="antlib:com.acme.antgoodies"&gt;
    &lt;target name="example"&gt;
       &lt;!-- Compile source --&gt;
@@ -94,7 +94,7 @@
    &lt;/target&gt;
 &lt;/project&gt;</pre>
     <p>The following is an example of evaluation of properties when the definition is used:</p>
-    <pre class="code">
+    <pre>
 &lt;target name="defineandcall"&gt;
    &lt;presetdef name="showmessage"&gt;
       &lt;echo&gt;message is '${message}'&lt;/echo&gt;
@@ -109,8 +109,8 @@
 &lt;target name="called"&gt;
    &lt;showmessage/&gt;
 &lt;/target&gt;</pre>
-    <p>The command <code>ant defineandcall</code> results in the output:</p>
-    <pre class="code">
+    <p>The command <kbd>ant defineandcall</kbd> results in the output:</p>
+    <pre class="output">
 defineandcall:
 [showmessage] message is '${message}'
 [showmessage] message is 'Message 1'
@@ -120,7 +120,7 @@ called:
     <p>It is possible to use a trick to evaluate properties when the definition is <em>made</em>
       rather than used. This can be useful if you do not expect some properties to be available in
       child builds run with <code>&lt;ant ... inheritall="false"&gt;</code>:</p>
-    <pre class="code">
+    <pre>
 &lt;macrodef name="showmessage-presetdef"&gt;
   &lt;attribute name="messageval"/&gt;
   &lt;presetdef name="showmessage"&gt;

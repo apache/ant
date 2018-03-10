@@ -60,7 +60,7 @@
 <h3>Java 5+ proxy support</h3>
 <p><em>Since Ant 1.7</em></p>
 <p>
-  When Ant starts up, if the <code>-autoproxy</code> command is
+  When Ant starts up, if the <kbd>-autoproxy</kbd> command is
   supplied, Ant sets the <code>java.net.useSystemProxies</code> system
   property. This tells a Java 5+ runtime to use the current set of
   property settings of the host environment. Other JVMs, such as
@@ -78,7 +78,7 @@
   like Oracle JDBC drivers or pure Java SVN clients.
 </p>
 <p>
-  To make the <code>-autoproxy</code> option the default, add it to
+  To make the <kbd>-autoproxy</kbd> option the default, add it to
   the environment variable <code>ANT_ARGS</code>, which contains a
   list of arguments to pass to Ant on every command line run.
 </p>
@@ -130,7 +130,7 @@
 <h3>Manual JVM options</h3>
 <p>
   Any JVM can have its proxy options explicitly configured by passing
-  the appropriate <code>-D</code> system property options to the
+  the appropriate <kbd>-D</kbd> system property options to the
   runtime.  Ant can be configured through all its shell scripts via
   the <code>ANT_OPTS</code> environment variable, which is a list of
   options to supply to Ant's JVM:
@@ -260,7 +260,7 @@ For csh/tcsh:
   There are four ways to set up proxies in Ant.
 </p>
 <ol>
-  <li>With Ant 1.7 and Java 5+ using the <code>-autoproxy</code> parameter.</li>
+  <li>With Ant 1.7 and Java 5+ using the <kbd>-autoproxy</kbd> parameter.</li>
   <li>Via JVM system properties&mdash;set these in the <code>ANT_ARGS</code> environment variable.</li>
   <li>Via the <code>&lt;setproxy&gt;</code> task.</li>
   <li>Custom ProxySelector implementations</li>
@@ -275,7 +275,7 @@ For csh/tcsh:
   for Java code to adapt to them. However, given the fact that it
   currently does break some builds, it will be some time before Ant
   enables the automatic proxy feature by default. Until then, you have
-  to enable the <code>-autoproxy</code> option or use one of the
+  to enable the <kbd>-autoproxy</kbd> option or use one of the
   alternate mechanisms to configure the JVM.
 </p>
 

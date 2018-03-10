@@ -173,7 +173,7 @@ JSCh earlier than 0.1.28.</p>
   <tr>
     <td>verbose</td>
     <td>Determines whether <code>sshexec</code> outputs verbosely to the user.<br/>  Similar output
-      is generated as the <code>ssh</code> commandline tool with the <code>-v</code>
+      is generated as the <kbd>ssh</kbd> command line tool with the <kbd>-v</kbd>
       option.  <em>since Ant 1.8.0</em></td>
     <td>No; defaults to <q>false</q></td>
   </tr>
@@ -196,7 +196,7 @@ JSCh earlier than 0.1.28.</p>
   </tr>
   <tr>
     <td>usepty</td>
-    <td>Whether to allocate a pseudo-tty (like <code>ssh -t</code>).  <em>since Ant 1.8.3</em></td>
+    <td>Whether to allocate a pseudo-tty (like <kbd>ssh -t</kbd>).  <em>since Ant 1.8.3</em></td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
@@ -261,9 +261,9 @@ command line. For example:</p>
          password=&quot;${password}&quot;
          command=&quot;touch somefile&quot;/&gt;</pre>
 <p>Invoking Ant with the following command line:</p>
-<pre>ant -Dusername=me -Dpassword=mypassword target1 target2</pre>
+<pre class="input">ant -Dusername=me -Dpassword=mypassword target1 target2</pre>
 <p>is slightly better, but the username/password is exposed to all users on an Unix system (via
-the <code>ps</code> command). The best approach is to use the <code>&lt;input&gt;</code> task and/or
+the <kbd>ps</kbd> command). The best approach is to use the <code>&lt;input&gt;</code> task and/or
 retrieve the password from a (secured) <samp>.properties</samp> file.</p>
 </body>
 </html>

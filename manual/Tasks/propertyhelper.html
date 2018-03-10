@@ -29,8 +29,9 @@
 <h3>Description</h3>
 <p>This task is provided for the purpose of allowing the user to <strong>(a)</strong> install a
 different <code>PropertyHelper</code> at runtime, or <strong>(b)</strong> (hopefully more often)
-install one or more <code>PropertyHelper</code> Delegates into the <code>PropertyHelper</code>
-active on the current <code>Project</code>. This is somewhat advanced Apache Ant usage and assumes a
+install one or more <code class="code">PropertyHelper</code> Delegates into
+the <code class="code">PropertyHelper</code> active on the
+current <code class="code">Project</code>. This is somewhat advanced Apache Ant usage and assumes a
 working familiarity with the modern Ant APIs. See the description of
 Ant's <a href="../properties.html#propertyHelper">Property Helper</a> for more information.</p>
 
@@ -41,11 +42,12 @@ Ant's <a href="../properties.html#propertyHelper">Property Helper</a> for more i
 instance.</p>
 
 <h4>PropertyHelper.Delegate</h4>
-<p>You may specify, either in conjunction with a new <code>PropertyHelper</code> or not, one or more
-configured implementations of the <code>org.apache.tools.ant.PropertyHelper.Delegate</code>
-interface. A deeper understanding of the API is required here, however, as <code>Delegate</code> is
-a marker interface only: the nested arguments must implement a <code>Delegate</code> subinterface in
-order to do anything meaningful.</p>
+<p>You may specify, either in conjunction with a new <code class="code">PropertyHelper</code> or
+not, one or more configured implementations of
+the <code class="code">org.apache.tools.ant.PropertyHelper.Delegate</code> interface. A deeper
+understanding of the API is required here, however, as <code class="code">Delegate</code> is a
+marker interface only: the nested arguments must implement a <code class="code">Delegate</code>
+subinterface in order to do anything meaningful.</p>
 
 <h4>delegate</h4>
 <p>A generic <code>&lt;delegate&gt;</code> element which can use project references is also
@@ -67,8 +69,8 @@ provided:</p>
 
 <h3>Examples</h3>
 
-<p>Install a completely different <code>PropertyHelper</code> implementation
-(assuming <code>MyPropertyHelper extends PropertyHelper</code>):</p>
+<p>Install a completely different <code class="code">PropertyHelper</code> implementation
+(assuming <code class="code">MyPropertyHelper extends PropertyHelper</code>):</p>
 
 <pre>
 &lt;componentdef classname="org.example.MyPropertyHelper"
@@ -78,10 +80,11 @@ provided:</p>
 &lt;/propertyhelper>
 </pre>
 
-<p>Add a new <code>PropertyEvaluator</code> delegate (assuming <code>MyPropertyEvaluator implements
-PropertyHelper.PropertyEvaluator</code>).  Note that <code>PropertyHelper</code> uses the configured
-delegates in LIFO order.  I.e. the delegate added by this task will be consulted before any
-previously defined delegate and in particular before the built-in ones.</p>
+<p>Add a new <code class="code">PropertyEvaluator</code> delegate
+(assuming <code class="code">MyPropertyEvaluator implements
+PropertyHelper.PropertyEvaluator</code>).  Note that <code class="code">PropertyHelper</code> uses
+the configured delegates in LIFO order.  I.e. the delegate added by this task will be consulted
+before any previously defined delegate and in particular before the built-in ones.</p>
 
 <pre>
 &lt;componentdef classname="org.example.MyPropertyEvaluator"
@@ -91,7 +94,8 @@ previously defined delegate and in particular before the built-in ones.</p>
 &lt;/propertyhelper>
 </pre>
 
-<p>Add a new <code>PropertyEvaluator</code> delegate using the <var>refid</var> syntax:</p>
+<p>Add a new <code class="code">PropertyEvaluator</code> delegate using the <var>refid</var>
+syntax:</p>
 
 <pre>
 &lt;typedef classname="org.example.MyPropertyEvaluator"

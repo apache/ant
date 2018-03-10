@@ -52,13 +52,13 @@ attribute:</p>
   <li><q>gcjh</q>&mdash;the native standard compiler
     of <a href="https://gcc.gnu.org/gcc-7/changes.html#java" target="_top">gcj and
     gij</a>. <em>Since Apache Ant 1.8.2</em></li>
-  <li><q>forking</q>&mdash;runs the <code>javah</code> executable via its command line interface in
+  <li><q>forking</q>&mdash;runs the <kbd>javah</kbd> executable via its command line interface in
     a separate process. Default when not running on Kaffe or gcj/gij <em>since Ant 1.9.8</em></li>
 </ul>
 
 <p><strong>Note</strong>: if you are using this task to work on multiple files the command line may
-become too long on some operating systems.  Unfortunately the <code>javah</code> command doesn't
-support command argument files the way <code>javac</code> (for example) does, so all that can be
+become too long on some operating systems.  Unfortunately the <kbd>javah</kbd> command doesn't
+support command argument files the way <kbd>javac</kbd> (for example) does, so all that can be
 done is breaking the amount of classes to compile into smaller chunks.</p>
 
 <h3>Parameters</h3>
@@ -81,7 +81,7 @@ done is breaking the amount of classes to compile into smaller chunks.</p>
   </tr>
   <tr>
     <td>destdir</td>
-    <td class="left">sets the directory where <code>javah</code> saves the header files or the stub
+    <td class="left">sets the directory where <kbd>javah</kbd> saves the header files or the stub
       files.</td>
   </tr>
   <tr>
@@ -102,8 +102,7 @@ done is breaking the amount of classes to compile into smaller chunks.</p>
   </tr>
   <tr>
     <td>verbose</td>
-    <td>causes <code>Javah</code> to print a message concerning the status of the generated
-      files</td>
+    <td>causes <kbd>javah</kbd> to print a message concerning the status of the generated files</td>
     <td>No</td>
   </tr>
   <tr>
@@ -185,8 +184,8 @@ using one of the built-in compilers.</p>
 
 <h4>Any nested element of a type that implements JavahAdapter</h4>
 <p><em>Since Ant 1.8.0</em></p>
-<p>If a defined type implements the <code>JavahAdapter</code> interface a nested element of that
-type can be used as an alternative to the <var>implementation</var> attribute.</p>
+<p>If a defined type implements the <code class="code">JavahAdapter</code> interface a nested
+element of that type can be used as an alternative to the <var>implementation</var> attribute.</p>
 
 <h3>Examples</h3>
 <pre>&lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
@@ -220,11 +219,12 @@ already exist.</p>
   &lt;class name=&quot;org.foo.bar.Tribble&quot;/&gt;
 &lt;/javah&gt;</pre>
 <p>writes the headers for the three classes using the 'old' JNI format, then writes the
-corresponding <samp>.c</samp> stubs. The verbose option will cause <code>Javah</code> to describe
-its progress.</p>
+corresponding <samp>.c</samp> stubs. The <var>verbose</var> option will cause <code>Javah</code> to
+describe its progress.</p>
 
-<p>If you want to use a custom JavahAdapter <code>org.example.MyAdapter</code> you can either use
-the implementation attribute:</p>
+<p>If you want to use a
+custom <code class="code">JavahAdapter</code> <code>org.example.MyAdapter</code> you can either use
+the <var>implementation</var> attribute:</p>
 <pre>
 &lt;javah destdir="c" class="org.foo.bar.Wibble"
        implementation="org.example.MyAdapter"/&gt;</pre>

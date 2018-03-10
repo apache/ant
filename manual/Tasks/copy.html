@@ -279,8 +279,8 @@ default character encoding is Cp1252, on Unix it is usually UTF-8. For both of t
 are illegal byte sequences (more in UTF-8 than for Cp1252).</p>
 <p>How the Reader class deals with these illegal sequences is up to the implementation of the
 character decoder. The current Sun Java implementation is to map them to legal characters. Previous
-Sun Java (1.3 and lower) threw a MalformedInputException. IBM Java 1.4 also throws this exception.
-It is the mapping of the characters that cause the corruption.</p>
+Sun Java (1.3 and lower) threw a <code>MalformedInputException</code>. IBM Java 1.4 also throws this
+exception. It is the mapping of the characters that cause the corruption.</p>
 <p>On Unix, where the default is normally UTF-8, this is a <em>big</em> problem, as it is easy to
 edit a file to contain non US-ASCII characters from ISO-8859-1, for example the Danish &oelig;
 character. When this is copied (with filtering) by Ant, the character get converted to a question

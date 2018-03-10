@@ -48,7 +48,7 @@ the <a href="#tasks">Tasks</a> section below.)</p>
     <td>the default target to use when no target is supplied.</td>
     <td>No; however, <em>since Ant 1.6.0</em>, every project includes an implicit target that contains any and all
       top-level tasks and/or types. This target will always be executed as part of the project's initialization, even
-      when Ant is run with the <a href="running.html#options"><code>-projecthelp</code></a> option.
+      when Ant is run with the <a href="running.html#options"><kbd>-projecthelp</kbd></a> option.
     </td>
   </tr>
   <tr>
@@ -180,7 +180,7 @@ and <code>&lt;taskdef&gt;</code>).  When you do this they are evaluated before a
 will generate build failures if they are used outside of targets as they may cause infinite loops otherwise
 (<code>&lt;antcall&gt;</code> for example).</p>
 
-<p>We have given some targets descriptions; this causes the <code>-projecthelp</code> invocation option to list them as
+<p>We have given some targets descriptions; this causes the <kbd>-projecthelp</kbd> invocation option to list them as
 public targets with the descriptions; the other target is internal and not listed.</p>
 <p>Finally, for this target to work the source in the <samp>src</samp> subdirectory should be stored in a directory tree
 which matches the package names. Check the <code>&lt;javac&gt;</code> task for details.</p>
@@ -424,7 +424,7 @@ deliberately assign a different meaning to <var>refid</var>.</p>
 <p>Don't add anything to the <code>CLASSPATH</code> environment variable&mdash;this is often the reason for very obscure
 errors. Use Ant's own <a href="install.html#optionalTasks">mechanisms</a> for adding libraries:</p>
 <ul>
-  <li>via command line argument <code>-lib</code></li>
+  <li>via command line argument <kbd>-lib</kbd></li>
   <li>adding to <code>${user.home}/.ant/lib</code></li>
   <li>adding to <code>${ant.home}/lib</code></li>
 </ul>

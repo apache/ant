@@ -25,10 +25,10 @@
 <h3>Description</h3>
 <p>Generates an XML-formatted report file of the changes between two tags or dates recorded in
 a <a href="https://www.nongnu.org/cvs/" target="_top">CVS</a> repository.</p>
-<p><strong>Important</strong>: This task needs <code>cvs</code> on the path. If it isn't, you will
-get an error (such as <code>error=2</code> on Windows). If <code>&lt;cvs&gt;</code> doesn't work,
-try to execute <code>cvs.exe</code> from the command line in the target directory in which you are
-working.  Also note that this task assumes that the cvs executable is compatible with the Unix
+<p><strong>Important</strong>: This task needs <kbd>cvs</kbd> on the path. If it isn't, you will get
+an error (such as <code>error=2</code> on Windows). If <code>&lt;cvs&gt;</code> doesn't work, try to
+execute <kbd>cvs.exe</kbd> from the command line in the target directory in which you are working.
+Also note that this task assumes that the <kbd>cvs</kbd> executable is compatible with the Unix
 version, this is not completely true for certain other CVS clients&mdash;like CVSNT for
 example&mdash;and some operation may fail when using such an incompatible client.</p>
 <h3>Parameters</h3>
@@ -46,8 +46,8 @@ example&mdash;and some operation may fail when using such an incompatible client
   <tr>
     <td>startDate</td>
     <td class="left">The earliest date from which diffs are to be included in the
-     report.<br/>Accepts all formats accepted by the <code>cvs</code> command for <code>-D
-     date_spec</code> arguments.</td>
+     report.<br/>Accepts all formats accepted by the <kbd>cvs</kbd> command for <kbd>-D
+     date_spec</kbd> arguments.</td>
   </tr>
   <tr>
     <td>endTag</td>
@@ -57,7 +57,7 @@ example&mdash;and some operation may fail when using such an incompatible client
   <tr>
     <td>endDate</td>
     <td class="left">The latest date from which diffs are to be included in the report.<br/>Accepts
-     all formats accepted by the <code>cvs</code> command for <code>-D date_spec</code>
+     all formats accepted by the <kbd>cvs</kbd> command for <kbd>-D date_spec</kbd>
      arguments.</td>
   </tr>
   <tr>
@@ -82,7 +82,7 @@ example&mdash;and some operation may fail when using such an incompatible client
   <tr>
     <td>compression</td>
     <td><q>true</q> (equivalent to <q>3</q>), <q>false</q>, or a number between <q>1</q>
-    and <q>9</q> (corresponding to possible values for CVS <code>-z#</code> argument). Any other
+    and <q>9</q> (corresponding to possible values for CVS <kbd>-z#</kbd> argument). Any other
     value is treated as <q>false</q></td>
     <td>No; defaults to no compression</td>
   </tr>

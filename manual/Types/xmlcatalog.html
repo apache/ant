@@ -38,8 +38,9 @@ Dependencies</a> for more information.</p>
 <p>This data type provides a catalog of resource locations based on
 the <a href="https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html"
 target="_top">OASIS XML Catalog standard</a>.  The catalog entries are used both for Entity
-resolution and URI resolution, in accordance with the <code>org.xml.sax.EntityResolver</code>
-and <code>javax.xml.transform.URIResolver</code> interfaces as defined in
+resolution and URI resolution, in accordance with
+the <code class="code">org.xml.sax.EntityResolver</code>
+and <code class="code">javax.xml.transform.URIResolver</code> interfaces as defined in
 the <a href="https://download.oracle.com/otn-pub/jcp/jaxp-1_6-mrel3-spec/JAXP1_6-FinalSpec.pdf"
 target="_top">Java API for XML Processing (JAXP) Specification</a>.</p>
 <p>For example, in a <code>web.xml</code> file, the DTD is referenced as:</p>
@@ -193,21 +194,18 @@ warning will be logged.</p>
 <p>Set up an XMLCatalog with a single DTD referenced locally in a user's home directory:</p>
 <pre>
 &lt;xmlcatalog&gt;
-    &lt;dtd
-        publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
-        location=&quot;/home/dion/downloads/docbook/docbookx.dtd&quot;/&gt;
+    &lt;dtd publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
+         location=&quot;/home/dion/downloads/docbook/docbookx.dtd&quot;/&gt;
 &lt;/xmlcatalog&gt;</pre>
 <p>Set up an XMLCatalog with a multiple DTDs to be found either in the filesystem (relative to
 the Ant project <var>basedir</var>) or in the classpath:
 </p>
 <pre>
 &lt;xmlcatalog id=&quot;commonDTDs&quot;&gt;
-    &lt;dtd
-        publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
-        location=&quot;docbook/docbookx.dtd&quot;/&gt;
-    &lt;dtd
-        publicId=&quot;-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN&quot;
-        location=&quot;web-app_2_2.dtd&quot;/&gt;
+    &lt;dtd publicId=&quot;-//OASIS//DTD DocBook XML V4.1.2//EN&quot;
+         location=&quot;docbook/docbookx.dtd&quot;/&gt;
+    &lt;dtd publicId=&quot;-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN&quot;
+         location=&quot;web-app_2_2.dtd&quot;/&gt;
 &lt;/xmlcatalog&gt;</pre>
 
 <p>Set up an XMLCatalog with a combination of DTDs and entities as well as a nested XMLCatalog
@@ -215,21 +213,17 @@ and external catalog files in both formats:</p>
 
 <pre>
 &lt;xmlcatalog id=&quot;allcatalogs&quot;&gt;
-    &lt;dtd
-        publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
-        location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
-    &lt;entity
-        publicId=&quot;LargeLogo&quot;
-        location=&quot;com/arielpartners/images/ariel-logo-large.gif&quot;/&gt;
+    &lt;dtd publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
+         location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
+    &lt;entity publicId=&quot;LargeLogo&quot;
+            location=&quot;com/arielpartners/images/ariel-logo-large.gif&quot;/&gt;
     &lt;xmlcatalog refid="commonDTDs"/&gt;
         &lt;catalogpath&gt;
             &lt;pathelement location="/etc/sgml/catalog"/&gt;
-            &lt;fileset
-                dir=&quot;/anetwork/drive&quot;
-                includes=&quot;**/catalog&quot;/&gt;
-            &lt;fileset
-                dir=&quot;/my/catalogs&quot;
-                includes=&quot;**/catalog.xml&quot;/&gt;
+            &lt;fileset dir=&quot;/anetwork/drive&quot;
+                     includes=&quot;**/catalog&quot;/&gt;
+            &lt;fileset dir=&quot;/my/catalogs&quot;
+                     includes=&quot;**/catalog.xml&quot;/&gt;
         &lt;/catalogpath&gt;
     &lt;/xmlcatalog&gt;
 &lt;/xmlcatalog&gt;</pre>

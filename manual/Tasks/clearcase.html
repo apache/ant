@@ -55,19 +55,20 @@ Sean Egan    (sean at cm-logic dot com)</p>
 <hr/>
 <h2 id="introduction">Introduction</h2>
 <p>Apache Ant provides several optional tasks for working with ClearCase. These tasks correspond to
-various ClearCase commands using the <code>cleartool</code> program. The current tasks available for
+various ClearCase commands using the <kbd>cleartool</kbd> program. The current tasks available for
 Ant correspond to only a few of the significant ClearCase commands.</p>
 
 <p>More tasks can be easily added by deriving from the ClearCase class and then adding functionality
 that is specific to that ClearCase command.</p>
-<p>Important: these tasks all require <code>cleartool</code> on the command line.  If a task fails
-  with an IOException, especially <code>error=2</code> on Windows, this is your problem.</p>
+<p>Important: these tasks all require <kbd>cleartool</kbd> on the command line.  If a task fails
+with an <code>IOException</code>, especially <code>error=2</code> on Windows, this is your
+problem.</p>
 
 <hr/>
 
 <h2 id="cccheckin">CCCheckin</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool checkin</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool checkin</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -132,7 +133,7 @@ original.</p>
 
 <h2 id="cccheckout">CCCheckout</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool checkout</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool checkout</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -214,7 +215,7 @@ suppressed. A &quot;<samp>Some comment text</samp>&quot; is added to ClearCase a
 
 <h2 id="ccuncheckout">CCUnCheckout</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>uncheckout</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool uncheckout</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -249,7 +250,7 @@ of the file called <samp>c:/views/viewdir/afile.keep</samp> is kept.</p>
 
 <h2 id="ccupdate">CCUpdate</h2>
 <h3>Description</h3>
-<p>Task to perform an <code>cleartool update</code> command to ClearCase.</p>
+<p>Task to perform an <kbd>cleartool update</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -319,7 +320,7 @@ set to the current time.</p>
 
 <h2 id="ccmklbtype">CCMklbtype</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>mklbtype</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mklbtype</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -394,7 +395,7 @@ version 1</q> is added as a comment.</p>
 
 <h2 id="ccmklabel">CCMklabel</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>mklabel</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mklabel</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -466,7 +467,7 @@ added as a comment. It will <em>recurse</em> all subdirectories.</p>
 
 <h2 id="ccrmtype">CCRmtype</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>rmtype</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool rmtype</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -557,7 +558,7 @@ comment. All instances of the type are removed, including the type object itself
 
 <h2 id="cclock">CCLock</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool lock</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool lock</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -617,7 +618,7 @@ object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
 
 <h2 id="ccunlock">CCUnlock</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool unlock</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool unlock</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -662,7 +663,7 @@ object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
 
 <h2 id="ccmkbl">CCMkbl</h2>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool mkbl</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mkbl</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -727,7 +728,7 @@ named <samp>Application_Baseline_AUTO</samp>.</p>
 <h2 id="ccmkattr">CCMkattr</h2>
 <p><em>Since Ant 1.6.1</em></p>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool mkattr</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mkattr</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -796,7 +797,7 @@ the attribute <samp>BugFix</samp> with a value of <samp>34445</samp> to it.</p>
 <h2 id="ccmkdir">CCMkdir</h2>
 <p><em>Since Ant 1.6.1</em></p>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool mkdir</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mkdir</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
@@ -844,7 +845,7 @@ automatically check it out.</p>
 <h2 id="ccmkelem">CCMkelem</h2>
 <p><em>Since Ant 1.6.1</em></p>
 <h3>Description</h3>
-<p>Task to perform a <code>cleartool mkelem</code> command to ClearCase.</p>
+<p>Task to perform a <kbd>cleartool mkelem</kbd> command to ClearCase.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>

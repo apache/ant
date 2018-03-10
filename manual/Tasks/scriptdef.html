@@ -43,28 +43,29 @@ information.</p>
 <p>The attributes and nested elements supported by the task may be defined
 using <code>&lt;attribute&gt;</code> and <code>&lt;element&gt;</code> nested elements. These are
 available to the script that implements the task as two collection style script
-variables <code>attributes</code> and <code>elements</code>. The elements in
-the <code>attributes</code> collection may be accessed by the attribute
-name. The <code>elements</code> collection is accessed by the nested element name. This will return
-a list of all instances of the nested element.  The instances in this list may be accessed by an
-integer index.</p>
+variables <code class="code">attributes</code> and <code class="code">elements</code>. The elements
+in the <code class="code">attributes</code> collection may be accessed by the attribute
+name. The <code class="code">elements</code> collection is accessed by the nested element name. This
+will return a list of all instances of the nested element.  The instances in this list may be
+accessed by an integer index.</p>
 
 <p><strong>Note</strong>: Ant will turn all attribute and element names into all lowercase names, so
 even if you use <var>name</var>=<q>SomeAttribute</q>, you'll have to use <q>someattribute</q> to
-retrieve the attribute's value from the <code>attributes</code> collection.</p>
+retrieve the attribute's value from the <code class="code">attributes</code> collection.</p>
 
-<p>The name <code>self</code> (<em>since Ant 1.6.3</em>) is a pre-defined reference to
+<p>The name <code class="code">self</code> (<em>since Ant 1.6.3</em>) is a pre-defined reference to
 the <code>scriptdef</code> task instance.  It can be used for logging, or for integration with the
-rest of Ant. the <code>self.text attribute</code> contains any nested text passed to the script</p>
+rest of Ant. The <code class="code">self.text</code> attribute contains any nested text passed to
+the script</p>
 
-<p>If an attribute or element is not passed in, then <code>attributes.get()</code>
-or <code>elements.get()</code> will return null. It is up to the script to perform any checks and
-validation. <code>self.fail(String message)</code>can be used to raise
+<p>If an attribute or element is not passed in, then <code class="code">attributes.get()</code>
+or <code class="code">elements.get()</code> will return null. It is up to the script to perform any
+checks and validation. <code class="code">self.fail(String message)</code>can be used to raise
 a <code>BuildException</code>.</p>
 
-<p>The name <code>project</code> is a pre-defined reference to the Ant Project. For more information
-on writing scripts, please refer to the <a href="script.html"><code>&lt;script&gt;</code></a>
-task.</p>
+<p>The name <code class="code">project</code> is a pre-defined reference to the Ant Project. For
+more information on writing scripts, please refer to
+the <a href="script.html"><code>&lt;script&gt;</code></a> task.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
@@ -236,8 +237,8 @@ through them</p>
 error. For example in the above script, removing the closing curly bracket would result in this
 error</p>
 
-<pre>build.xml:15: SyntaxError: missing } in compound
-statement (scriptdef <code>&lt;scripttest2&gt;</code>; line 10)</pre>
+<pre class="output">build.xml:15: SyntaxError: missing } in compound
+statement (scriptdef &lt;scripttest2&gt;; line 10)</pre>
 
 <p>Script errors are only detected when a <code>script</code> task is actually executed.</p>
 <p>The next example does uses nested text in Jython. It also declares the script in a new xml

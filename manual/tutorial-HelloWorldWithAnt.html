@@ -43,12 +43,12 @@ individual steps: <samp>classes</samp> for our compiled files and <samp>jar</sam
 <p>We have to create only the <samp>src</samp> directory. (Because I am working on Windows, here is the Windows
 syntax&mdash;translate to your shell):</p>
 
-<pre class="code">md src</pre>
+<pre class="input">md src</pre>
 
 <p>The following simple Java class just prints a fixed message out to STDOUT, so just write this code
 into <samp>src\oata\HelloWorld.java</samp>.</p>
 
-<pre class="code">
+<pre>
 package oata;
 
 public class HelloWorld {
@@ -58,7 +58,7 @@ public class HelloWorld {
 }</pre>
 
 <p>Now just try to compile and run that:</p>
-<pre class="code">
+<pre class="input">
 md build\classes
 javac -sourcepath src -d build\classes src\oata\HelloWorld.java
 java -cp build\classes oata.HelloWorld</pre>
@@ -67,14 +67,14 @@ which will result in
 
 <p>Creating a jar-file is not very difficult. But creating a <em>startable</em> jar-file needs more steps: create a
 manifest-file containing the start class, creating the target directory and archiving the files.</p>
-<pre class="code">
+<pre class="input">
 echo Main-Class: oata.HelloWorld&gt;myManifest
 md build\jar
 jar cfm build\jar\HelloWorld.jar myManifest -C build\classes .
 java -jar build\jar\HelloWorld.jar</pre>
 
-<p><strong>Note</strong>: Do not have blanks around the &gt;-sign in the <code>echo
-Main-Class</code> instruction because it would falsify it!</p>
+<p><strong>Note</strong>: Do not have blanks around the &gt;-sign in the <kbd>echo Main-Class</kbd> instruction because
+it would falsify it!</p>
 
 <h2 id="four-steps">Four steps to a running application</h2>
 <p>After finishing the java-only step we have to think about our build process. We <em>have</em> to compile our code,
@@ -85,7 +85,7 @@ startable jar file would be nice ... And it's a good practise to have a <q>clean
 generated stuff. Many failures could be solved just by a "clean build".</p>
 
 <p>By default Ant uses <samp>build.xml</samp> as the name for a buildfile, so our <samp>.\build.xml</samp> would be:</p>
-<pre class="code">
+<pre>
 &lt;project&gt;
 
     &lt;target name="clean"&gt;
@@ -113,12 +113,12 @@ generated stuff. Many failures could be solved just by a "clean build".</p>
 &lt;/project&gt;</pre>
 
 <p>Now you can compile, package and run the application via</p>
-<pre class="code">
+<pre class="input">
 ant compile
 ant jar
 ant run</pre>
 <p>Or shorter with</p>
-<pre class="code">ant compile jar run</pre>
+<pre class="input">ant compile jar run</pre>
 
 <p>While having a look at the buildfile, we will see some similar steps between Ant and the Java-only commands:</p>
 <table>
@@ -127,7 +127,7 @@ ant run</pre>
   <th>Ant</th>
 </tr>
 <tr>
-  <td><pre class="code">
+  <td><pre class="input">
 md build\classes
 javac
     -sourcepath src
@@ -144,7 +144,7 @@ jar cfm
 
 
 java -jar build\jar\HelloWorld.jar</pre></td>
-  <td><pre class="code">
+  <td><pre>
 &lt;mkdir dir="build/classes"/&gt;
 &lt;javac
     srcdir="src"
@@ -171,7 +171,7 @@ steps.</p>
 <p>The first and second point would be addressed with <em>properties</em>, the third with a special property&mdash;an
 attribute of the <code>&lt;project&gt;</code> tag and the fourth problem can be solved using dependencies.</p>
 
-<pre class="code">
+<pre>
 &lt;project name="HelloWorld" basedir="." default="main"&gt;
 
     &lt;property name="src.dir"     value="src"/&gt;
@@ -212,7 +212,7 @@ attribute of the <code>&lt;project&gt;</code> tag and the fourth problem can be 
 
 &lt;/project&gt;</pre>
 
-<p>Now it's easier, just do a <code>ant</code> and you will get</p>
+<p>Now it's easier, just do a <kbd>ant</kbd> and you will get</p>
 <pre class="output">
 Buildfile: build.xml
 
@@ -252,7 +252,7 @@ this library could be accessed during compilation and run.</p>
 the <a href="https://logging.apache.org/log4j/1.2/manual.html" target="_top">Short Manual [2]</a>. First we have to
 modify the java source to use the logging framework:</p>
 
-<pre class="code">
+<pre>
 package oata;
 
 <b>import org.apache.log4j.Logger;</b>
@@ -269,13 +269,13 @@ public class HelloWorld {
 
 <p>Most of the modifications are "framework overhead" which has to be done once. The blue line is our "old System-out"
 statement.</p>
-<p>Don't try to run <code>ant</code>&mdash;you will only get lot of compiler errors. Log4J is not on the classpath so we
+<p>Don't try to run <kbd>ant</kbd>&mdash;you will only get lot of compiler errors. Log4J is not on the classpath so we
 have to do a little work here. But do not change the <code>CLASSPATH</code> environment variable! This is only for this
 project and maybe you would break other environments (this is one of the most famous mistakes when working with Ant). We
 introduce Log4J (or to be more precise: all libraries (jar-files) which are somewhere under <samp>.\lib</samp>) into our
 buildfile:</p>
 
-<pre class="code">
+<pre>
 &lt;project name="HelloWorld" basedir="." default="main"&gt;
     ...
     <b>&lt;property name="lib.dir"     value="lib"/&gt;</b>
@@ -304,9 +304,9 @@ buildfile:</p>
 
 &lt;/project&gt;</pre>
 
-<p>In this example we start our application not via its Main-Class manifest-attribute, because we could not provide a
-jarname <em>and</em> a classpath. So add our class in the red line to the already defined path and start as
-usual. Running <code>ant</code> would give (after the usual compile stuff):</p>
+<p>In this example we start our application not via its <code>Main-Class</code> manifest-attribute, because we could not
+provide a jarname <em>and</em> a classpath. So add our class in the red line to the already defined path and start as
+usual. Running <kbd>ant</kbd> would give (after the usual compile stuff):</p>
 
 <pre class="output">[java] 0 [main] INFO oata.HelloWorld  - Hello World</pre>
 
@@ -324,14 +324,14 @@ usual. Running <code>ant</code> would give (after the usual compile stuff):</p>
 
 <h2 id="config-files">Configuration files</h2>
 <p>Why we have used Log4J? "It's highly configurable"? No&mdash;all is hardcoded! But that is not the fault of
-Log4J&mdash;it's ours. We had coded <code>BasicConfigurator.configure();</code> which implies a simple, but hardcoded
-configuration. More comfortable would be using a property file. In the Java source file, delete
-the <code>BasicConfiguration</code> line from the <code>main()</code> method (and the
-related <code>import</code>-statement). Log4J will search then for a configuration as described in it's manual. Then
+Log4J&mdash;it's ours. We had coded <code class="code">BasicConfigurator.configure();</code> which implies a simple, but
+hardcoded configuration. More comfortable would be using a property file. In the Java source file, delete
+the <code class="code">BasicConfiguration</code> line from the <code class="code">main()</code> method (and the
+related <code>import</code> statement). Log4J will search then for a configuration as described in it's manual. Then
 create a new file <samp>src/log4j.properties</samp>. That's the default name for Log4J's configuration and using that
 name would make life easier&mdash;not only the framework knows what is inside, you too!</p>
 
-<pre class="code">
+<pre>
 log4j.rootLogger=DEBUG, <b>stdout</b>
 
 log4j.appender.<b>stdout</b>=org.apache.log4j.ConsoleAppender
@@ -341,11 +341,11 @@ log4j.appender.<b>stdout</b>.layout.ConversionPattern=<span style="color:blue"><
 </pre>
 
 <p>This configuration creates an output channel (<q>Appender</q>) to console named as <code>stdout</code> which prints
-the message (<q>%m</q>) followed by a line feed (<q>%n</q>)&mdash;same as the earlier <code>System.out.println()</code>
-:-) Oooh kay&mdash;but we haven't finished yet. We should deliver the configuration file, too. So we change the
-buildfile:</p>
+the message (<q>%m</q>) followed by a line feed (<q>%n</q>)&mdash;same as the
+earlier <code class="code">System.out.println()</code> :-) Oooh kay&mdash;but we haven't finished yet. We should deliver
+the configuration file, too. So we change the buildfile:</p>
 
-<pre class="code">
+<pre>
     ...
     &lt;target name="compile"&gt;
         &lt;mkdir dir="${classes.dir}"/&gt;
@@ -363,7 +363,7 @@ start the application from that directory and these files will included into the
 <p>In this step we will introduce the usage of the JUnit [3] test framework in combination with Ant. Because Ant has a
 built-in JUnit 4.12 you could start directly using it. Write a test class in <samp>src\HelloWorldTest.java</samp>:</p>
 
-<pre class="code">
+<pre>
 import org.junit.Test;
 
 public class HelloWorldTest {
@@ -383,7 +383,7 @@ public class HelloWorldTest {
 information see the JUnit documentation [3] and the manual of <a href="Tasks/junit.html">junit</a> task.  Now we add a
 junit instruction to our buildfile:</p>
 
-<pre class="code">
+<pre>
     ...
 
     &lt;path <b>id="application"</b> location="${jar.dir}/${ant.project.name}.jar"/&gt;
@@ -418,7 +418,7 @@ How much tests failed? Some errors? <var>printsummary</var> lets us know.  The c
 To run tests the <code>batchtest</code> here is used, so you could easily add more test classes in the future just by
 naming them <code>*Test.java</code>.  This is a common naming scheme.</p>
 
-<p>After a <code>ant junit</code> you'll get:</p>
+<p>After a <kbd>ant junit</kbd> you'll get:</p>
 
 <pre class="output">
 ...
@@ -433,7 +433,7 @@ BUILD SUCCESSFUL
 <p>We can also produce a report. Something that you (and other) could read after closing the shell ....  There are two
 steps: 1. let <code>&lt;junit&gt;</code> log the information and 2. convert these to something readable (browsable).<p>
 
-<pre class="code">
+<pre>
     ...
     <b>&lt;property name="report.dir"  value="${build.dir}/junitreport"/&gt;</b>
     ...

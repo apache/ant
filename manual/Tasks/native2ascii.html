@@ -52,7 +52,7 @@
     <ul>
       <li><q>default</q>&mdash;the default converter for the platform: kaffe when run on Kaffe,
         builtin otherwise.</li>
-      <li><q>sun</q>&mdash;used to be the standard converter of the JDK &lt; 9</li>
+      <li><q>sun</q>&mdash;used to be the standard converter of the JDK 8 or earlier</li>
       <li><q>kaffe</q>&mdash;the standard converter of <a href="http://www.kaffe.org"
         target="_top">Kaffe</a></li>
       <li><q>builtin</q>&mdash;Ant's internal implementation. <em>Since Ant 1.9.8</em></li>
@@ -66,7 +66,7 @@
       </tr>
       <tr>
         <td>reverse</td>
-        <td>Reverse the sense of the conversion, i.e. convert from ASCII to native <strong>only
+        <td>Reverse the sense of the conversion, i.e. convert from ASCII to native<br/><strong>Only
           supported by the <q>sun</q> and <q>builtin</q> converters</strong></td>
         <td>No</td>
       </tr>
@@ -169,8 +169,8 @@ using one of the built-in converters.</p>
 
 <h4>Any nested element of a type that implements Native2AsciiAdapter</h4>
 <p><em>Since Ant 1.8.0</em></p>
-<p>If a defined type implements the <code>Native2AsciiAdapter</code> interface a nested element of
-that type can be used as an alternative to the <var>implementation</var> attribute.</p>
+<p>If a defined type implements the <code class="code">Native2AsciiAdapter</code> interface a nested
+element of that type can be used as an alternative to the <var>implementation</var> attribute.</p>
 
 <h3>Examples</h3>
 
@@ -189,8 +189,9 @@ EUCJIS encoding to ASCII and renames them to end in <samp>.java</samp>.</p>
 to ASCII, placing the results in the directory <samp>src</samp>.  The names of the files remain the
 same.</p>
 
-<p>If you want to use a custom Native2AsciiAdapter <code>org.example.MyAdapter</code> you can either
-use the implementation attribute:</p>
+<p>If you want to use a
+custom <code class="code">Native2AsciiAdapter</code> <code>org.example.MyAdapter</code> you can
+either use the implementation attribute:</p>
 <pre>
 &lt;native2ascii encoding="EUCJIS" src="srcdir" dest="srcdir"
               includes="**/*.eucjis" ext=".java"
@@ -203,8 +204,8 @@ use the implementation attribute:</p>
               includes="**/*.eucjis" ext=".java"&gt;
     &lt;myadapter/&gt;
 &lt;/native2ascii&gt;</pre>
-<p>in which case your native2ascii adapter can support attributes and nested elements of its
-own.</p>
+<p>in which case your <code>native2ascii</code> adapter can support attributes and nested elements
+of its own.</p>
 
 </body>
 </html>

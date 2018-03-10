@@ -682,7 +682,7 @@ two resources can be checked; in this case all resources must match.</p>
 <p><em>Since Ant 1.7.1</em></p>
 <p>Tests whether a resource contains a given (sub)string.</p>
 <p>The resources to check are specified via references or&mdash;in the case of file
-resources&mdash;via the resource attribute.</p>
+resources&mdash;via the <var>resource</var> attribute.</p>
 <table class="attr">
   <tr>
     <th>Attribute</th>
@@ -755,7 +755,8 @@ fails.</p>
 <p>There is also a nested <code>&lt;classpath&gt;</code> element, which can be used to specify a
 classpath.</p>
 <pre>&lt;hasmethod classname="java.util.ArrayList" method="trimToSize"/&gt;</pre>
-<p>Looks for the method <code>trimToSize()</code> in the <code>java.util.ArrayList</code> class.</p>
+<p>Looks for the method <code class="code">trimToSize()</code> in
+the <code class="code">java.util.ArrayList</code> class.</p>
 
 <h4 id="matches">matches</h4>
 <p><em>Since Ant 1.7</em></p>

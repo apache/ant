@@ -106,16 +106,18 @@
   <h1 id="propertyHelper">PropertyHelpers</h1>
 
   <p>Ant's property handling is accomplished by an instance
-    of <code>org.apache.tools.ant.PropertyHelper</code> associated with the current Project.  You
-    can learn more about this class by examining Ant's Java API. In Ant 1.8 the PropertyHelper class
-    was much reworked and now itself employs a number of helper classes (actually instances of
-    the <code>org.apache.tools.ant.PropertyHelper$Delegate</code> marker interface) to take care of
-    discrete tasks such as property setting, retrieval, parsing, etc. This makes Ant's property
-    handling highly extensible; also of interest is the
+    of <code class="code">org.apache.tools.ant.PropertyHelper</code> associated with the current
+    Project.  You can learn more about this class by examining Ant's Java API. In Ant 1.8 the
+    <code class="code">PropertyHelper</code> class was much reworked and now itself employs a number
+    of helper classes (actually instances of
+    the <code class="code">org.apache.tools.ant.PropertyHelper$Delegate</code> marker interface) to
+    take care of discrete tasks such as property setting, retrieval, parsing, etc. This makes Ant's
+    property handling highly extensible; also of interest is the
     new <a href="Tasks/propertyhelper.html">propertyhelper</a> task used to manipulate the
     PropertyHelper and its delegates from the context of the Ant buildfile.</p>
 
-  <p>There are three sub-interfaces of <code>Delegate</code> that may be useful to implement.</p>
+  <p>There are three sub-interfaces of <code class="code">Delegate</code> that may be useful to
+  implement.</p>
 
   <ul>
     <li><code>org.apache.tools.ant.property.PropertyExpander</code> is responsible for finding the
@@ -126,36 +128,36 @@
         syntax&mdash;or allow nested property expansions since the default implementation doesn't
         balance braces
         (see <a href="https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-props.git;a=blob;f=src/main/org/apache/ant/props/NestedPropertyExpander.java;hb=HEAD"
-        target="_top"><code>NestedPropertyExpander</code> in the <samp>props</samp> Antlib</a> for
+        target="_top"><code class="code">NestedPropertyExpander</code> in the <samp>props</samp> Antlib</a> for
         an example).</p>
     </li>
 
-    <li><code>org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code> is used to
+    <li><code class="code">org.apache.tools.ant.PropertyHelper$PropertyEvaluator</code> is used to
       expand <samp>${some-string}</samp> into an <code>Object</code>.
 
       <p>This is the interface you'd implement if you want to provide your own storage independent
         of Ant's project instance&mdash;the interface represents the reading end.  An example for
-        this would be <code>org.apache.tools.ant.property.LocalProperties</code> which implements
-        storage for <a href="Tasks/local.html">local properties</a>.</p>
+        this would be <code class="code">org.apache.tools.ant.property.LocalProperties</code> which
+        implements storage for <a href="Tasks/local.html">local properties</a>.</p>
 
       <p>Another reason to implement this interface is if you wanted to provide your own "property
         protocol" like expanding <code>toString:foo</code> by looking up the project
-        reference <samp>foo</samp> and invoking <code>toString()</code> on it (which is already
-        implemented in Ant, see below).</p>
+        reference <samp>foo</samp> and invoking <code class="code">toString()</code> on it (which is
+        already implemented in Ant, see below).</p>
     </li>
 
-    <li><code>org.apache.tools.ant.PropertyHelper$PropertySetter</code> is responsible for setting
-      properties.
+    <li><code class="code">org.apache.tools.ant.PropertyHelper$PropertySetter</code> is responsible
+      for setting properties.
 
       <p>This is the interface you'd implement if you want to provide your own storage independent
         of Ant's project instance&mdash;the interface represents the reading end.  An example for
-        this would be <code>org.apache.tools.ant.property.LocalProperties</code> which implements
-        storage for <a href="Tasks/local.html">local properties</a>.</p>
+        this would be <code class="code">org.apache.tools.ant.property.LocalProperties</code> which
+        implements storage for <a href="Tasks/local.html">local properties</a>.</p>
     </li>
 
   </ul>
 
-  <p>The default <code>PropertyExpander</code> looks similar to:</p>
+  <p>The default <code class="code">PropertyExpander</code> looks similar to:</p>
 
 <pre>
 public class DefaultExpander implements PropertyExpander {
@@ -176,8 +178,9 @@ public class DefaultExpander implements PropertyExpander {
 }</pre>
 
   <p>The logic that replaces <samp>${toString:<i>some-id</i>}</samp> with the stringified
-    representation of the object with <var>id</var> <samp>some-id</samp> inside the current build is
-    contained in a PropertyEvaluator similar to the following code:</p>
+    representation of the object with <var>id</var> <samp><i>some-id</i></samp> inside the current
+    build is contained in a <code class="code">PropertyEvaluator</code> similar to the following
+    code:</p>
 
 <pre>
 public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
@@ -234,10 +237,10 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <p>This means you can't use easily expand properties whose names are given by properties, but
     there are <a href="https://ant.apache.org/faq.html#propertyvalue-as-name-for-property"
-    target="_top">some workarounds</a> for older versions of Ant.  With Ant 1.8.0 and
-    the <a href="https://ant.apache.org/antlib/props/" target="_top">the props Antlib</a> you can
-    configure Ant to use the <code>NestedPropertyExpander</code> defined there if you need such a
-    feature.</p>
+    target="_top">some workarounds</a> for older versions of Ant. <em>Since Ant 1.8.0</em> using
+    the <a href="https://ant.apache.org/antlibs/props/" target="_top">props Antlib</a> you can
+    configure Ant to use the <code class="code">NestedPropertyExpander</code> defined there if you
+    need such a feature.</p>
 
   <h2>Expanding a "Property Name"</h2>
 
@@ -253,9 +256,9 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <p>Any Ant type which has been declared with a reference can also its string value extracted by
     using the <samp>${toString:}</samp> operation, with the name of the reference listed after
-    the <code>toString:</code> text.  The <code>toString()</code> method of the Java class instance
-    that is referenced is invoked&mdash;all built in types strive to produce useful and relevant
-    output in such an instance.</p>
+    the <code>toString:</code> text.  The <code class="code">toString()</code> method of the Java
+    class instance that is referenced is invoked&mdash;all built in types strive to produce useful
+    and relevant output in such an instance.</p>
 
   <p>For example, here is how to get a listing of the files in a fileset,<p>
 
@@ -272,12 +275,13 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
     the <samp>${ant.refid:}</samp> operation, with the name of the reference listed after
     the <code>ant.refid:</code> text.  The difference between this operation
     and <a href="#toString"><samp>${toString:}</samp></a> is that <samp>${ant.refid:}</samp> will
-    expand to the referenced object itself.  In most circumstances the <code>toString</code> method
-    will be invoked anyway, for example if the <samp>${ant.refid:}</samp> is surrounded by other
-    text.</p>
+    expand to the referenced object itself.  In most circumstances
+    the <code class="code">toString()</code> method will be invoked anyway, for example if
+    the <samp>${ant.refid:}</samp> is surrounded by other text.</p>
 
   <p>This syntax is most useful when using a task with attribute setters that accept objects other
-    than String.  For example, if the setter accepts a Resource object as in</p>
+    than <code class="code">String</code>.  For example, if the setter accepts
+    a <code class="code">Resource</code> object as in</p>
 
   <pre>public void setAttr(Resource r) { ... }</pre>
 
@@ -327,7 +331,7 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 &lt;/target>
 &lt;target name="lots-of-stuff" depends="use-file,other-unconditional-stuff"/&gt;</pre>
   <p>
-    Now <code>ant -Dfile.exists=false lots-of-stuff</code> will run <q>other-unconditional-stuff</q>
+    Now <kbd>ant -Dfile.exists=false lots-of-stuff</kbd> will run <q>other-unconditional-stuff</q>
     but not <q>use-file</q>, as you might expect, and you can disable the condition from another
     script too:
   </p>

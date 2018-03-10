@@ -140,7 +140,7 @@ value <samp>/weblogic</samp>.</p>
 &lt;/pathconvert&gt;</pre>
 <p>will generate the path shown below and store it in the property
 named <code>wl.path.unix</code>.</p>
-<pre>/weblogic/lib/weblogicaux.jar:/weblogic/classes:/weblogic/mssqlserver4/classes:/WINNT/SYSTEM32</pre>
+<pre class="output">/weblogic/lib/weblogicaux.jar:/weblogic/classes:/weblogic/mssqlserver4/classes:/WINNT/SYSTEM32</pre>
 
 <h4>Example 2</h4>
 <p>Given a FileList defined as:</p>
@@ -154,7 +154,7 @@ named <code>wl.path.unix</code>.</p>
   &lt;map from=&quot;${env.HOME}&quot; to=&quot;/usr/local&quot;/&gt;
 &lt;/pathconvert&gt;</pre>
 <p>will convert the list of files to the following Unix path:</p>
-<pre>/usr/local/ant/lib/njavac.jar:/usr/local/ant/lib/xproperty.jar</pre>
+<pre class="output">/usr/local/ant/lib/njavac.jar:/usr/local/ant/lib/xproperty.jar</pre>
 
 <h4>Example 3</h4>
 <pre>

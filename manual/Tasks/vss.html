@@ -46,13 +46,13 @@
 <p>These tasks provide an interface to
 the <a href="https://msdn.microsoft.com/en-us/library/3h0544kx(v=vs.80).aspx"
 target="_top">Microsoft Visual SourceSafe</a> SCM.
-The <code>org.apache.tools.ant.taskdefs.optional.vss</code> package consists of a simple framework
-to support VSS functionality as well as some Apache Ant tasks encapsulating frequently used VSS
-commands.  Although it is possible to use these commands on the desktop, they were primarily
-intended to be used by automated build systems.</p>
-<p>If you get a <code>CreateProcess error=2</code> when running these, it means
-that <code>ss.exe</code> was not found. Check to see if you can run it from the command
-line&mdash;you may need to alter your path, or set the <var>ssdir</var> property.</p>
+The <code class="code">org.apache.tools.ant.taskdefs.optional.vss</code> package consists of a
+simple framework to support VSS functionality as well as some Apache Ant tasks encapsulating
+frequently used VSS commands.  Although it is possible to use these commands on the desktop, they
+were primarily intended to be used by automated build systems.</p>
+<p>If you get a <code class="output">CreateProcess error=2</code> when running these, it means
+that <kbd>ss.exe</kbd> was not found. Check to see if you can run it from the command line&mdash;you
+may need to alter your path, or set the <var>ssdir</var> property.</p>
 <h2 id="tasks">The Tasks</h2>
 
 <table>
@@ -127,7 +127,7 @@ order version, date, label.</p>
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -168,7 +168,7 @@ order version, date, label.</p>
   </tr>
   <tr>
     <td>autoresponse</td>
-    <td>What to respond with (sets the <code>-I</code> option). By default, <code>-I-</code> is
+    <td>What to respond with (sets the <kbd>-I</kbd> option). By default, <kbd>-I-</kbd> is
       used; values of <q>Y</q> or <q>N</q> will be appended to this.</td>
     <td>No</td>
   </tr>
@@ -180,7 +180,7 @@ order version, date, label.</p>
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q></td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q></td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
@@ -233,7 +233,7 @@ writable.</p>
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -259,13 +259,13 @@ writable.</p>
   </tr>
   <tr>
     <td>autoresponse</td>
-    <td>What to respond with (sets the <code>-I</code> option). By default, <code>-I-</code> is
+    <td>What to respond with (sets the <kbd>-I</kbd> option). By default, <kbd>-I-</kbd> is
       used; values of <q>Y</q> or <q>N</q> will be appended to this.</td>
     <td>No</td>
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q>.</td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q>.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
@@ -314,7 +314,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -376,7 +376,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q></td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q></td>
     <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
@@ -451,7 +451,7 @@ specified according to your locale).</p>
   </tr>
   <tr>
      <td>ssdir</td>
-     <td>directory where <code>ss.exe</code> resides.</td>
+     <td>directory where <kbd>ss.exe</kbd> resides.</td>
      <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -481,7 +481,7 @@ specified according to your locale).</p>
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q>.</td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q>.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
@@ -531,7 +531,7 @@ order <var>version</var>, <var>date</var>, <var>label</var>.</p>
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -570,7 +570,7 @@ order <var>version</var>, <var>date</var>, <var>label</var>.</p>
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q>.</td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q>.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
@@ -623,7 +623,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -653,7 +653,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q>.</td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q>.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
@@ -694,7 +694,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -704,7 +704,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>failonerror</td>
-    <td>Stop the build process if <code>ss.exe</code> exits with a return code <q>100</q>.</td>
+    <td>Stop the build process if <kbd>ss.exe</kbd> exits with a return code <q>100</q>.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
 </table>
@@ -740,7 +740,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>ssdir</td>
-    <td>directory where <code>ss.exe</code> resides.</td>
+    <td>directory where <kbd>ss.exe</kbd> resides.</td>
     <td>No; by default expected to be in <code>PATH</code></td>
   </tr>
   <tr>
@@ -755,7 +755,7 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>autoresponse</td>
-    <td>What to respond with (sets the <code>-I</code> option). By default, <code>-I-</code> is
+    <td>What to respond with (sets the <kbd>-I</kbd> option). By default, <kbd>-I-</kbd> is
       used; values of <q>Y</q> or <q>N</q> will be appended to this.</td>
     <td>No</td>
   </tr>

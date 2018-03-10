@@ -100,7 +100,7 @@ is not set, the remaining tasks in other threads will continue to run until all 
 completed. In this situation, the <code>parallel</code> task will also fail.</p>
 
 <p>The <code>parallel</code> task may be combined with the <a href="sequential.html">sequential</a>
-task to define sequences of tasks to be executed on each thread within the parallel block</p>
+task to define sequences of tasks to be executed on each thread within the parallel block.</p>
 
 <p>The <var>threadCount</var> attribute can be used to place a maximum number of available threads
 for the execution.  When not present all child tasks will be executed at once.  When present then
@@ -125,9 +125,9 @@ occur.  This is not a replacement for Java Language level thread semantics and i
 
 <h4>daemons</h4>
 <p>The <code>parallel</code> task supports a <code>&lt;daemons&gt;</code> nested element. This is a
-list of tasks which are to be run in parallel daemon threads. The parallel task will not wait for
-these tasks to complete. Being daemon threads, however, they will not prevent Ant from completing,
-whereupon the threads are terminated. Failures in daemon threads which occur before
+list of tasks which are to be run in parallel daemon threads. The <code>parallel</code> task will
+not wait for these tasks to complete. Being daemon threads, however, they will not prevent Ant from
+completing, whereupon the threads are terminated. Failures in daemon threads which occur before
 the <code>parallel</code> task itself finishes will be reported and can cause <code>parallel</code>
 to throw an exception. Failures which occur after <code>parallel</code> has completed are not
 reported.</p>
@@ -166,7 +166,7 @@ the build. In this instance, some servlets are being compiled in one thread and 
 being precompiled in another. Developers need to be careful that the two tasks are independent, both
 in terms of their dependencies and in terms of their potential interactions in Ant's external
 environment. Here we set <var>fork</var>=<q>true</q> for the <code>&lt;javac&gt;</code> task, so
-that it runs in a new process; if the <code>&lt;wljspc&gt;</code> task used the <code>javac</code>
+that it runs in a new process; if the <code>&lt;wljspc&gt;</code> task used the <kbd>javac</kbd>
 compiler in-VM (it may), concurrency problems may arise.</p>
 
 <pre>
