@@ -404,10 +404,11 @@ file.</p>
 matching <samp>*.file</samp> in the <samp>src</samp> directory.
 The <samp>out</samp> <code>&lt;mapper&gt;</code> has been set up to map <samp>*.file</samp>
 to <samp>*.out</samp>, then this <code>&lt;mapper&gt;</code> is used to
-specify <code>targetfile</code>s for this &lt;apply&gt; task.  A reference to <samp>out</samp> is
-then used as an <code>&lt;outputmapper&gt;</code> nested in a <code>&lt;redirector&gt;</code>, which
-in turn is nested beneath this <code>&lt;apply&gt;</code> instance.  This allows us to perform
-dependency checking against output files&mdash;the target files in this case.</p>
+specify <code>targetfile</code>s for this <code>&lt;apply&gt;</code> task.  A reference
+to <samp>out</samp> is then used as an <code>&lt;outputmapper&gt;</code> nested in
+a <code>&lt;redirector&gt;</code>, which in turn is nested beneath this <code>&lt;apply&gt;</code>
+instance.  This allows us to perform dependency checking against output files&mdash;the target files
+in this case.</p>
 <pre>
 &lt;apply executable="ls" parallel="true"
        force="true" dest="${basedir}" append="true" type="both"&gt;

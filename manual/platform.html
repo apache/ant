@@ -34,19 +34,20 @@ against the shipping XSL engine.
 
 <h2>Unix and Linux</h2>
 <ul>
-<li>You should use a GNU version of <code>tar</code> to untar the Apache Ant source tree, if you
-have downloaded this as a tar file. If you get weird errors about missing files, this is the
+<li>You should use a GNU version of <kbd>tar</kbd> to untar the Apache Ant source tree, if you have
+downloaded this as a tar file. If you get weird errors about missing files, this is the
 problem.</li>
 <li>Ant does not preserve file permissions when a file is copied, moved or archived, because Java
 does not let it read or write the permissions.  Use <code>&lt;chmod&gt;</code> to set permissions,
 and when creating a tar archive, use the <var>mode</var> attribute
 of <code>&lt;tarfileset&gt;</code> to set the permissions in the tar file,
-or <code>&lt;apply&gt;</code> the real tar program.</li>
+or <code>&lt;apply&gt;</code> the real <kbd>tar</kbd> program.</li>
 <li>Ant is not symbolic link aware in moves, deletes and when recursing down a tree of directories
 to build up a list of files. Unexpected things can happen.</li>
 <li>Linux on IA-64: apparently you need a larger heap than the default one (64M) to compile big
 projects. If you get out of heap errors, either increase the heap or use a
-forking <code>javac</code>. Better yet, use <code>jikes</code> for extra compilation speed.</li>
+forking <code>&lt;javac&gt;</code>. Better yet, use <kbd>jikes</kbd> for extra compilation
+speed.</li>
 </ul>
 
 <h2>Microsoft Windows</h2>
@@ -80,16 +81,17 @@ files that are in use be overwritten.
 </p>
 <p>
 Finally, if any Ant task fails with an <code>error=2</code>, it means that whatever native program
-Ant is trying to run, it is not on the path.
+Ant is trying to run, it is not on the <code>Path</code>.
 </p>
 
 <h2>Microsoft Windows Vista</h2>
 <p>
 There are reports of problems with Windows Vista security bringing up dialog boxes asking if the
-user wants to run an untrusted executable during an Ant run, such as when the &lt;signjar&gt; task
-runs the <kbd>jarsigner.exe</kbd> program. This is beyond Ant's control, and stems from the OS
-trying to provide some illusion of security by being reluctant to run unsigned native executables.
-The latest Java versions appear to resolve this problem by having signed binaries.
+user wants to run an untrusted executable during an Ant run, such as when
+the <code>&lt;signjar&gt;</code> task runs the <kbd>jarsigner.exe</kbd> program. This is beyond
+Ant's control, and stems from the OS trying to provide some illusion of security by being reluctant
+to run unsigned native executables.  The latest Java versions appear to resolve this problem by
+having signed binaries.
 </p>
 
 <h2>Cygwin</h2>

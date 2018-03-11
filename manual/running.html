@@ -128,12 +128,13 @@ Options:
   -autoproxy             Java 5+ : use the OS proxies
   -main &lt;class&gt;          override Ant's normal entry point
 </pre>
-<p>For more information about <kbd>-logger</kbd> and
-<kbd>-listener</kbd> see
-<a href="listeners.html">Loggers &amp; Listeners</a>.
-<p>For more information about <kbd>-inputhandler</kbd> see
-<a href="inputhandler.html">InputHandler</a>.
-<p>Easiest way of changing the exit-behaviour is subclassing the original main class:</p>
+<p>For more information about <kbd>-logger</kbd>
+and <kbd>-listener</kbd> see <a href="listeners.html">Loggers &amp;
+Listeners</a>.
+<p>For more information about <kbd>-inputhandler</kbd>
+see <a href="inputhandler.html">InputHandler</a>.
+<p>Easiest way of changing the exit-behaviour is subclassing the
+original main class:</p>
 <pre>
 public class CustomExitCode extends org.apache.tools.ant.Main {
     protected void exit(int exitCode) {
@@ -141,7 +142,8 @@ public class CustomExitCode extends org.apache.tools.ant.Main {
     }
 }
 </pre>
-<p>and starting Ant with access (<kbd>-lib <i>path-to-class</i></kbd>) to this class.</p>
+<p>and starting Ant with access (<kbd>-lib <i>path-to-class</i></kbd>)
+to this class.</p>
 
 <h3 id="libs">Library Directories</h3>
 
@@ -175,8 +177,8 @@ the classpath is as follows:</p>
 to Ant using a <kbd>-lib</kbd> option. Ant itself is started with a
 very minimalistic classpath.  Ant should work perfectly well with an
 empty <code>CLASSPATH</code> environment variable, something the
-the <kbd>-noclasspath</kbd> option actually enforces. We get many
-more support calls related to classpath problems (especially quoting
+the <kbd>-noclasspath</kbd> option actually enforces. We get many more
+support calls related to classpath problems (especially quoting
 problems) than we like.</p>
 
 <p>The location of <samp>${user.home}/.ant/lib</samp> is somewhat
@@ -203,8 +205,7 @@ directory, on the target called <samp>dist</samp>.</p>
 <pre class="input">ant -buildfile test.xml -Dbuild=build/classes dist</pre>
 <p>runs Ant using the <samp>test.xml</samp> file in the current
 directory, on the target called <samp>dist</samp>, setting
-the <code>build</code> property to the
-value <q>build/classes</q>.</p>
+the <code>build</code> property to the value <q>build/classes</q>.</p>
 
 <pre class="input">ant -lib /home/ant/extras</pre>
 <p>runs Ant picking up additional task and support jars from
@@ -250,9 +251,12 @@ section for examples.</p>
 properties are available via Project instance, I searched for them with a</p>
 <pre class="input">grep -r -n "getPropert" * &gt; ..\grep.txt</pre>
 <p>command. After that I filtered out the often-used but
-  not-so-important values (most of them read-only
-  values): <code>path.separator</code>, <code>ant.home</code>, <code>basedir</code>, <code>user.dir</code>, <code>os.name</code>, <code>line.separator</code>, <code>java.home</code>, <code>java.version</code>, <code>java.version</code>, <code>user.home</code>, <code>java.class.path</code><br/>
-  And I filtered out the <code>getPropertyHelper</code> access.</p>
+not-so-important values (most of them read-only
+values): <code>path.separator</code>, <code>ant.home</code>, <code>basedir</code>,
+<code>user.dir</code>, <code>os.name</code>, <code>line.separator</code>,
+<code>java.home</code>, <code>java.version</code>, <code>java.version</code>,
+<code>user.home</code>, <code>java.class.path</code><br/>
+And I filtered out the <code>getPropertyHelper</code> access.</p>
 
 <table>
 <tr>
@@ -263,87 +267,80 @@ properties are available via Project instance, I searched for them with a</p>
 <tr>
   <td><code>ant.build.javac.source</code></td>
   <td>Source-level version number</td>
-  <td>Default <var>source</var> value for &lt;javac&gt;/&lt;javadoc&gt;</td>
+  <td>Default <var>source</var> value
+  for <code>&lt;javac&gt;</code>/<code>&lt;javadoc&gt;</code></td>
 </tr>
 <tr>
   <td><code>ant.build.javac.target</code></td>
   <td>Class-compatibility version number</td>
-  <td>Default <var>target</var> value for &lt;javac&gt;</td>
+  <td>Default <var>target</var> value for <code>&lt;javac&gt;</code></td>
 </tr>
 <tr>
   <td><code>ant.executor.class</code></td>
   <td>classname; default is <q>org.<wbr>apache.<wbr>tools.<wbr>ant.<wbr>helper.<wbr>DefaultExecutor</q></td>
-  <td><em>Since Ant 1.6.3</em> Ant will delegate Target invocation to the
-    <code>org.apache.tools.ant.Executor</code> implementation specified here.
-  </td>
+  <td><em>Since Ant 1.6.3</em> Ant will delegate Target invocation to
+  the <code class="code">org.apache.tools.ant.Executor</code>
+  implementation specified here.</td>
 </tr>
   <tr>
   <td><code>ant.file</code></td>
   <td>read only: full filename of the build file</td>
   <td>This is set to the name of the build
-    file. In <a href="Tasks/import.html">&lt;import&gt;-ed</a> files,
-    this is set to the containing build file.
-  </td>
+  file. In <a href="Tasks/import.html">&lt;import&gt;-ed</a> files,
+  this is set to the containing build file.</td>
 </tr>
   <tr>
   <td><code>ant.file.*</code></td>
-  <td>read only: full filename of the build file of Ant projects
-  </td>
+  <td>read only: full filename of the build file of Ant projects</td>
   <td>This is set to the name of a file by project; this lets you
   determine the location
-  of <a href="Tasks/import.html">&lt;import&gt;-ed</a> files,
-  </td>
+  of <a href="Tasks/import.html">&lt;import&gt;-ed</a> files.</td>
 </tr>
   <tr>
   <td><code>ant.input.properties</code></td>
   <td>filename (required)</td>
   <td>Name of the file holding the values for
-  the <a href="inputhandler.html">PropertyFileInputHandler</a>.
-  </td>
+  the <a href="inputhandler.html">PropertyFileInputHandler</a>.</td>
 </tr>
 <tr>
   <td><code>ant.logger.defaults</code></td>
   <td>filename (optional, default <q>/org/<wbr>apache/<wbr>tools/<wbr>ant/<wbr>listener/<wbr>defaults.properties</q>)</td>
   <td>Name of the file holding the color mappings for
-  the <a href="listeners.html#AnsiColorLogger">AnsiColorLogger</a>.
-  </td>
+  the <a href="listeners.html#AnsiColorLogger">AnsiColorLogger</a>.</td>
 </tr>
 <tr>
   <td><code>ant.netrexxc.*</code></td>
   <td>several formats</td>
-  <td>Use specified values as defaults for <a href="Tasks/netrexxc.html">netrexxc</a>.
-  </td>
+  <td>Use specified values as defaults
+  for <a href="Tasks/netrexxc.html">netrexxc</a>.</td>
 </tr>
 <tr>
   <td><code>ant.PropertyHelper</code></td>
   <td>Ant reference name (optional)</td>
   <td>Specify the PropertyHelper to use. The object must be of the
-  type <code>org.apache.tools.ant.PropertyHelper</code>. By default,
-  an object of <code>org.apache.tools.ant.PropertyHelper</code> will
-  be used as PropertyHelper.
-  </td>
+  type <code class="code">org.apache.tools.ant.PropertyHelper</code>. By
+  default, an object
+  of <code class="code">org.apache.tools.ant.PropertyHelper</code>
+  will be used as PropertyHelper.</td>
 </tr>
 <tr>
   <td><code>ant.regexp.regexpimpl</code></td>
   <td>classname</td>
   <td>classname for a RegExp implementation; by default, JDK 1.4+
   implementation; <a href="Types/mapper.html#regexp-mapper">RegExp
-  Mapper</a> "Choice of regular expression implementation".
-  </td>
+  Mapper</a> "Choice of regular expression implementation".</td>
 </tr>
 <tr>
   <td><code>ant.reuse.loader</code></td>
   <td>boolean</td>
   <td>allow to reuse classloaders used
-  in <code>org.apache.tools.ant.util.ClasspathUtil</code>.
-  </td>
+  in <code class="code">org.apache.tools.ant.util.ClasspathUtil</code>.</td>
 </tr>
 <tr>
   <td><code>ant.XmlLogger.stylesheet.uri</code></td>
   <td>filename (default <q>log.xsl</q>)</td>
   <td>Name for the stylesheet to include in the logfile
-  by <a href="listeners.html#XmlLogger">XmlLogger</a>.
-  </td>
+  by <a href="listeners.html#XmlLogger">XmlLogger</a>.</td>
 </tr>
 <tr>
   <td><code>build.compiler</code></td>
@@ -351,36 +348,31 @@ properties are available via Project instance, I searched for them with a</p>
   <td>Specify the default compiler to use;
   see <a href="Tasks/javac.html">javac</a>, <a href="Tasks/ejb.html#ejbjar_weblogic">EJB
   Tasks</a> (<var>compiler</var>
-  attribute), <a href="Tasks/javah.html">javah</a>.
-  </td>
+  attribute), <a href="Tasks/javah.html">javah</a>.</td>
 </tr>
 <tr>
   <td><code>build.compiler.emacs</code></td>
   <td>boolean (default <q>false</q>)</td>
   <td>Enable emacs-compatible error messages;
-  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".
-  </td>
+  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".</td>
 </tr>
 <tr>
   <td><code>build.compiler.fulldepend</code></td>
   <td>boolean (default false)</td>
   <td>Enable full dependency checking;
-  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".
-  </td>
+  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".</td>
 </tr>
 <tr>
   <td><code>build.compiler.jvc.extensions</code></td>
   <td><em><u>Deprecated</u></em></td>
   <td>Enable Microsoft extensions of their Java compiler;
-    see <a href="Tasks/javac.html#jvc">javac</a> "Jvc Notes".
-  </td>
+  see <a href="Tasks/javac.html#jvc">javac</a> "Jvc Notes".</td>
 </tr>
 <tr>
   <td><code>build.compiler.pedantic</code></td>
   <td>boolean (default <q>false</q>)</td>
   <td>Enable pedantic warnings;
-  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".
-  </td>
+  see <a href="Tasks/javac.html#jikes">javac</a> "Jikes Notes".</td>
 </tr>
 <tr>
   <td><code>build.compiler.warnings</code></td>
@@ -401,13 +393,12 @@ properties are available via Project instance, I searched for them with a</p>
   <td><code>file.encoding</code></td>
   <td>name of a supported character set (e.g. UTF-8, ISO-8859-1, US-ASCII)</td>
   <td>use as default character set of email messages; use as default
-      for <var>srcencoding</var>, <var>destencoding</var>
-      and <var>bundleencoding</var>
-      in <a href="Tasks/translate.html">translate</a><br/> see JavaDoc
-      of <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html"
-      target="_top">java.nio.charset.Charset</a> for more information
-      about character sets (not used in Ant, but has nice docs).
-  </td>
+  for <var>srcencoding</var>, <var>destencoding</var>
+  and <var>bundleencoding</var>
+  in <a href="Tasks/translate.html">translate</a><br/> see JavaDoc
+  of <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html"
+  target="_top">java.nio.charset.Charset</a> for more information
+  about character sets (not used in Ant, but has nice docs).</td>
 </tr>
 <tr>
   <td><code>jikes.class.path</code></td>
@@ -419,56 +410,51 @@ properties are available via Project instance, I searched for them with a</p>
   <td>filename (optional, defaults derived from Project instance)</td>
   <td>Name of the file holding properties for sending emails by
   the <a href="listeners.html#MailLogger">MailLogger</a>. Override
-  properties set inside the buildfile or via command line.
-  </td>
+  properties set inside the buildfile or via command line.</td>
 </tr>
 <tr>
   <td><code>org.apache.tools.ant.ProjectHelper</code></td>
   <td>classname (optional, default <q>org.<wbr>apache.<wbr>tools.<wbr>ant.<wbr>ProjectHelper2</q>)</td>
   <td>specifies the classname to use as ProjectHelper. The class must
-  extend <code>org.apache.tools.ant.ProjectHelper</code>.
-  </td>
+  extend <code class="code">org.apache.tools.ant.ProjectHelper</code>.</td>
 </tr>
 <tr>
   <td><code>org.apache.tools.ant.ArgumentProcessor</code></td>
   <td>classname (optional)</td>
   <td>specifies the classname to use as ArgumentProcessor. The class
-  must extend <code>org.apache.tools.ant.ArgumentProcessor</code>.
-  </td>
+  must extend <code class="code">org.apache.tools.ant.ArgumentProcessor</code>.</td>
 </tr>
 <tr>
   <td><code>websphere.home</code></td>
   <td>path</td>
   <td>Points to home directory of WebSphere;
-  see <a href="Tasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
-  </td>
+  see <a href="Tasks/ejb.html#ejbjar_websphere">EJB Tasks</a></td>
 </tr>
 <tr>
   <td><code>XmlLogger.file</code></td>
   <td>filename (default <q>log.xml</q>)</td>
-  <td>Name for the logfile for <a href="listeners.html#MailLogger">MailLogger</a>.
-  </td>
+  <td>Name for the logfile
+  for <a href="listeners.html#MailLogger">MailLogger</a>.</td>
 </tr>
 <tr>
   <td><code>ant.project-helper-repo.debug</code></td>
   <td>boolean (default <q>false</q>)</td>
   <td>Set it to <q>true</q> to enable debugging with
   Ant's <a href="projecthelper.html#repository">ProjectHelper internal
-  repository</a>.
-  </td>
+  repository</a>.</td>
 </tr>
 <tr>
   <td><code>ant.argument-processor-repo.debug</code></td>
   <td>boolean (default <q>false</q>)</td>
   <td>Set it to <q>true</q> to enable debugging with
   Ant's <a href="argumentprocessor.html#repository">ArgumentProcessor
-  internal repository</a>.
-  </td>
+  internal repository</a>.</td>
 </tr>
 <tr>
   <td><code>ant.tstamp.now</code></td>
   <td>number, seconds since the epoch (midnight 1970-01-01)</td>
-  <td rowspan="2">The value to use as current time and date for &lt;tstamp&gt;</td>
+  <td rowspan="2">The value to use as current time and date
+  for <code>&lt;tstamp&gt;</code></td>
 </tr>
 <tr>
   <td><code>ant.tstamp.now.iso</code></td>
