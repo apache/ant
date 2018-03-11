@@ -852,7 +852,7 @@
     cache implementation</p>
 
     <h4 id="ModSelNote">Note on RuleBasedCollator</h4>
-    <p>The RuleBasedCollator needs a format for its work, but its needed while instantiation. There
+    <p>The RuleBasedCollator needs a format for its work, but its needed while instantiating. There
     is a problem in the initialization algorithm for this case. Therefore you should not use this
     (or tell me the workaround :-).</p>
 
@@ -980,9 +980,9 @@
     the <a href="../Tasks/script.html">script</a> task on how to use this element.</p>
     <p>If no <var>src</var> attribute is supplied, the script must be nested inside the selector
     declaration.</p>
-    <p>The embedded script is invoked for every test, with the bean <code>self</code> is bound to
-    the selector. It has an attribute <var>selected</var> which can be set
-    using <code>setSelected(boolean)</code> to select a file.</p>
+    <p>The embedded script is invoked for every test, with the bean <code class="code">self</code>
+    is bound to the selector. It has an attribute <var>selected</var> which can be set
+    using <code class="code">setSelected(boolean)</code> to select a file.</p>
 
     <p>The following beans are configured for every script, alongside the classic set of project,
     properties, and targets.</p>

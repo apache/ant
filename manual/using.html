@@ -69,8 +69,8 @@ project's <var>default</var> is used.</p>
 
 <h3 id="targets">Targets</h3>
 <p>A target can depend on other targets. You might have a target for compiling, for example, and a target for creating a
-distributable. You can only build a distributable when you have compiled first, so the distribute target
-<em>depends on</em> the compile target. Ant resolves these dependencies.</p>
+distributable. You can only build a distributable when you have compiled first, so the <q>distribute</q>
+target <em>depends on</em> the <q>compile</q> target. Ant resolves these dependencies.</p>
 <p>It should be noted, however, that Ant's <var>depends</var> attribute only specifies the <em>order</em> in which
 targets should be executed&mdash;it does not affect whether the target that specifies the dependency(s) gets executed if
 the dependent target(s) did not (need to) run.</p>
@@ -104,7 +104,7 @@ scripts you could do:</p>
   task1.setFoo("bar");
 &lt;/script&gt;</pre>
 <p>to set the <code>foo</code> attribute of this particular task instance.  In another task (written in Java), you can
-access the instance via <code>project.getReference("task1")</code>.</p>
+access the instance via <code class="code">project.getReference("task1")</code>.</p>
 <p>Note 1: If <q>task1</q> has not been run yet, then it has not been configured (ie., no attributes have been set), and
 if it is going to be configured later, anything you've done to the instance may be overwritten.</p>
 <p>Note 2: Future versions of Ant will most likely <em>not</em> be backward-compatible with this behaviour, since there
@@ -433,20 +433,21 @@ errors. Use Ant's own <a href="install.html#optionalTasks">mechanisms</a> for ad
   <li>declare a single task per using instruction using
     <code>&lt;<a href="Tasks/taskdef.html">taskdef</a> name=&quot;taskname&quot;
       classname=&quot;ImplementationClass&quot;/&gt;</code><br/>
-    <code>&lt;taskdef name=&quot;for&quot; classname=&quot;net.sf.antcontrib.logic.For&quot;/&gt; &lt;for
+    <code class="code">&lt;taskdef name=&quot;for&quot; classname=&quot;net.sf.antcontrib.logic.For&quot;/&gt; &lt;for
       ... /&gt;</code>
   </li>
   <li>declare a bundle of tasks using a <samp>properties</samp> file holding these taskname&ndash;ImplementationClass
     pairs and <code>&lt;taskdef&gt;</code><br/>
-    <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antcontrib.properties&quot;/&gt; &lt;for ... /&gt;</code>
+    <code class="code">&lt;taskdef resource=&quot;net/sf/antcontrib/antcontrib.properties&quot;/&gt; &lt;for
+    ... /&gt;</code>
   </li>
   <li>declare a bundle of tasks using an <a href="Types/antlib.html">xml file</a> holding these
     taskname-ImplementationClass-pairs and <code>&lt;taskdef&gt;</code><br/>
-    <code>&lt;taskdef resource=&quot;net/sf/antcontrib/antlib.xml&quot;/&gt; &lt;for ... /&gt;</code>
+    <code class="code">&lt;taskdef resource=&quot;net/sf/antcontrib/antlib.xml&quot;/&gt; &lt;for ... /&gt;</code>
   </li>
   <li>declare a bundle of tasks using an xml file named <samp>antlib.xml</samp>, XML namespace
     and <a href="Types/antlib.html#antlibnamespace"><code>antlib:</code> protocol handler</a><br/>
-    <code>&lt;project xmlns:ac=&quot;antlib:net.sf.antcontrib&quot;/&gt; &lt;ac:for ... /&gt;</code>
+    <code class="code">&lt;project xmlns:ac=&quot;antlib:net.sf.antcontrib&quot;/&gt; &lt;ac:for ... /&gt;</code>
   </li>
 </ul>
 
