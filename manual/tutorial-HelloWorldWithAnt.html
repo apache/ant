@@ -386,7 +386,7 @@ public class HelloWorldTest {
 
 <p>Because we don't have real business logic to test, this test class is very small: just showing how to start. For
 further information see the JUnit documentation [3] and the manual of <a href="Tasks/junit.html">junit</a> task.  Now we
-add a <code>junit</code>code> instruction to our buildfile:</p>
+add a <code>junit</code> instruction to our buildfile:</p>
 
 <pre>
     ...
@@ -428,9 +428,9 @@ the future just by naming them <code>*Test.java</code>.  This is a common naming
 <pre class="output">
 ...
 junit:
-    [junit] Running HelloWorldTest
-    [junit] Tests run: 2, Failures: 1, Errors: 0, Time elapsed: 0,01 sec
-    [junit] Test HelloWorldTest FAILED
+    [junit] Running oata.HelloWorldTest
+    [junit] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0,01 sec
+    [junit] Test oata.HelloWorldTest FAILED
 
 BUILD SUCCESSFUL
 ...</pre>
