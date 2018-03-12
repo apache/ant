@@ -409,7 +409,7 @@ junit instruction to our buildfile:</p>
             &lt;/classpath&gt;
 
             &lt;batchtest fork="yes"&gt;
-                &lt;fileset dir="${src.dir}" includes="*Test.java"/&gt;
+                &lt;fileset dir="${src.dir}" includes="**/*Test.java"/&gt;
             &lt;/batchtest&gt;
         &lt;/junit&gt;
     &lt;/target&gt;</b>
