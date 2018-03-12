@@ -361,7 +361,8 @@ start the application from that directory and these files will included into the
 
 <h2 id="junit">Testing the class</h2>
 <p>In this step we will introduce the usage of the JUnit [3] test framework in combination with Ant. Because Ant has a
-built-in JUnit 4.12 you could start directly using it. Write a test class in <samp>src\HelloWorldTest.java</samp>:</p>
+built-in JUnit 4.12 you could start directly using it. Write a test class
+in <samp>src\oata\HelloWorldTest.java</samp>:</p>
 
 <pre>
 package oata;
@@ -383,9 +384,9 @@ public class HelloWorldTest {
 
 }</pre>
 
-<p>Because we don't have real business logic to test, this test class is very small: just show how to start. For further
-information see the JUnit documentation [3] and the manual of <a href="Tasks/junit.html">junit</a> task.  Now we add a
-junit instruction to our buildfile:</p>
+<p>Because we don't have real business logic to test, this test class is very small: just showing how to start. For
+further information see the JUnit documentation [3] and the manual of <a href="Tasks/junit.html">junit</a> task.  Now we
+add a <code>junit</code>code> instruction to our buildfile:</p>
 
 <pre>
     ...
@@ -434,7 +435,7 @@ junit:
 BUILD SUCCESSFUL
 ...</pre>
 
-<p>We can also produce a report. Something that you (and others) could read after closing the shell ....  There are two
+<p>We can also produce a report. Something that you (and others) could read after closing the shell ...  There are two
 steps: 1. let <code>&lt;junit&gt;</code> log the information and 2. convert these log files to something readable
 (browsable).<p>
 
