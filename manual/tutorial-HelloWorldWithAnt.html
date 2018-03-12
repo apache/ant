@@ -454,7 +454,7 @@ steps: 1. let <code>&lt;junit&gt;</code> log the information and 2. convert thes
             <b>&lt;formatter type="xml"/&gt;</b>
 
             &lt;batchtest fork="yes" <b>todir="${report.dir}"</b>&gt;
-                &lt;fileset dir="${src.dir}" includes="*Test.java"/&gt;
+                &lt;fileset dir="${src.dir}" includes="**/*Test.java"/&gt;
             &lt;/batchtest&gt;
         &lt;/junit&gt;
     &lt;/target&gt;
