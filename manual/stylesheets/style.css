@@ -27,12 +27,12 @@ h2 {
 h3 {
   font-size: 130%;
   color: white;
-  background-color: #525D76;
+  background-color: #525d76;
 }
 
 h4 {
   color: white;
-  background-color: #828DA6;
+  background-color: #828da6;
 }
 
 h5 {
@@ -125,7 +125,7 @@ pre var, code var {
 /* highlight console output */
 .output {
    color: white;
-   background: #837A67;
+   background: #837a67;
    overflow: hidden;
    text-overflow: ellipsis;
 }
@@ -143,6 +143,10 @@ td {
    vertical-align: top;
    background-color: #eeeeee;
    color: black;
+}
+
+tr:hover > td {
+    background-color: whitesmoke;
 }
 
 th {
