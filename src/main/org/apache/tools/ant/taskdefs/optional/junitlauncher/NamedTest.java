@@ -6,9 +6,8 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 public interface NamedTest {
 
     /**
-     * Returns the name of the test
      *
-     * @return
+     * @return Returns the name of the test
      */
     String getName();
 }
