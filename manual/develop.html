@@ -34,8 +34,8 @@
   <li id="footnote-1-back">For each attribute, write a <em>setter</em> method. The setter method
     must be a <code>public void</code> method that takes a single argument. The name of the method
     must begin with <code>set</code>, followed by the attribute name, with the first character of
-    the name in uppercase, and the rest in lowercase<a href="#footnote-1">*</a>.  That
-    is, to support an attribute named <code>file</code> you create a
+    the name in uppercase, and the rest in lowercase<a href="#footnote-1">*</a>.  That is, to
+    support an attribute named <var>file</var> you create a
     method <code class="code">setFile</code>.  Depending on the type of the argument, Ant will
     perform some conversions for you, see <a href="#set-magic">below</a>.</li>
 
@@ -49,13 +49,13 @@
     does <strong>not</strong> expand properties on the text it passes to the task.</li>
 
   <li>For each nested element, write a <em>create</em>, <em>add</em> or <em>addConfigured</em>
-  method.  A create method must be a <code>public</code> method that takes no arguments and returns
-  an <code>Object</code> type. The name of the create method must begin with <code>create</code>,
-  followed by the element name. An add (or addConfigured) method must be a <code>public void</code>
-  method that takes a single argument of an <code>Object</code> type with a no-argument constructor.
-  The name of the add (addConfigured) method must begin with <code>add</code>
-  (<code>addConfigured</code>), followed by the element name.  For a more complete discussion
-  see <a href="#nested-elements">below</a>.</li>
+    method.  A create method must be a <code>public</code> method that takes no arguments and
+    returns an <code>Object</code> type. The name of the create method must begin
+    with <code>create</code>, followed by the element name. An add (or addConfigured) method must be
+    a <code>public void</code> method that takes a single argument of an <code>Object</code> type
+    with a no-argument constructor.  The name of the add (addConfigured) method must begin
+    with <code>add</code> (<code>addConfigured</code>), followed by the element name.  For a more
+    complete discussion see <a href="#nested-elements">below</a>.</li>
 
   <li>Write a <code class="code">public void execute()</code> method, with no arguments, that throws
     a <code>BuildException</code>. This method implements the task itself.</li>
