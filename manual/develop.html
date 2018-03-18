@@ -96,18 +96,18 @@ one doesn't really matter to Ant, using all lower case is a good convention, tho
     actual <em>addConfigured</em> method is not called.</li>
 
   <li>All attributes of this task get set via their corresponding <code class="code">setXXX()</code>
-    methods, at runtime.</li>
+    methods, at run time.</li>
 
   <li>The content character data sections inside the XML element corresponding to this task is added
-    to the task via its <code class="code">addText()</code> method, at runtime.</li>
+    to the task via its <code class="code">addText()</code> method, at run time.</li>
 
   <li>All attributes of all child elements get set via their
-    corresponding <code class="code">setXXX()</code> methods, at runtime.</li>
+    corresponding <code class="code">setXXX()</code> methods, at run time.</li>
 
   <li>If child elements of the XML element corresponding to this task have been created
     for <code class="code">addConfiguredXXX()</code> methods, those methods get invoked now.</li>
 
-  <li id="execute"><code class="code">execute()</code> is called at runtime.  If <q>target1</q>
+  <li id="execute"><code class="code">execute()</code> is called at run time.  If <q>target1</q>
     and <q>target2</q> both depend on <q>target3</q>, then running <kbd>ant target1 target2</kbd>
     will run all tasks in <q>target3</q> twice.</li>
 </ol>
