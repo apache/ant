@@ -70,11 +70,14 @@
                     <includes>
                         <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/*</include>
                     </includes>
+                    <testIncludes>
+                        <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/*</include>
+                    </testIncludes>
                 </configuration>
             </plugin>
         </plugins>
         <sourceDirectory>../../../../src/main</sourceDirectory>
-        <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
+        <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
         <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
         <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
         <directory>../../../../target/${project.artifactId}</directory>
