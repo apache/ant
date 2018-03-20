@@ -66,7 +66,9 @@ and <tt>lazy</tt> is false, the JAR is signed.</li>
   </tr>
   <tr>
     <td valign="top">storepass</td>
-    <td valign="top">password for keystore integrity.</td>
+    <td valign="top">password for keystore integrity. Ant will not use
+    the <code>-storepass</code> command line argument but send the
+    password to jarsigner when it prompts for it.</td>
     <td valign="top" align="center">Yes.</td>
   </tr>
   <tr>

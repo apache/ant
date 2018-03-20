@@ -52,8 +52,12 @@ supported
   </tr>
   <tr>
     <td valign="top">storepass</td>
-    <td valign="top">password for keystore integrity.</td>
-    <td valign="top" align="center">Yes.</td>
+    <td valign="top">password for keystore integrity.
+    Note that
+    jarsigner does not read the password from stdin during
+    verification, so the password must be send via a command line
+    interface and may be visible to other users of the system.</td>
+    <td valign="top" align="center">No.</td>
   </tr>
   <tr>
     <td valign="top">keystore</td>

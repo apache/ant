@@ -282,5 +282,14 @@
     </au:expectfailure>
   </target>
 
+  <target name="testVerifyJarStrict" depends="basic">
+    <verify-base jar="${signtest.jar}" strict="true"/>
+  </target>
+
+  <target name="testVerifyJarStrictPKCS12" depends="basic-pkcs12"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=62194">
+    <verify-base-pkcs12 jar="${signtest.jar}" strict="true"/>
+  </target>
+
 </project>
 
