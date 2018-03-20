@@ -68,7 +68,7 @@
     <sign />
   </target>
 
-  <target name="basic-pkcs12" depends="jar" unless="jdk9+">
+  <target name="basic-pkcs12" depends="jar" unless="jdk9+" if="jdk1.6+">
     <sign keystore="${testkeystore.pkcs12}" storetype="pkcs12" strict="true"/>
   </target>
 
@@ -244,7 +244,8 @@
     <verify-base jar="${signtest.jar}" />
   </target>
 
-  <target name="testVerifyJarPKCS12" depends="basic-pkcs12" unless="jdk9+">
+  <target name="testVerifyJarPKCS12" depends="basic-pkcs12"
+          unless="jdk9+" if="jdk1.6+">
     <verify-base-pkcs12 jar="${signtest.jar}" />
   </target>
 
