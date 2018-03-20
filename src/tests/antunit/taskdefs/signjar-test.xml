@@ -68,7 +68,7 @@
     <sign />
   </target>
 
-  <target name="basic-pkcs12" depends="jar">
+  <target name="basic-pkcs12" depends="jar" unless="jdk9+">
     <sign keystore="${testkeystore.pkcs12}" storetype="pkcs12" strict="true"/>
   </target>
 
