@@ -25,7 +25,7 @@
   <property name="signtest.jar" location="${sign.dir}/signtest.jar" />
   <property name="subdirsigntest.jar" location="${subdir}/signtest.jar" />
   <property name="testkeystore" location="../../../etc/testcases/testkeystore" />
-  <property name="testkeystore.pkcs12" location="${testkeystore}.pkcs12" />
+  <property name="testkeystore.pkcs12" location="${input}/testkeystore.pkcs12" />
 
   <macrodef name="assertSigned">
     <attribute name="jar" default="${signtest.jar}" />
@@ -54,6 +54,8 @@
   </presetdef>
 
   <target name="setUp">
+    <mkdir dir="${input}"/>
+    <gunzip src="${testkeystore}.pkcs12.gz" dest="${testkeystore.pkcs12}"/>
     <mkdir dir="${sign.dir}" />
     <mkdir dir="${subdir}" />
   </target>
