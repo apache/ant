@@ -99,6 +99,7 @@
     <module>ant-jsch</module>
     <module>ant-junit</module>
     <module>ant-junit4</module>
+    <module>ant-junitlauncher</module>
     <module>ant-launcher</module>
     <module>ant-netrexx</module>
     <module>ant-swing</module>
