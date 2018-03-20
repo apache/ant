@@ -50,8 +50,12 @@ the <var>jar</var> attribute. Nested paths are also supported.</p>
   </tr>
   <tr>
     <td>storepass</td>
-    <td>password for keystore integrity.</td>
-    <td>Yes</td>
+    <td>password for keystore integrity.
+    Note that
+    jarsigner does not read the password from stdin during
+    verification, so the password must be send via a command line
+    interface and may be visible to other users of the system.</td>
+    <td>No</td>
   </tr>
   <tr>
     <td>keystore</td>

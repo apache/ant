@@ -59,6 +59,8 @@ public class VerifyJar extends AbstractJarSignerTask {
     private boolean certificates = false;
     private BufferingOutputFilter outputCache = new BufferingOutputFilter();
 
+    private String savedStorePass = null;
+
     /**
      * Ask for certificate information to be printed
      * @param certificates if true print certificates.
@@ -100,6 +102,42 @@ public class VerifyJar extends AbstractJarSignerTask {
     }
 
     /**
+     * @since 1.10.3
+     */
+    @Override
+    protected void beginExecution() {
+        // when using a PKCS12 keystore jarsigner -verify will not
+        // prompt for the keystore password but will only properly
+        // verify the jar with -strict enabled if the -storepass
+        // parameter is used. Note that the documentation of jarsigner
+        // says -storepass was never required with -verify - this is
+        // wrong.
+        //
+        // See https://bz.apache.org/bugzilla/show_bug.cgi?id=62194
+        //
+        // So if strict is true then we hide storepass from the base
+        // implementation and instead add the -storepass command line
+        // argument
+        if (mustHideStorePass()) {
+            savedStorePass = storepass;
+            setStorepass(null);
+        }
+        super.beginExecution();
+    }
+
+    /**
+     * @since 1.10.3
+     */
+    @Override
+    protected void endExecution() {
+        if (savedStorePass != null) {
+            setStorepass(savedStorePass);
+            savedStorePass = null;
+        }
+        super.endExecution();
+    }
+
+    /**
      * verify a JAR.
      * @param jar the jar to verify.
      * @throws BuildException if the file could not be verified
@@ -112,6 +150,10 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         setCommonOptions(cmd);
         bindToKeystore(cmd);
+        if (savedStorePass != null) {
+            addValue(cmd, "-storepass");
+            addValue(cmd, savedStorePass);
+        }
 
         //verify special operations
         addValue(cmd, "-verify");
@@ -122,6 +164,10 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         //JAR  is required
         addValue(cmd, jar.getPath());
+
+        if (alias != null) {
+            addValue(cmd, alias);
+        }
 
         log("Verifying JAR: " + jar.getAbsolutePath());
         outputCache.clear();
@@ -145,6 +191,10 @@ public class VerifyJar extends AbstractJarSignerTask {
         if (results.indexOf(VERIFIED_TEXT) < 0) {
             throw new BuildException(ERROR_NO_VERIFY + jar);
         }
+    }
+
+    private boolean mustHideStorePass() {
+        return strict && storepass != null;
     }
 
     /**

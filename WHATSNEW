@@ -27,6 +27,16 @@ Fixed bugs:
    tokens, would be replaced by property values
    Bugzilla Report 62147
 
+ * Added a workaround for a bug in the jarsigner tool to <verifyjar>
+   which requires the -storepass command line argument when verifying
+   signatures using -strict together with a PKCS12 keystore. Unlike
+   when signing the jar it will not prompt for the keystore's password
+   and read it from standard input.
+   This means Ant will now pass the keystore's password on the command
+   line when using <verifyjar>, which poses a security risk you should
+   be aware of.
+   Bugzilla Report 62194
+
 Other changes:
 --------------
 
