@@ -212,15 +212,15 @@
     <filename name="${optional.package}/junitlauncher/"/>
   </selector>
 
-    <selector id="needs.junit.engine.vintage">
-        <!-- we need JUnit vintage engine only in tests where we test the junitlauncher task -->
-        <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
-    </selector>
+  <selector id="needs.junit.engine.vintage">
+    <!-- we need JUnit vintage engine only in tests where we test the junitlauncher task -->
+    <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
+  </selector>
 
-    <selector id="needs.junit.engine.jupiter">
-        <!-- we need JUnit jupiter engine only in tests where we test the junitlauncher task -->
-        <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
-    </selector>
+  <selector id="needs.junit.engine.jupiter">
+    <!-- we need JUnit jupiter engine only in tests where we test the junitlauncher task -->
+    <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
+  </selector>
 
   <selector id="needs.apache-regexp">
     <filename name="${regexp.package}/JakartaRegexp*"/>
