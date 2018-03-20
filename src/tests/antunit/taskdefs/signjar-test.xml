@@ -25,6 +25,7 @@
   <property name="signtest.jar" location="${sign.dir}/signtest.jar" />
   <property name="subdirsigntest.jar" location="${subdir}/signtest.jar" />
   <property name="testkeystore" location="../../../etc/testcases/testkeystore" />
+  <property name="testkeystore.pkcs12" location="${testkeystore}.pkcs12" />
 
   <macrodef name="assertSigned">
     <attribute name="jar" default="${signtest.jar}" />
@@ -43,6 +44,11 @@
     <verifyjar keystore="${testkeystore}" storepass="apacheant" />
   </presetdef>
 
+  <presetdef name="verify-base-pkcs12">
+    <verifyjar keystore="${testkeystore.pkcs12}" storepass="apacheant"
+               storetype="pkcs12" alias="testonly"/>
+  </presetdef>
+
   <presetdef name="sign">
     <sign-base jar="${signtest.jar}" />
   </presetdef>
@@ -58,6 +64,10 @@
 
   <target name="basic" depends="jar">
     <sign />
+  </target>
+
+  <target name="basic-pkcs12" depends="jar">
+    <sign keystore="${testkeystore.pkcs12}" storetype="pkcs12" strict="true"/>
   </target>
 
   <target name="testBasic" depends="basic">
@@ -230,6 +240,10 @@
 
   <target name="testVerifyJar" depends="basic">
     <verify-base jar="${signtest.jar}" />
+  </target>
+
+  <target name="testVerifyJarPKCS12" depends="basic-pkcs12">
+    <verify-base-pkcs12 jar="${signtest.jar}" />
   </target>
 
   <target name="testVerifyJarCertificates" depends="basic">
