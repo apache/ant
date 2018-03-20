@@ -118,7 +118,7 @@ public class VerifyJar extends AbstractJarSignerTask {
         // So if strict is true then we hide storepass from the base
         // implementation and instead add the -storepass command line
         // argument
-        if (mustHideStorePass()) {
+        if (storepass != null) {
             savedStorePass = storepass;
             setStorepass(null);
         }
@@ -191,10 +191,6 @@ public class VerifyJar extends AbstractJarSignerTask {
         if (results.indexOf(VERIFIED_TEXT) < 0) {
             throw new BuildException(ERROR_NO_VERIFY + jar);
         }
-    }
-
-    private boolean mustHideStorePass() {
-        return strict && storepass != null;
     }
 
     /**
