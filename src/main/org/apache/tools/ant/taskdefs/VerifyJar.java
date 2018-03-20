@@ -123,6 +123,10 @@ public class VerifyJar extends AbstractJarSignerTask {
         //JAR  is required
         addValue(cmd, jar.getPath());
 
+        if (alias != null) {
+            addValue(cmd, alias);
+        }
+
         log("Verifying JAR: " + jar.getAbsolutePath());
         outputCache.clear();
         BuildException ex = null;
