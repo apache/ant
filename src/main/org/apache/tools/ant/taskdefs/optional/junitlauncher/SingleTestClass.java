@@ -1,7 +1,6 @@
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
-import org.junit.Test;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -31,7 +30,6 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
         this.testClass = test;
     }
 
-    @Test
     public String getName() {
         return this.testClass;
     }
