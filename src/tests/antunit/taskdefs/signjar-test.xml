@@ -244,7 +244,7 @@
     <verify-base jar="${signtest.jar}" />
   </target>
 
-  <target name="testVerifyJarPKCS12" depends="basic-pkcs12">
+  <target name="testVerifyJarPKCS12" depends="basic-pkcs12" unless="jdk9+">
     <verify-base-pkcs12 jar="${signtest.jar}" />
   </target>
 
@@ -284,11 +284,12 @@
     </au:expectfailure>
   </target>
 
-  <target name="testVerifyJarStrict" depends="basic">
+  <target name="testVerifyJarStrict" depends="basic" if="jdk1.7+">
     <verify-base jar="${signtest.jar}" strict="true"/>
   </target>
 
   <target name="testVerifyJarStrictPKCS12" depends="basic-pkcs12"
+          if="jdk1.7+" unless="jdk9+"
           description="https://bz.apache.org/bugzilla/show_bug.cgi?id=62194">
     <verify-base-pkcs12 jar="${signtest.jar}" strict="true"/>
   </target>
