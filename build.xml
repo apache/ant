@@ -31,7 +31,7 @@
   -->
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
-  <!-- this is the groupId of ant in the Maven repository -->
+  <!-- this is the directory corresponding to groupId of Ant in the Maven repository -->
   <property name="groupid" value="org/apache/ant"/>
   <property name="project.version" value="1.10.3alpha"/>
   <!-- pom.version is used when doing a distribution and must match with what is checked in under src/etc/poms -->
@@ -45,7 +45,7 @@
   <property name="optional.package" value="${taskdefs.package}/optional"/>
   <property name="type.package" value="${ant.package}/types"/>
   <property name="optional.type.package" value="${type.package}/optional"/>
-  <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
+  <property name="apache.resolver.type.package" value="${type.package}/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
 
@@ -60,13 +60,13 @@
   <property name="src.dir" value="src"/>
   <property name="java.dir" value="${src.dir}/main"/>
   <property name="script.dir" value="${src.dir}/script"/>
-  <property name="lib.dir" value="lib"/>
-  <property name="manual.dir" value="manual"/>
-  <property name="etc.dir" value="${src.dir}/etc"/>
+  <property name="resource.dir" value="${src.dir}/resources"/>
   <property name="src.junit" value="${src.dir}/tests/junit"/>
   <property name="src.antunit" value="${src.dir}/tests/antunit"/>
-  <property name="tests.etc.dir" value="${src.dir}/etc/testcases"/>
-  <property name="resource.dir" value="${src.dir}/resources"/>
+  <property name="etc.dir" value="${src.dir}/etc"/>
+  <property name="tests.etc.dir" value="${etc.dir}/testcases"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="manual.dir" value="manual"/>
 
   <!--
        ===================================================================
@@ -83,11 +83,11 @@
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="build.junit.xml" location="${build.tests}/xml"/>
   <property name="build.junit.tmpdir" location="${build.tests}/tmp"/>
+  <property name="build.junit.reports" location="${build.tests}/reports"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
   <property name="antunit.tmpdir" location="${build.dir}/antunit/tmp"/>
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
   <property name="antunit.loglevel" value="none"/>
-  <property name="build.junit.reports" location="${build.tests}/reports"/>
   <!-- the absolute path -->
   <property name="build.tests.value" location="${build.tests}"/>
   <property name="build.pkg.dir" value="${build.dir}/pkg"/>
