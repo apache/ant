@@ -133,6 +133,12 @@
     <artifact name="ant-junit4" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-junit4" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-junit4" type="source.asc" ext="jar.asc" e:classifier="sources"/>
+    <artifact name="ant-junitlauncher" type="pom" ext="pom"/>
+    <artifact name="ant-junitlauncher" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-junitlauncher" type="jar" ext="jar"/>
+    <artifact name="ant-junitlauncher" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-junitlauncher" type="source" ext="jar" e:classifier="sources"/>
+    <artifact name="ant-junitlauncher" type="source.asc" ext="jar.asc" e:classifier="sources"/>
     <artifact name="ant-launcher" type="pom" ext="pom"/>
     <artifact name="ant-launcher" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-launcher" type="jar" ext="jar"/>
