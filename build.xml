@@ -853,6 +853,7 @@
     <optional-src-jar dep="apache-resolver"/>
     <optional-src-jar dep="junit"/>
     <optional-src-jar dep="junit4"/>
+    <optional-src-jar dep="junitlauncher"/>
     <optional-src-jar dep="apache-regexp"/>
     <optional-src-jar dep="apache-oro"/>
     <optional-src-jar dep="apache-bcel"/>
