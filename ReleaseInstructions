@@ -22,7 +22,7 @@ Note: This document was adapted from the one created in the context of
     release and wait for a few days whether anybody objects.
 
     We haven't created extra branches for releases in a long time and
-    with out new 1.9.x LTS policy there is a permanent branch for
+    with our new 1.9.x LTS policy there is a permanent branch for
     Java5 compatible releases anyway. So no extra branch for the
     releases is needed.
 
@@ -38,7 +38,7 @@ Note: This document was adapted from the one created in the context of
     the build with -verbose option and scan for lines beginning with
     "Unable to load...". 
 
-3.  We don't want tags for failed votes to end up on out branches so
+3.  We don't want tags for failed votes to end up on our branches so
     the release is first created from a detached head.
 
     Checkout the HEAD of the master branch as a detached head:
