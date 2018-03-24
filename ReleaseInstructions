@@ -131,7 +131,7 @@ Note: This document was adapted from the one created in the context of
 
     b. Using gpg
 
-    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --use-agent --detach-sign --armor $i; done
+    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2 distribution/*/*.xz; do gpg --use-agent --detach-sign --armor $i; done
     $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --use-agent --detach-sign --armor $i; done
 
 11. Convert the part of the WHATSNEW file covering the changes
