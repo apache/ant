@@ -225,7 +225,7 @@ public class VerifyJar extends AbstractJarSignerTask {
 
         private Reader next;
 
-        private StringBuffer buffer = new StringBuffer();
+        private StringBuilder buffer = new StringBuilder();
 
         public BufferingOutputFilterReader(Reader next) {
             this.next = next;
@@ -252,7 +252,7 @@ public class VerifyJar extends AbstractJarSignerTask {
         }
 
         public void clear() {
-            buffer = new StringBuffer();
+            buffer = new StringBuilder();
         }
     }
 }

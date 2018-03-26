@@ -37,7 +37,7 @@ public class RegexpPatternMapper implements FileNameMapper {
     // CheckStyle:VisibilityModifier OFF - bc
     protected RegexpMatcher reg = null;
     protected char[] to = null;
-    protected StringBuffer result = new StringBuffer();
+    protected StringBuilder result = new StringBuilder();
     // CheckStyle:VisibilityModifier ON
 
     /**

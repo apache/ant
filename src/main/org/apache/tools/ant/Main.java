@@ -1089,7 +1089,7 @@ public class Main implements AntMain {
                 in.close();
                 shortAntVersion = props.getProperty("VERSION");
 
-                final StringBuffer msg = new StringBuffer();
+                final StringBuilder msg = new StringBuilder();
                 msg.append("Apache Ant(TM) version ");
                 msg.append(shortAntVersion);
                 msg.append(" compiled on ");

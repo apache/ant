@@ -335,7 +335,7 @@ public class Javadoc extends Task {
      */
     public static class Html {
         /** The text for the element */
-        private final StringBuffer text = new StringBuffer();
+        private final StringBuilder text = new StringBuilder();
 
         /**
          * Add text to the element.
