@@ -86,7 +86,7 @@ public class ScriptSelector extends BaseSelector {
     /**
      * Initialize on demand.
      *
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      *          if something goes wrong
      */
     private void init() throws BuildException {

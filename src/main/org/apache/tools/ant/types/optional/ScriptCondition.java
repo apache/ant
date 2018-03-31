@@ -38,7 +38,7 @@ public class ScriptCondition extends AbstractScriptComponent implements Conditio
      *
      * @return true if the condition is true
      *
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      *          if an error occurs
      */
     @Override

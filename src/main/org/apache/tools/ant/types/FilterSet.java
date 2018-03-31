@@ -219,7 +219,7 @@ public class FilterSet extends DataType implements Cloneable {
             return getRef().getFilters();
         }
         dieOnCircularReference();
-        //silly hack to avoid stack overflow...
+        // silly hack to avoid stack overflow...
         if (!readingFiles) {
             readingFiles = true;
             final int size = filtersFiles.size();

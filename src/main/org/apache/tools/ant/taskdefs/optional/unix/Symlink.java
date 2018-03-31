@@ -211,7 +211,7 @@ public class Symlink extends DispatchTask {
                         // it's already a symlink and the symlink target is the same
                         // as the target noted in the properties file. So there's no
                         // need to recreate it
-                        log("not recreating " + lnk + " as it points to the correct target already" ,
+                        log("not recreating " + lnk + " as it points to the correct target already",
                             Project.MSG_DEBUG);
                         continue;
                     }

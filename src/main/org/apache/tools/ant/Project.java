@@ -38,6 +38,7 @@ import java.util.WeakHashMap;
 import org.apache.tools.ant.helper.DefaultExecutor;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -326,7 +327,7 @@ public class Project implements ResourceFactory {
      * to the result
      */
     private void setAntLib() {
-        final File antlib = org.apache.tools.ant.launch.Locator.getClassSource(
+        final File antlib = Locator.getClassSource(
             Project.class);
         if (antlib != null) {
             setPropertyInternal(MagicNames.ANT_LIB, antlib.getAbsolutePath());

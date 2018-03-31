@@ -1,8 +1,8 @@
 package org.example.junitlauncher.vintage;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -11,6 +11,6 @@ public class AlwaysFailingJUnit4Test {
 
     @Test
     public void testWillFail() throws Exception {
-        Assert.assertEquals("Values weren't equal", 3, 4);
+        assertEquals("Values weren't equal", 3, 4);
     }
 }

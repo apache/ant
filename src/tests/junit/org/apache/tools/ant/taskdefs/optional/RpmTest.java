@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
@@ -32,7 +33,7 @@ public class RpmTest {
     @Test
     public void testShouldThrowExceptionWhenRpmFails() throws Exception {
         Rpm rpm = new MyRpm();
-        rpm.setProject(new org.apache.tools.ant.Project());
+        rpm.setProject(new Project());
         rpm.setFailOnError(true);
         // execute
         try {

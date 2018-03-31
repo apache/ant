@@ -154,10 +154,9 @@ public class Sleep extends Task {
     }
 
     /**
-     * Executes this build task. Throws org.apache.tools.ant.BuildException
-     * if there is an error during task execution.
+     * Executes this build task.
      *
-     * @exception BuildException Description of Exception
+     * @throws BuildException if there is an error during task execution
      */
     @Override
     public void execute()

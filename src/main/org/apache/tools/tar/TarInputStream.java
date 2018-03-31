@@ -295,9 +295,7 @@ public class TarInputStream extends FilterInputStream {
         try {
             currEntry = new TarEntry(headerBuf, encoding);
         } catch (IllegalArgumentException e) {
-            IOException ioe = new IOException("Error detected parsing the header");
-            ioe.initCause(e);
-            throw ioe;
+            throw new IOException("Error detected parsing the header", e);
         }
         if (debug) {
             System.err.println("TarInputStream: SET CURRENTRY '"

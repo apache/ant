@@ -591,7 +591,7 @@ public class Rmic extends MatchingTask {
     /**
      * execute by creating an instance of an implementation
      * class and getting to do the work
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      * if there's a problem with baseDir or RMIC
      */
     @Override
@@ -697,7 +697,7 @@ public class Rmic extends MatchingTask {
     /**
      * Move the generated source file(s) to the base directory
      *
-     * @throws org.apache.tools.ant.BuildException When error
+     * @throws BuildException When error
      * copying/removing files.
      */
     private void moveGeneratedFile(File baseDir, File sourceBaseFile, String classname,

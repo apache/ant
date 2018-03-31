@@ -222,7 +222,7 @@ public class MakeUrl extends Task {
     /**
      * Create the url
      *
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      *          if something goes wrong with the build
      */
     @Override

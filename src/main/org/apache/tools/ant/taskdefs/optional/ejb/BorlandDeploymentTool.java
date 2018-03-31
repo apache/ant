@@ -321,7 +321,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * @param sourceJar java.io.File representing the produced jar file
      */
     private void verifyBorlandJarV4(File sourceJar) {
-        org.apache.tools.ant.taskdefs.Java javaTask = null;
+        Java javaTask = null;
         log("verify BAS " + sourceJar, Project.MSG_INFO);
         try  {
             String args = verifyArgs;

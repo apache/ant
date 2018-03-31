@@ -45,7 +45,7 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
      * @param ejbFiles Hashtable&lt;String, File&gt;
      * @param baseName String
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+    protected void addVendorFiles(Hashtable<String, File> ejbFiles, String baseName) {
         String ddPrefix = usingBaseJarName() ? "" : baseName;
         File orionDD = new File(getConfig().descriptorDir, ddPrefix + ORION_DD);
 

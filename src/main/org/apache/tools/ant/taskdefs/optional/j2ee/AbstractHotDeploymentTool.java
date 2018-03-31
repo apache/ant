@@ -85,7 +85,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  validation of boilerplate attributes.
      *  <p>Only the "action" attribute is required in the
      *  base class.  Subclasses should check attributes accordingly.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
+     *  @throws BuildException if the attributes are invalid or incomplete.
      */
     @Override
     public void validateAttributes() throws BuildException {

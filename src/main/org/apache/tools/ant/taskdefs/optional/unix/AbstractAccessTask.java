@@ -32,6 +32,7 @@ package org.apache.tools.ant.taskdefs.optional.unix;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.ExecuteOn;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
@@ -42,8 +43,7 @@ import org.apache.tools.ant.types.FileSet;
  * @ant.task category="filesystem"
  */
 
-public abstract class AbstractAccessTask
-    extends org.apache.tools.ant.taskdefs.ExecuteOn {
+public abstract class AbstractAccessTask extends ExecuteOn {
 
     /**
      * Chmod task for setting file and directory permissions.
