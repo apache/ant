@@ -554,7 +554,7 @@ public class LayoutPreservingProperties extends Properties {
             }
             final int p = forEscaping.indexOf(c);
             if (p != -1) {
-                buffy.append("\\").append(escaped.substring(p, p + 1));
+                buffy.append("\\").append(escaped, p, p + 1);
             } else if (c < 0x0020 || c > 0x007e) {
                 buffy.append(escapeUnicode(c));
             } else {

@@ -536,7 +536,7 @@ public class FilterSet extends DataType implements Cloneable {
                     }
                     String token =
                         line.substring(index + beginToken.length(), endIndex);
-                    b.append(line.substring(i, index));
+                    b.append(line, i, index);
                     if (tokens.containsKey(token)) {
                         String value = tokens.get(token);
                         if (recurse && !value.equals(token)) {

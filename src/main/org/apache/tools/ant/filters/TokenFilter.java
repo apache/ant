@@ -380,7 +380,7 @@ public class TokenFilter extends BaseFilterReader
             while (found >= 0) {
                 // write everything up to the from
                 if (found > start) {
-                    ret.append(line.substring(start, found));
+                    ret.append(line, start, found);
                 }
 
                 // write the replacement to

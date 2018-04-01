@@ -177,7 +177,7 @@ public class KeySubst extends Task {
         while ((index = origString.indexOf("${", i)) > -1) {
             key = origString.substring(index + 2, origString.indexOf("}",
                                        index + 3));
-            finalString.append(origString.substring(i, index));
+            finalString.append(origString, i, index);
             if (keys.containsKey(key)) {
                 finalString.append(keys.get(key));
             } else {

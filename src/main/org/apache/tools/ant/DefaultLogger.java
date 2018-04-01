@@ -140,7 +140,7 @@ public class DefaultLogger implements BuildLogger {
             String msg1 = error.toString();
             String msg2 = cause.toString();
             if (msg1.endsWith(msg2)) {
-                m.append(msg1.substring(0, msg1.length() - msg2.length()));
+                m.append(msg1, 0, msg1.length() - msg2.length());
                 error = cause;
             } else {
                 break;

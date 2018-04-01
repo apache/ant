@@ -57,7 +57,7 @@ public class SmtpResponseReader {
         String line = reader.readLine();
         // CheckStyle:MagicNumber OFF
         if (line != null && line.length() >= 3) {
-            result.append(line.substring(0, 3));
+            result.append(line, 0, 3);
             result.append(" ");
         }
         // CheckStyle:MagicNumber ON
