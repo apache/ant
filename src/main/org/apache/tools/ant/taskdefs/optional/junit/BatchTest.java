@@ -112,8 +112,8 @@ public final class BatchTest extends BaseTest {
     void addTestsTo(Vector<? super JUnitTest> v) {
         JUnitTest[] tests = createAllJUnitTest();
         v.ensureCapacity(v.size() + tests.length);
-        for (int i = 0; i < tests.length; i++) {
-            v.addElement(tests[i]);
+        for (JUnitTest test : tests) {
+            v.addElement(test);
         }
     }
 

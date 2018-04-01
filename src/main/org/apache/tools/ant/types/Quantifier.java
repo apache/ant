@@ -154,8 +154,8 @@ public class Quantifier extends EnumeratedAttribute {
      */
     public boolean evaluate(boolean[] b) {
         int t = 0;
-        for (int i = 0; i < b.length; i++) {
-            if (b[i]) {
+        for (boolean bn : b) {
+            if (bn) {
                 t++;
             }
         }

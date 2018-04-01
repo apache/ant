@@ -102,18 +102,17 @@ public class AntVersion extends Task implements Condition {
     private DeweyDecimal getVersion() {
         Project p = new Project();
         p.init();
-        char[] versionString = p.getProperty("ant.version").toCharArray();
         StringBuilder sb = new StringBuilder();
         boolean foundFirstDigit = false;
-        for (int i = 0; i < versionString.length; i++) {
-            if (Character.isDigit(versionString[i])) {
-                sb.append(versionString[i]);
+        for (char versionChar : p.getProperty("ant.version").toCharArray()) {
+            if (Character.isDigit(versionChar)) {
+                sb.append(versionChar);
                 foundFirstDigit = true;
             }
-            if (versionString[i] == '.' && foundFirstDigit) {
-                sb.append(versionString[i]);
+            if (versionChar == '.' && foundFirstDigit) {
+                sb.append(versionChar);
             }
-            if (Character.isLetter(versionString[i]) && foundFirstDigit) {
+            if (Character.isLetter(versionChar) && foundFirstDigit) {
                 break;
             }
         }

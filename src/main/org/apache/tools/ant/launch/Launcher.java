@@ -144,10 +144,11 @@ public class Launcher {
             }
             if (getJars && element.isDirectory()) {
                 // add any jars in the directory
-                final URL[] dirURLs = Locator.getLocationURLs(element);
-                for (int j = 0; j < dirURLs.length; ++j) {
-                    if (launchDiag) { System.out.println("adding library JAR: " + dirURLs[j]);}
-                    libPathURLs.add(dirURLs[j]);
+                for (URL dirURL : Locator.getLocationURLs(element)) {
+                    if (launchDiag) {
+                        System.out.println("adding library JAR: " + dirURL);
+                    }
+                    libPathURLs.add(dirURL);
                 }
             }
 
@@ -265,9 +266,9 @@ public class Launcher {
             baseClassPath.setLength(baseClassPath.length() - 1);
         }
 
-        for (int i = 0; i < jars.length; ++i) {
+        for (URL jar : jars) {
             baseClassPath.append(File.pathSeparatorChar);
-            baseClassPath.append(Locator.fromURI(jars[i].toString()));
+            baseClassPath.append(Locator.fromURI(jar.toString()));
         }
 
         setProperty(JAVA_CLASS_PATH, baseClassPath.toString());

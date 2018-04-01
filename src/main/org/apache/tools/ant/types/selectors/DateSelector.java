@@ -160,30 +160,30 @@ public class DateSelector extends BaseExtendSelector {
     public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                String paramname = parameters[i].getName();
+            for (Parameter parameter : parameters) {
+                String paramname = parameter.getName();
                 if (MILLIS_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setMillis(Long.parseLong(parameters[i].getValue()));
+                        setMillis(Long.parseLong(parameter.getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid millisecond setting "
-                                + parameters[i].getValue());
+                                + parameter.getValue());
                     }
                 } else if (DATETIME_KEY.equalsIgnoreCase(paramname)) {
-                    setDatetime(parameters[i].getValue());
+                    setDatetime(parameter.getValue());
                 } else if (CHECKDIRS_KEY.equalsIgnoreCase(paramname)) {
-                    setCheckdirs(Project.toBoolean(parameters[i].getValue()));
+                    setCheckdirs(Project.toBoolean(parameter.getValue()));
                 } else if (GRANULARITY_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setGranularity(Integer.parseInt(parameters[i].getValue()));
+                        setGranularity(Integer.parseInt(parameter.getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid granularity setting "
-                            + parameters[i].getValue());
+                                + parameter.getValue());
                     }
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
-                    setWhen(new TimeComparison(parameters[i].getValue()));
+                    setWhen(new TimeComparison(parameter.getValue()));
                 } else if (PATTERN_KEY.equalsIgnoreCase(paramname)) {
-                    setPattern(parameters[i].getValue());
+                    setPattern(parameter.getValue());
                 } else {
                     setError("Invalid parameter " + paramname);
                 }

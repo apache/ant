@@ -111,17 +111,16 @@ public class ContainsRegexpSelector extends BaseExtendSelector
     public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                String paramname = parameters[i].getName();
+            for (Parameter parameter : parameters) {
+                String paramname = parameter.getName();
                 if (EXPRESSION_KEY.equalsIgnoreCase(paramname)) {
-                    setExpression(parameters[i].getValue());
+                    setExpression(parameter.getValue());
                 } else if (CS_KEY.equalsIgnoreCase(paramname)) {
-                    setCaseSensitive(Project
-                                     .toBoolean(parameters[i].getValue()));
+                    setCaseSensitive(Project.toBoolean(parameter.getValue()));
                 } else if (ML_KEY.equalsIgnoreCase(paramname)) {
-                    setMultiLine(Project.toBoolean(parameters[i].getValue()));
+                    setMultiLine(Project.toBoolean(parameter.getValue()));
                 } else if (SL_KEY.equalsIgnoreCase(paramname)) {
-                    setSingleLine(Project.toBoolean(parameters[i].getValue()));
+                    setSingleLine(Project.toBoolean(parameter.getValue()));
                 } else {
                     setError("Invalid parameter " + paramname);
                 }

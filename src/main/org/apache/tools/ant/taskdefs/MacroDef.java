@@ -264,8 +264,7 @@ public class MacroDef extends AntlibDefinition  {
                 attribute.getName());
         }
         final int size = attributes.size();
-        for (int i = 0; i < size; ++i) {
-            Attribute att = attributes.get(i);
+        for (Attribute att : attributes) {
             if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(
                     "the name \"%s\" has already been used in another attribute element",

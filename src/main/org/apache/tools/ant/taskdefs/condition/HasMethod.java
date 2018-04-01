@@ -165,9 +165,7 @@ public class HasMethod extends ProjectComponent implements Condition {
     }
 
     private boolean isFieldFound(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            Field fieldEntry = fields[i];
+        for (Field fieldEntry : clazz.getDeclaredFields()) {
             if (fieldEntry.getName().equals(field)) {
                 return true;
             }
@@ -176,9 +174,7 @@ public class HasMethod extends ProjectComponent implements Condition {
     }
 
     private boolean isMethodFound(Class<?> clazz) {
-        Method[] methods = clazz.getDeclaredMethods();
-        for (int i = 0; i < methods.length; i++) {
-            Method methodEntry = methods[i];
+        for (Method methodEntry : clazz.getDeclaredMethods()) {
             if (methodEntry.getName().equals(method)) {
                 return true;
             }

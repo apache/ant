@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.selectors.modifiedselector;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -152,33 +153,29 @@ public class DigestAlgorithm implements Algorithm {
     // implementation adapted from ...taskdefs.Checksum, thanks to Magesh for hint
     @Override
     public String getValue(File file) {
-        initMessageDigest();
-        try {
-            if (file.canRead()) {
-                byte[] buf = new byte[readBufferSize];
-                messageDigest.reset();
-                try (DigestInputStream dis = new DigestInputStream(
-                    Files.newInputStream(file.toPath()), messageDigest)) {
-                    // read the whole stream
-                    while (dis.read(buf, 0, readBufferSize) != -1) {
-                    }
-                    byte[] fileDigest = messageDigest.digest();
-                    StringBuilder checksumSb = new StringBuilder();
-                    for (int i = 0; i < fileDigest.length; i++) {
-                        String hexStr =
-                            Integer.toHexString(BYTE_MASK & fileDigest[i]);
-                        if (hexStr.length() < 2) {
-                            checksumSb.append('0');
-                        }
-                        checksumSb.append(hexStr);
-                    }
-                    return checksumSb.toString();
-                } catch (Exception ignored) {
-                }
-            }
-        } catch (Exception ignored) {
+        if (!file.canRead()) {
+            return null;
         }
-        return null;
+        initMessageDigest();
+        byte[] buf = new byte[readBufferSize];
+        messageDigest.reset();
+        try (DigestInputStream dis = new DigestInputStream(Files.newInputStream(file.toPath()),
+                messageDigest)) {
+            // read the whole stream
+            while (dis.read(buf, 0, readBufferSize) != -1) {
+            }
+            StringBuilder checksumSb = new StringBuilder();
+            for (byte digestByte : messageDigest.digest()) {
+                String hexStr = Integer.toHexString(BYTE_MASK & digestByte);
+                if (hexStr.length() < 2) {
+                    checksumSb.append('0');
+                }
+                checksumSb.append(hexStr);
+            }
+            return checksumSb.toString();
+        } catch (IOException ignored) {
+            return null;
+        }
     }
 
     /**

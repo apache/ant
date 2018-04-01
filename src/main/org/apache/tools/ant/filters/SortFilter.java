@@ -314,19 +314,18 @@ public final class SortFilter extends BaseParamFilterReader
         // get parameters
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                final String paramName = params[i].getName();
+            for (Parameter param : params) {
+                final String paramName = param.getName();
                 if (REVERSE_KEY.equals(paramName)) {
-                    setReverse(Boolean.valueOf(params[i].getValue())
-                               .booleanValue());
+                    setReverse(Boolean.valueOf(param.getValue()).booleanValue());
                     continue;
                 }
                 if (COMPARATOR_KEY.equals(paramName)) {
                     try {
-                        String className = (String) params[i].getValue();
+                        String className = (String) param.getValue();
                         @SuppressWarnings("unchecked")
-                        final Comparator<? super String> comparatorInstance = (Comparator<? super String>) (Class
-                                .forName(className).newInstance());
+                        final Comparator<? super String> comparatorInstance
+                                = (Comparator<? super String>) (Class.forName(className).newInstance());
                         setComparator(comparatorInstance);
                         continue;
                     } catch (InstantiationException e) {

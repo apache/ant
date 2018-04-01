@@ -179,10 +179,8 @@ public final class IntrospectionHelper {
      */
     private IntrospectionHelper(final Class<?> bean) {
         this.bean = bean;
-        final Method[] methods = bean.getMethods();
         Method addTextMethod = null;
-        for (int i = 0; i < methods.length; i++) {
-            final Method m = methods[i];
+        for (final Method m : bean.getMethods()) {
             final String name = m.getName();
             final Class<?> returnType = m.getReturnType();
             final Class<?>[] args = m.getParameterTypes();
@@ -205,7 +203,7 @@ public final class IntrospectionHelper {
             }
             if ("addText".equals(name) && Void.TYPE.equals(returnType)
                     && args.length == 1 && String.class.equals(args[0])) {
-                addTextMethod = methods[i];
+                addTextMethod = m;
             } else if (name.startsWith("set") && Void.TYPE.equals(returnType)
                     && args.length == 1 && !args[0].isArray()) {
                 final String propName = getPropertyName(name, "set");
@@ -1641,9 +1639,7 @@ public final class IntrospectionHelper {
         Class<?> matchedClass = null;
         Method matchedMethod = null;
 
-        final int size = methods.size();
-        for (int i = 0; i < size; ++i) {
-            final Method method = methods.get(i);
+        for (final Method method : methods) {
             final Class<?> methodClass = method.getParameterTypes()[0];
             if (methodClass.isAssignableFrom(paramClass)) {
                 if (matchedClass == null) {
@@ -1689,9 +1685,7 @@ public final class IntrospectionHelper {
             return null;
         }
         synchronized (definitions) {
-            final int size = definitions.size();
-            for (int i = 0; i < size; ++i) {
-                final AntTypeDefinition d = definitions.get(i);
+            for (final AntTypeDefinition d : definitions) {
                 final Class<?> exposedClass = d.getExposedClass(helper.getProject());
                 if (exposedClass == null) {
                     continue;

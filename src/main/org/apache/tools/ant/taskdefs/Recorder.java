@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildEvent;
@@ -68,7 +67,7 @@ public class Recorder extends Task implements SubBuildListener {
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
     /** The list of recorder entries. */
-    private static Hashtable recorderEntries = new Hashtable();
+    private static Hashtable<String, RecorderEntry> recorderEntries = new Hashtable<>();
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
@@ -206,10 +205,9 @@ public class Recorder extends Task implements SubBuildListener {
      */
     protected RecorderEntry getRecorder(String name, Project proj)
          throws BuildException {
-        Object o = recorderEntries.get(name);
-        RecorderEntry entry;
+        RecorderEntry entry = recorderEntries.get(name);
 
-        if (o == null) {
+        if (entry == null) {
             // create a recorder entry
             entry = new RecorderEntry(name);
 
@@ -220,9 +218,8 @@ public class Recorder extends Task implements SubBuildListener {
             }
             entry.setProject(proj);
             recorderEntries.put(name, entry);
-        } else {
-            entry = (RecorderEntry) o;
         }
+
         return entry;
     }
 
@@ -308,12 +305,12 @@ public class Recorder extends Task implements SubBuildListener {
      *
      * @since Ant 1.7
      */
+    @SuppressWarnings("unchecked")
     private void cleanup() {
-        Hashtable entries = (Hashtable) recorderEntries.clone();
-        Iterator itEntries = entries.entrySet().iterator();
-        while (itEntries.hasNext()) {
-            Map.Entry entry = (Map.Entry) itEntries.next();
-            RecorderEntry re = (RecorderEntry) entry.getValue();
+        Hashtable<String, RecorderEntry> entries
+                = (Hashtable<String, RecorderEntry>) recorderEntries.clone();
+        for (Map.Entry<String, RecorderEntry> entry : entries.entrySet()) {
+            RecorderEntry re = entry.getValue();
             if (re.getProject() == getProject()) {
                 recorderEntries.remove(entry.getKey());
             }

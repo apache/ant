@@ -140,17 +140,17 @@ public class TokenizedPath {
      * @return boolean
      */
     public boolean isSymlink(File base) {
-        for (int i = 0; i < tokenizedPath.length; i++) {
+        for (String token : tokenizedPath) {
             final Path pathToTraverse;
             if (base == null) {
-                pathToTraverse = Paths.get(tokenizedPath[i]);
+                pathToTraverse = Paths.get(token);
             } else {
-                pathToTraverse = Paths.get(base.toPath().toString(), tokenizedPath[i]);
+                pathToTraverse = Paths.get(base.toPath().toString(), token);
             }
             if (Files.isSymbolicLink(pathToTraverse)) {
                 return true;
             }
-            base = new File(base, tokenizedPath[i]);
+            base = new File(base, token);
         }
         return false;
     }
@@ -181,7 +181,7 @@ public class TokenizedPath {
      */
     private static File findFile(File base, final String[] pathElements,
                                  final boolean cs) {
-        for (int current = 0; current < pathElements.length; current++) {
+        for (String pathElement : pathElements) {
             if (!base.isDirectory()) {
                 return null;
             }
@@ -195,8 +195,8 @@ public class TokenizedPath {
             for (int i = 0; !found && i < matchCase.length; i++) {
                 for (int j = 0; !found && j < files.length; j++) {
                     if (matchCase[i]
-                        ? files[j].equals(pathElements[current])
-                        : files[j].equalsIgnoreCase(pathElements[current])) {
+                            ? files[j].equals(pathElement)
+                            : files[j].equalsIgnoreCase(pathElement)) {
                         base = new File(base, files[j]);
                         found = true;
                     }

@@ -430,10 +430,10 @@ public abstract class AbstractCvsTask extends Task {
             buf.append(newLine);
             buf.append("environment:");
             buf.append(newLine);
-            for (int z = 0; z < variableArray.length; z++) {
+            for (String variable : variableArray) {
                 buf.append(newLine);
                 buf.append("\t");
-                buf.append(variableArray[z]);
+                buf.append(variable);
             }
         }
 

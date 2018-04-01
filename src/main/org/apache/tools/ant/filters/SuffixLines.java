@@ -163,9 +163,9 @@ public final class SuffixLines
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (SUFFIX_KEY.equals(params[i].getName())) {
-                    suffix = params[i].getValue();
+            for (Parameter param : params) {
+                if (SUFFIX_KEY.equals(param.getName())) {
+                    suffix = param.getValue();
                     break;
                 }
             }

@@ -73,29 +73,29 @@ class LibraryDisplayer {
         printLine(size);
         if (0 != available.length) {
             System.out.println("Extensions Supported By Library:");
-            for (int i = 0; i < available.length; i++) {
-                System.out.println(available[i]);
+            for (Extension extension : available) {
+                System.out.println(extension);
             }
         }
 
         if (0 != required.length) {
             System.out.println("Extensions Required By Library:");
-            for (int i = 0; i < required.length; i++) {
-                System.out.println(required[i]);
+            for (Extension extension : required) {
+                System.out.println(extension);
             }
         }
 
         if (0 != options.length) {
             System.out.println("Extensions that will be used by Library if present:");
-            for (int i = 0; i < options.length; i++) {
-                System.out.println(options[i]);
+            for (Extension option : options) {
+                System.out.println(option);
             }
         }
 
         if (0 != specifications.length) {
             System.out.println("Specifications Supported By Library:");
-            for (int i = 0; i < specifications.length; i++) {
-                displaySpecification(specifications[i]);
+            for (Specification specification : specifications) {
+                displaySpecification(specification);
             }
         }
     }

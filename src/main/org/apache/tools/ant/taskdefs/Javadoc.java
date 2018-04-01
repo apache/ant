@@ -1922,18 +1922,14 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setPath(docletPath);
                 }
             }
-            for (final Enumeration<DocletParam> e = doclet.getParams();
-                 e.hasMoreElements();) {
-                final DocletParam param = e.nextElement();
+            for (final DocletParam param : Collections.list(doclet.getParams())) {
                 if (param.getName() == null) {
-                    throw new BuildException(
-                        "Doclet parameters must have a name");
+                    throw new BuildException("Doclet parameters must have a name");
                 }
 
                 toExecute.createArgument().setValue(param.getName());
                 if (param.getValue() != null) {
-                    toExecute.createArgument()
-                        .setValue(param.getValue());
+                    toExecute.createArgument().setValue(param.getValue());
                 }
             }
         }
@@ -2123,8 +2119,7 @@ public class Javadoc extends Task {
                     // -tag arguments.
                     final DirectoryScanner tagDefScanner =
                         ta.getDirectoryScanner(getProject());
-                    final String[] files = tagDefScanner.getIncludedFiles();
-                    for (String file : files) {
+                    for (String file : tagDefScanner.getIncludedFiles()) {
                         final File tagDefFile = new File(tagDir, file);
                         try (final BufferedReader in =
                             new BufferedReader(new FileReader(tagDefFile))) {
@@ -2244,9 +2239,8 @@ public class Javadoc extends Task {
     }
 
     private boolean containsWhitespace(final String s) {
-        final int len = s.length();
-        for (int i = 0; i < len; i++) {
-            if (Character.isWhitespace(s.charAt(i))) {
+        for (char c : s.toCharArray()) {
+            if (Character.isWhitespace(c)) {
                 return true;
             }
         }
@@ -2256,10 +2250,8 @@ public class Javadoc extends Task {
     private String quoteString(final String str, final char delim) {
         final StringBuilder buf = new StringBuilder(str.length() * 2);
         buf.append(delim);
-        final int len = str.length();
         boolean lastCharWasCR = false;
-        for (int i = 0; i < len; i++) {
-            final char c = str.charAt(i);
+        for (final char c : str.toCharArray()) {
             if (c == delim) { // can't put the non-constant delim into a case
                 buf.append('\\').append(c);
                 lastCharWasCR = false;
@@ -2376,24 +2368,23 @@ public class Javadoc extends Task {
             final File baseDir = ds.getDir(getProject());
             log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG);
             final DirectoryScanner dsc = ds.getDirectoryScanner(getProject());
-            final String[] dirs = dsc.getIncludedDirectories();
             boolean containsPackages = false;
-            for (int i = 0; i < dirs.length; i++) {
+            for (String dir : dsc.getIncludedDirectories()) {
                 // are there any java files in this directory?
-                final File pd = new File(baseDir, dirs[i]);
-                final String[] files = pd.list((dir1,
+                final File pd = new File(baseDir, dir);
+                final String[] files = pd.list((directory,
                     name) -> name.endsWith(".java") || (includeNoSourcePackages
                         && name.equals("package.html")));
 
                 if (files.length > 0) {
-                    if ("".equals(dirs[i])) {
+                    if ("".equals(dir)) {
                         log(baseDir
                             + " contains source files in the default package, you must specify them as source files not packages.",
                             Project.MSG_WARN);
                     } else {
                         containsPackages = true;
                         final String packageName =
-                            dirs[i].replace(File.separatorChar, '.');
+                                dir.replace(File.separatorChar, '.');
                         if (!addedPackages.contains(packageName)) {
                             addedPackages.add(packageName);
                             pn.add(packageName);

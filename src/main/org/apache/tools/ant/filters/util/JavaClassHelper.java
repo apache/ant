@@ -48,8 +48,7 @@ public final class JavaClassHelper {
         final ClassParser parser = new ClassParser(bis, "");
         final JavaClass javaClass = parser.parse();
         final Field[] fields = javaClass.getFields();
-        for (int i = 0; i < fields.length; i++) {
-            final Field field = fields[i];
+        for (final Field field : fields) {
             if (field != null) {
                 final ConstantValue cv = field.getConstantValue();
                 if (cv != null) {

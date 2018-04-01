@@ -139,9 +139,9 @@ public class JUnit4TestMethodAdapter implements Test {
                 throw new IllegalArgumentException("methodNames is <null>");
             }
             methodsListDescription = Description.createSuiteDescription(testClass);
-            for (int i = 0; i < methodNames.length; i++) {
+            for (String methodName : methodNames) {
                 methodsListDescription.addChild(
-                        Description.createTestDescription(testClass, methodNames[i]));
+                        Description.createTestDescription(testClass, methodName));
             }
             this.testClass = testClass;
             this.methodNames = methodNames;
@@ -165,12 +165,11 @@ public class JUnit4TestMethodAdapter implements Test {
             if (methodNames.length == 0) {
                 buf.append("No methods");
             } else {
-                buf.append(methodNames.length == 1 ? "Method" : "Methods");
-                buf.append(' ');
-                buf.append(methodNames[0]);
-                for (int i = 1; i < methodNames.length; i++) {
-                    buf.append(',').append(methodNames[i]);
+                buf.append(methodNames.length == 1 ? "Method " : "Methods ");
+                for (String methodName : methodNames) {
+                    buf.append(methodName).append(',');
                 }
+                buf.setLength(buf.length() - 1);
             }
             buf.append('(').append(testClass.getName()).append(')');
             return buf.toString();

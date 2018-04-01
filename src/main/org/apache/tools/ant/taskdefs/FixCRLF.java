@@ -302,10 +302,9 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
-        String[] files = ds.getIncludedFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            processFile(files[i]);
+        for (String filename : ds.getIncludedFiles()) {
+            processFile(filename);
         }
     }
 

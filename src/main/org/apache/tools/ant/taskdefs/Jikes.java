@@ -90,8 +90,8 @@ public class Jikes {
                     tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
                             "tmp", null, false, true);
                     out = new BufferedWriter(new FileWriter(tmpFile));
-                    for (int i = 0; i < args.length; i++) {
-                        out.write(args[i]);
+                    for (String arg : args) {
+                        out.write(arg);
                         out.newLine();
                     }
                     out.flush();

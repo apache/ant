@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -226,8 +228,7 @@ public class Sync extends Task {
         ds.addExcludes(excls);
 
         ds.scan();
-        String[] files = ds.getIncludedFiles();
-        for (String file : files) {
+        for (String file : ds.getIncludedFiles()) {
             File f = new File(toDir, file);
             log("Removing orphan file: " + f, Project.MSG_DEBUG);
             f.delete();
@@ -239,8 +240,9 @@ public class Sync extends Task {
         // leaves before their parent nodes - thus making sure (well,
         // more likely) that the directories are empty when we try to
         // delete them.
-        for (int i = dirs.length - 1; i >= 0; --i) {
-            File f = new File(toDir, dirs[i]);
+        Arrays.sort(dirs, Comparator.reverseOrder());
+        for (String dir : dirs) {
+            File f = new File(toDir, dir);
             String[] children = f.list();
             if (children == null || children.length < 1) {
                 log("Removing orphan directory: " + f, Project.MSG_DEBUG);
@@ -255,8 +257,9 @@ public class Sync extends Task {
             fs.setDir(toDir);
             String[] preservedDirs =
                 fs.getDirectoryScanner(getProject()).getIncludedDirectories();
-            for (int i = preservedDirs.length - 1; i >= 0; --i) {
-                preservedDirectories.add(new File(toDir, preservedDirs[i]));
+            Arrays.sort(preservedDirs, Comparator.reverseOrder());
+            for (String dir : preservedDirs) {
+                preservedDirectories.add(new File(toDir, dir));
             }
         }
 
@@ -286,13 +289,11 @@ public class Sync extends Task {
         int removedCount = 0;
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
-            for (int i = 0; i < children.length; ++i) {
-                File file = children[i];
+            for (File file : children) {
                 // Test here again to avoid method call for non-directories!
                 if (file.isDirectory()) {
-                    removedCount +=
-                        removeEmptyDirectories(file, true,
-                                               preservedEmptyDirectories);
+                    removedCount += removeEmptyDirectories(file, true,
+                            preservedEmptyDirectories);
                 }
             }
             if (children.length > 0) {

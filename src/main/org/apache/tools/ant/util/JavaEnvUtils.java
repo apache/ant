@@ -579,8 +579,8 @@ public final class JavaEnvUtils {
             throws IOException {
         File script = FILE_UTILS.createTempFile("ANT", ".JAVA_OPTS", null, false, true);
         try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
-            for (int i = 0; i < cmds.length; i++) {
-                out.write(cmds[i]);
+            for (String cmd : cmds) {
+                out.write(cmd);
                 out.newLine();
             }
         }

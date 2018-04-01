@@ -266,8 +266,8 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      */
     private File getResourceContainer(String resourceLocation, String[] paths)
          throws IOException {
-        for (int i = 0; i < paths.length; ++i) {
-            File element = new File(paths[i]);
+        for (String path : paths) {
+            File element = new File(path);
             if (!element.exists()) {
                 continue;
             }

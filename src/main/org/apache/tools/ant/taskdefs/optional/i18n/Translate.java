@@ -486,10 +486,9 @@ public class Translate extends MatchingTask {
         int filesProcessed = 0;
         for (FileSet fs : filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] srcFiles = ds.getIncludedFiles();
-            for (int j = 0; j < srcFiles.length; j++) {
+            for (String srcFile : ds.getIncludedFiles()) {
                 try {
-                    File dest = FILE_UTILS.resolveFile(toDir, srcFiles[j]);
+                    File dest = FILE_UTILS.resolveFile(toDir, srcFile);
                     //Make sure parent dirs exist, else, create them.
                     try {
                         File destDir = new File(dest.getParent());
@@ -502,7 +501,7 @@ public class Translate extends MatchingTask {
                             Project.MSG_DEBUG);
                     }
                     destLastModified = dest.lastModified();
-                    File src = FILE_UTILS.resolveFile(ds.getBasedir(), srcFiles[j]);
+                    File src = FILE_UTILS.resolveFile(ds.getBasedir(), srcFile);
                     srcLastModified = src.lastModified();
                     //Check to see if dest file has to be recreated
                     boolean needsWork = forceOverwrite
@@ -516,14 +515,12 @@ public class Translate extends MatchingTask {
                         }
                     }
                     if (needsWork) {
-                        log("Processing " + srcFiles[j],
-                            Project.MSG_DEBUG);
+                        log("Processing " + srcFile, Project.MSG_DEBUG);
                         translateOneFile(src, dest);
                         ++filesProcessed;
                     } else {
-                        log("Skipping " + srcFiles[j]
-                            + " as destination file is up to date",
-                            Project.MSG_VERBOSE);
+                        log("Skipping " + srcFile + " as destination file is up to date",
+                                Project.MSG_VERBOSE);
                     }
                 } catch (IOException ioe) {
                     throw new BuildException(ioe.getMessage(), getLocation());

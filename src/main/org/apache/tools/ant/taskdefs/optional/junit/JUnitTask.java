@@ -963,18 +963,12 @@ public class JUnitTask extends Task {
             /* I assume we don't want to do this with "per batch" forking. */
             List<List<JUnitTest>> newlist = new ArrayList<>();
             if (forkMode.getValue().equals(ForkMode.PER_TEST)) {
-                final Iterator<List<JUnitTest>> i1 = testList.iterator();
-                while (i1.hasNext()) {
-                    final List<JUnitTest> l = i1.next();
-                    if (l.size() == 1) {
-                        newlist.add(l);
+                for (List<JUnitTest> list : testList) {
+                    if (list.size() == 1) {
+                        newlist.add(list);
                     } else {
-                        final Iterator<JUnitTest> i2 = l.iterator();
-                        while (i2.hasNext()) {
-                            final List<JUnitTest> tmpSingleton =
-                                new ArrayList<>();
-                            tmpSingleton.add(i2.next());
-                            newlist.add(tmpSingleton);
+                        for (JUnitTest test : list) {
+                            newlist.add(Collections.singletonList(test));
                         }
                     }
                 }
@@ -1203,8 +1197,7 @@ public class JUnitTask extends Task {
 
         StringBuilder formatterArg = new StringBuilder(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
-        for (int i = 0; i < feArray.length; i++) {
-            final FormatterElement fe = feArray[i];
+        for (final FormatterElement fe : feArray) {
             if (fe.shouldUse(this)) {
                 formatterArg.append(Constants.FORMATTER);
                 formatterArg.append(fe.getClassname());
@@ -1251,9 +1244,9 @@ public class JUnitTask extends Task {
 
         final String[] environment = env.getVariables();
         if (environment != null) {
-            for (int i = 0; i < environment.length; i++) {
-                log("Setting environment variable: " + environment[i],
-                    Project.MSG_VERBOSE);
+            for (String variable : environment) {
+                log("Setting environment variable: " + variable,
+                        Project.MSG_VERBOSE);
             }
         }
         execute.setNewenvironment(newEnvironment);
@@ -1613,9 +1606,7 @@ public class JUnitTask extends Task {
 
             runner.setPermissions(perm);
 
-            final FormatterElement[] feArray = mergeFormatters(test);
-            for (int i = 0; i < feArray.length; i++) {
-                final FormatterElement fe = feArray[i];
+            for (final FormatterElement fe : mergeFormatters(test)) {
                 if (fe.shouldUse(this)) {
                     final File outFile = getOutput(fe, test);
                     if (outFile != null) {
@@ -1922,8 +1913,7 @@ public class JUnitTask extends Task {
 
             test.setCounts(1, 0, 1, 0);
             test.setProperties(getProject().getProperties());
-            for (int i = 0; i < feArray.length; i++) {
-                final FormatterElement fe = feArray[i];
+            for (final FormatterElement fe : feArray) {
                 if (fe.shouldUse(this)) {
                     final JUnitTaskMirror.JUnitResultFormatterMirror formatter =
                         fe.createFormatter(classLoader);

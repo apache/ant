@@ -187,13 +187,13 @@ public final class HeadFilter extends BaseParamFilterReader
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (LINES_KEY.equals(params[i].getName())) {
-                    lines = Long.parseLong(params[i].getValue());
+            for (Parameter param : params) {
+                if (LINES_KEY.equals(param.getName())) {
+                    lines = Long.parseLong(param.getValue());
                     continue;
                 }
-                if (SKIP_KEY.equals(params[i].getName())) {
-                    skip = Long.parseLong(params[i].getValue());
+                if (SKIP_KEY.equals(param.getName())) {
+                    skip = Long.parseLong(param.getValue());
                     continue;
                 }
             }

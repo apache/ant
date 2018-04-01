@@ -205,8 +205,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         Commandline cmd = new Commandline();
 
         if (options != null) {
-            for (int i = 0; i < options.length; i++) {
-                cmd.createArgument().setValue(options[i]);
+            for (String option : options) {
+                cmd.createArgument().setValue(option);
             }
         }
 
@@ -329,8 +329,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     protected String[] filterJvmCompilerArgs(String[] compilerArgs) {
         int len = compilerArgs.length;
         List<String> args = new ArrayList<>(len);
-        for (int i = 0; i < len; i++) {
-            String arg = compilerArgs[i];
+        for (String arg : compilerArgs) {
             if (arg.startsWith("-J")) {
                 attributes.log("Dropping " + arg + " from compiler arguments");
             } else {

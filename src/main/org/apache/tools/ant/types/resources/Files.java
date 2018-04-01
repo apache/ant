@@ -180,8 +180,8 @@ public class Files extends AbstractSelectorContainer
     public synchronized void appendIncludes(String[] includes) {
         checkAttributesAllowed();
         if (includes != null) {
-            for (int i = 0; i < includes.length; i++) {
-                defaultPatterns.createInclude().setName(includes[i]);
+            for (String include : includes) {
+                defaultPatterns.createInclude().setName(include);
             }
             ds = null;
         }
@@ -210,8 +210,8 @@ public class Files extends AbstractSelectorContainer
     public synchronized void appendExcludes(String[] excludes) {
         checkAttributesAllowed();
         if (excludes != null) {
-            for (int i = 0; i < excludes.length; i++) {
-                defaultPatterns.createExclude().setName(excludes[i]);
+            for (String exclude : excludes) {
+                defaultPatterns.createExclude().setName(exclude);
             }
             ds = null;
         }

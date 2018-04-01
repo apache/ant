@@ -221,9 +221,8 @@ public class Classloader extends Task {
             }
 
             if (existingLoader && classpath != null) {
-                String[] list = classpath.list();
-                for (int i = 0; i < list.length; i++) {
-                    File f = new File(list[i]);
+                for (String path : classpath.list()) {
+                    File f = new File(path);
                     if (f.exists()) {
                         log("Adding to class loader " + acl + " " + f.getAbsolutePath(),
                                 Project.MSG_DEBUG);

@@ -225,8 +225,7 @@ public class Image extends MatchingTask {
                           final File dstDir, final FileNameMapper mapper) {
         int writeCount = 0;
 
-        for (int i = 0; i < srcNames.length; ++i) {
-            final String srcName = srcNames[i];
+        for (final String srcName : srcNames) {
             final File srcFile = new File(srcDir, srcName).getAbsoluteFile();
 
             final String[] dstNames = mapper.mapFileName(srcName);

@@ -411,9 +411,9 @@ public class Parallel extends Task
         int tries = 0;
         do {
             oneAlive = false;
-            for (int i = 0; i < running.length; i++) {
-                if (running[i] != null && !running[i].isFinished()) {
-                    running[i].interrupt();
+            for (TaskRunnable runnable : running) {
+                if (runnable != null && !runnable.isFinished()) {
+                    runnable.interrupt();
                     Thread.yield();
                     oneAlive = true;
                 }

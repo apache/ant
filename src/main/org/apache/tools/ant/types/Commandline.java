@@ -353,8 +353,8 @@ public class Commandline implements Cloneable {
      * @param line an array of arguments to append.
      */
     public void addArguments(String[] line) {
-        for (int i = 0; i < line.length; i++) {
-            createArgument().setValue(line[i]);
+        for (String l : line) {
+            createArgument().setValue(l);
         }
     }
 
@@ -397,13 +397,11 @@ public class Commandline implements Cloneable {
      * @since Ant 1.6
      */
     public void addArgumentsToList(ListIterator<String> list) {
-        final int size = arguments.size();
-        for (int i = 0; i < size; i++) {
-            Argument arg = arguments.get(i);
+        for (Argument arg : arguments) {
             String[] s = arg.getParts();
             if (s != null) {
-                for (int j = 0; j < s.length; j++) {
-                    list.add(s[j]);
+                for (String value : s) {
+                    list.add(value);
                 }
             }
         }

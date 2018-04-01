@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import junit.framework.AssertionFailedError;
@@ -300,8 +299,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
         writer.newLine();
         writer.write("        TestSuite suite = new TestSuite();");
         writer.newLine();
-        for (Iterator<TestInfos> iter = failedTests.iterator(); iter.hasNext();) {
-            TestInfos testInfos = iter.next();
+        for (TestInfos testInfos : failedTests) {
             writer.write("        suite.addTest(");
             writer.write(String.valueOf(testInfos));
             writer.write(");");

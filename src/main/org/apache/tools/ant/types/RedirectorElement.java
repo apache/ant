@@ -573,9 +573,9 @@ public class RedirectorElement extends DataType {
         }
         //remove any null elements
         ArrayList<File> list = new ArrayList<>(name.length);
-        for (int i = 0; i < name.length; i++) {
-            if (name[i] != null) {
-                list.add(getProject().resolveFile(name[i]));
+        for (String n : name) {
+            if (n != null) {
+                list.add(getProject().resolveFile(n));
             }
         }
         return (File[]) (list.toArray(new File[list.size()]));
@@ -597,11 +597,10 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            Mapper[] m = new Mapper[] {inputMapper, outputMapper, errorMapper};
-            for (int i = 0; i < m.length; i++) {
-                if (m[i] != null) {
-                    stk.push(m[i]);
-                    m[i].dieOnCircularReference(stk, p);
+            for (Mapper m : Arrays.asList(inputMapper, outputMapper, errorMapper)) {
+                if (m != null) {
+                    stk.push(m);
+                    m.dieOnCircularReference(stk, p);
                     stk.pop();
                 }
             }

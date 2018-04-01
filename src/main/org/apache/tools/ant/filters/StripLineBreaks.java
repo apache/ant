@@ -140,9 +140,9 @@ public final class StripLineBreaks
         String userDefinedLineBreaks = null;
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (LINE_BREAKS_KEY.equals(params[i].getName())) {
-                    userDefinedLineBreaks = params[i].getValue();
+            for (Parameter param : params) {
+                if (LINE_BREAKS_KEY.equals(param.getName())) {
+                    userDefinedLineBreaks = param.getValue();
                     break;
                 }
             }

@@ -86,10 +86,7 @@ public final class Locator {
         gAfterEscaping2[DEL] = 'F';
         char[] escChs = {' ', '<', '>', '#', '%', '"', '{', '}',
                          '|', '\\', '^', '~', '[', ']', '`'};
-        int len = escChs.length;
-        char ch;
-        for (int i = 0; i < len; i++) {
-            ch = escChs[i];
+        for (char ch : escChs) {
             gNeedEscaping[ch] = true;
             gAfterEscaping1[ch] = gHexChs[ch >> NIBBLE];
             gAfterEscaping2[ch] = gHexChs[ch & NIBBLE_MASK];
@@ -485,8 +482,8 @@ public final class Locator {
             urls = new URL[1];
             String path = location.getPath();
             String littlePath = path.toLowerCase(Locale.ENGLISH);
-            for (int i = 0; i < extensions.length; ++i) {
-                if (littlePath.endsWith(extensions[i])) {
+            for (String extension : extensions) {
+                if (littlePath.endsWith(extension)) {
                     urls[0] = fileToURL(location);
                     break;
                 }

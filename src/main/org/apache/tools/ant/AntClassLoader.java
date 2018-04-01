@@ -361,11 +361,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     public void setClassPath(final Path classpath) {
         pathComponents.removeAllElements();
         if (classpath != null) {
-            final Path actualClasspath = classpath.concatSystemClasspath("ignore");
-            final String[] pathElements = actualClasspath.list();
-            for (int i = 0; i < pathElements.length; ++i) {
+            for (String pathElement : classpath.concatSystemClasspath("ignore").list()) {
                 try {
-                    addPathElement(pathElements[i]);
+                    addPathElement(pathElement);
                 } catch (final BuildException e) {
                     // ignore path elements which are invalid
                     // relative to the project

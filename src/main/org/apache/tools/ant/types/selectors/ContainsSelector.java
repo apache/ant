@@ -111,16 +111,16 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
     public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                String paramname = parameters[i].getName();
+            for (Parameter parameter : parameters) {
+                String paramname = parameter.getName();
                 if (CONTAINS_KEY.equalsIgnoreCase(paramname)) {
-                    setText(parameters[i].getValue());
+                    setText(parameter.getValue());
                 } else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
-                            parameters[i].getValue()));
+                            parameter.getValue()));
                 } else if (WHITESPACE_KEY.equalsIgnoreCase(paramname)) {
                     setIgnorewhitespace(Project.toBoolean(
-                            parameters[i].getValue()));
+                            parameter.getValue()));
                 } else {
                     setError("Invalid parameter " + paramname);
                 }

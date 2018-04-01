@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -155,11 +157,9 @@ public class FailTest {
         String specificMessage = "Nested conditions "
           + "not permitted in conjunction with if/unless attributes";
 
-        char[] c = {'a', 'b', 'c'};
         StringBuilder target = new StringBuilder("testNested4x");
-
-        for (int i = 0; i < c.length; i++) {
-            target.setCharAt(target.length() - 1, c[i]);
+        for (char ch : Arrays.asList('a', 'b', 'c')) {
+            target.setCharAt(target.length() - 1, ch);
             try {
                 buildRule.executeTarget(target.toString());
                 fail("it is required to fail :-)");
@@ -193,11 +193,9 @@ public class FailTest {
     public void testNested7() {
         String specificMessage = "A single nested condition is required.";
 
-        char[] c = {'a', 'b'};
         StringBuilder target = new StringBuilder("testNested7x");
-
-        for (int i = 0; i < c.length; i++) {
-            target.setCharAt(target.length() - 1, c[i]);
+        for (char ch : Arrays.asList('a', 'b')) {
+            target.setCharAt(target.length() - 1, ch);
             try {
                 buildRule.executeTarget(target.toString());
                 fail("it is required to fail :-)");

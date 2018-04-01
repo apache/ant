@@ -237,13 +237,13 @@ public final class LineContainsRegExp
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (REGEXP_KEY.equals(params[i].getType())) {
-                    setRegexp(params[i].getValue());
-                } else if (NEGATE_KEY.equals(params[i].getType())) {
-                    setNegate(Project.toBoolean(params[i].getValue()));
-                } else if (CS_KEY.equals(params[i].getType())) {
-                    setCaseSensitive(Project.toBoolean(params[i].getValue()));
+            for (Parameter param : params) {
+                if (REGEXP_KEY.equals(param.getType())) {
+                    setRegexp(param.getValue());
+                } else if (NEGATE_KEY.equals(param.getType())) {
+                    setNegate(Project.toBoolean(param.getValue()));
+                } else if (CS_KEY.equals(param.getType())) {
+                    setCaseSensitive(Project.toBoolean(param.getValue()));
                 }
             }
         }

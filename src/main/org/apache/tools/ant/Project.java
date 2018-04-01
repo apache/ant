@@ -393,8 +393,8 @@ public class Project implements ResourceFactory {
     public void addBuildListener(final BuildListener listener) {
         synchronized (listenersLock) {
             // If the listeners already has this listener, do nothing
-            for (int i = 0; i < listeners.length; i++) {
-                if (listeners[i] == listener) {
+            for (BuildListener buildListener : listeners) {
+                if (buildListener == listener) {
                     return;
                 }
             }
@@ -439,8 +439,8 @@ public class Project implements ResourceFactory {
     public Vector<BuildListener> getBuildListeners() {
         synchronized (listenersLock) {
             final Vector<BuildListener> r = new Vector<>(listeners.length);
-            for (int i = 0; i < listeners.length; i++) {
-                r.add(listeners[i]);
+            for (BuildListener listener : listeners) {
+                r.add(listener);
             }
             return r;
         }
@@ -1826,13 +1826,13 @@ public class Project implements ResourceFactory {
         // dependency tree, not just on the Targets that depend on the
         // build Target.
 
-        for (int i = 0; i < roots.length; i++) {
-            final String st = state.get(roots[i]);
+        for (String root : roots) {
+            final String st = state.get(root);
             if (st == null) {
-                tsort(roots[i], targetTable, state, visiting, ret);
+                tsort(root, targetTable, state, visiting, ret);
             } else if (st == VISITING) {
                 throw new BuildException("Unexpected node in visiting state: "
-                    + roots[i]);
+                        + root);
             }
         }
         final StringBuilder buf = new StringBuilder("Build sequence for target(s)");
@@ -2087,9 +2087,8 @@ public class Project implements ResourceFactory {
      */
     public void fireBuildStarted() {
         final BuildEvent event = new BuildEvent(this);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].buildStarted(event);
+        for (BuildListener currListener : listeners) {
+            currListener.buildStarted(event);
         }
     }
 
@@ -2103,9 +2102,8 @@ public class Project implements ResourceFactory {
     public void fireBuildFinished(final Throwable exception) {
         final BuildEvent event = new BuildEvent(this);
         event.setException(exception);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].buildFinished(event);
+        for (BuildListener currListener : listeners) {
+            currListener.buildFinished(event);
         }
         // Inform IH to clear the cache
         IntrospectionHelper.clearCache();
@@ -2119,10 +2117,9 @@ public class Project implements ResourceFactory {
      */
     public void fireSubBuildStarted() {
         final BuildEvent event = new BuildEvent(this);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            if (currListeners[i] instanceof SubBuildListener) {
-                ((SubBuildListener) currListeners[i]).subBuildStarted(event);
+        for (BuildListener currListener : listeners) {
+            if (currListener instanceof SubBuildListener) {
+                ((SubBuildListener) currListener).subBuildStarted(event);
             }
         }
     }
@@ -2139,10 +2136,9 @@ public class Project implements ResourceFactory {
     public void fireSubBuildFinished(final Throwable exception) {
         final BuildEvent event = new BuildEvent(this);
         event.setException(exception);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            if (currListeners[i] instanceof SubBuildListener) {
-                ((SubBuildListener) currListeners[i]).subBuildFinished(event);
+        for (BuildListener currListener : listeners) {
+            if (currListener instanceof SubBuildListener) {
+                ((SubBuildListener) currListener).subBuildFinished(event);
             }
         }
     }
@@ -2156,9 +2152,8 @@ public class Project implements ResourceFactory {
      */
     protected void fireTargetStarted(final Target target) {
         final BuildEvent event = new BuildEvent(target);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].targetStarted(event);
+        for (BuildListener currListener : listeners) {
+            currListener.targetStarted(event);
         }
 
     }
@@ -2176,9 +2171,8 @@ public class Project implements ResourceFactory {
     protected void fireTargetFinished(final Target target, final Throwable exception) {
         final BuildEvent event = new BuildEvent(target);
         event.setException(exception);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].targetFinished(event);
+        for (BuildListener currListener : listeners) {
+            currListener.targetFinished(event);
         }
 
     }
@@ -2194,9 +2188,8 @@ public class Project implements ResourceFactory {
         // register this as the current task on the current thread.
         registerThreadTask(Thread.currentThread(), task);
         final BuildEvent event = new BuildEvent(task);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].taskStarted(event);
+        for (BuildListener currListener : listeners) {
+            currListener.taskStarted(event);
         }
     }
 
@@ -2216,9 +2209,8 @@ public class Project implements ResourceFactory {
         System.err.flush();
         final BuildEvent event = new BuildEvent(task);
         event.setException(exception);
-        final BuildListener[] currListeners = listeners;
-        for (int i = 0; i < currListeners.length; i++) {
-            currListeners[i].taskFinished(event);
+        for (BuildListener currListener : listeners) {
+            currListener.taskFinished(event);
         }
 
     }
@@ -2264,9 +2256,8 @@ public class Project implements ResourceFactory {
         }
         try {
             isLoggingMessage.set(Boolean.TRUE);
-            final BuildListener[] currListeners = listeners;
-            for (int i = 0; i < currListeners.length; i++) {
-                currListeners[i].messageLogged(event);
+            for (BuildListener currListener : listeners) {
+                currListener.messageLogged(event);
             }
         } finally {
             isLoggingMessage.set(Boolean.FALSE);
@@ -2466,11 +2457,9 @@ public class Project implements ResourceFactory {
             return;
         }
         try {
-            final Method method =
-                obj.getClass().getMethod(
-                    "setProject", new Class[] {Project.class});
+            final Method method = obj.getClass().getMethod("setProject", Project.class);
             if (method != null) {
-                method.invoke(obj, new Object[] {this});
+                method.invoke(obj, this);
             }
         } catch (final Throwable e) {
             // ignore this if the object does not have

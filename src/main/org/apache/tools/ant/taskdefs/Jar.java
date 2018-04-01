@@ -533,10 +533,8 @@ public class Jar extends Zip {
 
     private void writeManifest(ZipOutputStream zOut, Manifest manifest)
         throws IOException {
-        for (Enumeration<String> e = manifest.getWarnings();
-             e.hasMoreElements();) {
-            log("Manifest warning: " + e.nextElement(),
-                Project.MSG_WARN);
+        for (String warning : Collections.list(manifest.getWarnings())) {
+            log("Manifest warning: " + warning, Project.MSG_WARN);
         }
 
         zipDir((Resource) null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE,
@@ -621,13 +619,12 @@ public class Jar extends Zip {
                     cpEntries[c++] = tok.nextToken();
                 }
             }
-            String[] indexJarEntries = indexJars.list();
-            for (int i = 0; i < indexJarEntries.length; i++) {
-                String name = findJarName(indexJarEntries[i], cpEntries);
+            for (String indexJarEntry : indexJars.list()) {
+                String name = findJarName(indexJarEntry, cpEntries);
                 if (name != null) {
                     ArrayList<String> dirs = new ArrayList<String>();
                     ArrayList<String> files = new ArrayList<String>();
-                    grabFilesAndDirs(indexJarEntries[i], dirs, files);
+                    grabFilesAndDirs(indexJarEntry, dirs, files);
                     if (dirs.size() + files.size() > 0) {
                         writer.println(name);
                         writeIndexLikeList(dirs, files, writer);
@@ -777,8 +774,8 @@ public class Jar extends Zip {
             // checks here deferring them for the second run
             Resource[][] manifests = grabManifests(rcs);
             int count = 0;
-            for (int i = 0; i < manifests.length; i++) {
-                count += manifests[i].length;
+            for (Resource[] mf : manifests) {
+                count += mf.length;
             }
             log("found a total of " + count + " manifests in "
                 + manifests.length + " resource collections",

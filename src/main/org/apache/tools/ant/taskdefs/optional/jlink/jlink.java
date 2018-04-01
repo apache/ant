@@ -256,10 +256,7 @@ public class jlink {
      */
     private void addDirContents(ZipOutputStream output, File dir, String prefix,
                                 boolean compress) throws IOException {
-        String[] contents = dir.list();
-
-        for (int i = 0; i < contents.length; ++i) {
-            String name = contents[i];
+        for (String name : dir.list()) {
             File file = new File(dir, name);
 
             if (file.isDirectory()) {

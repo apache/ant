@@ -74,7 +74,7 @@ public class XMLValidateTask extends Task {
     /** file to be validated */
     protected File file = null;
     /** sets of file to be validated */
-    protected Vector filesets = new Vector();
+    protected Vector<FileSet> filesets = new Vector<>();
     protected Path classpath;
 
     /**
@@ -90,12 +90,12 @@ public class XMLValidateTask extends Task {
     // CheckStyle:VisibilityModifier ON
 
     /** The vector to store all attributes (features) to be set on the parser. **/
-    private Vector attributeList = new Vector();
+    private Vector<Attribute> attributeList = new Vector<>();
 
     /**
      * List of properties.
      */
-    private final Vector propertyList = new Vector();
+    private final Vector<Property> propertyList = new Vector<>();
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
     /** Message for successful validation */
@@ -307,15 +307,10 @@ public class XMLValidateTask extends Task {
                 }
             }
 
-            final int size = filesets.size();
-            for (int i = 0; i < size; i++) {
-
-                FileSet fs = (FileSet) filesets.elementAt(i);
+            for (FileSet fs : filesets) {
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                String[] files = ds.getIncludedFiles();
-
-                for (int j = 0; j < files.length; j++) {
-                    File srcFile = new File(fs.getDir(getProject()), files[j]);
+                for (String fileName : ds.getIncludedFiles()) {
+                    File srcFile = new File(fs.getDir(getProject()), fileName);
                     doValidate(srcFile);
                     fileProcessed++;
                 }
@@ -353,16 +348,12 @@ public class XMLValidateTask extends Task {
                 setFeature(XmlConstants.FEATURE_VALIDATION, true);
             }
             // set the feature from the attribute list
-            final int attSize = attributeList.size();
-            for (int i = 0; i < attSize; i++) {
-                Attribute feature = (Attribute) attributeList.elementAt(i);
+            for (Attribute feature : attributeList) {
                 setFeature(feature.getName(), feature.getValue());
 
             }
             // Sets properties
-            final int propSize = propertyList.size();
-            for (int i = 0; i < propSize; i++) {
-                final Property prop = (Property) propertyList.elementAt(i);
+            for (Property prop : propertyList) {
                 setProperty(prop.getName(), prop.getValue());
             }
         }

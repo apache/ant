@@ -77,9 +77,9 @@ public final class KaffeNative2Ascii extends DefaultNative2Ascii {
      * @return null if neither class can get loaded.
      */
     private static Class<?> getN2aClass() {
-        for (int i = 0; i < N2A_CLASSNAMES.length; i++) {
+        for (String className : N2A_CLASSNAMES) {
             try {
-                return Class.forName(N2A_CLASSNAMES[i]);
+                return Class.forName(className);
             } catch (ClassNotFoundException cnfe) {
                 // Ignore
             }

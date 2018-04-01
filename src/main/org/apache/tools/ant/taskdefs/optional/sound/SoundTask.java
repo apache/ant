@@ -147,10 +147,9 @@ public class SoundTask extends Task {
             if (source.exists()) {
                 if (source.isDirectory()) {
                     // get the list of files in the dir
-                    String[] entries = source.list();
-                    Vector files = new Vector();
-                    for (int i = 0; i < entries.length; i++) {
-                        File f = new File(source, entries[i]);
+                    Vector<File> files = new Vector<>();
+                    for (String file : source.list()) {
+                        File f = new File(source, file);
                         if (f.isFile()) {
                             files.addElement(f);
                         }

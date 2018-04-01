@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -405,8 +404,7 @@ public class FilterChain extends DataType {
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (Iterator<Object> i = filterReaders.iterator(); i.hasNext();) {
-                Object o = i.next();
+            for (Object o : filterReaders) {
                 if (o instanceof DataType) {
                     pushAndInvokeCircularReferenceCheck((DataType) o, stk, p);
                 }

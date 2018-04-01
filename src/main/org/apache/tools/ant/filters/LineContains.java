@@ -204,11 +204,11 @@ public final class LineContains
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (CONTAINS_KEY.equals(params[i].getType())) {
-                    contains.addElement(params[i].getValue());
-                } else if (NEGATE_KEY.equals(params[i].getType())) {
-                    setNegate(Project.toBoolean(params[i].getValue()));
+            for (Parameter param : params) {
+                if (CONTAINS_KEY.equals(param.getType())) {
+                    contains.addElement(param.getValue());
+                } else if (NEGATE_KEY.equals(param.getType())) {
+                    setNegate(Project.toBoolean(param.getValue()));
                 }
             }
         }

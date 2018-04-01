@@ -275,18 +275,16 @@ public class Expand extends Task {
             boolean included = false;
             Set<String> includePatterns = new HashSet<>();
             Set<String> excludePatterns = new HashSet<>();
-            final int size = patternsets.size();
-            for (int v = 0; v < size; v++) {
-                PatternSet p = patternsets.get(v);
+            for (PatternSet p : patternsets) {
                 String[] incls = p.getIncludePatterns(getProject());
                 if (incls == null || incls.length == 0) {
                     // no include pattern implicitly means includes="**"
-                    incls = new String[] {"**"};
+                    incls = new String[]{"**"};
                 }
 
-                for (int w = 0; w < incls.length; w++) {
-                    String pattern = incls[w].replace('/', File.separatorChar)
-                        .replace('\\', File.separatorChar);
+                for (String incl : incls) {
+                    String pattern = incl.replace('/', File.separatorChar)
+                            .replace('\\', File.separatorChar);
                     if (pattern.endsWith(File.separator)) {
                         pattern += "**";
                     }
@@ -295,10 +293,9 @@ public class Expand extends Task {
 
                 String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
-                    for (int w = 0; w < excls.length; w++) {
-                        String pattern = excls[w]
-                            .replace('/', File.separatorChar)
-                            .replace('\\', File.separatorChar);
+                    for (String excl : excls) {
+                        String pattern = excl.replace('/', File.separatorChar)
+                                .replace('\\', File.separatorChar);
                         if (pattern.endsWith(File.separator)) {
                             pattern += "**";
                         }

@@ -142,10 +142,10 @@ public final class TabsToSpaces
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (params[i] != null) {
-                    if (TAB_LENGTH_KEY.equals(params[i].getName())) {
-                        tabLength = Integer.parseInt(params[i].getValue());
+            for (Parameter param : params) {
+                if (param != null) {
+                    if (TAB_LENGTH_KEY.equals(param.getName())) {
+                        tabLength = Integer.parseInt(param.getValue());
                         break;
                     }
                 }

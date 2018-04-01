@@ -544,8 +544,7 @@ public class LayoutPreservingProperties extends Properties {
         final String escaped = "tfrn\\:=#!";
         final StringBuilder buffy = new StringBuilder(s.length());
         boolean leadingSpace = true;
-        for (int i = 0; i < ch.length; i++) {
-            final char c = ch[i];
+        for (final char c : ch) {
             if (c == ' ') {
                 if (escapeAllSpaces || leadingSpace) {
                     buffy.append("\\");

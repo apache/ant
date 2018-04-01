@@ -478,8 +478,8 @@ public class JspC extends MatchingTask {
             // lists and compile lists
             resetFileLists();
             int filecount = 0;
-            for (int i = 0; i < list.length; i++) {
-                File srcDir = getProject().resolveFile(list[i]);
+            for (String fileName : list) {
+                File srcDir = getProject().resolveFile(fileName);
                 if (!srcDir.exists()) {
                     throw new BuildException("srcdir \"" + srcDir.getPath()
                                              + "\" does not exist!",

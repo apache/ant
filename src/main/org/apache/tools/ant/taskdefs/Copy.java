@@ -774,9 +774,9 @@ public class Copy extends Task {
         String[] toCopy = null;
         if (forceOverwrite) {
             final Vector<String> v = new Vector<String>();
-            for (int i = 0; i < names.length; i++) {
-                if (mapper.mapFileName(names[i]) != null) {
-                    v.addElement(names[i]);
+            for (String name : names) {
+                if (mapper.mapFileName(name) != null) {
+                    v.addElement(name);
                 }
             }
             toCopy = new String[v.size()];
@@ -785,16 +785,16 @@ public class Copy extends Task {
             final SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper, granularity);
         }
-        for (int i = 0; i < toCopy.length; i++) {
-            final File src = new File(fromDir, toCopy[i]);
-            final String[] mappedFiles = mapper.mapFileName(toCopy[i]);
+        for (String name : toCopy) {
+            final File src = new File(fromDir, name);
+            final String[] mappedFiles = mapper.mapFileName(name);
             if (mappedFiles == null || mappedFiles.length == 0) {
                 continue;
             }
 
             if (!enableMultipleMappings) {
                 map.put(src.getAbsolutePath(),
-                        new String[] {new File(toDir, mappedFiles[0]).getAbsolutePath()});
+                        new String[]{new File(toDir, mappedFiles[0]).getAbsolutePath()});
             } else {
                 // reuse the array created by the mapper
                 for (int k = 0; k < mappedFiles.length; k++) {
@@ -820,9 +820,9 @@ public class Copy extends Task {
         Resource[] toCopy;
         if (forceOverwrite) {
             final List<Resource> v = new ArrayList<>();
-            for (int i = 0; i < fromResources.length; i++) {
-                if (mapper.mapFileName(fromResources[i].getName()) != null) {
-                    v.add(fromResources[i]);
+            for (Resource rc : fromResources) {
+                if (mapper.mapFileName(rc.getName()) != null) {
+                    v.add(rc);
                 }
             }
             toCopy = v.toArray(new Resource[v.size()]);
@@ -832,22 +832,21 @@ public class Copy extends Task {
                                                           (ResourceFactory) name -> new FileResource(toDir, name),
                                                           granularity);
         }
-        for (int i = 0; i < toCopy.length; i++) {
-            final String[] mappedFiles = mapper.mapFileName(toCopy[i].getName());
+        for (Resource rc : toCopy) {
+            final String[] mappedFiles = mapper.mapFileName(rc.getName());
             if (mappedFiles == null || mappedFiles.length == 0) {
                 throw new BuildException("Can't copy a resource without a"
                         + " name if the mapper doesn't"
                         + " provide one.");
             }
             if (!enableMultipleMappings) {
-                map.put(toCopy[i],
-                        new String[] {new File(toDir, mappedFiles[0]).getAbsolutePath()});
+                map.put(rc, new String[]{new File(toDir, mappedFiles[0]).getAbsolutePath()});
             } else {
                 // reuse the array created by the mapper
                 for (int k = 0; k < mappedFiles.length; k++) {
                     mappedFiles[k] = new File(toDir, mappedFiles[k]).getAbsolutePath();
                 }
-                map.put(toCopy[i], mappedFiles);
+                map.put(rc, mappedFiles);
             }
         }
         return map;
@@ -865,9 +864,8 @@ public class Copy extends Task {
 
             for (final Map.Entry<String, String[]> e : fileCopyMap.entrySet()) {
                 final String fromFile = e.getKey();
-                final String[] toFiles = e.getValue();
 
-                for (final String toFile : toFiles) {
+                for (final String toFile : e.getValue()) {
                     if (fromFile.equals(toFile)) {
                         log("Skipping self-copy of " + fromFile, verbosity);
                         continue;

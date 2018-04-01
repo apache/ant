@@ -84,21 +84,21 @@ public class DepthSelector extends BaseExtendSelector {
     public void setParameters(Parameter... parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                String paramname = parameters[i].getName();
+            for (Parameter parameter : parameters) {
+                String paramname = parameter.getName();
                 if (MIN_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setMin(Integer.parseInt(parameters[i].getValue()));
+                        setMin(Integer.parseInt(parameter.getValue()));
                     } catch (NumberFormatException nfe1) {
                         setError("Invalid minimum value "
-                                + parameters[i].getValue());
+                                + parameter.getValue());
                     }
                 } else if (MAX_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setMax(Integer.parseInt(parameters[i].getValue()));
+                        setMax(Integer.parseInt(parameter.getValue()));
                     } catch (NumberFormatException nfe1) {
                         setError("Invalid maximum value "
-                                + parameters[i].getValue());
+                                + parameter.getValue());
                     }
                 } else {
                     setError("Invalid parameter " + paramname);

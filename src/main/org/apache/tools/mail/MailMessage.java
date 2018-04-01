@@ -439,8 +439,8 @@ public class MailMessage {
 
     boolean isResponseOK(String response, int[] ok) {
         // Check that the response is one of the valid codes
-        for (int i = 0; i < ok.length; i++) {
-            if (response.startsWith("" + ok[i])) {
+        for (int status : ok) {
+            if (response.startsWith("" + status)) {
                 return true;
             }
         }
@@ -508,9 +508,8 @@ class MailPrintStream extends PrintStream {
     }
 
     void rawPrint(String s) {
-        int len = s.length();
-        for (int i = 0; i < len; i++) {
-            rawWrite(s.charAt(i));
+        for (char ch : s.toCharArray()) {
+            rawWrite(ch);
         }
     }
 }

@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1209,9 +1208,9 @@ public class IPlanetEjbc {
              * Loop through each stub/skeleton class that must be generated, and
              * determine (if all exist) which file has the most recent timestamp
              */
-            for (int i = 0; i < classnames.length; i++) {
+            for (String classname : classnames) {
                 String pathToClass =
-                        classnames[i].replace('.', File.separatorChar) + ".class";
+                        classname.replace('.', File.separatorChar) + ".class";
                 File classFile = new File(destDir, pathToClass);
 
                 /*
@@ -1306,9 +1305,8 @@ public class IPlanetEjbc {
                         + "\n\r              iiop:      " + iiop
                         + "\n\r              hasession: " + hasession;
 
-            Iterator<String> i = cmpDescriptors.iterator();
-            while (i.hasNext()) {
-                s += "\n\r              CMP Descriptor: " + i.next();
+            for (String cmpDescriptor : cmpDescriptors) {
+                s += "\n\r              CMP Descriptor: " + cmpDescriptor;
             }
 
             return s;

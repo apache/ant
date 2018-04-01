@@ -1156,9 +1156,8 @@ public class Javac extends MatchingTask {
      */
     protected void scanDir(final File srcDir, final File destDir, final String[] files) {
         final GlobPatternMapper m = new GlobPatternMapper();
-        final String[] extensions = findSupportedFileExtensions();
 
-        for (String extension : extensions) {
+        for (String extension : findSupportedFileExtensions()) {
             m.setFrom(extension);
             m.setTo("*.class");
             final SourceFileScanner sfs = new SourceFileScanner(this);
@@ -1178,9 +1177,8 @@ public class Javac extends MatchingTask {
     }
 
     private void collectFileListFromSourcePath() {
-        final String[] list = src.list();
-        for (int i = 0; i < list.length; i++) {
-            final File srcDir = getProject().resolveFile(list[i]);
+        for (String filename : src.list()) {
+            final File srcDir = getProject().resolveFile(filename);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()

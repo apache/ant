@@ -64,9 +64,9 @@ public final class SplitClassLoader extends AntClassLoader {
 
     private boolean isSplit(String classname) {
         String simplename = classname.substring(classname.lastIndexOf('.') + 1);
-        for (int i = 0; i < splitClasses.length; i++) {
-            if (simplename.equals(splitClasses[i])
-                || simplename.startsWith(splitClasses[i] + '$')) {
+        for (String splitClass : splitClasses) {
+            if (simplename.equals(splitClass)
+                    || simplename.startsWith(splitClass + '$')) {
                 return true;
             }
         }

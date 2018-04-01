@@ -146,8 +146,7 @@ public class Copydir extends MatchingTask {
     }
 
     private void scanDir(File from, File to, String[] files) {
-        for (int i = 0; i < files.length; i++) {
-            String filename = files[i];
+        for (String filename : files) {
             File srcFile = new File(from, filename);
             File destFile;
             if (flatten) {

@@ -342,8 +342,8 @@ public class Touch extends Task {
                 if (millis < 0 && r.isExists()) {
                     modTime = r.getLastModified();
                 }
-                for (int i = 0; i < mapped.length; i++) {
-                    touch(getProject().resolveFile(mapped[i]), modTime);
+                for (String fileName : mapped) {
+                    touch(getProject().resolveFile(fileName), modTime);
                 }
             }
         }

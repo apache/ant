@@ -27,6 +27,8 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Provider;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -265,15 +267,15 @@ public class MimeMailer extends Mailer {
                 if (invalid == null) {
                     invalid = new Address[0];
                 }
-                for (int i = 0; i < invalid.length; i++) {
-                    didntReach(invalid[i], "invalid", sfe);
+                for (Address address : invalid) {
+                    didntReach(address, "invalid", sfe);
                 }
                 Address[] validUnsent = sfe.getValidUnsentAddresses();
                 if (validUnsent == null) {
                     validUnsent = new Address[0];
                 }
-                for (int i = 0; i < validUnsent.length; i++) {
-                    didntReach(validUnsent[i], "valid", sfe);
+                for (Address address : validUnsent) {
+                    didntReach(address, "valid", sfe);
                 }
             }
         } catch (MessagingException | IOException e) {
@@ -284,18 +286,15 @@ public class MimeMailer extends Mailer {
     private static InternetAddress[] internetAddresses(final Vector<EmailAddress> list)
         throws AddressException, UnsupportedEncodingException {
 
-        final int size = list.size();
-        final InternetAddress[] addrs = new InternetAddress[size];
+        final List<InternetAddress> addrs = new ArrayList<>();
 
-        for (int i = 0; i < size; ++i) {
-            final EmailAddress addr = list.get(i);
-
+        for (final EmailAddress addr : list) {
             final String name = addr.getName();
-            addrs[i] = (name == null)
+            addrs.add((name == null)
                 ? new InternetAddress(addr.getAddress())
-                : new InternetAddress(addr.getAddress(), name);
+                : new InternetAddress(addr.getAddress(), name));
         }
-        return addrs;
+        return addrs.toArray(new InternetAddress[addrs.size()]);
     }
 
     private String parseCharSetFromMimeType(final String type) {

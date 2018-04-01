@@ -364,8 +364,8 @@ public final class SelectorUtils {
         int strIdxEnd = strArr.length - 1;
 
         boolean containsStar = false;
-        for (int i = 0; i < patArr.length; i++) {
-            if (patArr[i] == '*') {
+        for (char ch : patArr) {
+            if (ch == '*') {
                 containsStar = true;
                 break;
             }

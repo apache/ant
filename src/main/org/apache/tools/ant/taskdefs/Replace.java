@@ -716,9 +716,7 @@ public class Replace extends MatchingTask {
      */
     private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
         StringBuffer buf = inputBuffer;
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter filter = replacefilters.get(i);
+        for (Replacefilter filter : replacefilters) {
             filter.setInputBuffer(buf);
             buf = filter.getOutputBuffer();
         }

@@ -374,18 +374,16 @@ public class ExecuteOn extends ExecTask {
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
                 if (!FileDirBoth.DIR.equals(currentType)) {
-                    String[] s = getFiles(base, ds);
-                    for (int j = 0; j < s.length; j++) {
+                    for (String value : getFiles(base, ds)) {
                         totalFiles++;
-                        fileNames.add(s[j]);
+                        fileNames.add(value);
                         baseDirs.add(base);
                     }
                 }
                 if (!FileDirBoth.FILE.equals(currentType)) {
-                    String[] s = getDirs(base, ds);
-                    for (int j = 0; j < s.length; j++) {
+                    for (String value : getDirs(base, ds)) {
                         totalDirs++;
-                        fileNames.add(s[j]);
+                        fileNames.add(value);
                         baseDirs.add(base);
                     }
                 }
@@ -520,8 +518,8 @@ public class ExecuteOn extends ExecTask {
         List<String> targets = new ArrayList<>();
         if (targetFilePos != null) {
             Set<String> addedFiles = new HashSet<>();
-            for (int i = 0; i < srcFiles.length; i++) {
-                String[] subTargets = mapper.mapFileName(srcFiles[i]);
+            for (String srcFile : srcFiles) {
+                String[] subTargets = mapper.mapFileName(srcFile);
                 if (subTargets != null) {
                     for (String subTarget : subTargets) {
                         String name;

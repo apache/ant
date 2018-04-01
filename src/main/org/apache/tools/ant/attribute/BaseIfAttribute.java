@@ -20,7 +20,6 @@ package org.apache.tools.ant.attribute;
 
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.tools.ant.ProjectComponent;
@@ -72,9 +71,7 @@ public abstract class BaseIfAttribute
         Map<String, String> ret = new HashMap<>();
         RuntimeConfigurable rc = el.getWrapper();
         Hashtable<String, Object> attributes = rc.getAttributeMap(); // This does a copy!
-        for (Iterator<Map.Entry<String, Object>> i =
-            attributes.entrySet().iterator(); i.hasNext();) {
-            Map.Entry<String, Object> entry = i.next();
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
             String key = entry.getKey();
             String value = (String) entry.getValue();
             if (key.startsWith("ant-attribute:param")) {
