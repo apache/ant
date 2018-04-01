@@ -44,7 +44,7 @@ public class IsReachableTest {
 
 
     @Test
-    public void testLocalhost() throws Exception {
+    public void testLocalhost() {
         buildRule.executeTarget("testLocalhost");
     }
 

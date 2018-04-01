@@ -51,18 +51,18 @@ public class TokenFilterTest {
 
     /** make sure tokenfilter exists */
     @Test
-    public void testTokenfilter() throws IOException {
+    public void testTokenfilter() {
         buildRule.executeTarget("tokenfilter");
     }
 
     @Test
-    public void testTrimignore() throws IOException {
+    public void testTrimignore() {
         buildRule.executeTarget("trimignore");
         assertContains("Hello-World", buildRule.getLog());
     }
 
     @Test
-    public void testStringTokenizer() throws IOException {
+    public void testStringTokenizer() {
         buildRule.executeTarget("stringtokenizer");
         assertContains("#This#is#a#number#of#words#", buildRule.getLog());
     }
@@ -98,7 +98,7 @@ public class TokenFilterTest {
     }
 
     @Test
-    public void testReplaceStrings() throws IOException {
+    public void testReplaceStrings() {
         buildRule.executeTarget("replacestrings");
         assertContains("bar bar bar", buildRule.getLog());
     }
@@ -175,7 +175,7 @@ public class TokenFilterTest {
     }
 
     @Test
-    public void testFilterReplaceStrings() throws IOException {
+    public void testFilterReplaceStrings() {
         buildRule.executeTarget("filterreplacestrings");
         assertContains("bar bar bar", buildRule.getLog());
     }

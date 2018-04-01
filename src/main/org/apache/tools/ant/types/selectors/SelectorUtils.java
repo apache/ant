@@ -525,7 +525,8 @@ public final class SelectorUtils {
     /**
      * Same as {@link #tokenizePath tokenizePath} but hopefully faster.
      */
-    /*package*/ static String[] tokenizePathAsArray(String path) {
+    /* package */
+    static String[] tokenizePathAsArray(String path) {
         String root = null;
         if (FileUtils.isAbsolutePath(path)) {
             String[] s = FILE_UTILS.dissect(path);

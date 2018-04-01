@@ -54,7 +54,7 @@ public class XmlValidateTest {
      * Basic inline 'dtd' element test.
      */
     @Test
-    public void testValidate() throws Exception {
+    public void testValidate() {
         buildRule.executeTarget("testValidate");
     }
 
@@ -62,7 +62,7 @@ public class XmlValidateTest {
      * Test indirect validation.
      */
     @Test
-    public void testDeepValidate() throws Exception {
+    public void testDeepValidate() {
         buildRule.executeTarget("testDeepValidate");
     }
 

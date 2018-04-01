@@ -56,7 +56,7 @@ public class XMLCatalogTest {
         return cat;
     }
 
-    private static String toURLString(File file) throws MalformedURLException {
+    private static String toURLString(File file) {
         return JAXPUtils.getSystemId(file);
     }
 

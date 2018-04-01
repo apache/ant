@@ -72,7 +72,7 @@ public class ImageTest {
     }
 
     @Test
-    public void testOverwriteTrue() throws InterruptedException {
+    public void testOverwriteTrue() {
         buildRule.executeTarget("testSimpleScale");
         AntAssert.assertContains("Processing File", buildRule.getLog());
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);

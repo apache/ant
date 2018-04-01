@@ -34,7 +34,7 @@ public class ChangeLogParserTest {
     protected ChangeLogParser parser = new ChangeLogParser();
 
     @Test
-    public void testOldCvsFormat() throws Exception {
+    public void testOldCvsFormat() {
         parser.stdout("Working file: build.xml");
         parser.stdout("revision 1.475");
         parser.stdout("date: 2004/06/05 16:10:32;  author: somebody;  state: Exp;  lines: +2 -2");

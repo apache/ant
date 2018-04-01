@@ -72,7 +72,7 @@ public abstract class BuildFileTest extends TestCase {
      * is automatically called, since it's trivial to have a
      * test target depend on it.
      */
-    protected void tearDown() throws Exception {
+    protected void tearDown() {
         if (project == null) {
             /*
              * Maybe the BuildFileTest was subclassed and there is

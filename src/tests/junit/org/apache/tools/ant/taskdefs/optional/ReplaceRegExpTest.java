@@ -108,7 +108,7 @@ public class ReplaceRegExpTest {
     }
 
     @Test
-    public void testNoPreserveLastModified() throws Exception {
+    public void testNoPreserveLastModified() {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue(testFile.setLastModified(testFile.lastModified()
@@ -119,7 +119,7 @@ public class ReplaceRegExpTest {
     }
 
     @Test
-    public void testPreserveLastModified() throws Exception {
+    public void testPreserveLastModified() {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue(testFile.setLastModified(testFile.lastModified()

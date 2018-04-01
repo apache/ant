@@ -41,12 +41,12 @@ public class ExtendedTaskdefTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         buildRule.executeTarget("teardown");
     }
 
     @Test
-    public void testRun() throws Exception {
+    public void testRun() {
         try {
             buildRule.executeTarget("testRun");
             fail("BuildException should have been thrown");
@@ -56,7 +56,7 @@ public class ExtendedTaskdefTest {
     }
 
     @Test
-    public void testRun2() throws Exception {
+    public void testRun2() {
         try {
             buildRule.executeTarget("testRun2");
             fail("BuildException should have been thrown");

@@ -45,7 +45,7 @@ public class ProjectHelperRepositoryTest {
     }
 
     @Test
-    public void testFind() throws Exception {
+    public void testFind() {
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
         repo.registerProjectHelper(SomeHelper.class);
 
@@ -75,7 +75,7 @@ public class ProjectHelperRepositoryTest {
     }
 
     @Test
-    public void testNoDefaultContructor() throws Exception {
+    public void testNoDefaultContructor() {
 
         class IncrrectHelper extends ProjectHelper {
             // the default constructor is not visible to ant here
@@ -92,7 +92,7 @@ public class ProjectHelperRepositoryTest {
     }
 
     @Test
-    public void testUnkwnowHelper() throws Exception {
+    public void testUnkwnowHelper() {
         ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
         try {
             repo.registerProjectHelper("xxx.yyy.zzz.UnknownHelper");

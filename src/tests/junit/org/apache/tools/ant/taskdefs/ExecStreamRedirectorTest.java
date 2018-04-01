@@ -23,7 +23,7 @@ public class ExecStreamRedirectorTest {
     private Project project;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         project = new Project();
         project.init();
         final File antFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/exec/exec-with-redirector.xml");

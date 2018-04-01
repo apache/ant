@@ -36,7 +36,7 @@ public class DefaultLoggerTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testThrowableMessage() throws Exception { // #43398
+    public void testThrowableMessage() { // #43398
         BuildException be = new BuildException("oops", new Location("build.xml", 1, 0));
         assertEquals(
                 "build.xml:1: oops" + StringUtils.LINE_SEP,

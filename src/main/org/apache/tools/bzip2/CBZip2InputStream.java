@@ -983,7 +983,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         }
     }
 
-    private static final class Data extends Object {
+    private static final class Data {
 
         // (with blockSize 900k)
         final boolean[] inUse   = new boolean[256];                                   //      256 byte
@@ -1046,7 +1046,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     }
 
-    private static void reportCRCError() throws IOException {
+    private static void reportCRCError() {
         // The clean way would be to throw an exception.
         //throw new IOException("crc error");
 

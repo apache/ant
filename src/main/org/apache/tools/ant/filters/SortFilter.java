@@ -310,7 +310,7 @@ public final class SortFilter extends BaseParamFilterReader
     /**
      * Scans the parameters list
      */
-    private void initialize() throws IOException {
+    private void initialize() {
         // get parameters
         Parameter[] params = getParameters();
         if (params != null) {

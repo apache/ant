@@ -26,7 +26,7 @@ public class XmlLoggerTest {
     @Test
     // see https://issues.apache.org/bugzilla/show_bug.cgi?id=56850
     // "NPE in XmlLogger.buildFinished"
-    public void test() throws Throwable {
+    public void test() {
         final XmlLogger logger = new XmlLogger();
         final Cvs task = new Cvs();
         final BuildEvent event = new BuildEvent(task);

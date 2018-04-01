@@ -23,20 +23,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public class CBZip2StreamTest {
 
     @SuppressWarnings("resource")
-    @Test
+    @Test(expected = IOException.class)
     public void testNullPointer() throws IOException {
-        try {
-            new CBZip2InputStream(new ByteArrayInputStream(new byte[0]));
-            fail("expected an exception");
-        } catch (IOException e) {
-            // expected
-            //TODO assert exception values
-        }
+        new CBZip2InputStream(new ByteArrayInputStream(new byte[0]));
     }
 
     @Test

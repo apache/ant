@@ -44,12 +44,12 @@ public class StyleTest {
     public final BuildFileRule buildRule = new BuildFileRule();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/style/build.xml");
     }
 
     @Test
-    public void testStyleIsSet() throws Exception {
+    public void testStyleIsSet() {
 
         try {
             buildRule.executeTarget("testStyleIsSet");
@@ -130,14 +130,14 @@ public class StyleTest {
     }
 
     @Test
-    public void testDirectoryHierarchyWithDirMatching() throws Exception {
+    public void testDirectoryHierarchyWithDirMatching() {
         buildRule.executeTarget("testDirectoryHierarchyWithDirMatching");
         assertTrue(new File(buildRule.getOutputDir().getAbsoluteFile(),  "dest/level1/data.html")
                    .exists());
     }
 
     @Test
-    public void testDirsWithSpaces() throws Exception {
+    public void testDirsWithSpaces() {
         buildRule.executeTarget("testDirsWithSpaces");
         assertTrue(new File(buildRule.getOutputDir().getAbsoluteFile(),  "d est/data.html")
                    .exists());

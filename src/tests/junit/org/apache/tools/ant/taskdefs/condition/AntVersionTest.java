@@ -32,7 +32,7 @@ public class AntVersionTest {
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/conditions/antversion.xml");
     }
 

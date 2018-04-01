@@ -40,7 +40,7 @@ public class TStampTest {
     protected Location location;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         location = new Location("test.xml");
         project = new Project();
         tstamp = new Tstamp();
@@ -49,7 +49,7 @@ public class TStampTest {
     }
 
     @Test
-    public void testTimeZone() throws Exception {
+    public void testTimeZone() {
         Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("today");
         format.setPattern("HH:mm:ss z");
@@ -71,7 +71,7 @@ public class TStampTest {
      * @throws Exception if something goes wrong
      */
     @Test
-    public void testWriteOrder() throws Exception {
+    public void testWriteOrder() {
         Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("TODAY");
         format.setPattern("HH:mm:ss z");
@@ -94,7 +94,7 @@ public class TStampTest {
      * @throws Exception if something goes wrong
      */
     @Test
-    public void testPrefix() throws Exception {
+    public void testPrefix() {
         tstamp.setPrefix("prefix");
         tstamp.execute();
         String prop = project.getProperty("prefix.DSTAMP");
@@ -102,7 +102,7 @@ public class TStampTest {
     }
 
     @Test
-    public void testFormatPrefix() throws Exception {
+    public void testFormatPrefix() {
         Tstamp.CustomFormat format = tstamp.createFormat();
         format.setProperty("format");
         format.setPattern("HH:mm:ss z");

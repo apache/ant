@@ -38,7 +38,7 @@ public class LocatorTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         windows = Os.isFamily(Os.FAMILY_DOS);
         unix = Os.isFamily(Os.FAMILY_UNIX);
     }
@@ -88,7 +88,7 @@ public class LocatorTest {
      * this isn't really a valid URI, except maybe in IE
      * @throws Exception if something goes wrong
      */
-    public void testNetworkURI() throws Exception {
+    public void testNetworkURI() {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar", ""
                 + "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar",
                 "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
@@ -96,26 +96,26 @@ public class LocatorTest {
 
     @Ignore("We don't appear to generate paths like this in the launcher")
     @Test
-    public void testTripleForwardSlashNetworkURI() throws Exception {
+    public void testTripleForwardSlashNetworkURI() {
         resolveTo("file:///PC03/jclasses/lib/ant-1.7.0.jar",
                 "///PC03/jclasses/lib/ant-1.7.0.jar",
                 "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar");
     }
 
     @Test
-    public void testUnixNetworkPath() throws Exception {
+    public void testUnixNetworkPath() {
         resolveTo("file://cluster/home/ant/lib",
                 "//cluster/home/ant/lib",
                 "\\\\cluster\\home\\ant\\lib");
     }
 
     @Test
-    public void testUnixPath() throws Exception {
+    public void testUnixPath() {
         resolveTo("file:/home/ant/lib", "/home/ant/lib", null);
     }
 
     @Test
-    public void testSpacedURI() throws Exception {
+    public void testSpacedURI() {
         resolveTo("file:C:\\Program Files\\Ant\\lib",
                 "C:\\Program Files\\Ant\\lib",
                 "C:\\Program Files\\Ant\\lib");
@@ -126,7 +126,7 @@ public class LocatorTest {
      * @throws Throwable if desired
      */
     @Test
-    public void testAntOnRemoteShare() throws Throwable {
+    public void testAntOnRemoteShare() {
         String resolved = Locator.fromJarURI(SHARED_JAR_URI);
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR, resolved, unix);
         assertResolved(SHARED_JAR_URI, LAUNCHER_JAR.replace('/', '\\'),
@@ -139,7 +139,7 @@ public class LocatorTest {
      * @throws Throwable if desired
      */
     @Test
-    public void testFileFromRemoteShare() throws Throwable {
+    public void testFileFromRemoteShare() {
         String resolved = Locator.fromJarURI(SHARED_JAR_URI);
         File f = new File(resolved);
         String path = f.getAbsolutePath();
@@ -149,7 +149,7 @@ public class LocatorTest {
     }
 
     @Test
-    public void testHttpURI() throws Exception {
+    public void testHttpURI() {
         String url = "http://ant.apache.org";
         try {
             Locator.fromURI(url);
@@ -174,7 +174,7 @@ public class LocatorTest {
     }
 
     @Test
-    public void testOddLowAsciiURI() throws Exception {
+    public void testOddLowAsciiURI() {
         assertResolves("hash# and percent%");
     }
 

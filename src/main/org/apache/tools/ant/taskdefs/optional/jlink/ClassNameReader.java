@@ -104,7 +104,7 @@ class ConstantPool {
  * given just an InputStream. Reads in just enough to perform this
  * minimal task only.
  */
-public class ClassNameReader extends Object {
+public class ClassNameReader {
     private static final int CLASS_MAGIC_NUMBER =  0xCAFEBABE;
 
     /**

@@ -18,8 +18,6 @@
 
 package org.apache.tools.ant.filters;
 
-import java.io.IOException;
-
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,7 +39,7 @@ public class NoNewLineTest  {
 
 
     @Test
-    public void testNoAddNewLine() throws IOException {
+    public void testNoAddNewLine() {
         buildRule.executeTarget("testNoAddNewLine");
     }
 

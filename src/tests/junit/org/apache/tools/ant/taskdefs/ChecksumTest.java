@@ -42,7 +42,7 @@ public class ChecksumTest {
     }
 
     @Test
-    public void testCreateMd5() throws IOException {
+    public void testCreateMd5() {
         buildRule.executeTarget("createMd5");
     }
 

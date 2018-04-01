@@ -60,12 +60,12 @@ public class JspcTest {
     }
 
     @Test
-    public void testUriroot() throws Exception {
+    public void testUriroot() {
         executeJspCompile("testUriroot", "uriroot_jsp.java");
     }
 
     @Test
-    public void testXml() throws Exception {
+    public void testXml() {
         executeJspCompile("testXml", "xml_jsp.java");
     }
 
@@ -73,7 +73,7 @@ public class JspcTest {
      * try a keyword in a file
      */
     @Test
-    public void testKeyword() throws Exception {
+    public void testKeyword() {
         executeJspCompile("testKeyword", "default_jsp.java");
     }
 
@@ -81,13 +81,13 @@ public class JspcTest {
      * what happens to 1nvalid-classname
      */
     @Test
-    public void testInvalidClassname() throws Exception {
+    public void testInvalidClassname() {
         executeJspCompile("testInvalidClassname",
                 "_1nvalid_0002dclassname_jsp.java");
     }
 
     @Test
-    public void testNoTld() throws Exception {
+    public void testNoTld() {
         try {
             buildRule.executeTarget("testNoTld");
             fail("Not found");
@@ -97,7 +97,7 @@ public class JspcTest {
     }
 
     @Test
-    public void testNotAJspFile()  throws Exception {
+    public void testNotAJspFile() {
         buildRule.executeTarget("testNotAJspFile");
     }
 
@@ -107,7 +107,7 @@ public class JspcTest {
      */
     @Ignore("picks up on the missing_tld file, and incorrectly bails")
     @Test
-    public void testWebapp()  throws Exception {
+    public void testWebapp() {
         buildRule.executeTarget("testWebapp");
     }
 

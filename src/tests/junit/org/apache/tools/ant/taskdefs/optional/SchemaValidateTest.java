@@ -49,7 +49,7 @@ public class SchemaValidateTest {
      * test with no namespace
      */
     @Test
-    public void testNoNamespace() throws Exception {
+    public void testNoNamespace() {
         buildRule.executeTarget("testNoNamespace");
     }
 
@@ -57,12 +57,12 @@ public class SchemaValidateTest {
      * add namespace awareness.
      */
     @Test
-    public void testNSMapping() throws Exception {
+    public void testNSMapping() {
         buildRule.executeTarget("testNSMapping");
     }
 
     @Test
-    public void testNoEmptySchemaNamespace() throws Exception {
+    public void testNoEmptySchemaNamespace() {
         try {
             buildRule.executeTarget("testNoEmptySchemaNamespace");
             fail("Empty namespace URI");
@@ -72,7 +72,7 @@ public class SchemaValidateTest {
     }
 
     @Test
-    public void testNoEmptySchemaLocation() throws Exception {
+    public void testNoEmptySchemaLocation() {
         try {
             buildRule.executeTarget("testNoEmptySchemaLocation");
             fail("Empty schema location");
@@ -83,7 +83,7 @@ public class SchemaValidateTest {
     }
 
     @Test
-    public void testNoFile() throws Exception {
+    public void testNoFile() {
         try {
             buildRule.executeTarget("testNoFile");
             fail("No file at file attribute");
@@ -94,7 +94,7 @@ public class SchemaValidateTest {
     }
 
     @Test
-    public void testNoDoubleSchemaLocation() throws Exception {
+    public void testNoDoubleSchemaLocation() {
         try {
             buildRule.executeTarget("testNoDoubleSchemaLocation");
             fail("Two locations for schemas");
@@ -105,7 +105,7 @@ public class SchemaValidateTest {
     }
 
     @Test
-    public void testNoDuplicateSchema() throws Exception {
+    public void testNoDuplicateSchema() {
         try {
             buildRule.executeTarget("testNoDuplicateSchema");
             fail("duplicate schemas with different values");
@@ -116,12 +116,12 @@ public class SchemaValidateTest {
     }
 
     @Test
-    public void testEqualsSchemasOK() throws Exception {
+    public void testEqualsSchemasOK() {
         buildRule.executeTarget("testEqualsSchemasOK");
     }
 
     @Test
-    public void testFileset() throws Exception {
+    public void testFileset() {
         buildRule.executeTarget("testFileset");
     }
 }

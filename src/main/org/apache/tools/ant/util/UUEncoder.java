@@ -87,11 +87,11 @@ public class UUEncoder {
         writer.flush();
     }
 
-    private void encodeBegin() throws IOException {
+    private void encodeBegin() {
         encodeString("begin " + DEFAULT_MODE + " " + name + "\n");
     }
 
-    private void encodeEnd() throws IOException {
+    private void encodeEnd() {
         encodeString(" \nend\n");
     }
 

@@ -115,7 +115,7 @@ public class PropertyFileTest {
     }
 
     @Test
-    public void testExerciseDefaultAndIncrement() throws Exception {
+    public void testExerciseDefaultAndIncrement() {
         buildRule.executeTarget("exercise");
         assertEquals("3", buildRule.getProject().getProperty("int.with.default"));
         assertEquals("1", buildRule.getProject().getProperty("int.without.default"));

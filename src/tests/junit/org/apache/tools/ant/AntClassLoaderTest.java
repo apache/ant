@@ -175,7 +175,7 @@ public class AntClassLoaderTest {
      *     classes cannot be loaded</a>
      */
     @Test
-    public void testInvalidZipException() throws Exception {
+    public void testInvalidZipException() {
         buildRule.executeTarget("createNonJar");
         File jar = new File(buildRule.getProject().getProperty("tmp.dir")
                             + "/foo.jar");
@@ -234,6 +234,7 @@ public class AntClassLoaderTest {
         public URL getResource(String n) {
             return null;
         }
+        @SuppressWarnings("unchecked")
         public Enumeration getResources(String n) {
             return new CollectionUtils.EmptyEnumeration();
         }

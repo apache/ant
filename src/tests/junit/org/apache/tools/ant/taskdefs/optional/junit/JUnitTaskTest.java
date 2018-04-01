@@ -97,7 +97,7 @@ public class JUnitTaskTest {
     }
 
     @Test
-    public void testNonForkedCapture() throws IOException {
+    public void testNonForkedCapture() {
         buildRule.executeTarget("capture");
         assertNoPrint(buildRule.getLog(), "log");
         assertNoPrint(buildRule.getFullLog(), "debug log");

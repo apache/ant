@@ -97,21 +97,21 @@ public class JUnitReportTest {
     }
 
     @Test
-    public void testEmptyFile() throws Exception {
+    public void testEmptyFile() {
         buildRule.executeTarget("testEmptyFile");
         assertIndexCreated();
         assertContains("Required text not found in log", XMLResultAggregator.WARNING_EMPTY_FILE, buildRule.getLog());
     }
 
     @Test
-    public void testIncompleteFile() throws Exception {
+    public void testIncompleteFile() {
         buildRule.executeTarget("testIncompleteFile");
         assertIndexCreated();
         assertContains("Required text not found in log", XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED, buildRule.getLog());
     }
 
     @Test
-    public void testWrongElement() throws Exception {
+    public void testWrongElement() {
         buildRule.executeTarget("testWrongElement");
         assertIndexCreated();
         assertContains("Required text not found in log", XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT, buildRule.getLog());

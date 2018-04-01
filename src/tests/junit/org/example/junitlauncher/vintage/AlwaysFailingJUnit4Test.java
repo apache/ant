@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class AlwaysFailingJUnit4Test {
 
     @Test
-    public void testWillFail() throws Exception {
+    public void testWillFail() {
         assertEquals("Values weren't equal", 3, 4);
     }
 }

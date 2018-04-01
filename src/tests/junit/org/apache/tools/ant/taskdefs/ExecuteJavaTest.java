@@ -54,7 +54,7 @@ public class ExecuteJavaTest {
         ej.setClasspath(cp);
     }
 
-    private Commandline getCommandline(int timetorun) throws Exception {
+    private Commandline getCommandline(int timetorun) {
         Commandline cmd = new Commandline();
         cmd.setExecutable(TimeProcess.class.getName());
         cmd.createArgument().setValue(String.valueOf(timetorun));

@@ -508,7 +508,7 @@ public class DirectoryScannerTest {
     }
 
     @Test
-    public void testRecursiveExcludes() throws Exception {
+    public void testRecursiveExcludes() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
         ds.setExcludes(new String[] {"**/beta/**"});

@@ -102,7 +102,7 @@ public class CommandlineJavaTest {
     }
 
     @Test
-    public void testJarOption() throws Exception {
+    public void testJarOption() {
         CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("arg1");
         c.setJar("myfile.jar");

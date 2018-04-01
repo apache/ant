@@ -32,7 +32,7 @@ public class ZipOutputStreamTest {
     private ZipLong zl;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         time = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
@@ -55,7 +55,7 @@ public class ZipOutputStreamTest {
 
 
     @Test
-    public void testZipLong() throws Exception {
+    public void testZipLong() {
         ZipLong test = ZipOutputStream.toDosTime(time);
         assertEquals(test.getValue(), zl.getValue());
     }

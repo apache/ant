@@ -63,7 +63,7 @@ public class SQLExecTest {
     public static final String SQL = "sql";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // make sure the cache is cleared.
         JDBCTask.getLoaderMap().clear();
     }
@@ -98,7 +98,7 @@ public class SQLExecTest {
     }
 
     @Test
-    public void testNull() throws Exception {
+    public void testNull() {
         doMultipleCalls(1000, NULL, true, true);
     }
 

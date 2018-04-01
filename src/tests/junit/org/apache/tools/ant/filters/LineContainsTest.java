@@ -49,7 +49,7 @@ public class LineContainsTest {
     }
 
     @Test
-    public void testNegateLineContains() throws IOException {
+    public void testNegateLineContains() {
         buildRule.executeTarget("testNegateLineContains");
     }
 

@@ -21,7 +21,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.tools.ant.BuildException;
@@ -217,8 +216,7 @@ public class ZipTest {
 
     // Bugzilla Report 33412
     @Test
-    public void testDefaultExcludesAndUpdate()
-        throws ZipException, IOException {
+    public void testDefaultExcludesAndUpdate() throws IOException {
        buildRule.executeTarget("testDefaultExcludesAndUpdate");
         ZipFile f = null;
         try {
@@ -303,7 +301,7 @@ public class ZipTest {
     }
 
     @Test
-    public void testRegexpMapper() throws IOException {
+    public void testRegexpMapper() {
         buildRule.executeTarget("testRegexpMapper1");
         File testFile = new File(buildRule.getOutputDir(), "regexp.zip");
         long l = testFile.lastModified();

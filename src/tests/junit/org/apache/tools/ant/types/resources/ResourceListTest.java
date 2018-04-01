@@ -35,12 +35,12 @@ public class ResourceListTest {
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/resources/resourcelist.xml");
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         buildRule.executeTarget("tearDown");
     }
 
@@ -108,7 +108,7 @@ public class ResourceListTest {
     }
 
     @Test
-    public void testCircularReference() throws Exception {
+    public void testCircularReference() {
         ResourceList rl1 = new ResourceList();
         rl1.setProject(buildRule.getProject());
         rl1.setRefid(new Reference(buildRule.getProject(), "foo"));

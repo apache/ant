@@ -130,7 +130,7 @@ public class ReplaceTest {
     }
 
     @Test
-    public void testNoPreserveLastModified() throws Exception {
+    public void testNoPreserveLastModified() {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue("Could not change file modification time",
@@ -141,7 +141,7 @@ public class ReplaceTest {
     }
 
     @Test
-    public void testPreserveLastModified() throws Exception {
+    public void testPreserveLastModified() {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue("Could not change file modification time",

@@ -14,7 +14,7 @@ public class JUnit4SampleTest {
     }
 
     @Test
-    public void testBar() throws Exception {
+    public void testBar() {
         Assert.assertTrue(true);
     }
 

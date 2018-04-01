@@ -49,107 +49,107 @@ public class FixCrLfTest {
     }
 
     @Test
-    public void test1() throws IOException {
+    public void test1() {
         buildRule.executeTarget("test1");
     }
 
     @Test
-    public void test2() throws IOException {
+    public void test2() {
         buildRule.executeTarget("test2");
     }
 
     @Test
-    public void test3() throws IOException {
+    public void test3() {
         buildRule.executeTarget("test3");
     }
 
     @Test
-    public void test4() throws IOException {
+    public void test4() {
         buildRule.executeTarget("test4");
     }
 
     @Test
-    public void test5() throws IOException {
+    public void test5() {
         buildRule.executeTarget("test5");
     }
 
     @Test
-    public void test6() throws IOException {
+    public void test6() {
         buildRule.executeTarget("test6");
     }
 
     @Test
-    public void test7() throws IOException {
+    public void test7() {
         buildRule.executeTarget("test7");
     }
 
     @Test
-    public void test8() throws IOException {
+    public void test8() {
         buildRule.executeTarget("test8");
     }
 
     @Test
-    public void test9() throws IOException {
+    public void test9() {
         buildRule.executeTarget("test9");
     }
 
     @Test
-    public void testMacLines() throws IOException {
+    public void testMacLines() {
         buildRule.executeTarget("testMacLines");
     }
 
     @Test
-    public void testNoOverwrite() throws IOException {
+    public void testNoOverwrite() {
         buildRule.executeTarget("testNoOverwrite");
     }
 
     @Test
-    public void testEncoding() throws IOException {
+    public void testEncoding() {
         buildRule.executeTarget("testEncoding");
     }
 
     @Test
-    public void testOutputEncoding() throws IOException {
+    public void testOutputEncoding() {
         buildRule.executeTarget("testOutputEncoding");
     }
 
     @Test
-    public void testLongLines() throws IOException {
+    public void testLongLines() {
         buildRule.executeTarget("testLongLines");
     }
 
     @Test
-    public void testCrCrLfSequenceUnix() throws IOException {
+    public void testCrCrLfSequenceUnix() {
         buildRule.executeTarget("testCrCrLfSequence-unix");
     }
 
     @Test
-    public void testCrCrLfSequenceDos() throws IOException {
+    public void testCrCrLfSequenceDos() {
         buildRule.executeTarget("testCrCrLfSequence-dos");
     }
 
     @Test
-    public void testCrCrLfSequenceMac() throws IOException {
+    public void testCrCrLfSequenceMac() {
         buildRule.executeTarget("testCrCrLfSequence-mac");
     }
 
     @Test
-    public void testFixlastDos() throws IOException {
+    public void testFixlastDos() {
         buildRule.executeTarget("testFixlastDos");
     }
 
     @Test
-    public void testFixlastFalseMac() throws IOException {
+    public void testFixlastFalseMac() {
         buildRule.executeTarget("testFixlastFalseMac");
     }
 
     @Test
-    public void testFixFile() throws Exception {
+    public void testFixFile() {
         buildRule.executeTarget("testFixFile");
     }
 
     @Test
-    public void testFixFileExclusive() throws Exception {
+    public void testFixFileExclusive() {
         try {
             buildRule.executeTarget("testFixFileExclusive");
             fail(FixCRLF.ERROR_FILE_AND_SRCDIR);

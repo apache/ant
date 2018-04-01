@@ -77,7 +77,7 @@ public class LazyResourceCollectionTest {
     }
 
     @Test
-    public void testLazyLoading() throws Exception {
+    public void testLazyLoading() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
         lazyCollection.add(collectionTest);
@@ -118,7 +118,7 @@ public class LazyResourceCollectionTest {
     }
 
     @Test
-    public void testCaching() throws Exception {
+    public void testCaching() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
         lazyCollection.add(collectionTest);

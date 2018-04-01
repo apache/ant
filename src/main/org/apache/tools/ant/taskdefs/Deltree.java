@@ -72,16 +72,11 @@ public class Deltree extends Task {
 
             log("Deleting: " + dir.getAbsolutePath());
 
-            try {
-                removeDir(dir);
-            } catch (IOException ioe) {
-                String msg = "Unable to delete " + dir.getAbsolutePath();
-                throw new BuildException(msg, getLocation());
-            }
+            removeDir(dir);
         }
     }
 
-    private void removeDir(File dir) throws IOException {
+    private void removeDir(File dir) {
 
         // check to make sure that the given dir isn't a symlink
         // the comparison of absolute path and canonical path

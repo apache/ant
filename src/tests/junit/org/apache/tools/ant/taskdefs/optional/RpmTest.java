@@ -31,7 +31,7 @@ import static org.apache.tools.ant.AntAssert.assertContains;
 public class RpmTest {
 
     @Test
-    public void testShouldThrowExceptionWhenRpmFails() throws Exception {
+    public void testShouldThrowExceptionWhenRpmFails() {
         Rpm rpm = new MyRpm();
         rpm.setProject(new Project());
         rpm.setFailOnError(true);
@@ -45,7 +45,7 @@ public class RpmTest {
     }
 
     @Test
-    public void testShouldNotThrowExceptionWhenRpmFails() throws Exception {
+    public void testShouldNotThrowExceptionWhenRpmFails() {
         Rpm rpm = new MyRpm();
         rpm.execute();
     }

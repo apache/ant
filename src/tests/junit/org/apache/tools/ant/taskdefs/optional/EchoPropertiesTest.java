@@ -182,7 +182,7 @@ public class EchoPropertiesTest {
     }
 
     @Test
-    public void testWithPrefixAndRegex() throws Exception {
+    public void testWithPrefixAndRegex() {
         try {
             buildRule.executeTarget("testWithPrefixAndRegex");
             fail("BuildException should have been thrown on Prefix and RegEx being set");

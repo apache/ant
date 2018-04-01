@@ -56,17 +56,17 @@ public class XsltTest {
     }
 
     @Test
-    public void testCatalog() throws Exception {
+    public void testCatalog() {
          buildRule.executeTarget("testCatalog");
     }
 
     @Test
-    public void testOutputProperty() throws Exception {
+    public void testOutputProperty() {
       buildRule.executeTarget("testOutputProperty");
     }
 
     @Test
-    public void testXMLWithEntitiesInNonAsciiPath() throws Exception {
+    public void testXMLWithEntitiesInNonAsciiPath() {
         buildRule.executeTarget("testXMLWithEntitiesInNonAsciiPath");
     }
 
@@ -75,7 +75,7 @@ public class XsltTest {
      * @throws Exception if something goes wrong.
      */
     @Test
-    public void testStyleSheetWithInclude() throws Exception {
+    public void testStyleSheetWithInclude() {
         buildRule.executeTarget("testStyleSheetWithInclude");
         if (buildRule.getLog().contains("java.io.FileNotFoundException")) {
             fail("xsl:include was not found");
