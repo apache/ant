@@ -26,7 +26,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 public class LocationTest {
@@ -43,8 +44,8 @@ public class LocationTest {
     public void testPlainTask() {
         buildRule.executeTarget("testPlainTask");
         Echo e = buildRule.getProject().getReference("echo");
-        assertFalse(e.getLocation() == Location.UNKNOWN_LOCATION);
-        assertFalse(e.getLocation().getLineNumber() == 0);
+        assertNotSame(e.getLocation(), Location.UNKNOWN_LOCATION);
+        assertNotEquals(0, e.getLocation().getLineNumber());
     }
 
     @Test
@@ -52,7 +53,7 @@ public class LocationTest {
         buildRule.executeTarget("testStandaloneType");
         Echo e = buildRule.getProject().getReference("echo2");
         FileSet f = buildRule.getProject().getReference("fs");
-        assertFalse(f.getLocation() == Location.UNKNOWN_LOCATION);
+        assertNotSame(f.getLocation(), Location.UNKNOWN_LOCATION);
         assertEquals(e.getLocation().getLineNumber() + 1,
                      f.getLocation().getLineNumber());
     }
@@ -62,8 +63,8 @@ public class LocationTest {
         buildRule.executeTarget("testConditionTask");
         TaskAdapter ta = buildRule.getProject().getReference("cond");
         ConditionTask c = (ConditionTask) ta.getProxy();
-        assertFalse(c.getLocation() == Location.UNKNOWN_LOCATION);
-        assertFalse(c.getLocation().getLineNumber() == 0);
+        assertNotSame(c.getLocation(), Location.UNKNOWN_LOCATION);
+        assertNotEquals(0, c.getLocation().getLineNumber());
     }
 
     @Test

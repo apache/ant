@@ -60,12 +60,12 @@ public class ZipShortTest {
         ZipShort zs2 = new ZipShort(0x1234);
         ZipShort zs3 = new ZipShort(0x5678);
 
-        assertTrue("reflexive", zs.equals(zs));
+        assertEquals("reflexive", zs, zs);
 
-        assertTrue("works", zs.equals(zs2));
+        assertEquals("works", zs, zs2);
         assertTrue("works, part two", !zs.equals(zs3));
 
-        assertTrue("symmetric", zs2.equals(zs));
+        assertEquals("symmetric", zs2, zs);
 
         assertTrue("null handling", !zs.equals(null));
         assertTrue("non ZipShort handling", !zs.equals(0x1234));

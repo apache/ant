@@ -18,11 +18,11 @@
 
 package org.apache.tools.ant.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DeweyDecimalTest {
 
@@ -55,21 +55,21 @@ public class DeweyDecimalTest {
 
     @Test
     public void testEquals() {
-        assertTrue(new DeweyDecimal("1.2.3").equals(new DeweyDecimal("1.2.3")));
-        assertFalse(new DeweyDecimal("1.2.3").equals(new DeweyDecimal("1.2.4")));
-        assertTrue(new DeweyDecimal("1.2.0").equals(new DeweyDecimal("1.2")));
-        assertTrue(new DeweyDecimal("1.2").equals(new DeweyDecimal("1.2.0")));
+        assertEquals(new DeweyDecimal("1.2.3"), new DeweyDecimal("1.2.3"));
+        assertNotEquals(new DeweyDecimal("1.2.3"), new DeweyDecimal("1.2.4"));
+        assertEquals(new DeweyDecimal("1.2.0"), new DeweyDecimal("1.2"));
+        assertEquals(new DeweyDecimal("1.2"), new DeweyDecimal("1.2.0"));
     }
 
     @Test
     public void compareTo() {
         assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2")) > 0);
         assertTrue(new DeweyDecimal("1.2").compareTo(new DeweyDecimal("1.2.3")) < 0);
-        assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2.3")) == 0);
+        assertEquals(0, new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2.3")));
         assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.1.4")) > 0);
         assertTrue(new DeweyDecimal("1.2.3").compareTo(new DeweyDecimal("1.2.2.9")) > 0);
-        assertTrue(new DeweyDecimal("1.2.0").compareTo(new DeweyDecimal("1.2")) == 0);
-        assertTrue(new DeweyDecimal("1.2").compareTo(new DeweyDecimal("1.2.0")) == 0);
+        assertEquals(0, new DeweyDecimal("1.2.0").compareTo(new DeweyDecimal("1.2")));
+        assertEquals(0, new DeweyDecimal("1.2").compareTo(new DeweyDecimal("1.2.0")));
     }
 
     // TODO isGreaterThan, ...

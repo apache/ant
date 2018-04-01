@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
@@ -96,7 +97,7 @@ public class ImageTest {
         AntAssert.assertContains("Processing File", buildRule.getLog());
         f = new File(buildRule.getOutputDir(), LARGEIMAGE);
         long overwrittenLastModified = f.lastModified();
-        assertTrue("File was overwritten.", lastModified == overwrittenLastModified);
+        assertEquals("File was overwritten.", lastModified, overwrittenLastModified);
     }
 
     @Test

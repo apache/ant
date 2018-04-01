@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -107,14 +106,10 @@ public class TarFileSetTest extends AbstractFileSetTest {
         getProject().addReference("test", f);
         TarFileSet zid = (TarFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
-        assertTrue("src attribute copied by copy constructor",
-                zid.getSrc(getProject()).equals(f.getSrc(getProject())));
-        assertTrue("prefix attribute copied by copy constructor",
-                f.getPrefix(getProject()).equals(zid.getPrefix(getProject())));
-        assertTrue("file mode attribute copied by copy constructor",
-                f.getFileMode(getProject()) == zid.getFileMode(getProject()));
-        assertTrue("dir mode attribute copied by copy constructor",
-                f.getDirMode(getProject()) == zid.getDirMode(getProject()));
+        assertEquals("src attribute copied by copy constructor", zid.getSrc(getProject()), f.getSrc(getProject()));
+        assertEquals("prefix attribute copied by copy constructor", f.getPrefix(getProject()), zid.getPrefix(getProject()));
+        assertEquals("file mode attribute copied by copy constructor", f.getFileMode(getProject()), zid.getFileMode(getProject()));
+        assertEquals("dir mode attribute copied by copy constructor", f.getDirMode(getProject()), zid.getDirMode(getProject()));
       }
 
 }

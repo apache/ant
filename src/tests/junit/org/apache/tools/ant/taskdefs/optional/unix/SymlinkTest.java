@@ -35,16 +35,16 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
 import org.junit.After;
-import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -69,7 +69,7 @@ public class SymlinkTest {
 
     @Before
     public void setUp() {
-        Assume.assumeTrue("Symlinks not supported on current operating system", supportsSymlinks);
+        assumeTrue("Symlinks not supported on current operating system", supportsSymlinks);
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/unix/symlink.xml");
         buildRule.executeTarget("setUp");
     }
@@ -274,8 +274,8 @@ public class SymlinkTest {
         assertFalse(f.exists());
         assertFalse(f.isDirectory());
         assertFalse(f.isFile());
-        assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == false);
-        assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == false);
+        assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+        assertFalse(su.isSymbolicLink(f.getParentFile(), f.getName()));
         assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
         assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                              f.getName()));
@@ -284,8 +284,8 @@ public class SymlinkTest {
         assertFalse(f.exists());
         assertFalse(f.isDirectory());
         assertFalse(f.isFile());
-        assertTrue(su.isSymbolicLink(f.getAbsolutePath()) == false);
-        assertTrue(su.isSymbolicLink(f.getParentFile(), f.getName()) == false);
+        assertFalse(su.isSymbolicLink(f.getAbsolutePath()));
+        assertFalse(su.isSymbolicLink(f.getParentFile(), f.getName()));
         assertTrue(su.isDanglingSymbolicLink(f.getAbsolutePath()));
         assertTrue(su.isDanglingSymbolicLink(f.getParentFile(),
                                              f.getName()));
@@ -305,10 +305,10 @@ public class SymlinkTest {
         buildRule.executeTarget("test-overwrite-link");
         final Project p = buildRule.getProject();
         final String linkTargetResource = p.getProperty("test.overwrite.link.target.dir");
-        Assert.assertNotNull("Property test.overwrite.link.target.dir is not set", linkTargetResource);
+        assertNotNull("Property test.overwrite.link.target.dir is not set", linkTargetResource);
         final Path targetResourcePath = Paths.get(linkTargetResource);
-        Assert.assertTrue(targetResourcePath + " is not a directory", Files.isDirectory(targetResourcePath));
-        Assert.assertEquals(targetResourcePath + " directory was expected to be empty", 0, Files.list(targetResourcePath).count());
+        assertTrue(targetResourcePath + " is not a directory", Files.isDirectory(targetResourcePath));
+        assertEquals(targetResourcePath + " directory was expected to be empty", 0, Files.list(targetResourcePath).count());
     }
 
     @After

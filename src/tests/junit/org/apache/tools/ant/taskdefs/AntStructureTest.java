@@ -18,12 +18,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,6 +29,9 @@ import org.junit.Test;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -68,7 +69,7 @@ public class AntStructureTest {
         // the test has likely been loaded via a different classloader
         // than this class.  Therefore we make the printer assert its
         // state and only check for the tail invocation.
-        AntAssert.assertContains(MyPrinter.TAIL_CALLED, buildRule.getLog());
+        assertContains(MyPrinter.TAIL_CALLED, buildRule.getLog());
     }
 
     public static class MyPrinter implements AntStructure.StructurePrinter {
@@ -81,32 +82,32 @@ public class AntStructureTest {
 
         public void printHead(PrintWriter out, Project p, Hashtable tasks,
                               Hashtable types) {
-            Assert.assertTrue(!headCalled);
-            Assert.assertTrue(!targetCalled);
-            Assert.assertTrue(!tailCalled);
-            Assert.assertEquals(0, elementCalled);
+            assertTrue(!headCalled);
+            assertTrue(!targetCalled);
+            assertTrue(!tailCalled);
+            assertEquals(0, elementCalled);
             headCalled = true;
         }
         public void printTargetDecl(PrintWriter out) {
-            Assert.assertTrue(headCalled);
-            Assert.assertTrue(!targetCalled);
-            Assert.assertTrue(!tailCalled);
-            Assert.assertEquals(0, elementCalled);
+            assertTrue(headCalled);
+            assertTrue(!targetCalled);
+            assertTrue(!tailCalled);
+            assertEquals(0, elementCalled);
             targetCalled = true;
         }
         public void printElementDecl(PrintWriter out, Project p, String name,
                                      Class element) {
-            Assert.assertTrue(headCalled);
-            Assert.assertTrue(targetCalled);
-            Assert.assertTrue(!tailCalled);
+            assertTrue(headCalled);
+            assertTrue(targetCalled);
+            assertTrue(!tailCalled);
             elementCalled++;
             this.p = p;
         }
         public void printTail(PrintWriter out) {
-            Assert.assertTrue(headCalled);
-            Assert.assertTrue(targetCalled);
-            Assert.assertTrue(!tailCalled);
-            Assert.assertTrue(elementCalled > 0);
+            assertTrue(headCalled);
+            assertTrue(targetCalled);
+            assertTrue(!tailCalled);
+            assertTrue(elementCalled > 0);
             tailCalled = true;
             p.log(TAIL_CALLED);
         }

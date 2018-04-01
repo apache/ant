@@ -1,7 +1,10 @@
 package org.example.junitlauncher.vintage;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -10,16 +13,16 @@ public class JUnit4SampleTest {
 
     @Test
     public void testFoo() {
-        Assert.assertEquals(1, 1);
+        assertEquals(1, 1);
     }
 
     @Test
     public void testBar() {
-        Assert.assertTrue(true);
+        assertTrue(true);
     }
 
     @Test
     public void testFooBar() {
-        Assert.assertFalse(false);
+        assertFalse(false);
     }
 }

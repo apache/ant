@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -57,7 +57,7 @@ public class ExecStreamRedirectorTest {
             assertTrue(redirectedOutputFile + " is missing or not a regular file", redirectedOutputFile.isFile());
             final byte[] redirectedOutput = readAllBytes(redirectedOutputFile);
             assertNotNull("No content was redirected to " + redirectedOutputFile, redirectedOutput);
-            assertFalse("Content in redirected file " + redirectedOutputFile + " was empty", redirectedOutput.length == 0);
+            assertNotEquals("Content in redirected file " + redirectedOutputFile + " was empty", 0, redirectedOutput.length);
             if (dirListingOutput != null) {
                 // compare the directory listing that was redirected to these files. all files should have the same content
                 assertTrue("Redirected output in file " + redirectedOutputFile +

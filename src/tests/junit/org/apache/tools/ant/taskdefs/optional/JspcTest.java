@@ -181,9 +181,8 @@ public class JspcTest {
      */
     protected void assertMapped(JspMangler mangler, String filename, String classname) {
         String mappedname = mangler.mapJspToJavaName(new File(filename));
-        assertTrue(filename + " should have mapped to " + classname
-                    + " but instead mapped to " + mappedname,
-                    classname.equals(mappedname));
+        assertEquals(filename + " should have mapped to " + classname
+                + " but instead mapped to " + mappedname, classname, mappedname);
     }
 
 }

@@ -26,7 +26,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -81,7 +80,7 @@ public class AvailableTest {
     @Test
     public void test4() {
         buildRule.executeTarget("test4");
-        assertTrue(buildRule.getProject().getProperty("test") == null);
+        assertNull(buildRule.getProject().getProperty("test"));
     }
 
     // file does exist -> property 'test' == 'true'
@@ -94,7 +93,7 @@ public class AvailableTest {
     @Test
     public void test6() {
         buildRule.executeTarget("test6");
-        assertTrue(buildRule.getProject().getProperty("test") == null);
+        assertNull(buildRule.getProject().getProperty("test"));
     }
 
     // resource does exist -> property 'test' == 'true'
@@ -108,7 +107,7 @@ public class AvailableTest {
     @Test
     public void test8() {
         buildRule.executeTarget("test8");
-        assertTrue(buildRule.getProject().getProperty("test") == null);
+        assertNull(buildRule.getProject().getProperty("test"));
     }
 
     // class does exist -> property 'test' == 'true'

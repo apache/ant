@@ -81,9 +81,9 @@ public class PropertyFileTest {
         assertEquals(FNAME, beforeUpdate.getProperty(FNAME_KEY));
         assertEquals(LNAME, beforeUpdate.getProperty(LNAME_KEY));
         assertEquals(EMAIL, beforeUpdate.getProperty(EMAIL_KEY));
-        assertEquals(null, beforeUpdate.getProperty(PHONE_KEY));
-        assertEquals(null, beforeUpdate.getProperty(AGE_KEY));
-        assertEquals(null, beforeUpdate.getProperty(DATE_KEY));
+        assertNull(beforeUpdate.getProperty(PHONE_KEY));
+        assertNull(beforeUpdate.getProperty(AGE_KEY));
+        assertNull(beforeUpdate.getProperty(DATE_KEY));
 
         // ask ant to update the properties...
         buildRule.executeTarget("update-existing-properties");

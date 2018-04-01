@@ -23,8 +23,6 @@ import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -37,8 +35,10 @@ import java.io.IOException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Tests FileSet using the Copy task.
@@ -78,7 +78,7 @@ public class CopyTest {
     public void test3() {
         buildRule.executeTarget("test3");
         File file3  = new File(buildRule.getProject().getProperty("output"), "copytest3.tmp");
-        //rollback file timestamp instead of delaying test
+        // rollback file timestamp instead of delaying test
         FileUtilities.rollbackTimestamps(file3, 3);
         buildRule.executeTarget("test3Part2");
         assertTrue(file3.exists());
@@ -90,19 +90,14 @@ public class CopyTest {
         File file3c = new File(buildRule.getProject().getProperty("output"), "copytest3c.tmp");
         assertTrue(file3c.exists());
 
-        //file length checks rely on touch generating a zero byte file
-        if (file3.length()==0) {
-            fail("could not overwrite an existing, older file");
-        }
-        if (file3c.length()!=0) {
-            fail("could not force overwrite an existing, newer file");
-        }
-        if (file3b.length()==0) {
-            fail("unexpectedly overwrote an existing, newer file");
-        }
+        // file length checks rely on touch generating a zero byte file
 
-        //file time checks for java1.2+
-        assertTrue(file3a.lastModified() == file3.lastModified());
+        assertNotEquals("could not overwrite an existing, older file", 0, file3.length());
+        assertEquals("could not force overwrite an existing, newer file", 0, file3c.length());
+        assertNotEquals("unexpectedly overwrote an existing, newer file", 0, file3b.length());
+
+        // file time checks for java1.2+
+        assertEquals(file3a.lastModified(), file3.lastModified());
         assertTrue(file3c.lastModified() < file3a.lastModified());
 
     }
@@ -293,14 +288,14 @@ public class CopyTest {
     @Test
     public void testCopyToSymlinkedSelf() throws Exception {
         // we are only going to test against systems that support symlinks
-        Assume.assumeTrue("Symlinks not supported on this operating system", Os.isFamily(Os.FAMILY_UNIX));
+        assumeTrue("Symlinks not supported on this operating system", Os.isFamily(Os.FAMILY_UNIX));
 
         // setup the source files to run copying against
         buildRule.executeTarget("setupSelfCopyTesting");
         final File testDir = new File(buildRule.getProject().getProperty("self.copy.test.root.dir"));
-        Assert.assertTrue(testDir + " was expected to be a directory", testDir.isDirectory());
+        assertTrue(testDir + " was expected to be a directory", testDir.isDirectory());
         final File srcFile = new File(testDir, "file.txt");
-        Assert.assertTrue("Source file " + srcFile + " was expected to be a file", srcFile.isFile());
+        assertTrue("Source file " + srcFile + " was expected to be a file", srcFile.isFile());
         final long originalFileSize = srcFile.length();
         final String originalContent;
         final BufferedReader reader = new BufferedReader(new FileReader(srcFile));
@@ -309,26 +304,26 @@ public class CopyTest {
         } finally {
             reader.close();
         }
-        Assert.assertTrue("Content missing in file " + srcFile, originalContent != null && originalContent.length() > 0);
+        assertTrue("Content missing in file " + srcFile, originalContent != null && originalContent.length() > 0);
 
         // run the copy tests
         buildRule.executeTarget("testSelfCopy");
         // make sure the source file hasn't been impacted by the copy
         assertSizeAndContent(srcFile, originalFileSize, originalContent);
         final File symlinkedFile = new File(testDir, "sylmink-file.txt");
-        Assert.assertTrue(symlinkedFile + " was expected to be a file", symlinkedFile.isFile());
+        assertTrue(symlinkedFile + " was expected to be a file", symlinkedFile.isFile());
         assertSizeAndContent(symlinkedFile, originalFileSize, originalContent);
 
         final File symlinkedTestDir = new File(buildRule.getProject().getProperty("self.copy.test.symlinked.dir"));
-        Assert.assertTrue(symlinkedTestDir + " was expected to be a directory", symlinkedTestDir.isDirectory());
+        assertTrue(symlinkedTestDir + " was expected to be a directory", symlinkedTestDir.isDirectory());
         assertSizeAndContent(new File(symlinkedTestDir, "file.txt"), originalFileSize, originalContent);
         assertSizeAndContent(new File(symlinkedTestDir, "sylmink-file.txt"), originalFileSize, originalContent);
 
     }
 
     private void assertSizeAndContent(final File file, final long expectedSize, final String expectedContent) throws IOException {
-        Assert.assertTrue(file + " was expected to be a file", file.isFile());
-        Assert.assertEquals("Unexpected size of file " + file, expectedSize, file.length());
+        assertTrue(file + " was expected to be a file", file.isFile());
+        assertEquals("Unexpected size of file " + file, expectedSize, file.length());
         final BufferedReader reader = new BufferedReader(new FileReader(file));
         final String content;
         try {
@@ -336,6 +331,6 @@ public class CopyTest {
         } finally {
             reader.close();
         }
-        Assert.assertEquals("Unexpected content in file " + file, expectedContent, content);
+        assertEquals("Unexpected content in file " + file, expectedContent, content);
     }
 }

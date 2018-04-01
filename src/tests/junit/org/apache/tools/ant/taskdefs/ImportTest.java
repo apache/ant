@@ -22,7 +22,6 @@ import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -53,8 +52,7 @@ public class ImportTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/import/unnamedImport.xml",
                          Project.MSG_WARN);
         String log = buildRule.getLog();
-        assertTrue("Warnings logged when not expected: " + log,
-                    log.length() == 0);
+        assertEquals("Warnings logged when not expected: " + log, 0, log.length());
     }
 
     @Test

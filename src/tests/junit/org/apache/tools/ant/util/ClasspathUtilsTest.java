@@ -26,7 +26,7 @@ import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -61,6 +61,6 @@ public class ClasspathUtilsTest {
             list.append(" ").append(enumeration.nextElement());
             count++;
         }
-        assertTrue("Should be only one and not " + count + " " + list, count == 1);
+        assertEquals("Should be only one and not " + count + " " + list, 1, count);
     }
 }

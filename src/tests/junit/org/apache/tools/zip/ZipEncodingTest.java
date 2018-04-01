@@ -25,6 +25,8 @@ import java.nio.ByteBuffer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test zip encodings.
@@ -133,15 +135,15 @@ public class ZipEncodingTest {
 
         String decoded = enc.decode(testBytes);
 
-        assertEquals(true, enc.canEncode(decoded));
+        assertTrue(enc.canEncode(decoded));
 
         ByteBuffer encoded = enc.encode(decoded);
 
         assertByteEquals(testBytes, encoded);
 
-        assertEquals(false, enc.canEncode(UNENC_STRING));
+        assertFalse(enc.canEncode(UNENC_STRING));
         assertByteEquals("%U2016".getBytes("US-ASCII"), enc.encode(UNENC_STRING));
-        assertEquals(false, enc.canEncode(BAD_STRING));
+        assertFalse(enc.canEncode(BAD_STRING));
         assertByteEquals(BAD_STRING_ENC.getBytes("US-ASCII"),
                 enc.encode(BAD_STRING));
     }

@@ -41,8 +41,8 @@ import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -169,7 +169,7 @@ public class JavaTest {
         java.setJvmargs("-Xmx128M");
         java.setArgs(arg);
         final String[] cmdLine = java.getCommandLine().getCommandline();
-        Assert.assertNotNull("Has command line.", cmdLine);
+        assertNotNull("Has command line.", cmdLine);
         assertEquals("Command line should have 5 elements", 5, cmdLine.length);
         assertEquals("Last command line element should be java argument: " + arg,
                 arg,
@@ -195,7 +195,7 @@ public class JavaTest {
         java.setJvmargs("-Xmx128M");    //NOI18N
         java.setArgs(arg);
         final String[] cmdLine = java.getCommandLine().getCommandline();
-        Assert.assertNotNull("Has command line.", cmdLine);
+        assertNotNull("Has command line.", cmdLine);
         assertEquals("Command line should have 5 elements", 5, cmdLine.length);
         assertEquals("Last command line element should be java argument: " + arg,
                 arg,

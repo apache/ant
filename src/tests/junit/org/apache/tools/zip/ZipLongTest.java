@@ -63,12 +63,12 @@ public class ZipLongTest {
         ZipLong zl2 = new ZipLong(0x12345678);
         ZipLong zl3 = new ZipLong(0x87654321);
 
-        assertTrue("reflexive", zl.equals(zl));
+        assertEquals("reflexive", zl, zl);
 
-        assertTrue("works", zl.equals(zl2));
+        assertEquals("works", zl, zl2);
         assertTrue("works, part two", !zl.equals(zl3));
 
-        assertTrue("symmetric", zl2.equals(zl));
+        assertEquals("symmetric", zl2, zl);
 
         assertTrue("null handling", !zl.equals(null));
         assertTrue("non ZipLong handling", !zl.equals(0x1234));

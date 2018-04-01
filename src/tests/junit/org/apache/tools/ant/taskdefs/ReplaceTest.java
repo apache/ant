@@ -148,7 +148,7 @@ public class ReplaceTest {
                 testFile.setLastModified(testFile.lastModified() - FileUtils.getFileUtils().getFileTimestampGranularity() * 5));
         long ts1 = testFile.lastModified();
         buildRule.executeTarget("testPreserve");
-        assertTrue(ts1 == new File(buildRule.getOutputDir(), "test.txt").lastModified());
+        assertEquals(ts1, new File(buildRule.getOutputDir(), "test.txt").lastModified());
     }
 
     public void assertEqualContent(File expect, File result)

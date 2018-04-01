@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.types.selectors;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.text.RuleBasedCollator;
@@ -51,6 +50,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -189,7 +189,7 @@ public class ModifiedSelectorTest {
 
             assertNotNull("'fs.mod.value' must be set.", fsModValue);
             // must be empty according to the Mock* implementations
-            assertTrue("'fs.mod.value' must be empty.", "".equals(fsModValue));
+            assertEquals("'fs.mod.value' must be empty.", "", fsModValue);
         } finally {
             bft.doTarget("modifiedselectortest-scenario-clean");
             bft.deletePropertiesfile();
@@ -602,9 +602,9 @@ public class ModifiedSelectorTest {
         Object o2 = "string2";
         Object o3 = "string2"; // really "2"
 
-        assertTrue("Comparator gave wrong value.", comp.compare(o1, o2) != 0);
-        assertTrue("Comparator gave wrong value.", comp.compare(o1, o3) != 0);
-        assertTrue("Comparator gave wrong value.", comp.compare(o2, o3) == 0);
+        assertNotEquals("Comparator gave wrong value.", 0, comp.compare(o1, o2));
+        assertNotEquals("Comparator gave wrong value.", 0, comp.compare(o1, o3));
+        assertEquals("Comparator gave wrong value.", 0, comp.compare(o2, o3));
     }
 
     // =====================  scenario tests  =====================
@@ -837,8 +837,8 @@ public class ModifiedSelectorTest {
             // do the checks
             assertTrue("Cache file not created.", cachefile.exists());
             assertTrue("Not enough files copied on first time.", to1.list().length > 5);
-            assertTrue("Too much files copied on second time.", to2.list().length == 0);
-            assertTrue("Too much files copied on third time.", to3.list().length == 2);
+            assertEquals("Too much files copied on second time.", 0, to2.list().length);
+            assertEquals("Too much files copied on third time.", 2, to3.list().length);
         // don't catch the JUnit exceptions
         } finally {
             bft.doTarget("modifiedselectortest-scenario-clean");

@@ -5,11 +5,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests the {@link JUnitLauncherTask}
@@ -75,7 +76,7 @@ public class JUnitLauncherTaskTest {
     public void testFailureStopsBuild() {
         try {
             project.executeTarget("test-failure-stops-build");
-            Assert.fail("Test execution failure was expected to stop the build but didn't");
+            fail("Test execution failure was expected to stop the build but didn't");
         } catch (BuildException be) {
             // expected
         }

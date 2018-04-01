@@ -36,10 +36,9 @@ import org.junit.Test;
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
-
 
 public class ZipTest {
 
@@ -138,12 +137,12 @@ public class ZipTest {
         ZipFile zipFile = new ZipFile(new File(buildRule.getProject().getProperty("output"),
                 "zipgroupfileset.zip"));
 
-        assertTrue(zipFile.getEntry("ant.xml") != null);
-        assertTrue(zipFile.getEntry("optional/jspc.xml") != null);
-        assertTrue(zipFile.getEntry("zip/zipgroupfileset3.zip") != null);
+        assertNotNull(zipFile.getEntry("ant.xml"));
+        assertNotNull(zipFile.getEntry("optional/jspc.xml"));
+        assertNotNull(zipFile.getEntry("zip/zipgroupfileset3.zip"));
 
-        assertTrue(zipFile.getEntry("test6.mf") == null);
-        assertTrue(zipFile.getEntry("test7.mf") == null);
+        assertNull(zipFile.getEntry("test6.mf"));
+        assertNull(zipFile.getEntry("test7.mf"));
 
         zipFile.close();
     }

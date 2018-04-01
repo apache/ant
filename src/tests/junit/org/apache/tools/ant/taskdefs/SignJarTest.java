@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -124,7 +125,7 @@ public class SignJarTest {
         File f = new File(testJarParent,
                           "../" + testJarParent.getName() + "/"
                           + testJar.getName());
-        assertFalse(testJar.equals(f));
+        assertNotEquals(testJar, f);
         assertEquals(testJar.getCanonicalPath(), f.getCanonicalPath());
         SignJar s = new SignJar();
         s.setProject(buildRule.getProject());
