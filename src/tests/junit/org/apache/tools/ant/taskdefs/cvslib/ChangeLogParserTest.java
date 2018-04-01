@@ -50,7 +50,7 @@ public class ChangeLogParserTest {
     }
 
     @Test
-    public void testCvs112Format() throws Exception {
+    public void testCvs112Format() {
         parser.stdout("Working file: build.xml");
         parser.stdout("revision 1.475");
         parser.stdout("date: 2004-06-05 16:10:32 +0000; author: somebody; state: Exp;  lines: +2 -2");

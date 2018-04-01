@@ -42,39 +42,38 @@ public class IsReachableTest {
                 "src/etc/testcases/taskdefs/conditions/isreachable.xml");
     }
 
-
     @Test
     public void testLocalhost() {
         buildRule.executeTarget("testLocalhost");
     }
 
     @Test
-    public void testLocalhostURL() throws Exception {
+    public void testLocalhostURL() {
         buildRule.executeTarget("testLocalhostURL");
     }
 
     @Test
-    public void testIpv4localhost() throws Exception {
+    public void testIpv4localhost() {
         buildRule.executeTarget("testIpv4localhost");
     }
 
     @Test
-    public void testFTPURL() throws Exception {
+    public void testFTPURL() {
         buildRule.executeTarget("testFTPURL");
     }
 
     @Test
-    public void testBoth() throws Exception {
+    public void testBoth() {
         try {
            buildRule.executeTarget("testBoth");
-            fail("Build exception expected: error on two targets");
+           fail("Build exception expected: error on two targets");
         } catch (BuildException ex) {
             assertEquals(IsReachable.ERROR_BOTH_TARGETS, ex.getMessage());
         }
     }
 
     @Test
-    public void testNoTargets() throws Exception {
+    public void testNoTargets() {
         try {
             buildRule.executeTarget("testNoTargets");
             fail("Build exception expected: no params");
@@ -84,7 +83,7 @@ public class IsReachableTest {
     }
 
     @Test
-    public void testBadTimeout() throws Exception {
+    public void testBadTimeout() {
         try {
             buildRule.executeTarget("testBadTimeout");
             fail("Build exception expected: error on -ve timeout");
@@ -95,7 +94,7 @@ public class IsReachableTest {
 
     @Test
     @Ignore("Previously named in a way to prevent execution")
-    public void NotestFile() throws Exception {
+    public void NotestFile() {
         try {
             buildRule.executeTarget("testFile");
             fail("Build exception expected: error on file URL");
@@ -105,7 +104,7 @@ public class IsReachableTest {
     }
 
     @Test
-    public void testBadURL() throws Exception {
+    public void testBadURL() {
         try {
             buildRule.executeTarget("testBadURL");
             fail("Build exception expected: error in URL");

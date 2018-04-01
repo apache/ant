@@ -91,12 +91,12 @@ public class MoveTest {
     }
 
     @Test
-    public void testCompleteDirectoryMove() throws IOException {
+    public void testCompleteDirectoryMove() {
         testCompleteDirectoryMove("testCompleteDirectoryMove");
     }
 
     @Test
-    public void testCompleteDirectoryMove2() throws IOException {
+    public void testCompleteDirectoryMove2() {
         testCompleteDirectoryMove("testCompleteDirectoryMove2");
     }
 

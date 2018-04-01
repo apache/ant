@@ -385,12 +385,12 @@ public class JUnitTaskTest {
     }
 
     @Test
-    public void testTestMethods() throws Exception {
+    public void testTestMethods() {
         buildRule.executeTarget("testTestMethods");
     }
 
     @Test
-    public void testNonTestsSkipped() throws Exception {
+    public void testNonTestsSkipped() {
 
         buildRule.executeTarget("testNonTests");
         assertFalse("Test result should not exist as test was skipped - TEST-org.example.junit.NonTestMissed.xml",

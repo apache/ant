@@ -312,7 +312,7 @@ public class XMLCatalogTest {
     }
 
     @Test
-    public void testResolverBase() throws MalformedURLException, TransformerException {
+    public void testResolverBase() throws TransformerException {
         String uri = "http://foo.com/bar/blah.xml";
         String uriLoc = "etc/testcases/taskdefs/optional/xml/about.xml";
         String base = toURLString(project.getBaseDir()) + "/src/";

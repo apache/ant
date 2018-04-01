@@ -18,8 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.IOException;
-
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.After;
 import org.junit.Before;
@@ -47,17 +45,17 @@ public class ChecksumTest {
     }
 
     @Test
-    public void testCreateMD5SUMformat() throws IOException {
+    public void testCreateMD5SUMformat() {
         buildRule.executeTarget("createMD5SUMformat");
     }
 
     @Test
-    public void testCreateSVFformat() throws IOException {
+    public void testCreateSVFformat() {
         buildRule.executeTarget("createSVFformat");
     }
 
     @Test
-    public void testCreatePattern() throws IOException {
+    public void testCreatePattern() {
         buildRule.executeTarget("createPattern");
     }
 

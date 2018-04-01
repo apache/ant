@@ -62,7 +62,7 @@ public class ExecuteJavaTest {
     }
 
     @Test
-    public void testNoTimeOut() throws Exception {
+    public void testNoTimeOut() {
         Commandline cmd = getCommandline(TIME_OUT / 2);
         ej.setJavaCommand(cmd);
         ej.execute(project);
@@ -71,7 +71,7 @@ public class ExecuteJavaTest {
 
     // test that the watchdog ends the process
     @Test
-    public void testTimeOut() throws Exception {
+    public void testTimeOut() {
         Commandline cmd = getCommandline(TIME_OUT * 2);
         ej.setJavaCommand(cmd);
         long now = System.currentTimeMillis();
@@ -88,7 +88,7 @@ public class ExecuteJavaTest {
     }
 
     @Test
-    public void testNoTimeOutForked() throws Exception {
+    public void testNoTimeOutForked() {
         Commandline cmd = getCommandline(TIME_OUT / 2);
         ej.setJavaCommand(cmd);
         ej.fork(cp);
@@ -97,7 +97,7 @@ public class ExecuteJavaTest {
 
     // test that the watchdog ends the process
     @Test
-    public void testTimeOutForked() throws Exception {
+    public void testTimeOutForked() {
         Commandline cmd = getCommandline(TIME_OUT * 2);
         ej.setJavaCommand(cmd);
         long now = System.currentTimeMillis();

@@ -193,13 +193,13 @@ public class EchoPropertiesTest {
     }
 
     @Test
-    public void testWithEmptyPrefixAndRegex() throws Exception {
+    public void testWithEmptyPrefixAndRegex() {
         buildRule.executeTarget("testEchoWithEmptyPrefixToLog");
         assertContains("test.property=" + TEST_VALUE, buildRule.getLog());
     }
 
     @Test
-    public void testWithRegex() throws Exception {
+    public void testWithRegex() {
         assumeTrue("Test skipped because no regexp matcher is present.",
                 RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
         buildRule.executeTarget("testWithRegex");
