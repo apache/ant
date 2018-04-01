@@ -92,13 +92,12 @@ public class Description extends DataType {
             return;
         }
         for (Task task : findElementInTarget(t, "description")) {
-            if (!(task instanceof UnknownElement)) {
-                continue;
-            }
-            UnknownElement ue = ((UnknownElement) task);
-            String descComp = ue.getWrapper().getText().toString();
-            if (descComp != null) {
-                description.append(project.replaceProperties(descComp));
+            if (task instanceof UnknownElement) {
+                UnknownElement ue = (UnknownElement) task;
+                String descComp = ue.getWrapper().getText().toString();
+                if (descComp != null) {
+                    description.append(project.replaceProperties(descComp));
+                }
             }
         }
     }

@@ -83,7 +83,7 @@ public class Jikes extends DefaultCompilerAdapter {
             classpath.append(new Path(project, jikesPath));
         }
 
-        if (!(extdirs == null || extdirs.isEmpty())) {
+        if (extdirs != null && !extdirs.isEmpty()) {
             cmd.createArgument().setValue("-extdirs");
             cmd.createArgument().setPath(extdirs);
         }

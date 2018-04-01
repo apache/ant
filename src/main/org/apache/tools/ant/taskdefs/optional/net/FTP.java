@@ -2394,8 +2394,8 @@ public class FTP extends Task implements FTPTaskConfig {
                     //  to indicate that an attempt to create a directory has
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
-                    if (!(ignoreNoncriticalErrors && (rc == CODE_550
-                        || rc == CODE_553 || rc == CODE_521))) {
+                    if (!ignoreNoncriticalErrors
+                            || rc != CODE_550 && rc != CODE_553 && rc != CODE_521) {
                         throw new BuildException(
                             "could not create directory: %s",
                             ftp.getReplyString());
@@ -2420,8 +2420,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private void handleMkDirFailure(FTPClient ftp)
         throws BuildException {
         int rc = ftp.getReplyCode();
-        if (!(ignoreNoncriticalErrors
-              && (rc == CODE_550 || rc == CODE_553 || rc == CODE_521))) {
+        if (!ignoreNoncriticalErrors || rc != CODE_550 && rc != CODE_553 && rc != CODE_521) {
             throw new BuildException("could not create directory: %s",
                 ftp.getReplyString());
         }

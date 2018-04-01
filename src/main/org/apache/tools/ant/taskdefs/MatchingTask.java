@@ -162,7 +162,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public void XsetIgnore(String ignoreString) {
         log("The ignore attribute is deprecated."
             + "Please use the excludes attribute.", Project.MSG_WARN);
-        if (!(ignoreString == null || ignoreString.isEmpty())) {
+        if (ignoreString != null && !ignoreString.isEmpty()) {
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ",
                                                       false);
             while (tok.hasMoreTokens()) {

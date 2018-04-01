@@ -209,7 +209,7 @@ public class EchoProperties extends Task {
      * @since Ant 1.7
      */
     public void setRegex(String regex) {
-        if (!(regex == null || regex.isEmpty())) {
+        if (regex != null && !regex.isEmpty()) {
             this.regex = regex;
             PropertySet ps = new PropertySet();
             ps.setProject(getProject());

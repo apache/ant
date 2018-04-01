@@ -253,7 +253,7 @@ public final class ChainReaderHelper {
                 }
                 success = true;
             } finally {
-                if (!(success || classLoadersToCleanUp.isEmpty())) {
+                if (!success && !classLoadersToCleanUp.isEmpty()) {
                     cleanUpClassLoaders(classLoadersToCleanUp);
                 }
             }

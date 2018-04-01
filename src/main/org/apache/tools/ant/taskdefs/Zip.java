@@ -1600,13 +1600,13 @@ public class Zip extends MatchingTask {
             final List<Resource> resources = new Vector<>();
             if (!doFilesonly) {
                 for (String d : rs.getIncludedDirectories()) {
-                    if (!(d.isEmpty() && skipEmptyNames)) {
+                    if (!d.isEmpty() || !skipEmptyNames) {
                         resources.add(rs.getResource(d));
                     }
                 }
             }
             for (String f : rs.getIncludedFiles()) {
-                if (!(f.isEmpty() && skipEmptyNames)) {
+                if (!f.isEmpty() || !skipEmptyNames) {
                     resources.add(rs.getResource(f));
                 }
             }

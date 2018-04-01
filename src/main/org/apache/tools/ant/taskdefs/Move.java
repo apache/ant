@@ -179,7 +179,7 @@ public class Move extends Copy {
                     }
                     File d = new File(toDirName);
                     if (!d.exists()) {
-                        if (!(d.mkdirs() || d.exists())) {
+                        if (!d.mkdirs() && !d.exists()) {
                             log("Unable to create directory "
                                     + d.getAbsolutePath(), Project.MSG_ERR);
                         } else {
@@ -372,8 +372,8 @@ public class Move extends Copy {
                     + " is a no-op.", Project.MSG_VERBOSE);
                 return true;
             }
-            if (!(getFileUtils().areSame(sourceFile, destFile)
-                  || getFileUtils().tryHardToDelete(destFile, performGc))) {
+            if (!getFileUtils().areSame(sourceFile, destFile)
+                    && !getFileUtils().tryHardToDelete(destFile, performGc)) {
                 throw new BuildException("Unable to remove existing file %s",
                     destFile);
             }

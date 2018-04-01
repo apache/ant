@@ -1398,12 +1398,12 @@ public class Project implements ResourceFactory {
                     curtarget.performTasks();
                     succeededTargets.add(curtarget.getName());
                 } catch (final RuntimeException ex) {
-                    if (!(keepGoingMode)) {
+                    if (!keepGoingMode) {
                         throw ex; // throw further
                     }
                     thrownException = ex;
                 } catch (final Throwable ex) {
-                    if (!(keepGoingMode)) {
+                    if (!keepGoingMode) {
                         throw new BuildException(ex);
                     }
                     thrownException = ex;

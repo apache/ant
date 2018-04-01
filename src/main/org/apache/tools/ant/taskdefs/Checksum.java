@@ -328,7 +328,7 @@ public class Checksum extends MatchingTask implements Condition {
             throw new BuildException(
                 "Specify at least one source - a file or a resource collection.");
         }
-        if (!(resources == null || resources.isFilesystemOnly())) {
+        if (resources != null && !resources.isFilesystemOnly()) {
             throw new BuildException("Can only calculate checksums for file-based resources.");
         }
         if (file != null && file.exists() && file.isDirectory()) {

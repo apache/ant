@@ -268,7 +268,7 @@ public class Expand extends Task {
             entryName = entryName.substring(1);
         }
 
-        if (!(patternsets == null || patternsets.isEmpty())) {
+        if (patternsets != null && !patternsets.isEmpty()) {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
 

@@ -240,7 +240,7 @@ public class Image extends MatchingTask {
 
                 if (dstFile.exists()) {
                     // avoid overwriting unless necessary
-                    if(!overwrite
+                    if (!overwrite
                        && srcFile.lastModified() <= dstFile.lastModified()) {
 
                         log(srcFile + " omitted as " + dstFile

@@ -240,7 +240,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     protected void addVendorFiles(Hashtable<String, File> ejbFiles, String ddPrefix) {
 
         //choose the right vendor DD
-        if (!(version == BES || version == BAS)) {
+        if (version != BES && version != BAS) {
             throw new BuildException("version " + version + " is not supported");
         }
 

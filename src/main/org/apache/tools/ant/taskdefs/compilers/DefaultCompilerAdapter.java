@@ -334,7 +334,7 @@ public abstract class DefaultCompilerAdapter
                 }
             }
 
-            if (!(extdirs == null || extdirs.isEmpty())) {
+            if (extdirs != null && !extdirs.isEmpty()) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
             }

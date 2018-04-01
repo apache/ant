@@ -205,7 +205,7 @@ public class DependSet extends MatchingTask {
               "At least one set of target files must be specified");
         }
         //no sources = nothing to compare; no targets = nothing to delete:
-        if (!(sources.isEmpty() || targets.isEmpty() || uptodate(sources, targets))) {
+        if (!sources.isEmpty() && !targets.isEmpty() && !uptodate(sources, targets)) {
            log("Deleting all target files.", Project.MSG_VERBOSE);
            if (verbose) {
                for (String t : targets.list()) {

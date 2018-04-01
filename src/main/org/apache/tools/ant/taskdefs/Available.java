@@ -287,12 +287,12 @@ public class Available extends Task implements Condition {
             } else {
                 setTaskName("available");
             }
-            if (!(classname == null || checkClass(classname))) {
+            if (classname != null && !checkClass(classname)) {
                 log("Unable to load class " + classname + appendix,
                     Project.MSG_VERBOSE);
                 return false;
             }
-            if ((file != null) && !checkFile()) {
+            if (file != null && !checkFile()) {
                 StringBuilder buf = new StringBuilder("Unable to find ");
                 if (type != null) {
                     buf.append(type).append(' ');
@@ -301,7 +301,7 @@ public class Available extends Task implements Condition {
                 log(buf.toString(), Project.MSG_VERBOSE);
                 return false;
             }
-            if ((resource != null) && !checkResource(resource)) {
+            if (resource != null && !checkResource(resource)) {
                 log("Unable to load resource " + resource + appendix,
                     Project.MSG_VERBOSE);
                 return false;

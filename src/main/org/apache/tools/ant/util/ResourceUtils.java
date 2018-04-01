@@ -368,8 +368,8 @@ public class ResourceUtils {
                                     final String inputEncoding, final String outputEncoding,
                                     final Project project, final boolean force)
         throws IOException {
-        if (!(overwrite || SelectorUtils.isOutOfDate(source, dest, FileUtils.getFileUtils()
-                .getFileTimestampGranularity()))) {
+        if (!overwrite && !SelectorUtils.isOutOfDate(source, dest,
+                FileUtils.getFileUtils().getFileTimestampGranularity())) {
             return;
         }
         final boolean filterSetsAvailable = (filters != null
@@ -515,7 +515,7 @@ public class ResourceUtils {
         }
         final boolean e1 = r1.isExists();
         final boolean e2 = r2.isExists();
-        if (!(e1 || e2)) {
+        if (!e1 && !e2) {
             return 0;
         }
         if (e1 != e2) {

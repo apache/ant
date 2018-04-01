@@ -178,7 +178,7 @@ public class LoadResource extends Task {
                 text = null;
             }
 
-            if (!(text == null || text.isEmpty())) {
+            if (text != null && !text.isEmpty()) {
                 getProject().setNewProperty(property, text);
                 log("loaded " + text.length() + " characters",
                     Project.MSG_VERBOSE);

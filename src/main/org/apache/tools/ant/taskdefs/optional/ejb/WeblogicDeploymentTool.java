@@ -566,8 +566,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
 
             Path combinedClasspath = getCombinedClasspath();
-            if (!(wlClasspath == null || combinedClasspath == null
-                || combinedClasspath.toString().trim().isEmpty())) {
+            if (wlClasspath != null && combinedClasspath != null
+                    && !combinedClasspath.toString().trim().isEmpty()) {
                 javaTask.createArg().setValue("-classpath");
                 javaTask.createArg().setPath(combinedClasspath);
             }

@@ -159,7 +159,7 @@ public class UpToDate extends Task implements Condition {
                 "At least one srcfile or a nested <srcfiles> or <srcresources> element must be set.");
         }
 
-        if (!(sourceFileSets.isEmpty() && sourceResources.isEmpty())
+        if ((!sourceFileSets.isEmpty() || !sourceResources.isEmpty())
             && sourceFile != null) {
             throw new BuildException(
                 "Cannot specify both the srcfile attribute and a nested <srcfiles> or <srcresources> element.");

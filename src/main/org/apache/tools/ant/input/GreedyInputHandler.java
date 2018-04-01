@@ -65,7 +65,7 @@ public class GreedyInputHandler extends DefaultInputHandler {
                 }
             }
             request.setInput(new String(baos.toByteArray()));
-            if (!(request.isInputValid())) {
+            if (!request.isInputValid()) {
                 throw new BuildException(
                     "Received invalid console input");
             }

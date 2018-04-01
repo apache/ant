@@ -375,7 +375,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 text = text.trim();
             }
             localAttributes.put(macroDef.getText().getName(), text);
-        } else if (!(text == null || text.trim().isEmpty())) {
+        } else if (text != null && !text.trim().isEmpty()) {
             throw new BuildException(
                 "The \"%s\" macro does not support nested text data.",
                 getTaskName());

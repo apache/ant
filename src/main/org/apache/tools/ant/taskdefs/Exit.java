@@ -138,7 +138,7 @@ public class Exit extends Task {
                      : (testIfCondition() && testUnlessCondition());
         if (fail) {
             String text = null;
-            if (!(message == null || message.trim().isEmpty())) {
+            if (message != null && !message.trim().isEmpty()) {
                 text = message.trim();
             } else {
                 if (ifCondition != null && !"".equals(ifCondition)

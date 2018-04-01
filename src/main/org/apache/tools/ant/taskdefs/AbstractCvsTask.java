@@ -603,7 +603,7 @@ public abstract class AbstractCvsTask extends Task {
      */
     public void setTag(String p) {
         // Check if not real tag => set it to null
-        if (!(p == null || p.trim().isEmpty())) {
+        if (p != null && !p.trim().isEmpty()) {
             tag = p;
             addCommandArgument("-r" + p);
         }
@@ -639,7 +639,7 @@ public abstract class AbstractCvsTask extends Task {
      * can understand see man cvs
      */
     public void setDate(String p) {
-        if (!(p == null || p.trim().isEmpty())) {
+        if (p != null && !p.trim().isEmpty()) {
             addCommandArgument("-D");
             addCommandArgument(p);
         }

@@ -355,7 +355,7 @@ public class jlink {
         */
         String name = inputEntry.getName();
 
-        if (!(inputEntry.isDirectory() || name.endsWith(".class"))) {
+        if (!inputEntry.isDirectory() && !name.endsWith(".class")) {
             try (InputStream input = zip.getInputStream(zip.getEntry(name))) {
                 String className = ClassNameReader.getClassName(input);
 

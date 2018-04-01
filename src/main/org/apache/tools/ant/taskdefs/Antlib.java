@@ -92,7 +92,7 @@ public class Antlib extends Task implements TaskContainer {
             UnknownElement ue =
                 parser.parseAntlibDescriptor(project, antlibResource);
             // Check name is "antlib"
-            if (!(TAG.equals(ue.getTag()))) {
+            if (!TAG.equals(ue.getTag())) {
                 throw new BuildException(
                     "Unexpected tag " + ue.getTag() + " expecting "
                     + TAG, ue.getLocation());

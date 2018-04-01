@@ -183,7 +183,7 @@ public class LoadProperties extends Task {
 
             String text = instream.readFully();
 
-            if (!(text == null || text.isEmpty())) {
+            if (text != null && !text.isEmpty()) {
                 if (!text.endsWith("\n")) {
                     text = text + "\n";
                 }

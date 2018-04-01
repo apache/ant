@@ -102,7 +102,7 @@ public class LoadFileTest {
     @Test
     public void testLoadAFile() throws BuildException {
         buildRule.executeTarget("testLoadAFile");
-        if(!buildRule.getProject().getProperty("testLoadAFile").contains("eh?")) {
+        if (!buildRule.getProject().getProperty("testLoadAFile").contains("eh?")) {
             fail("property is not all in the file");
         }
     }
@@ -122,7 +122,7 @@ public class LoadFileTest {
     @Test
     public void testEvalProps() throws BuildException {
         buildRule.executeTarget("testEvalProps");
-        if(!buildRule.getProject().getProperty("testEvalProps").contains("rain")) {
+        if (!buildRule.getProject().getProperty("testEvalProps").contains("rain")) {
             fail("property eval broken");
         }
     }
@@ -133,7 +133,7 @@ public class LoadFileTest {
     @Test
     public void testFilterChain() throws BuildException {
         buildRule.executeTarget("testFilterChain");
-        if(!buildRule.getProject().getProperty("testFilterChain").contains("World!")) {
+        if (!buildRule.getProject().getProperty("testFilterChain").contains("World!")) {
             fail("Filter Chain broken");
         }
     }

@@ -269,7 +269,7 @@ public class Parallel extends Task
         ThreadGroup group = new ThreadGroup("parallel");
 
         TaskRunnable[] daemons = null;
-        if (!(daemonTasks == null || daemonTasks.tasks.isEmpty())) {
+        if (daemonTasks != null && !daemonTasks.tasks.isEmpty()) {
             daemons = new TaskRunnable[daemonTasks.tasks.size()];
         }
 

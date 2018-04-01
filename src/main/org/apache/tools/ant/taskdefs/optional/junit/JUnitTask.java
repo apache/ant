@@ -1703,8 +1703,8 @@ public class JUnitTask extends Task {
     private void checkModules() {
         if (hasPath(getCommandline().getModulepath()) ||
             hasPath(getCommandline().getUpgrademodulepath())) {
-            if (!(batchTests.stream().allMatch(BaseTest::getFork)
-                && tests.stream().allMatch(BaseTest::getFork))) {
+            if (!batchTests.stream().allMatch(BaseTest::getFork)
+                    || !tests.stream().allMatch(BaseTest::getFork)) {
                 throw new BuildException(
                     "The module path requires fork attribute to be set to true.");
             }

@@ -227,7 +227,7 @@ public class SubAnt extends Task {
                     log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
                 }
             } catch (RuntimeException ex) {
-                if (!(getProject().isKeepGoingMode())) {
+                if (!getProject().isKeepGoingMode()) {
                     if (verbose && subdirPath != null) {
                         log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
                     }
@@ -235,7 +235,7 @@ public class SubAnt extends Task {
                 }
                 thrownException = ex;
             } catch (Throwable ex) {
-                if (!(getProject().isKeepGoingMode())) {
+                if (!getProject().isKeepGoingMode()) {
                     if (verbose && subdirPath != null) {
                         log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
                     }

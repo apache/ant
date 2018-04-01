@@ -2174,8 +2174,7 @@ public class Javadoc extends Task {
     private void doDocFilesSubDirs(final Commandline toExecute) {
         if (docFilesSubDirs) {
             toExecute.createArgument().setValue("-docfilessubdirs");
-            if (!(excludeDocFilesSubDir == null
-                || excludeDocFilesSubDir.trim().isEmpty())) {
+            if (excludeDocFilesSubDir != null && !excludeDocFilesSubDir.trim().isEmpty()) {
                 toExecute.createArgument().setValue("-excludedocfilessubdir");
                 toExecute.createArgument().setValue(excludeDocFilesSubDir);
             }

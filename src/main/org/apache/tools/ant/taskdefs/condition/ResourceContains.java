@@ -88,8 +88,7 @@ public class ResourceContains implements Condition {
                         o = rc.iterator().next();
                     }
                 } else {
-                    throw new BuildException("Illegal value at '%s': %s", refid,
-                        o);
+                    throw new BuildException("Illegal value at '%s': %s", refid, o);
                 }
             }
             this.resource = (Resource) o;

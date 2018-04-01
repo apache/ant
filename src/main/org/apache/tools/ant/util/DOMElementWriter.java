@@ -550,7 +550,7 @@ public class DOMElementWriter {
      * @return true if it is an entity.
      */
     public boolean isReference(String ent) {
-        if (!(ent.charAt(0) == '&') || !ent.endsWith(";")) {
+        if (ent.charAt(0) != '&' || !ent.endsWith(";")) {
             return false;
         }
 

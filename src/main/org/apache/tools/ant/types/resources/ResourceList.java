@@ -110,7 +110,7 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (encoding != null) {
             throw tooManyAttributes();
         }
-        if (!(filterChains.isEmpty() && textDocuments.isEmpty())) {
+        if (!filterChains.isEmpty() || !textDocuments.isEmpty()) {
             throw noChildrenAllowed();
         }
         super.setRefid(r);

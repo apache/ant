@@ -748,7 +748,7 @@ public class Delete extends MatchingTask {
                     if (!f.exists()) {
                         continue;
                     }
-                    if (!(f.isDirectory()) || f.list().length == 0) {
+                    if (!f.isDirectory() || f.list().length == 0) {
                         log("Deleting " + f, verbosity);
                         if (!delete(f) && failonerror) {
                             handle("Unable to delete "

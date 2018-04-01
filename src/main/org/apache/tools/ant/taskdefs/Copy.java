@@ -909,7 +909,7 @@ public class Copy extends Task {
                 for (String dir : dirs) {
                     final File d = new File(dir);
                     if (!d.exists()) {
-                        if (!(d.mkdirs() || d.isDirectory())) {
+                        if (!d.mkdirs() && !d.isDirectory()) {
                             log("Unable to create directory "
                                 + d.getAbsolutePath(), Project.MSG_ERR);
                         } else {

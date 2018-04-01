@@ -665,12 +665,12 @@ public class FileUtils {
         char sep = File.separatorChar;
         filename = filename.replace('/', sep).replace('\\', sep);
         char c = filename.charAt(0);
-        if (!(ON_DOS || ON_NETWARE)) {
+        if (!ON_DOS && !ON_NETWARE) {
             return (c == sep);
         }
         if (c == sep) {
             // CheckStyle:MagicNumber OFF
-            if (!(ON_DOS && len > 4 && filename.charAt(1) == sep)) {
+            if (!ON_DOS || len <= 4 || filename.charAt(1) != sep) {
                 return false;
             }
             // CheckStyle:MagicNumber ON

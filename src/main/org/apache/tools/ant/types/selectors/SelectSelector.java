@@ -216,7 +216,7 @@ public class SelectSelector extends BaseSelectorContainer {
         validate();
 
         // Deal with if and unless properties first
-        if (!(passesConditions())) {
+        if (!passesConditions()) {
             return false;
         }
 

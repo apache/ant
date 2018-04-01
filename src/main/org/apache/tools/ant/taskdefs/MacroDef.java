@@ -729,8 +729,8 @@ public class MacroDef extends AntlibDefinition  {
         }
         if (getURI() == null || "".equals(getURI())
             || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
-            if (!(other.getURI() == null || "".equals(other.getURI())
-                  || other.getURI().equals(ProjectHelper.ANT_CORE_URI))) {
+            if (other.getURI() != null && !"".equals(other.getURI())
+                    && !other.getURI().equals(ProjectHelper.ANT_CORE_URI)) {
                 return false;
             }
         } else if (!getURI().equals(other.getURI())) {

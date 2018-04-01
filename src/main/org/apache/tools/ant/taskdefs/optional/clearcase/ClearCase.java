@@ -128,7 +128,7 @@ public abstract class ClearCase extends Task {
      */
     protected final String getClearToolCommand() {
         String toReturn = mClearToolDir;
-        if (!("".equals(toReturn) || toReturn.endsWith("/"))) {
+        if (!"".equals(toReturn) && !toReturn.endsWith("/")) {
             toReturn += "/";
         }
 

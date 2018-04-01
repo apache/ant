@@ -1768,9 +1768,8 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     //  to indicate that an attempt to create a directory has
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
-                    if (!(task.isIgnoreNoncriticalErrors() && (rc == CODE_550
-                                                               || rc == CODE_553
-                                                               || rc == CODE_521))) {
+                    if (!task.isIgnoreNoncriticalErrors()
+                            || rc != CODE_550 && rc != CODE_553 && rc != CODE_521) {
                         throw new BuildException("could not create directory: "
                                                  + ftp.getReplyString());
                     }
@@ -1799,9 +1798,8 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     private void handleMkDirFailure(FTPClient ftp)
         throws BuildException {
         int rc = ftp.getReplyCode();
-        if (!(task.isIgnoreNoncriticalErrors() && (rc == CODE_550
-                                                   || rc == CODE_553
-                                                   || rc == CODE_521))) {
+        if (!task.isIgnoreNoncriticalErrors()
+                || rc != CODE_550 && rc != CODE_553 && rc != CODE_521) {
             throw new BuildException("could not create directory: "
                                      + ftp.getReplyString());
         }

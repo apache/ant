@@ -320,7 +320,7 @@ public abstract class Definer extends DefBase {
      */
     private URL fileToURL() {
         String message = null;
-        if (!(file.exists())) {
+        if (!file.exists()) {
             message = "File " + file + " does not exist";
         }
         if (message == null && !(file.isFile())) {

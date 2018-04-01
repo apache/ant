@@ -160,8 +160,7 @@ public class BorlandGenerateClient extends Task {
             setMode(JAVA_MODE);
         }
 
-        if (!(version == BorlandDeploymentTool.BES
-            || version == BorlandDeploymentTool.BAS)) {
+        if (version != BorlandDeploymentTool.BES && version != BorlandDeploymentTool.BAS) {
             throw new BuildException("version %d is not supported", version);
         }
 

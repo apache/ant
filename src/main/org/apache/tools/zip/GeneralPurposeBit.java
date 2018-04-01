@@ -189,14 +189,15 @@ public final class GeneralPurposeBit implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof GeneralPurposeBit)) {
-            return false;
+        if (o instanceof GeneralPurposeBit) {
+            GeneralPurposeBit g = (GeneralPurposeBit) o;
+            return g.encryptionFlag == encryptionFlag
+                    && g.strongEncryptionFlag == strongEncryptionFlag
+                    && g.languageEncodingFlag == languageEncodingFlag
+                    && g.dataDescriptorFlag == dataDescriptorFlag;
         }
-        GeneralPurposeBit g = (GeneralPurposeBit) o;
-        return g.encryptionFlag == encryptionFlag
-            && g.strongEncryptionFlag == strongEncryptionFlag
-            && g.languageEncodingFlag == languageEncodingFlag
-            && g.dataDescriptorFlag == dataDescriptorFlag;
+
+        return false;
     }
 
     @Override

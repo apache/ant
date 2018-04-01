@@ -889,11 +889,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void ensureDirectoryFor(final File targetFile) throws BuildException {
         final File directory = targetFile.getParentFile();
-        if (!directory.exists()) {
-            if (!(directory.mkdirs() || directory.isDirectory())) {
-                handleError("Unable to create directory: "
-                            + directory.getAbsolutePath());
-            }
+        if (!directory.exists() && !directory.mkdirs() && !directory.isDirectory()) {
+            handleError("Unable to create directory: "
+                    + directory.getAbsolutePath());
         }
     }
 

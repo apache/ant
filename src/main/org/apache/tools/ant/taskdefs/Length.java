@@ -221,7 +221,7 @@ public class Length extends Task implements Condition {
                     "the mode attribute is for use with the file/resource length function");
             }
         } else if (resources != null) {
-            if (!(EACH.equals(mode) || ALL.equals(mode))) {
+            if (!EACH.equals(mode) && !ALL.equals(mode)) {
                 throw new BuildException(
                     "invalid mode setting for file/resource length function: \""
                         + mode + "\"");

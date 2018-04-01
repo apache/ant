@@ -138,13 +138,12 @@ public class Directory {
             return true;
         }
 
-        if (!(obj instanceof Directory)) {
-            return false;
+        if (obj instanceof Directory) {
+            Directory d = (Directory) obj;
+            return this.directory.equals(d.directory);
         }
 
-        Directory d = (Directory) obj;
-
-        return this.directory.equals(d.directory);
+        return false;
     }
 
     /**
