@@ -275,7 +275,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.1 stubs are good
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion11() {
@@ -284,7 +283,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.1 stubs are good
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion11Dest() {
@@ -293,8 +291,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.2 stubs are good
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion12() {
@@ -303,8 +299,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version 1.2 stubs are good
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersion12Dest() {
@@ -313,8 +307,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version compat stubs are good
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersionCompat() {
@@ -323,8 +315,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that version compat stubs are good
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testVersionCompatDest() {
@@ -333,8 +323,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that passes -Xnew to sun's rmic running in a different VM.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewForked() {
@@ -342,6 +330,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testXnewForked");
     }
 
+    /**
+     * test that passes -Xnew to sun's rmic running in a different VM.
+     */
     @Test
     public void testXnewForkedJava9plus() {
         assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
@@ -352,8 +343,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that passes -Xnew to sun's rmic running in a different VM.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewForkedDest() {
@@ -361,6 +350,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testXnewForkedDest");
     }
 
+    /**
+     * test that passes -Xnew to sun's rmic running in a different VM.
+     */
     @Test
     public void testXnewForkedDestJava9plus() {
         assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
@@ -371,8 +363,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that runs the new xnew compiler adapter.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewCompiler() {
@@ -380,6 +370,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testXnewCompiler");
     }
 
+    /**
+     * test that runs the new xnew compiler adapter.
+     */
     @Test
     public void testXnewCompilerJava9plus() {
         assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
@@ -390,8 +383,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that runs the new xnew compiler adapter.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testXnewCompilerDest() {
@@ -399,6 +390,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testXnewCompilerDest");
     }
 
+    /**
+     * test that runs the new xnew compiler adapter.
+     */
     @Test
     public void testXnewCompilerDestJava9plus() {
         assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
@@ -409,8 +403,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that verifies that IDL compiles.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testIDL() {
@@ -418,6 +410,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testIDL");
     }
 
+    /**
+     * test that verifies that IDL compiles.
+     */
     @Test
     public void testIDLJava11plus() {
         assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
@@ -428,8 +423,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that verifies that IDL compiles.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testIDLDest() {
@@ -437,6 +430,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testIDLDest");
     }
 
+    /**
+     * test that verifies that IDL compiles.
+     */
     @Test
     public void testIDLDestJava11plus() {
         assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
@@ -447,8 +443,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that verifies that IIOP compiles.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testIIOP() {
@@ -456,6 +450,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testIIOP");
     }
 
+    /**
+     * test that verifies that IIOP compiles.
+     */
     @Test
     public void testIIOPJava11plus() {
         assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));
@@ -466,8 +463,6 @@ public class RmicAdvancedTest {
 
     /**
      * test that verifies that IIOP compiles.
-     *
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testIIOPDest() {
@@ -475,6 +470,9 @@ public class RmicAdvancedTest {
         buildRule.executeTarget("testIIOPDest");
     }
 
+    /**
+     * test that verifies that IIOP compiles.
+     */
     @Test
     public void testIIOPDestJava11plus() {
         assumeTrue("Current system is Java 10 or older", JavaEnvUtils.isAtLeastJavaVersion("11"));

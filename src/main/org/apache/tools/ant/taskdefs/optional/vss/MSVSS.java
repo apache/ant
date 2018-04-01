@@ -640,7 +640,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return    True if the FailOnError flag has been set or if 'writablefiles=skip'.
      */
     private boolean getFailOnError() {
-        return getWritableFiles().equals(WRITABLE_SKIP) ? false : failOnError;
+        return !getWritableFiles().equals(WRITABLE_SKIP) && failOnError;
     }
 
 

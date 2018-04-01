@@ -44,9 +44,9 @@ public class SecureInputHandler extends DefaultInputHandler {
         try {
             Object console = ReflectUtil.invokeStatic(System.class, "console");
             do {
-                char[] input = (char[]) ReflectUtil.invoke(
+                char[] input = ReflectUtil.invoke(
                     console, "readPassword", String.class, prompt,
-                    Object[].class, (Object[]) null);
+                    Object[].class, null);
                 request.setInput(new String(input));
                 /* for security zero char array after retrieving value */
                 java.util.Arrays.fill(input, ' ');

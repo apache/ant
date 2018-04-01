@@ -81,22 +81,22 @@ public abstract class RegexpMatcherTest {
         Vector v = reg.getGroups("xaaaa");
         assertEquals("No parens -> no extra groups", 1, v.size());
         assertEquals("Trivial match with no parens", "aaaa",
-                     (String) v.elementAt(0));
+                v.elementAt(0));
 
         reg.setPattern("(aaaa)");
         v = reg.getGroups("xaaaa");
         assertEquals("Trivial match with single paren", 2, v.size());
         assertEquals("Trivial match with single paren, full match", "aaaa",
-                     (String) v.elementAt(0));
+                v.elementAt(0));
         assertEquals("Trivial match with single paren, matched paren", "aaaa",
-                     (String) v.elementAt(0));
+                v.elementAt(0));
 
         reg.setPattern("(a+)b(b+)");
         v = reg.getGroups("xaabb");
         assertEquals(3, v.size());
-        assertEquals("aabb", (String) v.elementAt(0));
-        assertEquals("aa", (String) v.elementAt(1));
-        assertEquals("b", (String) v.elementAt(2));
+        assertEquals("aabb", v.elementAt(0));
+        assertEquals("aa", v.elementAt(1));
+        assertEquals("b", v.elementAt(2));
     }
 
     @Test
@@ -134,7 +134,7 @@ public abstract class RegexpMatcherTest {
     }
 
     @Test
-    public void testNextLineCharacter() throws IOException {
+    public void testNextLineCharacter() {
         reg.setPattern("end of text$");
         assertTrue("next-line character", !reg.matches("end of text\u0085"));
     }
@@ -164,13 +164,11 @@ public abstract class RegexpMatcherTest {
     }
 
     @Test
-    public void testMultiVersusSingleLine() throws IOException {
-        StringBuilder buf = new StringBuilder();
-        buf.append("Line1").append(UNIX_LINE);
-        buf.append("starttest Line2").append(UNIX_LINE);
-        buf.append("Line3 endtest").append(UNIX_LINE);
-        buf.append("Line4").append(UNIX_LINE);
-        String text = buf.toString();
+    public void testMultiVersusSingleLine() {
+        String text = "Line1" + UNIX_LINE +
+                "starttest Line2" + UNIX_LINE +
+                "Line3 endtest" + UNIX_LINE +
+                "Line4" + UNIX_LINE;
 
         doStartTest1(text);
         doStartTest2(text);

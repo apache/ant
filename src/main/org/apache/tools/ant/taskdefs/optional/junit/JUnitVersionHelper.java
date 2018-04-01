@@ -46,11 +46,11 @@ public class JUnitVersionHelper {
 
     static {
         try {
-            testCaseName = TestCase.class.getMethod("getName", new Class[0]);
+            testCaseName = TestCase.class.getMethod("getName");
         } catch (NoSuchMethodException e) {
             // pre JUnit 3.7
             try {
-                testCaseName = TestCase.class.getMethod("name", new Class[0]);
+                testCaseName = TestCase.class.getMethod("name");
             } catch (NoSuchMethodException ignored) {
                 // ignore
             }

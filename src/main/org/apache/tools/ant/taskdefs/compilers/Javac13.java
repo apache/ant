@@ -54,8 +54,8 @@ public class Javac13 extends DefaultCompilerAdapter {
             Class<?> c = Class.forName("com.sun.tools.javac.Main");
             Object compiler = c.newInstance();
             Method compile = c.getMethod("compile", String[].class);
-            int result = ((Integer) compile.invoke(compiler,
-                (Object) cmd.getArguments())).intValue();
+            int result = (Integer) compile.invoke(compiler,
+                    (Object) cmd.getArguments());
             return result == MODERN_COMPILER_SUCCESS;
         } catch (Exception ex) {
             if (ex instanceof BuildException) {

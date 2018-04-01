@@ -65,7 +65,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher
                     c = argument.charAt(i);
                     int value = Character.digit(c, DECIMAL);
                     if (value > -1) {
-                        result.append((String) v.elementAt(value));
+                        result.append(v.elementAt(value));
                     } else {
                         result.append(c);
                     }

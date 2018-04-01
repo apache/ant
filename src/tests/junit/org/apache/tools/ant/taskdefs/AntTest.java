@@ -493,7 +493,7 @@ public class AntTest {
                     } else {
                         // a rather convoluted equals() test
                         Path expect = (Path) value;
-                        Path received = (Path) event.getProject().getReference(keys[calls]);
+                        Path received = event.getProject().getReference(keys[calls]);
                         boolean shouldBeEqual = expectSame[calls++];
                         if (received == null) {
                             assertTrue(msg, !shouldBeEqual);

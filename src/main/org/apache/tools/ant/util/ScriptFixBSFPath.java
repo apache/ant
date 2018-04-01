@@ -109,7 +109,7 @@ public class ScriptFixBSFPath {
         boolean needMoveRunner = (bsfSource == null);
 
         // Check for location of language
-        String languageClassName = (String) BSF_LANGUAGE_MAP.get(language);
+        String languageClassName = BSF_LANGUAGE_MAP.get(language);
 
         // Check if need to need to move bsf
         boolean needMoveBsf =

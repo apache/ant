@@ -306,7 +306,7 @@ public class DOMElementWriter {
         out.write("<");
         if (namespacePolicy.qualifyElements) {
             String uri = getNamespaceURI(element);
-            String prefix = (String) nsPrefixMap.get(uri);
+            String prefix = nsPrefixMap.get(uri);
             if (prefix == null) {
                 if (nsPrefixMap.isEmpty()) {
                     // steal default namespace
@@ -331,7 +331,7 @@ public class DOMElementWriter {
             out.write(" ");
             if (namespacePolicy.qualifyAttributes) {
                 String uri = getNamespaceURI(attr);
-                String prefix = (String) nsPrefixMap.get(uri);
+                String prefix = nsPrefixMap.get(uri);
                 if (prefix == null) {
                     prefix = NS + (nextPrefix++);
                     nsPrefixMap.put(uri, prefix);
@@ -399,7 +399,7 @@ public class DOMElementWriter {
         out.write("</");
         if (namespacePolicy.qualifyElements) {
             String uri = getNamespaceURI(element);
-            String prefix = (String) nsPrefixMap.get(uri);
+            String prefix = nsPrefixMap.get(uri);
             if (prefix != null && !"".equals(prefix)) {
                 out.write(prefix);
                 out.write(":");
@@ -607,11 +607,8 @@ public class DOMElementWriter {
         if (c < 0xE000) {
             return false;
         }
-        if (c <= 0xFFFD) {
-            return true;
-        }
+        return c <= 0xFFFD;
         // CheckStyle:MagicNumber ON
-        return false;
     }
 
     private void removeNSDefinitions(Element element) {

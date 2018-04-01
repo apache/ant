@@ -74,11 +74,11 @@ public class AntClassLoaderDelegationTest {
             FILE_UTILS.toURI(buildTestcases) + "org/" + TEST_RESOURCE);
         URL urlFromParent = new URL("http://ant.apache.org/" + TEST_RESOURCE);
         assertEquals("correct resources (regular delegation order)",
-            Arrays.asList(new URL[] {urlFromParent, urlFromPath}),
+            Arrays.asList(urlFromParent, urlFromPath),
             enum2List(acl.getResources(TEST_RESOURCE)));
         acl = new AntClassLoader(parent, p, path, false);
         assertEquals("correct resources (reverse delegation order)",
-            Arrays.asList(new URL[] {urlFromPath, urlFromParent}),
+            Arrays.asList(urlFromPath, urlFromParent),
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
 
@@ -98,11 +98,11 @@ public class AntClassLoaderDelegationTest {
         AntClassLoader acl = new AntClassLoader(parent, p, path, false);
         acl.setIsolated(true);
         assertEquals("correct resources (reverse delegation order)",
-            Arrays.asList(new URL[] {urlFromPath}),
+                Collections.singletonList(urlFromPath),
             enum2List(acl.getResources(TEST_RESOURCE)));
     }
 
-    private static List enum2List(Enumeration e) {
+    private static List<URL> enum2List(Enumeration<URL> e) {
         return Collections.list(e);
     }
 
@@ -112,13 +112,13 @@ public class AntClassLoaderDelegationTest {
         public ParentLoader() {
         }
 
-        protected Enumeration findResources(String name) throws IOException {
+        protected Enumeration<URL> findResources(String name) throws IOException {
             if (name.equals(TEST_RESOURCE)) {
                 return Collections.enumeration(
                     Collections.singleton(
                         new URL("http://ant.apache.org/" + name)));
             } else {
-                return Collections.enumeration(Collections.EMPTY_SET);
+                return Collections.enumeration(Collections.emptySet());
             }
         }
 

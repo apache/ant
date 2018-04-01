@@ -750,7 +750,7 @@ public class Tar extends MatchingTask {
      */
     protected TarFileSet asTarFileSet(final ArchiveFileSet archiveFileSet) {
         TarFileSet tfs;
-        if (archiveFileSet != null && archiveFileSet instanceof TarFileSet) {
+        if (archiveFileSet instanceof TarFileSet) {
             tfs = (TarFileSet) archiveFileSet;
         } else {
             tfs = new TarFileSet();

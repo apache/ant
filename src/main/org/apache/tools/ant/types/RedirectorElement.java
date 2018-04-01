@@ -464,16 +464,16 @@ public class RedirectorElement extends DataType {
         }
         dieOnCircularReference();
         if (alwaysLog != null) {
-            redirector.setAlwaysLog(alwaysLog.booleanValue());
+            redirector.setAlwaysLog(alwaysLog);
         }
         if (logError != null) {
-            redirector.setLogError(logError.booleanValue());
+            redirector.setLogError(logError);
         }
         if (append != null) {
-            redirector.setAppend(append.booleanValue());
+            redirector.setAppend(append);
         }
         if (createEmptyFiles != null) {
-            redirector.setCreateEmptyFiles(createEmptyFiles.booleanValue());
+            redirector.setCreateEmptyFiles(createEmptyFiles);
         }
         if (outputProperty != null) {
             redirector.setOutputProperty(outputProperty);
@@ -485,7 +485,7 @@ public class RedirectorElement extends DataType {
             redirector.setInputString(inputString);
         }
         if (logInputString != null) {
-            redirector.setLogInputString(logInputString.booleanValue());
+            redirector.setLogInputString(logInputString);
         }
         if (inputMapper != null) {
             String[] inputTargets = null;
@@ -578,7 +578,7 @@ public class RedirectorElement extends DataType {
                 list.add(getProject().resolveFile(n));
             }
         }
-        return (File[]) (list.toArray(new File[list.size()]));
+        return list.toArray(new File[list.size()]);
     }
 
     /**

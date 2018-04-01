@@ -377,7 +377,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's name.
      */
     public String getName() {
-        return name.toString();
+        return name;
     }
 
     /**
@@ -404,7 +404,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's link name.
      */
     public String getLinkName() {
-        return linkName.toString();
+        return linkName;
     }
 
     /**
@@ -504,7 +504,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's user name.
      */
     public String getUserName() {
-        return userName.toString();
+        return userName;
     }
 
     /**
@@ -522,7 +522,7 @@ public class TarEntry implements TarConstants {
      * @return This entry's group name.
      */
     public String getGroupName() {
-        return groupName.toString();
+        return groupName;
     }
 
     /**
@@ -745,15 +745,7 @@ public class TarEntry implements TarConstants {
             return file.isDirectory();
         }
 
-        if (linkFlag == LF_DIR) {
-            return true;
-        }
-
-        if (getName().endsWith("/")) {
-            return true;
-        }
-
-        return false;
+        return linkFlag == LF_DIR || getName().endsWith("/");
     }
 
     /**

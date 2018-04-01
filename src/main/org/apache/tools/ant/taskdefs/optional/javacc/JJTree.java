@@ -74,7 +74,7 @@ public class JJTree extends Task {
      * @param buildNodeFiles a <code>boolean</code> value.
      */
     public void setBuildnodefiles(boolean buildNodeFiles) {
-        optionalAttrs.put(BUILD_NODE_FILES, Boolean.valueOf(buildNodeFiles));
+        optionalAttrs.put(BUILD_NODE_FILES, buildNodeFiles);
     }
 
     /**
@@ -82,7 +82,7 @@ public class JJTree extends Task {
      * @param multi a <code>boolean</code> value.
      */
     public void setMulti(boolean multi) {
-        optionalAttrs.put(MULTI, Boolean.valueOf(multi));
+        optionalAttrs.put(MULTI, multi);
     }
 
     /**
@@ -90,7 +90,7 @@ public class JJTree extends Task {
      * @param nodeDefaultVoid a <code>boolean</code> value.
      */
     public void setNodedefaultvoid(boolean nodeDefaultVoid) {
-        optionalAttrs.put(NODE_DEFAULT_VOID, Boolean.valueOf(nodeDefaultVoid));
+        optionalAttrs.put(NODE_DEFAULT_VOID, nodeDefaultVoid);
     }
 
     /**
@@ -98,7 +98,7 @@ public class JJTree extends Task {
      * @param nodeFactory a <code>boolean</code> value.
      */
     public void setNodefactory(boolean nodeFactory) {
-        optionalAttrs.put(NODE_FACTORY, Boolean.valueOf(nodeFactory));
+        optionalAttrs.put(NODE_FACTORY, nodeFactory);
     }
 
     /**
@@ -106,7 +106,7 @@ public class JJTree extends Task {
      * @param nodeScopeHook a <code>boolean</code> value.
      */
     public void setNodescopehook(boolean nodeScopeHook) {
-        optionalAttrs.put(NODE_SCOPE_HOOK, Boolean.valueOf(nodeScopeHook));
+        optionalAttrs.put(NODE_SCOPE_HOOK, nodeScopeHook);
     }
 
     /**
@@ -114,7 +114,7 @@ public class JJTree extends Task {
      * @param nodeUsesParser a <code>boolean</code> value.
      */
     public void setNodeusesparser(boolean nodeUsesParser) {
-        optionalAttrs.put(NODE_USES_PARSER, Boolean.valueOf(nodeUsesParser));
+        optionalAttrs.put(NODE_USES_PARSER, nodeUsesParser);
     }
 
     /**
@@ -122,7 +122,7 @@ public class JJTree extends Task {
      * @param staticParser a <code>boolean</code> value.
      */
     public void setStatic(boolean staticParser) {
-        optionalAttrs.put(STATIC, Boolean.valueOf(staticParser));
+        optionalAttrs.put(STATIC, staticParser);
     }
 
     /**
@@ -130,7 +130,7 @@ public class JJTree extends Task {
      * @param visitor a <code>boolean</code> value.
      */
     public void setVisitor(boolean visitor) {
-        optionalAttrs.put(VISITOR, Boolean.valueOf(visitor));
+        optionalAttrs.put(VISITOR, visitor);
     }
 
     /**

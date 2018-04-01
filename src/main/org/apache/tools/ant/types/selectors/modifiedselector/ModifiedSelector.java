@@ -693,9 +693,7 @@ public class ModifiedSelector extends BaseExtendSelector
     @Override
     public void setParameters(Parameter... parameters) {
         if (parameters != null) {
-            for (Parameter p : parameters) {
-                configParameter.add(p);
-            }
+            Collections.addAll(configParameter, parameters);
         }
     }
 
@@ -777,14 +775,8 @@ public class ModifiedSelector extends BaseExtendSelector
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder("{modifiedselector");
-        buf.append(" update=").append(update);
-        buf.append(" seldirs=").append(selectDirectories);
-        buf.append(" cache=").append(cache);
-        buf.append(" algorithm=").append(algorithm);
-        buf.append(" comparator=").append(comparator);
-        buf.append("}");
-        return buf.toString();
+        return String.format("{modifiedselector update=%s seldirs=%s cache=%s algorithm=%s comparator=%s}",
+                update, selectDirectories, cache, algorithm, comparator);
     }
 
 

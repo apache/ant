@@ -111,8 +111,8 @@ public class MimeMailer extends Mailer {
                 return type;
             }
             // Must be like "text/plain; charset=windows-1251"
-            return new StringBuilder(type != null ? type : "text/plain").append(
-                "; charset=").append(charset).toString();
+            return (type != null ? type : "text/plain") +
+                    "; charset=" + charset;
         }
 
         @Override

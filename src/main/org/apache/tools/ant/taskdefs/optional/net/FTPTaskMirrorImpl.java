@@ -145,11 +145,11 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
          */
         @Override
         public String getParent() {
-            String result = "";
-            for(int i = 0; i < parts.length - 1; i++){
-                result += File.separatorChar + parts[i];
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < parts.length - 1; i++){
+                result.append(File.separatorChar).append(parts[i]);
             }
-            return result;
+            return result.toString();
         }
 
         /* (non-Javadoc)

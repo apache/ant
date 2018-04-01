@@ -42,7 +42,7 @@ public class XMLFragmentTest {
 
     @Test
     public void testNestedText() {
-        XMLFragment x = (XMLFragment) buildRule.getProject().getReference("nested-text");
+        XMLFragment x = buildRule.getProject().getReference("nested-text");
         assertNotNull(x);
         Node n = x.getFragment();
         assertTrue("No attributes", !n.hasAttributes());
@@ -55,7 +55,7 @@ public class XMLFragmentTest {
     @Test
     public void testNestedChildren() {
         XMLFragment x =
-            (XMLFragment) buildRule.getProject().getReference("with-children");
+                buildRule.getProject().getReference("with-children");
         assertNotNull(x);
         Node n = x.getFragment();
         assertTrue("No attributes", !n.hasAttributes());

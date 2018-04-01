@@ -439,9 +439,7 @@ public class Project implements ResourceFactory {
     public Vector<BuildListener> getBuildListeners() {
         synchronized (listenersLock) {
             final Vector<BuildListener> r = new Vector<>(listeners.length);
-            for (BuildListener listener : listeners) {
-                r.add(listener);
-            }
+            Collections.addAll(r, listeners);
             return r;
         }
     }

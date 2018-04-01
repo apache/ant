@@ -48,7 +48,7 @@ public class IsFalse extends ProjectComponent implements Condition {
         if (value == null) {
             throw new BuildException("Nothing to test for falsehood");
         }
-        return !value.booleanValue();
+        return !value;
     }
 
 }

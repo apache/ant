@@ -65,7 +65,7 @@ public class JJDoc extends Task {
      * @param plainText a <code>boolean</code> value.
      */
     public void setText(boolean plainText) {
-        optionalAttrs.put(TEXT, Boolean.valueOf(plainText));
+        optionalAttrs.put(TEXT, plainText);
         this.plainText = plainText;
     }
 
@@ -74,7 +74,7 @@ public class JJDoc extends Task {
      * @param oneTable a <code>boolean</code> value.
      */
     public void setOnetable(boolean oneTable) {
-        optionalAttrs.put(ONE_TABLE, Boolean.valueOf(oneTable));
+        optionalAttrs.put(ONE_TABLE, oneTable);
     }
 
     /**

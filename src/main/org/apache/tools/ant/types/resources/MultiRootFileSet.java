@@ -114,7 +114,7 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public Object clone() {
         if (isReference()) {
-            return ((MultiRootFileSet) getRef(getProject())).clone();
+            return getRef(getProject()).clone();
         }
         final MultiRootFileSet fs = (MultiRootFileSet) super.clone();
         fs.baseDirs = new ArrayList<>(baseDirs);
@@ -163,7 +163,7 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public String toString() {
         if (isReference()) {
-            return ((MultiRootFileSet) getRef(getProject())).toString();
+            return getRef(getProject()).toString();
         }
         return merge().toString();
     }

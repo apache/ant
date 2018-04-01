@@ -108,7 +108,7 @@ public class Native2AsciiAdapterFactory {
     private static Native2AsciiAdapter resolveClassName(String className,
                                                         ClassLoader loader)
         throws BuildException {
-        return (Native2AsciiAdapter) ClasspathUtils.newInstance(className,
+        return ClasspathUtils.newInstance(className,
             loader != null ? loader :
             Native2AsciiAdapterFactory.class.getClassLoader(),
             Native2AsciiAdapter.class);

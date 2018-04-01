@@ -85,7 +85,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     public void setRecordState(Boolean state) {
         if (state != null) {
             flush();
-            record = state.booleanValue();
+            record = state;
         }
     }
 

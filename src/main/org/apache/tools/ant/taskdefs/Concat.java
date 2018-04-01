@@ -355,9 +355,7 @@ public class Concat extends Task implements ResourceCollection {
          * add a character to the lastchars buffer
          */
         private void addLastChar(char ch) {
-            for (int i = lastChars.length - 2; i >= 0; --i) {
-                lastChars[i] = lastChars[i + 1];
-            }
+            System.arraycopy(lastChars, 1, lastChars, 0, lastChars.length - 2 + 1);
             lastChars[lastChars.length - 1] = ch;
         }
 

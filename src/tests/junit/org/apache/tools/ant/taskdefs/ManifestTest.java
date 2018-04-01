@@ -286,7 +286,7 @@ public class ManifestTest {
         value = mainSection.getAttributeValue(NOT_LONG_NAME);
         assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
 
-        Set set = new HashSet();
+        Set<String> set = new HashSet<>();
         FileReader fin = new FileReader(expandedManifest);
         try {
             BufferedReader in = new BufferedReader(fin);

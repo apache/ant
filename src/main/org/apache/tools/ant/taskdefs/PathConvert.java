@@ -356,7 +356,7 @@ public class PathConvert extends Task {
 
             StringBuilder rslt = new StringBuilder();
 
-            ResourceCollection resources = isPreserveDuplicates() ? (ResourceCollection) path : new Union(path);
+            ResourceCollection resources = isPreserveDuplicates() ? path : new Union(path);
             List<String> ret = new ArrayList<>();
             FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
             for (Resource r : resources) {

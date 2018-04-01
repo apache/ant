@@ -162,7 +162,7 @@ public class SoundTask extends Task {
                     Random rn = new Random();
                     int x = rn.nextInt(numfiles);
                     // set the source to the file at that location
-                    this.source = (File) files.elementAt(x);
+                    this.source = files.elementAt(x);
                 }
             } else {
                 log(source + ": invalid path.", Project.MSG_WARN);

@@ -297,9 +297,7 @@ public class ImportTask extends Task {
             }
             if (importedURL != null) {
                 URLProvider up = ((Resource) o).as(URLProvider.class);
-                if (up != null && up.getURL().equals(importedURL)) {
-                    return true;
-                }
+                return up != null && up.getURL().equals(importedURL);
             }
         }
         return false;

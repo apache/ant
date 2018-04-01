@@ -167,8 +167,7 @@ public final class DateUtils {
     public static String formatElapsedTime(long millis) {
         long seconds = millis / ONE_SECOND;
         long minutes = seconds / ONE_MINUTE;
-        Object[] args = {new Long(minutes), new Long(seconds % ONE_MINUTE)};
-        return MINUTE_SECONDS.format(args);
+        return MINUTE_SECONDS.format(new Object[]{minutes, seconds % ONE_MINUTE});
     }
 
     /**

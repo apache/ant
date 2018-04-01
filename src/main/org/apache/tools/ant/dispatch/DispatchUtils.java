@@ -43,9 +43,8 @@ public class DispatchUtils {
             } else if (task instanceof UnknownElement) {
                 UnknownElement ue = (UnknownElement) task;
                 Object realThing = ue.getRealThing();
-                if (realThing != null
-                    && realThing instanceof Dispatchable
-                    && realThing instanceof Task) {
+                if (realThing instanceof Dispatchable
+                        && realThing instanceof Task) {
                     dispatchable = (Dispatchable) realThing;
                 }
             }
@@ -59,7 +58,7 @@ public class DispatchUtils {
                             mName += name.substring(1);
                         }
                         final Class<? extends Dispatchable> c = dispatchable.getClass();
-                        final Method actionM = c.getMethod(mName, new Class[0]);
+                        final Method actionM = c.getMethod(mName);
                         if (actionM != null) {
                             final Object o = actionM.invoke(dispatchable, (Object[]) null);
                             if (o != null) {
@@ -68,7 +67,7 @@ public class DispatchUtils {
                                     methodName = s.trim();
                                     Method executeM = null;
                                     executeM = dispatchable.getClass().getMethod(
-                                        methodName, new Class[0]);
+                                        methodName);
                                     if (executeM == null) {
                                         throw new BuildException(
                                             "No public " + methodName + "() in "

@@ -66,14 +66,13 @@ public class BindTargets extends Task {
 
         if (getOwningTarget() == null
                 || !"".equals(getOwningTarget().getName())) {
-            throw new BuildException(
-                    "bindtargets only allowed as a top-level task");
+            throw new BuildException("bindtargets only allowed as a top-level task");
         }
 
         if (onMissingExtensionPoint == null) {
             onMissingExtensionPoint = OnMissingExtensionPoint.FAIL;
         }
-        final ProjectHelper helper = (ProjectHelper) getProject().getReference(
+        final ProjectHelper helper = getProject().getReference(
                 ProjectHelper.PROJECTHELPER_REFERENCE);
 
         for (String target : targets) {

@@ -279,10 +279,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             if (this.inMemoryStore != null && this.inMemoryStore.position() > 0) {
                 return true;
             }
-            if (this.usingFileStore && this.filePath != null) {
-                return true;
-            }
-            return false;
+            return this.usingFileStore && this.filePath != null;
         }
 
         @Override

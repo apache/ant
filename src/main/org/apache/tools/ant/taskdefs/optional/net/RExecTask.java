@@ -206,7 +206,7 @@ public class RExecTask extends Task {
             try {
                 StringBuilder sb = new StringBuilder();
                 int windowStart = -s.length();
-                if (timeout == null || timeout.intValue() == 0) {
+                if (timeout == null || timeout == 0) {
                     while (windowStart < 0
                            || !sb.substring(windowStart).equals(s)) {
                         sb.append((char) is.read());
@@ -214,7 +214,7 @@ public class RExecTask extends Task {
                     }
                 } else {
                     Calendar endTime = Calendar.getInstance();
-                    endTime.add(Calendar.SECOND, timeout.intValue());
+                    endTime.add(Calendar.SECOND, timeout);
                     while (windowStart < 0
                            || !sb.substring(windowStart).equals(s)) {
                         while (Calendar.getInstance().before(endTime)
@@ -265,7 +265,7 @@ public class RExecTask extends Task {
             InputStream is = this.getInputStream();
             try {
                 StringBuilder sb = new StringBuilder();
-                if (timeout == null || timeout.intValue() == 0) {
+                if (timeout == null || timeout == 0) {
                 int read;
                     while ((read = is.read()) != -1) {
                         char c = (char) read;
@@ -277,7 +277,7 @@ public class RExecTask extends Task {
                     }
                 } else {
                     Calendar endTime = Calendar.getInstance();
-                    endTime.add(Calendar.SECOND, timeout.intValue());
+                    endTime.add(Calendar.SECOND, timeout);
                 int read = 0;
                     while (read != -1) {
                         while (Calendar.getInstance().before(endTime) && is.available() == 0) {

@@ -381,8 +381,7 @@ public class PropertyHelper implements GetProperty {
     public static synchronized PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper = null;
         if (project != null) {
-            helper = (PropertyHelper) project.getReference(MagicNames
-                                                           .REFID_PROPERTY_HELPER);
+            helper = project.getReference(MagicNames.REFID_PROPERTY_HELPER);
         }
         if (helper != null) {
             return helper;
@@ -440,11 +439,8 @@ public class PropertyHelper implements GetProperty {
                                    boolean inherited, boolean user,
                                    boolean isNew) {
         if (getNext() != null) {
-            boolean subst = getNext().setPropertyHook(ns, name, value, inherited, user, isNew);
             // If next has handled the property
-            if (subst) {
-                return true;
-            }
+            return getNext().setPropertyHook(ns, name, value, inherited, user, isNew);
         }
         return false;
     }
@@ -1118,7 +1114,7 @@ public class PropertyHelper implements GetProperty {
     protected <D extends Delegate> List<D> getDelegates(Class<D> type) {
         @SuppressWarnings("unchecked")
         final List<D> result = (List<D>) delegates.get(type);
-        return result == null ? Collections.<D> emptyList() : result;
+        return result == null ? Collections.emptyList() : result;
     }
 
     /**
@@ -1193,7 +1189,7 @@ public class PropertyHelper implements GetProperty {
     private boolean evalAsBooleanOrPropertyName(Object value) {
         Boolean b = toBoolean(value);
         if (b != null) {
-            return b.booleanValue();
+            return b;
         }
         return getProperty(String.valueOf(value)) != null;
     }

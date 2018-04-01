@@ -116,15 +116,13 @@ public final class LineContainsRegExp
                 line = line.substring(1);
             }
         } else {
-            final int regexpsSize = regexps.size();
-
             for (line = readLine(); line != null; line = readLine()) {
                 boolean matches = true;
-                for (int i = 0; matches && i < regexpsSize; i++) {
-                    RegularExpression regexp
-                        = (RegularExpression) regexps.elementAt(i);
-                    Regexp re = regexp.getRegexp(getProject());
-                    matches = re.matches(line, regexpOptions);
+                for (RegularExpression regexp : regexps) {
+                    if (!regexp.getRegexp(getProject()).matches(line, regexpOptions)) {
+                        matches = false;
+                        break;
+                    }
                 }
                 if (matches ^ isNegated()) {
                     break;

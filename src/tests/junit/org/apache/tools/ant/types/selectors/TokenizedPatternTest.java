@@ -62,12 +62,12 @@ public class TokenizedPatternTest {
                    .withoutLastToken().matchPath(p, true));
     }
 
-    @Test
     /**
      * this test illustrates the behavior described in bugzilla 59114
      * meaning that the pattern "**" matches the empty path
      * but the pattern "*" does not
      */
+    @Test
     public void testEmptyFolderWithStarStar() {
         TokenizedPath p = TokenizedPath.EMPTY_PATH;
         assertTrue(new TokenizedPattern(SelectorUtils.DEEP_TREE_MATCH).matchPath(p, true));

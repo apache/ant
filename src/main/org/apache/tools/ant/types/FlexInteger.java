@@ -41,7 +41,7 @@ public class FlexInteger {
      * @return the integer value
      */
     public int intValue() {
-        return value.intValue();
+        return value;
     }
 
     /**

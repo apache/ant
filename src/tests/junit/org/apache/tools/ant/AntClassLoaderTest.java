@@ -29,11 +29,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -234,9 +234,9 @@ public class AntClassLoaderTest {
         public URL getResource(String n) {
             return null;
         }
-        @SuppressWarnings("unchecked")
-        public Enumeration getResources(String n) {
-            return new CollectionUtils.EmptyEnumeration();
+
+        public Enumeration<URL> getResources(String n) {
+            return Collections.emptyEnumeration();
         }
     }
 
@@ -244,6 +244,7 @@ public class AntClassLoaderTest {
         GetPackageWrapper(ClassLoader parent) {
             super(parent);
         }
+
         public Package getPackage(String s) {
             return super.getPackage(s);
         }

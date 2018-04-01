@@ -135,30 +135,30 @@ public class Execute {
                 procEnvironment = getVMSLogicals(in);
                 return procEnvironment;
             }
-            String var = null;
+            StringBuilder var = null;
             String line, lineSep = StringUtils.LINE_SEP;
             while ((line = in.readLine()) != null) {
                 if (line.indexOf('=') == -1) {
                     // Chunk part of previous env var (UNIX env vars can
                     // contain embedded new lines).
                     if (var == null) {
-                        var = lineSep + line;
+                        var = new StringBuilder(lineSep + line);
                     } else {
-                        var += lineSep + line;
+                        var.append(lineSep).append(line);
                     }
                 } else {
                     // New env var...append the previous one if we have it.
                     if (var != null) {
-                        int eq = var.indexOf('=');
+                        int eq = var.toString().indexOf('=');
                         procEnvironment.put(var.substring(0, eq),
                                             var.substring(eq + 1));
                     }
-                    var = line;
+                    var = new StringBuilder(line);
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.
             if (var != null) {
-                int eq = var.indexOf('=');
+                int eq = var.toString().indexOf('=');
                 procEnvironment.put(var.substring(0, eq), var.substring(eq + 1));
             }
         } catch (IOException exc) {

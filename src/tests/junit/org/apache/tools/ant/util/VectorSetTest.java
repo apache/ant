@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
 public class VectorSetTest {
 
     private static final Object O = new Object();
-    private VectorSet v = new VectorSet();
+    private VectorSet<Object> v = new VectorSet<>();
 
     @Test
     public void testAdd() {
@@ -57,13 +57,13 @@ public class VectorSetTest {
 
     @Test
     public void testAddAll() {
-        assertTrue(v.addAll(Arrays.asList(new Object[] {O, O})));
+        assertTrue(v.addAll(Arrays.asList(O, O)));
         assertEquals(1, v.size());
     }
 
     @Test
     public void testAddAll2() {
-        assertTrue(v.addAll(0, Arrays.asList(new Object[] {O, O})));
+        assertTrue(v.addAll(0, Arrays.asList(O, O)));
         assertEquals(1, v.size());
     }
 
@@ -75,11 +75,12 @@ public class VectorSetTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testClone() {
         v.add(O);
         Object o = v.clone();
         assertTrue(o instanceof VectorSet);
-        VectorSet vs = (VectorSet) o;
+        VectorSet<Object> vs = (VectorSet) o;
         assertEquals(1, vs.size());
         assertTrue(vs.contains(O));
     }
@@ -94,10 +95,10 @@ public class VectorSetTest {
 
     @Test
     public void testContainsAll() {
-        assertFalse(v.containsAll(Arrays.asList(new Object[] {O, O})));
+        assertFalse(v.containsAll(Arrays.asList(O, O)));
         v.add(O);
-        assertTrue(v.containsAll(Arrays.asList(new Object[] {O, O})));
-        assertFalse(v.containsAll(Arrays.asList(new Object[] {O, null})));
+        assertTrue(v.containsAll(Arrays.asList(O, O)));
+        assertFalse(v.containsAll(Arrays.asList(O, null)));
     }
 
     @Test
@@ -131,7 +132,7 @@ public class VectorSetTest {
 
     @Test
     public void testRemoveAtEndWhenSizeEqualsCapacity() {
-        v = new VectorSet(3, 1);
+        v = new VectorSet<>(3, 1);
         Object a = new Object();
         v.add(a);
         Object b = new Object();
@@ -148,7 +149,7 @@ public class VectorSetTest {
 
     @Test
     public void testRemoveAtFrontWhenSizeEqualsCapacity() {
-        v = new VectorSet(3, 1);
+        v = new VectorSet<>(3, 1);
         v.add(O);
         Object a = new Object();
         v.add(a);
@@ -165,7 +166,7 @@ public class VectorSetTest {
 
     @Test
     public void testRemoveInMiddleWhenSizeEqualsCapacity() {
-        v = new VectorSet(3, 1);
+        v = new VectorSet<>(3, 1);
         Object a = new Object();
         v.add(a);
         v.add(O);
@@ -183,9 +184,9 @@ public class VectorSetTest {
     @Test
     public void testRemoveAll() {
         v.add(O);
-        assertTrue(v.removeAll(Arrays.asList(new Object[] {O, O})));
+        assertTrue(v.removeAll(Arrays.asList(O, O)));
         assertEquals(0, v.size());
-        assertFalse(v.removeAll(Arrays.asList(new Object[] {O, O})));
+        assertFalse(v.removeAll(Arrays.asList(O, O)));
     }
 
     @Test
@@ -222,7 +223,7 @@ public class VectorSetTest {
         Object a = new Object();
         Object b = new Object();
         Object c = new Object();
-        v.addAll(Arrays.asList(new Object[] {O, a, b, c}));
+        v.addAll(Arrays.asList(O, a, b, c));
         v.removeRange(1, 3);
         assertEquals(2, v.size());
         assertTrue(v.contains(O));
@@ -234,9 +235,9 @@ public class VectorSetTest {
         Object a = new Object();
         Object b = new Object();
         Object c = new Object();
-        v.addAll(Arrays.asList(new Object[] {O, a, b, c}));
+        v.addAll(Arrays.asList(O, a, b, c));
         assertEquals(0, v.indexOf(O));
-        assertTrue(v.retainAll(Arrays.asList(new Object[] {c, O})));
+        assertTrue(v.retainAll(Arrays.asList(c, O)));
         assertEquals(2, v.size());
         assertTrue(v.contains(O));
         assertTrue(v.contains(c));

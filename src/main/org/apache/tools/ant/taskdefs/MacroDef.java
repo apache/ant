@@ -427,14 +427,8 @@ public class MacroDef extends AntlibDefinition  {
             } else if (!name.equals(other.name)) {
                 return false;
             }
-            if (defaultValue == null) {
-                if (other.defaultValue != null) {
-                    return false;
-                }
-            } else if (!defaultValue.equals(other.defaultValue)) {
-                return false;
-            }
-            return true;
+            return defaultValue == null ? other.defaultValue == null
+                    : defaultValue.equals(other.defaultValue);
         }
 
         /**

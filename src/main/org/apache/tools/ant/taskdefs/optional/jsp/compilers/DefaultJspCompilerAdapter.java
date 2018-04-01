@@ -50,15 +50,13 @@ public abstract class DefaultJspCompilerAdapter
         jspc.log("Compilation " + cmd.describeJavaCommand(),
                  Project.MSG_VERBOSE);
 
-        StringBuilder niceSourceList =
-            new StringBuilder(compileList.size() == 1 ? "File" : "Files")
-                .append(" to be compiled:").append(lSep)
-                .append(compileList.stream()
-                    .peek(arg -> cmd.createArgument().setValue(arg))
-                    .map(arg -> "    " + arg)
-                    .collect(Collectors.joining(lSep)));
-
-        jspc.log(niceSourceList.toString(), Project.MSG_VERBOSE);
+        String niceSourceList = (compileList.size() == 1 ? "File" : "Files") +
+                " to be compiled:" + lSep +
+                compileList.stream()
+                        .peek(arg -> cmd.createArgument().setValue(arg))
+                        .map(arg -> "    " + arg)
+                        .collect(Collectors.joining(lSep));
+        jspc.log(niceSourceList, Project.MSG_VERBOSE);
     }
 
     // CheckStyle:VisibilityModifier OFF - bc

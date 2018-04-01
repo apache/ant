@@ -57,12 +57,8 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
      * @return a string describing this object
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder("{containsselector text: ");
-        buf.append('"').append(contains).append('"');
-        buf.append(" casesensitive: ").append(casesensitive);
-        buf.append(" ignorewhitespace: ").append(ignorewhitespace);
-        buf.append("}");
-        return buf.toString();
+        return String.format("{containsselector text: \"%s\" casesensitive: %s ignorewhitespace: %s}",
+                contains, casesensitive, ignorewhitespace);
     }
 
     /**

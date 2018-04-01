@@ -125,7 +125,7 @@ public class ExecTask extends Task {
      */
     public void setTimeout(Integer value) {
         setTimeout(
-            (value == null) ? null : Long.valueOf(value.intValue()));
+            (value == null) ? null : (long) value);
     }
 
     /**
@@ -699,7 +699,7 @@ public class ExecTask extends Task {
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
         return (timeout == null)
-            ? null : new ExecuteWatchdog(timeout.longValue());
+            ? null : new ExecuteWatchdog(timeout);
     }
 
     /**

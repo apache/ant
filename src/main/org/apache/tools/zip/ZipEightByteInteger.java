@@ -207,10 +207,10 @@ public final class ZipEightByteInteger {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof ZipEightByteInteger)) {
-            return false;
+        if (o instanceof ZipEightByteInteger) {
+            return value.equals(((ZipEightByteInteger) o).getValue());
         }
-        return value.equals(((ZipEightByteInteger) o).getValue());
+        return false;
     }
 
     /**

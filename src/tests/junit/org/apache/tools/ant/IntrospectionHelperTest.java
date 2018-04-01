@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -220,7 +219,7 @@ public class IntrospectionHelperTest {
         Enumeration e = ih.getNestedElements();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-            Class expect = (Class) elemMap.get(name);
+            Class expect = elemMap.get(name);
             assertNotNull("Support for "+name+" in IntrospectioNHelperTest?",
                           expect);
             assertEquals("Return type of " + name, expect, ih.getElementType(name));
@@ -234,8 +233,8 @@ public class IntrospectionHelperTest {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
         Map<String, Class<?>> actualMap = ih.getNestedElementMap();
         for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
-            String elemName = (String) entry.getKey();
-            Class<?> elemClass = (Class) elemMap.get(elemName);
+            String elemName = entry.getKey();
+            Class<?> elemClass = elemMap.get(elemName);
             assertNotNull("Support for " + elemName +
                           " in IntrospectionHelperTest?", elemClass);
             assertEquals("Type of " + elemName, elemClass, entry.getValue());
@@ -461,8 +460,8 @@ public class IntrospectionHelperTest {
         }
     }
 
-    private Map getExpectedAttributes() {
-        Map attrMap = new Hashtable();
+    private Map<String, Class<?>> getExpectedAttributes() {
+        Map<String, Class<?>> attrMap = new Hashtable<>();
         attrMap.put("seven", String.class);
         attrMap.put("eight", Integer.TYPE);
         attrMap.put("nine", Integer.class);
@@ -511,8 +510,8 @@ public class IntrospectionHelperTest {
         Map<String, Class<?>> attrMap = getExpectedAttributes();
         Map<String, Class<?>> actualMap = ih.getAttributeMap();
         for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
-            String attrName = (String) entry.getKey();
-            Class attrClass = (Class) attrMap.get(attrName);
+            String attrName = entry.getKey();
+            Class attrClass = attrMap.get(attrName);
             assertNotNull("Support for " + attrName +
                           " in IntrospectionHelperTest?", attrClass);
             assertEquals("Type of " + attrName, attrClass, entry.getValue());
@@ -532,33 +531,33 @@ public class IntrospectionHelperTest {
     @Test
     public void testGetAttributeMethod() {
         assertAttrMethod("seven", "setSeven", String.class,
-                         "2", "3");
+                "2", "3");
         assertAttrMethod("eight", "setEight", Integer.TYPE,
-                         Integer.valueOf(2), Integer.valueOf(3));
+                2, 3);
         assertAttrMethod("nine", "setNine", Integer.class,
-                         Integer.valueOf(2), Integer.valueOf(3));
+                2, 3);
         assertAttrMethod("ten", "setTen", File.class,
-                         new File(projectBasedir + 2), new File("toto"));
+                new File(projectBasedir + 2), new File("toto"));
         assertAttrMethod("eleven", "setEleven", Boolean.TYPE,
-                         Boolean.FALSE, Boolean.TRUE);
+                Boolean.FALSE, Boolean.TRUE);
         assertAttrMethod("twelve", "setTwelve", Boolean.class,
-                         Boolean.FALSE, Boolean.TRUE);
+                Boolean.FALSE, Boolean.TRUE);
         assertAttrMethod("thirteen", "setThirteen", Class.class,
-                         Project.class, Map.class);
+                Project.class, Map.class);
         assertAttrMethod("fourteen", "setFourteen", StringBuffer.class,
-                         new StringBuffer("2"), new StringBuffer("3"));
+                new StringBuffer("2"), new StringBuffer("3"));
         assertAttrMethod("fifteen", "setFifteen", Character.TYPE,
-                         Character.valueOf('a'), Character.valueOf('b'));
+                'a', 'b');
         assertAttrMethod("sixteen", "setSixteen", Character.class,
-                         Character.valueOf('a'), Character.valueOf('b'));
+                'a', 'b');
         assertAttrMethod("seventeen", "setSeventeen", Byte.TYPE,
-                         Byte.valueOf((byte) 17), Byte.valueOf((byte) 10));
+                (byte) 17, (byte) 10);
         assertAttrMethod("eightteen", "setEightteen", Short.TYPE,
-                         Short.valueOf((short) 18), Short.valueOf((short) 10));
+                (short) 18, (short) 10);
         assertAttrMethod("nineteen", "setNineteen", Double.TYPE,
-                         Double.valueOf(19), Double.valueOf((short) 10));
+                19d, (double) (short) 10);
         assertAttrMethod("twenty", "setTwenty", Path.class,
-                         new File(projectBasedir + 20).toPath(), Paths.get("toto"));
+                new File(projectBasedir + 20).toPath(), Paths.get("toto"));
 
         try {
             assertAttrMethod("onehundred", null, null, null, null);
@@ -619,7 +618,7 @@ public class IntrospectionHelperTest {
     }
 
     public void setTwelve(Boolean b) {
-        assertTrue(!b.booleanValue());
+        assertTrue(!b);
     }
 
     public void setThirteen(Class c) {
@@ -702,7 +701,7 @@ public class IntrospectionHelperTest {
         assertEquals("Arg Type", methodArg, args[0]);
 
         try {
-            m.invoke(this, new Object[] { arg });
+            m.invoke(this, arg);
         } catch (IllegalAccessException e) {
             throw new BuildException(e);
         } catch (InvocationTargetException e) {
@@ -710,7 +709,7 @@ public class IntrospectionHelperTest {
         }
 
         try {
-            m.invoke(this, new Object[] { badArg });
+            m.invoke(this, badArg);
             fail("Should have raised an assertion exception");
         } catch (IllegalAccessException e) {
             throw new BuildException(e);
@@ -740,13 +739,13 @@ public class IntrospectionHelperTest {
         assertTrue(m.isEmpty());
     }
 
-    public void addConfigured(Hashtable h) {
+    public void addConfigured(Hashtable<String, String> h) {
         // Valid extension point, more derived than Map above, but *after* it!
         assertEquals(makeTable("key", "value"), h);
     }
 
-    private Hashtable makeTable(Object key, Object value) {
-        Hashtable table = new Hashtable();
+    private Hashtable<String, String> makeTable(String key, String value) {
+        Hashtable<String, String> table = new Hashtable<>();
         table.put(key, value);
         return table;
     }

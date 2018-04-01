@@ -124,7 +124,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
                 }
 
                 if (duration != null) {
-                    playClip(audioClip, duration.longValue());
+                    playClip(audioClip, duration);
                 } else {
                     playClip(audioClip, loops);
                 }

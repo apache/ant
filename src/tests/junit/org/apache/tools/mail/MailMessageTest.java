@@ -565,10 +565,10 @@ public class MailMessageTest {
         protected String subject = null;
         protected String message = null;
 
-        protected Vector replyToList = new Vector();
-        protected Vector toList = new Vector();
-        protected Vector ccList = new Vector();
-        protected Vector bccList = new Vector();
+        protected Vector<String> replyToList = new Vector<>();
+        protected Vector<String> toList = new Vector<>();
+        protected Vector<String> ccList = new Vector<>();
+        protected Vector<String> bccList = new Vector<>();
 
         ClientThread(int port) {
             this.port = port;

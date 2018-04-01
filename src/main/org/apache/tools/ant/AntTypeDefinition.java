@@ -307,11 +307,11 @@ public class AntTypeDefinition {
         // DataType can have a "no arg" constructor or take a single
         // Project argument.
         try {
-            ctor = newclass.getConstructor(new Class[0]);
+            ctor = newclass.getConstructor();
             noArg = true;
         } catch (NoSuchMethodException nse) {
             //can throw the same exception, if there is no this(Project) ctor.
-            ctor = newclass.getConstructor(new Class[] {Project.class});
+            ctor = newclass.getConstructor(Project.class);
             noArg = false;
         }
         //now we instantiate

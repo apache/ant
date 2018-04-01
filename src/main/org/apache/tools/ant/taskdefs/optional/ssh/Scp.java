@@ -364,10 +364,10 @@ public class Scp extends SSHBase {
                 }
                 message.setLogListener(this);
                 if (fileMode != null) {
-                    message.setFileMode(fileMode.intValue());
+                    message.setFileMode(fileMode);
                 }
                 if (dirMode != null) {
-                    message.setDirMode(dirMode.intValue());
+                    message.setDirMode(dirMode);
                 }
                 message.execute();
             }
@@ -399,10 +399,10 @@ public class Scp extends SSHBase {
             }
             message.setLogListener(this);
             if (fileMode != null) {
-                message.setFileMode(fileMode.intValue());
+                message.setFileMode(fileMode);
             }
             if (dirMode != null) {
-                message.setDirMode(dirMode.intValue());
+                message.setDirMode(dirMode);
             }
             message.execute();
         } finally {

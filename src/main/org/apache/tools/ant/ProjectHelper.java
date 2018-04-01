@@ -264,7 +264,7 @@ public class ProjectHelper {
      * @since Ant 1.8.0
      */
     public static void setInIncludeMode(boolean includeMode) {
-        inIncludeMode.set(Boolean.valueOf(includeMode));
+        inIncludeMode.set(includeMode);
     }
 
     // --------------------  Parse method  --------------------

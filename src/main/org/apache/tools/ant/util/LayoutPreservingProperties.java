@@ -180,13 +180,13 @@ public class LayoutPreservingProperties extends Properties {
 
         if (keyedPairLines.containsKey(key)) {
             final Integer i = keyedPairLines.get(key);
-            final Pair p = (Pair) logicalLines.get(i.intValue());
+            final Pair p = (Pair) logicalLines.get(i);
             p.setValue(value);
         } else {
             key = escapeName(key);
             final Pair p = new Pair(key, value);
             p.setNew(true);
-            keyedPairLines.put(key, Integer.valueOf(logicalLines.size()));
+            keyedPairLines.put(key, logicalLines.size());
             logicalLines.add(p);
         }
     }
@@ -204,9 +204,9 @@ public class LayoutPreservingProperties extends Properties {
         final Integer i = keyedPairLines.remove(key);
         if (null != i) {
             if (removeComments) {
-                removeCommentsEndingAt(i.intValue());
+                removeCommentsEndingAt(i);
             }
-            logicalLines.set(i.intValue(), null);
+            logicalLines.set(i, null);
         }
         return obj;
     }
@@ -363,7 +363,7 @@ public class LayoutPreservingProperties extends Properties {
                         // the new one
                         remove(key);
                     }
-                    keyedPairLines.put(key, Integer.valueOf(logicalLines.size()));
+                    keyedPairLines.put(key, logicalLines.size());
                 }
                 logicalLines.add(line);
                 logicalLineBuffer.setLength(0);

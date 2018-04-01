@@ -157,7 +157,7 @@ public class Recorder extends Task implements SubBuildListener {
         recorder.setMessageOutputLevel(loglevel);
         recorder.setEmacsMode(emacsMode);
         if (start != null) {
-            if (start.booleanValue()) {
+            if (start) {
                 recorder.reopenFile();
                 recorder.setRecordState(start);
             } else {
@@ -214,7 +214,7 @@ public class Recorder extends Task implements SubBuildListener {
             if (append == null) {
                 entry.openFile(false);
             } else {
-                entry.openFile(append.booleanValue());
+                entry.openFile(append);
             }
             entry.setProject(proj);
             recorderEntries.put(name, entry);

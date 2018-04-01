@@ -72,7 +72,6 @@ public class XsltTest {
 
     /**
      * check that the system id gets set properly on stylesheets.
-     * @throws Exception if something goes wrong.
      */
     @Test
     public void testStyleSheetWithInclude() {

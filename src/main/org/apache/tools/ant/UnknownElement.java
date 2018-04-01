@@ -503,8 +503,7 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
-        return realThing == null
-            || !(realThing instanceof Task) ? super.getTaskName()
+        return !(realThing instanceof Task) ? super.getTaskName()
                                             : ((Task) realThing).getTaskName();
     }
 
@@ -643,7 +642,7 @@ public class UnknownElement extends Task {
         }
         for (int i = 0; i < childrenSize; ++i) {
             // children cannot be null childrenSize would have been 0
-            UnknownElement child = (UnknownElement) children.get(i); //NOSONAR
+            UnknownElement child = children.get(i); //NOSONAR
             if (!child.similar(other.children.get(i))) {
                 return false;
             }

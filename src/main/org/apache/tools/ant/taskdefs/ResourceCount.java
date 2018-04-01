@@ -103,7 +103,7 @@ public class ResourceCount extends Task implements Condition {
      * @param c number of Resources as int.
      */
     public void setCount(int c) {
-        count = Integer.valueOf(c);
+        count = c;
     }
 
     /**

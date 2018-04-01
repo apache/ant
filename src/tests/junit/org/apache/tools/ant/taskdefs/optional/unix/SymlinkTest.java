@@ -297,8 +297,7 @@ public class SymlinkTest {
      * is {@code false}, then any existing symbolic link at the {@code link} location (whose target is a directory)
      * doesn't end up create a new symbolic link within the target directory.
      *
-     *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=58683">BZ-58683</a> for more details
      */
     @Test

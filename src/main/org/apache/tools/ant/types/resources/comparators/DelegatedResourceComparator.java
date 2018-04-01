@@ -66,11 +66,11 @@ public class DelegatedResourceComparator extends ResourceComparator {
         if (isReference()) {
             return getCheckedRef().equals(o);
         }
-        if (!(o instanceof DelegatedResourceComparator)) {
-            return false;
+        if (o instanceof DelegatedResourceComparator) {
+            List<ResourceComparator> ov = ((DelegatedResourceComparator) o).resourceComparators;
+            return resourceComparators == null ? ov == null : resourceComparators.equals(ov);
         }
-        List<ResourceComparator> ov = ((DelegatedResourceComparator) o).resourceComparators;
-        return resourceComparators == null ? ov == null : resourceComparators.equals(ov);
+        return false;
     }
 
     /**
@@ -107,11 +107,10 @@ s.
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            if (!(resourceComparators == null || resourceComparators.isEmpty())) {
+            if (resourceComparators != null && !resourceComparators.isEmpty()) {
                 for (ResourceComparator resourceComparator : resourceComparators) {
                     if (resourceComparator instanceof DataType) {
-                        pushAndInvokeCircularReferenceCheck((DataType) resourceComparator, stk,
-                                                            p);
+                        pushAndInvokeCircularReferenceCheck(resourceComparator, stk, p);
                     }
                 }
             }

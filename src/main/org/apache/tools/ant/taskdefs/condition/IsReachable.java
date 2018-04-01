@@ -179,8 +179,8 @@ public class IsReachable extends ProjectComponent implements Condition {
             Method reachableMethod =
                 InetAddress.class.getMethod(METHOD_NAME, Integer.class);
             try {
-                reachable = ((Boolean) reachableMethod.invoke(address,
-                    Integer.valueOf(timeout * SECOND))).booleanValue();
+                reachable = (Boolean) reachableMethod.invoke(address,
+                        timeout * SECOND);
             } catch (final IllegalAccessException e) {
                 //utterly implausible, but catered for anyway
                 throw new BuildException("When calling " + reachableMethod);

@@ -124,9 +124,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             return; // Quick return - no output do nothing.
         }
         try {
-            output
-                .write(new StringBuilder("Testsuite: ").append(suite.getName())
-                    .append(StringUtils.LINE_SEP).toString());
+            output.write("Testsuite: " + suite.getName() + StringUtils.LINE_SEP);
             output.flush();
         } catch (IOException ex) {
             throw new BuildException(ex);

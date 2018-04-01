@@ -1643,7 +1643,7 @@ public class JUnitTask extends Task {
         if (timeout == null) {
             return null;
         }
-        return new ExecuteWatchdog((long) timeout.intValue());
+        return new ExecuteWatchdog((long) timeout);
     }
 
     /**

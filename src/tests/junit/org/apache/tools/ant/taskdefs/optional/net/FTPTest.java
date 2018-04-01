@@ -213,7 +213,7 @@ public class FTPTest {
     public void testGetWithSelector() {
         buildRule.executeTarget("ftp-get-with-selector");
         assertContains("selectors are not supported in remote filesets", buildRule.getLog());
-        FileSet fsDestination = (FileSet) buildRule.getProject().getReference("fileset-destination-without-selector");
+        FileSet fsDestination = buildRule.getProject().getReference("fileset-destination-without-selector");
         DirectoryScanner dsDestination = fsDestination.getDirectoryScanner(buildRule.getProject());
         dsDestination.scan();
         String[] sortedDestinationDirectories = dsDestination.getIncludedDirectories();
@@ -226,7 +226,7 @@ public class FTPTest {
             sortedDestinationFiles[counter] =
                 sortedDestinationFiles[counter].replace(File.separatorChar, '/');
         }
-        FileSet fsSource =  (FileSet) buildRule.getProject().getReference("fileset-source-without-selector");
+        FileSet fsSource = buildRule.getProject().getReference("fileset-source-without-selector");
         DirectoryScanner dsSource = fsSource.getDirectoryScanner(buildRule.getProject());
         dsSource.scan();
         compareFiles(dsSource, sortedDestinationFiles, sortedDestinationDirectories);
@@ -251,7 +251,7 @@ public class FTPTest {
         Assume.assumeTrue(loginFailureMessage, loginSucceeded);
         Assume.assumeTrue("Could not change remote directory", changeRemoteDir(remoteTmpDir));
         buildRule.getProject().executeTarget("ftp-get-directory-no-symbolic-link");
-        FileSet fsDestination = (FileSet) buildRule.getProject().getReference("fileset-destination-without-selector");
+        FileSet fsDestination = buildRule.getProject().getReference("fileset-destination-without-selector");
         DirectoryScanner dsDestination = fsDestination.getDirectoryScanner(buildRule.getProject());
         dsDestination.scan();
         compareFiles(dsDestination, new String[] {}, new String[] {});
@@ -523,11 +523,11 @@ public class FTPTest {
      * of times a message has been emitted.
      */
     private class LogCounter extends DefaultLogger {
-        private Map searchMap = new HashMap();
+        private Map<String, Integer> searchMap = new HashMap<>();
         private int matchCount;
 
         public void addLogMessageToSearch(String message) {
-            searchMap.put(message, Integer.valueOf(0));
+            searchMap.put(message, 0);
         }
 
         /*
@@ -535,9 +535,9 @@ public class FTPTest {
          */
         public void messageLogged(BuildEvent event) {
             String message = event.getMessage();
-            Integer mcnt = (Integer) searchMap.get(message);
+            Integer mcnt = searchMap.get(message);
             if (null != mcnt) {
-                searchMap.put(message, Integer.valueOf(mcnt.intValue() + 1));
+                searchMap.put(message, mcnt + 1);
             }
             super.messageLogged(event);
         }
@@ -547,9 +547,9 @@ public class FTPTest {
          * to the log
          */
         public int getMatchCount(String message) {
-            Integer mcnt = (Integer) searchMap.get(message);
+            Integer mcnt = searchMap.get(message);
             if (null != mcnt) {
-                return mcnt.intValue();
+                return mcnt;
             }
             return 0;
         }

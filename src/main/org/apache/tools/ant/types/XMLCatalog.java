@@ -922,21 +922,17 @@ public class XMLCatalog extends DataType
             // in the classpath.
             //
             try {
-                setXMLCatalog =
-                    resolverImplClass.getMethod("setXMLCatalog",
-                                                new Class[] {XMLCatalog.class});
+                setXMLCatalog = resolverImplClass.getMethod("setXMLCatalog",
+                        XMLCatalog.class);
 
-                parseCatalog =
-                    resolverImplClass.getMethod("parseCatalog",
-                                                new Class[] {String.class});
+                parseCatalog = resolverImplClass.getMethod("parseCatalog",
+                        String.class);
 
-                resolveEntity =
-                    resolverImplClass.getMethod("resolveEntity",
-                                                new Class[] {String.class, String.class});
+                resolveEntity = resolverImplClass.getMethod("resolveEntity",
+                        String.class, String.class);
 
-                resolve =
-                    resolverImplClass.getMethod("resolve",
-                                                new Class[] {String.class, String.class});
+                resolve = resolverImplClass.getMethod("resolve",
+                        String.class, String.class);
             } catch (NoSuchMethodException ex) {
                 throw new BuildException(ex);
             }
@@ -986,9 +982,8 @@ public class XMLCatalog extends DataType
                 // this possibility.
                 //
                 try {
-                    result =
-                        (InputSource) resolveEntity.invoke(resolverImpl,
-                                                          new Object[] {publicId, systemId});
+                    result = (InputSource) resolveEntity.invoke(resolverImpl,
+                            new Object[] {publicId, systemId});
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1050,9 +1045,8 @@ public class XMLCatalog extends DataType
                     result = new SAXSource(source);
                 } else {
                     try {
-                        result =
-                            (SAXSource) resolve.invoke(resolverImpl,
-                                                      new Object[] {href, base});
+                        result = (SAXSource) resolve.invoke(resolverImpl,
+                                new Object[] {href, base});
                     } catch (Exception ex) {
                         throw new BuildException(ex);
                     }
@@ -1074,9 +1068,8 @@ public class XMLCatalog extends DataType
                     }
                 }
                 try {
-                    result =
-                        (SAXSource) resolve.invoke(resolverImpl,
-                                                  new Object[] {href, base});
+                    result = (SAXSource) resolve.invoke(resolverImpl,
+                            new Object[] {href, base});
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1096,8 +1089,7 @@ public class XMLCatalog extends DataType
             if (!externalCatalogsProcessed) {
 
                 try {
-                    setXMLCatalog.invoke(resolverImpl,
-                                         new Object[] {XMLCatalog.this});
+                    setXMLCatalog.invoke(resolverImpl, XMLCatalog.this);
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1112,8 +1104,7 @@ public class XMLCatalog extends DataType
                         File catFile = new File(catFileName);
                         log("Parsing " + catFile, Project.MSG_DEBUG);
                         try {
-                            parseCatalog.invoke(resolverImpl,
-                                    new Object[]{catFile.getPath()});
+                            parseCatalog.invoke(resolverImpl, catFile.getPath());
                         } catch (Exception ex) {
                             throw new BuildException(ex);
                         }

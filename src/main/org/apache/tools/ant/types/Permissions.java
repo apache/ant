@@ -155,7 +155,7 @@ public class Permissions {
             final String name = permission.getName();
             final String actions = permission.getActions();
             final Constructor<? extends java.security.Permission> ctr = clazz.getConstructor(PARAMS);
-            return ctr.newInstance(new Object[] {name, actions});
+            return ctr.newInstance(name, actions);
         } catch (final Exception e) {
             // Let the UnresolvedPermission handle it.
             return new UnresolvedPermission(permission.getClassName(),
@@ -318,10 +318,8 @@ public class Permissions {
                 final Set<String> as = parseActions(perm.getActions());
                 final int size = as.size();
                 as.removeAll(actions);
-                if (as.size() == size) {
-                    // None of the actions revoked, so all allowed.
-                    return false;
-                }
+                // If no actions removed, then all allowed
+                return as.size() != size;
             }
             return true;
         }

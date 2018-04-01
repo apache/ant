@@ -42,7 +42,7 @@ public class LocationTest {
     @Test
     public void testPlainTask() {
         buildRule.executeTarget("testPlainTask");
-        Echo e = (Echo) buildRule.getProject().getReference("echo");
+        Echo e = buildRule.getProject().getReference("echo");
         assertFalse(e.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(e.getLocation().getLineNumber() == 0);
     }
@@ -50,8 +50,8 @@ public class LocationTest {
     @Test
     public void testStandaloneType() {
         buildRule.executeTarget("testStandaloneType");
-        Echo e = (Echo) buildRule.getProject().getReference("echo2");
-        FileSet f = (FileSet) buildRule.getProject().getReference("fs");
+        Echo e = buildRule.getProject().getReference("echo2");
+        FileSet f = buildRule.getProject().getReference("fs");
         assertFalse(f.getLocation() == Location.UNKNOWN_LOCATION);
         assertEquals(e.getLocation().getLineNumber() + 1,
                      f.getLocation().getLineNumber());
@@ -60,7 +60,7 @@ public class LocationTest {
     @Test
     public void testConditionTask() {
         buildRule.executeTarget("testConditionTask");
-        TaskAdapter ta = (TaskAdapter) buildRule.getProject().getReference("cond");
+        TaskAdapter ta = buildRule.getProject().getReference("cond");
         ConditionTask c = (ConditionTask) ta.getProxy();
         assertFalse(c.getLocation() == Location.UNKNOWN_LOCATION);
         assertFalse(c.getLocation().getLineNumber() == 0);
@@ -69,7 +69,7 @@ public class LocationTest {
     @Test
     public void testMacrodefWrappedTask() {
         buildRule.executeTarget("testMacrodefWrappedTask");
-        Echo e = (Echo) buildRule.getProject().getReference("echo3");
+        Echo e = buildRule.getProject().getReference("echo3");
         assertTrue(buildRule.getLog().contains("Line: "
                 + (e.getLocation().getLineNumber() + 1)));
     }
@@ -77,7 +77,7 @@ public class LocationTest {
     @Test
     public void testPresetdefWrappedTask() {
         buildRule.executeTarget("testPresetdefWrappedTask");
-        Echo e = (Echo) buildRule.getProject().getReference("echo4");
+        Echo e = buildRule.getProject().getReference("echo4");
         assertTrue(buildRule.getLog().contains("Line: "
                 + (e.getLocation().getLineNumber() + 1)));
     }

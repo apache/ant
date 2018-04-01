@@ -85,7 +85,7 @@ public class CollectionUtils {
             Object key = e1.nextElement();
             Object value1 = d1.get(key);
             Object value2 = d2.get(key);
-            if (value2 == null || !value1.equals(value2)) {
+            if (!value1.equals(value2)) {
                 return false;
             }
         }

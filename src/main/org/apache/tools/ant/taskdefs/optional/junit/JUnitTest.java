@@ -129,7 +129,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
         this.haltOnFail = haltOnFailure;
         this.filtertrace = filtertrace;
         this.methodsSpecified = methods != null;
-        this.methods = methodsSpecified ? (String[]) methods.clone() : null;
+        this.methods = methodsSpecified ? methods.clone() : null;
         this.antThreadID = thread;
     }
 

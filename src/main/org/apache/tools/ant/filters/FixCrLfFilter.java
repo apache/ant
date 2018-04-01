@@ -273,8 +273,8 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
                 in = new MaskJavaTabLiteralsFilter(in);
             }
             // Add/Remove tabs
-            in = (tabs == AddAsisRemove.ADD) ? (Reader) new AddTabFilter(in, getTablength())
-                    : (Reader) new RemoveTabFilter(in, getTablength());
+            in = (tabs == AddAsisRemove.ADD) ? new AddTabFilter(in, getTablength())
+                    : new RemoveTabFilter(in, getTablength());
         }
         // Add missing EOF character
         in = (ctrlz == AddAsisRemove.ADD) ? new AddEofFilter(in) : in;

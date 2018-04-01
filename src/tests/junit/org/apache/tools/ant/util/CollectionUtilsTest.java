@@ -39,8 +39,8 @@ public class CollectionUtilsTest {
         assertTrue(!CollectionUtils.equals(null, new Vector()));
         assertTrue(!CollectionUtils.equals(new Vector(), null));
         assertTrue(CollectionUtils.equals(new Vector(), new Vector()));
-        Vector v1 = new Vector();
-        Stack s2 = new Stack();
+        Vector<String> v1 = new Vector<>();
+        Stack<String> s2 = new Stack<>();
         v1.addElement("foo");
         s2.push("foo");
         assertTrue(CollectionUtils.equals(v1, s2));
@@ -68,7 +68,7 @@ public class CollectionUtilsTest {
         assertTrue(!CollectionUtils.equals(null, new Hashtable()));
         assertTrue(!CollectionUtils.equals(new Hashtable(), null));
         assertTrue(CollectionUtils.equals(new Hashtable(), new Properties()));
-        Hashtable h1 = new Hashtable();
+        Hashtable<String, String> h1 = new Hashtable<>();
         Properties p2 = new Properties();
         h1.put("foo", "");
         p2.put("foo", "");

@@ -23,7 +23,6 @@ import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Path;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,8 +47,7 @@ public class ClasspathUtilsTest {
     @Test
     public void testOnlyOneInstance() {
         Enumeration enumeration;
-        String list = "";
-        ClassLoader c = ClasspathUtils.getUniqueClassLoaderForPath(p, (Path) null, false);
+        ClassLoader c = ClasspathUtils.getUniqueClassLoaderForPath(p, null, false);
         try {
             enumeration = c.getResources(
                 "org/apache/tools/ant/taskdefs/defaults.properties");
@@ -58,8 +56,9 @@ public class ClasspathUtilsTest {
                 "Could not get the defaults.properties resource", e);
         }
         int count = 0;
+        StringBuilder list = new StringBuilder();
         while (enumeration.hasMoreElements()) {
-            list = list + " " + enumeration.nextElement();
+            list.append(" ").append(enumeration.nextElement());
             count++;
         }
         assertTrue("Should be only one and not " + count + " " + list, count == 1);

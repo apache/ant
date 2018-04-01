@@ -115,8 +115,7 @@ public class Environment {
          */
         public String getContent() throws BuildException {
             validate();
-            return new StringBuilder(key.trim()).append("=")
-                .append(value.trim()).toString();
+            return key.trim() + "=" + value.trim();
         }
 
         /**

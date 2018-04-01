@@ -217,7 +217,7 @@ public class AntXMLContext {
         if (wStack.size() < 1) {
             return null;
         }
-        return (RuntimeConfigurable) wStack.elementAt(wStack.size() - 1);
+        return wStack.elementAt(wStack.size() - 1);
     }
 
     /**
@@ -229,7 +229,7 @@ public class AntXMLContext {
         if (wStack.size() < 2) {
             return null;
         }
-        return (RuntimeConfigurable) wStack.elementAt(wStack.size() - 2);
+        return wStack.elementAt(wStack.size() - 2);
     }
 
     /**
@@ -394,7 +394,7 @@ public class AntXMLContext {
         if (list == null || list.isEmpty()) {
             return null;
         }
-        return (String) list.get(list.size() - 1);
+        return list.get(list.size() - 1);
     }
 
     /**

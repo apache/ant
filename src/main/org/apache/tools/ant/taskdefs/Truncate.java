@@ -40,7 +40,7 @@ public class Truncate extends Task {
 
     private static final int BUFFER_SIZE = 1024;
 
-    private static final Long ZERO = new Long(0L);
+    private static final Long ZERO = 0L;
 
     private static final String NO_CHILD = "No files specified.";
 
@@ -91,7 +91,7 @@ public class Truncate extends Task {
      */
     public void setLength(Long length) {
         this.length = length;
-        if (length != null && length.longValue() < 0) {
+        if (length != null && length < 0) {
             throw new BuildException(INVALID_LENGTH + length);
         }
     }
@@ -159,7 +159,7 @@ public class Truncate extends Task {
     private void process(File f) {
         long len = f.length();
         long newLength = length == null
-                ? len + adjust.longValue() : length.longValue();
+                ? len + adjust : length;
 
         if (len == newLength) {
             //nothing to do!

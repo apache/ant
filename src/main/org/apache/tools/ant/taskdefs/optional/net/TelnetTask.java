@@ -348,7 +348,7 @@ public class TelnetTask extends Task {
             try {
                 StringBuilder sb = new StringBuilder();
                 int windowStart = -s.length();
-                if (timeout == null || timeout.intValue() == 0) {
+                if (timeout == null || timeout == 0) {
                     while (windowStart < 0
                            || !sb.substring(windowStart).equals(s)) {
                         sb.append((char) is.read());
@@ -356,7 +356,7 @@ public class TelnetTask extends Task {
                     }
                 } else {
                     Calendar endTime = Calendar.getInstance();
-                    endTime.add(Calendar.SECOND, timeout.intValue());
+                    endTime.add(Calendar.SECOND, timeout);
                     while (windowStart < 0
                            || !sb.substring(windowStart).equals(s)) {
                         while (Calendar.getInstance().before(endTime)

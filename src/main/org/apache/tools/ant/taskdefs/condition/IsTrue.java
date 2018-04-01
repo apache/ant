@@ -49,7 +49,7 @@ public class IsTrue extends ProjectComponent implements Condition {
         if (value == null) {
             throw new BuildException("Nothing to test for truth");
         }
-        return value.booleanValue();
+        return value;
     }
 
 }

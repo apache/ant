@@ -113,10 +113,7 @@ public class Http extends ProjectComponent implements Condition {
                     int code = http.getResponseCode();
                     log("Result code for " + spec + " was " + code,
                         Project.MSG_VERBOSE);
-                    if (code > 0 && code < errorsBeginAt) {
-                        return true;
-                    }
-                    return false;
+                    return code > 0 && code < errorsBeginAt;
                 }
             } catch (ProtocolException pe) {
                 throw new BuildException("Invalid HTTP protocol: "

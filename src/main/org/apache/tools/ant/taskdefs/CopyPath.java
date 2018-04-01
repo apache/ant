@@ -180,7 +180,7 @@ public class CopyPath extends Task {
         for (String sourceFileName : sourceFiles) {
 
             File sourceFile = new File(sourceFileName);
-            String[] toFiles = (String[]) mapper.mapFileName(sourceFileName);
+            String[] toFiles = mapper.mapFileName(sourceFileName);
             if (toFiles == null) {
                 continue;
             }

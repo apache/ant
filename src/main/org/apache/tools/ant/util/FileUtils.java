@@ -1642,9 +1642,7 @@ public class FileUtils {
         }
 
         // fill it up path with parts which were not equal
-        for (int i = same; i < toPathStack.length; i++) {
-            relativePathStack.add(toPathStack[i]);
-        }
+        relativePathStack.addAll(Arrays.asList(toPathStack).subList(same, toPathStack.length));
 
         return getPath(relativePathStack);
     }

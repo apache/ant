@@ -591,7 +591,7 @@ public class FilterSet extends DataType implements Cloneable {
                 "Infinite loop in tokens. Currently known tokens : "
                 + passedTokens.toString() + "\nProblem token : " + beginToken
                 + parent + endToken + " called from " + beginToken
-                + passedTokens.lastElement().toString() + endToken);
+                + passedTokens.lastElement() + endToken);
             recurseDepth--;
             return parent;
         }

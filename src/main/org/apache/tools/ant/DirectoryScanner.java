@@ -616,9 +616,7 @@ public class DirectoryScanner
     public static void resetDefaultExcludes() {
         synchronized (defaultExcludes) {
             defaultExcludes.clear();
-            for (String element : DEFAULTEXCLUDES) {
-                defaultExcludes.add(element);
-            }
+            Collections.addAll(defaultExcludes, DEFAULTEXCLUDES);
         }
     }
 
@@ -1046,16 +1044,11 @@ public class DirectoryScanner
     private boolean shouldSkipPattern(final String pattern) {
         if (FileUtils.isAbsolutePath(pattern)) {
             //skip abs. paths not under basedir, if set:
-            if (!(basedir == null || SelectorUtils.matchPatternStart(pattern,
-                                                basedir.getAbsolutePath(),
-                                                isCaseSensitive()))) {
-                return true;
-            }
-        } else if (basedir == null) {
-            //skip non-abs. paths if basedir == null:
-            return true;
+            return !(basedir == null || SelectorUtils.matchPatternStart(pattern,
+                    basedir.getAbsolutePath(), isCaseSensitive()));
         }
-        return false;
+
+        return basedir == null;
     }
 
     /**
@@ -1823,9 +1816,9 @@ public class DirectoryScanner
                 final String target = f.getCanonicalPath();
                 files.add(target);
 
-                String relPath = "";
+                StringBuilder relPath = new StringBuilder();
                 for (final String dir : directoryNamesFollowed) {
-                    relPath += "../";
+                    relPath.append("../");
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
                         files.add(f.getCanonicalPath());

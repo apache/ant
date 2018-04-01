@@ -105,8 +105,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             return; // Quick return - no output do nothing.
         }
         try {
-            out.write(new StringBuilder("Testsuite: ").append(suite.getName())
-                .append(StringUtils.LINE_SEP).toString().getBytes());
+            out.write(("Testsuite: " + suite.getName() +
+                    StringUtils.LINE_SEP).getBytes());
             out.flush();
         } catch (IOException ex) {
             throw new BuildException("Unable to write output", ex);
@@ -122,19 +122,9 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     public void endTestSuite(JUnitTest suite) throws BuildException {
         boolean success = false;
         try {
-            StringBuilder sb = new StringBuilder("Tests run: ");
-            sb.append(suite.runCount());
-            sb.append(", Failures: ");
-            sb.append(suite.failureCount());
-            sb.append(", Errors: ");
-            sb.append(suite.errorCount());
-            sb.append(", Skipped: ");
-            sb.append(suite.skipCount());
-            sb.append(", Time elapsed: ");
-            sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
-            sb.append(" sec");
-            sb.append(StringUtils.LINE_SEP);
-            write(sb.toString());
+            write(String.format("Tests run: %d, Failures: %d, Errors: %d, Skipped: %d, Time elapsed: %s sec%n",
+                    suite.runCount(), suite.failureCount(), suite.errorCount(), suite.skipCount(),
+                    nf.format(suite.getRunTime() / ONE_SECOND)));
 
             // write the err and output streams to the log
             if (systemOutput != null && systemOutput.length() > 0) {
@@ -190,7 +180,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
      */
     @Override
     public void startTest(Test t) {
-        testStarts.put(t, new Long(System.currentTimeMillis()));
+        testStarts.put(t, System.currentTimeMillis());
         failed.put(t, Boolean.FALSE);
     }
 
@@ -214,7 +204,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                 // can be null if an error occurred in setUp
                 if (l != null) {
                     seconds =
-                        (System.currentTimeMillis() - l.longValue()) / ONE_SECOND;
+                        (System.currentTimeMillis() - l) / ONE_SECOND;
                 }
 
                 wri.write(" took " + nf.format(seconds) + " sec");

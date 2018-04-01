@@ -332,33 +332,22 @@ public final class Specification {
         }
 
         // Available specification version must be >= required
-        final DeweyDecimal otherSpecificationVersion
-            = other.getSpecificationVersion();
-        if (null != specificationVersion) {
-            if (null == otherSpecificationVersion
-                || !isCompatible(specificationVersion, otherSpecificationVersion)) {
-                return REQUIRE_SPECIFICATION_UPGRADE;
-            }
+        final DeweyDecimal otherSpecificationVersion = other.getSpecificationVersion();
+        if (null != specificationVersion && (null == otherSpecificationVersion
+                || !isCompatible(specificationVersion, otherSpecificationVersion))) {
+            return REQUIRE_SPECIFICATION_UPGRADE;
         }
 
         // Implementation Vendor ID must match
-        final String otherImplementationVendor
-            = other.getImplementationVendor();
-        if (null != implementationVendor) {
-            if (null == otherImplementationVendor
-                || !implementationVendor.equals(otherImplementationVendor)) {
-                return REQUIRE_VENDOR_SWITCH;
-            }
+        if (null != implementationVendor
+                && !implementationVendor.equals(other.getImplementationVendor())) {
+            return REQUIRE_VENDOR_SWITCH;
         }
 
         // Implementation version must be >= required
-        final String otherImplementationVersion
-            = other.getImplementationVersion();
-        if (null != implementationVersion) {
-            if (null == otherImplementationVersion
-                || !implementationVersion.equals(otherImplementationVersion)) {
-                return REQUIRE_IMPLEMENTATION_CHANGE;
-            }
+        if (null != implementationVersion
+                && !implementationVersion.equals(other.getImplementationVersion())) {
+            return REQUIRE_IMPLEMENTATION_CHANGE;
         }
 
         // This available optional package satisfies the requirements

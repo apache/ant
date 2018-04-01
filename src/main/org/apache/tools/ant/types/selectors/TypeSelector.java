@@ -39,10 +39,7 @@ public class TypeSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder("{typeselector type: ");
-        buf.append(type);
-        buf.append("}");
-        return buf.toString();
+        return "{typeselector type: " + type + "}";
     }
 
     /**

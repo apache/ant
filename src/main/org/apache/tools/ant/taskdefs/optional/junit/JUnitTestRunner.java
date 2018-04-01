@@ -306,7 +306,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         this.haltOnFailure = haltOnFailure;
         this.showOutput = showOutput;
         this.logTestListenerEvents = logTestListenerEvents;
-        this.methods = methods != null ? (String[]) methods.clone() : null;
+        this.methods = methods != null ? methods.clone() : null;
         this.loader = loader;
     }
 

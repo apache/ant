@@ -117,7 +117,7 @@ public class Exit extends Task {
      * @param i   the <code>int</code> status
      */
     public void setStatus(int i) {
-        status = Integer.valueOf(i);
+        status = i;
     }
 
     /**
@@ -162,7 +162,7 @@ public class Exit extends Task {
             }
             log("failing due to " + text, Project.MSG_DEBUG);
             throw status == null ? new BuildException(text)
-                : new ExitStatusException(text, status.intValue());
+                : new ExitStatusException(text, status);
         }
     }
 

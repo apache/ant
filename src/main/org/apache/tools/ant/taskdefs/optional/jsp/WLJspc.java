@@ -307,14 +307,14 @@ public class WLJspc extends MatchingTask {
      */
     protected String replaceString(String inpString, String escapeChars,
                                    String replaceChars) {
-        String localString = "";
+        StringBuilder localString = new StringBuilder();
         StringTokenizer st = new StringTokenizer(inpString, escapeChars, true);
         int numTokens = st.countTokens();
         for (int i = 0; i < numTokens; i++) {
             String test = st.nextToken();
             test = (test.equals(escapeChars) ? replaceChars : test);
-            localString += test;
+            localString.append(test);
         }
-        return localString;
+        return localString.toString();
     }
 }

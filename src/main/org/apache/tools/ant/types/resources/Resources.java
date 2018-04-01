@@ -275,6 +275,6 @@ public class Resources extends DataType implements ResourceCollection {
     }
 
     private synchronized List<ResourceCollection> getNested() {
-        return rc == null ? Collections.<ResourceCollection> emptyList() : rc;
+        return rc == null ? Collections.emptyList() : rc;
     }
 }

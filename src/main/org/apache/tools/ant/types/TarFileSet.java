@@ -249,7 +249,7 @@ public class TarFileSet extends ArchiveFileSet {
     @Override
     public Object clone() {
         if (isReference()) {
-            return ((TarFileSet) getRef(getProject())).clone();
+            return getRef(getProject()).clone();
         }
         return super.clone();
     }

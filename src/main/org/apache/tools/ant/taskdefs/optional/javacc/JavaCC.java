@@ -111,7 +111,7 @@ public class JavaCC extends Task {
      * @param lookahead an <code>int</code> value.
      */
     public void setLookahead(int lookahead) {
-        optionalAttrs.put(LOOKAHEAD, Integer.valueOf(lookahead));
+        optionalAttrs.put(LOOKAHEAD, lookahead);
     }
 
     /**
@@ -119,7 +119,7 @@ public class JavaCC extends Task {
      * @param choiceAmbiguityCheck an <code>int</code> value.
      */
     public void setChoiceambiguitycheck(int choiceAmbiguityCheck) {
-        optionalAttrs.put(CHOICE_AMBIGUITY_CHECK, Integer.valueOf(choiceAmbiguityCheck));
+        optionalAttrs.put(CHOICE_AMBIGUITY_CHECK, choiceAmbiguityCheck);
     }
 
     /**
@@ -127,7 +127,7 @@ public class JavaCC extends Task {
      * @param otherAmbiguityCheck an <code>int</code> value.
      */
     public void setOtherambiguityCheck(int otherAmbiguityCheck) {
-        optionalAttrs.put(OTHER_AMBIGUITY_CHECK, Integer.valueOf(otherAmbiguityCheck));
+        optionalAttrs.put(OTHER_AMBIGUITY_CHECK, otherAmbiguityCheck);
     }
 
     /**

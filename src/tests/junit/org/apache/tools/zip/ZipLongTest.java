@@ -71,7 +71,7 @@ public class ZipLongTest {
         assertTrue("symmetric", zl2.equals(zl));
 
         assertTrue("null handling", !zl.equals(null));
-        assertTrue("non ZipLong handling", !zl.equals(Integer.valueOf(0x1234)));
+        assertTrue("non ZipLong handling", !zl.equals(0x1234));
     }
 
     /**

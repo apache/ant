@@ -41,7 +41,7 @@ public class IntegerCPInfo extends ConstantCPInfo {
      */
     @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(Integer.valueOf(cpStream.readInt()));
+        setValue(cpStream.readInt());
     }
 
     /**

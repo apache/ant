@@ -41,7 +41,7 @@ public class LongCPInfo extends ConstantCPInfo {
      */
     @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(Long.valueOf(cpStream.readLong()));
+        setValue(cpStream.readLong());
     }
 
     /**

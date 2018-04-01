@@ -420,7 +420,7 @@ public class ScpToMessage extends AbstractSshMessage {
      * @since Ant 1.9.5
      */
     public int getFileMode() {
-        return fileMode != null ? fileMode.intValue() : DEFAULT_FILE_MODE;
+        return fileMode != null ? fileMode : DEFAULT_FILE_MODE;
     }
 
     /**
@@ -438,7 +438,7 @@ public class ScpToMessage extends AbstractSshMessage {
      * @since Ant 1.9.5
      */
     public int getDirMode() {
-        return dirMode != null ? dirMode.intValue() : DEFAULT_DIR_MODE;
+        return dirMode != null ? dirMode : DEFAULT_DIR_MODE;
     }
 
     /**

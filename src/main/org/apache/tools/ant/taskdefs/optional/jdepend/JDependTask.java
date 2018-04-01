@@ -624,7 +624,7 @@ public class JDependTask extends Task {
         if (getTimeout() == null) {
             return null;
         }
-        return new ExecuteWatchdog(getTimeout().longValue());
+        return new ExecuteWatchdog(getTimeout());
     }
 
     private Optional<Path> getWorkingPath() {

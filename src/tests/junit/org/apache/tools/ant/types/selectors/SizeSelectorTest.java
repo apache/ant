@@ -224,7 +224,7 @@ public class SizeSelectorTest {
         p.setName(name);
         p.setValue("foo");
         try {
-            s.setParameters(new Parameter[] {p});
+            s.setParameters(p);
             fail("should have caused an exception");
         } catch (BuildException be) {
             assertEquals("foo is not a legal value for this attribute",

@@ -108,7 +108,7 @@ public class Length extends Task implements Condition {
      * @param ell the long length to compare with.
      */
     public synchronized void setLength(long ell) {
-        length = Long.valueOf(ell);
+        length = ell;
     }
 
     /**
@@ -152,7 +152,7 @@ public class Length extends Task implements Condition {
      * @param trim <code>boolean</code>.
      */
     public synchronized void setTrim(boolean trim) {
-        this.trim = Boolean.valueOf(trim);
+        this.trim = trim;
     }
 
     /**
@@ -201,11 +201,11 @@ public class Length extends Task implements Condition {
         }
         Long ell;
         if (STRING.equals(mode)) {
-            ell = Long.valueOf(getLength(string, getTrim()));
+            ell = getLength(string, getTrim());
         } else {
             AccumHandler h = new AccumHandler();
             handleResources(h);
-            ell = Long.valueOf(h.getAccum());
+            ell = h.getAccum();
         }
         return when.evaluate(ell.compareTo(length));
     }

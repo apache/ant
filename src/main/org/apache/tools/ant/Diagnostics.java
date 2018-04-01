@@ -18,7 +18,6 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -122,8 +121,7 @@ public final class Diagnostics {
      * @return array of files (or null for no such directory)
      */
     private static File[] listJarFiles(File libDir) {
-        return libDir
-            .listFiles((FilenameFilter) (dir, name) -> name.endsWith(".jar"));
+        return libDir.listFiles((dir, name) -> name.endsWith(".jar"));
     }
 
     /**
@@ -451,7 +449,7 @@ public final class Diagnostics {
         try {
             Class<?> which = Class.forName("org.apache.env.Which");
             Method method = which.getMethod(
-                "main", new Class[] {String[].class});
+                "main", String[].class);
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");

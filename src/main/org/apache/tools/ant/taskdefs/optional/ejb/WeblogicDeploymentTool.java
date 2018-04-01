@@ -830,8 +830,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     rebuild = true;
                 }
             }
-            if (genericLoader != null
-                && genericLoader instanceof AntClassLoader) {
+            if (genericLoader instanceof AntClassLoader) {
                 @SuppressWarnings("resource")
                 AntClassLoader loader = (AntClassLoader) genericLoader;
                 loader.cleanup();

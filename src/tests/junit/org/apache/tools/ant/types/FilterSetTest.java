@@ -152,23 +152,23 @@ public class FilterSetTest {
     public void testNestedFilterSets() {
         buildRule.executeTarget("test-nested-filtersets");
 
-        FilterSet fs = (FilterSet) buildRule.getProject().getReference("1");
+        FilterSet fs = buildRule.getProject().getReference("1");
         Hashtable filters = fs.getFilterHash();
         assertEquals(1, filters.size());
         assertEquals("value1", filters.get("token1"));
 
-        fs = (FilterSet) buildRule.getProject().getReference("2");
+        fs = buildRule.getProject().getReference("2");
         filters = fs.getFilterHash();
         assertEquals(2, filters.size());
         assertEquals("1111", filters.get("aaaa"));
         assertEquals("2222", filters.get("bbbb"));
 
-        fs = (FilterSet) buildRule.getProject().getReference("3");
+        fs = buildRule.getProject().getReference("3");
         filters = fs.getFilterHash();
         assertEquals(1, filters.size());
         assertEquals("value4", filters.get("token4"));
 
-        fs = (FilterSet) buildRule.getProject().getReference("5");
+        fs = buildRule.getProject().getReference("5");
         filters = fs.getFilterHash();
         assertEquals(1, filters.size());
         assertEquals("value1", filters.get("token1"));

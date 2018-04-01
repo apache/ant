@@ -766,7 +766,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (preserveBC == null) {
             preserveBC = delegateIteratorToList() ? Boolean.TRUE : Boolean.FALSE;
         }
-        return preserveBC.booleanValue();
+        return preserveBC;
     }
 
     /**

@@ -222,7 +222,7 @@ public final class SortFilter extends BaseParamFilterReader
             }
 
             if (iterator.hasNext()) {
-                line = (String) iterator.next();
+                line = iterator.next();
             } else {
                 line = null;
                 lines = null;
@@ -317,12 +317,12 @@ public final class SortFilter extends BaseParamFilterReader
             for (Parameter param : params) {
                 final String paramName = param.getName();
                 if (REVERSE_KEY.equals(paramName)) {
-                    setReverse(Boolean.valueOf(param.getValue()).booleanValue());
+                    setReverse(Boolean.valueOf(param.getValue()));
                     continue;
                 }
                 if (COMPARATOR_KEY.equals(paramName)) {
                     try {
-                        String className = (String) param.getValue();
+                        String className = param.getValue();
                         @SuppressWarnings("unchecked")
                         final Comparator<? super String> comparatorInstance
                                 = (Comparator<? super String>) (Class.forName(className).newInstance());

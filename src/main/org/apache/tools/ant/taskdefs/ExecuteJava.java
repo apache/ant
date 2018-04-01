@@ -142,7 +142,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     "Could not find %s. Make sure you have it in your classpath",
                     classname);
             }
-            main = target.getMethod("main", new Class[] {String[].class});
+            main = target.getMethod("main", String[].class);
             if (main == null) {
                 throw new BuildException("Could not find main() method in %s",
                     classname);
@@ -164,7 +164,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 // main thread will still be there to let the new thread
                 // finish
                 thread.setDaemon(true);
-                Watchdog w = new Watchdog(timeout.longValue());
+                Watchdog w = new Watchdog(timeout);
                 w.addTimeoutObserver(this);
                 synchronized (this) {
                     thread.start();
@@ -289,7 +289,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             = new Execute(redirector.createHandler(),
                           timeout == null
                           ? null
-                          : new ExecuteWatchdog(timeout.longValue()));
+                          : new ExecuteWatchdog(timeout));
         exe.setAntRun(pc.getProject());
         if (Os.isFamily("openvms")) {
             setupCommandLineForVMS(exe, cmdl.getCommandline());

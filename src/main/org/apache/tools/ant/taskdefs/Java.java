@@ -987,7 +987,7 @@ public class Java extends Task {
         if (timeout == null) {
             return null;
         }
-        return new ExecuteWatchdog(timeout.longValue());
+        return new ExecuteWatchdog(timeout);
     }
 
     /**

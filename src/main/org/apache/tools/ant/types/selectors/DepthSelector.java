@@ -50,11 +50,7 @@ public class DepthSelector extends BaseExtendSelector {
      * @return a string describing this object
      */
     public String toString() {
-        StringBuilder buf = new StringBuilder("{depthselector");
-        buf.append(" min: ").append(min);
-        buf.append(" max: ").append(max);
-        buf.append("}");
-        return buf.toString();
+        return "{depthselector min: " + min + " max: " + max + "}";
     }
 
     /**
@@ -164,9 +160,6 @@ public class DepthSelector extends BaseExtendSelector {
             throw new BuildException("File %s is outside of %s directory tree",
                 filename, absBase);
         }
-        if (min > -1 && depth < min) {
-            return false;
-        }
-        return true;
+        return min <= -1 || depth >= min;
     }
 }

@@ -61,9 +61,7 @@ public class Directory {
      * @param directory a Directory
      */
     public void addDirectory(Directory directory) {
-        if (!childDirectories.contains(directory)) {
-            childDirectories.add(directory);
-        }
+        childDirectories.add(directory);
     }
 
     /**

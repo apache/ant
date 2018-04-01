@@ -43,7 +43,7 @@ public class DoubleCPInfo extends ConstantCPInfo {
      */
     @Override
     public void read(DataInputStream cpStream) throws IOException {
-        setValue(Double.valueOf(cpStream.readDouble()));
+        setValue(cpStream.readDouble());
     }
 
     /**

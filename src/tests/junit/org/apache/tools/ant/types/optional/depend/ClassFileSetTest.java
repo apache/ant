@@ -58,7 +58,7 @@ public class ClassFileSetTest {
         FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
         String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
+        Hashtable<String, String> files = new Hashtable<>();
         for (String scannedFile : scannedFiles) {
             files.put(scannedFile, scannedFile);
         }
@@ -83,9 +83,8 @@ public class ClassFileSetTest {
         buildRule.executeTarget("testsmallset");
         FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (String scannedFile : scannedFiles) {
+        Hashtable<String, String> files = new Hashtable<>();
+        for (String scannedFile : scanner.getIncludedFiles()) {
             files.put(scannedFile, scannedFile);
         }
         assertEquals("Classfileset did not pick up expected number of "
@@ -105,9 +104,8 @@ public class ClassFileSetTest {
         buildRule.executeTarget("testcomboset");
         FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (String scannedFile : scannedFiles) {
+        Hashtable<String, String> files = new Hashtable<>();
+        for (String scannedFile : scanner.getIncludedFiles()) {
             files.put(scannedFile, scannedFile);
         }
         assertEquals("Classfileset did not pick up expected number of "
@@ -133,9 +131,8 @@ public class ClassFileSetTest {
         buildRule.executeTarget("testmethodparam");
         FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (String scannedFile : scannedFiles) {
+        Hashtable<String, String> files = new Hashtable<>();
+        for (String scannedFile : scanner.getIncludedFiles()) {
             files.put(scannedFile, scannedFile);
         }
         assertEquals("Classfileset did not pick up expected number of "
@@ -161,9 +158,8 @@ public class ClassFileSetTest {
         buildRule.executeTarget("testmethodparaminner");
         FileSet resultFileSet = p.getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (String scannedFile : scannedFiles) {
+        Hashtable<String, String> files = new Hashtable<>();
+        for (String scannedFile : scanner.getIncludedFiles()) {
             files.put(scannedFile, scannedFile);
         }
         assertEquals("Classfileset did not pick up expected number of "

@@ -149,7 +149,7 @@ public class ProjectHelper2 extends ProjectHelper {
     public void parse(Project project, Object source) throws BuildException {
         getImportStack().addElement(source);
         AntXMLContext context = null;
-        context = (AntXMLContext) project.getReference(REFID_CONTEXT);
+        context = project.getReference(REFID_CONTEXT);
         if (context == null) {
             context = new AntXMLContext(project);
             project.addReference(REFID_CONTEXT, context);
@@ -1020,8 +1020,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
             if (extensionPoint != null) {
                 ProjectHelper helper =
-                    (ProjectHelper) context.getProject().
-                    getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+                        context.getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
                 for (String extPointName : Target.parseDepends(extensionPoint, name, "extensionOf")) {
                     if (extensionPointMissing == null) {
                         extensionPointMissing = OnMissingExtensionPoint.FAIL;

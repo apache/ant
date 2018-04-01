@@ -52,7 +52,7 @@ public class ScriptDefTest {
         buildRule.executeTarget("simple");
         // get the fileset and its basedir
         Project p = buildRule.getProject();
-        FileSet fileset = (FileSet) p.getReference("testfileset");
+        FileSet fileset = p.getReference("testfileset");
         File baseDir = fileset.getDir(p);
         String log = buildRule.getLog();
         assertTrue("Expecting attribute value printed",
@@ -87,7 +87,7 @@ public class ScriptDefTest {
         buildRule.executeTarget("nestedbyclassname");
         // get the fileset and its basedir
         Project p = buildRule.getProject();
-        FileSet fileset = (FileSet) p.getReference("testfileset");
+        FileSet fileset = p.getReference("testfileset");
         File baseDir = fileset.getDir(p);
         String log = buildRule.getLog();
         assertTrue("Expecting attribute value to be printed",

@@ -223,11 +223,7 @@ public class PropertiesfileCache implements Cache {
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append("<PropertiesfileCache:");
-        buf.append("cachefile=").append(cachefile);
-        buf.append(";noOfEntries=").append(cache.size());
-        buf.append(">");
-        return buf.toString();
+        return String.format("<PropertiesfileCache:cachefile=%s;noOfEntries=%d>",
+                cachefile, cache.size());
     }
 }

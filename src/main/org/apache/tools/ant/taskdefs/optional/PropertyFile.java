@@ -692,14 +692,14 @@ public class PropertyFile extends Task {
         /** no arg constructor */
         public Unit() {
             calendarFields.put(MILLISECOND,
-                Integer.valueOf(Calendar.MILLISECOND));
-            calendarFields.put(SECOND, Integer.valueOf(Calendar.SECOND));
-            calendarFields.put(MINUTE, Integer.valueOf(Calendar.MINUTE));
-            calendarFields.put(HOUR, Integer.valueOf(Calendar.HOUR_OF_DAY));
-            calendarFields.put(DAY, Integer.valueOf(Calendar.DATE));
-            calendarFields.put(WEEK, Integer.valueOf(Calendar.WEEK_OF_YEAR));
-            calendarFields.put(MONTH, Integer.valueOf(Calendar.MONTH));
-            calendarFields.put(YEAR, Integer.valueOf(Calendar.YEAR));
+                    Calendar.MILLISECOND);
+            calendarFields.put(SECOND, Calendar.SECOND);
+            calendarFields.put(MINUTE, Calendar.MINUTE);
+            calendarFields.put(HOUR, Calendar.HOUR_OF_DAY);
+            calendarFields.put(DAY, Calendar.DATE);
+            calendarFields.put(WEEK, Calendar.WEEK_OF_YEAR);
+            calendarFields.put(MONTH, Calendar.MONTH);
+            calendarFields.put(YEAR, Calendar.YEAR);
         }
 
         /**
@@ -707,7 +707,7 @@ public class PropertyFile extends Task {
          * @return the calendar value.
          */
         public int getCalendarField() {
-            return calendarFields.get(getValue().toLowerCase()).intValue();
+            return calendarFields.get(getValue().toLowerCase());
         }
 
         /** {@inheritDoc}. */

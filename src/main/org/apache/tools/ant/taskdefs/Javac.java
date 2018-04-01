@@ -826,7 +826,7 @@ public class Javac extends MatchingTask {
      * @param include if true, includes Ant's own classpath in the classpath
      */
     public void setIncludeantruntime(final boolean include) {
-        includeAntRuntime = Boolean.valueOf(include);
+        includeAntRuntime = include;
     }
 
     /**
@@ -834,7 +834,7 @@ public class Javac extends MatchingTask {
      * @return whether or not the ant classpath is to be included in the classpath
      */
     public boolean getIncludeantruntime() {
-        return includeAntRuntime != null ? includeAntRuntime.booleanValue() : true;
+        return includeAntRuntime != null ? includeAntRuntime : true;
     }
 
     /**
@@ -1459,7 +1459,7 @@ public class Javac extends MatchingTask {
                 continue;
             }
             final String pkg = path.substring(0, path.length() - suffix.length());
-            packageInfos.put(pkg, Long.valueOf(f.lastModified()));
+            packageInfos.put(pkg, f.lastModified());
         }
     }
 
@@ -1475,7 +1475,7 @@ public class Javac extends MatchingTask {
             final File pkgBinDir = new File(dest, pkg.replace('/', File.separatorChar));
             pkgBinDir.mkdirs();
             final File pkgInfoClass = new File(pkgBinDir, "package-info.class");
-            if (pkgInfoClass.isFile() && pkgInfoClass.lastModified() >= sourceLastMod.longValue()) {
+            if (pkgInfoClass.isFile() && pkgInfoClass.lastModified() >= sourceLastMod) {
                 continue;
             }
             log("Creating empty " + pkgInfoClass);

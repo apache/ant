@@ -23,7 +23,6 @@ import java.util.Stack;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 
 /**
@@ -84,8 +83,7 @@ public class Reverse extends ResourceComparator {
             super.dieOnCircularReference(stk, p);
         } else {
             if (nested != null) {
-                pushAndInvokeCircularReferenceCheck((DataType) nested, stk,
-                                                    p);
+                pushAndInvokeCircularReferenceCheck(nested, stk, p);
             }
             setChecked(true);
         }

@@ -120,7 +120,7 @@ public class TypeAdapterTest {
         private String execMethodName = "run";
         private Object proxy;
 
-        public Method getExecuteMethod(Class proxyClass) {
+        public Method getExecuteMethod(Class<?> proxyClass) {
             try {
                 Method execMethod = proxyClass.getMethod(execMethodName);
                 if (!Void.TYPE.equals(execMethod.getReturnType())) {

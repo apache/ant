@@ -252,7 +252,7 @@ public class Sync extends Task {
         }
 
         Boolean ped = getExplicitPreserveEmptyDirs();
-        if (ped != null && ped.booleanValue() != myCopy.getIncludeEmptyDirs()) {
+        if (ped != null && ped != myCopy.getIncludeEmptyDirs()) {
             FileSet fs = syncTarget.toFileSet(true);
             fs.setDir(toDir);
             String[] preservedDirs =
@@ -554,7 +554,7 @@ public class Sync extends Task {
          * @since Ant 1.8.0
          */
         public void setPreserveEmptyDirs(boolean b) {
-            preserveEmptyDirs = Boolean.valueOf(b);
+            preserveEmptyDirs = b;
         }
 
         /**

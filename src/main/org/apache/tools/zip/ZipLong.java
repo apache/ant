@@ -168,10 +168,10 @@ public final class ZipLong implements Cloneable {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof ZipLong)) {
-            return false;
+        if (o instanceof ZipLong) {
+            return value == ((ZipLong) o).getValue();
         }
-        return value == ((ZipLong) o).getValue();
+        return false;
     }
 
     /**

@@ -329,14 +329,7 @@ public class SubAnt extends Task {
         if (t instanceof BuildException) {
             return isHardError(t.getCause());
         }
-        if (t instanceof OutOfMemoryError) {
-            return true;
-        }
-        if (t instanceof ThreadDeath) {
-            return true;
-        }
-        // incl. t == null
-        return false;
+        return t instanceof OutOfMemoryError || t instanceof ThreadDeath;
     }
 
     /**

@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipEntry;
@@ -128,7 +127,7 @@ public class ZipResource extends ArchiveResource {
      */
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+            return getCheckedRef().getInputStream();
         }
         final ZipFile z = new ZipFile(getZipfile(), getEncoding());
         ZipEntry ze = z.getEntry(getName());
@@ -162,7 +161,7 @@ public class ZipResource extends ArchiveResource {
      */
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+            return getCheckedRef().getOutputStream();
         }
         throw new UnsupportedOperationException(
             "Use the zip task for zip output.");

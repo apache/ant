@@ -62,9 +62,9 @@ public class Nice extends Task {
             getProject().setNewProperty(currentPriority, current);
         }
         //if there is a new priority, and it is different, change it
-        if (newPriority != null && priority != newPriority.intValue()) {
+        if (newPriority != null && priority != newPriority) {
             try {
-                self.setPriority(newPriority.intValue());
+                self.setPriority(newPriority);
             } catch (SecurityException e) {
                 //catch permissions denial and keep going
                 log("Unable to set new priority -a security manager is in the way",
@@ -92,7 +92,7 @@ public class Nice extends Task {
         if (newPriority < Thread.MIN_PRIORITY || newPriority > Thread.MAX_PRIORITY) {
             throw new BuildException("The thread priority is out of the range 1-10");
         }
-        this.newPriority = Integer.valueOf(newPriority);
+        this.newPriority = newPriority;
     }
 
 }

@@ -338,7 +338,7 @@ public class XmlPropertyTest {
      * and below.
      */
     private static Enumeration getFiles (final File startingDir) {
-        Vector result = new Vector();
+        Vector<File> result = new Vector<>();
         getFiles(startingDir, result);
         return result.elements();
     }
@@ -347,7 +347,7 @@ public class XmlPropertyTest {
      * Collect a list of xml files in the specified folder
      * and below.
      */
-    private static void getFiles (final File startingDir, Vector collect) {
+    private static void getFiles (final File startingDir, Vector<File> collect) {
         FileFilter filter = new FileFilter() {
             public boolean accept (File file) {
                 if (file.isDirectory()) {

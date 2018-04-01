@@ -40,7 +40,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -827,10 +826,8 @@ public class Copy extends Task {
             }
             toCopy = v.toArray(new Resource[v.size()]);
         } else {
-            toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources,
-                                                          mapper,
-                                                          (ResourceFactory) name -> new FileResource(toDir, name),
-                                                          granularity);
+            toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources, mapper,
+                    name -> new FileResource(toDir, name), granularity);
         }
         for (Resource rc : toCopy) {
             final String[] mappedFiles = mapper.mapFileName(rc.getName());

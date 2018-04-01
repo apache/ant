@@ -57,7 +57,7 @@ public class MockBuildListener implements BuildListener {
         assertTrue("unexpected messageLogged: "+ actual.getMessage(), !buffer.isEmpty());
         assertEquals("unexpected project ", project, actual.getProject());
 
-        BuildEvent expected = (BuildEvent) buffer.elementAt(0);
+        BuildEvent expected = buffer.elementAt(0);
         buffer.removeElementAt(0);
         assertEquals("unexpected messageLogged ", expected.getMessage(), actual.getMessage());
         assertEquals("unexpected priority ", expected.getPriority(), actual.getPriority());

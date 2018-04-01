@@ -351,15 +351,11 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         attributes.log("Compilation " + cmd.describeArguments(),
                        Project.MSG_VERBOSE);
 
-        StringBuilder niceSourceList =
-            new StringBuilder(compileList.size() == 1 ? "File" : "Files")
-                .append(" to be compiled:");
-
-        niceSourceList.append(
-            compileList.stream().peek(arg -> cmd.createArgument().setValue(arg))
-                .collect(Collectors.joining("    ")));
-
-        attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
+        String niceSourceList = (compileList.size() == 1 ? "File" : "Files") +
+                " to be compiled:" +
+                compileList.stream().peek(arg -> cmd.createArgument().setValue(arg))
+                        .collect(Collectors.joining("    "));
+        attributes.log(niceSourceList, Project.MSG_VERBOSE);
     }
 
     private void verifyArguments(Commandline cmd) {

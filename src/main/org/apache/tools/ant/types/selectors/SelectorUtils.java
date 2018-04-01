@@ -153,20 +153,8 @@ public final class SelectorUtils {
             strIdxStart++;
         }
 
-        // CheckStyle:SimplifyBooleanReturnCheck OFF
-        // Check turned off as the code needs the comments for the various
-        // code paths.
-        if (strIdxStart > strIdxEnd) {
-            // String is exhausted
-            return true;
-        }
-        if (patIdxStart > patIdxEnd) {
-            // String not exhausted, but pattern is. Failure.
-            return false;
-        }
-        // pattern now holds ** while string is not exhausted
-        // this will generate false positives but we can live with that.
-        return true;
+        // Fail if string is not exhausted or pattern is exhausted
+        return strIdxStart > strIdxEnd || patIdxStart <= patIdxEnd;
     }
 
     /**

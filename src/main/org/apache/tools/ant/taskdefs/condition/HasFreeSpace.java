@@ -49,7 +49,7 @@ public class HasFreeSpace implements Condition {
                 //reflection to avoid bootstrap/build problems
                 File fs = new File(partition);
                 ReflectWrapper w = new ReflectWrapper(fs);
-                long free = w.<Long> invoke("getFreeSpace").longValue();
+                long free = w.<Long>invoke("getFreeSpace");
                 return free >= StringUtils.parseHumanSizes(needed);
             }
             throw new BuildException(

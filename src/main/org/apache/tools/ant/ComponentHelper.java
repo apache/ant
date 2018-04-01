@@ -750,7 +750,7 @@ public class ComponentHelper  {
      */
     public void exitAntLib() {
         antLibStack.pop();
-        antLibCurrentUri = (antLibStack.isEmpty()) ? null : (String) antLibStack.peek();
+        antLibCurrentUri = (antLibStack.isEmpty()) ? null : antLibStack.peek();
     }
 
     /**

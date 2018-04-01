@@ -51,7 +51,7 @@ public class Date implements ResourceSelector {
      * @param m the number of millis.
      */
     public synchronized void setMillis(long m) {
-        millis = new Long(m);
+        millis = m;
     }
 
     /**
@@ -59,7 +59,7 @@ public class Date implements ResourceSelector {
      * @return long number of millis since 1970.
      */
     public synchronized long getMillis() {
-        return millis == null ? -1L : millis.longValue();
+        return millis == null ? -1L : millis;
     }
 
     /**
@@ -155,7 +155,7 @@ public class Date implements ResourceSelector {
                     dateTime, p);
             }
         }
-        return when.evaluate(r.getLastModified(), millis.longValue(), granularity);
+        return when.evaluate(r.getLastModified(), millis, granularity);
     }
 
 }

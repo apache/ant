@@ -84,9 +84,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                         }
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
-                        for (String dependency : classFile.getClassRefs()) {
-                            analyzedDeps.add(dependency);
-                        }
+                        analyzedDeps.addAll(classFile.getClassRefs());
                     } finally {
                         FileUtils.close(inStream);
                         FileUtils.close(zipFile);

@@ -180,7 +180,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized String getName() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getName();
+            return getCheckedRef().getName();
         }
         String name = getURL().getFile();
         return "".equals(name) ? name : name.substring(1);
@@ -201,7 +201,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized boolean isExists() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).isExists();
+            return getCheckedRef().isExists();
         }
         return isExists(false);
     }
@@ -262,7 +262,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized long getLastModified() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getLastModified();
+            return getCheckedRef().getLastModified();
         }
         if (!isExists(false)) {
             return UNKNOWN_DATETIME;
@@ -280,7 +280,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized boolean isDirectory() {
         return isReference()
-            ? ((Resource) getCheckedRef()).isDirectory()
+            ? getCheckedRef().isDirectory()
             : getName().endsWith("/");
     }
 
@@ -291,7 +291,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized long getSize() {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getSize();
+            return getCheckedRef().getSize();
         }
         if (!isExists(false)) {
             return 0L;
@@ -345,7 +345,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+            return getCheckedRef().getInputStream();
         }
         connect();
         try {
@@ -366,7 +366,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getOutputStream();
+            return getCheckedRef().getOutputStream();
         }
         connect();
         try {

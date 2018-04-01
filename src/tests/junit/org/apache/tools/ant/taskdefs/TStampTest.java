@@ -68,7 +68,6 @@ public class TStampTest {
     /**
      * verifies that custom props have priority over the
      * originals
-     * @throws Exception if something goes wrong
      */
     @Test
     public void testWriteOrder() {
@@ -89,9 +88,7 @@ public class TStampTest {
     }
 
     /**
-     * verifies that custom props have priority over the
-     * originals
-     * @throws Exception if something goes wrong
+     * verifies that custom props have priority over the originals
      */
     @Test
     public void testPrefix() {

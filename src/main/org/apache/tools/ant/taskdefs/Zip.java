@@ -1248,11 +1248,11 @@ public class Zip extends MatchingTask {
                                              final File zipFile,
                                              final boolean needsUpdate)
         throws BuildException {
-        final List<ResourceCollection> filesets = new ArrayList<>();
+        final List<FileSet> filesets = new ArrayList<>();
         final List<ResourceCollection> rest = new ArrayList<>();
         for (ResourceCollection rc : rcs) {
             if (rc instanceof FileSet) {
-                filesets.add(rc);
+                filesets.add((FileSet) rc);
             } else {
                 rest.add(rc);
             }
@@ -1262,8 +1262,7 @@ public class Zip extends MatchingTask {
         ArchiveState as = getNonFileSetResourcesToAdd(rc, zipFile,
                                                       needsUpdate);
 
-        final FileSet[] fs = filesets.toArray(new FileSet[filesets
-                                                                .size()]);
+        final FileSet[] fs = filesets.toArray(new FileSet[filesets.size()]);
         final ArchiveState as2 = getResourcesToAdd(fs, zipFile, as.isOutOfDate());
         if (!as.isOutOfDate() && as2.isOutOfDate()) {
             /*
@@ -1498,7 +1497,7 @@ public class Zip extends MatchingTask {
 
         final Resource[][] initialResources = grabNonFileSetResources(rcs);
         final boolean empty = isEmpty(initialResources);
-        HAVE_NON_FILE_SET_RESOURCES_TO_ADD.set(Boolean.valueOf(!empty));
+        HAVE_NON_FILE_SET_RESOURCES_TO_ADD.set(!empty);
         if (empty) {
             // no emptyBehavior handling since the FileSet version
             // will take care of it.

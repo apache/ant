@@ -165,7 +165,7 @@ public class EmailTask extends Task {
      * @param port The port to use.
      */
     public void setMailport(int port) {
-        this.port = Integer.valueOf(port);
+        this.port = port;
     }
 
     /**
@@ -554,7 +554,7 @@ public class EmailTask extends Task {
             // pass the params to the mailer
             mailer.setHost(host);
             if (port != null) {
-                mailer.setPort(port.intValue());
+                mailer.setPort(port);
                 mailer.setPortExplicitlySpecified(true);
             } else {
                 mailer.setPort(SMTP_PORT);

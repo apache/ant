@@ -330,19 +330,19 @@ public class IPlanetEjbc {
     private static void usage() {
         System.out.println("java org.apache.tools.ant.taskdefs.optional.ejb.IPlanetEjbc \\");
         System.out.println("  [OPTIONS] [EJB 1.1 descriptor] [iAS EJB descriptor]");
-        System.out.println("");
+        System.out.println();
         System.out.println("Where OPTIONS are:");
         System.out.println("  -debug -- for additional debugging output");
         System.out.println("  -keepsource -- to retain Java source files generated");
         System.out.println("  -classpath [classpath] -- classpath used for compilation");
         System.out.println("  -d [destination directory] -- directory for compiled classes");
-        System.out.println("");
+        System.out.println();
         System.out.println("If a classpath is not specified, the system classpath");
         System.out.println("will be used.  If a destination directory is not specified,");
         System.out.println("the current working directory will be used (classes will");
         System.out.println("still be placed in subfolders which correspond to their");
         System.out.println("package name).");
-        System.out.println("");
+        System.out.println();
         System.out.println("The EJB home interface, remote interface, and implementation");
         System.out.println("class must be found in the destination directory.  In");
         System.out.println("addition, the destination will look for the stubs and skeletons");
@@ -1295,21 +1295,21 @@ public class IPlanetEjbc {
          */
         @Override
         public String toString() {
-            String s = "EJB name: " + name
-                        + "\n\r              home:      " + home
-                        + "\n\r              remote:    " + remote
-                        + "\n\r              impl:      " + implementation
-                        + "\n\r              primaryKey: " + primaryKey
-                        + "\n\r              beantype:  " + beantype
-                        + "\n\r              cmp:       " + cmp
-                        + "\n\r              iiop:      " + iiop
-                        + "\n\r              hasession: " + hasession;
+            StringBuilder s = new StringBuilder("EJB name: " + name
+                    + "\n\r              home:      " + home
+                    + "\n\r              remote:    " + remote
+                    + "\n\r              impl:      " + implementation
+                    + "\n\r              primaryKey: " + primaryKey
+                    + "\n\r              beantype:  " + beantype
+                    + "\n\r              cmp:       " + cmp
+                    + "\n\r              iiop:      " + iiop
+                    + "\n\r              hasession: " + hasession);
 
             for (String cmpDescriptor : cmpDescriptors) {
-                s += "\n\r              CMP Descriptor: " + cmpDescriptor;
+                s.append("\n\r              CMP Descriptor: ").append(cmpDescriptor);
             }
 
-            return s;
+            return s.toString();
         }
 
     } // End of EjbInfo inner class

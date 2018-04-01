@@ -244,12 +244,12 @@ public class WaitFor extends ConditionBase {
 
         /** Constructor the Unit enumerated type. */
         public Unit() {
-            timeTable.put(MILLISECOND, Long.valueOf(1L));
-            timeTable.put(SECOND,      Long.valueOf(ONE_SECOND));
-            timeTable.put(MINUTE,      Long.valueOf(ONE_MINUTE));
-            timeTable.put(HOUR,        Long.valueOf(ONE_HOUR));
-            timeTable.put(DAY,         Long.valueOf(ONE_DAY));
-            timeTable.put(WEEK,        Long.valueOf(ONE_WEEK));
+            timeTable.put(MILLISECOND, 1L);
+            timeTable.put(SECOND, ONE_SECOND);
+            timeTable.put(MINUTE, ONE_MINUTE);
+            timeTable.put(HOUR, ONE_HOUR);
+            timeTable.put(DAY, ONE_DAY);
+            timeTable.put(WEEK, ONE_WEEK);
         }
 
         /**
@@ -258,7 +258,7 @@ public class WaitFor extends ConditionBase {
          */
         public long getMultiplier() {
             String key = getValue().toLowerCase(Locale.ENGLISH);
-            return timeTable.get(key).longValue();
+            return timeTable.get(key);
         }
 
         /**

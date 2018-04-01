@@ -166,19 +166,19 @@ public final class StringUtils {
             } else {
                 switch (c) {
                     case '\\':
-                        b.append((char) '\\');
+                        b.append('\\');
                         break;
                     case 'n':
-                        b.append((char) '\n');
+                        b.append('\n');
                         break;
                     case 'r':
-                        b.append((char) '\r');
+                        b.append('\r');
                         break;
                     case 't':
-                        b.append((char) '\t');
+                        b.append('\t');
                         break;
                     case 'f':
-                        b.append((char) '\f');
+                        b.append('\f');
                         break;
                     case 's':
                         b.append(" \t\n\r\f");

@@ -307,13 +307,8 @@ public final class IntrospectionHelper {
      * @return true if the given set method is to be hidden.
      */
     private boolean isHiddenSetMethod(final String name, final Class<?> type) {
-        if ("setLocation".equals(name) && Location.class.equals(type)) {
-            return true;
-        }
-        if ("setTaskType".equals(name) && String.class.equals(type)) {
-            return true;
-        }
-        return false;
+        return "setLocation".equals(name) && Location.class.equals(type)
+                || "setTaskType".equals(name) && String.class.equals(type);
     }
 
     /**
@@ -472,7 +467,7 @@ public final class IntrospectionHelper {
                     + " doesn't support nested text data (\"" + condenseText(text) + "\").");
         }
         try {
-            addText.invoke(element, new Object[] {text});
+            addText.invoke(element, text);
         } catch (final IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
@@ -955,7 +950,7 @@ public final class IntrospectionHelper {
      */
     public Map<String, Class<?>> getAttributeMap() {
         return attributeTypes.isEmpty()
-            ? Collections.<String, Class<?>> emptyMap() : Collections.unmodifiableMap(attributeTypes);
+            ? Collections.emptyMap() : Collections.unmodifiableMap(attributeTypes);
     }
 
     /**
@@ -980,7 +975,7 @@ public final class IntrospectionHelper {
      */
     public Map<String, Class<?>> getNestedElementMap() {
         return nestedTypes.isEmpty()
-            ? Collections.<String, Class<?>> emptyMap() : Collections.unmodifiableMap(nestedTypes);
+            ? Collections.emptyMap() : Collections.unmodifiableMap(nestedTypes);
     }
 
     /**
@@ -1002,7 +997,7 @@ public final class IntrospectionHelper {
      */
     public List<Method> getExtensionPoints() {
         return addTypeMethods.isEmpty()
-                ? Collections.<Method> emptyList() : Collections.unmodifiableList(addTypeMethods);
+                ? Collections.emptyList() : Collections.unmodifiableList(addTypeMethods);
     }
 
     /**
@@ -1078,7 +1073,7 @@ public final class IntrospectionHelper {
                         throw new BuildException("The value \"\" is not a "
                                 + "legal value for attribute \"" + attrName + "\"");
                     }
-                    m.invoke(parent, (Object[]) new Character[] {new Character(value.charAt(0))});
+                    m.invoke(parent, (Object[]) new Character[] {value.charAt(0)});
                 }
             };
         }
@@ -1100,7 +1095,7 @@ public final class IntrospectionHelper {
                 public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
-                        m.invoke(parent, new Object[] {Class.forName(value)});
+                        m.invoke(parent, Class.forName(value));
                     } catch (final ClassNotFoundException ce) {
                         throw new BuildException(ce);
                     }
@@ -1113,7 +1108,7 @@ public final class IntrospectionHelper {
                 @Override
                 public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, new Object[] {p.resolveFile(value)});
+                    m.invoke(parent, p.resolveFile(value));
                 }
             };
         }
@@ -1122,7 +1117,7 @@ public final class IntrospectionHelper {
             return new AttributeSetter(m, arg) {
                 @Override
                 public void set(final Project p, final Object parent, final String value) throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, new Object[] { p.resolveFile(value).toPath() });
+                    m.invoke(parent, p.resolveFile(value).toPath());
                 }
             };
         }
@@ -1133,7 +1128,7 @@ public final class IntrospectionHelper {
                 @Override
                 void set(final Project p, final Object parent, final String value) throws InvocationTargetException,
                         IllegalAccessException, BuildException {
-                    m.invoke(parent, new Object[] {new FileResource(p, p.resolveFile(value))});
+                    m.invoke(parent, new FileResource(p, p.resolveFile(value)));
                 }
             };
         }
@@ -1146,7 +1141,7 @@ public final class IntrospectionHelper {
                     try {
                         final EnumeratedAttribute ea = (EnumeratedAttribute) reflectedArg.newInstance();
                         ea.setValue(value);
-                        m.invoke(parent, new Object[] {ea});
+                        m.invoke(parent, ea);
                     } catch (final InstantiationException ie) {
                         throw new BuildException(ie);
                     }
@@ -1165,8 +1160,7 @@ public final class IntrospectionHelper {
                 public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
-                        m.invoke(parent, new Object[] {
-                                new Long(StringUtils.parseHumanSizes(value)) });
+                        m.invoke(parent, StringUtils.parseHumanSizes(value));
                     } catch (final NumberFormatException e) {
                         throw new BuildException("Can't assign non-numeric"
                                                  + " value '" + value + "' to"
@@ -1216,7 +1210,7 @@ public final class IntrospectionHelper {
                     if (p != null) {
                         p.setProjectReference(attribute);
                     }
-                    m.invoke(parent, new Object[] {attribute});
+                    m.invoke(parent, attribute);
                 } catch (final InvocationTargetException e) {
                     final Throwable cause = e.getCause();
                     if (cause instanceof IllegalArgumentException) {
@@ -1434,7 +1428,7 @@ public final class IntrospectionHelper {
         @Override
         Object create(final Project project, final Object parent, final Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
-            return getMethod().invoke(parent, new Object[] {});
+            return getMethod().invoke(parent);
         }
     }
 
@@ -1485,7 +1479,7 @@ public final class IntrospectionHelper {
 
         private void istore(final Object parent, final Object child)
                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
-            getMethod().invoke(parent, new Object[] {child});
+            getMethod().invoke(parent, child);
         }
     }
 
@@ -1514,7 +1508,7 @@ public final class IntrospectionHelper {
                     useType = PRIMITIVE_TYPE_MAP.get(type);
                 }
                 if (value == null || useType.isInstance(value)) {
-                    method.invoke(parent, new Object[] {value});
+                    method.invoke(parent, value);
                     return;
                 }
             }
@@ -1578,7 +1572,7 @@ public final class IntrospectionHelper {
             Object create(final Project project, final Object parent, final Object ignore)
                     throws InvocationTargetException, IllegalAccessException {
                 if (!getMethod().getName().endsWith("Configured")) {
-                    getMethod().invoke(parent, new Object[] {realObject});
+                    getMethod().invoke(parent, realObject);
                 }
                 return nestedObject;
             }
@@ -1592,7 +1586,7 @@ public final class IntrospectionHelper {
             void store(final Object parent, final Object child) throws InvocationTargetException,
                     IllegalAccessException, InstantiationException {
                 if (getMethod().getName().endsWith("Configured")) {
-                    getMethod().invoke(parent, new Object[] {realObject});
+                    getMethod().invoke(parent, realObject);
                 }
             }
         };

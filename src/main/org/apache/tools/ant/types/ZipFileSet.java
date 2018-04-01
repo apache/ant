@@ -95,7 +95,7 @@ public class ZipFileSet extends ArchiveFileSet {
     @Override
     public Object clone() {
         if (isReference()) {
-            return ((ZipFileSet) getRef(getProject())).clone();
+            return getRef(getProject()).clone();
         }
         return super.clone();
     }

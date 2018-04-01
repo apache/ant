@@ -103,7 +103,7 @@ public class ConstantPool {
         if (entry instanceof Utf8CPInfo) {
             Utf8CPInfo utf8Info = (Utf8CPInfo) entry;
 
-            utf8Indexes.put(utf8Info.getValue(), Integer.valueOf(index));
+            utf8Indexes.put(utf8Info.getValue(), index);
         }
 
         return index;
@@ -145,7 +145,7 @@ public class ConstantPool {
         Integer indexInteger = utf8Indexes.get(value);
 
         if (indexInteger != null) {
-            index = indexInteger.intValue();
+            index = indexInteger;
         }
 
         return index;

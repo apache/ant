@@ -359,7 +359,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         }
     }
 
-    private void endBlock() throws IOException {
+    private void endBlock() {
         this.computedBlockCRC = this.crc.getFinalCRC();
 
         // A bad CRC is considered a fatal error.

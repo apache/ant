@@ -58,7 +58,7 @@ public abstract class BaseIfAttribute
      * @return val if positive or !val if not.
      */
     protected boolean convertResult(boolean val) {
-        return positive ? val : !val;
+        return positive == val;
     }
 
     /**

@@ -160,7 +160,7 @@ public class DependTest {
      * fileset
      */
     private Hashtable getResultFiles() {
-        FileSet resultFileSet = (FileSet) buildRule.getProject().getReference(RESULT_FILESET);
+        FileSet resultFileSet = buildRule.getProject().getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(buildRule.getProject());
         Hashtable<String, String> files = new Hashtable<>();
         for (String scannedFile : scanner.getIncludedFiles()) {

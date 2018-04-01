@@ -210,7 +210,7 @@ public class SSHSession extends SSHBase {
         int rport = 0;
 
         public void setLPort(final int lport) {
-            final Integer portKey = Integer.valueOf(lport);
+            final Integer portKey = lport;
             if (localPortsUsed.contains(portKey)) {
                 throw new BuildException(
                     "Multiple local tunnels defined to use same local port %d",
@@ -265,7 +265,7 @@ public class SSHSession extends SSHBase {
         }
 
         public void setRPort(final int rport) {
-            final Integer portKey = Integer.valueOf(rport);
+            final Integer portKey = rport;
             if (remotePortsUsed.contains(portKey)) {
                 throw new BuildException(
                     "Multiple remote tunnels defined to use same remote port %d",

@@ -322,7 +322,7 @@ public class AggregateTransformer {
         final String suffix;
 
         final String xsltFactoryName = xsltFactory == null ? null :  xsltFactory.getName();
-        if(xsltFactoryName != null && "net.sf.saxon.TransformerFactoryImpl".equals(xsltFactoryName)) {
+        if ("net.sf.saxon.TransformerFactoryImpl".equals(xsltFactoryName)) {
             suffix = "-saxon.xsl";
         } else {
             suffix = ".xsl";

@@ -163,7 +163,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
             return getCheckedRef().isExists();
         }
         //default true:
-        return exists == null || exists.booleanValue();
+        return exists == null || exists;
     }
 
     /**
@@ -192,7 +192,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
         if (!isExists() || lastmodified == null) {
             return UNKNOWN_DATETIME;
         }
-        long result = lastmodified.longValue();
+        long result = lastmodified;
         return result < UNKNOWN_DATETIME ? UNKNOWN_DATETIME : result;
     }
 
@@ -202,7 +202,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public void setLastModified(long lastmodified) {
         checkAttributesAllowed();
-        this.lastmodified = new Long(lastmodified);
+        this.lastmodified = lastmodified;
     }
 
     /**
@@ -214,7 +214,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
             return getCheckedRef().isDirectory();
         }
         //default false:
-        return directory != null && directory.booleanValue();
+        return directory != null && directory;
     }
 
     /**
@@ -233,7 +233,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public void setSize(long size) {
         checkAttributesAllowed();
-        this.size = new Long(size > UNKNOWN_SIZE ? size : UNKNOWN_SIZE);
+        this.size = size > UNKNOWN_SIZE ? size : UNKNOWN_SIZE;
     }
 
     /**
@@ -247,7 +247,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
             return getCheckedRef().getSize();
         }
         return isExists()
-            ? (size != null ? size.longValue() : UNKNOWN_SIZE)
+            ? (size != null ? size : UNKNOWN_SIZE)
             : 0L;
     }
 

@@ -86,7 +86,6 @@ public class LocatorTest {
 
     /**
      * this isn't really a valid URI, except maybe in IE
-     * @throws Exception if something goes wrong
      */
     public void testNetworkURI() {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar", ""
@@ -123,7 +122,6 @@ public class LocatorTest {
 
     /**
      * Bug 42275; Ant failing to run off a remote share
-     * @throws Throwable if desired
      */
     @Test
     public void testAntOnRemoteShare() {
@@ -135,8 +133,6 @@ public class LocatorTest {
 
     /**
      * Bug 42275; Ant failing to run off a remote share
-     *
-     * @throws Throwable if desired
      */
     @Test
     public void testFileFromRemoteShare() {

@@ -41,8 +41,7 @@ public class SymbolicLinkUtils {
     /**
      * Shared instance.
      */
-    private static final SymbolicLinkUtils PRIMARY_INSTANCE =
-        new SymbolicLinkUtils();
+    private static final SymbolicLinkUtils PRIMARY_INSTANCE = new SymbolicLinkUtils();
 
     /**
      * Method to retrieve The SymbolicLinkUtils, which is shared by
@@ -294,8 +293,7 @@ public class SymbolicLinkUtils {
                 }
             }
         } else {
-            Execute.runCommand(task,
-                               new String[] {"rm", link.getAbsolutePath()});
+            Execute.runCommand(task, "rm", link.getAbsolutePath());
         }
     }
 

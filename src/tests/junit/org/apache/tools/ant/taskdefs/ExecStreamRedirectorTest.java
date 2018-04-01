@@ -37,7 +37,7 @@ public class ExecStreamRedirectorTest {
     /**
      * Tests that the redirected streams of the exec'ed process aren't truncated.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=58451">bz-58451</a> and
      * <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=58833">bz-58833</a> for more details
      */

@@ -41,7 +41,7 @@ public class RedirectorElementTest {
     @Test
     public void test1() {
         buildRule.executeTarget("test1");
-        assertTrue((buildRule.getProject().<Object> getReference("test1")
+        assertTrue((buildRule.getProject().getReference("test1")
             instanceof RedirectorElement));
     }
 

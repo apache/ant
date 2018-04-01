@@ -632,8 +632,8 @@ public class Main implements AntMain {
                                      + args[pos]);
         }
 
-        if (threadPriority.intValue() < Thread.MIN_PRIORITY
-            || threadPriority.intValue() > Thread.MAX_PRIORITY) {
+        if (threadPriority < Thread.MIN_PRIORITY
+            || threadPriority > Thread.MAX_PRIORITY) {
             throw new BuildException(
                 "Niceness value is out of the range 1-10");
         }
@@ -798,7 +798,7 @@ public class Main implements AntMain {
                     try {
                         project.log("Setting Ant's thread priority to "
                                 + threadPriority, Project.MSG_VERBOSE);
-                        Thread.currentThread().setPriority(threadPriority.intValue());
+                        Thread.currentThread().setPriority(threadPriority);
                     } catch (final SecurityException swallowed) {
                         //we cannot set the priority here.
                         project.log("A security manager refused to set the -nice value");
@@ -941,7 +941,7 @@ public class Main implements AntMain {
         for (int i = 0; i < count; i++) {
             final String className = listeners.elementAt(i);
             final BuildListener listener =
-                    (BuildListener) ClasspathUtils.newInstance(className,
+                    ClasspathUtils.newInstance(className,
                             Main.class.getClassLoader(), BuildListener.class);
             project.setProjectReference(listener);
 
@@ -962,7 +962,7 @@ public class Main implements AntMain {
         if (inputHandlerClassname == null) {
             handler = new DefaultInputHandler();
         } else {
-            handler = (InputHandler) ClasspathUtils.newInstance(
+            handler = ClasspathUtils.newInstance(
                     inputHandlerClassname, Main.class.getClassLoader(),
                     InputHandler.class);
             project.setProjectReference(handler);
@@ -984,7 +984,7 @@ public class Main implements AntMain {
             emacsMode = true;
         } else if (loggerClassname != null) {
             try {
-                logger = (BuildLogger) ClasspathUtils.newInstance(
+                logger = ClasspathUtils.newInstance(
                         loggerClassname, Main.class.getClassLoader(),
                         BuildLogger.class);
             } catch (final BuildException e) {
@@ -1088,13 +1088,10 @@ public class Main implements AntMain {
                 props.load(in);
                 in.close();
                 shortAntVersion = props.getProperty("VERSION");
-
-                final StringBuffer msg = new StringBuffer();
-                msg.append("Apache Ant(TM) version ");
-                msg.append(shortAntVersion);
-                msg.append(" compiled on ");
-                msg.append(props.getProperty("DATE"));
-                antVersion = msg.toString();
+                antVersion = "Apache Ant(TM) version " +
+                        shortAntVersion +
+                        " compiled on " +
+                        props.getProperty("DATE");
             } catch (final IOException ioe) {
                 throw new BuildException("Could not load the version information:"
                                          + ioe.getMessage());

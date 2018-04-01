@@ -428,8 +428,7 @@ public class SchemaValidate extends XMLValidateTask {
          */
         public String getURIandLocation() throws BuildException {
             validateNamespace();
-            return new StringBuilder(namespace).append(' ')
-                .append(getSchemaLocationURL()).toString();
+            return namespace + ' ' + getSchemaLocationURL();
         }
 
         /**
@@ -475,11 +474,7 @@ public class SchemaValidate extends XMLValidateTask {
                     : schemaLocation.namespace != null) {
                 return false;
             }
-            if (url != null ? !url.equals(schemaLocation.url) : schemaLocation.url != null) {
-                return false;
-            }
-
-            return true;
+            return url != null ? url.equals(schemaLocation.url) : schemaLocation.url == null;
         }
 
         /**
@@ -504,12 +499,10 @@ public class SchemaValidate extends XMLValidateTask {
          */
         @Override
         public String toString() {
-            StringBuilder buffer = new StringBuilder();
-            buffer.append(namespace != null ? namespace : "(anonymous)");
-            buffer.append(' ');
-            buffer.append(url != null ? (url + " ") : "");
-            buffer.append(file != null ? file.getAbsolutePath() : "");
-            return buffer.toString();
+            String buffer = (namespace != null ? namespace : "(anonymous)")
+                    + ' ' + (url != null ? (url + " ") : "")
+                    + (file != null ? file.getAbsolutePath() : "");
+            return buffer;
         }
     } //SchemaLocation
 }

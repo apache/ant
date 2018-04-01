@@ -52,7 +52,7 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
     @Override
     public Object clone() {
         if (isReference()) {
-            return ((FileSet) getRef(getProject())).clone();
+            return getRef(getProject()).clone();
         }
         return super.clone();
     }

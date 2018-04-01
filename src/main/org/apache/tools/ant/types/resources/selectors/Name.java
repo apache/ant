@@ -126,7 +126,7 @@ public class Name implements ResourceSelector {
             return true;
         }
         String s = r.toString();
-        return s.equals(n) ? false : matches(s);
+        return !s.equals(n) && matches(s);
     }
 
     private boolean matches(String name) {

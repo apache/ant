@@ -96,7 +96,7 @@ public class StringUtilsTest {
 
     @Test
     public void testEndsWithEmptyBuffer() {
-        assertFalse(StringUtils.endsWith(new StringBuffer(""), "12345667"));
+        assertFalse(StringUtils.endsWith(new StringBuffer(), "12345667"));
     }
 
     @Test

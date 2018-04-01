@@ -36,7 +36,7 @@ public class LinkedHashtableTest {
     private static final Object K2 = new Object();
     private static final Object V1 = new Object();
     private static final Object V2 = new Object();
-    private Hashtable h = new LinkedHashtable();
+    private Hashtable<Object, Object> h = new LinkedHashtable<>();
 
     public void testClear() {
         h.put(K1, V1);
@@ -82,7 +82,7 @@ public class LinkedHashtableTest {
 
     @Test
     public void testPutAll() {
-        LinkedHashtable h2 = new LinkedHashtable();
+        LinkedHashtable<Object, Object> h2 = new LinkedHashtable<>();
         h.put(K1, V1);
         h2.putAll(h);
         assertTrue(h2.containsKey(K1));

@@ -205,7 +205,7 @@ public abstract class ResourceDecorator extends Resource {
      */
     protected final Resource getResource() {
         if (isReference()) {
-            return (Resource) getCheckedRef();
+            return getCheckedRef();
         }
         if (resource == null) {
             throw new BuildException("no resource specified");

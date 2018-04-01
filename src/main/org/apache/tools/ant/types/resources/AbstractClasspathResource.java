@@ -151,7 +151,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public boolean isExists() {
         if (isReference()) {
-            return  ((Resource) getCheckedRef()).isExists();
+            return  getCheckedRef().isExists();
         }
         dieOnCircularReference();
         try (InputStream is = getInputStream()) {
@@ -169,7 +169,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return ((Resource) getCheckedRef()).getInputStream();
+            return getCheckedRef().getInputStream();
         }
         dieOnCircularReference();
 
