@@ -77,7 +77,7 @@ public class XsltTest {
     @Test
     public void testStyleSheetWithInclude() throws Exception {
         buildRule.executeTarget("testStyleSheetWithInclude");
-        if (buildRule.getLog().indexOf("java.io.FileNotFoundException") != -1) {
+        if (buildRule.getLog().contains("java.io.FileNotFoundException")) {
             fail("xsl:include was not found");
         }
     }

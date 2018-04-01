@@ -308,7 +308,7 @@ public class ANTLR extends Task {
                 throw new BuildException("ANTLR returned: " + err, getLocation());
             }
             String output = bos.toString();
-            if (output.indexOf("error:") > -1) {
+            if (output.contains("error:")) {
                 throw new BuildException("ANTLR signaled an error: "
                                          + output, getLocation());
             }

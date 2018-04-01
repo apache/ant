@@ -754,7 +754,7 @@ public class Rmic extends MatchingTask {
         if (idl) {
             log("will leave uptodate test to rmic implementation in idl mode.",
                 Project.MSG_VERBOSE);
-        } else if (iiop && iiopOpts != null && iiopOpts.indexOf("-always") > -1) {
+        } else if (iiop && iiopOpts != null && iiopOpts.contains("-always")) {
             log("no uptodate test as -always option has been specified",
                 Project.MSG_VERBOSE);
         } else {

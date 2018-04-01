@@ -2459,7 +2459,7 @@ public class Javadoc extends Task {
 
         // check if file may be vulnerable because it was not
         // patched with "validURL(url)":
-        if (fileContents.indexOf("function validURL(url) {") < 0) {
+        if (!fileContents.contains("function validURL(url) {")) {
             // we need to patch the file!
             final String patchedFileContents = patchContent(fileContents, fixData);
             if (!patchedFileContents.equals(fileContents)) {

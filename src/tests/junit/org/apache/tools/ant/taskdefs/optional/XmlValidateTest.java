@@ -137,7 +137,7 @@ public class XmlValidateTest {
                 throw new AssumptionViolatedException("parser doesn't support schema");
             } else {
                 assertTrue(
-                    e.getMessage().indexOf("not a valid XML document") > -1);
+                        e.getMessage().contains("not a valid XML document"));
             }
         }
     }

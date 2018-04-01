@@ -185,7 +185,7 @@ public class ModifiedSelectorTest {
 
             assertNotNull("'fs.full.value' must be set.", fsFullValue);
             assertTrue("'fs.full.value' must not be null.", !"".equals(fsFullValue));
-            assertTrue("'fs.full.value' must contain ant.bat.", fsFullValue.indexOf("ant.bat")>-1);
+            assertTrue("'fs.full.value' must contain ant.bat.", fsFullValue.contains("ant.bat"));
 
             assertNotNull("'fs.mod.value' must be set.", fsModValue);
             // must be empty according to the Mock* implementations

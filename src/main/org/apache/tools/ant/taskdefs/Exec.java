@@ -89,7 +89,7 @@ public class Exec extends Task {
         // test if os match
         String myos = System.getProperty("os.name");
         log("Myos = " + myos, Project.MSG_VERBOSE);
-        if ((os != null) && (os.indexOf(myos) < 0)) {
+        if (os != null && !os.contains(myos)) {
             // this command will be executed only on the specified OS
             log("Not found in " + os, Project.MSG_VERBOSE);
             return 0;
@@ -100,9 +100,9 @@ public class Exec extends Task {
           dir = getProject().getBaseDir();
         }
 
-        if (myos.toLowerCase(Locale.ENGLISH).indexOf("windows") >= 0) {
+        if (myos.toLowerCase(Locale.ENGLISH).contains("windows")) {
             if (!dir.equals(getProject().resolveFile("."))) {
-                if (myos.toLowerCase(Locale.ENGLISH).indexOf("nt") >= 0) {
+                if (myos.toLowerCase(Locale.ENGLISH).contains("nt")) {
                     command = "cmd /c cd " + dir + " && " + command;
                 } else {
                     String ant = getProject().getProperty(MagicNames.ANT_HOME);

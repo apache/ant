@@ -563,7 +563,7 @@ public class ExecTask extends Task {
         //for the current os.name
         String myos = System.getProperty("os.name");
         log("Current OS is " + myos, Project.MSG_VERBOSE);
-        if ((os != null) && (os.indexOf(myos) < 0)) {
+        if (os != null && !os.contains(myos)) {
             // this command will be executed only on the specified OS
             log("This OS, " + myos
                     + " was not found in the specified list of valid OSes: " + os,

@@ -136,9 +136,9 @@ public class JikesOutputParser implements ExecuteStreamHandler {
             if (line.trim().equals("")) {
                 continue;
             }
-            if (lower.indexOf("error") != -1) {
+            if (lower.contains("error")) {
                 setError(true);
-            } else if (lower.indexOf("warning") != -1) {
+            } else if (lower.contains("warning")) {
                 setError(false);
                    } else {
                 // If we don't know the type of the line

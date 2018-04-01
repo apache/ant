@@ -471,7 +471,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         if (getConfig().namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
 
             // try to find JOnAS specific convention name
-            if (descriptorFileName.indexOf(getConfig().baseNameTerminator) == -1) {
+            if (!descriptorFileName.contains(getConfig().baseNameTerminator)) {
 
                 // baseNameTerminator not found: the descriptor use the
                 // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and

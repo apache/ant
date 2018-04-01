@@ -155,7 +155,7 @@ public class ResourceContains implements Condition {
                 contents = contents.toLowerCase();
                 sub = sub.toLowerCase();
             }
-            return contents.indexOf(sub) >= 0;
+            return contents.contains(sub);
         } catch (IOException e) {
             throw new BuildException("There was a problem accessing resource : " + resource);
         }

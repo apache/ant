@@ -110,7 +110,7 @@ public class CopyTest {
     @Test
     public void testFilterTest() {
         buildRule.executeTarget("filtertest");
-        assertTrue(buildRule.getLog().indexOf("loop in tokens") == -1);
+        assertTrue(!buildRule.getLog().contains("loop in tokens"));
     }
 
     @Test

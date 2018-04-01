@@ -122,7 +122,7 @@ public abstract class BuildFileTest extends TestCase {
         String realLog = getLog();
         assertTrue("expecting log to contain \"" + substring + "\" log was \""
                    + realLog + "\"",
-                   realLog.indexOf(substring) >= 0);
+                realLog.contains(substring));
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class BuildFileTest extends TestCase {
         String realLog = getLog();
         assertFalse("didn't expect log to contain \"" + substring + "\" log was \""
                     + realLog + "\"",
-                    realLog.indexOf(substring) >= 0);
+                realLog.contains(substring));
     }
 
     /**
@@ -160,7 +160,7 @@ public abstract class BuildFileTest extends TestCase {
         String realMessage = (message != null)
             ? message
             : "expecting output to contain \"" + substring + "\" output was \"" + realOutput + "\"";
-        assertTrue(realMessage, realOutput.indexOf(substring) >= 0);
+        assertTrue(realMessage, realOutput.contains(substring));
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class BuildFileTest extends TestCase {
         String realMessage = (message != null)
             ? message
             : "expecting output to not contain \"" + substring + "\" output was \"" + realOutput + "\"";
-        assertFalse(realMessage, realOutput.indexOf(substring) >= 0);
+        assertFalse(realMessage, realOutput.contains(substring));
     }
 
     /**
@@ -237,7 +237,7 @@ public abstract class BuildFileTest extends TestCase {
         assertTrue("expecting debug log to contain \"" + substring
                    + "\" log was \""
                    + realLog + "\"",
-                   realLog.indexOf(substring) >= 0);
+                realLog.contains(substring));
     }
 
     /**
@@ -425,7 +425,7 @@ public abstract class BuildFileTest extends TestCase {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
             buildException = ex;
-            if ((null != contains) && (ex.getMessage().indexOf(contains) == -1)) {
+            if ((null != contains) && (!ex.getMessage().contains(contains))) {
                 fail("Should throw BuildException because '" + cause + "' with message containing '" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
             }
             return;

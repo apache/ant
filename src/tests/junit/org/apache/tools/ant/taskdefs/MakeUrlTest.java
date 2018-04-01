@@ -161,7 +161,7 @@ public class MakeUrlTest {
         String result = getProperty(property);
 
         assertTrue("expected " + contains + " in " + result,
-                result != null && result.indexOf(contains) >= 0);
+                result != null && result.contains(contains));
     }
 
     /**

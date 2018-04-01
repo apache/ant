@@ -597,7 +597,7 @@ public class FilterSet extends DataType implements Cloneable {
         }
         passedTokens.addElement(parent);
         String value = iReplaceTokens(line);
-        if (value.indexOf(beginToken) == -1 && !duplicateToken
+        if (!value.contains(beginToken) && !duplicateToken
                 && recurseDepth == 1) {
             passedTokens = null;
         } else if (duplicateToken) {

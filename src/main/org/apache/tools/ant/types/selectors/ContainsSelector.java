@@ -186,7 +186,7 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
                     if (ignorewhitespace) {
                         teststr = SelectorUtils.removeWhitespace(teststr);
                     }
-                    if (teststr.indexOf(userstr) > -1) {
+                    if (teststr.contains(userstr)) {
                         return true;
                     }
                     teststr = in.readLine();

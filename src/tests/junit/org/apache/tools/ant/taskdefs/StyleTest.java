@@ -232,7 +232,7 @@ public class StyleTest {
               "expecting file " + filename
             + " to contain " + contains
             + " but got " + content,
-            content.indexOf(contains) > -1);
+                content.contains(contains));
     }
 
 }

@@ -1042,7 +1042,7 @@ public class TarEntry implements TarConstants {
                         fileName = fileName.substring(2);
                     }
                 }
-            } else if (osname.indexOf("netware") > -1) {
+            } else if (osname.contains("netware")) {
                 int colon = fileName.indexOf(':');
                 if (colon != -1) {
                     fileName = fileName.substring(colon + 1);

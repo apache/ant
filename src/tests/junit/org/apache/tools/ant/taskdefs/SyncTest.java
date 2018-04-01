@@ -41,7 +41,7 @@ public class SyncTest {
         buildRule.executeTarget("simplecopy");
         String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
+        assertTrue(!buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class SyncTest {
         assertFileIsNotPresent(d);
         String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsNotPresent(c);
-        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
+        assertTrue(!buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SyncTest {
         assertFileIsNotPresent(d);
         String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsPresent(c);
-        assertTrue(buildRule.getFullLog().indexOf("dangling") == -1);
+        assertTrue(!buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") > -1);
+        assertTrue(buildRule.getFullLog().contains("Removing orphan file:"));
         assertContains("Removed 1 dangling file from", buildRule.getFullLog());
         assertContains("Removed 1 dangling directory from", buildRule.getFullLog());
     }
@@ -97,7 +97,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") > -1);
+        assertTrue(buildRule.getFullLog().contains("Removing orphan file:"));
         assertContains("Removed 1 dangling file from", buildRule.getFullLog());
         assertContains("Removed 1 dangling directory from", buildRule.getFullLog());
     }
@@ -111,7 +111,7 @@ public class SyncTest {
         assertFileIsPresent(c);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsNotPresent(f);
-        assertTrue(buildRule.getFullLog().indexOf("Removing orphan directory:") > -1);
+        assertTrue(buildRule.getFullLog().contains("Removing orphan directory:"));
         assertContains("NO dangling file to remove from", buildRule.getFullLog());
         assertContains("Removed 2 dangling directories from", buildRule.getFullLog());
     }
@@ -123,7 +123,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") == -1);
+        assertTrue(!buildRule.getFullLog().contains("Removing orphan file:"));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(buildRule.getFullLog().indexOf("Removing orphan file:") == -1);
+        assertTrue(!buildRule.getFullLog().contains("Removing orphan file:"));
     }
 
     public void assertFileIsPresent(String f) {

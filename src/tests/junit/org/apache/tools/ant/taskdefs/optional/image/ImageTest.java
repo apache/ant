@@ -116,7 +116,7 @@ public class ImageTest {
         } catch (RuntimeException re){
             assertTrue("Run time exception should say 'Unable to process image stream'. :"
                        + re.toString(),
-                       re.toString().indexOf("Unable to process image stream") > -1);
+                    re.toString().contains("Unable to process image stream"));
         }
     }
 

@@ -80,7 +80,7 @@ public class JUnitTestRunnerTest {
         runner.run();
         String error = runner.getFormatter().getError();
         assertEquals(error, JUnitTestRunner.ERRORS, runner.getRetCode());
-        assertTrue(error, error.indexOf("thrown on purpose") != -1);
+        assertTrue(error, error.contains("thrown on purpose"));
     }
 
     // check that something which is not a testcase generates no errors

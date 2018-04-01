@@ -199,7 +199,7 @@ public class ConcatTest {
     @Test
     public void testFilter() {
         buildRule.executeTarget("testfilter");
-        assertTrue(buildRule.getLog().indexOf("REPLACED") > -1);
+        assertTrue(buildRule.getLog().contains("REPLACED"));
     }
 
     @Test
@@ -251,7 +251,7 @@ public class ConcatTest {
     @Test
     public void testfilterinline() {
         buildRule.executeTarget("testfilterinline");
-        assertTrue(buildRule.getLog().indexOf("REPLACED") > -1);
+        assertTrue(buildRule.getLog().contains("REPLACED"));
     }
 
     /**
@@ -260,8 +260,8 @@ public class ConcatTest {
     @Test
     public void testmultireader() {
         buildRule.executeTarget("testmultireader");
-        assertTrue(buildRule.getLog().indexOf("Bye") > -1);
-        assertTrue(buildRule.getLog().indexOf("Hello") == -1);
+        assertTrue(buildRule.getLog().contains("Bye"));
+        assertTrue(!buildRule.getLog().contains("Hello"));
     }
     /**
      * Check if fixlastline works
@@ -302,7 +302,7 @@ public class ConcatTest {
         assertTrue(
             "expecting file " + filename + " to contain " +
             contains +
-            " but got " + content, content.indexOf(contains) > -1);
+            " but got " + content, content.contains(contains));
     }
 
 }

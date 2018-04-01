@@ -318,9 +318,9 @@ public class AntTest {
     @Test
     public void testPropertySet() {
         buildRule.executeTarget("test-propertyset");
-        assertTrue(buildRule.getLog().indexOf("test1 is ${test1}") > -1);
-        assertTrue(buildRule.getLog().indexOf("test2 is ${test2}") > -1);
-        assertTrue(buildRule.getLog().indexOf("test1.x is 1") > -1);
+        assertTrue(buildRule.getLog().contains("test1 is ${test1}"));
+        assertTrue(buildRule.getLog().contains("test2 is ${test2}"));
+        assertTrue(buildRule.getLog().contains("test1.x is 1"));
     }
 
     @Test

@@ -38,29 +38,29 @@ public class TaskContainerTest {
     public void testPropertyExpansion() {
         buildRule.executeTarget("testPropertyExpansion");
         assertTrue("attribute worked",
-                   buildRule.getLog().indexOf("As attribute: it worked") > -1);
+                buildRule.getLog().contains("As attribute: it worked"));
         assertTrue("nested text worked",
-                   buildRule.getLog().indexOf("As nested text: it worked") > -1);
+                buildRule.getLog().contains("As nested text: it worked"));
     }
 
     @Test
     public void testTaskdef() {
         buildRule.executeTarget("testTaskdef");
         assertTrue("attribute worked",
-                   buildRule.getLog().indexOf("As attribute: it worked") > -1);
+                buildRule.getLog().contains("As attribute: it worked"));
         assertTrue("nested text worked",
-                   buildRule.getLog().indexOf("As nested text: it worked") > -1);
+                buildRule.getLog().contains("As nested text: it worked"));
         assertTrue("nested text worked",
-                   buildRule.getLog().indexOf("As nested task: it worked") > -1);
+                buildRule.getLog().contains("As nested task: it worked"));
     }
 
     @Test
     public void testCaseInsensitive() {
         buildRule.executeTarget("testCaseInsensitive");
         assertTrue("works outside of container",
-                   buildRule.getLog().indexOf("hello ") > -1);
+                buildRule.getLog().contains("hello "));
         assertTrue("works inside of container",
-                   buildRule.getLog().indexOf("world") > -1);
+                buildRule.getLog().contains("world"));
     }
 
 }

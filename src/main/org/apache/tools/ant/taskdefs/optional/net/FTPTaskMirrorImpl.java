@@ -1505,7 +1505,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 Project.MSG_WARN);
         } else {
             for (String reply : ftp.getReplyStrings()) {
-                if (reply.indexOf("200") == -1) {
+                if (!reply.contains("200")) {
                     task.log(reply, Project.MSG_WARN);
                 }
             }

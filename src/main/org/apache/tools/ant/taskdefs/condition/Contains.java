@@ -71,7 +71,7 @@ public class Contains implements Condition {
         }
 
         return caseSensitive
-            ? string.indexOf(subString) > -1
-            : string.toLowerCase().indexOf(subString.toLowerCase()) > -1;
+            ? string.contains(subString)
+            : string.toLowerCase().contains(subString.toLowerCase());
     }
 }

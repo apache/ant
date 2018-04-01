@@ -47,7 +47,7 @@ public class Kaffeh implements JavahAdapter {
             Execute.runCommand(javah, cmd.getCommandline());
             return true;
         } catch (BuildException e) {
-            if (e.getMessage().indexOf("failed with return code") == -1) {
+            if (!e.getMessage().contains("failed with return code")) {
                 throw e;
             }
         }

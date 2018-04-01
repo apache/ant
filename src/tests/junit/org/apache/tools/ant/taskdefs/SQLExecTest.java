@@ -90,7 +90,7 @@ public class SQLExecTest {
         try {
             sql.execute();
         } catch (BuildException e){
-            assertTrue(e.getCause().getMessage().indexOf("No suitable Driver") != -1);
+            assertTrue(e.getCause().getMessage().contains("No suitable Driver"));
         }
         assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
         assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));

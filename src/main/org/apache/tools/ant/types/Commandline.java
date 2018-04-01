@@ -428,15 +428,14 @@ public class Commandline implements Cloneable {
      *                           and double quotes.
      */
     public static String quoteArgument(String argument) {
-        if (argument.indexOf("\"") > -1) {
-            if (argument.indexOf("\'") > -1) {
+        if (argument.contains("\"")) {
+            if (argument.contains("\'")) {
                 throw new BuildException("Can\'t handle single and double"
                         + " quotes in same argument");
             }
             return '\'' + argument + '\'';
         }
-        if (argument.indexOf("\'") > -1
-               || argument.indexOf(" ") > -1
+        if (argument.contains("\'") || argument.contains(" ")
                // WIN9x uses a bat file for executing commands
                || (IS_WIN_9X && argument.indexOf(';') != -1)) {
             return '\"' + argument + '\"';
