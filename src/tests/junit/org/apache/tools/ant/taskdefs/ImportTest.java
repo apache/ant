@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
-import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -138,7 +138,7 @@ public class ImportTest {
         if (!new File(ln).exists()) {
             ln = "/bin/ln";
         }
-        Assume.assumeTrue("Current system does not support Symlinks", new File(ln).exists());
+        assumeTrue("Current system does not support Symlinks", new File(ln).exists());
         String symlink = "src/etc/testcases/taskdefs/import/symlinks/d3b";
         File symlinkFile = new File(System.getProperty("root"), symlink);
         if (Runtime.getRuntime().exec(new String[] {ln, "-s", "d3a", symlinkFile.getAbsolutePath()}).waitFor() != 0) {

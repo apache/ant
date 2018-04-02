@@ -19,13 +19,13 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * test assertion handling
@@ -111,7 +111,7 @@ public class AssertionsTest {
 
     @Test
     public void testNofork() {
-        Assume.assumeFalse("ran Ant tests with -ea and this would fail spuriously", AssertionsTest.class.desiredAssertionStatus());
+        assumeFalse("ran Ant tests with -ea and this would fail spuriously", AssertionsTest.class.desiredAssertionStatus());
         buildRule.executeTarget("test-nofork");
         assertContains("Assertion statements are currently ignored in non-forked mode", buildRule.getLog());
     }

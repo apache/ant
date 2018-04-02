@@ -21,6 +21,9 @@ import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeNoException;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +32,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -145,7 +147,7 @@ public class ManifestClassPathTest {
 
     @Test
     public void testPseudoTahoeRefid() {
-        Assume.assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
+        assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-refid");
         assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
@@ -158,7 +160,7 @@ public class ManifestClassPathTest {
 
     @Test
     public void testPseudoTahoeNested() {
-        Assume.assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
+        assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-nested");
         assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
@@ -195,7 +197,7 @@ public class ManifestClassPathTest {
 
     @Test
     public void testInternationalHebrew() {
-        Assume.assumeFalse("Test with hebrew path not attempted under Windows", Os.isFamily("windows"));
+        assumeFalse("Test with hebrew path not attempted under Windows", Os.isFamily("windows"));
         buildRule.executeTarget("international-hebrew");
         buildRule.executeTarget("run-two-jars");
         assertContains("beta alpha", buildRule.getLog());
@@ -203,14 +205,14 @@ public class ManifestClassPathTest {
 
     @Test
     public void testSameWindowsDrive() {
-        Assume.assumeTrue("Test with drive letters only run on windows", Os.isFamily("windows"));
+        assumeTrue("Test with drive letters only run on windows", Os.isFamily("windows"));
         buildRule.executeTarget("testSameDrive");
         assertEquals(buildRule.getProject().getProperty("cp"), "../a/b/x.jar");
     }
 
     @Test
     public void testDifferentWindowsDrive() {
-        Assume.assumeTrue("Test with drive letters only run on windows", Os.isFamily("windows"));
+        assumeTrue("Test with drive letters only run on windows", Os.isFamily("windows"));
         // the lines below try to find a drive name different than the one containing the temp dir
         // if the temp dir is C will try to use D
         // if the temp dir is on D or other will try to use C
@@ -231,7 +233,7 @@ public class ManifestClassPathTest {
             }
             new File(altDriveLetter + ":/foo.txt").getCanonicalPath();
         } catch (IOException e) {
-            Assume.assumeNoException("Drive " + altDriveLetter + ": doesn't exist or is not ready", e);
+            assumeNoException("Drive " + altDriveLetter + ": doesn't exist or is not ready", e);
         }
         buildRule.getProject().setProperty("altDriveLetter", altDriveLetter);
 

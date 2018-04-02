@@ -20,13 +20,13 @@ package org.apache.tools.ant.types.selectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserPrincipal;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -39,7 +39,7 @@ public class OwnedBySelectorTest {
     @Test
     public void ownedByIsTrueForSelf() throws Exception {
         // at least on Jenkins the file is owned by "BUILTIN\Administrators"
-        Assume.assumeFalse(Os.isFamily("windows"));
+        assumeFalse(Os.isFamily("windows"));
         String self = System.getProperty("user.name");
         File file = folder.newFile("f.txt");
         UserPrincipal user = Files.getOwner(file.toPath());

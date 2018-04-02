@@ -22,6 +22,7 @@ import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.apache.tools.ant.AntAssert.assertNotContains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.io.Reader;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -115,7 +115,7 @@ public class TokenFilterTest {
     public void testReplaceRegex() throws IOException {
 
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present",
+        assumeTrue("Regex not present",
                 getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("replaceregex");
@@ -131,7 +131,7 @@ public class TokenFilterTest {
     @Test
     public void testFilterReplaceRegex() throws IOException {
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present",
+        assumeTrue("Regex not present",
                 getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("filterreplaceregex");
@@ -143,7 +143,7 @@ public class TokenFilterTest {
     @Test
     public void testHandleDollerMatch() throws IOException {
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("dollermatch");
     }
@@ -183,7 +183,7 @@ public class TokenFilterTest {
     @Test
     public void testContainsRegex() throws IOException {
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         //expectFileContains(buildRule.getProject().getProperty("output") + "/replaceregexp", "bye world");
 
@@ -197,7 +197,7 @@ public class TokenFilterTest {
     @Test
     public void testFilterContainsRegex() throws IOException {
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("filtercontainsregex");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/filtercontainsregex");
@@ -209,7 +209,7 @@ public class TokenFilterTest {
     @Test
     public void testContainsRegex2() throws IOException {
         buildRule.executeTarget("hasregex");
-        Assume.assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("containsregex2");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/containsregex2");
@@ -227,7 +227,7 @@ public class TokenFilterTest {
 
     @Test
     public void testScriptFilter() throws IOException {
-        Assume.assumeTrue("Project does not have 'testScriptFilter' target",
+        assumeTrue("Project does not have 'testScriptFilter' target",
                 buildRule.getProject().getTargets().contains("testScriptFilter"));
         buildRule.executeTarget("scriptfilter");
         assertContains("HELLO WORLD", getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter"));
@@ -236,7 +236,7 @@ public class TokenFilterTest {
 
     @Test
     public void testScriptFilter2() throws IOException {
-        Assume.assumeTrue("Project does not have 'testScriptFilter' target", buildRule.getProject().getTargets().contains("testScriptFilter"));
+        assumeTrue("Project does not have 'testScriptFilter' target", buildRule.getProject().getTargets().contains("testScriptFilter"));
         buildRule.executeTarget("scriptfilter2");
         assertContains("HELLO MOON", getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter2"));
     }

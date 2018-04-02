@@ -34,7 +34,6 @@ import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +43,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  */
@@ -137,7 +137,7 @@ public class JarTest {
         File jarFile = new File(getOutputDir(), tempJar);
 
         // move the modified date back a couple of seconds rather than delay the test on each run
-        Assume.assumeTrue(jarFile.setLastModified(jarFile.lastModified()
+        assumeTrue(jarFile.setLastModified(jarFile.lastModified()
                 - FileUtils.getFileUtils().getFileTimestampGranularity() * 3));
         long jarModifiedDate = jarFile.lastModified();
 

@@ -20,11 +20,11 @@ package org.apache.tools.ant.taskdefs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class DirnameTest {
 
     @Test
     public void test4() {
-        Assume.assumeFalse("Test not possible on DOS or Netware family OS", Os.isFamily("netware") || Os.isFamily("dos"));
+        assumeFalse("Test not possible on DOS or Netware family OS", Os.isFamily("netware") || Os.isFamily("dos"));
         buildRule.executeTarget("test4");
         String filesep = System.getProperty("file.separator");
         String expected = filesep + "usr" + filesep + "local";

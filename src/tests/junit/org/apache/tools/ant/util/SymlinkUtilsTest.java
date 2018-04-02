@@ -19,11 +19,11 @@
 package org.apache.tools.ant.util;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assume.assumeFalse;
 
 import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.junit.Assume;
 import org.junit.Test;
 
 public class SymlinkUtilsTest {
@@ -33,7 +33,7 @@ public class SymlinkUtilsTest {
 
     @Test
     public void testRootIsNoSymlink() throws IOException {
-        Assume.assumeFalse("Symlink doesn't work on Windows", Os.isFamily("windows"));
+        assumeFalse("Symlink doesn't work on Windows", Os.isFamily("windows"));
         assertFalse(SYMLINK_UTILS.isSymbolicLink("/"));
     }
 

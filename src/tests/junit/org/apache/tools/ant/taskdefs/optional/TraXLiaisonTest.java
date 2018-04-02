@@ -19,6 +19,9 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeNoException;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,7 +35,6 @@ import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -59,13 +61,12 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
         try {
             getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
         } catch (Exception exc) {
-            Assume.assumeNoException("xalan redirect is not on the classpath", exc);
+            assumeNoException("xalan redirect is not on the classpath", exc);
         }
         try {
             String factoryName = TransformerFactory.newInstance().getClass().getName();
-            Assume.assumeFalse("TraxFactory is Xalan",
-                              "org.apache.xalan.processor.TransformerFactoryImpl"
-                              .equals(factoryName));
+            assumeFalse("TraxFactory is Xalan",
+                    "org.apache.xalan.processor.TransformerFactoryImpl".equals(factoryName));
         } catch (TransformerFactoryConfigurationError exc) {
             throw new RuntimeException(exc);
         }
@@ -106,13 +107,12 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
         try {
             getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
         } catch (Exception exc) {
-            Assume.assumeNoException("xalan redirect is not on the classpath", exc);
+            assumeNoException("xalan redirect is not on the classpath", exc);
         }
         try {
             String factoryName = TransformerFactory.newInstance().getClass().getName();
-            Assume.assumeTrue("TraxFactory is " + factoryName + " and not Xalan",
-                              "org.apache.xalan.processor.TransformerFactoryImpl"
-                              .equals(factoryName));
+            assumeTrue("TraxFactory is " + factoryName + " and not Xalan",
+                    "org.apache.xalan.processor.TransformerFactoryImpl".equals(factoryName));
         } catch (TransformerFactoryConfigurationError exc) {
             throw new RuntimeException(exc);
         }

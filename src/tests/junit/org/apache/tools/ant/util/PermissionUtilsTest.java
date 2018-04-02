@@ -19,6 +19,7 @@
 package org.apache.tools.ant.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeNotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +37,6 @@ import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
-import org.junit.Assume;
 import org.junit.Test;
 
 public class PermissionUtilsTest {
@@ -103,8 +103,8 @@ public class PermissionUtilsTest {
     public void getSetPermissionsWorksForFiles() throws IOException {
         File f = File.createTempFile("ant", ".tst");
         f.deleteOnExit();
-        Assume.assumeNotNull(Files.getFileAttributeView(f.toPath(),
-                                                        PosixFileAttributeView.class));
+        assumeNotNull(Files.getFileAttributeView(f.toPath(),
+                PosixFileAttributeView.class));
         Set<PosixFilePermission> s =
             EnumSet.of(PosixFilePermission.OWNER_READ,
                        PosixFilePermission.OWNER_WRITE,

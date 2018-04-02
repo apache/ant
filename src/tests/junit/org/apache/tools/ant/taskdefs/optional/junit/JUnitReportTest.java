@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -35,7 +36,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -187,9 +187,8 @@ public class JUnitReportTest {
     public void testWithSecurityManagerAndXalanFactory() throws Exception {
         try {
             String factoryName = TransformerFactory.newInstance().getClass().getName();
-            Assume.assumeTrue("TraxFactory is " + factoryName + " and not Xalan",
-                              "org.apache.xalan.processor.TransformerFactoryImpl"
-                              .equals(factoryName));
+            assumeTrue("TraxFactory is " + factoryName + " and not Xalan",
+                    "org.apache.xalan.processor.TransformerFactoryImpl".equals(factoryName));
         } catch (TransformerFactoryConfigurationError exc) {
             throw new RuntimeException(exc);
         }

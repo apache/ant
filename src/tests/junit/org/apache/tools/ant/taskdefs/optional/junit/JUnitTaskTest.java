@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import static org.apache.tools.ant.AntAssert.assertNotContains;
 import static org.apache.tools.ant.AntAssert.assertContains;
@@ -52,7 +53,6 @@ import org.apache.tools.ant.taskdefs.launcher.CommandLauncher;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -140,7 +140,7 @@ public class JUnitTaskTest {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             try {
                 Class<?> clazz = Class.forName("junit.framework.JUnit4TestAdapter");
-                Assume.assumeFalse("Skipping test since it fails with JUnit 4", clazz != null);
+                assumeFalse("Skipping test since it fails with JUnit 4", clazz != null);
             } catch (ClassNotFoundException e) {
                 // OK, this is JUnit3, can run test
             }

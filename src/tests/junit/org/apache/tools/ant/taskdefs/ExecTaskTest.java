@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 import java.io.File;
 import java.util.GregorianCalendar;
@@ -29,7 +30,6 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -68,7 +68,7 @@ public class ExecTaskTest {
     @Test
     public void testspawn() throws InterruptedException {
         buildRule.getProject().executeTarget("setUp");
-        Assume.assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
+        assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
         myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
         logFile = FILE_UTILS.createTempFile("spawn", "log", new File(buildRule.getProject().getProperty("output")),
                 false, false);

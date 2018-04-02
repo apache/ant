@@ -20,7 +20,6 @@ package org.apache.tools.ant.util;
 import java.io.File;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.junit.Assume;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +36,7 @@ public class JavaEnvUtilsTest {
 
     @Test
     public void testGetExecutableNetware() {
-        Assume.assumeTrue("Test only runs on netware", Os.isName("netware"));
+        assumeTrue("Test only runs on netware", Os.isName("netware"));
         assertEquals("java", JavaEnvUtils.getJreExecutable("java"));
         assertEquals("javac", JavaEnvUtils.getJdkExecutable("javac"));
         assertEquals("foo", JavaEnvUtils.getJreExecutable("foo"));
@@ -46,7 +45,7 @@ public class JavaEnvUtilsTest {
 
     @Test
     public void testGetExecutableWindows() {
-        Assume.assumeTrue("Test only runs on windows", Os.isFamily("windows"));
+        assumeTrue("Test only runs on windows", Os.isFamily("windows"));
         String javaHome = FILE_UTILS.normalize(System.getProperty("java.home"))
             .getAbsolutePath();
 
@@ -83,7 +82,7 @@ public class JavaEnvUtilsTest {
 
     @Test
     public void testGetExecutableMostPlatforms() {
-        Assume.assumeTrue("Test only runs on non Netware and non Windows systems",
+        assumeTrue("Test only runs on non Netware and non Windows systems",
                 !Os.isName("netware") && !Os.isFamily("windows"));
         String javaHome = FILE_UTILS.normalize(System.getProperty("java.home")).getAbsolutePath();
 

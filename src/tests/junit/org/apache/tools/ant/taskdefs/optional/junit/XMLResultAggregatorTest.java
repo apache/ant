@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNoException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +30,6 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.types.FileSet;
-import org.junit.Assume;
 import org.junit.Test;
 
 public class XMLResultAggregatorTest {
@@ -40,7 +40,7 @@ public class XMLResultAggregatorTest {
         try {
             Class.forName("java.nio.file.Files");
         } catch (ClassNotFoundException x) {
-            Assume.assumeNoException("Skip test on JDK 6 and below", x);
+            assumeNoException("Skip test on JDK 6 and below", x);
         }
         final File d = new File(System.getProperty("java.io.tmpdir"), "XMLResultAggregatorTest");
         if (d.exists()) {

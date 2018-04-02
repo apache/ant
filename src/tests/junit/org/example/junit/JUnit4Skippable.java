@@ -18,12 +18,12 @@
 
 package org.example.junit;
 
-import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 public class JUnit4Skippable {
 
@@ -40,7 +40,7 @@ public class JUnit4Skippable {
 
     @Test
     public void implicitlyIgnoreTest() {
-        Assume.assumeFalse("This test will be ignored", true);
+        assumeFalse("This test will be ignored", true);
         fail("I told you, this test should have been ignored!");
     }
 
@@ -52,7 +52,7 @@ public class JUnit4Skippable {
 
     @Test
     public void implicitlyIgnoreTestNoMessage() {
-        Assume.assumeFalse(true);
+        assumeFalse(true);
         fail("I told you, this test should have been ignored!");
     }
 

@@ -22,7 +22,6 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * Testcase for the Signjar task
@@ -100,7 +100,7 @@ public class SignJarTest {
 
     @Test
     public void testURLKeystoreHTTP() {
-        Assume.assumeFalse("Test is set offline", isOffline());
+        assumeFalse("Test is set offline", isOffline());
         buildRule.executeTarget("urlKeystoreHTTP");
     }
 

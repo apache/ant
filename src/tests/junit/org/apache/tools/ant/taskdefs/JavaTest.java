@@ -34,7 +34,6 @@ import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * stress out java task
@@ -220,13 +220,13 @@ public class JavaTest {
      */
     @Test
     public void testRunFail() {
-        Assume.assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        assumeTrue("Fatal tests have not been set to run", runFatalTests);
         buildRule.executeTarget("testRunFail");
     }
 
     @Test
     public void testRunFailFoe() {
-        Assume.assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        assumeTrue("Fatal tests have not been set to run", runFatalTests);
         try {
             buildRule.executeTarget("testRunFailFoe");
             fail("Build exception should have been thrown - " + "java failures being propagated");

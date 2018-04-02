@@ -22,11 +22,11 @@ import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeNoException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -128,7 +128,7 @@ public class PropertyTest {
         try {
             Class.forName("java.lang.Iterable");
         } catch (ClassNotFoundException e) {
-            Assume.assumeNoException("XML Loading only on Java 5+", e);
+            assumeNoException("XML Loading only on Java 5+", e);
         }
         buildRule.executeTarget("testXmlProperty");
         assertEquals("ONE", buildRule.getProject().getProperty("xml.one"));

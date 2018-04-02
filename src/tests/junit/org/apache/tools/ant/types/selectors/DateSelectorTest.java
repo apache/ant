@@ -20,13 +20,12 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
-import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Tests Date Selectors.
@@ -36,7 +35,6 @@ public class DateSelectorTest {
 
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
-
 
     /**
      * Test the code that validates the selector.
@@ -211,7 +209,7 @@ public class DateSelectorTest {
         // setup the modified timestamp to match what the test needs, although be aware that the 3rd and 4th
         // files don't exist so can't be changed, so don't try and loop over them
         for (int i = 1; i <= 2; i++) {
-            Assume.assumeTrue("Cannot setup file times for test",
+            assumeTrue("Cannot setup file times for test",
                     selectorRule.getMirrorFiles()[i].setLastModified(testtime - (3 * 60 * 60 * 100)));
         }
 
@@ -225,7 +223,7 @@ public class DateSelectorTest {
         s.setWhen(before);
         s.setGranularity(2);
         for (int i = 7; i <= 10; i++) {
-            Assume.assumeTrue("Cannot setup file times for test",
+            assumeTrue("Cannot setup file times for test",
                     selectorRule.getMirrorFiles()[i].setLastModified(testtime + (3 * 60 * 60 * 100)));
         }
 
