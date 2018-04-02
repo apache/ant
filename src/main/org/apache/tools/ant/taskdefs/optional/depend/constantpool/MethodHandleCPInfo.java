@@ -31,11 +31,6 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
     private ReferenceKind referenceKind;
     /** Must be a valid index into the constant pool table. */
     private int referenceIndex;
-    /**
-     * the index into the constant pool which defined the name and type
-     * signature of the method
-     */
-    private int nameAndTypeIndex;
 
     public enum ReferenceKind {
         REF_getField,

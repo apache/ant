@@ -218,8 +218,7 @@ public class Mapper extends DataType {
 
         if (type == null && classname == null && container == null) {
             throw new BuildException(
-                "nested mapper or "
-                + "one of the attributes type or classname is required");
+                    "nested mapper or one of the attributes type or classname is required");
         }
 
         if (container != null) {

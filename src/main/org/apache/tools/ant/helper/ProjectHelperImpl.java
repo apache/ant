@@ -43,6 +43,7 @@ import org.xml.sax.DocumentHandler;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
+import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.XMLReaderAdapter;
@@ -62,7 +63,7 @@ public class ProjectHelperImpl extends ProjectHelper {
      * SAX 1 style parser used to parse the given file. This may
      * in fact be a SAX 2 XMLReader wrapped in an XMLReaderAdapter.
      */
-    private org.xml.sax.Parser parser;
+    private Parser parser;
 
     /** The project to configure. */
     private Project project;

@@ -288,7 +288,7 @@ public class XMLValidateTask extends Task {
     public void execute() throws BuildException {
         try {
             int fileProcessed = 0;
-            if (file == null && (filesets.isEmpty())) {
+            if (file == null && filesets.isEmpty()) {
                 throw new BuildException(
                     "Specify at least one source - " + "a file or a fileset.");
             }
@@ -307,7 +307,7 @@ public class XMLValidateTask extends Task {
                 }
             }
 
-            for (FileSet fs : filesets) {
+            for (final FileSet fs : filesets) {
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 for (String fileName : ds.getIncludedFiles()) {
                     File srcFile = new File(fs.getDir(getProject()), fileName);
@@ -348,12 +348,12 @@ public class XMLValidateTask extends Task {
                 setFeature(XmlConstants.FEATURE_VALIDATION, true);
             }
             // set the feature from the attribute list
-            for (Attribute feature : attributeList) {
+            for (final Attribute feature : attributeList) {
                 setFeature(feature.getName(), feature.getValue());
 
             }
             // Sets properties
-            for (Property prop : propertyList) {
+            for (final Property prop : propertyList) {
                 setProperty(prop.getName(), prop.getValue());
             }
         }
@@ -375,6 +375,7 @@ public class XMLValidateTask extends Task {
      * we have created and wrapped a SAX1 parser.
      * @return the new XMLReader.
      */
+    @SuppressWarnings("deprecated")
     protected XMLReader createXmlReader() {
         Object reader = null;
         if (readerClassName == null) {
@@ -645,7 +646,7 @@ public class XMLValidateTask extends Task {
                 }
                 int line = e.getLineNumber();
                 int col = e.getColumnNumber();
-                return  name
+                return name
                     + (line == -1
                        ? ""
                        : (":" + line + (col == -1 ? "" : (":" + col))))
@@ -661,11 +662,10 @@ public class XMLValidateTask extends Task {
      * @since ant1.6
      */
     public static class Attribute {
-        /** The name of the attribute to set.
+        /**
+         * The name of the attribute to set.
          *
-         * Valid attributes <a href=
-         * "http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
-         * >include.</a>
+         * Valid attributes <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
          */
         private String attributeName = null;
 

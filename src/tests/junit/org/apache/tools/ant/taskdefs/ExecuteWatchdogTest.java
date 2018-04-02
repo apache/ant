@@ -136,11 +136,11 @@ public class ExecuteWatchdogTest {
         watchdog.start(process);
 
         // I assume that starting this takes less than TIME_OUT/2 ms...
-        Thread thread = new Thread(){
-                public void run(){
+        Thread thread = new Thread() {
+                public void run() {
                     try {
                         process.waitFor();
-                    } catch(InterruptedException e){
+                    } catch(InterruptedException e) {
                         // not very nice but will do the job
                         throw new AssumptionViolatedException("process interrupted in thread", e);
                     }

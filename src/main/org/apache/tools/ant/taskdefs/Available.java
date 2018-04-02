@@ -31,7 +31,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -240,11 +239,8 @@ public class Available extends Task implements Condition {
                 PropertyHelper ph = PropertyHelper.getPropertyHelper(getProject());
                 Object oldvalue = ph.getProperty(property);
                 if (null != oldvalue && !oldvalue.equals(value)) {
-                    log("DEPRECATED - <available> used to override an existing"
-                        + " property."
-                        + StringUtils.LINE_SEP
-                        + "  Build file should not reuse the same property"
-                        + " name for different values.",
+                    log(String.format("DEPRECATED - <available> used to override an existing property.%n"
+                            + "  Build file should not reuse the same property name for different values."),
                         Project.MSG_WARN);
                 }
                 // NB: this makes use of Project#setProperty rather than Project#setNewProperty

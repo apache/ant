@@ -576,16 +576,8 @@ public final class SelectorUtils {
      * @return whether the target is out of date
      */
     public static boolean isOutOfDate(File src, File target, int granularity) {
-        if (!src.exists()) {
-            return false;
-        }
-        if (!target.exists()) {
-            return true;
-        }
-        if ((src.lastModified() - granularity) > target.lastModified()) {
-            return true;
-        }
-        return false;
+        return src.exists() && (!target.exists()
+                || (src.lastModified() - granularity) > target.lastModified());
     }
 
     /**

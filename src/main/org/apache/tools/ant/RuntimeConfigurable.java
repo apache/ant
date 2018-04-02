@@ -176,6 +176,7 @@ public class RuntimeConfigurable implements Serializable {
      *              false.
      * @since 1.9.1
      */
+    @SuppressWarnings("deprecated")
     public boolean isEnabled(UnknownElement owner) {
         if (!namespacedAttribute) {
             return true;

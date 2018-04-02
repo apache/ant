@@ -80,8 +80,7 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
             requestBuilder.selectors(DiscoverySelectors.selectClass(this.testClass));
         } else {
             // add specific methods
-            final String[] methods = this.getMethods();
-            for (final String method : methods) {
+            for (final String method : this.getMethods()) {
                 requestBuilder.selectors(DiscoverySelectors.selectMethod(this.testClass, method));
             }
         }

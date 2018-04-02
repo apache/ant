@@ -974,7 +974,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         } else {
             // ClassLoader.this.parent is already delegated to for example from
             // ClassLoader.getResources, no need:
-            base = new CollectionUtils.EmptyEnumeration<URL>();
+            base = Collections.emptyEnumeration();
         }
         if (isParentFirst(name)) {
             // Normal case.

@@ -254,13 +254,8 @@ public class PropertyFile extends Task {
             throw new BuildException(x, getLocation());
         }
         try {
-            OutputStream os = Files.newOutputStream(propertyfile.toPath()); //NOSONAR
-            try {
-                try {
-                    os.write(baos.toByteArray());
-                } finally {
-                    os.close();
-                }
+            try (OutputStream os = Files.newOutputStream(propertyfile.toPath())) {
+                os.write(baos.toByteArray());
             } catch (IOException x) { // possibly corrupt
                 FileUtils.getFileUtils().tryHardToDelete(propertyfile);
                 throw x;

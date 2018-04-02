@@ -150,8 +150,7 @@ public class Javah extends Task {
     public String[] getClasses() {
         Stream<String> stream = Stream.concat(
             files.stream()
-                .map(fs -> fs.getDirectoryScanner(getProject())
-                    .getIncludedFiles())
+                .map(fs -> fs.getDirectoryScanner(getProject()).getIncludedFiles())
                 .flatMap(Stream::of)
                 .map(s -> s.replace('\\', '.').replace('/', '.')
                     .replaceFirst("\\.class$", "")),
@@ -375,8 +374,7 @@ public class Javah extends Task {
      * @since Ant 1.6.3
      */
     public ImplementationSpecificArgument createArg() {
-        ImplementationSpecificArgument arg =
-            new ImplementationSpecificArgument();
+        ImplementationSpecificArgument arg = new ImplementationSpecificArgument();
         facade.addImplementationArgument(arg);
         return arg;
     }
@@ -444,8 +442,8 @@ public class Javah extends Task {
                     + "\" does not exist or is not a directory", getLocation());
             }
             if (outputFile != null) {
-                throw new BuildException("destdir and outputFile are mutually "
-                    + "exclusive", getLocation());
+                throw new BuildException("destdir and outputFile are mutually exclusive",
+                        getLocation());
             }
         }
 

@@ -64,7 +64,7 @@ public class ImageTest {
     }
 
     @Test
-    public void testSimpleScale(){
+    public void testSimpleScale() {
         buildRule.executeTarget("testSimpleScale");
         AntAssert.assertContains("Processing File", buildRule.getLog());
 
@@ -114,7 +114,7 @@ public class ImageTest {
         try {
             buildRule.executeTarget("testFailOnError");
             AntAssert.assertContains("Unable to process image stream", buildRule.getLog());
-        } catch (RuntimeException re){
+        } catch (RuntimeException re) {
             assertTrue("Run time exception should say 'Unable to process image stream'. :"
                        + re.toString(),
                     re.toString().contains("Unable to process image stream"));

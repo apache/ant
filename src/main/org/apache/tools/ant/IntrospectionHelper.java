@@ -700,10 +700,8 @@ public final class IntrospectionHelper {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(final String parentUri, final String elementName) {
-        if (isDynamic() || !addTypeMethods.isEmpty()) {
-            return true;
-        }
-        return supportsReflectElement(parentUri, elementName);
+        return isDynamic() || !addTypeMethods.isEmpty()
+                || supportsReflectElement(parentUri, elementName);
     }
 
     /**
@@ -725,11 +723,9 @@ public final class IntrospectionHelper {
      */
     public boolean supportsNestedElement(final String parentUri, final String elementName,
                                          final Project project, final Object parent) {
-        if (!addTypeMethods.isEmpty()
-            && createAddTypeCreator(project, parent, elementName) != null) {
-            return true;
-        }
-        return isDynamic() || supportsReflectElement(parentUri, elementName);
+        return !addTypeMethods.isEmpty()
+                && createAddTypeCreator(project, parent, elementName) != null
+                || isDynamic() || supportsReflectElement(parentUri, elementName);
     }
 
     /**
@@ -1116,7 +1112,8 @@ public final class IntrospectionHelper {
         if (java.nio.file.Path.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value) throws InvocationTargetException, IllegalAccessException {
+                public void set(final Project p, final Object parent, final String value)
+                        throws InvocationTargetException, IllegalAccessException {
                     m.invoke(parent, p.resolveFile(value).toPath());
                 }
             };
@@ -1126,8 +1123,8 @@ public final class IntrospectionHelper {
         if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                void set(final Project p, final Object parent, final String value) throws InvocationTargetException,
-                        IllegalAccessException, BuildException {
+                void set(final Project p, final Object parent, final String value)
+                        throws InvocationTargetException, IllegalAccessException, BuildException {
                     m.invoke(parent, new FileResource(p, p.resolveFile(value)));
                 }
             };
@@ -1244,7 +1241,7 @@ public final class IntrospectionHelper {
                                 value);
                         setValue = enumValue;
                     } catch (final IllegalArgumentException e) {
-                        //there is specific logic here for the value
+                        // there is a specific logic here for the value
                         // being out of the allowed set of enumerations.
                         throw new BuildException("'" + value + "' is not a permitted value for "
                                 + reflectedArg.getName());
@@ -1478,7 +1475,7 @@ public final class IntrospectionHelper {
         }
 
         private void istore(final Object parent, final Object child)
-                throws InvocationTargetException, IllegalAccessException, InstantiationException {
+                throws InvocationTargetException, IllegalAccessException {
             getMethod().invoke(parent, child);
         }
     }
@@ -1541,10 +1538,8 @@ public final class IntrospectionHelper {
         }
         final ComponentHelper helper = ComponentHelper.getComponentHelper(project);
 
-        final MethodAndObject restricted =  createRestricted(
-            helper, elementName, addTypeMethods);
-        final MethodAndObject topLevel = createTopLevel(
-            helper, elementName, addTypeMethods);
+        final MethodAndObject restricted =  createRestricted(helper, elementName, addTypeMethods);
+        final MethodAndObject topLevel = createTopLevel(helper, elementName, addTypeMethods);
 
         if (restricted == null && topLevel == null) {
             return null;
@@ -1556,8 +1551,7 @@ public final class IntrospectionHelper {
                 + elementName);
         }
 
-        final MethodAndObject methodAndObject
-            = restricted != null ? restricted : topLevel;
+        final MethodAndObject methodAndObject = restricted == null ? topLevel : restricted;
 
         Object rObject = methodAndObject.object;
         if (methodAndObject.object instanceof PreSetDef.PreSetDefinition) {
@@ -1716,9 +1710,8 @@ public final class IntrospectionHelper {
         final Method addMethod = findMatchingMethod(
             restrictedDefinition.getExposedClass(project), addTypeMethods);
         if (addMethod == null) {
-            throw new BuildException(
-                "Ant Internal Error - contract mismatch for "
-                + elementName);
+            throw new BuildException("Ant Internal Error - contract mismatch for "
+                    + elementName);
         }
         final Object addedObject = restrictedDefinition.create(project);
         if (addedObject == null) {

@@ -524,7 +524,6 @@ public class FTPTest {
      */
     private class LogCounter extends DefaultLogger {
         private Map<String, Integer> searchMap = new HashMap<>();
-        private int matchCount;
 
         public void addLogMessageToSearch(String message) {
             searchMap.put(message, 0);

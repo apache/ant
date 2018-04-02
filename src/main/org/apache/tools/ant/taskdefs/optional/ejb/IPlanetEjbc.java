@@ -93,6 +93,7 @@ public class IPlanetEjbc {
 
     /* Classpath used when the iAS ejbc is called */
     private String      classpath;
+    @SuppressWarnings("unused")
     private String[]    classpathElements;
 
     /* Options passed to the iAS ejbc */
@@ -643,6 +644,7 @@ public class IPlanetEjbc {
          *
          * @return String display-name value.
          */
+        @SuppressWarnings("unused")
         public String getDisplayName() {
             return displayName;
         }
@@ -956,6 +958,7 @@ public class IPlanetEjbc {
             this.primaryKey = primaryKey;
         }
 
+        @SuppressWarnings("unused")
         public Classname getPrimaryKey() {
             return primaryKey;
         }

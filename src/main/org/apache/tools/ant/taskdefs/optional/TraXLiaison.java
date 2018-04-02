@@ -327,7 +327,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         if (uriResolver != null) {
             transformer.setURIResolver(uriResolver);
         }
-        for (String[] pair : outputProperties) {
+        for (final String[] pair : outputProperties) {
             transformer.setOutputProperty(pair[0], pair[1]);
         }
 
@@ -422,7 +422,6 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         tfactory.setErrorListener(this);
 
         // specific attributes for the transformer
-        final int size = attributes.size();
         for (final Object[] pair : attributes) {
             tfactory.setAttribute((String) pair[0], pair[1]);
         }

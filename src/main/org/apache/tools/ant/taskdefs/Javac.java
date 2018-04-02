@@ -1546,7 +1546,7 @@ public class Javac extends MatchingTask {
                                 element,
                                 i));
                     }
-                    final Collection<? extends CharSequence> parts = resolveGroup(element.subSequence(i+1, end));
+                    final Collection<? extends CharSequence> parts = resolveGroup(element.subSequence(i + 1, end));
                     switch (parts.size()) {
                         case 0:
                             break;

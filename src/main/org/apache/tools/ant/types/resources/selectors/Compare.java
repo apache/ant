@@ -37,9 +37,6 @@ import org.apache.tools.ant.types.resources.comparators.ResourceComparator;
  */
 public class Compare extends DataType implements ResourceSelector {
 
-    private static final String ONE_CONTROL_MESSAGE
-        = " the <control> element should be specified exactly once.";
-
     private DelegatedResourceComparator comp = new DelegatedResourceComparator();
     private Quantifier against = Quantifier.ALL;
 
@@ -144,6 +141,7 @@ public class Compare extends DataType implements ResourceSelector {
     }
 
     private BuildException oneControl() {
-        return new BuildException(super.toString() + ONE_CONTROL_MESSAGE);
+        return new BuildException("%s the <control> element should be specified exactly once.",
+                super.toString());
     }
 }

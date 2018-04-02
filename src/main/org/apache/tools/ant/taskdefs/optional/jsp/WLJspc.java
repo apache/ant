@@ -312,7 +312,7 @@ public class WLJspc extends MatchingTask {
         int numTokens = st.countTokens();
         for (int i = 0; i < numTokens; i++) {
             String test = st.nextToken();
-            test = (test.equals(escapeChars) ? replaceChars : test);
+            test = test.equals(escapeChars) ? replaceChars : test;
             localString.append(test);
         }
         return localString.toString();

@@ -32,7 +32,6 @@ import java.util.function.UnaryOperator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
 import org.apache.tools.ant.util.Native2AsciiUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Encapsulates the built-in Native2Ascii implementation.
@@ -85,8 +84,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         UnaryOperator<String> translation) throws IOException {
         for (String line : (Iterable<String>) () -> input.lines()
             .map(translation).iterator()) {
-            output.write(line);
-            output.write(StringUtils.LINE_SEP);
+            output.write(String.format("%s%n", line));
         }
     }
 }

@@ -247,7 +247,7 @@ public class FTP extends Task implements FTPTaskConfig {
         @Override
         public String getParent() {
             StringBuilder result = new StringBuilder();
-            for (int i = 0; i < parts.length - 1; i++){
+            for (int i = 0; i < parts.length - 1; i++) {
                 result.append(File.separatorChar).append(parts[i]);
             }
             return result.toString();
@@ -2702,7 +2702,6 @@ public class FTP extends Task implements FTPTaskConfig {
             getValidLanguageCodes();
 
         private static String[] getValidLanguageCodes() {
-            @SuppressWarnings("unchecked")
             Collection<String> c = FTPClientConfig.getSupportedLanguageCodes();
             String[] ret = new String[c.size() + 1];
             int i = 0;

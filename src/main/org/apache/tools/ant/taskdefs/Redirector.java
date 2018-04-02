@@ -674,8 +674,7 @@ public class Redirector {
                 } catch (final IOException eyeOhEx) {
                     throw new BuildException(eyeOhEx);
                 }
-                ((ConcatFileInputStream) inputStream)
-                        .setManagingComponent(managingTask);
+                ((ConcatFileInputStream) inputStream).setManagingComponent(managingTask);
             } else if (inputString != null) {
                 final StringBuffer buf = new StringBuffer("Using input ");
                 if (logInputString) {

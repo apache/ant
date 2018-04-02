@@ -105,6 +105,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
      * we may determine the name of the EJB JAR file using this display-name,
      * but this has not be implemented yet.
      */
+    @SuppressWarnings("unused")
     private String displayName;
 
     /*

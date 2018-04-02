@@ -236,9 +236,8 @@ public class SplashTask extends Task {
 
         boolean success = false;
         if (in != null) {
-            try (
-                DataInputStream din = new DataInputStream(in);
-                ByteArrayOutputStream bout = new ByteArrayOutputStream()){
+            try (DataInputStream din = new DataInputStream(in);
+                 ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
                 int data;
                 while ((data = din.read()) != -1) {
                     bout.write((byte) data);

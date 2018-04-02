@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -1019,7 +1020,7 @@ public class Copy extends Task {
                 l = new ArrayList<>(names.length);
                 m.put(baseDir, l);
             }
-            l.addAll(java.util.Arrays.asList(names));
+            l.addAll(Arrays.asList(names));
         }
     }
 

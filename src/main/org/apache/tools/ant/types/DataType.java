@@ -244,6 +244,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *                        or if <code>project</code> is <code>null</code>.
      * @since Ant 1.7
      */
+    @SuppressWarnings("unchecked")
     protected <T> T getCheckedRef(final Class<T> requiredClass,
                                   final String dataTypeName, final Project project) {
         if (project == null) {

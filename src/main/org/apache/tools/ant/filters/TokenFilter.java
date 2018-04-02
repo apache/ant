@@ -395,7 +395,7 @@ public class TokenFilter extends BaseFilterReader
 
             // write the remaining characters
             if (line.length() > start) {
-                ret.append(line.substring(start, line.length()));
+                ret.append(line, start, line.length());
             }
 
             return ret.toString();

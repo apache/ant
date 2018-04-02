@@ -187,9 +187,7 @@ public class Expand extends Task {
                     + " as the file does not exist",
                     getLocation());
         }
-        try (
-            ZipFile
-            zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)){
+        try (ZipFile zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)) {
             boolean empty = true;
             Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {

@@ -69,12 +69,8 @@ public class TranslateTest {
         byte[] buffer1 = new byte[BUF_SIZE];
         byte[] buffer2 = new byte[BUF_SIZE];
 
-        @SuppressWarnings("resource")
-        FileInputStream fis1 = new FileInputStream(file1);
-        try {
-            @SuppressWarnings("resource")
-            FileInputStream fis2 = new FileInputStream(file2);
-            try {
+        try (FileInputStream fis1 = new FileInputStream(file1)) {
+            try (FileInputStream fis2 = new FileInputStream(file2)) {
                 int read = 0;
                 while ((read = fis1.read(buffer1)) != -1) {
                     fis2.read(buffer2);
@@ -84,11 +80,7 @@ public class TranslateTest {
                         }
                     }
                 }
-            } finally {
-                fis2.close();
             }
-        } finally {
-            fis1.close();
         }
         return true;
     }

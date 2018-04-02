@@ -38,7 +38,7 @@ abstract class TestDefinition {
     }
 
     boolean isHaltOnFailure() {
-        return this.haltOnFailure == null ? false : this.haltOnFailure;
+        return this.haltOnFailure != null && this.haltOnFailure;
     }
 
     Boolean getHaltOnFailure() {

@@ -179,9 +179,8 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @throws BuildException if the command cannot execute.
      */
     public void execute() throws BuildException {
-        int result = 0;
         Commandline commandLine = buildCmdLine();
-        result = run(commandLine);
+        int result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnError()) {
             String msg = "Failed executing: " + formatCommandLine(commandLine)
                      + " With a return code of " + result;

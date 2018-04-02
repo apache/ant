@@ -39,7 +39,9 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
 
     private String remoteFile;
     private final File localFile;
+    @SuppressWarnings("unused")
     private boolean isRecursive = false;
+    @SuppressWarnings("unused")
     private boolean verbose = false;
 
     /**
@@ -161,7 +163,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
 
     private void getFile(final ChannelSftp channel,
                          final ChannelSftp.LsEntry le,
-                         File localFile) throws IOException, SftpException {
+                         File localFile) throws SftpException {
         final String remoteFile = le.getFilename();
         if (!localFile.exists()) {
             final String path = localFile.getAbsolutePath();

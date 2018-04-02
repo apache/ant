@@ -62,12 +62,10 @@ public class DispatchUtils {
                         if (actionM != null) {
                             final Object o = actionM.invoke(dispatchable, (Object[]) null);
                             if (o != null) {
-                                final String s = o.toString();
-                                if (s.trim().length() > 0) {
-                                    methodName = s.trim();
-                                    Method executeM = null;
-                                    executeM = dispatchable.getClass().getMethod(
-                                        methodName);
+                                final String s = o.toString().trim();
+                                if (s.length() > 0) {
+                                    methodName = s;
+                                    Method executeM = dispatchable.getClass().getMethod(methodName);
                                     if (executeM == null) {
                                         throw new BuildException(
                                             "No public " + methodName + "() in "

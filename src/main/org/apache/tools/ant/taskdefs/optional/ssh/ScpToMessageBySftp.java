@@ -171,7 +171,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
         log("done.\n");
     }
 
-    private void doSingleTransfer() throws IOException, JSchException {
+    private void doSingleTransfer() throws JSchException {
         final ChannelSftp channel = openSftpChannel();
         try {
             channel.connect();
@@ -265,7 +265,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
     private void sendFileToRemote(final ChannelSftp channel,
                                   final File localFile,
                                   String remotePath)
-        throws IOException, SftpException {
+        throws SftpException {
         final long filesize = localFile.length();
 
         if (remotePath == null) {

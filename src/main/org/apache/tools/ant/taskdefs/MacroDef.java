@@ -263,7 +263,6 @@ public class MacroDef extends AntlibDefinition  {
                 "the name \"%s\" has already been used by the text element",
                 attribute.getName());
         }
-        final int size = attributes.size();
         for (Attribute att : attributes) {
             if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(
@@ -700,12 +699,10 @@ public class MacroDef extends AntlibDefinition  {
             return true;
         }
 
-        if (obj == null) {
+        if (obj == null || !obj.getClass().equals(getClass())) {
             return false;
         }
-        if (!obj.getClass().equals(getClass())) {
-            return false;
-        }
+
         MacroDef other = (MacroDef) obj;
         if (name == null) {
             return other.name == null;
@@ -716,8 +713,8 @@ public class MacroDef extends AntlibDefinition  {
         // Allow two macro definitions with the same location
         // to be treated as similar - bugzilla 31215
         if (other.getLocation() != null
-            && other.getLocation().equals(getLocation())
-            && !same) {
+                && other.getLocation().equals(getLocation())
+                && !same) {
             return true;
         }
         if (text == null) {
@@ -728,7 +725,7 @@ public class MacroDef extends AntlibDefinition  {
             return false;
         }
         if (getURI() == null || "".equals(getURI())
-            || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
+                || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
             if (other.getURI() != null && !"".equals(other.getURI())
                     && !other.getURI().equals(ProjectHelper.ANT_CORE_URI)) {
                 return false;
@@ -737,16 +734,8 @@ public class MacroDef extends AntlibDefinition  {
             return false;
         }
 
-        if (!nestedSequential.similar(other.nestedSequential)) {
-            return false;
-        }
-        if (!attributes.equals(other.attributes)) {
-            return false;
-        }
-        if (!elements.equals(other.elements)) {
-            return false;
-        }
-        return true;
+        return nestedSequential.similar(other.nestedSequential)
+                && attributes.equals(other.attributes) && elements.equals(other.elements);
     }
 
     /**
