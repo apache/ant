@@ -171,16 +171,21 @@ public class MSVSSHISTORY extends MSVSS {
      */
     public void setStyle(BriefCodediffNofile attr) {
         String option = attr.getValue();
-        if (option.equals(STYLE_BRIEF)) {
-            super.setInternalStyle(FLAG_BRIEF);
-        } else if (option.equals(STYLE_CODEDIFF)) {
-            super.setInternalStyle(FLAG_CODEDIFF);
-        } else if (option.equals(STYLE_DEFAULT)) {
-            super.setInternalStyle("");
-        } else if (option.equals(STYLE_NOFILE)) {
-            super.setInternalStyle(FLAG_NO_FILE);
-        } else {
-            throw new BuildException("Style " + attr + " unknown.", getLocation());
+        switch (option) {
+            case STYLE_BRIEF:
+                super.setInternalStyle(FLAG_BRIEF);
+                break;
+            case STYLE_CODEDIFF:
+                super.setInternalStyle(FLAG_CODEDIFF);
+                break;
+            case STYLE_DEFAULT:
+                super.setInternalStyle("");
+                break;
+            case STYLE_NOFILE:
+                super.setInternalStyle(FLAG_NO_FILE);
+                break;
+            default:
+                throw new BuildException("Style " + attr + " unknown.", getLocation());
         }
     }
 

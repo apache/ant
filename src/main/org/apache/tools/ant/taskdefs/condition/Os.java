@@ -272,39 +272,52 @@ public class Os implements Condition {
                             || OS_NAME.contains("ce"));
                     isNT = !is9x;
                 }
-                if (family.equals(FAMILY_WINDOWS)) {
-                    isFamily = isWindows;
-                } else if (family.equals(FAMILY_9X)) {
-                    isFamily = isWindows && is9x;
-                } else if (family.equals(FAMILY_NT)) {
-                    isFamily = isWindows && isNT;
-                } else if (family.equals(FAMILY_OS2)) {
-                    isFamily = OS_NAME.contains(FAMILY_OS2);
-                } else if (family.equals(FAMILY_NETWARE)) {
-                    isFamily = OS_NAME.contains(FAMILY_NETWARE);
-                } else if (family.equals(FAMILY_DOS)) {
-                    isFamily = PATH_SEP.equals(";") && !isFamily(FAMILY_NETWARE);
-                } else if (family.equals(FAMILY_MAC)) {
-                    isFamily = OS_NAME.contains(FAMILY_MAC)
-                        || OS_NAME.contains(DARWIN);
-                } else if (family.equals(FAMILY_TANDEM)) {
-                    isFamily = OS_NAME.contains("nonstop_kernel");
-                } else if (family.equals(FAMILY_UNIX)) {
-                    isFamily = PATH_SEP.equals(":")
-                        && !isFamily(FAMILY_VMS)
-                        && (!isFamily(FAMILY_MAC) || OS_NAME.endsWith("x")
-                            || OS_NAME.contains(DARWIN));
-                } else if (family.equals(FAMILY_ZOS)) {
-                    isFamily = OS_NAME.contains(FAMILY_ZOS)
-                        || OS_NAME.contains("os/390");
-                } else if (family.equals(FAMILY_OS400)) {
-                    isFamily = OS_NAME.contains(FAMILY_OS400);
-                } else if (family.equals(FAMILY_VMS)) {
-                    isFamily = OS_NAME.contains(FAMILY_VMS);
-                } else {
-                    throw new BuildException(
-                        "Don\'t know how to detect os family \""
-                        + family + "\"");
+                switch (family) {
+                    case FAMILY_WINDOWS:
+                        isFamily = isWindows;
+                        break;
+                    case FAMILY_9X:
+                        isFamily = isWindows && is9x;
+                        break;
+                    case FAMILY_NT:
+                        isFamily = isWindows && isNT;
+                        break;
+                    case FAMILY_OS2:
+                        isFamily = OS_NAME.contains(FAMILY_OS2);
+                        break;
+                    case FAMILY_NETWARE:
+                        isFamily = OS_NAME.contains(FAMILY_NETWARE);
+                        break;
+                    case FAMILY_DOS:
+                        isFamily = PATH_SEP.equals(";") && !isFamily(FAMILY_NETWARE);
+                        break;
+                    case FAMILY_MAC:
+                        isFamily = OS_NAME.contains(FAMILY_MAC)
+                                || OS_NAME.contains(DARWIN);
+                        break;
+                    case FAMILY_TANDEM:
+                        isFamily = OS_NAME.contains("nonstop_kernel");
+                        break;
+                    case FAMILY_UNIX:
+                        isFamily = PATH_SEP.equals(":")
+                                && !isFamily(FAMILY_VMS)
+                                && (!isFamily(FAMILY_MAC) || OS_NAME.endsWith("x")
+                                || OS_NAME.contains(DARWIN));
+                        break;
+                    case FAMILY_ZOS:
+                        isFamily = OS_NAME.contains(FAMILY_ZOS)
+                                || OS_NAME.contains("os/390");
+                        break;
+                    case FAMILY_OS400:
+                        isFamily = OS_NAME.contains(FAMILY_OS400);
+                        break;
+                    case FAMILY_VMS:
+                        isFamily = OS_NAME.contains(FAMILY_VMS);
+                        break;
+                    default:
+                        throw new BuildException(
+                                "Don\'t know how to detect os family \""
+                                        + family + "\"");
                 }
             }
             if (name != null) {

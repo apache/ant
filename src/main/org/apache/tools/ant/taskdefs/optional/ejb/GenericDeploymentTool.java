@@ -262,12 +262,16 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
 
         String analyzerClassName = null;
-        if (analyzer.equals(ANALYZER_SUPER)) {
-            analyzerClassName = ANALYZER_CLASS_SUPER;
-        } else if (analyzer.equals(ANALYZER_FULL)) {
-            analyzerClassName = ANALYZER_CLASS_FULL;
-        } else {
-            analyzerClassName = analyzer;
+        switch (analyzer) {
+            case ANALYZER_SUPER:
+                analyzerClassName = ANALYZER_CLASS_SUPER;
+                break;
+            case ANALYZER_FULL:
+                analyzerClassName = ANALYZER_CLASS_FULL;
+                break;
+            default:
+                analyzerClassName = analyzer;
+                break;
         }
 
         try {

@@ -405,17 +405,19 @@ public class PropertySet extends DataType implements ResourceCollection {
                     }
                 }
             } else if (r.builtin != null) {
-
-                if (r.builtin.equals(BuiltinPropertySetName.ALL)) {
-                    names.addAll(props.keySet());
-                } else if (r.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
-                    names.addAll(getAllSystemProperties().keySet());
-                } else if (r.builtin.equals(BuiltinPropertySetName
-                                              .COMMANDLINE)) {
-                    names.addAll(getProject().getUserProperties().keySet());
-                } else {
-                    throw new BuildException("Impossible: Invalid builtin "
-                                             + "attribute!");
+                switch (r.builtin) {
+                    case BuiltinPropertySetName.ALL:
+                        names.addAll(props.keySet());
+                        break;
+                    case BuiltinPropertySetName.SYSTEM:
+                        names.addAll(getAllSystemProperties().keySet());
+                        break;
+                    case BuiltinPropertySetName.COMMANDLINE:
+                        names.addAll(getProject().getUserProperties().keySet());
+                        break;
+                    default:
+                        throw new BuildException("Impossible: Invalid builtin "
+                                + "attribute!");
                 }
             } else {
                 throw new BuildException("Impossible: Invalid PropertyRef!");
