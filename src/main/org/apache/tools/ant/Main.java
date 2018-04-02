@@ -68,7 +68,7 @@ public class Main implements AntMain {
      * not be seen by Main.
      */
     private static final Set<String> LAUNCH_COMMANDS = Collections
-            .unmodifiableSet(new HashSet<String>(Arrays.asList("-lib", "-cp", "-noclasspath",
+            .unmodifiableSet(new HashSet<>(Arrays.asList("-lib", "-cp", "-noclasspath",
                     "--noclasspath", "-nouserlib", "-main")));
 
     /** The default build file name. {@value} */
@@ -408,7 +408,7 @@ public class Main implements AntMain {
                     if (newI != -1) {
                         List<String> extraArgs = extraArguments.get(processor.getClass());
                         if (extraArgs == null) {
-                            extraArgs = new ArrayList<String>();
+                            extraArgs = new ArrayList<>();
                             extraArguments.put(processor.getClass(), extraArgs);
                         }
                         for (; i < newI && i < args.length; i++) {

@@ -196,7 +196,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private final List<ZipEntry> entries = new LinkedList<ZipEntry>();
+    private final List<ZipEntry> entries = new LinkedList<>();
 
     /**
      * CRC instance to avoid parsing DEFLATED data twice.
@@ -247,7 +247,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private final Map<ZipEntry, Long> offsets = new HashMap<ZipEntry, Long>();
+    private final Map<ZipEntry, Long> offsets = new HashMap<>();
 
     /**
      * The encoding to use for filenames and the file comment.

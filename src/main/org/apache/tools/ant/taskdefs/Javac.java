@@ -1512,7 +1512,7 @@ public class Javac extends MatchingTask {
     private static Map<String,Collection<File>> resolveModuleSourcePathElement(
             final File projectDir,
             final String element) {
-        final Map<String,Collection<File>> result = new TreeMap<String, Collection<File>>();
+        final Map<String,Collection<File>> result = new TreeMap<>();
         for (CharSequence resolvedElement : expandGroups(element)) {
             findModules(projectDir, resolvedElement.toString(), result);
         }

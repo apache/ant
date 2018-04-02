@@ -53,7 +53,7 @@ public class AntXMLContext {
      * defined. Project maintains a Hashtable, which is not ordered.
      * This will allow description to know the original order.
      */
-    private Vector<Target> targetVector = new Vector<Target>();
+    private Vector<Target> targetVector = new Vector<>();
 
     /**
      * Parent directory of the build file. Used for resolving entities
@@ -100,7 +100,7 @@ public class AntXMLContext {
     private boolean ignoreProjectTag = false;
 
     /** Keeps track of prefix -> uri mapping during parsing */
-    private Map<String, List<String>> prefixMapping = new HashMap<String, List<String>>();
+    private Map<String, List<String>> prefixMapping = new HashMap<>();
 
 
     /** Keeps track of targets in files */
@@ -364,7 +364,7 @@ public class AntXMLContext {
     public void startPrefixMapping(String prefix, String uri) {
         List<String> list = prefixMapping.get(prefix);
         if (list == null) {
-            list = new ArrayList<String>();
+            list = new ArrayList<>();
             prefixMapping.put(prefix, list);
         }
         list.add(uri);

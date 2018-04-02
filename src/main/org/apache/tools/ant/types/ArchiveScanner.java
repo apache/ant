@@ -61,22 +61,22 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     /**
      * record list of all file zip entries
      */
-    private Map<String, Resource> fileEntries = new TreeMap<String, Resource>();
+    private Map<String, Resource> fileEntries = new TreeMap<>();
 
     /**
      * record list of all directory zip entries
      */
-    private Map<String, Resource> dirEntries = new TreeMap<String, Resource>();
+    private Map<String, Resource> dirEntries = new TreeMap<>();
 
     /**
      * record list of matching file zip entries
      */
-    private Map<String, Resource> matchFileEntries = new TreeMap<String, Resource>();
+    private Map<String, Resource> matchFileEntries = new TreeMap<>();
 
     /**
      * record list of matching directory zip entries
      */
-    private Map<String, Resource> matchDirEntries = new TreeMap<String, Resource>();
+    private Map<String, Resource> matchDirEntries = new TreeMap<>();
 
     /**
      * encoding of file names.

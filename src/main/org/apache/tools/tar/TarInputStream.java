@@ -419,7 +419,7 @@ public class TarInputStream extends FilterInputStream {
     }
 
     Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         // Format is "length keyword=value\n";
         while (true) { // get length
             int ch;

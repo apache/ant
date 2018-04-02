@@ -685,7 +685,7 @@ public class ComponentHelper  {
         synchronized (restrictedDefinitions) {
             list = restrictedDefinitions.get(name);
             if (list == null) {
-                list = new ArrayList<AntTypeDefinition>();
+                list = new ArrayList<>();
                 restrictedDefinitions.put(name, list);
             }
         }
@@ -1086,7 +1086,7 @@ public class ComponentHelper  {
      * @return the (possibly empty) list of definitions
      */
     private List<AntTypeDefinition> findTypeMatches(String prefix) {
-        final List<AntTypeDefinition> result = new ArrayList<AntTypeDefinition>();
+        final List<AntTypeDefinition> result = new ArrayList<>();
         synchronized (antTypeTable) {
             for (AntTypeDefinition def : antTypeTable.values()) {
                 if (def.getName().startsWith(prefix)) {

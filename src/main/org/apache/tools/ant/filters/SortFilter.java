@@ -213,7 +213,7 @@ public final class SortFilter extends BaseParamFilterReader
         } else {
             if (lines == null) {
                 // We read all lines and sort them
-                lines = new ArrayList<String>();
+                lines = new ArrayList<>();
                 for (line = readLine(); line != null; line = readLine()) {
                     lines.add(line);
                 }

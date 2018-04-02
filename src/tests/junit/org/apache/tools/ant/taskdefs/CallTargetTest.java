@@ -60,7 +60,7 @@ public class CallTargetTest {
     // params will not be passed in)
     @Test
     public void testMultiCall() {
-        Vector<String> v = new Vector<String>();
+        Vector<String> v = new Vector<>();
         v.add("call-multi");
         v.add("call-multi");
         buildRule.getProject().executeTargets(v);

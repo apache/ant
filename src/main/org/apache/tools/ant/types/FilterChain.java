@@ -46,7 +46,7 @@ import org.apache.tools.ant.filters.TokenFilter;
  */
 public class FilterChain extends DataType {
 
-    private Vector<Object> filterReaders = new Vector<Object>();
+    private Vector<Object> filterReaders = new Vector<>();
 
     /**
      * Add an AntFilterReader filter.

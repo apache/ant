@@ -41,7 +41,7 @@ public class ExtraFieldUtils {
     private static final Map<ZipShort, Class<?>> implementations;
 
     static {
-        implementations = new ConcurrentHashMap<ZipShort, Class<?>>();
+        implementations = new ConcurrentHashMap<>();
         register(AsiExtraField.class);
         register(JarMarker.class);
         register(UnicodePathExtraField.class);
@@ -133,7 +133,7 @@ public class ExtraFieldUtils {
     public static ZipExtraField[] parse(byte[] data, boolean local,
                                         UnparseableExtraField onUnparseableData)
         throws ZipException {
-        List<ZipExtraField> v = new ArrayList<ZipExtraField>();
+        List<ZipExtraField> v = new ArrayList<>();
         int start = 0;
         LOOP:
         while (start <= data.length - WORD) {

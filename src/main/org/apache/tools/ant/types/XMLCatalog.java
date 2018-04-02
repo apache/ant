@@ -124,7 +124,7 @@ public class XMLCatalog extends DataType
     //-- Fields ----------------------------------------------------------------
 
     /** Holds dtd/entity objects until needed. */
-    private Vector<ResourceLocation> elements = new Vector<ResourceLocation>();
+    private Vector<ResourceLocation> elements = new Vector<>();
 
     /**
      * Classpath in which to attempt to resolve resources.

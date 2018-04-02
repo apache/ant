@@ -57,7 +57,7 @@ public class LocalPropertyStack {
      */
     public void enterScope() {
         synchronized (LOCK) {
-            stack.addFirst(new ConcurrentHashMap<String, Object>());
+            stack.addFirst(new ConcurrentHashMap<>());
         }
     }
 

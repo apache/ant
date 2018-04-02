@@ -282,7 +282,7 @@ public class TarOutputStream extends FilterOutputStream {
         if (finished) {
             throw new IOException("Stream has already been finished");
         }
-        Map<String, String> paxHeaders = new HashMap<String, String>();
+        Map<String, String> paxHeaders = new HashMap<>();
         final String entryName = entry.getName();
         boolean paxHeaderContainsPath = handleLongName(entry, entryName, paxHeaders, "path",
                                                        TarConstants.LF_GNUTYPE_LONGNAME, "file name");

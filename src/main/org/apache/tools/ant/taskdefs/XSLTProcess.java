@@ -1147,7 +1147,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         public static final Map<ParamType, QName> XPATH_TYPES;
 
         static {
-            final Map<ParamType, QName> m = new EnumMap<ParamType, QName>(ParamType.class);
+            final Map<ParamType, QName> m = new EnumMap<>(ParamType.class);
             m.put(XPATH_STRING, XPathConstants.STRING);
             m.put(XPATH_BOOLEAN, XPathConstants.BOOLEAN);
             m.put(XPATH_NUMBER, XPathConstants.NUMBER);

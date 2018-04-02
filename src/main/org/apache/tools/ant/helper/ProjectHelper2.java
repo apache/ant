@@ -166,7 +166,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
-                context.setCurrentTargets(new HashMap<String, Target>());
+                context.setCurrentTargets(new HashMap<>());
                 context.setImplicitTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
                 newCurrent.execute();
@@ -177,7 +177,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
         } else {
             // top level file
-            context.setCurrentTargets(new HashMap<String, Target>());
+            context.setCurrentTargets(new HashMap<>());
             parse(project, source, new RootHandler(context, mainHandler));
             // Execute the top-level target
             context.getImplicitTarget().execute();
@@ -490,7 +490,7 @@ public class ProjectHelper2 extends ProjectHelper {
      * with the implicit execution stack)
      */
     public static class RootHandler extends DefaultHandler {
-        private Stack<AntHandler> antHandlers = new Stack<AntHandler>();
+        private Stack<AntHandler> antHandlers = new Stack<>();
         private AntHandler currentHandler = null;
         private AntXMLContext context;
 

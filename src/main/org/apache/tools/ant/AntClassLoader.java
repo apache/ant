@@ -225,7 +225,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /** Static map of jar file/time to manifest class-path entries */
     private static Map<String, String> pathMap =
-        Collections.synchronizedMap(new HashMap<String, String>());
+        Collections.synchronizedMap(new HashMap<>());
 
     /**
      * The context loader saved when setting the thread's current
@@ -1410,7 +1410,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         for (final Enumeration<JarFile> e = jarFiles.elements(); e.hasMoreElements();) {
             FileUtils.close(e.nextElement());
         }
-        jarFiles = new Hashtable<File, JarFile>();
+        jarFiles = new Hashtable<>();
         if (project != null) {
             project.removeBuildListener(this);
         }

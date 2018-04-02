@@ -107,8 +107,8 @@ public class AntStructure extends Task {
             }
 
             printer.printHead(out, getProject(),
-                              new Hashtable<String, Class<?>>(getProject().getTaskDefinitions()),
-                              new Hashtable<String, Class<?>>(getProject().getDataTypeDefinitions()));
+                    new Hashtable<>(getProject().getTaskDefinitions()),
+                    new Hashtable<>(getProject().getDataTypeDefinitions()));
 
             printer.printTargetDecl(out);
 
@@ -190,7 +190,7 @@ public class AntStructure extends Task {
         private static final String TASKS = "%tasks;";
         private static final String TYPES = "%types;";
 
-        private final Hashtable<String, String> visited = new Hashtable<String, String>();
+        private final Hashtable<String, String> visited = new Hashtable<>();
 
         @Override
         public void printTail(final PrintWriter out) {

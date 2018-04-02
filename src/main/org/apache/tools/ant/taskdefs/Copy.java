@@ -773,7 +773,7 @@ public class Copy extends Task {
                             final FileNameMapper mapper, final Hashtable<String, String[]> map) {
         String[] toCopy = null;
         if (forceOverwrite) {
-            final Vector<String> v = new Vector<String>();
+            final Vector<String> v = new Vector<>();
             for (String name : names) {
                 if (mapper.mapFileName(name) != null) {
                     v.addElement(name);

@@ -48,7 +48,7 @@ public class KeySubst extends Task {
     private File source = null;
     private File dest = null;
     private String sep = "*";
-    private Hashtable<String, String> replacements = new Hashtable<String, String>();
+    private Hashtable<String, String> replacements = new Hashtable<>();
 
     /**
      * Do the execution.
@@ -150,7 +150,7 @@ public class KeySubst extends Task {
      */
     public static void main(String[] args) {
         try {
-            Hashtable<String, String> hash = new Hashtable<String, String>();
+            Hashtable<String, String> hash = new Hashtable<>();
             hash.put("VERSION", "1.0.3");
             hash.put("b", "ffff");
             System.out.println(KeySubst.replace("$f ${VERSION} f ${b} jj $",

@@ -658,7 +658,7 @@ public class Checksum extends MatchingTask implements Condition {
      * @since 1.7
      */
     public static class FormatElement extends EnumeratedAttribute {
-        private static HashMap<String, MessageFormat> formatMap = new HashMap<String, MessageFormat>();
+        private static HashMap<String, MessageFormat> formatMap = new HashMap<>();
         private static final String CHECKSUM = "CHECKSUM";
         private static final String MD5SUM = "MD5SUM";
         private static final String SVF = "SVF";

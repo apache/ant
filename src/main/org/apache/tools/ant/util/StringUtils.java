@@ -65,7 +65,7 @@ public final class StringUtils {
      * @return the list of elements.
      */
     public static Vector<String> split(String data, int ch) {
-        Vector<String> elems = new Vector<String>();
+        Vector<String> elems = new Vector<>();
         int pos = -1;
         int i = 0;
         while ((pos = data.indexOf(ch, i)) != -1) {

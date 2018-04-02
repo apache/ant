@@ -33,7 +33,7 @@ public class BindTargets extends Task {
 
     private String extensionPoint;
 
-    private final List<String> targets = new ArrayList<String>();
+    private final List<String> targets = new ArrayList<>();
 
     private OnMissingExtensionPoint onMissingExtensionPoint;
 

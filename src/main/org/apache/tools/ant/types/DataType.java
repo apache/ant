@@ -114,7 +114,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
         if (checked || !isReference()) {
             return;
         }
-        dieOnCircularReference(new IdentityStack<Object>(this), p);
+        dieOnCircularReference(new IdentityStack<>(this), p);
     }
 
     /**

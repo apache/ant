@@ -39,7 +39,7 @@ public class ExecutorTest implements BuildListener  {
 
     private static final Vector<String> TARGET_NAMES;
     static {
-        TARGET_NAMES = new Vector<String>();
+        TARGET_NAMES = new Vector<>();
         TARGET_NAMES.add("a");
         TARGET_NAMES.add("b");
     }
@@ -169,7 +169,7 @@ public class ExecutorTest implements BuildListener  {
     public void testKeepGoingIgnoreDependencies() {
         try {
             //explicitly add foo for failure
-            Vector<String> targetNames = new Vector<String>(TARGET_NAMES);
+            Vector<String> targetNames = new Vector<>(TARGET_NAMES);
             targetNames.add(0, "foo");
             getProject(IGNORE_DEPS, true, true).executeTargets(targetNames);
             fail("should fail");

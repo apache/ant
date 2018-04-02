@@ -59,15 +59,15 @@ public class TokenFilter extends BaseFilterReader
 
 
     /** string filters */
-    private Vector<Filter>    filters   = new Vector<Filter>();
+    private Vector<Filter> filters = new Vector<>();
     /** the tokenizer to use on the input stream */
     private Tokenizer tokenizer = null;
     /** the output token termination */
-    private String    delimOutput = null;
+    private String delimOutput = null;
     /** the current string token from the input stream */
-    private String    line      = null;
+    private String line    = null;
     /** the position in the current string token */
-    private int       linePos   = 0;
+    private int    linePos = 0;
 
     /**
      * Constructor for "dummy" instances.
@@ -121,9 +121,9 @@ public class TokenFilter extends BaseFilterReader
             if (line != null) {
                 if (tokenizer.getPostToken().length() != 0) {
                     if (delimOutput != null) {
-                        line = line + delimOutput;
+                        line += delimOutput;
                     } else {
-                        line = line + tokenizer.getPostToken();
+                        line += tokenizer.getPostToken();
                     }
                 }
             }

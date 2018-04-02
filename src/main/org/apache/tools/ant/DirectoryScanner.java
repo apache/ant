@@ -1193,7 +1193,7 @@ public class DirectoryScanner
                     dir.getAbsolutePath());
             }
         }
-        scandir(dir, path, fast, newfiles, new LinkedList<String>());
+        scandir(dir, path, fast, newfiles, new LinkedList<>());
     }
 
     private void scandir(final File dir, final TokenizedPath path, final boolean fast,

@@ -284,7 +284,7 @@ public class VectorSetTest {
             v.add(i);
         }
         assertEquals(size, v.size());
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
         for (int i = size - 4; i < 2 * size; i++) {
             list.add(i);
             v.add(i);

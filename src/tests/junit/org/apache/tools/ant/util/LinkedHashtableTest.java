@@ -44,9 +44,10 @@ public class LinkedHashtableTest {
         assertTrue(h.isEmpty());
     }
 
+    @SuppressWarnings("unchecked")
     public void testClone() {
         h.put(K1, V1);
-        Hashtable<Object, Object> h2 = (Hashtable) h.clone();
+        Hashtable<Object, Object> h2 = (Hashtable<Object, Object>) h.clone();
         assertTrue(h2 instanceof LinkedHashtable);
         assertTrue(h2.containsKey(K1));
     }

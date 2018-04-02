@@ -480,11 +480,11 @@ public class DirectoryScannerTest {
         assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
-        TreeSet<String> files = new TreeSet<String>();
+        TreeSet<String> files = new TreeSet<>();
         for (String includedFile : includedFiles) {
             files.add(includedFile.replace(File.separatorChar, '/'));
         }
-        TreeSet<String> directories = new TreeSet<String>();
+        TreeSet<String> directories = new TreeSet<>();
         for (String includedDirectory : includedDirectories) {
             directories.add(includedDirectory.replace(File.separatorChar, '/'));
         }

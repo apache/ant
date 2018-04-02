@@ -25,7 +25,7 @@ import java.util.Vector;
 
 public class MockBuildListener implements BuildListener {
 
-    private final Vector<BuildEvent> buffer = new Vector<BuildEvent>();
+    private final Vector<BuildEvent> buffer = new Vector<>();
     private final Project project;
 
     public MockBuildListener(final Project project) {

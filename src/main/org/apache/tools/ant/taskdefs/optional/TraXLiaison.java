@@ -124,13 +124,13 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     private final Vector<String[]> outputProperties = new Vector<>();
 
     /** stylesheet parameters */
-    private final Hashtable<String, Object> params = new Hashtable<String, Object>();
+    private final Hashtable<String, Object> params = new Hashtable<>();
 
     /** factory attributes */
-    private final List<Object[]> attributes = new ArrayList<Object[]>();
+    private final List<Object[]> attributes = new ArrayList<>();
 
     /** factory features */
-    private final Map<String, Boolean> features = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> features = new HashMap<>();
 
     /** whether to suppress warnings */
     private boolean suppressWarnings = false;

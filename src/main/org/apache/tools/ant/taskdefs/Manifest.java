@@ -131,7 +131,7 @@ public class Manifest {
         private String name = null;
 
         /** The attribute's value */
-        private Vector<String> values = new Vector<String>();
+        private Vector<String> values = new Vector<>();
 
         /**
          * For multivalued attributes, this is the index of the attribute

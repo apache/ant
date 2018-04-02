@@ -391,7 +391,7 @@ public class Concat extends Task implements ResourceCollection {
                 return result;
             }
             Reader resourceReader = getFilteredReader(
-                    new MultiReader<Resource>(c.iterator(), resourceReaderFactory));
+                    new MultiReader<>(c.iterator(), resourceReaderFactory));
             Reader rdr;
             if (header == null && footer == null) {
                 rdr = resourceReader;
@@ -419,7 +419,7 @@ public class Concat extends Task implements ResourceCollection {
                         readers[pos] = getFilteredReader(readers[pos]);
                     }
                 }
-                rdr = new MultiReader<Reader>(Arrays.asList(readers).iterator(),
+                rdr = new MultiReader<>(Arrays.asList(readers).iterator(),
                         identityReaderFactory);
             }
             return outputEncoding == null ? new ReaderInputStream(rdr)
@@ -698,7 +698,7 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void addFilterChain(FilterChain filterChain) {
         if (filterChains == null) {
-            filterChains = new Vector<FilterChain>();
+            filterChains = new Vector<>();
         }
         filterChains.addElement(filterChain);
     }

@@ -56,7 +56,7 @@ public class ArgumentProcessorRegistry {
 
     private static ArgumentProcessorRegistry instance = new ArgumentProcessorRegistry();
 
-    private List<ArgumentProcessor> processors = new ArrayList<ArgumentProcessor>();
+    private List<ArgumentProcessor> processors = new ArrayList<>();
 
     public static ArgumentProcessorRegistry getInstance() {
         return instance;

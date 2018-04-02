@@ -62,10 +62,10 @@ public final class ReplaceTokens
     private static final String DEFAULT_END_TOKEN = "@";
 
     /** Hashtable to holds the original replacee-replacer pairs (String to String). */
-    private Hashtable<String, String> hash = new Hashtable<String, String>();
+    private Hashtable<String, String> hash = new Hashtable<>();
 
     /** This map holds the "resolved" tokens (begin- and end-tokens are added to make searching simpler) */
-    private final TreeMap<String, String> resolvedTokens = new TreeMap<String, String>();
+    private final TreeMap<String, String> resolvedTokens = new TreeMap<>();
     private boolean resolvedTokensBuilt = false;
     /** Used for comparisons and lookup into the resolvedTokens map. */
     private String readBuffer = "";

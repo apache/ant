@@ -278,9 +278,9 @@ public class DefaultCompilerAdapterTest {
             assertTrue(index != -1 && index < cmdLine.size() - 1);
             assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
             //J1.java & J2.java has to be in files list
-            final Set<String> expected = new TreeSet<String>();
+            final Set<String> expected = new TreeSet<>();
             Collections.addAll(expected, java1.getAbsolutePath(), java2.getAbsolutePath());
-            final Set<String> actual = new TreeSet<String>(cmdLine.subList(cmdLine.size() - 2, cmdLine.size()));
+            final Set<String> actual = new TreeSet<>(cmdLine.subList(cmdLine.size() - 2, cmdLine.size()));
             assertEquals(expected, actual);
         } finally {
             delete(workDir);
@@ -341,12 +341,12 @@ public class DefaultCompilerAdapterTest {
             assertTrue(index != -1 && index < cmdLine.size() - 1);
             assertEquals(modules.getAbsolutePath(), cmdLine.get(index + 1));
             //J1.java, J2.java & J3.java has to be in files list
-            final Set<String> expectedFiles = new TreeSet<String>();
+            final Set<String> expectedFiles = new TreeSet<>();
             Collections.addAll(expectedFiles,
                     java1.getAbsolutePath(),
                     java2.getAbsolutePath(),
                     java3.getAbsolutePath());
-            final Set<String> actualFiles = new TreeSet<String>(cmdLine.subList(cmdLine.size() - 3, cmdLine.size()));
+            final Set<String> actualFiles = new TreeSet<>(cmdLine.subList(cmdLine.size() - 3, cmdLine.size()));
             assertEquals(expectedFiles, actualFiles);
         } finally {
             delete(workDir);
@@ -390,11 +390,11 @@ public class DefaultCompilerAdapterTest {
             final File[] compileList = impl.compileList;
             assertNotNull(compileList);
             //J1.java, J2.java has to be in files list but not J3.java
-            final Set<String> expectedFiles = new TreeSet<String>();
+            final Set<String> expectedFiles = new TreeSet<>();
             Collections.addAll(expectedFiles,
                     java1.getAbsolutePath(),
                     java2.getAbsolutePath());
-            final Set<String> actualFiles = new TreeSet<String>();
+            final Set<String> actualFiles = new TreeSet<>();
             for (File compileFile : compileList) {
                 actualFiles.add(compileFile.getAbsolutePath());
             }

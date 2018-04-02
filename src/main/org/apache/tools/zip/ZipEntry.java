@@ -307,7 +307,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * @since 1.1
      */
     public void setExtraFields(final ZipExtraField[] fields) {
-        List<ZipExtraField> newFields = new ArrayList<ZipExtraField>();
+        List<ZipExtraField> newFields = new ArrayList<>();
         for (ZipExtraField field : fields) {
             if (field instanceof UnparseableExtraFieldData) {
                 unparseableExtra = (UnparseableExtraFieldData) field;
@@ -457,7 +457,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         if (extraFields == null) {
             throw new java.util.NoSuchElementException();
         }
-        List<ZipExtraField> newResult = new ArrayList<ZipExtraField>();
+        List<ZipExtraField> newResult = new ArrayList<>();
         for (ZipExtraField extraField : extraFields) {
             if (!type.equals(extraField.getHeaderId())) {
                 newResult.add(extraField);

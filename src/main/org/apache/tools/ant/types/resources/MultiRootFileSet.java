@@ -40,7 +40,7 @@ public class MultiRootFileSet extends AbstractFileSet
 
     private SetType type = SetType.file;
     private boolean cache = true;
-    private List<File> baseDirs = new ArrayList<File>();
+    private List<File> baseDirs = new ArrayList<>();
     private Union union;
 
     @Override

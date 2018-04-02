@@ -601,7 +601,7 @@ public class Jar extends Zip {
         // header newline
         writer.println(zipFile.getName());
 
-        writeIndexLikeList(new ArrayList<String>(addedDirs.keySet()),
+        writeIndexLikeList(new ArrayList<>(addedDirs.keySet()),
                            rootEntries, writer);
         writer.println();
 
@@ -622,8 +622,8 @@ public class Jar extends Zip {
             for (String indexJarEntry : indexJars.list()) {
                 String name = findJarName(indexJarEntry, cpEntries);
                 if (name != null) {
-                    ArrayList<String> dirs = new ArrayList<String>();
-                    ArrayList<String> files = new ArrayList<String>();
+                    ArrayList<String> dirs = new ArrayList<>();
+                    ArrayList<String> files = new ArrayList<>();
                     grabFilesAndDirs(indexJarEntry, dirs, files);
                     if (dirs.size() + files.size() > 0) {
                         writer.println(name);

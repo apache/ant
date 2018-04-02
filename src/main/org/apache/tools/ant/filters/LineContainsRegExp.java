@@ -58,7 +58,7 @@ public final class LineContainsRegExp
     private static final String CS_KEY = "casesensitive";
 
     /** Vector that holds the expressions that input lines must contain. */
-    private Vector<RegularExpression> regexps = new Vector<RegularExpression>();
+    private Vector<RegularExpression> regexps = new Vector<>();
 
     /**
      * Remaining line to be read from this filter, or <code>null</code> if

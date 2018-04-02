@@ -463,7 +463,7 @@ public final class JavaEnvUtils {
      */
 
     private static void buildJrePackages() {
-        jrePackages = new Vector<String>();
+        jrePackages = new Vector<>();
         if (isAtLeastJavaVersion(JAVA_1_1)) {
             //things like sun.reflection, sun.misc, sun.net
             jrePackages.addElement("sun");

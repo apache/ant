@@ -66,7 +66,7 @@ public final class TailFilter extends BaseParamFilterReader
     /** the position in the current line */
     private int       linePos   = 0;
 
-    private LinkedList<String> lineList = new LinkedList<String>();
+    private LinkedList<String> lineList = new LinkedList<>();
 
     /**
      * Constructor for "dummy" instances.

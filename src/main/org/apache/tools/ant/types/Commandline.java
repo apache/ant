@@ -59,7 +59,7 @@ public class Commandline implements Cloneable {
     /**
      * The arguments of the command
      */
-    private List<Argument> arguments = new ArrayList<Argument>();
+    private List<Argument> arguments = new ArrayList<>();
 
     /**
      * the program to execute
@@ -363,7 +363,7 @@ public class Commandline implements Cloneable {
      * @return the commandline as an array of strings.
      */
     public String[] getCommandline() {
-        final List<String> commands = new LinkedList<String>();
+        final List<String> commands = new LinkedList<>();
         addCommandToList(commands.listIterator());
         return commands.toArray(new String[commands.size()]);
     }

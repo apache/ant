@@ -40,7 +40,7 @@ import java.util.Vector;
 public final class VectorSet<E> extends Vector<E> {
     private static final long serialVersionUID = 1L;
 
-    private final HashSet<E> set = new HashSet<E>();
+    private final HashSet<E> set = new HashSet<>();
 
     public VectorSet() {
         super();
