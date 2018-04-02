@@ -298,11 +298,8 @@ public class CopyTest {
         assertTrue("Source file " + srcFile + " was expected to be a file", srcFile.isFile());
         final long originalFileSize = srcFile.length();
         final String originalContent;
-        final BufferedReader reader = new BufferedReader(new FileReader(srcFile));
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader(srcFile))) {
             originalContent = FileUtils.readFully(reader);
-        } finally {
-            reader.close();
         }
         assertTrue("Content missing in file " + srcFile, originalContent != null && originalContent.length() > 0);
 
@@ -324,12 +321,9 @@ public class CopyTest {
     private void assertSizeAndContent(final File file, final long expectedSize, final String expectedContent) throws IOException {
         assertTrue(file + " was expected to be a file", file.isFile());
         assertEquals("Unexpected size of file " + file, expectedSize, file.length());
-        final BufferedReader reader = new BufferedReader(new FileReader(file));
         final String content;
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             content = FileUtils.readFully(reader);
-        } finally {
-            reader.close();
         }
         assertEquals("Unexpected content in file " + file, expectedContent, content);
     }

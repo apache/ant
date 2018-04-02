@@ -221,17 +221,8 @@ public class EchoPropertiesTest {
             throws IOException {
         File f = createRelativeFile(relativeFilename);
         Properties props = new Properties();
-        InputStream in = null;
-        try  {
-            in = new BufferedInputStream(new FileInputStream(f));
+        try (InputStream in = new BufferedInputStream(new FileInputStream(f))) {
             props.load(in);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                }
-            }
         }
         return props;
     }

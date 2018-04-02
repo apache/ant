@@ -261,10 +261,8 @@ public class JarTest {
     // bugzilla report 10262
     @Test
     public void testNoDuplicateIndex() throws IOException {
-        ZipFile archive = null;
-        try {
-            buildRule.executeTarget("testIndexTests");
-            archive = new ZipFile(new File(getOutputDir(), tempJar));
+        buildRule.executeTarget("testIndexTests");
+        try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar))) {
             Enumeration<? extends ZipEntry> e = archive.entries();
             int numberOfIndexLists = 0;
             while (e.hasMoreElements()) {
@@ -274,24 +272,17 @@ public class JarTest {
                 }
             }
             assertEquals(1, numberOfIndexLists);
-        } finally {
-            if (archive != null) {
-                archive.close();
-            }
         }
     }
 
     // bugzilla report 16972
     @Test
     public void testRootFilesInIndex() throws IOException {
-        ZipFile archive = null;
-        try {
-            buildRule.executeTarget("testIndexTests");
-            archive = new ZipFile(new File(getOutputDir(), tempJar));
+        buildRule.executeTarget("testIndexTests");
+        try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar))) {
             ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
             InputStream is = archive.getInputStream(ze);
-            BufferedReader r = new BufferedReader(new InputStreamReader(is,
-                                                                        "UTF8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF8"));
             boolean foundSub = false;
             boolean foundSubFoo = false;
             boolean foundFoo = false;
@@ -311,10 +302,6 @@ public class JarTest {
             assertTrue(foundSub);
             assertTrue(!foundSubFoo);
             assertTrue(foundFoo);
-        } finally {
-            if (archive != null) {
-                archive.close();
-            }
         }
     }
     @Test

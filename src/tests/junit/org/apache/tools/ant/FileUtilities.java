@@ -46,15 +46,8 @@ public class FileUtilities {
      * @throws IOException on error reading the file (not existing, not readable etc)
      */
     public static String getFileContents(File file) throws IOException {
-            FileReader rdr = null;
-            try {
-                rdr = new FileReader(file);
-                return FileUtils.readFully(rdr);
-            }
-            finally {
-                if (rdr != null) {
-                rdr.close();
-            }
+        try (FileReader rdr = new FileReader(file)) {
+            return FileUtils.readFully(rdr);
         }
     }
 

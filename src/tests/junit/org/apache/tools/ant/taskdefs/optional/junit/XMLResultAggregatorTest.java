@@ -50,14 +50,11 @@ public class XMLResultAggregatorTest {
         }
         assertTrue(d.getAbsolutePath(), d.mkdir());
         File xml = new File(d, "x.xml");
-        PrintWriter pw = new PrintWriter(new FileOutputStream(xml));
-        try {
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(xml))) {
             pw.println("<testsuite errors='0' failures='0' name='my.UnitTest' tests='1'>");
             pw.println(" <testcase classname='my.UnitTest' name='testSomething'/>");
             pw.println("</testsuite>");
             pw.flush();
-        } finally {
-            pw.close();
         }
         XMLResultAggregator task = new XMLResultAggregator();
         task.setTodir(d);

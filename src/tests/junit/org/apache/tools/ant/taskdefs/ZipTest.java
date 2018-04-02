@@ -102,7 +102,6 @@ public class ZipTest {
             if (zfPrefixAddsDir != null) {
                 zfPrefixAddsDir.close();
             }
-
         } catch (IOException e) {
             //ignored
         }
@@ -217,15 +216,8 @@ public class ZipTest {
     @Test
     public void testDefaultExcludesAndUpdate() throws IOException {
        buildRule.executeTarget("testDefaultExcludesAndUpdate");
-        ZipFile f = null;
-        try {
-            f = new ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
-            assertNotNull("ziptest~ should be included",
-                          f.getEntry("ziptest~"));
-        } finally {
-            if (f != null) {
-                f.close();
-            }
+        try (ZipFile f = new ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"))) {
+            assertNotNull("ziptest~ should be included", f.getEntry("ziptest~"));
         }
     }
 
@@ -242,60 +234,36 @@ public class ZipTest {
     @Test
     public void testTarFileSet() throws IOException {
         buildRule.executeTarget("testTarFileSet");
-        org.apache.tools.zip.ZipFile zf = null;
-        try {
-            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"))) {
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("asf-logo.gif");
             assertEquals(UnixStat.FILE_FLAG | 0446, ze.getUnixMode());
-        } finally {
-            if (zf != null) {
-                zf.close();
-            }
         }
     }
 
     @Test
     public void testRewriteZeroPermissions() throws IOException {
        buildRule.executeTarget("rewriteZeroPermissions");
-        org.apache.tools.zip.ZipFile zf = null;
-        try {
-            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"))) {
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
-        } finally {
-            if (zf != null) {
-                zf.close();
-            }
         }
     }
 
     @Test
     public void testAcceptZeroPermissions() throws IOException {
        buildRule.executeTarget("acceptZeroPermissions");
-        org.apache.tools.zip.ZipFile zf = null;
-        try {
-            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"))) {
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("testdir/test.txt");
             assertEquals(0000, ze.getUnixMode());
-        } finally {
-            if (zf != null) {
-                zf.close();
-            }
         }
     }
 
     @Test
     public void testForBugzilla34764() throws IOException {
        buildRule.executeTarget("testForBugzilla34764");
-        org.apache.tools.zip.ZipFile zf = null;
-        try {
-            zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"))) {
             org.apache.tools.zip.ZipEntry ze = zf.getEntry("file1");
             assertEquals(UnixStat.FILE_FLAG | 0644, ze.getUnixMode());
-        } finally {
-            if (zf != null) {
-                zf.close();
-            }
         }
     }
 

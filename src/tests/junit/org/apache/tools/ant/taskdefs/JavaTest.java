@@ -506,22 +506,13 @@ public class JavaTest {
             if (argv.length >= 2) {
                 logFile = argv[1];
             }
-            OutputStreamWriter out = null;
             Thread.sleep(sleepTime * 1000);
 
-            try {
-                File dest = new File(logFile);
-                FileOutputStream fos = new FileOutputStream(dest);
-                out = new OutputStreamWriter(fos);
+            File dest = new File(logFile);
+            try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(dest))) {
                 out.write("bye bye\n");
             } catch (Exception ex) {
-            } finally {
-                try {
-                    out.close();
-                } catch (IOException ioe) {
-                }
             }
-
         }
     }
 

@@ -287,8 +287,7 @@ public class ManifestTest {
         assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
 
         Set<String> set = new HashSet<>();
-        FileReader fin = new FileReader(expandedManifest);
-        try {
+        try (FileReader fin = new FileReader(expandedManifest)) {
             BufferedReader in = new BufferedReader(fin);
 
             String read = in.readLine();
@@ -297,8 +296,6 @@ public class ManifestTest {
                 read = in.readLine();
             }
             in.close();
-        } finally {
-            fin.close();
         }
 
         assertTrue("Manifest file should have contained string ",
@@ -465,11 +462,8 @@ public class ManifestTest {
      * Reads mftest.mf.
      */
     private Manifest getManifest(File file) throws IOException, ManifestException {
-        FileReader r = new FileReader(file);
-        try {
+        try (FileReader r = new FileReader(file)) {
             return new Manifest(r);
-        } finally {
-            r.close();
         }
     }
 }

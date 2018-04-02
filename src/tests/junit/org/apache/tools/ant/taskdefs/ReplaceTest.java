@@ -157,25 +157,14 @@ public class ReplaceTest {
             fail("Expected file " + result + " doesn\'t exist");
         }
 
-        InputStream inExpect = null;
-        InputStream inResult = null;
-        try {
-            inExpect = new BufferedInputStream(new FileInputStream(expect));
-            inResult = new BufferedInputStream(new FileInputStream(result));
-
+        try (InputStream inExpect = new BufferedInputStream(new FileInputStream(expect));
+             InputStream inResult = new BufferedInputStream(new FileInputStream(result))) {
             int expectedByte = inExpect.read();
             while (expectedByte != -1) {
                 assertEquals(expectedByte, inResult.read());
                 expectedByte = inExpect.read();
             }
             assertEquals("End of file", -1, inResult.read());
-        } finally {
-            if (inResult != null) {
-                inResult.close();
-            }
-            if (inExpect != null) {
-                inExpect.close();
-            }
         }
     }
 }

@@ -56,15 +56,12 @@ public class InitializeClassTest {
         buildRule.executeTarget("forked");
         synchronized (System.out) {
             PrintStream ps = System.out;
-            PrintStream newps = new PrintStream(new FileOutputStream(f2));
-             try {
-                 System.setOut(newps);
-                 buildRule.getProject().executeTarget("unforked");
-             } finally {
-                 System.setOut(ps);
-
-                 newps.close();
-             }
+            try (PrintStream newps = new PrintStream(new FileOutputStream(f2))) {
+                System.setOut(newps);
+                buildRule.getProject().executeTarget("unforked");
+            } finally {
+                System.setOut(ps);
+            }
         }
         assertEquals(FileUtilities.getFileContents(f1), FileUtilities.getFileContents(f2));
     }

@@ -75,16 +75,13 @@ public class ExecStreamRedirectorTest {
     }
 
     private static byte[] readAllBytes(final File file) throws IOException {
-        final FileInputStream fis = new FileInputStream(file);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
+        try (FileInputStream fis = new FileInputStream(file)) {
             final byte[] dataChunk = new byte[1024];
             int numRead = -1;
             while ((numRead = fis.read(dataChunk)) > 0) {
                 bos.write(dataChunk, 0, numRead);
             }
-        } finally {
-            fis.close();
         }
         return bos.toByteArray();
     }

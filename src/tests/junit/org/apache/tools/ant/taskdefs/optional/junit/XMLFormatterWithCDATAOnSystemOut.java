@@ -65,16 +65,10 @@ public class XMLFormatterWithCDATAOnSystemOut {
             // avoid endless loop
             buildRule.executeTarget("run-junit");
             File f = buildRule.getProject().resolveFile(REPORT);
-            FileReader reader = null;
-            try {
-                reader = new FileReader(f);
+            try (FileReader reader = new FileReader(f)) {
                 String content = FileUtils.readFully(reader);
-                assertTrue(content.indexOf("</RESPONSE>&#x5d;&#x5d;&gt;"
-                                           + "</ERROR>") > 0);
+                assertTrue(content.contains("</RESPONSE>&#x5d;&#x5d;&gt;</ERROR>"));
             } finally {
-                if (reader != null) {
-                    reader.close();
-                }
                 f.delete();
             }
         }

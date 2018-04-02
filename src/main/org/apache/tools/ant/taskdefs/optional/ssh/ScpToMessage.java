@@ -347,7 +347,6 @@ public class ScpToMessage extends AbstractSshMessage {
         waitForAck(in);
 
         // send a content of lfile
-        final InputStream fis = Files.newInputStream(localFile.toPath());
         final byte[] buf = new byte[BUFFER_SIZE];
         final long startTime = System.currentTimeMillis();
         long totalLength = 0;
@@ -359,7 +358,7 @@ public class ScpToMessage extends AbstractSshMessage {
         final long initFilesize = filesize;
         int percentTransmitted = 0;
 
-        try {
+        try (InputStream fis = Files.newInputStream(localFile.toPath())) {
             if (this.getVerbose()) {
                 log("Sending: " + localFile.getName() + " : " + localFile.length());
             }
@@ -385,7 +384,6 @@ public class ScpToMessage extends AbstractSshMessage {
                 final long endTime = System.currentTimeMillis();
                 logStats(startTime, endTime, totalLength);
             }
-            fis.close();
         }
     }
 
