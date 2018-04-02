@@ -175,7 +175,7 @@ public class MapperTest {
         String[] targets = fileNameMapper.mapFileName("fromfilename");
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 3, targets.length);
-        List list = Arrays.asList(targets);
+        List<String> list = Arrays.asList(targets);
         assertTrue("cannot find expected target \"tofilename\"",
                 list.contains("tofilename"));
         assertTrue("cannot find expected target \"fromfilename\"",

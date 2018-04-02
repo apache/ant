@@ -265,10 +265,10 @@ public class JarTest {
         try {
             buildRule.executeTarget("testIndexTests");
             archive = new ZipFile(new File(getOutputDir(), tempJar));
-            Enumeration e = archive.entries();
+            Enumeration<? extends ZipEntry> e = archive.entries();
             int numberOfIndexLists = 0;
             while (e.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) e.nextElement();
+                ZipEntry ze = e.nextElement();
                 if (ze.getName().equals("META-INF/INDEX.LIST")) {
                     numberOfIndexLists++;
                 }

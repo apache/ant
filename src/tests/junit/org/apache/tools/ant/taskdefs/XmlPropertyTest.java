@@ -24,7 +24,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildFileRule;
@@ -145,10 +147,10 @@ public class XmlPropertyTest {
      */
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) throws IOException {
-        Enumeration iter =
+        Enumeration<File> iter =
             getFiles(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
-            File inputFile = (File) iter.nextElement();
+            File inputFile = iter.nextElement();
             // What's the working directory?  If local, then its the
             // folder of the input file.  Otherwise, its the "current" dir..
             File workingDir;
@@ -209,11 +211,9 @@ public class XmlPropertyTest {
     private static void ensureProperties(String msg, File inputFile,
                                           File workingDir, Project p,
                                           Properties properties) {
-        Hashtable xmlproperties = p.getProperties();
+        Hashtable<String, Object> xmlproperties = p.getProperties();
         // Every key identified by the Properties must have been loaded.
-        Enumeration<?> propertyKeyEnum = properties.propertyNames();
-        while (propertyKeyEnum.hasMoreElements()) {
-            String currentKey = propertyKeyEnum.nextElement().toString();
+        for (String currentKey : properties.stringPropertyNames()) {
             String assertMsg = msg + "-" + inputFile.getName()
                 + " Key=" + currentKey;
 
@@ -266,24 +266,20 @@ public class XmlPropertyTest {
     /**
      * Debugging method to print the properties in the given hashtable
      */
-    private static void printProperties(Hashtable xmlproperties) {
-        Enumeration keyEnum = xmlproperties.keys();
-        while (keyEnum.hasMoreElements()) {
-            String currentKey = keyEnum.nextElement().toString();
-            System.out.println(currentKey + " = "
-                               + xmlproperties.get(currentKey));
+    private static void printProperties(Hashtable<Object, Object> xmlproperties) {
+        for (Map.Entry<Object, Object> entry : xmlproperties.entrySet()) {
+            System.out.println(entry.getKey() + " = " + entry.getValue());
         }
     }
 
     /**
      * Ensure all references loaded by the project are valid.
      */
-    private static void ensureReferences (String msg, File inputFile,
-                                          Hashtable references) {
-        Enumeration referenceKeyEnum = references.keys();
-        while(referenceKeyEnum.hasMoreElements()){
-            String currentKey = referenceKeyEnum.nextElement().toString();
-            Object currentValue = references.get(currentKey);
+    private static void ensureReferences(String msg, File inputFile,
+                                         Hashtable<String, Object> references) {
+        for (Map.Entry<String, Object> entry : references.entrySet()) {
+            String currentKey = entry.getKey();
+            Object currentValue = entry.getValue();
 
             if (!(currentValue instanceof Path) && !(currentValue instanceof String)
                     && !currentKey.startsWith("ant.")) {
@@ -337,7 +333,7 @@ public class XmlPropertyTest {
      * Retrieve a list of xml files in the specified folder
      * and below.
      */
-    private static Enumeration getFiles (final File startingDir) {
+    private static Enumeration<File> getFiles (final File startingDir) {
         Vector<File> result = new Vector<>();
         getFiles(startingDir, result);
         return result.elements();

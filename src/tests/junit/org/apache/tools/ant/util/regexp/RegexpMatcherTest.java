@@ -78,7 +78,7 @@ public abstract class RegexpMatcherTest {
     @Test
     public void testGroups() {
         reg.setPattern("aaaa");
-        Vector v = reg.getGroups("xaaaa");
+        Vector<String> v = reg.getGroups("xaaaa");
         assertEquals("No parens -> no extra groups", 1, v.size());
         assertEquals("Trivial match with no parens", "aaaa",
                 v.elementAt(0));
@@ -102,7 +102,7 @@ public abstract class RegexpMatcherTest {
     @Test
     public void testBugzillaReport14619() {
         reg.setPattern("^(.*)/src/((.*/)*)([a-zA-Z0-9_\\.]+)\\.java$");
-        Vector v = reg.getGroups("de/tom/src/Google.java");
+        Vector<String> v = reg.getGroups("de/tom/src/Google.java");
         assertEquals(5, v.size());
         assertEquals("de/tom", v.elementAt(1));
         assertEquals("", v.elementAt(2));

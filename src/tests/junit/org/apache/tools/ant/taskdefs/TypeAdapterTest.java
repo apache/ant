@@ -136,7 +136,7 @@ public class TypeAdapterTest {
                 throw new BuildException(message);
             }
         }
-        public void checkProxyClass(Class proxyClass) {
+        public void checkProxyClass(Class<?> proxyClass) {
             getExecuteMethod(proxyClass);
         }
 

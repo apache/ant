@@ -80,8 +80,9 @@ public class AntStructureTest {
         private int elementCalled = 0;
         private Project p;
 
-        public void printHead(PrintWriter out, Project p, Hashtable tasks,
-                              Hashtable types) {
+        public void printHead(PrintWriter out, Project p,
+                              Hashtable<String, Class<?>> tasks,
+                              Hashtable<String, Class<?>> types) {
             assertTrue(!headCalled);
             assertTrue(!targetCalled);
             assertTrue(!tailCalled);
@@ -96,7 +97,7 @@ public class AntStructureTest {
             targetCalled = true;
         }
         public void printElementDecl(PrintWriter out, Project p, String name,
-                                     Class element) {
+                                     Class<?> element) {
             assertTrue(headCalled);
             assertTrue(targetCalled);
             assertTrue(!tailCalled);

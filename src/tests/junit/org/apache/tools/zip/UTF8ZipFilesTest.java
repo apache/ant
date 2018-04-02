@@ -200,9 +200,9 @@ public class UTF8ZipFilesTest {
         try {
             zf = new ZipFile(file, encoding, false);
 
-            Enumeration e = zf.getEntries();
+            Enumeration<ZipEntry> e = zf.getEntries();
             while (e.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) e.nextElement();
+                ZipEntry ze = e.nextElement();
 
                 if (ze.getName().endsWith("sser.txt")) {
                     assertUnicodeName(ze, OIL_BARREL_TXT, encoding);

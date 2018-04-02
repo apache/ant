@@ -382,7 +382,7 @@ public class XMLValidateTask extends Task {
             reader = createDefaultReaderOrParser();
         } else {
 
-            Class readerClass = null;
+            Class<?> readerClass = null;
             try {
                 // load the parser class
                 if (classpath != null) {

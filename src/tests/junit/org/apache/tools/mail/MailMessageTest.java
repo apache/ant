@@ -603,26 +603,26 @@ public class MailMessageTest {
             try {
                 msg.from(from);
 
-                Enumeration e;
+                Enumeration<String> e;
 
                 e = replyToList.elements();
                 while (e.hasMoreElements()) {
-                    msg.replyto(e.nextElement().toString());
+                    msg.replyto(e.nextElement());
                 }
 
                 e = toList.elements();
                 while (e.hasMoreElements()) {
-                    msg.to(e.nextElement().toString());
+                    msg.to(e.nextElement());
                 }
 
                 e = ccList.elements();
                 while (e.hasMoreElements()) {
-                    msg.cc(e.nextElement().toString());
+                    msg.cc(e.nextElement());
                 }
 
                 e = bccList.elements();
                 while (e.hasMoreElements()) {
-                    msg.bcc(e.nextElement().toString());
+                    msg.bcc(e.nextElement());
                 }
 
                 if (subject != null) {

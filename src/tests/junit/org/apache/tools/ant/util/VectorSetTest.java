@@ -80,7 +80,7 @@ public class VectorSetTest {
         v.add(O);
         Object o = v.clone();
         assertTrue(o instanceof VectorSet);
-        VectorSet<Object> vs = (VectorSet) o;
+        VectorSet<Object> vs = (VectorSet<Object>) o;
         assertEquals(1, vs.size());
         assertTrue(vs.contains(O));
     }

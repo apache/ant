@@ -92,7 +92,7 @@ public class JUnitReportTest {
         try {
             assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
         } finally {
-            FileUtils.getFileUtils().close(reportStream);
+            FileUtils.close(reportStream);
         }
     }
 

@@ -478,7 +478,7 @@ public class FTPTest {
      * to parse the log output.
      */
     private class CountLogListener extends DefaultLogger {
-        private Vector lastMatchGroups = null;
+        private Vector<String> lastMatchGroups = null;
         private RegexpMatcher matcher = new RegexpMatcherFactory().newRegexpMatcher();
 
         /**
@@ -514,7 +514,7 @@ public class FTPTest {
             if (this.lastMatchGroups == null) {
                 return -1;
             }
-            return Integer.parseInt((String) this.lastMatchGroups.get(1));
+            return Integer.parseInt(this.lastMatchGroups.get(1));
         }
     }
 

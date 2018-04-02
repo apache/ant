@@ -153,7 +153,7 @@ public class FilterSetTest {
         buildRule.executeTarget("test-nested-filtersets");
 
         FilterSet fs = buildRule.getProject().getReference("1");
-        Hashtable filters = fs.getFilterHash();
+        Hashtable<String, String> filters = fs.getFilterHash();
         assertEquals(1, filters.size());
         assertEquals("value1", filters.get("token1"));
 

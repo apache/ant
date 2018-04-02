@@ -19,6 +19,7 @@
 package org.apache.tools.ant.util;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
@@ -46,7 +47,7 @@ public class ClasspathUtilsTest {
 
     @Test
     public void testOnlyOneInstance() {
-        Enumeration enumeration;
+        Enumeration<URL> enumeration;
         ClassLoader c = ClasspathUtils.getUniqueClassLoaderForPath(p, null, false);
         try {
             enumeration = c.getResources(

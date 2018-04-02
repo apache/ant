@@ -65,7 +65,7 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testdirect");
-        Hashtable files = getResultFiles();
+        Hashtable<String, String> files = getResultFiles();
         assertEquals("Depend did not leave correct number of files", 3,
             files.size());
         assertTrue("Result did not contain A.class",
@@ -86,7 +86,7 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testclosure");
-        Hashtable files = getResultFiles();
+        Hashtable<String, String> files = getResultFiles();
         assertTrue("Depend did not leave correct number of files",
             files.size() <= 2);
         assertTrue("Result did not contain D.class",
@@ -159,7 +159,7 @@ public class DependTest {
      * @return a Hashtable containing the names of the files in the result
      * fileset
      */
-    private Hashtable getResultFiles() {
+    private Hashtable<String, String> getResultFiles() {
         FileSet resultFileSet = buildRule.getProject().getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(buildRule.getProject());
         Hashtable<String, String> files = new Hashtable<>();

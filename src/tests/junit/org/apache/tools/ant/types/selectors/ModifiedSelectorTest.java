@@ -408,7 +408,7 @@ public class ModifiedSelectorTest {
         String value2 = "value2";
 
         // given cache must be empty
-        Iterator it1 = cache.iterator();
+        Iterator<String> it1 = cache.iterator();
         assertFalse("Cache is not empty", it1.hasNext());
 
         // cache must return a stored value
@@ -418,8 +418,8 @@ public class ModifiedSelectorTest {
         assertEquals("cache returned wrong value", value2, cache.get(key2));
 
         // test the iterator
-        Iterator it2 = cache.iterator();
-        Object   returned = it2.next();
+        Iterator<String> it2 = cache.iterator();
+        String returned = it2.next();
         boolean ok = (key1.equals(returned) || key2.equals(returned));
         String msg = "Iterator returned unexpected value."
                    + "  key1.equals(returned)=" + key1.equals(returned)
@@ -430,7 +430,7 @@ public class ModifiedSelectorTest {
 
         // clear the cache
         cache.delete();
-        Iterator it3 = cache.iterator();
+        Iterator<String> it3 = cache.iterator();
         assertFalse("Cache is not empty", it3.hasNext());
     }
 

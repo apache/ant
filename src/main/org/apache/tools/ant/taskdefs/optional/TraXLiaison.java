@@ -335,7 +335,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             if ("org.apache.xalan.transformer.TransformerImpl" //NOSONAR
                 .equals(transformer.getClass().getName())) {
                 try {
-                    final Class traceSupport =
+                    final Class<?> traceSupport =
                         Class.forName("org.apache.tools.ant.taskdefs.optional."
                                       + "Xalan2TraceSupport", true,
                                       Thread.currentThread()
@@ -389,7 +389,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             tfactory = TransformerFactory.newInstance();
         } else {
             try {
-                Class clazz = null;
+                Class<?> clazz = null;
                 try {
                     clazz =
                         Class.forName(factoryName, true,

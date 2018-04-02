@@ -46,7 +46,7 @@ public class LinkedHashtableTest {
 
     public void testClone() {
         h.put(K1, V1);
-        Hashtable h2 = (Hashtable) h.clone();
+        Hashtable<Object, Object> h2 = (Hashtable) h.clone();
         assertTrue(h2 instanceof LinkedHashtable);
         assertTrue(h2.containsKey(K1));
     }
@@ -130,13 +130,13 @@ public class LinkedHashtableTest {
     @Test
     public void testEntrySet() {
         multiSetup();
-        Iterator i = h.entrySet().iterator();
+        Iterator<Map.Entry<Object, Object>> i = h.entrySet().iterator();
         assertTrue(i.hasNext());
-        Map.Entry e = (Map.Entry) i.next();
+        Map.Entry<Object, Object> e = i.next();
         assertSame(K1, e.getKey());
         assertSame(V1, e.getValue());
         assertTrue(i.hasNext());
-        e = (Map.Entry) i.next();
+        e = i.next();
         assertSame(K2, e.getKey());
         assertSame(V2, e.getValue());
         assertFalse(i.hasNext());
@@ -147,7 +147,7 @@ public class LinkedHashtableTest {
         h.put(K2, V2);
     }
 
-    private static void assertKeys(Iterator i) {
+    private static void assertKeys(Iterator<Object> i) {
         assertTrue(i.hasNext());
         assertSame(K1, i.next());
         assertTrue(i.hasNext());
@@ -155,7 +155,7 @@ public class LinkedHashtableTest {
         assertFalse(i.hasNext());
     }
 
-    private static void assertValues(Iterator i) {
+    private static void assertValues(Iterator<Object> i) {
         assertTrue(i.hasNext());
         assertSame(V1, i.next());
         assertTrue(i.hasNext());
