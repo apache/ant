@@ -671,7 +671,7 @@ public class Jar extends Zip {
                            + " be replaced by a newly generated one.",
                            Project.MSG_WARN);
         } else {
-            if (index && vPath.indexOf('/') == -1) {
+            if (index && !vPath.contains("/")) {
                 rootEntries.add(vPath);
             }
             super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);
@@ -1083,7 +1083,7 @@ public class Jar extends Zip {
                 String name = ze.getName();
                 if (ze.isDirectory()) {
                     dirSet.add(name);
-                } else if (name.indexOf('/') == -1) {
+                } else if (!name.contains("/")) {
                     files.add(name);
                 } else {
                     // a file, not in the root

@@ -231,8 +231,7 @@ public class ResourceList extends DataType implements ResourceCollection {
             return (Resource) expanded;
         }
         String expandedLine = expanded.toString();
-        int colon = expandedLine.indexOf(':');
-        if (colon >= 0) {
+        if (expandedLine.contains(":")) {
             // could be an URL or an absolute file on an OS with drives
             try {
                 return new URLResource(expandedLine);

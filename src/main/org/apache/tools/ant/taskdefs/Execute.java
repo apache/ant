@@ -136,17 +136,9 @@ public class Execute {
                 return procEnvironment;
             }
             StringBuilder var = null;
-            String line, lineSep = StringUtils.LINE_SEP;
+            String line;
             while ((line = in.readLine()) != null) {
-                if (line.indexOf('=') == -1) {
-                    // Chunk part of previous env var (UNIX env vars can
-                    // contain embedded new lines).
-                    if (var == null) {
-                        var = new StringBuilder(lineSep + line);
-                    } else {
-                        var.append(lineSep).append(line);
-                    }
-                } else {
+                if (line.contains("=")) {
                     // New env var...append the previous one if we have it.
                     if (var != null) {
                         int eq = var.toString().indexOf('=');
@@ -154,6 +146,14 @@ public class Execute {
                                             var.substring(eq + 1));
                     }
                     var = new StringBuilder(line);
+                } else {
+                    // Chunk part of previous env var (UNIX env vars can
+                    // contain embedded new lines).
+                    if (var == null) {
+                        var = new StringBuilder(StringUtils.LINE_SEP + line);
+                    } else {
+                        var.append(StringUtils.LINE_SEP).append(line);
+                    }
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.

@@ -437,7 +437,7 @@ public class Commandline implements Cloneable {
         }
         if (argument.contains("\'") || argument.contains(" ")
                // WIN9x uses a bat file for executing commands
-               || (IS_WIN_9X && argument.indexOf(';') != -1)) {
+               || (IS_WIN_9X && argument.contains(";"))) {
             return '\"' + argument + '\"';
         }
         return argument;

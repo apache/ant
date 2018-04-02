@@ -457,12 +457,7 @@ public class Scp extends SSHBase {
     }
 
     private static boolean isRemoteUri(final String uri) {
-        boolean isRemote = true;
-        final int indexOfAt = uri.indexOf('@');
-        if (indexOfAt < 0) {
-            isRemote = false;
-        }
-        return isRemote;
+        return uri.contains("@");
     }
 
     private Directory createDirectory(final FileSet set) {

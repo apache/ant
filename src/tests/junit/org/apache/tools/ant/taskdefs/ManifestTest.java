@@ -36,6 +36,7 @@ import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -398,8 +399,8 @@ public class ManifestTest {
         assertNotNull(mf);
         mfAsString = mf.toString();
         assertNotNull(mfAsString);
-        assertEquals(-1, mfAsString.indexOf("Foo: Bar"));
         assertTrue(mfAsString.contains("Foo: Baz"));
+        assertFalse(mfAsString.contains("Foo: Bar"));
     }
 
     @Test

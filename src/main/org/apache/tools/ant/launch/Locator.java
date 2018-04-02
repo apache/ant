@@ -282,7 +282,7 @@ public final class Locator {
      * @since Ant 1.7
      */
     public static String decodeUri(String uri) throws UnsupportedEncodingException {
-        if (uri.indexOf('%') == -1) {
+        if (!uri.contains("%")) {
             return uri;
         }
         ByteArrayOutputStream sb = new ByteArrayOutputStream(uri.length());

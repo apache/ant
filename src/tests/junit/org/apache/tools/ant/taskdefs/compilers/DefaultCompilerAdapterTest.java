@@ -36,6 +36,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -268,7 +269,7 @@ public class DefaultCompilerAdapterTest {
             assertNotNull(cmd[0]);
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No modulesourcepath
-            assertEquals(-1, cmdLine.indexOf("--module-source-path"));
+            assertFalse(cmdLine.contains("--module-source-path"));
             //The -sourcepath has to be followed by src
             int index = cmdLine.indexOf("-sourcepath");
             assertTrue(index != -1 && index < cmdLine.size() - 1);
@@ -326,7 +327,7 @@ public class DefaultCompilerAdapterTest {
             assertNotNull(cmd[0]);
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No sourcepath
-            assertEquals(-1, cmdLine.indexOf("-sourcepath"));
+            assertFalse(cmdLine.contains("-sourcepath"));
             //The --module-source-path has to be followed by the pattern
             int index = cmdLine.indexOf("--module-source-path");
             assertTrue(index != -1 && index < cmdLine.size() - 1);

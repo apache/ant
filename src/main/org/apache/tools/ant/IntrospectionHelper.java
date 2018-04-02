@@ -394,7 +394,7 @@ public final class IntrospectionHelper {
                 dc.setDynamicAttribute(attributeName.toLowerCase(Locale.ENGLISH), value.toString());
                 return;
             }
-            if (attributeName.indexOf(':') >= 0) {
+            if (attributeName.contains(":")) {
                 return; // Ignore attribute from unknown uri's
             }
             final String msg = getElementName(p, element)

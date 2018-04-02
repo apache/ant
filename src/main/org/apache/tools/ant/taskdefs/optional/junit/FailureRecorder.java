@@ -269,7 +269,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
 
     private void createClassHeader() throws IOException {
         String className = getLocationName().replace('\\', '/');
-        if (className.indexOf('/') > -1) {
+        if (className.contains("/")) {
             className = className.substring(className.lastIndexOf('/') + 1);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
@@ -352,8 +352,8 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
          */
         public TestInfos(Test test) {
             className = test.getClass().getName();
-            String _methodName = test.toString();
-            methodName = _methodName.substring(0, _methodName.indexOf('('));
+            String methodName = test.toString();
+            this.methodName = methodName.substring(0, methodName.indexOf('('));
         }
 
         /**

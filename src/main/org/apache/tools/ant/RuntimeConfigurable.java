@@ -154,7 +154,7 @@ public class RuntimeConfigurable implements Serializable {
      * @return AttributeComponentInformation instance
      */
     private AttributeComponentInformation isRestrictedAttribute(String name, ComponentHelper componentHelper) {
-        if (name.indexOf(':') == -1) {
+        if (!name.contains(":")) {
             return new AttributeComponentInformation(null, false);
         }
         String componentName = attrToComponent(name);
@@ -184,16 +184,15 @@ public class RuntimeConfigurable implements Serializable {
         ComponentHelper componentHelper = ComponentHelper
             .getComponentHelper(owner.getProject());
 
-        IntrospectionHelper ih
-            = IntrospectionHelper.getHelper(
-                owner.getProject(), EnableAttributeConsumer.class);
-        for (int i = 0; i < attributeMap.keySet().size(); ++i) {
-            String name = (String) attributeMap.keySet().toArray()[i];
-            AttributeComponentInformation attributeComponentInformation = isRestrictedAttribute(name, componentHelper);
+        IntrospectionHelper ih = IntrospectionHelper.getHelper(owner.getProject(),
+                EnableAttributeConsumer.class);
+        for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
+            AttributeComponentInformation attributeComponentInformation
+                    = isRestrictedAttribute(entry.getKey(), componentHelper);
             if (!attributeComponentInformation.isRestricted())  {
                 continue;
             }
-            String value = (String) attributeMap.get(name);
+            String value = (String) entry.getValue();
             EnableAttribute enable = null;
             try {
                 enable = (EnableAttribute)
@@ -287,7 +286,7 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public synchronized void setAttribute(String name, String value) {
-        if (name.indexOf(':') != -1) {
+        if (name.contains(":")) {
             namespacedAttribute = true;
         }
         setAttribute(name, (Object) value);

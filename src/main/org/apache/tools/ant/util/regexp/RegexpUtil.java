@@ -62,10 +62,10 @@ public class RegexpUtil {
     public static int asOptions(String flags) {
         int options = RegexpMatcher.MATCH_DEFAULT;
         if (flags != null) {
-            options = asOptions(flags.indexOf('i') == -1,
-                                flags.indexOf('m') != -1,
-                                flags.indexOf('s') != -1);
-            if (flags.indexOf('g') != -1) {
+            options = asOptions(!flags.contains("i"),
+                    flags.contains("m"),
+                    flags.contains("s"));
+            if (flags.contains("g")) {
                 options |= Regexp.REPLACE_ALL;
             }
         }

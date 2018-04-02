@@ -199,7 +199,7 @@ public class GlobPatternMapper implements FileNameMapper {
             name = name.toLowerCase();
         }
         if (handleDirSep) {
-            if (name.indexOf('\\') != -1) {
+            if (name.contains("\\")) {
                 name = name.replace('\\', '/');
             }
         }

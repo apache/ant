@@ -253,9 +253,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 inputStream = Files.newInputStream(buildFile.toPath());
             } else {
                 uri = url.toString();
-                int pling = -1;
-                if (uri.startsWith("jar:file")
-                    && (pling = uri.indexOf("!/")) > -1) {
+                int pling = uri.indexOf("!/");
+                if (uri.startsWith("jar:file") && pling > -1) {
                     zf = new ZipFile(org.apache.tools.ant.launch.Locator
                                      .fromJarURI(uri), "UTF-8");
                     inputStream =

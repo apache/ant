@@ -483,12 +483,12 @@ public class Depend extends MatchingTask {
                 // without closure we may delete an inner class but not the
                 // top level class which would not trigger a recompile.
 
-                if (affectedClass.indexOf('$') == -1) {
+                int aci = affectedClass.indexOf('$');
+                if (aci == -1) {
                     continue;
                 }
                 // need to delete the main class
-                String topLevelClassName
-                    = affectedClass.substring(0, affectedClass.indexOf('$'));
+                String topLevelClassName = affectedClass.substring(0, aci);
                 log("Top level class = " + topLevelClassName,
                     Project.MSG_VERBOSE);
                 ClassFileInfo topLevelClassInfo

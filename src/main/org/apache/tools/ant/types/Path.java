@@ -774,8 +774,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @since Ant 1.8.2
      */
     private static boolean containsWildcards(String path) {
-        return path != null
-            && (path.indexOf('*') > -1 || path.indexOf('?') > -1);
+        return path != null && (path.contains("*") || path.contains("?"));
     }
 
 }

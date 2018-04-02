@@ -647,7 +647,7 @@ public final class SelectorUtils {
      * @return true if the string contains at least a star or a question mark
      */
     public static boolean hasWildcards(String input) {
-        return input.indexOf('*') != -1 || input.indexOf('?') != -1;
+        return input.contains("*") || input.contains("?");
     }
 
     /**

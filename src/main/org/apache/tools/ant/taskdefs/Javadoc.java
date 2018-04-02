@@ -2203,7 +2203,7 @@ public class Javadoc extends Task {
             if (useExternalFile) {
                 // TODO what is the following doing?
                 //     should it run if !javadoc4 && executable != null?
-                if (sourceFileName.indexOf(' ') > -1) {
+                if (sourceFileName.contains(" ")) {
                     String name = sourceFileName;
                     if (File.separatorChar == '\\') {
                         name = sourceFileName.replace(File.separatorChar, '/');
@@ -2227,11 +2227,10 @@ public class Javadoc extends Task {
      */
     private String quoteString(final String str) {
         if (!containsWhitespace(str)
-            && str.indexOf('\'') == -1
-            && str.indexOf('"') == -1) {
+            && !str.contains("'") && !str.contains("\"")) {
             return str;
         }
-        if (str.indexOf('\'') == -1) {
+        if (!str.contains("'")) {
             return quoteString(str, '\'');
         }
         return quoteString(str, '"');

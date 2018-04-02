@@ -139,7 +139,7 @@ public class Launcher {
         while (tokenizer.hasMoreElements()) {
             final String elementName = tokenizer.nextToken();
             final File element = new File(elementName);
-            if (elementName.indexOf('%') != -1 && !element.exists()) {
+            if (elementName.contains("%") && !element.exists()) {
                 continue;
             }
             if (getJars && element.isDirectory()) {

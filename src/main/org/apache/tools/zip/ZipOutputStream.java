@@ -343,22 +343,22 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     public ZipOutputStream(File file) throws IOException {
         super(null);
-        RandomAccessFile _raf = null;
+        RandomAccessFile ranf = null;
         try {
-            _raf = new RandomAccessFile(file, "rw");
-            _raf.setLength(0);
+            ranf = new RandomAccessFile(file, "rw");
+            ranf.setLength(0);
         } catch (IOException e) {
-            if (_raf != null) {
+            if (ranf != null) {
                 try {
-                    _raf.close();
+                    ranf.close();
                 } catch (IOException inner) { // NOPMD
                     // ignore
                 }
-                _raf = null;
+                ranf = null;
             }
             out = Files.newOutputStream(file.toPath());
         }
-        raf = _raf;
+        raf = ranf;
     }
 
     /**

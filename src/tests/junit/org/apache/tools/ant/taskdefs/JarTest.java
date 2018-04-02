@@ -289,12 +289,16 @@ public class JarTest {
 
             String line = r.readLine();
             while (line != null) {
-                if (line.equals("foo")) {
-                    foundFoo = true;
-                } else if (line.equals("sub")) {
-                    foundSub = true;
-                } else if (line.equals("sub/foo")) {
-                    foundSubFoo = true;
+                switch (line) {
+                    case "foo":
+                        foundFoo = true;
+                        break;
+                    case "sub":
+                        foundSub = true;
+                        break;
+                    case "sub/foo":
+                        foundSubFoo = true;
+                        break;
                 }
                 line = r.readLine();
             }
