@@ -613,12 +613,9 @@ public final class IntrospectionHelper {
                 project.setProjectReference(nestedElement);
             }
             return nestedElement;
-        } catch (final IllegalAccessException ie) {
+        } catch (final IllegalAccessException | InstantiationException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
-        } catch (final InstantiationException ine) {
-            // impossible as getMethods should only return public methods
-            throw new BuildException(ine);
         } catch (final InvocationTargetException ite) {
             throw extractBuildException(ite);
         }
@@ -787,12 +784,9 @@ public final class IntrospectionHelper {
         }
         try {
             ns.store(parent, child);
-        } catch (final IllegalAccessException ie) {
+        } catch (final IllegalAccessException | InstantiationException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
-        } catch (final InstantiationException ine) {
-            // impossible as getMethods should only return public methods
-            throw new BuildException(ine);
         } catch (final InvocationTargetException ite) {
             throw extractBuildException(ite);
         }
@@ -1162,9 +1156,7 @@ public final class IntrospectionHelper {
                         throw new BuildException("Can't assign non-numeric"
                                                  + " value '" + value + "' to"
                                                  + " attribute " + attrName);
-                    } catch (final InvocationTargetException e) {
-                        throw e;
-                    } catch (final IllegalAccessException e) {
+                    } catch (final InvocationTargetException | IllegalAccessException e) {
                         throw e;
                     } catch (final Exception e) {
                         throw new BuildException(e);
@@ -1346,9 +1338,7 @@ public final class IntrospectionHelper {
                     project.setProjectReference(nestedObject);
                 }
                 return nestedObject;
-            } catch (final IllegalAccessException ex) {
-                throw new BuildException(ex);
-            } catch (final InstantiationException ex) {
+            } catch (final IllegalAccessException | InstantiationException ex) {
                 throw new BuildException(ex);
             } catch (final IllegalArgumentException ex) {
                 if (polyType == null) {
@@ -1374,9 +1364,7 @@ public final class IntrospectionHelper {
         public void store() {
             try {
                 nestedCreator.store(parent, nestedObject);
-            } catch (final IllegalAccessException ex) {
-                throw new BuildException(ex);
-            } catch (final InstantiationException ex) {
+            } catch (final IllegalAccessException | InstantiationException ex) {
                 throw new BuildException(ex);
             } catch (final IllegalArgumentException ex) {
                 if (polyType == null) {

@@ -328,15 +328,10 @@ public final class SortFilter extends BaseParamFilterReader
                                 = (Comparator<? super String>) (Class.forName(className).newInstance());
                         setComparator(comparatorInstance);
                         continue;
-                    } catch (InstantiationException e) {
-                        throw new BuildException(e);
-                    } catch (IllegalAccessException e) {
+                    } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
                         /*
-                         * Probably a inner non-static class, this this case is
-                         * not considered
+                         * IAE probably means an inner non-static class, that case is not considered
                          */
-                        throw new BuildException(e);
-                    } catch (ClassNotFoundException e) {
                         throw new BuildException(e);
                     } catch (ClassCastException e) {
                         throw new BuildException("Value of comparator attribute"

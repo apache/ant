@@ -294,11 +294,7 @@ public class FormatterElement {
             } else {
                 f = Class.forName(classname, true, loader);
             }
-        } catch (ClassNotFoundException e) {
-            throw new BuildException(
-                "Using loader " + loader + " on class " + classname
-                + ": " + e, e);
-        } catch (NoClassDefFoundError e) {
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
             throw new BuildException(
                 "Using loader " + loader + " on class " + classname
                 + ": " + e, e);
@@ -340,9 +336,7 @@ public class FormatterElement {
                 setter.invoke(r, project);
             } catch (NoSuchMethodException e) {
                 // no setProject to invoke; just ignore
-            } catch (IllegalAccessException e) {
-                throw new BuildException(e);
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new BuildException(e);
             }
         }

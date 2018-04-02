@@ -366,9 +366,7 @@ public class AntStructure extends Task {
                         } else {
                             sb.append(Stream.of(values).collect(joinAlts));
                         }
-                    } catch (final InstantiationException ie) {
-                        sb.append("CDATA ");
-                    } catch (final IllegalAccessException ie) {
+                    } catch (final InstantiationException | IllegalAccessException ie) {
                         sb.append("CDATA ");
                     }
                 } else if (Enum.class.isAssignableFrom(type)) {

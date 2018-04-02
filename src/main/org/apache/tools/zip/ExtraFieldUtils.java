@@ -174,10 +174,8 @@ public class ExtraFieldUtils {
                         .parseFromCentralDirectoryData(data, start + WORD, length);
                 }
                 v.add(ze);
-            } catch (InstantiationException ie) {
+            } catch (InstantiationException | IllegalAccessException ie) {
                 throw new ZipException(ie.getMessage());
-            } catch (IllegalAccessException iae) {
-                throw new ZipException(iae.getMessage());
             }
             start += (length + WORD);
         }

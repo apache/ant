@@ -188,12 +188,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (caught != null) {
                 throw caught;
             }
-        } catch (BuildException e) {
-            throw e;
-        } catch (SecurityException e) {
-            throw e;
-        } catch (ThreadDeath e) {
-            // TODO could perhaps also call thread.stop(); not sure if anyone cares
+        } catch (BuildException | ThreadDeath | SecurityException e) {
             throw e;
         } catch (Throwable e) {
             throw new BuildException(e);

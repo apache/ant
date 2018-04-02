@@ -112,9 +112,7 @@ public class DispatchUtils {
             } else {
                 throw new BuildException(t);
             }
-        } catch (NoSuchMethodException e) {
-            throw new BuildException(e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new BuildException(e);
         }
     }

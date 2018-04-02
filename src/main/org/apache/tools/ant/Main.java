@@ -858,12 +858,9 @@ public class Main implements AntMain {
                 System.setErr(savedErr);
                 System.setIn(savedIn);
             }
-        } catch (final RuntimeException exc) {
+        } catch (final RuntimeException | Error exc) {
             error = exc;
             throw exc;
-        } catch (final Error e) {
-            error = e;
-            throw e;
         } finally {
             if (!projectHelp) {
                 try {

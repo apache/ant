@@ -572,9 +572,7 @@ public class XMLCatalog extends DataType
             spFactory.setNamespaceAware(true);
             try {
                 reader = spFactory.newSAXParser().getXMLReader();
-            } catch (ParserConfigurationException ex) {
-                throw new TransformerException(ex);
-            } catch (SAXException ex) {
+            } catch (ParserConfigurationException | SAXException ex) {
                 throw new TransformerException(ex);
             }
         }

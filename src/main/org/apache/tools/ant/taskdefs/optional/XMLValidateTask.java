@@ -394,11 +394,7 @@ public class XMLValidateTask extends Task {
                 }
 
                 reader = readerClass.newInstance();
-            } catch (ClassNotFoundException e) {
-                throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
-            } catch (InstantiationException e) {
-                throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
-            } catch (IllegalAccessException e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
             }
         }

@@ -466,9 +466,7 @@ public class PropertyFile extends Task {
                 } else {
                     currentValue = 0;
                 }
-            } catch (NumberFormatException nfe) {
-                // swallow
-            } catch (ParseException pe)  {
+            } catch (NumberFormatException | ParseException nfe) {
                 // swallow
             }
 
@@ -479,9 +477,7 @@ public class PropertyFile extends Task {
                 if (value != null) {
                     try {
                         operationValue = fmt.parse(value).intValue();
-                    } catch (NumberFormatException nfe) {
-                        // swallow
-                    } catch (ParseException pe)  {
+                    } catch (NumberFormatException | ParseException nfe) {
                         // swallow
                     }
                 }

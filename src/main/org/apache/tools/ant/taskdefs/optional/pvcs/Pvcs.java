@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.pvcs;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -282,15 +281,7 @@ public class Pvcs extends Task {
                 throw new BuildException(msg, getLocation());
             }
 
-        } catch (FileNotFoundException e) {
-            String msg = "Failed executing: " + commandLine.toString()
-                + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, getLocation());
-        } catch (IOException e) {
-            String msg = "Failed executing: " + commandLine.toString()
-                + ". Exception: " + e.getMessage();
-            throw new BuildException(msg, getLocation());
-        } catch (ParseException e) {
+        } catch (ParseException | IOException e) {
             String msg = "Failed executing: " + commandLine.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());

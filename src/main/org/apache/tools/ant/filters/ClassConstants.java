@@ -126,9 +126,7 @@ public final class ClassConstants
                             return read();
                         }
                     }
-                } catch (NoClassDefFoundError ex) {
-                    throw ex;
-                } catch (RuntimeException ex) {
+                } catch (NoClassDefFoundError | RuntimeException ex) {
                     throw ex;
                 } catch (InvocationTargetException ex) {
                     Throwable t = ex.getTargetException();

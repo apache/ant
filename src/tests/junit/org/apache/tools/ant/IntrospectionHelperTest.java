@@ -702,9 +702,7 @@ public class IntrospectionHelperTest {
 
         try {
             m.invoke(this, arg);
-        } catch (IllegalAccessException e) {
-            throw new BuildException(e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new BuildException(e);
         }
 

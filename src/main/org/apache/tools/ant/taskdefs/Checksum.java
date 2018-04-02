@@ -371,10 +371,8 @@ public class Checksum extends MatchingTask implements Condition {
         if (provider != null) {
             try {
                 messageDigest = MessageDigest.getInstance(algorithm, provider);
-            } catch (NoSuchAlgorithmException noalgo) {
+            } catch (NoSuchAlgorithmException | NoSuchProviderException noalgo) {
                 throw new BuildException(noalgo, getLocation());
-            } catch (NoSuchProviderException noprovider) {
-                throw new BuildException(noprovider, getLocation());
             }
         } else {
             try {
