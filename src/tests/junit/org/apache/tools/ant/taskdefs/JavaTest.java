@@ -383,13 +383,11 @@ public class JavaTest {
         // reader will be read
         java.execute();
 
-        Thread inputThread = new Thread(new Runnable() {
-            public void run() {
-                Input input = new Input();
-                input.setProject(buildRule.getProject());
-                input.setAddproperty("input.value");
-                input.execute();
-            }
+        Thread inputThread = new Thread(() -> {
+            Input input = new Input();
+            input.setProject(buildRule.getProject());
+            input.setAddproperty("input.value");
+            input.execute();
         });
         inputThread.start();
 
@@ -425,19 +423,17 @@ public class JavaTest {
         final boolean[] timeout = new boolean[1];
         timeout[0] = false;
 
-        Thread writingThread = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    // wait a little bit to have the target executed
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new AssumptionViolatedException("Thread interrupted", e);
-                }
-                try {
-                    out.write("foo-FlushedInput\n".getBytes());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        Thread writingThread = new Thread(() -> {
+            try {
+                // wait a little bit to have the target executed
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new AssumptionViolatedException("Thread interrupted", e);
+            }
+            try {
+                out.write("foo-FlushedInput\n".getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
         writingThread.setDaemon(true);

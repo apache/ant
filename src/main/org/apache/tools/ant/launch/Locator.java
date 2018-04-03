@@ -492,7 +492,7 @@ public final class Locator {
         }
         File[] matches = location.listFiles((dir, name) -> {
             String littleName = name.toLowerCase(Locale.ENGLISH);
-            return Stream.of(extensions).anyMatch(x -> littleName.endsWith(x));
+            return Stream.of(extensions).anyMatch(littleName::endsWith);
         });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {

@@ -297,12 +297,10 @@ public class ProjectTest {
                 }
             });
         final boolean[] done = new boolean[] {false};
-        Thread t = new Thread() {
-                public void run() {
-                    p.log(FOO, Project.MSG_INFO);
-                    done[0] = true;
-                }
-            };
+        Thread t = new Thread(() -> {
+            p.log(FOO, Project.MSG_INFO);
+            done[0] = true;
+        });
         t.start();
         t.join(2000);
         assertTrue("Expected logging thread to finish successfully", done[0]);

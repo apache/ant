@@ -136,16 +136,14 @@ public class ExecuteWatchdogTest {
         watchdog.start(process);
 
         // I assume that starting this takes less than TIME_OUT/2 ms...
-        Thread thread = new Thread() {
-                public void run() {
-                    try {
-                        process.waitFor();
-                    } catch(InterruptedException e) {
-                        // not very nice but will do the job
-                        throw new AssumptionViolatedException("process interrupted in thread", e);
-                    }
-                }
-        };
+        Thread thread = new Thread(() -> {
+            try {
+                process.waitFor();
+            } catch(InterruptedException e) {
+                // not very nice but will do the job
+                throw new AssumptionViolatedException("process interrupted in thread", e);
+            }
+        });
         thread.start();
 
         // wait for TIME_OUT / 2, there should be about TIME_OUT / 2 ms remaining before timeout

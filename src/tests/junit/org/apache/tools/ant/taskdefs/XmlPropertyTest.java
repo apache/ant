@@ -343,14 +343,12 @@ public class XmlPropertyTest {
      * and below.
      */
     private static void getFiles (final File startingDir, Vector<File> collect) {
-        FileFilter filter = new FileFilter() {
-            public boolean accept (File file) {
-                if (file.isDirectory()) {
-                    return true;
-                } else {
-                    return (file.getPath().indexOf("taskdefs") > 0 &&
-                            file.getPath().toLowerCase().endsWith(".xml"));
-                }
+        FileFilter filter = file -> {
+            if (file.isDirectory()) {
+                return true;
+            } else {
+                return (file.getPath().indexOf("taskdefs") > 0 &&
+                        file.getPath().toLowerCase().endsWith(".xml"));
             }
         };
 

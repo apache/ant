@@ -30,7 +30,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -940,8 +939,8 @@ public class Replace extends MatchingTask {
      */
     private Iterator<Object> getOrderedIterator(Properties props) {
         List<Object> keys = new ArrayList<>(props.keySet());
-        Collections.sort(keys, Comparator
-            .comparingInt(o -> Objects.toString(o, "").length()).reversed());
+        keys.sort(Comparator.comparingInt(o -> Objects.toString(o, "").length())
+                .reversed());
         return keys.iterator();
     }
 }

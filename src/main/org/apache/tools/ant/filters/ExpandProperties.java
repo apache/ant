@@ -99,12 +99,7 @@ public final class ExpandProperties
                     getProperty = PropertyHelper.getPropertyHelper(project);
                 } else {
                     final Properties props = propertySet.getProperties();
-                    getProperty = new GetProperty() {
-
-                        public Object getProperty(String name) {
-                            return props.getProperty(name);
-                        }
-                    };
+                    getProperty = props::getProperty;
                 }
                 Object expanded = new ParseProperties(project, PropertyHelper
                                                       .getPropertyHelper(project)

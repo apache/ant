@@ -267,11 +267,7 @@ public class URLResource extends Resource implements URLProvider {
         if (!isExists(false)) {
             return UNKNOWN_DATETIME;
         }
-        return withConnection(new ConnectionUser() {
-                public long useConnection(URLConnection c) {
-                    return conn.getLastModified();
-                }
-            }, UNKNOWN_DATETIME);
+        return withConnection(c -> conn.getLastModified(), UNKNOWN_DATETIME);
     }
 
     /**
@@ -296,11 +292,7 @@ public class URLResource extends Resource implements URLProvider {
         if (!isExists(false)) {
             return 0L;
         }
-        return withConnection(new ConnectionUser() {
-                public long useConnection(URLConnection c) {
-                    return conn.getContentLength();
-                }
-            }, UNKNOWN_SIZE);
+        return withConnection(c -> conn.getContentLength(), UNKNOWN_SIZE);
     }
 
     /**

@@ -179,12 +179,10 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
 
         if ("FX".equalsIgnoreCase(getLanguage())) {
             source = source.entrySet().stream()
-                .collect(Collectors.toMap(
-                    e -> String.format("%s:%s", e.getKey(),
-                        e.getValue().getClass().getName()),
-                    Map.Entry::getValue));
+                .collect(Collectors.toMap(e -> String.format("%s:%s", e.getKey(),
+                        e.getValue().getClass().getName()), Map.Entry::getValue));
         }
-        source.forEach(target::accept);
+        source.forEach(target);
     }
 
     private ScriptEngine createEngine() {

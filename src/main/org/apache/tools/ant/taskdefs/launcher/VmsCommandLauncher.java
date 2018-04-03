@@ -122,16 +122,13 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     }
 
     private void deleteAfter(final File f, final Process p) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    p.waitFor();
-                } catch(InterruptedException e) {
-                    // ignore
-                }
-                FileUtils.delete(f);
+        new Thread(() -> {
+            try {
+                p.waitFor();
+            } catch(InterruptedException e) {
+                // ignore
             }
-        }.start();
+            FileUtils.delete(f);
+        }).start();
     }
 }

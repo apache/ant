@@ -395,21 +395,18 @@ public class SSHExec extends SSHBase {
             channel.connect();
             // wait for it to finish
             thread =
-                new Thread() {
-                    @Override
-                    public void run() {
+                    new Thread(() -> {
                         while (!channel.isClosed()) {
                             if (thread == null) {
                                 return;
                             }
                             try {
-                                sleep(RETRY_INTERVAL);
+                                Thread.sleep(RETRY_INTERVAL);
                             } catch (final Exception e) {
                                 // ignored
                             }
                         }
-                    }
-                };
+                    });
 
             thread.start();
             thread.join(maxwait);

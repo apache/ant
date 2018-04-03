@@ -354,16 +354,14 @@ public final class SortFilter extends BaseParamFilterReader
     private void sort() {
         if (comparator == null) {
             if (reverse) {
-                Collections.sort(lines, new Comparator<String>() {
-                        public int compare(String s1, String s2) {
-                            return (-s1.compareTo(s2)); //NOSONAR
-                        }
-                    });
+                lines.sort((s1, s2) -> {
+                    return -s1.compareTo(s2); //NOSONAR
+                });
             } else {
                 Collections.sort(lines);
             }
         } else {
-            Collections.sort(lines, comparator);
+            lines.sort(comparator);
         }
     }
 }

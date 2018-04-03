@@ -503,12 +503,7 @@ public class Concat extends Task implements ResourceCollection {
         }
     };
 
-    private ReaderFactory<Reader> identityReaderFactory = new ReaderFactory<Reader>() {
-        @Override
-        public Reader getReader(Reader o) {
-            return o;
-        }
-    };
+    private ReaderFactory<Reader> identityReaderFactory = o -> o;
 
     /**
      * Construct a new Concat task.

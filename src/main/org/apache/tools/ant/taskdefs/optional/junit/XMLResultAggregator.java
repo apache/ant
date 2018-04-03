@@ -185,10 +185,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             DirectoryScanner ds = fs.getDirectoryScanner(p);
             ds.scan();
             return Stream.of(ds.getIncludedFiles())
-                .filter(pathname -> pathname.endsWith(".xml")).map(pathname -> {
-                    return p.resolveFile(
-                        new File(ds.getBasedir(), pathname).getPath());
-                });
+                .filter(pathname -> pathname.endsWith(".xml"))
+                    .map(pathname -> p.resolveFile(new File(ds.getBasedir(), pathname).getPath()));
         }).toArray(File[]::new);
     }
 

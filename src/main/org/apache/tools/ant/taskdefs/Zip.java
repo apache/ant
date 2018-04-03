@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -1632,7 +1631,7 @@ public class Zip extends MatchingTask {
             }
             // make sure directories are in alpha-order - this also
             // ensures parents come before their children
-            Collections.sort(dirs, Comparator.comparing(Resource::getName));
+            dirs.sort(Comparator.comparing(Resource::getName));
             final List<Resource> rs = new ArrayList<>(dirs);
             rs.addAll(files);
             result[i] = rs.toArray(new Resource[rs.size()]);

@@ -32,11 +32,7 @@ public class ThreadedOutput extends TestCase {
     }
 
     public void testOutput() throws InterruptedException {
-        Thread t = new Thread(new Runnable() {
-                public void run() {
-                    System.out.println("foo");
-                }
-            });
+        Thread t = new Thread(() -> System.out.println("foo"));
         t.start();
         t.join();
     }
