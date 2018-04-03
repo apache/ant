@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
@@ -52,10 +53,8 @@ public class FileUtilsTest {
 
     @After
     public void tearDown() {
-        if (removeThis != null && removeThis.exists()) {
-            if (!removeThis.delete()) {
-                removeThis.deleteOnExit();
-            }
+        if (removeThis != null && removeThis.exists() && !removeThis.delete()) {
+            removeThis.deleteOnExit();
         }
     }
 
@@ -77,7 +76,7 @@ public class FileUtilsTest {
         fos.close();
         assumeTrue("Could not change file modified time", removeThis.setLastModified(removeThis.lastModified() - 2000));
         long modTime = removeThis.lastModified();
-        assertTrue(modTime != 0);
+        assertNotEquals(0, modTime);
 
 
         FILE_UTILS.setFileLastModified(removeThis, -1);
@@ -97,12 +96,12 @@ public class FileUtilsTest {
          *
          * Just assert the time has changed.
          */
-        assertTrue(thirdModTime != secondModTime);
+        assertNotEquals(thirdModTime, secondModTime);
     }
 
     @Test
     public void testResolveFile() {
-        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+        if (!Os.isFamily("dos") && !Os.isFamily("netware")) {
             /*
              * Start with simple absolute file names.
              */
@@ -157,7 +156,7 @@ public class FileUtilsTest {
                          FILE_UTILS.resolveFile(null, driveSpec + "/////").getPath());
             assertEquals(driveSpec,
                          FILE_UTILS.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
-        } else if (!(Os.isFamily("dos"))) {
+        } else if (!Os.isFamily("dos")) {
             /*
              * drive letters must be considered just normal filenames.
              */
@@ -202,7 +201,7 @@ public class FileUtilsTest {
 
     @Test
     public void testNormalize() {
-        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+        if (!Os.isFamily("dos") && !Os.isFamily("netware")) {
             /*
              * Start with simple absolute file names.
              */
@@ -348,8 +347,8 @@ public class FileUtilsTest {
         assertTrue("starts with pre", name.startsWith("pre"));
         assertTrue("ends with .suf", name.endsWith(".suf"));
         assertTrue("File was created", tmp1.exists());
-        assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(), tmp1
-                .getAbsolutePath());
+        assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(),
+                tmp1.getAbsolutePath());
         tmp1.delete();
 
         File dir2 = new File(tmploc + "/ant-test");
@@ -361,14 +360,14 @@ public class FileUtilsTest {
         assertTrue("starts with pre", name2.startsWith("pre"));
         assertTrue("ends with .suf", name2.endsWith(".suf"));
         assertTrue("File was created", tmp2.exists());
-        assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(), tmp2
-                .getAbsolutePath());
+        assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(),
+                tmp2.getAbsolutePath());
         tmp2.delete();
         dir2.delete();
 
         File parent = new File((new File("/tmp")).getAbsolutePath());
         tmp1 = FILE_UTILS.createTempFile("pre", ".suf", parent, false);
-        assertTrue("new file", !tmp1.exists());
+        assertFalse("new file", tmp1.exists());
 
         name = tmp1.getName();
         assertTrue("starts with pre", name.startsWith("pre"));
@@ -377,14 +376,13 @@ public class FileUtilsTest {
                 .getParent());
 
         tmp2 = FILE_UTILS.createTempFile("pre", ".suf", parent, false);
-        assertTrue("files are different", !tmp1.getAbsolutePath().equals(
-                tmp2.getAbsolutePath()));
+        assertNotEquals("files are different", tmp1.getAbsolutePath(), tmp2.getAbsolutePath());
 
         // null parent dir
         File tmp3 = FILE_UTILS.createTempFile("pre", ".suf", null, false);
         tmploc = System.getProperty("java.io.tmpdir");
-        assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(), tmp3
-                .getAbsolutePath());
+        assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(),
+                tmp3.getAbsolutePath());
     }
 
     /**
@@ -392,18 +390,21 @@ public class FileUtilsTest {
      */
     @Test
     public void testContentEquals() throws IOException {
-        assertTrue("Non existing files", FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
-                                                          new File(System.getProperty("root"), "bar")));
-        assertTrue("One exists, the other one doesn\'t",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"), new File(System.getProperty("root"), "build.xml")));
-        assertTrue("Don\'t compare directories",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "src"), new File(System.getProperty("root"), "src")));
+        assertTrue("Non existing files",
+                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
+                        new File(System.getProperty("root"), "bar")));
+        assertFalse("One exists, the other one doesn\'t",
+                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
+                        new File(System.getProperty("root"), "build.xml")));
+        assertFalse("Don\'t compare directories",
+                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "src"),
+                        new File(System.getProperty("root"), "src")));
         assertTrue("File equals itself",
-                   FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                                    new File(System.getProperty("root"), "build.xml")));
-        assertTrue("Files are different",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                                     new File(System.getProperty("root"), "docs.xml")));
+                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
+                        new File(System.getProperty("root"), "build.xml")));
+        assertFalse("Files are different",
+                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
+                        new File(System.getProperty("root"), "docs.xml")));
     }
 
     /**
@@ -438,7 +439,7 @@ public class FileUtilsTest {
                                                  new File("c:\\foo\\bar")));
         assertEquals("bar", FILE_UTILS.removeLeadingPath(new File("c:\\foo\\"),
                                                  new File("c:\\foo\\bar")));
-        if (!(Os.isFamily("dos") || Os.isFamily("netware"))) {
+        if (!Os.isFamily("dos") && !Os.isFamily("netware")) {
             assertEquals(FILE_UTILS.normalize("/bar").getAbsolutePath(),
                          FILE_UTILS.removeLeadingPath(new File("/foo"), new File("/bar")));
             assertEquals(FILE_UTILS.normalize("/foobar").getAbsolutePath(),
@@ -564,8 +565,8 @@ public class FileUtilsTest {
         assertFalse("newer source files are no up to date",
                 FILE_UTILS.isUpToDate(secondTime, firstTime));
 
-        assertTrue("-1 dest timestamp implies nonexistence",
-                !FILE_UTILS.isUpToDate(firstTime,-1L));
+        assertFalse("-1 dest timestamp implies nonexistence",
+                FILE_UTILS.isUpToDate(firstTime, -1L));
     }
 
     @Test

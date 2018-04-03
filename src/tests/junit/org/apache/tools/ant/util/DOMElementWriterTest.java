@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -41,9 +42,9 @@ public class DOMElementWriterTest {
         assertTrue("&#20;", w.isReference("&#20;"));
         assertTrue("&#x20;", w.isReference("&#x20;"));
         assertTrue("&#xA0;", w.isReference("&#xA0;"));
-        assertTrue("&#A0;", !w.isReference("&#A0;"));
-        assertTrue("20;", !w.isReference("20;"));
-        assertTrue("&#20", !w.isReference("&#20"));
+        assertFalse("&#A0;", w.isReference("&#A0;"));
+        assertFalse("20;", w.isReference("20;"));
+        assertFalse("&#20", w.isReference("&#20"));
         assertTrue("&quot;", w.isReference("&quot;"));
         assertTrue("&apos;", w.isReference("&apos;"));
         assertTrue("&gt;", w.isReference("&gt;"));
@@ -111,18 +112,18 @@ public class DOMElementWriterTest {
 
     @Test
     public void testIsLegalCharacter() {
-        assertTrue("0x00", !w.isLegalCharacter('\u0000'));
+        assertFalse("0x00", w.isLegalCharacter('\u0000'));
         assertTrue("0x09", w.isLegalCharacter('\t'));
         assertTrue("0x0A", w.isLegalCharacter('\n'));
         assertTrue("0x0C", w.isLegalCharacter('\r'));
-        assertTrue("0x1F", !w.isLegalCharacter('\u001F'));
+        assertFalse("0x1F", w.isLegalCharacter('\u001F'));
         assertTrue("0x20", w.isLegalCharacter('\u0020'));
         assertTrue("0xD7FF", w.isLegalCharacter('\uD7FF'));
-        assertTrue("0xD800", !w.isLegalCharacter('\uD800'));
-        assertTrue("0xDFFF", !w.isLegalCharacter('\uDFFF'));
+        assertFalse("0xD800", w.isLegalCharacter('\uD800'));
+        assertFalse("0xDFFF", w.isLegalCharacter('\uDFFF'));
         assertTrue("0xE000", w.isLegalCharacter('\uE000'));
         assertTrue("0xFFFD", w.isLegalCharacter('\uFFFD'));
-        assertTrue("0xFFFE", !w.isLegalCharacter('\uFFFE'));
+        assertFalse("0xFFFE", w.isLegalCharacter('\uFFFE'));
     }
 
     @Test

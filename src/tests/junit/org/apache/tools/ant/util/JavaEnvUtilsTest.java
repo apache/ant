@@ -23,7 +23,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -69,7 +71,7 @@ public class JavaEnvUtilsTest {
             if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
                 assertTrue(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
             } else {
-                assertTrue(j + " is normalized and not in the JRE dir", !j.startsWith(javaHome));
+                assertFalse(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
             }
         } catch (AssertionError e) {
             // java.home is bogus
@@ -82,8 +84,8 @@ public class JavaEnvUtilsTest {
 
     @Test
     public void testGetExecutableMostPlatforms() {
-        assumeTrue("Test only runs on non Netware and non Windows systems",
-                !Os.isName("netware") && !Os.isFamily("windows"));
+        assumeFalse("Test only runs on non Netware and non Windows systems",
+                Os.isName("netware") || Os.isFamily("windows"));
         String javaHome = FILE_UTILS.normalize(System.getProperty("java.home")).getAbsolutePath();
 
         // could still be OS/2
@@ -108,7 +110,7 @@ public class JavaEnvUtilsTest {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
             assertTrue(j + " is normalized and in the JRE dir", j.startsWith(javaHome));
         } else {
-            assertTrue(j + " is normalized and not in the JRE dir", !j.startsWith(javaHome));
+            assertFalse(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
         }
 
         assertEquals("foo" + extension, JavaEnvUtils.getJreExecutable("foo"));

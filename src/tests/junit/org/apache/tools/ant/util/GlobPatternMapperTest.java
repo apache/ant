@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Tests for org.apache.tools.ant.util;GlobPatternMapper.
+ * Tests for org.apache.tools.ant.util.GlobPatternMapper.
  *
  */
 public class GlobPatternMapperTest {

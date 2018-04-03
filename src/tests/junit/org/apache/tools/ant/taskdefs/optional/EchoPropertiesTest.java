@@ -126,9 +126,7 @@ public class EchoPropertiesTest {
 
         // read in the file
         File f = createRelativeFile(GOOD_OUTFILE_XML);
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
-        try {
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String read = null;
             while ((read = br.readLine()) != null) {
                 if (read.contains("<property name=\"test.property\" value=\"" + TEST_VALUE + "\" />")) {
@@ -137,15 +135,6 @@ public class EchoPropertiesTest {
                 }
             }
             fail("did not encounter set property in generated file.");
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException e) {
-            }
-            try {
-                br.close();
-            } catch (IOException e) {
-            }
         }
     }
 

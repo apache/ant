@@ -18,11 +18,7 @@
 
 package org.apache.tools.ant.util.regexp;
 
-import java.io.IOException;
-
 import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 /**
  * Tests for the JDK 1.4 implementation of the Regexp interface.
@@ -34,40 +30,36 @@ public class Jdk14RegexpRegexpTest extends RegexpTest {
         return new Jdk14RegexpRegexp();
     }
 
+    /**
+     * Should trigger once fixed. {@since JDK 1.4RC1}
+     */
     @Test
-    public void testParagraphCharacter() throws IOException {
-        try {
-            super.testParagraphCharacter();
-            fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionError e) {
-        }
+    public void testParagraphCharacter() {
+        super.testParagraphCharacter();
     }
 
+    /**
+     * Should trigger once fixed. {@since JDK 1.4RC1}
+     */
     @Test
-    public void testLineSeparatorCharacter() throws IOException {
-        try {
-            super.testLineSeparatorCharacter();
-            fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionError e) {
-        }
+    public void testLineSeparatorCharacter() {
+        super.testLineSeparatorCharacter();
     }
 
+    /**
+     * Should trigger once fixed. {@since JDK 1.4RC1}
+     */
     @Test
-    public void testStandaloneCR() throws IOException {
-        try {
-            super.testStandaloneCR();
-            fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionError e) {
-        }
+    public void testStandaloneCR() {
+        super.testStandaloneCR();
     }
 
+    /**
+     * Should trigger once fixed. {@since JDK 1.4RC1}
+     */
     @Test
-    public void testWindowsLineSeparator() throws IOException {
-        try {
-            super.testWindowsLineSeparator();
-            fail("Should trigger once fixed. {@since JDK 1.4RC1}");
-        } catch (AssertionError e) {
-        }
+    public void testWindowsLineSeparator() {
+        super.testWindowsLineSeparator();
     }
 
 }

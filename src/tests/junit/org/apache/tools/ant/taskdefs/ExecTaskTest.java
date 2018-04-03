@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 
@@ -73,7 +74,7 @@ public class ExecTaskTest {
         logFile = FILE_UTILS.createTempFile("spawn", "log", new File(buildRule.getProject().getProperty("output")),
                 false, false);
         // this is guaranteed by FileUtils#createTempFile
-        assertTrue("log file not existing", !logFile.exists());
+        assertFalse("log file not existing", logFile.exists());
         // make the spawned process run 1 seconds
         myBuild.setTimeToWait(TIME_TO_WAIT);
         myBuild.setLogFile(logFile.getAbsolutePath());

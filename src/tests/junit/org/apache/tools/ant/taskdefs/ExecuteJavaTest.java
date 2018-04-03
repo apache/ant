@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -66,7 +67,7 @@ public class ExecuteJavaTest {
         Commandline cmd = getCommandline(TIME_OUT / 2);
         ej.setJavaCommand(cmd);
         ej.execute(project);
-        assertTrue("process should not have been killed", !ej.killedProcess());
+        assertFalse("process should not have been killed", ej.killedProcess());
     }
 
     // test that the watchdog ends the process
@@ -92,7 +93,7 @@ public class ExecuteJavaTest {
         Commandline cmd = getCommandline(TIME_OUT / 2);
         ej.setJavaCommand(cmd);
         ej.fork(cp);
-        assertTrue("process should not have been killed", !ej.killedProcess());
+        assertFalse("process should not have been killed", ej.killedProcess());
     }
 
     // test that the watchdog ends the process

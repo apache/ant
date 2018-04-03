@@ -29,6 +29,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -106,8 +107,7 @@ public class StyleTest {
     }
 
     public void testDefaultMapper(String target) throws Exception {
-        assertTrue(!(
-                new File(buildRule.getOutputDir().getAbsoluteFile(), "data.html").exists()));
+        assertFalse(new File(buildRule.getOutputDir().getAbsoluteFile(), "data.html").exists());
         expectFileContains(target,
                            buildRule.getOutputDir().getAbsoluteFile() + "/data.html",
                            "set='myvalue'");
@@ -115,7 +115,7 @@ public class StyleTest {
 
     @Test
     public void testCustomMapper() throws Exception {
-        assertTrue(!new File(buildRule.getOutputDir().getAbsoluteFile(),  "out.xml").exists());
+        assertFalse(new File(buildRule.getOutputDir().getAbsoluteFile(), "out.xml").exists());
         expectFileContains("testCustomMapper",
                            buildRule.getOutputDir().getAbsoluteFile() + "/out.xml",
                            "set='myvalue'");
@@ -123,7 +123,7 @@ public class StyleTest {
 
     @Test
     public void testTypedMapper() throws Exception {
-        assertTrue(!new File(buildRule.getOutputDir().getAbsoluteFile(),  "out.xml").exists());
+        assertFalse(new File(buildRule.getOutputDir().getAbsoluteFile(), "out.xml").exists());
         expectFileContains("testTypedMapper",
                            buildRule.getOutputDir().getAbsoluteFile() + "/out.xml",
                            "set='myvalue'");

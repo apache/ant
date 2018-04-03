@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LayoutPreservingPropertiesTest {
@@ -171,19 +172,13 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue("should have had no properties ",
-                !s.contains("prop.alpha"));
-        assertTrue("should have had no properties ",
-                !s.contains("prop.beta"));
-        assertTrue("should have had no properties ",
-                !s.contains("prop.gamma"));
+        assertFalse("should have had no properties ", s.contains("prop.alpha"));
+        assertFalse("should have had no properties ", s.contains("prop.beta"));
+        assertFalse("should have had no properties ", s.contains("prop.gamma"));
 
-        assertTrue("should have had no comments",
-                !s.contains("# a comment"));
-        assertTrue("should have had no comments",
-                !s.contains("! more comment"));
-        assertTrue("should have had no comments",
-                !s.contains("# now a line wrapping one"));
+        assertFalse("should have had no comments", s.contains("# a comment"));
+        assertFalse("should have had no comments", s.contains("! more comment"));
+        assertFalse("should have had no comments", s.contains("# now a line wrapping one"));
     }
 
     @Test
@@ -203,8 +198,7 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue("should not have had prop.beta",
-                !s.contains("prop.beta"));
+        assertFalse("should not have had prop.beta", s.contains("prop.beta"));
         assertTrue("should have had prop.beta's comment",
                 s.contains("! more comment"));
     }
@@ -228,10 +222,8 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue("should not have had prop.beta",
-                !s.contains("prop.beta"));
-        assertTrue("should not have had prop.beta's comment",
-                !s.contains("! more comment"));
+        assertFalse("should not have had prop.beta", s.contains("prop.beta"));
+        assertFalse("should not have had prop.beta's comment", s.contains("! more comment"));
     }
 
     @Test
@@ -263,7 +255,7 @@ public class LayoutPreservingPropertiesTest {
 
         // check original is untouched
         assertTrue("should have had 'simple'", s1.contains("simple"));
-        assertTrue("should not have had prop.new", !s1.contains("prop.new"));
+        assertFalse("should not have had prop.new", s1.contains("prop.new"));
 
         // check clone has the changes
         assertTrue("should have had 'a new value for beta'",

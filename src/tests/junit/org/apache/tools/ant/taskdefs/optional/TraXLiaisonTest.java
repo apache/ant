@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeNoException;
@@ -162,7 +163,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
         }
         String systemid = JAXPUtils.getSystemId(file);
         assertTrue("SystemIDs should start by file:/", systemid.startsWith("file:/"));
-        assertTrue("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
+        assertFalse("SystemIDs should not start with file:////", systemid.startsWith("file:////"));
     }
 
     public void log(String message) {

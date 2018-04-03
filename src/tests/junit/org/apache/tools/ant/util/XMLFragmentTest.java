@@ -27,6 +27,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -45,7 +46,7 @@ public class XMLFragmentTest {
         XMLFragment x = buildRule.getProject().getReference("nested-text");
         assertNotNull(x);
         Node n = x.getFragment();
-        assertTrue("No attributes", !n.hasAttributes());
+        assertFalse("No attributes", n.hasAttributes());
         NodeList nl = n.getChildNodes();
         assertEquals(1, nl.getLength());
         assertEquals(Node.TEXT_NODE, nl.item(0).getNodeType());
@@ -58,7 +59,7 @@ public class XMLFragmentTest {
                 buildRule.getProject().getReference("with-children");
         assertNotNull(x);
         Node n = x.getFragment();
-        assertTrue("No attributes", !n.hasAttributes());
+        assertFalse("No attributes", n.hasAttributes());
         NodeList nl = n.getChildNodes();
         assertEquals(3, nl.getLength());
 

@@ -21,6 +21,7 @@ package org.apache.tools.ant.util.facade;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -51,9 +52,9 @@ public class FacadeTaskHelperTest {
     @Test
     public void testHasBeenSet() {
         FacadeTaskHelper fth = new FacadeTaskHelper("foo");
-        assertTrue("nothing set", !fth.hasBeenSet());
+        assertFalse("nothing set", fth.hasBeenSet());
         fth.setMagicValue(null);
-        assertTrue("magic has not been set", !fth.hasBeenSet());
+        assertFalse("magic has not been set", fth.hasBeenSet());
         fth.setMagicValue("foo");
         assertTrue("magic has been set", fth.hasBeenSet());
         fth.setMagicValue(null);

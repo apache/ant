@@ -18,10 +18,11 @@
 
 package org.apache.tools.ant;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-
 import java.util.Vector;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MockBuildListener implements BuildListener {
 
@@ -54,7 +55,7 @@ public class MockBuildListener implements BuildListener {
         if (actual.getPriority() == Project.MSG_DEBUG) {
             return;
         }
-        assertTrue("unexpected messageLogged: "+ actual.getMessage(), !buffer.isEmpty());
+        assertFalse("unexpected messageLogged: " + actual.getMessage(), buffer.isEmpty());
         assertEquals("unexpected project ", project, actual.getProject());
 
         BuildEvent expected = buffer.elementAt(0);

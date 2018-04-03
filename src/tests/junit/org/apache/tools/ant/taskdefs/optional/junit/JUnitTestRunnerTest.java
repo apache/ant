@@ -17,10 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -31,6 +27,11 @@ import junit.framework.TestSuite;
 
 import org.apache.tools.ant.BuildException;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Small testcase for the runner, tests are very very very basics.
@@ -54,7 +55,7 @@ public class JUnitTestRunnerTest {
         runner.run();
         String error = runner.getFormatter().getError();
         // might be FAILURES or ERRORS depending on JUnit version?
-        assertTrue(error, runner.getRetCode() != JUnitTestRunner.SUCCESS);
+        assertNotEquals(error, JUnitTestRunner.SUCCESS, runner.getRetCode());
     }
 
     // check that having no suite generates no errors

@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -38,6 +39,6 @@ public class JAXPUtilsTest {
         }
         String systemid = JAXPUtils.getSystemId(file);
         assertTrue("SystemIDs should start by file:/", systemid.startsWith("file:/"));
-        assertTrue("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
+        assertFalse("SystemIDs should not start with file:////", systemid.startsWith("file:////"));
     }
 }

@@ -23,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -49,7 +50,7 @@ public class LazyFileOutputStreamTest {
     @Test
     public void testNoFileWithoutWrite() throws IOException {
         los.close();
-        assertTrue(f + " has not been written.", !f.exists());
+        assertFalse(f + " has not been written.", f.exists());
     }
 
     @Test

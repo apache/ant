@@ -147,7 +147,7 @@ public class LineOrientedOutputStreamTest {
         }
 
         private void assertNotInvoked() {
-            assertTrue("No output", !invoked);
+            assertFalse("No output", invoked);
         }
     }
 }

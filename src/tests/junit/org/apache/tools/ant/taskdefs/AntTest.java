@@ -36,8 +36,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -243,15 +244,13 @@ public class AntTest {
             buildRule.getProject().resolveFile("ant/test4.log")
         };
         for (File logFile : logFiles) {
-            assertTrue(logFile.getName() + " doesn\'t exist",
-                    !logFile.exists());
+            assertFalse(logFile.getName() + " doesn\'t exist", logFile.exists());
         }
 
         buildRule.executeTarget("testLogfilePlacement");
 
         for (File logFile : logFiles) {
-            assertTrue(logFile.getName() + " exists",
-                    logFile.exists());
+            assertTrue(logFile.getName() + " exists", logFile.exists());
         }
     }
 
@@ -496,19 +495,19 @@ public class AntTest {
                         Path received = event.getProject().getReference(keys[calls]);
                         boolean shouldBeEqual = expectSame[calls++];
                         if (received == null) {
-                            assertTrue(msg, !shouldBeEqual);
+                            assertFalse(msg, shouldBeEqual);
                         } else {
                             String[] l1 = expect.list();
                             String[] l2 = received.list();
                             if (l1.length == l2.length) {
                                 for (int i = 0; i < l1.length; i++) {
                                     if (!l1[i].equals(l2[i])) {
-                                        assertTrue(msg, !shouldBeEqual);
+                                        assertFalse(msg, shouldBeEqual);
                                     }
                                 }
                                 assertTrue(msg, shouldBeEqual);
                             } else {
-                                assertTrue(msg, !shouldBeEqual);
+                                assertFalse(msg, shouldBeEqual);
                             }
                         }
                     }

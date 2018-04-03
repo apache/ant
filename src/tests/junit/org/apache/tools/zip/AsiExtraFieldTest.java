@@ -21,6 +21,7 @@ package org.apache.tools.zip;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -94,8 +95,8 @@ public class AsiExtraFieldTest implements UnixStat {
         a.parseFromLocalFileData(data, 0, data.length);
         assertEquals("length plain file", data.length,
                      a.getLocalFileDataLength().getValue());
-        assertTrue("plain file, no link", !a.isLink());
-        assertTrue("plain file, no dir", !a.isDirectory());
+        assertFalse("plain file, no link", a.isLink());
+        assertFalse("plain file, no dir", a.isDirectory());
         assertEquals("mode plain file", FILE_FLAG | 0123, a.getMode());
         assertEquals("uid plain file", 5, a.getUserId());
         assertEquals("gid plain file", 6, a.getGroupId());
@@ -110,7 +111,7 @@ public class AsiExtraFieldTest implements UnixStat {
         assertEquals("length link", data.length,
                      a.getLocalFileDataLength().getValue());
         assertTrue("link, is link", a.isLink());
-        assertTrue("link, no dir", !a.isDirectory());
+        assertFalse("link, no dir", a.isDirectory());
         assertEquals("mode link", LINK_FLAG | 0123, a.getMode());
         assertEquals("uid link", 5, a.getUserId());
         assertEquals("gid link", 6, a.getGroupId());
@@ -124,7 +125,7 @@ public class AsiExtraFieldTest implements UnixStat {
         a.parseFromLocalFileData(data, 0, data.length);
         assertEquals("length dir", data.length,
                      a.getLocalFileDataLength().getValue());
-        assertTrue("dir, no link", !a.isLink());
+        assertFalse("dir, no link", a.isLink());
         assertTrue("dir, is dir", a.isDirectory());
         assertEquals("mode dir", DIR_FLAG | 0123, a.getMode());
         assertEquals("uid dir", 5, a.getUserId());

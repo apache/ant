@@ -773,14 +773,13 @@ public class FTPTest {
         }
     }
 
-    @Test
+    /**
+     * Two retries expected, continued after two.
+     */
+    @Test(expected = BuildException.class)
     public void testGetWithSelectorRetryable3() {
         buildRule.getProject().addTaskDefinition("ftp", threeFailureFTP.class);
-        try {
-            buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
-            fail("Two retries expected, continued after two.");
-        } catch (BuildException bx) {
-        }
+        buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
     }
 
     @Test
@@ -808,7 +807,6 @@ public class FTPTest {
         String[] messages = new String[]{
                 "Doing Site Command: umask 222",
                 "Failed to issue Site Command: umask 222",
-
         };
         LogCounter counter = new LogCounter();
         for (String message : messages) {

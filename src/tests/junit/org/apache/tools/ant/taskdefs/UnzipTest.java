@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -214,8 +215,7 @@ public class UnzipTest {
      * @param filename filename to resolve against the project
      */
     private void assertFileExists(String message, String filename) {
-        assertTrue(message,
-                buildRule.getProject().resolveFile(filename).exists());
+        assertTrue(message, buildRule.getProject().resolveFile(filename).exists());
     }
 
     /**
@@ -225,8 +225,7 @@ public class UnzipTest {
      * @param filename filename to resolve against the project
      */
     private void assertFileMissing(String message, String filename) {
-        assertTrue(message,
-                !buildRule.getProject().resolveFile(filename).exists());
+        assertFalse(message, buildRule.getProject().resolveFile(filename).exists());
     }
 
     /**

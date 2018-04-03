@@ -18,11 +18,7 @@
 
 package org.apache.tools.ant.util.regexp;
 
-import java.io.IOException;
-
 import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 /**
  * Tests for the jakarta-regexp implementation of the Regexp interface.
@@ -34,25 +30,21 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         return new JakartaRegexpRegexp();
     }
 
-    @Test
-    public void testWindowsLineSeparator2() throws IOException {
-        try {
-            super.testWindowsLineSeparator2();
-            fail("Should trigger when this bug is fixed. {@since 1.2}");
-        } catch (AssertionError e) {
-        }
+    /**
+     * Should trigger once fixed. {@since 1.2}
+     */
+    @Test(expected = AssertionError.class)
+    public void testWindowsLineSeparator2() {
+        super.testWindowsLineSeparator2();
     }
 
     /**
      * Fails for the same reason as "default" mode in doEndTest2.
+     * Should trigger once fixed. {@since 1.2}
      */
-    @Test
-    public void testUnixLineSeparator() throws IOException {
-        try {
-            super.testUnixLineSeparator();
-            fail("Should trigger once this bug is fixed. {@since 1.2}");
-        } catch (AssertionError e) {
-        }
+    @Test(expected = AssertionError.class)
+    public void testUnixLineSeparator() {
+        super.testUnixLineSeparator();
     }
 
     /**

@@ -55,7 +55,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
 
-
 /**
  * Unit tests for ModifiedSelector.
  *
@@ -184,7 +183,7 @@ public class ModifiedSelectorTest {
             String fsModValue  = bft.getProperty("fs.mod.value");
 
             assertNotNull("'fs.full.value' must be set.", fsFullValue);
-            assertTrue("'fs.full.value' must not be null.", !"".equals(fsFullValue));
+            assertNotEquals("'fs.full.value' must not be null.", "", fsFullValue);
             assertTrue("'fs.full.value' must contain ant.bat.", fsFullValue.contains("ant.bat"));
 
             assertNotNull("'fs.mod.value' must be set.", fsModValue);

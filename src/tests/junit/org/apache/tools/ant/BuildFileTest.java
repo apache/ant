@@ -425,7 +425,7 @@ public abstract class BuildFileTest extends TestCase {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
             buildException = ex;
-            if ((null != contains) && (!ex.getMessage().contains(contains))) {
+            if (null != contains && !ex.getMessage().contains(contains)) {
                 fail("Should throw BuildException because '" + cause + "' with message containing '" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
             }
             return;

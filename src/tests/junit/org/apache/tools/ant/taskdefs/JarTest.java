@@ -80,34 +80,30 @@ public class JarTest {
         }
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
     }
 
-    @Test
+    /**
+     * Expected failure due to nonexistent manifest file
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: manifest file does not exist");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert exception message
     }
 
-    @Test
+    /**
+     * Expected failure due to unrecognized whenempty attribute: format C: /y
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: Unrecognized whenempty attribute: format C: /y");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert exception message
     }
 
     private File getOutputDir() {

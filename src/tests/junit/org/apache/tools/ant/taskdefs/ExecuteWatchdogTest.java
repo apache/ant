@@ -126,7 +126,7 @@ public class ExecuteWatchdogTest {
         Process process = getProcess(-1); // process should abort
         watchdog.start(process);
         int retCode = process.waitFor();
-        assertTrue("process should not have been killed", !watchdog.killedProcess());
+        assertFalse("process should not have been killed", watchdog.killedProcess());
         assertTrue("return code is invalid: " + retCode, retCode!=0);
     }
 
@@ -159,6 +159,6 @@ public class ExecuteWatchdogTest {
 
         // process should be dead and well finished
         assertEquals(0, process.exitValue());
-        assertTrue("process should not have been killed", !watchdog.killedProcess());
+        assertFalse("process should not have been killed", watchdog.killedProcess());
     }
 }

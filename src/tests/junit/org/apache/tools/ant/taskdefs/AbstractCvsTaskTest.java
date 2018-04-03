@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -54,7 +55,7 @@ public class AbstractCvsTaskTest {
     @Test
     public void testPackageAttribute() {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
-        assertTrue("starting empty", !f.exists());
+        assertFalse("starting empty", f.exists());
         buildRule.executeTarget("package-attribute");
         AntAssert.assertContains("U src/Makefile", buildRule.getLog());
         assertTrue("now it is there", f.exists());
@@ -63,7 +64,7 @@ public class AbstractCvsTaskTest {
     @Test
     public void testTagAttribute() {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
-        assertTrue("starting empty", !f.exists());
+        assertFalse("starting empty", f.exists());
         buildRule.executeTarget("tag-attribute");
         AntAssert.assertContains("OPENBSD_5_3", buildRule.getLog());
         assertTrue("now it is there", f.exists());

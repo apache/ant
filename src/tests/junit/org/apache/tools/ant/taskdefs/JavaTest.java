@@ -41,6 +41,7 @@ import org.junit.internal.AssumptionViolatedException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -321,7 +322,7 @@ public class JavaTest {
         File logFile = FILE_UTILS.createTempFile("spawn", "log",
                 new File(buildRule.getProject().getProperty("output")), false, false);
         // this is guaranteed by FileUtils#createTempFile
-        assertTrue("log file not existing", !logFile.exists());
+        assertFalse("log file not existing", logFile.exists());
         buildRule.getProject().setProperty("logFile", logFile.getAbsolutePath());
         buildRule.getProject().setProperty("timeToWait", Long.toString(TIME_TO_WAIT));
         buildRule.getProject().executeTarget("testSpawn");

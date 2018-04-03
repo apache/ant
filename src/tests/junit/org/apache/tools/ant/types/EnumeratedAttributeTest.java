@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -38,13 +39,12 @@ public class EnumeratedAttributeTest {
         for (String value : expected) {
             assertTrue(value + " is in TestNormal",
                     t1.containsValue(value));
-            assertTrue(value.toUpperCase() + " is in TestNormal",
-                    !t1.containsValue(value.toUpperCase()));
+            assertFalse(value.toUpperCase() + " is in TestNormal",
+                    t1.containsValue(value.toUpperCase()));
         }
-        assertTrue("TestNormal doesn\'t have \"d\" attribute",
-               !t1.containsValue("d"));
-        assertTrue("TestNull doesn\'t have \"d\" attribute and doesn\'t die",
-               !(new TestNull()).containsValue("d"));
+        assertFalse("TestNormal doesn\'t have \"d\" attribute", t1.containsValue("d"));
+        assertFalse("TestNull doesn\'t have \"d\" attribute and doesn\'t die",
+                (new TestNull()).containsValue("d"));
     }
 
     @Test

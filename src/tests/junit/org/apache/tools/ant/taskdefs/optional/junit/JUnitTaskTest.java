@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 import static org.apache.tools.ant.AntAssert.assertNotContains;
 import static org.apache.tools.ant.AntAssert.assertContains;
@@ -140,7 +140,7 @@ public class JUnitTaskTest {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)) {
             try {
                 Class<?> clazz = Class.forName("junit.framework.JUnit4TestAdapter");
-                assumeFalse("Skipping test since it fails with JUnit 4", clazz != null);
+                assumeTrue("Skipping test since it fails with JUnit 4", clazz == null);
             } catch (ClassNotFoundException e) {
                 // OK, this is JUnit3, can run test
             }

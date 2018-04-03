@@ -123,14 +123,14 @@ public class TarTest {
         File f1
             = new File(buildRule.getProject().getProperty("output"), "untar/test7-prefix");
 
-        if (!(f1.exists() && f1.isDirectory())) {
+        if (!f1.exists() || !f1.isDirectory()) {
             fail("The prefix attribute is not working properly.");
         }
 
         File f2
             = new File(buildRule.getProject().getProperty("output"), "untar/test7dir");
 
-        if (!(f2.exists() && f2.isDirectory())) {
+        if (!f2.exists() || !f2.isDirectory()) {
             fail("The prefix attribute is not working properly.");
         }
     }
