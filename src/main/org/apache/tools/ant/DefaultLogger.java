@@ -215,7 +215,7 @@ public class DefaultLogger implements BuildLogger {
         if (Project.MSG_INFO <= msgOutputLevel
             && !event.getTarget().getName().equals("")) {
             String msg = StringUtils.LINE_SEP
-                + event.getTarget().getName() + ":";
+                + event.getTarget().getName() + ':';
             printMessage(msg, out, event.getPriority());
             log(msg);
         }

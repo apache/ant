@@ -90,7 +90,7 @@ public class NoBannerLogger extends DefaultLogger {
 
         synchronized (this) {
             if (null != targetName) {
-                out.println(StringUtils.LINE_SEP + targetName + ":");
+                out.println(StringUtils.LINE_SEP + targetName + ':');
                 targetName = null;
             }
         }

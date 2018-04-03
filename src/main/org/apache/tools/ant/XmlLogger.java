@@ -136,7 +136,7 @@ public class XmlLogger implements BuildLogger {
 
         @Override
         public String toString() {
-            return element.getTagName() + ":" + element.getAttribute("name");
+            return element.getTagName() + ':' + element.getAttribute("name");
         }
     }
 

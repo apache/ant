@@ -118,7 +118,7 @@ public class PathTokenizer {
                     // we know we are on a DOS style platform and the next path
                     // starts with a slash or backslash, so we know this is a
                     // drive spec
-                    token += ":" + nextToken;
+                    token += ':' + nextToken;
                 } else {
                     // store the token just read for next time
                     lookahead = nextToken;
@@ -145,9 +145,9 @@ public class PathTokenizer {
                             // it indeed is a drive spec, get the next bit
                             String oneMore = tokenizer.nextToken().trim();
                             if (!oneMore.equals(File.pathSeparator)) {
-                                token += ":" + oneMore;
+                                token += ':' + oneMore;
                             } else {
-                                token += ":";
+                                token += ':';
                                 lookahead = oneMore;
                             }
                         }

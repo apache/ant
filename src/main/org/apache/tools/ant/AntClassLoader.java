@@ -493,7 +493,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         }
 
         final String absPathPlusTimeAndLength = pathComponent.getAbsolutePath()
-                + pathComponent.lastModified() + "-" + pathComponent.length();
+                + pathComponent.lastModified() + '-' + pathComponent.length();
         String classpath = pathMap.get(absPathPlusTimeAndLength);
         if (classpath == null) {
             try (JarFile jarFile = new JarFile(pathComponent)) {
@@ -1230,7 +1230,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * @param manifest the jar's manifest
      */
     protected void definePackage(final File container, final String packageName, final Manifest manifest) {
-        final String sectionName = packageName.replace('.', '/') + "/";
+        final String sectionName = packageName.replace('.', '/') + '/';
 
         String specificationTitle = null;
         String specificationVendor = null;
@@ -1366,7 +1366,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             try {
                 stream = getResourceStream(pathComponent, classFilename);
                 if (stream != null) {
-                    log("Loaded from " + pathComponent + " "
+                    log("Loaded from " + pathComponent + ' '
                         + classFilename, Project.MSG_DEBUG);
                     return getClassFromStream(stream, name, pathComponent);
                 }
@@ -1375,7 +1375,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             } catch (final IOException ioe) {
                 // ioe.printStackTrace();
                 log("Exception reading component " + pathComponent + " (reason: "
-                    + ioe.getMessage() + ")", Project.MSG_VERBOSE);
+                    + ioe.getMessage() + ')', Project.MSG_VERBOSE);
             } finally {
                 FileUtils.close(stream);
             }
@@ -1537,7 +1537,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      */
     @Override
     public String toString() {
-        return "AntClassLoader[" + getClasspath() + "]";
+        return "AntClassLoader[" + getClasspath() + ']';
     }
 
     /** {@inheritDoc} */
