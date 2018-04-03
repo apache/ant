@@ -605,11 +605,7 @@ public class Tar extends MatchingTask {
                     base = Copy.NULL_FILE_PLACEHOLDER;
                 }
                 basedirs.add(base);
-                List<String> files = basedirToFilesMap.get(base);
-                if (files == null) {
-                    files = new Vector<>();
-                    basedirToFilesMap.put(base, files);
-                }
+                List<String> files = basedirToFilesMap.computeIfAbsent(base, k -> new Vector<>());
                 if (base == Copy.NULL_FILE_PLACEHOLDER) {
                     files.add(r.getFile().getAbsolutePath());
                 } else {

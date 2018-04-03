@@ -406,11 +406,7 @@ public class Main implements AntMain {
                 for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
                     final int newI = processor.readArguments(args, i);
                     if (newI != -1) {
-                        List<String> extraArgs = extraArguments.get(processor.getClass());
-                        if (extraArgs == null) {
-                            extraArgs = new ArrayList<>();
-                            extraArguments.put(processor.getClass(), extraArgs);
-                        }
+                        List<String> extraArgs = extraArguments.computeIfAbsent(processor.getClass(), k -> new ArrayList<>());
                         for (; i < newI && i < args.length; i++) {
                             extraArgs.add(args[i]);
                         }

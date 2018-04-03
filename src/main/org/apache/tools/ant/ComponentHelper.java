@@ -683,11 +683,7 @@ public class ComponentHelper  {
         String name = def.getName();
         List<AntTypeDefinition> list = null;
         synchronized (restrictedDefinitions) {
-            list = restrictedDefinitions.get(name);
-            if (list == null) {
-                list = new ArrayList<>();
-                restrictedDefinitions.put(name, list);
-            }
+            list = restrictedDefinitions.computeIfAbsent(name, k -> new ArrayList<>());
         }
         // Check if the classname is already present and remove it
         // if it is

@@ -362,11 +362,7 @@ public class AntXMLContext {
      * @param uri    a namespace uri
      */
     public void startPrefixMapping(String prefix, String uri) {
-        List<String> list = prefixMapping.get(prefix);
-        if (list == null) {
-            list = new ArrayList<>();
-            prefixMapping.put(prefix, list);
-        }
+        List<String> list = prefixMapping.computeIfAbsent(prefix, k -> new ArrayList<>());
         list.add(uri);
     }
 

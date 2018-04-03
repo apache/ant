@@ -889,11 +889,7 @@ public class ZipFile implements Closeable {
             }
 
             final String name = ze.getName();
-            LinkedList<ZipEntry> entriesOfThatName = nameMap.get(name);
-            if (entriesOfThatName == null) {
-                entriesOfThatName = new LinkedList<>();
-                nameMap.put(name, entriesOfThatName);
-            }
+            LinkedList<ZipEntry> entriesOfThatName = nameMap.computeIfAbsent(name, k -> new LinkedList<>());
             entriesOfThatName.addLast(ze);
         }
     }

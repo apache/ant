@@ -98,12 +98,7 @@ public final class DateUtils {
      * @since Ant 1.10.2
      */
     public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_MIN =
-        new ThreadLocal<DateFormat>() {
-            @Override
-            protected DateFormat initialValue() {
-                return new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US);
-            }
-        };
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US));
 
     /**
      * Provides a thread-local US-style date format. Exactly as used by
@@ -112,12 +107,7 @@ public final class DateUtils {
      * @since Ant 1.10.2
      */
     public static final ThreadLocal<DateFormat> EN_US_DATE_FORMAT_SEC =
-        new ThreadLocal<DateFormat>() {
-            @Override
-            protected DateFormat initialValue() {
-                return new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US);
-            }
-        };
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US));
 
     static {
         MINUTE_SECONDS.setFormat(0, MINUTES_FORMAT);
@@ -329,12 +319,10 @@ public final class DateUtils {
     }
 
     final private static ThreadLocal<DateFormat> iso8601WithTimeZone =
-        new ThreadLocal<DateFormat>() {
-            @Override protected DateFormat initialValue() {
+            ThreadLocal.withInitial(() -> {
               // An arbitrary easy-to-read format to normalize to.
               return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
-            }
-        };
+            });
     final private static Pattern iso8601normalizer = Pattern.compile(
         "^(\\d{4,}-\\d{2}-\\d{2})[Tt ]" +           // yyyy-MM-dd
         "(\\d{2}:\\d{2}(:\\d{2}(\\.\\d{3})?)?) ?" + // HH:mm:ss.SSS

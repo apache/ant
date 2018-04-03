@@ -179,12 +179,7 @@ public class Project implements ResourceFactory {
 
     /** for each thread, record whether it is currently executing
         messageLogged */
-    private final ThreadLocal<Boolean> isLoggingMessage = new ThreadLocal<Boolean>() {
-            @Override
-            protected Boolean initialValue() {
-                return Boolean.FALSE;
-            }
-        };
+    private final ThreadLocal<Boolean> isLoggingMessage = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     /**
      * The Ant core classloader--may be <code>null</code> if using

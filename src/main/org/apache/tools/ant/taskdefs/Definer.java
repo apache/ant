@@ -54,12 +54,7 @@ public abstract class Definer extends DefBase {
      */
     private static final String ANTLIB_XML = "/antlib.xml";
 
-    private static final ThreadLocal<Map<URL, Location>> RESOURCE_STACK = new ThreadLocal<Map<URL, Location>>() {
-        @Override
-        protected Map<URL, Location> initialValue() {
-            return new HashMap<>();
-        }
-    };
+    private static final ThreadLocal<Map<URL, Location>> RESOURCE_STACK = ThreadLocal.withInitial(HashMap::new);
 
     private String name;
     private String classname;

@@ -263,9 +263,8 @@ class ChangeLogParser {
      * Utility method that saves the current entry.
      */
     private void saveEntry() {
-        entries.computeIfAbsent(date + author + comment, k -> {
-            return new CVSEntry(parseDate(date), author, comment);
-        }).addFile(file, revision, previousRevision);
+        entries.computeIfAbsent(date + author + comment,
+                k -> new CVSEntry(parseDate(date), author, comment)).addFile(file, revision, previousRevision);
     }
 
     /**

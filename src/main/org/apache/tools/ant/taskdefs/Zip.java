@@ -1296,12 +1296,7 @@ public class Zip extends MatchingTask {
      * to move the withEmpty behavior checks (since either would break
      * subclasses in several ways).
      */
-    private static final ThreadLocal<Boolean> HAVE_NON_FILE_SET_RESOURCES_TO_ADD = new ThreadLocal<Boolean>() {
-            @Override
-            protected Boolean initialValue() {
-                return Boolean.FALSE;
-            }
-        };
+    private static final ThreadLocal<Boolean> HAVE_NON_FILE_SET_RESOURCES_TO_ADD = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     /**
      * Collect the resources that are newer than the corresponding

@@ -202,11 +202,7 @@ public class ProjectHelper {
         targetPrefix.set(prefix);
     }
 
-    private static final ThreadLocal<String> prefixSeparator = new ThreadLocal<String>() {
-            protected String initialValue() {
-                return ".";
-            }
-        };
+    private static final ThreadLocal<String> prefixSeparator = ThreadLocal.withInitial(() -> ".");
 
     /**
      * The separator between the prefix and the target name.
@@ -230,11 +226,7 @@ public class ProjectHelper {
         prefixSeparator.set(sep);
     }
 
-    private static final ThreadLocal<Boolean> inIncludeMode = new ThreadLocal<Boolean>() {
-            protected Boolean initialValue() {
-                return Boolean.FALSE;
-            }
-        };
+    private static final ThreadLocal<Boolean> inIncludeMode = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     /**
      * Whether the current file should be read in include as opposed

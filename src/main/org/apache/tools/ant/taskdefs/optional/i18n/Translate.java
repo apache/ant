@@ -458,9 +458,7 @@ public class Translate extends MatchingTask {
                         }
                         if (key.length() > 0) {
                             //Has key already been loaded into resourceMap?
-                            if (resourceMap.get(key) == null) {
-                                resourceMap.put(key, value);
-                            }
+                            resourceMap.putIfAbsent(key, value);
                         }
                     }
                 }

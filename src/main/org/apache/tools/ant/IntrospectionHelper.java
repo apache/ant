@@ -1028,8 +1028,7 @@ public final class IntrospectionHelper {
                                                   final String attrName) {
         // use wrappers for primitive classes, e.g. int and
         // Integer are treated identically
-        final Class<?> reflectedArg = PRIMITIVE_TYPE_MAP.containsKey(arg)
-            ? PRIMITIVE_TYPE_MAP.get(arg) : arg;
+        final Class<?> reflectedArg = PRIMITIVE_TYPE_MAP.getOrDefault(arg, arg);
 
         // Object.class - it gets handled differently by AttributeSetter
         if (java.lang.Object.class == reflectedArg) {

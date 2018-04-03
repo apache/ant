@@ -1695,11 +1695,7 @@ public class Javac extends MatchingTask {
             final File moduleSourceRoot = pathInModule == null ?
                     module :
                     new File(module, pathInModule);
-            Collection<File> moduleRoots = collector.get(moduleName);
-            if (moduleRoots == null) {
-                moduleRoots = new ArrayList<>();
-                collector.put(moduleName, moduleRoots);
-            }
+            Collection<File> moduleRoots = collector.computeIfAbsent(moduleName, k -> new ArrayList<>());
             moduleRoots.add(moduleSourceRoot);
         }
     }

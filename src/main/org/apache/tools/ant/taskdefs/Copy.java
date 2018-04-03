@@ -1015,11 +1015,7 @@ public class Copy extends Task {
     private static void add(File baseDir, final String[] names, final Map<File, List<String>> m) {
         if (names != null) {
             baseDir = getKeyFile(baseDir);
-            List<String> l = m.get(baseDir);
-            if (l == null) {
-                l = new ArrayList<>(names.length);
-                m.put(baseDir, l);
-            }
+            List<String> l = m.computeIfAbsent(baseDir, k -> new ArrayList<>(names.length));
             l.addAll(Arrays.asList(names));
         }
     }

@@ -207,11 +207,7 @@ public class XmlLogger implements BuildLogger {
      * @return the stack of timed elements for the current thread
      */
     private Stack<TimedElement> getStack() {
-        Stack<TimedElement> threadStack = threadStacks.get(Thread.currentThread());
-        if (threadStack == null) {
-            threadStack = new Stack<>();
-            threadStacks.put(Thread.currentThread(), threadStack);
-        }
+        Stack<TimedElement> threadStack = threadStacks.computeIfAbsent(Thread.currentThread(), k -> new Stack<>());
         /* For debugging purposes uncomment:
         org.w3c.dom.Comment s = doc.createComment("stack=" + threadStack);
         buildElement.element.appendChild(s);
