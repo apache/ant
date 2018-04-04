@@ -17,13 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.fail;
 
 /**
@@ -67,7 +67,7 @@ public class SchemaValidateTest {
             buildRule.executeTarget("testNoEmptySchemaNamespace");
             fail("Empty namespace URI");
         } catch (BuildException ex) {
-            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_URI, ex.getMessage());
+            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_URI, ex.getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ public class SchemaValidateTest {
             buildRule.executeTarget("testNoEmptySchemaLocation");
             fail("Empty schema location");
         } catch (BuildException ex) {
-            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_LOCATION,
+            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_LOCATION,
                     ex.getMessage());
         }
     }
@@ -88,7 +88,7 @@ public class SchemaValidateTest {
             buildRule.executeTarget("testNoFile");
             fail("No file at file attribute");
         } catch (BuildException ex) {
-            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_NO_FILE,
+            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_FILE,
                     ex.getMessage());
         }
     }
@@ -99,7 +99,7 @@ public class SchemaValidateTest {
             buildRule.executeTarget("testNoDoubleSchemaLocation");
             fail("Two locations for schemas");
         } catch (BuildException ex) {
-            AntAssert.assertContains(SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS,
+            assertContains(SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS,
                     ex.getMessage());
         }
     }
@@ -110,7 +110,7 @@ public class SchemaValidateTest {
             buildRule.executeTarget("testNoDuplicateSchema");
             fail("duplicate schemas with different values");
         } catch (BuildException ex) {
-            AntAssert.assertContains(SchemaValidate.ERROR_DUPLICATE_SCHEMA,
+            assertContains(SchemaValidate.ERROR_DUPLICATE_SCHEMA,
                     ex.getMessage());
         }
     }

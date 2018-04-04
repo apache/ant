@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
@@ -25,6 +24,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -108,8 +108,8 @@ public class IsReachableTest {
         try {
             buildRule.executeTarget("testBadURL");
             fail("Build exception expected: error in URL");
-        } catch(BuildException ex) {
-            AntAssert.assertContains(IsReachable.ERROR_BAD_URL, ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains(IsReachable.ERROR_BAD_URL, ex.getMessage());
         }
     }
 }

@@ -18,11 +18,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.jdepend;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
 
 /**
  * Testcase for the JDepend optional task.
@@ -45,7 +46,7 @@ public class JDependTest {
     @Test
     public void testSimple() {
         buildRule.executeTarget("simple");
-        AntAssert.assertContains("Package: org.apache.tools.ant.util.facade",
+        assertContains("Package: org.apache.tools.ant.util.facade",
                 buildRule.getOutput());
     }
 
@@ -55,7 +56,7 @@ public class JDependTest {
     @Test
     public void testXml() {
         buildRule.executeTarget("xml");
-        AntAssert.assertContains("<DependsUpon>", buildRule.getOutput());
+        assertContains("<DependsUpon>", buildRule.getOutput());
     }
 
     /**
@@ -65,7 +66,7 @@ public class JDependTest {
     @Test
     public void testFork() {
         buildRule.executeTarget("fork");
-        AntAssert.assertContains("Package: org.apache.tools.ant.util.facade", buildRule.getLog());
+        assertContains("Package: org.apache.tools.ant.util.facade", buildRule.getLog());
     }
 
     /**
@@ -74,7 +75,7 @@ public class JDependTest {
     @Test
     public void testForkXml() {
         buildRule.executeTarget("fork-xml");
-        AntAssert.assertContains("<DependsUpon>", buildRule.getLog());
+        assertContains("<DependsUpon>", buildRule.getLog());
     }
 
     /**
@@ -83,7 +84,7 @@ public class JDependTest {
     @Test
     public void testTimeout() {
         buildRule.executeTarget("fork-xml");
-        AntAssert.assertContains("JDepend FAILED - Timed out", buildRule.getLog());
+        assertContains("JDepend FAILED - Timed out", buildRule.getLog());
     }
 
 
@@ -93,7 +94,7 @@ public class JDependTest {
     @Test
     public void testTimeoutNot() {
         buildRule.executeTarget("fork-timeout-not");
-        AntAssert.assertContains("Package: org.apache.tools.ant.util.facade", buildRule.getLog());
+        assertContains("Package: org.apache.tools.ant.util.facade", buildRule.getLog());
     }
 
 }

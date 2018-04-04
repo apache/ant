@@ -19,7 +19,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
@@ -31,6 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
@@ -236,7 +236,7 @@ public class RmicAdvancedTest {
             buildRule.executeTarget("testDefaultBadClass");
         } finally {
             // don't look for much text here as it is vendor and version dependent
-            AntAssert.assertContains("unimplemented.class", buildRule.getLog());
+            assertContains("unimplemented.class", buildRule.getLog());
         }
     }
 

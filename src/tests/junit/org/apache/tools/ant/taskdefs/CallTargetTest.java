@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
@@ -27,6 +26,7 @@ import org.junit.Test;
 
 import java.util.Vector;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -47,7 +47,7 @@ public class CallTargetTest {
     @Test
     public void testInheritRefFileSet() {
         buildRule.executeTarget("testinheritreffileset");
-        AntAssert.assertContains("calltarget.xml", buildRule.getLog());
+        assertContains("calltarget.xml", buildRule.getLog());
     }
 
     // see bugrep 21724 (references not passing through with antcall)
@@ -64,7 +64,7 @@ public class CallTargetTest {
         v.add("call-multi");
         v.add("call-multi");
         buildRule.getProject().executeTargets(v);
-        AntAssert.assertContains("multi is SETmulti is SET", buildRule.getLog());
+        assertContains("multi is SETmulti is SET", buildRule.getLog());
     }
 
     @Test

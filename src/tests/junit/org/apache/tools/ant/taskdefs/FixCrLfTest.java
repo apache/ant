@@ -26,13 +26,13 @@ import java.io.InputStream;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -154,7 +154,7 @@ public class FixCrLfTest {
             buildRule.executeTarget("testFixFileExclusive");
             fail(FixCRLF.ERROR_FILE_AND_SRCDIR);
         } catch (BuildException ex) {
-            AntAssert.assertContains(FixCRLF.ERROR_FILE_AND_SRCDIR, ex.getMessage());
+            assertContains(FixCRLF.ERROR_FILE_AND_SRCDIR, ex.getMessage());
         }
     }
 

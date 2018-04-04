@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +25,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -57,7 +57,7 @@ public class AbstractCvsTaskTest {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertFalse("starting empty", f.exists());
         buildRule.executeTarget("package-attribute");
-        AntAssert.assertContains("U src/Makefile", buildRule.getLog());
+        assertContains("U src/Makefile", buildRule.getLog());
         assertTrue("now it is there", f.exists());
     }
 
@@ -66,7 +66,7 @@ public class AbstractCvsTaskTest {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertFalse("starting empty", f.exists());
         buildRule.executeTarget("tag-attribute");
-        AntAssert.assertContains("OPENBSD_5_3", buildRule.getLog());
+        assertContains("OPENBSD_5_3", buildRule.getLog());
         assertTrue("now it is there", f.exists());
     }
 }

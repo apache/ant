@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -28,6 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.fail;
 
 public class AddTypeTest {
@@ -63,19 +63,19 @@ public class AddTypeTest {
     @Test
     public void testNestedA() {
         buildRule.executeTarget("nested.a");
-        AntAssert.assertContains("add A called", buildRule.getLog());
+        assertContains("add A called", buildRule.getLog());
     }
 
     @Test
     public void testNestedB() {
         buildRule.executeTarget("nested.b");
-         AntAssert.assertContains("add B called", buildRule.getLog());
+         assertContains("add B called", buildRule.getLog());
     }
 
     @Test
     public void testNestedC() {
         buildRule.executeTarget("nested.c");
-        AntAssert.assertContains("add C called", buildRule.getLog());
+        assertContains("add C called", buildRule.getLog());
     }
 
     @Test
@@ -84,26 +84,26 @@ public class AddTypeTest {
             buildRule.executeTarget("nested.ab");
             fail("Build exception expected: Should have got ambiguous");
         } catch (BuildException ex) {
-            AntAssert.assertContains("ambiguous", ex.getMessage());
+            assertContains("ambiguous", ex.getMessage());
         }
     }
 
     @Test
     public void testConditionType() {
         buildRule.executeTarget("condition.type");
-        AntAssert.assertContains("beforeafter", buildRule.getLog());
+        assertContains("beforeafter", buildRule.getLog());
     }
 
     @Test
     public void testConditionTask() {
         buildRule.executeTarget("condition.task");
-        AntAssert.assertContains("My Condition execution", buildRule.getLog());
+        assertContains("My Condition execution", buildRule.getLog());
     }
 
     @Test
     public void testConditionConditionType() {
         buildRule.executeTarget("condition.condition.type");
-        AntAssert.assertContains("My Condition eval", buildRule.getLog());
+        assertContains("My Condition eval", buildRule.getLog());
     }
 
     @Test
@@ -112,21 +112,21 @@ public class AddTypeTest {
             buildRule.executeTarget("condition.condition.task");
             fail("Build exception expected: Task masking condition");
         } catch (BuildException ex) {
-             AntAssert.assertContains("doesn't support the nested", ex.getMessage());
+             assertContains("doesn't support the nested", ex.getMessage());
         }
     }
 
     @Test
     public void testAddConfigured() {
         buildRule.executeTarget("myaddconfigured");
-        AntAssert.assertContains("value is Value Setexecute: value is Value Set",
+        assertContains("value is Value Setexecute: value is Value Set",
                 buildRule.getLog());
     }
 
     @Test
     public void testAddConfiguredValue() {
         buildRule.executeTarget("myaddconfiguredvalue");
-        AntAssert.assertContains("value is Value Setexecute: value is Value Set",
+        assertContains("value is Value Setexecute: value is Value Set",
                 buildRule.getLog());
     }
 

@@ -18,13 +18,13 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.fail;
 
 /**
@@ -66,8 +66,8 @@ public class IsFileSelectedTest {
         try {
             buildRule.executeTarget("not.selector");
             fail("Exception should have been thrown: checking for use as a selector (not allowed)");
-        } catch(BuildException ex) {
-            AntAssert.assertContains("fileset doesn't support the nested \"isfile",
+        } catch (BuildException ex) {
+            assertContains("fileset doesn't support the nested \"isfile",
                     ex.getMessage());
         }
     }
