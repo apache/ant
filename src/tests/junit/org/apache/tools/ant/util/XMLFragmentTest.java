@@ -66,7 +66,7 @@ public class XMLFragmentTest {
         assertEquals(Node.ELEMENT_NODE, nl.item(0).getNodeType());
         Element child1 = (Element) nl.item(0);
         assertEquals("child1", child1.getTagName());
-        assertTrue(!child1.hasAttributes());
+        assertFalse(child1.hasAttributes());
         NodeList nl2 = child1.getChildNodes();
         assertEquals(1, nl2.getLength());
         assertEquals(Node.TEXT_NODE, nl2.item(0).getNodeType());
@@ -83,7 +83,7 @@ public class XMLFragmentTest {
         assertEquals(Node.ELEMENT_NODE, nl.item(2).getNodeType());
         Element child3 = (Element) nl.item(2);
         assertEquals("child3", child3.getTagName());
-        assertTrue(!child3.hasAttributes());
+        assertFalse(child3.hasAttributes());
         nl2 = child3.getChildNodes();
         assertEquals(1, nl2.getLength());
         assertEquals(Node.ELEMENT_NODE, nl2.item(0).getNodeType());

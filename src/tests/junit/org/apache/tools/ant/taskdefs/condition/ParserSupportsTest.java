@@ -46,7 +46,7 @@ public class ParserSupportsTest {
         try {
             buildRule.executeTarget("testEmpty");
             fail("Build exception expected: " + ParserSupports.ERROR_NO_ATTRIBUTES);
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(ParserSupports.ERROR_NO_ATTRIBUTES, ex.getMessage());
         }
     }
@@ -56,7 +56,7 @@ public class ParserSupportsTest {
         try {
             buildRule.executeTarget("testBoth");
             fail("Build exception expected: " + ParserSupports.ERROR_BOTH_ATTRIBUTES);
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(ParserSupports.ERROR_BOTH_ATTRIBUTES, ex.getMessage());
         }
     }
@@ -71,7 +71,7 @@ public class ParserSupportsTest {
         try {
             buildRule.executeTarget("testPropertyNoValue");
             fail("Build exception expected: " + ParserSupports.ERROR_NO_VALUE);
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals(ParserSupports.ERROR_NO_VALUE, ex.getMessage());
         }
     }

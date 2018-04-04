@@ -65,7 +65,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test1");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -76,7 +76,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test2");
             fail("required argument not specified");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -87,7 +87,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test1");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -107,7 +107,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test4b");
             fail("target doesn't exist");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -327,7 +327,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("infinite-loop-via-depends");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -371,7 +371,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("blank-target");
             fail("target name must not be empty");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }

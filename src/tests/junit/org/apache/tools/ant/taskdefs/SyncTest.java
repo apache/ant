@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SyncTest {
@@ -41,7 +42,7 @@ public class SyncTest {
         buildRule.executeTarget("simplecopy");
         String d = buildRule.getProject().getProperty("dest") + "/a/b/c/d";
         assertFileIsPresent(d);
-        assertTrue(!buildRule.getFullLog().contains("dangling"));
+        assertFalse(buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class SyncTest {
         assertFileIsNotPresent(d);
         String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsNotPresent(c);
-        assertTrue(!buildRule.getFullLog().contains("dangling"));
+        assertFalse(buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -61,7 +62,7 @@ public class SyncTest {
         assertFileIsNotPresent(d);
         String c = buildRule.getProject().getProperty("dest") + "/a/b/c";
         assertFileIsPresent(c);
-        assertTrue(!buildRule.getFullLog().contains("dangling"));
+        assertFalse(buildRule.getFullLog().contains("dangling"));
     }
 
     @Test
@@ -123,7 +124,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(!buildRule.getFullLog().contains("Removing orphan file:"));
+        assertFalse(buildRule.getFullLog().contains("Removing orphan file:"));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class SyncTest {
         assertFileIsPresent(d);
         String f = buildRule.getProject().getProperty("dest") + "/e/f";
         assertFileIsPresent(f);
-        assertTrue(!buildRule.getFullLog().contains("Removing orphan file:"));
+        assertFalse(buildRule.getFullLog().contains("Removing orphan file:"));
     }
 
     public void assertFileIsPresent(String f) {

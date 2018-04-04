@@ -45,7 +45,7 @@ public class EmailTaskTest {
         try {
             buildRule.executeTarget("test1");
             fail("Build exception expected: SMTP auth only possibly with MIME mail");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -55,7 +55,7 @@ public class EmailTaskTest {
         try {
             buildRule.executeTarget("test2");
             fail("Build exception expected: SSL only possibly with MIME mail");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }

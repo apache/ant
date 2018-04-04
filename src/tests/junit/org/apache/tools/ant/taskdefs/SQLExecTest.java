@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -72,7 +73,7 @@ public class SQLExecTest {
     @Test
     public void testDriverCaching() {
         SQLExec sql = createTask(getProperties(NULL));
-        assertTrue(!SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+        assertFalse(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
             fail("BuildException should have been thrown");

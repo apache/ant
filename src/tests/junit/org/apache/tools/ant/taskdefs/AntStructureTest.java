@@ -31,6 +31,7 @@ import java.util.Hashtable;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -83,31 +84,34 @@ public class AntStructureTest {
         public void printHead(PrintWriter out, Project p,
                               Hashtable<String, Class<?>> tasks,
                               Hashtable<String, Class<?>> types) {
-            assertTrue(!headCalled);
-            assertTrue(!targetCalled);
-            assertTrue(!tailCalled);
+            assertFalse(headCalled);
+            assertFalse(targetCalled);
+            assertFalse(tailCalled);
             assertEquals(0, elementCalled);
             headCalled = true;
         }
+
         public void printTargetDecl(PrintWriter out) {
             assertTrue(headCalled);
-            assertTrue(!targetCalled);
-            assertTrue(!tailCalled);
+            assertFalse(targetCalled);
+            assertFalse(tailCalled);
             assertEquals(0, elementCalled);
             targetCalled = true;
         }
+
         public void printElementDecl(PrintWriter out, Project p, String name,
                                      Class<?> element) {
             assertTrue(headCalled);
             assertTrue(targetCalled);
-            assertTrue(!tailCalled);
+            assertFalse(tailCalled);
             elementCalled++;
             this.p = p;
         }
+
         public void printTail(PrintWriter out) {
             assertTrue(headCalled);
             assertTrue(targetCalled);
-            assertTrue(!tailCalled);
+            assertFalse(tailCalled);
             assertTrue(elementCalled > 0);
             tailCalled = true;
             p.log(TAIL_CALLED);

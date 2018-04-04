@@ -413,7 +413,7 @@ public class FileUtilsTest {
     @Test
     public void testCreateNewFile() throws IOException {
         removeThis = new File("dummy");
-        assertTrue(!removeThis.exists());
+        assertFalse(removeThis.exists());
         FILE_UTILS.createNewFile(removeThis);
         assertTrue(removeThis.exists());
     }

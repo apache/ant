@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -36,8 +37,8 @@ public class CollectionUtilsTest {
 
     @Test
     public void testVectorEquals() {
-        assertTrue(!CollectionUtils.equals(null, new Vector()));
-        assertTrue(!CollectionUtils.equals(new Vector(), null));
+        assertFalse(CollectionUtils.equals(null, new Vector()));
+        assertFalse(CollectionUtils.equals(new Vector(), null));
         assertTrue(CollectionUtils.equals(new Vector(), new Vector()));
         Vector<String> v1 = new Vector<>();
         Stack<String> s2 = new Stack<>();
@@ -46,27 +47,27 @@ public class CollectionUtilsTest {
         assertTrue(CollectionUtils.equals(v1, s2));
         assertTrue(CollectionUtils.equals(s2, v1));
         v1.addElement("bar");
-        assertTrue(!CollectionUtils.equals(v1, s2));
-        assertTrue(!CollectionUtils.equals(s2, v1));
+        assertFalse(CollectionUtils.equals(v1, s2));
+        assertFalse(CollectionUtils.equals(s2, v1));
         s2.push("bar");
         assertTrue(CollectionUtils.equals(v1, s2));
         assertTrue(CollectionUtils.equals(s2, v1));
         s2.push("baz");
-        assertTrue(!CollectionUtils.equals(v1, s2));
-        assertTrue(!CollectionUtils.equals(s2, v1));
+        assertFalse(CollectionUtils.equals(v1, s2));
+        assertFalse(CollectionUtils.equals(s2, v1));
         v1.addElement("baz");
         assertTrue(CollectionUtils.equals(v1, s2));
         assertTrue(CollectionUtils.equals(s2, v1));
         v1.addElement("zyzzy");
         s2.push("zyzzy2");
-        assertTrue(!CollectionUtils.equals(v1, s2));
-        assertTrue(!CollectionUtils.equals(s2, v1));
+        assertFalse(CollectionUtils.equals(v1, s2));
+        assertFalse(CollectionUtils.equals(s2, v1));
     }
 
     @Test
     public void testDictionaryEquals() {
-        assertTrue(!CollectionUtils.equals(null, new Hashtable()));
-        assertTrue(!CollectionUtils.equals(new Hashtable(), null));
+        assertFalse(CollectionUtils.equals(null, new Hashtable()));
+        assertFalse(CollectionUtils.equals(new Hashtable(), null));
         assertTrue(CollectionUtils.equals(new Hashtable(), new Properties()));
         Hashtable<String, String> h1 = new Hashtable<>();
         Properties p2 = new Properties();
@@ -75,28 +76,28 @@ public class CollectionUtilsTest {
         assertTrue(CollectionUtils.equals(h1, p2));
         assertTrue(CollectionUtils.equals(p2, h1));
         h1.put("bar", "");
-        assertTrue(!CollectionUtils.equals(h1, p2));
-        assertTrue(!CollectionUtils.equals(p2, h1));
+        assertFalse(CollectionUtils.equals(h1, p2));
+        assertFalse(CollectionUtils.equals(p2, h1));
         p2.put("bar", "");
         assertTrue(CollectionUtils.equals(h1, p2));
         assertTrue(CollectionUtils.equals(p2, h1));
         p2.put("baz", "");
-        assertTrue(!CollectionUtils.equals(h1, p2));
-        assertTrue(!CollectionUtils.equals(p2, h1));
+        assertFalse(CollectionUtils.equals(h1, p2));
+        assertFalse(CollectionUtils.equals(p2, h1));
         h1.put("baz", "");
         assertTrue(CollectionUtils.equals(h1, p2));
         assertTrue(CollectionUtils.equals(p2, h1));
         h1.put("zyzzy", "");
         p2.put("zyzzy2", "");
-        assertTrue(!CollectionUtils.equals(h1, p2));
-        assertTrue(!CollectionUtils.equals(p2, h1));
+        assertFalse(CollectionUtils.equals(h1, p2));
+        assertFalse(CollectionUtils.equals(p2, h1));
         p2.put("zyzzy", "");
         h1.put("zyzzy2", "");
         assertTrue(CollectionUtils.equals(h1, p2));
         assertTrue(CollectionUtils.equals(p2, h1));
         h1.put("dada", "1");
         p2.put("dada", "2");
-        assertTrue(!CollectionUtils.equals(h1, p2));
-        assertTrue(!CollectionUtils.equals(p2, h1));
+        assertFalse(CollectionUtils.equals(h1, p2));
+        assertFalse(CollectionUtils.equals(p2, h1));
     }
 }

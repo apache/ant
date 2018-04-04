@@ -28,6 +28,7 @@ import org.junit.internal.AssumptionViolatedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -127,7 +128,7 @@ public class ExecuteWatchdogTest {
         watchdog.start(process);
         int retCode = process.waitFor();
         assertFalse("process should not have been killed", watchdog.killedProcess());
-        assertTrue("return code is invalid: " + retCode, retCode!=0);
+        assertNotEquals("return code is invalid: " + retCode, 0, retCode);
     }
 
     @Test
@@ -139,7 +140,7 @@ public class ExecuteWatchdogTest {
         Thread thread = new Thread(() -> {
             try {
                 process.waitFor();
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 // not very nice but will do the job
                 throw new AssumptionViolatedException("process interrupted in thread", e);
             }

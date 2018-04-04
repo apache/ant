@@ -126,12 +126,12 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue(!s.contains("\\ prop\\ one\\ =\\ \\ leading and"
+        assertFalse(s.contains("\\ prop\\ one\\ =\\ \\ leading and"
                 + " trailing spaces "));
         assertTrue(s.contains("\\ prop\\ one\\ =new one"));
-        assertTrue(!s.contains("prop\\ttwo=contains\\ttab"));
+        assertFalse(s.contains("prop\\ttwo=contains\\ttab"));
         assertTrue(s.contains("prop\\ttwo=new two"));
-        assertTrue(!s.contains("prop\\nthree=contains\\nnewline"));
+        assertFalse(s.contains("prop\\nthree=contains\\nnewline"));
         assertTrue(s.contains("prop\\nthree=new three"));
     }
 
@@ -291,10 +291,10 @@ public class LayoutPreservingPropertiesTest {
         assertTrue(s.contains("alpha=new value for alpha"));
         assertTrue(s.contains("beta=new value for beta"));
 
-        assertTrue(!s.contains("prop\\:seven=contains\\:colon"));
-        assertTrue(!s.contains("prop\\=eight=contains\\=equals"));
-        assertTrue(!s.contains("alpha:set with a colon"));
-        assertTrue(!s.contains("beta set with a space"));
+        assertFalse(s.contains("prop\\:seven=contains\\:colon"));
+        assertFalse(s.contains("prop\\=eight=contains\\=equals"));
+        assertFalse(s.contains("alpha:set with a colon"));
+        assertFalse(s.contains("beta set with a space"));
     }
 
     private static String readFile(File f) throws IOException {

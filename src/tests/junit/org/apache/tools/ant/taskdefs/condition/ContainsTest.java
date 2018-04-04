@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -33,7 +34,7 @@ public class ContainsTest  {
         Contains con = new Contains();
         con.setString("abc");
         con.setSubstring("A");
-        assertTrue(!con.eval());
+        assertFalse(con.eval());
 
         con.setCasesensitive(false);
         assertTrue(con.eval());

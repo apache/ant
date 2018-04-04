@@ -68,7 +68,7 @@ public class EchoTest {
         echo.setEncoding("UTF-8");
         echo.execute();
         String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8"));
-        assertEquals(x,"\u00e4\u00a9");
+        assertEquals(x, "\u00e4\u00a9");
     }
 
     @After
