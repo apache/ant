@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javafx.scene.control.Control;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -100,6 +101,35 @@ public class JUnitTestRunnerTest {
         //assertEquals(runner.getFormatter().getError(), JUnitTestRunner.FAILURES, runner.getRetCode());
     }
 
+    // check that something which is not a testcase doesn't generate an error
+    // when skipping non-test classes
+    @Test
+    public void testSkipNonTestsNoTestCase() {
+        TestRunner runner = createRunner(NoTestCase.class, true);
+        runner.run();
+        assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
+    }
+
+    // check that something which is not a testcase with a failing static init doesn't generate an error
+    // when skipping non-test classes
+    @Test
+    public void testSkipNonTestsNoTestCaseFailingStaticInit() {
+        TestRunner runner = createRunner(NoTestCaseStaticInitializerError.class, true);
+        runner.run();
+        assertEquals(runner.getFormatter().getError(), JUnitTestRunner.SUCCESS, runner.getRetCode());
+    }
+
+    @Test
+    public void testStaticInitializerErrorTestCase() {
+        TestRunner runner = createRunner(StaticInitializerErrorTestCase.class);
+        runner.run();
+        // On junit3 this is a FAILURE, on junit4 this is an ERROR
+        int ret = runner.getRetCode();
+        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
+            fail("Unexpected result " + ret + " from junit runner");
+        }
+    }
+
     // check that an exception in the constructor is noticed
     @Test
     public void testInvalidTestCase() {
@@ -133,6 +163,12 @@ public class JUnitTestRunnerTest {
     protected TestRunner createRunner(Class<?> clazz) {
         return new TestRunner(new JUnitTest(clazz.getName()), null,
                                             true, true, true);
+    }
+
+    protected TestRunner createRunner(Class<?> clazz, boolean skipNonTests) {
+        JUnitTest test = new JUnitTest(clazz.getName());
+        test.setSkipNonTests(skipNonTests);
+        return new TestRunner(test, null, true, true, true);
     }
 
     protected TestRunner createRunnerForTestMethod(Class<?> clazz, String method) {
@@ -197,6 +233,15 @@ public class JUnitTestRunnerTest {
     public static class NoTestCase {
     }
 
+    public static class NoTestCaseStaticInitializerError {
+        static {
+            error();
+        }
+        private static void error() {
+            throw new NullPointerException("thrown on purpose");
+        }
+    }
+
     public static class InvalidMethodTestCase extends TestCase {
         public InvalidMethodTestCase(String name) {
             super(name);
@@ -249,6 +294,17 @@ public class JUnitTestRunnerTest {
         }
         public static junit.framework.Test suite() {
             throw new NullPointerException("thrown on purpose");
+        }
+    }
+
+    public static class StaticInitializerErrorTestCase extends TestCase {
+        static {
+            error();
+        }
+        private static void error() {
+            throw new NullPointerException("thrown on purpose");
+        }
+        public void testA() {
         }
     }
 
