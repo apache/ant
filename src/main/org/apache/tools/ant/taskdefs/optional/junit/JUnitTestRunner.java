@@ -383,9 +383,10 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             try {
                 Class testClass = null;
                 if (loader == null) {
-                    testClass = Class.forName(junitTest.getName());
+                    testClass = Class.forName(junitTest.getName(), false,
+                                              getClass().getClassLoader());
                 } else {
-                    testClass = Class.forName(junitTest.getName(), true,
+                    testClass = Class.forName(junitTest.getName(), false,
                                               loader);
                 }
 
