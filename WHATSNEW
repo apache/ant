@@ -4,7 +4,7 @@ Changes from Ant 1.10.3 TO Ant 1.10.4
 Fixed bugs:
 -----------
 
- * Delay the class initialization of the test classes untill they are
+ * Delay the class initialization of the test classes until they are
    passed to JUnit. This way we can avoid that failing static initializers
    from non-test classes are reported as error when the 'skipNonTests' option
    is 'true'.
