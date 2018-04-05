@@ -318,16 +318,13 @@ public final class SortFilter extends BaseParamFilterReader
                 final String paramName = param.getName();
                 if (REVERSE_KEY.equals(paramName)) {
                     setReverse(Boolean.valueOf(param.getValue()));
-                    continue;
-                }
-                if (COMPARATOR_KEY.equals(paramName)) {
+                } else if (COMPARATOR_KEY.equals(paramName)) {
                     try {
                         String className = param.getValue();
                         @SuppressWarnings("unchecked")
                         final Comparator<? super String> comparatorInstance
                                 = (Comparator<? super String>) (Class.forName(className).newInstance());
                         setComparator(comparatorInstance);
-                        continue;
                     } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
                         /*
                          * IAE probably means an inner non-static class, that case is not considered

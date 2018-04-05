@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Commandline objects help handling command lines specifying processes to

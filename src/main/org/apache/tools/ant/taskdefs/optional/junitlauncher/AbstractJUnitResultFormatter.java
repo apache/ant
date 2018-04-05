@@ -42,7 +42,6 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             this.sysOutStore.store(data);
         } catch (IOException e) {
             handleException(e);
-            return;
         }
     }
 
@@ -55,7 +54,6 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             this.sysErrStore.store(data);
         } catch (IOException e) {
             handleException(e);
-            return;
         }
     }
 

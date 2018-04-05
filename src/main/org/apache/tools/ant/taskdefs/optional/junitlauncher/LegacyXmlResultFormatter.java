@@ -61,7 +61,6 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             new XMLReportWriter().write();
         } catch (IOException | XMLStreamException e) {
             handleException(e);
-            return;
         }
     }
 

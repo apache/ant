@@ -389,6 +389,7 @@ public class JDependTask extends Task {
      * @exception BuildException if an error occurs
      */
     @Override
+    @SuppressWarnings("deprecated")
     public void execute() throws BuildException {
 
         CommandlineJava commandline = new CommandlineJava();
@@ -627,6 +628,7 @@ public class JDependTask extends Task {
         return new ExecuteWatchdog(getTimeout());
     }
 
+    @SuppressWarnings("deprecated")
     private Optional<Path> getWorkingPath() {
         Optional<Path> result = Optional.ofNullable(getClassespath());
         if (result.isPresent()) {

@@ -180,13 +180,9 @@ public class Get extends Task {
     public boolean doGet(final int logLevel, final DownloadProgress progress)
             throws IOException {
         checkAttributes();
-        for (final Resource r : sources) {
-            final URLProvider up = r.as(URLProvider.class);
-            final URL source = up.getURL();
-            return doGet(source, destination, logLevel, progress);
-        }
-        /*NOTREACHED*/
-        return false;
+        return doGet(sources.iterator().next().as(URLProvider.class).getURL(),
+                destination, logLevel, progress);
+
     }
 
     /**

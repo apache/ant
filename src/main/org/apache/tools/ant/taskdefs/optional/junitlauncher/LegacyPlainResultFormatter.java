@@ -99,7 +99,6 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             }
         } catch (IOException ioe) {
             handleException(ioe);
-            return;
         }
     }
 

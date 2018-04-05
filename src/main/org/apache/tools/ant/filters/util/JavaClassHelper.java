@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
-import org.apache.bcel.classfile.JavaClass;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 /**

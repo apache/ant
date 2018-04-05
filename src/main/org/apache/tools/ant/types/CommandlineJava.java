@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.types;
 
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
