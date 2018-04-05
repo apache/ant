@@ -461,9 +461,9 @@ public class Tar extends MatchingTask {
             if (r instanceof TarResource) {
                 final TarResource tr = (TarResource) r;
                 te.setUserName(tr.getUserName());
-                te.setUserId(tr.getUid());
+                te.setUserId(tr.getLongUid());
                 te.setGroupName(tr.getGroup());
-                te.setGroupId(tr.getGid());
+                te.setGroupId(tr.getLongGid());
             }
         }
 
