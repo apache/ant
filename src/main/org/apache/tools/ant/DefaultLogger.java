@@ -58,6 +58,7 @@ public class DefaultLogger implements BuildLogger {
 
     // CheckStyle:ConstantNameCheck OFF - bc
     /** Line separator */
+    @Deprecated
     protected static final String lSep = StringUtils.LINE_SEP;
     // CheckStyle:ConstantNameCheck ON
 
@@ -149,7 +150,7 @@ public class DefaultLogger implements BuildLogger {
         if (verbose || !(error instanceof BuildException)) {
             m.append(StringUtils.getStackTrace(error));
         } else {
-            m.append(error).append(lSep);
+            m.append(error).append(StringUtils.LINE_SEP);
         }
     }
 

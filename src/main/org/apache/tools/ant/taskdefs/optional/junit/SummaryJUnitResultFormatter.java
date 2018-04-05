@@ -77,7 +77,6 @@ public class SummaryJUnitResultFormatter
      */
     @Override
     public void startTestSuite(JUnitTest suite) {
-        String newLine = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder("Running ");
         int antThreadID = suite.getThread();
 
@@ -87,7 +86,7 @@ public class SummaryJUnitResultFormatter
             sb.append(" in thread ");
             sb.append(antThreadID);
         }
-        sb.append(newLine);
+        sb.append(System.lineSeparator());
         writeOutputLine(sb.toString().getBytes());
     }
     /**
@@ -166,8 +165,7 @@ public class SummaryJUnitResultFormatter
      */
     @Override
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        String newLine = System.getProperty("line.separator");
-        StringBuilder sb = new StringBuilder("Tests run: ");
+         StringBuilder sb = new StringBuilder("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());
@@ -189,17 +187,15 @@ public class SummaryJUnitResultFormatter
             sb.append(", Class: ");
             sb.append(suite.getName());
         }
-        sb.append(newLine);
+        sb.append(System.lineSeparator());
 
         if (withOutAndErr) {
             if (systemOutput != null && systemOutput.length() > 0) {
-                sb.append("Output:").append(newLine).append(systemOutput)
-                    .append(newLine);
+                sb.append(String.format("Output:%n%s%n", systemOutput));
             }
 
             if (systemError != null && systemError.length() > 0) {
-                sb.append("Error: ").append(newLine).append(systemError)
-                    .append(newLine);
+                sb.append(String.format("Output:%n%s%n", systemError));
             }
         }
 

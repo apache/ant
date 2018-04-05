@@ -54,9 +54,6 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class AntStructure extends Task {
 
-    private static final String LINE_SEP
-        = System.getProperty("line.separator");
-
     private File output;
     private StructurePrinter printer = new DTDPrinter();
 
@@ -293,15 +290,12 @@ public class AntStructure extends Task {
                 return;
             }
 
-            StringBuilder sb =
-                new StringBuilder("<!ELEMENT ").append(name).append(" ");
+            StringBuilder sb = new StringBuilder("<!ELEMENT ").append(name).append(" ");
 
             if (Reference.class.equals(element)) {
-                sb.append("EMPTY>").append(LINE_SEP);
-                sb.append("<!ATTLIST ").append(name);
-                sb.append(LINE_SEP).append("          id ID #IMPLIED");
-                sb.append(LINE_SEP).append("          refid IDREF #IMPLIED");
-                sb.append(">").append(LINE_SEP);
+                sb.append(String.format("EMPTY>%n<!ATTLIST %s%n"
+                                + "          id ID #IMPLIED%n          refid IDREF #IMPLIED>%n",
+                        name));
                 out.println(sb);
                 return;
             }
@@ -334,9 +328,8 @@ public class AntStructure extends Task {
             sb.append(">");
             out.println(sb);
 
-            sb = new StringBuilder("<!ATTLIST ");
-            sb.append(name);
-            sb.append(LINE_SEP).append("          id ID #IMPLIED");
+            sb = new StringBuilder();
+            sb.append(String.format("<!ATTLIST %s%n          id ID #IMPLIED", name));
 
             e = ih.getAttributes();
             while (e.hasMoreElements()) {
@@ -345,8 +338,7 @@ public class AntStructure extends Task {
                     continue;
                 }
 
-                sb.append(LINE_SEP).append("          ")
-                    .append(attrName).append(" ");
+                sb.append(String.format("%n          %s ", attrName));
                 final Class<?> type = ih.getAttributeType(attrName);
                 if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
                     sb.append(BOOLEAN).append(" ");
@@ -384,7 +376,7 @@ public class AntStructure extends Task {
                 }
                 sb.append("#IMPLIED");
             }
-            sb.append(">").append(LINE_SEP);
+            sb.append(">").append(System.lineSeparator());
             out.println(sb);
 
             for (String nestedName : v) {

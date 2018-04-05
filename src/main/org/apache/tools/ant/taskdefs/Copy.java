@@ -50,6 +50,7 @@ import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.LinkedHashtable;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * <p>Copies a file or directory to a new file
@@ -70,8 +71,9 @@ public class Copy extends Task {
     private static final String MSG_WHEN_COPYING_EMPTY_RC_TO_FILE =
         "Cannot perform operation from directory to file.";
 
+    @Deprecated
+    static final String LINE_SEPARATOR = StringUtils.LINE_SEP;
     static final File NULL_FILE_PLACEHOLDER = new File("/NULL_FILE");
-    static final String LINE_SEPARATOR = System.getProperty("line.separator");
     // CheckStyle:VisibilityModifier OFF - bc
     protected File file = null;     // the source file
     protected File destFile = null; // the destination file
@@ -1083,15 +1085,13 @@ public class Copy extends Task {
             message.append(ex.getMessage());
         }
         if (ex.getClass().getName().contains("MalformedInput")) {
-            message.append(LINE_SEPARATOR);
-            message.append(
-                "This is normally due to the input file containing invalid");
-             message.append(LINE_SEPARATOR);
-            message.append("bytes for the character encoding used : ");
+            message.append(String.format(
+                    "%nThis is normally due to the input file containing invalid"
+                            + "%nbytes for the character encoding used : "));
             message.append(
                 (inputEncoding == null
                  ? fileUtils.getDefaultEncoding() : inputEncoding));
-            message.append(LINE_SEPARATOR);
+            message.append(System.lineSeparator());
         }
         return message.toString();
     }

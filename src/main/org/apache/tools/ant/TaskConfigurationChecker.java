@@ -94,14 +94,10 @@ public class TaskConfigurationChecker {
      */
     public void checkErrors() throws BuildException {
         if (!errors.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Configuration error on <");
-            sb.append(task.getTaskName());
-            sb.append(">:");
-            sb.append(System.getProperty("line.separator"));
+            StringBuilder sb = new StringBuilder(String.format("Configuration error on <%s>:%n",
+                    task.getTaskName()));
             for (String msg : errors) {
-                sb.append("- ");
-                sb.append(msg);
-                sb.append(System.getProperty("line.separator"));
+                sb.append(String.format("- %s%n", msg));
             }
             throw new BuildException(sb.toString(), task.getLocation());
         }

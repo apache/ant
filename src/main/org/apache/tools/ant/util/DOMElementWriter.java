@@ -151,8 +151,6 @@ public class DOMElementWriter {
         this.namespacePolicy = namespacePolicy;
     }
 
-    private static String lSep = System.getProperty("line.separator");
-
     // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Don't try to be too smart but at least recognize the predefined
@@ -219,7 +217,7 @@ public class DOMElementWriter {
                 case Node.ELEMENT_NODE:
                     hasChildElements = true;
                     if (i == 0) {
-                        out.write(lSep);
+                        out.write(StringUtils.LINE_SEP);
                     }
                     write((Element) child, out, indent + 1, indentWith);
                     break;
@@ -367,7 +365,7 @@ public class DOMElementWriter {
         } else {
             removeNSDefinitions(element);
             out.write(" />");
-            out.write(lSep);
+            out.write(StringUtils.LINE_SEP);
             out.flush();
         }
     }
@@ -408,7 +406,7 @@ public class DOMElementWriter {
         }
         out.write(element.getTagName());
         out.write(">");
-        out.write(lSep);
+        out.write(StringUtils.LINE_SEP);
         out.flush();
     }
 

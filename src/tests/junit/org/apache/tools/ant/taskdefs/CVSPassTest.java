@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
  *
  */
 public class CVSPassTest {
-    private final String EOL = System.getProperty("line.separator");
+    private final String EOL = System.lineSeparator();
     private static final String JAKARTA_URL =
         ":pserver:anoncvs@jakarta.apache.org:/home/cvspublic Ay=0=h<Z";
     private static final String XML_URL =

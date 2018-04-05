@@ -63,6 +63,7 @@ public abstract class DefaultCompilerAdapter
 
     //must keep for subclass BC, though unused:
     // CheckStyle:ConstantNameCheck OFF - bc
+    @Deprecated
     protected static final String lSep = StringUtils.LINE_SEP;
     // CheckStyle:ConstantNameCheck ON
 

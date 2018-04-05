@@ -133,8 +133,6 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class JUnitTask extends Task {
 
-    private static final String LINE_SEP
-        = System.getProperty("line.separator");
     private static final String CLASSPATH = "CLASSPATH";
 
     private static final int STRING_BUFFER_SIZE = 128;
@@ -1381,11 +1379,10 @@ public class JUnitTask extends Task {
                      e.hasMoreElements();) {
                     final URL current = e.nextElement();
                     if (previous != null && !urlEquals(current, previous)) {
-                        log("WARNING: multiple versions of ant detected "
-                            + "in path for junit "
-                            + LINE_SEP + "         " + previous
-                            + LINE_SEP + "     and " + current,
-                            Project.MSG_WARN);
+                        log(String.format(
+                                "WARNING: multiple versions of ant detected in path for junit%n"
+                                        + "         %s%n     and %s", previous, current),
+                                Project.MSG_WARN);
                         return;
                     }
                     previous = current;

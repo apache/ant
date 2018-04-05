@@ -35,8 +35,6 @@ import org.apache.tools.ant.types.CommandlineJava;
 public abstract class DefaultJspCompilerAdapter
     implements JspCompilerAdapter {
 
-    private static String lSep = System.lineSeparator();
-
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
@@ -50,13 +48,12 @@ public abstract class DefaultJspCompilerAdapter
         jspc.log("Compilation " + cmd.describeJavaCommand(),
                  Project.MSG_VERBOSE);
 
-        String niceSourceList = (compileList.size() == 1 ? "File" : "Files") +
-                " to be compiled:" + lSep +
-                compileList.stream()
+        String niceSourceList = compileList.stream()
                         .peek(arg -> cmd.createArgument().setValue(arg))
                         .map(arg -> "    " + arg)
-                        .collect(Collectors.joining(lSep));
-        jspc.log(niceSourceList, Project.MSG_VERBOSE);
+                        .collect(Collectors.joining(System.lineSeparator()));
+        jspc.log(String.format("File%s to be compiled:%n%s",
+                compileList.size() == 1 ? "" : "s", niceSourceList), Project.MSG_VERBOSE);
     }
 
     // CheckStyle:VisibilityModifier OFF - bc

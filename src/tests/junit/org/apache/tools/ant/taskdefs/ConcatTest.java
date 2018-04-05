@@ -270,7 +270,7 @@ public class ConcatTest {
     @Test
     public void testfixlastline() throws IOException {
         buildRule.executeTarget("testfixlastline");
-        assertContains("end of line" + System.getProperty("line.separator") + "This has",
+        assertContains("end of line" + System.lineSeparator() + "This has",
                 FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"));
     }
 

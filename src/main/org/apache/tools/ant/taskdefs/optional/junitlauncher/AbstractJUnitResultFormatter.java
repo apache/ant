@@ -28,8 +28,6 @@ import java.util.Optional;
  */
 abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
 
-
-    protected static String NEW_LINE = System.getProperty("line.separator");
     protected TestExecutionContext context;
 
     private SysOutErrContentStore sysOutStore;

@@ -777,9 +777,7 @@ public class NetRexxC extends MatchingTask {
 
         log("Files to be compiled:", Project.MSG_VERBOSE);
 
-        final String eol = System.getProperty("line.separator");
-        log(
-            compileList.stream().map(s -> "    " + s).collect(Collectors.joining(eol)),
+        log(compileList.stream().map(s -> "    " + s).collect(Collectors.joining(System.lineSeparator())),
                 Project.MSG_VERBOSE);
 
         // create a single array of arguments for the compiler

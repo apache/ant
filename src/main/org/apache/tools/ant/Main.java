@@ -1269,7 +1269,7 @@ public class Main implements AntMain {
                                      final String heading,
                                      final int maxlen) {
         // now, start printing the targets and their descriptions
-        final String lSep = System.getProperty("line.separator");
+        final String lSep = System.lineSeparator();
         // got a bit annoyed that I couldn't find a pad function
         StringBuilder spaces = new StringBuilder("    ");
         while (spaces.length() <= maxlen) {
