@@ -834,7 +834,7 @@ public class Javac extends MatchingTask {
      * @return whether or not the ant classpath is to be included in the classpath
      */
     public boolean getIncludeantruntime() {
-        return includeAntRuntime != null ? includeAntRuntime : true;
+        return includeAntRuntime == null || includeAntRuntime;
     }
 
     /**
@@ -1509,10 +1509,10 @@ public class Javac extends MatchingTask {
      * @return a mapping from module name to module source roots
      * @since 1.9.7
      */
-    private static Map<String,Collection<File>> resolveModuleSourcePathElement(
+    private static Map<String, Collection<File>> resolveModuleSourcePathElement(
             final File projectDir,
             final String element) {
-        final Map<String,Collection<File>> result = new TreeMap<>();
+        final Map<String, Collection<File>> result = new TreeMap<>();
         for (CharSequence resolvedElement : expandGroups(element)) {
             findModules(projectDir, resolvedElement.toString(), result);
         }

@@ -53,10 +53,7 @@ public abstract class ResourceComparator extends DataType implements Comparator<
         if (isReference()) {
             return getCheckedRef().equals(o);
         }
-        if (o == null) {
-            return false;
-        }
-        return o == this || o.getClass().equals(getClass());
+        return o != null && (o == this || o.getClass().equals(getClass()));
     }
 
     /**

@@ -60,31 +60,26 @@ public class IsReference extends ProjectComponent implements Condition {
     public boolean eval() throws BuildException {
         if (ref == null) {
             throw new BuildException(
-                "No reference specified for isreference condition");
+                    "No reference specified for isreference condition");
         }
 
         String key = ref.getRefId();
         if (!getProject().hasReference(key)) {
             return false;
         }
+
         if (type == null) {
             return true;
         }
-        Object o = getProject().getReference(key);
-        Class<?> typeClass =
-            getProject().getDataTypeDefinitions().get(type);
-
+        Class<?> typeClass = getProject().getDataTypeDefinitions().get(type);
         if (typeClass == null) {
-            typeClass =
-                getProject().getTaskDefinitions().get(type);
+            typeClass = getProject().getTaskDefinitions().get(type);
         }
 
-        if (typeClass == null) {
-            // don't know the type, should throw exception instead?
-            return false;
-        }
+        // if the type is unknown, throw exception instead?
+        return typeClass != null
+                && typeClass.isAssignableFrom(getProject().getReference(key).getClass());
 
-        return typeClass.isAssignableFrom(o.getClass());
     }
 
 }

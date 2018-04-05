@@ -775,10 +775,7 @@ public class Rmic extends MatchingTask {
         try {
             Class<?> testClass = loader.loadClass(classname);
             // One cannot RMIC an interface for "classic" RMI (JRMP)
-            if (testClass.isInterface() && !iiop && !idl) {
-                return false;
-            }
-            return isValidRmiRemote(testClass);
+            return (!testClass.isInterface() || iiop || idl) && isValidRmiRemote(testClass);
         } catch (ClassNotFoundException e) {
             log(ERROR_UNABLE_TO_VERIFY_CLASS + classname + ERROR_NOT_FOUND,
                 Project.MSG_WARN);

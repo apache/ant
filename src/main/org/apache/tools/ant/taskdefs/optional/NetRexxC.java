@@ -924,7 +924,7 @@ public class NetRexxC extends MatchingTask {
      */
     private void addExistingToClasspath(StringBuilder target, String source) {
         StringTokenizer tok = new StringTokenizer(source,
-            System.getProperty("path.separator"), false);
+            File.pathSeparator, false);
 
         while (tok.hasMoreTokens()) {
             File f = getProject().resolveFile(tok.nextToken());

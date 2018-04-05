@@ -113,11 +113,8 @@ public class CommandlineJava implements Cloneable {
                 }
             }
             Properties propertySetProperties = mergePropertySets();
-            for (Enumeration<?> e = propertySetProperties.keys();
-                 e.hasMoreElements();) {
-                String key = (String) e.nextElement();
-                String value = propertySetProperties.getProperty(key);
-                listIt.add("-D" + key + "=" + value);
+            for (String key : propertySetProperties.stringPropertyNames()) {
+                listIt.add("-D" + key + "=" + propertySetProperties.getProperty(key));
             }
         }
 
@@ -140,10 +137,9 @@ public class CommandlineJava implements Cloneable {
             try {
                 sys = System.getProperties();
                 Properties p = new Properties();
-                for (Enumeration<?> e = sys.propertyNames(); e.hasMoreElements();) {
-                    String name = (String) e.nextElement();
+                for (String name : sys.stringPropertyNames()) {
                     String value = sys.getProperty(name);
-                    if (name != null && value != null) {
+                    if (value != null) {
                         p.put(name, value);
                     }
                 }

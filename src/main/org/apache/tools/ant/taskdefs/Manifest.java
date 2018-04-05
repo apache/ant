@@ -193,12 +193,8 @@ public class Manifest {
             Attribute rhsAttribute = (Attribute) rhs;
             String lhsKey = getKey();
             String rhsKey = rhsAttribute.getKey();
-            if ((lhsKey == null && rhsKey != null)
-                 || (lhsKey != null && !lhsKey.equals(rhsKey))) {
-                return false;
-            }
-
-            return values.equals(rhsAttribute.values);
+            return (lhsKey != null || rhsKey == null)
+                    && (lhsKey == null || lhsKey.equals(rhsKey)) && values.equals(rhsAttribute.values);
         }
 
         /**
@@ -243,10 +239,7 @@ public class Manifest {
          * @return the attribute's key.
          */
         public String getKey() {
-            if (name == null) {
-                return null;
-            }
-            return name.toLowerCase(Locale.ENGLISH);
+            return name == null ? null : name.toLowerCase(Locale.ENGLISH);
         }
 
         /**
@@ -302,8 +295,7 @@ public class Manifest {
          * @param line the continuation line.
          */
         public void addContinuation(String line) {
-            String currentValue = values.elementAt(currentIndex);
-            setValue(currentValue + line.substring(1));
+            setValue(values.elementAt(currentIndex) + line.substring(1));
         }
 
         /**
@@ -607,10 +599,7 @@ public class Manifest {
          */
         public String getAttributeValue(String attributeName) {
             Attribute attribute = getAttribute(attributeName.toLowerCase(Locale.ENGLISH));
-            if (attribute == null) {
-                return null;
-            }
-            return attribute.getValue();
+            return attribute == null ? null : attribute.getValue();
         }
 
         /**
@@ -723,8 +712,7 @@ public class Manifest {
             if (attribute == null) {
                 return;
             }
-            String attributeKey = attribute.getKey();
-            attributes.put(attributeKey, attribute);
+            attributes.put(attribute.getKey(), attribute);
         }
 
         /**
@@ -1113,11 +1101,8 @@ public class Manifest {
             return false;
         }
 
-        if (!mainSection.equals(rhsManifest.mainSection)) {
-            return false;
-        }
+        return mainSection.equals(rhsManifest.mainSection) && sections.equals(rhsManifest.sections);
 
-        return sections.equals(rhsManifest.sections);
     }
 
     /**

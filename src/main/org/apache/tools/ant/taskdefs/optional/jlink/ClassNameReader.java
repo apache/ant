@@ -129,8 +129,7 @@ public class ClassNameReader {
         /* int accessFlags = */ data.readUnsignedShort();
         int classIndex = data.readUnsignedShort();
         Integer stringIndex = (Integer) values[classIndex];
-        String className = (String) values[stringIndex];
-        return className;
+        return (String) values[stringIndex];
     }
 
 }

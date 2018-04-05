@@ -61,9 +61,8 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
      */
     protected Pattern getCompiledPattern(int options)
         throws BuildException {
-        int cOptions = getCompilerOptions(options);
         try {
-            return Pattern.compile(this.pattern, cOptions);
+            return Pattern.compile(this.pattern, getCompilerOptions(options));
         } catch (PatternSyntaxException e) {
             throw new BuildException(e);
         }

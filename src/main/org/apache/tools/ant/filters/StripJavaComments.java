@@ -139,7 +139,6 @@ public final class StripJavaComments
      */
 
     public Reader chain(final Reader rdr) {
-        StripJavaComments newFilter = new StripJavaComments(rdr);
-        return newFilter;
+        return new StripJavaComments(rdr);
     }
 }

@@ -467,14 +467,9 @@ public class SchemaValidate extends XMLValidateTask {
 
             final SchemaLocation schemaLocation = (SchemaLocation) o;
 
-            if (file != null ? !file.equals(schemaLocation.file) : schemaLocation.file != null) {
-                return false;
-            }
-            if (namespace != null ? !namespace.equals(schemaLocation.namespace)
-                    : schemaLocation.namespace != null) {
-                return false;
-            }
-            return url != null ? url.equals(schemaLocation.url) : schemaLocation.url == null;
+            return (file == null ? schemaLocation.file == null : file.equals(schemaLocation.file))
+                    && (namespace == null ? schemaLocation.namespace == null : namespace.equals(schemaLocation.namespace))
+                    && (url == null ? schemaLocation.url == null : url.equals(schemaLocation.url));
         }
 
         /**
@@ -485,9 +480,9 @@ public class SchemaValidate extends XMLValidateTask {
         public int hashCode() {
             int result;
             // CheckStyle:MagicNumber OFF
-            result = (namespace != null ? namespace.hashCode() : 0);
-            result = 29 * result + (file != null ? file.hashCode() : 0);
-            result = 29 * result + (url != null ? url.hashCode() : 0);
+            result = (namespace == null ? 0 : namespace.hashCode());
+            result = 29 * result + (file == null ? 0 : file.hashCode());
+            result = 29 * result + (url == null ? 0 : url.hashCode());
             // CheckStyle:MagicNumber OFF
             return result;
         }
@@ -499,10 +494,9 @@ public class SchemaValidate extends XMLValidateTask {
          */
         @Override
         public String toString() {
-            String buffer = (namespace != null ? namespace : "(anonymous)")
-                    + ' ' + (url != null ? (url + " ") : "")
-                    + (file != null ? file.getAbsolutePath() : "");
-            return buffer;
+            return (namespace == null ? "(anonymous)" : namespace)
+                    + (url == null ? "" : " " + url)
+                    + (file == null ? "" : " " + file.getAbsolutePath());
         }
-    } //SchemaLocation
+    }
 }

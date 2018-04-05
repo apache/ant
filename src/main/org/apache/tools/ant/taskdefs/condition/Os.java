@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.File;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
@@ -34,8 +35,7 @@ public class Os implements Condition {
         System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
     private static final String OS_VERSION =
         System.getProperty("os.version").toLowerCase(Locale.ENGLISH);
-    private static final String PATH_SEP =
-        System.getProperty("path.separator");
+    private static final String PATH_SEP = File.pathSeparator;
 
     /**
      * OS family that can be tested for. {@value}

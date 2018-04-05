@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
+
 /**
  */
 public class DirnameTest {
@@ -75,8 +77,7 @@ public class DirnameTest {
     public void test4() {
         assumeFalse("Test not possible on DOS or Netware family OS", Os.isFamily("netware") || Os.isFamily("dos"));
         buildRule.executeTarget("test4");
-        String filesep = System.getProperty("file.separator");
-        String expected = filesep + "usr" + filesep + "local";
+        String expected = File.separator + "usr" + File.separator + "local";
         String checkprop = buildRule.getProject().getProperty("local.dir");
         assertEquals("dirname failed", expected, checkprop);
     }

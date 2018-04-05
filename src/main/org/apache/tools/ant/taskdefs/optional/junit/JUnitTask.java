@@ -1429,10 +1429,8 @@ public class JUnitTask extends Task {
      * @return created file
      */
     private File createTempPropertiesFile(final String prefix) {
-        final File propsFile =
-            FILE_UTILS.createTempFile(prefix, ".properties",
-                tmpDir != null ? tmpDir : getProject().getBaseDir(), true, true);
-        return propsFile;
+        return FILE_UTILS.createTempFile(prefix, ".properties",
+            tmpDir != null ? tmpDir : getProject().getBaseDir(), true, true);
     }
 
 
@@ -1701,8 +1699,8 @@ public class JUnitTask extends Task {
      * @since 1.9.8
      */
     private void checkModules() {
-        if (hasPath(getCommandline().getModulepath()) ||
-            hasPath(getCommandline().getUpgrademodulepath())) {
+        if (hasPath(getCommandline().getModulepath())
+                || hasPath(getCommandline().getUpgrademodulepath())) {
             if (!batchTests.stream().allMatch(BaseTest::getFork)
                     || !tests.stream().allMatch(BaseTest::getFork)) {
                 throw new BuildException(

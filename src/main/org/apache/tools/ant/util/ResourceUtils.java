@@ -796,14 +796,9 @@ public class ResourceUtils {
             return false;
         }
         final FileProvider fileResource1 = resource1.as(FileProvider.class);
-        if (fileResource1 == null) {
-            return false;
-        }
         final FileProvider fileResource2 = resource2.as(FileProvider.class);
-        if (fileResource2 == null) {
-            return false;
-        }
-        return FileUtils.getFileUtils().areSame(fileResource1.getFile(), fileResource2.getFile());
+        return fileResource1 != null && fileResource2 != null
+                && FileUtils.getFileUtils().areSame(fileResource1.getFile(), fileResource2.getFile());
     }
 
     private static void log(final Project project, final String message) {

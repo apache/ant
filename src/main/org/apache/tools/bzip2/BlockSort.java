@@ -729,10 +729,8 @@ class BlockSort {
                                                 }
                                                 break;
                                             } // while x > 0
-                                            else {
-                                                if ((block[i1] & 0xff) <= (block[i2] & 0xff)) {
-                                                    break;
-                                                }
+                                            else if ((block[i1] & 0xff) <= (block[i2] & 0xff)) {
+                                                break;
                                             }
                                         } else if ((block[i1 + 5] & 0xff) <= (block[i2 + 5] & 0xff)) {
                                             break;

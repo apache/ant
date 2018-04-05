@@ -595,7 +595,7 @@ public class Concat extends Task implements ResourceCollection {
      */
     @Deprecated
     public void setForce(boolean forceOverwrite) {
-        this.forceOverwrite = forceOverwrite;
+        setOverwrite(forceOverwrite);
     }
 
     /**
@@ -606,7 +606,7 @@ public class Concat extends Task implements ResourceCollection {
      * @since Ant 1.8.2
      */
     public void setOverwrite(boolean forceOverwrite) {
-        setForce(forceOverwrite);
+        this.forceOverwrite = forceOverwrite;
     }
 
     /**
@@ -923,11 +923,8 @@ public class Concat extends Task implements ResourceCollection {
     }
 
     private boolean isUpToDate(ResourceCollection c) {
-        if (dest == null || forceOverwrite) {
-            return false;
-        }
-        return c.stream().noneMatch(r -> SelectorUtils.isOutOfDate(r, dest,
-            FILE_UTILS.getFileTimestampGranularity()));
+        return dest != null && !forceOverwrite
+                && c.stream().noneMatch(r -> SelectorUtils.isOutOfDate(r, dest, FILE_UTILS.getFileTimestampGranularity()));
     }
 
     /**

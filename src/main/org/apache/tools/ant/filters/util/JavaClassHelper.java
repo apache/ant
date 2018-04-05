@@ -46,14 +46,12 @@ public final class JavaClassHelper {
         final StringBuffer sb = new StringBuffer();
         final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         final ClassParser parser = new ClassParser(bis, "");
-        final JavaClass javaClass = parser.parse();
-        final Field[] fields = javaClass.getFields();
-        for (final Field field : fields) {
+        for (final Field field : parser.parse().getFields()) {
             if (field != null) {
                 final ConstantValue cv = field.getConstantValue();
                 if (cv != null) {
                     String cvs = cv.toString();
-                    //Remove start and end quotes if field is a String
+                    // Remove start and end quotes if field is a String
                     if (cvs.startsWith("\"") && cvs.endsWith("\"")) {
                         cvs = cvs.substring(1, cvs.length() - 1);
                     }

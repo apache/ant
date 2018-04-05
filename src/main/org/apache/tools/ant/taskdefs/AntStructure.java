@@ -348,19 +348,16 @@ public class AntStructure extends Task {
                 sb.append(LINE_SEP).append("          ")
                     .append(attrName).append(" ");
                 final Class<?> type = ih.getAttributeType(attrName);
-                if (type.equals(Boolean.class)
-                    || type.equals(Boolean.TYPE)) {
+                if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
                     sb.append(BOOLEAN).append(" ");
                 } else if (Reference.class.isAssignableFrom(type)) {
                     sb.append("IDREF ");
                 } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
                     try {
                         final EnumeratedAttribute ea =
-                            type.asSubclass(EnumeratedAttribute.class)
-                                .newInstance();
+                            type.asSubclass(EnumeratedAttribute.class).newInstance();
                         final String[] values = ea.getValues();
-                        if (values == null
-                            || values.length == 0
+                        if (values == null || values.length == 0
                             || !areNmtokens(values)) {
                             sb.append("CDATA ");
                         } else {

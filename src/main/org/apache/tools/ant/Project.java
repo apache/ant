@@ -1828,10 +1828,10 @@ public class Project implements ResourceFactory {
                         + root);
             }
         }
-        final StringBuilder buf = new StringBuilder("Build sequence for target(s)");
-
-        for (int j = 0; j < roots.length; j++) {
-            buf.append((j == 0) ? " `" : ", `").append(roots[j]).append('\'');
+        final StringBuilder buf = new StringBuilder();
+        for (String root : roots) {
+            buf.append((buf.length() == 0) ? "Build sequence for target(s) `"
+                    : ", `").append(root).append('\'');
         }
         buf.append(" is ").append(ret);
         log(buf.toString(), MSG_VERBOSE);

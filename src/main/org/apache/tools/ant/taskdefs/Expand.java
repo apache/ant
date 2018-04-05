@@ -270,7 +270,6 @@ public class Expand extends Task {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
 
-            boolean included = false;
             Set<String> includePatterns = new HashSet<>();
             Set<String> excludePatterns = new HashSet<>();
             for (PatternSet p : patternsets) {
@@ -302,20 +301,23 @@ public class Expand extends Task {
                 }
             }
 
-            for (Iterator<String> iter = includePatterns.iterator();
-                 !included && iter.hasNext();) {
-                String pattern = iter.next();
-                included = SelectorUtils.matchPath(pattern, name);
+            boolean included = false;
+            for (String pattern : includePatterns) {
+                if (SelectorUtils.matchPath(pattern, name)) {
+                    included = true;
+                    break;
+                }
             }
 
-            for (Iterator<String> iter = excludePatterns.iterator();
-                 included && iter.hasNext();) {
-                String pattern = iter.next();
-                included = !SelectorUtils.matchPath(pattern, name);
+            for (String pattern : excludePatterns) {
+                if (SelectorUtils.matchPath(pattern, name)) {
+                    included = false;
+                    break;
+                }
             }
 
             if (!included) {
-                //Do not process this file
+                // Do not process this file
                 log("skipping " + entryName
                     + " as it is excluded or not included.",
                     Project.MSG_VERBOSE);

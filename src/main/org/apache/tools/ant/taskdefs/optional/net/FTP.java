@@ -1202,13 +1202,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @since ant 1.6
      */
     private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
-        if (file.isDirectory()) {
-            return false;
-        }
-        if (file.isFile()) {
-            return true;
-        }
-        return !isFunctioningAsDirectory(ftp, dir, file);
+        return !file.isDirectory() && (file.isFile() || !isFunctioningAsDirectory(ftp, dir, file));
     }
 
     /**
@@ -1901,8 +1895,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @return the filename as it will appear on the server.
      */
     protected String resolveFile(String file) {
-        return file.replace(System.getProperty("file.separator").charAt(0),
-                            remoteFileSep.charAt(0));
+        return file.replace(File.separator.charAt(0), remoteFileSep.charAt(0));
     }
 
     /**

@@ -132,7 +132,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
 
     private void getDir(final ChannelSftp channel,
                         final String remoteFile,
-                        final File localFile) throws IOException, SftpException {
+                        final File localFile) throws SftpException {
         String pwd = remoteFile;
         if (remoteFile.lastIndexOf('/') != -1) {
             if (remoteFile.length() > 1) {
@@ -196,9 +196,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         }
         if (getPreserveLastModified()) {
             FileUtils.getFileUtils().setFileLastModified(localFile,
-                                                         ((long) le.getAttrs()
-                                                          .getMTime())
-                                                         * 1000);
+                    ((long) le.getAttrs().getMTime()) * 1000);
         }
     }
 }

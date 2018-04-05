@@ -1615,7 +1615,6 @@ public class FileUtils {
         if (0 < toPathStack.length && 0 < fromPathStack.length) {
             if (!fromPathStack[0].equals(toPathStack[0])) {
                 // not the same device (would be "" on Linux/Unix)
-
                 return getPath(Arrays.asList(toPathStack));
             }
         } else {
@@ -1623,14 +1622,11 @@ public class FileUtils {
             return getPath(Arrays.asList(toPathStack));
         }
 
-        int minLength = Math.min(fromPathStack.length, toPathStack.length);
-        int same = 1; // Used outside the for loop
-
         // get index of parts which are equal
-        for (;
-             same < minLength && fromPathStack[same].equals(toPathStack[same]);
-             same++) {
-            // Do nothing
+        int minLength = Math.min(fromPathStack.length, toPathStack.length);
+        int same = 1;
+        while (same < minLength && fromPathStack[same].equals(toPathStack[same])) {
+            same++;
         }
 
         List<String> relativePathStack = new ArrayList<>();

@@ -696,8 +696,7 @@ public abstract class DefaultCompilerAdapter
      */
     @Deprecated
     protected boolean assumeJava19() {
-        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
-            || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
+        return assumeJava9();
     }
 
     /**
@@ -706,7 +705,8 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.9.8
      */
     protected boolean assumeJava9() {
-        return assumeJava19();
+        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
+                || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
     }
 
     /**

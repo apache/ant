@@ -286,7 +286,7 @@ public class Replace extends MatchingTask {
          * The filter expects from the component providing the input that data
          * is only added by that component to the end of this StringBuffer.
          * This StringBuffer will be modified by this filter, and expects that
-         * another component will only added to this StringBuffer.
+         * another component will only append to this StringBuffer.
          * @param input The input for this filter.
          */
         void setInputBuffer(StringBuffer input) {

@@ -310,10 +310,10 @@ public class URLResource extends Resource implements URLProvider {
         if (another == null || another.getClass() != getClass()) {
             return false;
         }
-        URLResource otheru = (URLResource) another;
+        URLResource other = (URLResource) another;
         return getURL() == null
-            ? otheru.getURL() == null
-            : getURL().equals(otheru.getURL());
+            ? other.getURL() == null
+            : getURL().equals(other.getURL());
     }
 
     /**

@@ -186,10 +186,8 @@ public final class LineContainsRegExp
         LineContainsRegExp newFilter = new LineContainsRegExp(rdr);
         newFilter.setRegexps(getRegexps());
         newFilter.setNegate(isNegated());
-        newFilter
-            .setCaseSensitive(!RegexpUtil.hasFlag(regexpOptions,
-                                                  Regexp.MATCH_CASE_INSENSITIVE)
-                              );
+        newFilter.setCaseSensitive(!RegexpUtil.hasFlag(regexpOptions,
+                Regexp.MATCH_CASE_INSENSITIVE));
         return newFilter;
     }
 
