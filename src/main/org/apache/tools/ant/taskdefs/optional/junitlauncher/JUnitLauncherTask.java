@@ -394,7 +394,6 @@ public class JUnitLauncherTask extends Task {
             } catch (IOException e) {
                 task.log("Failed while streaming " + (this.streamType == StreamType.SYS_OUT ? "sysout" : "syserr") + " data",
                         e, Project.MSG_INFO);
-                return;
             } finally {
                 streamContentDeliver.stop = true;
                 // just "wakeup" the delivery thread, to take into account
@@ -500,7 +499,6 @@ public class JUnitLauncherTask extends Task {
                     closeAndWait(sysErr);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    return;
                 }
             }
         }

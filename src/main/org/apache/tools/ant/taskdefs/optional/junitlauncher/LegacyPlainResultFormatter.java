@@ -99,7 +99,6 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             }
         } catch (IOException ioe) {
             handleException(ioe);
-            return;
         }
     }
 
@@ -258,8 +257,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             return;
         }
         final Throwable throwable = result.getThrowable().get();
-        sb.append(": ").append(throwable.getMessage());
-        sb.append(NEW_LINE);
+        sb.append(String.format(": %s%n", throwable.getMessage()));
         final StringWriter stacktrace = new StringWriter();
         throwable.printStackTrace(new PrintWriter(stacktrace));
         sb.append(stacktrace.toString());

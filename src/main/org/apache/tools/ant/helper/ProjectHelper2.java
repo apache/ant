@@ -274,12 +274,10 @@ public class ProjectHelper2 extends ProjectHelper {
                         + uri + (zf != null ? " from a zip file" : ""),
                         Project.MSG_VERBOSE);
 
-            DefaultHandler hb = handler;
-
-            parser.setContentHandler(hb);
-            parser.setEntityResolver(hb);
-            parser.setErrorHandler(hb);
-            parser.setDTDHandler(hb);
+            parser.setContentHandler(handler);
+            parser.setEntityResolver(handler);
+            parser.setErrorHandler(handler);
+            parser.setDTDHandler(handler);
             parser.parse(inputSource);
         } catch (SAXParseException exc) {
             Location location = new Location(exc.getSystemId(), exc.getLineNumber(), exc
@@ -603,8 +601,7 @@ public class ProjectHelper2 extends ProjectHelper {
         @Override
         public void endElement(String uri, String name, String qName) throws SAXException {
             currentHandler.onEndElement(uri, name, context);
-            AntHandler prev = antHandlers.pop();
-            currentHandler = prev;
+            currentHandler = antHandlers.pop();
             if (currentHandler != null) {
                 currentHandler.onEndChild(uri, name, qName, context);
             }
@@ -729,45 +726,49 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (attrUri != null && !attrUri.isEmpty() && !attrUri.equals(uri)) {
                     continue; // Ignore attributes from unknown uris
                 }
-                String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
-
-                if ("default".equals(key)) {
-                    if (value != null && !value.isEmpty()) {
-                        if (!context.isIgnoringProjectTag()) {
-                            project.setDefault(value);
-                        }
-                    }
-                } else if ("name".equals(key)) {
-                    if (value != null) {
-                        context.setCurrentProjectName(value);
-                        nameAttributeSet = true;
-                        if (!context.isIgnoringProjectTag()) {
-                            project.setName(value);
-                            project.addReference(value, project);
-                        } else if (isInIncludeMode()) {
-                            if (!"".equals(value) && getCurrentTargetPrefix()!= null && getCurrentTargetPrefix().endsWith(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX))  {
-                                String newTargetPrefix = getCurrentTargetPrefix().replace(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX, value);
-                                // help nested include tasks
-                                setCurrentTargetPrefix(newTargetPrefix);
+                switch (attrs.getLocalName(i)) {
+                    case "default":
+                        if (value != null && !value.isEmpty()) {
+                            if (!context.isIgnoringProjectTag()) {
+                                project.setDefault(value);
                             }
                         }
-                    }
-                } else if ("id".equals(key)) {
-                    if (value != null) {
-                        // What's the difference between id and name ?
-                        if (!context.isIgnoringProjectTag()) {
-                            project.addReference(value, project);
+                        break;
+                    case "name":
+                        if (value != null) {
+                            context.setCurrentProjectName(value);
+                            nameAttributeSet = true;
+                            if (!context.isIgnoringProjectTag()) {
+                                project.setName(value);
+                                project.addReference(value, project);
+                            } else if (isInIncludeMode()) {
+                                if (!value.isEmpty() && getCurrentTargetPrefix() != null
+                                        && getCurrentTargetPrefix().endsWith(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX)) {
+                                    String newTargetPrefix = getCurrentTargetPrefix().replace(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX, value);
+                                    // help nested include tasks
+                                    setCurrentTargetPrefix(newTargetPrefix);
+                                }
+                            }
                         }
-                    }
-                } else if ("basedir".equals(key)) {
-                    if (!context.isIgnoringProjectTag()) {
-                        baseDir = value;
-                    }
-                } else {
-                    // TODO ignore attributes in a different NS ( maybe store them ? )
-                    throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i)
-                                                + "\"", context.getLocator());
+                        break;
+                    case "id":
+                        if (value != null) {
+                            // What's the difference between id and name ?
+                            if (!context.isIgnoringProjectTag()) {
+                                project.addReference(value, project);
+                            }
+                        }
+                        break;
+                    case "basedir":
+                        if (!context.isIgnoringProjectTag()) {
+                            baseDir = value;
+                        }
+                        break;
+                    default:
+                        // TODO ignore attributes in a different NS ( maybe store them ? )
+                        throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i)
+                                + "\"", context.getLocator());
                 }
             }
 
@@ -914,37 +915,44 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (attrUri != null && !attrUri.isEmpty() && !attrUri.equals(uri)) {
                     continue; // Ignore attributes from unknown uris
                 }
-                String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
-
-                if ("name".equals(key)) {
-                    name = value;
-                    if (name.isEmpty()) {
-                        throw new BuildException("name attribute must " + "not be empty");
-                    }
-                } else if ("depends".equals(key)) {
-                    depends = value;
-                } else if ("if".equals(key)) {
-                    target.setIf(value);
-                } else if ("unless".equals(key)) {
-                    target.setUnless(value);
-                } else if ("id".equals(key)) {
-                    if (value != null && !value.isEmpty()) {
-                        context.getProject().addReference(value, target);
-                    }
-                } else if ("description".equals(key)) {
-                    target.setDescription(value);
-                } else if ("extensionOf".equals(key)) {
-                    extensionPoint = value;
-                } else if ("onMissingExtensionPoint".equals(key)) {
-                    try {
-                        extensionPointMissing = OnMissingExtensionPoint.valueOf(value);
-                    } catch (IllegalArgumentException e) {
-                        throw new BuildException("Invalid onMissingExtensionPoint " + value);
-                    }
-                } else {
-                    throw new SAXParseException("Unexpected attribute \"" + key + "\"", context
-                                                .getLocator());
+                switch (attrs.getLocalName(i)) {
+                    case "name":
+                        name = value;
+                        if (name.isEmpty()) {
+                            throw new BuildException("name attribute must not be empty");
+                        }
+                        break;
+                    case "depends":
+                        depends = value;
+                        break;
+                    case "if":
+                        target.setIf(value);
+                        break;
+                    case "unless":
+                        target.setUnless(value);
+                        break;
+                    case "id":
+                        if (value != null && !value.isEmpty()) {
+                            context.getProject().addReference(value, target);
+                        }
+                        break;
+                    case "description":
+                        target.setDescription(value);
+                        break;
+                    case "extensionOf":
+                        extensionPoint = value;
+                        break;
+                    case "onMissingExtensionPoint":
+                        try {
+                            extensionPointMissing = OnMissingExtensionPoint.valueOf(value);
+                        } catch (IllegalArgumentException e) {
+                            throw new BuildException("Invalid onMissingExtensionPoint " + value);
+                        }
+                        break;
+                    default:
+                        throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i)
+                                + "\"", context.getLocator());
                 }
             }
 

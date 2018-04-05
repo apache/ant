@@ -125,7 +125,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
         new Thread(() -> {
             try {
                 p.waitFor();
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 // ignore
             }
             FileUtils.delete(f);

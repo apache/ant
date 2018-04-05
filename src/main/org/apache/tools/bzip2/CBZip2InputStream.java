@@ -74,7 +74,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private int currentChar = -1;
 
-    private static final int EOF                  = 0;
+    private static final int EOF               = 0;
     private static final int START_BLOCK_STATE = 1;
     private static final int RAND_PART_A_STATE = 2;
     private static final int RAND_PART_B_STATE = 3;
@@ -85,8 +85,10 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private int currentState = START_BLOCK_STATE;
 
-    private int storedBlockCRC, storedCombinedCRC;
-    private int computedBlockCRC, computedCombinedCRC;
+    private int storedBlockCRC;
+    private int storedCombinedCRC;
+    private int computedBlockCRC;
+    private int computedCombinedCRC;
 
     // Variables used by setup* methods exclusively
 

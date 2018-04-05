@@ -124,6 +124,7 @@ public class JavaEnvUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("deprecated")
     public void isJavaVersionSupportsBothVersionsOfJava9() {
         assumeTrue(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9));
         assertTrue("JAVA_1_9 is not considered equal to JAVA_9",
@@ -131,6 +132,7 @@ public class JavaEnvUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("deprecated")
     public void java10IsDetectedProperly() {
         assumeTrue("10".equals(System.getProperty("java.specification.version")));
         assertEquals("10", JavaEnvUtils.getJavaVersion());

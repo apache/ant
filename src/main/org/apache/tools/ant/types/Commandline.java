@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -66,12 +65,8 @@ public class Commandline implements Cloneable {
      */
     private String executable = null;
 
-    protected static final String DISCLAIMER =
-        StringUtils.LINE_SEP
-        + "The \' characters around the executable and arguments are"
-        + StringUtils.LINE_SEP
-        + "not part of the command."
-        + StringUtils.LINE_SEP;
+    protected static final String DISCLAIMER = String.format(
+            "%nThe ' characters around the executable and arguments are%nnot part of the command.%n");
 
     /**
      * Create a command line from a string.
@@ -676,14 +671,10 @@ public class Commandline implements Cloneable {
         if (args == null || args.length <= offset) {
             return "";
         }
-        StringBuilder buf = new StringBuilder("argument");
-        if (args.length > offset) {
-            buf.append("s");
-        }
-        buf.append(":").append(StringUtils.LINE_SEP);
+        StringBuilder buf = new StringBuilder();
+        buf.append(String.format("argument%s:%n", args.length > offset ? "s" : ""));
         for (int i = offset; i < args.length; i++) {
-            buf.append("\'").append(args[i]).append("\'")
-                .append(StringUtils.LINE_SEP);
+            buf.append(String.format("\'%s\'%n", args[i]));
         }
         buf.append(DISCLAIMER);
         return buf.toString();

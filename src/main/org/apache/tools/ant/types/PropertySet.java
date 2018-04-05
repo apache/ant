@@ -568,8 +568,7 @@ public class PropertySet extends DataType implements ResourceCollection {
                 pushAndInvokeCircularReferenceCheck(mapper, stk, p);
             }
             for (PropertySet propertySet : setRefs) {
-                pushAndInvokeCircularReferenceCheck(propertySet, stk,
-                                                    p);
+                pushAndInvokeCircularReferenceCheck(propertySet, stk, p);
             }
             setChecked(true);
         }

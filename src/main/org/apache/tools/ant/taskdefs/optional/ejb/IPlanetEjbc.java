@@ -812,11 +812,7 @@ public class IPlanetEjbc {
             String base = "\\ejb-jar\\enterprise-beans\\" + ejbType;
 
             if ((base + "\\ejb-name").equals(currentLoc)) {
-                currentEjb = ejbs.get(value);
-                if (currentEjb == null) {
-                    currentEjb = new EjbInfo(value);
-                    ejbs.put(value, currentEjb);
-                }
+                currentEjb = ejbs.computeIfAbsent(value, EjbInfo::new);
             } else if ((base + "\\home").equals(currentLoc)) {
                 currentEjb.setHome(value);
             } else if ((base + "\\remote").equals(currentLoc)) {
@@ -846,18 +842,13 @@ public class IPlanetEjbc {
             String base = "\\ias-ejb-jar\\enterprise-beans\\" + ejbType;
 
             if ((base + "\\ejb-name").equals(currentLoc)) {
-                currentEjb = ejbs.get(value);
-                if (currentEjb == null) {
-                    currentEjb = new EjbInfo(value);
-                    ejbs.put(value, currentEjb);
-                }
+                currentEjb = ejbs.computeIfAbsent(value, EjbInfo::new);
             } else if ((base + "\\iiop").equals(currentLoc)) {
                 currentEjb.setIiop(value);
             } else if ((base + "\\failover-required").equals(currentLoc)) {
                 currentEjb.setHasession(value);
             } else if ((base
-                + "\\persistence-manager\\properties-file-location")
-                    .equals(currentLoc)) {
+                + "\\persistence-manager\\properties-file-location").equals(currentLoc)) {
                 currentEjb.addCmpDescriptor(value);
             }
         }
@@ -869,15 +860,15 @@ public class IPlanetEjbc {
      *
      */
     private class EjbInfo {
-        private String     name;              // EJB's display name
-        private Classname  home;              // EJB's home interface name
-        private Classname  remote;            // EJB's remote interface name
-        private Classname  implementation;      // EJB's implementation class
-        private Classname  primaryKey;        // EJB's primary key class
-        private String  beantype = "entity";  // or "stateful" or "stateless"
-        private boolean cmp       = false;      // Does this EJB support CMP?
-        private boolean iiop      = false;      // Does this EJB support IIOP?
-        private boolean hasession = false;      // Does this EJB require failover?
+        private String    name;              // EJB's display name
+        private Classname home;              // EJB's home interface name
+        private Classname remote;            // EJB's remote interface name
+        private Classname implementation;    // EJB's implementation class
+        private Classname primaryKey;        // EJB's primary key class
+        private String  beantype = "entity"; // or "stateful" or "stateless"
+        private boolean cmp       = false;   // Does this EJB support CMP?
+        private boolean iiop      = false;   // Does this EJB support IIOP?
+        private boolean hasession = false;   // Does this EJB require failover?
         private List<String> cmpDescriptors = new ArrayList<>();  // CMP descriptor list
 
         /**

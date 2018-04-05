@@ -58,7 +58,7 @@ public class FacadeTaskHelperTest {
         fth.setMagicValue("foo");
         assertTrue("magic has been set", fth.hasBeenSet());
         fth.setMagicValue(null);
-        assertTrue(!fth.hasBeenSet());
+        assertFalse(fth.hasBeenSet());
         fth.setImplementation("baz");
         assertTrue("set explicitly", fth.hasBeenSet());
     }

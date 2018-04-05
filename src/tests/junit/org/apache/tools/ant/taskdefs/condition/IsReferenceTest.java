@@ -54,7 +54,7 @@ public class IsReferenceTest {
         try {
             buildRule.executeTarget("isreference-incomplete");
             fail("Build exception expected: refid attirbute has been omitted");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("No reference specified for isreference condition", ex.getMessage());
         }
     }

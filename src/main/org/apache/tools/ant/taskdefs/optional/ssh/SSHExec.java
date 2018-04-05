@@ -218,7 +218,7 @@ public class SSHExec extends SSHBase {
      *      will be stored.
      * @since Apache Ant 1.9.4
      */
-    public void setErrorproperty (final String property) {
+    public void setErrorproperty(final String property) {
         errorProperty = property;
     }
 

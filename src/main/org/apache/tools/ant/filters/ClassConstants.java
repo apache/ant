@@ -86,41 +86,27 @@ public final class ClassConstants
      * be read (for example due to the class not being found).
      */
     public int read() throws IOException {
-
         int ch = -1;
 
         if (queuedData != null && queuedData.length() == 0) {
             queuedData = null;
         }
 
-        if (queuedData != null) {
-            ch = queuedData.charAt(0);
-            queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
-                queuedData = null;
-            }
-        } else {
+        if (queuedData == null) {
             final String clazz = readFully();
             if (clazz == null || clazz.length() == 0) {
                 ch = -1;
             } else {
                 final byte[] bytes = clazz.getBytes(ResourceUtils.ISO_8859_1);
                 try {
-                    final Class<?> javaClassHelper =
-                        Class.forName(JAVA_CLASS_HELPER);
+                    final Class<?> javaClassHelper = Class.forName(JAVA_CLASS_HELPER);
                     if (javaClassHelper != null) {
-                        final Class<?>[] params = {
-                            byte[].class
-                        };
                         final Method getConstants =
-                            javaClassHelper.getMethod("getConstants", params);
-                        final Object[] args = {
-                            bytes
-                        };
+                            javaClassHelper.getMethod("getConstants", byte[].class);
                         // getConstants is a static method, no need to
                         // pass in the object
                         final StringBuffer sb = (StringBuffer)
-                                getConstants.invoke(null, args);
+                                getConstants.invoke(null, (Object) bytes);
                         if (sb.length() > 0) {
                             queuedData = sb.toString();
                             return read();
@@ -141,6 +127,12 @@ public final class ClassConstants
                     throw new BuildException(ex);
                 }
             }
+        } else {
+            ch = queuedData.charAt(0);
+            queuedData = queuedData.substring(1);
+            if (queuedData.length() == 0) {
+                queuedData = null;
+            }
         }
         return ch;
     }
@@ -156,7 +148,6 @@ public final class ClassConstants
      *         the specified reader
      */
     public Reader chain(final Reader rdr) {
-        ClassConstants newFilter = new ClassConstants(rdr);
-        return newFilter;
+        return new ClassConstants(rdr);
     }
 }

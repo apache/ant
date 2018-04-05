@@ -73,11 +73,10 @@ public abstract class BaseIfAttribute
         Hashtable<String, Object> attributes = rc.getAttributeMap(); // This does a copy!
         for (Map.Entry<String, Object> entry : attributes.entrySet()) {
             String key = entry.getKey();
-            String value = (String) entry.getValue();
             if (key.startsWith("ant-attribute:param")) {
                 int pos = key.lastIndexOf(':');
                 ret.put(key.substring(pos + 1),
-                    el.getProject().replaceProperties(value));
+                    el.getProject().replaceProperties((String) entry.getValue()));
             }
         }
         return ret;

@@ -83,11 +83,7 @@ public class PathTokenizer {
      * in the string after the current position; <code>false</code> otherwise.
      */
     public boolean hasMoreTokens() {
-        if (lookahead != null) {
-            return true;
-        }
-
-        return tokenizer.hasMoreTokens();
+        return lookahead != null || tokenizer.hasMoreTokens();
     }
 
     /**

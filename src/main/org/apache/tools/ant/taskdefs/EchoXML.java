@@ -57,7 +57,7 @@ public class EchoXML extends XMLFragment {
 
     /**
      * Set the namespace policy for the xml file
-     * @param n namespace policy: "ignore," "elementsOnly," or "all"
+     * @param n namespace policy: "ignore", "elementsOnly", or "all"
      * @see org.apache.tools.ant.util.DOMElementWriter.XmlNamespacePolicy
      */
     public void setNamespacePolicy(NamespacePolicy n) {

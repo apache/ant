@@ -37,8 +37,8 @@ public class TarResource extends ArchiveResource {
 
     private String userName = "";
     private String groupName = "";
-    private int    uid;
-    private int    gid;
+    private long   uid;
+    private long   gid;
 
     /**
      * Default constructor.
@@ -134,24 +134,42 @@ public class TarResource extends ArchiveResource {
 
     /**
      * @return the uid for the tar entry
+     * @since 1.10.4
      */
-    public int getUid() {
+    public long getLongUid() {
         if (isReference()) {
-            return getCheckedRef().getUid();
+            return getCheckedRef().getLongUid();
         }
         checkEntry();
         return uid;
     }
 
     /**
-     * @return the gid for the tar entry
+     * @return the uid for the tar entry
      */
-    public int getGid() {
+    @Deprecated
+    public int getUid() {
+        return (int) getLongUid();
+    }
+
+    /**
+     * @return the gid for the tar entry
+     * @since 1.10.4
+     */
+    public long getLongGid() {
         if (isReference()) {
-            return getCheckedRef().getGid();
+            return getCheckedRef().getLongGid();
         }
         checkEntry();
         return gid;
+    }
+
+    /**
+     * @return the uid for the tar entry
+     */
+    @Deprecated
+    public int getGid() {
+        return (int) getLongGid();
     }
 
     /**
@@ -194,8 +212,8 @@ public class TarResource extends ArchiveResource {
         setMode(e.getMode());
         userName = e.getUserName();
         groupName = e.getGroupName();
-        uid = e.getUserId();
-        gid = e.getGroupId();
+        uid = e.getLongUserId();
+        gid = e.getLongGroupId();
     }
 
 }

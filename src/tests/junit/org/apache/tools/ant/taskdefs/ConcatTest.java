@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -240,7 +241,7 @@ public class ConcatTest {
         try {
             buildRule.executeTarget("samefile");
             fail("Build exception should have been thrown - output file same as input");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert value
         }
     }
@@ -261,7 +262,7 @@ public class ConcatTest {
     public void testmultireader() {
         buildRule.executeTarget("testmultireader");
         assertTrue(buildRule.getLog().contains("Bye"));
-        assertTrue(!buildRule.getLog().contains("Hello"));
+        assertFalse(buildRule.getLog().contains("Hello"));
     }
     /**
      * Check if fixlastline works
@@ -269,7 +270,7 @@ public class ConcatTest {
     @Test
     public void testfixlastline() throws IOException {
         buildRule.executeTarget("testfixlastline");
-        assertContains("end of line" + System.getProperty("line.separator") + "This has",
+        assertContains("end of line" + System.lineSeparator() + "This has",
                 FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"));
     }
 

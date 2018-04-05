@@ -319,9 +319,7 @@ public class ScpFromMessage extends AbstractSshMessage {
             throw new JSchException("failed to stat remote file", e);
         }
         FileUtils.getFileUtils().setFileLastModified(localFile,
-                                                     ((long) fileAttributes
-                                                      .getMTime())
-                                                     * 1000);
+                ((long) fileAttributes.getMTime()) * 1000);
     }
 
     /**

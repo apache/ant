@@ -109,7 +109,7 @@ public class SignJarTest {
         try {
             buildRule.executeTarget("testTsaLocalhost");
             fail("Should have thrown exception - no TSA at localhost:0");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             assertEquals("jarsigner returned: 1", ex.getMessage());
         }
     }

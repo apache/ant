@@ -165,7 +165,7 @@ public class XmlValidateTest {
         try {
             buildRule.executeTarget("testUtf8");
             fail("Invalid characters in file");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
           //TODO assert exception message
         }
     }
@@ -181,7 +181,7 @@ public class XmlValidateTest {
         try {
             buildRule.executeTarget("testProperty.invalidXML");
             fail("XML file does not satisfy schema");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }

@@ -29,7 +29,7 @@ import java.util.Hashtable;
  * @since Ant 1.6
  */
 @Deprecated
-public class LazyHashtable extends Hashtable {
+public class LazyHashtable<K, V> extends Hashtable<K, V> {
     // CheckStyle:VisibilityModifier OFF - bc
     protected boolean initAllDone = false;
     // CheckStyle:VisibilityModifier OFF - bc
@@ -55,7 +55,7 @@ public class LazyHashtable extends Hashtable {
      * Get a enumeration over the elements.
      * @return an enumeration.
      */
-    public Enumeration elements() {
+    public Enumeration<V> elements() {
         initAll();
         return super.elements();
     }
@@ -111,7 +111,7 @@ public class LazyHashtable extends Hashtable {
      * Get an enumeration over the keys.
      * @return an enumeration.
      */
-    public Enumeration keys() {
+    public Enumeration<K> keys() {
         initAll();
         return super.keys();
     }

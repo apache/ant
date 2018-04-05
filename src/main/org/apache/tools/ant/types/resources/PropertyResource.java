@@ -120,10 +120,7 @@ public class PropertyResource extends Resource {
      */
     @Override
     public boolean equals(Object o) {
-        if (super.equals(o)) {
-            return true;
-        }
-        return isReferenceOrProxy() && getReferencedOrProxied().equals(o);
+        return super.equals(o) || isReferenceOrProxy() && getReferencedOrProxied().equals(o);
     }
 
     /**

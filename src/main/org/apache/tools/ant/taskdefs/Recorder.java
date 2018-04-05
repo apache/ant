@@ -310,8 +310,7 @@ public class Recorder extends Task implements SubBuildListener {
         Hashtable<String, RecorderEntry> entries
                 = (Hashtable<String, RecorderEntry>) recorderEntries.clone();
         for (Map.Entry<String, RecorderEntry> entry : entries.entrySet()) {
-            RecorderEntry re = entry.getValue();
-            if (re.getProject() == getProject()) {
+            if (entry.getValue().getProject() == getProject()) {
                 recorderEntries.remove(entry.getKey());
             }
         }

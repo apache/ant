@@ -35,6 +35,7 @@ import java.io.IOException;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -105,7 +106,7 @@ public class CopyTest {
     @Test
     public void testFilterTest() {
         buildRule.executeTarget("filtertest");
-        assertTrue(!buildRule.getLog().contains("loop in tokens"));
+        assertFalse(buildRule.getLog().contains("loop in tokens"));
     }
 
     @Test

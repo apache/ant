@@ -151,8 +151,6 @@ public class DOMElementWriter {
         this.namespacePolicy = namespacePolicy;
     }
 
-    private static String lSep = System.getProperty("line.separator");
-
     // CheckStyle:VisibilityModifier OFF - bc
     /**
      * Don't try to be too smart but at least recognize the predefined
@@ -219,7 +217,7 @@ public class DOMElementWriter {
                 case Node.ELEMENT_NODE:
                     hasChildElements = true;
                     if (i == 0) {
-                        out.write(lSep);
+                        out.write(StringUtils.LINE_SEP);
                     }
                     write((Element) child, out, indent + 1, indentWith);
                     break;
@@ -367,7 +365,7 @@ public class DOMElementWriter {
         } else {
             removeNSDefinitions(element);
             out.write(" />");
-            out.write(lSep);
+            out.write(StringUtils.LINE_SEP);
             out.flush();
         }
     }
@@ -408,7 +406,7 @@ public class DOMElementWriter {
         }
         out.write(element.getTagName());
         out.write(">");
-        out.write(lSep);
+        out.write(StringUtils.LINE_SEP);
         out.flush();
     }
 
@@ -434,10 +432,8 @@ public class DOMElementWriter {
     }
 
     private String encode(final String value, final boolean encodeWhitespace) {
-        final int len = value.length();
-        final StringBuilder sb = new StringBuilder(len);
-        for (int i = 0; i < len; i++) {
-            final char c = value.charAt(i);
+        final StringBuilder sb = new StringBuilder(value.length());
+        for (final char c : value.toCharArray()) {
             switch (c) {
             case '<':
                 sb.append("&lt;");
@@ -522,13 +518,12 @@ public class DOMElementWriter {
         while (prevEnd < len) {
             final int end = (cdataEndPos < 0 ? len : cdataEndPos);
             // Write out stretches of legal characters in the range [prevEnd, end).
-            for (int prevLegalCharPos = prevEnd; prevLegalCharPos < end;/*empty*/) {
-                int illegalCharPos;
-                for (illegalCharPos = prevLegalCharPos; true; ++illegalCharPos) {
-                    if (illegalCharPos >= end
-                        || !isLegalCharacter(value.charAt(illegalCharPos))) {
-                        break;
-                    }
+            int prevLegalCharPos = prevEnd;
+            while (prevLegalCharPos < end) {
+                int illegalCharPos = prevLegalCharPos;
+                while (illegalCharPos < end
+                        && isLegalCharacter(value.charAt(illegalCharPos))) {
+                    ++illegalCharPos;
                 }
                 out.write(value, prevLegalCharPos, illegalCharPos - prevLegalCharPos);
                 prevLegalCharPos = illegalCharPos + 1;

@@ -472,7 +472,7 @@ public final class Locator {
      */
     public static URL[] getLocationURLs(File location,
                                         final String... extensions)
-         throws MalformedURLException {
+            throws MalformedURLException {
         URL[] urls = new URL[0];
 
         if (!location.exists()) {

@@ -28,6 +28,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -45,9 +47,6 @@ import org.apache.tools.ant.types.resources.URLResource;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Gets a particular file from a URL source.
@@ -181,13 +180,9 @@ public class Get extends Task {
     public boolean doGet(final int logLevel, final DownloadProgress progress)
             throws IOException {
         checkAttributes();
-        for (final Resource r : sources) {
-            final URLProvider up = r.as(URLProvider.class);
-            final URL source = up.getURL();
-            return doGet(source, destination, logLevel, progress);
-        }
-        /*NOTREACHED*/
-        return false;
+        return doGet(sources.iterator().next().as(URLProvider.class).getURL(),
+                destination, logLevel, progress);
+
     }
 
     /**

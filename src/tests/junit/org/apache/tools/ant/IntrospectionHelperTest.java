@@ -259,12 +259,12 @@ public class IntrospectionHelperTest {
     }
 
     private void assertElemMethod(String elemName, String methodName,
-                                  Class returnType, Class methodArg) {
+                                  Class<?> returnType, Class<?> methodArg) {
         Method m = ih.getElementMethod(elemName);
         assertEquals("Method name", methodName, m.getName());
-        Class expectedReturnType = (returnType == null)? Void.TYPE: returnType;
+        Class<?> expectedReturnType = (returnType == null)? Void.TYPE: returnType;
         assertEquals("Return type", expectedReturnType, m.getReturnType());
-        Class[] args = m.getParameterTypes();
+        Class<?>[] args = m.getParameterTypes();
         if (methodArg != null) {
             assertEquals("Arg Count", 1, args.length);
             assertEquals("Arg Type", methodArg, args[0]);
@@ -491,14 +491,14 @@ public class IntrospectionHelperTest {
 
     @Test
     public void testGetAttributes() {
-        Map attrMap = getExpectedAttributes();
-        Enumeration e = ih.getAttributes();
+        Map<String, Class<?>> attrMap = getExpectedAttributes();
+        Enumeration<String> e = ih.getAttributes();
         while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            Class expect = (Class) attrMap.get(name);
-            assertNotNull("Support for "+name+" in IntrospectionHelperTest?",
+            String name = e.nextElement();
+            Class<?> expect = attrMap.get(name);
+            assertNotNull("Support for " + name + " in IntrospectionHelperTest?",
                           expect);
-            assertEquals("Type of "+name, expect, ih.getAttributeType(name));
+            assertEquals("Type of " + name, expect, ih.getAttributeType(name));
             attrMap.remove(name);
         }
         attrMap.remove("name");
@@ -511,7 +511,7 @@ public class IntrospectionHelperTest {
         Map<String, Class<?>> actualMap = ih.getAttributeMap();
         for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
             String attrName = entry.getKey();
-            Class attrClass = attrMap.get(attrName);
+            Class<?> attrClass = attrMap.get(attrName);
             assertNotNull("Support for " + attrName +
                           " in IntrospectionHelperTest?", attrClass);
             assertEquals("Type of " + attrName, attrClass, entry.getValue());
@@ -568,7 +568,7 @@ public class IntrospectionHelperTest {
     }
 
     private void assertAttrMethod(String attrName, String methodName,
-                                  Class methodArg, Object arg, Object badArg) {
+                                  Class<?> methodArg, Object arg, Object badArg) {
         Method m = ih.getAttributeMethod(attrName);
         assertMethod(m, methodName, methodArg, arg, badArg);
     }
@@ -614,14 +614,14 @@ public class IntrospectionHelperTest {
     }
 
     public void setEleven(boolean b) {
-        assertTrue(!b);
+        assertFalse(b);
     }
 
     public void setTwelve(Boolean b) {
-        assertTrue(!b);
+        assertFalse(b);
     }
 
-    public void setThirteen(Class c) {
+    public void setThirteen(Class<?> c) {
         assertEquals(Project.class, c);
     }
 
@@ -664,7 +664,7 @@ public class IntrospectionHelperTest {
 
     @Test
     public void testGetExtensionPoints() {
-        List extensions = ih.getExtensionPoints();
+        List<Method> extensions = ih.getExtensionPoints();
         final int adders = 2;
         assertEquals("extension count", adders, extensions.size());
 
@@ -675,28 +675,23 @@ public class IntrospectionHelperTest {
         // combinatorics are too hard to check.  We really only want
         // to ensure that the more derived Hashtable can be found
         // before Map.
-//        assertExtMethod(extensions.get(0), "add", Number.class,
+//        assertMethod(extensions.get(0), "add", Number.class,
 //                        new Integer(2), new Integer(3));
 
         // addConfigured(Hashtable) should come before addConfigured(Map)
-        assertExtMethod(extensions.get(adders - 2),
+        assertMethod(extensions.get(adders - 2),
                         "addConfigured", Hashtable.class,
                         makeTable("key", "value"), makeTable("1", "2"));
 
-        assertExtMethod(extensions.get(adders - 1), "addConfigured", Map.class,
-                        new HashMap(), makeTable("1", "2"));
+        assertMethod(extensions.get(adders - 1), "addConfigured", Map.class,
+                        new HashMap<String, String>(), makeTable("1", "2"));
     }
 
-    private void assertExtMethod(Object mo, String methodName, Class methodArg,
-                                 Object arg, Object badArg) {
-        assertMethod((Method) mo, methodName, methodArg, arg, badArg);
-    }
-
-    private void assertMethod(Method m, String methodName, Class methodArg,
+    private void assertMethod(Method m, String methodName, Class<?> methodArg,
                               Object arg, Object badArg) {
         assertEquals("Method name", methodName, m.getName());
         assertEquals("Return type", Void.TYPE, m.getReturnType());
-        Class[] args = m.getParameterTypes();
+        Class<?>[] args = m.getParameterTypes();
         assertEquals("Arg Count", 1, args.length);
         assertEquals("Arg Type", methodArg, args[0]);
 
@@ -717,7 +712,7 @@ public class IntrospectionHelperTest {
         }
     }
 
-    public List add(List l) {
+    public List<Object> add(List l) {
         // INVALID extension point
         return null;
     }
@@ -728,11 +723,11 @@ public class IntrospectionHelperTest {
 //        assertEquals(2, n.intValue());
 //    }
 
-    public void add(List l, int i) {
+    public void add(List<Object> l, int i) {
         // INVALID extension point
     }
 
-    public void addConfigured(Map m) {
+    public void addConfigured(Map<Object, Object> m) {
         // Valid extension point
         assertTrue(m.isEmpty());
     }

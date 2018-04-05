@@ -37,6 +37,7 @@ import org.junit.Test;
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -389,7 +390,7 @@ public class ManifestTest {
         buildRule.executeTarget("testUpdate");
         Manifest mf = getManifest(new File(outDir, "mftest.mf"));
         assertNotNull(mf);
-        assertTrue(!Manifest.getDefaultManifest().equals(mf));
+        assertNotEquals(Manifest.getDefaultManifest(), mf);
         String mfAsString = mf.toString();
         assertNotNull(mfAsString);
         assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));

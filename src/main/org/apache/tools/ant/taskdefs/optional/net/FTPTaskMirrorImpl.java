@@ -1280,8 +1280,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
      * @return the filename as it will appear on the server.
      */
     protected String resolveFile(String file) {
-        return file.replace(System.getProperty("file.separator").charAt(0),
-                            task.getSeparator().charAt(0));
+        return file.replace(File.separator.charAt(0), task.getSeparator().charAt(0));
     }
 
     /**

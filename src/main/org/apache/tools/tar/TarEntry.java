@@ -343,10 +343,7 @@ public class TarEntry implements TarConstants {
      */
     @Override
     public boolean equals(Object it) {
-        if (it == null || getClass() != it.getClass()) {
-            return false;
-        }
-        return equals((TarEntry) it);
+        return it != null && getClass() == it.getClass() && equals((TarEntry) it);
     }
 
     /**
@@ -425,7 +422,7 @@ public class TarEntry implements TarConstants {
      */
     @Deprecated
     public int getUserId() {
-        return (int) (userId & 0xffffffff);
+        return (int) userId;
     }
 
     /**
@@ -466,7 +463,7 @@ public class TarEntry implements TarConstants {
      */
     @Deprecated
     public int getGroupId() {
-        return (int) (groupId & 0xffffffff);
+        return (int) groupId;
     }
 
     /**
@@ -753,13 +750,8 @@ public class TarEntry implements TarConstants {
      * @return <i>true</i> if it is a 'normal' file
      */
     public boolean isFile() {
-        if (file != null) {
-            return file.isFile();
-        }
-        if (linkFlag == LF_OLDNORM || linkFlag == LF_NORMAL) {
-            return true;
-        }
-        return !getName().endsWith("/");
+        return file != null ? file.isFile()
+                : linkFlag == LF_OLDNORM || linkFlag == LF_NORMAL || !getName().endsWith("/");
     }
 
     /**

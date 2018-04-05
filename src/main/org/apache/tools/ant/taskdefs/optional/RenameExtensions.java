@@ -43,6 +43,7 @@ import org.apache.tools.ant.types.Mapper;
  * @deprecated since 1.5.x.
  *             Use &lt;move&gt; instead
  */
+@Deprecated
 public class RenameExtensions extends MatchingTask {
 
     private String fromExtension = "";

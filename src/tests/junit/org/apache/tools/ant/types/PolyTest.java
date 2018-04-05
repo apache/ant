@@ -18,13 +18,14 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.apache.tools.ant.AntAssert.assertContains;
 
 public class PolyTest {
 
@@ -39,25 +40,25 @@ public class PolyTest {
     @Test
     public void testFileSet() {
         buildRule.executeTarget("fileset");
-        AntAssert.assertContains("types.FileSet", buildRule.getLog());
+        assertContains("types.FileSet", buildRule.getLog());
     }
 
     @Test
     public void testFileSetAntType() {
         buildRule.executeTarget("fileset-ant-type");
-        AntAssert.assertContains("types.PolyTest$MyFileSet", buildRule.getLog());
+        assertContains("types.PolyTest$MyFileSet", buildRule.getLog());
     }
 
     @Test
     public void testPath() {
         buildRule.executeTarget("path");
-        AntAssert.assertContains("types.Path", buildRule.getLog());
+        assertContains("types.Path", buildRule.getLog());
     }
 
     @Test
     public void testPathAntType() {
         buildRule.executeTarget("path-ant-type");
-        AntAssert.assertContains("types.PolyTest$MyPath", buildRule.getLog());
+        assertContains("types.PolyTest$MyPath", buildRule.getLog());
     }
 
     public static class MyFileSet extends FileSet {

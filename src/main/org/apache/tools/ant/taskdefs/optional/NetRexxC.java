@@ -777,9 +777,7 @@ public class NetRexxC extends MatchingTask {
 
         log("Files to be compiled:", Project.MSG_VERBOSE);
 
-        final String eol = System.getProperty("line.separator");
-        log(
-            compileList.stream().map(s -> "    " + s).collect(Collectors.joining(eol)),
+        log(compileList.stream().map(s -> "    " + s).collect(Collectors.joining(System.lineSeparator())),
                 Project.MSG_VERBOSE);
 
         // create a single array of arguments for the compiler
@@ -924,7 +922,7 @@ public class NetRexxC extends MatchingTask {
      */
     private void addExistingToClasspath(StringBuilder target, String source) {
         StringTokenizer tok = new StringTokenizer(source,
-            System.getProperty("path.separator"), false);
+            File.pathSeparator, false);
 
         while (tok.hasMoreTokens()) {
             File f = getProject().resolveFile(tok.nextToken());

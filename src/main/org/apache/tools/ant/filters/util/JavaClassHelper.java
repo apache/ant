@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
-import org.apache.bcel.classfile.JavaClass;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 /**
@@ -31,9 +30,6 @@ import org.apache.bcel.classfile.JavaClass;
  *
  */
 public final class JavaClassHelper {
-    /** System specific line separator. */
-    private static final String LS = System.getProperty("line.separator");
-
     /**
      * Get the constants declared in a file as name=value
      *
@@ -46,21 +42,16 @@ public final class JavaClassHelper {
         final StringBuffer sb = new StringBuffer();
         final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         final ClassParser parser = new ClassParser(bis, "");
-        final JavaClass javaClass = parser.parse();
-        final Field[] fields = javaClass.getFields();
-        for (final Field field : fields) {
+        for (final Field field : parser.parse().getFields()) {
             if (field != null) {
                 final ConstantValue cv = field.getConstantValue();
                 if (cv != null) {
                     String cvs = cv.toString();
-                    //Remove start and end quotes if field is a String
+                    // Remove start and end quotes if field is a String
                     if (cvs.startsWith("\"") && cvs.endsWith("\"")) {
                         cvs = cvs.substring(1, cvs.length() - 1);
                     }
-                    sb.append(field.getName());
-                    sb.append('=');
-                    sb.append(cvs);
-                    sb.append(LS);
+                    sb.append(String.format("%s=%s%n", field.getName(), cvs));
                 }
             }
         }

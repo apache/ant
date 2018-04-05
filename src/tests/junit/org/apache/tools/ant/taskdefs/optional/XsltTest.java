@@ -50,7 +50,7 @@ public class XsltTest {
         try {
             buildRule.executeTarget("testCatchNoDtd");
             fail("Expected failure");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }

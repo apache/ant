@@ -159,8 +159,11 @@ public class DefaultExcludesTest {
         assertEquals(message + " : string array length match", expected.length, actual.length);
         for (String element : expected) {
             boolean found = false;
-            for (int i = 0; !found && i < actual.length; i++) {
-                found |= element.equals(actual[i]);
+            for (String member : actual) {
+                found |= element.equals(member);
+                if (found) {
+                    break;
+                }
             }
             assertTrue(message + " : didn't find element "
                     + element + " in array match", found);

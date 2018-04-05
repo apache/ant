@@ -318,12 +318,12 @@ public final class DateUtils {
         }
     }
 
-    final private static ThreadLocal<DateFormat> iso8601WithTimeZone =
+    private static final ThreadLocal<DateFormat> iso8601WithTimeZone =
             ThreadLocal.withInitial(() -> {
               // An arbitrary easy-to-read format to normalize to.
               return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
             });
-    final private static Pattern iso8601normalizer = Pattern.compile(
+    private static final Pattern iso8601normalizer = Pattern.compile(
         "^(\\d{4,}-\\d{2}-\\d{2})[Tt ]" +           // yyyy-MM-dd
         "(\\d{2}:\\d{2}(:\\d{2}(\\.\\d{3})?)?) ?" + // HH:mm:ss.SSS
         "(?:Z|([+-]\\d{2})(?::?(\\d{2}))?)?$");     // Z

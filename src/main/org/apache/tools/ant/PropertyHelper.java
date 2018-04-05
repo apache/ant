@@ -20,10 +20,10 @@ package org.apache.tools.ant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -974,14 +974,11 @@ public class PropertyHelper implements GetProperty {
     public void copyInheritedProperties(Project other) {
         //avoid concurrent modification:
         synchronized (inheritedProperties) {
-            Enumeration<String> e = inheritedProperties.keys();
-            while (e.hasMoreElements()) {
-                String arg = e.nextElement();
-                if (other.getUserProperty(arg) != null) {
-                    continue;
+            for (Map.Entry<String, Object> entry : inheritedProperties.entrySet()) {
+                String arg = entry.getKey();
+                if (other.getUserProperty(arg) == null) {
+                    other.setInheritedProperty(arg, entry.getValue().toString());
                 }
-                Object value = inheritedProperties.get(arg);
-                other.setInheritedProperty(arg, value.toString());
             }
         }
     }
@@ -1004,14 +1001,11 @@ public class PropertyHelper implements GetProperty {
     public void copyUserProperties(Project other) {
         //avoid concurrent modification:
         synchronized (userProperties) {
-            Enumeration<String> e = userProperties.keys();
-            while (e.hasMoreElements()) {
-                Object arg = e.nextElement();
-                if (inheritedProperties.containsKey(arg)) {
-                    continue;
+            for (Map.Entry<String, Object> entry : userProperties.entrySet()) {
+                String arg = entry.getKey();
+                if (!inheritedProperties.containsKey(arg)) {
+                    other.setUserProperty(arg, entry.getValue().toString());
                 }
-                Object value = userProperties.get(arg);
-                other.setUserProperty(arg.toString(), value.toString());
             }
         }
     }
@@ -1123,16 +1117,14 @@ public class PropertyHelper implements GetProperty {
      * @return Set&lt;Class&gt;
      * @since Ant 1.8.0
      */
+    @SuppressWarnings("unchecked")
     protected static Set<Class<? extends Delegate>> getDelegateInterfaces(Delegate d) {
         final HashSet<Class<? extends Delegate>> result = new HashSet<>();
         Class<?> c = d.getClass();
         while (c != null) {
             for (Class<?> ifc : c.getInterfaces()) {
                 if (Delegate.class.isAssignableFrom(ifc)) {
-                    @SuppressWarnings("unchecked")
-                    final Class<? extends Delegate> delegateInterface =
-                            (Class<? extends Delegate>) ifc;
-                    result.add(delegateInterface);
+                    result.add((Class<? extends Delegate>) ifc);
                 }
             }
             c = c.getSuperclass();

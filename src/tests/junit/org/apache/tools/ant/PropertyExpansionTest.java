@@ -90,9 +90,8 @@ public class PropertyExpansionTest {
     /**
      * little helper method to validate stuff
      */
-    private void assertExpandsTo(String source,String expected) {
-        String actual = buildRule.getProject().replaceProperties(source);
-        assertEquals(source,expected,actual);
+    private void assertExpandsTo(String source, String expected) {
+        assertEquals(source, expected, buildRule.getProject().replaceProperties(source));
     }
 
 }

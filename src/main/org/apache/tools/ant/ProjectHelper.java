@@ -556,10 +556,8 @@ public class ProjectHelper {
             return ex;
         }
         String errorMessage
-            = "The following error occurred while executing this line:"
-            + System.getProperty("line.separator")
-            + ex.getLocation().toString()
-            + ex.getMessage();
+            = String.format("The following error occurred while executing this line:%n%s%s",
+                ex.getLocation().toString(), ex.getMessage());
         if (ex instanceof ExitStatusException) {
             int exitStatus = ((ExitStatusException) ex).getStatus();
             if (newLocation == null) {

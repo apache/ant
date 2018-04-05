@@ -19,12 +19,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
@@ -205,11 +203,12 @@ public class UpToDate extends Task implements Condition {
         // scan all filesets, even if we know the target is out of
         // date after the first test.
 
-        Iterator<FileSet> iter = sourceFileSets.iterator();
-        while (upToDate && iter.hasNext()) {
-            FileSet fs = iter.next();
-            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            upToDate = scanDir(fs.getDir(getProject()), ds.getIncludedFiles());
+        for (FileSet fs : sourceFileSets) {
+            if (!scanDir(fs.getDir(getProject()),
+                    fs.getDirectoryScanner(getProject()).getIncludedFiles())) {
+                upToDate = false;
+                break;
+            }
         }
 
         if (upToDate) {

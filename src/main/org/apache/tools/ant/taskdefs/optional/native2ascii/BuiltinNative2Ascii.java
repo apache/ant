@@ -60,11 +60,11 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
 
     private BufferedReader getReader(File srcFile, String encoding,
                                      boolean reverse) throws IOException {
-        if (!reverse && encoding != null) {
-            return new BufferedReader(new InputStreamReader(
-                Files.newInputStream(srcFile.toPath()), encoding));
+        if (reverse || encoding == null) {
+            return new BufferedReader(new FileReader(srcFile));
         }
-        return new BufferedReader(new FileReader(srcFile));
+        return new BufferedReader(new InputStreamReader(
+            Files.newInputStream(srcFile.toPath()), encoding));
     }
 
     private Writer getWriter(File destFile, String encoding,
@@ -72,12 +72,12 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         if (!reverse) {
             encoding = "ASCII";
         }
-        if (encoding != null) {
-            return new BufferedWriter(
-                new OutputStreamWriter(Files.newOutputStream(destFile.toPath()),
-                                       encoding));
+        if (encoding == null) {
+            return new BufferedWriter(new FileWriter(destFile));
         }
-        return new BufferedWriter(new FileWriter(destFile));
+        return new BufferedWriter(
+            new OutputStreamWriter(Files.newOutputStream(destFile.toPath()),
+                                   encoding));
     }
 
     private void translate(BufferedReader input, Writer output,

@@ -24,7 +24,6 @@ import java.text.RuleBasedCollator;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
@@ -47,6 +46,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -569,7 +569,7 @@ public class ModifiedSelectorTest {
     public void testResourceSelectorSelresTrue() {
         BFT bft = new BFT();
         bft.doTarget("modifiedselectortest-ResourceSelresTrue");
-        AntAssert.assertContains("does not provide an InputStream", bft.getLog());
+        assertContains("does not provide an InputStream", bft.getLog());
         bft.deleteCachefile();
     }
 

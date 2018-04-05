@@ -906,7 +906,6 @@ public class Jar extends Zip {
      */
     // CheckStyle:LineLength ON
     private void checkJarSpec() {
-        String br = System.getProperty("line.separator");
         StringBuilder message = new StringBuilder();
         Section mainSection = (configuredManifest == null)
                             ? null
@@ -929,9 +928,7 @@ public class Jar extends Zip {
         }
 
         if (message.length() > 0) {
-            message.append(br);
-            message.append("Location: ").append(getLocation());
-            message.append(br);
+            message.append(String.format("%nLocation: %s%n", getLocation()));
             if ("fail".equalsIgnoreCase(strict.getValue())) {
                 throw new BuildException(message.toString(), getLocation());
             }

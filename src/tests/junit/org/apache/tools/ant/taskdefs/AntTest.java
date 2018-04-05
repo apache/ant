@@ -22,7 +22,6 @@ import java.io.File;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
@@ -35,6 +34,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -65,7 +65,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test1");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -76,7 +76,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test2");
             fail("required argument not specified");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -87,7 +87,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test1");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -107,7 +107,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("test4b");
             fail("target doesn't exist");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -290,7 +290,7 @@ public class AntTest {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-inheritall-start");
 
-        AntAssert.assertContains("The value of test is 7", buildRule.getLog());
+        assertContains("The value of test is 7", buildRule.getLog());
     }
 
     @Test
@@ -298,20 +298,20 @@ public class AntTest {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-no-inheritall-start");
 
-        AntAssert.assertContains("The value of test is 7", buildRule.getLog());
+        assertContains("The value of test is 7", buildRule.getLog());
     }
 
     @Test
     public void testOverrideWinsInheritAll() {
         buildRule.executeTarget("test-property-override-inheritall-start");
 
-        AntAssert.assertContains("The value of test is 4", buildRule.getLog());
+        assertContains("The value of test is 4", buildRule.getLog());
     }
 
     @Test
     public void testOverrideWinsNoInheritAll() {
         buildRule.executeTarget("test-property-override-no-inheritall-start");
-        AntAssert.assertContains("The value of test is 4", buildRule.getLog());
+        assertContains("The value of test is 4", buildRule.getLog());
     }
 
     @Test
@@ -327,7 +327,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("infinite-loop-via-depends");
             fail("recursive call");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }
@@ -371,7 +371,7 @@ public class AntTest {
         try {
             buildRule.executeTarget("blank-target");
             fail("target name must not be empty");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //TODO assert exception message
         }
     }

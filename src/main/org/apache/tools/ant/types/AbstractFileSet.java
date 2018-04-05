@@ -592,7 +592,7 @@ public abstract class AbstractFileSet extends DataType
             return getRef(getProject()).hasSelectors();
         }
         dieOnCircularReference();
-        return !(selectors.isEmpty());
+        return !selectors.isEmpty();
     }
 
     /**
@@ -605,10 +605,8 @@ public abstract class AbstractFileSet extends DataType
             return getRef(getProject()).hasPatterns();
         }
         dieOnCircularReference();
-        if (defaultPatterns.hasPatterns(getProject())) {
-            return true;
-        }
-        return additionalPatterns.stream().anyMatch(ps -> ps.hasPatterns(getProject()));
+        return defaultPatterns.hasPatterns(getProject())
+                || additionalPatterns.stream().anyMatch(ps -> ps.hasPatterns(getProject()));
     }
 
     /**

@@ -389,19 +389,22 @@ public class ProjectHelperImpl extends ProjectHelper {
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getName(i);
                 String value = attrs.getValue(i);
-
-                if ("default".equals(key)) {
-                    def = value;
-                } else if ("name".equals(key)) {
-                    name = value;
-                } else if ("id".equals(key)) {
-                    id = value;
-                } else if ("basedir".equals(key)) {
-                    baseDir = value;
-                } else {
-                    throw new SAXParseException(
-                            "Unexpected attribute \"" + attrs.getName(i)
-                            + "\"", helperImpl.locator);
+                switch (key) {
+                    case "default":
+                        def = value;
+                        break;
+                    case "name":
+                        name = value;
+                        break;
+                    case "id":
+                        id = value;
+                        break;
+                    case "basedir":
+                        baseDir = value;
+                        break;
+                    default:
+                        throw new SAXParseException("Unexpected attribute \"" + attrs.getName(i)
+                                        + "\"", helperImpl.locator);
                 }
             }
 
@@ -525,26 +528,32 @@ public class ProjectHelperImpl extends ProjectHelper {
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getName(i);
                 String value = attrs.getValue(i);
-
-                if ("name".equals(key)) {
-                    name = value;
-                    if (name.isEmpty()) {
-                        throw new BuildException("name attribute must not" + " be empty",
-                                new Location(helperImpl.locator));
-                    }
-                } else if ("depends".equals(key)) {
-                    depends = value;
-                } else if ("if".equals(key)) {
-                    ifCond = value;
-                } else if ("unless".equals(key)) {
-                    unlessCond = value;
-                } else if ("id".equals(key)) {
-                    id = value;
-                } else if ("description".equals(key)) {
-                    description = value;
-                } else {
-                    throw new SAXParseException("Unexpected attribute \"" + key + "\"",
-                            helperImpl.locator);
+                switch (key) {
+                    case "name":
+                        name = value;
+                        if (name.isEmpty()) {
+                            throw new BuildException("name attribute must not be empty",
+                                    new Location(helperImpl.locator));
+                        }
+                        break;
+                    case "depends":
+                        depends = value;
+                        break;
+                    case "if":
+                        ifCond = value;
+                        break;
+                    case "unless":
+                        unlessCond = value;
+                        break;
+                    case "id":
+                        id = value;
+                        break;
+                    case "description":
+                        description = value;
+                        break;
+                    default:
+                        throw new SAXParseException("Unexpected attribute \"" + key + "\"",
+                                helperImpl.locator);
                 }
             }
 

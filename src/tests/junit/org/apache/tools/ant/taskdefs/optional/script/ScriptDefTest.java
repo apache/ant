@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.script;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
@@ -28,6 +27,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -67,8 +67,8 @@ public class ScriptDefTest {
         try {
             buildRule.executeTarget("nolang");
             fail("Absence of language attribute not detected");
-        } catch(BuildException ex) {
-            AntAssert.assertContains("requires a language attribute", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("requires a language attribute", ex.getMessage());
         }
     }
 
@@ -77,8 +77,8 @@ public class ScriptDefTest {
         try {
             buildRule.executeTarget("noname");
             fail("Absence of name attribute not detected");
-        } catch(BuildException ex) {
-            AntAssert.assertContains("scriptdef requires a name attribute", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("scriptdef requires a name attribute", ex.getMessage());
         }
     }
 
@@ -108,8 +108,8 @@ public class ScriptDefTest {
         try {
             buildRule.executeTarget("exception");
             fail("Should have thrown an exception in the script");
-        } catch(BuildException ex) {
-            AntAssert.assertContains("TypeError", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("TypeError", ex.getMessage());
         }
     }
 
@@ -126,8 +126,8 @@ public class ScriptDefTest {
         try {
             buildRule.executeTarget("doubleAttributeDef");
             fail("Should have detected duplicate attirbute definition");
-        } catch(BuildException ex) {
-            AntAssert.assertContains("attr1 attribute more than once", ex.getMessage());
+        } catch (BuildException ex) {
+            assertContains("attr1 attribute more than once", ex.getMessage());
         }
     }
 
@@ -156,7 +156,7 @@ public class ScriptDefTest {
             fail("should have failed with reader's encoding [" + readerEncoding +
                 "] different from the writer's encoding [" +
                 buildRule.getProject().getProperty("useSrcAndEncoding.encoding") + "]");
-        } catch(BuildException e) {
+        } catch (BuildException e) {
             assertTrue(e.getMessage().matches(
                     "expected <eacute \\[\u00e9]> but was <eacute \\[\u00c3\u00a9]>"));
         }

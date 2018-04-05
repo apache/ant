@@ -39,7 +39,7 @@ public class DispatchTaskTest {
         try {
             buildRule.executeTarget("disp");
             fail("BuildException should have been thrown");
-        } catch(BuildException ex) {
+        } catch (BuildException ex) {
             //FIXME the previous method used here ignored the build exception - what are we trying to test
         }
     }

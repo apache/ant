@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -189,7 +190,7 @@ public class ProjectTest {
         } catch (BuildException e) {
             assertEquals(message, e.getMessage());
             mbl.assertEmpty();
-            assertTrue(!p.getTaskDefinitions().containsKey(dummyName));
+            assertFalse(p.getTaskDefinitions().containsKey(dummyName));
         }
     }
 

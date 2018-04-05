@@ -300,7 +300,7 @@ public class JarTest {
             }
 
             assertTrue(foundSub);
-            assertTrue(!foundSubFoo);
+            assertFalse(foundSubFoo);
             assertTrue(foundFoo);
         }
     }

@@ -17,7 +17,6 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
@@ -25,6 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -74,7 +74,7 @@ public class RedirectorElementTest {
     public void testLogInputString() {
         buildRule.executeTarget("testLogInputString");
         if (buildRule.getLog().contains("testLogInputString can-cat")) {
-            AntAssert.assertContains("Using input string", buildRule.getFullLog());
+            assertContains("Using input string", buildRule.getFullLog());
         }
     }
 
