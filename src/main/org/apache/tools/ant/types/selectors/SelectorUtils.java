@@ -154,6 +154,8 @@ public final class SelectorUtils {
         }
 
         // Fail if string is not exhausted or pattern is exhausted
+        // Otherwise the pattern now holds ** while string is not exhausted
+        // this will generate false positives but we can live with that.
         return strIdxStart > strIdxEnd || patIdxStart <= patIdxEnd;
     }
 
