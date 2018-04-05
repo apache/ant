@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.launch;
 
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -476,7 +474,6 @@ public final class Locator {
                                         final String... extensions)
             throws MalformedURLException {
         URL[] urls = new URL[0];
-        FileUtils utils = FileUtils.getFileUtils();
 
         if (!location.exists()) {
             return urls;
@@ -487,7 +484,7 @@ public final class Locator {
             String littlePath = path.toLowerCase(Locale.ENGLISH);
             for (String extension : extensions) {
                 if (littlePath.endsWith(extension)) {
-                    urls[0] = utils.getFileURL(location);
+                    urls[0] = fileToURL(location);
                     break;
                 }
             }
@@ -499,7 +496,7 @@ public final class Locator {
         });
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
-            urls[i] = utils.getFileURL(matches[i]);
+            urls[i] = fileToURL(matches[i]);
         }
         return urls;
     }
