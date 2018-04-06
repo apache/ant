@@ -302,7 +302,7 @@ public class CopyTest {
         try (BufferedReader reader = new BufferedReader(new FileReader(srcFile))) {
             originalContent = FileUtils.readFully(reader);
         }
-        assertTrue("Content missing in file " + srcFile, originalContent != null && originalContent.length() > 0);
+        assertTrue("Content missing in file " + srcFile, originalContent != null && !originalContent.isEmpty());
 
         // run the copy tests
         buildRule.executeTarget("testSelfCopy");

@@ -1055,7 +1055,7 @@ public class Javadoc extends Task {
         final String linkOfflineError = "The linkoffline attribute must include"
             + " a URL and a package-list file location separated by a"
             + " space";
-        if (src.trim().length() == 0) {
+        if (src.trim().isEmpty()) {
             throw new BuildException(linkOfflineError);
         }
         final StringTokenizer tok = new StringTokenizer(src, " ", false);

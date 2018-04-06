@@ -79,9 +79,8 @@ public class MultiRootFileSet extends AbstractFileSet
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (dirs != null && dirs.length() > 0) {
-            final String[] ds = dirs.split(",");
-            for (final String d : ds) {
+        if (dirs != null && !dirs.isEmpty()) {
+            for (final String d : dirs.split(",")) {
                 baseDirs.add(getProject().resolveFile(d));
             }
         }

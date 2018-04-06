@@ -127,7 +127,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                     nf.format(suite.getRunTime() / ONE_SECOND)));
 
             // write the err and output streams to the log
-            if (systemOutput != null && systemOutput.length() > 0) {
+            if (systemOutput != null && !systemOutput.isEmpty()) {
                 write("------------- Standard Output ---------------");
                 write(StringUtils.LINE_SEP);
                 write(systemOutput);
@@ -135,7 +135,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                 write(StringUtils.LINE_SEP);
             }
 
-            if (systemError != null && systemError.length() > 0) {
+            if (systemError != null && !systemError.isEmpty()) {
                 write("------------- Standard Error -----------------");
                 write(StringUtils.LINE_SEP);
                 write(systemError);

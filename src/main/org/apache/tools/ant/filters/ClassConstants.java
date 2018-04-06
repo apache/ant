@@ -88,13 +88,13 @@ public final class ClassConstants
     public int read() throws IOException {
         int ch = -1;
 
-        if (queuedData != null && queuedData.length() == 0) {
+        if (queuedData != null && queuedData.isEmpty()) {
             queuedData = null;
         }
 
         if (queuedData == null) {
             final String clazz = readFully();
-            if (clazz == null || clazz.length() == 0) {
+            if (clazz == null || clazz.isEmpty()) {
                 ch = -1;
             } else {
                 final byte[] bytes = clazz.getBytes(ResourceUtils.ISO_8859_1);
@@ -130,7 +130,7 @@ public final class ClassConstants
         } else {
             ch = queuedData.charAt(0);
             queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
+            if (queuedData.isEmpty()) {
                 queuedData = null;
             }
         }

@@ -756,8 +756,8 @@ public class CommandlineJava implements Cloneable {
      * @since Ant 1.6
      */
     public boolean haveClasspath() {
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
-        return fullClasspath != null && fullClasspath.toString().trim().length() > 0;
+        Path fullClasspath = classpath == null ? null : classpath.concatSystemClasspath("ignore");
+        return fullClasspath != null && !fullClasspath.toString().trim().isEmpty();
     }
 
     /**

@@ -87,7 +87,7 @@ public abstract class DefaultJspCompilerAdapter
      * @param  argument  The argument
      */
     protected void addArg(CommandlineJava cmd, String argument) {
-        if (argument != null && argument.length() != 0) {
+        if (argument != null && !argument.isEmpty()) {
            cmd.createArgument().setValue(argument);
         }
     }

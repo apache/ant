@@ -1018,7 +1018,7 @@ public class ComponentHelper  {
         out.println("Action: Check that any custom tasks/types have been declared.");
         out.println("Action: Check that any <presetdef>/<macrodef>"
                 + " declarations have taken place.");
-        if (uri.length() > 0) {
+        if (!uri.isEmpty()) {
             final List<AntTypeDefinition> matches = findTypeMatches(uri);
             if (matches.isEmpty()) {
                 out.println("No types or tasks have been defined in this namespace yet");

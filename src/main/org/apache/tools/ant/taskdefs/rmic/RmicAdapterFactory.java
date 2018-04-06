@@ -95,7 +95,7 @@ public final class RmicAdapterFactory {
                                       Path classpath)
         throws BuildException {
         //handle default specially by choosing the sun or kaffe compiler
-        if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.length() == 0) {
+        if (DEFAULT_COMPILER.equalsIgnoreCase(rmicType) || rmicType.isEmpty()) {
             if (KaffeRmic.isAvailable()) {
                 rmicType = KaffeRmic.COMPILER_NAME;
             } else if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {

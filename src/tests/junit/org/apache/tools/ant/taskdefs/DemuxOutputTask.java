@@ -54,7 +54,7 @@ public class DemuxOutputTask extends Task {
 
     protected void handleOutput(String line) {
         line = line.trim();
-        if (line.length() != 0 && !line.equals(randomOutValue)) {
+        if (!line.isEmpty() && !line.equals(randomOutValue)) {
             String message = "Received = [" + line + "], expected = ["
                 + randomOutValue + "]";
             throw new BuildException(message);
@@ -64,7 +64,7 @@ public class DemuxOutputTask extends Task {
 
     protected void handleErrorOutput(String line) {
         line = line.trim();
-        if (line.length() != 0 && !line.equals(randomErrValue)) {
+        if (!line.isEmpty() && !line.equals(randomErrValue)) {
             String message = "Received = [" + line + "], expected = ["
                 + randomErrValue + "]";
             throw new BuildException(message);

@@ -152,7 +152,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
         sb.append(StringUtils.LINE_SEP);
 
         // append the err and output streams to the log
-        if (systemOutput != null && systemOutput.length() > 0) {
+        if (systemOutput != null && !systemOutput.isEmpty()) {
             sb.append("------------- Standard Output ---------------")
                     .append(StringUtils.LINE_SEP)
                     .append(systemOutput)
@@ -160,7 +160,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
                     .append(StringUtils.LINE_SEP);
         }
 
-        if (systemError != null && systemError.length() > 0) {
+        if (systemError != null && !systemError.isEmpty()) {
             sb.append("------------- Standard Error -----------------")
                     .append(StringUtils.LINE_SEP)
                     .append(systemError)

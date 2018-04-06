@@ -657,7 +657,7 @@ public class ResourceUtils {
             lineTokenizer.setIncludeDelims(true);
             String line = lineTokenizer.getToken(in);
             while (line != null) {
-                if (line.length() == 0) {
+                if (line.isEmpty()) {
                     // this should not happen, because the lines are
                     // returned with the end of line delimiter
                     out.newLine();

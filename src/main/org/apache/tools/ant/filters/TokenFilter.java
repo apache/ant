@@ -105,7 +105,7 @@ public class TokenFilter extends BaseFilterReader
         if (tokenizer == null) {
             tokenizer = new LineTokenizer();
         }
-        while (line == null || line.length() == 0) {
+        while (line == null || line.isEmpty()) {
             line = tokenizer.getToken(in);
             if (line == null) {
                 return -1;
@@ -117,13 +117,11 @@ public class TokenFilter extends BaseFilterReader
                 }
             }
             linePos = 0;
-            if (line != null) {
-                if (tokenizer.getPostToken().length() != 0) {
-                    if (delimOutput != null) {
-                        line += delimOutput;
-                    } else {
-                        line += tokenizer.getPostToken();
-                    }
+            if (line != null && !tokenizer.getPostToken().isEmpty()) {
+                if (delimOutput != null) {
+                    line += delimOutput;
+                } else {
+                    line += tokenizer.getPostToken();
                 }
             }
         }
@@ -593,7 +591,7 @@ public class TokenFilter extends BaseFilterReader
          * @return the trimmed line
          */
         public String filter(String line) {
-            if (line.trim().length() == 0) {
+            if (line.trim().isEmpty()) {
                 return null;
             }
             return line;

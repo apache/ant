@@ -391,7 +391,7 @@ public class RuntimeConfigurable implements Serializable {
      *        Should not be <code>null</code>.
      */
     public synchronized void addText(String data) {
-        if (data.length() == 0) {
+        if (data.isEmpty()) {
             return;
         }
         characters = (characters == null)

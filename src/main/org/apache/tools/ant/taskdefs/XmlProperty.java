@@ -290,7 +290,7 @@ public class XmlProperty extends Task {
         // Set the prefix for this node to include its tag name.
         String nodePrefix = prefix;
         if (node.getNodeType() != Node.TEXT_NODE) {
-            if (prefix.trim().length() > 0) {
+            if (!prefix.trim().isEmpty()) {
                 nodePrefix += ".";
             }
             nodePrefix += node.getNodeName();

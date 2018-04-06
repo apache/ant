@@ -84,7 +84,7 @@ public class NoBannerLogger extends DefaultLogger {
 
         if (event.getPriority() > msgOutputLevel
             || null == event.getMessage()
-            || "".equals(event.getMessage().trim())) {
+            || event.getMessage().trim().isEmpty()) {
                 return;
         }
 

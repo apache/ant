@@ -182,7 +182,7 @@ public class XmlLogger implements BuildLogger {
             outStream == null ? Files.newOutputStream(Paths.get(outFilename)) : outStream;
                 Writer out = new OutputStreamWriter(stream, "UTF8")) {
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            if (xslUri.length() > 0) {
+            if (!xslUri.isEmpty()) {
                 out.write("<?xml-stylesheet type=\"text/xsl\" href=\"" + xslUri
                     + "\"?>\n\n");
             }

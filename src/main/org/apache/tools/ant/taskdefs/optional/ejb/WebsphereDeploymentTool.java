@@ -553,7 +553,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 javaTask.createArg().setValue(destJar.getPath());
                 javaTask.createArg().setLine(getOptions());
                 if (getCombinedClasspath() != null
-                    && getCombinedClasspath().toString().length() > 0) {
+                    && !getCombinedClasspath().toString().isEmpty()) {
                     javaTask.createArg().setValue("-cp");
                     javaTask.createArg().setValue(getCombinedClasspath().toString());
                 }

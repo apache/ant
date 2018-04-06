@@ -1016,8 +1016,7 @@ public class DirectoryScanner
                         continue;
                     }
                     if (myfile.isDirectory()) {
-                        if (isIncluded(currentPath)
-                            && currentelement.length() > 0) {
+                        if (isIncluded(currentPath) && !currentelement.isEmpty()) {
                             accountForIncludedDir(currentPath, myfile, true);
                         }  else {
                             scandir(myfile, currentPath, true);
@@ -1200,7 +1199,7 @@ public class DirectoryScanner
     private void scandir(final File dir, final TokenizedPath path, final boolean fast,
                          String[] newFiles, final Deque<String> directoryNamesFollowed) {
         String vpath = path.toString();
-        if (vpath.length() > 0 && !vpath.endsWith(File.separator)) {
+        if (!vpath.isEmpty() && !vpath.endsWith(File.separator)) {
             vpath += File.separator;
         }
 

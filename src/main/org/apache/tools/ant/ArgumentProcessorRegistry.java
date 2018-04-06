@@ -157,7 +157,7 @@ public class ArgumentProcessorRegistry {
             }
             BufferedReader rd = new BufferedReader(isr);
             String processorClassName = rd.readLine();
-            if (processorClassName != null && !"".equals(processorClassName)) {
+            if (processorClassName != null && !processorClassName.isEmpty()) {
                 return getProcessor(processorClassName);
             }
         } finally {

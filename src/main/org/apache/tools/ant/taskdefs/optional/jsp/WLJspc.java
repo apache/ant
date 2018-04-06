@@ -174,7 +174,7 @@ public class WLJspc extends MatchingTask {
             File jspFile = new File(filename);
             args[j] = "-package";
             String parents = jspFile.getParent();
-            if (parents == null || "".equals(parents)) {
+            if (parents == null || parents.isEmpty()) {
                 args[j + 1] = destinationPackage;
             } else {
                 parents = this.replaceString(parents, File.separator, "_.");
@@ -265,7 +265,7 @@ public class WLJspc extends MatchingTask {
             String parents = jspFile.getParent();
 
             String pack;
-            if (parents == null || "".equals(parents)) {
+            if (parents == null || parents.isEmpty()) {
                 pack = pathToPackage;
             } else {
                 parents =  this.replaceString(parents, File.separator, "_/");

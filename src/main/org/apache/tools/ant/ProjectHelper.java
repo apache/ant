@@ -494,7 +494,7 @@ public class ProjectHelper {
      * @return      The stringified form of the ns name
      */
     public static String genComponentName(String uri, String name) {
-        if (uri == null || "".equals(uri) || uri.equals(ANT_CORE_URI)) {
+        if (uri == null || uri.isEmpty() || uri.equals(ANT_CORE_URI)) {
             return name;
         }
         return uri + ":" + name;

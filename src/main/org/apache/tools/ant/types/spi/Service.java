@@ -96,7 +96,7 @@ public class Service extends ProjectComponent {
                 "type attribute must be set for service element",
                 getLocation());
         }
-        if (type.length() == 0) {
+        if (type.isEmpty()) {
             throw new BuildException(
                 "Invalid empty type classname", getLocation());
         }

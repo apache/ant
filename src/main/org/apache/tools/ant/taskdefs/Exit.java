@@ -141,12 +141,10 @@ public class Exit extends Task {
             if (message != null && !message.trim().isEmpty()) {
                 text = message.trim();
             } else {
-                if (ifCondition != null && !"".equals(ifCondition)
-                    && testIfCondition()) {
+                if (!isNullOrEmpty(ifCondition) && testIfCondition()) {
                     text = "if=" + ifCondition;
                 }
-                if (unlessCondition != null && !"".equals(unlessCondition)
-                    && testUnlessCondition()) {
+                if (!isNullOrEmpty(unlessCondition) && testUnlessCondition()) {
                     if (text == null) {
                         text = "";
                     } else {
@@ -164,6 +162,10 @@ public class Exit extends Task {
             throw status == null ? new BuildException(text)
                 : new ExitStatusException(text, status);
         }
+    }
+
+    private boolean isNullOrEmpty(Object value) {
+        return value == null || "".equals(value);
     }
 
     /**

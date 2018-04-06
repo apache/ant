@@ -313,7 +313,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         currentTest.appendChild(nested);
 
         final String message = t.getMessage();
-        if (message != null && message.length() > 0) {
+        if (message != null && !message.isEmpty()) {
             nested.setAttribute(ATTR_MESSAGE, t.getMessage());
         }
         nested.setAttribute(ATTR_TYPE, t.getClass().getName());

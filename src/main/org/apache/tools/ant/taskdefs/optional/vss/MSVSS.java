@@ -417,7 +417,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     protected String getLabel() {
         String shortLabel = "";
-        if (label != null && label.length() > 0) {
+        if (label != null && !label.isEmpty()) {
                 shortLabel = FLAG_LABEL + getShortLabel();
         }
         return shortLabel;

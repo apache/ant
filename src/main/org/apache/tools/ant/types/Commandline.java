@@ -183,8 +183,7 @@ public class Commandline implements Cloneable {
          * @return an array of strings.
          */
         public String[] getParts() {
-            if (parts == null || parts.length == 0
-                    || (prefix.length() == 0 && suffix.length() == 0)) {
+            if (parts == null || parts.length == 0 || (prefix.isEmpty() && suffix.isEmpty())) {
                 return parts;
             }
             String[] fullParts = new String[parts.length];
@@ -327,7 +326,7 @@ public class Commandline implements Cloneable {
      * @since Ant 1.9.7
      */
     public void setExecutable(String executable, boolean translateFileSeparator) {
-        if (executable == null || executable.length() == 0) {
+        if (executable == null || executable.isEmpty()) {
             return;
         }
         this.executable = translateFileSeparator
@@ -468,7 +467,7 @@ public class Commandline implements Cloneable {
      * An empty or null toProcess parameter results in a zero sized array.
      */
     public static String[] translateCommandline(String toProcess) {
-        if (toProcess == null || toProcess.length() == 0) {
+        if (toProcess == null || toProcess.isEmpty()) {
             //no command? no string
             return new String[0];
         }

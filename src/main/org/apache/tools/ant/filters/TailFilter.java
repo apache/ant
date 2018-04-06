@@ -108,7 +108,7 @@ public final class TailFilter extends BaseParamFilterReader
             setInitialized(true);
         }
 
-        while (line == null || line.length() == 0) {
+        while (line == null || line.isEmpty()) {
             line = lineTokenizer.getToken(in);
             line = tailFilter(line);
             if (line == null) {

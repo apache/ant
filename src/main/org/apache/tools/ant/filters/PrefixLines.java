@@ -86,14 +86,14 @@ public final class PrefixLines
 
         int ch = -1;
 
-        if (queuedData != null && queuedData.length() == 0) {
+        if (queuedData != null && queuedData.isEmpty()) {
             queuedData = null;
         }
 
         if (queuedData != null) {
             ch = queuedData.charAt(0);
             queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
+            if (queuedData.isEmpty()) {
                 queuedData = null;
             }
         } else {

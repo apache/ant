@@ -190,11 +190,11 @@ public class SummaryJUnitResultFormatter
         sb.append(System.lineSeparator());
 
         if (withOutAndErr) {
-            if (systemOutput != null && systemOutput.length() > 0) {
+            if (systemOutput != null && !systemOutput.isEmpty()) {
                 sb.append(String.format("Output:%n%s%n", systemOutput));
             }
 
-            if (systemError != null && systemError.length() > 0) {
+            if (systemError != null && !systemError.isEmpty()) {
                 sb.append(String.format("Output:%n%s%n", systemError));
             }
         }

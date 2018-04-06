@@ -155,7 +155,7 @@ public class JUnitVersionHelper {
                 if (annotation != null) {
                     Method valueMethod = annotation.annotationType().getMethod("value");
                     String value = (String) valueMethod.invoke(annotation);
-                    if (value != null && value.length() > 0) {
+                    if (value != null && !value.isEmpty()) {
                         message = value;
                     }
                 }

@@ -283,7 +283,7 @@ public class FilterSet extends DataType implements Cloneable {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (startOfToken == null || "".equals(startOfToken)) {
+        if (startOfToken == null || startOfToken.isEmpty()) {
             throw new BuildException("beginToken must not be empty");
         }
         this.startOfToken = startOfToken;
@@ -310,7 +310,7 @@ public class FilterSet extends DataType implements Cloneable {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        if (endOfToken == null || "".equals(endOfToken)) {
+        if (endOfToken == null || endOfToken.isEmpty()) {
             throw new BuildException("endToken must not be empty");
         }
         this.endOfToken = endOfToken;

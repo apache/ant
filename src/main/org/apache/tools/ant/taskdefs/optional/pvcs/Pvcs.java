@@ -243,7 +243,7 @@ public class Pvcs extends Task {
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
-            if (getConfig() != null && getConfig().length() > 0) {
+            if (getConfig() != null && !getConfig().isEmpty()) {
                 commandLine.createArgument().setValue("-c" + getConfig());
             }
 

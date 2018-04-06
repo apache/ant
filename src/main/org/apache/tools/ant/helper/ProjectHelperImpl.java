@@ -246,7 +246,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         public void characters(char[] buf, int start, int count) throws SAXParseException {
             String s = new String(buf, start, count).trim();
 
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 throw new SAXParseException("Unexpected text \"" + s + "\"", helperImpl.locator);
             }
         }
@@ -579,7 +579,7 @@ public class ProjectHelperImpl extends ProjectHelper {
 
             // take care of dependencies
 
-            if (depends.length() > 0) {
+            if (!depends.isEmpty()) {
                 target.setDepends(depends);
             }
         }

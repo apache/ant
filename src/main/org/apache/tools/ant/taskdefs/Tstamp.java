@@ -144,7 +144,7 @@ public class Tstamp extends Task {
      */
     protected Optional<Date> getNow(String propertyName, Function<String, Date> map, BiFunction<String, String, String> log) {
         String property = getProject().getProperty(propertyName);
-        if (property != null && property.length() > 0) {
+        if (property != null && !property.isEmpty()) {
             try {
                 return Optional.ofNullable(map.apply(property));
             } catch (Exception e) {

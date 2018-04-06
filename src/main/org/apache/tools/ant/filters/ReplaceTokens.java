@@ -134,7 +134,7 @@ public final class ReplaceTokens
         }
 
         // is the read buffer empty?
-        if (readBuffer.length() == 0) {
+        if (readBuffer.isEmpty()) {
             int next = in.read();
             if (next == -1) {
                 return next; // end of stream. all buffers empty.
@@ -169,13 +169,13 @@ public final class ReplaceTokens
      * @return the first character from the read buffer or -1 if read buffer is empty.
      */
     private int getFirstCharacterFromReadBuffer() {
-        if (readBuffer.length() > 0) {
-            int chr = readBuffer.charAt(0);
-            readBuffer = readBuffer.substring(1);
-            return chr;
-        } else {
+        if (readBuffer.isEmpty()) {
             return -1;
         }
+
+        int chr = readBuffer.charAt(0);
+        readBuffer = readBuffer.substring(1);
+        return chr;
     }
 
     /**

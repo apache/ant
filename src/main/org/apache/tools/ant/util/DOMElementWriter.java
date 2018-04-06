@@ -248,7 +248,7 @@ public class DOMElementWriter {
                     out.write("<?");
                     out.write(child.getNodeName());
                     String data = child.getNodeValue();
-                    if (data != null && data.length() > 0) {
+                    if (data != null && !data.isEmpty()) {
                         out.write(' ');
                         out.write(data);
                     }
@@ -398,7 +398,7 @@ public class DOMElementWriter {
         if (namespacePolicy.qualifyElements) {
             String uri = getNamespaceURI(element);
             String prefix = nsPrefixMap.get(uri);
-            if (prefix != null && !"".equals(prefix)) {
+            if (prefix != null && !prefix.isEmpty()) {
                 out.write(prefix);
                 out.write(":");
             }

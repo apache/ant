@@ -370,15 +370,15 @@ public class MailLogger extends DefaultLogger {
 
         mailMessage.setSubject(values.subject());
 
-        if (values.charset().length() > 0) {
+        if (values.charset().isEmpty()) {
+            mailMessage.setHeader("Content-Type", values.mimeType());
+        } else {
             mailMessage.setHeader("Content-Type", values.mimeType()
                                   + "; charset=\"" + values.charset() + "\"");
-        } else {
-            mailMessage.setHeader("Content-Type", values.mimeType());
         }
 
         PrintStream ps = mailMessage.getPrintStream();
-        ps.println(values.body().length() > 0 ? values.body() : message);
+        ps.println(values.body().isEmpty() ? message : values.body());
 
         mailMessage.sendAndClose();
     }
@@ -408,10 +408,10 @@ public class MailLogger extends DefaultLogger {
         mailer.setSSL(values.ssl());
         mailer.setEnableStartTLS(values.starttls());
         Message mymessage =
-            new Message(values.body().length() > 0 ? values.body() : message);
+            new Message(!values.body().isEmpty() ? values.body() : message);
         mymessage.setProject(project);
         mymessage.setMimeType(values.mimeType());
-        if (values.charset().length() > 0) {
+        if (!values.charset().isEmpty()) {
             mymessage.setCharset(values.charset());
         }
         mailer.setMessage(mymessage);

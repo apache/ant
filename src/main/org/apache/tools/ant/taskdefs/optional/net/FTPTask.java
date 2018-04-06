@@ -504,7 +504,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setSystemTypeKey(FTPSystemType systemKey) {
-        if (systemKey != null && !"".equals(systemKey.getValue())) {
+        if (systemKey != null && !systemKey.getValue().isEmpty()) {
             this.systemTypeKey = systemKey;
             configurationHasBeenSet();
         }
@@ -517,7 +517,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setDefaultDateFormatConfig(String defaultDateFormat) {
-        if (defaultDateFormat != null && !"".equals(defaultDateFormat)) {
+        if (defaultDateFormat != null && !defaultDateFormat.isEmpty()) {
             this.defaultDateFormatConfig = defaultDateFormat;
             configurationHasBeenSet();
         }
@@ -530,7 +530,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        if (recentDateFormat != null && !"".equals(recentDateFormat)) {
+        if (recentDateFormat != null && recentDateFormat.isEmpty()) {
             this.recentDateFormatConfig = recentDateFormat;
             configurationHasBeenSet();
         }
@@ -556,7 +556,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        if (serverTimeZoneId != null && !"".equals(serverTimeZoneId)) {
+        if (serverTimeZoneId != null && serverTimeZoneId.isEmpty()) {
             this.serverTimeZoneConfig = serverTimeZoneId;
             configurationHasBeenSet();
         }
@@ -570,7 +570,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setShortMonthNamesConfig(String shortMonthNames) {
-        if (shortMonthNames != null && !"".equals(shortMonthNames)) {
+        if (shortMonthNames != null && !shortMonthNames.isEmpty()) {
             this.shortMonthNamesConfig = shortMonthNames;
             configurationHasBeenSet();
         }
@@ -671,7 +671,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @param timestampGranularity The timestampGranularity to set.
      */
     public void setTimestampGranularity(Granularity timestampGranularity) {
-        if (null == timestampGranularity || "".equals(timestampGranularity.getValue())) {
+        if (null == timestampGranularity || timestampGranularity.getValue().isEmpty()) {
             return;
         }
         this.timestampGranularity = timestampGranularity;

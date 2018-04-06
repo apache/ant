@@ -241,7 +241,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
      * @since 1.1
      */
     public boolean isLink() {
-        return getLinkedFile().length() != 0;
+        return !getLinkedFile().isEmpty();
     }
 
     /**

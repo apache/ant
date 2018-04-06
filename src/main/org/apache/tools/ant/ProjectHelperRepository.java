@@ -197,7 +197,7 @@ public class ProjectHelperRepository {
             String helperClassName = rd.readLine();
             rd.close();
 
-            if (helperClassName != null && !"".equals(helperClassName)) {
+            if (helperClassName != null && !helperClassName.isEmpty()) {
                 return getHelperConstructor(helperClassName);
             }
         } catch (Exception e) {

@@ -608,7 +608,7 @@ public class FileUtilsTest {
      */
     private void assertEqualsIgnoreDriveCase(String s1, String s2) {
         if ((Os.isFamily("dos") || Os.isFamily("netware"))
-            && s1.length() > 0 && s2.length() > 0) {
+            && !s1.isEmpty() && !s2.isEmpty()) {
             StringBuilder sb1 = new StringBuilder(s1);
             StringBuilder sb2 = new StringBuilder(s2);
             sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));

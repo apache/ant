@@ -353,7 +353,7 @@ public class LayoutPreservingProperties extends Properties {
                 LogicalLine line;
                 if (comment) {
                     line = new Comment(logicalLineBuffer.toString());
-                } else if (logicalLineBuffer.toString().trim().length() == 0) {
+                } else if (logicalLineBuffer.toString().trim().isEmpty()) {
                     line = new Blank();
                 } else {
                     line = new Pair(logicalLineBuffer.toString());

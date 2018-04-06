@@ -569,7 +569,7 @@ public class SubAnt extends Task {
     private Ant createAntTask(File directory) {
         Ant antTask = new Ant(this);
         antTask.init();
-        if (subTarget != null && subTarget.length() > 0) {
+        if (subTarget != null && !subTarget.isEmpty()) {
             antTask.setTarget(subTarget);
         }
 

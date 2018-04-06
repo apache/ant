@@ -65,7 +65,7 @@ public class LocatorTest {
      * @param enabled is the test enabled?
      */
     private void assertResolved(String uri, String expectedResult, String result, boolean enabled) {
-        if (enabled && expectedResult != null && expectedResult.length() > 0) {
+        if (enabled && expectedResult != null && !expectedResult.isEmpty()) {
             assertEquals("Expected " + uri + " to resolve to \n" + expectedResult + "\n but got\n"
                     + result + "\n", expectedResult, result);
         }

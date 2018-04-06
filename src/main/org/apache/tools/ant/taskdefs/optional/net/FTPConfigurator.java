@@ -43,7 +43,7 @@ class FTPConfigurator {
         task.log("custom configuration", Project.MSG_VERBOSE);
         FTPClientConfig config;
         String systemTypeKey = task.getSystemTypeKey();
-        if (systemTypeKey != null && !"".equals(systemTypeKey)) {
+        if (systemTypeKey != null && !systemTypeKey.isEmpty()) {
             config = new FTPClientConfig(systemTypeKey);
             task.log("custom config: system key = "
                     + systemTypeKey, Project.MSG_VERBOSE);
@@ -69,7 +69,7 @@ class FTPConfigurator {
 
         String serverLanguageCodeConfig = task.getServerLanguageCodeConfig();
         if (serverLanguageCodeConfig != null) {
-            if (!"".equals(serverLanguageCodeConfig)
+            if (!serverLanguageCodeConfig.isEmpty()
                 && !FTPClientConfig.getSupportedLanguageCodes()
                 .contains(serverLanguageCodeConfig)) {
                 throw new BuildException("unsupported language code" +

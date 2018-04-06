@@ -417,7 +417,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
-            if (config.flatDestDir && baseName.length() != 0) {
+            if (config.flatDestDir && !baseName.isEmpty()) {
                 int startName = baseName.lastIndexOf(File.separator);
                 if (startName == -1) {
                     startName = 0;

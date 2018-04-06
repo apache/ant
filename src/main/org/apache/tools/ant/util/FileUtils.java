@@ -634,7 +634,7 @@ public class FileUtils {
      * @since Ant 1.7
      */
     public static boolean isContextRelativePath(String filename) {
-        if (!(ON_DOS || ON_NETWARE) || filename.length() == 0) {
+        if (!(ON_DOS || ON_NETWARE) || filename.isEmpty()) {
             return false;
         }
         char sep = File.separatorChar;
@@ -658,10 +658,10 @@ public class FileUtils {
      * @since Ant 1.6.3
      */
     public static boolean isAbsolutePath(String filename) {
-        int len = filename.length();
-        if (len == 0) {
+        if (filename.isEmpty()) {
             return false;
         }
+        int len = filename.length();
         char sep = File.separatorChar;
         filename = filename.replace('/', sep).replace('\\', sep);
         char c = filename.charAt(0);

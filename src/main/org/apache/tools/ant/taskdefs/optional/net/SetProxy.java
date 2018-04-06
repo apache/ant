@@ -181,7 +181,7 @@ public class SetProxy extends Task {
         Properties sysprops = System.getProperties();
         if (proxyHost != null) {
             settingsChanged = true;
-            if (proxyHost.length() != 0) {
+            if (!proxyHost.isEmpty()) {
                 traceSettingInfo();
                 enablingProxy = true;
                 sysprops.put(ProxySetup.HTTP_PROXY_HOST, proxyHost);
@@ -216,7 +216,7 @@ public class SetProxy extends Task {
         //socks
         if (socksProxyHost != null) {
             settingsChanged = true;
-            if (socksProxyHost.length() != 0) {
+            if (!socksProxyHost.isEmpty()) {
                 enablingProxy = true;
                 sysprops.put(ProxySetup.SOCKS_PROXY_HOST, socksProxyHost);
                 sysprops.put(ProxySetup.SOCKS_PROXY_PORT, Integer.toString(socksProxyPort));

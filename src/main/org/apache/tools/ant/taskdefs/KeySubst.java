@@ -72,7 +72,7 @@ public class KeySubst extends Task {
             String newline = null;
             line = br.readLine();
             while (line != null) {
-                if (line.length() == 0) {
+                if (line.isEmpty()) {
                     bw.newLine();
                 } else {
                     newline = KeySubst.replace(line, replacements);
@@ -128,7 +128,7 @@ public class KeySubst extends Task {
      * @param keys a <code>String</code> value
      */
     public void setKeys(String keys) {
-        if (keys != null && keys.length() > 0) {
+        if (keys != null && !keys.isEmpty()) {
             StringTokenizer tok =
             new StringTokenizer(keys, this.sep, false);
             while (tok.hasMoreTokens()) {

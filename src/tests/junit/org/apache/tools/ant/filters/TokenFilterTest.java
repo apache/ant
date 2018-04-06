@@ -265,7 +265,7 @@ public class TokenFilterTest {
 
     public static class Capitalize implements TokenFilter.Filter {
         public String filter(String token) {
-            if (token.length() == 0) {
+            if (token.isEmpty()) {
                 return token;
             }
             return token.substring(0, 1).toUpperCase() + token.substring(1);

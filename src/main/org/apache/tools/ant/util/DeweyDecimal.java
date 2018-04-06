@@ -60,7 +60,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
 
         for (int i = 0; i < components.length; i++) {
             final String component = tokenizer.nextToken();
-            if (component.length() == 0) {
+            if (component.isEmpty()) {
                 throw new NumberFormatException("Empty component in string");
             }
 

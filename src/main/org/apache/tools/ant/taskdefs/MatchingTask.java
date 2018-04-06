@@ -136,7 +136,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
             while (tok.hasMoreTokens()) {
                 String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
+                if (!pattern.isEmpty()) {
                     createInclude().setName(pattern + "/**");
                 }
             }

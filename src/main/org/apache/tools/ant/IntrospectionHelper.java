@@ -458,7 +458,7 @@ public final class IntrospectionHelper {
         if (addText == null) {
             text = text.trim();
             // Element doesn't handle text content
-            if (text.length() == 0) {
+            if (text.isEmpty()) {
                 // Only whitespace - ignore
                 return;
             }
@@ -530,7 +530,7 @@ public final class IntrospectionHelper {
             parentUri = "";
         }
         NestedCreator nc = null;
-        if (uri.equals(parentUri) || uri.length() == 0) {
+        if (uri.equals(parentUri) || uri.isEmpty()) {
             nc = nestedCreators.get(name.toLowerCase(Locale.ENGLISH));
         }
         if (nc == null) {
@@ -741,10 +741,7 @@ public final class IntrospectionHelper {
             return false;
         }
         String uri = ProjectHelper.extractUriFromComponentName(elementName);
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            uri = "";
-        }
-        if ("".equals(uri)) {
+        if (uri.equals(ProjectHelper.ANT_CORE_URI) || uri.isEmpty()) {
             return true;
         }
         if (parentUri.equals(ProjectHelper.ANT_CORE_URI)) {
@@ -1058,7 +1055,7 @@ public final class IntrospectionHelper {
                 @Override
                 public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException {
-                    if (value.length() == 0) {
+                    if (value.isEmpty()) {
                         throw new BuildException("The value \"\" is not a "
                                 + "legal value for attribute \"" + attrName + "\"");
                     }

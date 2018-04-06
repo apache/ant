@@ -67,7 +67,7 @@ public class JUnit4TestMethodAdapter implements Test {
             if (methodNames[i] == null) {
                 throw new IllegalArgumentException("method name #" + i + " is <null>");
             }
-            if (methodNames[i].length() == 0) {
+            if (methodNames[i].isEmpty()) {
                 throw new IllegalArgumentException("method name #" + i + " is empty");
             }
         }

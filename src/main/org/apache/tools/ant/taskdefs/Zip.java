@@ -936,12 +936,12 @@ public class Zip extends MatchingTask {
             fileMode = zfs.getFileMode(getProject());
         }
 
-        if (prefix.length() > 0 && fullpath.length() > 0) {
+        if (!prefix.isEmpty() && !fullpath.isEmpty()) {
             throw new BuildException(
                 "Both prefix and fullpath attributes must not be set on the same fileset.");
         }
 
-        if (resources.length != 1 && fullpath.length() > 0) {
+        if (resources.length != 1 && !fullpath.isEmpty()) {
             throw new BuildException(
                 "fullpath attribute may only be specified for filesets that specify a single file.");
         }

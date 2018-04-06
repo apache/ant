@@ -64,9 +64,8 @@ public class TokenizedPath {
      * @param child the child, must not contain the file separator
      */
     public TokenizedPath(TokenizedPath parent, String child) {
-        if (parent.path.length() > 0
-            && parent.path.charAt(parent.path.length() - 1)
-               != File.separatorChar) {
+        if (!parent.path.isEmpty()
+            && parent.path.charAt(parent.path.length() - 1) != File.separatorChar) {
             path = parent.path + File.separatorChar + child;
         } else {
             path = parent.path + child;

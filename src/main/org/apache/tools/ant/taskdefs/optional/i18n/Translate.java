@@ -365,12 +365,9 @@ public class Translate extends MatchingTask {
                                    bundleCountry,
                                    bundleVariant);
 
-        String language = locale.getLanguage().length() > 0
-            ? "_" + locale.getLanguage() : "";
-        String country = locale.getCountry().length() > 0
-            ? "_" + locale.getCountry() : "";
-        String variant = locale.getVariant().length() > 0
-            ? "_" + locale.getVariant() : "";
+        String language = locale.getLanguage().isEmpty() ? "" : "_" + locale.getLanguage();
+        String country = locale.getCountry().isEmpty() ? "" : "_" + locale.getCountry();
+        String variant = locale.getVariant().isEmpty() ? "" : "_" + locale.getVariant();
 
         processBundle(bundle + language + country + variant, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY_VARIANT, false);
         processBundle(bundle + language + country, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY, false);
@@ -381,12 +378,9 @@ public class Translate extends MatchingTask {
         //using default file encoding scheme.
         locale = Locale.getDefault();
 
-        language = locale.getLanguage().length() > 0
-            ? "_" + locale.getLanguage() : "";
-        country = locale.getCountry().length() > 0
-            ? "_" + locale.getCountry() : "";
-        variant = locale.getVariant().length() > 0
-            ? "_" + locale.getVariant() : "";
+        language = locale.getLanguage().isEmpty() ? "" : "_" + locale.getLanguage();
+        country = locale.getCountry().isEmpty() ? "" : "_" + locale.getCountry();
+        variant = locale.getVariant().isEmpty() ? "" : "_" + locale.getVariant();
         bundleEncoding = System.getProperty("file.encoding");
 
         processBundle(bundle + language + country + variant, BUNDLE_DEFAULT_LANGUAGE_COUNTRY_VARIANT, false);
@@ -456,7 +450,7 @@ public class Translate extends MatchingTask {
                                 break;
                             }
                         }
-                        if (key.length() > 0) {
+                        if (!key.isEmpty()) {
                             //Has key already been loaded into resourceMap?
                             resourceMap.putIfAbsent(key, value);
                         }

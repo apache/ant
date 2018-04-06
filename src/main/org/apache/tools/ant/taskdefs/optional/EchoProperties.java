@@ -184,7 +184,7 @@ public class EchoProperties extends Task {
      * @param  prefix  The new prefix value
      */
     public void setPrefix(String prefix) {
-        if (prefix != null && prefix.length() != 0) {
+        if (prefix != null && !prefix.isEmpty()) {
             this.prefix = prefix;
             PropertySet ps = new PropertySet();
             ps.setProject(getProject());

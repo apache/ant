@@ -1217,7 +1217,7 @@ public class Main implements AntMain {
         }
 
         final String defaultTarget = project.getDefaultTarget();
-        if (defaultTarget != null && !"".equals(defaultTarget)) {
+        if (defaultTarget != null && defaultTarget.isEmpty()) {
             // shouldn't need to check but...
             project.log("Default target: " + defaultTarget);
         }

@@ -135,7 +135,7 @@ public class ResourceContains implements Condition {
     public synchronized boolean eval() throws BuildException {
         validate();
 
-        if (substring.length() == 0) {
+        if (substring.isEmpty()) {
             if (getProject() != null) {
                 getProject().log("Substring is empty; returning true",
                                  Project.MSG_VERBOSE);

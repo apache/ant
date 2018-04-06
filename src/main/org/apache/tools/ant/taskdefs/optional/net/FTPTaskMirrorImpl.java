@@ -359,12 +359,10 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 }
 
                 if (myfile.isDirectory()) {
-                    if (isIncluded(currentelement)
-                        && currentelement.length() > 0) {
+                    if (isIncluded(currentelement) && !currentelement.isEmpty()) {
                         accountForIncludedDir(currentelement, myfile, true);
-                    }  else {
-                        if (currentelement.length() > 0
-                                && currentelement.charAt(currentelement.length() - 1)
+                    } else {
+                        if (!currentelement.isEmpty() && currentelement.charAt(currentelement.length() - 1)
                                 != File.separatorChar) {
                             currentelement += File.separatorChar;
                         }

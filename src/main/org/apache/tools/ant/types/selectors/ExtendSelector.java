@@ -56,7 +56,7 @@ public class ExtendSelector extends BaseSelector {
      * Instantiates the identified custom selector class.
      */
     public void selectorCreate() {
-        if (classname != null && classname.length() > 0) {
+        if (classname != null && !classname.isEmpty()) {
             try {
                 Class<?> c;
                 if (classpath == null) {

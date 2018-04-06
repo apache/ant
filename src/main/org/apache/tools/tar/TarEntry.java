@@ -995,7 +995,7 @@ public class TarEntry implements TarConstants {
                 if (isDirectory() && !name.endsWith("/")) {
                     name += "/";
                 }
-                if (prefix.length() > 0) {
+                if (!prefix.isEmpty()) {
                     name = prefix + "/" + name;
                 }
             }

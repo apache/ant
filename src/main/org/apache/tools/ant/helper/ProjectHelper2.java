@@ -467,7 +467,7 @@ public class ProjectHelper2 extends ProjectHelper {
             throws SAXParseException {
             String s = new String(buf, start, count).trim();
 
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 throw new SAXParseException("Unexpected text \"" + s + "\"", context.getLocator());
             }
         }
@@ -984,7 +984,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                          target.getLocation());
             }
             Hashtable<String, Target> projectTargets = project.getTargets();
-            boolean   usedTarget = false;
+            boolean usedTarget = false;
             // If the name has not already been defined define it
             if (projectTargets.containsKey(name)) {
                 project.log("Already defined in main or a previous import, ignore " + name,
@@ -996,7 +996,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 usedTarget = true;
             }
 
-            if (depends.length() > 0) {
+            if (!depends.isEmpty()) {
                 if (!isInIncludeMode) {
                     target.setDepends(depends);
                 } else {
@@ -1052,7 +1052,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
         private String getTargetPrefix(AntXMLContext context) {
             String configuredValue = getCurrentTargetPrefix();
-            if (configuredValue != null && configuredValue.length() == 0) {
+            if (configuredValue != null && configuredValue.isEmpty()) {
                 configuredValue = null;
             }
             if (configuredValue != null) {

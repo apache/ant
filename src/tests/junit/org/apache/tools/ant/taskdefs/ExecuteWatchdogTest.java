@@ -87,7 +87,7 @@ public class ExecuteWatchdogTest {
         int retcode = p.waitFor();
         if (retcode != 0) {
             String err = getErrorOutput(p);
-            if (err.length() > 0) {
+            if (!err.isEmpty()) {
                 System.err.println("ERROR:");
                 System.err.println(err);
             }

@@ -488,7 +488,7 @@ public class Ant extends Task {
         Set<String> set = new HashSet<>();
         for (int i = properties.size() - 1; i >= 0; --i) {
             Property p = properties.get(i);
-            if (p.getName() != null && !"".equals(p.getName())) {
+            if (p.getName() != null && !p.getName().isEmpty()) {
                 if (set.contains(p.getName())) {
                     properties.remove(i);
                 } else {

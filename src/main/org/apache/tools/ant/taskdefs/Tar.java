@@ -399,11 +399,9 @@ public class Tar extends MatchingTask {
 
         if (tarFileSet != null) {
             final String fullpath = tarFileSet.getFullpath(this.getProject());
-            if (fullpath.length() > 0) {
-                vPath = fullpath;
-            } else {
+            if (fullpath.isEmpty()) {
                 // don't add "" to the archive
-                if (vPath.length() <= 0) {
+                if (vPath.isEmpty()) {
                     return;
                 }
 
@@ -413,6 +411,8 @@ public class Tar extends MatchingTask {
                     prefix += "/";
                 }
                 vPath = prefix + vPath;
+            } else {
+                vPath = fullpath;
             }
 
             preserveLeadingSlashes = tarFileSet.getPreserveLeadingSlashes();

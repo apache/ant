@@ -273,7 +273,7 @@ public class Get extends Task {
      */
     private void checkAttributes() {
 
-        if (userAgent == null || userAgent.trim().length() == 0) {
+        if (userAgent == null || userAgent.trim().isEmpty()) {
             throw new BuildException("userAgent may not be null or empty");
         }
 

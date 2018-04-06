@@ -237,7 +237,7 @@ public class MacroDef extends AntlibDefinition  {
      * @return true if the name consists of valid name characters
      */
     private static boolean isValidName(String name) {
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             return false;
         }
         for (int i = 0; i < name.length(); ++i) {
@@ -724,9 +724,9 @@ public class MacroDef extends AntlibDefinition  {
         } else if (!text.equals(other.text)) {
             return false;
         }
-        if (getURI() == null || "".equals(getURI())
+        if (getURI() == null || getURI().isEmpty()
                 || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
-            if (other.getURI() != null && !"".equals(other.getURI())
+            if (other.getURI() != null && !other.getURI().isEmpty()
                     && !other.getURI().equals(ProjectHelper.ANT_CORE_URI)) {
                 return false;
             }
