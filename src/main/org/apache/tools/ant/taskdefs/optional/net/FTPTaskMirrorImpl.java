@@ -363,13 +363,10 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                         && currentelement.length() > 0) {
                         accountForIncludedDir(currentelement, myfile, true);
                     }  else {
-                        if (currentelement.length() > 0) {
-                            if (currentelement.charAt(currentelement
-                                                      .length() - 1)
+                        if (currentelement.length() > 0
+                                && currentelement.charAt(currentelement.length() - 1)
                                 != File.separatorChar) {
-                                currentelement =
-                                    currentelement + File.separatorChar;
-                            }
+                            currentelement += File.separatorChar;
                         }
                         scandir(myfile.getAbsolutePath(), currentelement, true);
                     }
@@ -875,22 +872,20 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
-                    if (!"".equals(relPath)) {
-                        relPath = relPath + task.getSeparator();
+                    if (relPath != null && !relPath.isEmpty()) {
+                        relPath += task.getSeparator();
                     }
                     if (theFile == null) {
                         // hit a hidden file assume not a symlink
-                        relPath = relPath + currentElement;
-                        currentPath = currentPath + task.getSeparator()
-                            + currentElement;
+                        relPath += currentElement;
+                        currentPath += task.getSeparator() + currentElement;
                         task.log("Hidden file " + relPath
                                  + " assumed to not be a symlink.",
                                  Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
-                        relPath = relPath + theFile.getName();
-                        currentPath = currentPath + task.getSeparator()
-                            + theFile.getName();
+                        relPath += theFile.getName();
+                        currentPath += task.getSeparator() + theFile.getName();
                     }
                 }
                 return relPath;

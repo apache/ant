@@ -96,13 +96,13 @@ public class RegexpUtil {
                                 boolean singleLine) {
         int options = RegexpMatcher.MATCH_DEFAULT;
         if (!caseSensitive) {
-            options = options | RegexpMatcher.MATCH_CASE_INSENSITIVE;
+            options |= RegexpMatcher.MATCH_CASE_INSENSITIVE;
         }
         if (multiLine) {
-            options = options | RegexpMatcher.MATCH_MULTILINE;
+            options |= RegexpMatcher.MATCH_MULTILINE;
         }
         if (singleLine) {
-            options = options | RegexpMatcher.MATCH_SINGLELINE;
+            options |= RegexpMatcher.MATCH_SINGLELINE;
         }
         return options;
     }

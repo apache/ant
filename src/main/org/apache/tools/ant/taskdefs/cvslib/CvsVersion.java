@@ -101,11 +101,11 @@ public class CvsVersion extends AbstractCvsTask {
                 }
             }
             String s2 = s.substring(0, i);
-            version = version + counter * Long.parseLong(s2);
+            version += counter * Long.parseLong(s2);
             if (counter == 1) {
                 break;
             }
-            counter = counter / MULTIPLY;
+            counter /= MULTIPLY;
         }
         return version >= VERSION_1_11_2;
     }

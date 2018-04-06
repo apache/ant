@@ -296,7 +296,7 @@ public abstract class Definer extends DefBase {
             resource = path.substring("//".length());
             if (!resource.endsWith(".xml")) {
                 //if we haven't already named an XML file, it gets antlib.xml
-                resource = resource + ANTLIB_XML;
+                resource += ANTLIB_XML;
             }
         } else {
             //convert from a package to a path

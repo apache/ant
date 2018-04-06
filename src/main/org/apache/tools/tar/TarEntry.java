@@ -993,7 +993,7 @@ public class TarEntry implements TarConstants {
                 // SunOS tar -E does not add / to directory names, so fix
                 // up to be consistent
                 if (isDirectory() && !name.endsWith("/")) {
-                    name = name + "/";
+                    name += "/";
                 }
                 if (prefix.length() > 0) {
                     name = prefix + "/" + name;

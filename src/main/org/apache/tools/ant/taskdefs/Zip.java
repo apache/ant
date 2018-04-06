@@ -1026,7 +1026,7 @@ public class Zip extends MatchingTask {
         throws IOException {
 
         if (!name.endsWith("/")) {
-            name = name + "/";
+            name += "/";
         }
 
         final int nextToLastSlash = name.lastIndexOf('/', name.length() - 2);

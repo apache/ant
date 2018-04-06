@@ -113,7 +113,7 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
             try {
                 final SftpATTRS attrs = channel.stat(remoteFile);
                 if (attrs.isDir() && !remoteFile.endsWith("/")) {
-                    remoteFile = remoteFile + "/";
+                    remoteFile += "/";
                 }
             } catch (final SftpException ee) {
                 // Ignored

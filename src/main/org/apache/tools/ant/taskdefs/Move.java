@@ -125,9 +125,7 @@ public class Move extends Copy {
                     fs.setDir(fromDir);
                     addFileset(fs);
                     DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                    String[] files = ds.getIncludedFiles();
-                    String[] dirs = ds.getIncludedDirectories();
-                    scan(fromDir, toDir, files, dirs);
+                    scan(fromDir, toDir, ds.getIncludedFiles(), ds.getIncludedDirectories());
                 }
             }
         }

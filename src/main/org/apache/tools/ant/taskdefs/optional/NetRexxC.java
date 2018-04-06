@@ -664,9 +664,7 @@ public class NetRexxC extends MatchingTask {
         // compile lists
         DirectoryScanner ds = getDirectoryScanner(srcDir);
 
-        String[] files = ds.getIncludedFiles();
-
-        scanDir(srcDir, destDir, files);
+        scanDir(srcDir, destDir, ds.getIncludedFiles());
 
         // copy the source and support files
         copyFilesToDestination();

@@ -505,14 +505,12 @@ public class Copy extends Task {
                     }
                     final File fromDir = fs.getDir(getProject());
 
-                    final String[] srcFiles = ds.getIncludedFiles();
-                    final String[] srcDirs = ds.getIncludedDirectories();
                     if (!flatten && mapperElement == null
                         && ds.isEverythingIncluded() && !fs.hasPatterns()) {
                         completeDirMap.put(fromDir, destDir);
                     }
-                    add(fromDir, srcFiles, filesByBasedir);
-                    add(fromDir, srcDirs, dirsByBasedir);
+                    add(fromDir, ds.getIncludedFiles(), filesByBasedir);
+                    add(fromDir, ds.getIncludedDirectories(), dirsByBasedir);
                     baseDirs.add(fromDir);
                 } else { // not a fileset or contains non-file resources
 

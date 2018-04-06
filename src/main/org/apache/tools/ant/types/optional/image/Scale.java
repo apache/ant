@@ -95,8 +95,7 @@ public class Scale extends TransformOperation implements DrawOperation {
         int percIndex = heightStr.indexOf('%');
         if (percIndex > 0) {
             yPercent = true;
-            float height = Float.parseFloat(heightStr.substring(0, percIndex));
-            return height / HUNDRED;
+            return Float.parseFloat(heightStr.substring(0, percIndex)) / HUNDRED;
         }
         yPercent = false;
         return Float.parseFloat(heightStr);
@@ -114,10 +113,10 @@ public class Scale extends TransformOperation implements DrawOperation {
         float yFl = getHeight();
 
         if (!xPercent) {
-            xFl = xFl / image.getWidth();
+            xFl /= image.getWidth();
         }
         if (!yPercent) {
-            yFl = yFl / image.getHeight();
+            yFl /= image.getHeight();
         }
 
         if ("width".equals(proportions)) {

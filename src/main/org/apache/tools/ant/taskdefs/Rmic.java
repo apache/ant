@@ -628,8 +628,7 @@ public class Rmic extends MatchingTask {
             // specific classname is not given
             if (classname == null) {
                 DirectoryScanner ds = this.getDirectoryScanner(baseDir);
-                String[] files = ds.getIncludedFiles();
-                scanDir(baseDir, files, adapter.getMapper());
+                scanDir(baseDir, ds.getIncludedFiles(), adapter.getMapper());
             } else {
                 // otherwise perform a timestamp comparison - at least
                 String path = classname.replace('.', File.separatorChar)

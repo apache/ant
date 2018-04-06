@@ -151,7 +151,7 @@ public class BorlandGenerateClient extends Task {
             String ejbjarname = ejbjarfile.getAbsolutePath();
             //clientname = ejbjarfile+client.jar
             String clientname = ejbjarname.substring(0, ejbjarname.lastIndexOf("."));
-            clientname = clientname + "client.jar";
+            clientname += "client.jar";
             clientjarfile = new File(clientname);
         }
 

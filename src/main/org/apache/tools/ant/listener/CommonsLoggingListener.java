@@ -78,7 +78,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         if (suffix != null) {
             suffix = suffix.replace('.', '-');
             suffix = suffix.replace(' ', '-');
-            cat = cat + "." + suffix;
+            cat += "." + suffix;
         }
         final PrintStream tmpOut = System.out;
         final PrintStream tmpErr = System.err;

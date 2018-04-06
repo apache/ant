@@ -471,13 +471,10 @@ public class FTP extends Task implements FTPTaskConfig {
                         && currentelement.length() > 0) {
                         accountForIncludedDir(currentelement, myfile, true);
                     }  else {
-                        if (currentelement.length() > 0) {
-                            if (currentelement.charAt(currentelement
-                                                      .length() - 1)
+                        if (currentelement.length() > 0
+                                && currentelement.charAt(currentelement.length() - 1)
                                 != File.separatorChar) {
-                                currentelement =
-                                    currentelement + File.separatorChar;
-                            }
+                            currentelement += File.separatorChar;
                         }
                         scandir(myfile.getAbsolutePath(), currentelement, true);
                     }
@@ -974,20 +971,20 @@ public class FTP extends Task implements FTPTaskConfig {
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
-                    if (!"".equals(relPath)) {
-                        relPath = relPath + remoteFileSep;
+                    if (relPath != null && !relPath.isEmpty()) {
+                        relPath += remoteFileSep;
                     }
                     if (theFile == null) {
                         // hit a hidden file assume not a symlink
-                        relPath = relPath + currentElement;
-                        currentPath = currentPath + remoteFileSep + currentElement;
+                        relPath += currentElement;
+                        currentPath += remoteFileSep + currentElement;
                         log("Hidden file " + relPath
                             + " assumed to not be a symlink.",
                             Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
-                        relPath = relPath + theFile.getName();
-                        currentPath = currentPath + remoteFileSep + theFile.getName();
+                        relPath += theFile.getName();
+                        currentPath += remoteFileSep + theFile.getName();
                     }
                 }
                 return relPath;

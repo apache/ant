@@ -185,7 +185,7 @@ public class LoadProperties extends Task {
 
             if (text != null && !text.isEmpty()) {
                 if (!text.endsWith("\n")) {
-                    text = text + "\n";
+                    text += "\n";
                 }
                 ByteArrayInputStream tis = new ByteArrayInputStream(
                     text.getBytes(ResourceUtils.ISO_8859_1));

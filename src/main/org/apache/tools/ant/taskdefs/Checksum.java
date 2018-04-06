@@ -611,7 +611,7 @@ public class Checksum extends MatchingTask implements Condition {
         // two characters form the hex value.
         for (int i = 0, j = 0; j < l; i++) {
             int f = Character.digit(data[j++], WORD) << NIBBLE;
-            f = f | Character.digit(data[j++], WORD);
+            f |= Character.digit(data[j++], WORD);
             out[i] = (byte) (f & BYTE_MASK);
         }
 

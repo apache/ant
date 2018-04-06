@@ -409,8 +409,8 @@ public class Tar extends MatchingTask {
 
                 String prefix = tarFileSet.getPrefix(this.getProject());
                 // '/' is appended for compatibility with the zip task.
-                if (prefix.length() > 0 && !prefix.endsWith("/")) {
-                    prefix = prefix + "/";
+                if (!prefix.isEmpty() && !prefix.endsWith("/")) {
+                    prefix += "/";
                 }
                 vPath = prefix + vPath;
             }

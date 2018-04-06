@@ -451,7 +451,7 @@ public class Translate extends MatchingTask {
                             value = value.substring(0, value.length() - 1);
                             line = in.readLine();
                             if (line != null) {
-                                value = value + line.trim();
+                                value += line.trim();
                             } else {
                                 break;
                             }

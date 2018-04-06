@@ -113,7 +113,7 @@ public class ManifestClassPath extends Task {
             }
 
             if (pathEntry.isDirectory() && !relPath.endsWith("/")) {
-                relPath = relPath + '/';
+                relPath += '/';
             }
             relPath = Locator.encodeURI(relPath);
 

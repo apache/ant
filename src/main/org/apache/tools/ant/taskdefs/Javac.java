@@ -1186,9 +1186,8 @@ public class Javac extends MatchingTask {
             }
 
             final DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-            final String[] files = ds.getIncludedFiles();
 
-            scanDir(srcDir, destDir != null ? destDir : srcDir, files);
+            scanDir(srcDir, destDir != null ? destDir : srcDir, ds.getIncludedFiles());
         }
     }
 

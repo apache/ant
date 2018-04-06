@@ -241,7 +241,7 @@ public class MakeUrl extends Task {
             url = toURL(file);
             //and add any files if also defined
             if (!filesetURL.isEmpty()) {
-                url = url + separator + filesetURL;
+                url += separator + filesetURL;
             }
         }
         //add path URLs
@@ -250,7 +250,7 @@ public class MakeUrl extends Task {
             if (url.isEmpty()) {
                 url = pathURL;
             } else {
-                url = url + separator + pathURL;
+                url += separator + pathURL;
             }
         }
         log("Setting " + property + " to URL " + url, Project.MSG_VERBOSE);

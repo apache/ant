@@ -133,7 +133,6 @@ public class WLJspc extends MatchingTask {
         }
 
         compileClasspath = compileClasspath.concatSystemClasspath();
-        String[] files = ds.getIncludedFiles();
 
         //Weblogic.jspc calls System.exit() ... have to fork
         // Therefore, takes loads of time
@@ -164,7 +163,7 @@ public class WLJspc extends MatchingTask {
         args[j++] = "-classpath";
         args[j++] = compileClasspath.toString();
 
-        this.scanDir(files);
+        this.scanDir(ds.getIncludedFiles());
         log("Compiling " + filesToDo.size() + " JSP files");
 
         for (String filename : filesToDo) {

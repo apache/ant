@@ -53,12 +53,11 @@ public class Find extends Task {
         String foundLocation = null;
         for (FileSet fs : filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            String[] includedFiles = ds.getIncludedFiles();
-            for (String includedFile : includedFiles) {
+            File base  = ds.getBasedir();
+            for (String includedFile : ds.getIncludedFiles()) {
                 String filename = includedFile.replace('\\','/');
                 filename = filename.substring(filename.lastIndexOf("/") + 1);
                 if (foundLocation == null && file.equals(filename)) {
-                    File base  = ds.getBasedir();
                     File found = new File(base, includedFile);
                     foundLocation = found.getAbsolutePath();
                 }
