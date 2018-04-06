@@ -128,7 +128,7 @@ public class XMLCatalogTest {
         assertNull("Nonexistent Catalog entry should not be returned", isResult);
 
         Source result = catalog.resolve("i/dont/exist.dtd", null);
-        String expected = toURLString(new File(project.getBaseDir().toURI().toURL() +
+        String expected = toURLString(new File(project.getBaseDir().toURL() +
                                                "/i/dont/exist.dtd"));
         String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
         assertTrue("Nonexistent Catalog entry return input with a system ID like "
