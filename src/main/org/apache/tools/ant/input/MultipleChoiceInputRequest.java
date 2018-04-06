@@ -67,6 +67,6 @@ public class MultipleChoiceInputRequest extends InputRequest {
     @Override
     public boolean isInputValid() {
         return choices.contains(getInput())
-            || ("".equals(getInput()) && getDefaultValue() != null);
+            || (getInput().isEmpty() && getDefaultValue() != null);
     }
 }

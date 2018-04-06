@@ -1181,7 +1181,7 @@ public class Main implements AntMain {
 
         for (final Target currentTarget : ptargets.values()) {
             final String targetName = currentTarget.getName();
-            if ("".equals(targetName)) {
+            if (targetName.isEmpty()) {
                 continue;
             }
             final String targetDescription = currentTarget.getDescription();

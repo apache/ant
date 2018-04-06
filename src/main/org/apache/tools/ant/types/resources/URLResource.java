@@ -183,7 +183,7 @@ public class URLResource extends Resource implements URLProvider {
             return getCheckedRef().getName();
         }
         String name = getURL().getFile();
-        return "".equals(name) ? name : name.substring(1);
+        return name.isEmpty() ? name : name.substring(1);
     }
 
     /**

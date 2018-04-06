@@ -77,7 +77,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
     @Override
     public Object createDynamicElement(String uri, String name, String qName) {
         Element e;
-        if ("".equals(uri)) {
+        if (uri.isEmpty()) {
             e = doc.createElement(name);
         } else {
             e = doc.createElementNS(uri, qName);
@@ -128,7 +128,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
         @Override
         public void setDynamicAttribute(
             String uri, String name, String qName, String value) {
-            if ("".equals(uri)) {
+            if (uri.isEmpty()) {
                 e.setAttribute(name, value);
             } else {
                 e.setAttributeNS(uri, qName, value);
@@ -145,7 +145,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
         @Override
         public Object createDynamicElement(String uri, String name, String qName) {
             Element e2 = null;
-            if ("".equals(uri)) {
+            if (uri.isEmpty()) {
                 e2 = doc.createElement(name);
             } else {
                 e2 = doc.createElementNS(uri, qName);

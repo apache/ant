@@ -836,7 +836,7 @@ public class ComponentHelper  {
      */
     private synchronized void checkNamespace(String componentName) {
         String uri = ProjectHelper.extractUriFromComponentName(componentName);
-        if ("".equals(uri)) {
+        if (uri.isEmpty()) {
             uri = ProjectHelper.ANT_CORE_URI;
         }
         if (!uri.startsWith(ProjectHelper.ANTLIB_URI)) {

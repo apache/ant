@@ -277,7 +277,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
         if (src == null) {
             return super.getResource(name);
         }
-        if ("".equals(name)) {
+        if (name.isEmpty()) {
             // special case in ZIPs, we do not want this thing included
             return new Resource("", true, Long.MAX_VALUE, true);
         }

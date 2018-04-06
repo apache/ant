@@ -315,7 +315,7 @@ public class DOMElementWriter {
                 nsPrefixMap.put(uri, prefix);
                 addNSDefinition(element, uri);
             }
-            if (!"".equals(prefix)) {
+            if (!prefix.isEmpty()) {
                 out.write(prefix);
                 out.write(":");
             }
@@ -350,7 +350,7 @@ public class DOMElementWriter {
             for (String uri : uris) {
                 String prefix = nsPrefixMap.get(uri);
                 out.write(" xmlns");
-                if (!"".equals(prefix)) {
+                if (!prefix.isEmpty()) {
                     out.write(":");
                     out.write(prefix);
                 }

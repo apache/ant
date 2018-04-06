@@ -380,7 +380,7 @@ public final class IntrospectionHelper {
                 final String uriPlusPrefix = ProjectHelper.extractUriFromComponentName(attributeName);
                 final String uri = ProjectHelper.extractUriFromComponentName(uriPlusPrefix);
                 final String localName = ProjectHelper.extractNameFromComponentName(attributeName);
-                final String qName = "".equals(uri) ? localName : uri + ":" + localName;
+                final String qName = uri.isEmpty() ? localName : uri + ":" + localName;
                 dc.setDynamicAttribute(uri, localName, qName, value.toString());
                 return;
             }

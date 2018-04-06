@@ -510,7 +510,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             pathMap.put(absPathPlusTimeAndLength, classpath);
         }
 
-        if (!"".equals(classpath)) {
+        if (!classpath.isEmpty()) {
             final URL baseURL = FILE_UTILS.getFileURL(pathComponent);
             final StringTokenizer st = new StringTokenizer(classpath);
             while (st.hasMoreTokens()) {

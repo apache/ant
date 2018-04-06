@@ -333,7 +333,7 @@ public class Permissions {
             final StringTokenizer tk = new StringTokenizer(actions, ",");
             while (tk.hasMoreTokens()) {
                 final String item = tk.nextToken().trim();
-                if (!"".equals(item)) {
+                if (!item.isEmpty()) {
                     result.add(item);
                 }
             }

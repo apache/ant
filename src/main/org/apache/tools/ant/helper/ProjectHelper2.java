@@ -1060,7 +1060,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
 
             String projectName = context.getCurrentProjectName();
-            if ("".equals(projectName)) {
+            if (projectName != null && projectName.isEmpty()) {
                 projectName = null;
             }
 

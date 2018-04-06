@@ -488,7 +488,7 @@ public class DefaultCompilerAdapterTest {
         sth.setJavac(javac);
         Commandline cmd = new Commandline();
         sth.setupModernJavacCommandlineSwitches(cmd);
-        if ("".equals(expectedLog)) {
+        if (expectedLog.isEmpty()) {
             assertEquals("", javac.getLog());
         } else {
             String l = javac.getLog();

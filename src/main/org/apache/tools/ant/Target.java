@@ -301,7 +301,7 @@ public class Target implements TaskContainer {
      * @since 1.6.2
      */
     public String getIf() {
-        return "".equals(ifString) ? null : ifString;
+        return ifString.isEmpty() ? null : ifString;
     }
 
     /**
@@ -354,7 +354,7 @@ public class Target implements TaskContainer {
      * @since 1.6.2
      */
     public String getUnless() {
-        return "".equals(unlessString) ? null : unlessString;
+        return unlessString.isEmpty() ? null : unlessString;
     }
 
     /**

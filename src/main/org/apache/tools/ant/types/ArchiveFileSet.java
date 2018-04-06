@@ -223,7 +223,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public void setPrefix(String prefix) {
         checkArchiveAttributesAllowed();
-        if (!"".equals(prefix) && !"".equals(fullpath)) {
+        if (!prefix.isEmpty() && !fullpath.isEmpty()) {
             throw new BuildException(ERROR_PATH_AND_PREFIX);
         }
         this.prefix = prefix;
@@ -250,7 +250,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public void setFullpath(String fullpath) {
         checkArchiveAttributesAllowed();
-        if (!"".equals(prefix) && !"".equals(fullpath)) {
+        if (!prefix.isEmpty() && !fullpath.isEmpty()) {
             throw new BuildException(ERROR_PATH_AND_PREFIX);
         }
         this.fullpath = fullpath;
