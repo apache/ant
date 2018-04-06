@@ -1148,20 +1148,16 @@ public class ZipOutputStream extends FilterOutputStream {
         }
 
         String comm = ze.getComment();
-        if (comm != null && !"".equals(comm)) {
+        if (comm == null || comm.isEmpty()) {
+            return;
+        }
 
-            boolean commentEncodable = zipEncoding.canEncode(comm);
-
-            if (createUnicodeExtraFields == UnicodeExtraFieldPolicy.ALWAYS
-                || !commentEncodable) {
-                ByteBuffer commentB = getEntryEncoding(ze).encode(comm);
-                ze.addExtraField(new UnicodeCommentExtraField(comm,
-                                                              commentB.array(),
-                                                              commentB.arrayOffset(),
-                                                              commentB.limit()
-                                                              - commentB.position())
-                                 );
-            }
+        if (createUnicodeExtraFields == UnicodeExtraFieldPolicy.ALWAYS
+            || !zipEncoding.canEncode(comm)) {
+            ByteBuffer commentB = getEntryEncoding(ze).encode(comm);
+            ze.addExtraField(new UnicodeCommentExtraField(comm,
+                    commentB.array(), commentB.arrayOffset(),
+                    commentB.limit() - commentB.position()));
         }
     }
 

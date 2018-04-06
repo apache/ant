@@ -79,7 +79,9 @@ public class Find extends Task {
                 // create list
                 StringBuilder list = new StringBuilder();
                 for (String file : foundFiles) {
-                    if (list.length() > 0) list.append(delimiter);
+                    if (list.length() > 0) {
+                        list.append(delimiter);
+                    }
                     list.append(file);
                 }
                 rv = list.toString();

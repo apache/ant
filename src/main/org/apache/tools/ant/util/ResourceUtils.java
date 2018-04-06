@@ -176,8 +176,10 @@ public class ResourceUtils {
         final Union result = new Union();
         for (final Resource sr : source) {
             String srName = sr.getName();
-            srName = srName == null
-                ? srName : srName.replace('/', File.separatorChar);
+            if (srName != null) {
+                srName = srName.replace('/', File.separatorChar);
+            }
+
 
             String[] targetnames = null;
             try {
@@ -653,7 +655,6 @@ public class ResourceUtils {
 
             final LineTokenizer lineTokenizer = new LineTokenizer();
             lineTokenizer.setIncludeDelims(true);
-            String newline = null;
             String line = lineTokenizer.getToken(in);
             while (line != null) {
                 if (line.length() == 0) {
@@ -661,8 +662,7 @@ public class ResourceUtils {
                     // returned with the end of line delimiter
                     out.newLine();
                 } else {
-                    newline = filters.replaceTokens(line);
-                    out.write(newline);
+                    out.write(filters.replaceTokens(line));
                 }
                 line = lineTokenizer.getToken(in);
             }

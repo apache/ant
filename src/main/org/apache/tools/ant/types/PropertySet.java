@@ -502,7 +502,7 @@ public class PropertySet extends DataType implements ResourceCollection {
         StringBuilder b = new StringBuilder();
         TreeMap<String, Object> sorted = new TreeMap<>(getPropertyMap());
         for (Entry<String, Object> e : sorted.entrySet()) {
-            if (b.length() != 0) {
+            if (b.length() > 0) {
                 b.append(", ");
             }
             b.append(e.getKey());

@@ -452,11 +452,11 @@ public class Commandline implements Cloneable {
         }
         // path containing one or more elements
         final StringBuilder result = new StringBuilder();
-        for (int i = 0; i < line.length; i++) {
-            if (i > 0) {
+        for (String l : line) {
+            if (result.length() > 0) {
                 result.append(' ');
             }
-            result.append(quoteArgument(line[i]));
+            result.append(quoteArgument(l));
         }
         return result.toString();
     }
@@ -508,7 +508,7 @@ public class Commandline implements Cloneable {
                 } else if ("\"".equals(nextTok)) {
                     state = inDoubleQuote;
                 } else if (" ".equals(nextTok)) {
-                    if (lastTokenHasBeenQuoted || current.length() != 0) {
+                    if (lastTokenHasBeenQuoted || current.length() > 0) {
                         result.add(current.toString());
                         current.setLength(0);
                     }
@@ -519,7 +519,7 @@ public class Commandline implements Cloneable {
                 break;
             }
         }
-        if (lastTokenHasBeenQuoted || current.length() != 0) {
+        if (lastTokenHasBeenQuoted || current.length() > 0) {
             result.add(current.toString());
         }
         if (state == inQuote || state == inDoubleQuote) {

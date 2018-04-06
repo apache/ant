@@ -104,10 +104,10 @@ public class StringTokenizer extends ProjectComponent implements Tokenizer {
             if (inToken) {
                 if (isDelim) {
                     if (delimsAreTokens) {
-                        if (word.length() == 0) {
-                            word.append(c);
-                        } else {
+                        if (word.length() > 0) {
                             pushed = ch;
+                        } else {
+                            word.append(c);
                         }
                         break;
                     }

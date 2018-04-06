@@ -52,43 +52,39 @@ public class DispatchUtils {
                 String mName = null;
                 try {
                     final String name = dispatchable.getActionParameterName();
-                    if (name != null && name.trim().length() > 0) {
-                        mName = "get" + name.trim().substring(0, 1).toUpperCase();
-                        if (name.length() > 1) {
-                            mName += name.substring(1);
-                        }
-                        final Class<? extends Dispatchable> c = dispatchable.getClass();
-                        final Method actionM = c.getMethod(mName);
-                        if (actionM != null) {
-                            final Object o = actionM.invoke(dispatchable, (Object[]) null);
-                            if (o != null) {
-                                final String s = o.toString().trim();
-                                if (s.length() > 0) {
-                                    methodName = s;
-                                    Method executeM = dispatchable.getClass().getMethod(methodName);
-                                    if (executeM == null) {
-                                        throw new BuildException(
-                                            "No public " + methodName + "() in "
-                                            + dispatchable.getClass());
-                                    }
-                                    executeM.invoke(dispatchable, (Object[]) null);
-                                    if (task instanceof UnknownElement) {
-                                        ((UnknownElement) task).setRealThing(null);
-                                    }
-                                } else {
-                                    throw new BuildException(
-                                        "Dispatchable Task attribute '" + name.trim()
-                                        + "' not set or value is empty.");
-                                }
-                            } else {
-                                    throw new BuildException(
-                                        "Dispatchable Task attribute '" + name.trim()
-                                        + "' not set or value is empty.");
-                            }
-                        }
-                    } else {
+                    if (name == null || name.trim().isEmpty()) {
                         throw new BuildException(
                             "Action Parameter Name must not be empty for Dispatchable Task.");
+                    }
+                    mName = "get" + name.trim().substring(0, 1).toUpperCase();
+                    if (name.length() > 1) {
+                        mName += name.substring(1);
+                    }
+                    final Class<? extends Dispatchable> c = dispatchable.getClass();
+                    final Method actionM = c.getMethod(mName);
+                    if (actionM != null) {
+                        final Object o = actionM.invoke(dispatchable, (Object[]) null);
+                        if (o == null) {
+                                throw new BuildException(
+                                    "Dispatchable Task attribute '" + name.trim()
+                                    + "' not set or value is empty.");
+                        }
+                        methodName = o.toString().trim();
+                        if (methodName.isEmpty()) {
+                            throw new BuildException(
+                                "Dispatchable Task attribute '" + name.trim()
+                                + "' not set or value is empty.");
+                        }
+                        Method executeM = dispatchable.getClass().getMethod(methodName);
+                        if (executeM == null) {
+                            throw new BuildException(
+                                "No public " + methodName + "() in "
+                                + dispatchable.getClass());
+                        }
+                        executeM.invoke(dispatchable, (Object[]) null);
+                        if (task instanceof UnknownElement) {
+                            ((UnknownElement) task).setRealThing(null);
+                        }
                     }
                 } catch (NoSuchMethodException nsme) {
                     throw new BuildException("No public " + mName + "() in " + task.getClass());

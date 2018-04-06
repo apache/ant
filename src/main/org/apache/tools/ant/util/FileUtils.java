@@ -710,7 +710,7 @@ public class FileUtils {
             String pathComponent = tokenizer.nextToken();
             pathComponent = pathComponent.replace('/', File.separatorChar);
             pathComponent = pathComponent.replace('\\', File.separatorChar);
-            if (path.length() != 0) {
+            if (path.length() > 0) {
                 path.append(File.pathSeparatorChar);
             }
             path.append(pathComponent);

@@ -383,19 +383,15 @@ public class Ant extends Task {
             String thisAntFile = getProject().getProperty(MagicNames.ANT_FILE);
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
-            if (thisAntFile != null
-                && file.equals(getProject().resolveFile(thisAntFile))
-                && getOwningTarget() != null) {
-
-                if ("".equals(getOwningTarget().getName())) {
-                    if ("antcall".equals(getTaskName())) {
-                        throw new BuildException(
-                            "antcall must not be used at the top level.");
-                    }
+            if (thisAntFile != null && file.equals(getProject().resolveFile(thisAntFile))
+                    && getOwningTarget() != null && getOwningTarget().getName().isEmpty()) {
+                if ("antcall".equals(getTaskName())) {
                     throw new BuildException(
+                            "antcall must not be used at the top level.");
+                }
+                throw new BuildException(
                         "%s task at the top level must not invoke its own build file.",
                         getTaskName());
-                }
             }
 
             try {
