@@ -403,8 +403,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                         baseDir = value;
                         break;
                     default:
-                        throw new SAXParseException("Unexpected attribute \"" + attrs.getName(i)
-                                        + "\"", helperImpl.locator);
+                        throw new SAXParseException("Unexpected attribute \"" + key + "\"",
+                                helperImpl.locator);
                 }
             }
 

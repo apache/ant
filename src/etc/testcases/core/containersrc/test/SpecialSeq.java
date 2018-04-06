@@ -23,12 +23,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.Echo;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 public class SpecialSeq extends Task implements TaskContainer {
     /** Optional Vector holding the nested tasks */
-    private Vector nestedTasks = new Vector();
+    private Vector<Task> nestedTasks = new Vector<>();
 
     private FileSet fileset;
 
@@ -50,10 +49,7 @@ public class SpecialSeq extends Task implements TaskContainer {
         if (fileset == null || fileset.getDir(getProject()) == null) {
             throw new BuildException("Fileset was not configured");
         }
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();) {
-            Task nestedTask = (Task) e.nextElement();
-            nestedTask.perform();
-        }
+        nestedTasks.forEach(Task::perform);
         nestedEcho.reconfigure();
         nestedEcho.perform();
     }
