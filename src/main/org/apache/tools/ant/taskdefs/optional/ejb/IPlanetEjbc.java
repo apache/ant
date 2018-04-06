@@ -436,31 +436,31 @@ public class IPlanetEjbc {
      */
     protected void checkConfiguration() throws EjbcException {
 
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
 
         if (stdDescriptor == null) {
-            msg += "A standard XML descriptor file must be specified.  ";
+            msg.append("A standard XML descriptor file must be specified.  ");
         }
         if (iasDescriptor == null) {
-            msg += "An iAS-specific XML descriptor file must be specified.  ";
+            msg.append("An iAS-specific XML descriptor file must be specified.  ");
         }
         if (classpath == null) {
-            msg += "A classpath must be specified.    ";
+            msg.append("A classpath must be specified.    ");
         }
         if (parser == null) {
-            msg += "An XML parser must be specified.    ";
+            msg.append("An XML parser must be specified.    ");
         }
 
         if (destDirectory == null) {
-            msg += "A destination directory must be specified.  ";
+            msg.append("A destination directory must be specified.  ");
         } else if (!destDirectory.exists()) {
-            msg += "The destination directory specified does not exist.  ";
+            msg.append("The destination directory specified does not exist.  ");
         } else if (!destDirectory.isDirectory()) {
-            msg += "The destination specified is not a directory.  ";
+            msg.append("The destination specified is not a directory.  ");
         }
 
         if (msg.length() > 0) {
-            throw new EjbcException(msg);
+            throw new EjbcException(msg.toString());
         }
     }
 

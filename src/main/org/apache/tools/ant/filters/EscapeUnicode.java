@@ -82,7 +82,10 @@ public class EscapeUnicode
         }
 
         int ch = -1;
-        if (unicodeBuf.length() == 0) {
+        if (unicodeBuf.length() > 0) {
+            ch = (int) unicodeBuf.charAt(0);
+            unicodeBuf.deleteCharAt(0);
+        } else {
             ch = in.read();
             if (ch != -1) {
                 char achar = (char) ch;
@@ -91,9 +94,6 @@ public class EscapeUnicode
                     ch = '\\';
                 }
             }
-        } else {
-            ch = (int) unicodeBuf.charAt(0);
-            unicodeBuf.deleteCharAt(0);
         }
         return ch;
     }

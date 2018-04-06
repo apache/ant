@@ -615,8 +615,8 @@ public class ExecuteOn extends ExecTask {
             if (forwardSlash && fileSeparator != '/') {
                 src = src.replace(fileSeparator, '/');
             }
-            if (srcFilePos != null && (srcFilePos.getPrefix().length() > 0
-                    || srcFilePos.getSuffix().length() > 0)) {
+            if (srcFilePos != null
+                    && (!srcFilePos.getPrefix().isEmpty() || !srcFilePos.getSuffix().isEmpty())) {
                 src = srcFilePos.getPrefix() + src + srcFilePos.getSuffix();
             }
             result[srcIndex + i] = src;

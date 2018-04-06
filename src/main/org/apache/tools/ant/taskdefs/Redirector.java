@@ -561,7 +561,7 @@ public class Redirector {
         String line = null;
         final StringBuffer val = new StringBuffer();
         while ((line = in.readLine()) != null) {
-            if (val.length() != 0) {
+            if (val.length() > 0) {
                 val.append(StringUtils.LINE_SEP);
             }
             val.append(line);
