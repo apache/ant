@@ -240,9 +240,8 @@ public class Sync extends Task {
         // leaves before their parent nodes - thus making sure (well,
         // more likely) that the directories are empty when we try to
         // delete them.
-        Arrays.sort(dirs, Comparator.reverseOrder());
-        for (String dir : dirs) {
-            File f = new File(toDir, dir);
+        for (int i = dirs.length - 1; i >= 0; --i) {
+            File f = new File(toDir, dirs[i]);
             String[] children = f.list();
             if (children == null || children.length < 1) {
                 log("Removing orphan directory: " + f, Project.MSG_DEBUG);
@@ -257,9 +256,8 @@ public class Sync extends Task {
             fs.setDir(toDir);
             String[] preservedDirs =
                 fs.getDirectoryScanner(getProject()).getIncludedDirectories();
-            Arrays.sort(preservedDirs, Comparator.reverseOrder());
-            for (String dir : preservedDirs) {
-                preservedDirectories.add(new File(toDir, dir));
+            for (int i = preservedDirs.length - 1; i >= 0; --i) {
+                preservedDirectories.add(new File(toDir, preservedDirs[i]));
             }
         }
 

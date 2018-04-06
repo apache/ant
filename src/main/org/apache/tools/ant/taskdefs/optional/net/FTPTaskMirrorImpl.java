@@ -1186,8 +1186,8 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             if (task.getAction() == FTPTask.RM_DIR) {
                 // to remove directories, start by the end of the list
                 // the trunk does not let itself be removed before the leaves
-                Arrays.sort(dsfiles, Comparator.reverseOrder());
-                for (final String dsfile : dsfiles) {
+                for (int i = dsfiles.length - 1; i >= 0; i--) {
+                    final String dsfile = dsfiles[i];
                     executeRetryable(h, () -> rmDir(ftp, dsfile), dsfile);
                 }
             } else {
