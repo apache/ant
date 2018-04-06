@@ -1708,7 +1708,7 @@ public class FTP extends Task implements FTPTaskConfig {
             throw new BuildException("password attribute must be set!");
         }
 
-        if ((action == LIST_FILES) && (listing == null)) {
+        if (action == LIST_FILES && listing == null) {
             throw new BuildException(
                 "listing attribute must be set for list action!");
         }
@@ -1783,12 +1783,12 @@ public class FTP extends Task implements FTPTaskConfig {
         }
         String dir = null;
 
-        if ((ds.getBasedir() == null)
-            && ((action == SEND_FILES) || (action == GET_FILES))) {
+        if (ds.getBasedir() == null
+            && (action == SEND_FILES || action == GET_FILES)) {
             throw new BuildException(
                 "the dir attribute must be set for send and get actions");
         }
-        if ((action == SEND_FILES) || (action == GET_FILES)) {
+        if (action == SEND_FILES || action == GET_FILES) {
             dir = ds.getBasedir().getAbsolutePath();
         }
 

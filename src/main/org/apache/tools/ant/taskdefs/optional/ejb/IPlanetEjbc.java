@@ -253,7 +253,7 @@ public class IPlanetEjbc {
         boolean     retainSource  = false;
         IPlanetEjbc ejbc;
 
-        if ((args.length < MIN_NUM_ARGS) || (args.length > MAX_NUM_ARGS)) {
+        if (args.length < MIN_NUM_ARGS || args.length > MAX_NUM_ARGS) {
             usage();
             return;
         }
@@ -663,7 +663,7 @@ public class IPlanetEjbc {
          */
         public void registerDTD(String publicID, String location) {
             log("Registering: " + location);
-            if ((publicID == null) || (location == null)) {
+            if (publicID == null || location == null) {
                 return;
             }
 
@@ -742,7 +742,7 @@ public class IPlanetEjbc {
                 iasDescriptor = true;
             }
 
-            if (("session".equals(name)) || ("entity".equals(name))) {
+            if ("session".equals(name) || "entity".equals(name)) {
                 ejbType = name;
             }
         }
@@ -1033,20 +1033,20 @@ public class IPlanetEjbc {
                         + " EJB.");
             }
 
-            if ((!beantype.equals(ENTITY_BEAN))
-                && (!beantype.equals(STATELESS_SESSION))
-                && (!beantype.equals(STATEFUL_SESSION))) {
+            if (!beantype.equals(ENTITY_BEAN)
+                && !beantype.equals(STATELESS_SESSION)
+                && !beantype.equals(STATEFUL_SESSION)) {
                 throw new EjbcException("The beantype found (" + beantype
                     + ") isn't valid in the " + name + " EJB.");
             }
 
-            if (cmp && (!beantype.equals(ENTITY_BEAN))) {
+            if (cmp && !beantype.equals(ENTITY_BEAN)) {
                 System.out.println(
                     "CMP stubs and skeletons may not be generated for a Session Bean -- the \"cmp\" attribute will be ignoredfor the "
                         + name + " EJB.");
             }
 
-            if (hasession && (!beantype.equals(STATEFUL_SESSION))) {
+            if (hasession && !beantype.equals(STATEFUL_SESSION)) {
                 System.out.println(
                     "Highly available stubs and skeletons may only be generated for a Stateful Session Bean"
                         + "-- the \"hasession\" attribute will be ignored for the "

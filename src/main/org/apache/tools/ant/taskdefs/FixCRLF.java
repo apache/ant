@@ -468,7 +468,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                     switch (ch) {
                     case '\r':
                         ch = reader.read();
-                        if ((char) (ch) == '\n') {
+                        if ((char) ch == '\n') {
                             eolcount += 2;
                             eolStr.append("\r\n");
                         } else {

@@ -117,7 +117,7 @@ public class DigestAlgorithm implements Algorithm {
             return;
         }
 
-        if ((provider != null) && !"".equals(provider) && !"null".equals(provider)) {
+        if (provider != null && !provider.isEmpty() && !"null".equals(provider)) {
             try {
                 messageDigest = MessageDigest.getInstance(algorithm, provider);
             } catch (NoSuchAlgorithmException | NoSuchProviderException e) {

@@ -130,7 +130,7 @@ public class PropertiesfileCache implements Cache {
      */
     @Override
     public void load() {
-        if ((cachefile != null) && cachefile.isFile() && cachefile.canRead()) {
+        if (cachefile != null && cachefile.isFile() && cachefile.canRead()) {
             try (BufferedInputStream bis = new BufferedInputStream(
                 Files.newInputStream(cachefile.toPath()))) {
                 cache.load(bis);
@@ -155,7 +155,7 @@ public class PropertiesfileCache implements Cache {
         if (!cacheDirty) {
             return;
         }
-        if ((cachefile != null) && cache.propertyNames().hasMoreElements()) {
+        if (cachefile != null && cache.propertyNames().hasMoreElements()) {
             try (BufferedOutputStream bos = new BufferedOutputStream(
                 Files.newOutputStream(cachefile.toPath()))) {
                 cache.store(bos, null);

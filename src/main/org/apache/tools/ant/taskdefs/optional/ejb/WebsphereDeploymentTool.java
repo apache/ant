@@ -696,8 +696,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         JarEntry genericEntry = genericEntries.get(filepath);
                         JarEntry wasEntry = wasEntries.get(filepath);
 
-                        if ((genericEntry.getCrc() != wasEntry.getCrc())
-                            || (genericEntry.getSize() != wasEntry.getSize())) {
+                        if (genericEntry.getCrc() != wasEntry.getCrc()
+                            || genericEntry.getSize() != wasEntry.getSize()) {
 
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface

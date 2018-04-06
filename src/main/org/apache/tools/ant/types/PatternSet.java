@@ -159,7 +159,7 @@ public class PatternSet extends DataType implements Cloneable {
             } else {
                 buf.append(name);
             }
-            if ((ifCond != null) || (unlessCond != null)) {
+            if (ifCond != null || unlessCond != null) {
                 buf.append(":");
                 String connector = "";
 

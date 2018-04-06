@@ -207,7 +207,7 @@ public class IPlanetEjbcTask extends Task {
                 "The standard EJB descriptor must be specified using the \"ejbdescriptor\" attribute.";
             throw new BuildException(msg, getLocation());
         }
-        if ((!ejbdescriptor.exists()) || (!ejbdescriptor.isFile())) {
+        if (!ejbdescriptor.exists() || !ejbdescriptor.isFile()) {
             String msg = "The standard EJB descriptor (" + ejbdescriptor
                 + ") was not found or isn't a file.";
             throw new BuildException(msg, getLocation());
@@ -218,7 +218,7 @@ public class IPlanetEjbcTask extends Task {
                 "The iAS-speific XML descriptor must be specified using the \"iasdescriptor\" attribute.";
             throw new BuildException(msg, getLocation());
         }
-        if ((!iasdescriptor.exists()) || (!iasdescriptor.isFile())) {
+        if (!iasdescriptor.exists() || !iasdescriptor.isFile()) {
             String msg = "The iAS-specific XML descriptor (" + iasdescriptor
                 + ") was not found or isn't a file.";
             throw new BuildException(msg, getLocation());
@@ -229,13 +229,13 @@ public class IPlanetEjbcTask extends Task {
                 "The destination directory must be specified using the \"dest\" attribute.";
             throw new BuildException(msg, getLocation());
         }
-        if ((!dest.exists()) || (!dest.isDirectory())) {
+        if (!dest.exists() || !dest.isDirectory()) {
             String msg = "The destination directory (" + dest
                 + ") was not found or isn't a directory.";
             throw new BuildException(msg, getLocation());
         }
 
-        if ((iashome != null) && (!iashome.isDirectory())) {
+        if (iashome != null && !iashome.isDirectory()) {
             String msg =
                 "If \"iashome\" is specified, it must be a valid directory (it was set to "
                     + iashome + ").";

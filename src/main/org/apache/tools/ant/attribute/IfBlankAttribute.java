@@ -34,6 +34,6 @@ public class IfBlankAttribute extends BaseIfAttribute {
      * {@inheritDoc}
      */
     public boolean isEnabled(UnknownElement el, String value) {
-        return convertResult((value == null || "".equals(value)));
+        return convertResult(value == null || value.isEmpty());
     }
 }

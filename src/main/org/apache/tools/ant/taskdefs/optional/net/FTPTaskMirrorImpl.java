@@ -1158,15 +1158,13 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             dsfiles = ds.getIncludedFiles();
         }
 
-        if ((ds.getBasedir() == null)
-            && ((task.getAction() == FTPTask.SEND_FILES)
-                || (task.getAction() == FTPTask.GET_FILES))) {
+        if (ds.getBasedir() == null
+            && (task.getAction() == FTPTask.SEND_FILES || task.getAction() == FTPTask.GET_FILES)) {
             throw new BuildException(
                 "the dir attribute must be set for send and get actions");
         }
         String dir = null;
-        if ((task.getAction() == FTPTask.SEND_FILES)
-            || (task.getAction() == FTPTask.GET_FILES)) {
+        if (task.getAction() == FTPTask.SEND_FILES || task.getAction() == FTPTask.GET_FILES) {
             dir = ds.getBasedir().getAbsolutePath();
         }
 

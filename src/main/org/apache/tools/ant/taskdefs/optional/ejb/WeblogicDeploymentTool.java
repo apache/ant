@@ -713,8 +713,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         JarEntry genericEntry = genericEntries.get(filepath);
                         JarEntry wlEntry = wlEntries.get(filepath);
 
-                        if ((genericEntry.getCrc() != wlEntry.getCrc())
-                            || (genericEntry.getSize() != wlEntry.getSize())) {
+                        if (genericEntry.getCrc() != wlEntry.getCrc()
+                            || genericEntry.getSize() != wlEntry.getSize()) {
 
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface

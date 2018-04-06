@@ -515,7 +515,7 @@ public class Property extends Task {
             loadEnvironment(env);
         }
 
-        if ((name != null) && (ref != null)) {
+        if (name != null && ref != null) {
             try {
                 addProperty(name,
                             ref.getReferencedObject(getProject()).toString());

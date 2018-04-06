@@ -247,7 +247,7 @@ public final class Locator {
             int posi = cwd.indexOf(':');
             boolean pathStartsWithFileSeparator = path.startsWith(File.separator);
             boolean pathStartsWithUNC = path.startsWith("" + File.separator + File.separator);
-            if ((posi > 0) && pathStartsWithFileSeparator && !pathStartsWithUNC) {
+            if (posi > 0 && pathStartsWithFileSeparator && !pathStartsWithUNC) {
                 path = cwd.substring(0, posi + 1) + path;
             }
         } catch (UnsupportedEncodingException exc) {
@@ -470,6 +470,7 @@ public final class Locator {
      * @exception MalformedURLException if the URLs for the files cannot be
      *            formed.
      */
+    @SuppressWarnings("deprecated")
     public static URL[] getLocationURLs(File location,
                                         final String... extensions)
             throws MalformedURLException {

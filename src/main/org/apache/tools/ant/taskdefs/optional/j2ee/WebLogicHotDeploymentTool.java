@@ -88,7 +88,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
         String action = getTask().getAction();
 
         // check that the password has been set
-        if ((getPassword() == null)) {
+        if (getPassword() == null) {
             throw new BuildException("The password attribute must be set.");
         }
 

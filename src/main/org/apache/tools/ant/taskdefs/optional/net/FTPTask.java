@@ -744,7 +744,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
             throw new BuildException("password attribute must be set!");
         }
 
-        if ((action == LIST_FILES) && (listing == null)) {
+        if (action == LIST_FILES && listing == null) {
             throw new BuildException(
                 "listing attribute must be set for list action!");
         }

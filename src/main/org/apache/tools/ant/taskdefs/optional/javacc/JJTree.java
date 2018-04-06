@@ -302,7 +302,7 @@ public class JJTree extends Task {
                                                 outputDir);
         String jjtreeFile = destFile.getAbsolutePath().replace('\\', '/');
 
-        if ((optionalOutputFile == null) || optionalOutputFile.isEmpty()) {
+        if (optionalOutputFile == null || optionalOutputFile.isEmpty()) {
             int filePos = jjtreeFile.lastIndexOf('/');
 
             if (filePos >= 0) {
@@ -325,7 +325,7 @@ public class JJTree extends Task {
             }
         }
 
-        if ((outputDir == null) || outputDir.isEmpty()) {
+        if (outputDir == null || outputDir.isEmpty()) {
             outputDir = getDefaultOutputDirectory();
         }
 
@@ -350,7 +350,7 @@ public class JJTree extends Task {
             return null;
         }
 
-        if ((outputDir == null)
+        if (outputDir == null
             && (destFile.startsWith("/") || destFile.startsWith("\\"))) {
             String relativeOutputFile = makeOutputFileRelative(destFile);
             setOutputfile(relativeOutputFile);

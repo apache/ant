@@ -884,7 +884,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     @Override
     public void validateConfigured() throws BuildException {
-        if ((destDir == null) || (!destDir.isDirectory())) {
+        if (destDir == null || !destDir.isDirectory()) {
             throw new BuildException(
                 "A valid destination directory must be specified using the \"destdir\" attribute.",
                 getLocation());

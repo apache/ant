@@ -155,12 +155,12 @@ public class Replace extends MatchingTask {
             }
 
             //value and property are mutually exclusive attributes
-            if ((value != null) && (property != null)) {
+            if (value != null && property != null) {
                 throw new BuildException(
                     "Either value or property can be specified, but a replacefilter element cannot have both.");
             }
 
-            if ((property != null)) {
+            if (property != null) {
                 //the property attribute must have access to a property file
                 if (propertyResource == null) {
                     throw new BuildException(
@@ -305,7 +305,7 @@ public class Replace extends MatchingTask {
             String t = getToken();
             if (inputBuffer.length() > t.length()) {
                 int pos = replace();
-                pos = Math.max((inputBuffer.length() - t.length()), pos);
+                pos = Math.max(inputBuffer.length() - t.length(), pos);
                 outputBuffer.append(inputBuffer.substring(0, pos));
                 inputBuffer.delete(0, pos);
                 return true;

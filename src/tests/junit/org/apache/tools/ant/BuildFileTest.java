@@ -402,7 +402,7 @@ public abstract class BuildFileTest extends TestCase {
             executeTarget(target);
         } catch (BuildException ex) {
             buildException = ex;
-            if ((null != msg) && (!ex.getMessage().equals(msg))) {
+            if (null != msg && !ex.getMessage().equals(msg)) {
                 fail("Should throw BuildException because '" + cause
                         + "' with message '" + msg
                         + "' (actual message '" + ex.getMessage() + "' instead)");

@@ -288,7 +288,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         }
 
         int blockSize = this.in.read();
-        if ((blockSize < '1') || (blockSize > '9')) {
+        if (blockSize < '1' || blockSize > '9') {
             throw new IOException("Stream is not BZip2 formatted: illegal "
                                   + "blocksize " + (char) blockSize);
         }
@@ -662,7 +662,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
         int minLens_zt  = minLens[zt];
 
         while (nextSym != eob) {
-            if ((nextSym == RUNA) || (nextSym == RUNB)) {
+            if (nextSym == RUNA || nextSym == RUNB) {
                 int s = -1;
 
                 for (int n = 1; true; n <<= 1) {
@@ -855,7 +855,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             tt[cftab[ll8[i] & 0xff]++] = i;
         }
 
-        if ((this.origPtr < 0) || (this.origPtr >= tt.length)) {
+        if (this.origPtr < 0 || this.origPtr >= tt.length) {
             throw new IOException("stream corrupted");
         }
 
@@ -1039,7 +1039,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
             // it can happen, if the compressor mixed small and large
             // blocks.  Normally only the last block will be smaller
             // than others.
-            if ((ttShadow == null) || (ttShadow.length < length)) {
+            if (ttShadow == null || ttShadow.length < length) {
                 this.tt = ttShadow = new int[length];
             }
 

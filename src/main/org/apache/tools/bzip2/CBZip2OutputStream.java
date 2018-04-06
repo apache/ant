@@ -1008,18 +1008,17 @@ public class CBZip2OutputStream extends OutputStream
             int ge = gs - 1;
             int aFreq = 0;
 
-            for (final int a = alphaSize - 1; (aFreq < tFreq) && (ge < a);) {
+            while (aFreq < tFreq && ge < alphaSize - 1) {
                 aFreq += mtfFreq[++ge];
             }
 
-            if ((ge > gs) && (nPart != nGroups) && (nPart != 1)
-                && (((nGroups - nPart) & 1) != 0)) {
+            if (ge > gs && nPart != nGroups && nPart != 1 && (nGroups - nPart & 1) != 0) {
                 aFreq -= mtfFreq[ge--];
             }
 
             final byte[] len_np = len[nPart - 1];
             for (int v = alphaSize; --v >= 0;) {
-                if ((v >= gs) && (v <= ge)) {
+                if (v >= gs && v <= ge) {
                     len_np[v] = LESSER_ICOST;
                 } else {
                     len_np[v] = GREATER_ICOST;

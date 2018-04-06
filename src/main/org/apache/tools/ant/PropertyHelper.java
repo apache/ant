@@ -1167,7 +1167,6 @@ public class PropertyHelper implements GetProperty {
      */
     private static boolean nullOrEmpty(Object value) {
         return value == null || "".equals(value);
-
     }
 
     /**

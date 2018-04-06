@@ -219,7 +219,7 @@ public class CCCheckout extends ClearCase {
 
         String result = runS(cmdl);
 
-        return (result != null && result.length() > 0);
+        return result != null && !result.isEmpty();
     }
 
     /**

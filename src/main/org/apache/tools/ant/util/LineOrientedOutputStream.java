@@ -53,7 +53,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
     @Override
     public final void write(int cc) throws IOException {
         final byte c = (byte) cc;
-        if ((c == LF) || (c == CR)) {
+        if (c == LF || c == CR) {
             if (!skip) {
               processBuffer();
             }

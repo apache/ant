@@ -221,7 +221,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @since 1.8.2
      */
     String getMethodsString() {
-        if ((methodsList == null) && methodsSpecified) {
+        if (methodsList == null && methodsSpecified) {
             if (methods.length == 0) {
                 methodsList = "";
             } else if (methods.length == 1) {
@@ -246,7 +246,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      * @since 1.8.2
      */
     void resolveMethods() {
-        if ((methods == null) && methodsSpecified) {
+        if (methods == null && methodsSpecified) {
             try {
                 methods = parseTestMethodNamesList(methodsList);
             } catch (IllegalArgumentException ex) {

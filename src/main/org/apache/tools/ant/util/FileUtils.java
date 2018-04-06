@@ -666,7 +666,7 @@ public class FileUtils {
         filename = filename.replace('/', sep).replace('\\', sep);
         char c = filename.charAt(0);
         if (!ON_DOS && !ON_NETWARE) {
-            return (c == sep);
+            return c == sep;
         }
         if (c == sep) {
             // CheckStyle:MagicNumber OFF

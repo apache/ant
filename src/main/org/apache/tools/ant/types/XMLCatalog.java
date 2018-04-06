@@ -435,7 +435,7 @@ public class XMLCatalog extends DataType
                 } else {
                     baseURL = new URL(base);
                 }
-                URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
+                URL url = uri.isEmpty() ? baseURL : new URL(baseURL, uri);
                 source.setInputSource(new InputSource(url.toString()));
             } catch (MalformedURLException ex) {
                 // At this point we are probably in failure mode, but

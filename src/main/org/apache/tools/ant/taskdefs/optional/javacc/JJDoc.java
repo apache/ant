@@ -191,7 +191,7 @@ public class JJDoc extends Task {
             suffix = DEFAULT_SUFFIX_TEXT;
         }
 
-        if ((optionalOutputFile == null) || optionalOutputFile.isEmpty()) {
+        if (optionalOutputFile == null || optionalOutputFile.isEmpty()) {
             int filePos = javaccFile.lastIndexOf('/');
 
             if (filePos >= 0) {

@@ -404,7 +404,7 @@ public class ReplaceRegExp extends Task {
 
                                 linebuf = new StringBuilder();
                             } else { // any other char
-                                if ((hasCR) || (c < 0)) {
+                                if (hasCR || c < 0) {
                                     // Mac-style linebreak or EOF (or both)
                                     changes |= replaceAndWrite(linebuf.toString(),
                                                                w, options);

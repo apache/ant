@@ -70,7 +70,7 @@ public class FileList extends DataType implements ResourceCollection {
      */
     @Override
     public void setRefid(Reference r) throws BuildException {
-        if ((dir != null) || (!filenames.isEmpty())) {
+        if (dir != null || !filenames.isEmpty()) {
             throw tooManyAttributes();
         }
         super.setRefid(r);

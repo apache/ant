@@ -211,12 +211,12 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
 
         File iasDescriptor = new File(getConfig().descriptorDir,
                                         getIasDescriptorName());
-        if ((!iasDescriptor.exists()) || (!iasDescriptor.isFile())) {
+        if (!iasDescriptor.exists() || !iasDescriptor.isFile()) {
             throw new BuildException("The iAS-specific EJB descriptor ("
                 + iasDescriptor + ") was not found.", getLocation());
         }
 
-        if ((iashome != null) && (!iashome.isDirectory())) {
+        if (iashome != null && !iashome.isDirectory()) {
             throw new BuildException(
                 "If \"iashome\" is specified, it must be a valid directory (it was set to "
                     + iashome + ").",

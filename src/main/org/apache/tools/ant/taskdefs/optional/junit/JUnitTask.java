@@ -2168,7 +2168,7 @@ public class JUnitTask extends Task {
             if (test.shouldRun(getProject())) {
                 /* with multi-threaded runs need to defer execution of even */
                 /* individual tests so the threads can pick tests off the queue. */
-                if ((runIndividual || !test.getFork()) && (threads == 1)) {
+                if ((runIndividual || !test.getFork()) && threads == 1) {
                     execute(test, 0);
                 } else {
                     testConfigurations

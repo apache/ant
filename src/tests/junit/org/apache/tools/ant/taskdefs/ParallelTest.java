@@ -100,7 +100,7 @@ public class ParallelTest {
         int firstPipe = s.indexOf('|', start);
         int beginSlash = s.indexOf('/', firstPipe);
         int lastPipe = s.indexOf('|', beginSlash);
-        if ((firstPipe == -1) || (beginSlash == -1) || (lastPipe == -1)) {
+        if (firstPipe == -1 || beginSlash == -1 || lastPipe == -1) {
             return -1;
         }
 

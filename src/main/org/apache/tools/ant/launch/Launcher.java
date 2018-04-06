@@ -344,7 +344,7 @@ public class Launcher {
         if (antLibDirProperty != null) {
             antLibDir = new File(antLibDirProperty);
         }
-        if ((antLibDir == null) || !antLibDir.exists()) {
+        if (antLibDir == null || !antLibDir.exists()) {
             antLibDir = antLauncherDir;
             setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
         }

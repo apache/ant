@@ -585,7 +585,7 @@ public class Redirector {
             }
 
             if ((outputFilterChains != null && outputFilterChains.size() > 0)
-                    || !(outputEncoding.equalsIgnoreCase(inputEncoding))) {
+                    || !outputEncoding.equalsIgnoreCase(inputEncoding)) {
                 try {
                     final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
@@ -627,7 +627,7 @@ public class Redirector {
             }
 
             if ((errorFilterChains != null && errorFilterChains.size() > 0)
-                    || !(errorEncoding.equalsIgnoreCase(inputEncoding))) {
+                    || !errorEncoding.equalsIgnoreCase(inputEncoding)) {
                 try {
                     final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
