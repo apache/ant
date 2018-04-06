@@ -1108,9 +1108,9 @@ public class Jar extends Zip {
                 String name = resources[0][j].getName().replace('\\', '/');
                 if (rcs[i] instanceof ArchiveFileSet) {
                     ArchiveFileSet afs = (ArchiveFileSet) rcs[i];
-                    if (!"".equals(afs.getFullpath(getProject()))) {
+                    if (!afs.getFullpath(getProject()).isEmpty()) {
                         name = afs.getFullpath(getProject());
-                    } else if (!"".equals(afs.getPrefix(getProject()))) {
+                    } else if (!afs.getPrefix(getProject()).isEmpty()) {
                         String prefix = afs.getPrefix(getProject());
                         if (!prefix.endsWith("/") && !prefix.endsWith("\\")) {
                             prefix += "/";

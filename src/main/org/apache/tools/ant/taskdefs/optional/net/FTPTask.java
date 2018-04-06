@@ -941,7 +941,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
          */
         public long getMilliseconds(int action) {
             String granularityU = getValue().toUpperCase(Locale.ENGLISH);
-            if ("".equals(granularityU)) {
+            if (granularityU.isEmpty()) {
                 if (action == SEND_FILES) {
                     return GRANULARITY_MINUTE;
                 }

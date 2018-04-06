@@ -149,7 +149,7 @@ public class Replace extends MatchingTask {
                     "token is a mandatory for replacefilter.");
             }
 
-            if ("".equals(token.getText())) {
+            if (token.getText().isEmpty()) {
                 throw new BuildException(
                     "The token must not be an empty string.");
             }
@@ -586,7 +586,7 @@ public class Replace extends MatchingTask {
                 "Either token or a nested replacefilter must be specified",
                 getLocation());
         }
-        if (token != null && "".equals(token.getText())) {
+        if (token != null && token.getText().isEmpty()) {
             throw new BuildException(
                 "The token attribute must not be an empty string.",
                 getLocation());

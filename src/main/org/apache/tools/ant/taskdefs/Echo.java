@@ -61,15 +61,12 @@ public class Echo extends Task {
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
-        final String msg = "".equals(message) ? StringUtils.LINE_SEP : message;
         try {
-            ResourceUtils
-                    .copyResource(new StringResource(msg), output == null
-                                  ? new LogOutputResource(this, logLevel)
-                                  : output,
-                                  null, null, false, false, append, null,
-                                  "".equals(encoding) ? null : encoding,
-                                  getProject(), force);
+            ResourceUtils.copyResource(
+                    new StringResource(message.isEmpty() ? StringUtils.LINE_SEP : message),
+                    output == null ? new LogOutputResource(this, logLevel) : output,
+                    null, null, false, false, append, null,
+                    encoding.isEmpty() ? null : encoding, getProject(), force);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         }

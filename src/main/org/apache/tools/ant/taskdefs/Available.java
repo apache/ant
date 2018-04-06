@@ -159,7 +159,7 @@ public class Available extends Task implements Condition {
      * @param classname the name of the class required.
      */
     public void setClassname(String classname) {
-        if (!"".equals(classname)) {
+        if (!classname.isEmpty()) {
             this.classname = classname;
         }
     }

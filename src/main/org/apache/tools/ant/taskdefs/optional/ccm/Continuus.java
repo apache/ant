@@ -103,7 +103,7 @@ public abstract class Continuus extends Task {
      */
     protected final String getCcmCommand() {
         String toReturn = ccmDir;
-        if (!"".equals(toReturn) && !toReturn.endsWith("/")) {
+        if (!toReturn.isEmpty() && !toReturn.endsWith("/")) {
             toReturn += "/";
         }
 

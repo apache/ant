@@ -395,11 +395,11 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     return;
                 }
                 String completePath;
-                if (!"".equals(vpath)) {
+                if (vpath.isEmpty()) {
+                    completePath = rootPath;
+                } else {
                     completePath = rootPath + task.getSeparator()
                         + vpath.replace(File.separatorChar, task.getSeparator().charAt(0));
-                } else {
-                    completePath = rootPath;
                 }
                 FTPFile[] newfiles = listFiles(completePath, false);
 

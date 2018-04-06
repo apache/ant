@@ -434,7 +434,7 @@ public class Ant extends Task {
             addReferences();
 
             if (!locals.isEmpty() && !(locals.size() == 1
-                                       && "".equals(locals.get(0)))) {
+                    && locals.get(0) != null && locals.get(0).isEmpty())) {
                 BuildException be = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
@@ -670,7 +670,7 @@ public class Ant extends Task {
      * @param targetToAdd the name of the target to invoke.
      */
     public void setTarget(String targetToAdd) {
-        if ("".equals(targetToAdd)) {
+        if (targetToAdd.isEmpty()) {
             throw new BuildException("target attribute must not be empty");
         }
         targets.add(targetToAdd);
@@ -720,7 +720,7 @@ public class Ant extends Task {
                 "nested target is incompatible with the target attribute");
         }
         String name = t.getName();
-        if ("".equals(name)) {
+        if (name.isEmpty()) {
             throw new BuildException("target name must not be empty");
         }
         targets.add(name);

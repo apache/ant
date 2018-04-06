@@ -47,17 +47,17 @@ public class DefaultExcludes extends Task {
      */
     @Override
     public void execute() throws BuildException {
-        if (!defaultrequested && "".equals(add) && "".equals(remove) && !echo) {
+        if (!defaultrequested && add.isEmpty() && remove.isEmpty() && !echo) {
             throw new BuildException(
                 "<defaultexcludes> task must set at least one attribute (echo=\"false\" doesn't count since that is the default");
         }
         if (defaultrequested) {
             DirectoryScanner.resetDefaultExcludes();
         }
-        if (!"".equals(add)) {
+        if (!add.isEmpty()) {
             DirectoryScanner.addDefaultExclude(add);
         }
-        if (!"".equals(remove)) {
+        if (!remove.isEmpty()) {
             DirectoryScanner.removeDefaultExclude(remove);
         }
         if (echo) {
