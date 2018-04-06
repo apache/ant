@@ -55,10 +55,10 @@ public class ManifestTest {
     private File outDir;
 
     public static final String LONG_LINE
-        = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich" +
-          "IsSureToLeadToHundredsOfQuestionsAboutWhyAntMungesManifests" +
-          "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas" +
-          "AProblemWithThatItIsNotABugInAnt";
+            = "AReallyLongLineToTestLineBreakingInManifests-ACapabilityWhich"
+            + "IsSureToLeadToHundredsOfQuestionsAboutWhyAntMungesManifests"
+            + "OfCourseTheAnswerIsThatIsWhatTheSpecRequiresAndIfAnythingHas"
+            + "AProblemWithThatItIsNotABugInAnt";
 
     public static final String LONG_70_NAME
         = "ThisNameIsJustSeventyCharactersWhichIsAllowedAccordingToTheSpecsFiller";

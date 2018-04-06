@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * Base class for the uuencode/decode test tasks.
  */
 abstract public class BaseTask extends Task {
-    private final static FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
     private File inFile;
     private File outFile;
 

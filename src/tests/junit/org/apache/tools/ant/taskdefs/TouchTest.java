@@ -193,7 +193,7 @@ public class TouchTest {
      * @param timestamp long
      * @param time long
      */
-    public void assertTimesNearlyMatch(long timestamp,long time) {
+    public void assertTimesNearlyMatch(long timestamp, long time) {
         long granularity= FILE_UTILS.getFileTimestampGranularity();
         assertTimesNearlyMatch(timestamp, time, granularity);
     }

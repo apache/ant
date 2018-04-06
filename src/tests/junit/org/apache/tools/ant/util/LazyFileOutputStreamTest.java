@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class LazyFileOutputStreamTest {
     private LazyFileOutputStream los;
-    private final static File f = new File("test.txt");
+    private static final File f = new File("test.txt");
 
     @Before
     public void setUp() {

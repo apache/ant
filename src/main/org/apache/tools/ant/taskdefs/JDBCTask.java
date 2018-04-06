@@ -60,7 +60,7 @@ public class SQLExampleTask extends JDBCTask {
         Statement stmt=null;
         try {
             if (tableName == null) {
-                throw new BuildException("TableName must be specified",location);
+                throw new BuildException("TableName must be specified", location);
             }
             String sql = "SELECT * FROM "+tableName;
             stmt= conn.createStatement();

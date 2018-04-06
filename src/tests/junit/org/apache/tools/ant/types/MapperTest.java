@@ -222,7 +222,7 @@ public class MapperTest {
         String[] targets = fileNameMapper.mapFileName("a");
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 2, targets.length);
-        List list = Arrays.asList(targets);
+        List<String> list = Arrays.asList(targets);
         assertTrue("cannot find expected target \"def\"", list.contains("def"));
         assertTrue("cannot find expected target \"ghi\"", list.contains("ghi"));
 
