@@ -1830,8 +1830,8 @@ public class Project implements ResourceFactory {
         }
         final StringBuilder buf = new StringBuilder();
         for (String root : roots) {
-            buf.append((buf.length() == 0) ? "Build sequence for target(s) `"
-                    : ", `").append(root).append('\'');
+            buf.append((buf.length() > 0) ? ", `" : "Build sequence for target(s) `")
+                    .append(root).append('\'');
         }
         buf.append(" is ").append(ret);
         log(buf.toString(), MSG_VERBOSE);

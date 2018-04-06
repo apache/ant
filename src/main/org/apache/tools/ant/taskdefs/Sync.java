@@ -19,9 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;

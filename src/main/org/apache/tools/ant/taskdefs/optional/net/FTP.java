@@ -27,9 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -959,7 +957,7 @@ public class FTP extends Task implements FTPTaskConfig {
             private String getRelativePath(String currentPath, String currentRelativePath) {
                 List<String> pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
                 List<String> pathElements2 = SelectorUtils.tokenizePath(currentPath, remoteFileSep);
-                String relPath = currentRelativePath;
+                StringBuilder relPath = new StringBuilder(currentRelativePath);
                 final int size = pathElements.size();
                 for (int pcount = pathElements2.size(); pcount < size; pcount++) {
                     String currentElement = pathElements.get(pcount);
@@ -968,23 +966,23 @@ public class FTP extends Task implements FTPTaskConfig {
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
-                    if (relPath != null && !relPath.isEmpty()) {
-                        relPath += remoteFileSep;
+                    if (relPath.length() > 0) {
+                        relPath.append(remoteFileSep);
                     }
                     if (theFile == null) {
                         // hit a hidden file assume not a symlink
-                        relPath += currentElement;
+                        relPath.append(currentElement);
                         currentPath += remoteFileSep + currentElement;
                         log("Hidden file " + relPath
                             + " assumed to not be a symlink.",
                             Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
-                        relPath += theFile.getName();
+                        relPath.append(theFile.getName());
                         currentPath += remoteFileSep + theFile.getName();
                     }
                 }
-                return relPath;
+                return relPath.toString();
             }
 
             /**

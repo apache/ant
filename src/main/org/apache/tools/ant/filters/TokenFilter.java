@@ -19,7 +19,6 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;

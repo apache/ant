@@ -27,8 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -861,7 +859,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     .tokenizePath(getAbsolutePath(), task.getSeparator());
                 List<String> pathElements2 = SelectorUtils
                     .tokenizePath(currentPath, task.getSeparator());
-                String relPath = currentRelativePath;
+                StringBuilder relPath = new StringBuilder(currentRelativePath);
                 final int size = pathElements.size();
                 for (int pcount = pathElements2.size(); pcount < size; pcount++) {
                     String currentElement = pathElements.get(pcount);
@@ -870,23 +868,23 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
-                    if (relPath != null && !relPath.isEmpty()) {
-                        relPath += task.getSeparator();
+                    if (relPath.length() > 0) {
+                        relPath.append(task.getSeparator());
                     }
                     if (theFile == null) {
                         // hit a hidden file assume not a symlink
-                        relPath += currentElement;
+                        relPath.append(currentElement);
                         currentPath += task.getSeparator() + currentElement;
                         task.log("Hidden file " + relPath
                                  + " assumed to not be a symlink.",
                                  Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
-                        relPath += theFile.getName();
+                        relPath.append(theFile.getName());
                         currentPath += task.getSeparator() + theFile.getName();
                     }
                 }
-                return relPath;
+                return relPath.toString();
             }
 
             /**
