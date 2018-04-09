@@ -195,7 +195,7 @@ public class SummaryJUnitResultFormatter
             }
 
             if (systemError != null && !systemError.isEmpty()) {
-                sb.append(String.format("Output:%n%s%n", systemError));
+                sb.append(String.format("Error: %n%s%n", systemError));
             }
         }
 
