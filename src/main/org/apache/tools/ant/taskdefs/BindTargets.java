@@ -65,7 +65,7 @@ public class BindTargets extends Task {
         }
 
         if (getOwningTarget() == null
-                || getOwningTarget().getName().isEmpty()) {
+                || !getOwningTarget().getName().isEmpty()) {
             throw new BuildException("bindtargets only allowed as a top-level task");
         }
 
