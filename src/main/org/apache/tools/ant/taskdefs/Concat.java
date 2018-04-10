@@ -595,7 +595,7 @@ public class Concat extends Task implements ResourceCollection {
      */
     @Deprecated
     public void setForce(boolean forceOverwrite) {
-        setOverwrite(forceOverwrite);
+        this.forceOverwrite = forceOverwrite;
     }
 
     /**
@@ -605,8 +605,9 @@ public class Concat extends Task implements ResourceCollection {
      *              input files.
      * @since Ant 1.8.2
      */
+    @SuppressWarnings("deprecated")
     public void setOverwrite(boolean forceOverwrite) {
-        this.forceOverwrite = forceOverwrite;
+        setForce(forceOverwrite);
     }
 
     /**
