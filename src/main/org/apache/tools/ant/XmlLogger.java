@@ -208,9 +208,11 @@ public class XmlLogger implements BuildLogger {
      */
     private Stack<TimedElement> getStack() {
         /* For debugging purposes uncomment:
-        org.w3c.dom.Comment s = doc.createComment("stack=" + threadStack);
-        buildElement.element.appendChild(s);
-         */
+        if (threadStacks.containsKey(Thread.currentThread())) {
+            org.w3c.dom.Comment s = doc.createComment("stack=" + threadStacks(Thread.currentThread()));
+            buildElement.element.appendChild(s);
+        }
+        */
         return threadStacks.computeIfAbsent(Thread.currentThread(), k -> new Stack<>());
     }
 
