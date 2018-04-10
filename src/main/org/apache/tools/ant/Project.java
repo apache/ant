@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.helper.DefaultExecutor;
 import org.apache.tools.ant.input.DefaultInputHandler;
@@ -1828,13 +1830,10 @@ public class Project implements ResourceFactory {
                         + root);
             }
         }
-        final StringBuilder buf = new StringBuilder();
-        for (String root : roots) {
-            buf.append((buf.length() > 0) ? ", `" : "Build sequence for target(s) `")
-                    .append(root).append('\'');
-        }
-        buf.append(" is ").append(ret);
-        log(buf.toString(), MSG_VERBOSE);
+        log("Build sequence for target(s)"
+                + Arrays.stream(roots).map(root -> String.format(" `%s'", root))
+                .collect(Collectors.joining(","))
+                + " is " + ret, MSG_VERBOSE);
 
         final Vector<Target> complete = (returnAll) ? ret : new Vector<>(ret);
         for (final Enumeration<String> en = targetTable.keys(); en.hasMoreElements();) {
