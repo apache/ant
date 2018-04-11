@@ -17,13 +17,12 @@
  */
 package org.apache.tools.ant.input;
 
+import java.util.Arrays;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.ReflectUtil;
 
 /**
  * Prompts and requests input.  May loop until a valid input has
- * been entered. Doesn't echo input (requires Java6). If Java6 is not
- * available, falls back to the DefaultHandler (insecure).
+ * been entered. Doesn't echo input.
  * @since Ant 1.7.1
  */
 public class SecureInputHandler extends DefaultInputHandler {
@@ -41,19 +40,10 @@ public class SecureInputHandler extends DefaultInputHandler {
      */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
-        try {
-            Object console = ReflectUtil.invokeStatic(System.class, "console");
-            do {
-                char[] input = ReflectUtil.invoke(
-                    console, "readPassword", String.class, prompt,
-                    Object[].class, null);
-                request.setInput(new String(input));
-                /* for security zero char array after retrieving value */
-                java.util.Arrays.fill(input, ' ');
-            } while (!request.isInputValid());
-        } catch (Exception e) {
-            /* Java6 not present use default handler */
-            super.handleInput(request);
-        }
+        do {
+            char[] input = System.console().readPassword();
+            request.setInput(new String(input));
+            Arrays.fill(input, ' ');
+        } while (!request.isInputValid());
     }
 }
