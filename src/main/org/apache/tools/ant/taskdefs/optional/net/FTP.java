@@ -956,11 +956,10 @@ public class FTP extends Task implements FTPTaskConfig {
              */
             private String getRelativePath(String currentPath, String currentRelativePath) {
                 List<String> pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
-                List<String> pathElements2 = SelectorUtils.tokenizePath(currentPath, remoteFileSep);
-                StringBuilder relPath = new StringBuilder(currentRelativePath);
-                final int size = pathElements.size();
-                for (int pcount = pathElements2.size(); pcount < size; pcount++) {
-                    String currentElement = pathElements.get(pcount);
+                StringBuilder relPath = new StringBuilder(currentRelativePath == null
+                        ? "" : currentRelativePath);
+                for (String currentElement : pathElements.subList(SelectorUtils.tokenizePath(currentPath,
+                        remoteFileSep).size(), pathElements.size())) {
                     FTPFile[] theFiles = listFiles(currentPath);
                     FTPFile theFile = null;
                     if (theFiles != null) {
@@ -973,8 +972,7 @@ public class FTP extends Task implements FTPTaskConfig {
                         // hit a hidden file assume not a symlink
                         relPath.append(currentElement);
                         currentPath += remoteFileSep + currentElement;
-                        log("Hidden file " + relPath
-                            + " assumed to not be a symlink.",
+                        log("Hidden file " + relPath + " assumed to not be a symlink.",
                             Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
