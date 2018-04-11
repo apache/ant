@@ -530,7 +530,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setRecentDateFormatConfig(String recentDateFormat) {
-        if (recentDateFormat != null && recentDateFormat.isEmpty()) {
+        if (recentDateFormat != null && !recentDateFormat.isEmpty()) {
             this.recentDateFormatConfig = recentDateFormat;
             configurationHasBeenSet();
         }
@@ -556,7 +556,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerTimeZoneConfig(String serverTimeZoneId) {
-        if (serverTimeZoneId != null && serverTimeZoneId.isEmpty()) {
+        if (serverTimeZoneId != null && !serverTimeZoneId.isEmpty()) {
             this.serverTimeZoneConfig = serverTimeZoneId;
             configurationHasBeenSet();
         }
