@@ -92,11 +92,8 @@ public abstract class ScriptRunnerBase {
      * @param bean the object to be stored in the script context.
      */
     public void addBean(String key, Object bean) {
-        if (key.isEmpty() || !Character.isJavaIdentifierStart(key.charAt(0))) {
-            return;
-        }
-
-        if (!key.chars().skip(1).allMatch(Character::isJavaIdentifierPart)) {
+        if (key.isEmpty() || !Character.isJavaIdentifierStart(key.charAt(0))
+                || !key.chars().skip(1).allMatch(Character::isJavaIdentifierPart)) {
             return;
         }
 
