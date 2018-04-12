@@ -34,7 +34,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 import org.apache.tools.ant.util.facade.ImplementationSpecificArgument;
 
@@ -484,11 +483,10 @@ public class Javah extends Task {
         if (c.length > 1) {
             message.append("es");
         }
-        message.append(" to be compiled:");
-        message.append(StringUtils.LINE_SEP);
+        message.append(String.format(" to be compiled:%n"));
         for (String element : c) {
             cmd.createArgument().setValue(element);
-            message.append("    ").append(element).append(StringUtils.LINE_SEP);
+            message.append(String.format("    %s%n", element));
         }
         log(message.toString(), Project.MSG_VERBOSE);
     }

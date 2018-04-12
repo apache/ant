@@ -906,7 +906,8 @@ public class SQLExec extends JDBCTask {
     }
 
     private String maybeQuote(String s) {
-        if (csvQuoteChar == null || s == null || (!forceCsvQuoteChar && !s.contains(csvColumnSep) && !s.contains(csvQuoteChar))) {
+        if (csvQuoteChar == null || s == null
+                || (!forceCsvQuoteChar && !s.contains(csvColumnSep) && !s.contains(csvQuoteChar))) {
             return s;
         }
         StringBuilder sb = new StringBuilder(csvQuoteChar);

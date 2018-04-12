@@ -1073,15 +1073,14 @@ public class FileUtils {
         }
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
-        StringBuilder textBuffer = null;
+        StringBuilder textBuffer = new StringBuilder();
         while (bufferLength != -1) {
             bufferLength = rdr.read(buffer);
             if (bufferLength > 0) {
-                textBuffer = (textBuffer == null) ? new StringBuilder() : textBuffer;
                 textBuffer.append(buffer, 0, bufferLength);
             }
         }
-        return (textBuffer == null) ? null : textBuffer.toString();
+        return (textBuffer.length() == 0) ? null : textBuffer.toString();
     }
 
     /**

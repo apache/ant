@@ -62,8 +62,7 @@ public class TarUtils {
             }
 
             public String decode(final byte[] buffer) {
-                final int length = buffer.length;
-                final StringBuilder result = new StringBuilder(length);
+                final StringBuilder result = new StringBuilder(buffer.length);
 
                 for (final byte b : buffer) {
                     if (b == 0) { // Trailing null

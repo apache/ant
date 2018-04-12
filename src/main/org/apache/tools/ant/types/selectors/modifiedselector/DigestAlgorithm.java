@@ -166,11 +166,7 @@ public class DigestAlgorithm implements Algorithm {
             }
             StringBuilder checksumSb = new StringBuilder();
             for (byte digestByte : messageDigest.digest()) {
-                String hexStr = Integer.toHexString(BYTE_MASK & digestByte);
-                if (hexStr.length() < 2) {
-                    checksumSb.append('0');
-                }
-                checksumSb.append(hexStr);
+                checksumSb.append(String.format("%02x", BYTE_MASK & digestByte));
             }
             return checksumSb.toString();
         } catch (IOException ignored) {

@@ -278,7 +278,7 @@ public class RExecTask extends Task {
                 } else {
                     Calendar endTime = Calendar.getInstance();
                     endTime.add(Calendar.SECOND, timeout);
-                int read = 0;
+                    int read = 0;
                     while (read != -1) {
                         while (Calendar.getInstance().before(endTime) && is.available() == 0) {
                             Thread.sleep(PAUSE_TIME);
@@ -289,7 +289,7 @@ public class RExecTask extends Task {
                                                          "Response timed-out waiting for EOF",
                                                          getLocation());
                         }
-                        read =  is.read();
+                        read = is.read();
                         if (read != -1) {
                             char c = (char) read;
                             sb.append(c);

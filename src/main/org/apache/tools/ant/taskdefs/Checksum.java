@@ -578,11 +578,7 @@ public class Checksum extends MatchingTask implements Condition {
     private String createDigestString(byte[] fileDigest) {
         StringBuilder checksumSb = new StringBuilder();
         for (byte digestByte : fileDigest) {
-            String hexStr = Integer.toHexString(BYTE_MASK & digestByte);
-            if (hexStr.length() < 2) {
-                checksumSb.append('0');
-            }
-            checksumSb.append(hexStr);
+            checksumSb.append(String.format("%02x", BYTE_MASK & digestByte));
         }
         return checksumSb.toString();
     }

@@ -38,12 +38,7 @@ public class Native2AsciiUtils {
             if (c <= MAX_ASCII) {
                 sb.append(c);
             } else {
-                sb.append("\\u");
-                String encoded = Integer.toHexString(c);
-                for (int i = encoded.length(); i < 4; i++) {
-                    sb.append("0");
-                }
-                sb.append(encoded);
+                sb.append(String.format("\\u%04x", (int) c));
             }
         }
         return sb.toString();

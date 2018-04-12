@@ -76,9 +76,8 @@ public class ManifestClassPath extends Task {
         final FileUtils fileUtils = FileUtils.getFileUtils();
         dir = fileUtils.normalize(dir.getAbsolutePath());
 
-        String[] elements = path.list();
         StringBuilder buffer = new StringBuilder();
-        for (String element : elements) {
+        for (String element : path.list()) {
             // Normalize the current file
             File pathEntry = new File(element);
             String fullPath = pathEntry.getAbsolutePath();
