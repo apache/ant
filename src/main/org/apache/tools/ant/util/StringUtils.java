@@ -155,8 +155,7 @@ public final class StringUtils {
     public static String resolveBackSlash(String input) {
         StringBuilder b = new StringBuilder();
         boolean backSlashSeen = false;
-        for (int i = 0; i < input.length(); ++i) {
-            char c = input.charAt(i);
+        for (final char c : input.toCharArray()) {
             if (!backSlashSeen) {
                 if (c == '\\') {
                     backSlashSeen = true;

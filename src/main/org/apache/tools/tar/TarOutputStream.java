@@ -521,10 +521,9 @@ public class TarOutputStream extends FilterOutputStream {
     }
 
     private String stripTo7Bits(String name) {
-        final int length = name.length();
-        StringBuilder result = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            char stripped = (char) (name.charAt(i) & 0x7F);
+        StringBuilder result = new StringBuilder(name.length());
+        for (final char ch : name.toCharArray()) {
+            char stripped = (char) (ch & 0x7F);
             if (stripped != 0) { // would be read as Trailing null
                 result.append(stripped);
             }

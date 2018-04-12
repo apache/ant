@@ -185,12 +185,9 @@ public class Concat extends Task implements ResourceCollection {
                 value = "";
             }
             if (trimLeading) {
-                char[] current = value.toCharArray();
-                StringBuilder b = new StringBuilder(current.length);
+                StringBuilder b = new StringBuilder();
                 boolean startOfLine = true;
-                int pos = 0;
-                while (pos < current.length) {
-                    char ch = current[pos++];
+                for (final char ch : value.toCharArray()) {
                     if (startOfLine) {
                         if (ch == ' ' || ch == '\t') {
                             continue;

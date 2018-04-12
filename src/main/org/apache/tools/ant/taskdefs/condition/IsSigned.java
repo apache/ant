@@ -133,10 +133,8 @@ public class IsSigned extends DataType implements Condition {
 
     private static String replaceInvalidChars(final String name) {
         StringBuilder sb = new StringBuilder();
-        final int len = name.length();
         boolean changes = false;
-        for (int i = 0; i < len; i++) {
-            final char ch = name.charAt(i);
+        for (final char ch : name.toCharArray()) {
             if (ManifestTask.VALID_ATTRIBUTE_CHARS.indexOf(ch) < 0) {
                 sb.append("_");
                 changes = true;

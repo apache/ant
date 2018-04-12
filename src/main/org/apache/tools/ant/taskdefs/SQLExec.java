@@ -911,10 +911,8 @@ public class SQLExec extends JDBCTask {
             return s;
         }
         StringBuilder sb = new StringBuilder(csvQuoteChar);
-        int len = s.length();
         char q = csvQuoteChar.charAt(0);
-        for (int i = 0; i < len; i++) {
-            char c = s.charAt(i);
+        for (final char c : s.toCharArray()) {
             if (c == q) {
                 sb.append(q);
             }

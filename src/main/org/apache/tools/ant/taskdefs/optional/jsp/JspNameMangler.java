@@ -92,8 +92,7 @@ public class JspNameMangler implements JspMangler {
             modifiedClassName.append(mangleChar(firstChar));
         }
         // this is the rest
-        for (int i = 1; i < className.length(); i++) {
-            char subChar = className.charAt(i);
+        for (final char subChar : className.substring(1).toCharArray()) {
             if (Character.isJavaIdentifierPart(subChar)) {
                 modifiedClassName.append(subChar);
             } else {
