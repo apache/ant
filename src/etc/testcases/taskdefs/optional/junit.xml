@@ -354,4 +354,19 @@
     </junit>
   </target>
 
+  <target name="testCheckForkedPath">
+    <property name="includeantruntime" value="yes" />
+    <!-- duplicate the Ant classes into a jar -->
+    <jar destfile="${output}/ant.jar" basedir="${antclasses}" />
+    <junit fork="yes" haltonerror="true" haltonfailure="true"
+             showoutput="${showoutput}" includeantruntime="${includeantruntime}">
+      <test name="org.example.junit.Output" />
+      <classpath>
+        <pathelement location="../../../../../build/testcases" />
+        <pathelement location="${junitjar}" />
+        <pathelement location="${output}/ant.jar" />
+      </classpath>
+    </junit>
+  </target>
+
 </project>

@@ -577,6 +577,36 @@ public class JUnitTaskTest {
         }
     }
 
+    private void setupCheckDuplicateTest() {
+        final String projectResourceName =
+                LoaderUtils.classNameToResource(Project.class.getName());
+        final File antclasses = LoaderUtils.getResourceSource(
+                Project.class.getClassLoader(), projectResourceName);
+        final String testResourceName =
+                LoaderUtils.classNameToResource(junit.framework.Test.class.getName());
+        final File junitJar = LoaderUtils.getResourceSource(
+                Project.class.getClassLoader(), testResourceName);
+        buildRule.getProject().setProperty("antclasses", antclasses.getAbsolutePath());
+        buildRule.getProject().setProperty("junitjar", junitJar.getAbsolutePath());
+    }
+
+    @Test
+    public void testCheckDuplicateAntJar() throws Exception {
+        setupCheckDuplicateTest();
+        buildRule.executeTarget("testCheckForkedPath");
+        assertTrue("Expecting the warning about the duplicate ant jar",
+                buildRule.getLog().contains("WARNING: multiple versions of ant detected in path for junit"));
+    }
+
+    @Test
+    public void testCheckNonDuplicateAntJar() throws Exception {
+        setupCheckDuplicateTest();
+        buildRule.getProject().setProperty("includeantruntime", "no");
+        buildRule.executeTarget("testCheckForkedPath");
+        assertFalse("Unexpected warning about the duplicate ant jar",
+                buildRule.getLog().contains("WARNING: multiple versions of ant detected in path for junit"));
+    }
+
     private void delete(File f) {
         if (f.isDirectory()) {
             final File[] clds = f.listFiles();
