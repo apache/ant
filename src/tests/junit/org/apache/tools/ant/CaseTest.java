@@ -21,9 +21,7 @@ package org.apache.tools.ant;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Simple tests of build file processing
@@ -32,6 +30,9 @@ public class CaseTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -49,15 +50,12 @@ public class CaseTest {
 
     /**
      * Test whether the build file uses case when determining
-     * task names.
+     * task names. Task name should be case sensitive.
      */
     @Test
     public void testTaskCase() {
-        try {
-            buildRule.executeTarget("taskcase");
-            fail("Build exception should have been thrown due to case sensitivity of name");
-        } catch (BuildException ex) {
-            assertContains("Task names should be case sensitive", "Problem: failed to create task or type ecHO", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Problem: failed to create task or type ecHO");
+        buildRule.executeTarget("taskcase");
     }
 }

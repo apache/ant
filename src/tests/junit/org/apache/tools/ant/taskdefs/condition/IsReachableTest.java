@@ -23,10 +23,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * test for reachable things
@@ -36,10 +33,12 @@ public class IsReachableTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
-        buildRule.configureProject(
-                "src/etc/testcases/taskdefs/conditions/isreachable.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/conditions/isreachable.xml");
     }
 
     @Test
@@ -64,52 +63,37 @@ public class IsReachableTest {
 
     @Test
     public void testBoth() {
-        try {
-           buildRule.executeTarget("testBoth");
-           fail("Build exception expected: error on two targets");
-        } catch (BuildException ex) {
-            assertEquals(IsReachable.ERROR_BOTH_TARGETS, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(IsReachable.ERROR_BOTH_TARGETS);
+        buildRule.executeTarget("testBoth");
     }
 
     @Test
     public void testNoTargets() {
-        try {
-            buildRule.executeTarget("testNoTargets");
-            fail("Build exception expected: no params");
-        } catch (BuildException ex) {
-            assertEquals(IsReachable.ERROR_NO_HOSTNAME, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(IsReachable.ERROR_NO_HOSTNAME);
+        buildRule.executeTarget("testNoTargets");
     }
 
     @Test
     public void testBadTimeout() {
-        try {
-            buildRule.executeTarget("testBadTimeout");
-            fail("Build exception expected: error on -ve timeout");
-        } catch (BuildException ex) {
-            assertEquals(IsReachable.ERROR_BAD_TIMEOUT, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(IsReachable.ERROR_BAD_TIMEOUT);
+        buildRule.executeTarget("testBadTimeout");
     }
 
     @Test
     @Ignore("Previously named in a way to prevent execution")
     public void NotestFile() {
-        try {
-            buildRule.executeTarget("testFile");
-            fail("Build exception expected: error on file URL");
-        } catch (BuildException ex) {
-            assertEquals(IsReachable.ERROR_NO_HOST_IN_URL, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(IsReachable.ERROR_NO_HOST_IN_URL);
+        buildRule.executeTarget("testFile");
     }
 
     @Test
     public void testBadURL() {
-        try {
-            buildRule.executeTarget("testBadURL");
-            fail("Build exception expected: error in URL");
-        } catch (BuildException ex) {
-            assertContains(IsReachable.ERROR_BAD_URL, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(IsReachable.ERROR_BAD_URL);
+        buildRule.executeTarget("testBadURL");
     }
 }

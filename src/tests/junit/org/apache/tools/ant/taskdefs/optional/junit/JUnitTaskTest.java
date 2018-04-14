@@ -17,15 +17,16 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
-import static org.apache.tools.ant.AntAssert.assertNotContains;
-import static org.apache.tools.ant.AntAssert.assertContains;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -179,26 +180,26 @@ public class JUnitTaskTest {
                    collectorFile.exists());
         // the passing test cases
         buildRule.executeTarget("A.test01");
-        assertContains("1st run: should run A.test01", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run A.test01"));
         buildRule.executeTarget("B.test05");
-        assertContains("1st run: should run B.test05", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run B.test05"));
         buildRule.executeTarget("B.test06");
-        assertContains("1st run: should run B.test06", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run B.test06"));
         buildRule.executeTarget("C.test07");
-        assertContains("1st run: should run C.test07", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run C.test07"));
         buildRule.executeTarget("C.test08");
-        assertContains("1st run: should run C.test08", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run C.test08"));
         buildRule.executeTarget("C.test09");
-        assertContains("1st run: should run C.test09", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run C.test09"));
         // the failing test cases
         buildRule.executeTarget("A.test02");
-        assertContains("1st run: should run A.test02", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run A.test02"));
         buildRule.executeTarget("A.test03");
-        assertContains("1st run: should run A.test03", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run A.test03"));
         buildRule.executeTarget("B.test04");
-        assertContains("1st run: should run B.test04", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run B.test04"));
         buildRule.executeTarget("D.test10");
-        assertContains("1st run: should run D.test10", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("1st run: should run D.test10"));
 
 
         // 2nd junit run: should do only failing tests
@@ -208,26 +209,26 @@ public class JUnitTaskTest {
                    collectorFile.exists());
         // the passing test cases
         buildRule.executeTarget("A.test01");
-        assertNotContains("2nd run: should not run A.test01", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run A.test01")));
         buildRule.executeTarget("B.test05");
-        assertNotContains("2nd run: should not run A.test05", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run A.test05")));
         buildRule.executeTarget("B.test06");
-        assertNotContains("2nd run: should not run B.test06", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run B.test06")));
         buildRule.executeTarget("C.test07");
-        assertNotContains("2nd run: should not run C.test07", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run C.test07")));
         buildRule.executeTarget("C.test08");
-        assertNotContains("2nd run: should not run C.test08", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run C.test08")));
         buildRule.executeTarget("C.test09");
-        assertNotContains("2nd run: should not run C.test09", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("2nd run: should not run C.test09")));
         // the failing test cases
         buildRule.executeTarget("A.test02");
-        assertContains("2nd run: should run A.test02", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("2nd run: should run A.test02"));
         buildRule.executeTarget("A.test03");
-        assertContains("2nd run: should run A.test03", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("2nd run: should run A.test03"));
         buildRule.executeTarget("B.test04");
-        assertContains("2nd run: should run B.test04", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("2nd run: should run B.test04"));
         buildRule.executeTarget("D.test10");
-        assertContains("2nd run: should run D.test10", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("2nd run: should run D.test10"));
 
 
         // "fix" errors in class A
@@ -239,13 +240,13 @@ public class JUnitTaskTest {
                    + "' should exist after the 3rd run.",
                    collectorFile.exists());
         buildRule.executeTarget("A.test02");
-        assertContains("3rd run: should run A.test02", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("3rd run: should run A.test02"));
         buildRule.executeTarget("A.test03");
-        assertContains("3rd run: should run A.test03", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("3rd run: should run A.test03"));
         buildRule.executeTarget("B.test04");
-        assertContains("3rd run: should run B.test04", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("3rd run: should run B.test04"));
         buildRule.executeTarget("D.test10");
-        assertContains("3rd run: should run D.test10", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("3rd run: should run D.test10"));
 
 
         // 4rd run: two running tests with errors
@@ -254,12 +255,12 @@ public class JUnitTaskTest {
                    + "' should exist after the 4th run.",
                    collectorFile.exists());
         //TODO: these two statements fail
-        //buildRule.executeTarget("A.test02");assertNotContains("4th run: should not run A.test02", buildRule.getOutput());
-        //buildRule.executeTarget("A.test03");assertNotContains("4th run: should not run A.test03", buildRule.getOutput());
+        //buildRule.executeTarget("A.test02");assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test02")));
+        //buildRule.executeTarget("A.test03");assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test03")));
         buildRule.executeTarget("B.test04");
-        assertContains("4th run: should run B.test04", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("4th run: should run B.test04"));
         buildRule.executeTarget("D.test10");
-        assertContains("4th run: should run D.test10", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("4th run: should run D.test10"));
 
     }
 
@@ -272,16 +273,16 @@ public class JUnitTaskTest {
     @Test
     public void testMultilineAssertsNoFork() {
         buildRule.executeTarget("testMultilineAssertsNoFork");
-        assertNotContains("messaged up", buildRule.getLog());
-        assertNotContains("crashed)", buildRule.getLog());
+        assertThat(buildRule.getLog(), not(containsString("messaged up")));
+        assertThat(buildRule.getLog(), not(containsString("crashed)")));
     }
 
     // Bugzilla Issue 45411
     @Test
     public void testMultilineAssertsFork() {
         buildRule.executeTarget("testMultilineAssertsFork");
-        assertNotContains("messaged up", buildRule.getLog());
-        assertNotContains("crashed)", buildRule.getLog());
+        assertThat(buildRule.getLog(), not(containsString("messaged up")));
+        assertThat(buildRule.getLog(), not(containsString("crashed)")));
     }
 
     private void assertResultFilesExist(String target, String extension) {
@@ -301,8 +302,8 @@ public class JUnitTaskTest {
     }
 
     private void assertNoPrint(String result, String where) {
-        assertNotContains(where + " '" + result + "' must not contain print statement",
-                   "print to System.", result);
+        assertThat(where + " '" + result + "' must not contain print statement",
+                result, not(containsString("print to System.")));
     }
 
     private void assertOutput() throws IOException {

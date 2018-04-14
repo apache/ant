@@ -26,8 +26,9 @@ import org.junit.Test;
 
 import java.util.Vector;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -47,7 +48,7 @@ public class CallTargetTest {
     @Test
     public void testInheritRefFileSet() {
         buildRule.executeTarget("testinheritreffileset");
-        assertContains("calltarget.xml", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("calltarget.xml"));
     }
 
     // see bugrep 21724 (references not passing through with antcall)
@@ -64,7 +65,7 @@ public class CallTargetTest {
         v.add("call-multi");
         v.add("call-multi");
         buildRule.getProject().executeTargets(v);
-        assertContains("multi is SETmulti is SET", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("multi is SETmulti is SET"));
     }
 
     @Test

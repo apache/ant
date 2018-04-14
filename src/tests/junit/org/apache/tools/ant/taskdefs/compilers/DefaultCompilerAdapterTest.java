@@ -34,10 +34,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DefaultCompilerAdapterTest {
@@ -419,8 +420,8 @@ public class DefaultCompilerAdapterTest {
         sth.setJavac(javac);
         Commandline cmd = new Commandline();
         sth.setupModernJavacCommandlineSwitches(cmd);
-        assertContains("Support for javac --release has been added in "
-                       + "Java9 ignoring it", javac.getLog());
+        assertThat(javac.getLog(),
+                containsString("Support for javac --release has been added in Java9 ignoring it"));
         String[] args = cmd.getCommandline();
         assertEquals(7, args.length);
         assertEquals("-classpath", args[0]);
@@ -445,8 +446,8 @@ public class DefaultCompilerAdapterTest {
         sth.setJavac(javac);
         Commandline cmd = new Commandline();
         sth.setupModernJavacCommandlineSwitches(cmd);
-        assertContains("Ignoring source, target and bootclasspath as "
-                       + "release has been set", javac.getLog());
+        assertThat(javac.getLog(),
+                containsString("Ignoring source, target and bootclasspath as release has been set"));
         String[] args = cmd.getCommandline();
         assertEquals(5, args.length);
         assertEquals("-classpath", args[0]);
@@ -491,8 +492,7 @@ public class DefaultCompilerAdapterTest {
         if (expectedLog.isEmpty()) {
             assertEquals("", javac.getLog());
         } else {
-            String l = javac.getLog();
-            assertContains(expectedLog, l);
+            assertThat(javac.getLog(), containsString(expectedLog));
         }
         String[] args = cmd.getCommandline();
         assertEquals(expectedSource == null ? 0 : 2, args.length);

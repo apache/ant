@@ -33,14 +33,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Testcase for the Manifest class used in the jar task.
@@ -50,6 +51,9 @@ public class ManifestTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private File expandedManifest;
     private File outDir;
@@ -109,12 +113,9 @@ public class ManifestTest {
      */
     @Test
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: Manifest is invalid - no colon on header line");
-        } catch (BuildException ex) {
-            assertContains("Invalid Manifest", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid Manifest");
+        buildRule.executeTarget("test3");
     }
 
     /**
@@ -122,12 +123,9 @@ public class ManifestTest {
      */
     @Test
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("BuildException expected: Manifest is invalid - section starts with continuation line");
-        } catch (BuildException ex) {
-            assertContains("Invalid Manifest", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid Manifest");
+        buildRule.executeTarget("test4");
    }
 
     /**
@@ -136,8 +134,8 @@ public class ManifestTest {
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        assertTrue("Expected warning about Name in main section", buildRule.getLog()
-                .contains("Manifest warning: \"Name\" attributes should not occur in the main section"));
+        assertThat("Expected warning about Name in main section", buildRule.getLog(),
+                containsString("Manifest warning: \"Name\" attributes should not occur in the main section"));
     }
 
     /**
@@ -145,16 +143,16 @@ public class ManifestTest {
      */
     @Test
     public void test6() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid Manifest");
         try {
             buildRule.executeTarget("test6");
-            fail("BuildException expected: Manifest is invalid - section starts with incorrect attribute");
-        } catch (BuildException ex) {
-            assertContains("Invalid Manifest", ex.getMessage());
-        }
-        assertTrue("Expected warning about section not starting with Name: attribute", buildRule.getLog()
-                .contains("Manifest sections should start with a \"Name\" attribute"));
-    }
+        } finally {
+            assertThat("Expected warning about section not starting with Name: attribute", buildRule.getLog(),
+                    containsString("Manifest sections should start with a \"Name\" attribute"));
 
+        }
+    }
 
     /**
      * From attribute is illegal
@@ -162,8 +160,8 @@ public class ManifestTest {
     @Test
     public void test7() {
         buildRule.executeTarget("test7");
-        assertTrue("Expected warning about From: attribute", buildRule.getLog()
-                .contains(Manifest.ERROR_FROM_FORBIDDEN));
+        assertThat("Expected warning about From: attribute", buildRule.getLog(),
+                containsString(Manifest.ERROR_FROM_FORBIDDEN));
     }
 
     /**
@@ -187,13 +185,9 @@ public class ManifestTest {
      */
     @Test
     public void test9() {
-        try {
-            buildRule.executeTarget("test9");
-            fail("BuildException expected: Construction is invalid - Name attribute should not be used");
-        } catch (BuildException ex) {
-            assertContains("Specify the section name using the \"name\" attribute of the <section> element",
-                           ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Specify the section name using the \"name\" attribute of the <section> element");
+        buildRule.executeTarget("test9");
     }
 
     /**
@@ -201,12 +195,9 @@ public class ManifestTest {
      */
     @Test
     public void test10() {
-        try {
-            buildRule.executeTarget("test10");
-            fail("BuildException expected: Attribute has no name");
-        } catch (BuildException ex) {
-            assertContains("Attributes must have name and value", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Attributes must have name and value");
+        buildRule.executeTarget("test10");
     }
 
     /**
@@ -214,12 +205,9 @@ public class ManifestTest {
      */
     @Test
     public void test11() {
-        try {
-            buildRule.executeTarget("test11");
-            fail("BuildException expected: Attribute has no value");
-        } catch (BuildException ex) {
-            assertContains("Attributes must have name and value", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Attributes must have name and value");
+        buildRule.executeTarget("test11");
     }
 
     /**
@@ -227,12 +215,9 @@ public class ManifestTest {
      */
     @Test
     public void test12() {
-        try {
-            buildRule.executeTarget("test12");
-            fail("BuildException expected: Section with no name");
-        } catch (BuildException ex) {
-            assertContains("Sections must have a name", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Sections must have a name");
+        buildRule.executeTarget("test12");
     }
 
     /**
@@ -240,13 +225,9 @@ public class ManifestTest {
      */
     @Test
     public void test13() {
-        try {
-            buildRule.executeTarget("test13");
-            fail("BuildException expected: Duplicate Attribute");
-        } catch (BuildException ex) {
-            assertContains("The attribute \"Test\" may not occur more than once in the same section",
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The attribute \"Test\" may not occur more than once in the same section");
+        buildRule.executeTarget("test13");
     }
 
     /**
@@ -361,14 +342,10 @@ public class ManifestTest {
     /**
      * file attribute for manifest task is required.
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testNoFile() {
-        try {
-            buildRule.executeTarget("testNoFile");
-            fail("BuildException expected: file is required");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testNoFile");
+        //TODO assert value
     }
 
     /**
@@ -394,71 +371,51 @@ public class ManifestTest {
         String mfAsString = mf.toString();
         assertNotNull(mfAsString);
         assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));
-        assertTrue(mfAsString.contains("Foo: Bar"));
+        assertThat(mfAsString, containsString("Foo: Bar"));
 
         mf = getManifest(new File(outDir, "mftest2.mf"));
         assertNotNull(mf);
         mfAsString = mf.toString();
         assertNotNull(mfAsString);
-        assertTrue(mfAsString.contains("Foo: Baz"));
-        assertFalse(mfAsString.contains("Foo: Bar"));
+        assertThat(mfAsString, containsString("Foo: Baz"));
+        assertThat(mfAsString, not(containsString("Foo: Bar")));
     }
 
     @Test
     public void testFrom() {
         buildRule.executeTarget("testFrom");
-        assertContains(Manifest.ERROR_FROM_FORBIDDEN, buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString(Manifest.ERROR_FROM_FORBIDDEN));
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIllegalName() {
-        try {
-            buildRule.executeTarget("testIllegalName");
-            fail("BuildException expected: Manifest attribute names must not contain ' '");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testIllegalName");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIllegalNameInSection() {
-        try {
-            buildRule.executeTarget("testIllegalNameInSection");
-            fail("BuildException expected: Manifest attribute names must not contain ' '");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testIllegalNameInSection");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIllegalNameBegin() {
-        try {
-            buildRule.executeTarget("testIllegalNameInSection");
-            fail("BuildException expected: Manifest attribute names must not start with '-' at the begin.");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testIllegalNameInSection");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIllegalName2() {
-        try {
-            buildRule.executeTarget("testIllegalName");
-            fail("BuildException expected: Manifest attribute names must not contain '.'");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testIllegalName");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIllegalName3() {
-        try {
-            buildRule.executeTarget("testIllegalName");
-            fail("BuildException expected: Manifest attribute names must not contain '*'");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
-    }
+        buildRule.executeTarget("testIllegalName");
+        // TODO assert value
+     }
 
     /**
      * Reads mftest.mf.

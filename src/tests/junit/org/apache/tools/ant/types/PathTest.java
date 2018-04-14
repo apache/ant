@@ -27,7 +27,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -572,7 +574,7 @@ public class PathTest {
             assertEquals(0, p.list().length);
         } catch (BuildException x) {
             String m = x.toString();
-            assertTrue(m, m.contains("circular"));
+            assertThat(m, m, containsString("circular"));
         }
     }
 

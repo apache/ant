@@ -23,7 +23,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -45,7 +46,7 @@ public class ScriptSelectorTest {
             buildRule.executeTarget("testNolanguage");
             fail("Absence of language attribute not detected");
         } catch (BuildException ex) {
-            assertContains("script language must be specified", ex.getMessage());
+            assertThat(ex.getMessage(), containsString("script language must be specified"));
 
         }
     }

@@ -26,8 +26,10 @@ import java.util.Properties;
 
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class LayoutPreservingPropertiesTest {
@@ -60,8 +62,8 @@ public class LayoutPreservingPropertiesTest {
 
         // and now make sure that the comments made it into the new file
         String s = readFile(tmp);
-        assertTrue("missing comment", s.contains("# a comment"));
-        assertTrue("missing comment", s.contains("! more comment"));
+        assertThat("missing comment", s, containsString(("# a comment")));
+        assertThat("missing comment", s, containsString(("! more comment")));
     }
 
     /**
@@ -90,16 +92,15 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue(s.contains("\\ prop\\ one\\ =\\ \\ leading and trailing"
-                + " spaces "));
-        assertTrue(s.contains("prop\\ttwo=contains\\ttab"));
-        assertTrue(s.contains("prop\\nthree=contains\\nnewline"));
-        assertTrue(s.contains("prop\\rfour=contains\\rcarriage return"));
-        assertTrue(s.contains("prop\\\\six=contains\\\\backslash"));
-        assertTrue(s.contains("prop\\:seven=contains\\:colon"));
-        assertTrue(s.contains("prop\\=eight=contains\\=equals"));
-        assertTrue(s.contains("prop\\#nine=contains\\#hash"));
-        assertTrue(s.contains("prop\\!ten=contains\\!exclamation"));
+        assertThat(s, containsString("\\ prop\\ one\\ =\\ \\ leading and trailing spaces "));
+        assertThat(s, containsString("prop\\ttwo=contains\\ttab"));
+        assertThat(s, containsString("prop\\nthree=contains\\nnewline"));
+        assertThat(s, containsString("prop\\rfour=contains\\rcarriage return"));
+        assertThat(s, containsString("prop\\\\six=contains\\\\backslash"));
+        assertThat(s, containsString("prop\\:seven=contains\\:colon"));
+        assertThat(s, containsString("prop\\=eight=contains\\=equals"));
+        assertThat(s, containsString("prop\\#nine=contains\\#hash"));
+        assertThat(s, containsString("prop\\!ten=contains\\!exclamation"));
     }
 
     /**
@@ -126,13 +127,12 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertFalse(s.contains("\\ prop\\ one\\ =\\ \\ leading and"
-                + " trailing spaces "));
-        assertTrue(s.contains("\\ prop\\ one\\ =new one"));
-        assertFalse(s.contains("prop\\ttwo=contains\\ttab"));
-        assertTrue(s.contains("prop\\ttwo=new two"));
-        assertFalse(s.contains("prop\\nthree=contains\\nnewline"));
-        assertTrue(s.contains("prop\\nthree=new three"));
+        assertThat(s, not(containsString("\\ prop\\ one\\ =\\ \\ leading and trailing spaces ")));
+        assertThat(s, containsString("\\ prop\\ one\\ =new one"));
+        assertThat(s, not(containsString("prop\\ttwo=contains\\ttab")));
+        assertThat(s, containsString("prop\\ttwo=new two"));
+        assertThat(s, not(containsString("prop\\nthree=contains\\nnewline")));
+        assertThat(s, containsString("prop\\nthree=new three"));
     }
 
     @Test
@@ -172,13 +172,13 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertFalse("should have had no properties ", s.contains("prop.alpha"));
-        assertFalse("should have had no properties ", s.contains("prop.beta"));
-        assertFalse("should have had no properties ", s.contains("prop.gamma"));
+        assertThat("should have had no properties ", s, not(containsString(("prop.alpha"))));
+        assertThat("should have had no properties ", s, not(containsString(("prop.beta"))));
+        assertThat("should have had no properties ", s, not(containsString(("prop.gamma"))));
 
-        assertFalse("should have had no comments", s.contains("# a comment"));
-        assertFalse("should have had no comments", s.contains("! more comment"));
-        assertFalse("should have had no comments", s.contains("# now a line wrapping one"));
+        assertThat("should have had no comments", s, not(containsString(("# a comment"))));
+        assertThat("should have had no comments", s, not(containsString(("! more comment"))));
+        assertThat("should have had no comments", s, not(containsString(("# now a line wrapping one"))));
     }
 
     @Test
@@ -198,9 +198,8 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertFalse("should not have had prop.beta", s.contains("prop.beta"));
-        assertTrue("should have had prop.beta's comment",
-                s.contains("! more comment"));
+        assertThat("should not have had prop.beta", s, not(containsString(("prop.beta"))));
+        assertThat("should have had prop.beta's comment", s, containsString("! more comment"));
     }
 
     @Test
@@ -222,8 +221,8 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertFalse("should not have had prop.beta", s.contains("prop.beta"));
-        assertFalse("should not have had prop.beta's comment", s.contains("! more comment"));
+        assertThat("should not have had prop.beta", s, not(containsString(("prop.beta"))));
+        assertThat("should not have had prop.beta's comment", s, not(containsString(("! more comment"))));
     }
 
     @Test
@@ -254,13 +253,12 @@ public class LayoutPreservingPropertiesTest {
         String s2 = readFile(tmp2);
 
         // check original is untouched
-        assertTrue("should have had 'simple'", s1.contains("simple"));
-        assertFalse("should not have had prop.new", s1.contains("prop.new"));
+        assertThat("should have had 'simple'", s1, containsString(("simple")));
+        assertThat("should not have had prop.new", s1, not(containsString(("prop.new"))));
 
         // check clone has the changes
-        assertTrue("should have had 'a new value for beta'",
-                s2.contains("a new value for beta"));
-        assertTrue("should have had prop.new", s2.contains("prop.new"));
+        assertThat("should have had 'a new value for beta'", s2, containsString(("a new value for beta")));
+        assertThat("should have had prop.new", s2, containsString(("prop.new")));
     }
 
     @Test
@@ -285,16 +283,16 @@ public class LayoutPreservingPropertiesTest {
         // and check that the resulting file looks okay
         String s = readFile(tmp);
 
-        assertTrue(s.contains("prop\\:seven=new value for seven"));
-        assertTrue(s.contains("prop\\=eight=new value for eight"));
-        assertTrue(s.contains("prop\\ eleven=new value for eleven"));
-        assertTrue(s.contains("alpha=new value for alpha"));
-        assertTrue(s.contains("beta=new value for beta"));
+        assertThat(s, containsString("prop\\:seven=new value for seven"));
+        assertThat(s, containsString("prop\\=eight=new value for eight"));
+        assertThat(s, containsString("prop\\ eleven=new value for eleven"));
+        assertThat(s, containsString("alpha=new value for alpha"));
+        assertThat(s, containsString("beta=new value for beta"));
 
-        assertFalse(s.contains("prop\\:seven=contains\\:colon"));
-        assertFalse(s.contains("prop\\=eight=contains\\=equals"));
-        assertFalse(s.contains("alpha:set with a colon"));
-        assertFalse(s.contains("beta set with a space"));
+        assertThat(s, not(containsString("prop\\:seven=contains\\:colon")));
+        assertThat(s, not(containsString("prop\\=eight=contains\\=equals")));
+        assertThat(s, not(containsString("alpha:set with a colon")));
+        assertThat(s, not(containsString("beta set with a space")));
     }
 
     private static String readFile(File f) throws IOException {

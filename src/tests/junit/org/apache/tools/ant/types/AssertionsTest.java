@@ -22,9 +22,10 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeFalse;
 
 /**
@@ -35,23 +36,22 @@ public class AssertionsTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/assertions.xml");
     }
-
 
     /**
      * runs a test and expects an assertion thrown in forked code
      * @param target String
      */
     private void expectAssertion(String target) {
-        try {
-            buildRule.executeTarget(target);
-            fail("BuildException should have been thrown by assertion fail in task");
-        } catch (BuildException ex) {
-            assertContains("assertion not thrown in " + target, "Java returned: 1", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned: 1");
+        buildRule.executeTarget(target);
     }
 
     @Test
@@ -91,29 +91,25 @@ public class AssertionsTest {
 
     @Test
     public void testMultipleAssertions() {
-        try {
-            buildRule.executeTarget("test-multiple-assertions");
-            fail("BuildException should have been thrown by assertion fail in task");
-        } catch (BuildException ex) {
-            assertContains("multiple assertions rejected", "Only one assertion declaration is allowed", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Only one assertion declaration is allowed");
+        buildRule.executeTarget("test-multiple-assertions");
     }
 
     @Test
     public void testReferenceAbuse() {
-        try {
-            buildRule.executeTarget("test-reference-abuse");
-            fail("BuildException should have been thrown by reference abuse");
-        } catch (BuildException ex) {
-            assertContains("reference abuse rejected", "You must not specify", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify");
+        buildRule.executeTarget("test-reference-abuse");
     }
 
     @Test
     public void testNofork() {
-        assumeFalse("ran Ant tests with -ea and this would fail spuriously", AssertionsTest.class.desiredAssertionStatus());
+        assumeFalse("ran Ant tests with -ea and this would fail spuriously",
+                AssertionsTest.class.desiredAssertionStatus());
         buildRule.executeTarget("test-nofork");
-        assertContains("Assertion statements are currently ignored in non-forked mode", buildRule.getLog());
+        assertThat(buildRule.getLog(),
+                containsString("Assertion statements are currently ignored in non-forked mode"));
     }
 
     @Test

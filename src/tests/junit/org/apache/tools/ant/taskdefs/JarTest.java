@@ -24,7 +24,6 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -33,16 +32,17 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -52,32 +52,16 @@ public class JarTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private static String tempJar = "tmp.jar";
     private static String tempDir = "jartmp/";
-    private Reader r1;
-    private Reader r2;
-
 
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/jar.xml");
         buildRule.executeTarget("setUp");
-    }
-
-    @After
-    public void tearDown() {
-        if (r1 != null) {
-            try {
-                r1.close();
-            } catch (IOException e) {
-            }
-        }
-        if (r2 != null) {
-            try {
-                r2.close();
-            } catch (IOException e) {
-            }
-        }
     }
 
     /**
@@ -86,6 +70,7 @@ public class JarTest {
     @Test(expected = BuildException.class)
     public void test1() {
         buildRule.executeTarget("test1");
+        // TODO assert exception message
     }
 
     /**
@@ -114,7 +99,6 @@ public class JarTest {
     public void test4() {
         buildRule.executeTarget("test4");
         File jarFile = new File(getOutputDir(), tempJar);
-
         assertTrue(jarFile.exists());
     }
 
@@ -154,14 +138,12 @@ public class JarTest {
 
     @Test
     public void testRecreateWithoutUpdateNewerFile() {
-        testRecreate("testRecreateNewerFileSetup",
-                     "testRecreateWithoutUpdateNewerFile");
+        testRecreate("testRecreateNewerFileSetup", "testRecreateWithoutUpdateNewerFile");
     }
 
     @Test
     public void testRecreateWithUpdateNewerFile() {
-        testRecreate("testRecreateNewerFileSetup",
-                     "testRecreateWithUpdateNewerFile");
+        testRecreate("testRecreateNewerFileSetup", "testRecreateWithUpdateNewerFile");
     }
 
     private void testRecreate(String firstTarget, String secondTarget) {
@@ -177,22 +159,24 @@ public class JarTest {
         long jarModifiedDate = jarFile.lastModified();
         buildRule.executeTarget(secondTarget);
         jarFile = new File(getOutputDir(), tempJar);
-        assertTrue("jar has been recreated in " + secondTarget,
-                   jarModifiedDate < jarFile.lastModified());
+        assertTrue("jar has been recreated in " + secondTarget, jarModifiedDate < jarFile.lastModified());
     }
 
     @Test
-    public void testManifestStaysIntact()
-        throws IOException, ManifestException {
+    public void testManifestStaysIntact() throws IOException, ManifestException {
         buildRule.executeTarget("testManifestStaysIntact");
 
-        r1 = new FileReader(new File(getOutputDir(),
-                            tempDir + "manifest"));
-        r2 = new FileReader(new File(getOutputDir(),
-                tempDir + "META-INF/MANIFEST.MF"));
+        Manifest mf1;
+        try (FileReader r1 = new FileReader(new File(getOutputDir(), tempDir + "manifest"))) {
+            mf1 = new Manifest(r1);
+        }
 
-        Manifest mf1 = new Manifest(r1);
-        Manifest mf2 = new Manifest(r2);
+        Manifest mf2;
+        try (FileReader r2 = new FileReader(new File(getOutputDir(), tempDir
+                + "META-INF/MANIFEST.MF"))) {
+            mf2 = new Manifest(r2);
+        }
+
         assertEquals(mf1, mf2);
     }
 
@@ -218,26 +202,22 @@ public class JarTest {
 
     @Test
     public void testRecreateZipfilesetWithoutUpdateAdditionalFiles() {
-        testRecreate("test4",
-                     "testRecreateZipfilesetWithoutUpdateAdditionalFiles");
+        testRecreate("test4", "testRecreateZipfilesetWithoutUpdateAdditionalFiles");
     }
 
     @Test
     public void testRecreateZipfilesetWithUpdateAdditionalFiles() {
-        testRecreate("test4",
-                     "testRecreateZipfilesetWithUpdateAdditionalFiles");
+        testRecreate("test4", "testRecreateZipfilesetWithUpdateAdditionalFiles");
     }
 
     @Test
     public void testRecreateZipfilesetWithoutUpdateNewerFile() {
-        testRecreate("testRecreateNewerFileSetup",
-                     "testRecreateZipfilesetWithoutUpdateNewerFile");
+        testRecreate("testRecreateNewerFileSetup", "testRecreateZipfilesetWithoutUpdateNewerFile");
     }
 
     @Test
     public void testRecreateZipfilesetWithUpdateNewerFile() {
-        testRecreate("testRecreateNewerFileSetup",
-                     "testRecreateZipfilesetWithUpdateNewerFile");
+        testRecreate("testRecreateNewerFileSetup", "testRecreateZipfilesetWithUpdateNewerFile");
     }
 
     @Test
@@ -306,9 +286,8 @@ public class JarTest {
     }
     @Test
     public void testManifestOnlyJar() {
-
         buildRule.executeTarget("testManifestOnlyJar");
-        assertContains("Building MANIFEST-only jar: ", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Building MANIFEST-only jar: "));
         File manifestFile = new File(getOutputDir(), tempDir + "META-INF" + File.separator + "MANIFEST.MF");
         assertTrue(manifestFile.exists());
     }
@@ -320,44 +299,41 @@ public class JarTest {
 
     @Test
     public void testNoVersionInfoFail() {
-        try {
-            buildRule.executeTarget("testNoVersionInfoFail");
-            fail("BuildException expected: Manifest Implementation information missing.");
-        } catch (BuildException ex) {
-            assertContains("No Implementation-Title set.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No Implementation-Title set.");
+        buildRule.executeTarget("testNoVersionInfoFail");
     }
 
     @Test
     public void testNoVersionInfoIgnore() {
         buildRule.executeTarget("testNoVersionInfoIgnore");
-        assertTrue(buildRule.getFullLog().contains("No Implementation-Title set."));
-        assertTrue(buildRule.getFullLog().contains("No Implementation-Version set."));
-        assertTrue(buildRule.getFullLog().contains("No Implementation-Vendor set."));
+        assertThat(buildRule.getFullLog(), containsString("No Implementation-Title set."));
+        assertThat(buildRule.getFullLog(), containsString("No Implementation-Version set."));
+        assertThat(buildRule.getFullLog(), containsString("No Implementation-Vendor set."));
     }
 
     @Test
     public void testNoVersionInfoWarn() {
         buildRule.executeTarget("testNoVersionInfoWarn");
-        assertTrue(buildRule.getLog().contains("No Implementation-Title set."));
-        assertTrue(buildRule.getLog().contains("No Implementation-Version set."));
-        assertTrue(buildRule.getLog().contains("No Implementation-Vendor set."));
+        assertThat(buildRule.getLog(), containsString("No Implementation-Title set."));
+        assertThat(buildRule.getLog(), containsString("No Implementation-Version set."));
+        assertThat(buildRule.getLog(), containsString("No Implementation-Vendor set."));
     }
 
     @Test
     public void testNoVersionInfoNoStrict() {
         buildRule.executeTarget("testNoVersionInfoNoStrict");
-        assertFalse(buildRule.getLog().contains("No Implementation-Title set."));
-        assertFalse(buildRule.getLog().contains("No Implementation-Version set."));
-        assertFalse(buildRule.getLog().contains("No Implementation-Vendor set."));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Title set.")));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Version set.")));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Vendor set.")));
     }
 
     @Test
     public void testHasVersionInfo() {
         buildRule.executeTarget("testHasVersionInfo");
-        assertFalse(buildRule.getLog().contains("No Implementation-Title set."));
-        assertFalse(buildRule.getLog().contains("No Implementation-Version set."));
-        assertFalse(buildRule.getLog().contains("No Implementation-Vendor set."));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Title set.")));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Version set.")));
+        assertThat(buildRule.getLog(), not(containsString("No Implementation-Vendor set.")));
     }
 
 }

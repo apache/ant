@@ -33,12 +33,12 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 public class ZipTest {
@@ -49,52 +49,47 @@ public class ZipTest {
     //instance variable to allow cleanup
     ZipFile zfPrefixAddsDir = null;
 
-
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/zip.xml");
         buildRule.executeTarget("setUp");
     }
 
-    @Test
+    /**
+     * Fail due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        //TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        //TODO assert value
     }
 
-    @Test
+    /**
+     * Fail because zip cannot include itself
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: zip cannot include itself");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        //TODO assert value
     }
 
-    @Test
+    /**
+     * Fail because zip cannot include itself
+     */
+    @Test(expected = BuildException.class)
     @Ignore("Previously commented out")
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("BuildException expected: zip cannot include itself");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test4");
+        //TODO assert value
     }
 
     @After
@@ -150,13 +145,13 @@ public class ZipTest {
     @Test
     public void testUpdateNotNecessary() {
        buildRule.executeTarget("testUpdateNotNecessary");
-       assertFalse(buildRule.getLog().contains("Updating"));
+       assertThat(buildRule.getLog(), not(containsString("Updating")));
     }
 
     @Test
     public void testUpdateIsNecessary() {
         buildRule.executeTarget("testUpdateIsNecessary");
-        assertContains("Updating", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Updating"));
     }
 
     // Bugzilla Report 18403
@@ -204,7 +199,7 @@ public class ZipTest {
     @Test
     public void testZipEmptyCreate() {
         buildRule.executeTarget("zipEmptyCreate");
-        assertContains("Note: creating empty", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Note: creating empty"));
     }
 
     // Bugzilla Report 25513

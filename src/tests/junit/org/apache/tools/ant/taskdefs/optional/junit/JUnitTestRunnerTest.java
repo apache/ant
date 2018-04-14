@@ -28,9 +28,10 @@ import junit.framework.TestSuite;
 import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -81,7 +82,7 @@ public class JUnitTestRunnerTest {
         runner.run();
         String error = runner.getFormatter().getError();
         assertEquals(error, JUnitTestRunner.ERRORS, runner.getRetCode());
-        assertTrue(error, error.contains("thrown on purpose"));
+        assertThat(error, error, containsString("thrown on purpose"));
     }
 
     // check that something which is not a testcase generates no errors

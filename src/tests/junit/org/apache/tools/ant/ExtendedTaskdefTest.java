@@ -17,14 +17,11 @@
  */
 package org.apache.tools.ant;
 
-import static org.junit.Assert.fail;
-
-import static org.apache.tools.ant.AntAssert.assertContains;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * created 16-Mar-2006 12:25:12
@@ -34,6 +31,9 @@ public class ExtendedTaskdefTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -45,24 +45,24 @@ public class ExtendedTaskdefTest {
         buildRule.executeTarget("teardown");
     }
 
+    /**
+     * Exception should be thrown by a subclass
+     */
     @Test
     public void testRun() {
-        try {
-            buildRule.executeTarget("testRun");
-            fail("BuildException should have been thrown");
-        } catch (BuildException ex) {
-            assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("executing the Foo task");
+        buildRule.executeTarget("testRun");
     }
 
+    /**
+     * Exception should be thrown by a subclass
+     */
     @Test
     public void testRun2() {
-        try {
-            buildRule.executeTarget("testRun2");
-            fail("BuildException should have been thrown");
-        } catch (BuildException ex) {
-            assertContains("exception thrown by the subclass", "executing the Foo task", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("executing the Foo task");
+        buildRule.executeTarget("testRun2");
     }
 
 }

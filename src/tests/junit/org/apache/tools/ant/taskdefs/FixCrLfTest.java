@@ -31,10 +31,10 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
@@ -42,6 +42,9 @@ public class FixCrLfTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -150,12 +153,9 @@ public class FixCrLfTest {
 
     @Test
     public void testFixFileExclusive() {
-        try {
-            buildRule.executeTarget("testFixFileExclusive");
-            fail(FixCRLF.ERROR_FILE_AND_SRCDIR);
-        } catch (BuildException ex) {
-            assertContains(FixCRLF.ERROR_FILE_AND_SRCDIR, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(FixCRLF.ERROR_FILE_AND_SRCDIR);
+        buildRule.executeTarget("testFixFileExclusive");
     }
 
     /**
@@ -231,11 +231,8 @@ public class FixCrLfTest {
 
     // not used, but public so theoretically must remain for BC?
     @Deprecated
-    public void assertEqualContent(File expect, File result)
-        throws AssertionFailedError, IOException {
-        if (!result.exists()) {
-            fail("Expected file " + result + " doesn\'t exist");
-        }
+    public void assertEqualContent(File expect, File result) throws AssertionFailedError, IOException {
+        assertTrue("Expected file " + result + " doesn\'t exist", result.exists());
 
         try (InputStream inExpect = new BufferedInputStream(new FileInputStream(expect));
              InputStream inResult = new BufferedInputStream(new FileInputStream(result))) {

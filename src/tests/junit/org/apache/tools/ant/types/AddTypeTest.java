@@ -26,14 +26,18 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class AddTypeTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -63,71 +67,65 @@ public class AddTypeTest {
     @Test
     public void testNestedA() {
         buildRule.executeTarget("nested.a");
-        assertContains("add A called", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("add A called"));
     }
 
     @Test
     public void testNestedB() {
         buildRule.executeTarget("nested.b");
-         assertContains("add B called", buildRule.getLog());
+         assertThat(buildRule.getLog(), containsString("add B called"));
     }
 
     @Test
     public void testNestedC() {
         buildRule.executeTarget("nested.c");
-        assertContains("add C called", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("add C called"));
     }
 
     @Test
     public void testNestedAB() {
-        try {
-            buildRule.executeTarget("nested.ab");
-            fail("Build exception expected: Should have got ambiguous");
-        } catch (BuildException ex) {
-            assertContains("ambiguous", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("ambiguous");
+        buildRule.executeTarget("nested.ab");
     }
 
     @Test
     public void testConditionType() {
         buildRule.executeTarget("condition.type");
-        assertContains("beforeafter", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("beforeafter"));
     }
 
     @Test
     public void testConditionTask() {
         buildRule.executeTarget("condition.task");
-        assertContains("My Condition execution", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("My Condition execution"));
     }
 
     @Test
     public void testConditionConditionType() {
         buildRule.executeTarget("condition.condition.type");
-        assertContains("My Condition eval", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("My Condition eval"));
     }
 
     @Test
     public void testConditionConditionTask() {
-        try {
-            buildRule.executeTarget("condition.condition.task");
-            fail("Build exception expected: Task masking condition");
-        } catch (BuildException ex) {
-             assertContains("doesn't support the nested", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("doesn't support the nested");
+        buildRule.executeTarget("condition.condition.task");
     }
 
     @Test
     public void testAddConfigured() {
         buildRule.executeTarget("myaddconfigured");
-        assertContains("value is Value Setexecute: value is Value Set",
-                buildRule.getLog());
+        assertThat(buildRule.getLog(),
+                containsString("value is Value Setexecute: value is Value Set"));
     }
 
     @Test
     public void testAddConfiguredValue() {
         buildRule.executeTarget("myaddconfiguredvalue");
-        assertContains("value is Value Setexecute: value is Value Set",
-                buildRule.getLog());
+        assertThat(buildRule.getLog(),
+                containsString("value is Value Setexecute: value is Value Set"));
     }
 
     @Test

@@ -25,8 +25,9 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -57,7 +58,7 @@ public class AbstractCvsTaskTest {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertFalse("starting empty", f.exists());
         buildRule.executeTarget("package-attribute");
-        assertContains("U src/Makefile", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("U src/Makefile"));
         assertTrue("now it is there", f.exists());
     }
 
@@ -66,7 +67,7 @@ public class AbstractCvsTaskTest {
         File f = new File(buildRule.getProject().getProperty("output") + "/src/Makefile");
         assertFalse("starting empty", f.exists());
         buildRule.executeTarget("tag-attribute");
-        assertContains("OPENBSD_5_3", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("OPENBSD_5_3"));
         assertTrue("now it is there", f.exists());
     }
 }

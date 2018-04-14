@@ -23,7 +23,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests the {@link org.apache.tools.ant.taskdefs.XSLTProcess} task.
@@ -45,14 +47,10 @@ public class XsltTest {
         buildRule.configureProject(TASKDEFS_DIR + "xslt.xml");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testCatchNoDtd() {
-        try {
-            buildRule.executeTarget("testCatchNoDtd");
-            fail("Expected failure");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("testCatchNoDtd");
+        // TODO assert exception message
     }
 
     @Test
@@ -76,8 +74,7 @@ public class XsltTest {
     @Test
     public void testStyleSheetWithInclude() {
         buildRule.executeTarget("testStyleSheetWithInclude");
-        if (buildRule.getLog().contains("java.io.FileNotFoundException")) {
-            fail("xsl:include was not found");
-        }
+        assertThat("xsl:include was not found", buildRule.getLog(),
+                not(containsString("java.io.FileNotFoundException")));
     }
 }

@@ -34,12 +34,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -290,7 +291,7 @@ public class AntTest {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-inheritall-start");
 
-        assertContains("The value of test is 7", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("The value of test is 7"));
     }
 
     @Test
@@ -298,28 +299,28 @@ public class AntTest {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-no-inheritall-start");
 
-        assertContains("The value of test is 7", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("The value of test is 7"));
     }
 
     @Test
     public void testOverrideWinsInheritAll() {
         buildRule.executeTarget("test-property-override-inheritall-start");
 
-        assertContains("The value of test is 4", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("The value of test is 4"));
     }
 
     @Test
     public void testOverrideWinsNoInheritAll() {
         buildRule.executeTarget("test-property-override-no-inheritall-start");
-        assertContains("The value of test is 4", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("The value of test is 4"));
     }
 
     @Test
     public void testPropertySet() {
         buildRule.executeTarget("test-propertyset");
-        assertTrue(buildRule.getLog().contains("test1 is ${test1}"));
-        assertTrue(buildRule.getLog().contains("test2 is ${test2}"));
-        assertTrue(buildRule.getLog().contains("test1.x is 1"));
+        assertThat(buildRule.getLog(), containsString("test1 is ${test1}"));
+        assertThat(buildRule.getLog(), containsString("test2 is ${test2}"));
+        assertThat(buildRule.getLog(), containsString("test1.x is 1"));
     }
 
     @Test

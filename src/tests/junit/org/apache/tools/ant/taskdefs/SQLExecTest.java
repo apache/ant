@@ -30,14 +30,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Simple testcase to test for driver caching.
@@ -63,6 +63,9 @@ public class SQLExecTest {
     public static final String PATH = "path";
     public static final String SQL = "sql";
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         // make sure the cache is cleared.
@@ -72,30 +75,29 @@ public class SQLExecTest {
    // simple test to ensure that the caching does work...
     @Test
     public void testDriverCaching() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No suitable Driver");
         SQLExec sql = createTask(getProperties(NULL));
         assertFalse(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
         try {
             sql.execute();
-            fail("BuildException should have been thrown");
-        } catch (BuildException e) {
-            assertContains("No suitable Driver", e.getMessage());
-        }
-        assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
-        assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
-        ClassLoader loader1 = sql.getLoader();
+        } finally {
+            assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+            assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
+            ClassLoader loader1 = sql.getLoader();
 
-        // 2nd run..
-        sql = createTask(getProperties(NULL));
-        // the driver must still be cached.
-        assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
-        try {
-            sql.execute();
-        } catch (BuildException e) {
-            assertTrue(e.getCause().getMessage().contains("No suitable Driver"));
+            // 2nd run..
+            sql = createTask(getProperties(NULL));
+            // the driver must still be cached.
+            assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
+            try {
+                sql.execute();
+            } finally {
+                assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
+                assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
+                assertSame(loader1, sql.getLoader());
+            }
         }
-        assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
-        assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
-        assertSame(loader1, sql.getLoader());
     }
 
     @Test

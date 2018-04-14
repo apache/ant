@@ -22,11 +22,12 @@ import java.io.File;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static junit.framework.Assert.assertEquals;
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 
 /** Test the locator in the ant-launch JAR */
 public class LocatorTest {
@@ -36,6 +37,8 @@ public class LocatorTest {
     private static final String SHARED_JAR_URI = "jar:file:" + LAUNCHER_JAR
             + "!/org/apache/tools/ant/launch/Launcher.class";
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -136,25 +139,19 @@ public class LocatorTest {
      */
     @Test
     public void testFileFromRemoteShare() {
+        assumeTrue("not Windows", windows);
         String resolved = Locator.fromJarURI(SHARED_JAR_URI);
         File f = new File(resolved);
         String path = f.getAbsolutePath();
-        if (windows) {
-            assertEquals(0, path.indexOf("\\\\"));
-        }
+        assertEquals(0, path.indexOf("\\\\"));
     }
 
     @Test
     public void testHttpURI() {
         String url = "http://ant.apache.org";
-        try {
-            Locator.fromURI(url);
-            fail("Exception should have been thrown");
-        } catch (IllegalArgumentException e) {
-            String message = e.getMessage();
-            assertContains(Locator.ERROR_NOT_FILE_URI, message);
-            assertContains(url, message);
-        }
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(Locator.ERROR_NOT_FILE_URI + url);
+        Locator.fromURI(url);
     }
 
     @Test

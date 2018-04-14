@@ -26,7 +26,8 @@ import org.apache.tools.ant.util.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class XMLFormatterWithCDATAOnSystemOut {
 
@@ -66,8 +67,8 @@ public class XMLFormatterWithCDATAOnSystemOut {
             buildRule.executeTarget("run-junit");
             File f = buildRule.getProject().resolveFile(REPORT);
             try (FileReader reader = new FileReader(f)) {
-                String content = FileUtils.readFully(reader);
-                assertTrue(content.contains("</RESPONSE>&#x5d;&#x5d;&gt;</ERROR>"));
+                assertThat(FileUtils.readFully(reader),
+                        containsString("</RESPONSE>&#x5d;&#x5d;&gt;</ERROR>"));
             } finally {
                 f.delete();
             }

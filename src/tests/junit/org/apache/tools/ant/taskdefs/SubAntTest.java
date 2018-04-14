@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
@@ -29,16 +27,19 @@ import org.apache.tools.ant.BuildListener;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.assertThat;
 
 public class SubAntTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -84,33 +85,31 @@ public class SubAntTest {
     @Test
     public void testMultipleTargets() {
         buildRule.executeTarget("multipleTargets");
-        assertContains("test1-one", buildRule.getLog());
-        assertContains("test1-two", buildRule.getLog());
-        assertContains("test2-one", buildRule.getLog());
-        assertContains("test2-two", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("test1-one"));
+        assertThat(buildRule.getLog(), containsString("test1-two"));
+        assertThat(buildRule.getLog(), containsString("test2-one"));
+        assertThat(buildRule.getLog(), containsString("test2-two"));
     }
 
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEfalse() {
         buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEfalse");
-        assertContains("Target \"three\" does not exist in the project \"subant\"", buildRule.getLog());
+        assertThat(buildRule.getLog(),
+                containsString("Target \"three\" does not exist in the project \"subant\""));
     }
 
     @Test
     public void testMultipleTargetsOneDoesntExist_FOEtrue() {
-        try {
-            buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEtrue");
-            fail("BuildException expected: Calling not existent target");
-        } catch (BuildException ex) {
-            assertContains("Target \"three\" does not exist in the project \"subant\"", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Target \"three\" does not exist in the project \"subant\"");
+        buildRule.executeTarget("multipleTargetsOneDoesntExist_FOEtrue");
     }
 
     protected void testBaseDirs(String target, String[] dirs) {
         SubAntTest.BasedirChecker bc = new SubAntTest.BasedirChecker(dirs);
         buildRule.getProject().addBuildListener(bc);
         buildRule.executeTarget(target);
-        AssertionFailedError ae = bc.getError();
+        AssertionError ae = bc.getError();
         if (ae != null) {
             throw ae;
         }
@@ -120,7 +119,7 @@ public class SubAntTest {
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
-        private AssertionFailedError error;
+        private AssertionError error;
 
         BasedirChecker(String[] dirs) {
             expectedBasedirs = dirs;
@@ -152,17 +151,15 @@ public class SubAntTest {
                 try {
                     assertEquals(expectedBasedirs[calls++],
                             event.getProject().getBaseDir().getAbsolutePath());
-                } catch (AssertionFailedError e) {
+                } catch (AssertionError e) {
                     error = e;
                 }
             }
         }
 
-        AssertionFailedError getError() {
+        AssertionError getError() {
             return error;
         }
-
     }
-
 
 }

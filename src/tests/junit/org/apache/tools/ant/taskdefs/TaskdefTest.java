@@ -25,8 +25,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -118,11 +119,11 @@ public class TaskdefTest {
     public void testOverride() {
         buildRule.executeTarget("testOverride");
         String log = buildRule.getLog();
-        assertTrue("override warning sent",
-                log.contains("Trying to override old definition of task copy"));
-        assertTrue("task inside target worked",
-                log.contains("In target"));
-        assertTrue("task inside target worked",
-                log.contains("In TaskContainer"));
+        assertThat("override warning sent", log,
+                containsString("Trying to override old definition of task copy"));
+        assertThat("task inside target worked", log,
+                containsString("In target"));
+        assertThat("task inside target worked", log,
+                containsString("In TaskContainer"));
     }
 }

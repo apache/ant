@@ -17,10 +17,10 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeNoException;
 import static org.junit.Assume.assumeTrue;
@@ -35,6 +35,7 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests &lt;bm:manifestclasspath&gt;.
@@ -44,6 +45,9 @@ public class ManifestClassPathTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/manifestclasspath.xml");
@@ -51,57 +55,62 @@ public class ManifestClassPathTest {
 
     @Test
     public void testBadDirectory() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Jar's directory not found:");
         try {
             buildRule.executeTarget("test-bad-directory");
-            fail("Build exception should have been thrown on bad directory");
-        } catch (BuildException ex) {
-            assertContains("Jar's directory not found:", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertNull(buildRule.getProject().getProperty("jar.classpath"));
     }
 
     @Test
     public void testBadNoProperty() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Missing 'property' attribute!");
         try {
             buildRule.executeTarget("test-bad-no-property");
-            fail("Build exception should have been thrown on no property");
-        } catch (BuildException ex) {
-            assertContains("Missing 'property' attribute!", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertNull(buildRule.getProject().getProperty("jar.classpath"));
     }
 
     @Test
     public void testBadPropertyExists() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Property 'jar.classpath' already set!");
         try {
             buildRule.executeTarget("test-bad-property-exists");
-            fail("Build exception should have been thrown on bad property");
-        } catch (BuildException ex) {
-            assertContains("Property 'jar.classpath' already set!", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertEquals("exists", buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertEquals(buildRule.getProject().getProperty("jar.classpath"), "exists");
     }
 
     @Test
     public void testBadNoJarfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Missing 'jarfile' attribute!");
         try {
             buildRule.executeTarget("test-bad-no-jarfile");
-            fail("Build exception should have been thrown on bad jar file");
-        } catch (BuildException ex) {
-            assertContains("Missing 'jarfile' attribute!", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertNull(buildRule.getProject().getProperty("jar.classpath"));
     }
 
     @Test
     public void testBadNoClassPath() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Missing nested <classpath>!");
         try {
             buildRule.executeTarget("test-bad-no-classpath");
-            fail("Build exception should have been thrown on no classpath");
-        } catch (BuildException ex) {
-            assertContains("Missing nested <classpath>!", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertNull(buildRule.getProject().getProperty("jar.classpath"));
     }
 
     @Test
@@ -136,18 +145,20 @@ public class ManifestClassPathTest {
 
     @Test
     public void testParentLevel2TooDeep() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No suitable relative path from ");
         try {
             buildRule.executeTarget("test-parent-level2-too-deep");
-            fail("Build exception should have been thrown on no suitable path");
-        } catch (BuildException ex) {
-            assertContains("No suitable relative path from ", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("jar.classpath"));
         }
-        assertNull(buildRule.getProject().getProperty("jar.classpath"));
     }
 
     @Test
     public void testPseudoTahoeRefid() {
-        assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
+        assumeTrue("No regexp matcher is present",
+                RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-refid");
         assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
@@ -160,7 +171,8 @@ public class ManifestClassPathTest {
 
     @Test
     public void testPseudoTahoeNested() {
-        assumeTrue("No regexp matcher is present", RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
+        assumeTrue("No regexp matcher is present",
+                RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
 
         buildRule.executeTarget("test-pseudo-tahoe-nested");
         assertEquals(buildRule.getProject().getProperty("jar.classpath"), "classes/dsp-core/ "
@@ -192,7 +204,7 @@ public class ManifestClassPathTest {
     public void testInternationalGerman() {
         buildRule.executeTarget("international-german");
         buildRule.executeTarget("run-two-jars");
-        assertContains("beta alpha", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("beta alpha"));
     }
 
     @Test
@@ -200,7 +212,7 @@ public class ManifestClassPathTest {
         assumeFalse("Test with hebrew path not attempted under Windows", Os.isFamily("windows"));
         buildRule.executeTarget("international-hebrew");
         buildRule.executeTarget("run-two-jars");
-        assertContains("beta alpha", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("beta alpha"));
     }
 
     @Test
@@ -237,13 +249,13 @@ public class ManifestClassPathTest {
         }
         buildRule.getProject().setProperty("altDriveLetter", altDriveLetter);
 
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No suitable relative path from ");
         try {
             buildRule.executeTarget("testDifferentDrive");
-            fail("Build exception should have been thrown on no alternative drive");
-        } catch (BuildException ex) {
-            assertContains("No suitable relative path from ", ex.getMessage());
+        } finally {
+            // post-mortem
+            assertNull(buildRule.getProject().getProperty("cp"));
         }
-
-        assertNull(buildRule.getProject().getProperty("cp"));
     }
 }

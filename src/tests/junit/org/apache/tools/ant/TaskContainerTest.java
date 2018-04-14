@@ -22,7 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class TaskContainerTest {
 
@@ -37,30 +38,30 @@ public class TaskContainerTest {
     @Test
     public void testPropertyExpansion() {
         buildRule.executeTarget("testPropertyExpansion");
-        assertTrue("attribute worked",
-                buildRule.getLog().contains("As attribute: it worked"));
-        assertTrue("nested text worked",
-                buildRule.getLog().contains("As nested text: it worked"));
+        assertThat("attribute worked", buildRule.getLog(),
+                containsString(("As attribute: it worked")));
+        assertThat("nested text worked", buildRule.getLog(),
+                containsString(("As nested text: it worked")));
     }
 
     @Test
     public void testTaskdef() {
         buildRule.executeTarget("testTaskdef");
-        assertTrue("attribute worked",
-                buildRule.getLog().contains("As attribute: it worked"));
-        assertTrue("nested text worked",
-                buildRule.getLog().contains("As nested text: it worked"));
-        assertTrue("nested text worked",
-                buildRule.getLog().contains("As nested task: it worked"));
+        assertThat("attribute worked", buildRule.getLog(),
+                containsString(("As attribute: it worked")));
+        assertThat("nested text worked", buildRule.getLog(),
+                containsString(("As nested text: it worked")));
+        assertThat("nested text worked", buildRule.getLog(),
+                containsString(("As nested task: it worked")));
     }
 
     @Test
     public void testCaseInsensitive() {
         buildRule.executeTarget("testCaseInsensitive");
-        assertTrue("works outside of container",
-                buildRule.getLog().contains("hello "));
-        assertTrue("works inside of container",
-                buildRule.getLog().contains("world"));
+        assertThat("works outside of container", buildRule.getLog(),
+                containsString(("hello ")));
+        assertThat("works inside of container", buildRule.getLog(),
+                containsString(("world")));
     }
 
 }

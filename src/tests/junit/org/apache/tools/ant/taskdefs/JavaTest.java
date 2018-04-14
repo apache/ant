@@ -38,13 +38,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -54,6 +55,9 @@ public class JavaTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static final int TIME_TO_WAIT = 1;
     // wait 1 second extra to allow for java to start ...
@@ -87,62 +91,44 @@ public class JavaTest {
 
     @Test
     public void testNoJarNoClassname() {
-        try {
-            buildRule.executeTarget("testNoJarNoClassname");
-            fail("Build exception should have been thrown - parameter validation");
-        } catch (BuildException ex) {
-            assertContains("Classname must not be null.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Classname must not be null.");
+        buildRule.executeTarget("testNoJarNoClassname");
     }
 
     @Test
     public void testJarNoFork() {
-        try {
-            buildRule.executeTarget("testJarNoFork");
-            fail("Build exception should have been thrown - parameter validation");
-        } catch (BuildException ex) {
-            assertContains("Cannot execute a jar in non-forked mode. Please set fork='true'. ", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot execute a jar in non-forked mode. Please set fork='true'. ");
+        buildRule.executeTarget("testJarNoFork");
     }
 
     @Test
     public void testJarAndClassName() {
-        try {
-            buildRule.executeTarget("testJarAndClassName");
-            fail("Build exception should have been thrown - both classname and JAR are not allowed");
-        } catch (BuildException ex) {
-            assertEquals("Cannot use 'jar' and 'classname' attributes in same command", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'jar' and 'classname' attributes in same command");
+        buildRule.executeTarget("testJarAndClassName");
     }
 
     @Test
     public void testClassnameAndJar() {
-        try {
-            buildRule.executeTarget("testClassnameAndJar");
-            fail("Build exception should have been thrown - both classname and JAR are not allowed");
-        } catch (BuildException ex) {
-            assertEquals("Cannot use 'jar' with 'classname' or 'module' attributes in same command.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
+        buildRule.executeTarget("testClassnameAndJar");
     }
 
     @Test
     public void testJarAndModule() {
-        try {
-            buildRule.executeTarget("testJarAndModule");
-            fail("Build exception should have been thrown - both module and JAR are not allowed");
-        } catch (BuildException ex) {
-            assertEquals("Cannot use 'jar' and 'module' attributes in same command", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'jar' and 'module' attributes in same command");
+        buildRule.executeTarget("testJarAndModule");
     }
 
     @Test
     public void testModuleAndJar() {
-        try {
-            buildRule.executeTarget("testModuleAndJar");
-            fail("Build exception should have been thrown - both module and JAR are not allowed");
-        } catch (BuildException ex) {
-            assertEquals("Cannot use 'jar' with 'classname' or 'module' attributes in same command.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
+        buildRule.executeTarget("testModuleAndJar");
     }
 
     @Test
@@ -214,8 +200,6 @@ public class JavaTest {
         buildRule.executeTarget("testRun");
     }
 
-
-
     /** this test fails but we ignore the return value;
      *  we verify that failure only matters when failonerror is set
      */
@@ -228,54 +212,42 @@ public class JavaTest {
     @Test
     public void testRunFailFoe() {
         assumeTrue("Fatal tests have not been set to run", runFatalTests);
-        try {
-            buildRule.executeTarget("testRunFailFoe");
-            fail("Build exception should have been thrown - " + "java failures being propagated");
-        } catch (BuildException ex) {
-            assertContains("Java returned:", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned:");
+        buildRule.executeTarget("testRunFailFoe");
     }
 
     @Test
     public void testRunFailFoeFork() {
-        try {
-            buildRule.executeTarget("testRunFailFoeFork");
-            fail("Build exception should have been thrown - " + "java failures being propagated");
-        } catch (BuildException ex) {
-            assertContains("Java returned:", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned:");
+        buildRule.executeTarget("testRunFailFoeFork");
     }
 
     @Test
     public void testExcepting() {
         buildRule.executeTarget("testExcepting");
-        assertContains("Exception raised inside called program", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Exception raised inside called program"));
     }
 
     @Test
     public void testExceptingFork() {
         buildRule.executeTarget("testExceptingFork");
-        assertContains("Java Result:", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Java Result:"));
     }
 
     @Test
     public void testExceptingFoe() {
-        try {
-            buildRule.executeTarget("testExceptingFoe");
-            fail("Build exception should have been thrown - " + "passes exception through");
-        } catch (BuildException ex) {
-            assertContains("Exception raised inside called program", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Exception raised inside called program");
+        buildRule.executeTarget("testExceptingFoe");
     }
 
     @Test
     public void testExceptingFoeFork() {
-        try {
-            buildRule.executeTarget("testExceptingFoeFork");
-            fail("Build exception should have been thrown - " + "exceptions turned into error codes");
-        } catch (BuildException ex) {
-            assertContains("Java returned:", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned:");
+        buildRule.executeTarget("testExceptingFoeFork");
     }
 
     @Test
@@ -304,12 +276,9 @@ public class JavaTest {
 
     @Test
     public void testRunFailWithFailOnError() {
-        try {
-            buildRule.executeTarget("testRunFailWithFailOnError");
-            fail("Build exception should have been thrown - " + "non zero return code");
-        } catch (BuildException ex) {
-            assertContains("Java returned:", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned:");
+        buildRule.executeTarget("testRunFailWithFailOnError");
     }
 
     @Test
@@ -328,7 +297,6 @@ public class JavaTest {
         buildRule.getProject().executeTarget("testSpawn");
 
         Thread.sleep(TIME_TO_WAIT * 1000 + SECURITY_MARGIN);
-
 
         // let's be nice with the next generation of developers
         if (!logFile.exists()) {

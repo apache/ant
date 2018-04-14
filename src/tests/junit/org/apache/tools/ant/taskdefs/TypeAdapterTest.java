@@ -28,11 +28,11 @@ import org.apache.tools.ant.TypeAdapter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.assertThat;
 
 /**
  */
@@ -41,6 +41,8 @@ public class TypeAdapterTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -50,35 +52,32 @@ public class TypeAdapterTest {
     @Test
     public void testTaskAdapter() {
         buildRule.executeTarget("taskadapter");
-        assertContains("MyExec called", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("MyExec called"));
     }
 
     @Test
     public void testRunAdapter() {
         buildRule.executeTarget("runadapter");
-        assertContains("MyRunnable called", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("MyRunnable called"));
     }
 
     @Test
     public void testRunAdapterError() {
-        try {
-            buildRule.executeTarget("runadaptererror");
-            fail("BuildException expected: no public run method");
-        } catch (BuildException ex) {
-            assertContains("No public run() method in", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No public run() method in");
+        buildRule.executeTarget("runadaptererror");
     }
 
     @Test
     public void testDelay() {
         buildRule.executeTarget("delay");
-        assertContains("MyTask called", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("MyTask called"));
     }
 
     @Test
     public void testOnErrorReport() {
         buildRule.executeTarget("onerror.report");
-        assertContains("MyTaskNotPresent cannot be found", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("MyTaskNotPresent cannot be found"));
     }
 
     @Test

@@ -22,10 +22,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests the XMLValidate optional task, by running targets in the test script
@@ -44,6 +41,9 @@ public class XmlValidateTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -104,42 +104,23 @@ public class XmlValidateTest {
     }
 
     /**
-     * Test xml schema validation
+     * Test xml schema validation,
+     * implicitly assume schema-supporting parser (Java 5+)
      */
     @Test
     public void testXmlSchemaGood() throws BuildException {
-        try {
-            buildRule.executeTarget("testSchemaGood");
-        } catch (BuildException e) {
-            if (e.getMessage().endsWith(
-                    " doesn't recognize feature http://apache.org/xml/features/validation/schema")
-                    || e.getMessage().endsWith(
-                            " doesn't support feature http://apache.org/xml/features/validation/schema")) {
-                throw new AssumptionViolatedException("parser doesn't support schema");
-            } else {
-                throw e;
-            }
-        }
+        buildRule.executeTarget("testSchemaGood");
     }
+
     /**
-     * Test xml schema validation
+     * Test xml schema validation,
+     * implicitly assume schema-supporting parser (Java 5+)
      */
     @Test
     public void testXmlSchemaBad() {
-        try {
-            buildRule.executeTarget("testSchemaBad");
-            fail("Should throw BuildException because 'Bad Schema Validation'");
-        } catch (BuildException e) {
-            if (e.getMessage().endsWith(
-                    " doesn't recognize feature http://apache.org/xml/features/validation/schema")
-                    || e.getMessage().endsWith(
-                            " doesn't support feature http://apache.org/xml/features/validation/schema")) {
-                throw new AssumptionViolatedException("parser doesn't support schema");
-            } else {
-                assertTrue(
-                        e.getMessage().contains("not a valid XML document"));
-            }
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("not a valid XML document");
+        buildRule.executeTarget("testSchemaBad");
     }
 
     /**
@@ -160,30 +141,24 @@ public class XmlValidateTest {
      *
      * Bug 11279
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testUtf8() {
-        try {
-            buildRule.executeTarget("testUtf8");
-            fail("Invalid characters in file");
-        } catch (BuildException ex) {
-          //TODO assert exception message
-        }
+        buildRule.executeTarget("testUtf8");
+        //TODO assert exception message
     }
 
-    // Tests property element, using XML schema properties as an example.
+    /**
+     * Tests property element, using XML schema properties as an example.
+     */
     @Test
     public void testPropertySchemaForValidXML() {
         buildRule.executeTarget("testProperty.validXML");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testPropertySchemaForInvalidXML() {
-        try {
-            buildRule.executeTarget("testProperty.invalidXML");
-            fail("XML file does not satisfy schema");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("testProperty.invalidXML");
+        //TODO assert exception message
     }
 
 }

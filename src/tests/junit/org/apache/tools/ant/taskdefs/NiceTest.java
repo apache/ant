@@ -23,9 +23,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * test nice
@@ -34,6 +32,9 @@ public class NiceTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -62,22 +63,16 @@ public class NiceTest {
 
     @Test
     public void testTooSlow() {
-        try {
-            buildRule.executeTarget("too_slow");
-            fail("BuildException expected: out of range");
-        } catch (BuildException ex) {
-            assertContains("out of the range 1-10", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("out of the range 1-10");
+        buildRule.executeTarget("too_slow");
     }
 
     @Test
     public void testTooFast() {
-        try {
-            buildRule.executeTarget("too_fast");
-            fail("BuildException expected: out of range");
-        } catch (BuildException ex) {
-            assertContains("out of the range 1-10", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("out of the range 1-10");
+        buildRule.executeTarget("too_fast");
     }
 
 }

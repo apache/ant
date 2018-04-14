@@ -22,9 +22,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test schema validation
@@ -39,6 +37,9 @@ public class SchemaValidateTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -63,56 +64,37 @@ public class SchemaValidateTest {
 
     @Test
     public void testNoEmptySchemaNamespace() {
-        try {
-            buildRule.executeTarget("testNoEmptySchemaNamespace");
-            fail("Empty namespace URI");
-        } catch (BuildException ex) {
-            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_URI, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(SchemaValidate.SchemaLocation.ERROR_NO_URI);
+        buildRule.executeTarget("testNoEmptySchemaNamespace");
     }
 
     @Test
     public void testNoEmptySchemaLocation() {
-        try {
-            buildRule.executeTarget("testNoEmptySchemaLocation");
-            fail("Empty schema location");
-        } catch (BuildException ex) {
-            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_LOCATION,
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(SchemaValidate.SchemaLocation.ERROR_NO_LOCATION);
+        buildRule.executeTarget("testNoEmptySchemaLocation");
     }
 
     @Test
     public void testNoFile() {
-        try {
-            buildRule.executeTarget("testNoFile");
-            fail("No file at file attribute");
-        } catch (BuildException ex) {
-            assertContains(SchemaValidate.SchemaLocation.ERROR_NO_FILE,
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(SchemaValidate.SchemaLocation.ERROR_NO_FILE);
+        buildRule.executeTarget("testNoFile");
     }
 
     @Test
     public void testNoDoubleSchemaLocation() {
-        try {
-            buildRule.executeTarget("testNoDoubleSchemaLocation");
-            fail("Two locations for schemas");
-        } catch (BuildException ex) {
-            assertContains(SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS,
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(SchemaValidate.SchemaLocation.ERROR_TWO_LOCATIONS);
+        buildRule.executeTarget("testNoDoubleSchemaLocation");
     }
 
     @Test
     public void testNoDuplicateSchema() {
-        try {
-            buildRule.executeTarget("testNoDuplicateSchema");
-            fail("duplicate schemas with different values");
-        } catch (BuildException ex) {
-            assertContains(SchemaValidate.ERROR_DUPLICATE_SCHEMA,
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(SchemaValidate.ERROR_DUPLICATE_SCHEMA);
+        buildRule.executeTarget("testNoDuplicateSchema");
     }
 
     @Test

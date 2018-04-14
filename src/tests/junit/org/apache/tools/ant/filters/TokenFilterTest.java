@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.filters;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.apache.tools.ant.AntAssert.assertNotContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -58,57 +59,57 @@ public class TokenFilterTest {
     @Test
     public void testTrimignore() {
         buildRule.executeTarget("trimignore");
-        assertContains("Hello-World", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Hello-World"));
     }
 
     @Test
     public void testStringTokenizer() {
         buildRule.executeTarget("stringtokenizer");
-        assertContains("#This#is#a#number#of#words#", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("#This#is#a#number#of#words#"));
     }
 
     @Test
     public void testUnixLineOutput() throws IOException {
         buildRule.executeTarget("unixlineoutput");
-        assertContains("\nThis\nis\na\nnumber\nof\nwords\n",
-                getFileString(buildRule.getProject().getProperty("output") + "/unixlineoutput"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/unixlineoutput"),
+                containsString("\nThis\nis\na\nnumber\nof\nwords\n"));
     }
 
     @Test
     public void testDosLineOutput() throws IOException {
 
         buildRule.executeTarget("doslineoutput");
-        assertContains("\r\nThis\r\nis\r\na\r\nnumber\r\nof\r\nwords\r\n",
-                getFileString(buildRule.getProject().getProperty("output") + "/doslineoutput"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/doslineoutput"),
+                containsString("\r\nThis\r\nis\r\na\r\nnumber\r\nof\r\nwords\r\n"));
     }
 
     @Test
     public void testFileTokenizer() throws IOException {
         buildRule.executeTarget("filetokenizer");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/filetokenizer");
-        assertContains("   of words", contents);
-        assertNotContains(" This is", contents);
+        assertThat(contents, containsString("   of words"));
+        assertThat(contents, not(containsString(" This is")));
     }
 
     @Test
     public void testReplaceString() throws IOException {
         buildRule.executeTarget("replacestring");
-        assertContains("this is the moon",
-                getFileString(buildRule.getProject().getProperty("output") + "/replacestring"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/replacestring"),
+                containsString("this is the moon"));
     }
 
     @Test
     public void testReplaceStrings() {
         buildRule.executeTarget("replacestrings");
-        assertContains("bar bar bar", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("bar bar bar"));
     }
 
     @Test
     public void testContainsString() throws IOException {
         buildRule.executeTarget("containsstring");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/containsstring");
-        assertContains("this is a line contains foo", contents);
-        assertNotContains("this line does not", contents);
+        assertThat(contents, containsString("this is a line contains foo"));
+        assertThat(contents, not(containsString("this line does not")));
     }
 
     @Test
@@ -120,12 +121,12 @@ public class TokenFilterTest {
 
         buildRule.executeTarget("replaceregex");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/replaceregex");
-        assertContains("world world world world", contents);
-        assertContains("dog Cat dog", contents);
-        assertContains("moon Sun Sun", contents);
-        assertContains("found WhiteSpace", contents);
-        assertContains("Found digits [1234]", contents);
-        assertNotContains("This is a line with digits", contents);
+        assertThat(contents, containsString("world world world world"));
+        assertThat(contents, containsString("dog Cat dog"));
+        assertThat(contents, containsString("moon Sun Sun"));
+        assertThat(contents, containsString("found WhiteSpace"));
+        assertThat(contents, containsString("Found digits [1234]"));
+        assertThat(contents, not(containsString("This is a line with digits")));
     }
 
     @Test
@@ -135,15 +136,16 @@ public class TokenFilterTest {
                 getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("filterreplaceregex");
-        String contents = getFileString(buildRule.getProject().getProperty("output") + "/filterreplaceregex");
-        assertContains("world world world world", contents);
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/filterreplaceregex"),
+                containsString("world world world world"));
 
     }
 
     @Test
     public void testHandleDollerMatch() throws IOException {
         buildRule.executeTarget("hasregex");
-        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present",
+                getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("dollermatch");
     }
@@ -154,7 +156,7 @@ public class TokenFilterTest {
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/trimfile");
         assertTrue("no ws at start", contents.startsWith("This is th"));
         assertTrue("no ws at end", contents.endsWith("second line."));
-        assertContains("  This is the second", contents);
+        assertThat(contents, containsString("  This is the second"));
     }
 
     @Test
@@ -163,21 +165,21 @@ public class TokenFilterTest {
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/trimfilebyline");
         assertFalse("no ws at start", contents.startsWith("This is th"));
         assertFalse("no ws at end", contents.endsWith("second line."));
-        assertNotContains("  This is the second", contents);
-        assertContains("file.\nThis is the second", contents);
+        assertThat(contents, not(containsString("  This is the second")));
+        assertThat(contents, containsString("file.\nThis is the second"));
     }
 
     @Test
     public void testFilterReplaceString() throws IOException {
         buildRule.executeTarget("filterreplacestring");
-        String contents = getFileString(buildRule.getProject().getProperty("output") + "/filterreplacestring");
-        assertContains("This is the moon", contents);
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/filterreplacestring"),
+                containsString("This is the moon"));
     }
 
     @Test
     public void testFilterReplaceStrings() {
         buildRule.executeTarget("filterreplacestrings");
-        assertContains("bar bar bar", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("bar bar bar"));
     }
 
     @Test
@@ -189,40 +191,42 @@ public class TokenFilterTest {
 
         buildRule.executeTarget("containsregex");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/containsregex");
-        assertContains("hello world", contents);
-        assertNotContains("this is the moon", contents);
-        assertContains("World here", contents);
+        assertThat(contents, containsString("hello world"));
+        assertThat(contents, not(containsString("this is the moon")));
+        assertThat(contents, containsString("World here"));
     }
 
     @Test
     public void testFilterContainsRegex() throws IOException {
         buildRule.executeTarget("hasregex");
-        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present",
+                getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("filtercontainsregex");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/filtercontainsregex");
-        assertContains("hello world", contents);
-        assertNotContains("this is the moon", contents);
-        assertContains("World here", contents);
+        assertThat(contents, containsString("hello world"));
+        assertThat(contents, not(containsString("this is the moon")));
+        assertThat(contents, containsString("World here"));
     }
 
     @Test
     public void testContainsRegex2() throws IOException {
         buildRule.executeTarget("hasregex");
-        assumeTrue("Regex not present", getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
+        assumeTrue("Regex not present",
+                getFileString(buildRule.getProject().getProperty("output") + "/replaceregexp").contains("bye world"));
 
         buildRule.executeTarget("containsregex2");
-        String contents = getFileString(buildRule.getProject().getProperty("output") + "/containsregex2");
-        assertContains("void register_bits();", contents);
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/containsregex2"),
+                containsString("void register_bits();"));
     }
 
     @Test
     public void testDeleteCharacters() throws IOException {
         buildRule.executeTarget("deletecharacters");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/deletechars");
-        assertNotContains("#", contents);
-        assertNotContains("*", contents);
-        assertContains("This is some ", contents);
+        assertThat(contents, not(containsString("#")));
+        assertThat(contents, not(containsString("*")));
+        assertThat(contents, containsString("This is some "));
     }
 
     @Test
@@ -230,21 +234,25 @@ public class TokenFilterTest {
         assumeTrue("Project does not have 'testScriptFilter' target",
                 buildRule.getProject().getTargets().contains("testScriptFilter"));
         buildRule.executeTarget("scriptfilter");
-        assertContains("HELLO WORLD", getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter"),
+                containsString("HELLO WORLD"));
 
     }
 
     @Test
     public void testScriptFilter2() throws IOException {
-        assumeTrue("Project does not have 'testScriptFilter' target", buildRule.getProject().getTargets().contains("testScriptFilter"));
+        assumeTrue("Project does not have 'testScriptFilter' target",
+                buildRule.getProject().getTargets().contains("testScriptFilter"));
         buildRule.executeTarget("scriptfilter2");
-        assertContains("HELLO MOON", getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter2"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/scriptfilter2"),
+                containsString("HELLO MOON"));
     }
 
     @Test
     public void testCustomTokenFilter() throws IOException {
         buildRule.executeTarget("customtokenfilter");
-        assertContains("Hello World", getFileString(buildRule.getProject().getProperty("output") + "/custom"));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/custom"),
+                containsString("Hello World"));
     }
 
     // ------------------------------------------------------
@@ -255,7 +263,7 @@ public class TokenFilterTest {
         Reader r = null;
         try {
             r = new FileReader(FILE_UTILS.resolveFile(buildRule.getProject().getBaseDir(),filename));
-            return  FileUtils.readFully(r);
+            return FileUtils.readFully(r);
         }
         finally {
             FileUtils.close(r);

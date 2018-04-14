@@ -25,10 +25,9 @@ import org.apache.tools.ant.types.FileSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -36,6 +35,9 @@ public class PreSetDefTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -98,22 +100,16 @@ public class PreSetDefTest {
 
     @Test
     public void testCorrectTaskNameBadAttr() {
-        try {
-            buildRule.executeTarget("correct_taskname_badattr");
-            fail("BuildException expected: attribute message");
-        } catch (BuildException ex) {
-            assertContains("javac doesn't support the", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("javac doesn't support the");
+        buildRule.executeTarget("correct_taskname_badattr");
     }
 
     @Test
     public void testCorrectTaskNameBadEl() {
-        try {
-            buildRule.executeTarget("correct_taskname_badel");
-            fail("BuildException expected: element message");
-        } catch (BuildException ex) {
-            assertContains("javac doesn't support the", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("javac doesn't support the");
+        buildRule.executeTarget("correct_taskname_badel");
     }
 
     @Test

@@ -29,9 +29,10 @@ import org.junit.Test;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -70,7 +71,7 @@ public class AntStructureTest {
         // the test has likely been loaded via a different classloader
         // than this class.  Therefore we make the printer assert its
         // state and only check for the tail invocation.
-        assertContains(MyPrinter.TAIL_CALLED, buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString(MyPrinter.TAIL_CALLED));
     }
 
     public static class MyPrinter implements AntStructure.StructurePrinter {

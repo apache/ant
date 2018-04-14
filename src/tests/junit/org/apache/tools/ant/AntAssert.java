@@ -23,7 +23,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Provides common assert functions for use across multiple tests, similar to the <tt>Assert</tt>s
  * within JUnit.
+ *
+ * @deprecated use assertThat() in JUnit 4.4+ in combination with containsString() matcher;
+ * for exception messages, use ExpectedException rule.
  */
+@Deprecated
 public class AntAssert {
 
     /**

@@ -18,10 +18,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeNoException;
 
 import org.apache.tools.ant.BuildException;
@@ -30,6 +29,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  */
@@ -37,6 +37,9 @@ public class PropertyTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
@@ -58,25 +61,23 @@ public class PropertyTest {
     @Test
     public void test2() {
         buildRule.executeTarget("test2");
-        assertContains("testprop1=aa, testprop3=xxyy, testprop4=aazz", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("testprop1=aa, testprop3=xxyy, testprop4=aazz"));
     }
 
+    /**
+     * Fail due to circular definition
+     */
     @Test
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("Did not throw exception on circular exception");
-        } catch (BuildException e) {
-            assertTrue("Circular definition not detected - ",
-                    e.getMessage().contains("was circularly defined"));
-        }
-
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("was circularly defined");
+        buildRule.executeTarget("test3");
     }
 
     @Test
     public void test4() {
         buildRule.executeTarget("test4");
-        assertContains("http.url is http://localhost:999", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("http.url is http://localhost:999"));
     }
 
     @Test
@@ -86,7 +87,7 @@ public class PropertyTest {
         buildRule.getProject().setNewProperty("test5.url", uri);
 
         buildRule.executeTarget("test5");
-        assertContains("http.url is http://localhost:999", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("http.url is http://localhost:999"));
     }
 
     @Test
@@ -95,32 +96,30 @@ public class PropertyTest {
         assertEquals("80", buildRule.getProject().getProperty("server1.http.port"));
     }
 
+    /**
+     * Fail due to prefix allowed only non-resource/file load
+     */
     @Test
     public void testPrefixFailure() {
-       try {
-            buildRule.executeTarget("prefix.fail");
-            fail("Did not throw exception on invalid use of prefix");
-        } catch (BuildException e) {
-            assertContains("Prefix allowed on non-resource/file load - ",
-                     "Prefix is only valid", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Prefix is only valid");
+        buildRule.executeTarget("prefix.fail");
     }
 
+    /**
+     * Fail due to circular definition
+     */
     @Test
     public void testCircularReference() {
-        try {
-            buildRule.executeTarget("testCircularReference");
-            fail("Did not throw exception on circular exception");
-        } catch (BuildException e) {
-            assertContains("Circular definition not detected - ",
-                         "was circularly defined", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("was circularly defined");
+        buildRule.executeTarget("testCircularReference");
     }
 
     @Test
     public void testThisIsNotACircularReference() {
         buildRule.executeTarget("thisIsNotACircularReference");
-        assertContains("b is A/A/A", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("b is A/A/A"));
     }
 
     @Test
@@ -133,7 +132,6 @@ public class PropertyTest {
         buildRule.executeTarget("testXmlProperty");
         assertEquals("ONE", buildRule.getProject().getProperty("xml.one"));
         assertEquals("TWO", buildRule.getProject().getProperty("xml.two"));
-
     }
 
 }

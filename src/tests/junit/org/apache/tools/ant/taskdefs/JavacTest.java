@@ -28,12 +28,14 @@ import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -65,13 +67,12 @@ public class JavacTest {
 
         javac.setFork(true);
         assertNotNull("normal fork", javac.getJavacExecutable());
-        assertContains("name should contain \"javac\"", "javac",
-                   javac.getJavacExecutable());
+        assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
 
         project.setProperty("build.compiler", "extJavac");
         javac.setFork(false);
         assertNotNull("fork via property", javac.getJavacExecutable());
-        assertContains("name should contain \"javac\"", "javac", javac.getJavacExecutable());
+        assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
 
         project.setProperty("build.compiler", "whatever");
         assertNull("no fork and not extJavac means no executable",

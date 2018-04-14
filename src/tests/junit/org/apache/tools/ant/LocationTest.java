@@ -25,10 +25,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class LocationTest {
 
@@ -71,16 +72,16 @@ public class LocationTest {
     public void testMacrodefWrappedTask() {
         buildRule.executeTarget("testMacrodefWrappedTask");
         Echo e = buildRule.getProject().getReference("echo3");
-        assertTrue(buildRule.getLog().contains("Line: "
-                + (e.getLocation().getLineNumber() + 1)));
+        assertThat(buildRule.getLog(),
+                containsString("Line: " + (e.getLocation().getLineNumber() + 1)));
     }
 
     @Test
     public void testPresetdefWrappedTask() {
         buildRule.executeTarget("testPresetdefWrappedTask");
         Echo e = buildRule.getProject().getReference("echo4");
-        assertTrue(buildRule.getLog().contains("Line: "
-                + (e.getLocation().getLineNumber() + 1)));
+        assertThat(buildRule.getLog(),
+                containsString("Line: " + (e.getLocation().getLineNumber() + 1)));
     }
 
     public static class EchoLocation extends Task {

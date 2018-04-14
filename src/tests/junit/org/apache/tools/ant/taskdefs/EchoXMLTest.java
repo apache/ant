@@ -25,7 +25,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 public class EchoXMLTest {
@@ -54,7 +55,7 @@ public class EchoXMLTest {
             buildRule.executeTarget("testFail");
             fail("BuildException expected: must fail");
         } catch (BuildException ex) {
-            assertContains("${foo}=bar", ex.getMessage());
+            assertThat(ex.getMessage(), containsString("${foo}=bar"));
         }
     }
 
@@ -64,7 +65,7 @@ public class EchoXMLTest {
             buildRule.executeTarget("testEmpty");
             fail("BuildException expected: must fail");
         } catch (BuildException ex) {
-            assertContains("No nested XML specified", ex.getMessage());
+            assertThat(ex.getMessage(), containsString("No nested XML specified"));
         }
     }
 

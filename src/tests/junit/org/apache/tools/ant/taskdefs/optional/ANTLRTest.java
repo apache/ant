@@ -28,8 +28,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.apache.tools.ant.AntAssert.assertNotContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -178,32 +179,32 @@ public class ANTLRTest {
     @Test
     public void testNoRecompile() {
         buildRule.executeTarget("test9");
-        assertNotContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), not(containsString("Skipped grammar file.")));
         buildRule.executeTarget("noRecompile");
-        assertContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), containsString("Skipped grammar file."));
     }
 
     @Test
     public void testNormalRecompile() {
         buildRule.executeTarget("test9");
-        assertNotContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), not(containsString("Skipped grammar file.")));
 
         FileUtilities.rollbackTimestamps(buildRule.getOutputDir(), 5);
 
         buildRule.executeTarget("normalRecompile");
-        assertNotContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), not(containsString("Skipped grammar file.")));
     }
 
     @Test
     // Bugzilla Report 12961
     public void testSupergrammarChangeRecompile() {
         buildRule.executeTarget("test9");
-        assertNotContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), not(containsString("Skipped grammar file.")));
 
         FileUtilities.rollbackTimestamps(buildRule.getOutputDir(), 5);
 
         buildRule.executeTarget("supergrammarChangeRecompile");
-        assertNotContains("Skipped grammar file.", buildRule.getFullLog());
+        assertThat(buildRule.getFullLog(), not(containsString("Skipped grammar file.")));
 
     }
 

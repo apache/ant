@@ -23,11 +23,12 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
 
 /**
  */
@@ -36,50 +37,36 @@ public class TypedefTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/typedef.xml");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testEmpty() {
-        try {
-            buildRule.executeTarget("empty");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("empty");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testNoName() {
-        try {
-            buildRule.executeTarget("noName");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("noName");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testNoClassname() {
-        try {
-            buildRule.executeTarget("noClassname");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("noClassname");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testClassNotFound() {
-        try {
-            buildRule.executeTarget("classNotFound");
-            fail("BuildException expected: classname specified doesn't exist");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("classNotFound");
+        // TODO assert value
     }
 
     @Test
@@ -88,8 +75,7 @@ public class TypedefTest {
         assertEquals("", buildRule.getLog());
         Object ref = buildRule.getProject().getReferences().get("global");
         assertNotNull("ref is not null", ref);
-        assertEquals("org.example.types.TypedefTestType",
-                     ref.getClass().getName());
+        assertEquals("org.example.types.TypedefTestType", ref.getClass().getName());
     }
 
     @Test
@@ -98,8 +84,7 @@ public class TypedefTest {
         assertEquals("", buildRule.getLog());
         Object ref = buildRule.getProject().getReferences().get("local");
         assertNotNull("ref is not null", ref);
-        assertEquals("org.example.types.TypedefTestType",
-                     ref.getClass().getName());
+        assertEquals("org.example.types.TypedefTestType", ref.getClass().getName());
     }
 
     /**
@@ -109,28 +94,25 @@ public class TypedefTest {
     @Test
     public void testDoubleNotPresent() {
         buildRule.executeTarget("double-notpresent");
-        assertContains("hi", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("hi"));
     }
 
     @Test
     public void testNoResourceOnErrorFailAll() {
-            try {
-            buildRule.executeTarget("noresourcefailall");
-            fail("BuildException expected: the requested resource does not exist");
-        } catch (BuildException ex) {
-            assertContains("Could not load definitions from resource ", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Could not load definitions from resource ");
+        buildRule.executeTarget("noresourcefailall");
     }
 
     @Test
     public void testNoResourceOnErrorFail() {
         buildRule.executeTarget("noresourcefail");
-        assertContains("Could not load definitions from resource ", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Could not load definitions from resource "));
     }
 
     @Test
     public void testNoResourceOnErrorNotFail() {
-            buildRule.executeTarget("noresourcenotfail");
-        assertContains("Could not load definitions from resource ", buildRule.getLog());
+        buildRule.executeTarget("noresourcenotfail");
+        assertThat(buildRule.getLog(), containsString("Could not load definitions from resource "));
     }
 }

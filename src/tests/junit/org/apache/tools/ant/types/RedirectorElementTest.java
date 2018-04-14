@@ -24,7 +24,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -73,9 +75,8 @@ public class RedirectorElementTest {
     @Test
     public void testLogInputString() {
         buildRule.executeTarget("testLogInputString");
-        if (buildRule.getLog().contains("testLogInputString can-cat")) {
-            assertContains("Using input string", buildRule.getFullLog());
-        }
+        assertThat(buildRule.getFullLog(), both(containsString("testLogInputString can-cat"))
+                .and(containsString("Using input string")));
     }
 
     @Test

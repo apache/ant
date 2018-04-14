@@ -28,7 +28,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class DynamicFilterTest {
 
@@ -46,7 +47,7 @@ public class DynamicFilterTest {
         buildRule.executeTarget("dynamicfilter");
         String content = FileUtilities.getFileContents(
                 new File(buildRule.getProject().getProperty("output") + "/dynamicfilter"));
-        assertContains("hellO wOrld", content);
+        assertThat(content, containsString("hellO wOrld"));
     }
 
     public static class CustomFilter implements ChainableReader {

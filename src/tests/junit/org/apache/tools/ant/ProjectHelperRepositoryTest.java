@@ -26,7 +26,6 @@ import org.apache.tools.ant.types.resources.StringResource;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Testing around the management of the project helpers
@@ -74,32 +73,20 @@ public class ProjectHelperRepositoryTest {
         assertTrue(helper instanceof ProjectHelper2);
     }
 
-    @Test
-    public void testNoDefaultContructor() {
+    @Test(expected = BuildException.class)
+    public void testNoDefaultConstructor() {
 
-        class IncrrectHelper extends ProjectHelper {
+        class IncorrectHelper extends ProjectHelper {
             // the default constructor is not visible to ant here
         }
 
-        ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
-        try {
-            repo.registerProjectHelper(IncrrectHelper.class);
-            fail("Registring an helper with no default constructor should fail");
-        } catch (BuildException e) {
-            // ok
-            //TODO we should be asserting a value in here
-        }
+        ProjectHelperRepository.getInstance().registerProjectHelper(IncorrectHelper.class);
+        // TODO we should be asserting a value in here
     }
 
-    @Test
-    public void testUnkwnowHelper() {
-        ProjectHelperRepository repo = ProjectHelperRepository.getInstance();
-        try {
-            repo.registerProjectHelper("xxx.yyy.zzz.UnknownHelper");
-            fail("Registring an unknwon helper should fail");
-        } catch (BuildException e) {
-            // ok
-            //TODO we should be asserting a value in here
-        }
+    @Test(expected = BuildException.class)
+    public void testUnknownHelper() {
+        ProjectHelperRepository.getInstance().registerProjectHelper("xxx.yyy.zzz.UnknownHelper");
+        // TODO we should be asserting a value in here
     }
 }

@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.apache.tools.ant.AntAssert.assertNotContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
@@ -41,13 +42,13 @@ public class TearDownOnVmCrashTest {
     public void testNoTeardown() {
         buildRule.executeTarget("testNoTeardown");
         assertEquals("true", buildRule.getProject().getProperty("error"));
-        assertNotContains("tearDown called on Timeout", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), not(containsString("tearDown called on Timeout")));
     }
 
     @Test
     public void testTeardown() {
         buildRule.executeTarget("testTeardown");
         assertEquals("true", buildRule.getProject().getProperty("error"));
-        assertContains("tearDown called on Timeout", buildRule.getOutput());
+        assertThat(buildRule.getOutput(), containsString("tearDown called on Timeout"));
     }
 }

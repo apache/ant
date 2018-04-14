@@ -29,9 +29,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -150,7 +151,7 @@ public class ConcatTest {
         String filename = "src/etc/testcases/taskdefs/thisfiledoesnotexist"
             .replace('/', File.separatorChar);
         buildRule.executeTarget("test6");
-        assertContains(filename + " does not exist", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString(filename + " does not exist"));
     }
 
     @Test
@@ -200,7 +201,7 @@ public class ConcatTest {
     @Test
     public void testFilter() {
         buildRule.executeTarget("testfilter");
-        assertTrue(buildRule.getLog().contains("REPLACED"));
+        assertThat(buildRule.getLog(), containsString("REPLACED"));
     }
 
     @Test
@@ -252,7 +253,7 @@ public class ConcatTest {
     @Test
     public void testfilterinline() {
         buildRule.executeTarget("testfilterinline");
-        assertTrue(buildRule.getLog().contains("REPLACED"));
+        assertThat(buildRule.getLog(), containsString("REPLACED"));
     }
 
     /**
@@ -261,8 +262,8 @@ public class ConcatTest {
     @Test
     public void testmultireader() {
         buildRule.executeTarget("testmultireader");
-        assertTrue(buildRule.getLog().contains("Bye"));
-        assertFalse(buildRule.getLog().contains("Hello"));
+        assertThat(buildRule.getLog(), containsString("Bye"));
+        assertThat(buildRule.getLog(), not(containsString("Hello")));
     }
     /**
      * Check if fixlastline works
@@ -270,8 +271,8 @@ public class ConcatTest {
     @Test
     public void testfixlastline() throws IOException {
         buildRule.executeTarget("testfixlastline");
-        assertContains("end of line" + System.lineSeparator() + "This has",
-                FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"));
+        assertThat(FileUtilities.getFileContents(buildRule.getProject(), "concat.line4"),
+                containsString("end of line" + System.lineSeparator() + "This has"));
     }
 
     /**
@@ -280,7 +281,8 @@ public class ConcatTest {
     @Test
     public void testfixlastlineeol() throws IOException {
         buildRule.executeTarget("testfixlastlineeol");
-        assertContains("end of line\rThis has", FileUtilities.getFileContents(buildRule.getProject(), "concat.linecr"));
+        assertThat(FileUtilities.getFileContents(buildRule.getProject(), "concat.linecr"),
+                containsString("end of line\rThis has"));
     }
 
     @Test
@@ -300,10 +302,8 @@ public class ConcatTest {
         throws IOException {
         buildRule.executeTarget(target);
         String content = FileUtilities.getFileContents(buildRule.getProject(), filename);
-        assertTrue(
-            "expecting file " + filename + " to contain " +
-            contains +
-            " but got " + content, content.contains(contains));
+        assertThat("expecting file " + filename + " to contain " + contains + " but got " + content,
+                content, containsString(contains));
     }
 
 }

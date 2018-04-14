@@ -24,7 +24,8 @@ import java.io.FileWriter;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class PropertyFileCLITest {
 
@@ -54,7 +55,7 @@ public class PropertyFileCLITest {
                     "-l", log.getAbsolutePath()
                 }, null, null);
             String l = FileUtils.safeReadFully(fr = new FileReader(log));
-            assertContains("Hello, world", l);
+            assertThat(l, containsString("Hello, world"));
         } finally {
             FileUtils.close(fw);
             FileUtils.close(fr);

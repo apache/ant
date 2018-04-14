@@ -18,18 +18,21 @@
 
 package org.apache.tools.ant.types;
 
-
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit testcases for org.apache.tools.ant.CommandlineJava
@@ -93,8 +96,7 @@ public class CommandlineJavaTest {
         //        assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
-        assertTrue("build.xml contained",
-                s[3].contains("build.xml" + java.io.File.pathSeparator));
+        assertThat("build.xml contained", s[3], containsString("build.xml" + File.pathSeparator));
         assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath",

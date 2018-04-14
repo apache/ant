@@ -28,8 +28,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -228,11 +230,8 @@ public class StyleTest {
 
     private void assertFileContains(String filename, String contains) throws IOException {
         String content = getFileString(filename);
-        assertTrue(
-              "expecting file " + filename
-            + " to contain " + contains
-            + " but got " + content,
-                content.contains(contains));
+        assertThat("expecting file " + filename + " to contain " + contains + " but got " + content,
+                content, containsString(contains));
     }
 
 }

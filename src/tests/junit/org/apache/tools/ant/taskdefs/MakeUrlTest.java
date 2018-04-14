@@ -22,21 +22,25 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 
 public class MakeUrlTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -45,42 +49,30 @@ public class MakeUrlTest {
 
     @Test
     public void testEmpty() {
-        try {
-            buildRule.executeTarget("testEmpty");
-            fail("BuildException expected: missing property");
-        } catch (BuildException ex) {
-            assertContains("property", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("property");
+        buildRule.executeTarget("testEmpty");
     }
 
     @Test
     public void testNoProperty() {
-        try {
-            buildRule.executeTarget("testNoProperty");
-            fail("BuildException expected: missing property");
-        } catch (BuildException ex) {
-            assertContains("property", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("property");
+        buildRule.executeTarget("testNoProperty");
     }
 
     @Test
     public void testNoFile() {
-        try {
-            buildRule.executeTarget("testNoFile");
-            fail("BuildException expected: missing file");
-        } catch (BuildException ex) {
-            assertContains("file", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("file");
+        buildRule.executeTarget("testNoFile");
     }
 
     @Test
     public void testValidation() {
-        try {
-            buildRule.executeTarget("testValidation");
-            fail("BuildException expected: " + MakeUrl.ERROR_MISSING_FILE);
-        } catch (BuildException ex) {
-            assertContains("file", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("file");
+        buildRule.executeTarget("testValidation");
     }
 
     @Test
@@ -160,8 +152,8 @@ public class MakeUrlTest {
     protected void assertPropertyContains(String property, String contains) {
         String result = getProperty(property);
 
-        assertTrue("expected " + contains + " in " + result,
-                result != null && result.contains(contains));
+        assertNotNull("expected non-null property value", result);
+        assertThat("expected " + contains + " in " + result, result, containsString(contains));
     }
 
     /**

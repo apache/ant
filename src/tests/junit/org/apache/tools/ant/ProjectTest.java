@@ -32,12 +32,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -268,7 +269,7 @@ public class ProjectTest {
         // overriding target from imported buildfile is allowed
         buildRule.configureProject("src/etc/testcases/core/duplicate-target2.xml");
         buildRule.executeTarget("once");
-        assertContains("once from buildfile", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("once from buildfile"));
     }
 
     @Test

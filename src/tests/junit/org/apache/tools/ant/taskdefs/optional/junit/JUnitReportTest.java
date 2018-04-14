@@ -18,9 +18,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.ByteArrayInputStream;
@@ -100,21 +101,21 @@ public class JUnitReportTest {
     public void testEmptyFile() {
         buildRule.executeTarget("testEmptyFile");
         assertIndexCreated();
-        assertContains("Required text not found in log", XMLResultAggregator.WARNING_EMPTY_FILE, buildRule.getLog());
+        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_EMPTY_FILE));
     }
 
     @Test
     public void testIncompleteFile() {
         buildRule.executeTarget("testIncompleteFile");
         assertIndexCreated();
-        assertContains("Required text not found in log", XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED, buildRule.getLog());
+        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED));
     }
 
     @Test
     public void testWrongElement() {
         buildRule.executeTarget("testWrongElement");
         assertIndexCreated();
-        assertContains("Required text not found in log", XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT, buildRule.getLog());
+        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT));
     }
 
     // Bugzilla Report 34963
@@ -126,8 +127,8 @@ public class JUnitReportTest {
         try {
             r = new FileReader(new File(buildRule.getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
             String report = FileUtils.readFully(r);
-            assertContains("output must contain <br>:\n" + report, "junit.framework.AssertionFailedError: DOEG<br>", report);
-            assertContains("#51049: output must translate line breaks:\n" + report, "cur['line.separator'] = '\\r\\n';", report);
+            assertThat("output must contain <br>:\n" + report, report, containsString("junit.framework.AssertionFailedError: DOEG<br>"));
+            assertThat("#51049: output must translate line breaks:\n" + report, report, containsString("cur['line.separator'] = '\\r\\n';"));
         } finally {
             FileUtils.close(r);
         }
@@ -179,7 +180,7 @@ public class JUnitReportTest {
     @Test
     public void testWithParams() throws Exception {
         buildRule.executeTarget("testWithParams");
-        assertContains("key1=value1,key2=value2", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("key1=value1,key2=value2"));
         commonIndexFileAssertions();
     }
 

@@ -24,11 +24,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.apache.tools.ant.AntAssert.assertNotContains;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
 
 /**
  */
@@ -36,6 +38,9 @@ public class GetTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -47,54 +52,49 @@ public class GetTest {
         buildRule.executeTarget("cleanup");
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to invalid src argument
+     */
+    @Test(expected = BuildException.class)
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("src invalid");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test4");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to invalid dest argument or no HTTP server on localhost
+     */
+    @Test(expected = BuildException.class)
     public void test5() {
-        try {
-            buildRule.executeTarget("test5");
-            fail("dest invalid (or no http-server on local machine");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test5");
+        // TODO assert value
     }
 
     @Test
@@ -102,15 +102,17 @@ public class GetTest {
         buildRule.executeTarget("test6");
     }
 
+    /**
+     * Fail due to null or empty userAgent argument
+     */
     @Test
     public void test7() {
+        thrown.expect(BuildException.class);
         try {
             buildRule.executeTarget("test7");
-            assertNotContains("Adding header", buildRule.getLog());
-
-            fail("userAgent may not be null or empty");
-        } catch (BuildException ex) {
-            //TODO assert value
+        } finally {
+            // post-mortem
+            assertThat(buildRule.getLog(), not(containsString("Adding header")));
         }
     }
 
@@ -127,22 +129,21 @@ public class GetTest {
     @Test
     public void testTwoHeadersAreAddedOK() {
         buildRule.executeTarget("testTwoHeadersAreAddedOK");
-        String log = buildRule.getLog();
-        assertContains("Adding header 'header1'", log);
-        assertContains("Adding header 'header2'", log);
+        assertThat(buildRule.getLog(), both(containsString("Adding header 'header1'"))
+                        .and(containsString("Adding header 'header2'")));
     }
 
     @Test
     public void testEmptyHeadersAreNeverAdded() {
         buildRule.executeTarget("testEmptyHeadersAreNeverAdded");
-        assertNotContains("Adding header", buildRule.getLog());
+        assertThat(buildRule.getLog(), not(containsString("Adding header")));
     }
 
     @Test
     public void testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded() {
         buildRule.executeTarget("testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded");
         String log = buildRule.getLog();
-        assertContains("Adding header 'header1'", log);
+        assertThat(log, containsString("Adding header 'header1'"));
 
         int actualHeaderCount = log.split("Adding header ").length - 1;
 
@@ -152,7 +153,7 @@ public class GetTest {
     @Test
     public void testHeaderSpaceTrimmed() {
         buildRule.executeTarget("testHeaderSpaceTrimmed");
-        assertContains("Adding header 'header1'", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("Adding header 'header1'"));
     }
 
 }

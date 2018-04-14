@@ -17,8 +17,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
@@ -212,7 +213,7 @@ public class FTPTest {
     @Test
     public void testGetWithSelector() {
         buildRule.executeTarget("ftp-get-with-selector");
-        assertContains("selectors are not supported in remote filesets", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("selectors are not supported in remote filesets"));
         FileSet fsDestination = buildRule.getProject().getReference("fileset-destination-without-selector");
         DirectoryScanner dsDestination = fsDestination.getDirectoryScanner(buildRule.getProject());
         dsDestination.scan();

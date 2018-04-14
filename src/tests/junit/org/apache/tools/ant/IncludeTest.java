@@ -18,13 +18,16 @@
 
 package org.apache.tools.ant;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test the build file inclusion using XML entities.
@@ -34,6 +37,9 @@ public class IncludeTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void test1() {
@@ -72,59 +78,39 @@ public class IncludeTest {
 
     @Test
     public void testParseErrorInIncluding() {
-        try {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("location", hasProperty("fileName",
+                containsString("build.xml"))));
             buildRule.configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
-            fail("should have caused a parser exception");
-        } catch (BuildException e) {
-            assertContains(e.getLocation().toString()
-                       + " should refer to build.xml",
-                       "build.xml:", e.getLocation().toString());
-        }
     }
 
     @Test
     public void testTaskErrorInIncluding() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("location",
+                both(hasProperty("fileName", containsString("build.xml")))
+                        .and(hasProperty("lineNumber", equalTo(14)))));
+        thrown.expectMessage(startsWith("Warning: Could not find file "));
         buildRule.configureProject("src/etc/testcases/core/include/including_file_task_error/build.xml");
-        try {
-            buildRule.executeTarget("test");
-            fail("should have cause a build failure");
-        } catch (BuildException e) {
-            assertTrue(e.getMessage()
-                       + " should start with \'Warning: Could not find",
-                         e.getMessage().startsWith("Warning: Could not find file "));
-            assertTrue(e.getLocation().toString()
-                       + " should end with build.xml:14: ",
-                       e.getLocation().toString().endsWith("build.xml:14: "));
-        }
     }
 
     @Test
     public void testParseErrorInIncluded() {
-        try {
-            buildRule.configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
-            fail("should have caused a parser exception");
-        } catch (BuildException e) {
-            assertContains(e.getLocation().toString()
-                       + " should refer to included_file.xml",
-                       "included_file.xml:",
-                       e.getLocation().toString());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("location",
+                hasProperty("fileName", containsString("included_file.xml"))));
+        buildRule.configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
     }
 
     @Test
     public void testTaskErrorInIncluded() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("location",
+                both(hasProperty("fileName", containsString("included_file.xml")))
+                        .and(hasProperty("lineNumber", equalTo(2)))));
+        thrown.expectMessage(startsWith("Warning: Could not find file "));
         buildRule.configureProject("src/etc/testcases/core/include/included_file_task_error/build.xml");
-        try {
-            buildRule.executeTarget("test");
-            fail("should have cause a build failure");
-        } catch (BuildException e) {
-            assertTrue(e.getMessage()
-                       + " should start with \'Warning: Could not find",
-                         e.getMessage().startsWith("Warning: Could not find file "));
-            assertTrue(e.getLocation().toString()
-                       + " should end with included_file.xml:2: ",
-                       e.getLocation().toString().endsWith("included_file.xml:2: "));
-        }
+        buildRule.executeTarget("test");
     }
 
     @Test

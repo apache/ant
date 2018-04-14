@@ -46,11 +46,12 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNotNull;
@@ -184,7 +185,8 @@ public class ModifiedSelectorTest {
 
             assertNotNull("'fs.full.value' must be set.", fsFullValue);
             assertNotEquals("'fs.full.value' must not be null.", "", fsFullValue);
-            assertTrue("'fs.full.value' must contain ant.bat.", fsFullValue.contains("ant.bat"));
+            assertThat("'fs.full.value' must contain ant.bat.", fsFullValue,
+                    containsString("ant.bat"));
 
             assertNotNull("'fs.mod.value' must be set.", fsModValue);
             // must be empty according to the Mock* implementations
@@ -569,7 +571,7 @@ public class ModifiedSelectorTest {
     public void testResourceSelectorSelresTrue() {
         BFT bft = new BFT();
         bft.doTarget("modifiedselectortest-ResourceSelresTrue");
-        assertContains("does not provide an InputStream", bft.getLog());
+        assertThat(bft.getLog(), containsString("does not provide an InputStream"));
         bft.deleteCachefile();
     }
 

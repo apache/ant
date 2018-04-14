@@ -25,7 +25,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class PolyTest {
 
@@ -40,25 +41,25 @@ public class PolyTest {
     @Test
     public void testFileSet() {
         buildRule.executeTarget("fileset");
-        assertContains("types.FileSet", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("types.FileSet"));
     }
 
     @Test
     public void testFileSetAntType() {
         buildRule.executeTarget("fileset-ant-type");
-        assertContains("types.PolyTest$MyFileSet", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("types.PolyTest$MyFileSet"));
     }
 
     @Test
     public void testPath() {
         buildRule.executeTarget("path");
-        assertContains("types.Path", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("types.Path"));
     }
 
     @Test
     public void testPathAntType() {
         buildRule.executeTarget("path-ant-type");
-        assertContains("types.PolyTest$MyPath", buildRule.getLog());
+        assertThat(buildRule.getLog(), containsString("types.PolyTest$MyPath"));
     }
 
     public static class MyFileSet extends FileSet {

@@ -23,12 +23,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test the load file task
@@ -37,6 +38,9 @@ public class LoadFileTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -49,29 +53,21 @@ public class LoadFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * Fail due to source file not defined
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testNoSourcefileDefined() {
-        try {
-            buildRule.executeTarget("testNoSourcefileDefined");
-            fail("BuildException expected: source file not defined");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testNoSourcefileDefined");
+        // TODO assert value
     }
 
     /**
-     * A unit test for JUnit
+     * Fail due to output property not defined
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testNoPropertyDefined() {
-        try {
-            buildRule.executeTarget("testNoPropertyDefined");
-            fail("BuildException expected: output property not defined");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testNoPropertyDefined");
+        // TODO assert value
     }
 
     /**
@@ -79,12 +75,9 @@ public class LoadFileTest {
      */
     @Test
     public void testNoSourcefilefound() {
-        try {
-            buildRule.executeTarget("testNoSourcefilefound");
-            fail("BuildException expected: File not found");
-        } catch (BuildException ex) {
-            assertContains(" doesn't exist", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(" doesn't exist");
+        buildRule.executeTarget("testNoSourcefilefound");
     }
 
     /**
@@ -102,9 +95,8 @@ public class LoadFileTest {
     @Test
     public void testLoadAFile() throws BuildException {
         buildRule.executeTarget("testLoadAFile");
-        if (!buildRule.getProject().getProperty("testLoadAFile").contains("eh?")) {
-            fail("property is not all in the file");
-        }
+        assertThat("property is not all in the file",
+                buildRule.getProject().getProperty("testLoadAFile"), containsString("eh?"));
     }
 
     /**
@@ -122,9 +114,8 @@ public class LoadFileTest {
     @Test
     public void testEvalProps() throws BuildException {
         buildRule.executeTarget("testEvalProps");
-        if (!buildRule.getProject().getProperty("testEvalProps").contains("rain")) {
-            fail("property eval broken");
-        }
+        assertThat("property eval broken",
+                buildRule.getProject().getProperty("testEvalProps"), containsString("rain"));
     }
 
     /**
@@ -133,9 +124,8 @@ public class LoadFileTest {
     @Test
     public void testFilterChain() throws BuildException {
         buildRule.executeTarget("testFilterChain");
-        if (!buildRule.getProject().getProperty("testFilterChain").contains("World!")) {
-            fail("Filter Chain broken");
-        }
+        assertThat("Filter Chain broken",
+                buildRule.getProject().getProperty("testFilterChain"), containsString("World!"));
     }
 
     /**

@@ -18,12 +18,10 @@
 
 package org.apache.tools.ant;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  */
@@ -31,6 +29,9 @@ public class LoaderRefTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -41,11 +42,8 @@ public class LoaderRefTest {
     // override allowed on <available>
     @Test
     public void testBadRef() {
-        try {
-            buildRule.executeTarget("testbadref");
-            fail("BuildRule should have thrown an exception due to a bad classloader being specified");
-        } catch (BuildException ex) {
-            assertContains("Should fail due to ref not being a class loader", "does not reference a class loader", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("does not reference a class loader");
+        buildRule.executeTarget("testbadref");
     }
 }

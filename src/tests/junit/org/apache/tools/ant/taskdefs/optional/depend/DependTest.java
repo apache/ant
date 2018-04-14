@@ -29,11 +29,13 @@ import org.apache.tools.ant.types.FileSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Testcase for the Depend optional task.
@@ -47,6 +49,9 @@ public class DependTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -104,7 +109,6 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("tempsrc.dir")), 5);
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
-
         buildRule.executeTarget("testinner");
         assertEquals("Depend did not leave correct number of files", 0,
             getResultFiles().size());
@@ -132,12 +136,9 @@ public class DependTest {
      */
     @Test
     public void testNoSource() {
-        try {
-            buildRule.executeTarget("testnosource");
-            fail("Build exception expected: No source specified");
-        } catch (BuildException ex) {
-            assertContains("srcdir attribute must be set", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("srcdir attribute must be set");
+        buildRule.executeTarget("testnosource");
     }
 
     /**
@@ -145,12 +146,9 @@ public class DependTest {
      */
     @Test
     public void testEmptySource() {
-        try {
-            buildRule.executeTarget("testemptysource");
-            fail("Build exception expected: No source specified");
-        } catch (BuildException ex) {
-            assertContains("srcdir attribute must be non-empty", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("srcdir attribute must be non-empty");
+        buildRule.executeTarget("testemptysource");
     }
 
     /**
@@ -201,12 +199,9 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testnonpublic");
-        String log = buildRule.getLog();
-        assertContains("Expected warning about APrivate",
-            "The class APrivate in file", log);
-        assertContains("but has not been deleted because its source file "
-            + "could not be determined",
-            "The class APrivate in file", log);
+        assertThat("Expected warning about APrivate",
+                buildRule.getLog(), both(containsString("The class APrivate in file"))
+                        .and(containsString("but has not been deleted because its source file could not be determined")));
     }
 
 }

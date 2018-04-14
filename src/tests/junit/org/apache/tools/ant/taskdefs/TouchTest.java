@@ -25,23 +25,24 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 
-import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TouchTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
 
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
 
     @Before
     public void setUp() {
@@ -168,13 +169,9 @@ public class TouchTest {
      */
     @Test
     public void testBadPattern() {
-        try {
-            buildRule.executeTarget("testBadPattern");
-            fail("No parsing exception thrown");
-        } catch (BuildException ex) {
-            assertContains("Unparseable", ex.getMessage());
-        }
-
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Unparseable");
+        buildRule.executeTarget("testBadPattern");
     }
 
     /**
