@@ -20,7 +20,7 @@
 
   <target name="setUp">
     <mkdir dir="${input}/org/example"/>
-    <property name="tmpdir" location="../../../../build/ant-unit/taskdef"/>
+    <property name="tmpdir" location="../../../../build/antunit/taskdef"/>
     <mkdir dir="${tmpdir}"/>
     <echoxml file="${input}/org/example/antlib.xml">
       <antlib>

@@ -22,7 +22,7 @@
 
     <target name="setUp" if="jdk1.6+">
         <mkdir dir="${input}/org/example" />
-        <property name="tmpdir" location="../../../../build/ant-unit/taskdef" />
+        <property name="tmpdir" location="../../../../build/antunit/taskdef" />
         <mkdir dir="${tmpdir}" />
         <echo file="${input}/org/example/antlib.xml">
             <![CDATA[<antlib xmlns:e="ant:current">
