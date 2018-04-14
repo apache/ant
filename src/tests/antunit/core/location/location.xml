@@ -20,7 +20,7 @@
        
   <property name="ant.build.dir" location="../../../../../build"/>
   <property name="working.dir"
-            location="${ant.build.dir}/ant-unit/location-dir"/>
+            location="${ant.build.dir}/antunit/location-dir"/>
   <property name="classes.dir" location="${working.dir}/classes"/>
   
   <target name="all">

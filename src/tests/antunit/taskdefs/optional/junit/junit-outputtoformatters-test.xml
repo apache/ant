@@ -18,7 +18,7 @@
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../../antunit-base.xml" />
   <property name="ant-build" location="../../../../../../build"/>
-  <property name="build-junit-dir" location="${ant-build}/ant-unit/junit-dir"/>
+  <property name="build-junit-dir" location="${ant-build}/antunit/junit-dir"/>
   <property name="reports.dir" location="${build-junit-dir}/report"/>
 
   <macrodef name="assert-file-not-contains" backtrace="no">
