@@ -164,7 +164,7 @@ public class ParallelTest {
     }
 
     /**
-     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=55539"
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=55539">bug 55539</a>
      */
     @Test
     public void testSingleExit() {
@@ -177,7 +177,7 @@ public class ParallelTest {
     }
 
     /**
-     * @see "https://issues.apache.org/bugzilla/show_bug.cgi?id=55539"
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=55539">bug 55539</a>
      */
     @Test
     public void testExitAndOtherException() {

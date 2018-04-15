@@ -49,8 +49,7 @@ public class UnknownElementTest {
     /**
      * Not really a UnknownElement test but rather one of "what
      * information is available in taskFinished".
-     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26197">
-     *     https://issues.apache.org/bugzilla/show_bug.cgi?id=26197</a>
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=26197">bug 26197</a>
      */
     @Test
     @Ignore("Previously disabled through naming convention")

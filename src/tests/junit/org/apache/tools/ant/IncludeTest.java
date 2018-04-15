@@ -86,6 +86,7 @@ public class IncludeTest {
 
     @Test
     public void testTaskErrorInIncluding() {
+        // TODO the test breaks in IDE
         thrown.expect(BuildException.class);
         thrown.expect(hasProperty("location",
                 both(hasProperty("fileName", containsString("build.xml")))
@@ -104,6 +105,7 @@ public class IncludeTest {
 
     @Test
     public void testTaskErrorInIncluded() {
+        // TODO the test breaks in IDE
         thrown.expect(BuildException.class);
         thrown.expect(hasProperty("location",
                 both(hasProperty("fileName", containsString("included_file.xml")))

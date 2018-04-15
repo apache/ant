@@ -43,7 +43,9 @@ public class DateUtilsTest {
         assertEquals("2 minutes 1 second", text);
     }
 
-    // https://issues.apache.org/bugzilla/show_bug.cgi?id=44659
+    /**
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=44659">bug 44659</a>
+     */
     @Test
     public void testLongElapsedTime() {
         assertEquals("2926 minutes 13 seconds",

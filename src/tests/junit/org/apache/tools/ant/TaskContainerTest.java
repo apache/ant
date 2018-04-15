@@ -48,20 +48,18 @@ public class TaskContainerTest {
     public void testTaskdef() {
         buildRule.executeTarget("testTaskdef");
         assertThat("attribute worked", buildRule.getLog(),
-                containsString(("As attribute: it worked")));
+                containsString("As attribute: it worked"));
         assertThat("nested text worked", buildRule.getLog(),
-                containsString(("As nested text: it worked")));
-        assertThat("nested text worked", buildRule.getLog(),
-                containsString(("As nested task: it worked")));
+                containsString("As nested text: it worked"));
     }
 
     @Test
     public void testCaseInsensitive() {
         buildRule.executeTarget("testCaseInsensitive");
         assertThat("works outside of container", buildRule.getLog(),
-                containsString(("hello ")));
+                containsString("hello "));
         assertThat("works inside of container", buildRule.getLog(),
-                containsString(("world")));
+                containsString("world"));
     }
 
 }

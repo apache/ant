@@ -58,7 +58,7 @@ public class AntlibTest {
     /**
      * Confirms that all matching resources will be used, so that you
      * can collect several antlibs in one Definer call.
-     * @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=24024"
+     * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=24024">bug 24024</a>
      */
     @Test
     public void testAntlibResource() {

@@ -36,6 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 /**
@@ -445,7 +446,7 @@ public class MSVSSTest implements MSVSSConstants {
 
         while (testIndex < testLength) {
             try {
-                if (sGeneratedCmdLine[genIndex].equals("")) {
+                if (sGeneratedCmdLine[genIndex].isEmpty()) {
                     genIndex++;
                     continue;
                 }
@@ -462,13 +463,11 @@ public class MSVSSTest implements MSVSSConstants {
         // Count the number of empty strings
         int cnt = 0;
         for (String argument : sGeneratedCmdLine) {
-            if (argument.equals("")) {
+            if (argument.isEmpty()) {
                 cnt++;
             }
         }
-        if (genLength - cnt > sTestCmdLine.length) {
-            // We have extra elements
-            fail("extra args");
-        }
+        // We have extra elements
+        assertFalse("extra args", genLength - cnt > sTestCmdLine.length);
     }
 }

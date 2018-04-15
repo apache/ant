@@ -144,7 +144,7 @@ public class SubAntTest {
         }
 
         public void targetStarted(BuildEvent event) {
-            if (event.getTarget().getName().equals("")) {
+            if (event.getTarget().getName().isEmpty()) {
                 return;
             }
             if (error == null) {

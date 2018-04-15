@@ -32,7 +32,6 @@ import static org.junit.Assert.fail;
  */
 public class ZipEntryTest {
 
-
     /**
      * test handling of extra fields
      */
@@ -203,8 +202,7 @@ public class ZipEntryTest {
 
     /**
      * Test case for
-     * <a href="https://issues.apache.org/jira/browse/COMPRESS-94"
-     * >COMPRESS-94</a>.
+     * <a href="https://issues.apache.org/jira/browse/COMPRESS-94">COMPRESS-94</a>
      */
     @Test
     public void testNotEquals() {

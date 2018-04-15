@@ -170,9 +170,9 @@ public class AntClassLoaderTest {
     }
 
     /**
-     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47593">
-     *     bug 47593, request to log the name of corrupt zip files from which
-     *     classes cannot be loaded</a>
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47593">bug 47593</a>
+     *     request to log the name of corrupt zip files from which
+     *     classes cannot be loaded
      */
     @Test
     public void testInvalidZipException() {
@@ -204,8 +204,7 @@ public class AntClassLoaderTest {
      * Asserts that getResources won't return resources that cannot be
      * seen by AntClassLoader but by ClassLoader.this.parent.
      *
-     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=46752">
-     *     https://issues.apache.org/bugzilla/show_bug.cgi?id=46752</a>
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=46752">bug 46752</a>
      */
     @SuppressWarnings("resource")
     @Test

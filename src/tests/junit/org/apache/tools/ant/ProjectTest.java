@@ -309,8 +309,7 @@ public class ProjectTest {
     }
 
     /**
-     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47623">
-     *     https://issues.apache.org/bugzilla/show_bug.cgi?id=47623</a>
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=47623">bug 47623</a>
      */
     @Test
     public void testNullThrowableMessageLog() {
