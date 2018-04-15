@@ -133,7 +133,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
         while ((line = reader.readLine()) != null) {
             lower = line.toLowerCase();
-            if (line.trim().equals("")) {
+            if (line.trim().isEmpty()) {
                 continue;
             }
             if (lower.contains("error")) {

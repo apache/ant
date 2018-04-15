@@ -463,7 +463,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
             // Use getShortLabel() so labels longer then 30 char are truncated
             // and the user is warned
             String shortLabel = getShortLabel();
-            if (shortLabel != null && !shortLabel.equals("")) {
+            if (shortLabel != null && !shortLabel.isEmpty()) {
                 versionDateLabel = FLAG_VERSION_LABEL + shortLabel;
             }
         }

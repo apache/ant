@@ -543,7 +543,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
      * @see org.apache.commons.net.ftp.FTPClientConfig
      */
     public void setServerLanguageCodeConfig(String serverLanguageCode) {
-        if (serverLanguageCode != null && !serverLanguageCode.equals("")) {
+        if (serverLanguageCode != null && !serverLanguageCode.isEmpty()) {
             this.serverLanguageCodeConfig = serverLanguageCode;
             configurationHasBeenSet();
         }

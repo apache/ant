@@ -1418,7 +1418,7 @@ public class Zip extends MatchingTask {
             if (filesets[i] instanceof ZipFileSet) {
                 final ZipFileSet zfs = (ZipFileSet) filesets[i];
                 if (zfs.getFullpath(getProject()) != null
-                    && !zfs.getFullpath(getProject()).equals("")) {
+                    && !zfs.getFullpath(getProject()).isEmpty()) {
                     // in this case all files from origin map to
                     // the fullPath attribute of the zipfileset at
                     // destination
@@ -1427,7 +1427,7 @@ public class Zip extends MatchingTask {
                     myMapper = fm;
 
                 } else if (zfs.getPrefix(getProject()) != null
-                           && !zfs.getPrefix(getProject()).equals("")) {
+                           && !zfs.getPrefix(getProject()).isEmpty()) {
                     final GlobPatternMapper gm = new GlobPatternMapper();
                     gm.setFrom("*");
                     String prefix = zfs.getPrefix(getProject());

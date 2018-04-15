@@ -150,7 +150,7 @@ public class DefaultLogger implements BuildLogger {
         if (verbose || !(error instanceof BuildException)) {
             m.append(StringUtils.getStackTrace(error));
         } else {
-            m.append(error).append(StringUtils.LINE_SEP);
+            m.append(String.format("%s%n", error));
         }
     }
 
@@ -166,17 +166,13 @@ public class DefaultLogger implements BuildLogger {
         Throwable error = event.getException();
         StringBuffer message = new StringBuffer();
         if (error == null) {
-            message.append(StringUtils.LINE_SEP);
-            message.append(getBuildSuccessfulMessage());
+            message.append(String.format("%n%s", getBuildSuccessfulMessage()));
         } else {
-            message.append(StringUtils.LINE_SEP);
-            message.append(getBuildFailedMessage());
-            message.append(StringUtils.LINE_SEP);
+            message.append(String.format("%n%s%n", getBuildFailedMessage()));
             throwableMessage(message, error, Project.MSG_VERBOSE <= msgOutputLevel);
         }
-        message.append(StringUtils.LINE_SEP);
-        message.append("Total time: ");
-        message.append(formatTime(System.currentTimeMillis() - startTime));
+        message.append(String.format("%nTotal time: %s",
+                formatTime(System.currentTimeMillis() - startTime)));
 
         String msg = message.toString();
         if (error == null) {
@@ -214,9 +210,8 @@ public class DefaultLogger implements BuildLogger {
       */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel
-            && !event.getTarget().getName().equals("")) {
-            String msg = StringUtils.LINE_SEP
-                + event.getTarget().getName() + ":";
+            && !event.getTarget().getName().isEmpty()) {
+            String msg = String.format("%n%s:", event.getTarget().getName());
             printMessage(msg, out, event.getPriority());
             log(msg);
         }
@@ -261,7 +256,7 @@ public class DefaultLogger implements BuildLogger {
 
             StringBuilder message = new StringBuilder();
             if (event.getTask() == null || emacsMode) {
-                //emacs mode or there is no task
+                // emacs mode or there is no task
                 message.append(event.getMessage());
             } else {
                 // Print out the name of the task if we're in one
@@ -275,10 +270,7 @@ public class DefaultLogger implements BuildLogger {
                     new BufferedReader(new StringReader(event.getMessage()))) {
 
                     message.append(r.lines().map(line -> prefix + line)
-                        .collect(Collectors.joining(StringUtils.LINE_SEP)));
-                    if (message.length() == 0) {
-                        message.append(prefix);
-                    }
+                        .collect(Collectors.joining(System.lineSeparator(), prefix, "")));
                 } catch (IOException e) {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
