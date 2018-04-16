@@ -22,8 +22,11 @@ import java.io.File;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
@@ -52,26 +55,26 @@ public class JavaEnvUtilsTest {
             .getAbsolutePath();
 
         String j = JavaEnvUtils.getJreExecutable("java");
-        assertTrue(j.endsWith(".exe"));
+        assertThat(j, endsWith(".exe"));
         assertTrue(j + " is absolute", (new File(j)).isAbsolute());
         try {
-            assertTrue(j + " is normalized and in the JRE dir", j.startsWith(javaHome));
+            assertThat(j + " is normalized and in the JRE dir", j, startsWith(javaHome));
         } catch (AssertionError e) {
             // java.home is bogus
             assertEquals("java.exe", j);
         }
 
         j = JavaEnvUtils.getJdkExecutable("javac");
-        assertTrue(j.endsWith(".exe"));
+        assertThat(j, endsWith(".exe"));
 
         try {
             assertTrue(j + " is absolute", (new File(j)).isAbsolute());
             String javaHomeParent = FILE_UTILS.normalize(javaHome + "/..").getAbsolutePath();
-            assertTrue(j + " is normalized and in the JDK dir", j.startsWith(javaHomeParent));
+            assertThat(j + " is normalized and in the JDK dir", j, startsWith(javaHomeParent));
             if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
-                assertTrue(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
+                assertThat(j + " is normalized and not in the JRE dir", j, startsWith(javaHome));
             } else {
-                assertFalse(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
+                assertThat(j + " is normalized and not in the JRE dir", j, not(startsWith(javaHome)));
             }
         } catch (AssertionError e) {
             // java.home is bogus
@@ -92,25 +95,25 @@ public class JavaEnvUtilsTest {
         String extension = Os.isFamily("dos") ? ".exe" : "";
 
         String j = JavaEnvUtils.getJreExecutable("java");
-        if (!extension.equals("")) {
-            assertTrue(j.endsWith(extension));
+        if (extension.isEmpty()) {
+            assertThat(j, endsWith(extension));
         }
         assertTrue(j + " is absolute", (new File(j)).isAbsolute());
-        assertTrue(j + " is normalized and in the JRE dir", j.startsWith(javaHome));
+        assertThat(j + " is normalized and in the JRE dir", j, startsWith(javaHome));
 
         j = JavaEnvUtils.getJdkExecutable("javac");
-        if (!extension.equals("")) {
-            assertTrue(j.endsWith(extension));
+        if (extension.isEmpty()) {
+            assertThat(j, endsWith(extension));
         }
         assertTrue(j + " is absolute", (new File(j)).isAbsolute());
 
         String javaHomeParent = FILE_UTILS.normalize(javaHome + "/..").getAbsolutePath();
-        assertTrue(j + " is normalized and in the JDK dir", j.startsWith(javaHomeParent));
+        assertThat(j + " is normalized and in the JDK dir", j, startsWith(javaHomeParent));
 
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
-            assertTrue(j + " is normalized and in the JRE dir", j.startsWith(javaHome));
+            assertThat(j + " is normalized and in the JRE dir", j, startsWith(javaHome));
         } else {
-            assertFalse(j + " is normalized and not in the JRE dir", j.startsWith(javaHome));
+            assertThat(j + " is normalized and not in the JRE dir", j, not(startsWith(javaHome)));
         }
 
         assertEquals("foo" + extension, JavaEnvUtils.getJreExecutable("foo"));

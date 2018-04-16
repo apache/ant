@@ -24,9 +24,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 /**
  */
@@ -35,60 +37,58 @@ public class GzipTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/gzip.xml");
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Fail due to zipfile pointing to a directory
+     */
+    @Test(expected = BuildException.class)
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("BuildException expected: zipfile must not point to a directory");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test4");
+        // TODO assert value
     }
 
     @Test
     public void testGZip() {
         buildRule.executeTarget("realTest");
         String log = buildRule.getLog();
-        assertTrue("Expecting message starting with 'Building:' but got '"
-            + log + "'", log.startsWith("Building:"));
-        assertTrue("Expecting message ending with 'asf-logo.gif.gz' but got '"
-            + log + "'", log.endsWith("asf-logo.gif.gz"));
+        assertThat("Expecting message starting with 'Building:' but got '"
+                + log + "'", log, startsWith("Building:"));
+        assertThat("Expecting message ending with 'asf-logo.gif.gz' but got '"
+                + log + "'", log, endsWith("asf-logo.gif.gz"));
     }
 
     @Test
@@ -100,9 +100,8 @@ public class GzipTest {
     public void testDateCheck() {
         buildRule.executeTarget("testDateCheck");
         String log = buildRule.getLog();
-        assertTrue(
-            "Expecting message ending with 'asf-logo.gif.gz is up to date.' but got '" + log + "'",
-            log.endsWith("asf-logo.gif.gz is up to date."));
+        assertThat("Expecting message ending with 'asf-logo.gif.gz is up to date.' but got '"
+                + log + "'", log, endsWith("asf-logo.gif.gz is up to date."));
     }
 
     @After

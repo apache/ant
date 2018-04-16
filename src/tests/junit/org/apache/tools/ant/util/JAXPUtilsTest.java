@@ -21,8 +21,9 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 /**
  * JAXPUtils test case
@@ -38,7 +39,7 @@ public class JAXPUtilsTest {
             file = new File("/user/local/bin");
         }
         String systemid = JAXPUtils.getSystemId(file);
-        assertTrue("SystemIDs should start by file:/", systemid.startsWith("file:/"));
-        assertFalse("SystemIDs should not start with file:////", systemid.startsWith("file:////"));
+        assertThat("SystemIDs should start by file:/", systemid, startsWith("file:/"));
+        assertThat("SystemIDs should not start with file:////", systemid, not(startsWith("file:////")));
     }
 }

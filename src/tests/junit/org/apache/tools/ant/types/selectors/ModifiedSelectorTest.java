@@ -47,6 +47,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -161,13 +162,13 @@ public class ModifiedSelectorTest {
     @Test
     public void testCustomAlgorithm() {
         String algo = getAlgoName("org.apache.tools.ant.types.selectors.modifiedselector.HashvalueAlgorithm");
-        assertTrue("Wrong algorithm used: " + algo, algo.startsWith("HashvalueAlgorithm"));
+        assertThat("Wrong algorithm used: " + algo, algo, startsWith("HashvalueAlgorithm"));
     }
 
     @Test
     public void testCustomAlgorithm2() {
         String algo = getAlgoName("org.apache.tools.ant.types.selectors.MockAlgorithm");
-        assertTrue("Wrong algorithm used: " + algo, algo.startsWith("MockAlgorithm"));
+        assertThat("Wrong algorithm used: " + algo, algo, startsWith("MockAlgorithm"));
     }
 
     @Test

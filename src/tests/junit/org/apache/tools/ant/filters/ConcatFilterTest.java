@@ -28,8 +28,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 /**
  * JUnit Testcases for ConcatReader
@@ -79,8 +81,8 @@ public class ConcatFilterTest {
         buildRule.executeTarget("testFilterReaderNoArgs");
         File expected = new File(buildRule.getProject().getProperty("output"), "concatfilter.test");
         File result = new File(buildRule.getProject().getProperty("output"),  "concat.FilterReaderNoArgs.test");
-        assertEquals("testFilterReaderNoArgs: Result not like expected", FileUtilities.getFileContents(expected),
-                FileUtilities.getFileContents(result));
+        assertEquals("testFilterReaderNoArgs: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -131,9 +133,8 @@ public class ConcatFilterTest {
         buildRule.executeTarget(target);
         String resultContent = FileUtilities.getFileContents(
                 new File(buildRule.getProject().getProperty("output") + "/concat." + target.substring(4) + ".test"));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(expectedStart));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(expectedEnd));
+        assertThat("First 5 lines differs.", resultContent, startsWith(expectedStart));
+        assertThat("Last 5 lines differs.", resultContent, endsWith(expectedEnd));
     }
-
 
 }

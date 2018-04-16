@@ -37,6 +37,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -370,7 +371,7 @@ public class ManifestTest {
         assertNotEquals(Manifest.getDefaultManifest(), mf);
         String mfAsString = mf.toString();
         assertNotNull(mfAsString);
-        assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));
+        assertThat(mfAsString, startsWith("Manifest-Version: 2.0"));
         assertThat(mfAsString, containsString("Foo: Bar"));
 
         mf = getManifest(new File(outDir, "mftest2.mf"));

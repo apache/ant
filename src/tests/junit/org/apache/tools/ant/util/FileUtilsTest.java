@@ -28,9 +28,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
@@ -344,8 +347,8 @@ public class FileUtilsTest {
         File tmp1 = FILE_UTILS.createTempFile("pre", ".suf", null, false, true);
         String tmploc = System.getProperty("java.io.tmpdir");
         String name = tmp1.getName();
-        assertTrue("starts with pre", name.startsWith("pre"));
-        assertTrue("ends with .suf", name.endsWith(".suf"));
+        assertThat("starts with pre", name, startsWith("pre"));
+        assertThat("ends with .suf", name, endsWith(".suf"));
         assertTrue("File was created", tmp1.exists());
         assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(),
                 tmp1.getAbsolutePath());
@@ -357,8 +360,8 @@ public class FileUtilsTest {
 
         File tmp2 = FILE_UTILS.createTempFile("pre", ".suf", dir2, true, true);
         String name2 = tmp2.getName();
-        assertTrue("starts with pre", name2.startsWith("pre"));
-        assertTrue("ends with .suf", name2.endsWith(".suf"));
+        assertThat("starts with pre", name2, startsWith("pre"));
+        assertThat("ends with .suf", name2, endsWith(".suf"));
         assertTrue("File was created", tmp2.exists());
         assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(),
                 tmp2.getAbsolutePath());
@@ -370,8 +373,8 @@ public class FileUtilsTest {
         assertFalse("new file", tmp1.exists());
 
         name = tmp1.getName();
-        assertTrue("starts with pre", name.startsWith("pre"));
-        assertTrue("ends with .suf", name.endsWith(".suf"));
+        assertThat("starts with pre", name, startsWith("pre"));
+        assertThat("ends with .suf", name, endsWith(".suf"));
         assertEquals("is inside parent dir", parent.getAbsolutePath(), tmp1
                 .getParent());
 
@@ -485,14 +488,14 @@ public class FileUtilsTest {
         }
         if (File.pathSeparatorChar == '/') {
             assertEquals("file:/foo", removeExtraneousAuthority(FILE_UTILS.toURI("/foo")));
-            assertTrue("file: URIs must name absolute paths", FILE_UTILS.toURI("./foo").startsWith("file:/"));
-            assertTrue(FILE_UTILS.toURI("./foo").endsWith("/foo"));
+            assertThat("file: URIs must name absolute paths", FILE_UTILS.toURI("./foo"), startsWith("file:/"));
+            assertThat(FILE_UTILS.toURI("./foo"), endsWith("/foo"));
             assertEquals("file:/" + dosRoot + "foo%20bar", removeExtraneousAuthority(FILE_UTILS.toURI("/foo bar")));
             assertEquals("file:/" + dosRoot + "foo%23bar", removeExtraneousAuthority(FILE_UTILS.toURI("/foo#bar")));
         } else if (File.pathSeparatorChar == '\\') {
             assertEquals("file:/" + dosRoot + "foo", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo")));
-            assertTrue("file: URIs must name absolute paths", FILE_UTILS.toURI(".\\foo").startsWith("file:/"));
-            assertTrue(FILE_UTILS.toURI(".\\foo").endsWith("/foo"));
+            assertThat("file: URIs must name absolute paths", FILE_UTILS.toURI(".\\foo"), startsWith("file:/"));
+            assertThat(FILE_UTILS.toURI(".\\foo"), endsWith("/foo"));
             assertEquals("file:/" + dosRoot + "foo%20bar", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo bar")));
             assertEquals("file:/" + dosRoot + "foo%23bar", removeExtraneousAuthority(FILE_UTILS.toURI("\\foo#bar")));
         }

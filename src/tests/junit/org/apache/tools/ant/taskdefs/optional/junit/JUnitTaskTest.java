@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +27,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
-
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -254,9 +254,11 @@ public class JUnitTaskTest {
         assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 4th run.",
                    collectorFile.exists());
-        //TODO: these two statements fail
-        //buildRule.executeTarget("A.test02");assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test02")));
-        //buildRule.executeTarget("A.test03");assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test03")));
+        //TODO: these statements fail
+        //buildRule.executeTarget("A.test02");
+        //assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test02")));
+        //buildRule.executeTarget("A.test03");
+        //assertThat(buildRule.getOutput(), not(containsString("4th run: should not run A.test03")));
         buildRule.executeTarget("B.test04");
         assertThat(buildRule.getOutput(), containsString("4th run: should run B.test04"));
         buildRule.executeTarget("D.test10");
@@ -307,41 +309,32 @@ public class JUnitTaskTest {
     }
 
     private void assertOutput() throws IOException {
-        FileReader inner = new FileReader(new File(buildRule.getOutputDir(),
-                                          "testlog.txt"));
-        BufferedReader reader = new BufferedReader(inner);
-        try {
+        FileReader inner = new FileReader(new File(buildRule.getOutputDir(), "testlog.txt"));
+        try (BufferedReader reader = new BufferedReader(inner)) {
             String line = reader.readLine();
-            assertEquals("Testsuite: org.apache.tools.ant.taskdefs.optional.junit.Printer",
-                         line);
+            assertEquals("Testsuite: org.apache.tools.ant.taskdefs.optional.junit.Printer", line);
             line = reader.readLine();
             assertNotNull(line);
-            assertTrue(line.startsWith("Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed:"));
+            assertThat(line, startsWith("Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed:"));
             line = reader.readLine();
-            assertEquals("------------- Standard Output ---------------",
-                         line);
+            assertEquals("------------- Standard Output ---------------", line);
             assertPrint(reader.readLine(), "static", "out");
             assertPrint(reader.readLine(), "constructor", "out");
             assertPrint(reader.readLine(), "method", "out");
             line = reader.readLine();
-            assertEquals("------------- ---------------- ---------------",
-                         line);
+            assertEquals("------------- ---------------- ---------------", line);
             line = reader.readLine();
-            assertEquals("------------- Standard Error -----------------",
-                         line);
+            assertEquals("------------- Standard Error -----------------", line);
             assertPrint(reader.readLine(), "static", "err");
             assertPrint(reader.readLine(), "constructor", "err");
             assertPrint(reader.readLine(), "method", "err");
             line = reader.readLine();
-            assertEquals("------------- ---------------- ---------------",
-                         line);
+            assertEquals("------------- ---------------- ---------------", line);
             line = reader.readLine();
             assertEquals("", line);
             line = reader.readLine();
             assertNotNull(line);
-            assertTrue(line.startsWith("Testcase: testNoCrash took "));
-        } finally {
-            inner.close();
+            assertThat(line, startsWith("Testcase: testNoCrash took "));
         }
     }
 

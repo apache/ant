@@ -18,11 +18,12 @@
 
 package org.apache.tools.ant.filters;
 
+import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.FileReader;
@@ -77,7 +78,6 @@ public class TokenFilterTest {
 
     @Test
     public void testDosLineOutput() throws IOException {
-
         buildRule.executeTarget("doslineoutput");
         assertThat(getFileString(buildRule.getProject().getProperty("output") + "/doslineoutput"),
                 containsString("\r\nThis\r\nis\r\na\r\nnumber\r\nof\r\nwords\r\n"));
@@ -86,9 +86,8 @@ public class TokenFilterTest {
     @Test
     public void testFileTokenizer() throws IOException {
         buildRule.executeTarget("filetokenizer");
-        String contents = getFileString(buildRule.getProject().getProperty("output") + "/filetokenizer");
-        assertThat(contents, containsString("   of words"));
-        assertThat(contents, not(containsString(" This is")));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/filetokenizer"),
+                both(containsString("   of words")).and(not(containsString(" This is"))));
     }
 
     @Test
@@ -107,9 +106,9 @@ public class TokenFilterTest {
     @Test
     public void testContainsString() throws IOException {
         buildRule.executeTarget("containsstring");
-        String contents = getFileString(buildRule.getProject().getProperty("output") + "/containsstring");
-        assertThat(contents, containsString("this is a line contains foo"));
-        assertThat(contents, not(containsString("this line does not")));
+        assertThat(getFileString(buildRule.getProject().getProperty("output") + "/containsstring"),
+                both(containsString("this is a line contains foo"))
+                        .and(not(containsString("this line does not"))));
     }
 
     @Test
@@ -154,8 +153,8 @@ public class TokenFilterTest {
     public void testTrimFile() throws IOException {
         buildRule.executeTarget("trimfile");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/trimfile");
-        assertTrue("no ws at start", contents.startsWith("This is th"));
-        assertTrue("no ws at end", contents.endsWith("second line."));
+        assertThat("no ws at start", contents, startsWith("This is th"));
+        assertThat("no ws at end", contents, endsWith("second line."));
         assertThat(contents, containsString("  This is the second"));
     }
 
@@ -163,8 +162,8 @@ public class TokenFilterTest {
     public void testTrimFileByLine() throws IOException {
         buildRule.executeTarget("trimfilebyline");
         String contents = getFileString(buildRule.getProject().getProperty("output") + "/trimfilebyline");
-        assertFalse("no ws at start", contents.startsWith("This is th"));
-        assertFalse("no ws at end", contents.endsWith("second line."));
+        assertThat("no ws at start", contents, not(startsWith("This is th")));
+        assertThat("no ws at end", contents, not(endsWith("second line.")));
         assertThat(contents, not(containsString("  This is the second")));
         assertThat(contents, containsString("file.\nThis is the second"));
     }

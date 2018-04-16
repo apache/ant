@@ -22,9 +22,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class JavaResourceTest {
 
@@ -43,8 +44,8 @@ public class JavaResourceTest {
 
         // this actually relies on the first manifest being found on
         // the classpath (probably rt.jar's) being valid
-        assertTrue(buildRule.getProject().getProperty("manifest")
-                   .startsWith("Manifest-Version:"));
+        assertThat(buildRule.getProject().getProperty("manifest"),
+                   startsWith("Manifest-Version:"));
     }
 
     @Test
