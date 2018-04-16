@@ -425,7 +425,7 @@ public class AntTest {
         }
 
         public void targetStarted(BuildEvent event) {
-            if (event.getTarget().getName().equals("")) {
+            if (event.getTarget().getName().isEmpty()) {
                 return;
             }
             if (error == null) {
@@ -476,7 +476,7 @@ public class AntTest {
         }
 
         public void targetStarted(BuildEvent event) {
-            if (event.getTarget().getName().equals("")) {
+            if (event.getTarget().getName().isEmpty()) {
                 return;
             }
             if (error == null) {
@@ -602,7 +602,7 @@ public class AntTest {
         }
 
         public void targetStarted(BuildEvent event) {
-            if (event.getTarget().getName().equals("")) {
+            if (event.getTarget().getName().isEmpty()) {
                 return;
             }
             if (calls >= expectedValues.length) {

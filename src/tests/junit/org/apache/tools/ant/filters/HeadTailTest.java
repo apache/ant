@@ -49,7 +49,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testHead");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.head.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.head.test");
-        assertEquals("testHead: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testHead: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -57,7 +58,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testHeadLines");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.headLines.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.headLines.test");
-        assertEquals("testHeadLines: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testHeadLines: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -65,7 +67,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testHeadSkip");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.headSkip.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.headSkip.test");
-        assertEquals("testHeadSkip: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testHeadSkip: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -73,7 +76,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testHeadLinesSkip");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.headLinesSkip.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.headLinesSkip.test");
-        assertEquals("testHeadLinesSkip: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testHeadLinesSkip: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -88,9 +92,10 @@ public class HeadTailTest {
     @Test
     public void testTail() throws IOException {
         buildRule.executeTarget("testTail");
-        File expected =buildRule.getProject().resolveFile("expected/head-tail.tail.test");
+        File expected = buildRule.getProject().resolveFile("expected/head-tail.tail.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.tail.test");
-        assertEquals("testTail: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testTail: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -98,7 +103,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testTailLines");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.tailLines.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.tailLines.test");
-        assertEquals("testTailLines: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testTailLines: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -106,7 +112,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testTailSkip");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.tailSkip.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.tailSkip.test");
-        assertEquals("testTailSkip: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testTailSkip: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -114,7 +121,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testTailLinesSkip");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.tailLinesSkip.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.tailLinesSkip.test");
-        assertEquals("testTailLinesSkip: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testTailLinesSkip: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
     @Test
@@ -131,7 +139,8 @@ public class HeadTailTest {
         buildRule.executeTarget("testHeadTail");
         File expected = buildRule.getProject().resolveFile("expected/head-tail.headtail.test");
         File result = new File(buildRule.getProject().getProperty("output") + "/head-tail.headtail.test");
-        assertEquals("testHeadTail: Result not like expected", FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+        assertEquals("testHeadTail: Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
     }
 
 }

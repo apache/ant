@@ -24,15 +24,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 public class EchoXMLTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -51,22 +51,16 @@ public class EchoXMLTest {
 
     @Test
     public void testFail() {
-        try {
-            buildRule.executeTarget("testFail");
-            fail("BuildException expected: must fail");
-        } catch (BuildException ex) {
-            assertThat(ex.getMessage(), containsString("${foo}=bar"));
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("${foo}=bar");
+        buildRule.executeTarget("testFail");
     }
 
     @Test
     public void testEmpty() {
-        try {
-            buildRule.executeTarget("testEmpty");
-            fail("BuildException expected: must fail");
-        } catch (BuildException ex) {
-            assertThat(ex.getMessage(), containsString("No nested XML specified"));
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No nested XML specified");
+        buildRule.executeTarget("testEmpty");
     }
 
 }

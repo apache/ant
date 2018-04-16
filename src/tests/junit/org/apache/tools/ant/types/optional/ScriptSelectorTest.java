@@ -22,10 +22,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test that scripting selection works. Needs scripting support to work
@@ -35,6 +32,9 @@ public class ScriptSelectorTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/selectors/scriptselector.xml");
@@ -42,13 +42,9 @@ public class ScriptSelectorTest {
 
     @Test
     public void testNolanguage() {
-        try {
-            buildRule.executeTarget("testNolanguage");
-            fail("Absence of language attribute not detected");
-        } catch (BuildException ex) {
-            assertThat(ex.getMessage(), containsString("script language must be specified"));
-
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("script language must be specified");
+        buildRule.executeTarget("testNolanguage");
     }
 
     @Test

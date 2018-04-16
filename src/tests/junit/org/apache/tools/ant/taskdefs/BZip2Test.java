@@ -32,7 +32,6 @@ import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -83,14 +82,8 @@ public class BZip2Test {
         while (true) {
             int expected = originalIn.read();
             int actual   = actualIn.read();
-            if (expected >= 0) {
-                if (expected != actual) {
-                    fail("File content mismatch");
-                }
-            } else {
-                if (actual >= 0) {
-                    fail("File content mismatch");
-                }
+            assertEquals("File content mismatch", expected, actual);
+            if (expected < 0) {
                 break;
             }
         }
