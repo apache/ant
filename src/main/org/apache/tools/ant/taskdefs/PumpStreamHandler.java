@@ -134,11 +134,9 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Start the <code>Thread</code>s.
      */
     public void start() {
-        outputThread.start();
-        errorThread.start();
-        if (inputThread != null) {
-            inputThread.start();
-        }
+        start(outputThread);
+        start(errorThread);
+        start(inputThread);
     }
 
     /**
@@ -162,6 +160,12 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     }
 
     private static final long JOIN_TIMEOUT = 200;
+
+    private void start(Thread t) {
+        if (t != null) {
+            t.start();
+        }
+    }
 
     /**
      * Waits for a thread to finish while trying to make it finish
