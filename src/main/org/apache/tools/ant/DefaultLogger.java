@@ -268,9 +268,8 @@ public class DefaultLogger implements BuildLogger {
 
                 try (BufferedReader r =
                     new BufferedReader(new StringReader(event.getMessage()))) {
-
-                    message.append(r.lines().map(line -> prefix + line)
-                        .collect(Collectors.joining(System.lineSeparator(), prefix, "")));
+                    message.append(r.lines()
+                        .collect(Collectors.joining(System.lineSeparator() + prefix, prefix, "")));
                 } catch (IOException e) {
                     // shouldn't be possible
                     message.append(label).append(event.getMessage());
