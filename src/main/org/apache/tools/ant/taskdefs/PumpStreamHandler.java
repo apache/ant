@@ -44,14 +44,20 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Construct a new <code>PumpStreamHandler</code>.
-     * @param out the output <code>OutputStream</code>.
-     * @param err the error <code>OutputStream</code>.
+     * @param out the output <code>OutputStream</code>, must not be null.
+     * @param err the error <code>OutputStream</code>, must not be null.
      * @param input the input <code>InputStream</code>.
      * @param nonBlockingRead set it to <code>true</code> if the input should be
      *                      read with simulated non blocking IO.
      */
     public PumpStreamHandler(OutputStream out, OutputStream err,
                              InputStream input, boolean nonBlockingRead) {
+        if (out == null) {
+            throw new NullPointerException("out must not be null");
+        }
+        if (err == null) {
+            throw new NullPointerException("err must not be null");
+        }
         this.out = out;
         this.err = err;
         this.input = input;
@@ -60,8 +66,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Construct a new <code>PumpStreamHandler</code>.
-     * @param out the output <code>OutputStream</code>.
-     * @param err the error <code>OutputStream</code>.
+     * @param out the output <code>OutputStream</code>, must not be null.
+     * @param err the error <code>OutputStream</code>, must not be null.
      * @param input the input <code>InputStream</code>.
      */
     public PumpStreamHandler(OutputStream out, OutputStream err,
@@ -71,8 +77,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Construct a new <code>PumpStreamHandler</code>.
-     * @param out the output <code>OutputStream</code>.
-     * @param err the error <code>OutputStream</code>.
+     * @param out the output <code>OutputStream</code>, must not be null.
+     * @param err the error <code>OutputStream</code>, must not be null.
      */
     public PumpStreamHandler(OutputStream out, OutputStream err) {
         this(out, err, null);
@@ -80,7 +86,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Construct a new <code>PumpStreamHandler</code>.
-     * @param outAndErr the output/error <code>OutputStream</code>.
+     * @param outAndErr the output/error <code>OutputStream</code>, must not be null.
      */
     public PumpStreamHandler(OutputStream outAndErr) {
         this(outAndErr, outAndErr);
@@ -108,9 +114,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param is the <code>InputStream</code>.
      */
     public void setProcessErrorStream(InputStream is) {
-        if (err != null) {
-            createProcessErrorPump(is, err);
-        }
+        createProcessErrorPump(is, err);
     }
 
     /**
