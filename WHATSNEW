@@ -19,6 +19,13 @@ Other changes:
  * AntAssert is deprecated, assertThat from JUnit 4.4+, Hamcrest matchers and/or
    ExpectedException rule provide equivalent functionality
 
+ * PumpStreamHandler now explicitly verifies the streams for output
+   and error are not null and will throw an exception if they
+   are. This way creating a PumpStreamHandler will fail early as
+   opposed to some obscure errors later when closing streams or
+   finishing threads might fail.
+   Bugzilla Report 62148
+
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 
