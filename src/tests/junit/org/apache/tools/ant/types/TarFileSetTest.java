@@ -21,10 +21,10 @@ package org.apache.tools.ant.types;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.TarFileSet.
@@ -33,83 +33,82 @@ import static org.junit.Assert.fail;
  */
 public class TarFileSetTest extends AbstractFileSetTest {
 
+    private TarFileSet tfs;
 
     protected AbstractFileSet getInstance() {
         return new TarFileSet();
     }
 
+    @Before
+    public void setUp() {
+        super.setUp();
+        tfs = (TarFileSet) getInstance();
+    }
+
+    //check that dir and src are incompatible
+    @Test
+    public final void testSrcDirAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot set both dir and src attributes");
+        tfs.setSrc(new File("example.tar"));
+        tfs.setDir(new File("examples"));
+    }
+
+    //check that dir and src are incompatible
+    @Test
+    public final void testDirSrcAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot set both dir and src attributes");
+        tfs.setDir(new File("examples"));
+        tfs.setSrc(new File("example.tar"));
+    }
+
+    //check that fullpath and prefix are incompatible
+    @Test
+    public final void testPrefixFullpathAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot set both fullpath and prefix attributes");
+        tfs.setSrc(new File("example.tar"));
+        tfs.setPrefix("/examples");
+        tfs.setFullpath("/doc/manual/index.html");
+    }
+
+    @Test
+    public final void testFullpathPrefixAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot set both fullpath and prefix attributes");
+        tfs.setSrc(new File("example.tar"));
+        tfs.setFullpath("/doc/manual/index.html");
+        tfs.setPrefix("/examples");
+    }
+
+    // check that reference tarfilesets cannot have specific attributes
+    @Test
+    public final void testRefidSrcAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        tfs.setRefid(new Reference(getProject(), "test"));
+        tfs.setSrc(new File("example.tar"));
+    }
+
+    // check that a reference tarfileset gets the same attributes as the original
     @Test
     public final void testAttributes() {
-        TarFileSet f = (TarFileSet) getInstance();
-        //check that dir and src are incompatible
-        f.setSrc(new File("example.tar"));
-        try {
-            f.setDir(new File("examples"));
-            fail("can add dir to "
-                    + f.getDataTypeName()
-                    + " when a src is already present");
-        } catch (BuildException be) {
-            assertEquals("Cannot set both dir and src attributes",be.getMessage());
-        }
-        f = (TarFileSet) getInstance();
-        //check that dir and src are incompatible
-        f.setDir(new File("examples"));
-        try {
-            f.setSrc(new File("example.tar"));
-            fail("can add src to "
-                    + f.getDataTypeName()
-                    + " when a dir is already present");
-        } catch (BuildException be) {
-            assertEquals("Cannot set both dir and src attributes",be.getMessage());
-        }
-        //check that fullpath and prefix are incompatible
-        f = (TarFileSet) getInstance();
-        f.setSrc(new File("example.tar"));
-        f.setPrefix("/examples");
-        try {
-            f.setFullpath("/doc/manual/index.html");
-            fail("Can add fullpath to "
-                    + f.getDataTypeName()
-                    + " when a prefix is already present");
-        } catch (BuildException be) {
-            assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
-        }
-        f = (TarFileSet) getInstance();
-        f.setSrc(new File("example.tar"));
-        f.setFullpath("/doc/manual/index.html");
-        try {
-            f.setPrefix("/examples");
-            fail("Can add prefix to "
-                    + f.getDataTypeName()
-                    + " when a fullpath is already present");
-        } catch (BuildException be) {
-            assertEquals("Cannot set both fullpath and prefix attributes", be.getMessage());
-        }
-        // check that reference tarfilesets cannot have specific attributes
-        f = (TarFileSet) getInstance();
-        f.setRefid(new Reference(getProject(), "test"));
-        try {
-            f.setSrc(new File("example.tar"));
-            fail("Can add src to "
-                    + f.getDataTypeName()
-                    + " when a refid is already present");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one "
-            + "attribute when using refid", be.getMessage());
-        }
-        // check that a reference tarfileset gets the same attributes as the original
-        f = (TarFileSet) getInstance();
-        f.setSrc(new File("example.tar"));
-        f.setPrefix("/examples");
-        f.setFileMode("600");
-        f.setDirMode("530");
-        getProject().addReference("test", f);
+        tfs.setSrc(new File("example.tar"));
+        tfs.setPrefix("/examples");
+        tfs.setFileMode("600");
+        tfs.setDirMode("530");
+        getProject().addReference("test", tfs);
         TarFileSet zid = (TarFileSet) getInstance();
         zid.setRefid(new Reference(getProject(), "test"));
-        assertEquals("src attribute copied by copy constructor", zid.getSrc(getProject()), f.getSrc(getProject()));
-        assertEquals("prefix attribute copied by copy constructor", f.getPrefix(getProject()), zid.getPrefix(getProject()));
-        assertEquals("file mode attribute copied by copy constructor", f.getFileMode(getProject()), zid.getFileMode(getProject()));
-        assertEquals("dir mode attribute copied by copy constructor", f.getDirMode(getProject()), zid.getDirMode(getProject()));
+        assertEquals("src attribute copied by copy constructor",
+                tfs.getSrc(getProject()), zid.getSrc(getProject()));
+        assertEquals("prefix attribute copied by copy constructor",
+                tfs.getPrefix(getProject()), zid.getPrefix(getProject()));
+        assertEquals("file mode attribute copied by copy constructor",
+                tfs.getFileMode(getProject()), zid.getFileMode(getProject()));
+        assertEquals("dir mode attribute copied by copy constructor",
+                tfs.getDirMode(getProject()), zid.getDirMode(getProject()));
       }
 
 }

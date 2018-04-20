@@ -25,16 +25,25 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.AbstractFileSetTest;
 import org.apache.tools.ant.types.Reference;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.endsWith;
 
 /**
  * This doesn't actually test much, mainly reference handling.
  */
 public class MultiRootFileSetTest extends AbstractFileSetTest {
+
+    private MultiRootFileSet multiRootFileSet;
+
+    @Before
+    public void setUp() {
+        super.setUp();
+        multiRootFileSet = new MultiRootFileSet();
+    }
 
     protected AbstractFileSet getInstance() {
         return new MultiRootFileSet() {
@@ -58,73 +67,58 @@ public class MultiRootFileSetTest extends AbstractFileSetTest {
     }
 
     @Test
-    public void testEmptyElementIfIsReferenceAdditionalAttributes() {
-        MultiRootFileSet f = new MultiRootFileSet();
-        f.setProject(getProject());
-        f.setBaseDirs("a");
-        try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
-            fail("Can add reference to multirootfileset "
-                 + " with elements from setBasedirs");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        f = new MultiRootFileSet();
-        f.addConfiguredBaseDir(new FileResource(new File(".")));
-        try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
-            fail("Can add reference to multirootfileset"
-                 + " with elements from addConfiguredBaseDir");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-
-        f = new MultiRootFileSet();
-        f.setRefid(new Reference(getProject(), "dummyref"));
-        try {
-            f.setBaseDirs("a");
-            fail("Can set basedirs in multirootfileset"
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setCache(true);
-            fail("Can set cache in multirootfileset"
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setType(MultiRootFileSet.SetType.file);
-            fail("Can set type in multirootfileset"
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.addConfiguredBaseDir(new FileResource(new File(".")));
-            fail("Can add nested basedir in multirootfileset "
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
+    public void testCannotSetBaseDirsThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        multiRootFileSet.setProject(getProject());
+        multiRootFileSet.setBaseDirs("a");
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
     }
 
     @Test
-    public void testDirCannotBeSet() {
-        try {
-            new MultiRootFileSet().setDir(new File("."));
-            fail("Can set dir in a multirootfileset");
-        } catch (BuildException e) {
-            assertTrue(e.getMessage()
-                       .endsWith(" doesn't support the dir attribute"));
-        }
+    public void testCannotSetConfiguredBaseDirThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        multiRootFileSet.addConfiguredBaseDir(new FileResource(new File(".")));
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
+    }
+
+    @Test
+    public void testCannotSetRefidThenBaseDirs() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
+        multiRootFileSet.setBaseDirs("a");
+    }
+
+    @Test
+    public void testCannotSetRefidThenCache() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
+        multiRootFileSet.setCache(true);
+    }
+
+    @Test
+    public void testCannotSetRefidThenType() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
+        multiRootFileSet.setType(MultiRootFileSet.SetType.file);
+    }
+
+    @Test
+    public void testCannotSetRefidThenConfiguredBaseDir() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        multiRootFileSet.setRefid(new Reference(getProject(), "dummyref"));
+        multiRootFileSet.addConfiguredBaseDir(new FileResource(new File(".")));
+    }
+
+    @Test
+    public void testCannotSetDir() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(endsWith(" doesn't support the dir attribute"));
+        multiRootFileSet.setDir(new File("."));
     }
 }

@@ -23,10 +23,11 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Base class for FileSetTest and DirSetTest.
@@ -39,10 +40,16 @@ public abstract class AbstractFileSetTest {
 
     private Project project;
 
+    private AbstractFileSet f;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
+        f = getInstance();
     }
 
     protected abstract AbstractFileSet getInstance();
@@ -52,216 +59,187 @@ public abstract class AbstractFileSetTest {
     }
 
     @Test
-    public final void testEmptyElementIfIsReference() {
-        AbstractFileSet f = getInstance();
+    public final void testCannotSetIncludesThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         f.setIncludes("**/*.java");
-        try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
-            fail("Can add reference to "
-                 + f.getDataTypeName()
-                 + " with elements from setIncludes");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-
-        f = getInstance();
-        f.createPatternSet();
-        try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
-            fail("Can add reference to "
-                 + f.getDataTypeName()
-                 + " with nested patternset element.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when "
-                         + "using refid", be.getMessage());
-        }
-
-        f = getInstance();
-        f.createInclude();
-        try {
-            f.setRefid(new Reference(getProject(), "dummyref"));
-            fail("Can add reference to "
-                 + f.getDataTypeName()
-                 + " with nested include element.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-
-        f = getInstance();
         f.setRefid(new Reference(getProject(), "dummyref"));
-        try {
-            f.setIncludes("**/*.java");
-            fail("Can set includes in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setIncludesfile(new File("/a"));
-            fail("Can set includesfile in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setExcludes("**/*.java");
-            fail("Can set excludes in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setExcludesfile(new File("/a"));
-            fail("Can set excludesfile in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.setDir(project.resolveFile("."));
-            fail("Can set dir in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute "
-                         + "when using refid", be.getMessage());
-        }
-        try {
-            f.createInclude();
-            fail("Can add nested include in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
-        try {
-            f.createExclude();
-            fail("Can add nested exclude in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
-        try {
-            f.createIncludesFile();
-            fail("Can add nested includesfile in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
-        try {
-            f.createExcludesFile();
-            fail("Can add nested excludesfile in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
-        try {
-            f.createPatternSet();
-            fail("Can add nested patternset in "
-                 + f.getDataTypeName()
-                 + " that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using "
-                         + "refid", be.getMessage());
-        }
     }
 
     @Test
-    public void testCircularReferenceCheck() {
-        AbstractFileSet f = getInstance();
+    public final void testCannotAddPatternSetThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.createPatternSet();
+        f.setRefid(new Reference(getProject(), "dummyref"));
+    }
+
+    @Test
+    public final void testCannotAddIncludeThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.createInclude();
+        f.setRefid(new Reference(getProject(), "dummyref"));
+    }
+
+    @Test
+    public final void testCannotSetRefidThenIncludes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setIncludes("**/*.java");
+    }
+
+    @Test
+    public final void testCannotSetRefidThenIncludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setIncludesfile(new File("/a"));
+    }
+
+    @Test
+    public final void testCannotSetRefidThenExcludes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setExcludes("**/*.java");
+    }
+
+    @Test
+    public final void testCannotSetRefidThenExcludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setExcludesfile(new File("/a"));
+    }
+
+    @Test
+    public final void testCannotSetRefidThenDir() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.setDir(project.resolveFile("."));
+    }
+
+    @Test
+    public final void testCannotSetRefidThenAddInclude() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.createInclude();
+    }
+
+    @Test
+    public final void testCannotSetRefidThenAddExclude() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.createExclude();
+    }
+
+    @Test
+    public final void testCannotSetRefidThenAddIncludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.createIncludesFile();
+    }
+
+    @Test
+    public final void testCannotSetRefidThenAddExcludesFile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.createExcludesFile();
+    }
+
+    @Test
+    public final void testCannotSetRefidThenAddPatternset() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        f.setRefid(new Reference(getProject(), "dummyref"));
+        f.createPatternSet();
+    }
+
+    @Test
+    public void testCircularReferenceCheckGetDir() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
         project.addReference("dummy", f);
         f.setRefid(new Reference(getProject(), "dummy"));
-        try {
-            f.getDir(project);
-            fail("Can make " + f.getDataTypeName()
-                 + " a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
-        try {
-            f.getDirectoryScanner(project);
-            fail("Can make " + f.getDataTypeName()
-                 + " a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        f.getDir(project);
+    }
 
+    @Test
+    public void testCircularReferenceCheckGetDirScanner() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        project.addReference("dummy", f);
+        f.setRefid(new Reference(getProject(), "dummy"));
+        f.getDirectoryScanner(project);
+    }
+
+    @Test
+    public void testLoopReferenceCheckGetDir() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
         // dummy1 --> dummy2 --> dummy3 --> dummy1
-        AbstractFileSet f1 = getInstance();
-        project.addReference("dummy1", f1);
-        f1.setRefid(new Reference(getProject(), "dummy2"));
-        AbstractFileSet f2 = getInstance();
-        project.addReference("dummy2", f2);
-        f2.setRefid(new Reference(getProject(), "dummy3"));
-        AbstractFileSet f3 = getInstance();
-        project.addReference("dummy3", f3);
-        f3.setRefid(new Reference(getProject(), "dummy1"));
-        try {
-            f1.getDir(project);
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
-        try {
-            f1.getDirectoryScanner(project);
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        project.addReference("dummy1", f);
+        f.setRefid(new Reference(getProject(), "dummy2"));
+        AbstractFileSet fa = getInstance();
+        project.addReference("dummy2", fa);
+        fa.setRefid(new Reference(getProject(), "dummy3"));
+        AbstractFileSet fb = getInstance();
+        project.addReference("dummy3", fb);
+        fb.setRefid(new Reference(getProject(), "dummy1"));
+        f.getDir(project);
+    }
 
+    @Test
+    public void testLoopReferenceCheckGetDirScanner() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        // dummy1 --> dummy2 --> dummy3 --> dummy1
+        project.addReference("dummy1", f);
+        f.setRefid(new Reference(getProject(), "dummy2"));
+        AbstractFileSet fa = getInstance();
+        project.addReference("dummy2", fa);
+        fa.setRefid(new Reference(getProject(), "dummy3"));
+        AbstractFileSet fb = getInstance();
+        project.addReference("dummy3", fb);
+        fb.setRefid(new Reference(getProject(), "dummy1"));
+        f.getDirectoryScanner(project);
+    }
+
+    @Test
+    public void testLoopReferenceCheck() {
         // dummy1 --> dummy2 --> dummy3
         // (which has the Project's basedir as root).
-        f1 = getInstance();
-        project.addReference("dummy1", f1);
-        f1.setRefid(new Reference(getProject(), "dummy2"));
-        f2 = getInstance();
-        project.addReference("dummy2", f2);
-        f2.setRefid(new Reference(getProject(), "dummy3"));
-        f3 = getInstance();
-        project.addReference("dummy3", f3);
-        f3.setDir(project.resolveFile("."));
-        File dir = f1.getDir(project);
+        project.addReference("dummy1", f);
+        f.setRefid(new Reference(getProject(), "dummy2"));
+        AbstractFileSet fa = getInstance();
+        project.addReference("dummy2", fa);
+        fa.setRefid(new Reference(getProject(), "dummy3"));
+        AbstractFileSet fb = getInstance();
+        project.addReference("dummy3", fb);
+        fb.setDir(project.resolveFile("."));
+        File dir = f.getDir(project);
         assertEquals("Dir is basedir", dir, project.getBaseDir());
     }
 
     @Test
     public void canCallSetFileTwiceWithSameArgument() {
-        AbstractFileSet f = getInstance();
         f.setFile(new File("/a"));
         f.setFile(new File("/a"));
         // really only asserts no exception is thrown
     }
 
     @Test
-    public void cantCallSetFileTwiceWithDifferentArguments() {
-        AbstractFileSet f = getInstance();
+    public void cannotCallSetFileTwiceWithDifferentArguments() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("setFile cannot be called twice with different arguments");
         f.setFile(new File("/a"));
-        try {
-            f.setFile(new File("/b"));
-            fail("expected an exception");
-        } catch (BuildException ex) {
-            assertEquals("setFile cannot be called twice with different arguments", ex.getMessage());
-        }
+        f.setFile(new File("/b"));
     }
 }

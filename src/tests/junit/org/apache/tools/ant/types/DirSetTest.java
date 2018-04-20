@@ -22,47 +22,53 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.DirSet.
  */
 public class DirSetTest extends AbstractFileSetTest {
 
+    private DirSet ds;
+
+    private FileSet fs;
+
+    @Before
+    public void setUp() {
+        super.setUp();
+        ds = (DirSet) getInstance();
+        ds.setProject(getProject());
+        fs = new FileSet();
+    }
+
     protected AbstractFileSet getInstance() {
         return new DirSet();
     }
 
     @Test
-    public void testFileSetIsNoDirSet() {
-        DirSet ds = (DirSet) getInstance();
-        ds.setProject(getProject());
-        FileSet fs = new FileSet();
+    public void testDirSetFromFileSet() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("dummy doesn\'t denote a DirSet");
         fs.setProject(getProject());
         getProject().addReference("dummy", fs);
         ds.setRefid(new Reference(getProject(), "dummy"));
-        try {
-            ds.getDir(getProject());
-            fail("DirSet created from FileSet reference");
-        } catch (BuildException e) {
-            assertEquals("dummy doesn\'t denote a DirSet", e.getMessage());
-        }
-
-        ds = (DirSet) getInstance();
-        ds.setProject(getProject());
-        getProject().addReference("dummy2", ds);
-        fs.setRefid(new Reference(getProject(), "dummy2"));
-        try {
-            fs.getDir(getProject());
-            fail("FileSet created from DirSet reference");
-        } catch (BuildException e) {
-            assertEquals("dummy2 doesn\'t denote a FileSet", e.getMessage());
-        }
+        ds.getDir(getProject());
     }
 
+    @Test
+    public void testFileSetFromDirSet() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("dummy doesn\'t denote a FileSet");
+        getProject().addReference("dummy", ds);
+        fs.setRefid(new Reference(getProject(), "dummy"));
+        fs.getDir(getProject());
+    }
+
+    @Test
     public void testToString() throws Exception {
         File tmp = File.createTempFile("DirSetTest", "");
         try {
@@ -75,8 +81,6 @@ public class DirSetTest extends AbstractFileSetTest {
             new FileOutputStream(new File(a, "x")).close();
             new FileOutputStream(new File(b, "x")).close();
             new FileOutputStream(new File(bc, "x")).close();
-            DirSet ds = new DirSet();
-            ds.setProject(getProject());
             ds.setDir(tmp);
             ds.setIncludes("b/");
             assertEquals("b;b" + File.separator + "c", ds.toString());
