@@ -257,8 +257,8 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     public boolean match(String path) {
         String vpath = path;
         if (!path.isEmpty()) {
-            vpath = path.replace('/', File.separatorChar).
-                replace('\\', File.separatorChar);
+            vpath = path.replace('/', File.separatorChar)
+                    .replace('\\', File.separatorChar);
             if (vpath.charAt(0) == File.separatorChar) {
                 vpath = vpath.substring(1);
             }

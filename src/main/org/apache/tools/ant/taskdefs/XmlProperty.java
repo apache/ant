@@ -212,7 +212,7 @@ public class XmlProperty extends Task {
     }
 
     /**
-     * @return the xmlCatalog as the entityresolver.
+     * @return the xmlCatalog as the EntityResolver.
      */
     protected EntityResolver getEntityResolver() {
         return xmlCatalog;

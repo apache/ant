@@ -93,7 +93,7 @@ public class Get extends Task {
                            DEFAULT_AGENT_PREFIX + "/"
                            + Main.getShortAntVersion());
 
-    // Store headers as key/value pair without duplicate in keyz
+    // Store headers as key/value pair without duplicate in keys
     private Map<String, String> headers = new LinkedHashMap<>();
 
     /**
@@ -212,7 +212,7 @@ public class Get extends Task {
             return true;
         }
 
-        //dont do any progress, unless asked
+        // don't do any progress, unless asked
         if (progress == null) {
             progress = new NullProgress();
         }

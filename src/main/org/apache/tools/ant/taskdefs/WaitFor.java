@@ -253,8 +253,8 @@ public class WaitFor extends ConditionBase {
         }
 
         /**
-         * Convert the value to a multipler (millisecond to unit).
-         * @return a multipler (a long value)
+         * Convert the value to a multiplier (millisecond to unit).
+         * @return a multiplier (a long value)
          */
         public long getMultiplier() {
             String key = getValue().toLowerCase(Locale.ENGLISH);

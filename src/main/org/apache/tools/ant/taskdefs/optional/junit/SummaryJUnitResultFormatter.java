@@ -165,7 +165,7 @@ public class SummaryJUnitResultFormatter
      */
     @Override
     public void endTestSuite(JUnitTest suite) throws BuildException {
-         StringBuilder sb = new StringBuilder("Tests run: ");
+        StringBuilder sb = new StringBuilder("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());

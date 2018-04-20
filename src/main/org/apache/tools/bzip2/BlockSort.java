@@ -52,7 +52,7 @@ import java.util.BitSet;
  * ssCommons Compre
  * </pre>
  *
- * <p>Which results in a new text "ss romooCCmmpnse", in adition the
+ * <p>Which results in a new text "ss romooCCmmpnse", in addition the
  * index of the first line that contained the original text is kept -
  * in this case it is 1.  The idea is that in a long English text all
  * permutations that start with "he" are likely suffixes of a "the" and

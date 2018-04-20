@@ -1971,7 +1971,7 @@ public class FTP extends Task implements FTPTaskConfig {
             instream.close();
             boolean success = FTPReply.isPositiveCompletion(ftp.getReplyCode());
             if (success) {
-                FTPFile [] ftpFiles = ftp.listFiles(tempFile.getName());
+                FTPFile[] ftpFiles = ftp.listFiles(tempFile.getName());
                 if (ftpFiles.length == 1) {
                     long remoteTimeStamp = ftpFiles[0].getTimestamp().getTime().getTime();
                     returnValue = localTimeStamp - remoteTimeStamp;

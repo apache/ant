@@ -81,18 +81,16 @@ public class Deltree extends Task {
         // the comparison of absolute path and canonical path
         // catches this
 
-        //        if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
+        // if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
         // (costin) It will not work if /home/costin is symlink to
-        // /da0/home/costin ( taz for example )
+        // /da0/home/costin (taz for example)
         for (String s : dir.list()) {
             File f = new File(dir, s);
             if (f.isDirectory()) {
                 removeDir(f);
-            } else {
-                if (!f.delete()) {
-                    throw new BuildException("Unable to delete file "
-                                             + f.getAbsolutePath());
-                }
+            } else if (!f.delete()) {
+                throw new BuildException("Unable to delete file "
+                        + f.getAbsolutePath());
             }
         }
         if (!dir.delete()) {

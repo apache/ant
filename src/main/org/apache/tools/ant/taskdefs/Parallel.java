@@ -58,7 +58,7 @@ public class Parallel extends Task
         private List<Task> tasks = new ArrayList<>();
 
         /**
-         * Add a nested task to execute parallel (asynchron).
+         * Add a nested task to execute in parallel (asynchronously).
          * <p>
          * @param nestedTask  Nested task to be executed in parallel.
          *                    must not be null.
@@ -96,7 +96,7 @@ public class Parallel extends Task
      */
     private boolean failOnAny;
 
-    /** The dameon task list if any */
+    /** The daemon task list if any */
     private TaskList daemonTasks;
 
     /** Accumulation of exceptions messages from all nested tasks */
@@ -215,8 +215,8 @@ public class Parallel extends Task
      */
     private void updateThreadCounts() {
         if (numThreadsPerProcessor != 0) {
-            numThreads = Runtime.getRuntime().availableProcessors() *
-                    numThreadsPerProcessor;
+            numThreads = Runtime.getRuntime().availableProcessors()
+                    * numThreadsPerProcessor;
         }
     }
 

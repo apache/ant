@@ -204,7 +204,7 @@ public class EjbJar extends MatchingTask {
     /** Instance variable that stores the suffix for the generated jarfile. */
     private String genericJarSuffix = "-generic.jar";
 
-    /** Instance variable that stores the CMP version for the jboss jarfile. */
+    /** Instance variable that stores the CMP version for the JBoss jarfile. */
     private String cmpVersion = CMPVersion.CMP1_0;
 
     /** The list of deployment tools we are going to run. */
@@ -236,7 +236,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Adds a deployment tool for Weblogic server.
+     * Adds a deployment tool for WebLogic server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -247,7 +247,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Adds a deployment tool for Websphere 4.0 server.
+     * Adds a deployment tool for WebSphere 4.0 server.
      *
      * @return the deployment tool instance to be configured.
      */
@@ -309,7 +309,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Adds a deployment tool for Weblogic when using the Toplink
+     * Adds a deployment tool for WebLogic when using the TOPLink
      * Object-Relational mapping.
      *
      * @return the deployment tool instance to be configured.

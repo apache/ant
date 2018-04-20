@@ -168,7 +168,7 @@ public class ReflectUtil {
 
     /**
      * A method to convert an invocationTargetException to
-     * a buildexception and throw it.
+     * a BuildException and throw it.
      * @param t the invocation target exception.
      * @throws BuildException the converted exception.
      */
@@ -179,7 +179,7 @@ public class ReflectUtil {
 
     /**
      * A method to convert an invocationTargetException to
-     * a buildexception.
+     * a BuildException.
      * @param t the invocation target exception.
      * @return the converted exception.
      * @since ant 1.7.1

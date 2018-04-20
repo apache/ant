@@ -596,7 +596,7 @@ public class UnknownElement extends Task {
     /**
      * like contents equals, but ignores project
      * @param obj the object to check against
-     * @return true if this unknownelement has the same contents the other
+     * @return true if this UnknownElement has the same contents the other
      */
     public boolean similar(Object obj) {
         if (obj == null) {

@@ -109,8 +109,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
         if (audioInputStream != null) {
             AudioFormat format = audioInputStream.getFormat();
-            DataLine.Info   info = new DataLine.Info(Clip.class, format,
-                                             AudioSystem.NOT_SPECIFIED);
+            DataLine.Info info = new DataLine.Info(Clip.class, format, AudioSystem.NOT_SPECIFIED);
             try {
                 try {
                     audioClip = (Clip) AudioSystem.getLine(info);

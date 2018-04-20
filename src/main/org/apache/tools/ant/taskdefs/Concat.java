@@ -214,7 +214,7 @@ public class Concat extends Task implements ResourceCollection {
 
     /**
      * This class reads from each of the source files in turn.
-     * The concatentated result can then be filtered as
+     * The concatenated result can then be filtered as
      * a single stream.
      */
     private final class MultiReader<S> extends Reader {
@@ -623,7 +623,7 @@ public class Concat extends Task implements ResourceCollection {
      * Sets the behavior when no source resource files are available. If set to
      * <code>false</code> the destination file will always be created.
      * Defaults to <code>true</code>.
-     * @param ignoreEmpty if false honour destinationfile creation.
+     * @param ignoreEmpty if false, honour destination file creation.
      * @since Ant 1.8.0
      */
     public void setIgnoreEmpty(boolean ignoreEmpty) {
@@ -698,7 +698,7 @@ public class Concat extends Task implements ResourceCollection {
 
     /**
      * This method adds text which appears in the 'concat' element.
-     * @param text the text to be concated.
+     * @param text the text to be concatenated.
      */
     public void addText(String text) {
         if (textBuffer == null) {

@@ -82,7 +82,7 @@ public class SubAnt extends Task {
     /**
      * Get the default build file name to use when launching the task.
      * <p>
-     * This function may be overriden by providers of custom ProjectHelper so
+     * This function may be overridden by providers of custom ProjectHelper so
      * they can implement easily their sub launcher.
      * </p>
      *

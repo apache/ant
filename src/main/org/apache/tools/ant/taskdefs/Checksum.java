@@ -154,7 +154,7 @@ public class Checksum extends MatchingTask implements Condition {
     private int readBufferSize = BUFFER_SIZE;
 
     /**
-     * Formater for the checksum file.
+     * Formatter for the checksum file.
      */
     private MessageFormat format = FormatElement.getDefault().getFormat();
 

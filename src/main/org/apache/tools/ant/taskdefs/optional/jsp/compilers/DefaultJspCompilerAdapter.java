@@ -82,7 +82,7 @@ public abstract class DefaultJspCompilerAdapter
     }
 
     /**
-     * add a single argument to the argument list, if the value aint null
+     * add a single argument to the argument list, if the value isn't null
      * @param cmd the command line
      * @param  argument  The argument
      */
@@ -94,7 +94,7 @@ public abstract class DefaultJspCompilerAdapter
 
 
     /**
-     *  add an argument tuple to the argument list, if the value aint null
+     *  add an argument tuple to the argument list, if the value isn't null
      * @param cmd the command line
      * @param  argument  The argument
      * @param  value     the parameter
@@ -107,7 +107,7 @@ public abstract class DefaultJspCompilerAdapter
     }
 
     /**
-     *  add an argument tuple to the arg list, if the file parameter aint null
+     *  add an argument tuple to the arg list, if the file parameter isn't null
      * @param cmd the command line
      * @param  argument  The argument
      * @param  file     the parameter

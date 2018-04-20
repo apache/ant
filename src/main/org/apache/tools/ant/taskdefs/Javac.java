@@ -1450,8 +1450,8 @@ public class Javac extends MatchingTask {
             if (!"package-info.java".equals(f.getName())) {
                 continue;
             }
-            final String path = FILE_UTILS.removeLeadingPath(srcDir, f).
-                    replace(File.separatorChar, '/');
+            final String path = FILE_UTILS.removeLeadingPath(srcDir, f)
+                    .replace(File.separatorChar, '/');
             final String suffix = "/package-info.java";
             if (!path.endsWith(suffix)) {
                 log("anomalous package-info.java path: " + path, Project.MSG_WARN);
@@ -1643,7 +1643,7 @@ public class Javac extends MatchingTask {
     private static void findModules(
             final File root,
             String pattern,
-            final Map<String,Collection<File>> collector) {
+            final Map<String, Collection<File>> collector) {
         pattern = pattern
                 .replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
@@ -1684,16 +1684,14 @@ public class Javac extends MatchingTask {
         final String pathToModule,
         final String pathInModule,
         final Map<String,Collection<File>> collector) {
-        final FileUtils fu = FileUtils.getFileUtils();
-        final File f = fu.resolveFile(root, pathToModule);
+        final File f = FileUtils.getFileUtils().resolveFile(root, pathToModule);
         if (!f.isDirectory()) {
             return;
         }
         for (File module : f.listFiles(File::isDirectory)) {
             final String moduleName = module.getName();
-            final File moduleSourceRoot = pathInModule == null ?
-                    module :
-                    new File(module, pathInModule);
+            final File moduleSourceRoot = pathInModule == null
+                    ? module : new File(module, pathInModule);
             Collection<File> moduleRoots = collector.computeIfAbsent(moduleName, k -> new ArrayList<>());
             moduleRoots.add(moduleSourceRoot);
         }

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 /**
  * Helper methods to deal with date/time formatting with a specific
  * defined format (<a href="http://www.w3.org/TR/NOTE-datetime">ISO8601</a>)
- * or a plurialization correct elapsed time in minutes and seconds.
+ * or a correct pluralization of elapsed time in minutes and seconds.
  *
  * @since Ant 1.5
  *

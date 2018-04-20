@@ -1096,13 +1096,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
      * @since ant 1.6
      */
     private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
-        if (file.isDirectory()) {
-            return false;
-        }
-        if (file.isFile()) {
-            return true;
-        }
-        return !isFunctioningAsDirectory(ftp, dir, file);
+        return !file.isDirectory() && (file.isFile() || !isFunctioningAsDirectory(ftp, dir, file));
     }
 
     /**
@@ -1357,7 +1351,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             ftp.storeFile(tempFile.getName(), instream);
             instream.close();
             if (FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                FTPFile [] ftpFiles = ftp.listFiles(tempFile.getName());
+                FTPFile[] ftpFiles = ftp.listFiles(tempFile.getName());
                 if (ftpFiles.length == 1) {
                     long remoteTimeStamp = ftpFiles[0].getTimestamp().getTime().getTime();
                     returnValue = localTimeStamp - remoteTimeStamp;

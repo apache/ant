@@ -536,7 +536,7 @@ public class CommandlineJava implements Cloneable {
         }
         // this is the classname to run as well as its arguments.
         // in case of ExecutableType.JAR, the executable is a jar file,
-        // in case of ExecutableType.MODULE, the executable is a module name, portentially including a class name.
+        // in case of ExecutableType.MODULE, the executable is a module name, potentially including a class name.
         javaCommand.addCommandToList(listIterator);
     }
 
@@ -602,7 +602,7 @@ public class CommandlineJava implements Cloneable {
      * @return the total number of arguments in the java command line.
      * @see #getCommandline()
      * @deprecated since 1.7.
-     *             Please dont use this, it effectively creates the
+     *             Please don't use this, it effectively creates the
      *             entire command.
      */
     @Deprecated

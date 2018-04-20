@@ -2196,7 +2196,7 @@ public class Zip extends MatchingTask {
      * central directory - which is what <em>as-needed</em> may result
      * in.  Java5 and Microsoft Visual Studio's Extension loader are
      * known to fconsider the archive broken in such cases.  If you
-     * are targeting such an archiver uset the value <em>never</em>
+     * are targeting such an archiver use the value <em>never</em>
      * unless you know you need Zip64 extensions.</p>
      *
      * @since Ant 1.9.1

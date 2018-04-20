@@ -367,9 +367,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Sets the parameters for the transformer.
      */
     private void setTransformationParameters() {
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            transformer.setParameter(entry.getKey(), entry.getValue());
-        }
+        params.forEach((key, value) -> transformer.setParameter(key, value));
     }
 
     /**

@@ -67,7 +67,7 @@ public class Kjc extends DefaultCompilerAdapter {
             cmd.createArgument().setFile(destDir);
         }
 
-        // generate the clsspath
+        // generate the classpath
         cmd.createArgument().setValue("-classpath");
 
         Path cp = new Path(project);

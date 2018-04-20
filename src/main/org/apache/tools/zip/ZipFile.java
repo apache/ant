@@ -472,7 +472,7 @@ public class ZipFile implements Closeable {
     }
 
     /**
-     * Reads an individual entry of the central directory, creats an
+     * Reads an individual entry of the central directory, creates an
      * ZipEntry from it and adds it to the global maps.
      *
      * @param noUTF8Flag map used to collect entries that don't have
@@ -778,7 +778,7 @@ public class ZipFile implements Closeable {
 
     /**
      * Searches the archive backwards from minDistance to maxDistance
-     * for the given signature, positions the RandomaccessFile right
+     * for the given signature, positions the RandomAccessFile right
      * at the signature if it has been found.
      */
     private boolean tryToLocateSignature(final long minDistanceFromEnd,

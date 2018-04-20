@@ -67,7 +67,7 @@ public class LazyResourceCollectionWrapper extends
 
     /**
      * Specify if the resource should be filtered or not. This function should
-     * be overriden in order to define the filtering algorithm
+     * be overridden in order to define the filtering algorithm
      *
      * @param r resource considered for filtration
      * @return whether the resource should be filtered or not

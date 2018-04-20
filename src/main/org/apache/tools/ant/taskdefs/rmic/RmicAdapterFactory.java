@@ -77,7 +77,7 @@ public final class RmicAdapterFactory {
      * <li>kaffe = Kaffe's rmic
      * <li><i>a fully qualified classname</i> = the name of a rmic
      * adapter
-     * <li>weblogic = weblogic compiler
+     * <li>weblogic = WebLogic compiler
      * <li>forking = Sun's RMIC by forking a new JVM
      * </ul>
      *

@@ -48,7 +48,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
      */
     @Override
     protected boolean areIiopAndIdlSupported() {
-        // actually I don't think Kaffee supports either, but we've
+        // actually I don't think Kaffe supports either, but we've
         // accepted the flags prior to 1.10.3
         return true;
     }

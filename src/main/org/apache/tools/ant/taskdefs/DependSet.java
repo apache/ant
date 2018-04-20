@@ -225,7 +225,7 @@ public class DependSet extends MatchingTask {
         datesel.setMillis(System.currentTimeMillis());
         datesel.setWhen(TimeComparison.AFTER);
         // don't whine because a file has changed during the last
-        // second (or whathever our current granularity may be)
+        // second (or whatever our current granularity may be)
         datesel.setGranularity(0);
         logFuture(targets, datesel);
 

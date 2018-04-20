@@ -91,7 +91,7 @@ public class ResolvePropertyMap implements GetProperty {
 
             String recursiveCallKey = name;
             if (prefix != null && !expandingLHS && !prefixValues) {
-                // only look up unprefixed properties inside the map
+                // only look up nonprefixed properties inside the map
                 // if prefixValues is true or we are expanding the key
                 // itself
                 recursiveCallKey = prefix + name;

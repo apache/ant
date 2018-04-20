@@ -35,7 +35,7 @@ public class OrionDeploymentTool extends GenericDeploymentTool {
 
     protected static final String ORION_DD = "orion-ejb-jar.xml";
 
-    /** Instance variable that stores the suffix for the jboss jarfile. */
+    /** Instance variable that stores the suffix for the JBoss jarfile. */
     private String jarSuffix = ".jar";
 
     /**

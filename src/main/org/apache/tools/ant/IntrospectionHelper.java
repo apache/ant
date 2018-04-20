@@ -81,7 +81,7 @@ public final class IntrospectionHelper {
         final Class<?>[] wrappers = {Boolean.class, Byte.class, Character.class, Short.class,
                             Integer.class, Long.class, Float.class, Double.class};
         for (int i = 0; i < primitives.length; i++) {
-            PRIMITIVE_TYPE_MAP.put (primitives[i], wrappers[i]);
+            PRIMITIVE_TYPE_MAP.put(primitives[i], wrappers[i]);
         }
     }
 
@@ -536,15 +536,11 @@ public final class IntrospectionHelper {
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
-        if (nc == null &&
-            (parent instanceof DynamicElementNS
-             || parent instanceof DynamicElement)
-            ) {
+        if (nc == null
+                && (parent instanceof DynamicElementNS || parent instanceof DynamicElement)) {
             final String qName = child == null ? name : child.getQName();
-            final Object nestedElement =
-                createDynamicElement(parent,
-                                     child == null ? "" : child.getNamespace(),
-                                     name, qName);
+            final Object nestedElement = createDynamicElement(parent,
+                    child == null ? "" : child.getNamespace(), name, qName);
             if (nestedElement != null) {
                 nc = new NestedCreator(null) {
                     @Override

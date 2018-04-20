@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * Deployment tool for Weblogic TOPLink.
+ * Deployment tool for WebLogic TOPLink.
  */
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 

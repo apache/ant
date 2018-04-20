@@ -209,13 +209,11 @@ public class ProjectHelper2 extends ProjectHelper {
         } else if (source instanceof URL) {
             url = (URL) source;
         } else if (source instanceof Resource) {
-            FileProvider fp =
-                ((Resource) source).as(FileProvider.class);
+            FileProvider fp = ((Resource) source).as(FileProvider.class);
             if (fp != null) {
                 buildFile = fp.getFile();
             } else {
-                URLProvider up =
-                    ((Resource) source).as(URLProvider.class);
+                URLProvider up = ((Resource) source).as(URLProvider.class);
                 if (up != null) {
                     url = up.getURL();
                 }
@@ -766,7 +764,7 @@ public class ProjectHelper2 extends ProjectHelper {
                         }
                         break;
                     default:
-                        // TODO ignore attributes in a different NS ( maybe store them ? )
+                        // TODO ignore attributes in a different NS (maybe store them ?)
                         throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i)
                                 + "\"", context.getLocator());
                 }

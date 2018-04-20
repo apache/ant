@@ -34,18 +34,18 @@ import org.apache.tools.ant.types.Path;
 /**
  * Precompiles JSP's using WebLogic's JSP compiler (weblogic.jspc).
  *
- * Tested only on Weblogic 4.5.1 - NT4.0 and Solaris 5.7
+ * Tested only on WebLogic 4.5.1 - NT4.0 and Solaris 5.7
  *
  * required attributes
- *      src : root of source tree for JSP, ie, the document root for your weblogic server
+ *      src : root of source tree for JSP, ie, the document root for your WebLogic server
  *      dest : root of destination directory, what you have set as
- *             WorkingDir in the weblogic properties
+ *             WorkingDir in the WebLogic properties
  *      package : start package name under which your JSP's would be compiled
  *
  * other attributes
  *     classpath
  *
- * A classpath should be set which contains the weblogic classes as well as all
+ * A classpath should be set which contains the WebLogic classes as well as all
  * application classes referenced by the JSP. The system classpath is also
  * appended when the jspc is called, so you may choose to put everything in
  * the classpath while calling Ant. However, since presumably the JSP's will
@@ -55,11 +55,11 @@ import org.apache.tools.ant.types.Path;
  * The task checks timestamps on the JSP's and the generated classes, and compiles
  * only those files that have changed.
  *
- * It follows the weblogic naming convention of putting classes in
+ * It follows the WebLogic naming convention of putting classes in
  *  <b> _dirName/_fileName.class for dirname/fileName.jsp   </b>
  *
- * Limitation: It compiles the files thru the Classic compiler only.
- * Limitation: Since it is my experience that weblogic jspc throws out of
+ * Limitation: It compiles the files through the Classic compiler only.
+ * Limitation: Since it is my experience that WebLogic jspc throws out of
  *             memory error on being given too many files at one go, it is
  *             called multiple times with one jsp file each.
  *
@@ -80,7 +80,7 @@ import org.apache.tools.ant.types.Path;
  */
 
 public class WLJspc extends MatchingTask {
-    //TODO Test on other versions of weblogic
+    //TODO Test on other versions of WebLogic
     //TODO add more attributes to the task, to take care of all jspc options
     //TODO Test on Unix
 
@@ -134,7 +134,7 @@ public class WLJspc extends MatchingTask {
 
         compileClasspath = compileClasspath.concatSystemClasspath();
 
-        //Weblogic.jspc calls System.exit() ... have to fork
+        // WebLogic jspc calls System.exit() ... have to fork
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of
         // memory on hefty dirs (even on  a Sun)
@@ -157,7 +157,7 @@ public class WLJspc extends MatchingTask {
         //Use classic compiler -- can be parameterised?
         args[j++] =  "-compilerclass";
         args[j++] = "sun.tools.javac.Main";
-        //Weblogic jspc does not seem to work unless u explicitly set this...
+        // WebLogic jspc does not seem to work unless u explicitly set this...
         // Does not take the classpath from the env....
         // Am i missing something about the Java task??
         args[j++] = "-classpath";
@@ -168,7 +168,7 @@ public class WLJspc extends MatchingTask {
 
         for (String filename : filesToDo) {
             //TODO
-            // All this to get package according to weblogic standards
+            // All this to get package according to WebLogic standards
             // Can be written better... this is too hacky!
             // Careful.. similar code in scanDir, but slightly different!!
             File jspFile = new File(filename);
@@ -260,7 +260,7 @@ public class WLJspc extends MatchingTask {
             File srcFile = new File(this.sourceDirectory, file);
             //TODO
             // All this to convert source to destination directory according
-            // to weblogic standards Can be written better... this is too hacky!
+            // to WebLogic standards - can be written better... this is too hacky!
             File jspFile = new File(file);
             String parents = jspFile.getParent();
 

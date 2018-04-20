@@ -2357,7 +2357,7 @@ public class JUnitTask extends Task {
 
     /**
      * Checks if a given folder is an unpacked module.
-     * @param root the fodler to be checked
+     * @param root the folder to be checked
      * @return true if the root is an unpacked module
      * @since 1.9.8
      */

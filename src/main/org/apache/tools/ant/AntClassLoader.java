@@ -849,7 +849,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /**
-     * Used for isolated resource seaching.
+     * Used for isolated resource searching.
      * @return the root classloader of AntClassLoader.
      */
     private ClassLoader getRootLoader() {

@@ -338,7 +338,7 @@ public class LayoutPreservingProperties extends Properties {
                 s = "\n" + s;
             } else {
                 // could be a comment, if first non-whitespace is a # or !
-                comment = s.matches("^([ \t\f])*([#!]).*");
+                comment = s.matches("^[ \t\f]*[#!].*");
             }
 
             // continuation if not a comment and the line ends is an

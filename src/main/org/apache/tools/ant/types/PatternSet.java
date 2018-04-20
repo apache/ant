@@ -47,7 +47,7 @@ public class PatternSet extends DataType implements Cloneable {
     /**
      * inner class to hold a name on list.  "If" and "Unless" attributes
      * may be used to invalidate the entry based on the existence of a
-     * property (typically set thru the use of the Available task)
+     * property (typically set through the use of the Available task)
      * or value of an expression.
      */
     public class NameEntry {

@@ -24,8 +24,8 @@ import java.io.OutputStream;
 import org.apache.tools.ant.Task;
 
 /**
- * Redirects text written to a stream thru the standard
- * ant logging mechanism. This class is useful for integrating
+ * Redirects text written to a stream through the standard
+ * Ant logging mechanism. This class is useful for integrating
  * with tools that write to System.out and System.err. For example,
  * the following will cause all text written to System.out to be
  * logged with "info" priority:

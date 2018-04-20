@@ -255,7 +255,7 @@ public class MailMessage {
 
     /**
      * Sets the named header to the given value.  RFC 822 provides the rules for
-     * what text may constitute a header name and value.
+     * what text may constitue a header name and value.
      * @param name name of the header
      * @param value contents of the header
      */

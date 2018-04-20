@@ -858,8 +858,8 @@ public class FileUtils {
             if (dirEnd == -1 || dirEnd < index) {
                 file = path.substring(index);
             } else {
-                directory = new StringBuilder(path.substring(index, dirEnd).
-                                             replace(File.separatorChar, '.'));
+                directory = new StringBuilder(path.substring(index, dirEnd)
+                        .replace(File.separatorChar, '.'));
                 index = dirEnd + 1;
                 if (path.length() > index) {
                     file = path.substring(index);

@@ -41,7 +41,7 @@ import org.xml.sax.XMLReader;
  * This task validates XML schema documents. It requires an XML parser
  * that handles the relevant SAX, Xerces or JAXP options.
  *
- * To resolve remote referencies, Ant may need its proxy set up, using the
+ * To resolve remote references, Ant may need its proxy set up, using the
  * setproxy task.
  *
  * Hands off most of the work to its parent, {@link XMLValidateTask}

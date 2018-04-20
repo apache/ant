@@ -613,9 +613,8 @@ public class Rmic extends MatchingTask {
             if (verify) {
                 log("Verify has been turned on.", Project.MSG_VERBOSE);
             }
-            RmicAdapter adapter =
-                nestedAdapter != null ? nestedAdapter :
-                RmicAdapterFactory.getRmic(getCompiler(), this,
+            RmicAdapter adapter = nestedAdapter != null ? nestedAdapter
+                    : RmicAdapterFactory.getRmic(getCompiler(), this,
                                            createCompilerClasspath());
 
             // now we need to populate the compiler adapter
@@ -727,8 +726,7 @@ public class Rmic extends MatchingTask {
             try {
                 if (filtering) {
                     FILE_UTILS.copyFile(oldFile, newFile,
-                                        new FilterSetCollection(getProject()
-                                                                .getGlobalFilterSet()));
+                            new FilterSetCollection(getProject().getGlobalFilterSet()));
                 } else {
                     FILE_UTILS.copyFile(oldFile, newFile);
                 }

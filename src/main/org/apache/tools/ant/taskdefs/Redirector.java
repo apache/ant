@@ -707,8 +707,8 @@ public class Redirector {
     /** outStreams */
     private void outStreams() {
         if (out != null && out.length > 0) {
-            final String logHead = "Output " +
-                    ((appendOut) ? "appended" : "redirected") + " to ";
+            final String logHead = "Output "
+                    + ((appendOut) ? "appended" : "redirected") + " to ";
             outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE,
                     appendOut, createEmptyFilesOut);
         }
@@ -729,8 +729,8 @@ public class Redirector {
 
     private void errorStreams() {
         if (error != null && error.length > 0) {
-            final String logHead = "Error " +
-                    ((appendErr) ? "appended" : "redirected") + " to ";
+            final String logHead = "Error "
+                    + ((appendErr) ? "appended" : "redirected") + " to ";
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE,
                     appendErr, createEmptyFilesErr);
         } else if (!(logError || outputStream == null) && errorProperty == null) {

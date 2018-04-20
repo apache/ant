@@ -23,7 +23,7 @@ import java.io.InputStream;
 
 /**
  *
- * Passes input requests to the project object for demuxing into
+ * Passes input requests to the project object for demultiplexing into
  * individual tasks and threads.
  *
  * @since Ant 1.6
@@ -46,7 +46,7 @@ public class DemuxInputStream extends InputStream {
     }
 
     /**
-     * Read a byte from the project's demuxed input.
+     * Read a byte from the project's demultiplexed input.
      * @return the next byte
      * @throws IOException on error
      */
@@ -61,7 +61,7 @@ public class DemuxInputStream extends InputStream {
 
 
     /**
-     * Read bytes from the project's demuxed input.
+     * Read bytes from the project's demultiplexed input.
      * @param buffer an array of bytes to read into
      * @param offset the offset in the array of bytes
      * @param length the number of bytes in the array
