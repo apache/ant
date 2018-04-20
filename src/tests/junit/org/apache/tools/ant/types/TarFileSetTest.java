@@ -45,7 +45,9 @@ public class TarFileSetTest extends AbstractFileSetTest {
         tfs = (TarFileSet) getInstance();
     }
 
-    //check that dir and src are incompatible
+    /**
+     * check that dir and src are incompatible
+     */
     @Test
     public final void testSrcDirAttributes() {
         thrown.expect(BuildException.class);
@@ -54,7 +56,9 @@ public class TarFileSetTest extends AbstractFileSetTest {
         tfs.setDir(new File("examples"));
     }
 
-    //check that dir and src are incompatible
+    /**
+     * check that dir and src are incompatible
+     */
     @Test
     public final void testDirSrcAttributes() {
         thrown.expect(BuildException.class);
@@ -63,7 +67,9 @@ public class TarFileSetTest extends AbstractFileSetTest {
         tfs.setSrc(new File("example.tar"));
     }
 
-    //check that fullpath and prefix are incompatible
+    /**
+     * check that fullpath and prefix are incompatible
+     */
     @Test
     public final void testPrefixFullpathAttributes() {
         thrown.expect(BuildException.class);
@@ -82,7 +88,9 @@ public class TarFileSetTest extends AbstractFileSetTest {
         tfs.setPrefix("/examples");
     }
 
-    // check that reference tarfilesets cannot have specific attributes
+    /**
+     * check that reference tarfilesets cannot have specific attributes
+     */
     @Test
     public final void testRefidSrcAttributes() {
         thrown.expect(BuildException.class);
@@ -91,7 +99,9 @@ public class TarFileSetTest extends AbstractFileSetTest {
         tfs.setSrc(new File("example.tar"));
     }
 
-    // check that a reference tarfileset gets the same attributes as the original
+    /**
+     * check that a reference tarfileset gets the same attributes as the original
+     */
     @Test
     public final void testAttributes() {
         tfs.setSrc(new File("example.tar"));
