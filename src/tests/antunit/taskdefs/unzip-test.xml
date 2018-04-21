@@ -24,6 +24,10 @@
     <mkdir dir="${output}" />
   </target>
 
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete dir="/tmp/testdir"/>
+  </target>
+
   <target name="testFailureOnBrokenCentralDirectoryStructure">
     <au:expectfailure
        expectedmessage="central directory is empty, can't expand corrupt archive.">
@@ -66,5 +70,47 @@
     <delete file="${input}/test.zip" quiet="true"/>
     <!-- failed on Windows and other OSes with implicit file locking -->
     <au:assertFileDoesntExist file="${input}/test.zip"/>
+  </target>
+
+  <target name="testEntriesDontEscapeDestByDefault">
+    <mkdir dir="${input}/"/>
+    <mkdir dir="${output}/"/>
+    <unzip src="zip/direscape.zip" dest="${output}"/>
+    <au:assertFileDoesntExist file="${input}/a"/>
+  </target>
+
+  <target name="testEntriesCanEscapeDestIfRequested">
+    <mkdir dir="${input}/"/>
+    <mkdir dir="${output}/"/>
+    <unzip src="zip/direscape.zip" dest="${output}" allowFilesToEscapeDest="true"/>
+    <au:assertFileExists file="${input}/a"/>
+  </target>
+
+  <target name="-can-write-to-tmp?">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/A.java"><![CDATA[
+public class A {
+    public static void main(String[] args) {
+        new java.io.File("/tmp/testdir/").mkdirs();
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <java classname="A" classpath="${output}"/>
+    <available property="can-write-to-tmp!" file="/tmp/testdir/"/>
+  </target>
+
+  <target name="testEntriesCanEscapeDestViaAbsolutePathByDefault"
+          depends="-can-write-to-tmp?" if="can-write-to-tmp!">
+    <unzip src="zip/direscape-absolute.zip" dest="${output}"/>
+    <au:assertFileExists file="/tmp/testdir/a"/>
+  </target>
+
+  <target name="testEntriesDontEscapeDestViaAbsolutePathIfProhibited"
+          depends="-can-write-to-tmp?" if="can-write-to-tmp!">
+    <unzip src="zip/direscape-absolute.zip" dest="${output}"
+           allowFilesToEscapeDest="false"/>
+    <au:assertFileDoesntExist file="/tmp/testdir/a"/>
   </target>
 </project>

@@ -1,6 +1,19 @@
 Changes from Ant 1.10.3 TO Ant 1.10.4
 =====================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * <unzip>, <unjar> and <untar> will no longer extract entries whose
+   names would make the created files be placed outside of the
+   destination directory anymore by default. A new attribute
+   allowFilesToEscapeDest can be used to override the behavior.
+   Another special case is when stripAbsolutePathSpec is false (which
+   still is the default) and the entry's name starts with a
+   (back)slash and allowFilesToEscapeDest hasn't been specified
+   explicitly, in this case the file may be created outside of the
+   dest directory as well.
+
 Fixed bugs:
 -----------
 

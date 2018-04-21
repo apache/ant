@@ -77,6 +77,7 @@ public class Expand extends Task {
     private boolean failOnEmptyArchive = false;
     private boolean stripAbsolutePathSpec = false;
     private boolean scanForUnicodeExtraFields = true;
+    private Boolean allowFilesToEscapeDest = null;
 
     private String encoding;
 
@@ -256,14 +257,17 @@ public class Expand extends Task {
                                boolean isDirectory, FileNameMapper mapper)
                                throws IOException {
 
-        if (stripAbsolutePathSpec && !entryName.isEmpty()
+        final boolean entryNameStartsWithPathSpec = !entryName.isEmpty()
             && (entryName.charAt(0) == File.separatorChar
                 || entryName.charAt(0) == '/'
-                || entryName.charAt(0) == '\\')) {
+                || entryName.charAt(0) == '\\');
+        if (stripAbsolutePathSpec && entryNameStartsWithPathSpec) {
             log("stripped absolute path spec from " + entryName,
                 Project.MSG_VERBOSE);
             entryName = entryName.substring(1);
         }
+        boolean allowedOutsideOfDest = Boolean.TRUE == getAllowFilesToEscapeDest()
+            || null == getAllowFilesToEscapeDest() && !stripAbsolutePathSpec && entryNameStartsWithPathSpec;
 
         if (patternsets != null && !patternsets.isEmpty()) {
             String name = entryName.replace('/', File.separatorChar)
@@ -328,6 +332,12 @@ public class Expand extends Task {
             mappedNames = new String[] {entryName};
         }
         File f = fileUtils.resolveFile(dir, mappedNames[0]);
+        if (!allowedOutsideOfDest && !fileUtils.isLeadingPath(dir, f)) {
+            log("skipping " + entryName + " as its target " + f + " is outside of "
+                + dir + ".", Project.MSG_VERBOSE);
+                return;
+        }
+
         try {
             if (!overwrite && f.exists()
                 && f.lastModified() >= entryDate.getTime()) {
@@ -518,6 +528,27 @@ public class Expand extends Task {
      */
     public boolean getScanForUnicodeExtraFields() {
         return scanForUnicodeExtraFields;
+    }
+
+    /**
+     * Whether to allow the extracted file or directory to be outside of the dest directory.
+     *
+     * @param b the flag
+     * @since Ant 1.10.4
+     */
+    public void setAllowFilesToEscapeDest(boolean b) {
+        allowFilesToEscapeDest = b;
+    }
+
+    /**
+     * Whether to allow the extracted file or directory to be outside of the dest directory.
+     *
+     * @return {@code null} if the flag hasn't been set explicitly,
+     * otherwise the value set by the user.
+     * @since Ant 1.10.4
+     */
+    public Boolean getAllowFilesToEscapeDest() {
+        return allowFilesToEscapeDest;
     }
 
 }
