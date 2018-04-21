@@ -118,6 +118,15 @@ extract an Ant generated ZIP archive.</p>
       page</a></td>
     <td>No; defaults to <q>true</q></td>
   </tr>
+  <tr>
+    <td>allowFilesToEscapeDest</td>
+    <td>Whether to allow the extracted file or directory
+      to be outside of the dest directory.
+      <em>since Ant 1.10.4</em></td>
+    <td>No, defaults to false unless
+    stripAbsolutePathSpec is true and the entry's name starts with a leading
+    path spec.</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;/&gt;</pre>
