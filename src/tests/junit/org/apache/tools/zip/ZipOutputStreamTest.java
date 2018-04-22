@@ -56,18 +56,18 @@ public class ZipOutputStreamTest {
 
     @Test
     public void testZipLong() {
-        ZipLong test = ZipOutputStream.toDosTime(time);
+        ZipLong test = ZipUtil.toDosTime(time);
         assertEquals(test.getValue(), zl.getValue());
     }
 
     @Test
     public void testAdjustToLong() {
         assertEquals((long) Integer.MAX_VALUE,
-                     ZipOutputStream.adjustToLong(Integer.MAX_VALUE));
+                     ZipUtil.adjustToLong(Integer.MAX_VALUE));
         assertEquals(((long) Integer.MAX_VALUE) + 1,
-                     ZipOutputStream.adjustToLong(Integer.MAX_VALUE + 1));
+                     ZipUtil.adjustToLong(Integer.MAX_VALUE + 1));
         assertEquals(2 * ((long) Integer.MAX_VALUE),
-                     ZipOutputStream.adjustToLong(2 * Integer.MAX_VALUE));
+                     ZipUtil.adjustToLong(2 * Integer.MAX_VALUE));
     }
 
 }

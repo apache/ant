@@ -617,8 +617,8 @@ public class FileUtilsTest {
      * calling this method allows tests where normalize is called to pass under cygwin
      */
     private void assertEqualsIgnoreDriveCase(String s1, String s2) {
-        if ((Os.isFamily("dos") || Os.isFamily("netware"))
-            && !s1.isEmpty() && !s2.isEmpty()) {
+        assumeTrue("Not DOS or Netware", Os.isFamily("dos") || Os.isFamily("netware"));
+        if (!s1.isEmpty() && !s2.isEmpty()) {
             StringBuilder sb1 = new StringBuilder(s1);
             StringBuilder sb2 = new StringBuilder(s2);
             sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));

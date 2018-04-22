@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -82,14 +83,13 @@ public class FilenameSelectorTest {
         assertEquals("FFFFFFFFFFFF", selectorRule.selectionString(s));
     }
 
-        // This is turned off temporarily. There appears to be a bug
-        // in SelectorUtils.matchPattern() where it is recursive on
-        // Windows even if no ** is in pattern.
-        // s.setName("*.gz");
-        // String results = selectorRule.selectionString(s);
-        // assertEquals("FFFTFFFFFFFF", results); // Unix
-        // vs
-        // assertEquals("FFFTFFFFTFFF", results); // Windows
+    @Ignore("Turned off due to a bug: SelectorUtils.matchPattern() is recursive without '**' on Windows")
+    @Test
+    public void testSelectionBehaviourWildcard() {
+        s.setName("*.gz");
+        assertEquals("FFFTFFFFFFFF", selectorRule.selectionString(s)); // Unix
+        assertEquals("FFFTFFFFTFFF", selectorRule.selectionString(s)); // Windows
+    }
 
     @Test
     public void testSelectionBehaviourNegate() {

@@ -105,7 +105,7 @@
 <project name="master">
   <include file="compile-java.xml" as="compile"/>
 </project>]]></echo>
-    <!-- here prefix should be concatened from each include first 
+    <!-- here prefix should be concatenated from each include first
          "compile" then "abstract-compile"-->
     <ant dir="${output}" target="compile.abstract-compile.compile"/>
     <au:assertLogContains text="in compile java"/>
